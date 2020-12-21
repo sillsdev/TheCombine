@@ -282,13 +282,9 @@ namespace BackendFramework.Controllers
             return new StatusCodeResult(304);
         }
 
-        // Check if lift import has already happened for this project
+        /// <summary> Check if lift import has already happened for this project </summary>
         [HttpGet("{projectId}/liftcheck")]
-        // Temporarily disable warning about missing await in this method.
-        // It's needed for the return type to be correct, but nothing inside the function is awaiting yet.
-#pragma warning disable 1998
         public async Task<IActionResult> CanUploadLift(string projectId)
-#pragma warning restore 1998
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -301,7 +297,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            return new OkObjectResult(_projectService.CanImportLift(projectId));
+            return new OkObjectResult(await _projectService.CanImportLift(projectId));
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>

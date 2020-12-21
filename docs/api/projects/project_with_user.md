@@ -1,6 +1,7 @@
 # Project With User
 
-Extension of [`Project`](project.md) with [`User`](..\users\user.md) attribute. Used as return type from [Project Creation](post.md)
+Extension of [`Project`](project.md) with [`User`](..\users\user.md) attribute. Used as return type from
+[Project Creation](post.md)
 
 ## Raw type
 

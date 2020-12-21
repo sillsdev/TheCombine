@@ -184,9 +184,9 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public bool CanImportLift(string projectId)
+        public async Task<bool> CanImportLift(string projectId)
         {
-            var project = GetProject(projectId).Result;
+            var project = await GetProject(projectId);
             return !project.LiftImported;
         }
     }

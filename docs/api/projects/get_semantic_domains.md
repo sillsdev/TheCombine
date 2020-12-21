@@ -1,10 +1,12 @@
 # Parse Semantic Domains of Project
 
 Takes the sematic domains of your project and returns a JSON object in the structure needed by the Tree View component.
-The app currently has copies of the semantic domains in English, Spanish, and French. This tool can be used to localize the Tree View component to other languages.
-This function is not currently operating, so the source code must be changed.
+The app currently has copies of the semantic domains in English, Spanish, and French. This tool can be used to localize
+the Tree View component to other languages. This function is not currently operating, so the source code must be
+changed.
 
-1. In the file [~/TheCombine/Backend/Services/LiftApiServices.cs](../../../Backend/Services/LiftApiServices.cs), uncomment the code in the method `ProcessRangeElement()`.
+1. In the file [~/TheCombine/Backend/Services/LiftApiServices.cs](../../../Backend/Services/LiftApiServices.cs),
+   uncomment the code in the method `ProcessRangeElement()`.
 
 ![Code](code.PNG)
 
@@ -15,11 +17,14 @@ This function is not currently operating, so the source code must be changed.
 
 ![DevTools](DevToolProjId.PNG)
 
-6. Navigate in-browser to `localhost:5001/v1/projeccts/{projectId}/semanticdomains` with the project id you found, which will give you the plaintext result. It should look something like this:
+6. Navigate in-browser to `localhost:5001/v1/projeccts/{projectId}/semanticdomains` with the project id you found, which
+   will give you the plaintext result. It should look something like this:
 
 ![SemDom](semdoms.PNG)
 
-7.  Save this data to a JSON file in [~/TheCombine/src/resources/semantic-domains](../../../src/resources/semantic-domains) with the language code as its name (e.g. `en.json` for English) will allow the data from this language to be used in the Tree View component.
+7.  Save this data to a JSON file in
+    [~/TheCombine/src/resources/semantic-domains](../../../src/resources/semantic-domains) with the language code as its
+    name (e.g. `en.json` for English) will allow the data from this language to be used in the Tree View component.
 
 **URL** : `/v1/projects/{projectId}/semanticdomains`
 

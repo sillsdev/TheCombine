@@ -41,6 +41,10 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/words/upload </remarks>
         /// <returns> Number of words added </returns>
         [HttpPost("upload")]
+        // Allow clients to POST large import files to the server (default limit is 28MB).
+        // Note: The HTTP Proxy in front, such as NGNIX, also needs to be configured
+        //     to allow large requests through as well.
+        [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
@@ -55,7 +59,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure Lift file has not already been imported.
-            if (!_projectService.CanImportLift(projectId))
+            if (!await _projectService.CanImportLift(projectId))
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }

@@ -106,9 +106,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(false);
         }
 
-        public bool CanImportLift(string projectId)
+        public Task<bool> CanImportLift(string projectId)
         {
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

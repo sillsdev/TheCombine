@@ -2,7 +2,7 @@ import axios from "axios";
 
 import authHeader from "../components/Login/AuthHeaders";
 import history, { Path } from "../history";
-import { Goal, GoalType } from "../types/goals";
+import { Goal } from "../types/goals";
 import { Project } from "../types/project";
 import { RuntimeConfig } from "../types/runtimeConfig";
 import SemanticDomainWithSubdomains from "../types/SemanticDomain";
@@ -405,11 +405,13 @@ export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
 ): Promise<Goal> {
-  let goalType: string = goalNameToGoalTypeId(goal.name);
-  let stepData: string = JSON.stringify(goal.steps);
-  let userEditTuple = { goalType: goalType, stepData: [stepData] };
-  let projectId: string = LocalStorage.getProjectId();
-  let resp = await backendServer.post(
+  const stepData = JSON.stringify(goal.steps);
+  const userEditTuple = {
+    goalType: goal.goalType.toString(),
+    stepData: [stepData],
+  };
+  const projectId = LocalStorage.getProjectId();
+  const resp = await backendServer.post(
     `projects/${projectId}/useredits/${userEditId}`,
     userEditTuple,
     {
@@ -421,11 +423,11 @@ export async function addGoalToUserEdit(
 
 export async function addStepToGoal(
   userEditId: string,
-  indexInHistory: number,
+  goalIndex: number,
   goal: Goal
 ): Promise<Goal> {
-  let stepData: string = JSON.stringify(goal.steps);
-  let userEditTuple = { goalIndex: indexInHistory, newEdit: stepData };
+  const newEdit = JSON.stringify(goal.steps);
+  const userEditTuple = { goalIndex, newEdit };
   return await backendServer
     .put(
       `projects/${LocalStorage.getProjectId()}/useredits/${userEditId}`,
@@ -437,41 +439,6 @@ export async function addStepToGoal(
     .then((resp) => {
       return resp.data;
     });
-}
-
-function goalNameToGoalTypeId(goalName: string): string {
-  let goalType: number;
-  switch (goalName) {
-    case "charInventory":
-      goalType = GoalType.CreateCharInv;
-      break;
-    case "validateChars":
-      goalType = GoalType.ValidateChars;
-      break;
-    case "createStrWordInv":
-      goalType = GoalType.CreateStrWordInv;
-      break;
-    case "validateStrWords":
-      goalType = GoalType.ValidateStrWords;
-      break;
-    case "mergeDups":
-      goalType = GoalType.MergeDups;
-      break;
-    case "spellCheckGloss":
-      goalType = GoalType.SpellcheckGloss;
-      break;
-    case "reviewEntries":
-      goalType = GoalType.ReviewEntries;
-      break;
-    case "handleFlags":
-      goalType = GoalType.HandleFlags;
-      break;
-    default:
-      goalType = 8;
-      break;
-  }
-
-  return goalType.toString();
 }
 
 export async function createUserEdit(): Promise<Object> {

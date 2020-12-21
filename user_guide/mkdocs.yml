@@ -1,0 +1,37 @@
+site_name: The Combine
+strict: true
+theme:
+  name: material
+  palette:
+    primary: blue
+  icon:
+    logo: material/barley
+    repo: fontawesome/brands/github
+  favicon: images/favicon.ico
+  language: en
+repo_url: https://github.com/sillsdev/TheCombine
+repo_name: sillsdev/TheCombine
+copyright: © 2020 SIL International
+extra:
+  social:
+    - icon: fontawesome/solid/globe
+      link: https://www.sil.org/
+    - icon: fontawesome/brands/github
+      link: https://github.com/sillsdev
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/silintl
+    - icon: fontawesome/brands/facebook
+      link: https://www.facebook.com/SIL.International/
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UC6ojqR9jOPHuPN7XP92Zj9Q
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/sil-international
+nav:
+  - Overview: index.md
+  - Account: account.md
+  - Projects: project.md
+  - Data Entry: dataEntry.md
+  - Data Cleanup: goals.md
+  - Admin: admin.md
+markdown_extensions:
+  - admonition
