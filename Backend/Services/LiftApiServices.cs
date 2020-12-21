@@ -177,6 +177,7 @@ namespace BackendFramework.Services
             {
                 throw new MissingProjectException($"Project does not exist: {projectId}");
             }
+            var vernacularBcp47 = proj.VernacularWritingSystem.Bcp47;
 
             // Generate the zip dir.
             var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
@@ -198,7 +199,7 @@ namespace BackendFramework.Services
             using var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
             var rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            // write header of lift document
+            // Write header of lift document.
             var header =
                 $@"
                     <ranges>
@@ -238,7 +239,7 @@ namespace BackendFramework.Services
                 }
 
                 AddNote(entry, wordEntry);
-                await AddVern(entry, wordEntry, projectId, projService);
+                AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
 
@@ -250,7 +251,7 @@ namespace BackendFramework.Services
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
 
                 AddNote(entry, wordEntry);
-                await AddVern(entry, wordEntry, projectId, projService);
+                AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
 
@@ -329,16 +330,16 @@ namespace BackendFramework.Services
                 liftRangesWriter.Close();
             }
 
-
-            // Export character set to ldml
+            // Export character set to ldml.
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (proj.VernacularWritingSystem.Bcp47 != "")
+            if (vernacularBcp47 != "")
             {
-                await LdmlExport(ldmlDir, projService, proj);
+                var validChars = proj.ValidCharacters;
+                LdmlExport(ldmlDir, vernacularBcp47, validChars);
             }
 
-            // Compress everything
+            // Compress everything.
             var destinationFileName = Path.Combine(exportDir,
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
@@ -369,17 +370,10 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
-        /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
-        private static async Task AddVern(LexEntry entry, Word wordEntry, string projectId, IProjectService projService)
+        private static void AddVern(LexEntry entry, Word wordEntry, string vernacularBcp47)
         {
-            var project = await projService.GetProject(projectId);
-            if (project is null)
-            {
-                throw new MissingProjectException($"Project does not exist: {projectId}");
-            }
-
-            var lang = project.VernacularWritingSystem.Bcp47;
-            entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
+            entry.LexicalForm.MergeIn(MultiText.Create(
+                new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
         }
 
         /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
@@ -441,24 +435,15 @@ namespace BackendFramework.Services
             }
         }
 
-        /// <summary> Exports main character set from a project to an ldml file </summary>
-        /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
-        private static async Task LdmlExport(string filePath, IProjectService projService, Project project)
+        /// <summary> Exports vernacular language character set to an ldml file </summary>
+        private static void LdmlExport(string filePath, string vernacularBcp47, List<string> validChars)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(project.VernacularWritingSystem.Bcp47, out var wsDef);
+            wsf.Create(vernacularBcp47, out var wsDef);
 
-            // TODO: Why query for this Project again after it is passed in?
-            var projectId = project.Id;
-            var proj = await projService.GetProject(project.Id);
-            if (proj is null)
-            {
-                throw new MissingProjectException($"Project does not exist: {projectId}");
-            }
-
-            // If there isn't already a main character set defined, make one and add it to the writing system
-            // definition
+            // If there isn't already a main character set defined,
+            // make one and add it to the writing system definition.
             if (!wsDef.CharacterSets.TryGet("main", out var chars))
             {
                 chars = new CharacterSetDefinition("main");
@@ -467,7 +452,7 @@ namespace BackendFramework.Services
 
             // Replace all the characters found with our copy of the character set
             chars.Characters.Clear();
-            foreach (var character in proj.ValidCharacters)
+            foreach (var character in validChars)
             {
                 chars.Characters.Add(character);
             }

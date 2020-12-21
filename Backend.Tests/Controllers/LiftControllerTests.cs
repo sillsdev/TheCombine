@@ -267,10 +267,7 @@ namespace Backend.Tests.Controllers
         {
             // This test assumes you have the starting .zip (Filename) included in your project files.
             var pathToStartZip = Path.Combine(Util.AssetsDir, roundTripObj.Filename);
-            if (!File.Exists(pathToStartZip))
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(File.Exists(pathToStartZip));
 
             // Roundtrip Part 1
 
