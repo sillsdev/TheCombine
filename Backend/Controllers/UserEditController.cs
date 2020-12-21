@@ -41,7 +41,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -66,7 +66,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -89,7 +89,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -154,7 +154,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -198,8 +198,8 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
 
-            // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            // Ensure project exists.
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -234,7 +234,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);

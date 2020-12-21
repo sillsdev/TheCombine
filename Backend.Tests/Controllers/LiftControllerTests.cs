@@ -18,15 +18,15 @@ namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
-        private IWordRepository _wordRepo;
-        private IWordService _wordService;
-        private IProjectService _projServ;
-        private ILiftService _liftService;
-        private LiftController _liftController;
-        private IHubContext<CombineHub> _notifyService;
-        private IPermissionService _permissionService;
+        private IWordRepository _wordRepo = null!;
+        private IWordService _wordService = null!;
+        private IProjectService _projServ = null!;
+        private ILiftService _liftService = null!;
+        private LiftController _liftController = null!;
+        private IHubContext<CombineHub> _notifyService = null!;
+        private IPermissionService _permissionService = null!;
 
-        private Project _proj;
+        private Project _proj = null!;
 
         [SetUp]
         public void Setup()
@@ -224,7 +224,7 @@ namespace Backend.Tests.Controllers
 
             const string userId = "testId";
             _liftController.ExportLiftFile(_proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileContentResult;
+            var result = (FileContentResult)_liftController.DownloadLiftFile(_proj.Id, userId).Result;
             Assert.NotNull(result);
 
             // Write LiftFile contents to a temporary directory.
@@ -267,10 +267,7 @@ namespace Backend.Tests.Controllers
         {
             // This test assumes you have the starting .zip (Filename) included in your project files.
             var pathToStartZip = Path.Combine(Util.AssetsDir, roundTripObj.Filename);
-            if (!File.Exists(pathToStartZip))
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(File.Exists(pathToStartZip));
 
             // Roundtrip Part 1
 
@@ -289,6 +286,12 @@ namespace Backend.Tests.Controllers
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
+            if (proj1 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
             Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
@@ -306,7 +309,7 @@ namespace Backend.Tests.Controllers
             }
 
             // Export.
-            var exportedFilePath = _liftController.CreateLiftExport(proj1.Id);
+            var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
             // Assert the file was created with desired heirarchy.
@@ -331,6 +334,11 @@ namespace Backend.Tests.Controllers
 
             // Init the project the .zip info is added to.
             var proj2 = _projServ.Create(RandomProject()).Result;
+            if (proj2 is null)
+            {
+                Assert.Fail();
+                return;
+            }
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
@@ -344,6 +352,12 @@ namespace Backend.Tests.Controllers
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;
+            if (proj2 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
             Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
@@ -362,7 +376,7 @@ namespace Backend.Tests.Controllers
             }
 
             // Export.
-            exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
+            exportedFilePath = _liftController.CreateLiftExport(proj2.Id).Result;
             exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
             // Assert the file was created with desired hierarchy.

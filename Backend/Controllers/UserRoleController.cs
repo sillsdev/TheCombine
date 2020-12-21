@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -78,7 +78,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -107,7 +107,7 @@ namespace BackendFramework.Controllers
             userRole.ProjectId = projectId;
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -133,7 +133,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -158,7 +158,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);

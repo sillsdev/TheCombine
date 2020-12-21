@@ -9,9 +9,9 @@ namespace Backend.Tests.Services
 {
     public class PasswordResetServiceTests
     {
-        private IUserService _userService;
-        private PasswordResetContextMock _passwordResets;
-        private IPasswordResetService _passwordResetService;
+        private IUserService _userService = null!;
+        private PasswordResetContextMock _passwordResets = null!;
+        private IPasswordResetService _passwordResetService = null!;
 
         [SetUp]
         public void Setup()
