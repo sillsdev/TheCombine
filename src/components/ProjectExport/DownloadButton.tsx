@@ -21,7 +21,6 @@ export default function DownloadButton() {
   const dispatch = useDispatch();
   const [fileName, setFileName] = useState<string | undefined>();
   const [fileUrl, setFileUrl] = useState<string | undefined>();
-  const [isDownloading, setIsDownloading] = useState<boolean>(false);
   let downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
@@ -33,7 +32,6 @@ export default function DownloadButton() {
   }, [downloadLink, fileUrl]);
 
   async function download() {
-    setIsDownloading(true);
     const projectName = await getProjectName(exportState.projectId);
     setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
     asyncDownloadExport(exportState.projectId)(dispatch)
@@ -43,45 +41,40 @@ export default function DownloadButton() {
           reset();
         }
       })
-      .catch((err) => {
-        console.error(err);
-        setIsDownloading(false);
-      });
+      .catch((err) => console.error(err));
   }
 
   function reset() {
     resetExport(exportState.projectId)(dispatch);
-    setIsDownloading(false);
   }
 
   function icon() {
-    if (exportState.status === ExportStatus.Success && !isDownloading) {
-      return (
-        <IconButton tabIndex={-1} onClick={download}>
-          <GetApp />
-        </IconButton>
-      );
+    switch (exportState.status) {
+      case ExportStatus.Success:
+        return (
+          <IconButton tabIndex={-1} onClick={download}>
+            <GetApp />
+          </IconButton>
+        );
+      case ExportStatus.Failure:
+        return (
+          <IconButton tabIndex={-1} onClick={reset}>
+            <Error />
+          </IconButton>
+        );
+      default:
+        return (
+          <IconButton tabIndex={-1}>
+            <Cached />
+          </IconButton>
+        );
     }
-    if (exportState.status === ExportStatus.Failure) {
-      return (
-        <IconButton tabIndex={-1} onClick={reset}>
-          <Error />
-        </IconButton>
-      );
-    }
-    return (
-      <IconButton tabIndex={-1}>
-        <Cached />
-      </IconButton>
-    );
   }
 
   function textId() {
     switch (exportState.status) {
       case ExportStatus.Success:
-        return `projectExport.download${
-          isDownloading ? "InProgress" : "Ready"
-        }`;
+        return "projectExport.downloadInProgress";
       case ExportStatus.Failure:
         return "projectExport.exportFailed";
       case ExportStatus.InProgress:

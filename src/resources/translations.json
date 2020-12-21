@@ -265,11 +265,6 @@
     }
   },
   "projectExport": {
-    "downloadInProgress": [
-      "Download in progress",
-      "Download in progress",
-      "Download in progress"
-    ],
     "downloadReady": ["Download ready", "Download ready", "Download ready"],
     "exportFailed": ["Export failed", "Export failed", "Export failed"],
     "exportInProgress": [
