@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
@@ -214,7 +215,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestExportDeleted()
+        public async Task TestExportDeleted()
         {
             var word = RandomWord(_proj.Id);
             var secondWord = RandomWord(_proj.Id);
@@ -227,8 +228,8 @@ namespace Backend.Tests.Controllers
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(_proj.Id, wordToUpdate.Id, word);
-            _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
+            await _wordService.Update(_proj.Id, wordToUpdate.Id, word);
+            await _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
 
             const string userId = "testId";
             _liftController.ExportLiftFile(_proj.Id, userId).Wait();
@@ -254,7 +255,7 @@ namespace Backend.Tests.Controllers
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
 
             // Delete the export
-            _liftController.DeleteLiftFile(userId);
+            await _liftController.DeleteLiftFile(userId);
             var notFoundResult = _liftController.DownloadLiftFile(_proj.Id, userId).Result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
         }
