@@ -51,7 +51,7 @@ namespace BackendFramework.Services
             {
                 return await projectList.FirstAsync();
             }
-            catch (Exception)
+            catch (InvalidOperationException)
             {
                 return null;
             }
