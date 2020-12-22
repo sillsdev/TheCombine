@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -50,7 +50,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
@@ -67,7 +67,7 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -79,7 +79,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -151,7 +151,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
@@ -176,12 +176,17 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/characters")]
         public async Task<IActionResult> PutChars(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
                 return new ForbidResult();
             }
 
             var currentProj = await _projectService.GetProject(projectId);
+            if (currentProj is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             currentProj.ValidCharacters = project.ValidCharacters;
             currentProj.RejectedCharacters = project.RejectedCharacters;
             await _projectService.Update(projectId, currentProj);
@@ -194,7 +199,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -235,12 +240,12 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
 
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -282,15 +287,11 @@ namespace BackendFramework.Controllers
             return new StatusCodeResult(304);
         }
 
-        // Check if lift import has already happened for this project
+        /// <summary> Check if lift import has already happened for this project </summary>
         [HttpGet("{projectId}/liftcheck")]
-        // Temporarily disable warning about missing await in this method.
-        // It's needed for the return type to be correct, but nothing inside the function is awaiting yet.
-#pragma warning disable 1998
         public async Task<IActionResult> CanUploadLift(string projectId)
-#pragma warning restore 1998
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -301,7 +302,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            return new OkObjectResult(_projectService.CanImportLift(projectId));
+            return new OkObjectResult(await _projectService.CanImportLift(projectId));
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
@@ -309,7 +310,13 @@ namespace BackendFramework.Controllers
         [HttpPut("invite")]
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
-            var project = await _projectService.GetProject(data.ProjectId);
+            var projectId = data.ProjectId;
+            var project = await _projectService.GetProject(projectId);
+            if (project is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, data.EmailAddress);
 
             await _projectService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
@@ -325,6 +332,11 @@ namespace BackendFramework.Controllers
         {
 
             var project = await _projectService.GetProject(projectId);
+            if (project is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var users = await _userService.GetAllUsers();
             var status = new bool[2];
             var activeTokenExists = false;

@@ -11,11 +11,9 @@ export enum GoalOption {
   Current,
 }
 
-export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
+export type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
 
-export type MockGoalStepType = {};
-
-export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
+export type GoalStep = CreateCharInvStepData | MergeStepData; // | OtherTypes
 
 export interface GoalProps {
   goal?: Goal;
@@ -51,28 +49,61 @@ export interface GoalSelectorState {
   lastIndex: number;
 }
 
-export interface Goal {
+// The enum value is a permanent id for UserEdits and should not be changed.
+export enum GoalType {
+  Default = -1,
+  CreateCharInv = 0,
+  CreateStrWordInv = 2,
+  HandleFlags = 7,
+  MergeDups = 4,
+  ReviewEntries = 6,
+  SpellcheckGloss = 5,
+  ValidateChars = 1,
+  ValidateStrWords = 3,
+}
+
+// These strings must match what is in src/resources/translations.json.
+export enum GoalName {
+  Default = "default",
+  CreateCharInv = "charInventory",
+  CreateStrWordInv = "createStrWordInv",
+  HandleFlags = "handleFlags",
+  MergeDups = "mergeDups",
+  ReviewEntries = "reviewEntries",
+  SpellcheckGloss = "spellcheckGloss",
+  ValidateChars = "validateChars",
+  ValidateStrWords = "validateStrWords",
+}
+
+export class Goal {
   goalType: GoalType;
-  name: string;
+  name: GoalName;
   user: User;
   steps: GoalStep[];
   numSteps: number;
   currentStep: number;
-  data: GoalData; // The data required to load/reload this exact goal
+  data: GoalData;
   completed: boolean;
   result: GoalOption;
   hash: string;
-}
 
-export enum GoalType {
-  CreateCharInv,
-  ValidateChars,
-  CreateStrWordInv,
-  ValidateStrWords,
-  MergeDups,
-  SpellcheckGloss,
-  ReviewEntries,
-  HandleFlags,
+  constructor(
+    type = GoalType.Default,
+    name = GoalName.Default,
+    steps: GoalStep[] = [],
+    data: GoalData = {}
+  ) {
+    this.goalType = type;
+    this.name = name;
+    this.user = new User("", "", "");
+    this.steps = steps;
+    this.numSteps = 1;
+    this.currentStep = 0;
+    this.data = data;
+    this.completed = false;
+    this.result = GoalOption.Current;
+    this.hash = generateGuid();
+  }
 }
 
 export function generateGuid(): string {

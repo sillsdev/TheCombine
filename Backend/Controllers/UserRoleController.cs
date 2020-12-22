@@ -31,13 +31,13 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -52,13 +52,13 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -72,13 +72,13 @@ namespace BackendFramework.Controllers
         [HttpGet("{userRoleId}")]
         public async Task<IActionResult> Get(string projectId, string userRoleId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -99,7 +99,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody] UserRole userRole)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
@@ -107,7 +107,7 @@ namespace BackendFramework.Controllers
             userRole.ProjectId = projectId;
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -127,13 +127,13 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userRoleId}")]
         public async Task<IActionResult> Delete(string projectId, string userRoleId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -152,13 +152,13 @@ namespace BackendFramework.Controllers
         [HttpPut("{userRoleId}")]
         public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);

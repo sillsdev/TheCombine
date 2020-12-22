@@ -69,7 +69,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
             done={done}
             buttonProps={{ type: "submit" }}
           >
-            <Translate id="buttons.Save" />
+            <Translate id="buttons.save" />
           </LoadingDoneButton>
         </Grid>
       </Grid>

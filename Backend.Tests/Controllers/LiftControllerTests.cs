@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
@@ -18,15 +19,15 @@ namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
-        private IWordRepository _wordRepo;
-        private IWordService _wordService;
-        private IProjectService _projServ;
-        private ILiftService _liftService;
-        private LiftController _liftController;
-        private IHubContext<CombineHub> _notifyService;
-        private IPermissionService _permissionService;
+        private IWordRepository _wordRepo = null!;
+        private IWordService _wordService = null!;
+        private IProjectService _projServ = null!;
+        private ILiftService _liftService = null!;
+        private LiftController _liftController = null!;
+        private IHubContext<CombineHub> _notifyService = null!;
+        private IPermissionService _permissionService = null!;
 
-        private Project _proj;
+        private Project _proj = null!;
 
         [SetUp]
         public void Setup()
@@ -205,8 +206,16 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        /// <summary>  Read all of the bytes from a Stream into byte array. </summary>
+        private static byte[] ReadAllBytes(Stream stream)
+        {
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
         [Test]
-        public void TestExportDeleted()
+        public async Task TestExportDeleted()
         {
             var word = RandomWord(_proj.Id);
             var secondWord = RandomWord(_proj.Id);
@@ -219,16 +228,23 @@ namespace Backend.Tests.Controllers
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(_proj.Id, wordToUpdate.Id, word);
-            _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
+            await _wordService.Update(_proj.Id, wordToUpdate.Id, word);
+            await _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
 
             const string userId = "testId";
             _liftController.ExportLiftFile(_proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileContentResult;
+            var result = (FileStreamResult)_liftController.DownloadLiftFile(_proj.Id, userId).Result;
             Assert.NotNull(result);
 
+            // Read contents.
+            byte[] contents;
+            using (var fileStream = result.FileStream)
+            {
+                contents = ReadAllBytes(fileStream);
+            }
+
             // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(result.FileContents);
+            var extractedExportDir = ExtractZipFileContents(contents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
@@ -239,7 +255,7 @@ namespace Backend.Tests.Controllers
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
 
             // Delete the export
-            _liftController.DeleteLiftFile(userId);
+            await _liftController.DeleteLiftFile(userId);
             var notFoundResult = _liftController.DownloadLiftFile(_proj.Id, userId).Result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
         }
@@ -267,10 +283,7 @@ namespace Backend.Tests.Controllers
         {
             // This test assumes you have the starting .zip (Filename) included in your project files.
             var pathToStartZip = Path.Combine(Util.AssetsDir, roundTripObj.Filename);
-            if (!File.Exists(pathToStartZip))
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(File.Exists(pathToStartZip));
 
             // Roundtrip Part 1
 
@@ -289,6 +302,12 @@ namespace Backend.Tests.Controllers
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
+            if (proj1 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
             Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
@@ -306,7 +325,7 @@ namespace Backend.Tests.Controllers
             }
 
             // Export.
-            var exportedFilePath = _liftController.CreateLiftExport(proj1.Id);
+            var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
             // Assert the file was created with desired heirarchy.
@@ -331,6 +350,11 @@ namespace Backend.Tests.Controllers
 
             // Init the project the .zip info is added to.
             var proj2 = _projServ.Create(RandomProject()).Result;
+            if (proj2 is null)
+            {
+                Assert.Fail();
+                return;
+            }
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
@@ -344,6 +368,12 @@ namespace Backend.Tests.Controllers
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;
+            if (proj2 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
             Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
@@ -362,7 +392,7 @@ namespace Backend.Tests.Controllers
             }
 
             // Export.
-            exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
+            exportedFilePath = _liftController.CreateLiftExport(proj2.Id).Result;
             exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
             // Assert the file was created with desired hierarchy.

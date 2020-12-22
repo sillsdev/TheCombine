@@ -8,7 +8,8 @@
 
 **analysisWritingSystems** : Language code of glossing systems
 
-**validCharacters** : 𠮷 appears to be a single character but is represented with two unicode codepoints: `"\uD842\uDFB7"`. Currently, the front-end splits on codepoints, so this character would be broken up.
+**validCharacters** : 𠮷 appears to be a single character but is represented with two unicode codepoints:
+`"\uD842\uDFB7"`. Currently, the front-end splits on codepoints, so this character would be broken up.
 
 **rejectedCharacters** :
 
@@ -17,9 +18,8 @@
 **wordFields** :
 
 > **Typing of this is uncertain**  
-> It would make sense to have this strictly typed since we know
-> all possible values at runtime we should probably add a enum that looks
-> something like
+> It would make sense to have this strictly typed since we know all possible values at runtime we should probably add a
+> enum that looks something like
 >
 > ```typescript
 > enum {

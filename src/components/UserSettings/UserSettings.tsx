@@ -208,7 +208,7 @@ class UserSettings extends React.Component<
 
                   <Grid item container justify="flex-end">
                     <Button type="submit" variant="contained">
-                      Save
+                      <Translate id="buttons.save" />
                     </Button>
                   </Grid>
                 </Grid>
