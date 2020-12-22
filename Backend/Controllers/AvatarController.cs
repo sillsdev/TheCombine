@@ -36,8 +36,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userId);
             }
 
-            var image = await System.IO.File.ReadAllBytesAsync(avatar);
-            return File(image, "image/jpeg");
+            var imageFile = System.IO.File.OpenRead(avatar);
+            return File(imageFile, "application/octet-stream");
         }
 
         /// <summary>
