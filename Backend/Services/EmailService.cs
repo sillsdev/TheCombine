@@ -19,10 +19,10 @@ namespace BackendFramework.Services
 
             await client.ConnectAsync(_emailContext.SmtpServer, _emailContext.SmtpPort);
 
-            //SMTP server authentication if needed
+            // SMTP server authentication if needed
             await client.AuthenticateAsync(_emailContext.SmtpUsername, _emailContext.SmtpPassword);
 
-            // set from field
+            // Set from field
             message.From.Clear();
             message.From.Add(new MailboxAddress(_emailContext.SmtpFrom, _emailContext.SmtpAddress));
 

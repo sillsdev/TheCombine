@@ -19,15 +19,15 @@ export default function DownloadButton() {
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-  const [fileName, setFileName] = useState<null | string>(null);
-  const [fileUrl, setFileUrl] = useState<null | string>(null);
+  const [fileName, setFileName] = useState<string | undefined>();
+  const [fileUrl, setFileUrl] = useState<string | undefined>();
   let downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
-    if (downloadLink.current && fileUrl !== null) {
+    if (downloadLink.current && fileUrl) {
       downloadLink.current.click();
       URL.revokeObjectURL(fileUrl);
-      setFileUrl(null);
+      setFileUrl(undefined);
     }
   }, [downloadLink, fileUrl]);
 
@@ -48,36 +48,43 @@ export default function DownloadButton() {
     resetExport(exportState.projectId)(dispatch);
   }
 
+  function textId() {
+    switch (exportState.status) {
+      case ExportStatus.InProgress:
+        return "projectExport.exportInProgress";
+      case ExportStatus.Success:
+        return "projectExport.downloadInProgress";
+      case ExportStatus.Failure:
+        return "projectExport.exportFailed";
+    }
+  }
+
+  function icon() {
+    switch (exportState.status) {
+      case ExportStatus.InProgress:
+        return <Cached />;
+      case ExportStatus.Success:
+        return <GetApp />;
+      case ExportStatus.Failure:
+        return <Error />;
+    }
+  }
+
+  function iconFunction() {
+    switch (exportState.status) {
+      case ExportStatus.Success:
+        return download;
+      case ExportStatus.Failure:
+        return reset;
+    }
+  }
+
   return (
     <React.Fragment>
-      {/* Nothing shows if exportState.status === ExportStatus.Default. */}
-      {exportState.status === ExportStatus.Success && (
-        <Tooltip
-          title={<Translate id="projectExport.downloadReady" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1} onClick={download}>
-            <GetApp />
-          </IconButton>
-        </Tooltip>
-      )}
-      {exportState.status === ExportStatus.InProgress && (
-        <Tooltip
-          title={<Translate id="projectExport.exportInProgress" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1}>
-            <Cached />
-          </IconButton>
-        </Tooltip>
-      )}
-      {exportState.status === ExportStatus.Failure && (
-        <Tooltip
-          title={<Translate id="projectExport.exportFailed" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1} onClick={reset}>
-            <Error />
+      {exportState.status !== ExportStatus.Default && (
+        <Tooltip title={<Translate id={textId()} />} placement="bottom">
+          <IconButton tabIndex={-1} onClick={iconFunction()}>
+            {icon()}
           </IconButton>
         </Tooltip>
       )}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
@@ -205,8 +206,16 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        /// <summary>  Read all of the bytes from a Stream into byte array. </summary>
+        private static byte[] ReadAllBytes(Stream stream)
+        {
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
         [Test]
-        public void TestExportDeleted()
+        public async Task TestExportDeleted()
         {
             var word = RandomWord(_proj.Id);
             var secondWord = RandomWord(_proj.Id);
@@ -219,16 +228,23 @@ namespace Backend.Tests.Controllers
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(_proj.Id, wordToUpdate.Id, word);
-            _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
+            await _wordService.Update(_proj.Id, wordToUpdate.Id, word);
+            await _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
 
             const string userId = "testId";
             _liftController.ExportLiftFile(_proj.Id, userId).Wait();
-            var result = (FileContentResult)_liftController.DownloadLiftFile(_proj.Id, userId).Result;
+            var result = (FileStreamResult)_liftController.DownloadLiftFile(_proj.Id, userId).Result;
             Assert.NotNull(result);
 
+            // Read contents.
+            byte[] contents;
+            using (var fileStream = result.FileStream)
+            {
+                contents = ReadAllBytes(fileStream);
+            }
+
             // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(result.FileContents);
+            var extractedExportDir = ExtractZipFileContents(contents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
@@ -239,7 +255,7 @@ namespace Backend.Tests.Controllers
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
 
             // Delete the export
-            _liftController.DeleteLiftFile(userId);
+            await _liftController.DeleteLiftFile(userId);
             var notFoundResult = _liftController.DownloadLiftFile(_proj.Id, userId).Result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
         }
