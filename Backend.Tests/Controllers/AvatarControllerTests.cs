@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
@@ -12,11 +13,11 @@ namespace Backend.Tests.Controllers
 {
     public class AvatarControllerTests
     {
-        private IUserService _userService;
-        private UserController _userController;
-        private AvatarController _avatarController;
-        private PermissionServiceMock _permissionService;
-        private User _jwtAuthenticatedUser;
+        private IUserService _userService = null!;
+        private UserController _userController = null!;
+        private AvatarController _avatarController = null!;
+        private PermissionServiceMock _permissionService = null!;
+        private User _jwtAuthenticatedUser = null!;
 
         [SetUp]
         public void Setup()
@@ -35,7 +36,7 @@ namespace Backend.Tests.Controllers
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userService.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _userService.Authenticate(
-                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
+                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace Backend.Tests.Controllers
 
             var action = _userController.Get(_jwtAuthenticatedUser.Id).Result;
 
-            var foundUser = (action as ObjectResult).Value as User;
+            var foundUser = (User)((ObjectResult)action).Value;
             Assert.IsNotNull(foundUser.Avatar);
 
             // Clean up.

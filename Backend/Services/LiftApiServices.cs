@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -72,6 +73,15 @@ namespace BackendFramework.Services
             // Generally, the base class Dispose method would be called here, but it accesses _writer,
             // and we are disposing of that ourselves in the child class to fix a memory leak.
         }
+    }
+
+    public class MissingProjectException : Exception
+    {
+        public MissingProjectException(string message)
+            : base(message)
+        {
+        }
+
     }
 
     public class LiftService : ILiftService
@@ -157,9 +167,18 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
+        /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
-        public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
+        public async Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
+            // Validate project exists.
+            var proj = await projService.GetProject(projectId);
+            if (proj is null)
+            {
+                throw new MissingProjectException($"Project does not exist: {projectId}");
+            }
+            var vernacularBcp47 = proj.VernacularWritingSystem.Bcp47;
+
             // Generate the zip dir.
             var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
             var liftExportDir = Path.Combine(exportDir, "LiftExport");
@@ -180,7 +199,7 @@ namespace BackendFramework.Services
             using var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
             var rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            // write header of lift document
+            // Write header of lift document.
             var header =
                 $@"
                     <ranges>
@@ -220,7 +239,7 @@ namespace BackendFramework.Services
                 }
 
                 AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, projectId, projService);
+                AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
 
@@ -232,7 +251,7 @@ namespace BackendFramework.Services
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
 
                 AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, projectId, projService);
+                AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
 
@@ -242,7 +261,6 @@ namespace BackendFramework.Services
             liftWriter.End();
 
             // Export semantic domains to lift-ranges
-            var proj = projService.GetProject(projectId).Result;
             var extractedPathToImport = FileStorage.GenerateImportExtractedLocationDirPath(projectId, false);
             string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
@@ -265,9 +283,10 @@ namespace BackendFramework.Services
                 using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
                 {
                     Indent = true,
-                    NewLineOnAttributes = true
+                    NewLineOnAttributes = true,
+                    Async = true
                 });
-                liftRangesWriter.WriteStartDocument();
+                await liftRangesWriter.WriteStartDocumentAsync();
                 liftRangesWriter.WriteStartElement("lift-ranges");
                 liftRangesWriter.WriteStartElement("range");
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
@@ -303,24 +322,24 @@ namespace BackendFramework.Services
                     WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, sd.Description);
                 }
 
-                liftRangesWriter.WriteEndElement(); //end semantic-domain-ddp4 range
-                liftRangesWriter.WriteEndElement(); //end lift-ranges
-                liftRangesWriter.WriteEndDocument();
+                await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
+                await liftRangesWriter.WriteEndElementAsync(); //end lift-ranges
+                await liftRangesWriter.WriteEndDocumentAsync();
 
-                liftRangesWriter.Flush();
+                await liftRangesWriter.FlushAsync();
                 liftRangesWriter.Close();
             }
 
-
-            // Export character set to ldml
+            // Export character set to ldml.
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (proj.VernacularWritingSystem.Bcp47 != "")
+            if (vernacularBcp47 != "")
             {
-                LdmlExport(ldmlDir, projService, proj);
+                var validChars = proj.ValidCharacters;
+                LdmlExport(ldmlDir, vernacularBcp47, validChars);
             }
 
-            // Compress everything
+            // Compress everything.
             var destinationFileName = Path.Combine(exportDir,
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
@@ -351,10 +370,10 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
-        private static void AddVern(LexEntry entry, Word wordEntry, string projectId, IProjectService projService)
+        private static void AddVern(LexEntry entry, Word wordEntry, string vernacularBcp47)
         {
-            var lang = projService.GetProject(projectId).Result.VernacularWritingSystem.Bcp47;
-            entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
+            entry.LexicalForm.MergeIn(MultiText.Create(
+                new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
         }
 
         /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
@@ -416,17 +435,15 @@ namespace BackendFramework.Services
             }
         }
 
-        /// <summary> Exports main character set from a project to an ldml file </summary>
-        private static void LdmlExport(string filePath, IProjectService projService, Project project)
+        /// <summary> Exports vernacular language character set to an ldml file </summary>
+        private static void LdmlExport(string filePath, string vernacularBcp47, List<string> validChars)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(project.VernacularWritingSystem.Bcp47, out var wsDef);
+            wsf.Create(vernacularBcp47, out var wsDef);
 
-            var proj = projService.GetProject(project.Id).Result;
-
-            // If there isn't already a main character set defined, make one and add it to the writing system
-            // definition
+            // If there isn't already a main character set defined,
+            // make one and add it to the writing system definition.
             if (!wsDef.CharacterSets.TryGet("main", out var chars))
             {
                 chars = new CharacterSetDefinition("main");
@@ -435,7 +452,7 @@ namespace BackendFramework.Services
 
             // Replace all the characters found with our copy of the character set
             chars.Characters.Clear();
-            foreach (var character in proj.ValidCharacters)
+            foreach (var character in validChars)
             {
                 chars.Characters.Add(character);
             }
@@ -513,7 +530,11 @@ namespace BackendFramework.Services
             public async void FinishEntry(LiftEntry entry)
             {
                 var newWord = new Word { Guid = entry.Guid };
-                var proj = _projectService.GetProject(_projectId).Result;
+                var proj = await _projectService.GetProject(_projectId);
+                if (proj is null)
+                {
+                    throw new MissingProjectException($"Project does not exist: {_projectId}");
+                }
 
                 // Add Note if one exists.
                 // Note: Currently only support for a single note is included.

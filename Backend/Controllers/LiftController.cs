@@ -47,7 +47,7 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -159,14 +159,24 @@ namespace BackendFramework.Controllers
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
 
                 // Add character set to project from ldml file
-                var proj = _projectService.GetProject(projectId).Result;
+                var proj = await _projectService.GetProject(projectId);
+                if (proj is null)
+                {
+                    return new NotFoundObjectResult(projectId);
+                }
+
                 _liftService.LdmlImport(
                     Path.Combine(liftStoragePath, "WritingSystems"),
                     proj.VernacularWritingSystem.Bcp47, _projectService, proj);
 
                 // Store that we have imported Lift data already for this project to signal the frontend
                 // not to attempt to import again.
-                var project = _projectService.GetProject(projectId).Result;
+                var project = await _projectService.GetProject(projectId);
+                if (project is null)
+                {
+                    return new NotFoundObjectResult(projectId);
+                }
+
                 project.LiftImported = true;
                 await _projectService.Update(projectId, project);
 
@@ -192,7 +202,7 @@ namespace BackendFramework.Controllers
         // These internal methods are extracted for unit testing
         internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -204,7 +214,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -230,7 +240,7 @@ namespace BackendFramework.Controllers
                 }
 
                 // Export the data to a zip, read into memory, and delete zip
-                var exportedFilepath = CreateLiftExport(projectId);
+                var exportedFilepath = await CreateLiftExport(projectId);
 
                 // Store the temporary path to the exported file for user to download later.
                 _liftService.StoreExport(userId, exportedFilepath);
@@ -244,9 +254,9 @@ namespace BackendFramework.Controllers
             }
         }
 
-        internal string CreateLiftExport(string projectId)
+        internal async Task<string> CreateLiftExport(string projectId)
         {
-            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
+            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projectService);
             return exportedFilepath;
         }
 
@@ -262,7 +272,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -274,10 +284,10 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userId);
             }
 
-            var file = await System.IO.File.ReadAllBytesAsync(filePath);
+            var file = System.IO.File.OpenRead(filePath);
             return File(
                 file,
-                "application/zip",
+                "application/octet-stream",
                 $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
         }
 
@@ -285,15 +295,15 @@ namespace BackendFramework.Controllers
         /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
         /// <returns> UserId, if successful </returns>
         [HttpGet("deleteexport")]
-        public IActionResult DeleteLiftFile()
+        public async Task<IActionResult> DeleteLiftFile()
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return DeleteLiftFile(userId);
+            return await DeleteLiftFile(userId);
         }
 
-        internal IActionResult DeleteLiftFile(string userId)
+        internal async Task<IActionResult> DeleteLiftFile(string userId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }

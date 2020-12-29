@@ -73,7 +73,7 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
-        <UserMenuList isAdmin={isAdmin} />
+        <UserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
     </React.Fragment>
   );
@@ -81,6 +81,7 @@ export default function UserMenu() {
 
 interface UserMenuListProps {
   isAdmin: boolean;
+  onSelect: () => void;
 }
 
 /**
@@ -96,6 +97,7 @@ export function UserMenuList(props: UserMenuListProps) {
           onClick={() => {
             LocalStorage.setProjectId("");
             history.push(Path.SiteSettings);
+            props.onSelect();
           }}
         >
           <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
@@ -106,6 +108,7 @@ export function UserMenuList(props: UserMenuListProps) {
       <MenuItem
         onClick={() => {
           history.push(Path.UserSettings);
+          props.onSelect();
         }}
       >
         <Person style={{ marginRight: theme.spacing(1) }} />
@@ -116,6 +119,7 @@ export function UserMenuList(props: UserMenuListProps) {
         onClick={() => {
           // This link does not work in development, but should in production.
           window.open(`docs`);
+          props.onSelect();
         }}
       >
         <Help style={{ marginRight: theme.spacing(1) }} />
@@ -125,6 +129,7 @@ export function UserMenuList(props: UserMenuListProps) {
       <MenuItem
         onClick={() => {
           history.push(Path.Login);
+          props.onSelect();
         }}
       >
         <ExitToApp style={{ marginRight: theme.spacing(1) }} />
