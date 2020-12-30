@@ -36,8 +36,10 @@ def aws_s3_put(src: Path, dest: str) -> bool:
         capture_output=True,
     )
     if results.returncode != 0:
-        print(f"STDOUT:\n{results.stdout}")
-        print(f"\nSTDERR:\n{results.stderr}")
+        print("STDOUT:")
+        print(results.stdout)
+        print("\nSTDERR:")
+        print(results.stderr)
     return results.returncode == 0
 
 
@@ -58,8 +60,10 @@ def aws_s3_get(src: str, dest: Path) -> bool:
         capture_output=True,
     )
     if results.returncode != 0:
-        print(f"STDOUT:\n{results.stdout}")
-        print(f"\nSTDERR:\n{results.stderr}")
+        print("STDOUT:")
+        print(results.stdout)
+        print("\nSTDERR:")
+        print(results.stderr)
     return results.returncode == 0
 
 
