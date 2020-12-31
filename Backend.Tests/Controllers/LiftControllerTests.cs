@@ -130,12 +130,12 @@ namespace Backend.Tests.Controllers
 
         private static Word RandomWord(string projId)
         {
-            var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
+            var word = new Word { Senses = new List<Sense> { new Sense(), new Sense(), new Sense() } };
 
             foreach (var sense in word.Senses)
             {
                 sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
+                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (var gloss in sense.Glosses)
                 {
@@ -143,7 +143,7 @@ namespace Backend.Tests.Controllers
                     gloss.Language = Util.RandString(3);
                 }
 
-                sense.SemanticDomains = new List<SemanticDomain>()
+                sense.SemanticDomains = new List<SemanticDomain>
                 {
                     new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
                 };
@@ -238,7 +238,7 @@ namespace Backend.Tests.Controllers
 
             // Read contents.
             byte[] contents;
-            using (var fileStream = result.FileStream)
+            await using (var fileStream = result.FileStream)
             {
                 contents = ReadAllBytes(fileStream);
             }
@@ -247,7 +247,7 @@ namespace Backend.Tests.Controllers
             var extractedExportDir = ExtractZipFileContents(contents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
-            var text = File.ReadAllText(exportPath, Encoding.UTF8);
+            var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
             //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
             // Make sure we exported 2 live and one dead entry
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));

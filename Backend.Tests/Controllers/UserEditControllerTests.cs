@@ -53,7 +53,7 @@ namespace Backend.Tests.Controllers
             var edit = new Edit
             {
                 GoalType = count,
-                StepData = new List<string>() { Util.RandString() }
+                StepData = new List<string> { Util.RandString() }
             };
             userEdit.ProjectId = _projId;
             userEdit.Edits.Add(edit);

@@ -29,7 +29,7 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
-            return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
+            return Task.FromResult(request.Request.Headers["Authorization"] != UnauthorizedHeader);
         }
 
         public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
