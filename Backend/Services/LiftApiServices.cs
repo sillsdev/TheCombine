@@ -583,7 +583,7 @@ namespace BackendFramework.Services
                     {
                         SemanticDomains = new List<SemanticDomain>(),
                         Glosses = new List<Gloss>(),
-                        Guid = new Guid(sense.Id),
+                        Guid = new Guid(sense.Id)
                     };
 
                     // Add glosses

@@ -223,14 +223,13 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NotFound;
             }
-            else if (updateResult.ModifiedCount > 0)
+
+            if (updateResult.ModifiedCount > 0)
             {
                 return ResultOfUpdate.Updated;
             }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
+
+            return ResultOfUpdate.NoChange;
         }
 
         /// <summary> Adds a <see cref="User"/> </summary>
@@ -242,8 +241,8 @@ namespace BackendFramework.Services
 
             // Check to see if username or email address is taken
             if (users.Count != 0 && _userDatabase.Users.Find(
-                x => (x.Username.ToLowerInvariant() == user.Username.ToLowerInvariant() ||
-                x.Email.ToLowerInvariant() == user.Email.ToLowerInvariant())).ToList().Count > 0)
+                x => x.Username.ToLowerInvariant() == user.Username.ToLowerInvariant() ||
+                     x.Email.ToLowerInvariant() == user.Email.ToLowerInvariant()).ToList().Count > 0)
             {
                 return null;
             }
@@ -317,14 +316,13 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NotFound;
             }
-            else if (updateResult.ModifiedCount > 0)
+
+            if (updateResult.ModifiedCount > 0)
             {
                 return ResultOfUpdate.Updated;
             }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
+
+            return ResultOfUpdate.NoChange;
         }
     }
 
@@ -335,7 +333,7 @@ namespace BackendFramework.Services
             ProjectId = projectId;
             Permissions = permissions;
         }
-        public string ProjectId { get; set; }
-        public List<int> Permissions { get; set; }
+        public string ProjectId { get; }
+        public List<int> Permissions { get; }
     }
 }
