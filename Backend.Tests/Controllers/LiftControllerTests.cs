@@ -328,7 +328,7 @@ namespace Backend.Tests.Controllers
             var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
-            // Assert the file was created with desired heirarchy.
+            // Assert the file was created with desired hierarchy.
             Assert.That(Directory.Exists(exportedDirectory));
             Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
