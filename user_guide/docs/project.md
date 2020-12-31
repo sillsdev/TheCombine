@@ -17,8 +17,9 @@ regional, national, official, or majority language of the location where the ver
 ### Import Existing Data
 
 If you have linguistics data in a [LIFT](https://software.sil.org/lifttools) file (likely exported from The Combine,
-WeSay, FLEx, or Lexique Pro), you can hit the BROWSE button next to "Upload .zip project file?" to import the data into
-your project.
+[WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), or
+[Lexique Pro](software.sil.org/lexiquepro)), you can hit the BROWSE button next to "Upload .zip project file?" to import
+the data into your project.
 
 ## Manage a Project
 

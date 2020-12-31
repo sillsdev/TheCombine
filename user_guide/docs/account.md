@@ -19,7 +19,7 @@ Login to The Combine with the username and password given at registration.
 If you want to change your password, click the "Forget password?" link. Follow the instructions and a password-reset
 will be sent to the email address associated with your account.
 
-!!! note
+!!! important
 
     The username and email address are **not** case-sensitive. The password **is** case-sensitive.
 
