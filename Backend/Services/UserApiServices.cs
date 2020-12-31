@@ -136,7 +136,7 @@ namespace BackendFramework.Services
             foreach (var (projectRoleKey, projectRoleValue) in user.ProjectRoles)
             {
                 // Convert each userRoleId to its respective role and add to the mapping
-                var permissions = _userRole.GetUserRole(projectRoleKey, projectRoleValue).Result.Permissions;
+                var permissions = (await _userRole.GetUserRole(projectRoleKey, projectRoleValue)).Permissions;
                 var validEntry = new ProjectPermissions(projectRoleKey, permissions);
                 projectPermissionMap.Add(validEntry);
             }
