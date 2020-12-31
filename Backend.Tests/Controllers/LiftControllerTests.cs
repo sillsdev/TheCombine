@@ -186,12 +186,12 @@ namespace Backend.Tests.Controllers
 
         public class RoundTripObj
         {
-            public string Filename { get; set; }
-            public string Language { get; set; }
-            public List<string> AudioFiles { get; set; }
-            public int NumOfWords { get; set; }
-            public string EntryGuid { get; set; }
-            public string SenseGuid { get; set; }
+            public string Filename { get; }
+            public string Language { get; }
+            public List<string> AudioFiles { get; }
+            public int NumOfWords { get; }
+            public string EntryGuid { get; }
+            public string SenseGuid { get; }
 
             public RoundTripObj(
                 string filename, string language, List<string> audio,
