@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import { uploadAvatar, avatarSrc } from "../../backend";
+import { avatarSrc, uploadAvatar } from "../../backend";
+import { getUserId, setAvatar } from "../../backend/localStorage";
 import FileInputButton from "../Buttons/FileInputButton";
 import LoadingDoneButton from "../Buttons/LoadingDoneButton";
-import { getUserId, setAvatar } from "../../backend/localStorage";
 
 /**
  * Allows the current user to select an image and upload as their avatar
@@ -58,7 +58,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
         <Grid item>
           <FileInputButton
             updateFile={(file) => updateFile(file)}
-            accept=".jpg"
+            accept="image/*"
           >
             <Translate id="buttons.browse" />
           </FileInputButton>
