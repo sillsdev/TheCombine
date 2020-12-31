@@ -43,7 +43,8 @@ namespace BackendFramework.Controllers
             //}
 
             // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId) ||
+                !Sanitization.SanitizeFileName(fileName))
             {
                 return new UnsupportedMediaTypeResult();
             }

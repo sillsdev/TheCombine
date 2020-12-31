@@ -12,7 +12,16 @@ namespace BackendFramework.Helper
         /// </summary>
         public static bool SanitizeId(string id)
         {
-            return id.All(x => char.IsLetterOrDigit(x) | x == '-');
+            return id.All(c => char.IsLetterOrDigit(c) | c == '-');
+        }
+
+        /// <summary>
+        /// Validate that a file name does not have any illegal characters (such as / or \) which could manipulate
+        /// the path of files that are stored or retrieved.
+        /// </summary>
+        public static bool SanitizeFileName(string fileName)
+        {
+            return fileName.All(c => char.IsLetterOrDigit(c) | c == '-' | c == '.' | c == '_');
         }
     }
 }
