@@ -27,11 +27,11 @@ namespace BackendFramework.Services
             newUserEdit.Edits.Add(edit);
 
             // Replace the old UserEdit object with the new one that contains the new list entry
-            var replaceSucceeded = _repo.Replace(projectId, userEditId, newUserEdit).Result;
+            var replaceSucceeded = await _repo.Replace(projectId, userEditId, newUserEdit);
             var indexOfNewestEdit = -1;
             if (replaceSucceeded)
             {
-                var newestEdit = _repo.GetUserEdit(projectId, userEditId).Result;
+                var newestEdit = await _repo.GetUserEdit(projectId, userEditId);
                 indexOfNewestEdit = newestEdit.Edits.Count - 1;
             }
 
@@ -45,7 +45,7 @@ namespace BackendFramework.Services
             var addUserEdit = await _repo.GetUserEdit(projectId, userEditId);
             var newUserEdit = addUserEdit.Clone();
             newUserEdit.Edits[goalIndex].StepData.Add(userEdit);
-            var updateResult = _repo.Replace(projectId, userEditId, newUserEdit).Result;
+            var updateResult = await _repo.Replace(projectId, userEditId, newUserEdit);
             return updateResult;
         }
     }
