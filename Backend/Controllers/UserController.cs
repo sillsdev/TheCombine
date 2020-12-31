@@ -60,10 +60,8 @@ namespace BackendFramework.Controllers
             {
                 return new OkResult();
             }
-            else
-            {
-                return new InternalServerErrorResult();
-            }
+
+            return new InternalServerErrorResult();
         }
 
 
@@ -245,10 +243,10 @@ namespace BackendFramework.Controllers
 
         public class PasswordResetData
         {
-            public string EmailOrUsername;
-            public string Token;
-            public string NewPassword;
-            public string Domain;
+            public readonly string EmailOrUsername;
+            public readonly string Token;
+            public readonly string NewPassword;
+            public readonly string Domain;
 
             public PasswordResetData()
             {
