@@ -260,7 +260,7 @@ namespace Backend.Tests.Controllers
             Assert.NotNull(notFoundResult);
         }
 
-        private static RoundTripObj[] RoundTripCases =
+        private static RoundTripObj[] _roundTripCases =
         {
             new RoundTripObj("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
             new RoundTripObj("Lotud.zip", "dtr", new List<string>(), 5400),
@@ -278,7 +278,7 @@ namespace Backend.Tests.Controllers
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
         };
 
-        [TestCaseSource(nameof(RoundTripCases))]
+        [TestCaseSource(nameof(_roundTripCases))]
         public void TestRoundtrip(RoundTripObj roundTripObj)
         {
             // This test assumes you have the starting .zip (Filename) included in your project files.
