@@ -39,7 +39,7 @@ namespace BackendFramework.Controllers
         {
             // find user attached to email or username
             var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
-            var user = _userService.GetAllUsers().Result.SingleOrDefault(user =>
+            var user = (await _userService.GetAllUsers()).SingleOrDefault(user =>
                 user.Email.ToLowerInvariant().Equals(emailOrUsername) ||
                 user.Username.ToLowerInvariant().Equals(emailOrUsername));
 
