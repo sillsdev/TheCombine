@@ -8,7 +8,7 @@ namespace BackendFramework.Interfaces
     {
         Task<bool> HasProjectPermission(HttpContext request, Permission permission);
         bool IsUserIdAuthorized(HttpContext request, string userId);
-        bool IsViolationEdit(HttpContext request, string userEditId, string projectId);
+        Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId);
         string GetUserId(HttpContext request);
     }
 }

@@ -92,10 +92,10 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
+        public async Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             var userId = GetUserId(request);
-            var userObj = _userService.GetUser(userId).Result;
+            var userObj = await _userService.GetUser(userId);
             return userObj.WorkedProjects[projectId] != userEditId;
         }
 

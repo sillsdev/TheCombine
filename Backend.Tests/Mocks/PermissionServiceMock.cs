@@ -37,9 +37,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
         }
 
-        public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
+        public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
         public string GetUserId(HttpContext request)
