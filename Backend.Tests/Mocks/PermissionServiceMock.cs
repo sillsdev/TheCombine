@@ -26,10 +26,15 @@ namespace Backend.Tests.Mocks
 
         /// <summary>
         /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        ///
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
         /// </summary>
-        public Task<bool> HasProjectPermission(HttpContext request, Permission permission)
+        public Task<bool> HasProjectPermission(HttpContext? request, Permission permission)
         {
-            return Task.FromResult(request.Request.Headers["Authorization"] != UnauthorizedHeader);
+            return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
         }
 
         public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
