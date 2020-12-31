@@ -49,11 +49,6 @@ namespace BackendFramework.Controllers
             }
 
             var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
-            if (filePath is null)
-            {
-                return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
-            }
-
             var file = System.IO.File.OpenRead(filePath);
             if (file is null)
             {
