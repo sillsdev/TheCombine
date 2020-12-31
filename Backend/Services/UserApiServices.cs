@@ -175,7 +175,7 @@ namespace BackendFramework.Services
         {
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
             users.ForEach(Sanitize);
-            return (users);
+            return users;
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>

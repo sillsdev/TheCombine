@@ -28,7 +28,7 @@ namespace BackendFramework.Services
             {
                 var wordToDelete = _repo.GetWord(projectId, wordId).Result;
                 wordToDelete.Id = "";
-                wordToDelete.History = new List<string>() { wordId };
+                wordToDelete.History = new List<string> { wordId };
                 wordToDelete.Accessibility = State.Deleted;
 
                 foreach (var senseAcc in wordToDelete.Senses)
