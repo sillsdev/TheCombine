@@ -169,14 +169,13 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(userRoleId);
             }
-            else if (result == ResultOfUpdate.Updated)
+
+            if (result == ResultOfUpdate.Updated)
             {
                 return new OkObjectResult(userRoleId);
             }
-            else
-            {
-                return new StatusCodeResult(304);
-            }
+
+            return new StatusCodeResult(304);
         }
     }
 }

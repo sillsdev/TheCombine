@@ -78,10 +78,8 @@ namespace BackendFramework.Controllers
             {
                 return new OkResult();
             }
-            else
-            {
-                return new ForbidResult();
-            }
+
+            return new ForbidResult();
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
@@ -220,18 +218,12 @@ namespace BackendFramework.Controllers
             // }
 
             var result = await _userService.Update(userId, user);
-            if (result == ResultOfUpdate.NotFound)
+            return result switch
             {
-                return new NotFoundObjectResult(userId);
-            }
-            else if (result == ResultOfUpdate.Updated)
-            {
-                return new OkObjectResult(userId);
-            }
-            else // Not updated
-            {
-                return new StatusCodeResult(304);
-            }
+                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
+                ResultOfUpdate.Updated => new OkObjectResult(userId),
+                _ => new StatusCodeResult(304)
+            };
         }
 
         /// <summary> Deletes <see cref="User"/> with specified id </summary>
