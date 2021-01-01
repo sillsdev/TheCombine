@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace BackendFramework.Helper
 {
@@ -21,7 +23,18 @@ namespace BackendFramework.Helper
         /// </summary>
         public static bool SanitizeFileName(string fileName)
         {
-            return fileName.All(c => char.IsLetterOrDigit(c) | c == '-' | c == '.' | c == '_');
+            // For list of invalid characters per OS, see https://stackoverflow.com/a/31976060.
+            var validCharacters = new List<char>
+            {
+                '-',
+                '.',
+                '_',
+                ',',
+                '(',
+                ')',
+                ' '
+            }.ToImmutableList();
+            return fileName.All(c => char.IsLetterOrDigit(c) | validCharacters.Contains(c));
         }
     }
 }

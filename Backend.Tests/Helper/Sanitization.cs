@@ -40,9 +40,12 @@ namespace Backend.Tests.Helper
             "^",
             "&",
             "*",
-            "(",
-            ")",
-            "+"
+            "+",
+            "<",
+            ">",
+            ":",
+            "|",
+            "?"
         };
         [TestCaseSource(nameof(_invalidIds))]
         public void TestInvalidIds(string id)
@@ -58,7 +61,11 @@ namespace Backend.Tests.Helper
             "a-5.webm",
             "a-5.jpg",
             "a-5.png",
-            "a_5.png"
+            "a_5.png",
+            "a-5.png",
+            "a(5).png",
+            "a 5.png",
+            "a,5.png"
         };
 
         [TestCaseSource(nameof(_validFileNames))]
@@ -83,9 +90,12 @@ namespace Backend.Tests.Helper
             "^",
             "&",
             "*",
-            "(",
-            ")",
-            "+"
+            "+",
+            "<",
+            ">",
+            ":",
+            "|",
+            "?"
         };
         [TestCaseSource(nameof(_invalidFileNames))]
         public void TestInvalidFileNames(string fileName)
