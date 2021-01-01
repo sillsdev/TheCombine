@@ -14,7 +14,7 @@ namespace BackendFramework.Helper
         /// </summary>
         public static bool SanitizeId(string id)
         {
-            return id.All(c => char.IsLetterOrDigit(c) | c == '-');
+            return id.All(c => char.IsLetterOrDigit(c) || c == '-');
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace BackendFramework.Helper
                 ')',
                 ' '
             }.ToImmutableList();
-            return fileName.All(c => char.IsLetterOrDigit(c) | validCharacters.Contains(c));
+            return fileName.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c));
         }
     }
 }
