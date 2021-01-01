@@ -68,6 +68,7 @@ class CertProxyServer(LetsEncryptCert):
         for domain in domain_list:
             if self.get_cert([domain]):
                 cert_created = True
+                print(f"Cert created for {domain}.")
                 LetsEncryptCert.update_renew_before_expiry(domain, self.renew_before_expiry)
             else:
                 print(f"Could not get certificate for {domain}")

@@ -29,21 +29,21 @@ def aws_s3_put(src: Path, dest: str) -> bool:
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(dest)
     print(f"AWS S3 put {src} to {dest}")
-    results = subprocess.run(
-        ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
-        shell=True,
-        check=True,
-        capture_output=True,
-    )
-    if results.returncode != 0:
+    try:
+        subprocess.run(
+            ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
+            shell=True,
+            check=True,
+            capture_output=True,
+        )
+    except subprocess.CalledProcessError as process_error:
         print("STDOUT:")
-        print(results.stdout)
+        print(process_error.stdout)
         print("\nSTDERR:")
-        print(results.stderr)
-    return results.returncode == 0
+        print(process_error.stderr)
 
 
-def aws_s3_get(src: str, dest: Path) -> bool:
+def aws_s3_get(src: str, dest: Path) -> None:
     """
     Get a file from the configured AWS S3 Bucket.
 
@@ -53,18 +53,18 @@ def aws_s3_get(src: str, dest: Path) -> bool:
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(src)
     print(f"AWS S3 get {dest} from {src}")
-    results = subprocess.run(
-        ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
-        shell=True,
-        check=True,
-        capture_output=True,
-    )
-    if results.returncode != 0:
+    try:
+        subprocess.run(
+            ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
+            shell=True,
+            check=True,
+            capture_output=True,
+        )
+    except subprocess.CalledProcessError as process_error:
         print("STDOUT:")
-        print(results.stdout)
+        print(process_error.stdout)
         print("\nSTDERR:")
-        print(results.stderr)
-    return results.returncode == 0
+        print(process_error.stderr)
 
 
 def aws_push_certs() -> None:
