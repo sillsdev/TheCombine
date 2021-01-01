@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
-import { updateUser } from "../../backend";
+import { isEmailTaken, updateUser } from "../../backend";
 import {
   getAvatar,
   getCurrentUser,
@@ -123,13 +123,26 @@ class UserSettings extends React.Component<
     } as Pick<UserSettingsState, K>);
   }
 
+  isEmailOkay() {
+    const emailUnchanged =
+      this.state.email.toLowerCase() === this.state.user.email.toLowerCase();
+    return emailUnchanged || !isEmailTaken(this.state.email);
+  }
+
   onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let newUser: User = this.state.user;
-    newUser.name = this.state.name;
-    newUser.phone = this.state.phone;
-    newUser.email = this.state.email;
-    updateUser(newUser).then((user: User) => setCurrentUser(user));
+    if (this.isEmailOkay()) {
+      let newUser: User = this.state.user;
+      newUser.name = this.state.name;
+      newUser.phone = this.state.phone;
+      newUser.email = this.state.email;
+      updateUser(newUser).then((user: User) => {
+        setCurrentUser(user);
+        alert(this.props.translate("userSettings.updateSuccess"));
+      });
+    } else {
+      alert(this.props.translate("login.emailTaken"));
+    }
   }
 
   render() {
