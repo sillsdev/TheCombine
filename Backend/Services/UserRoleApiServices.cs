@@ -76,14 +76,13 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NotFound;
             }
-            else if (updateResult.ModifiedCount > 0)
+
+            if (updateResult.ModifiedCount > 0)
             {
                 return ResultOfUpdate.Updated;
             }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
+
+            return ResultOfUpdate.NoChange;
         }
     }
 }

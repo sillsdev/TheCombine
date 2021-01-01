@@ -44,14 +44,14 @@ namespace Backend.Tests.Controllers
                 Audio = new List<string>(),
                 EditedBy = new List<string> { Util.RandString(), Util.RandString() },
                 ProjectId = _projId,
-                Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() },
+                Senses = new List<Sense> { new Sense(), new Sense(), new Sense() },
                 Note = new Note { Language = Util.RandString(), Text = Util.RandString() }
             };
 
             foreach (var sense in word.Senses)
             {
                 sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
+                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (var gloss in sense.Glosses)
                 {
@@ -59,7 +59,7 @@ namespace Backend.Tests.Controllers
                     gloss.Language = Util.RandString(3);
                 }
 
-                sense.SemanticDomains = new List<SemanticDomain>()
+                sense.SemanticDomains = new List<SemanticDomain>
                 {
                     new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
                 };

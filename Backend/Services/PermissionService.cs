@@ -44,7 +44,7 @@ namespace BackendFramework.Services
             return userId == foundUserId;
         }
 
-        public static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
+        private static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
         {
             var jsonToken = GetJwt(request);
             var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();

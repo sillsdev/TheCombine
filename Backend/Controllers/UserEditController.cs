@@ -174,10 +174,8 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(editIndex);
             }
-            else
-            {
-                return new NotFoundObjectResult(editIndex);
-            }
+
+            return new NotFoundObjectResult(editIndex);
         }
 
         /// <summary> Adds a step to specified goal </summary>

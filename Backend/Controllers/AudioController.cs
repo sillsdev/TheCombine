@@ -43,17 +43,13 @@ namespace BackendFramework.Controllers
             //}
 
             // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId) ||
+                !Sanitization.SanitizeFileName(fileName))
             {
                 return new UnsupportedMediaTypeResult();
             }
 
             var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
-            if (filePath is null)
-            {
-                return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
-            }
-
             var file = System.IO.File.OpenRead(filePath);
             if (file is null)
             {

@@ -34,7 +34,7 @@ namespace Backend.Tests.Controllers
             var userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<int>()
+                Permissions = new List<int>
                 {
                     (int)Permission.DeleteEditSettingsAndUsers,
                     (int)Permission.ImportExport,

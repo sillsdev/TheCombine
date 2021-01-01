@@ -130,12 +130,12 @@ namespace Backend.Tests.Controllers
 
         private static Word RandomWord(string projId)
         {
-            var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
+            var word = new Word { Senses = new List<Sense> { new Sense(), new Sense(), new Sense() } };
 
             foreach (var sense in word.Senses)
             {
                 sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
+                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (var gloss in sense.Glosses)
                 {
@@ -143,7 +143,7 @@ namespace Backend.Tests.Controllers
                     gloss.Language = Util.RandString(3);
                 }
 
-                sense.SemanticDomains = new List<SemanticDomain>()
+                sense.SemanticDomains = new List<SemanticDomain>
                 {
                     new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
                 };
@@ -186,12 +186,12 @@ namespace Backend.Tests.Controllers
 
         public class RoundTripObj
         {
-            public string Filename { get; set; }
-            public string Language { get; set; }
-            public List<string> AudioFiles { get; set; }
-            public int NumOfWords { get; set; }
-            public string EntryGuid { get; set; }
-            public string SenseGuid { get; set; }
+            public string Filename { get; }
+            public string Language { get; }
+            public List<string> AudioFiles { get; }
+            public int NumOfWords { get; }
+            public string EntryGuid { get; }
+            public string SenseGuid { get; }
 
             public RoundTripObj(
                 string filename, string language, List<string> audio,
@@ -238,7 +238,7 @@ namespace Backend.Tests.Controllers
 
             // Read contents.
             byte[] contents;
-            using (var fileStream = result.FileStream)
+            await using (var fileStream = result.FileStream)
             {
                 contents = ReadAllBytes(fileStream);
             }
@@ -247,7 +247,7 @@ namespace Backend.Tests.Controllers
             var extractedExportDir = ExtractZipFileContents(contents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
-            var text = File.ReadAllText(exportPath, Encoding.UTF8);
+            var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
             //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
             // Make sure we exported 2 live and one dead entry
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
@@ -260,7 +260,7 @@ namespace Backend.Tests.Controllers
             Assert.NotNull(notFoundResult);
         }
 
-        private static RoundTripObj[] RoundTripCases =
+        private static RoundTripObj[] _roundTripCases =
         {
             new RoundTripObj("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
             new RoundTripObj("Lotud.zip", "dtr", new List<string>(), 5400),
@@ -278,7 +278,7 @@ namespace Backend.Tests.Controllers
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
         };
 
-        [TestCaseSource(nameof(RoundTripCases))]
+        [TestCaseSource(nameof(_roundTripCases))]
         public void TestRoundtrip(RoundTripObj roundTripObj)
         {
             // This test assumes you have the starting .zip (Filename) included in your project files.
@@ -328,7 +328,7 @@ namespace Backend.Tests.Controllers
             var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
-            // Assert the file was created with desired heirarchy.
+            // Assert the file was created with desired hierarchy.
             Assert.That(Directory.Exists(exportedDirectory));
             Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
