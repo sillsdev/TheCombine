@@ -28,19 +28,9 @@ def aws_s3_put(src: Path, dest: str) -> bool:
     information.
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(dest)
-    print(f"AWS S3 put {src} to {dest}")
-    try:
-        subprocess.run(
-            ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
-    except subprocess.CalledProcessError as process_error:
-        print("STDOUT:")
-        print(process_error.stdout)
-        print("\nSTDERR:")
-        print(process_error.stderr)
+    aws_cmd = f"aws s3 cp --profile {aws_s3_profile} {src} {aws_s3_uri}"
+    print(f"Run '{aws_cmd}'")
+    subprocess.call(aws_cmd, shell=True)
 
 
 def aws_s3_get(src: str, dest: Path) -> None:
@@ -52,19 +42,9 @@ def aws_s3_get(src: str, dest: Path) -> None:
     information.
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(src)
-    print(f"AWS S3 get {dest} from {src}")
-    try:
-        subprocess.run(
-            ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
-    except subprocess.CalledProcessError as process_error:
-        print("STDOUT:")
-        print(process_error.stdout)
-        print("\nSTDERR:")
-        print(process_error.stderr)
+    aws_cmd = f"aws s3 cp --profile {aws_s3_profile} {aws_s3_uri} {dest}"
+    print(f"Run '{aws_cmd}'")
+    subprocess.call(aws_cmd, shell=True)
 
 
 def aws_push_certs() -> None:
