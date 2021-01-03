@@ -64,11 +64,11 @@ namespace Backend.Tests.Controllers
                     new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
                 };
 
-                foreach (var semdom in sense.SemanticDomains)
+                foreach (var semDom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.RandString();
-                    semdom.Id = Util.RandString();
-                    semdom.Description = Util.RandString();
+                    semDom.Name = Util.RandString();
+                    semDom.Id = Util.RandString();
+                    semDom.Description = Util.RandString();
                 }
             }
 
@@ -158,7 +158,7 @@ namespace Backend.Tests.Controllers
             var origWord = _repo.Create(RandomWord()).Result;
 
             // Test delete function
-            var action = _wordController.Delete(_projId, origWord.Id).Result;
+            _ = _wordController.Delete(_projId, origWord.Id).Result;
 
             // Original word persists
             Assert.Contains(origWord, _repo.GetAllWords(_projId).Result);

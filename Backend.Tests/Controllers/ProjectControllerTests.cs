@@ -175,8 +175,8 @@ namespace Backend.Tests.Controllers
         public void TestProjectDuplicateCheck()
         {
             var project1 = _projectService.Create(RandomProject()).Result;
-            var project2 = _projectService.Create(RandomProject()).Result;
-            var project3 = _projectService.Create(RandomProject()).Result;
+            _ = _projectService.Create(RandomProject()).Result;
+            _ = _projectService.Create(RandomProject()).Result;
             var modProject = project1.Clone();
             modProject.Name = "Proj";
             _ = _controller.Put(modProject.Id, modProject);

@@ -292,9 +292,9 @@ namespace Backend.Tests.Controllers
 
             // Upload the zip file.
             // Generate api parameter with filestream.
-            using (var fstream = File.OpenRead(pathToStartZip))
+            using (var stream = File.OpenRead(pathToStartZip))
             {
-                var fileUpload = InitFile(fstream, roundTripObj.Filename);
+                var fileUpload = InitFile(stream, roundTripObj.Filename);
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;

@@ -84,7 +84,7 @@ namespace Backend.Tests.Mocks
                 }
 
                 foundUser = MakeJwt(foundUser).Result;
-                return Task.FromResult<User?>(foundUser);
+                return Task.FromResult(foundUser);
             }
             catch (InvalidOperationException)
             {

@@ -137,7 +137,7 @@ namespace Backend.Tests.Controllers
             const int modGoalIndex = 0;
             var wrapperObj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
 
-            var action = _userEditController.Put(_projId, origUserEdit.Id, wrapperObj);
+            _ = _userEditController.Put(_projId, origUserEdit.Id, wrapperObj);
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
             Assert.Contains(stringUserEdit, _userEditRepo.GetUserEdit(
