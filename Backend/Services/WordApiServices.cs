@@ -66,16 +66,8 @@ namespace BackendFramework.Services
                 wordWithAudioToDelete.Id = "";
                 wordWithAudioToDelete.ProjectId = projectId;
 
-                // Keep track of the old word
-                if (wordWithAudioToDelete.History is null)
-                {
-                    wordWithAudioToDelete.History = new List<string> { wordId };
-                }
-                // If we are updating the history, don't overwrite it, just add to the history
-                else
-                {
-                    wordWithAudioToDelete.History.Add(wordId);
-                }
+                // Keep track of the old word, adding it to the history.
+                wordWithAudioToDelete.History.Add(wordId);
 
                 wordWithAudioToDelete = await _repo.Create(wordWithAudioToDelete);
             }
@@ -103,16 +95,8 @@ namespace BackendFramework.Services
             word.ProjectId = projectId;
             word.Accessibility = State.Deleted;
 
-            // Keep track of the old word
-            if (word.History is null)
-            {
-                word.History = new List<string> { wordId };
-            }
-            // If we are updating the history, don't overwrite it, just add to the history
-            else
-            {
-                word.History.Add(wordId);
-            }
+            // Keep track of the old word, adding it to the history.
+            word.History.Add(wordId);
 
             var deletedWord = await _repo.Add(word);
             return deletedWord.Id;
@@ -130,16 +114,9 @@ namespace BackendFramework.Services
                 word.Id = "";
                 word.ProjectId = projectId;
                 word.Modified = DateTime.UtcNow.ToLongDateString();
-                // Keep track of the old word
-                if (word.History is null)
-                {
-                    word.History = new List<string> { wordId };
-                }
-                // If we are updating the history, don't overwrite it, just add to the history
-                else
-                {
-                    word.History.Add(wordId);
-                }
+
+                // Keep track of the old word, adding it to the history.
+                word.History.Add(wordId);
 
                 await _repo.Create(word);
             }
