@@ -142,7 +142,7 @@ namespace BackendFramework.Controllers
             var user = await _userService.GetUser(userId);
             if (user is null)
             {
-                return new NotFoundResult();
+                return new NotFoundObjectResult(userId);
             }
 
             return new ObjectResult(user);

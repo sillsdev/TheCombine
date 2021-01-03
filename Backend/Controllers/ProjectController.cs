@@ -104,11 +104,15 @@ namespace BackendFramework.Controllers
         {
             await _projectService.Create(project);
 
-            // Get user
+            // Get user.
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
+            if (currentUser is null)
+            {
+                return new NotFoundObjectResult(currentUserId);
+            }
 
-            // Give Project admin privileges to user who creates a Project
+            // Give Project admin privileges to user who creates a Project.
             var userRole = new UserRole
             {
                 Permissions = new List<int>
@@ -123,13 +127,13 @@ namespace BackendFramework.Controllers
             };
             userRole = await _userRoleService.Create(userRole);
 
-            // Update user with userRole
+            // Update user with userRole.
             currentUser.ProjectRoles ??= new Dictionary<string, string>();
 
-            // Generate the userRoles and update the user
+            // Generate the userRoles and update the user.
             currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userService.Update(currentUserId, currentUser);
-            // Generate the JWT based on those new userRoles
+            // Generate the JWT based on those new userRoles.
             var currentUpdatedUser = await _userService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
             {
@@ -244,6 +248,11 @@ namespace BackendFramework.Controllers
 
             // Fetch the user -> fetch user role -> update user role
             var changeUser = await _userService.GetUser(userId);
+            if (changeUser is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+
             string userRoleId;
             if (changeUser.ProjectRoles.ContainsKey(projectId))
             {
@@ -251,7 +260,6 @@ namespace BackendFramework.Controllers
             }
             else
             {
-
                 // Generate the userRole
                 var usersRole = new UserRole { ProjectId = projectId };
                 usersRole = await _userRoleService.Create(usersRole);

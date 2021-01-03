@@ -110,7 +110,7 @@ namespace Backend.Tests.Controllers
             _projectService.Create(RandomProject());
 
             var action = _controller.Get(project.Id).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundProjects = ((ObjectResult)action).Value as Project;
             Assert.AreEqual(project, foundProjects);

@@ -84,7 +84,7 @@ namespace Backend.Tests.Controllers
             _userEditRepo.Create(RandomUserEdit());
 
             var action = _userEditController.Get(_projId, userEdit.Id).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUserEdit = ((ObjectResult)action).Value as UserEdit;
             Assert.AreEqual(userEdit, foundUserEdit);
@@ -180,7 +180,7 @@ namespace Backend.Tests.Controllers
         public void TestGetMissingUserEdit()
         {
             var action = _userEditController.Get(_projId, "INVALID_USER_EDIT_ID").Result;
-            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
     }
 }

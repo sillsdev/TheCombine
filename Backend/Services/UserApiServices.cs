@@ -187,15 +187,23 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId </summary>
-        public async Task<User> GetUser(string userId)
+        public async Task<User?> GetUser(string userId)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
 
             var userList = await _userDatabase.Users.FindAsync(filter);
-            var user = userList.FirstOrDefault();
-            Sanitize(user);
-            return user;
+
+            try
+            {
+                var user = await userList.FirstAsync();
+                Sanitize(user);
+                return user;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>

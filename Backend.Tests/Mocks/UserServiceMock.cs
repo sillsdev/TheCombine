@@ -22,10 +22,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
-        public Task<User> GetUser(string id)
+        public Task<User?> GetUser(string id)
         {
-            var foundUser = _users.Single(user => user.Id == id);
-            return Task.FromResult(foundUser.Clone());
+            try
+            {
+                var foundUser = _users.Single(user => user.Id == id);
+                return Task.FromResult<User?>(foundUser.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                return Task.FromResult<User?>(null);
+            }
         }
 
         public Task<string?> GetUserAvatar(string id)

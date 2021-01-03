@@ -96,8 +96,7 @@ namespace Backend.Tests.Controllers
             _repo.Create(RandomWord());
 
             var action = _wordController.Get(_projId, word.Id).Result;
-
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundWord = ((ObjectResult)action).Value as Word;
             Assert.AreEqual(word, foundWord);
@@ -268,7 +267,7 @@ namespace Backend.Tests.Controllers
         public void TestGetMissingWord()
         {
             var action = _wordController.Get(_projId, "INVALID_WORD_ID").Result;
-            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
     }
 }
