@@ -249,8 +249,7 @@ namespace Backend.Tests.Controllers
             var newWordList = _wordService.Merge(_projId, parentChildMergeObject).Result;
 
             // Check for parent is in the db
-            var dbParent = newWordList.FirstOrDefault();
-            Assert.IsNotNull(dbParent);
+            var dbParent = newWordList.First();
             Assert.AreEqual(dbParent.Senses.Count, 3);
             Assert.AreEqual(dbParent.History.Count, 3);
 
