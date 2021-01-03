@@ -54,6 +54,7 @@ namespace BackendFramework
             }
         }
 
+        [Serializable]
         private class EnvironmentNotConfiguredException : Exception
         {
         }
@@ -76,6 +77,7 @@ namespace BackendFramework
             return Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") != null;
         }
 
+        [Serializable]
         private class AdminUserCreationException : Exception
         {
         }

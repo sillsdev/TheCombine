@@ -213,6 +213,11 @@ namespace Backend.Tests.Controllers
             // Check that new word has the right history
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
             var intermediateWord = _repo.GetWord(_projId, newWords.First().History.First()).Result;
+            if (intermediateWord is null)
+            {
+                Assert.Fail();
+                return;
+            }
             Assert.That(intermediateWord.History, Has.Count.EqualTo(1));
             Assert.AreEqual(intermediateWord.History.First(), thisWord.Id);
         }
@@ -257,6 +262,13 @@ namespace Backend.Tests.Controllers
             {
                 Assert.Contains(_repo.GetWord(_projId, word.Id).Result, _repo.GetAllWords(_projId).Result);
             }
+        }
+
+        [Test]
+        public void TestMissingWord()
+        {
+            var action = _wordController.Get(_projId, "INVALID_WORD_ID").Result;
+            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
         }
     }
 }

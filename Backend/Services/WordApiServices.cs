@@ -27,6 +27,11 @@ namespace BackendFramework.Services
             if (wordIsInFrontier)
             {
                 var wordToDelete = await _repo.GetWord(projectId, wordId);
+                if (wordToDelete is null)
+                {
+                    return false;
+                }
+
                 wordToDelete.Id = "";
                 wordToDelete.History = new List<string> { wordId };
                 wordToDelete.Accessibility = State.Deleted;
@@ -44,9 +49,14 @@ namespace BackendFramework.Services
 
         /// <summary> Removes audio with specified Id from a word </summary>
         /// <returns> New word </returns>
-        public async Task<Word> Delete(string projectId, string wordId, string fileName)
+        public async Task<Word?> Delete(string projectId, string wordId, string fileName)
         {
             var wordWithAudioToDelete = await _repo.GetWord(projectId, wordId);
+            if (wordWithAudioToDelete is null)
+            {
+                return null;
+            }
+
             var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
 
             // We only want to update words that are in the frontier
@@ -78,13 +88,16 @@ namespace BackendFramework.Services
         public async Task<string?> DeleteFrontierWord(string projectId, string wordId)
         {
             var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
-
             if (!wordIsInFrontier)
             {
                 return null;
             }
 
             var word = await _repo.GetWord(projectId, wordId);
+            if (word is null)
+            {
+                return null;
+            }
 
             word.Id = "";
             word.ProjectId = projectId;
@@ -149,6 +162,10 @@ namespace BackendFramework.Services
             {
                 // Get child word
                 var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
+                if (currentChildWord is null)
+                {
+                    throw new KeyNotFoundException($"Unable to locate word: ${newChildWordState.SrcWordId}");
+                }
 
                 // Copy over audio if child doesn't have own surviving entry
                 if (!newChildWordState.SenseStates.Exists(x => x == State.Separate))

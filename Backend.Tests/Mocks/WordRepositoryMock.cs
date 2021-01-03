@@ -24,10 +24,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_words.Select(word => word.Clone()).ToList());
         }
 
-        public Task<Word> GetWord(string projectId, string wordId)
+        public Task<Word?> GetWord(string projectId, string wordId)
         {
-            var foundWord = _words.Single(word => word.Id == wordId);
-            return Task.FromResult(foundWord.Clone());
+            try
+            {
+                var foundWord = _words.Single(word => word.Id == wordId);
+                return Task.FromResult<Word?>(foundWord.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                return Task.FromResult<Word?>(null);
+            }
         }
 
         public Task<Word> Create(Word word)
