@@ -11,7 +11,7 @@ namespace Backend.Tests.Helper
         {
             "a",
             "1",
-            "a-5",
+            "a-5"
         };
 
         [TestCaseSource(nameof(_validIds))]
