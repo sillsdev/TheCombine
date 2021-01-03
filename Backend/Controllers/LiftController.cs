@@ -98,7 +98,7 @@ namespace BackendFramework.Controllers
                 // If there was one directory, we're good
                 case 1:
                     {
-                        extractedDirPath = directoriesExtracted.FirstOrDefault();
+                        extractedDirPath = directoriesExtracted.First();
                         break;
                     }
                 // If there were two, and there was a __MACOSX directory, ignore it
