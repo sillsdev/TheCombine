@@ -136,7 +136,7 @@ namespace Backend.Tests.Controllers
             var origWord = _repo.Create(RandomWord()).Result;
 
             var modWord = origWord.Clone();
-            modWord.Vernacular = "Yoink";
+            modWord.Vernacular = "NewVernacular";
 
             var id = (string)((ObjectResult)_wordController.Put(_projId, modWord.Id, modWord).Result).Value;
 
@@ -250,7 +250,7 @@ namespace Backend.Tests.Controllers
             Assert.AreEqual(dbParent.Senses.Count, 3);
             Assert.AreEqual(dbParent.History.Count, 3);
 
-            // Check the separarte words were made
+            // Check that separate words were made
             Assert.AreEqual(newWordList.Count, 4);
 
             foreach (var word in newWordList)
