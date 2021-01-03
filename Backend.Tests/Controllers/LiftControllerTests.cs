@@ -353,11 +353,6 @@ namespace Backend.Tests.Controllers
 
             // Init the project the .zip info is added to.
             var proj2 = _projServ.Create(RandomProject()).Result;
-            if (proj2 is null)
-            {
-                Assert.Fail();
-                return;
-            }
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
