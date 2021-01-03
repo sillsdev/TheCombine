@@ -140,8 +140,14 @@ namespace Backend.Tests.Controllers
             _ = _userEditController.Put(_projId, origUserEdit.Id, wrapperObj);
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
-            Assert.Contains(stringUserEdit, _userEditRepo.GetUserEdit(
-                _projId, origUserEdit.Id).Result.Edits[modGoalIndex].StepData);
+
+            var userEdit = _userEditRepo.GetUserEdit(_projId, origUserEdit.Id).Result;
+            if (userEdit is null)
+            {
+                Assert.Fail();
+                return;
+            }
+            Assert.Contains(stringUserEdit, userEdit.Edits[modGoalIndex].StepData);
         }
 
         [Test]
@@ -168,6 +174,13 @@ namespace Backend.Tests.Controllers
             _ = _userEditController.Delete(_projId).Result;
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void TestGetMissingUserEdit()
+        {
+            var action = _userEditController.Get(_projId, "INVALID_USER_EDIT_ID").Result;
+            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
         }
     }
 }

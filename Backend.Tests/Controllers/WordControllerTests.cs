@@ -265,7 +265,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestMissingWord()
+        public void TestGetMissingWord()
         {
             var action = _wordController.Get(_projId, "INVALID_WORD_ID").Result;
             Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
