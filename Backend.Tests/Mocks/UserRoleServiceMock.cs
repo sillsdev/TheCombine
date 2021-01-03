@@ -23,10 +23,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(cloneList.Where(userRole => userRole.ProjectId == projectId).ToList());
         }
 
-        public Task<UserRole> GetUserRole(string projectId, string userRoleId)
+        public Task<UserRole?> GetUserRole(string projectId, string userRoleId)
         {
-            var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
-            return Task.FromResult(foundUserRole.Clone());
+            try
+            {
+                var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
+                return Task.FromResult<UserRole?>(foundUserRole.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                return Task.FromResult<UserRole?>(null);
+            }
         }
 
         public Task<UserRole> Create(UserRole userRole)

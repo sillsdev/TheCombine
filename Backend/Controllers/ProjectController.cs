@@ -268,6 +268,11 @@ namespace BackendFramework.Controllers
                 await _userService.Update(changeUser.Id, changeUser);
             }
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            if (userRole is null)
+            {
+                return new NotFoundObjectResult(userRoleId);
+            }
+
             userRole.Permissions = new List<int>(permissions);
 
             var result = await _userRoleService.Update(userRoleId, userRole);
