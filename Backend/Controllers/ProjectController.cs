@@ -128,8 +128,6 @@ namespace BackendFramework.Controllers
             userRole = await _userRoleService.Create(userRole);
 
             // Update user with userRole.
-            currentUser.ProjectRoles ??= new Dictionary<string, string>();
-
             // Generate the userRoles and update the user.
             currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userService.Update(currentUserId, currentUser);

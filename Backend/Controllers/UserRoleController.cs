@@ -113,12 +113,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            var returnUserRole = await _userRoleService.Create(userRole);
-            if (returnUserRole is null)
-            {
-                return BadRequest();
-            }
-
+            await _userRoleService.Create(userRole);
             return new OkObjectResult(userRole.Id);
         }
 
