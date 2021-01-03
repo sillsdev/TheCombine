@@ -22,7 +22,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
-        public Task<User?> GetUser(string id)
+        public Task<User?> GetUser(string id, bool sanitize = true)
         {
             try
             {

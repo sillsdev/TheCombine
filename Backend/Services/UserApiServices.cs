@@ -192,7 +192,9 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId </summary>
-        public async Task<User?> GetUser(string userId)
+        /// <param name="userId"> User ID to retrieve. </param>
+        /// <param name="sanitize"> Whether to sanitize (remove) sensitive information for the User instance. </param>
+        public async Task<User?> GetUser(string userId, bool sanitize = true)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
@@ -202,7 +204,10 @@ namespace BackendFramework.Services
             try
             {
                 var user = await userList.FirstAsync();
-                Sanitize(user);
+                if (sanitize)
+                {
+                    Sanitize(user);
+                }
                 return user;
             }
             catch (InvalidOperationException)
@@ -214,11 +219,7 @@ namespace BackendFramework.Services
         /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>
         public async Task<string?> GetUserAvatar(string userId)
         {
-            var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.Eq(x => x.Id, userId);
-
-            var userList = await _userDatabase.Users.FindAsync(filter);
-            var user = userList.FirstOrDefault();
+            var user = await GetUser(userId, false);
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
