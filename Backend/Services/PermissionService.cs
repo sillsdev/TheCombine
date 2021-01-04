@@ -56,6 +56,10 @@ namespace BackendFramework.Services
         {
             var userId = GetUserId(request);
             var user = await _userService.GetUser(userId);
+            if (user is null)
+            {
+                return false;
+            }
 
             // Database administrators implicitly possess all permissions.
             if (user.IsAdmin)
@@ -95,8 +99,13 @@ namespace BackendFramework.Services
         public async Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             var userId = GetUserId(request);
-            var userObj = await _userService.GetUser(userId);
-            return userObj.WorkedProjects[projectId] != userEditId;
+            var user = await _userService.GetUser(userId);
+            if (user is null)
+            {
+                return true;
+            }
+
+            return user.WorkedProjects[projectId] != userEditId;
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>

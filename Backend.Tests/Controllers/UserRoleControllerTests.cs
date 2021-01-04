@@ -84,11 +84,17 @@ namespace Backend.Tests.Controllers
             _userRoleService.Create(RandomUserRole());
 
             var action = _userRoleController.Get(_projId, userRole.Id).Result;
-
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUserRole = ((ObjectResult)action).Value as UserRole;
             Assert.AreEqual(userRole, foundUserRole);
+        }
+
+        [Test]
+        public void TestGetMissingUserRole()
+        {
+            var action = _userRoleController.Get(_projId, "INVALID_USER_ROLE_ID").Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
 
         [Test]

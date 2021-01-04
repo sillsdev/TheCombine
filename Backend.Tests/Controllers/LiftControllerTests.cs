@@ -223,7 +223,9 @@ namespace Backend.Tests.Controllers
 
             var wordToUpdate = _wordRepo.Create(word).Result;
             wordToDelete = _wordRepo.Create(wordToDelete).Result;
-            var untouchedWord = _wordRepo.Create(secondWord).Result;
+
+            // Create untouched word.
+            _ = _wordRepo.Create(secondWord).Result;
 
             word.Id = "";
             word.Vernacular = "updated";
@@ -248,7 +250,8 @@ namespace Backend.Tests.Controllers
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
-            //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
+            // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
+            //      kept vs deleted
             // Make sure we exported 2 live and one dead entry
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
@@ -292,9 +295,9 @@ namespace Backend.Tests.Controllers
 
             // Upload the zip file.
             // Generate api parameter with filestream.
-            using (var fstream = File.OpenRead(pathToStartZip))
+            using (var stream = File.OpenRead(pathToStartZip))
             {
-                var fileUpload = InitFile(fstream, roundTripObj.Filename);
+                var fileUpload = InitFile(stream, roundTripObj.Filename);
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;
@@ -350,11 +353,6 @@ namespace Backend.Tests.Controllers
 
             // Init the project the .zip info is added to.
             var proj2 = _projServ.Create(RandomProject()).Result;
-            if (proj2 is null)
-            {
-                Assert.Fail();
-                return;
-            }
 
             // Upload the exported words again.
             // Generate api parameter with filestream.

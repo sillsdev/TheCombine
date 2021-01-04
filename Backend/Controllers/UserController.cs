@@ -37,16 +37,16 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot")]
         public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
         {
-            // find user attached to email or username
+            // Find user attached to email or username.
             var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
-            var user = (await _userService.GetAllUsers()).SingleOrDefault(user =>
-                user.Email.ToLowerInvariant().Equals(emailOrUsername) ||
-                user.Username.ToLowerInvariant().Equals(emailOrUsername));
+            var user = (await _userService.GetAllUsers()).SingleOrDefault(u =>
+                u.Email.ToLowerInvariant().Equals(emailOrUsername) ||
+                u.Username.ToLowerInvariant().Equals(emailOrUsername));
 
-            // create password reset
+            // Create password reset.
             var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
 
-            // create email
+            // Create email.
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress(user.Name, user.Email));
             message.Subject = "Combine password reset";
@@ -142,7 +142,7 @@ namespace BackendFramework.Controllers
             var user = await _userService.GetUser(userId);
             if (user is null)
             {
-                return new NotFoundResult();
+                return new NotFoundObjectResult(userId);
             }
 
             return new ObjectResult(user);

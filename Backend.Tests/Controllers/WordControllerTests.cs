@@ -64,11 +64,11 @@ namespace Backend.Tests.Controllers
                     new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
                 };
 
-                foreach (var semdom in sense.SemanticDomains)
+                foreach (var semDom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.RandString();
-                    semdom.Id = Util.RandString();
-                    semdom.Description = Util.RandString();
+                    semDom.Name = Util.RandString();
+                    semDom.Id = Util.RandString();
+                    semDom.Description = Util.RandString();
                 }
             }
 
@@ -96,8 +96,7 @@ namespace Backend.Tests.Controllers
             _repo.Create(RandomWord());
 
             var action = _wordController.Get(_projId, word.Id).Result;
-
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundWord = ((ObjectResult)action).Value as Word;
             Assert.AreEqual(word, foundWord);
@@ -136,7 +135,7 @@ namespace Backend.Tests.Controllers
             var origWord = _repo.Create(RandomWord()).Result;
 
             var modWord = origWord.Clone();
-            modWord.Vernacular = "Yoink";
+            modWord.Vernacular = "NewVernacular";
 
             var id = (string)((ObjectResult)_wordController.Put(_projId, modWord.Id, modWord).Result).Value;
 
@@ -158,7 +157,7 @@ namespace Backend.Tests.Controllers
             var origWord = _repo.Create(RandomWord()).Result;
 
             // Test delete function
-            var action = _wordController.Delete(_projId, origWord.Id).Result;
+            _ = _wordController.Delete(_projId, origWord.Id).Result;
 
             // Original word persists
             Assert.Contains(origWord, _repo.GetAllWords(_projId).Result);
@@ -213,6 +212,11 @@ namespace Backend.Tests.Controllers
             // Check that new word has the right history
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
             var intermediateWord = _repo.GetWord(_projId, newWords.First().History.First()).Result;
+            if (intermediateWord is null)
+            {
+                Assert.Fail();
+                return;
+            }
             Assert.That(intermediateWord.History, Has.Count.EqualTo(1));
             Assert.AreEqual(intermediateWord.History.First(), thisWord.Id);
         }
@@ -245,18 +249,24 @@ namespace Backend.Tests.Controllers
             var newWordList = _wordService.Merge(_projId, parentChildMergeObject).Result;
 
             // Check for parent is in the db
-            var dbParent = newWordList.FirstOrDefault();
-            Assert.IsNotNull(dbParent);
+            var dbParent = newWordList.First();
             Assert.AreEqual(dbParent.Senses.Count, 3);
             Assert.AreEqual(dbParent.History.Count, 3);
 
-            // Check the separarte words were made
+            // Check that separate words were made
             Assert.AreEqual(newWordList.Count, 4);
 
             foreach (var word in newWordList)
             {
                 Assert.Contains(_repo.GetWord(_projId, word.Id).Result, _repo.GetAllWords(_projId).Result);
             }
+        }
+
+        [Test]
+        public void TestGetMissingWord()
+        {
+            var action = _wordController.Get(_projId, "INVALID_WORD_ID").Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
     }
 }

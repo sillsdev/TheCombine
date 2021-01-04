@@ -92,6 +92,7 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(wordId);
             }
+
             return new ObjectResult(word);
         }
 
@@ -200,12 +201,6 @@ namespace BackendFramework.Controllers
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
-            }
-
-            // Ensure MergeWords is alright
-            if (mergeWords?.Parent is null)
-            {
-                return new BadRequestResult();
             }
 
             try

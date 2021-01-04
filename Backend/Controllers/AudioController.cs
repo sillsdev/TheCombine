@@ -103,13 +103,17 @@ namespace BackendFramework.Controllers
             }
 
             // Add the relative path to the audio field
-            var gotWord = await _wordRepo.GetWord(projectId, wordId);
-            gotWord.Audio.Add(Path.GetFileName(fileUpload.FilePath));
+            var word = await _wordRepo.GetWord(projectId, wordId);
+            if (word is null)
+            {
+                return new NotFoundObjectResult(wordId);
+            }
+            word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
             // Update the word with new audio file
-            await _wordService.Update(projectId, wordId, gotWord);
+            await _wordService.Update(projectId, wordId, word);
 
-            return new ObjectResult(gotWord.Id);
+            return new ObjectResult(word.Id);
         }
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
@@ -129,7 +133,6 @@ namespace BackendFramework.Controllers
             }
 
             var newWord = await _wordService.Delete(projectId, wordId, fileName);
-
             if (newWord != null)
             {
                 return new OkObjectResult(newWord.Id);

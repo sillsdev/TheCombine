@@ -136,8 +136,13 @@ namespace BackendFramework.Services
             foreach (var (projectRoleKey, projectRoleValue) in user.ProjectRoles)
             {
                 // Convert each userRoleId to its respective role and add to the mapping
-                var permissions = (await _userRole.GetUserRole(projectRoleKey, projectRoleValue)).Permissions;
-                var validEntry = new ProjectPermissions(projectRoleKey, permissions);
+                var userRole = await _userRole.GetUserRole(projectRoleKey, projectRoleValue);
+                if (userRole is null)
+                {
+                    return null;
+                }
+
+                var validEntry = new ProjectPermissions(projectRoleKey, userRole.Permissions);
                 projectPermissionMap.Add(validEntry);
             }
 
@@ -187,25 +192,34 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId </summary>
-        public async Task<User> GetUser(string userId)
+        /// <param name="userId"> User ID to retrieve. </param>
+        /// <param name="sanitize"> Whether to sanitize (remove) sensitive information for the User instance. </param>
+        public async Task<User?> GetUser(string userId, bool sanitize = true)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
 
             var userList = await _userDatabase.Users.FindAsync(filter);
-            var user = userList.FirstOrDefault();
-            Sanitize(user);
-            return user;
+
+            try
+            {
+                var user = await userList.FirstAsync();
+                if (sanitize)
+                {
+                    Sanitize(user);
+                }
+                return user;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>
         public async Task<string?> GetUserAvatar(string userId)
         {
-            var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.Eq(x => x.Id, userId);
-
-            var userList = await _userDatabase.Users.FindAsync(filter);
-            var user = userList.FirstOrDefault();
+            var user = await GetUser(userId, false);
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 

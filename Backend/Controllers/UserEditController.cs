@@ -120,6 +120,11 @@ namespace BackendFramework.Controllers
             // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
+            if (currentUser is null)
+            {
+                return new NotFoundObjectResult(currentUserId);
+            }
+
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
             await _userService.Update(currentUserId, currentUser);
 
