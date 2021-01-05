@@ -124,7 +124,7 @@ export class DataEntryTable extends React.Component<
     const proj = await Backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutoComplete.On;
     let analysisLang = "en";
-    if (proj.analysisWritingSystems.length > 0) {
+    if (proj.analysisWritingSystems?.length > 0) {
       analysisLang = proj.analysisWritingSystems[0].bcp47;
     }
     this.setState({ analysisLang, suggestVerns });
