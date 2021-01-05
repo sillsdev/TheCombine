@@ -251,8 +251,8 @@ namespace BackendFramework.Services
         public async Task<User?> Create(User user)
         {
             // Confirm that email and username aren't empty and aren't taken
-            if (user.Email.Length == 0 | user.Username.Length == 0 |
-                await GetUserIdByEmail(user.Email) != null |
+            if (user.Email.Length == 0 || user.Username.Length == 0 ||
+                await GetUserIdByEmail(user.Email) != null ||
                 await GetUserIdByUsername(user.Username) != null)
             {
                 return null;
@@ -306,18 +306,25 @@ namespace BackendFramework.Services
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
-            // Confirm that email and username aren't empty and aren't taken by another user
-            if (user.Email.Length == 0 | user.Username.Length == 0)
+            // Confirm user exists.
+            var oldUser = await GetUser(userId);
+            if (oldUser == null)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+
+            // Confirm that email and username aren't empty and aren't taken by another user.
+            if (user.Email.Length == 0 || user.Username.Length == 0)
             {
                 return ResultOfUpdate.Failed;
             }
-            var userIdByEmail = await GetUserIdByEmail(user.Email);
-            if (userIdByEmail != null & userIdByEmail != userId)
+            if (user.Email.ToLowerInvariant() != oldUser.Email.ToLowerInvariant()
+                && await GetUserIdByEmail(user.Email) != null)
             {
                 return ResultOfUpdate.Failed;
             }
-            var userIdByUsername = await GetUserIdByUsername(user.Username);
-            if (userIdByUsername != null & userIdByUsername != userId)
+            if (user.Username.ToLowerInvariant() != oldUser.Username.ToLowerInvariant()
+                && await GetUserIdByUsername(user.Username) != null)
             {
                 return ResultOfUpdate.Failed;
             }
