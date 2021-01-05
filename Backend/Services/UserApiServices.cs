@@ -250,13 +250,10 @@ namespace BackendFramework.Services
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User?> Create(User user)
         {
-            // Check if collection is not empty
-            var users = await GetAllUsers();
-
-            // Check to see if username or email address is taken
-            if (users.Count != 0 && _userDatabase.Users.Find(
-                x => x.Username.ToLowerInvariant() == user.Username.ToLowerInvariant() ||
-                     x.Email.ToLowerInvariant() == user.Email.ToLowerInvariant()).ToList().Count > 0)
+            // Confirm that email and username aren't empty and aren't taken
+            if (user.Email.Length == 0 | user.Username.Length == 0 |
+                await GetUserIdByEmail(user.Email) != null |
+                await GetUserIdByUsername(user.Username) != null)
             {
                 return null;
             }
@@ -287,10 +284,44 @@ namespace BackendFramework.Services
             user.Token = "";
         }
 
+        /// <summary> Gets userid for specified email </summary>
+        /// <returns> A string with the userid, or null if not found </returns>
+        public async Task<string?> GetUserIdByEmail(string email)
+        {
+            var user = (await GetAllUsers()).Find(x =>
+                x.Email.ToLowerInvariant() == email.ToLowerInvariant());
+            return user?.Id;
+        }
+
+        /// <summary> Gets userid for specified username </summary>
+        /// <returns> A string with the userid, or null if not found </returns>
+        public async Task<string?> GetUserIdByUsername(string username)
+        {
+            var user = (await GetAllUsers()).Find(x =>
+                x.Username.ToLowerInvariant() == username.ToLowerInvariant());
+            return user?.Id;
+        }
+
         /// <summary> Updates <see cref="User"/> with specified userId </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
+            // Confirm that email and username aren't empty and aren't taken by another user
+            if (user.Email.Length == 0 | user.Username.Length == 0)
+            {
+                return ResultOfUpdate.Failed;
+            }
+            var userIdByEmail = await GetUserIdByEmail(user.Email);
+            if (userIdByEmail != null & userIdByEmail != userId)
+            {
+                return ResultOfUpdate.Failed;
+            }
+            var userIdByUsername = await GetUserIdByUsername(user.Username);
+            if (userIdByUsername != null & userIdByUsername != userId)
+            {
+                return ResultOfUpdate.Failed;
+            }
+
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
 
             // Note: Nulls out values not in update body

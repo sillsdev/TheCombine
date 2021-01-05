@@ -11,6 +11,8 @@ namespace BackendFramework.Interfaces
         Task<User?> GetUser(string userId, bool sanitize = false);
         Task<string?> GetUserAvatar(string userId);
         Task<User?> Create(User user);
+        Task<string?> GetUserIdByEmail(string email);
+        Task<string?> GetUserIdByUsername(string username);
         Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false);
         Task<bool> Delete(string userId);
         Task<bool> DeleteAllUsers();

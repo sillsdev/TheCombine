@@ -61,6 +61,18 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(success);
         }
 
+        public Task<string?> GetUserIdByEmail(string email)
+        {
+            var user = _users.Find(u => u.Email.ToLowerInvariant() == email.ToLowerInvariant());
+            return Task.FromResult(user?.Id);
+        }
+
+        public Task<string?> GetUserIdByUsername(string username)
+        {
+            var user = _users.Find(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant());
+            return Task.FromResult(user?.Id);
+        }
+
         public Task<ResultOfUpdate> Update(string id, User user, bool updateIsAdmin = false)
         {
             var foundUser = _users.Single(u => u.Id == id);
