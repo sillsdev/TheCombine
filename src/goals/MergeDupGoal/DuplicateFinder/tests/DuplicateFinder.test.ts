@@ -14,18 +14,19 @@ jest.mock("../../../../backend", () => {
   };
 });
 
+let finder: DupFinder;
+beforeEach(() => {
+  finder = new DupFinder();
+});
+
 describe("dupFinder", () => {
   test("getNextDups returns correct number of word collections", async () => {
-    let finder = new DupFinder();
-
     await finder.getNextDups().then((wordCollections) => {
       expect(wordCollections.length).toBeLessThanOrEqual(7);
     });
   });
 
   test("fetchWordsFromDB can get words from frontier", async () => {
-    let finder = new DupFinder();
-
     expect(finder.maskedWords.length).toBe(0);
 
     await finder.fetchWordsFromDB().then((gotWords) => {
@@ -35,8 +36,6 @@ describe("dupFinder", () => {
   });
 
   test("getDuplicatesOfWord search for duplicates with one parent", async () => {
-    const finder = new DupFinder();
-
     const parent = simpleWord("Yank", "Mayonnaise");
 
     await finder.fetchWordsFromDB().then(() => {
@@ -64,38 +63,32 @@ describe("dupFinder", () => {
 
   describe("getLevenshteinDistance", () => {
     test("with same Word", () => {
-      let finder = new DupFinder();
       expect(finder.getLevenshteinDistance("testing", "testing")).toEqual(0);
     });
 
     test("with similar Word, one insertion and one substitution", () => {
-      let finder = new DupFinder();
       expect(finder.getLevenshteinDistance("testing", "toasting")).toEqual(3);
     });
 
     test("with single substitution", () => {
-      let finder = new DupFinder();
       expect(finder.getLevenshteinDistance("testing", "tasting")).toEqual(
         DefaultParams.subCost
       );
     });
 
     test("with single deletion", () => {
-      const finder = new DupFinder();
       expect(finder.getLevenshteinDistance("testin", "testing")).toEqual(
         DefaultParams.delCost
       );
     });
 
     test("with single addition", () => {
-      const finder = new DupFinder();
       expect(finder.getLevenshteinDistance("testing", "testin")).toEqual(
         DefaultParams.insCost
       );
     });
 
     test("with distinct Word", () => {
-      const finder = new DupFinder();
       expect(
         finder.getLevenshteinDistance(
           "badger",
