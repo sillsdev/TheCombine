@@ -120,9 +120,7 @@ class UserSettings extends React.Component<
   ) {
     const value = e.target.value;
 
-    this.setState({
-      [field]: value,
-    } as Pick<UserSettingsState, K>);
+    this.setState({ [field]: value } as Pick<UserSettingsState, K>);
   }
 
   isEmailOkay() {
