@@ -84,6 +84,7 @@ interface UserSettingsState {
   name: string;
   phone: string;
   email: string;
+  emailTaken: boolean;
   avatar: string;
   avatarDialogOpen: boolean;
 }
@@ -104,6 +105,7 @@ class UserSettings extends React.Component<
       name: user.name,
       phone: user.phone,
       email: user.email,
+      emailTaken: false,
       avatar: getAvatar(),
       avatarDialogOpen: false,
     };
@@ -132,7 +134,7 @@ class UserSettings extends React.Component<
   onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (this.isEmailOkay()) {
-      let newUser: User = this.state.user;
+      const newUser: User = this.state.user;
       newUser.name = this.state.name;
       newUser.phone = this.state.phone;
       newUser.email = this.state.email;
@@ -141,7 +143,7 @@ class UserSettings extends React.Component<
         alert(this.props.translate("userSettings.updateSuccess"));
       });
     } else {
-      alert(this.props.translate("login.emailTaken"));
+      this.setState({ emailTaken: true });
     }
   }
 
@@ -212,7 +214,16 @@ class UserSettings extends React.Component<
                           variant="outlined"
                           value={this.state.email}
                           label={<Translate id="login.email" />}
-                          onChange={(e) => this.updateField(e, "email")}
+                          onChange={(e) => {
+                            this.updateField(e, "email");
+                            this.setState({ emailTaken: false });
+                          }}
+                          error={this.state.emailTaken}
+                          helperText={
+                            this.state.emailTaken
+                              ? this.props.translate("login.emailTaken")
+                              : null
+                          }
                           type="email"
                         />
                       </Grid>
