@@ -38,20 +38,19 @@ describe("dupFinder Tests", () => {
   });
 
   test("the finder can search for duplicates with one parent", async () => {
-    let finder = new DupFinder();
+    const finder = new DupFinder();
 
-    let parent = simpleWord("Yank", "Mayonnaise");
+    const parent = simpleWord("Yank", "Mayonnaise");
 
-    let duplicates: [Word[], number] = [[], Number.MIN_SAFE_INTEGER];
     await finder.fetchWordsFromDB().then(() => {
-      duplicates = finder.getDuplicatesOfWord(parent);
+      const duplicates = finder.getDuplicatesOfWord(parent);
 
-      duplicates[0].forEach((duplicate) => {
-        let vernScore = finder.getLevenshteinDistance(
+      duplicates.forEach((duplicate) => {
+        const vernScore = finder.getLevenshteinDistance(
           duplicate.vernacular,
           parent.vernacular
         );
-        let glossScore =
+        const glossScore =
           finder.getLevenshteinDistance(
             duplicate.senses[0].glosses[0].def,
             parent.senses[0].glosses[0].def
