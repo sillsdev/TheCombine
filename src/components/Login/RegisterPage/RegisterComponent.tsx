@@ -97,8 +97,10 @@ export class Register extends React.Component<
     field: K
   ) {
     const value = e.target.value;
-    const error = { ...this.state.error, [field]: false };
-    this.setState({ [field]: value, error } as Pick<RegisterState, K>);
+    this.setState({ [field]: value } as Pick<RegisterState, K>);
+    this.setState((prevState) => ({
+      error: { ...prevState.error, [field]: false },
+    }));
   }
 
   async checkUsername(username: string) {
@@ -121,27 +123,21 @@ export class Register extends React.Component<
 
   async register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const name: string = this.state.name.trim();
-    const username: string = this.state.username.trim();
-    const email: string = this.state.email.trim();
-    const password: string = this.state.password.trim();
-    const confirmPassword: string = this.state.confirmPassword.trim();
+    const name = this.state.name.trim();
+    const username = this.state.username.trim();
+    const email = this.state.email.trim();
+    const password = this.state.password.trim();
+    const confirmPassword = this.state.confirmPassword.trim();
 
-    // error checking
-    let error = { ...this.state.error };
+    // Error checking.
+    const error = { ...this.state.error };
     error.name = name === "";
     error.username = !usernameRequirements(username);
     error.email = email === "";
     error.password = !passwordRequirements(password);
     error.confirmPassword = password !== confirmPassword;
 
-    if (
-      error.name ||
-      error.username ||
-      error.email ||
-      error.password ||
-      error.confirmPassword
-    ) {
+    if (Object.values(error).some((e) => e)) {
       this.setState({ error });
     } else if (this.props.register) {
       this.props.register(name, username, email, password);
