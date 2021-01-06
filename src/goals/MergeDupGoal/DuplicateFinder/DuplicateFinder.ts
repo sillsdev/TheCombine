@@ -40,9 +40,6 @@ interface Bitmask {
   glossMasks: number[];
 }
 
-//[wordlist, list score]
-type ScoredWordlist = [Word[], number];
-
 // THIS DOES NOT YET WORK WITH MULTIPLE GLOSSES
 
 export default class DupFinder {
@@ -90,9 +87,6 @@ export default class DupFinder {
   //error handling
   empty2dArray = [[]];
 
-  // filter output, total output - Used for testing duplicate finder. (See docs/bitmap_testing.md)
-  //filterTest: [number, number] = [0, 0];
-
   /** Get lists of suspected duplicates. Returns [] if none found. */
   async getNextDups(): Promise<Word[][]> {
     const wordsLoaded = await this.fetchWordsFromDB();
@@ -119,13 +113,6 @@ export default class DupFinder {
         this.searchCount += 1;
       }
     }
-
-    // Used for testing duplicate finder. (See docs/bitmap_testing.md)
-    //console.log(
-    //  "Start: " + this.maskedWords.length,
-    //  "Filtered: " + this.filterTest[0] / this.maskedWords.length,
-    //  "Result: " + this.filterTest[1] / this.maskedWords.length
-    //);
 
     // Sort alphabetically.
     currentWordLists.sort((a, b) =>
@@ -155,17 +142,11 @@ export default class DupFinder {
     // Narrow down very different words.
     const words = this.filter(parent, wordCollection);
 
-    // Used for testing duplicate finder. (See docs/bitmap_testing.md)
-    //this.filterTest[0] += words.length;
-
     // Thorough scoring.
     const scoredWords = this.scoreWords(parent.word, words);
 
     // Apply thresholds.
     const wordList = this.getAcceptedWords(scoredWords);
-
-    // Used for testing duplicate finder. (See docs/bitmap_testing.md)
-    //this.filterTest[1] += wordList.length;
 
     // Sort alphabetically.
     wordList.sort((a, b) => a.vernacular.localeCompare(b.vernacular));
