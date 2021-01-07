@@ -19,7 +19,7 @@ def _get_aws_uri_(obj: str) -> Tuple[str, str]:
     return f"s3://{aws_bucket}/{obj}", aws_profile
 
 
-def aws_s3_put(src: Path, dest: str) -> bool:
+def aws_s3_put(src: Path, dest: str) -> None:
     """
     Push a file to the configured AWS S3 Bucket.
 
