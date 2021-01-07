@@ -187,8 +187,8 @@ export function refreshWords() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    let historyState: GoalHistoryState = getState().goalsState.historyState;
-    let goal: Goal = historyState.history[historyState.history.length - 1];
+    let historyState = getState().goalsState.historyState;
+    let goal = historyState.history[historyState.history.length - 1];
 
     // Push the current step into the history state and load the data.
     await updateStep(dispatch, goal, historyState).then(() => {

@@ -116,7 +116,7 @@ export function loadGoalData(goal: Goal) {
         const blacklist = LocalStorage.getMergeDupsBlacklist();
 
         for (const group of groups) {
-          // Remove words that are already included/blacklisted.
+          // Remove words that are already included.
           const newGroup = group.filter((w) => !usedIDs.includes(w.id));
           if (newGroup.length < 2) {
             continue;
