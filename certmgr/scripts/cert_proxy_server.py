@@ -9,12 +9,13 @@ the NUCs, by fetching their certificates and pushing them to an AWS S3 Bucket.
 
 import os
 from pathlib import Path
+
 from sys import stderr
 from typing import cast
 
 from aws import aws_push_certs
 from letsencrypt_cert import LetsEncryptCert
-from utils import get_setting
+from utils import get_setting, update_link
 
 
 class CertProxyServer(LetsEncryptCert):
@@ -87,17 +88,5 @@ class CertProxyServer(LetsEncryptCert):
         renew_hook = Path(
             f"{LetsEncryptCert.LETSENCRYPT_DIR}/renewal-hooks/deploy/01_hook_push_certs_to_aws"
         )
-        hook_target = "/opt/certmgr/cert_renewal_hook.py"
-        if renew_hook.is_symlink():
-            link_target = os.readlink(renew_hook)
-            if link_target != hook_target:
-                renew_hook.unlink()
-                renew_hook.symlink_to(hook_target)
-        elif not renew_hook.exists():
-            renew_hook.symlink_to(hook_target)
-        else:
-            print(
-                "WARNING: Certificate renewal hook already exists "
-                "and conflicts with the desired hook.",
-                file=stderr,
-            )
+        cert_renew_hook_src = "/opt/certmgr/cert_renewal_hook.py"
+        update_link(cert_renew_hook_src, renew_hook)
