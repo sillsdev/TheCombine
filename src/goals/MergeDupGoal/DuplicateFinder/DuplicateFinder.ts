@@ -326,9 +326,9 @@ export default class DupFinder {
 
   /** Returns collection of highest scoring words above the quality threshold. */
   private getAcceptedWords(words: ScoredWord[]): Word[] {
-    let outputCollection: Word[] = [];
+    const outputCollection: Word[] = [];
 
-    let getScore = (word: ScoredWord) => word.score;
+    const getScore = (word: ScoredWord) => word.score;
 
     words = quicksort<ScoredWord>(words, getScore);
 
