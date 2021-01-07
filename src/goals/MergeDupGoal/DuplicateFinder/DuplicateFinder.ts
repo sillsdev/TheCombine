@@ -1,9 +1,8 @@
-import { Word, hasSenses } from "../../../types/word";
 import * as backend from "../../../backend";
+import { hasSenses, Word } from "../../../types/word";
 import { quicksort } from "../../../utilities";
 
 export interface FinderParams {
-  searchLim: number;
   maxScore: number;
   maxCount: number;
   subCost: number;
@@ -16,7 +15,6 @@ export interface FinderParams {
 
 //use spread operator on default params to assign to parameters
 export const DefaultParams: FinderParams = {
-  searchLim: 500,
   maxScore: 3,
   maxCount: 8,
   subCost: 1,
@@ -42,15 +40,10 @@ interface Bitmask {
   glossMasks: number[];
 }
 
-//[wordlist, list score]
-type ScoredWordlist = [Word[], number];
-
 // THIS DOES NOT YET WORK WITH MULTIPLE GLOSSES
 
 export default class DupFinder {
   constructor(params: FinderParams = DefaultParams) {
-    this.searchLimit = params.searchLim;
-
     this.searchCount = 0;
 
     this.qualifiedValue = params.qualVal;
@@ -69,9 +62,6 @@ export default class DupFinder {
     this.glossmap = new Set();
     this.maskedWords = [];
   }
-
-  //prevent infinite loops in getNextDups()
-  searchLimit: number;
 
   searchCount: number; // Can be referenced from outside to calculate progress
 
@@ -97,92 +87,71 @@ export default class DupFinder {
   //error handling
   empty2dArray = [[]];
 
-  //filter output, total output - Used for testing duplicate finder. (See docs/bitmap_testing.md)
-  //filterTest: [number, number] = [0, 0];
-
-  /** get n lists of suspected duplicates from DB O(n^(4+ε)).
-   * Returns [] if no duplicates have been found.
-   */
+  /** Get lists of suspected duplicates. Returns [] if none found. */
   async getNextDups(): Promise<Word[][]> {
-    let wordCollections: Promise<Word[][]> = this.fetchWordsFromDB().then(
-      (gotWordsFromDB) => {
-        //return no words if DB empty
-        if (!gotWordsFromDB) return this.empty2dArray;
+    const wordsLoaded = await this.fetchWordsFromDB();
+    if (!wordsLoaded) {
+      return [];
+    }
 
-        //[wordlist, list score]
-        let currentWordlists: ScoredWordlist[] = [];
+    const currentWordLists: Word[][] = [];
+    const remainingWords = this.maskedWords;
+    let newWordList: Word[];
 
-        //use each word as a parent and compare the resulting lists against each other
-        let remainingWords = this.maskedWords;
-        for (let i = 0; i < this.maskedWords.length; i++) {
-          //word list to compare against current words
-          let newWordList: ScoredWordlist = this.getDuplicatesOfWord(
-            this.maskedWords[i],
-            remainingWords
-          );
-          remainingWords.shift();
+    // Use each word as a parent and compare the resulting lists against each other.
+    for (let i = 0; i < this.maskedWords.length; i++) {
+      // Word list to compare against current words.
+      newWordList = this.getDuplicatesOfWord(
+        this.maskedWords[i],
+        remainingWords
+      );
+      remainingWords.shift();
 
-          //ignore wordlists with less than 2 words
-          if (newWordList[0].length <= 1) {
-            continue;
-          }
-
-          //add wordlist if currentWords is not full yet
-          currentWordlists.push(newWordList);
-          continue;
-        }
-        currentWordlists.sort(function (a, b): number {
-          return a[1] - b[1];
-        });
-
-        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-        // console.log(
-        //   "Start: " + this.maskedWords.length,
-        //   "Filtered: " + this.filterTest[0] / this.maskedWords.length,
-        //   "Result: " + this.filterTest[1] / this.maskedWords.length
-        // );
-
-        //return empty 2d array if no possible duplicates found
-        if (currentWordlists.length <= 0) return this.empty2dArray;
-
-        //return the wordlist from the scored list
-        return currentWordlists.map(function (scoredList) {
-          return scoredList[0];
-        });
+      // Add lists with multiple words.
+      if (newWordList.length > 1) {
+        currentWordLists.push(newWordList);
+        this.searchCount += 1;
       }
+    }
+
+    // Sort alphabetically.
+    currentWordLists.sort((a, b) =>
+      a[0].vernacular.localeCompare(b[0].vernacular)
     );
-    return wordCollections;
+
+    return currentWordLists;
   }
 
-  /** returns a scored collection of duplicates of the parent */
+  /** Returns a collection of duplicates of the parent. */
   getDuplicatesOfWord(
     parent: Word | MaskedWord,
     wordCollection?: MaskedWord[]
-  ): ScoredWordlist {
-    if (!("mask" in parent)) parent = this.maskWord(parent);
-
-    if (!wordCollection) wordCollection = this.maskedWords;
-
-    if (wordCollection.length <= 0) {
-      return [[], Number.MAX_SAFE_INTEGER];
+  ): Word[] {
+    if (!("mask" in parent)) {
+      parent = this.maskWord(parent);
     }
 
-    //narrow down very different words
-    let words = this.filter(parent, wordCollection);
+    if (!wordCollection) {
+      wordCollection = this.maskedWords;
+    }
 
-    //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-    //this.filterTest[0] += words.length;
+    if (wordCollection.length <= 0) {
+      return [];
+    }
 
-    //thorough scoring
-    let scoredWords: ScoredWord[] = this.scoreWords(parent.word, words);
+    // Narrow down very different words.
+    const words = this.filter(parent, wordCollection);
 
-    //apply thresholds
-    let scoredList: ScoredWordlist = this.getAcceptedWords(scoredWords);
+    // Thorough scoring.
+    const scoredWords = this.scoreWords(parent.word, words);
 
-    //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-    //this.filterTest[1] += scoredList[0].length;
+    // Apply thresholds.
+    const wordList = this.getAcceptedWords(scoredWords);
 
-    return scoredList;
+    // Sort alphabetically.
+    wordList.sort((a, b) => a.vernacular.localeCompare(b.vernacular));
+
+    return wordList;
   }
 
   /** controls the scoring of a particular child by calculating the Levenshtein distance in O(n^(1 + ε) */
@@ -355,24 +324,21 @@ export default class DupFinder {
     return filteredWords;
   }
 
-  /** removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words */
-  private getAcceptedWords(words: ScoredWord[]): ScoredWordlist {
-    let outputCollection: ScoredWordlist = [[], 0];
+  /** Returns collection of highest scoring words above the quality threshold. */
+  private getAcceptedWords(words: ScoredWord[]): Word[] {
+    const outputCollection: Word[] = [];
 
-    let getScore = (word: ScoredWord) => {
-      return word.score;
-    };
+    const getScore = (word: ScoredWord) => word.score;
 
     words = quicksort<ScoredWord>(words, getScore);
 
-    //apply thresholds (score is redundant)
-    words.forEach((scoredword) => {
+    // Apply thresholds.
+    words.forEach((scoredWord) => {
       if (
-        scoredword.score <= this.maxScore &&
-        outputCollection[0].length <= this.maxCount
+        scoredWord.score <= this.maxScore &&
+        outputCollection.length <= this.maxCount
       ) {
-        outputCollection[0].push(scoredword.word);
-        outputCollection[1] += scoredword.score;
+        outputCollection.push(scoredWord.word);
       }
     });
 
