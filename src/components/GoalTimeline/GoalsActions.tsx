@@ -9,6 +9,7 @@ import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import {
+  generateBlacklistHash,
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
@@ -122,8 +123,8 @@ export function loadGoalData(goal: Goal) {
           }
 
           // Add if not blacklisted.
-          const groupIds = newGroup.map((w) => w.id).sort();
-          const groupHash = groupIds.reduce((val, acc) => `${acc}:${val}`, "");
+          const groupIds = newGroup.map((w) => w.id);
+          const groupHash = generateBlacklistHash(groupIds);
           if (!blacklist[groupHash]) {
             newGroups.push(newGroup);
             usedIDs.push(...groupIds);

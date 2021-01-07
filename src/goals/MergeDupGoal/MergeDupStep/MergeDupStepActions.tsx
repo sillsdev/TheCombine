@@ -406,7 +406,7 @@ export function mergeAll() {
   };
 }
 
-function generateBlacklistEntry(wordIDs: string[]) {
+export function generateBlacklistHash(wordIDs: string[]) {
   return wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
 }
 
@@ -415,12 +415,12 @@ function blacklistSetAndAllSubsets(
   blacklist: Hash<boolean>,
   wordIDs: string[]
 ) {
-  let hash = generateBlacklistEntry(wordIDs);
+  let hash = generateBlacklistHash(wordIDs);
   blacklist[hash] = true;
   if (wordIDs.length > 2) {
     wordIDs.forEach((id) => {
       const subset = wordIDs.filter((i) => i !== id);
-      hash = generateBlacklistEntry(subset);
+      hash = generateBlacklistHash(subset);
       if (!blacklist[hash]) {
         blacklistSetAndAllSubsets(blacklist, subset);
       }
