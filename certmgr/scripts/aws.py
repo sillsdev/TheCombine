@@ -19,7 +19,7 @@ def _get_aws_uri_(obj: str) -> Tuple[str, str]:
     return f"s3://{aws_bucket}/{obj}", aws_profile
 
 
-def aws_s3_put(src: Path, dest: str) -> bool:
+def aws_s3_put(src: Path, dest: str) -> None:
     """
     Push a file to the configured AWS S3 Bucket.
 
@@ -28,18 +28,11 @@ def aws_s3_put(src: Path, dest: str) -> bool:
     information.
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(dest)
-    print(f"AWS S3 put {src} to {dest}")
-    return (
-        subprocess.run(
-            ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
-            shell=True,
-            check=True,
-        ).returncode
-        == 0
-    )
+    aws_cmd = f"aws s3 cp --profile {aws_s3_profile} {src} {aws_s3_uri}"
+    subprocess.call(aws_cmd, shell=True)
 
 
-def aws_s3_get(src: str, dest: Path) -> bool:
+def aws_s3_get(src: str, dest: Path) -> None:
     """
     Get a file from the configured AWS S3 Bucket.
 
@@ -48,15 +41,8 @@ def aws_s3_get(src: str, dest: Path) -> bool:
     information.
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(src)
-    print(f"AWS S3 get {dest} from {src}")
-    return (
-        subprocess.run(
-            ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
-            shell=True,
-            check=True,
-        ).returncode
-        == 0
-    )
+    aws_cmd = f"aws s3 cp --profile {aws_s3_profile} {aws_s3_uri} {dest}"
+    subprocess.call(aws_cmd, shell=True)
 
 
 def aws_push_certs() -> None:
