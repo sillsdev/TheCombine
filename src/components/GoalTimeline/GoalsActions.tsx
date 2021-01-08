@@ -8,8 +8,8 @@ import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv"
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
-import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
+  generateBlacklistHash,
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
@@ -108,44 +108,39 @@ export function loadGoalData(goal: Goal) {
   return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
-        let finder = new DupFinder();
+        const finder = new DupFinder();
+        const groups = await finder.getNextDups();
 
-        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-        //let t0 = performance.now();
+        const usedIDs: string[] = [];
+        const newGroups = [];
+        const blacklist = LocalStorage.getMergeDupsBlacklist();
 
-        let groups = await finder.getNextDups();
-
-        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-        //console.log(performance.now() - t0);
-
-        let usedIDs: string[] = [];
-
-        let newGroups = [];
-
-        let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
-
-        for (let group of groups) {
-          let newGroup = [];
-          for (let word of group) {
-            if (!usedIDs.includes(word.id)) {
-              usedIDs.push(word.id);
-              newGroup.push(word);
-            }
+        for (const group of groups) {
+          // Remove words that are already included.
+          const newGroup = group.filter((w) => !usedIDs.includes(w.id));
+          if (newGroup.length < 2) {
+            continue;
           }
-          // check blacklist
-          let groupIds = newGroup.map((a) => a.id).sort();
-          let groupHash = groupIds.reduce((val, acc) => `${acc}:${val}`, "");
-          if (!blacklist[groupHash] && newGroup.length > 1) {
+
+          // Add if not blacklisted.
+          const groupIds = newGroup.map((w) => w.id);
+          const groupHash = generateBlacklistHash(groupIds);
+          if (!blacklist[groupHash]) {
             newGroups.push(newGroup);
+            usedIDs.push(...groupIds);
+          }
+
+          // Stop the process once numSteps many groups found.
+          if (newGroups.length === goal.numSteps) {
+            break;
           }
         }
 
-        if (newGroups.length >= 8) {
-          newGroups = newGroups.slice(0, 8);
-        }
-
+        // Add data to goal.
         goal.data = { plannedWords: newGroups };
         goal.numSteps = newGroups.length;
+
+        // Reset goal steps.
         goal.currentStep = 0;
         goal.steps = [];
 

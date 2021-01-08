@@ -187,8 +187,8 @@ export function refreshWords() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    let historyState: GoalHistoryState = getState().goalsState.historyState;
-    let goal: Goal = historyState.history[historyState.history.length - 1];
+    let historyState = getState().goalsState.historyState;
+    let goal = historyState.history[historyState.history.length - 1];
 
     // Push the current step into the history state and load the data.
     await updateStep(dispatch, goal, historyState).then(() => {
@@ -391,21 +391,39 @@ export function mergeAll() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    // generate blacklist
-    const wordIDs: string[] = Object.keys(
-      getState().mergeDuplicateGoal.data.words
-    );
-    const hash: string = wordIDs
-      .sort()
-      .reduce((val, acc) => `${acc}:${val}`, "");
-    const blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
-    blacklist[hash] = true;
+    // Generate blacklist.
+    const wordIDs = Object.keys(getState().mergeDuplicateGoal.data.words);
+    const blacklist = LocalStorage.getMergeDupsBlacklist();
+    blacklistSetAndAllSubsets(blacklist, wordIDs);
     LocalStorage.setMergeDupsBlacklist(blacklist);
-    // merge words
+
+    // Merge words.
     let mapping: Hash<{ srcWord: string; order: number }> = {};
     const words = Object.keys(getState().mergeDuplicateGoal.tree.words);
     for (const wordID of words) {
       mapping = await mergeWord(wordID, getState, mapping);
     }
   };
+}
+
+export function generateBlacklistHash(wordIDs: string[]) {
+  return wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
+}
+
+// Recursively blacklist all subsets of length at least 2.
+function blacklistSetAndAllSubsets(
+  blacklist: Hash<boolean>,
+  wordIDs: string[]
+) {
+  let hash = generateBlacklistHash(wordIDs);
+  blacklist[hash] = true;
+  if (wordIDs.length > 2) {
+    wordIDs.forEach((id) => {
+      const subset = wordIDs.filter((i) => i !== id);
+      hash = generateBlacklistHash(subset);
+      if (!blacklist[hash]) {
+        blacklistSetAndAllSubsets(blacklist, subset);
+      }
+    });
+  }
 }
