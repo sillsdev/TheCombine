@@ -43,11 +43,7 @@ def get_setting(env_var: str) -> Union[str, int, bool]:
 
 
 def update_link(src: Path, dest: Path) -> None:
-    """
-    Create/move a symbolic link at 'dest' to point to 'src'.
-
-    If dest already exists and is not a link, it is deleted first.
-    """
+    """Create/move a symbolic link at 'dest' to point to 'src'."""
     if dest.is_symlink():
         link_target = os.readlink(dest)
         if link_target != src:
