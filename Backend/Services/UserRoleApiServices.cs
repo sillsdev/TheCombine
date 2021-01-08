@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -32,15 +33,21 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="UserRole"/> with specified userRoleId and projectId </summary>
-        public async Task<UserRole> GetUserRole(string projectId, string userRoleId)
+        public async Task<UserRole?> GetUserRole(string projectId, string userRoleId)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
             var userRoleList = await _userRoleDatabase.UserRoles.FindAsync(filter);
-
-            return userRoleList.FirstOrDefault();
+            try
+            {
+                return await userRoleList.FirstAsync();
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Adds a <see cref="UserRole"/> </summary>
@@ -76,14 +83,13 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NotFound;
             }
-            else if (updateResult.ModifiedCount > 0)
+
+            if (updateResult.ModifiedCount > 0)
             {
                 return ResultOfUpdate.Updated;
             }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
+
+            return ResultOfUpdate.NoChange;
         }
     }
 }

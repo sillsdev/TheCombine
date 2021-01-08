@@ -4,9 +4,22 @@ A project is for a single vernacular language.
 
 ## Create a Project
 
+![Create Project - Yiddish](images/projectCreateTzotzil.png)
+
 ### Vernacular and Analysis Languages
 
-### Import existing Data
+The _vernacular language_ is the language for which words are being collected. This is usually a local, indigenous,
+minority, autochthonous, heritage, or endangered langauge or dialect.
+
+The _analysis language_ is the language into which the vernacular language is being translated. This is usually a
+regional, national, official, or majority language of the location where the vernacular is used.
+
+### Import Existing Data
+
+If you have linguistics data in a [LIFT](https://software.sil.org/lifttools) file (likely exported from The Combine,
+[WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), or
+[Lexique Pro](software.sil.org/lexiquepro)), you can hit the BROWSE button next to "Upload .zip project file?" to import
+the data into your project.
 
 ## Manage a Project
 
@@ -33,8 +46,8 @@ and associated with new data entries.
 
     Currently, only one LIFT file can be imported per project.
 
-After clicking the Export button, you can navigate to other parts of the website. A notification will appear in the App
-Bar when the export is ready for download. A project that has reached hundreds of MB is size may take tens of minutes to
+After clicking the Export button, you can navigate to other parts of the website. A download icon will appear in the App
+Bar when the export is ready for download. A project that has reached hundreds of MB in size may take tens of minutes to
 export.
 
 ### Autocomplete

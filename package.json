@@ -38,7 +38,7 @@
     "@material-ui/styles": "^4.11.2",
     "@matt-block/react-recaptcha-v2": "^1.0.6",
     "@microsoft/signalr": "^3.1.10",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dictionary-en-us": "^2.1.1",
     "make-dir": "^3.1.0",
     "material-table": "^1.69.2",

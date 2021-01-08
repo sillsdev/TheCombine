@@ -59,15 +59,15 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Null File");
             }
 
-            // Ensure file is not empty
+            // Ensure file is not empty.
             if (file.Length == 0)
             {
                 return new BadRequestObjectResult("Empty File");
             }
 
-            // Get user to apply avatar to
-            var gotUser = await _userService.GetUser(userId);
-            if (gotUser is null)
+            // Get user to apply avatar to.
+            var user = await _userService.GetUser(userId);
+            if (user is null)
             {
                 return new NotFoundObjectResult(userId);
             }
@@ -75,16 +75,16 @@ namespace BackendFramework.Controllers
             // Generate path to store avatar file.
             fileUpload.FilePath = FileStorage.GenerateAvatarFilePath(userId);
 
-            // Copy file data to a new local file
+            // Copy file data to a new local file.
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
 
-            // Update the user's avatar file
-            gotUser.Avatar = fileUpload.FilePath;
-            gotUser.HasAvatar = true;
-            _ = await _userService.Update(userId, gotUser);
+            // Update the user's avatar file.
+            user.Avatar = fileUpload.FilePath;
+            user.HasAvatar = true;
+            _ = await _userService.Update(userId, user);
 
             return new OkResult();
         }

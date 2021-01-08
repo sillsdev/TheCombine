@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
-import { updateUser } from "../../backend";
+import { isEmailTaken, updateUser } from "../../backend";
 import {
   getAvatar,
   getCurrentUser,
@@ -84,6 +84,7 @@ interface UserSettingsState {
   name: string;
   phone: string;
   email: string;
+  emailTaken: boolean;
   avatar: string;
   avatarDialogOpen: boolean;
 }
@@ -104,6 +105,7 @@ class UserSettings extends React.Component<
       name: user.name,
       phone: user.phone,
       email: user.email,
+      emailTaken: false,
       avatar: getAvatar(),
       avatarDialogOpen: false,
     };
@@ -118,18 +120,29 @@ class UserSettings extends React.Component<
   ) {
     const value = e.target.value;
 
-    this.setState({
-      [field]: value,
-    } as Pick<UserSettingsState, K>);
+    this.setState({ [field]: value } as Pick<UserSettingsState, K>);
+  }
+
+  isEmailOkay() {
+    const emailUnchanged =
+      this.state.email.toLowerCase() === this.state.user.email.toLowerCase();
+    return emailUnchanged || !isEmailTaken(this.state.email);
   }
 
   onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let newUser: User = this.state.user;
-    newUser.name = this.state.name;
-    newUser.phone = this.state.phone;
-    newUser.email = this.state.email;
-    updateUser(newUser).then((user: User) => setCurrentUser(user));
+    if (this.isEmailOkay()) {
+      const newUser: User = this.state.user;
+      newUser.name = this.state.name;
+      newUser.phone = this.state.phone;
+      newUser.email = this.state.email;
+      updateUser(newUser).then((user: User) => {
+        setCurrentUser(user);
+        alert(this.props.translate("userSettings.updateSuccess"));
+      });
+    } else {
+      this.setState({ emailTaken: true });
+    }
   }
 
   render() {
@@ -199,7 +212,16 @@ class UserSettings extends React.Component<
                           variant="outlined"
                           value={this.state.email}
                           label={<Translate id="login.email" />}
-                          onChange={(e) => this.updateField(e, "email")}
+                          onChange={(e) => {
+                            this.updateField(e, "email");
+                            this.setState({ emailTaken: false });
+                          }}
+                          error={this.state.emailTaken}
+                          helperText={
+                            this.state.emailTaken
+                              ? this.props.translate("login.emailTaken")
+                              : null
+                          }
                           type="email"
                         />
                       </Grid>

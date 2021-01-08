@@ -44,7 +44,7 @@ namespace BackendFramework.Services
             return userId == foundUserId;
         }
 
-        public static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
+        private static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
         {
             var jsonToken = GetJwt(request);
             var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
@@ -56,6 +56,10 @@ namespace BackendFramework.Services
         {
             var userId = GetUserId(request);
             var user = await _userService.GetUser(userId);
+            if (user is null)
+            {
+                return false;
+            }
 
             // Database administrators implicitly possess all permissions.
             if (user.IsAdmin)
@@ -92,11 +96,16 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
+        public async Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             var userId = GetUserId(request);
-            var userObj = _userService.GetUser(userId).Result;
-            return userObj.WorkedProjects[projectId] != userEditId;
+            var user = await _userService.GetUser(userId);
+            if (user is null)
+            {
+                return true;
+            }
+
+            return user.WorkedProjects[projectId] != userEditId;
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
