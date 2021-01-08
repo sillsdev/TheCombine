@@ -9,14 +9,11 @@ import {
 import { ArrowForwardIos } from "@material-ui/icons";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { SideBar } from "../MergeDupStepComponent";
-import { Hash, MergeTreeReference, TreeDataSense } from "../MergeDupsTree";
+import { Hash, TreeDataSense } from "../MergeDupsTree";
 
-//interface for component props
 export interface MergeStackProps {
-  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   wordID: string;
   senseID: string;
   sense: Hash<string>;
@@ -26,9 +23,7 @@ export interface MergeStackProps {
   sideBar: SideBar;
 }
 
-//interface for component state
 interface MergeStackState {
-  anchorEl?: HTMLElement;
   duplicateCount: number;
 }
 
@@ -40,11 +35,11 @@ function arraysEqual<T>(arr1: T[], arr2: T[]) {
   return true;
 }
 
-class MergeStack extends React.Component<
-  MergeStackProps & LocalizeContextProps,
+export default class MergeStack extends React.Component<
+  MergeStackProps,
   MergeStackState
 > {
-  constructor(props: MergeStackProps & LocalizeContextProps) {
+  constructor(props: MergeStackProps) {
     super(props);
     this.state = { duplicateCount: 1 };
   }
@@ -62,6 +57,15 @@ class MergeStack extends React.Component<
     });
   }
 
+  updateDuplicateCount(duplicateCount: number) {
+    if (duplicateCount > this.state.duplicateCount) {
+      this.expand();
+    }
+    if (duplicateCount !== this.state.duplicateCount) {
+      this.setState({ duplicateCount });
+    }
+  }
+
   render() {
     let senses = Object.values(this.props.sense).map(
       (senseID) => this.props.senses[senseID]
@@ -72,12 +76,7 @@ class MergeStack extends React.Component<
       data: this.props.senses[sense[1]],
     }));
 
-    if (senseEntries.length > this.state.duplicateCount) {
-      this.expand();
-    }
-    if (senseEntries.length !== this.state.duplicateCount) {
-      this.setState({ duplicateCount: senseEntries.length });
-    }
+    this.updateDuplicateCount(senseEntries.length);
 
     let glosses: { def: string; language: string; sense: string }[] = [];
     for (let entry of senseEntries) {
@@ -178,6 +177,3 @@ class MergeStack extends React.Component<
     );
   }
 }
-
-//export class as default
-export default withLocalize(MergeStack);

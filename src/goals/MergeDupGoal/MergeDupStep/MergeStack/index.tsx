@@ -1,8 +1,7 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import MergeStackComponent from "./MergeStackComponent";
+
 import { StoreState } from "../../../../types";
-import { MergeTreeAction } from "../MergeDupStepActions";
+import MergeStackComponent from "./MergeStackComponent";
 
 export function mapStateToProps(state: StoreState) {
   return {
@@ -10,13 +9,4 @@ export function mapStateToProps(state: StoreState) {
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction>
-) {
-  return {};
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MergeStackComponent);
+export default connect(mapStateToProps)(MergeStackComponent);
