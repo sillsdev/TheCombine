@@ -18,8 +18,11 @@
     append: yes
     generate_ssh_key: yes
 
-# setup 'teamcity' login
-- name: Add 'teamcity' user as authorized user for combine_user
+# setup 'teamcity' ssh key
+# Add the public key as an authorized_key for the
+# {{ combine_user }} so that TeamCity can connect to
+# install/update TheCombine software.
+- name: Add 'teamcity' public key as authorized_key for combine_user
   authorized_key:
     user: "{{ combine_user }}"
     state: present
