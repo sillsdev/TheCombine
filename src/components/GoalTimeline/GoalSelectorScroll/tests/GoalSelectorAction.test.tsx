@@ -1,9 +1,9 @@
 import {
-  SELECT_ACTION,
   GoalScrollAction,
+  MOUSE_ACTION,
+  SELECT_ACTION,
   scrollSelectorIndexAction,
   scrollSelectorMouseAction,
-  MOUSE_ACTION,
 } from "../GoalSelectorAction";
 
 const VAL = 5;

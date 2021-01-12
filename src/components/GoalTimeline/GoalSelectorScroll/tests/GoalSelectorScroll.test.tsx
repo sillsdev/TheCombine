@@ -7,8 +7,8 @@ import renderer, {
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { Goal, GoalName, GoalSelectorState } from "../../../../../types/goals";
-import { User } from "../../../../../types/user";
+import { Goal, GoalName, GoalSelectorState } from "../../../../types/goals";
+import { User } from "../../../../types/user";
 import GoalSelectorScroll from "../";
 import {
   GoalScrollAction,

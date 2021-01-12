@@ -2,7 +2,7 @@ import { localizeReducer } from "react-localize-redux";
 import { combineReducers, Reducer } from "redux";
 
 import { goalsReducer } from "./components/GoalTimeline/GoalsReducer";
-import { goalSelectReducer } from "./components/GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
+import { goalSelectReducer } from "./components/GoalTimeline/GoalSelectorScroll/GoalSelectorReducer";
 import { loginReducer } from "./components/Login/LoginReducer";
 import { passwordResetReducer } from "./components/PasswordReset/reducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
