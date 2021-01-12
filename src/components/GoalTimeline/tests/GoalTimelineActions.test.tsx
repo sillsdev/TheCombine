@@ -4,14 +4,18 @@ import thunk from "redux-thunk";
 import * as LocalStorage from "../../../backend/localStorage";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import {
-  MergeTreeActions,
+  MergeDupData,
+  MergeDups,
+  MergeStepData,
+} from "../../../goals/MergeDupGoal/MergeDups";
+import {
   MergeTreeAction,
+  MergeTreeActions,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
-import { Goal } from "../../../types/goals";
+import { Goal, maxNumSteps } from "../../../types/goals";
 import { User } from "../../../types/user";
 import { UserEdit } from "../../../types/userEdit";
 import { defaultState as goalsDefaultState } from "../DefaultState";
@@ -198,7 +202,7 @@ describe("Test GoalsActions", () => {
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
     let goalToUpdate: Goal = new MergeDups();
-    goalToUpdate.numSteps = 8;
+    goalToUpdate.numSteps = maxNumSteps(goalToUpdate.goalType);
     goalToUpdate.steps = [
       {
         words: [...goalDataMock.plannedWords[0]],
@@ -287,14 +291,16 @@ describe("Test GoalsActions", () => {
   });
 
   it("Should update the step data of a goal", () => {
-    const goal: MergeDups = new MergeDups();
+    const goal = new MergeDups();
     goal.data = goalDataMock;
     expect(goal.steps).toEqual([]);
     expect(goal.currentStep).toEqual(0);
 
-    const updatedGoal: MergeDups = actions.updateStepData(goal) as MergeDups;
+    const updatedGoal = actions.updateStepData(goal);
 
-    expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
+    expect((updatedGoal.steps[0] as MergeStepData).words).toEqual(
+      (goal.data as MergeDupData).plannedWords[0]
+    );
     expect(updatedGoal.currentStep).toEqual(0);
   });
 
