@@ -1,15 +1,15 @@
-import React, { ReactElement } from "react";
-
 import Card from "@material-ui/core/Card";
 import { Button, CardContent, Typography } from "@material-ui/core";
-import { Goal, GoalName } from "../../../../types/goals";
+import React, { ReactElement } from "react";
 import {
   LocalizeContextProps,
-  withLocalize,
   Translate,
+  withLocalize,
 } from "react-localize-redux";
-import ContextMenu from "../../../ContextMenu/ContextMenu";
-import { styleAddendum } from "../../../../types/theme";
+
+import { Goal, GoalName } from "../../../types/goals";
+import { styleAddendum } from "../../../types/theme";
+import ContextMenu from "../../ContextMenu/ContextMenu";
 
 const CLICK_SENSITIVITY: number = 10;
 
