@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 
@@ -50,6 +50,14 @@ export default function MergeStack(props: MergeStackProps) {
     (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
 
+  const updateSidebar = useCallback(() => {
+    props.setSidebar({
+      senses: senseEntries,
+      wordID: props.wordID,
+      senseID: props.senseID,
+    });
+  }, [props, senseEntries]);
+
   useEffect(() => {
     if (senseEntries.length !== duplicateCount) {
       if (senseEntries.length > duplicateCount) {
@@ -57,32 +65,16 @@ export default function MergeStack(props: MergeStackProps) {
       }
       setDuplicateCount(senseEntries.length);
     }
-    // We only want this effect to run when senseEntries changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [senseEntries]);
+  }, [senseEntries.length, duplicateCount, updateSidebar]);
 
   useEffect(() => {
-    resetSenseEntry();
-    // We only want this effect to run when hashSenses or props.sense changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hashedSenses, props.sense]);
-
-  function updateSidebar() {
-    props.setSidebar({
-      senses: senseEntries,
-      wordID: props.wordID,
-      senseID: props.senseID,
-    });
-  }
-
-  function resetSenseEntry() {
     setSenseEntries(
       Object.entries(props.sense).map((s) => ({
         id: s[0],
         data: hashedSenses[s[1]],
       }))
     );
-  }
+  }, [hashedSenses, props.sense]);
 
   if (
     props.sideBar.wordID === props.wordID &&
