@@ -1,10 +1,10 @@
+import { StoreAction, StoreActions } from "../../../rootActions";
+import { GoalSelectorState } from "../../../types/goals";
 import {
   GoalScrollAction,
-  SELECT_ACTION,
   MOUSE_ACTION,
+  SELECT_ACTION,
 } from "./GoalSelectorAction";
-import { GoalSelectorState } from "../../../../types/goals";
-import { StoreAction, StoreActions } from "../../../../rootActions";
 
 export const defaultState: GoalSelectorState = {
   selectedIndex: 0,
