@@ -131,7 +131,7 @@ export function loadGoalData(goal: Goal) {
           }
 
           // Stop the process once maxNumSteps many groups found.
-          if (newGroups.length === maxNumSteps(goal.name)) {
+          if (newGroups.length === maxNumSteps(goal.goalType)) {
             break;
           }
         }

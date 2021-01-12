@@ -202,7 +202,7 @@ describe("Test GoalsActions", () => {
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
     let goalToUpdate: Goal = new MergeDups();
-    goalToUpdate.numSteps = maxNumSteps(goalToUpdate.name);
+    goalToUpdate.numSteps = maxNumSteps(goalToUpdate.goalType);
     goalToUpdate.steps = [
       {
         words: [...goalDataMock.plannedWords[0]],

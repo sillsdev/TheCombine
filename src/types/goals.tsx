@@ -75,9 +75,9 @@ export enum GoalName {
   ValidateStrWords = "validateStrWords",
 }
 
-export function maxNumSteps(name: GoalName) {
-  switch (name) {
-    case GoalName.MergeDups:
+export function maxNumSteps(type: GoalType) {
+  switch (type) {
+    case GoalType.MergeDups:
       return 8;
     default:
       return 1;
