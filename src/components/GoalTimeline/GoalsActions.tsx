@@ -108,6 +108,8 @@ export function loadGoalData(goal: Goal) {
   return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
+        const maxNumSteps = 8;
+
         const finder = new DupFinder();
         const groups = await finder.getNextDups();
 
@@ -131,7 +133,7 @@ export function loadGoalData(goal: Goal) {
           }
 
           // Stop the process once numSteps many groups found.
-          if (newGroups.length === goal.numSteps) {
+          if (newGroups.length === maxNumSteps) {
             break;
           }
         }
