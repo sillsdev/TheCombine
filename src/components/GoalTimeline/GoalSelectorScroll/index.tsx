@@ -1,14 +1,14 @@
-import GoalSelectorScroll from "./GoalSelectorScroll";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+
+import { StoreState } from "../../../types";
+import { GoalSelectorState } from "../../../types/goals";
 import {
   GoalScrollAction,
   scrollSelectorIndexAction,
   scrollSelectorMouseAction,
 } from "./GoalSelectorAction";
-
-import { connect } from "react-redux";
-import { StoreState } from "../../../../types";
-import { GoalSelectorState } from "../../../../types/goals";
-import { Dispatch } from "redux";
+import GoalSelectorScroll from "./GoalSelectorScroll";
 
 export function mapStateToProps(state: StoreState): GoalSelectorState {
   return {

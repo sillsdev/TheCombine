@@ -1,11 +1,11 @@
-import { goalSelectReducer, defaultState } from "../GoalSelectorReducer";
+import { StoreActions, StoreAction } from "../../../../rootActions";
+import { GoalSelectorState } from "../../../../types/goals";
 import {
-  SELECT_ACTION,
   GoalScrollAction,
   MOUSE_ACTION,
+  SELECT_ACTION,
 } from "../GoalSelectorAction";
-import { GoalSelectorState } from "../../../../../types/goals";
-import { StoreActions, StoreAction } from "../../../../../rootActions";
+import { defaultState, goalSelectReducer } from "../GoalSelectorReducer";
 
 const VAL = 5;
 const scrollAct: GoalScrollAction = {
