@@ -10,7 +10,7 @@ import {
   MergeTreeReference,
   MergeTreeWord,
 } from "../MergeDupsTree";
-import MergeStack from "../MergeStack";
+import MergeStack from "./MergeStack";
 
 //interface for component props
 export interface MergeRowProps {
