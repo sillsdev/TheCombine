@@ -19,7 +19,7 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history, { Path } from "../../history";
 import { StoreState } from "../../types";
-import { Goal, GoalType } from "../../types/goals";
+import { Goal, GoalType, maxNumSteps } from "../../types/goals";
 import { ActionWithPayload } from "../../types/mockAction";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
@@ -108,8 +108,6 @@ export function loadGoalData(goal: Goal) {
   return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
-        const maxNumSteps = 8;
-
         const finder = new DupFinder();
         const groups = await finder.getNextDups();
 
@@ -132,8 +130,8 @@ export function loadGoalData(goal: Goal) {
             usedIDs.push(...groupIds);
           }
 
-          // Stop the process once numSteps many groups found.
-          if (newGroups.length === maxNumSteps) {
+          // Stop the process once maxNumSteps many groups found.
+          if (newGroups.length === maxNumSteps(goal.name)) {
             break;
           }
         }
@@ -159,9 +157,7 @@ export function loadGoalData(goal: Goal) {
 export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
     case GoalType.MergeDups: {
-      let currentGoalData: MergeDupData = JSON.parse(
-        JSON.stringify(goal.data as MergeDupData)
-      );
+      const currentGoalData = goal.data as MergeDupData;
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep],
       };
