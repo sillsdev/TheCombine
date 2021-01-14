@@ -19,8 +19,8 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history, { Path } from "../../history";
 import { StoreState } from "../../types";
+import { ActionWithPayload } from "../../types/actions";
 import { Goal, GoalType, maxNumSteps } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
 
