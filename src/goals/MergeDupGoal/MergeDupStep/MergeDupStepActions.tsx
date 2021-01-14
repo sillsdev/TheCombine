@@ -1,20 +1,14 @@
-import { Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
 import * as backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
-import {
-  getIndexInHistory,
-  getUserEditId,
-  updateGoal,
-  UpdateGoalAction,
-  updateStepData,
-} from "../../../components/GoalTimeline/GoalsActions";
+import { saveChangesToGoal } from "../../../components/GoalTimeline/GoalsActions";
 import history, { Path } from "../../../history";
 import { StoreState } from "../../../types";
-import { Goal, GoalHistoryState } from "../../../types/goals";
+import { Goal, GoalHistoryState, maxNumSteps } from "../../../types/goals";
 import { State, Word } from "../../../types/word";
-import { MergeDups, MergeStepData } from "../MergeDups";
+import DupFinder from "../DuplicateFinder/DuplicateFinder";
+import { MergeDupData, MergeDups, MergeStepData } from "../MergeDups";
 import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
 
 export enum MergeTreeActions {
@@ -159,16 +153,6 @@ export function mergeSense() {
   };
 }
 
-async function addStepToGoal(goal: Goal, goalIndex: number) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    const userEditId: string | undefined = getUserEditId(user);
-    if (userEditId !== undefined) {
-      await backend.addStepToGoal(userEditId, goalIndex, goal);
-    }
-  }
-}
-
 export function advanceStep() {
   return async (
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
@@ -187,13 +171,14 @@ export function refreshWords() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    let historyState = getState().goalsState.historyState;
-    let goal = historyState.history[historyState.history.length - 1];
+    let goalHistory = getState().goalsState.historyState.history;
+    let goal = goalHistory[goalHistory.length - 1];
+    const step = getStepFromMergeDupsData(goal);
 
     // Push the current step into the history state and load the data.
-    await updateStep(dispatch, goal, historyState).then(() => {
-      historyState = getState().goalsState.historyState;
-      goal = historyState.history[historyState.history.length - 1];
+    await saveChangesToGoal(dispatch, goal, goalHistory, step).then(() => {
+      goalHistory = getState().goalsState.historyState.history;
+      goal = goalHistory[goalHistory.length - 1];
       if (goal.currentStep < goal.numSteps) {
         const stepData = (goal as MergeDups).steps[
           goal.currentStep
@@ -208,19 +193,11 @@ export function refreshWords() {
   };
 }
 
-//
-function updateStep(
-  dispatch: Dispatch<UpdateGoalAction>,
-  goal: Goal,
-  state: GoalHistoryState
-): Promise<void> {
-  return new Promise((resolve) => {
-    const updatedGoal = updateStepData(goal);
-    dispatch(updateGoal(updatedGoal));
-    const goalIndex = getIndexInHistory(state.history, goal);
-    addStepToGoal(state.history[goalIndex], goalIndex);
-    resolve();
-  });
+function getStepFromMergeDupsData(goal: MergeDups): MergeStepData {
+  const data = goal.data as MergeDupData;
+  return {
+    words: data.plannedWords[goal.currentStep],
+  };
 }
 
 type SenseWithState = TreeDataSense & { state: State };
@@ -426,4 +403,45 @@ function blacklistSetAndAllSubsets(
       }
     });
   }
+}
+
+// Used by loadGoalData() in GoalActions.tsx.
+export async function loadMergeDupsData(goal: MergeDups) {
+  const finder = new DupFinder();
+  const groups = await finder.getNextDups();
+
+  const usedIDs: string[] = [];
+  const newGroups = [];
+  const blacklist = LocalStorage.getMergeDupsBlacklist();
+
+  for (const group of groups) {
+    // Remove words that are already included.
+    const newGroup = group.filter((w) => !usedIDs.includes(w.id));
+    if (newGroup.length < 2) {
+      continue;
+    }
+
+    // Add if not blacklisted.
+    const groupIds = newGroup.map((w) => w.id);
+    const groupHash = generateBlacklistHash(groupIds);
+    if (!blacklist[groupHash]) {
+      newGroups.push(newGroup);
+      usedIDs.push(...groupIds);
+    }
+
+    // Stop the process once maxNumSteps many groups found.
+    if (newGroups.length === maxNumSteps(goal.goalType)) {
+      break;
+    }
+  }
+
+  // Add data to goal.
+  goal.data = { plannedWords: newGroups };
+  goal.numSteps = newGroups.length;
+
+  // Reset goal steps.
+  goal.currentStep = 0;
+  goal.steps = [];
+
+  return goal;
 }

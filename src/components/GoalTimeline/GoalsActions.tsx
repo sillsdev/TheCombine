@@ -6,10 +6,9 @@ import * as LocalStorage from "../../backend/localStorage";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
-import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import {
-  generateBlacklistHash,
+  loadMergeDupsData,
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
@@ -19,10 +18,12 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history, { Path } from "../../history";
 import { StoreState } from "../../types";
-import { Goal, GoalType, maxNumSteps } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
+import { ActionWithPayload } from "../../types/actions";
+import { Goal, GoalStep, GoalType } from "../../types/goals";
+import { Project } from "../../types/project";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
+import { ProjectAction, saveChangesToProject } from "../Project/ProjectActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -108,42 +109,7 @@ export function loadGoalData(goal: Goal) {
   return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
-        const finder = new DupFinder();
-        const groups = await finder.getNextDups();
-
-        const usedIDs: string[] = [];
-        const newGroups = [];
-        const blacklist = LocalStorage.getMergeDupsBlacklist();
-
-        for (const group of groups) {
-          // Remove words that are already included.
-          const newGroup = group.filter((w) => !usedIDs.includes(w.id));
-          if (newGroup.length < 2) {
-            continue;
-          }
-
-          // Add if not blacklisted.
-          const groupIds = newGroup.map((w) => w.id);
-          const groupHash = generateBlacklistHash(groupIds);
-          if (!blacklist[groupHash]) {
-            newGroups.push(newGroup);
-            usedIDs.push(...groupIds);
-          }
-
-          // Stop the process once maxNumSteps many groups found.
-          if (newGroups.length === maxNumSteps(goal.goalType)) {
-            break;
-          }
-        }
-
-        // Add data to goal.
-        goal.data = { plannedWords: newGroups };
-        goal.numSteps = newGroups.length;
-
-        // Reset goal steps.
-        goal.currentStep = 0;
-        goal.steps = [];
-
+        goal = await loadMergeDupsData(goal);
         await dispatch(refreshWords());
 
         break;
@@ -152,21 +118,6 @@ export function loadGoalData(goal: Goal) {
     }
     return goal;
   };
-}
-
-export function updateStepData(goal: Goal): Goal {
-  switch (goal.goalType) {
-    case GoalType.MergeDups: {
-      const currentGoalData = goal.data as MergeDupData;
-      goal.steps[goal.currentStep] = {
-        words: currentGoalData.plannedWords[goal.currentStep],
-      };
-      break;
-    }
-    default:
-      break;
-  }
-  return goal;
 }
 
 export function getUserEditId(user: User): string | undefined {
@@ -229,4 +180,42 @@ export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
 
 export function updateGoal(goal: Goal): UpdateGoalAction {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
+}
+
+export async function saveChanges(
+  goal: Goal,
+  goalHistory: Goal[],
+  project: Project,
+  dispatch: ThunkDispatch<StoreState, any, GoalAction | ProjectAction>
+) {
+  await saveChangesToGoal(dispatch, goal, goalHistory);
+  await saveChangesToProject(project, dispatch);
+}
+
+export async function saveChangesToGoal(
+  dispatch: Dispatch<UpdateGoalAction>,
+  goal: Goal,
+  goalHistory: Goal[],
+  step?: GoalStep
+): Promise<void> {
+  const goalIndex = getIndexInHistory(goalHistory, goal);
+  if (step) {
+    goal.steps[goal.currentStep] = step;
+  }
+  dispatch(updateGoal(goal));
+  await addStepToGoal(goalHistory[goalIndex], goalIndex);
+}
+
+async function addStepToGoal(goal: Goal, goalIndex: number) {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
+    const userEditId = getUserEditId(user);
+    if (userEditId) {
+      await Backend.addStepToGoal(
+        userEditId,
+        goalIndex,
+        goal
+      ).catch((err: string) => console.log(err));
+    }
+  }
 }

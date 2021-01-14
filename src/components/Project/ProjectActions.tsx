@@ -1,3 +1,6 @@
+import { ThunkDispatch } from "redux-thunk";
+
+import { updateProject } from "../../backend";
 import { Project } from "../../types/project";
 
 export const SET_CURRENT_PROJECT = "SET_CURRENT_PROJECT";
@@ -17,4 +20,12 @@ export function setCurrentProject(payload: Project): ProjectAction {
     type: SET_CURRENT_PROJECT,
     payload,
   };
+}
+
+export async function saveChangesToProject(
+  project: Project,
+  dispatch: ThunkDispatch<any, any, ProjectAction>
+) {
+  dispatch(setCurrentProject(project));
+  await updateProject(project);
 }

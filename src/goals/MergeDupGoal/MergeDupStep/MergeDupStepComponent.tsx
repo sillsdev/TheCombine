@@ -79,9 +79,6 @@ class MergeDupStep extends React.Component<
     if (this.props.advanceStep) {
       this.props.advanceStep();
     }
-    if (this.props.refreshWords) {
-      this.props.refreshWords();
-    }
   }
   saveContinue() {
     this.clearSideBar();

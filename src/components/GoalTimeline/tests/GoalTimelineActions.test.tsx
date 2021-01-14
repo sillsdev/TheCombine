@@ -4,11 +4,7 @@ import thunk from "redux-thunk";
 import * as LocalStorage from "../../../backend/localStorage";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import {
-  MergeDupData,
-  MergeDups,
-  MergeStepData,
-} from "../../../goals/MergeDupGoal/MergeDups";
+import { MergeDupData, MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
 import {
   MergeTreeAction,
   MergeTreeActions,
@@ -288,33 +284,6 @@ describe("Test GoalsActions", () => {
         expect(returnedGoal.data).toEqual({});
       })
       .catch((err: string) => fail(err));
-  });
-
-  it("Should update the step data of a goal", () => {
-    const goal = new MergeDups();
-    goal.data = goalDataMock;
-    expect(goal.steps).toEqual([]);
-    expect(goal.currentStep).toEqual(0);
-
-    const updatedGoal = actions.updateStepData(goal);
-
-    expect((updatedGoal.steps[0] as MergeStepData).words).toEqual(
-      (goal.data as MergeDupData).plannedWords[0]
-    );
-    expect(updatedGoal.currentStep).toEqual(0);
-  });
-
-  it("Should not update the step data of an unimplemented goal", () => {
-    const goal: HandleFlags = new HandleFlags();
-    expect(goal.steps).toEqual([]);
-    expect(goal.currentStep).toEqual(0);
-
-    const updatedGoal: HandleFlags = actions.updateStepData(
-      goal
-    ) as HandleFlags;
-
-    expect(updatedGoal.steps).toEqual([]);
-    expect(updatedGoal.currentStep).toEqual(0);
   });
 
   it("should return a userEditId", () => {
