@@ -19,8 +19,8 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history, { Path } from "../../history";
 import { StoreState } from "../../types";
+import { ActionWithPayload } from "../../types/actions";
 import { Goal, GoalType, maxNumSteps } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
 
@@ -108,42 +108,7 @@ export function loadGoalData(goal: Goal) {
   return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
-        const finder = new DupFinder();
-        const groups = await finder.getNextDups();
-
-        const usedIDs: string[] = [];
-        const newGroups = [];
-        const blacklist = LocalStorage.getMergeDupsBlacklist();
-
-        for (const group of groups) {
-          // Remove words that are already included.
-          const newGroup = group.filter((w) => !usedIDs.includes(w.id));
-          if (newGroup.length < 2) {
-            continue;
-          }
-
-          // Add if not blacklisted.
-          const groupIds = newGroup.map((w) => w.id);
-          const groupHash = generateBlacklistHash(groupIds);
-          if (!blacklist[groupHash]) {
-            newGroups.push(newGroup);
-            usedIDs.push(...groupIds);
-          }
-
-          // Stop the process once maxNumSteps many groups found.
-          if (newGroups.length === maxNumSteps(goal.goalType)) {
-            break;
-          }
-        }
-
-        // Add data to goal.
-        goal.data = { plannedWords: newGroups };
-        goal.numSteps = newGroups.length;
-
-        // Reset goal steps.
-        goal.currentStep = 0;
-        goal.steps = [];
-
+        goal = await loadMergeDupsData(goal);
         await dispatch(refreshWords());
 
         break;
@@ -152,6 +117,46 @@ export function loadGoalData(goal: Goal) {
     }
     return goal;
   };
+}
+
+export async function loadMergeDupsData(goal: MergeDups) {
+  const finder = new DupFinder();
+  const groups = await finder.getNextDups();
+
+  const usedIDs: string[] = [];
+  const newGroups = [];
+  const blacklist = LocalStorage.getMergeDupsBlacklist();
+
+  for (const group of groups) {
+    // Remove words that are already included.
+    const newGroup = group.filter((w) => !usedIDs.includes(w.id));
+    if (newGroup.length < 2) {
+      continue;
+    }
+
+    // Add if not blacklisted.
+    const groupIds = newGroup.map((w) => w.id);
+    const groupHash = generateBlacklistHash(groupIds);
+    if (!blacklist[groupHash]) {
+      newGroups.push(newGroup);
+      usedIDs.push(...groupIds);
+    }
+
+    // Stop the process once maxNumSteps many groups found.
+    if (newGroups.length === maxNumSteps(goal.goalType)) {
+      break;
+    }
+  }
+
+  // Add data to goal.
+  goal.data = { plannedWords: newGroups };
+  goal.numSteps = newGroups.length;
+
+  // Reset goal steps.
+  goal.currentStep = 0;
+  goal.steps = [];
+
+  return goal;
 }
 
 export function updateStepData(goal: Goal): Goal {

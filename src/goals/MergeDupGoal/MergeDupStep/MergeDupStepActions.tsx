@@ -75,7 +75,8 @@ export type MergeTreeAction =
   | SetSenseMergeAction
   | SetWordStringMergeAction;
 
-// action creators
+// Action Creators
+
 export function setVern(
   wordID: string,
   vern: string
@@ -100,7 +101,6 @@ export function moveSenses(
   };
 }
 
-// sugar for moving a single sense
 export function moveSense(
   src: MergeTreeReference,
   dest: MergeTreeReference
@@ -149,6 +149,8 @@ export function orderDuplicate(
     payload: { ref, order },
   };
 }
+
+// Dispatch Functions
 
 export function mergeSense() {
   return async (
@@ -208,7 +210,6 @@ export function refreshWords() {
   };
 }
 
-//
 function updateStep(
   dispatch: Dispatch<UpdateGoalAction>,
   goal: Goal,

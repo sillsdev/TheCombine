@@ -32,54 +32,13 @@ export enum CharacterInventoryType {
   SET_CHARACTER_SET = "SET_CHARACTER_SET",
 }
 
-//action types
-
 export interface CharacterInventoryAction {
   type: CharacterInventoryType;
   payload: string[];
   characterSet?: CharacterSetEntry[];
 }
 
-/**
- * Sends the character inventory to the server
- */
-export function uploadInventory() {
-  return async (
-    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
-    getState: () => StoreState
-  ) => {
-    let state: StoreState = getState();
-    let project: Project = updateCurrentProject(state);
-    let updatedGoal: Goal = updateCurrentGoal(state);
-    let history: Goal[] = state.goalsState.historyState.history;
-
-    await saveChanges(updatedGoal, history, project, dispatch);
-  };
-}
-
-export function setCharacterStatus(character: string, status: characterStatus) {
-  return (
-    dispatch: Dispatch<CharacterInventoryAction>,
-    getState: () => StoreState
-  ) => {
-    if (status === "accepted") dispatch(addToValidCharacters([character]));
-    else if (status === "rejected")
-      dispatch(addToRejectedCharacters([character]));
-    else if (status === "undecided") {
-      let state = getState();
-
-      let validCharacters = state.characterInventoryState.validCharacters.filter(
-        (c) => c !== character
-      );
-      dispatch(setValidCharacters(validCharacters));
-
-      let rejectedCharacters = state.characterInventoryState.rejectedCharacters.filter(
-        (c) => c !== character
-      );
-      dispatch(setRejectedCharacters(rejectedCharacters));
-    }
-  };
-}
+// Action Creators
 
 export function addToValidCharacters(
   chars: string[]
@@ -122,13 +81,6 @@ export function setAllWords(words: string[]): CharacterInventoryAction {
   };
 }
 
-export function fetchWords() {
-  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
-    let words = await backend.getFrontierWords();
-    dispatch(setAllWords(words.map((word) => word.vernacular)));
-  };
-}
-
 export function setSelectedCharacter(
   character: string
 ): CharacterInventoryAction {
@@ -145,6 +97,54 @@ export function setCharacterSet(
     type: CharacterInventoryType.SET_CHARACTER_SET,
     payload: [],
     characterSet,
+  };
+}
+
+// Dispatch Functions
+
+export function setCharacterStatus(character: string, status: characterStatus) {
+  return (
+    dispatch: Dispatch<CharacterInventoryAction>,
+    getState: () => StoreState
+  ) => {
+    if (status === "accepted") dispatch(addToValidCharacters([character]));
+    else if (status === "rejected")
+      dispatch(addToRejectedCharacters([character]));
+    else if (status === "undecided") {
+      const state = getState();
+
+      const validCharacters = state.characterInventoryState.validCharacters.filter(
+        (c) => c !== character
+      );
+      dispatch(setValidCharacters(validCharacters));
+
+      const rejectedCharacters = state.characterInventoryState.rejectedCharacters.filter(
+        (c) => c !== character
+      );
+      dispatch(setRejectedCharacters(rejectedCharacters));
+    }
+  };
+}
+
+// Sends the character inventory to the server.
+export function uploadInventory() {
+  return async (
+    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
+    getState: () => StoreState
+  ) => {
+    const state = getState();
+    const project = updateCurrentProject(state);
+    const updatedGoal = updateCurrentGoal(state);
+    const history = state.goalsState.historyState.history;
+
+    await saveChanges(updatedGoal, history, project, dispatch);
+  };
+}
+
+export function fetchWords() {
+  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+    const words = await backend.getFrontierWords();
+    dispatch(setAllWords(words.map((word) => word.vernacular)));
   };
 }
 
