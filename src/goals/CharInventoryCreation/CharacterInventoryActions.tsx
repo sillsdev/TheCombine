@@ -1,18 +1,13 @@
-import { ThunkDispatch } from "redux-thunk";
-
 import * as backend from "../../backend";
 import { getCurrentUser } from "../../backend/localStorage";
-import {
-  ProjectAction,
-  setCurrentProject,
-} from "../../components/Project/ProjectActions";
 import {
   getIndexInHistory,
   getUserEditId,
   updateGoal,
-  UpdateGoalAction,
 } from "../../components/GoalTimeline/GoalsActions";
+import { setCurrentProject } from "../../components/Project/ProjectActions";
 import { StoreState } from "../../types";
+import { StoreStateDispatch } from "../../types/actions";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
@@ -101,7 +96,6 @@ export function setCharacterSet(
   };
 }
 
-<<<<<<< HEAD
 export function reset(): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.RESET,
@@ -109,19 +103,10 @@ export function reset(): CharacterInventoryAction {
   };
 }
 
-=======
->>>>>>> master
 // Dispatch Functions
 
 export function setCharacterStatus(character: string, status: characterStatus) {
-  return (
-<<<<<<< HEAD
-    dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>,
-=======
-    dispatch: Dispatch<CharacterInventoryAction>,
->>>>>>> master
-    getState: () => StoreState
-  ) => {
+  return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     if (status === "accepted") dispatch(addToValidCharacters([character]));
     else if (status === "rejected")
       dispatch(addToRejectedCharacters([character]));
@@ -143,14 +128,7 @@ export function setCharacterStatus(character: string, status: characterStatus) {
 
 // Sends the character inventory to the server.
 export function uploadInventory() {
-  return async (
-<<<<<<< HEAD
-    dispatch: ThunkDispatch<StoreState, any, ProjectAction | UpdateGoalAction>,
-=======
-    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
->>>>>>> master
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
     const project = updateCurrentProject(state);
     const updatedGoal = updateCurrentGoal(state);
@@ -161,23 +139,14 @@ export function uploadInventory() {
 }
 
 export function fetchWords() {
-<<<<<<< HEAD
-  return async (
-    dispatch: ThunkDispatch<any, any, CharacterInventoryAction>
-  ) => {
-=======
-  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
->>>>>>> master
+  return async (dispatch: StoreStateDispatch) => {
     const words = await backend.getFrontierWords();
     dispatch(setAllWords(words.map((word) => word.vernacular)));
   };
 }
 
 export function getAllCharacters() {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>,
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     let state = getState();
     let words = await backend.getFrontierWords();
     let characters: string[] = [];
@@ -229,7 +198,7 @@ async function saveChanges(
   goal: Goal,
   history: Goal[],
   project: Project,
-  dispatch: ThunkDispatch<any, any, ProjectAction | UpdateGoalAction>
+  dispatch: StoreStateDispatch
 ) {
   await saveChangesToGoal(goal, history, dispatch);
   await saveChangesToProject(project, dispatch);
@@ -238,7 +207,7 @@ async function saveChanges(
 async function saveChangesToGoal(
   updatedGoal: Goal,
   history: Goal[],
-  dispatch: ThunkDispatch<any, any, UpdateGoalAction>
+  dispatch: StoreStateDispatch
 ) {
   const user: User | null = getCurrentUser();
   if (user) {
@@ -255,7 +224,7 @@ async function saveChangesToGoal(
 
 async function saveChangesToProject(
   project: Project,
-  dispatch: ThunkDispatch<any, any, ProjectAction>
+  dispatch: StoreStateDispatch
 ) {
   dispatch(setCurrentProject(project));
   await backend.updateProject(project);
