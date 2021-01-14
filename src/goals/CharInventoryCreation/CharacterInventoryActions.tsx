@@ -101,6 +101,7 @@ export function setCharacterSet(
   };
 }
 
+<<<<<<< HEAD
 export function reset(): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.RESET,
@@ -108,11 +109,17 @@ export function reset(): CharacterInventoryAction {
   };
 }
 
+=======
+>>>>>>> master
 // Dispatch Functions
 
 export function setCharacterStatus(character: string, status: characterStatus) {
   return (
+<<<<<<< HEAD
     dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>,
+=======
+    dispatch: Dispatch<CharacterInventoryAction>,
+>>>>>>> master
     getState: () => StoreState
   ) => {
     if (status === "accepted") dispatch(addToValidCharacters([character]));
@@ -137,7 +144,11 @@ export function setCharacterStatus(character: string, status: characterStatus) {
 // Sends the character inventory to the server.
 export function uploadInventory() {
   return async (
+<<<<<<< HEAD
     dispatch: ThunkDispatch<StoreState, any, ProjectAction | UpdateGoalAction>,
+=======
+    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
+>>>>>>> master
     getState: () => StoreState
   ) => {
     const state = getState();
@@ -150,9 +161,13 @@ export function uploadInventory() {
 }
 
 export function fetchWords() {
+<<<<<<< HEAD
   return async (
     dispatch: ThunkDispatch<any, any, CharacterInventoryAction>
   ) => {
+=======
+  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+>>>>>>> master
     const words = await backend.getFrontierWords();
     dispatch(setAllWords(words.map((word) => word.vernacular)));
   };
