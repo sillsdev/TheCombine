@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
+
 import { StoreState } from "../../../types";
+import { StoreStateDispatch } from "../../../types/actions";
 import {
-  MergeTreeAction,
   advanceStep,
   refreshWords,
   moveSenses,
@@ -19,9 +19,7 @@ export function mapStateToProps(state: StoreState) {
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction>
-) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     advanceStep: () => {
       dispatch(advanceStep());

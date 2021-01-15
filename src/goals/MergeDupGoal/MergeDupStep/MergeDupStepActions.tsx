@@ -1,17 +1,14 @@
-import { Dispatch } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-
 import * as backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import {
   getIndexInHistory,
   getUserEditId,
   updateGoal,
-  UpdateGoalAction,
   updateStepData,
 } from "../../../components/GoalTimeline/GoalsActions";
 import history, { Path } from "../../../history";
 import { StoreState } from "../../../types";
+import { StoreStateDispatch } from "../../../types/actions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
 import { State, Word } from "../../../types/word";
 import { MergeDups, MergeStepData } from "../MergeDups";
@@ -153,10 +150,7 @@ export function orderDuplicate(
 // Dispatch Functions
 
 export function mergeSense() {
-  return async (
-    _dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    _getState: () => StoreState
-  ) => {
+  return async (_dispatch: StoreStateDispatch, _getState: () => StoreState) => {
     // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top
   };
 }
@@ -172,10 +166,7 @@ async function addStepToGoal(goal: Goal, goalIndex: number) {
 }
 
 export function advanceStep() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     let historyState: GoalHistoryState = getState().goalsState.historyState;
     let goal: Goal = historyState.history[historyState.history.length - 1];
     goal.currentStep++;
@@ -185,10 +176,7 @@ export function advanceStep() {
 }
 
 export function refreshWords() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     let historyState = getState().goalsState.historyState;
     let goal = historyState.history[historyState.history.length - 1];
 
@@ -211,7 +199,7 @@ export function refreshWords() {
 }
 
 function updateStep(
-  dispatch: Dispatch<UpdateGoalAction>,
+  dispatch: StoreStateDispatch,
   goal: Goal,
   state: GoalHistoryState
 ): Promise<void> {
@@ -388,10 +376,7 @@ export async function mergeWord(
 }
 
 export function mergeAll() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
+  return async (_dispatch: StoreStateDispatch, getState: () => StoreState) => {
     // Generate blacklist.
     const wordIDs = Object.keys(getState().mergeDuplicateGoal.data.words);
     const blacklist = LocalStorage.getMergeDupsBlacklist();
