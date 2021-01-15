@@ -9,11 +9,7 @@ import {
 } from "@material-ui/core";
 import { Save } from "@material-ui/icons";
 import * as React from "react";
-import {
-  withLocalize,
-  LocalizeContextProps,
-  Translate,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import history, { Path } from "../../history";
 import { Project } from "../../types/project";
@@ -46,11 +42,11 @@ interface CharacterInventoryState {
 /**
  * Allows users to define a character inventory for a project
  */
-export class CharacterInventory extends React.Component<
-  CharacterInventoryProps & LocalizeContextProps,
+export default class CharacterInventory extends React.Component<
+  CharacterInventoryProps,
   CharacterInventoryState
 > {
-  constructor(props: CharacterInventoryProps & LocalizeContextProps) {
+  constructor(props: CharacterInventoryProps) {
     super(props);
     this.state = { cancelDialogOpen: false };
   }
@@ -161,5 +157,3 @@ export class CharacterInventory extends React.Component<
     );
   }
 }
-
-export default withLocalize(CharacterInventory);
