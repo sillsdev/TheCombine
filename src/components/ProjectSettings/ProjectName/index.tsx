@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 import { StoreStateDispatch } from "../../../types/actions";
 import { Project } from "../../../types/project";
-import { setCurrentProject } from "../../Project/ProjectActions";
+import { saveChangesToProject } from "../../Project/ProjectActions";
 import ProjectName from "./ProjectName";
 
 function mapStateToProps(state: StoreState) {
@@ -14,9 +14,8 @@ function mapStateToProps(state: StoreState) {
 
 export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    setCurrentProject: (project: Project) => {
-      dispatch(setCurrentProject(project));
-    },
+    saveChangesToProject: (project: Project) =>
+      saveChangesToProject(project, dispatch),
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectName);

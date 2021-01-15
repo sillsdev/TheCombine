@@ -5,7 +5,7 @@ import {
   getUserEditId,
   updateGoal,
 } from "../../components/GoalTimeline/GoalsActions";
-import { setCurrentProject } from "../../components/Project/ProjectActions";
+import { saveChangesToProject } from "../../components/Project/ProjectActions";
 import { StoreState } from "../../types";
 import { StoreStateDispatch } from "../../types/actions";
 import { Goal } from "../../types/goals";
@@ -220,14 +220,6 @@ async function saveChangesToGoal(
         .catch((err: string) => console.log(err));
     }
   }
-}
-
-async function saveChangesToProject(
-  project: Project,
-  dispatch: StoreStateDispatch
-) {
-  dispatch(setCurrentProject(project));
-  await backend.updateProject(project);
 }
 
 function updateCurrentProject(state: StoreState): Project {

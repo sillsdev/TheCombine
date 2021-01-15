@@ -1,6 +1,7 @@
-import ProjectSettingsComponent from "./ProjectSettingsComponent";
-import { StoreState } from "../../types";
 import { connect } from "react-redux";
+
+import { StoreState } from "../../types";
+import ProjectSettingsComponent from "./ProjectSettingsComponent";
 
 function mapStateToProps(state: StoreState) {
   return {

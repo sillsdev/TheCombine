@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import {
   FormControl,
   Grid,
@@ -29,7 +25,7 @@ import { UserRole } from "../../types/userRole";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "../ProjectExport";
 import ProjectImport from "./ProjectImport";
-import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
+import ProjectLanguages from "./ProjectLanguages";
 import ProjectName from "./ProjectName";
 import ProjectSwitch from "./ProjectSwitch";
 import ProjectUsers, { ActiveUsers } from "./ProjectUsers";
@@ -46,11 +42,11 @@ interface ProjectSettingsState {
   loading: boolean;
 }
 
-class ProjectSettingsComponent extends React.Component<
-  ProjectSettingsProps & LocalizeContextProps,
+export default class ProjectSettingsComponent extends React.Component<
+  ProjectSettingsProps,
   ProjectSettingsState
 > {
-  constructor(props: ProjectSettingsProps & LocalizeContextProps) {
+  constructor(props: ProjectSettingsProps) {
     super(props);
     this.state = { loading: true };
   }
@@ -113,7 +109,7 @@ class ProjectSettingsComponent extends React.Component<
                 title={
                   <Translate id="projectSettings.language.interfaceLanguage" />
                 }
-                body={<ProjectLanguages project={this.props.project} />}
+                body={<ProjectLanguages />}
               />
             )}
 
@@ -201,5 +197,3 @@ class ProjectSettingsComponent extends React.Component<
     );
   }
 }
-
-export default withLocalize(ProjectSettingsComponent);
