@@ -1,10 +1,9 @@
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
 
 import { StoreState } from "../../../types";
+import { StoreStateDispatch } from "../../../types/actions";
 import { GoalSelectorState } from "../../../types/goals";
 import {
-  GoalScrollAction,
   scrollSelectorIndexAction,
   scrollSelectorMouseAction,
 } from "./GoalSelectorAction";
@@ -19,7 +18,7 @@ export function mapStateToProps(state: StoreState): GoalSelectorState {
   };
 }
 
-export function mapDispatchToProps(dispatch: Dispatch<GoalScrollAction>) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     swapSelectedIndex: (ndx: number) => {
       dispatch(scrollSelectorIndexAction(ndx));

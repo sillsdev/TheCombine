@@ -1,6 +1,3 @@
-import { Dispatch } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
@@ -10,7 +7,6 @@ import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
 import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import {
   generateBlacklistHash,
-  MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
@@ -18,8 +14,7 @@ import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history, { Path } from "../../history";
-import { StoreState } from "../../types";
-import { ActionWithPayload } from "../../types/actions";
+import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
 import { Goal, GoalType, maxNumSteps } from "../../types/goals";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
@@ -54,7 +49,7 @@ export function asyncLoadExistingUserEdits(
   projectId: string,
   userEditId: string
 ) {
-  return async (dispatch: Dispatch<GoalAction>) => {
+  return async (dispatch: StoreStateDispatch) => {
     await Backend.getUserEditById(projectId, userEditId)
       .then((userEdit) => {
         let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
@@ -67,7 +62,7 @@ export function asyncLoadExistingUserEdits(
 }
 
 export function asyncGetUserEdits() {
-  return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
+  return async (dispatch: StoreStateDispatch) => {
     const user = LocalStorage.getCurrentUser();
     const projectId = LocalStorage.getProjectId();
     if (user && projectId) {
@@ -83,7 +78,7 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
+  return async (dispatch: StoreStateDispatch) => {
     const user = LocalStorage.getCurrentUser();
     if (user) {
       const userEditId = getUserEditId(user);
@@ -105,7 +100,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
 }
 
 export function loadGoalData(goal: Goal) {
-  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
+  return async (dispatch: StoreStateDispatch) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
         goal = await loadMergeDupsData(goal);

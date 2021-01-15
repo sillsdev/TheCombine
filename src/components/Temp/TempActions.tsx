@@ -1,5 +1,6 @@
-import { Dispatch } from "react";
 import axios from "axios";
+
+import { StoreStateDispatch } from "../../types/actions";
 import { RuntimeConfig } from "../../types/runtimeConfig";
 
 export const PRESS_BUTTON = "PRESS_BUTTON";
@@ -18,7 +19,7 @@ var server = axios.create({
 
 //thunk action creator
 export function asyncPressButton() {
-  return async (dispatch: Dispatch<ButtonPressed>) => {
+  return async (dispatch: StoreStateDispatch) => {
     //console.log('asyncPressButton called');
     dispatch(pressButton());
     await server

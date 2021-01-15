@@ -1,8 +1,7 @@
-import { ThunkDispatch } from "redux-thunk";
-
 import * as backend from "../../../backend";
 import { getProjectId } from "../../../backend/localStorage";
 import { StoreState } from "../../../types";
+import { StoreStateDispatch } from "../../../types/actions";
 import { Note, Sense, State, Word } from "../../../types/word";
 import {
   OLD_SENSE,
@@ -90,9 +89,7 @@ function getError(sense: ReviewEntriesSense): string | undefined {
 }
 
 export function setAnalysisLang() {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     const projectId = getProjectId();
     const project = await backend.getProject(projectId);
     // Needs to be changed when multiple analysis writing systems is allowed
@@ -180,9 +177,7 @@ export function updateFrontierWord(
   oldData: ReviewEntriesWord,
   language: string
 ) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     // Clean + check data; if there's something irrepairably bad, return the error
     let editSource: ReviewEntriesWord | string = cleanWord(newData, oldData);
     if (typeof editSource === "string") return Promise.reject(editSource);
@@ -256,10 +251,7 @@ function refreshWord(
   oldWordId: string,
   action: (wordId: string) => Promise<string>
 ) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const newWordId = await action(oldWordId);
     const newWord = await backend.getWord(newWordId);
 

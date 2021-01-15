@@ -1,16 +1,15 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
 
-import ReviewEntriesComponent from "./ReviewEntriesComponent";
-import { ReviewEntriesWord } from "./ReviewEntriesTypes";
+import { StoreState } from "../../../types";
+import { StoreStateDispatch } from "../../../types/actions";
 import {
-  ReviewEntriesAction,
-  updateAllWords,
-  updateFrontierWord,
   clearReviewEntriesState,
   setAnalysisLang,
+  updateAllWords,
+  updateFrontierWord,
 } from "./ReviewEntriesActions";
-import { StoreState } from "../../../types";
+import ReviewEntriesComponent from "./ReviewEntriesComponent";
+import { ReviewEntriesWord } from "./ReviewEntriesTypes";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -19,9 +18,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
-) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     clearState: () => dispatch(clearReviewEntriesState()),
     setAnalysisLanguage: () => dispatch(setAnalysisLang()),
