@@ -15,18 +15,14 @@ import {
 import { defaultState } from "../../../App/DefaultState";
 import ProjectLanguages from "../ProjectLanguages";
 
-jest.mock("../../../../backend", () => {
-  return { updateProject: (proj: Project) => mockUpdateProject(proj) };
-});
-
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 const mockAnalysisWritingSystems: WritingSystem[] = [
   { name: "a", bcp47: "a", font: "" },
   { name: "b", bcp47: "b", font: "" },
 ];
-const mockUpdateProject = jest.fn((proj: Project) => {
-  return Promise.resolve(proj);
+const mockUpdateProject = jest.fn((_proj: Project) => {
+  return Promise.resolve();
 });
 
 let projectMaster: ReactTestRenderer;
@@ -41,7 +37,10 @@ function renderProjLangs(proj: Project) {
   renderer.act(() => {
     projectMaster = renderer.create(
       <Provider store={mockStore}>
-        <ProjectLanguages project={proj} />
+        <ProjectLanguages
+          project={proj}
+          saveChangesToProject={mockUpdateProject}
+        />
       </Provider>
     );
   });
