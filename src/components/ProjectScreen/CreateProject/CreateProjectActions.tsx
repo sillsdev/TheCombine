@@ -1,11 +1,9 @@
-import { ThunkDispatch } from "redux-thunk";
-
 import * as backend from "../../../backend";
 import history, { Path } from "../../../history";
-import { StoreState } from "../../../types";
+import { StoreStateDispatch } from "../../../types/actions";
 import { defaultProject, Project, WritingSystem } from "../../../types/project";
-import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
-import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
+import { asyncGetUserEdits } from "../../GoalTimeline/GoalsActions";
+import { setCurrentProject } from "../../Project/ProjectActions";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -42,13 +40,7 @@ export function asyncCreateProject(
   analysisLanguages: WritingSystem[],
   languageData?: File
 ) {
-  return async (
-    dispatch: ThunkDispatch<
-      StoreState,
-      any,
-      CreateProjectAction | ProjectAction | GoalAction
-    >
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress(name, vernacularLanguage, analysisLanguages));
     // Create project
     let project: Project = { ...defaultProject };
