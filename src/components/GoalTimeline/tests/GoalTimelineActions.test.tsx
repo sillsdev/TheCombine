@@ -15,7 +15,8 @@ import {
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
-import { Goal, maxNumSteps } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
+import { maxNumSteps } from "../../../types/goalUtilities";
 import { User } from "../../../types/user";
 import { UserEdit } from "../../../types/userEdit";
 import { defaultState as goalsDefaultState } from "../DefaultState";
