@@ -1,18 +1,13 @@
-import { Dispatch } from "react";
-
 import * as backend from "../../backend";
 import { getCurrentUser } from "../../backend/localStorage";
 import {
-  ProjectAction,
-  setCurrentProject,
-} from "../../components/Project/ProjectActions";
-import {
   getIndexInHistory,
   getUserEditId,
-  GoalAction,
   updateGoal,
 } from "../../components/GoalTimeline/GoalsActions";
+import { setCurrentProject } from "../../components/Project/ProjectActions";
 import { StoreState } from "../../types";
+import { StoreStateDispatch } from "../../types/actions";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
@@ -30,6 +25,7 @@ export enum CharacterInventoryType {
   SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS",
   SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
   SET_CHARACTER_SET = "SET_CHARACTER_SET",
+  RESET = "CHARINV_RESET",
 }
 
 export interface CharacterInventoryAction {
@@ -100,13 +96,17 @@ export function setCharacterSet(
   };
 }
 
+export function resetInState(): CharacterInventoryAction {
+  return {
+    type: CharacterInventoryType.RESET,
+    payload: [],
+  };
+}
+
 // Dispatch Functions
 
 export function setCharacterStatus(character: string, status: characterStatus) {
-  return (
-    dispatch: Dispatch<CharacterInventoryAction>,
-    getState: () => StoreState
-  ) => {
+  return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     if (status === "accepted") dispatch(addToValidCharacters([character]));
     else if (status === "rejected")
       dispatch(addToRejectedCharacters([character]));
@@ -128,10 +128,7 @@ export function setCharacterStatus(character: string, status: characterStatus) {
 
 // Sends the character inventory to the server.
 export function uploadInventory() {
-  return async (
-    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
     const project = updateCurrentProject(state);
     const updatedGoal = updateCurrentGoal(state);
@@ -142,17 +139,14 @@ export function uploadInventory() {
 }
 
 export function fetchWords() {
-  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+  return async (dispatch: StoreStateDispatch) => {
     const words = await backend.getFrontierWords();
     dispatch(setAllWords(words.map((word) => word.vernacular)));
   };
 }
 
 export function getAllCharacters() {
-  return async (
-    dispatch: Dispatch<CharacterInventoryAction>,
-    getState: () => StoreState
-  ) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     let state = getState();
     let words = await backend.getFrontierWords();
     let characters: string[] = [];
@@ -204,7 +198,7 @@ async function saveChanges(
   goal: Goal,
   history: Goal[],
   project: Project,
-  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
+  dispatch: StoreStateDispatch
 ) {
   await saveChangesToGoal(goal, history, dispatch);
   await saveChangesToProject(project, dispatch);
@@ -213,7 +207,7 @@ async function saveChanges(
 async function saveChangesToGoal(
   updatedGoal: Goal,
   history: Goal[],
-  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
+  dispatch: StoreStateDispatch
 ) {
   const user: User | null = getCurrentUser();
   if (user) {
@@ -230,7 +224,7 @@ async function saveChangesToGoal(
 
 async function saveChangesToProject(
   project: Project,
-  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
+  dispatch: StoreStateDispatch
 ) {
   dispatch(setCurrentProject(project));
   await backend.updateProject(project);
