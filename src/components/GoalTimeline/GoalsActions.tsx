@@ -1,21 +1,15 @@
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
-import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
-import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import {
   generateBlacklistHash,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
-import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
-import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history, { Path } from "../../history";
 import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
-import { Goal, GoalType, maxNumSteps } from "../../types/goals";
+import { Goal, GoalType } from "../../types/goals";
+import { goalTypeToGoal, maxNumSteps } from "../../types/goalUtilities";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
 
@@ -194,29 +188,6 @@ function convertEditsToArrayOfGoals(edits: Edit[]) {
     history.push(nextGoal);
   }
   return history;
-}
-
-function goalTypeToGoal(type: GoalType) {
-  switch (type) {
-    case GoalType.CreateCharInv:
-      return new CreateCharInv();
-    case GoalType.CreateStrWordInv:
-      return new CreateStrWordInv();
-    case GoalType.HandleFlags:
-      return new HandleFlags();
-    case GoalType.MergeDups:
-      return new MergeDups();
-    case GoalType.ReviewEntries:
-      return new ReviewEntries();
-    case GoalType.SpellcheckGloss:
-      return new SpellCheckGloss();
-    case GoalType.ValidateChars:
-      return new ValidateChars();
-    case GoalType.ValidateStrWords:
-      return new ValidateStrWords();
-    default:
-      return new Goal();
-  }
 }
 
 export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
