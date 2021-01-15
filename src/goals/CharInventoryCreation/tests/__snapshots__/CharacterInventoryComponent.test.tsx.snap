@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing Character Inventory Component Renders properly (snapshot test) 1`] = `
+exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
 <div>
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-justify-xs-center"

@@ -30,6 +30,7 @@ export interface CharacterInventoryProps {
   selectedCharacter: string;
   getAllCharacters: () => Promise<void>;
   allCharacters: CharacterSetEntry[];
+  resetInState: () => void;
 }
 
 export const SAVE: string = "pushGoals";
@@ -63,6 +64,11 @@ export default class CharacterInventory extends React.Component<
 
   handleClose() {
     this.setState({ cancelDialogOpen: false });
+  }
+
+  quit() {
+    this.props.resetInState();
+    history.push(Path.Goals);
   }
 
   render() {
@@ -103,7 +109,7 @@ export default class CharacterInventory extends React.Component<
                 color="primary"
                 onClick={() => {
                   this.props.uploadInventory();
-                  history.push(Path.Goals);
+                  this.quit();
                 }}
                 style={{ margin: theme.spacing(1) }}
               >
@@ -141,7 +147,7 @@ export default class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => history.push(Path.Goals)}
+              onClick={() => this.quit()}
               variant="contained"
               color="secondary"
               autoFocus

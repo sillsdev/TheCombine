@@ -96,7 +96,7 @@ export function setCharacterSet(
   };
 }
 
-export function reset(): CharacterInventoryAction {
+export function resetInState(): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.RESET,
     payload: [],
