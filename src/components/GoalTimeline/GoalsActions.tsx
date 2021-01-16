@@ -1,15 +1,15 @@
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import {
-  generateBlacklistHash,
-  refreshWords,
+  getMergeStepData,
+  loadMergeDupsData,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import history, { Path } from "../../history";
+import { StoreState } from "../../types";
 import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
-import { Goal, GoalType } from "../../types/goals";
-import { goalTypeToGoal, maxNumSteps } from "../../types/goalUtilities";
+import { Goal, GoalHistoryState, GoalType } from "../../types/goals";
+import { goalTypeToGoal } from "../../types/goalUtilities";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
 
@@ -23,6 +23,8 @@ export type GoalAction =
   | LoadUserEditsAction
   | AddGoalToHistoryAction
   | UpdateGoalAction;
+
+// Action Creators
 
 export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.LOAD_USER_EDITS;
@@ -38,6 +40,20 @@ export interface UpdateGoalAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.UPDATE_GOAL;
   payload: Goal[];
 }
+
+export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
+  return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: [goal] };
+}
+
+export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
+  return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
+}
+
+export function updateGoal(goal: Goal): UpdateGoalAction {
+  return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
+}
+
+// Dispatch Functions
 
 export function asyncLoadExistingUserEdits(
   projectId: string,
@@ -77,7 +93,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
     if (user) {
       const userEditId = getUserEditId(user);
       if (userEditId !== undefined) {
-        dispatch(loadGoalData(goal)).then(
+        dispatch(asyncLoadGoalData(goal)).then(
           (returnedGoal) => (goal = returnedGoal)
         );
         await Backend.addGoalToUserEdit(userEditId, goal)
@@ -93,14 +109,14 @@ export function asyncAddGoalToHistory(goal: Goal) {
   };
 }
 
-export function loadGoalData(goal: Goal) {
+export function asyncLoadGoalData(goal: Goal) {
   return async (dispatch: StoreStateDispatch) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
         goal = await loadMergeDupsData(goal);
-        await dispatch(refreshWords());
-
+        await dispatch(asyncRefreshWords());
         break;
+
       default:
         break;
     }
@@ -108,45 +124,37 @@ export function loadGoalData(goal: Goal) {
   };
 }
 
-export async function loadMergeDupsData(goal: MergeDups) {
-  const finder = new DupFinder();
-  const groups = await finder.getNextDups();
-
-  const usedIDs: string[] = [];
-  const newGroups = [];
-  const blacklist = LocalStorage.getMergeDupsBlacklist();
-
-  for (const group of groups) {
-    // Remove words that are already included.
-    const newGroup = group.filter((w) => !usedIDs.includes(w.id));
-    if (newGroup.length < 2) {
-      continue;
-    }
-
-    // Add if not blacklisted.
-    const groupIds = newGroup.map((w) => w.id);
-    const groupHash = generateBlacklistHash(groupIds);
-    if (!blacklist[groupHash]) {
-      newGroups.push(newGroup);
-      usedIDs.push(...groupIds);
-    }
-
-    // Stop the process once maxNumSteps many groups found.
-    if (newGroups.length === maxNumSteps(goal.goalType)) {
-      break;
-    }
-  }
-
-  // Add data to goal.
-  goal.data = { plannedWords: newGroups };
-  goal.numSteps = newGroups.length;
-
-  // Reset goal steps.
-  goal.currentStep = 0;
-  goal.steps = [];
-
-  return goal;
+export function asyncAdvanceStep() {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    let historyState: GoalHistoryState = getState().goalsState.historyState;
+    let goal: Goal = historyState.history[historyState.history.length - 1];
+    goal.currentStep++;
+    // Push the current step into the history state and load the data.
+    await dispatch(asyncRefreshWords());
+  };
 }
+
+export function asyncRefreshWords() {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    let historyState = getState().goalsState.historyState;
+    let goal = historyState.history[historyState.history.length - 1];
+
+    // Push the current step into the history state and load the data.
+    await updateStep(dispatch, goal, historyState).then(() => {
+      historyState = getState().goalsState.historyState;
+      goal = historyState.history[historyState.history.length - 1];
+      if (goal.currentStep < goal.numSteps) {
+        if (goal.goalType === GoalType.MergeDups) {
+          getMergeStepData(goal, dispatch);
+        }
+      } else {
+        history.push(Path.Goals);
+      }
+    });
+  };
+}
+
+// Helper Funtions
 
 export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
@@ -190,14 +198,26 @@ function convertEditsToArrayOfGoals(edits: Edit[]) {
   return history;
 }
 
-export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
-  return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: [goal] };
+function updateStep(
+  dispatch: StoreStateDispatch,
+  goal: Goal,
+  state: GoalHistoryState
+): Promise<void> {
+  return new Promise((resolve) => {
+    const updatedGoal = updateStepData(goal);
+    dispatch(updateGoal(updatedGoal));
+    const goalIndex = getIndexInHistory(state.history, goal);
+    addStepToGoal(state.history[goalIndex], goalIndex);
+    resolve();
+  });
 }
 
-export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
-  return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
-}
-
-export function updateGoal(goal: Goal): UpdateGoalAction {
-  return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
+async function addStepToGoal(goal: Goal, goalIndex: number) {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
+    const userEditId: string | undefined = getUserEditId(user);
+    if (userEditId !== undefined) {
+      await Backend.addStepToGoal(userEditId, goalIndex, goal);
+    }
+  }
 }

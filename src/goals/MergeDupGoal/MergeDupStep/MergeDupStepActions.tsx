@@ -1,16 +1,10 @@
 import * as backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
-import {
-  getIndexInHistory,
-  getUserEditId,
-  updateGoal,
-  updateStepData,
-} from "../../../components/GoalTimeline/GoalsActions";
-import history, { Path } from "../../../history";
 import { StoreState } from "../../../types";
 import { StoreStateDispatch } from "../../../types/actions";
-import { Goal, GoalHistoryState } from "../../../types/goals";
+import { maxNumSteps } from "../../../types/goalUtilities";
 import { State, Word } from "../../../types/word";
+import DupFinder from "../DuplicateFinder/DuplicateFinder";
 import { MergeDups, MergeStepData } from "../MergeDups";
 import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
 
@@ -153,63 +147,6 @@ export function mergeSense() {
   return async (_dispatch: StoreStateDispatch, _getState: () => StoreState) => {
     // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top
   };
-}
-
-async function addStepToGoal(goal: Goal, goalIndex: number) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    const userEditId: string | undefined = getUserEditId(user);
-    if (userEditId !== undefined) {
-      await backend.addStepToGoal(userEditId, goalIndex, goal);
-    }
-  }
-}
-
-export function advanceStep() {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    let historyState: GoalHistoryState = getState().goalsState.historyState;
-    let goal: Goal = historyState.history[historyState.history.length - 1];
-    goal.currentStep++;
-    // Push the current step into the history state and load the data.
-    dispatch(refreshWords());
-  };
-}
-
-export function refreshWords() {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    let historyState = getState().goalsState.historyState;
-    let goal = historyState.history[historyState.history.length - 1];
-
-    // Push the current step into the history state and load the data.
-    await updateStep(dispatch, goal, historyState).then(() => {
-      historyState = getState().goalsState.historyState;
-      goal = historyState.history[historyState.history.length - 1];
-      if (goal.currentStep < goal.numSteps) {
-        const stepData = (goal as MergeDups).steps[
-          goal.currentStep
-        ] as MergeStepData;
-        if (stepData) {
-          dispatch(setWordData(stepData.words));
-        }
-      } else {
-        history.push(Path.Goals);
-      }
-    });
-  };
-}
-
-function updateStep(
-  dispatch: StoreStateDispatch,
-  goal: Goal,
-  state: GoalHistoryState
-): Promise<void> {
-  return new Promise((resolve) => {
-    const updatedGoal = updateStepData(goal);
-    dispatch(updateGoal(updatedGoal));
-    const goalIndex = getIndexInHistory(state.history, goal);
-    addStepToGoal(state.history[goalIndex], goalIndex);
-    resolve();
-  });
 }
 
 type SenseWithState = TreeDataSense & { state: State };
@@ -392,6 +329,8 @@ export function mergeAll() {
   };
 }
 
+// Blacklist Functions
+
 export function generateBlacklistHash(wordIDs: string[]) {
   return wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
 }
@@ -412,4 +351,56 @@ function blacklistSetAndAllSubsets(
       }
     });
   }
+}
+
+// Used in MergeDups cases of GoalActions functions
+
+export function getMergeStepData(
+  goal: MergeDups,
+  dispatch: StoreStateDispatch
+) {
+  const stepData = goal.steps[goal.currentStep] as MergeStepData;
+  if (stepData) {
+    dispatch(setWordData(stepData.words));
+  }
+}
+
+export async function loadMergeDupsData(goal: MergeDups) {
+  const finder = new DupFinder();
+  const groups = await finder.getNextDups();
+
+  const usedIDs: string[] = [];
+  const newGroups = [];
+  const blacklist = LocalStorage.getMergeDupsBlacklist();
+
+  for (const group of groups) {
+    // Remove words that are already included.
+    const newGroup = group.filter((w) => !usedIDs.includes(w.id));
+    if (newGroup.length < 2) {
+      continue;
+    }
+
+    // Add if not blacklisted.
+    const groupIds = newGroup.map((w) => w.id);
+    const groupHash = generateBlacklistHash(groupIds);
+    if (!blacklist[groupHash]) {
+      newGroups.push(newGroup);
+      usedIDs.push(...groupIds);
+    }
+
+    // Stop the process once maxNumSteps many groups found.
+    if (newGroups.length === maxNumSteps(goal.goalType)) {
+      break;
+    }
+  }
+
+  // Add data to goal.
+  goal.data = { plannedWords: newGroups };
+  goal.numSteps = newGroups.length;
+
+  // Reset goal steps.
+  goal.currentStep = 0;
+  goal.steps = [];
+
+  return goal;
 }

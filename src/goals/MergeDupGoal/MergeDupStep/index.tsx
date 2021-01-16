@@ -1,10 +1,12 @@
 import { connect } from "react-redux";
+import {
+  asyncAdvanceStep,
+  asyncRefreshWords,
+} from "../../../components/GoalTimeline/GoalsActions";
 
 import { StoreState } from "../../../types";
 import { StoreStateDispatch } from "../../../types/actions";
 import {
-  advanceStep,
-  refreshWords,
   moveSenses,
   mergeAll,
   orderSense,
@@ -22,10 +24,10 @@ export function mapStateToProps(state: StoreState) {
 export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     advanceStep: () => {
-      dispatch(advanceStep());
+      dispatch(asyncAdvanceStep());
     },
     refreshWords: () => {
-      dispatch(refreshWords());
+      dispatch(asyncRefreshWords());
     },
     moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
       dispatch(moveSenses(src, dest));

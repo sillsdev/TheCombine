@@ -248,7 +248,7 @@ describe("Test GoalsActions", () => {
     mockStore = createMockStore(mockStoreState);
 
     try {
-      await mockStore.dispatch<any>(actions.loadGoalData(goalToUpdate));
+      await mockStore.dispatch<any>(actions.asyncLoadGoalData(goalToUpdate));
     } catch (err) {
       fail(err);
     }
@@ -260,7 +260,7 @@ describe("Test GoalsActions", () => {
     const expectedGoal: Goal = new HandleFlags();
 
     await mockStore
-      .dispatch<any>(actions.loadGoalData(goal))
+      .dispatch<any>(actions.asyncLoadGoalData(goal))
       .then((returnedGoal: Goal) => {
         expect(returnedGoal.data).toEqual(expectedGoal.data);
       })
@@ -272,7 +272,7 @@ describe("Test GoalsActions", () => {
   it("should load goal data for MergeDups", async () => {
     let goal: Goal = new MergeDups();
     try {
-      goal = await mockStore.dispatch<any>(actions.loadGoalData(goal));
+      goal = await mockStore.dispatch<any>(actions.asyncLoadGoalData(goal));
       let data = goal.data as MergeDupData;
       expect(data.plannedWords.length).toBeGreaterThan(0);
     } catch (err) {
@@ -284,7 +284,7 @@ describe("Test GoalsActions", () => {
     const goal: Goal = new HandleFlags();
 
     await mockStore
-      .dispatch<any>(actions.loadGoalData(goal))
+      .dispatch<any>(actions.asyncLoadGoalData(goal))
       .then((returnedGoal: Goal) => {
         expect(returnedGoal.data).toEqual({});
       })
