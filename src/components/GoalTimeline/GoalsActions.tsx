@@ -10,8 +10,10 @@ import { StoreState } from "../../types";
 import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
 import { Goal, GoalHistoryState, GoalType } from "../../types/goals";
 import { goalTypeToGoal } from "../../types/goalUtilities";
+import { Project } from "../../types/project";
 import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
+import { saveChangesToProject } from "../Project/ProjectActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -218,6 +220,36 @@ async function addStepToGoal(goal: Goal, goalIndex: number) {
     const userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
       await Backend.addStepToGoal(userEditId, goalIndex, goal);
+    }
+  }
+}
+
+export async function saveChanges(
+  goal: Goal,
+  history: Goal[],
+  project: Project,
+  dispatch: StoreStateDispatch
+) {
+  await saveChangesToGoal(goal, history, dispatch);
+  await saveChangesToProject(project, dispatch);
+}
+
+async function saveChangesToGoal(
+  updatedGoal: Goal,
+  history: Goal[],
+  dispatch: StoreStateDispatch
+) {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
+    const userEditId = getUserEditId(user);
+    if (userEditId !== undefined) {
+      const goalIndex = getIndexInHistory(history, updatedGoal);
+      dispatch(updateGoal(updatedGoal));
+      await Backend.addStepToGoal(
+        userEditId,
+        goalIndex,
+        updatedGoal
+      ).catch((err) => console.error(err));
     }
   }
 }
