@@ -40,18 +40,6 @@ beforeEach(() => {
 });
 
 describe("GoalTimelineVertical", () => {
-  describe("findGoalByName", () => {
-    it("Finds a goal by name when prompted", () => {
-      expect(timeHandle.findGoalByName(goals, goals[2].name)).toEqual(goals[2]);
-    });
-
-    it("Returns undefined when prompted for a non-existant goal", () => {
-      expect(timeHandle.findGoalByName(goals.slice(1), goals[0].name)).toBe(
-        undefined
-      );
-    });
-  });
-
   describe("handleChange", () => {
     it("Selects a goal from suggestions based on name", () => {
       timeHandle.handleChange(goals[2].name);
