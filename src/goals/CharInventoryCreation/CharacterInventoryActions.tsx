@@ -1,16 +1,9 @@
 import * as backend from "../../backend";
-import { getCurrentUser } from "../../backend/localStorage";
-import {
-  getIndexInHistory,
-  getUserEditId,
-  updateGoal,
-} from "../../components/GoalTimeline/GoalsActions";
-import { saveChangesToProject } from "../../components/Project/ProjectActions";
+import { saveChanges } from "../../components/GoalTimeline/GoalsActions";
 import { StoreState } from "../../types";
 import { StoreStateDispatch } from "../../types/actions";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
-import { User } from "../../types/user";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import {
   CharacterSetEntry,
@@ -130,11 +123,11 @@ export function setCharacterStatus(character: string, status: characterStatus) {
 export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
-    const project = updateCurrentProject(state);
     const updatedGoal = updateCurrentGoal(state);
-    const history = state.goalsState.historyState.history;
+    const goalHistory = state.goalsState.historyState.history;
+    const updatedProject = updateCurrentProject(state);
 
-    await saveChanges(updatedGoal, history, project, dispatch);
+    await saveChanges(updatedGoal, goalHistory, updatedProject, dispatch);
   };
 }
 
@@ -147,13 +140,13 @@ export function fetchWords() {
 
 export function getAllCharacters() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    let state = getState();
-    let words = await backend.getFrontierWords();
-    let characters: string[] = [];
-    words.forEach((word) => characters.push(...word.vernacular));
-    characters = [...new Set(characters)];
+    const state = getState();
+    const words = await backend.getFrontierWords();
+    const charactersWithDuplicates: string[] = [];
+    words.forEach((word) => charactersWithDuplicates.push(...word.vernacular));
+    const characters = [...new Set(charactersWithDuplicates)];
 
-    let characterSet: CharacterSetEntry[] = [];
+    const characterSet: CharacterSetEntry[] = [];
     characters.forEach((letter) => {
       characterSet.push({
         character: letter,
@@ -171,6 +164,8 @@ export function getAllCharacters() {
     dispatch(setCharacterSet(characterSet));
   };
 }
+
+// Helper Functions
 
 function countCharacterOccurences(char: string, words: string[]) {
   let count = 0;
@@ -194,44 +189,16 @@ export function getCharacterStatus(
   return "undecided";
 }
 
-async function saveChanges(
-  goal: Goal,
-  history: Goal[],
-  project: Project,
-  dispatch: StoreStateDispatch
-) {
-  await saveChangesToGoal(goal, history, dispatch);
-  await saveChangesToProject(project, dispatch);
-}
-
-async function saveChangesToGoal(
-  updatedGoal: Goal,
-  history: Goal[],
-  dispatch: StoreStateDispatch
-) {
-  const user: User | null = getCurrentUser();
-  if (user) {
-    const userEditId: string | undefined = getUserEditId(user);
-    if (userEditId !== undefined) {
-      const goalIndex = getIndexInHistory(history, updatedGoal);
-      dispatch(updateGoal(updatedGoal));
-      await backend
-        .addStepToGoal(userEditId, goalIndex, updatedGoal)
-        .catch((err: string) => console.log(err));
-    }
-  }
-}
-
 function updateCurrentProject(state: StoreState): Project {
-  let project = state.currentProject;
+  const project = state.currentProject;
   project.validCharacters = state.characterInventoryState.validCharacters;
   project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
 }
 
 function updateCurrentGoal(state: StoreState): Goal {
-  let history: Goal[] = state.goalsState.historyState.history;
-  let currentGoal: CreateCharInv = history[history.length - 1] as CreateCharInv;
+  const history = state.goalsState.historyState.history;
+  const currentGoal = history[history.length - 1] as CreateCharInv;
   // Nothing stored as goal data for now
 
   return currentGoal;
