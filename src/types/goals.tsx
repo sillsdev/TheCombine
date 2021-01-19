@@ -38,17 +38,6 @@ export interface GoalSuggestionsState {
   suggestions: Goal[];
 }
 
-export interface GoalSwitcherState {
-  goals: Goal[];
-}
-
-export interface GoalSelectorState {
-  selectedIndex: number;
-  allPossibleGoals: Goal[];
-  mouseX: number;
-  lastIndex: number;
-}
-
 // The enum value is a permanent id for UserEdits and should not be changed.
 export enum GoalType {
   Default = -1,

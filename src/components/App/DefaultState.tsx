@@ -4,7 +4,6 @@ import { defaultState as reviewEntriesState } from "../../goals/ReviewEntries/Re
 import { defaultProject } from "../../types/project";
 import { defaultState as loginState } from "../Login/LoginReducer";
 import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState";
-import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSelectorScroll/GoalSelectorReducer";
 import { defaultState as passwordResetState } from "../PasswordReset/reducer";
 import { defaultState as exportProjectState } from "../ProjectExport/ExportProjectReducer";
 import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
@@ -46,9 +45,6 @@ export const defaultState = {
   },
 
   //general cleanup tools
-  goalSelectorState: {
-    ...goalSelectorState,
-  },
   goalsState: {
     ...goalTimelineState,
   },

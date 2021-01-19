@@ -2,7 +2,6 @@ import { localizeReducer } from "react-localize-redux";
 import { combineReducers, Reducer } from "redux";
 
 import { goalsReducer } from "./components/GoalTimeline/GoalsReducer";
-import { goalSelectReducer } from "./components/GoalTimeline/GoalSelectorScroll/GoalSelectorReducer";
 import { loginReducer } from "./components/Login/LoginReducer";
 import { passwordResetReducer } from "./components/PasswordReset/reducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
@@ -35,7 +34,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   pronunciationsState: pronunciationsReducer,
 
   //general cleanup tools
-  goalSelectorState: goalSelectReducer,
   goalsState: goalsReducer,
 
   //merge duplicates goal

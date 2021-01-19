@@ -10,7 +10,7 @@ import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
 import { MergeTreeState } from "../goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import { ReviewEntriesState } from "../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
-import { GoalsState, GoalSelectorState } from "./goals";
+import { GoalsState } from "./goals";
 import { Project } from "./project";
 
 //root store structure
@@ -33,7 +33,6 @@ export interface StoreState {
   pronunciationsState: PronunciationsState;
 
   //general cleanup tools
-  goalSelectorState: GoalSelectorState;
   goalsState: GoalsState;
 
   //merge duplicates goal
