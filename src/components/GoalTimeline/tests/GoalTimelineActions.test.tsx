@@ -66,11 +66,11 @@ let mockStore: MockStoreEnhanced<unknown, {}>;
 let oldProjectId: string;
 let oldUser: User | null;
 
-const mockProjectId: string = "123";
-const mockUserEditId: string = "456";
+const mockProjectId = "123";
+const mockUserEditId = "456";
 const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
-const mockUserId: string = "789";
-let mockUser: User = new User("", "", "");
+const mockUserId = "789";
+let mockUser = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 const mockGoal: Goal = new CreateCharInv();

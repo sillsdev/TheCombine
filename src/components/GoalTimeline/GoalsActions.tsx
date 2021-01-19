@@ -56,17 +56,21 @@ export function updateGoal(goal: Goal): UpdateGoalAction {
 
 // Dispatch Functions
 
+export function asyncCreateUserEdits() {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(loadUserEdits([]));
+    await Backend.createUserEdit();
+  };
+}
+
 export function asyncLoadExistingUserEdits(
   projectId: string,
   userEditId: string
 ) {
   return async (dispatch: StoreStateDispatch) => {
-    await Backend.getUserEditById(projectId, userEditId)
-      .then((userEdit) => {
-        const history = convertEditsToGoals(userEdit.edits);
-        dispatch(loadUserEdits(history));
-      })
-      .catch((err) => console.error(err));
+    const userEdit = await Backend.getUserEditById(projectId, userEditId);
+    const history = convertEditsToGoals(userEdit.edits);
+    dispatch(loadUserEdits(history));
   };
 }
 
@@ -77,9 +81,9 @@ export function asyncGetUserEdits() {
       const userEditId = getUserEditId();
 
       if (userEditId) {
-        dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
+        await dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
-        dispatch(Backend.createUserEdit);
+        await dispatch(asyncCreateUserEdits());
       }
     }
   };
