@@ -93,15 +93,10 @@ export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: StoreStateDispatch) => {
     const userEditId = getUserEditId();
     if (userEditId) {
-      dispatch(asyncLoadGoalData(goal)).then(
-        (returnedGoal) => (goal = returnedGoal)
-      );
-      await Backend.addGoalToUserEdit(userEditId, goal)
-        .then((resp) => {
-          dispatch(addGoalToHistory(goal));
-          history.push(`${Path.Goals}/${resp}`);
-        })
-        .catch((err) => console.error(err));
+      goal = await dispatch(asyncLoadGoalData(goal));
+      const goalIndex = await Backend.addGoalToUserEdit(userEditId, goal);
+      dispatch(addGoalToHistory(goal));
+      history.push(`${Path.Goals}/${goalIndex}`);
     }
   };
 }

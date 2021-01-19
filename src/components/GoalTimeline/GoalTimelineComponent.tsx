@@ -79,22 +79,9 @@ export default class GoalTimeline extends React.Component<
   // Given a change event, find which goal the user selected, and choose it
   // as the next goal to work on.
   handleChange(name: string) {
-    let goal: Goal | undefined = this.findGoalByName(
-      this.props.allPossibleGoals,
-      name
-    );
+    const goal = this.props.allPossibleGoals.find((goal) => goal.name === name);
     if (goal) {
       this.props.chooseGoal(goal);
-    }
-  }
-
-  // Search through the list of possible goals, and find which one the user
-  // selected
-  findGoalByName(goals: Goal[], name: string): Goal | undefined {
-    for (var goal of goals) {
-      if (goal.name === name) {
-        return goal;
-      }
     }
   }
 
