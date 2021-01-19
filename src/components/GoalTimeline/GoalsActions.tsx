@@ -10,9 +10,7 @@ import { StoreState } from "../../types";
 import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
 import { Goal, GoalType } from "../../types/goals";
 import { goalTypeToGoal } from "../../types/goalUtilities";
-import { Project } from "../../types/project";
 import { Edit } from "../../types/userEdit";
-import { saveChangesToProject } from "../Project/ProjectActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -175,15 +173,6 @@ export function getUserEditId(): string | undefined {
   }
 }
 
-export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
-  for (let i = 0; i < history.length; i++) {
-    if (history[i].hash === currentGoal.hash) {
-      return i;
-    }
-  }
-  return -1;
-}
-
 function convertEditsToGoals(edits: Edit[]): Goal[] {
   return edits.map((edit) => goalTypeToGoal(edit.goalType));
 }
@@ -193,9 +182,9 @@ async function updateStep(
   goal: Goal,
   goalHistory: Goal[]
 ): Promise<void> {
+  const goalIndex = goalHistory.findIndex((g) => g.hash === goal.hash);
   const updatedGoal = updateStepData(goal);
   dispatch(updateGoal(updatedGoal));
-  const goalIndex = getIndexInHistory(goalHistory, goal);
   await addStepToGoal(goalHistory[goalIndex], goalIndex);
 }
 
@@ -203,32 +192,5 @@ async function addStepToGoal(goal: Goal, goalIndex: number) {
   const userEditId = getUserEditId();
   if (userEditId) {
     await Backend.addStepToGoal(userEditId, goalIndex, goal);
-  }
-}
-
-export async function saveChanges(
-  goal: Goal,
-  history: Goal[],
-  project: Project,
-  dispatch: StoreStateDispatch
-) {
-  await saveChangesToGoal(goal, history, dispatch);
-  await saveChangesToProject(project, dispatch);
-}
-
-async function saveChangesToGoal(
-  updatedGoal: Goal,
-  history: Goal[],
-  dispatch: StoreStateDispatch
-) {
-  const userEditId = getUserEditId();
-  if (userEditId) {
-    const goalIndex = getIndexInHistory(history, updatedGoal);
-    dispatch(updateGoal(updatedGoal));
-    await Backend.addStepToGoal(
-      userEditId,
-      goalIndex,
-      updatedGoal
-    ).catch((err) => console.error(err));
   }
 }

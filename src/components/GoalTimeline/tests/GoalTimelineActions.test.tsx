@@ -329,28 +329,4 @@ describe("GoalsActions", () => {
     LocalStorage.setProjectId("differentThanMockProjectId");
     expect(actions.getUserEditId()).toEqual(undefined);
   });
-
-  it("should return the correct goal", () => {
-    const goal: Goal = new HandleFlags();
-    const goal2: Goal = new CreateCharInv();
-    const goal3: Goal = new MergeDups();
-    const history: Goal[] = [goal, goal2, goal3];
-
-    const currentGoal: Goal = goal2;
-    let returnedIndex = actions.getIndexInHistory(history, currentGoal);
-
-    expect(returnedIndex).toEqual(1);
-  });
-
-  it("should return -1 when a goal doesn't exist", () => {
-    const goal: Goal = new HandleFlags();
-    const goal2: Goal = new CreateCharInv();
-    const goal3: Goal = new MergeDups();
-    const history: Goal[] = [goal, goal2, goal3];
-
-    const currentGoal: Goal = new ReviewEntries();
-    let returnedIndex = actions.getIndexInHistory(history, currentGoal);
-
-    expect(returnedIndex).toEqual(-1);
-  });
 });
