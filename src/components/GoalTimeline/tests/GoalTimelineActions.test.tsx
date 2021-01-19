@@ -66,10 +66,10 @@ let mockStore: MockStoreEnhanced<unknown, {}>;
 let oldProjectId: string;
 let oldUser: User | null;
 
-const mockProjectId: string = "12345";
-const mockUserEditId: string = "23456";
+const mockProjectId: string = "123";
+const mockUserEditId: string = "456";
 const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
-const mockUserId: string = "34567";
+const mockUserId: string = "789";
 let mockUser: User = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
@@ -100,7 +100,7 @@ beforeAll(() => {
 beforeEach(() => {
   // Clear everything from localStorage interacted with by these tests.
   LocalStorage.remove(LocalStorage.LocalStorageKey.ProjectId);
-  LocalStorage.remove(LocalStorage.LocalStorageKey.User);
+  LocalStorage.setCurrentUser(mockUser);
 });
 
 afterEach(() => {
@@ -114,7 +114,7 @@ afterAll(() => {
   }
 });
 
-describe("Test GoalsActions", () => {
+describe("GoalsActions", () => {
   it("should create an action to add a goal to history", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.AddGoalToHistoryAction = {
@@ -310,9 +310,7 @@ describe("Test GoalsActions", () => {
     expect(goal.steps).toEqual([]);
     expect(goal.currentStep).toEqual(0);
 
-    const updatedGoal: HandleFlags = actions.updateStepData(
-      goal
-    ) as HandleFlags;
+    const updatedGoal: HandleFlags = actions.updateStepData(goal);
 
     expect(updatedGoal.steps).toEqual([]);
     expect(updatedGoal.currentStep).toEqual(0);
@@ -320,16 +318,16 @@ describe("Test GoalsActions", () => {
 
   it("should return a userEditId", () => {
     LocalStorage.setProjectId(mockProjectId);
-    expect(actions.getUserEditId(mockUser)).toEqual(mockUserEditId);
+    expect(actions.getUserEditId()).toEqual(mockUserEditId);
   });
 
   it("should return undefined when no projectId is set", () => {
-    expect(actions.getUserEditId(mockUser)).toEqual(undefined);
+    expect(actions.getUserEditId()).toEqual(undefined);
   });
 
-  it("should return undefined when no userId exists for the project", () => {
+  it("should return undefined when no userEditId exists for the project", () => {
     LocalStorage.setProjectId("differentThanMockProjectId");
-    expect(actions.getUserEditId(mockUser)).toEqual(undefined);
+    expect(actions.getUserEditId()).toEqual(undefined);
   });
 
   it("should return the correct goal", () => {

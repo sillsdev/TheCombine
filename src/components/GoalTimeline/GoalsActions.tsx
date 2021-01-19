@@ -11,7 +11,6 @@ import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
 import { Goal, GoalType } from "../../types/goals";
 import { goalTypeToGoal } from "../../types/goalUtilities";
 import { Project } from "../../types/project";
-import { User } from "../../types/user";
 import { Edit } from "../../types/userEdit";
 import { saveChangesToProject } from "../Project/ProjectActions";
 
@@ -73,12 +72,11 @@ export function asyncLoadExistingUserEdits(
 
 export function asyncGetUserEdits() {
   return async (dispatch: StoreStateDispatch) => {
-    const user = LocalStorage.getCurrentUser();
     const projectId = LocalStorage.getProjectId();
-    if (user && projectId) {
-      const userEditId = getUserEditId(user);
+    if (projectId) {
+      const userEditId = getUserEditId();
 
-      if (userEditId !== undefined) {
+      if (userEditId) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
         dispatch(Backend.createUserEdit);
@@ -89,20 +87,17 @@ export function asyncGetUserEdits() {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: StoreStateDispatch) => {
-    const user = LocalStorage.getCurrentUser();
-    if (user) {
-      const userEditId = getUserEditId(user);
-      if (userEditId) {
-        dispatch(asyncLoadGoalData(goal)).then(
-          (returnedGoal) => (goal = returnedGoal)
-        );
-        await Backend.addGoalToUserEdit(userEditId, goal)
-          .then((resp) => {
-            dispatch(addGoalToHistory(goal));
-            history.push(`${Path.Goals}/${resp}`);
-          })
-          .catch((err) => console.error(err));
-      }
+    const userEditId = getUserEditId();
+    if (userEditId) {
+      dispatch(asyncLoadGoalData(goal)).then(
+        (returnedGoal) => (goal = returnedGoal)
+      );
+      await Backend.addGoalToUserEdit(userEditId, goal)
+        .then((resp) => {
+          dispatch(addGoalToHistory(goal));
+          history.push(`${Path.Goals}/${resp}`);
+        })
+        .catch((err) => console.error(err));
     }
   };
 }
@@ -169,10 +164,16 @@ export function updateStepData(goal: Goal): Goal {
   return goal;
 }
 
-export function getUserEditId(user: User): string | undefined {
-  const projectId = LocalStorage.getProjectId();
-  const projectIds = Object.keys(user.workedProjects);
-  return projectIds.find((id) => id === projectId);
+export function getUserEditId(): string | undefined {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
+    const projectId = LocalStorage.getProjectId();
+    const projectIds = Object.keys(user.workedProjects);
+    const key = projectIds.find((id) => id === projectId);
+    if (key) {
+      return user.workedProjects[key];
+    }
+  }
 }
 
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
@@ -200,12 +201,9 @@ async function updateStep(
 }
 
 async function addStepToGoal(goal: Goal, goalIndex: number) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    const userEditId = getUserEditId(user);
-    if (userEditId) {
-      await Backend.addStepToGoal(userEditId, goalIndex, goal);
-    }
+  const userEditId = getUserEditId();
+  if (userEditId) {
+    await Backend.addStepToGoal(userEditId, goalIndex, goal);
   }
 }
 
@@ -224,17 +222,14 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: StoreStateDispatch
 ) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    const userEditId = getUserEditId(user);
-    if (userEditId !== undefined) {
-      const goalIndex = getIndexInHistory(history, updatedGoal);
-      dispatch(updateGoal(updatedGoal));
-      await Backend.addStepToGoal(
-        userEditId,
-        goalIndex,
-        updatedGoal
-      ).catch((err) => console.error(err));
-    }
+  const userEditId = getUserEditId();
+  if (userEditId) {
+    const goalIndex = getIndexInHistory(history, updatedGoal);
+    dispatch(updateGoal(updatedGoal));
+    await Backend.addStepToGoal(
+      userEditId,
+      goalIndex,
+      updatedGoal
+    ).catch((err) => console.error(err));
   }
 }
