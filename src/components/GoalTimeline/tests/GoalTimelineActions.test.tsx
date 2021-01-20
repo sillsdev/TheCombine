@@ -14,7 +14,6 @@ import {
   MergeTreeActions,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
 import { Goal } from "../../../types/goals";
 import { maxNumSteps } from "../../../types/goalUtilities";
 import { User } from "../../../types/user";
