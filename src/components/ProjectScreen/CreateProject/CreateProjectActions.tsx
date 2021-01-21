@@ -2,7 +2,7 @@ import * as backend from "../../../backend";
 import history, { Path } from "../../../history";
 import { StoreStateDispatch } from "../../../types/actions";
 import { defaultProject, Project, WritingSystem } from "../../../types/project";
-import { asyncGetUserEdits } from "../../GoalTimeline/GoalsActions";
+import { asyncCreateUserEdits } from "../../GoalTimeline/GoalsActions";
 import { setCurrentProject } from "../../Project/ProjectActions";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
@@ -63,7 +63,7 @@ export function asyncCreateProject(
                 dispatch(success(name, vernacularLanguage, analysisLanguages));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
-                  dispatch(asyncGetUserEdits());
+                  dispatch(asyncCreateUserEdits());
                   history.push(Path.ProjSettings);
                 }, 1000);
               })
@@ -81,7 +81,7 @@ export function asyncCreateProject(
         } else {
           dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
-            dispatch(asyncGetUserEdits());
+            dispatch(asyncCreateUserEdits());
             history.push(Path.ProjSettings);
           }, 1000);
         }
