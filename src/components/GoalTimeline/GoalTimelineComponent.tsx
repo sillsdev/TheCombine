@@ -203,7 +203,7 @@ export default class GoalTimeline extends React.Component<
               <Translate id={"goal.selector.past"} />
             </Typography>
             <VerticalDisplay
-              data={this.props.history}
+              data={[...this.props.history].reverse()}
               scrollToEnd={false}
               handleChange={this.handleChange}
               height={35}
