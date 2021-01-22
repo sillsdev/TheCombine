@@ -158,27 +158,20 @@ namespace BackendFramework.Controllers
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
 
-                // Add character set to project from ldml file
-                var proj = await _projectService.GetProject(projectId);
-                if (proj is null)
-                {
-                    return new NotFoundObjectResult(projectId);
-                }
-
-                _liftService.LdmlImport(
-                    Path.Combine(liftStoragePath, "WritingSystems"),
-                    proj.VernacularWritingSystem.Bcp47, _projectService, proj);
-
-                // Store that we have imported Lift data already for this project to signal the frontend
-                // not to attempt to import again.
+                // Store that we have imported Lift data already for this project to signal the frontend not
+                // to attempt to import again. This should happen even if the character import below fails.
                 var project = await _projectService.GetProject(projectId);
                 if (project is null)
                 {
                     return new NotFoundObjectResult(projectId);
                 }
-
                 project.LiftImported = true;
                 await _projectService.Update(projectId, project);
+
+                // Add character set to project from ldml file
+                _liftService.LdmlImport(
+                    Path.Combine(liftStoragePath, "WritingSystems"),
+                    project.VernacularWritingSystem.Bcp47, _projectService, project);
 
                 return new ObjectResult(resp);
             }
