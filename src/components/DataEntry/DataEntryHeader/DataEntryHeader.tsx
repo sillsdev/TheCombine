@@ -7,8 +7,8 @@ import {
   LocalizeContextProps,
 } from "react-localize-redux";
 
-import theme from "types/theme";
 import DomainTree from "types/SemanticDomain";
+import theme from "types/theme";
 
 interface DataEntryHeaderProps {
   domain: DomainTree;
