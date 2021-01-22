@@ -38,7 +38,7 @@ export default function AppBarComponent(props: AppBarComponentProps) {
               )}
             </Grid>
             <Grid item>
-              <DownloadButton />
+              <DownloadButton colorSecondary />
             </Grid>
             <Grid item>
               <UserMenu />
