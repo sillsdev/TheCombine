@@ -1,6 +1,6 @@
-import { randomIntString } from "../utilities";
-import { AutoComplete } from "./AutoComplete";
-import { SemanticDomain } from "./word";
+import { randomIntString } from "utilities";
+import { AutoComplete } from "types/AutoComplete";
+import { SemanticDomain } from "types/word";
 
 export interface CustomField {
   name: string;

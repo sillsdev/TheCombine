@@ -1,16 +1,16 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 
-import theme from "../../../../types/theme";
-import { Sense, Word } from "../../../../types/word";
-import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
-import Recorder from "../../../Pronunciations/Recorder";
+import theme from "types/theme";
+import { Sense, Word } from "types/word";
+import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Recorder from "components/Pronunciations/Recorder";
 import {
   DeleteEntry,
   EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
-} from "../EntryCellComponents";
+} from "components/DataEntry/DataEntryTable/EntryCellComponents";
 
 interface RecentEntryProps {
   entry: Word;

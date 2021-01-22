@@ -3,12 +3,14 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import * as utilities from "../../../../utilities";
-import ReviewEntriesConnected from "../ReviewEntriesComponent";
-import { OLD_SENSE } from "../ReviewEntriesTypes";
-import mockWords, { mockCreateWord } from "./MockWords";
+import * as utilities from "utilities";
+import ReviewEntriesConnected from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
+import { OLD_SENSE } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import mockWords, {
+  mockCreateWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
-jest.mock("../../../../backend", () => {
+jest.mock("backend", () => {
   return {
     getFrontierWords: jest.fn(() => {
       return Promise.resolve(
@@ -45,7 +47,7 @@ jest.mock("@material-ui/core", () => {
 });
 
 // Mock uuid generation
-jest.mock("../../../../utilities", () => {
+jest.mock("utilities", () => {
   return {
     uuid: jest.fn(),
   };
@@ -62,7 +64,7 @@ jest.mock("material-table", () => {
 });
 
 // Mock the node module used by AudioRecorder
-jest.mock("../../../../components/Pronunciations/Recorder");
+jest.mock("components/Pronunciations/Recorder");
 
 // Mock to spy on updating words
 const MOCK_UPDATE = jest.fn();

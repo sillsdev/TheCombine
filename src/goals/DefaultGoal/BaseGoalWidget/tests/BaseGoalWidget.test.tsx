@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { User } from "../../../../types/user";
-import { Goal } from "../../../../types/goals";
-import { CreateCharInv } from "../../../CreateCharInv/CreateCharInv";
-import BaseGoalWidget from "../BaseGoalWidget";
+import { User } from "types/user";
+import { Goal } from "types/goals";
+import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import BaseGoalWidget from "goals/DefaultGoal/BaseGoalWidget/BaseGoalWidget";
 
 it("renders without crashing", () => {
   const div = document.createElement("div");

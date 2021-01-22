@@ -1,6 +1,6 @@
-import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { User } from "../../types/user";
-import * as LocalStorage from "../localStorage";
+import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { User } from "types/user";
+import * as LocalStorage from "backend/localStorage";
 
 const mockAvatar: string = "mockAvatar";
 const mockBlacklist: Hash<boolean> = { mockKey: true };

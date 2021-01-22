@@ -1,6 +1,6 @@
-import { resetPasswordRequest, resetPassword } from "../../backend";
-import history, { Path } from "../../history";
-import { StoreStateDispatch } from "../../types/actions";
+import { resetPasswordRequest, resetPassword } from "backend";
+import history, { Path } from "browserHistory";
+import { StoreStateDispatch } from "types/actions";
 
 export const RESET_PASSWORD_ATTEMPT = "RESET_PASSWORD_ATTEMPT";
 export type RESET_PASSWORD_ATTEMPT = typeof RESET_PASSWORD_ATTEMPT;

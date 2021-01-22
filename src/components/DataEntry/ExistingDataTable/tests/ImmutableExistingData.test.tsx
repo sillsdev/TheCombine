@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import { ImmutableExistingData } from "../ImmutableExistingData";
+import { ImmutableExistingData } from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
 
 describe("ImmutableExistingData", () => {
   it("render without crashing", () => {

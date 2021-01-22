@@ -11,10 +11,10 @@ import {
   teeDown,
   teeUpLeft,
   teeUpRight,
-} from "../../resources/tree";
-import DomainTile, { Direction } from "./DomainTile";
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import { TreeViewHeader } from "./TreeViewHeader";
+} from "resources/tree";
+import DomainTile, { Direction } from "components/TreeView/DomainTile";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;

@@ -1,4 +1,4 @@
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 export enum TreeActionType {
   TRAVERSE_TREE = "traverseTree",

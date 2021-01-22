@@ -1,4 +1,4 @@
-import { GoalHistoryState } from "../../../types/goals";
+import { GoalHistoryState } from "types/goals";
 
 export const defaultState: GoalHistoryState = {
   history: [],

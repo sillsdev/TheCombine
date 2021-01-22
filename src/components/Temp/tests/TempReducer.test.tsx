@@ -1,6 +1,6 @@
-import * as reducer from "../TempReducer";
-import { TempAction, PRESS_BUTTON } from "../TempActions";
-import { StoreAction, StoreActions } from "../../../rootActions";
+import * as reducer from "components/Temp/TempReducer";
+import { TempAction, PRESS_BUTTON } from "components/Temp/TempActions";
+import { StoreAction, StoreActions } from "rootActions";
 
 describe("tempReducer Tests", () => {
   let dummySt: reducer.TempState = reducer.defaultState;

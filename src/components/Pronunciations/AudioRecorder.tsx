@@ -1,7 +1,7 @@
 import React from "react";
 
-import Recorder from "./Recorder";
-import RecorderIcon from "./RecorderIcon";
+import Recorder from "components/Pronunciations/Recorder";
+import RecorderIcon from "components/Pronunciations/RecorderIcon";
 
 export interface RecorderProps {
   wordId: string;

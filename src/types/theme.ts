@@ -2,7 +2,7 @@ import { blue, green, grey, red, yellow } from "@material-ui/core/colors";
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
-import { Path } from "../history";
+import { Path } from "browserHistory";
 
 // Constants which define colors later:
 const primary: string = blue[600];

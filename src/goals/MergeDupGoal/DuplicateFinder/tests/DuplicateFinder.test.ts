@@ -1,12 +1,9 @@
-//Sam Delaney, 6/12/19
+import { simpleWord, testWordList as mockTestWordList } from "types/word";
+import DupFinder, {
+  DefaultParams,
+} from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 
-import {
-  simpleWord,
-  testWordList as mockTestWordList,
-} from "../../../../types/word";
-import DupFinder, { DefaultParams } from "../DuplicateFinder";
-
-jest.mock("../../../../backend", () => {
+jest.mock("backend", () => {
   return {
     getFrontierWords: jest.fn(() => {
       return Promise.resolve(mockTestWordList());

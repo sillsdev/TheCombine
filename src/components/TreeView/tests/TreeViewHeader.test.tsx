@@ -2,13 +2,14 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { renderHook, act } from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
-import MockDomain from "./MockSemanticDomain";
-import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
+
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import {
   TreeViewHeader,
   TreeHeaderProps,
   useTreeViewNavigation,
-} from "../TreeViewHeader";
+} from "components/TreeView/TreeViewHeader";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();

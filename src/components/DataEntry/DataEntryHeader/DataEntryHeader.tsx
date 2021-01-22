@@ -1,14 +1,14 @@
 import React from "react";
 import { Switch, Typography } from "@material-ui/core";
-
 import { Help } from "@material-ui/icons";
-import theme from "../../../types/theme";
 import {
   Translate,
   withLocalize,
   LocalizeContextProps,
 } from "react-localize-redux";
-import DomainTree from "../../../types/SemanticDomain";
+
+import DomainTree from "types/SemanticDomain";
+import theme from "types/theme";
 
 interface DataEntryHeaderProps {
   domain: DomainTree;

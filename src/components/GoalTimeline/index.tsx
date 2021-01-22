@@ -1,10 +1,13 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../types";
-import { StoreStateDispatch } from "../../types/actions";
-import { Goal } from "../../types/goals";
-import GoalTimeline from "./GoalTimelineComponent";
-import { asyncAddGoalToHistory, asyncGetUserEdits } from "./GoalsActions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Goal } from "types/goals";
+import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
+import {
+  asyncAddGoalToHistory,
+  asyncGetUserEdits,
+} from "components/GoalTimeline/GoalsActions";
 
 export function mapStateToProps(state: StoreState) {
   return {

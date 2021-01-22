@@ -1,9 +1,9 @@
-import { StoreActions, StoreAction } from "../../rootActions";
+import { StoreActions, StoreAction } from "rootActions";
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
   getCharacterStatus,
-} from "./CharacterInventoryActions";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
 
 export interface CharacterInventoryState {
   validCharacters: string[];

@@ -1,19 +1,19 @@
 import { connect } from "react-redux";
+
 import {
   asyncAdvanceStep,
   asyncRefreshWords,
-} from "../../../components/GoalTimeline/GoalsActions";
-
-import { StoreState } from "../../../types";
-import { StoreStateDispatch } from "../../../types/actions";
+} from "components/GoalTimeline/GoalsActions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 import {
   moveSenses,
   mergeAll,
   orderSense,
   orderDuplicate,
-} from "./MergeDupStepActions";
-import MergeDupStepComponent from "./MergeDupStepComponent";
-import { MergeTreeReference } from "./MergeDupsTree";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
   return {

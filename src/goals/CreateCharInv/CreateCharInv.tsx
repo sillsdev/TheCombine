@@ -1,4 +1,4 @@
-import { Goal, GoalName, GoalType } from "../../types/goals";
+import { Goal, GoalName, GoalType } from "types/goals";
 
 export interface CreateCharInvData {
   inventory: string[][];

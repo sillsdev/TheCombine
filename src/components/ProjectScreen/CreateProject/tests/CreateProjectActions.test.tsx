@@ -1,8 +1,8 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as action from "../CreateProjectActions";
-import * as reducer from "../CreateProjectReducer";
+import * as action from "components/ProjectScreen/CreateProject/CreateProjectActions";
+import * as reducer from "components/ProjectScreen/CreateProject/CreateProjectReducer";
 
 const createMockStore = configureMockStore([thunk]);
 

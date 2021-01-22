@@ -1,6 +1,6 @@
-import { Hash } from "../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { User } from "../types/user";
-import { getUser } from ".";
+import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { User } from "types/user";
+import { getUser } from "backend";
 
 export enum LocalStorageKey {
   Avatar = "avatar",

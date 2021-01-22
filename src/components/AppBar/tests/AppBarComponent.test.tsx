@@ -3,11 +3,11 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { Path } from "../../../history";
-import { defaultState } from "../../App/DefaultState";
-import AppBarComponent from "../AppBarComponent";
-import NavigationButtons from "../NavigationButtons";
-import ProjectNameButton from "../ProjectNameButton";
+import { Path } from "browserHistory";
+import { defaultState } from "components/App/DefaultState";
+import AppBarComponent from "components/AppBar/AppBarComponent";
+import NavigationButtons from "components/AppBar/NavigationButtons";
+import ProjectNameButton from "components/AppBar/ProjectNameButton";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);

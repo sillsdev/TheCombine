@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 
-import PageNotFound from "../../../components/PageNotFound/component";
-import EmptyGoalComponent from "../../../components/EmptyGoal/EmptyGoalComponent";
-import { Goal, GoalProps, GoalType } from "../../../types/goals";
-import CharInventoryCreation from "../../CharInventoryCreation";
-import MergeDupStep from "../../MergeDupGoal/MergeDupStep";
-import ReviewEntriesComponent from "../../ReviewEntries/ReviewEntriesComponent";
-import DisplayProg from "./DisplayProg";
+import PageNotFound from "components/PageNotFound/component";
+import EmptyGoalComponent from "components/EmptyGoal/EmptyGoalComponent";
+import { Goal, GoalProps, GoalType } from "types/goals";
+import CharInventoryCreation from "goals/CharInventoryCreation";
+import MergeDupStep from "goals/MergeDupGoal/MergeDupStep";
+import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent";
+import DisplayProg from "goals/DefaultGoal/BaseGoalScreen/DisplayProg";
 
 function stepComponent(goalType: GoalType): ReactNode[] {
   switch (goalType) {

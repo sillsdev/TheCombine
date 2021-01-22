@@ -1,7 +1,7 @@
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { StoreState } from ".";
+import { StoreState } from "types";
 
 export interface ActionWithPayload<T> extends Action {
   payload: T;

@@ -2,7 +2,8 @@ import React from "react";
 import { Grid, Typography, Tooltip } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import { Translate } from "react-localize-redux";
-import theme from "../../../../types/theme";
+
+import theme from "types/theme";
 
 export interface CharacterSetHeaderProps {}
 

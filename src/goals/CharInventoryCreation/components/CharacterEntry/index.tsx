@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../../../types";
-import { StoreStateDispatch } from "../../../../types/actions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 import {
   setRejectedCharacters,
   setValidCharacters,
-} from "../../CharacterInventoryActions";
-import CharacterEntry from "./CharacterEntryComponent";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
+import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry/CharacterEntryComponent";
 
 function mapStateToProps(state: StoreState) {
   return {

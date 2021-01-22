@@ -1,15 +1,15 @@
-import * as backend from "../../../backend";
-import { getProjectId } from "../../../backend/localStorage";
-import { StoreState } from "../../../types";
-import { StoreStateDispatch } from "../../../types/actions";
-import { Note, Sense, State, Word } from "../../../types/word";
+import * as backend from "backend";
+import { getProjectId } from "backend/localStorage";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Note, Sense, State, Word } from "types/word";
 import {
   OLD_SENSE,
   parseWord,
   ReviewEntriesSense,
   ReviewEntriesWord,
   SEP_CHAR,
-} from "./ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 export enum ReviewEntriesActionTypes {
   SetAnalysisLanguage = "SET_ANALYSIS_LANGUAGE",
