@@ -1,8 +1,8 @@
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import { Goal } from "types/goals";
 import BaseGoalSelect from "goals/DefaultGoal/BaseGoalWidget/BaseGoalWidget";
+import { Goal } from "types/goals";
 
 export interface GoalSuggestionsProps {
   suggestions: Goal[];

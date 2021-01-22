@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Project } from "types/project";
-import ChooseProjectComponent from "components/ProjectScreen/ChooseProject/index";
+import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({} as Project);

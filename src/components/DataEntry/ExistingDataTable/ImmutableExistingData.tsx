@@ -9,7 +9,9 @@ interface ImmutableExistingDataProps {
 /**
  * Displays a word users cannot edit any more
  */
-export class ImmutableExistingData extends React.Component<ImmutableExistingDataProps> {
+export class ImmutableExistingData extends React.Component<
+  ImmutableExistingDataProps
+> {
   render() {
     return (
       <Grid container wrap="nowrap" justify="space-around">

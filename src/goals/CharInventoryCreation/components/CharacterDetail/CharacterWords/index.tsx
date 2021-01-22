@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
 import CharacterWords from "goals/CharInventoryCreation/components/CharacterDetail/CharacterWords/CharacterWordsComponent";
+import { StoreState } from "types";
 
 function mapStateToProps(state: StoreState) {
   return {

@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
+
 import {
   asyncAdvanceStep,
   asyncRefreshWords,
 } from "components/GoalTimeline/GoalsActions";
-
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import {
