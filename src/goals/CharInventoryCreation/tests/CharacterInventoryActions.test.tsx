@@ -63,7 +63,7 @@ let mockUser = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-jest.mock("../../../backend", () => ({
+jest.mock("backend", () => ({
   updateProject: jest.fn((_project: Project) => {
     return Promise.resolve("projectId");
   }),

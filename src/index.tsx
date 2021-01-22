@@ -1,22 +1,18 @@
-//external modules
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { renderToStaticMarkup } from "react-dom/server";
-
-//TC modules
-import App from "./components/App/component";
-import * as serviceWorker from "./serviceWorker";
-import { store, persistor } from "./store";
 import { LocalizeProvider } from "react-localize-redux";
-
-//additional files
-import globalTranslations from "./resources/translations.json";
 import { Router } from "react-router-dom";
-import history from "./browserHistory";
 import { PersistGate } from "redux-persist/integration/react";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import theme from "./types/theme";
+
+import App from "components/App/component";
+import * as serviceWorker from "serviceWorker";
+import { store, persistor } from "store";
+import globalTranslations from "resources/translations.json";
+import history from "browserHistory";
+import theme from "types/theme";
 
 const localizedLanguages = [
   { name: "English", code: "en" },

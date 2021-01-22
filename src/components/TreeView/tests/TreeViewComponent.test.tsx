@@ -29,7 +29,7 @@ jest.mock("@material-ui/core", () => {
 
 // Mock createDomains
 jest.mock("components/TreeView/TreeViewReducer", () => {
-  const realReducer = jest.requireActual("../TreeViewReducer");
+  const realReducer = jest.requireActual("components/TreeView/TreeViewReducer");
   return {
     ...realReducer,
     createDomains: () => {

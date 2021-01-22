@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 
-import PageNotFound from "../component";
+import PageNotFound from "components/PageNotFound/component";
 
 const createMockStore = configureMockStore([]);
 

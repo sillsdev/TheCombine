@@ -3,7 +3,7 @@ import {
   defaultState,
   TreeViewState,
   createDomains,
-} from "../TreeViewReducer";
+} from "components/TreeView/TreeViewReducer";
 import {
   TreeViewAction,
   TreeActionType,

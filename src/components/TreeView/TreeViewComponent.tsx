@@ -8,9 +8,9 @@ import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { createDomains } from "components/TreeView/TreeViewReducer";
 
 // Domain data
-import en from "../../resources/semantic-domains/en.json";
-import es from "../../resources/semantic-domains/es.json";
-import fr from "../../resources/semantic-domains/fr.json";
+import en from "resources/semantic-domains/en.json";
+import es from "resources/semantic-domains/es.json";
+import fr from "resources/semantic-domains/fr.json";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;

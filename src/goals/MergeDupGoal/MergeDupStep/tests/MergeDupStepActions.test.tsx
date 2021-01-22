@@ -80,8 +80,8 @@ function mockMergeWords(parent: Word, children: MergeWord[]) {
   return Promise.resolve(mergeList[args]);
 }
 
-jest.mock("../../../../backend", () => {
-  const realBackend = jest.requireActual("../../../../backend");
+jest.mock("backend", () => {
+  const realBackend = jest.requireActual("backend");
   return {
     ...realBackend,
     mergeWords: jest.fn((parent: Word, children: MergeWord[]) =>

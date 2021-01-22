@@ -8,7 +8,7 @@ import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 const mockUser = new User("", "", "");
 let testRenderer: ReactTestRenderer;
 
-jest.mock("../../../backend", () => {
+jest.mock("backend", () => {
   return {
     getUser: jest.fn(() => {
       return Promise.resolve(mockUser);
