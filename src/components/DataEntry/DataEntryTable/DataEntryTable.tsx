@@ -7,10 +7,10 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import * as Backend from "../../../backend";
-import { AutoComplete } from "../../../types/AutoComplete";
-import DomainTree from "../../../types/SemanticDomain";
-import theme from "../../../types/theme";
+import * as Backend from "backend";
+import { AutoComplete } from "types/AutoComplete";
+import DomainTree from "types/SemanticDomain";
+import theme from "types/theme";
 import {
   Gloss,
   Note,
@@ -19,11 +19,11 @@ import {
   simpleWord,
   State,
   Word,
-} from "../../../types/word";
-import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
-import Recorder from "../../Pronunciations/Recorder";
-import NewEntry from "./NewEntry/NewEntry";
-import RecentEntry from "./RecentEntry/RecentEntry";
+} from "types/word";
+import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
+import Recorder from "components/Pronunciations/Recorder";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 
 interface DataEntryTableProps {
   domain: DomainTree;

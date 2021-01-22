@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import DeleteEntry from "../DeleteEntry";
+import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
 
 describe("DeleteEntry", () => {
   it("renders without crashing", () => {

@@ -1,14 +1,14 @@
 import { AppBar, Grid, Toolbar } from "@material-ui/core";
 import React from "react";
 
-import { getProjectId } from "../../backend/localStorage";
-import { Path } from "../../browserHistory";
-import theme from "../../types/theme";
-import DownloadButton from "../ProjectExport/DownloadButton";
-import Logo from "./Logo";
-import NavigationButtons from "./NavigationButtons";
-import ProjectNameButton from "./ProjectNameButton";
-import UserMenu from "./UserMenu";
+import { getProjectId } from "backend/localStorage";
+import { Path } from "browserHistory";
+import theme from "types/theme";
+import DownloadButton from "components/ProjectExport/DownloadButton";
+import Logo from "components/AppBar/Logo";
+import NavigationButtons from "components/AppBar/NavigationButtons";
+import ProjectNameButton from "components/AppBar/ProjectNameButton";
+import UserMenu from "components/AppBar/UserMenu";
 
 export interface AppBarComponentProps {
   currentTab: Path;

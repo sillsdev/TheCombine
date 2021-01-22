@@ -3,10 +3,11 @@ import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
 } from "react-test-renderer";
+
 import ContextMenu, {
   ContextMenu as ContextMenuClass,
   MenuType,
-} from "../ContextMenu";
+} from "components/ContextMenu/ContextMenu";
 
 // Mock DOM
 jest.autoMockOn();

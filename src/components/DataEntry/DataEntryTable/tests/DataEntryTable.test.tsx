@@ -6,9 +6,9 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import * as backend from "../../../../backend";
-import { defaultProject as mockProject } from "../../../../types/project";
-import { baseDomain } from "../../../../types/SemanticDomain";
+import * as backend from "backend";
+import { defaultProject as mockProject } from "types/project";
+import { baseDomain } from "types/SemanticDomain";
 import {
   multiGlossWord,
   SemanticDomain,
@@ -16,15 +16,15 @@ import {
   simpleWord,
   State,
   Word,
-} from "../../../../types/word";
-import { defaultState } from "../../../App/DefaultState";
+} from "types/word";
+import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   addSemanticDomainToSense,
   addSenseToWord,
-} from "../DataEntryTable";
-import NewEntry from "../NewEntry/NewEntry";
+} from "components/DataEntry/DataEntryTable/DataEntryTable";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 
-jest.mock("../../../../backend", () => {
+jest.mock("backend", () => {
   return {
     createWord: jest.fn((_word: Word) => {
       return Promise.resolve(mockWord);

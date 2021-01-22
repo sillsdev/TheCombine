@@ -2,8 +2,8 @@ import { MenuItem, Button } from "@material-ui/core";
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { User } from "../../../types/user";
-import UserMenu, { getIsAdmin, UserMenuList } from "../UserMenu";
+import { User } from "types/user";
+import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 
 const mockUser = new User("", "", "");
 let testRenderer: ReactTestRenderer;

@@ -1,8 +1,8 @@
-import SpellChecker from "../spellChecker";
+import SpellChecker from "components/DataEntry/spellChecker";
 
-jest.mock("../DataEntryHeader/DataEntryHeader");
-jest.mock("../DataEntryTable/DataEntryTable");
-jest.mock("../../TreeView");
+jest.mock("components/DataEntry/DataEntryHeader/DataEntryHeader");
+jest.mock("components/DataEntry/DataEntryTable/DataEntryTable");
+jest.mock("components/TreeView");
 
 describe("Tests spell checker", () => {
   it("constructs properly", () => {
@@ -23,7 +23,7 @@ describe("Tests spell checker", () => {
     expect(isSpelledCorrectly).toEqual(true);
   });
 
-  it("correctly detects a mispelled word", () => {
+  it("correctly detects a misspelled word", () => {
     let spellChecker: SpellChecker = new SpellChecker();
     let isSpelledCorrectly = spellChecker.correct("abjkdsjf");
     expect(isSpelledCorrectly).toEqual(false);
