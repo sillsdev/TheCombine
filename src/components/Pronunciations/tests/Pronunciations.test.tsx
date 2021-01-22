@@ -3,15 +3,15 @@ import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { defaultState } from "../../App/DefaultState";
-import AudioPlayer from "../AudioPlayer";
-import AudioRecorder from "../AudioRecorder";
-import { PronunciationsStatus } from "../PronunciationsActions";
-import Pronunciations from "../PronunciationsComponent";
-import RecorderIcon from "../RecorderIcon";
+import { defaultState } from "components/App/DefaultState";
+import AudioPlayer from "components/Pronunciations/AudioPlayer";
+import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import { PronunciationsStatus } from "components/Pronunciations/PronunciationsActions";
+import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import RecorderIcon from "components/Pronunciations/RecorderIcon";
 
 // Mock the node module used by AudioRecorder
-jest.mock("../Recorder");
+jest.mock("components/Pronunciations/Recorder");
 
 // Variables
 var testRenderer: ReactTestRenderer;

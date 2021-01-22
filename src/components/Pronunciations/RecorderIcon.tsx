@@ -4,13 +4,13 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import { StoreState } from "../../types";
-import { recorderStatus } from "../../types/theme";
+import { StoreState } from "types";
+import { recorderStatus } from "types/theme";
 import {
   PronunciationsStatus,
   recording,
   reset,
-} from "./PronunciationsActions";
+} from "components/Pronunciations/PronunciationsActions";
 
 export interface RecorderIconProps {
   wordId: string;

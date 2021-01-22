@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../../types";
-import { StoreStateDispatch } from "../../../types/actions";
-import { Project } from "../../../types/project";
-import { saveChangesToProject } from "../../Project/ProjectActions";
-import ProjectName from "./ProjectName";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
+import { saveChangesToProject } from "components/Project/ProjectActions";
+import ProjectName from "components/ProjectSettings/ProjectName/ProjectName";
 
 function mapStateToProps(state: StoreState) {
   return {

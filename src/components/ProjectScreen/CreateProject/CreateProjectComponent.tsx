@@ -13,11 +13,11 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { projectDuplicateCheck } from "../../../backend";
-import { WritingSystem } from "../../../types/project";
-import theme from "../../../types/theme";
-import FileInputButton from "../../Buttons/FileInputButton";
-import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
+import { projectDuplicateCheck } from "backend";
+import { WritingSystem } from "types/project";
+import theme from "types/theme";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
 export interface CreateProjectProps {
   asyncCreateProject: (
