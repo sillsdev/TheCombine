@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
-import GoalSuggestions from "../../GoalSuggestions";
-import { defaultState } from "../../DefaultState";
 import { Provider } from "react-redux";
+
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import GoalSuggestions from "components/GoalTimeline/GoalSuggestions";
 
 const createMockStore = configureMockStore([]);
 

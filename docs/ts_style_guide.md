@@ -17,6 +17,7 @@ Key Sections:
 - [File Names](#filename)
 - [`type` vs `interface`](#type-vs-interface)
 - [One-line `if` statements](#one-line-if-statements)
+- [imports](#imports)
 
 ## Variable and Function
 
@@ -358,3 +359,24 @@ if (isEmpty)
 
 > Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous
 > [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
+
+## imports
+
+Use absolute `import` statements everywhere for consistency.
+
+**Good**
+
+```ts
+import { getAllProjects } from "backend";
+import { Project } from "types/project";
+```
+
+**Bad**
+
+```ts
+import { getAllProjects } from "../../../../backend";
+import { Project } from "../../../../types/project";
+```
+
+> Reason: Provides consistency for imports across all files and shortens imports of commonly used top level modules.
+> Developers don't have to count `../` to know where a module is, they can simply start from the root of `src/`.

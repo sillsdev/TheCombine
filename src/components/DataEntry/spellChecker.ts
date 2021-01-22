@@ -1,6 +1,6 @@
 import nspell from "nspell";
 
-import { aff, dic } from "../../resources/dictionaries";
+import { aff, dic } from "resources/dictionaries";
 
 class SpellChecker {
   spell: nspell;

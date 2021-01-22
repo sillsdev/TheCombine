@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../types";
-import { StoreStateDispatch } from "../../types/actions";
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import { TraverseTreeAction } from "./TreeViewActions";
-import TreeViewComponent from "./TreeViewComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import { TraverseTreeAction } from "components/TreeView/TreeViewActions";
+import TreeViewComponent from "components/TreeView/TreeViewComponent";
 
 function mapStateToProps(state: StoreState) {
   return {

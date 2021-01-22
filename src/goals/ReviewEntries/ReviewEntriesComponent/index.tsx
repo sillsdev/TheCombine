@@ -1,15 +1,15 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../../types";
-import { StoreStateDispatch } from "../../../types/actions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 import {
   clearReviewEntriesState,
   setAnalysisLang,
   updateAllWords,
   updateFrontierWord,
-} from "./ReviewEntriesActions";
-import ReviewEntriesComponent from "./ReviewEntriesComponent";
-import { ReviewEntriesWord } from "./ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 function mapStateToProps(state: StoreState) {
   return {

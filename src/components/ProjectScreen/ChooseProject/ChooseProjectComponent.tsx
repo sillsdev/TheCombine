@@ -12,10 +12,10 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { getAllActiveProjectsByUser } from "../../../backend";
-import { getUserId } from "../../../backend/localStorage";
-import history, { Path } from "../../../history";
-import { Project } from "../../../types/project";
+import { getAllActiveProjectsByUser } from "backend";
+import { getUserId } from "backend/localStorage";
+import history, { Path } from "browserHistory";
+import { Project } from "types/project";
 
 export interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;

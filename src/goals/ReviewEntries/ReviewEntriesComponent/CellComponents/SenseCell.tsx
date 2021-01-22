@@ -2,12 +2,12 @@ import React, { ReactNode } from "react";
 import { Translate } from "react-localize-redux";
 import { TextField, Chip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import { highlight } from "../../../../types/theme";
 
-import { FieldParameterStandard } from "./CellColumns";
-import AlignedList from "./AlignedList";
-import { uuid } from "../../../../utilities";
-import { ReviewEntriesSense } from "../ReviewEntriesTypes";
+import { highlight } from "types/theme";
+import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
+import { uuid } from "utilities";
+import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 interface SenseCellProps {
   editable: boolean;

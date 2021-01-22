@@ -7,13 +7,9 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import {
-  defaultProject,
-  Project,
-  WritingSystem,
-} from "../../../../types/project";
-import { defaultState } from "../../../App/DefaultState";
-import ProjectLanguages from "../ProjectLanguages";
+import { defaultProject, Project, WritingSystem } from "types/project";
+import { defaultState } from "components/App/DefaultState";
+import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);

@@ -6,7 +6,8 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 export enum Direction {
   Down,

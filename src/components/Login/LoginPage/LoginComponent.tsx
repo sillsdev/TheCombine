@@ -17,8 +17,8 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import history, { Path } from "../../../history";
-import { RuntimeConfig } from "../../../types/runtimeConfig";
+import history, { Path } from "browserHistory";
+import { RuntimeConfig } from "types/runtimeConfig";
 
 export interface LoginDispatchProps {
   login?: (username: string, password: string) => void;

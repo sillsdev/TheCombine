@@ -3,8 +3,8 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import renderer from "react-test-renderer";
 
-import { Path } from "../../../history";
-import GoalRoute from "../component";
+import { Path } from "browserHistory";
+import GoalRoute from "components/GoalRoute/component";
 
 describe("GoalRoute", () => {
   it("renders without crashing", () => {

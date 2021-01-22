@@ -6,8 +6,9 @@ import {
 } from "react-localize-redux";
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
-import theme from "../../../../types/theme";
-import CharactersInput from "./CharactersInput";
+
+import theme from "types/theme";
+import CharactersInput from "goals/CharInventoryCreation/components/CharacterEntry/CharactersInput";
 
 export interface CharacterEntryProps {
   setValidCharacters: (inventory: string[]) => void;

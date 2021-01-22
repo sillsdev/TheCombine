@@ -1,5 +1,5 @@
-import { getCurrentUser } from "../../backend/localStorage";
-import { User } from "../../types/user";
+import { getCurrentUser } from "backend/localStorage";
+import { User } from "types/user";
 
 export interface AuthHeader {
   authorization?: string;

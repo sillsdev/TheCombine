@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { store } from "../../../store";
-import { Project } from "../../../types/project";
+import { store } from "store";
+import { Project } from "types/project";
 import CharacterInventory, {
   CANCEL,
   SAVE,
-} from "../CharacterInventoryComponent";
+} from "goals/CharInventoryCreation/CharacterInventoryComponent";
 
 // Constants
 const SET_INV = jest.fn();

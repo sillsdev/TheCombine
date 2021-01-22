@@ -1,11 +1,11 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as LocalStorage from "../../../backend/localStorage";
-import * as RootAction from "../../../rootActions";
-import { User } from "../../../types/user";
-import * as LoginAction from "../LoginActions";
-import * as LoginReducer from "../LoginReducer";
+import * as LocalStorage from "backend/localStorage";
+import * as RootAction from "rootActions";
+import { User } from "types/user";
+import * as LoginAction from "components/Login/LoginActions";
+import * as LoginReducer from "components/Login/LoginReducer";
 
 const createMockStore = configureMockStore([thunk]);
 

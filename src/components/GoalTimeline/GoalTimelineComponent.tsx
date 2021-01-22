@@ -2,9 +2,9 @@ import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-import { Goal } from "../../types/goals";
-import HorizontalDisplay from "./GoalDisplay/HorizontalDisplay";
-import VerticalDisplay from "./GoalDisplay/VerticalDisplay";
+import { Goal } from "types/goals";
+import HorizontalDisplay from "components/GoalTimeline/GoalDisplay/HorizontalDisplay";
+import VerticalDisplay from "components/GoalTimeline/GoalDisplay/VerticalDisplay";
 
 const timelineStyle = {
   centerDisplays: {

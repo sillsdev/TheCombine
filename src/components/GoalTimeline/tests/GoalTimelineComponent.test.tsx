@@ -3,13 +3,13 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { Goal } from "../../../types/goals";
-import { defaultState } from "../DefaultState";
-import GoalTimeline from "../GoalTimelineComponent";
+import { Goal } from "types/goals";
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
-jest.mock("../../AppBar/AppBarComponent", () => "div");
+jest.mock("components/AppBar/AppBarComponent", () => "div");
 
 // Constants
 const LOAD_EDITS = jest.fn();

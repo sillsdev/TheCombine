@@ -1,9 +1,9 @@
 import React from "react";
 
-import * as Backend from "../../backend";
-import AudioPlayer from "./AudioPlayer";
-import AudioRecorder from "./AudioRecorder";
-import Recorder from "./Recorder";
+import * as Backend from "backend";
+import AudioPlayer from "components/Pronunciations/AudioPlayer";
+import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import Recorder from "components/Pronunciations/Recorder";
 
 export interface PronunciationProps {
   wordId: string;

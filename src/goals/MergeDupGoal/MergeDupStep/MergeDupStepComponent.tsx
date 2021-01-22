@@ -22,14 +22,14 @@ import {
 } from "react-beautiful-dnd";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import theme from "../../../types/theme";
-import { uuid } from "../../../utilities";
+import theme from "types/theme";
+import { uuid } from "utilities";
 import {
   MergeTreeReference,
   MergeTreeWord,
   TreeDataSense,
-} from "./MergeDupsTree";
-import MergeRow from "./MergeRow";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
 
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];

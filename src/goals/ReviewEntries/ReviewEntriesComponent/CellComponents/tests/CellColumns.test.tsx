@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { SemanticDomain } from "../../../../../types/word";
-import { ReviewEntriesWord, SEP_CHAR } from "../../ReviewEntriesTypes";
-import mockWords from "../../tests/MockWords";
-import columns from "../CellColumns";
+import { SemanticDomain } from "types/word";
+import {
+  ReviewEntriesWord,
+  SEP_CHAR,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
+import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 
 const GLOSS = "hoovy";
 const DOMAIN: SemanticDomain = { name: "Person", id: "0.1" };

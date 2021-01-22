@@ -1,8 +1,8 @@
-import { GoalHistoryState } from "../../../types/goals";
-import GoalHistory from "./GoalHistoryComponent";
-
 import { connect } from "react-redux";
-import { StoreState } from "../../../types";
+
+import GoalHistory from "components/GoalTimeline/GoalHistory/GoalHistoryComponent";
+import { StoreState } from "types";
+import { GoalHistoryState } from "types/goals";
 
 export function mapStateToProps(state: StoreState): GoalHistoryState {
   return {

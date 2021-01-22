@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import LocalizedGlossWithSuggestions from "../GlossWithSuggestions";
+import LocalizedGlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
 
 describe("Tests GlossWithSuggestions", () => {
   it("renders without crashing", () => {

@@ -11,14 +11,14 @@ import { Save } from "@material-ui/icons";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "../../history";
-import { Project } from "../../types/project";
-import theme from "../../types/theme";
-import { CharacterSetEntry } from "./CharacterInventoryReducer";
-import CharacterDetail from "./components/CharacterDetail";
-import CharacterEntry from "./components/CharacterEntry";
-import CharacterList from "./components/CharacterList";
-import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
+import history, { Path } from "browserHistory";
+import { Project } from "types/project";
+import theme from "types/theme";
+import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
+import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
+import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
+import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
 
 export interface CharacterInventoryProps {
   setValidCharacters: (inventory: string[]) => void;

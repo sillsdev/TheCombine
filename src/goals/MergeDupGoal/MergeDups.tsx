@@ -1,5 +1,5 @@
-import { Goal, GoalName, GoalType } from "../../types/goals";
-import { Word } from "../../types/word";
+import { Goal, GoalName, GoalType } from "types/goals";
+import { Word } from "types/word";
 
 export interface MergeDupData {
   plannedWords: Word[][];

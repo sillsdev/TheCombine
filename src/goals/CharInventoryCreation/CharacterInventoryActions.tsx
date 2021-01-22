@@ -1,12 +1,12 @@
-import * as backend from "../../backend";
-import { saveChangesToProject } from "../../components/Project/ProjectActions";
-import { StoreState } from "../../types";
-import { StoreStateDispatch } from "../../types/actions";
-import { Project } from "../../types/project";
+import * as backend from "backend";
+import { saveChangesToProject } from "components/Project/ProjectActions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
 import {
   CharacterSetEntry,
   characterStatus,
-} from "./CharacterInventoryReducer";
+} from "goals/CharInventoryCreation/CharacterInventoryReducer";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
