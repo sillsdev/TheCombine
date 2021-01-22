@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
 import DataEntryComponent from "components/DataEntry/DataEntryComponent";
+import { StoreState } from "types";
 
 function mapStateToProps(state: StoreState) {
   return {
