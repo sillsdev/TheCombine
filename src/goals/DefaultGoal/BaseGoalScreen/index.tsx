@@ -1,9 +1,10 @@
-import { StoreState } from "../../../types";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { LocalizeContextProps } from "react-localize-redux";
-import { Goal, GoalProps } from "../../../types/goals";
-import BaseGoalScreen from "./BaseGoalScreen";
+
+import { StoreState } from "types";
+import { Goal, GoalProps } from "types/goals";
+import BaseGoalScreen from "goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 
 export interface TParams {
   id: string;

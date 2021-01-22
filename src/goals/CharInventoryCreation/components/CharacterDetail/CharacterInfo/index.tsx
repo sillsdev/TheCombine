@@ -1,6 +1,7 @@
-import CharacterInfo from "./CharacterInfoComponent";
 import { connect } from "react-redux";
-import { StoreState } from "../../../../../types";
+
+import CharacterInfo from "goals/CharInventoryCreation/components/CharacterDetail/CharacterInfo/CharacterInfoComponent";
+import { StoreState } from "types";
 
 function mapStateToProps(state: StoreState) {
   return {

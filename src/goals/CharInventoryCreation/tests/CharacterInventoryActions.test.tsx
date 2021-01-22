@@ -1,18 +1,18 @@
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as backend from "../../../backend";
-import * as LocalStorage from "../../../backend/localStorage";
-import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
-import { StoreState } from "../../../types";
-import { Project } from "../../../types/project";
-import { User } from "../../../types/user";
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
+import { SET_CURRENT_PROJECT } from "components/Project/ProjectActions";
+import { StoreState } from "types";
+import { Project } from "types/project";
+import { User } from "types/user";
 import {
   CharacterInventoryType,
   setValidCharacters,
   uploadInventory,
-} from "../CharacterInventoryActions";
-import { CharacterSetEntry } from "../CharacterInventoryReducer";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
+import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];

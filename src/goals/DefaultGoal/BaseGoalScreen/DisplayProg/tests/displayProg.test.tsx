@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import DisplayProg from "../displayProg";
+
+import DisplayProg from "goals/DefaultGoal/BaseGoalScreen/DisplayProg/displayProg";
 
 it("renders without crashing", () => {
   const div = document.createElement("div");

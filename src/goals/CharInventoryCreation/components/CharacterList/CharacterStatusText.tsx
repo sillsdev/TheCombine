@@ -1,8 +1,9 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { accepted, rejected } from "../../../../types/theme";
 import { Translate } from "react-localize-redux";
-import { characterStatus } from "../../CharacterInventoryReducer";
+
+import { accepted, rejected } from "types/theme";
+import { characterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 
 export interface CharacterStatusTextProps {
   status: characterStatus;
