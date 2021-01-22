@@ -1,5 +1,5 @@
-import { StoreAction, StoreActions } from "../../rootActions";
-import * as LoginAction from "./LoginActions";
+import { StoreAction, StoreActions } from "rootActions";
+import * as LoginAction from "components/Login/LoginActions";
 
 export interface LoginState {
   username: string;

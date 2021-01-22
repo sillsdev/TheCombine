@@ -1,5 +1,5 @@
-import { deleteLift, downloadLift, exportLift } from "../../backend";
-import { StoreStateDispatch } from "../../types/actions";
+import { deleteLift, downloadLift, exportLift } from "backend";
+import { StoreStateDispatch } from "types/actions";
 
 export enum ExportStatus {
   Default = "DEFAULT",

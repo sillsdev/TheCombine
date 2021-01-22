@@ -4,14 +4,14 @@ import React, { createRef, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getProjectName } from "../../backend";
-import { StoreState } from "../../types";
-import { getNowDateTimeString } from "../../utilities";
+import { getProjectName } from "backend";
+import { StoreState } from "types";
+import { getNowDateTimeString } from "utilities";
 import {
   asyncDownloadExport,
   ExportStatus,
   resetExport,
-} from "./ExportProjectActions";
+} from "components/ProjectExport/ExportProjectActions";
 
 /** A button to show export status */
 export default function DownloadButton() {

@@ -2,10 +2,10 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import LoadingButton from "../Buttons/LoadingButton";
-import DownloadButton from "./DownloadButton";
-import { ExportStatus } from "./ExportProjectActions";
-import { ExportProjectState } from "./ExportProjectReducer";
+import LoadingButton from "components/Buttons/LoadingButton";
+import DownloadButton from "components/ProjectExport/DownloadButton";
+import { ExportStatus } from "components/ProjectExport/ExportProjectActions";
+import { ExportProjectState } from "components/ProjectExport/ExportProjectReducer";
 
 interface ExportProjectProps {
   exportProject: (projectId: string) => void;

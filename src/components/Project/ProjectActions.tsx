@@ -1,6 +1,6 @@
-import { updateProject } from "../../backend";
-import { StoreStateDispatch } from "../../types/actions";
-import { Project } from "../../types/project";
+import { updateProject } from "backend";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
 
 export const SET_CURRENT_PROJECT = "SET_CURRENT_PROJECT";
 export type SET_CURRENT_PROJECT = typeof SET_CURRENT_PROJECT;

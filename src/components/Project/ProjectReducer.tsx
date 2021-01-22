@@ -1,7 +1,10 @@
-import { ProjectAction, SET_CURRENT_PROJECT } from "./ProjectActions";
-import { Project, defaultProject } from "../../types/project";
-import { setProjectId } from "../../backend/localStorage";
-import { StoreActions, StoreAction } from "../../rootActions";
+import {
+  ProjectAction,
+  SET_CURRENT_PROJECT,
+} from "components/Project/ProjectActions";
+import { Project, defaultProject } from "types/project";
+import { setProjectId } from "backend/localStorage";
+import { StoreActions, StoreAction } from "rootActions";
 
 export const projectReducer = (
   state: Project = { ...defaultProject },
