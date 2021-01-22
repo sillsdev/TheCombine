@@ -13,8 +13,12 @@ import {
   resetExport,
 } from "./ExportProjectActions";
 
+interface DownloadButtonProps {
+  colorSecondary?: boolean;
+}
+
 /** A button to show export status */
-export default function DownloadButton() {
+export default function DownloadButton(props: DownloadButtonProps) {
   const exportState = useSelector(
     (state: StoreState) => state.exportProjectState
   );
@@ -83,7 +87,11 @@ export default function DownloadButton() {
     <React.Fragment>
       {exportState.status !== ExportStatus.Default && (
         <Tooltip title={<Translate id={textId()} />} placement="bottom">
-          <IconButton tabIndex={-1} onClick={iconFunction()}>
+          <IconButton
+            tabIndex={-1}
+            onClick={iconFunction()}
+            color={props.colorSecondary ? "secondary" : "primary"}
+          >
             {icon()}
           </IconButton>
         </Tooltip>
