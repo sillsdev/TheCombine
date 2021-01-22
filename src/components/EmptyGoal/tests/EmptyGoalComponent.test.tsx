@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
-import EmptyGoalComponent from "../EmptyGoalComponent";
+
+import { defaultState } from "components/App/DefaultState";
+import EmptyGoalComponent from "components/EmptyGoal/EmptyGoalComponent";
 
 const createMockStore = configureMockStore([]);
 

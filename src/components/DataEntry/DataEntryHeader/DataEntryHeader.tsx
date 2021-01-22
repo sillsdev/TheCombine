@@ -2,9 +2,9 @@ import React from "react";
 import { Switch, Typography } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import {
-    Translate,
-    withLocalize,
-    LocalizeContextProps,
+  Translate,
+  withLocalize,
+  LocalizeContextProps,
 } from "react-localize-redux";
 
 import theme from "types/theme";

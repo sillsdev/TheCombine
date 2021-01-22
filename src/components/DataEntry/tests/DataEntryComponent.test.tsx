@@ -4,16 +4,8 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultProject as mockProject } from "types/project";
-import SemanticDomainWithSubdomains, {
-  baseDomain,
-} from "types/SemanticDomain";
-import {
-  DomainWord,
-  Sense,
-  simpleWord,
-  State,
-  Word,
-} from "types/word";
+import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
+import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
 import { defaultState } from "components/App/DefaultState";
 import DataEntryComponent, {
   filterWords,

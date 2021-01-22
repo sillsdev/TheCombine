@@ -3,10 +3,10 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 
-import DataEntryHeader, { getQuestions } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
-import SemanticDomainWithSubdomains, {
-  baseDomain,
-} from "types/SemanticDomain";
+import DataEntryHeader, {
+  getQuestions,
+} from "components/DataEntry/DataEntryHeader/DataEntryHeader";
+import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});

@@ -6,13 +6,7 @@ import { getFrontierWords } from "backend";
 import { Path } from "browserHistory";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
-import {
-  DomainWord,
-  SemanticDomain,
-  Sense,
-  State,
-  Word,
-} from "types/word";
+import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
 import AppBarComponent from "components/AppBar/AppBarComponent";
 import TreeViewComponent from "components/TreeView";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";

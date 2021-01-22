@@ -1,42 +1,39 @@
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as LocalStorage from "../../../backend/localStorage";
-import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
+import * as LocalStorage from "backend/localStorage";
+import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import {
   MergeDupData,
   MergeDups,
   MergeStepData,
-} from "../../../goals/MergeDupGoal/MergeDups";
+} from "goals/MergeDupGoal/MergeDups";
 import {
   MergeTreeAction,
   MergeTreeActions,
-} from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { Goal } from "../../../types/goals";
-import { maxNumSteps } from "../../../types/goalUtilities";
-import { User } from "../../../types/user";
-import { UserEdit } from "../../../types/userEdit";
-import { defaultState as goalsDefaultState } from "../DefaultState";
-import * as actions from "../GoalsActions";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { Goal } from "types/goals";
+import { maxNumSteps } from "types/goalUtilities";
+import { User } from "types/user";
+import { UserEdit } from "types/userEdit";
+import { defaultState as goalsDefaultState } from "components/GoalTimeline/DefaultState";
+import * as actions from "components/GoalTimeline/GoalsActions";
 
-jest.mock(
-  ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
-  () => {
-    const dupFinder = jest.requireActual(
-      ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
-    );
-    return jest.fn().mockImplementation(() => ({
-      ...dupFinder,
-      getNextDups: jest.fn(() => {
-        return Promise.resolve(mockGoalData.plannedWords);
-      }),
-    }));
-  }
-);
+jest.mock("goals/MergeDupGoal/DuplicateFinder/DuplicateFinder", () => {
+  const dupFinder = jest.requireActual(
+    "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
+  );
+  return jest.fn().mockImplementation(() => ({
+    ...dupFinder,
+    getNextDups: jest.fn(() => {
+      return Promise.resolve(mockGoalData.plannedWords);
+    }),
+  }));
+});
 
-jest.mock("../../../backend", () => {
+jest.mock("backend", () => {
   return {
     getUser: jest.fn((_userId: string) => {
       return Promise.resolve(mockUser);

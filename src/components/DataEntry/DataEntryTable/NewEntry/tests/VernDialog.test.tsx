@@ -4,7 +4,10 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { simpleWord, testWordList, Word } from "types/word";
-import { StyledMenuItem, VernList } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import {
+  StyledMenuItem,
+  VernList,
+} from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
