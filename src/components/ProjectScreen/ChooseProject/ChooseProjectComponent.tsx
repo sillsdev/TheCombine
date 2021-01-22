@@ -14,7 +14,7 @@ import {
 
 import { getAllActiveProjectsByUser } from "../../../backend";
 import { getUserId } from "../../../backend/localStorage";
-import history, { Path } from "../../../history";
+import history, { Path } from "../../../browserHistory";
 import { Project } from "../../../types/project";
 
 export interface ChooseProjectProps {

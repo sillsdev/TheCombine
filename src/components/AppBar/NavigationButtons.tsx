@@ -2,7 +2,7 @@ import { Button } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "../../history";
+import history, { Path } from "../../browserHistory";
 import { tabColor } from "../../types/theme";
 
 interface NavigationButtonsProps {

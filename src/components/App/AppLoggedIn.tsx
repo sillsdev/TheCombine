@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 
-import { getBasePath, Path } from "../../history";
+import { getBasePath, Path } from "browserHistory";
 import AppBar from "../AppBar/AppBarComponent";
 import DataEntry from "../DataEntry";
 import GoalRoute from "../GoalRoute/component";

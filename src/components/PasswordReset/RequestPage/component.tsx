@@ -3,7 +3,7 @@ import * as React from "react";
 import { LocalizeContextProps, Translate } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "../../../backend";
-import history, { Path } from "../../../history";
+import history, { Path } from "../../../browserHistory";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 
 export interface ResetRequestDispatchProps {

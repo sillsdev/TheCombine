@@ -2,7 +2,7 @@ import { AppBar, Grid, Toolbar } from "@material-ui/core";
 import React from "react";
 
 import { getProjectId } from "../../backend/localStorage";
-import { Path } from "../../history";
+import { Path } from "../../browserHistory";
 import theme from "../../types/theme";
 import DownloadButton from "../ProjectExport/DownloadButton";
 import Logo from "./Logo";

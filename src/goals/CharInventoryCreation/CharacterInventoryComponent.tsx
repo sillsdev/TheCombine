@@ -11,7 +11,7 @@ import { Save } from "@material-ui/icons";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "../../history";
+import history, { Path } from "../../browserHistory";
 import { Project } from "../../types/project";
 import theme from "../../types/theme";
 import { CharacterSetEntry } from "./CharacterInventoryReducer";

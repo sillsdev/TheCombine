@@ -16,7 +16,7 @@ import {
 } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "../../../backend";
-import history, { Path } from "../../../history";
+import history, { Path } from "../../../browserHistory";
 import { buttonSuccess } from "../../../types/theme";
 import { passwordRequirements, usernameRequirements } from "../../../utilities";
 

@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
 
-import history, { Path } from "../../history";
+import history, { Path } from "../../browserHistory";
 import tractor from "../../resources/tractor.png";
 
 /**

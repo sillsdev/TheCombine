@@ -10,7 +10,7 @@ import { Translate } from "react-localize-redux";
 
 import { getUser } from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import history, { Path } from "../../history";
+import history, { Path } from "../../browserHistory";
 import theme from "../../types/theme";
 import { User } from "../../types/user";
 

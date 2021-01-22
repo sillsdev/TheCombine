@@ -1,5 +1,5 @@
 import * as backend from "../../../backend";
-import history, { Path } from "../../../history";
+import history, { Path } from "../../../browserHistory";
 import { StoreStateDispatch } from "../../../types/actions";
 import { defaultProject, Project, WritingSystem } from "../../../types/project";
 import { asyncCreateUserEdits } from "../../GoalTimeline/GoalsActions";

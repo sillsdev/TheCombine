@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 
-import history, { Path } from "../../history";
+import history, { Path } from "../../browserHistory";
 import logo from "../../resources/CombineLogoV1White.png";
 import smallLogo from "../../resources/CombineSmallLogoV1.png";
 

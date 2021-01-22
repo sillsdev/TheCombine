@@ -17,7 +17,7 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import history, { Path } from "../../../history";
+import history, { Path } from "../../../browserHistory";
 import { RuntimeConfig } from "../../../types/runtimeConfig";
 
 export interface LoginDispatchProps {

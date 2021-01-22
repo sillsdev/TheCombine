@@ -5,7 +5,7 @@ import {
   getMergeStepData,
   loadMergeDupsData,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import history, { Path } from "../../history";
+import history, { Path } from "../../browserHistory";
 import { StoreState } from "../../types";
 import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
 import { Goal, GoalType } from "../../types/goals";

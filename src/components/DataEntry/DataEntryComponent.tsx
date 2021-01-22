@@ -3,7 +3,7 @@ import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 import { getFrontierWords } from "../../backend";
-import { Path } from "../../history";
+import { Path } from "../../browserHistory";
 import DomainTree from "../../types/SemanticDomain";
 import theme from "../../types/theme";
 import {

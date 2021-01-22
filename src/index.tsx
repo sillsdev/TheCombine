@@ -13,7 +13,7 @@ import { LocalizeProvider } from "react-localize-redux";
 //additional files
 import globalTranslations from "./resources/translations.json";
 import { Router } from "react-router-dom";
-import history from "./history";
+import history from "./browserHistory";
 import { PersistGate } from "redux-persist/integration/react";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import theme from "./types/theme";

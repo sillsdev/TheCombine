@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { Path } from "../../../history";
+import { Path } from "../../../browserHistory";
 import { defaultState } from "../../App/DefaultState";
 import AppBarComponent from "../AppBarComponent";
 import NavigationButtons from "../NavigationButtons";

@@ -4,7 +4,7 @@ import * as React from "react";
 import { Translate } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 
-import history, { Path } from "../../../history";
+import history, { Path } from "../../../browserHistory";
 import { passwordRequirements } from "../../../utilities";
 import { RequestState } from "../reducer";
 

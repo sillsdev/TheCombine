@@ -3,7 +3,7 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import renderer from "react-test-renderer";
 
-import { Path } from "../../../history";
+import { Path } from "../../../browserHistory";
 import GoalRoute from "../component";
 
 describe("GoalRoute", () => {
