@@ -3,10 +3,12 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import * as utilities from "../../../../utilities";
-import ReviewEntriesConnected from "../ReviewEntriesComponent";
-import { OLD_SENSE } from "../ReviewEntriesTypes";
-import mockWords, { mockCreateWord } from "./MockWords";
+import * as utilities from "utilities";
+import ReviewEntriesConnected from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
+import { OLD_SENSE } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import mockWords, {
+  mockCreateWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 jest.mock("../../../../backend", () => {
   return {

@@ -1,9 +1,12 @@
-import { StoreAction, StoreActions } from "../../../rootActions";
+import { StoreAction, StoreActions } from "rootActions";
 import {
   ReviewEntriesAction,
   ReviewEntriesActionTypes,
-} from "./ReviewEntriesActions";
-import { OLD_SENSE, ReviewEntriesWord } from "./ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import {
+  OLD_SENSE,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];

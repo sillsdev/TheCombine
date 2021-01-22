@@ -1,30 +1,27 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { getProject, getWord, updateWord } from "../../../../backend";
+import { getProject, getWord, updateWord } from "backend";
+import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
+import { defaultProject as mockProject } from "types/project";
 import {
-  Gloss,
-  SemanticDomain,
-  Sense,
-  State,
-  Word,
-} from "../../../../types/word";
-import { defaultProject as mockProject } from "../../../../types/project";
-import { updateFrontierWord, setAnalysisLang } from "../ReviewEntriesActions";
+  updateFrontierWord,
+  setAnalysisLang,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import {
   OLD_SENSE,
   ReviewEntriesSense,
   ReviewEntriesWord,
   SEP_CHAR,
-} from "../ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
-jest.mock("../../../../backend", () => ({
+jest.mock("backend", () => ({
   updateWord: jest.fn(),
   getWord: jest.fn(),
   getProject: jest.fn(),
 }));
 
-jest.mock("../../../../backend/localStorage", () => ({
+jest.mock("backend/localStorage", () => ({
   getProjectId: jest.fn(),
 }));
 

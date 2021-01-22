@@ -7,13 +7,16 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { getFrontierWords } from "../../../backend";
-import Recorder from "../../../components/Pronunciations/Recorder";
-import theme from "../../../types/theme";
-import { Word } from "../../../types/word";
-import columns from "./CellComponents/CellColumns";
-import tableIcons from "./icons";
-import { parseWord, ReviewEntriesWord } from "./ReviewEntriesTypes";
+import { getFrontierWords } from "backend";
+import Recorder from "components/Pronunciations/Recorder";
+import theme from "types/theme";
+import { Word } from "types/word";
+import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
+import {
+  parseWord,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 // Component state/props
 interface ReviewEntriesProps {

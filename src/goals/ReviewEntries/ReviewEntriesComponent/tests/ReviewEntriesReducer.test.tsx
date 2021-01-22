@@ -1,7 +1,13 @@
-import { ReviewEntriesActionTypes } from "../ReviewEntriesActions";
-import { defaultState, reviewEntriesReducer } from "../ReviewEntriesReducer";
-import { OLD_SENSE, ReviewEntriesWord } from "../ReviewEntriesTypes";
-import mockWords from "./MockWords";
+import { ReviewEntriesActionTypes } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import {
+  defaultState,
+  reviewEntriesReducer,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import {
+  OLD_SENSE,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 const newWord: ReviewEntriesWord = {
   ...new ReviewEntriesWord(),

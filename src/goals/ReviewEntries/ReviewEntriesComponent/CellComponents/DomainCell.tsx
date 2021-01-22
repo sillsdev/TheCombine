@@ -4,12 +4,17 @@ import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import TreeView from "../../../../components/TreeView";
-import { StoreState } from "../../../../types";
-import { highlight } from "../../../../types/theme";
-import { SemanticDomain } from "../../../../types/word";
-import { ReviewEntriesSense, ReviewEntriesWord } from "../ReviewEntriesTypes";
-import AlignedList, { SPACER } from "./AlignedList";
+import TreeView from "components/TreeView";
+import { StoreState } from "types";
+import { highlight } from "types/theme";
+import { SemanticDomain } from "types/word";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import AlignedList, {
+  SPACER,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;

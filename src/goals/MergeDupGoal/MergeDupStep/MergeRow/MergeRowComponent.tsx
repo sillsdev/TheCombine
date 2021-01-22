@@ -3,14 +3,14 @@ import * as React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import { SideBar } from "../MergeDupStepComponent";
+import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import {
   Hash,
   MergeData,
   MergeTreeReference,
   MergeTreeWord,
-} from "../MergeDupsTree";
-import MergeStack from "./MergeStack";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeStack";
 
 //interface for component props
 export interface MergeRowProps {

@@ -1,4 +1,4 @@
-import * as Data from "../../../types/word";
+import * as Data from "types/word";
 
 export type Hash<V> = { [key: string]: V };
 

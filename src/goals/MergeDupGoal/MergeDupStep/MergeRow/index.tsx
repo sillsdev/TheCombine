@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../../../types";
-import { StoreStateDispatch } from "../../../../types/actions";
-import { setVern } from "../MergeDupStepActions";
-import MergeRowComponent from "./MergeRowComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import MergeRowComponent from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeRowComponent";
 
 export function mapStateToProps(state: StoreState) {
   return {

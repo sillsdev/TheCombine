@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import AlignedList from "../AlignedList";
+import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 
 describe("AlignedList", () => {
   it("Renders without crashing", () => {

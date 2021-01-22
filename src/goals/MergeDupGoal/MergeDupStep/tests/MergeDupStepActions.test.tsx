@@ -1,18 +1,16 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as backend from "../../../../backend";
+import * as backend from "backend";
+import { MergeWord, multiGlossWord, Sense, State, Word } from "types/word";
+import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { mergeAll } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
-  MergeWord,
-  multiGlossWord,
-  Sense,
-  State,
-  Word,
-} from "../../../../types/word";
-import { MergeDups } from "../../MergeDups";
-import { mergeAll } from "../MergeDupStepActions";
-import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
-import { goalDataMock } from "./MockMergeDupData";
+  MergeData,
+  MergeTree,
+  Hash,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList = {
