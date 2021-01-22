@@ -1,8 +1,9 @@
-import * as action from "../TempActions";
-import { defaultState } from "../TempReducer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import axios from "axios";
+
+import * as action from "components/Temp/TempActions";
+import { defaultState } from "components/Temp/TempReducer";
 
 // Create a mock redux store with the specified middlewares applied in
 // an array (here, just thunk)

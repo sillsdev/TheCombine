@@ -19,15 +19,15 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
-import { isEmailTaken, updateUser } from "../../backend";
+import { isEmailTaken, updateUser } from "backend";
 import {
   getAvatar,
   getCurrentUser,
   setCurrentUser,
-} from "../../backend/localStorage";
-import theme from "../../types/theme";
-import { User } from "../../types/user";
-import AvatarUpload from "./AvatarUpload";
+} from "backend/localStorage";
+import theme from "types/theme";
+import { User } from "types/user";
+import AvatarUpload from "components/UserSettings/AvatarUpload";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (

@@ -1,10 +1,13 @@
 import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import { store } from "../../../store";
-import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
-import TreeViewComponent, { TreeView } from "../TreeViewComponent";
-import MockDomain from "./MockSemanticDomain";
+
+import { store } from "store";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import TreeViewComponent, {
+  TreeView,
+} from "components/TreeView/TreeViewComponent";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeView;
@@ -25,7 +28,7 @@ jest.mock("@material-ui/core", () => {
 });
 
 // Mock createDomains
-jest.mock("../TreeViewReducer", () => {
+jest.mock("components/TreeView/TreeViewReducer", () => {
   const realReducer = jest.requireActual("../TreeViewReducer");
   return {
     ...realReducer,

@@ -1,8 +1,6 @@
-//external modules
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
-//TC modules
 import { Path } from "browserHistory";
 import Login from "components/Login/LoginPage";
 import Register from "components/Login/RegisterPage";
