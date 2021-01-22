@@ -9,7 +9,7 @@ import { asyncAddGoalToHistory, asyncGetUserEdits } from "./GoalsActions";
 export function mapStateToProps(state: StoreState) {
   return {
     allPossibleGoals: state.goalsState.allPossibleGoals,
-    history: state.goalsState.historyState.history.reverse(),
+    history: state.goalsState.historyState.history,
     suggestions: state.goalsState.suggestionsState.suggestions,
   };
 }

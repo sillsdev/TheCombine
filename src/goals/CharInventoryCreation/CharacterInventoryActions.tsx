@@ -1,10 +1,8 @@
 import * as backend from "../../backend";
-import { saveChanges } from "../../components/GoalTimeline/GoalsActions";
+import { saveChangesToProject } from "../../components/Project/ProjectActions";
 import { StoreState } from "../../types";
 import { StoreStateDispatch } from "../../types/actions";
-import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
-import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import {
   CharacterSetEntry,
   characterStatus,
@@ -123,11 +121,8 @@ export function setCharacterStatus(character: string, status: characterStatus) {
 export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
-    const updatedGoal = updateCurrentGoal(state);
-    const goalHistory = state.goalsState.historyState.history;
     const updatedProject = updateCurrentProject(state);
-
-    await saveChanges(updatedGoal, goalHistory, updatedProject, dispatch);
+    await saveChangesToProject(updatedProject, dispatch);
   };
 }
 
@@ -194,12 +189,4 @@ function updateCurrentProject(state: StoreState): Project {
   project.validCharacters = state.characterInventoryState.validCharacters;
   project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
-}
-
-function updateCurrentGoal(state: StoreState): Goal {
-  const history = state.goalsState.historyState.history;
-  const currentGoal = history[history.length - 1] as CreateCharInv;
-  // Nothing stored as goal data for now
-
-  return currentGoal;
 }

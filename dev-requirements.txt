@@ -64,7 +64,7 @@ mccabe==0.6.1
     # via flake8
 mkdocs-material-extensions==1.0.1
     # via mkdocs-material
-mkdocs-material==6.2.3
+mkdocs-material==6.2.5
     # via
     #   -r dev-requirements.in
     #   mkdocs-material-extensions
@@ -74,7 +74,7 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-mypy==0.790
+mypy==0.800
     # via -r dev-requirements.in
 nltk==3.5
     # via lunr
@@ -98,19 +98,19 @@ pycodestyle==2.6.0
     # via flake8
 pyflakes==2.2.0
     # via flake8
-pygments==2.7.3
+pygments==2.7.4
     # via mkdocs-material
 pymdown-extensions==8.1
     # via mkdocs-material
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.10.1
+pytest-cov==2.11.1
     # via -r dev-requirements.in
 pytest==6.2.1
     # via
     #   -r dev-requirements.in
     #   pytest-cov
-pyyaml==5.3.1
+pyyaml==5.4.1
     # via mkdocs
 regex==2020.11.13
     # via
@@ -131,9 +131,9 @@ tornado==6.1
     # via
     #   livereload
     #   mkdocs
-tox==3.20.1
+tox==3.21.2
     # via -r dev-requirements.in
-tqdm==4.55.0
+tqdm==4.56.0
     # via nltk
 typed-ast==1.4.2
     # via
@@ -143,5 +143,5 @@ typing-extensions==3.7.4.3
     # via
     #   black
     #   mypy
-virtualenv==20.2.2
+virtualenv==20.4.0
     # via tox
