@@ -169,11 +169,19 @@ namespace BackendFramework.Controllers
                 await _projectService.Update(projectId, project);
 
                 // Add character set to project from ldml file
-                _liftService.LdmlImport(
-                    Path.Combine(liftStoragePath, "WritingSystems"),
-                    project.VernacularWritingSystem.Bcp47, _projectService, project);
+                try
+                {
+                    _liftService.LdmlImport(
+                        Path.Combine(liftStoragePath, "WritingSystems"),
+                        project.VernacularWritingSystem.Bcp47, _projectService, project);
 
-                return new ObjectResult(resp);
+                    return new ObjectResult(resp);
+                }
+                // If the LdmlImport failed, your system may have compatibility issues with the LiftService.
+                catch (Exception)
+                {
+                    return new UnprocessableEntityResult();
+                }
             }
             // If anything wrong happened, it's probably something wrong with the file itself
             catch (Exception)
