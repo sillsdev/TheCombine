@@ -7,11 +7,11 @@ import { Router } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
+import history from "browserHistory";
 import App from "components/App/component";
+import globalTranslations from "resources/translations.json";
 import * as serviceWorker from "serviceWorker";
 import { store, persistor } from "store";
-import globalTranslations from "resources/translations.json";
-import history from "browserHistory";
 import theme from "types/theme";
 
 const localizedLanguages = [
