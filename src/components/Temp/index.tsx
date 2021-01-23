@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../types";
-import { StoreStateDispatch } from "../../types/actions";
-import * as actions from "./TempActions";
-import Temp from "./TempComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import * as actions from "components/Temp/TempActions";
+import Temp from "components/Temp/TempComponent";
 
 //Temp Container Component
 

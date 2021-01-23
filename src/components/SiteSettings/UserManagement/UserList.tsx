@@ -16,9 +16,9 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { getUserId } from "../../../backend/localStorage";
-import theme from "../../../types/theme";
-import { User } from "../../../types/user";
+import { getUserId } from "backend/localStorage";
+import theme from "types/theme";
+import { User } from "types/user";
 
 interface UserListProps {
   allUsers: User[];

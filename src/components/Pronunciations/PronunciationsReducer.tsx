@@ -1,8 +1,8 @@
-import { StoreAction, StoreActions } from "../../rootActions";
+import { StoreAction, StoreActions } from "rootActions";
 import {
   PronunciationsAction,
   PronunciationsStatus,
-} from "./PronunciationsActions";
+} from "components/Pronunciations/PronunciationsActions";
 
 export interface PronunciationsState {
   type: PronunciationsStatus;

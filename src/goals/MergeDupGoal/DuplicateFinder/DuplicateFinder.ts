@@ -1,6 +1,6 @@
-import * as backend from "../../../backend";
-import { hasSenses, Word } from "../../../types/word";
-import { quicksort } from "../../../utilities";
+import * as backend from "backend";
+import { hasSenses, Word } from "types/word";
+import { quicksort } from "utilities";
 
 export interface FinderParams {
   maxScore: number;

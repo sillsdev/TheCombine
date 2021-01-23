@@ -4,15 +4,15 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { randomProject } from "../../../../types/project";
-import { defaultState } from "../../../App/DefaultState";
-import ExportProjectButton from "../../../ProjectExport/ExportProjectButton";
-import ProjectButtonWithConfirmation from "../ProjectButtonWithConfirmation";
-import ProjectManagement from "../ProjectManagement";
+import { randomProject } from "types/project";
+import { defaultState } from "components/App/DefaultState";
+import ExportProjectButton from "components/ProjectExport/ExportProjectButton";
+import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
+import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
-jest.mock("../../../../backend", () => {
+jest.mock("backend", () => {
   return {
     getAllProjects: jest.fn(() => {
       return Promise.resolve(mockProjects);

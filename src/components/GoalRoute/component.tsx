@@ -1,11 +1,11 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 
-import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen";
-import { Path } from "../../history";
-import GoalTimeline from "../GoalTimeline";
-import PageNotFound from "../PageNotFound/component";
-import PrivateRoute from "../PrivateRoute";
+import BaseGoalScreen from "goals/DefaultGoal/BaseGoalScreen";
+import { Path } from "browserHistory";
+import GoalTimeline from "components/GoalTimeline";
+import PageNotFound from "components/PageNotFound/component";
+import PrivateRoute from "components/PrivateRoute";
 
 /**
  * A wrapper on all goal components. The component that will be displayed will

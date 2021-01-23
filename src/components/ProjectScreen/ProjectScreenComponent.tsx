@@ -1,9 +1,9 @@
 import { Grid } from "@material-ui/core";
 import * as React from "react";
 
-import { setProjectId } from "../../backend/localStorage";
-import ChooseProjectComponent from "./ChooseProject";
-import CreateProjectComponent from "./CreateProject";
+import { setProjectId } from "backend/localStorage";
+import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
+import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 
 /** Where users create a project or choose an existing one */
 export default function ProjectScreen() {

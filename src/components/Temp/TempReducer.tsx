@@ -1,6 +1,6 @@
-import { TempAction } from "./TempActions";
-import { PRESS_BUTTON } from "./TempActions";
-import { StoreAction, StoreActions } from "../../rootActions";
+import { TempAction } from "components/Temp/TempActions";
+import { PRESS_BUTTON } from "components/Temp/TempActions";
+import { StoreAction, StoreActions } from "rootActions";
 
 export interface TempState {
   tempText: string;

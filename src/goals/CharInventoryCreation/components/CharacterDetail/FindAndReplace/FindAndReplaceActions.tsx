@@ -1,9 +1,9 @@
-import * as backend from "../../../../../backend";
-import { StoreStateDispatch } from "../../../../../types/actions";
+import * as backend from "backend";
+import { StoreStateDispatch } from "types/actions";
 import {
   fetchWords,
   getAllCharacters,
-} from "../../../CharacterInventoryActions";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: StoreStateDispatch) => {

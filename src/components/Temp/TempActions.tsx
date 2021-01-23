@@ -1,7 +1,7 @@
 import axios from "axios";
 
-import { StoreStateDispatch } from "../../types/actions";
-import { RuntimeConfig } from "../../types/runtimeConfig";
+import { StoreStateDispatch } from "types/actions";
+import { RuntimeConfig } from "types/runtimeConfig";
 
 export const PRESS_BUTTON = "PRESS_BUTTON";
 export type PRESS_BUTTON = typeof PRESS_BUTTON;

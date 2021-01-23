@@ -6,7 +6,7 @@ import {
 } from "react-localize-redux";
 import { Typography, GridList, GridListTile, Button } from "@material-ui/core";
 
-import { Goal } from "../../../types/goals";
+import { Goal } from "types/goals";
 
 const style = {
   container: {

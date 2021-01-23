@@ -1,9 +1,9 @@
 import {
   CreateCharInvData,
   CreateCharInvStepData,
-} from "../goals/CreateCharInv/CreateCharInv";
-import { MergeDupData, MergeStepData } from "../goals/MergeDupGoal/MergeDups";
-import { User } from "./user";
+} from "goals/CreateCharInv/CreateCharInv";
+import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
+import { User } from "types/user";
 
 export enum GoalOption {
   Complete,

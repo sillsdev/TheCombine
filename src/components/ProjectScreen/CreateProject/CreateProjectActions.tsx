@@ -1,9 +1,9 @@
-import * as backend from "../../../backend";
-import history, { Path } from "../../../history";
-import { StoreStateDispatch } from "../../../types/actions";
-import { defaultProject, Project, WritingSystem } from "../../../types/project";
-import { asyncCreateUserEdits } from "../../GoalTimeline/GoalsActions";
-import { setCurrentProject } from "../../Project/ProjectActions";
+import * as backend from "backend";
+import history, { Path } from "browserHistory";
+import { StoreStateDispatch } from "types/actions";
+import { defaultProject, Project, WritingSystem } from "types/project";
+import { asyncCreateUserEdits } from "components/GoalTimeline/GoalsActions";
+import { setCurrentProject } from "components/Project/ProjectActions";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;

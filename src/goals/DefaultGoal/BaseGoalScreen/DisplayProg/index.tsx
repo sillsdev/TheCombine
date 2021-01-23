@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import DisplayProg from "./displayProg";
-import { StoreState } from "../../../../types";
-import { Goal } from "../../../../types/goals";
+import DisplayProg from "goals/DefaultGoal/BaseGoalScreen/DisplayProg/displayProg";
+import { StoreState } from "types";
+import { Goal } from "types/goals";
 
 function mapStateToProps(state: StoreState) {
   let history: Goal[] = state.goalsState.historyState.history;

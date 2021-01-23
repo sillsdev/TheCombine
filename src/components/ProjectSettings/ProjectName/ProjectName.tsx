@@ -2,7 +2,7 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import { Project } from "../../../types/project";
+import { Project } from "types/project";
 
 interface NameProps {
   project: Project;

@@ -1,6 +1,6 @@
-import * as RootAction from "../../../rootActions";
-import * as LoginAction from "../LoginActions";
-import * as LoginReducer from "../LoginReducer";
+import * as RootAction from "rootActions";
+import * as LoginAction from "components/Login/LoginActions";
+import * as LoginReducer from "components/Login/LoginReducer";
 
 const user: LoginAction.LoginData = {
   username: "testUsername",

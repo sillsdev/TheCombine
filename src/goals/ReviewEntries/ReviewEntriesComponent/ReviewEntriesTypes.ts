@@ -1,6 +1,6 @@
-import Recorder from "../../../components/Pronunciations/Recorder";
-import { SemanticDomain, Sense, State, Word } from "../../../types/word";
-import { uuid } from "../../../utilities";
+import Recorder from "components/Pronunciations/Recorder";
+import { SemanticDomain, Sense, State, Word } from "types/word";
+import { uuid } from "utilities";
 
 export const OLD_SENSE: string = "-old";
 export const SEP_CHAR: string = ",";

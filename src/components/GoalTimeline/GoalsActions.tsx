@@ -1,16 +1,16 @@
-import * as Backend from "../../backend";
-import * as LocalStorage from "../../backend/localStorage";
-import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import * as Backend from "backend";
+import * as LocalStorage from "backend/localStorage";
+import { MergeDupData } from "goals/MergeDupGoal/MergeDups";
 import {
   getMergeStepData,
   loadMergeDupsData,
-} from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import history, { Path } from "../../history";
-import { StoreState } from "../../types";
-import { ActionWithPayload, StoreStateDispatch } from "../../types/actions";
-import { Goal, GoalType } from "../../types/goals";
-import { goalTypeToGoal } from "../../types/goalUtilities";
-import { Edit } from "../../types/userEdit";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import history, { Path } from "browserHistory";
+import { StoreState } from "types";
+import { ActionWithPayload, StoreStateDispatch } from "types/actions";
+import { Goal, GoalType } from "types/goals";
+import { goalTypeToGoal } from "types/goalUtilities";
+import { Edit } from "types/userEdit";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",

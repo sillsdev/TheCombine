@@ -4,9 +4,9 @@ import {
   FAILURE,
   RESET,
   CreateProjectAction,
-} from "./CreateProjectActions";
-import { Project, WritingSystem } from "../../../types/project";
-import { StoreAction, StoreActions } from "../../../rootActions";
+} from "components/ProjectScreen/CreateProject/CreateProjectActions";
+import { Project, WritingSystem } from "types/project";
+import { StoreAction, StoreActions } from "rootActions";
 
 export interface CreateProjectState {
   name: string;

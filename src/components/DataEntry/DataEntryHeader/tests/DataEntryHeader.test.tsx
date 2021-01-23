@@ -1,11 +1,13 @@
 import React from "react";
 import { Provider } from "react-redux";
-import DataEntryHeader, { getQuestions } from "../DataEntryHeader";
 import configureMockStore from "redux-mock-store";
 import renderer, { ReactTestInstance } from "react-test-renderer";
-import SemanticDomainWithSubdomains, {
-  baseDomain,
-} from "../../../../types/SemanticDomain";
+
+import DataEntryHeader, {
+  getQuestions,
+} from "components/DataEntry/DataEntryHeader/DataEntryHeader";
+import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 const mockCallback = jest.fn();

@@ -1,12 +1,16 @@
-import * as backend from "../../../backend";
-import * as LocalStorage from "../../../backend/localStorage";
-import { StoreState } from "../../../types";
-import { StoreStateDispatch } from "../../../types/actions";
-import { maxNumSteps } from "../../../types/goalUtilities";
-import { State, Word } from "../../../types/word";
-import DupFinder from "../DuplicateFinder/DuplicateFinder";
-import { MergeDups, MergeStepData } from "../MergeDups";
-import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { maxNumSteps } from "types/goalUtilities";
+import { State, Word } from "types/word";
+import DupFinder from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { MergeDups, MergeStepData } from "goals/MergeDupGoal/MergeDups";
+import {
+  Hash,
+  MergeTreeReference,
+  TreeDataSense,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "../../types";
-import { StoreStateDispatch } from "../../types/actions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 import {
   fetchWords,
   getAllCharacters,
@@ -10,8 +10,8 @@ import {
   setSelectedCharacter,
   setValidCharacters,
   uploadInventory,
-} from "./CharacterInventoryActions";
-import CharacterInventory from "./CharacterInventoryComponent";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
+import CharacterInventory from "goals/CharInventoryCreation/CharacterInventoryComponent";
 
 function mapStateToProps(state: StoreState) {
   return {

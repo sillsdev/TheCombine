@@ -3,12 +3,15 @@ import { Column } from "material-table";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { SemanticDomain } from "../../../../types/word";
-import { ReviewEntriesSense, ReviewEntriesWord } from "../ReviewEntriesTypes";
-import DeleteCell from "./DeleteCell";
-import DomainCell from "./DomainCell";
-import PronunciationsCell from "./PronunciationsCell";
-import SenseCell from "./SenseCell";
+import { SemanticDomain } from "types/word";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
+import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
+import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,

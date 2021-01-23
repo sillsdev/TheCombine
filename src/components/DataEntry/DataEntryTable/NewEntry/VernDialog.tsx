@@ -13,11 +13,11 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import theme from "../../../../types/theme";
-import { Word } from "../../../../types/word";
-import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import SenseCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "types/theme";
+import { Word } from "types/word";
+import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import { parseWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 export function VernDialog(
   props: {

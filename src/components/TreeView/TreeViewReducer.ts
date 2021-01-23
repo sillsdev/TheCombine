@@ -1,8 +1,9 @@
-import { TreeViewAction, TreeActionType } from "./TreeViewActions";
-import { StoreAction, StoreActions } from "../../rootActions";
-import SemanticDomainWithSubdomains, {
-  baseDomain,
-} from "../../types/SemanticDomain";
+import {
+  TreeViewAction,
+  TreeActionType,
+} from "components/TreeView/TreeViewActions";
+import { StoreAction, StoreActions } from "rootActions";
+import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
 
 export interface TreeViewState {
   currentDomain: SemanticDomainWithSubdomains;

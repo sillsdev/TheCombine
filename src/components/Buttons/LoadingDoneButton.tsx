@@ -4,7 +4,7 @@ import { Check } from "@material-ui/icons";
 import { Translate } from "react-localize-redux";
 import React from "react";
 
-import { buttonSuccess } from "../../types/theme";
+import { buttonSuccess } from "types/theme";
 
 interface LoadingDoneProps {
   loading: boolean;
