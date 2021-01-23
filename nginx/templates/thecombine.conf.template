@@ -45,9 +45,9 @@ server {
 
     # User Guide static files.
     location /docs {
-        alias       /usr/share/nginx/user_guide;
-        index      index.html index.htm;
-        expires     12h;
+        alias      /usr/share/nginx/user_guide;
+        index      index.html;
+        expires    12h;
         add_header Cache-Control "public, no-transform";
     }
 
