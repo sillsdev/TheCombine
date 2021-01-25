@@ -57,7 +57,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
       case ExportStatus.InProgress:
         return "projectExport.exportInProgress";
       case ExportStatus.Success:
-        return "projectExport.downloadInProgress";
+        return "projectExport.downloadReady";
       case ExportStatus.Failure:
         return "projectExport.exportFailed";
     }
