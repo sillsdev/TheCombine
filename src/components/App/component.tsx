@@ -31,8 +31,10 @@ export default class App extends React.Component {
             path={`${Path.ProjInvite}/:project/:token`}
             component={ProjectInvite}
           />
-          {/* https://brainbank.cc/jamie/lessons/programming-react/serve-static-file-txt-html-via-react-router */}
-          <Route path={Path.Docs} onEnter={window.location.reload} />
+          <Route path={Path.Docs}>
+            {/* https://stackoverflow.com/a/30389127 */}
+            <a href={window.location.pathname} />
+          </Route>
           <Route component={PageNotFound} />
         </Switch>
       </div>
