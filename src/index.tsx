@@ -19,17 +19,16 @@ const localizedLanguages = [
   { name: "Spanish", code: "es" },
   { name: "French", code: "fr" },
 ];
-
+const localizedTags = localizedLanguages.map((l) => l.code);
+const getPrimarySubtag = (bcp: string) => bcp.split("-")[0];
+const getLocalizedLanguage = (bcp: string) =>
+  localizedTags.includes(getPrimarySubtag(bcp)) ? getPrimarySubtag(bcp) : "en";
 const localizeInit = {
   languages: localizedLanguages,
   translation: globalTranslations,
   options: {
     renderToStaticMarkup,
-    defaultLanguage:
-      localizedLanguages.find((l) => l.code === navigator.language) !==
-      undefined
-        ? navigator.language
-        : "en",
+    defaultLanguage: getLocalizedLanguage(navigator.language),
   },
 };
 
