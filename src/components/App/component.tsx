@@ -31,11 +31,7 @@ export default class App extends React.Component {
             path={`${Path.ProjInvite}/:project/:token`}
             component={ProjectInvite}
           />
-          <Route path={Path.Docs}>
-            {/* https://stackoverflow.com/a/30389127 */}
-            <a href={window.location.pathname} />
-          </Route>
-          <Route component={PageNotFound} />
+          {/* Don't set a default value and hope it's passed to the server. */}
         </Switch>
       </div>
     );
