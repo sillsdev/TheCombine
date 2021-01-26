@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
 import Login from "components/Login/LoginPage";
@@ -31,7 +31,16 @@ export default class App extends React.Component {
             path={`${Path.ProjInvite}/:project/:token`}
             component={ProjectInvite}
           />
-          {/* Don't set a default value and hope it's passed to the server. */}
+          <Route exact path={Path.Docs}>
+            {/* The use of Link's target prevents a react-router state transition, per
+             * https://github.com/ReactTraining/react-router/issues/3109#issuecomment-189782650
+             */}
+            <Link
+              to={process.env.PUBLIC_URL + "/docs/index.html"}
+              target="_self"
+            />
+          </Route>
+          <Route component={PageNotFound} />
         </Switch>
       </div>
     );
