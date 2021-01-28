@@ -44,7 +44,7 @@
     "mui-language-picker": "^1.1.9",
     "nspell": "^2.1.5",
     "react": "^16.14.0",
-    "react-beautiful-dnd": "^11.0.4",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.14.0",
     "react-localize-redux": "^3.5.3",
     "react-modal": "^3.12.1",
