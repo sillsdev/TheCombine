@@ -123,15 +123,20 @@ class UserSettings extends React.Component<
     this.setState({ [field]: value } as Pick<UserSettingsState, K>);
   }
 
-  isEmailOkay() {
+  async isEmailOkay(): Promise<boolean> {
     const emailUnchanged =
       this.state.email.toLowerCase() === this.state.user.email.toLowerCase();
-    return emailUnchanged || !isEmailTaken(this.state.email);
+
+    if (emailUnchanged) {
+      return true;
+    }
+
+    return !(await isEmailTaken(this.state.email));
   }
 
-  onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (this.isEmailOkay()) {
+    if (await this.isEmailOkay()) {
       const newUser: User = this.state.user;
       newUser.name = this.state.name;
       newUser.phone = this.state.phone;
