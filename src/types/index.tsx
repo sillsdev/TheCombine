@@ -5,7 +5,6 @@ import { PasswordResetState } from "components/PasswordReset/reducer";
 import { ExportProjectState } from "components/ProjectExport/ExportProjectReducer";
 import { CreateProjectState } from "components/ProjectScreen/CreateProject/CreateProjectReducer";
 import { PronunciationsState } from "components/Pronunciations/PronunciationsReducer";
-import { TempState } from "components/Temp/TempReducer";
 import { TreeViewState } from "components/TreeView/TreeViewReducer";
 import { CharacterInventoryState } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
@@ -40,7 +39,4 @@ export interface StoreState {
 
   //character inventory goal
   characterInventoryState: CharacterInventoryState;
-
-  //temporary
-  tempState: TempState;
 }
