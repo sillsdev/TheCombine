@@ -2,6 +2,8 @@ import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as LocalStorage from "backend/localStorage";
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import * as actions from "components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import {
@@ -18,8 +20,6 @@ import { Goal } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
-import { defaultState as goalsDefaultState } from "components/GoalTimeline/DefaultState";
-import * as actions from "components/GoalTimeline/GoalsActions";
 
 jest.mock("goals/MergeDupGoal/DuplicateFinder/DuplicateFinder", () => {
   const dupFinder = jest.requireActual(
@@ -27,36 +27,46 @@ jest.mock("goals/MergeDupGoal/DuplicateFinder/DuplicateFinder", () => {
   );
   return jest.fn().mockImplementation(() => ({
     ...dupFinder,
-    getNextDups: jest.fn(() => {
-      return Promise.resolve(mockGoalData.plannedWords);
-    }),
+    getNextDups: () => mockGetNextDup(),
   }));
 });
 
 jest.mock("backend", () => {
   return {
-    getUser: jest.fn((_userId: string) => {
-      return Promise.resolve(mockUser);
-    }),
-    getUserEditById: jest.fn((_projId: string, _index: string) => {
-      return Promise.resolve(mockUserEdit);
-    }),
-    createUserEdit: jest.fn(() => {
-      return Promise.resolve({});
-    }),
-    updateUser: jest.fn((_user: User) => {
-      return Promise.resolve(mockUser);
-    }),
-    addGoalToUserEdit: jest.fn((_userEditId: string, _goal: Goal) => {
-      return Promise.resolve(mockGoal);
-    }),
+    addGoalToUserEdit: (id: string, goal: Goal) =>
+      mockAddGoalToUserEdit(id, goal),
+    createUserEdit: () => mockCreateUserEdit(),
+    getUser: (id: string) => mockGetUser(id),
+    getUserEditById: (id: string, index: string) =>
+      mockGetUserEditById(id, index),
+    updateUser: (user: User) => mockUpdateUser(user),
   };
 });
 
+const mockAddGoalToUserEdit = jest.fn();
+const mockCreateUserEdit = jest.fn();
+const mockGetNextDup = jest.fn();
+const mockGetUser = jest.fn();
+const mockGetUserEditById = jest.fn();
+const mockUpdateUser = jest.fn();
+function setMockFunctions() {
+  mockAddGoalToUserEdit.mockImplementation((_id: string, _goal: Goal) =>
+    Promise.resolve(mockGoal)
+  );
+  mockCreateUserEdit.mockImplementation(() => Promise.resolve({}));
+  mockGetNextDup.mockImplementation(() =>
+    Promise.resolve(goalDataMock.plannedWords)
+  );
+  mockGetUser.mockImplementation((_id: string) => Promise.resolve(mockUser));
+  mockGetUserEditById.mockImplementation((_id: string, _index: string) =>
+    Promise.resolve(mockUserEdit)
+  );
+  mockUpdateUser.mockImplementation((_user: User) => Promise.resolve(mockUser));
+}
+
 // At compile time, jest.mock calls will be hoisted to the top of the file,
 // so calls to imported variables fail. Fixed by initializing these variables
-// inside of beforeAll()
-let mockGoalData: MergeDupData;
+// inside of beforeAll() or beforeEach()
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
 let oldProjectId: string;
@@ -76,16 +86,14 @@ beforeAll(() => {
   oldProjectId = LocalStorage.getProjectId();
   oldUser = LocalStorage.getCurrentUser();
 
-  mockGoalData = goalDataMock;
-
   const mockStoreState = {
     goalsState: {
       historyState: {
-        history: [...goalsDefaultState.historyState.history],
+        history: [...defaultState.historyState.history],
       },
-      allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
+      allPossibleGoals: [...defaultState.allPossibleGoals],
       suggestionsState: {
-        suggestions: [...goalsDefaultState.suggestionsState.suggestions],
+        suggestions: [...defaultState.suggestionsState.suggestions],
       },
     },
   };
@@ -97,6 +105,9 @@ beforeEach(() => {
   // Clear everything from localStorage interacted with by these tests.
   LocalStorage.remove(LocalStorage.LocalStorageKey.ProjectId);
   LocalStorage.setCurrentUser(mockUser);
+
+  jest.resetAllMocks();
+  setMockFunctions();
 });
 
 afterEach(() => {
@@ -239,9 +250,9 @@ describe("GoalsActions", () => {
           historyState: {
             history: [goalToUpdate],
           },
-          allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
+          allPossibleGoals: [...defaultState.allPossibleGoals],
           suggestionsState: {
-            suggestions: [...goalsDefaultState.suggestionsState.suggestions],
+            suggestions: [...defaultState.suggestionsState.suggestions],
           },
         },
       };
