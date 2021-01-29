@@ -50,18 +50,12 @@ const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockUpdateUser = jest.fn();
 function setMockFunctions() {
-  mockAddGoalToUserEdit.mockImplementation((_id: string, _goal: Goal) =>
-    Promise.resolve(mockGoal)
-  );
-  mockCreateUserEdit.mockImplementation(() => Promise.resolve({}));
-  mockGetNextDup.mockImplementation(() =>
-    Promise.resolve(goalDataMock.plannedWords)
-  );
-  mockGetUser.mockImplementation((_id: string) => Promise.resolve(mockUser));
-  mockGetUserEditById.mockImplementation((_id: string, _index: string) =>
-    Promise.resolve(mockUserEdit)
-  );
-  mockUpdateUser.mockImplementation((_user: User) => Promise.resolve(mockUser));
+  mockAddGoalToUserEdit.mockResolvedValue(mockGoal);
+  mockCreateUserEdit.mockResolvedValue({});
+  mockGetNextDup.mockResolvedValue(goalDataMock.plannedWords);
+  mockGetUser.mockResolvedValue(mockUser);
+  mockGetUserEditById.mockResolvedValue(mockUserEdit);
+  mockUpdateUser.mockResolvedValue(mockUser);
 }
 
 // At compile time, jest.mock calls will be hoisted to the top of the file,

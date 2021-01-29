@@ -23,12 +23,6 @@ import {
   Word,
 } from "types/word";
 
-const mockCreateWord = jest.fn();
-const mockGetFrontierWords = jest.fn();
-const mockGetProject = jest.fn();
-const mockGetWord = jest.fn();
-const mockUpdateWord = jest.fn();
-
 jest.mock("backend", () => {
   return {
     createWord: (word: Word) => mockCreateWord(word),
@@ -56,22 +50,23 @@ const mockSemanticDomain: SemanticDomain = {
 const hideQuestionsMock = jest.fn();
 const getWordsFromBackendMock = jest.fn();
 
+const mockCreateWord = jest.fn();
+const mockGetFrontierWords = jest.fn();
+const mockGetProject = jest.fn();
+const mockGetWord = jest.fn();
+const mockUpdateWord = jest.fn();
 function setMockFunction() {
-  mockCreateWord.mockImplementation((_word: Word) => Promise.resolve(mockWord));
-  mockGetFrontierWords.mockImplementation(() => Promise.resolve([mockWord]));
-  mockGetProject.mockImplementation((_id: string) =>
-    Promise.resolve(defaultProject)
-  );
-  mockGetWord.mockImplementation((_id: string) =>
-    Promise.resolve([mockMultiWord])
-  );
-  mockUpdateWord.mockImplementation((_word: Word) => Promise.resolve(mockWord));
+  mockCreateWord.mockResolvedValue(mockWord);
+  mockGetFrontierWords.mockResolvedValue([mockWord]);
+  mockGetProject.mockResolvedValue(defaultProject);
+  mockGetWord.mockResolvedValue([mockMultiWord]);
+  mockUpdateWord.mockResolvedValue(mockWord);
 }
 
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunction();
-  getWordsFromBackendMock.mockReturnValue(Promise.resolve([mockMultiWord]));
+  getWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>

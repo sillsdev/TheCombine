@@ -5,12 +5,6 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 import { User } from "types/user";
 
-const mockOnSelect = jest.fn();
-const mockUser = new User("", "", "");
-const mockGetUser = jest.fn();
-const mockUserId = "mockUserId";
-let testRenderer: ReactTestRenderer;
-
 jest.mock("backend", () => {
   return {
     getUser: () => mockGetUser(),
@@ -19,14 +13,27 @@ jest.mock("backend", () => {
 
 jest.mock("backend/localStorage", () => {
   return {
-    getUserId: jest.fn(() => mockUserId),
+    getUserId: () => mockGetUserId(),
     getAvatar: jest.fn(),
   };
 });
 
+let testRenderer: ReactTestRenderer;
+
+const mockGetUser = jest.fn();
+const mockGetUserId = jest.fn();
+const mockOnSelect = jest.fn();
+const mockUser = new User("", "", "");
+const mockUserId = "mockUserId";
+
+function setMockFunctions() {
+  mockGetUser.mockResolvedValue(mockUser);
+  mockGetUserId.mockReturnValue(mockUserId);
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
-  mockGetUser.mockImplementation(() => Promise.resolve(mockUser));
+  setMockFunctions();
 });
 
 describe("UserMenu", () => {

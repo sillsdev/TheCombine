@@ -3,8 +3,6 @@ import DupFinder, {
 } from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { simpleWord, testWordList } from "types/word";
 
-const mockGetFrontierWords = jest.fn();
-
 jest.mock("backend", () => {
   return {
     getFrontierWords: () => mockGetFrontierWords(),
@@ -12,11 +10,11 @@ jest.mock("backend", () => {
 });
 
 let finder: DupFinder;
+const mockGetFrontierWords = jest.fn();
+
 beforeEach(() => {
   finder = new DupFinder();
-  mockGetFrontierWords.mockImplementation(() =>
-    Promise.resolve(testWordList())
-  );
+  mockGetFrontierWords.mockResolvedValue(testWordList());
 });
 
 describe("dupFinder", () => {
