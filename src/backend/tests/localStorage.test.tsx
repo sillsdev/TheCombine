@@ -38,7 +38,7 @@ afterAll(() => {
 
 function expectAllEmpty() {
   expect(LocalStorage.getAvatar()).toEqual("");
-  expect(LocalStorage.getCurrentUser()).toEqual(null);
+  expect(LocalStorage.getCurrentUser()).toEqual(undefined);
   expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
   expect(LocalStorage.getProjectId()).toEqual("");
   expect(LocalStorage.getUserId()).toEqual("");

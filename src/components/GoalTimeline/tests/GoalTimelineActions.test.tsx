@@ -60,7 +60,7 @@ let mockGoalData: MergeDupData;
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
 let oldProjectId: string;
-let oldUser: User | null;
+let oldUser: User | undefined;
 
 const mockProjectId = "123";
 const mockUserEditId = "456";
