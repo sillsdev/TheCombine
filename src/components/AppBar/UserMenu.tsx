@@ -12,18 +12,14 @@ import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import theme from "types/theme";
-import { User } from "types/user";
 
 export async function getIsAdmin(): Promise<boolean> {
   const userId = LocalStorage.getUserId();
-  return await getUser(userId)
-    .then((user: User) => {
-      return user.isAdmin;
-    })
-    .catch((err) => {
-      console.log(err);
-      return false;
-    });
+  const user = await getUser(userId);
+  if (user) {
+    return user.isAdmin;
+  }
+  return false;
 }
 
 /**
