@@ -55,7 +55,7 @@ const MOCK_STATE = {
 };
 
 let oldProjectId: string;
-let oldUser: User | null;
+let oldUser: User | undefined;
 const mockProjectId = "123";
 const mockUserEditId = "456";
 const mockUserId = "789";
