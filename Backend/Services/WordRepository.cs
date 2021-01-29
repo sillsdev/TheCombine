@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
@@ -59,7 +60,10 @@ namespace BackendFramework.Services
         public async Task<Word> Create(Word word)
         {
             PopulateWordGuids(word);
-            word.Created = DateTime.UtcNow.ToLongTimeString();
+            // Use Roundtrip-suitable ISO 8601 format.
+            // https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#Roundtrip
+            word.Created = Time.UtcNowIso8601();
+            word.Modified = Time.UtcNowIso8601();
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
