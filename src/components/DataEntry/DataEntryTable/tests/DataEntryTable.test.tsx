@@ -6,7 +6,6 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import * as backend from "backend";
 import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   addSemanticDomainToSense,
