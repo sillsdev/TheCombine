@@ -11,7 +11,7 @@ import DataEntryComponent, {
 } from "components/DataEntry/DataEntryComponent";
 import { DataEntryHeader } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import { DataEntryTable } from "components/DataEntry/DataEntryTable/DataEntryTable";
-import { defaultProject, defaultProject as mockProject } from "types/project";
+import { defaultProject } from "types/project";
 import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
 import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
 
@@ -190,7 +190,7 @@ describe("DataEntryComponent", () => {
     );
   });
 
-  it("sortDomainWordByVer sorts words alphabetically", () => {
+  it("sortDomainWordByVern sorts words alphabetically", () => {
     const mockDomain = baseDomain;
     mockDomain.name = "daily";
     const unfilteredWords: Word[] = [
