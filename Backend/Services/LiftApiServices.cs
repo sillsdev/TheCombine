@@ -530,7 +530,12 @@ namespace BackendFramework.Services
             /// </summary>
             public async void FinishEntry(LiftEntry entry)
             {
-                var newWord = new Word { Guid = entry.Guid };
+                var newWord = new Word
+                {
+                    Guid = entry.Guid,
+                    Created = Time.ToUtcIso8601(entry.DateCreated),
+                    Modified = Time.ToUtcIso8601(entry.DateModified)
+                };
                 var proj = await _projectService.GetProject(_projectId);
                 if (proj is null)
                 {
