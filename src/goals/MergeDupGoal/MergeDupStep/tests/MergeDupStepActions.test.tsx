@@ -87,9 +87,7 @@ function setMockFunctions() {
 }
 
 jest.mock("backend", () => {
-  const realBackend = jest.requireActual("backend");
   return {
-    ...realBackend,
     getWord: (id: mockWordListIndex) => mockGetWords(id),
     mergeWords: (parent: Word, children: MergeWord[]) =>
       mockMergeWords(parent, children),
