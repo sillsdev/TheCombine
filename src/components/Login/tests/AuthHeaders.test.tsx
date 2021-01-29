@@ -2,7 +2,7 @@ import * as LocalStorage from "backend/localStorage";
 import { User } from "types/user";
 import authHeader from "components/Login/AuthHeaders";
 
-let oldUser: User | null;
+let oldUser: User | undefined;
 
 beforeAll(() => {
   oldUser = LocalStorage.getCurrentUser();
