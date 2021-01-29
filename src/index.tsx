@@ -10,7 +10,6 @@ import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import history from "browserHistory";
 import App from "components/App/component";
 import globalTranslations from "resources/translations.json";
-import * as serviceWorker from "serviceWorker";
 import { store, persistor } from "store";
 import theme from "types/theme";
 
@@ -47,7 +46,3 @@ ReactDOM.render(
   </ThemeProvider>,
   document.getElementById("root")
 );
-
-// Learn more about service workers: https://developers.google.com/web/fundamentals/primers/service-workers/
-// https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-serviceWorker.register();
