@@ -23,6 +23,7 @@ nginx/scripts
 Session.vim
 scripts/*.js
 !scripts/printVersion.js
+.eslintcache
 
 npm-debug.log*
 yarn-debug.log*
