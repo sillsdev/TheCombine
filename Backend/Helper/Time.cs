@@ -5,7 +5,7 @@ namespace BackendFramework.Helper
     public static class Time
     {
         // https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#Roundtrip
-        private const string RoadTripIso8601Format = "o";
+        private const string RoundTripIso8601Format = "o";
 
         /// <summary>
         /// Construct a string for the current DateTime in the UTC timezone formatted in ISO 8601 format.
@@ -16,7 +16,7 @@ namespace BackendFramework.Helper
         /// </remarks>
         public static string UtcNowIso8601()
         {
-            return DateTime.UtcNow.ToString(RoadTripIso8601Format);
+            return DateTime.UtcNow.ToString(RoundTripIso8601Format);
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace BackendFramework.Helper
         /// </summary>
         public static string ToUtcIso8601(DateTime dateTime)
         {
-            return dateTime.ToString(RoadTripIso8601Format);
+            return dateTime.ToString(RoundTripIso8601Format);
         }
     }
 }
