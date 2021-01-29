@@ -47,8 +47,11 @@ and associated with new data entries.
     Currently, only one LIFT file can be imported per project.
 
 After clicking the Export button, you can navigate to other parts of the website. A download icon will appear in the App
-Bar when the export is ready for download. A project that has reached hundreds of MB in size may take tens of minutes to
-export.
+Bar when the export is ready for download.
+
+!!! important
+
+    A project that has reached hundreds of MB in size may take multiple minutes to export.
 
 ### Autocomplete
 
