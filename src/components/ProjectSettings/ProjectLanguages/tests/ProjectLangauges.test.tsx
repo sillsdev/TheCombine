@@ -7,9 +7,9 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultProject, Project, WritingSystem } from "types/project";
 import { defaultState } from "components/App/DefaultState";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
+import { defaultProject, Project, WritingSystem } from "types/project";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -17,9 +17,7 @@ const mockAnalysisWritingSystems: WritingSystem[] = [
   { name: "a", bcp47: "a", font: "" },
   { name: "b", bcp47: "b", font: "" },
 ];
-const mockUpdateProject = jest.fn((_proj: Project) => {
-  return Promise.resolve();
-});
+const mockUpdateProject = jest.fn();
 
 let projectMaster: ReactTestRenderer;
 let pickerHandle: ReactTestInstance;
@@ -30,6 +28,7 @@ function mockProject(systems?: WritingSystem[]) {
 }
 
 function renderProjLangs(proj: Project) {
+  mockUpdateProject.mockResolvedValue(undefined);
   renderer.act(() => {
     projectMaster = renderer.create(
       <Provider store={mockStore}>
