@@ -105,7 +105,7 @@ export function loginReset(): UserAction {
 
 export function logoutAndResetStore() {
   return (dispatch: StoreStateDispatch) => {
-    const user: User | null = LocalStorage.getCurrentUser();
+    const user = LocalStorage.getCurrentUser();
     if (user) {
       dispatch(logout(user.username));
     }

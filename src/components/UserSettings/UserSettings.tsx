@@ -98,8 +98,8 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
-    const potentialUser: User | null = getCurrentUser();
-    const user: User = potentialUser ? potentialUser : new User("", "", "");
+    const potentialUser = getCurrentUser();
+    const user = potentialUser ? potentialUser : new User("", "", "");
     this.state = {
       user: user,
       name: user.name,
