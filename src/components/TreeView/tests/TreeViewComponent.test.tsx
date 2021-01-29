@@ -2,21 +2,18 @@ import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { store } from "store";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 import TreeViewComponent, {
   TreeView,
 } from "components/TreeView/TreeViewComponent";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import { store } from "store";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeView;
 
 const RETURN_MOCK = jest.fn();
 const NAVIGATE_MOCK = jest.fn();
-
-// Mock out setTimeout
-jest.useFakeTimers();
 
 // Mock out Zoom to avoid issues with portals
 jest.mock("@material-ui/core", () => {
@@ -47,9 +44,8 @@ beforeEach(() => {
   NAVIGATE_MOCK.mockClear();
 });
 
-describe("Tests AddWords", () => {
-  it("Constructs correctly", () => {
-    // Default snapshot test
+describe("TreeView", () => {
+  it("Constructs correctly to match snapshot", () => {
     createTree();
     snapTest();
   });
@@ -61,7 +57,7 @@ describe("Tests AddWords", () => {
     expect(NAVIGATE_MOCK).toHaveBeenCalledWith(MockDomain);
   });
 
-  it("Sets a new domain upon navigation", () => {
+  it("Sets a new domain upon navigation", async () => {
     let newDom: SemanticDomainWithSubdomains = {
       name: "test",
       id: "test",
@@ -70,16 +66,12 @@ describe("Tests AddWords", () => {
       questions: [],
     };
 
-    treeHandle.animate(newDom);
-    jest.runAllTimers();
-
+    await treeHandle.animate(newDom);
     expect(NAVIGATE_MOCK).toHaveBeenCalledWith(newDom);
   });
 
-  it("Returns control to caller when the same semantic domain is passed in", () => {
-    treeHandle.animate(MockDomain);
-    jest.runAllTimers();
-
+  it("Returns control to caller when the same semantic domain is passed in", async () => {
+    await treeHandle.animate(MockDomain);
     expect(RETURN_MOCK).toHaveBeenCalledTimes(1);
   });
 });
@@ -99,7 +91,6 @@ function createTree() {
   treeHandle = treeMaster.root.findByType(TreeView).instance;
 }
 
-// Perform a snapshot test
 function snapTest() {
   expect(treeMaster.toJSON()).toMatchSnapshot();
 }
