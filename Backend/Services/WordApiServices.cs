@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -113,7 +114,7 @@ namespace BackendFramework.Services
             {
                 word.Id = "";
                 word.ProjectId = projectId;
-                word.Modified = DateTime.UtcNow.ToLongDateString();
+                word.Modified = Time.UtcNowIso8601();
 
                 // Keep track of the old word, adding it to the history.
                 word.History.Add(wordId);
