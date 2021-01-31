@@ -140,7 +140,7 @@ echo verbose "5. Stop the current containers."
 docker-compose down
 
 echo_verbose "6. Start up just the backend and the database."
-aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
+/usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
 docker-compose up --detach database backend
 
 

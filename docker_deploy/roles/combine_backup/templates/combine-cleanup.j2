@@ -81,17 +81,17 @@ MAX_BACKUPS=${MAX_BACKUPS:={{ max_backups }}}
 
 if [ "${LIST_ONLY}" = "1" ] ; then
   echo "Listing backups for s3://{{ aws_s3_backup_loc }}"
-  aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write
+  /usr/local/bin/aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write
   exit 0
 fi
 
-AWS_BACKUPS=($(aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep --fixed-strings "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
+AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep --fixed-strings "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
 NUM_BACKUPS={{ '${#AWS_BACKUPS[@]}' }}
 
 if [[ ${NUM_BACKUPS} -gt ${MAX_BACKUPS} ]] ; then
   loop_limit=$(( ${NUM_BACKUPS} - ${MAX_BACKUPS} ))
 
   for (( bu=0; bu < $loop_limit; bu++ )) ; do
-    aws s3 rm ${AWS_BUCKET}/${AWS_BACKUPS[${bu}]} --profile s3_read_write
+    /usr/local/bin/aws s3 rm ${AWS_BUCKET}/${AWS_BACKUPS[${bu}]} --profile s3_read_write
   done
 fi
