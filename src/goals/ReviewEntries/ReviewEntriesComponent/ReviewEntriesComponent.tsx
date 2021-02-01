@@ -1,22 +1,18 @@
 import { Typography } from "@material-ui/core";
 import MaterialTable from "material-table";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { getFrontierWords } from "backend";
 import Recorder from "components/Pronunciations/Recorder";
-import theme from "types/theme";
-import { Word } from "types/word";
 import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import {
   parseWord,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "types/theme";
+import { Word } from "types/word";
 
 // Component state/props
 interface ReviewEntriesProps {
@@ -42,13 +38,13 @@ interface ReviewEntriesState {
 // Constants
 const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
-export class ReviewEntriesComponent extends React.Component<
-  ReviewEntriesProps & LocalizeContextProps,
+export default class ReviewEntriesComponent extends React.Component<
+  ReviewEntriesProps,
   ReviewEntriesState
 > {
   recorder: Recorder;
 
-  constructor(props: ReviewEntriesProps & LocalizeContextProps) {
+  constructor(props: ReviewEntriesProps) {
     super(props);
     this.state = { loaded: false };
     this.recorder = new Recorder();
@@ -99,7 +95,7 @@ export class ReviewEntriesComponent extends React.Component<
                   onRowUpdate: (
                     newData: ReviewEntriesWord,
                     oldData: ReviewEntriesWord
-                  ) =>
+                  ): Promise<void> =>
                     new Promise(async (resolve, reject) => {
                       // Update database and update word ID.
                       // Awaited so user can't edit and submit word with bad ID before it's updated.
@@ -141,5 +137,3 @@ export class ReviewEntriesComponent extends React.Component<
     );
   }
 }
-
-export default withLocalize(ReviewEntriesComponent);

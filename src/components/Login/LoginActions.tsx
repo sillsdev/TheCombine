@@ -123,11 +123,11 @@ export function asyncRegister(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    let newUser: User = new User(name, username, password);
+    const newUser = new User(name, username, password);
     newUser.email = email;
     await backend
       .addUser(newUser)
-      .then((res) => {
+      .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());
@@ -151,11 +151,11 @@ export function asyncRegisterForEmailInvite(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    let newUser: User = new User(name, username, password);
+    const newUser = new User(name, username, password);
     newUser.email = email;
     await backend
       .addUser(newUser)
-      .then((res) => {
+      .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());
