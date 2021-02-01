@@ -15,6 +15,7 @@ class SpellChecker {
         break;
       default:
         this.spell = nspell(aff.en, dic.en);
+        break;
     }
   }
 
