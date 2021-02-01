@@ -235,14 +235,8 @@ export function updateFrontierWord(
       (sense) => sense.accessibility !== State.Deleted
     );
     editWord.note = new Note(editSource.noteText, editWord.note?.language);
-
-    dispatch(
-      updateWord(
-        editWord.id,
-        (await backend.updateWord(editWord)).id,
-        editSource
-      )
-    );
+    const newId = (await backend.updateWord(editWord)).id;
+    dispatch(updateWord(editWord.id, newId, editSource));
   };
 }
 

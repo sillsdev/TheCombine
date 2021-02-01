@@ -309,6 +309,7 @@ export async function mergeWord(
             mapping[src] = { srcWord: newWords[0], order: -1 };
             break;
           default:
+            break;
         }
       }
     }

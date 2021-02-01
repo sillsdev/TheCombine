@@ -71,8 +71,11 @@ export const loginReducer = (
         registerSuccess: false,
       };
     case LoginAction.LOGIN_RESET:
+      return defaultState;
     case LoginAction.LOGOUT:
+      return defaultState;
     case StoreActions.RESET:
+      return defaultState;
     case LoginAction.REGISTER_RESET:
       return defaultState;
     default:

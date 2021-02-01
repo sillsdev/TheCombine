@@ -1,15 +1,15 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { renderHook, act } from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
+import React from "react";
 
 import MockDomain from "components/TreeView/tests/MockSemanticDomain";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import {
   TreeViewHeader,
   TreeHeaderProps,
   useTreeViewNavigation,
 } from "components/TreeView/TreeViewHeader";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
@@ -33,13 +33,11 @@ const eventListeners: Map<string, EventListener> = new Map<
   EventListener
 >();
 
-window.addEventListener = jest.fn((event, cb) => {
-  eventListeners.set(event, cb as EventListener);
-});
-
 beforeEach(() => {
   jest.clearAllMocks();
-  eventListeners.clear();
+  window.addEventListener = jest.fn((event, cb) => {
+    eventListeners.set(event, cb as EventListener);
+  });
 });
 
 describe("TreeViewHeader", () => {
