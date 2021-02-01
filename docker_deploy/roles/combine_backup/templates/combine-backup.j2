@@ -28,8 +28,11 @@ USAGE
 if [[ $- == *i* ]] ; then
     # interactive shell
     EXEC_OPTS=""
+    QUIET_OPT=""
 else
     EXEC_OPTS="-T"
+    # currently, "--quiet" works for both mongodump and aws commands
+    QUIET_OPT="--quiet"
 fi
 
 while [[ $# -gt 0 ]] ; do
@@ -93,7 +96,7 @@ echo_verbose "4. Start up just the backend and the database."
 
 
 echo_verbose "5. Dump the database."
-/usr/local/bin/docker-compose exec ${EXEC_OPTS} database /usr/bin/mongodump --db=CombineDatabase --gzip --quiet
+/usr/local/bin/docker-compose exec ${EXEC_OPTS} database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${DB_CONTAINER}:${DB_FILES_SUBDIR}/ ${BACKUP_DIR}
 
@@ -120,7 +123,7 @@ done
 echo_verbose "9. Push backup to AWS S3 storage."
 #    need to specify full path because $PATH does not contain
 #    /usr/local/bin when run as a cron job
-/usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
+/usr/local/bin/aws ${QUIET_OPT} s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
 
 echo_verbose "10. Restart the containers."
 cd ${COMBINE_APP_DIR}
