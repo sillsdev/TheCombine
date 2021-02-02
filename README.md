@@ -3,15 +3,12 @@
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
 [![Frontend Coverage][frontend-codecov-badge]][codecov]
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
-[![Backend Coverage][backend-codecov-badge]][codecov]
-[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
+[![Backend Coverage][backend-codecov-badge]][codecov] [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 [![Python Actions Status][github-actions-python-badge]][github-actions]
 
-[![GitHub release][github-release-badge]][github-version]
-[![GitHub version][github-version-badge]][github-version]
-![Localization][localization-badge]
-[![GitHub][github-license-badge]][github-license]
+[![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
+![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
@@ -56,28 +53,27 @@ A rapid word collection tool.
    - [Node.js 12 (LTS)](https://nodejs.org/en/download/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
      - On Ubuntu, follow
-       [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
-       using the appropriate Node.js version.
+       [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
+       the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
      - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
-   - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add
-     /bin to PATH Environment Variable
+   - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
+     Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and the following extensions:
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
-   - [dotnet-format](https://github.com/dotnet/format):
-     `dotnet tool update --global dotnet-format --version 4.1.131201`
+   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 4.1.131201`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
-3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
-   generate and trust an SSL certificate
-4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
-   **containing at least 16 characters**, such as _This is a secret key_. Set
-   it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
-5. If you want the email services to work you will need to set the following environment variables.
-   These values must be kept secret, so ask your email administrator to supply them.
+3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
+   certificate
+4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
+   _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
+   _System_ app (Windows).
+5. If you want the email services to work you will need to set the following environment variables. These values must be
+   kept secret, so ask your email administrator to supply them.
 
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
@@ -86,12 +82,10 @@ A rapid word collection tool.
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-6. Run `npm start` from the project directory to install dependencies and start
-   the project.
+6. Run `npm start` from the project directory to install dependencies and start the project.
 
-7. Consult our [C#](docs/c_sharp_style_guide.md)
-   and [JavaScript/TypeScript](docs/ts_style_guide.md)
-   style guides for best coding practices in this project.
+7. Consult our [C#](docs/c_sharp_style_guide.md) and [JavaScript/TypeScript](docs/ts_style_guide.md) style guides for
+   best coding practices in this project.
 
 [chocolatey]: https://chocolatey.org/
 
@@ -104,15 +98,13 @@ In the project directory, you can run:
 > Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
 > [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
 
-Installs the necessary packages and runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Installs the necessary packages and runs the app in the development mode.<br> Open
+[http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+The page will reload if you make edits.<br> You will also see any lint errors in the console.
 
-> Note: You may need to first browse to https://localhost:5001 and accept the
-> certificate warning in your browser if you get Network Errors the first time
-> you try to run the application locally.
+> Note: You may need to first browse to https://localhost:5001 and accept the certificate warning in your browser if you
+> get Network Errors the first time you try to run the application locally.
 
 #### `npm run frontend`
 
@@ -135,8 +127,7 @@ Run all backend and frontend tests.
 Run all backend unit tests.
 
 To run a subset of tests, use the
-[`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
-option.
+[`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit) option.
 
 ```bash
 # Note the extra -- needed to separate arguments for npm vs script.
@@ -145,10 +136,8 @@ $ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.Proje
 
 #### `npm run test-frontend`
 
-Launches the test runners in the interactive watch mode.<br>
-See the section about
-[running tests](https://facebook.github.io/create-react-app/docs/running-tests)
-for more information.
+Launches the test runners in the interactive watch mode.<br> See the section about
+[running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 To run a subset of tests, pass in the name of a partial file path to filter:
 
@@ -159,8 +148,7 @@ $ npm run test-frontend -- DataEntry
 
 #### `npm run test-*:coverage`
 
-Launches the test runners to calculate the test coverage of the frontend or
-backend of the app.
+Launches the test runners to calculate the test coverage of the frontend or backend of the app.
 
 ##### Frontend Code Coverage Report
 
@@ -170,8 +158,7 @@ Run:
 $ npm run test-frontend:coverage
 ```
 
-To view the frontend code coverage open `coverage/lcov-report/index.html`
-in a browser.
+To view the frontend code coverage open `coverage/lcov-report/index.html` in a browser.
 
 ##### Backend Code Coverage Report
 
@@ -211,16 +198,17 @@ Auto-format frontend code in the `src` folder.
 
 Builds the app for production to the `build` folder.
 
-It correctly bundles React in production mode and optimizes the build for the
-best performance.
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.
 
 Your app is ready to be deployed!
 
-See the section about
-[deployment](https://facebook.github.io/create-react-app/docs/deployment) for
-more information.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+#### `npm run analyze`
+
+Run after `npm run build` to analyze the contents build bundle chunks.
 
 ### `npm run import-sem-doms`
 
@@ -253,8 +241,7 @@ $ npm run drop-database
 
 #### Local
 
-To create a new admin user, first set the `COMBINE_ADMIN_PASSWORD`
-environment variable and then run:
+To create a new admin user, first set the `COMBINE_ADMIN_PASSWORD` environment variable and then run:
 
 ```bash
 $ cd Backend
@@ -265,8 +252,8 @@ The exit code will be set to `0` on success and non-`0` otherwise.
 
 ### (Development Only) Grant an Existing User Admin Rights
 
-To grant an _existing_ user database administrator rights (all permissions for
-all database objects), create a user normally and then execute:
+To grant an _existing_ user database administrator rights (all permissions for all database objects), create a user
+normally and then execute:
 
 ```bash
 # Note the -- before the user name.
@@ -291,9 +278,8 @@ $ npm run license-report
 
 To update the version of the project:
 
-1. Edit package.json `"version"` to a
-   [semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
-   compatible string (e.g. `"0.1.1-alpha.0"`).
+1. Edit package.json `"version"` to a [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) compatible
+   string (e.g. `"0.1.1-alpha.0"`).
 2. Run `npm install` to automatically update `package-lock.json`.
 
 To retrieve the current version of the project from the terminal:
@@ -310,29 +296,28 @@ $ npm run --silent version
 
 Install [Docker](https://docs.docker.com/get-docker/).
 
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
-separately. This is included by default in Docker Desktop for Windows and macOS.
+(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately. This is included by default
+in Docker Desktop for Windows and macOS.
 
-(macOS / Windows Only) If you are on macOS or Windows without 
-[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you
-must ensure that Docker Desktop is allocated at least 4GB of Memory in Preferences | Resources.
+(macOS / Windows Only) If you are on macOS or Windows without
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
+allocated at least 4GB of Memory in Preferences | Resources.
 
 #### Python
 
-A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
-_TheCombine_ in Docker containers.
+A Python script, `scripts/docker_setup.py` is used to configure the files needed to run _TheCombine_ in Docker
+containers.
 
 ##### Windows Only
 
 - Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
 
-- Select the "Download Python" button at the top of the page. This will download the latest
-  appropriate x86-64 executable installer.
+- Select the "Download Python" button at the top of the page. This will download the latest appropriate x86-64
+  executable installer.
 
-- Once Python is installed, create an isolated Python
-  [virtual environment](https://docs.python.org/3/library/venv.html) using the
-  [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher
-  installed globally into the `PATH`.
+- Once Python is installed, create an isolated Python [virtual environment](https://docs.python.org/3/library/venv.html)
+  using the [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher installed globally into the
+  `PATH`.
 
   ```bash
   $ py -m venv venv
@@ -374,9 +359,8 @@ $ source venv/bin/activate
 
 ##### Python Packages
 
-**Important**: All Python commands and scripts should be executed within a terminal using an
-activated Python virtual environment. This will be denoted with the `(venv)` prefix on the
-prompt.
+**Important**: All Python commands and scripts should be executed within a terminal using an activated Python virtual
+environment. This will be denoted with the `(venv)` prefix on the prompt.
 
 With an active virtual environment, install Python development requirements for this project:
 
@@ -397,15 +381,15 @@ To run all Python linting steps:
 (venv) $ tox
 ```
 
-To upgrade all pinned dependencies, run the following command under Python 3.6 so the
-requirements are backwards-compatible.
+To upgrade all pinned dependencies, run the following command under Python 3.6 so the requirements are
+backwards-compatible.
 
 ```bash
 (venv) $ pip-compile --upgrade dev-requirements.in
 ```
 
-Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work
-around a pinning issue with supporting Python 3.6 and 3.7+.
+Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
+supporting Python 3.6 and 3.7+.
 
 ##### User Guide
 
@@ -423,8 +407,7 @@ To build the user guide statically into `user-guide/site`:
 
 #### Configure Docker
 
-Run the configuration script in an activated virtual environment to generate
-the necessary configuration files.
+Run the configuration script in an activated virtual environment to generate the necessary configuration files.
 
 ```bash
 (venv) $ python scripts/docker_setup.py
@@ -434,21 +417,20 @@ the necessary configuration files.
 
 ### Build and Run
 
-For information on _Docker Compose_ see the
-[Docker Compose documentation](https://docs.docker.com/compose/).
+For information on _Docker Compose_ see the [Docker Compose documentation](https://docs.docker.com/compose/).
 
 #### Running In Docker
 
 1. Create the required docker files by running `scripts/docker_setup.py` from _TheCombine_'s project directory.
 
-2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
-   the environment variables needed by the Backend container. If you have defined
-   them as OS variables in the [Getting Started with Development](#getting-started-with-development)
-   section above, then these variables will already be set. If not, then you will need to edit
-   `.env.backend` and provide values for the variables that are listed.
+2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
+   Backend container. If you have defined them as OS variables in the
+   [Getting Started with Development](#getting-started-with-development) section above, then these variables will
+   already be set. If not, then you will need to edit `.env.backend` and provide values for the variables that are
+   listed.
 
-3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to
-   all of the following `docker` commands). On Windows and macOS, Docker Desktop must be running.
+3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to all of the
+   following `docker` commands). On Windows and macOS, Docker Desktop must be running.
 
    ```bash
    $ docker-compose build --parallel
@@ -492,22 +474,21 @@ Run the following command to install the admin user in the _CombineDatabase_:
 $ docker-compose up --abort-on-container-exit
 ```
 
-This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`.
+This will create the user and exit. If successful, the exit code will be `0`, otherwise an error will be logged and the
+exit code will be non-`0`.
 
-**Important**: Remove the `COMBINE_ADMIN_*` environment variables from
-`.env.backend` so that subsequent launches will start up the backend.
+**Important**: Remove the `COMBINE_ADMIN_*` environment variables from `.env.backend` so that subsequent launches will
+start up the backend.
 
 ### Production
 
-The process for configuring and deploying _TheCombine_ for production targets is
-described in [docs/docker_deploy/README.md](docs/docker_deploy/README.md).
+The process for configuring and deploying _TheCombine_ for production targets is described in
+[docs/docker_deploy/README.md](docs/docker_deploy/README.md).
 
 ## Learn More
 
 - [React](https://reactjs.org/)
 - [Redux](https://redux.js.org/)
 - [React-Redux](https://redux.js.org/basics/usage-with-react)
-- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/)
-  (Language Localization)
+- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (Language Localization)
 - [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
