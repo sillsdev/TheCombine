@@ -2,12 +2,12 @@ import React from "react";
 
 import { getFrontierWords } from "backend";
 import Recorder from "components/Pronunciations/Recorder";
+import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTable";
 import {
   parseWord,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { Word } from "types/word";
-import ReviewEntriesTable from "./ReviewEntriesTable";
 
 // Component state/props
 interface ReviewEntriesProps {
