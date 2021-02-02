@@ -13,7 +13,6 @@ import ReviewEntriesTable from "./ReviewEntriesTable";
 interface ReviewEntriesProps {
   // Props mapped to store
   language: string;
-  words: ReviewEntriesWord[];
 
   // Dispatch changes
   clearState: () => void;
@@ -87,7 +86,6 @@ export default class ReviewEntriesComponent extends React.Component<
             newData: ReviewEntriesWord,
             oldData: ReviewEntriesWord
           ) => this.onRowUpdate(newData, oldData)}
-          words={this.props.words}
         />
       )
     );
