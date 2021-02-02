@@ -1,18 +1,13 @@
-import { Typography } from "@material-ui/core";
-import MaterialTable from "material-table";
 import React from "react";
-import { Translate } from "react-localize-redux";
 
 import { getFrontierWords } from "backend";
 import Recorder from "components/Pronunciations/Recorder";
-import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
-import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import {
   parseWord,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import theme from "types/theme";
 import { Word } from "types/word";
+import ReviewEntriesTable from "./ReviewEntriesTable";
 
 // Component state/props
 interface ReviewEntriesProps {
@@ -34,9 +29,6 @@ interface ReviewEntriesProps {
 interface ReviewEntriesState {
   loaded: boolean;
 }
-
-// Constants
-const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
 export default class ReviewEntriesComponent extends React.Component<
   ReviewEntriesProps,
@@ -71,68 +63,32 @@ export default class ReviewEntriesComponent extends React.Component<
     this.props.updateAllWords(newWords);
   }
 
-  // Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more
-  private removeDuplicates(array: any[]) {
-    return [...new Set(array)];
-  }
+  private onRowUpdate = (
+    newData: ReviewEntriesWord,
+    oldData: ReviewEntriesWord
+  ): Promise<void> =>
+    new Promise(async (resolve) => {
+      // Update database and update word ID.
+      // Awaited so user can't edit and submit word with bad ID before it's updated.
+      this.props
+        .updateFrontierWord(newData, oldData, this.props.language)
+        .then(() => {
+          setTimeout(() => {
+            resolve();
+          }, 500);
+        });
+    });
 
   render() {
     return (
       this.state.loaded && (
-        <Translate>
-          {({ translate }) => (
-            <Typography
-              component="h1"
-              variant="h4"
-              style={{ marginTop: theme.spacing(1) }}
-            >
-              <MaterialTable<any>
-                icons={tableIcons}
-                title={<Translate id={"reviewEntries.title"} />}
-                columns={columns}
-                data={this.props.words}
-                editable={{
-                  onRowUpdate: (
-                    newData: ReviewEntriesWord,
-                    oldData: ReviewEntriesWord
-                  ): Promise<void> =>
-                    new Promise(async (resolve, reject) => {
-                      // Update database and update word ID.
-                      // Awaited so user can't edit and submit word with bad ID before it's updated.
-                      this.props
-                        .updateFrontierWord(
-                          newData,
-                          oldData,
-                          this.props.language
-                        )
-                        .then(() => {
-                          setTimeout(() => {
-                            resolve();
-                          }, 500);
-                        })
-                        .catch((reason) => {
-                          // May wish to change this alert method
-                          alert(translate(reason));
-                          reject();
-                        });
-                    }),
-                }}
-                options={{
-                  filtering: true,
-                  pageSize:
-                    this.props.words.length > 0
-                      ? Math.min(this.props.words.length, ROWS_PER_PAGE[0])
-                      : ROWS_PER_PAGE[0],
-                  pageSizeOptions: this.removeDuplicates([
-                    Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
-                    Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
-                    Math.min(this.props.words.length, ROWS_PER_PAGE[2]),
-                  ]),
-                }}
-              />
-            </Typography>
-          )}
-        </Translate>
+        <ReviewEntriesTable
+          onRowUpdate={(
+            newData: ReviewEntriesWord,
+            oldData: ReviewEntriesWord
+          ) => this.onRowUpdate(newData, oldData)}
+          words={this.props.words}
+        />
       )
     );
   }
