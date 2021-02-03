@@ -55,7 +55,7 @@ Install the following components:
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
 - clone the project repo:
   ```
-  git clone --recurse-submodules https://github.com/sillsdev/TheCombine
+  git clone https://github.com/sillsdev/TheCombine
   ```
 - if you do not have an ssh key pair, create one using:
   ```
