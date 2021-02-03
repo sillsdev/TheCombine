@@ -13,6 +13,11 @@
   gather_facts: yes
   become: yes
 
+  vars:
+    nodejs_repo: node_12.x
+    nodejs_name: "Node.js 12.x"
+    nodejs_pkg: nodejs
+
   vars_files:
     - "vars/config_common.yml"
     - "vars/packages.yml"
@@ -38,3 +43,23 @@
         name: aws_access
       tags:
         - aws
+
+    - name: Import public key for node.js repository
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: Add repository for node.js
+      apt_repository:
+        repo: deb https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
+        state: present
+
+    - name: Add src repository for node.js
+      apt_repository:
+        repo: deb-src https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
+        state: present
+
+    - name: Install nodejs
+      apt:
+        name: "{{ nodejs_pkg }}"
+        state: latest
