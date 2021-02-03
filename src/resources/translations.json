@@ -264,6 +264,13 @@
       ]
     }
   },
+  "userSettings": {
+    "updateSuccess": [
+      "Settings successfully updated.",
+      "Settings successfully updated.",
+      "Settings successfully updated."
+    ]
+  },
   "projectExport": {
     "downloadReady": ["Download ready", "Download ready", "Download ready"],
     "exportFailed": ["Export failed", "Export failed", "Export failed"],

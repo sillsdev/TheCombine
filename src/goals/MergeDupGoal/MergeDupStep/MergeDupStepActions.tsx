@@ -1,21 +1,16 @@
-import { Dispatch } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-
-import * as backend from "../../../backend";
-import * as LocalStorage from "../../../backend/localStorage";
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { maxNumSteps } from "types/goalUtilities";
+import { State, Word } from "types/word";
+import DupFinder from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { MergeDups, MergeStepData } from "goals/MergeDupGoal/MergeDups";
 import {
-  getIndexInHistory,
-  getUserEditId,
-  updateGoal,
-  UpdateGoalAction,
-  updateStepData,
-} from "../../../components/GoalTimeline/GoalsActions";
-import history, { Path } from "../../../history";
-import { StoreState } from "../../../types";
-import { Goal, GoalHistoryState } from "../../../types/goals";
-import { State, Word } from "../../../types/word";
-import { MergeDups, MergeStepData } from "../MergeDups";
-import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
+  Hash,
+  MergeTreeReference,
+  TreeDataSense,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
@@ -75,7 +70,8 @@ export type MergeTreeAction =
   | SetSenseMergeAction
   | SetWordStringMergeAction;
 
-// action creators
+// Action Creators
+
 export function setVern(
   wordID: string,
   vern: string
@@ -100,7 +96,6 @@ export function moveSenses(
   };
 }
 
-// sugar for moving a single sense
 export function moveSense(
   src: MergeTreeReference,
   dest: MergeTreeReference
@@ -150,77 +145,12 @@ export function orderDuplicate(
   };
 }
 
+// Dispatch Functions
+
 export function mergeSense() {
-  return async (
-    _dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    _getState: () => StoreState
-  ) => {
+  return async (_dispatch: StoreStateDispatch, _getState: () => StoreState) => {
     // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top
   };
-}
-
-async function addStepToGoal(goal: Goal, goalIndex: number) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    const userEditId: string | undefined = getUserEditId(user);
-    if (userEditId !== undefined) {
-      await backend.addStepToGoal(userEditId, goalIndex, goal);
-    }
-  }
-}
-
-export function advanceStep() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
-    let historyState: GoalHistoryState = getState().goalsState.historyState;
-    let goal: Goal = historyState.history[historyState.history.length - 1];
-    goal.currentStep++;
-    // Push the current step into the history state and load the data.
-    dispatch(refreshWords());
-  };
-}
-
-export function refreshWords() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
-    let historyState: GoalHistoryState = getState().goalsState.historyState;
-    let goal: Goal = historyState.history[historyState.history.length - 1];
-
-    // Push the current step into the history state and load the data.
-    await updateStep(dispatch, goal, historyState).then(() => {
-      historyState = getState().goalsState.historyState;
-      goal = historyState.history[historyState.history.length - 1];
-      if (goal.currentStep < goal.numSteps) {
-        const stepData = (goal as MergeDups).steps[
-          goal.currentStep
-        ] as MergeStepData;
-        if (stepData) {
-          dispatch(setWordData(stepData.words));
-        }
-      } else {
-        history.push(Path.Goals);
-      }
-    });
-  };
-}
-
-//
-function updateStep(
-  dispatch: Dispatch<UpdateGoalAction>,
-  goal: Goal,
-  state: GoalHistoryState
-): Promise<void> {
-  return new Promise((resolve) => {
-    const updatedGoal = updateStepData(goal);
-    dispatch(updateGoal(updatedGoal));
-    const goalIndex = getIndexInHistory(state.history, goal);
-    addStepToGoal(state.history[goalIndex], goalIndex);
-    resolve();
-  });
 }
 
 type SenseWithState = TreeDataSense & { state: State };
@@ -379,6 +309,7 @@ export async function mergeWord(
             mapping[src] = { srcWord: newWords[0], order: -1 };
             break;
           default:
+            break;
         }
       }
     }
@@ -387,25 +318,94 @@ export async function mergeWord(
 }
 
 export function mergeAll() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
-    // generate blacklist
-    const wordIDs: string[] = Object.keys(
-      getState().mergeDuplicateGoal.data.words
-    );
-    const hash: string = wordIDs
-      .sort()
-      .reduce((val, acc) => `${acc}:${val}`, "");
-    const blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
-    blacklist[hash] = true;
+  return async (_dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    // Generate blacklist.
+    const wordIDs = Object.keys(getState().mergeDuplicateGoal.data.words);
+    const blacklist = LocalStorage.getMergeDupsBlacklist();
+    blacklistSetAndAllSubsets(blacklist, wordIDs);
     LocalStorage.setMergeDupsBlacklist(blacklist);
-    // merge words
+
+    // Merge words.
     let mapping: Hash<{ srcWord: string; order: number }> = {};
     const words = Object.keys(getState().mergeDuplicateGoal.tree.words);
     for (const wordID of words) {
       mapping = await mergeWord(wordID, getState, mapping);
     }
   };
+}
+
+// Blacklist Functions
+
+export function generateBlacklistHash(wordIDs: string[]) {
+  return wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
+}
+
+// Recursively blacklist all subsets of length at least 2.
+function blacklistSetAndAllSubsets(
+  blacklist: Hash<boolean>,
+  wordIDs: string[]
+) {
+  let hash = generateBlacklistHash(wordIDs);
+  blacklist[hash] = true;
+  if (wordIDs.length > 2) {
+    wordIDs.forEach((id) => {
+      const subset = wordIDs.filter((i) => i !== id);
+      hash = generateBlacklistHash(subset);
+      if (!blacklist[hash]) {
+        blacklistSetAndAllSubsets(blacklist, subset);
+      }
+    });
+  }
+}
+
+// Used in MergeDups cases of GoalActions functions
+
+export function getMergeStepData(
+  goal: MergeDups,
+  dispatch: StoreStateDispatch
+) {
+  const stepData = goal.steps[goal.currentStep] as MergeStepData;
+  if (stepData) {
+    dispatch(setWordData(stepData.words));
+  }
+}
+
+export async function loadMergeDupsData(goal: MergeDups) {
+  const finder = new DupFinder();
+  const groups = await finder.getNextDups();
+
+  const usedIDs: string[] = [];
+  const newGroups = [];
+  const blacklist = LocalStorage.getMergeDupsBlacklist();
+
+  for (const group of groups) {
+    // Remove words that are already included.
+    const newGroup = group.filter((w) => !usedIDs.includes(w.id));
+    if (newGroup.length < 2) {
+      continue;
+    }
+
+    // Add if not blacklisted.
+    const groupIds = newGroup.map((w) => w.id);
+    const groupHash = generateBlacklistHash(groupIds);
+    if (!blacklist[groupHash]) {
+      newGroups.push(newGroup);
+      usedIDs.push(...groupIds);
+    }
+
+    // Stop the process once maxNumSteps many groups found.
+    if (newGroups.length === maxNumSteps(goal.goalType)) {
+      break;
+    }
+  }
+
+  // Add data to goal.
+  goal.data = { plannedWords: newGroups };
+  goal.numSteps = newGroups.length;
+
+  // Reset goal steps.
+  goal.currentStep = 0;
+  goal.steps = [];
+
+  return goal;
 }

@@ -1,4 +1,3 @@
-import { GoalProps } from "../../../types/goals";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -7,9 +6,16 @@ import {
 } from "react-localize-redux";
 import { Card, CardContent } from "@material-ui/core";
 
-export const WIDTH: number = 200; // Width of each card
-const SCALE_FACTOR_FOR_DESELECTED = 0.9; // The percent of regular size that deselected cards shrink to
-const DESELECTED_WIDTH: number = WIDTH * SCALE_FACTOR_FOR_DESELECTED; // Width of each not-selected card
+import { GoalProps } from "types/goals";
+
+// Width of each card
+export const WIDTH = 200;
+
+// The percent of regular size that deselected cards shrink to
+const SCALE_FACTOR_FOR_DESELECTED = 0.9;
+
+// Width of each not-selected card
+const DESELECTED_WIDTH = WIDTH * SCALE_FACTOR_FOR_DESELECTED;
 
 class BaseGoalSelect extends React.Component<GoalProps & LocalizeContextProps> {
   readonly style = {

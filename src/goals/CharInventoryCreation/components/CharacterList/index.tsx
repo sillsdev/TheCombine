@@ -1,11 +1,9 @@
-import CharacterListComponent from "./CharacterListComponent";
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import {
-  CharacterInventoryAction,
-  setSelectedCharacter,
-} from "../../CharacterInventoryActions";
-import { StoreState } from "../../../../types";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { setSelectedCharacter } from "goals/CharInventoryCreation/CharacterInventoryActions";
+import CharacterListComponent from "goals/CharInventoryCreation/components/CharacterList/CharacterListComponent";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -13,9 +11,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
-) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setSelectedCharacter: (character: string) => {
       dispatch(setSelectedCharacter(character));

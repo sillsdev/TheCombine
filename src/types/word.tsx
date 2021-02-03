@@ -1,4 +1,4 @@
-import { randomIntString } from "../utilities";
+import { randomIntString } from "utilities";
 
 export enum State {
   Active = "Active",

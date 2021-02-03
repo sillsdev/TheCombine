@@ -1,9 +1,9 @@
-import { Note, Sense, State, Word } from "../../../../types/word";
+import { Note, Sense, State, Word } from "types/word";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
   SEP_CHAR,
-} from "../ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 export const mockWords: ReviewEntriesWord[] = [
   {

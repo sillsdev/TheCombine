@@ -1,12 +1,9 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
 
-import { StoreState } from "../../types";
-import {
-  asyncExportProject,
-  ExportProjectAction,
-} from "./ExportProjectActions";
-import ExportProjectButton from "./ExportProjectButton";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { asyncExportProject } from "components/ProjectExport/ExportProjectActions";
+import ExportProjectButton from "components/ProjectExport/ExportProjectButton";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -14,9 +11,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
-) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     exportProject: (projectId: string) => {
       dispatch(asyncExportProject(projectId));

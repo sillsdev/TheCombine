@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
-import { getCurrentUser } from "../../backend/localStorage";
-import { Path } from "../../history";
+import { getCurrentUser } from "backend/localStorage";
+import { Path } from "browserHistory";
 
 /**
  * Redirects to /login if there is no `user` in localStorage

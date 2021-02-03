@@ -120,6 +120,11 @@ namespace BackendFramework.Controllers
             // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
+            if (currentUser is null)
+            {
+                return new NotFoundObjectResult(currentUserId);
+            }
+
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
             await _userService.Update(currentUserId, currentUser);
 
@@ -148,7 +153,7 @@ namespace BackendFramework.Controllers
             }
 
             // Check to see if user is changing the correct user edit
-            if (_permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
+            if (await _permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
@@ -174,10 +179,8 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(editIndex);
             }
-            else
-            {
-                return new NotFoundObjectResult(editIndex);
-            }
+
+            return new NotFoundObjectResult(editIndex);
         }
 
         /// <summary> Adds a step to specified goal </summary>
@@ -193,7 +196,7 @@ namespace BackendFramework.Controllers
             }
 
             // Check to see if user is changing the correct user edit
-            if (_permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
+            if (await _permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }

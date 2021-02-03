@@ -1,9 +1,9 @@
 import {
   CreateCharInvData,
   CreateCharInvStepData,
-} from "../goals/CreateCharInv/CreateCharInv";
-import { MergeDupData, MergeStepData } from "../goals/MergeDupGoal/MergeDups";
-import { User } from "./user";
+} from "goals/CreateCharInv/CreateCharInv";
+import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
+import { User } from "types/user";
 
 export enum GoalOption {
   Complete,
@@ -36,17 +36,6 @@ export interface GoalHistoryState {
 
 export interface GoalSuggestionsState {
   suggestions: Goal[];
-}
-
-export interface GoalSwitcherState {
-  goals: Goal[];
-}
-
-export interface GoalSelectorState {
-  selectedIndex: number;
-  allPossibleGoals: Goal[];
-  mouseX: number;
-  lastIndex: number;
 }
 
 // The enum value is a permanent id for UserEdits and should not be changed.

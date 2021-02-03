@@ -1,6 +1,7 @@
 import * as React from "react";
 import { TextField } from "@material-ui/core";
-import theme from "../../../../types/theme";
+
+import theme from "types/theme";
 
 export interface CharactersInputProps {
   setCharacters: (characters: string[]) => void;

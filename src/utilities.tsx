@@ -56,7 +56,8 @@ export function getNowDateTimeString() {
   const now = new Date(Date.now());
   const vals = [
     now.getFullYear(),
-    now.getMonth(),
+    // Date.getMonth() starts at 0 for January.
+    now.getMonth() + 1,
     now.getDate(),
     now.getHours(),
     now.getMinutes(),

@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { StoreState } from "../../../../types";
-import { ThunkDispatch } from "redux-thunk";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 import {
-  CharacterInventoryAction,
-  setValidCharacters,
   setRejectedCharacters,
-} from "../../CharacterInventoryActions";
-import CharacterEntry from "./CharacterEntryComponent";
+  setValidCharacters,
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
+import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry/CharacterEntryComponent";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -15,9 +15,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
-) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setValidCharacters: (inventory: string[]) => {
       dispatch(setValidCharacters(inventory));

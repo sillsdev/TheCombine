@@ -1,15 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
 
-import Pronunciations from "../../../../components/Pronunciations/PronunciationsComponent";
-import Recorder from "../../../../components/Pronunciations/Recorder";
-import { StoreState } from "../../../../types";
+import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Recorder from "components/Pronunciations/Recorder";
+import { StoreStateDispatch } from "types/actions";
 import {
   deleteAudio,
-  ReviewEntriesAction,
   uploadAudio,
-} from "../ReviewEntriesActions";
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 
 interface PronunciationCellProps {
   wordId: string;
@@ -34,9 +32,7 @@ class PronunciationsCell extends React.Component<PronunciationCellProps> {
   }
 }
 
-function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
-) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     deleteAudio: (wordId: string, fileName: string) =>
       dispatch(deleteAudio(wordId, fileName)),

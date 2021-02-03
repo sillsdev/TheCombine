@@ -20,20 +20,16 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import theme from "../../../types/theme";
-import { uuid } from "../../../utilities";
+import theme from "types/theme";
+import { uuid } from "utilities";
 import {
   MergeTreeReference,
   MergeTreeWord,
   TreeDataSense,
-} from "./MergeDupsTree";
-import MergeRow from "./MergeRow";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
 
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];
@@ -304,14 +300,14 @@ class MergeDupStep extends React.Component<
               ) as string
             }
           >
-            <Translate id="buttons.saveAndContinue" />
+            {this.props.translate("buttons.saveAndContinue")}
           </Button>
           <Button
             style={{ float: "right", marginRight: 30 }}
             onClick={(_) => this.next()}
             title={this.props.translate("mergeDups.helpText.skip") as string}
           >
-            <Translate id="buttons.skip" />
+            {this.props.translate("buttons.skip")}
           </Button>
         </Paper>
       </Box>

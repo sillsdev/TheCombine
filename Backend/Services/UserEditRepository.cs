@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -31,7 +32,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="UserEdit"/> with specified userRoleId and projectId </summary>
-        public async Task<UserEdit> GetUserEdit(string projectId, string userEditId)
+        public async Task<UserEdit?> GetUserEdit(string projectId, string userEditId)
         {
             var filterDef = new FilterDefinitionBuilder<UserEdit>();
             var filter = filterDef.And(filterDef.Eq(
@@ -39,7 +40,14 @@ namespace BackendFramework.Services
 
             var userEditList = await _userEditDatabase.UserEdits.FindAsync(filter);
 
-            return userEditList.FirstOrDefault();
+            try
+            {
+                return await userEditList.FirstAsync();
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Adds a <see cref="UserEdit"/> </summary>

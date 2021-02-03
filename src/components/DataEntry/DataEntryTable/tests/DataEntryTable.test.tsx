@@ -6,9 +6,14 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import * as backend from "../../../../backend";
-import { defaultProject as mockProject } from "../../../../types/project";
-import { baseDomain } from "../../../../types/SemanticDomain";
+import { defaultState } from "components/App/DefaultState";
+import DataEntryTable, {
+  addSemanticDomainToSense,
+  addSenseToWord,
+} from "components/DataEntry/DataEntryTable/DataEntryTable";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import { defaultProject } from "types/project";
+import { baseDomain } from "types/SemanticDomain";
 import {
   multiGlossWord,
   SemanticDomain,
@@ -16,31 +21,15 @@ import {
   simpleWord,
   State,
   Word,
-} from "../../../../types/word";
-import { defaultState } from "../../../App/DefaultState";
-import DataEntryTable, {
-  addSemanticDomainToSense,
-  addSenseToWord,
-} from "../DataEntryTable";
-import NewEntry from "../NewEntry/NewEntry";
+} from "types/word";
 
-jest.mock("../../../../backend", () => {
+jest.mock("backend", () => {
   return {
-    createWord: jest.fn((_word: Word) => {
-      return Promise.resolve(mockWord);
-    }),
-    getFrontierWords: jest.fn(() => {
-      return Promise.resolve([mockWord]);
-    }),
-    getProject: jest.fn((_id: string) => {
-      return Promise.resolve(mockProject);
-    }),
-    getWord: jest.fn(() => {
-      return Promise.resolve([mockMultiWord]);
-    }),
-    updateWord: jest.fn((_word: Word) => {
-      return Promise.resolve(mockWord);
-    }),
+    createWord: (word: Word) => mockCreateWord(word),
+    getFrontierWords: () => mockGetFrontierWords(),
+    getProject: (id: string) => mockGetProject(id),
+    getWord: (id: string) => mockGetWord(id),
+    updateWord: (word: Word) => mockUpdateWord(word),
   };
 });
 jest.mock("../../../Pronunciations/Recorder");
@@ -61,9 +50,23 @@ const mockSemanticDomain: SemanticDomain = {
 const hideQuestionsMock = jest.fn();
 const getWordsFromBackendMock = jest.fn();
 
+const mockCreateWord = jest.fn();
+const mockGetFrontierWords = jest.fn();
+const mockGetProject = jest.fn();
+const mockGetWord = jest.fn();
+const mockUpdateWord = jest.fn();
+function setMockFunction() {
+  mockCreateWord.mockResolvedValue(mockWord);
+  mockGetFrontierWords.mockResolvedValue([mockWord]);
+  mockGetProject.mockResolvedValue(defaultProject);
+  mockGetWord.mockResolvedValue([mockMultiWord]);
+  mockUpdateWord.mockResolvedValue(mockWord);
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
-  getWordsFromBackendMock.mockReturnValue(Promise.resolve([mockMultiWord]));
+  setMockFunction();
+  getWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
@@ -81,7 +84,7 @@ beforeEach(() => {
   });
 });
 
-describe("Tests DataEntryTable", () => {
+describe("DataEntryTable", () => {
   it("should call add word on backend when new entry has data and complete is clicked", (done) => {
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
@@ -96,7 +99,7 @@ describe("Tests DataEntryTable", () => {
         // Get button for complete and push it
         testRenderer.root.findByProps({ id: "complete" }).props.onClick();
         // Assert that the backend function for adding the word was called
-        expect(backend.createWord).toBeCalled();
+        expect(mockCreateWord).toBeCalled();
         done();
       }
     );
@@ -117,7 +120,7 @@ describe("Tests DataEntryTable", () => {
         // Get button for complete and push it
         testRenderer.root.findByProps({ id: "complete" }).props.onClick();
         // Assert that the backend function for adding the word was NOT called
-        expect(backend.createWord).not.toBeCalled();
+        expect(mockCreateWord).not.toBeCalled();
         done();
       }
     );
@@ -218,7 +221,7 @@ describe("Tests DataEntryTable", () => {
           )
           .then(() => {
             // Assert that the backend function for updating the word was NOT called
-            expect(backend.updateWord).not.toBeCalled();
+            expect(mockUpdateWord).not.toBeCalled();
             done();
           });
       }
@@ -246,7 +249,7 @@ describe("Tests DataEntryTable", () => {
           )
           .then(() => {
             // Assert that the backend function for updating the word was called once
-            expect(backend.updateWord).toBeCalledTimes(1);
+            expect(mockUpdateWord).toBeCalledTimes(1);
             done();
           });
       }
@@ -265,7 +268,7 @@ describe("Tests DataEntryTable", () => {
           .props.updateWordWithNewGloss(mockMultiWord.id, "differentGloss", [])
           .then(() => {
             // Assert that the backend function for updating the word was called once
-            expect(backend.updateWord).toBeCalledTimes(1);
+            expect(mockUpdateWord).toBeCalledTimes(1);
             done();
           });
       }

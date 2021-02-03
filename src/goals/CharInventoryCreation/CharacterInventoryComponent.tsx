@@ -9,20 +9,16 @@ import {
 } from "@material-ui/core";
 import { Save } from "@material-ui/icons";
 import * as React from "react";
-import {
-  withLocalize,
-  LocalizeContextProps,
-  Translate,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
-import history, { Path } from "../../history";
-import { Project } from "../../types/project";
-import theme from "../../types/theme";
-import { CharacterSetEntry } from "./CharacterInventoryReducer";
-import CharacterDetail from "./components/CharacterDetail";
-import CharacterEntry from "./components/CharacterEntry";
-import CharacterList from "./components/CharacterList";
-import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
+import history, { Path } from "browserHistory";
+import { Project } from "types/project";
+import theme from "types/theme";
+import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
+import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
+import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
+import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
 
 export interface CharacterInventoryProps {
   setValidCharacters: (inventory: string[]) => void;
@@ -34,6 +30,7 @@ export interface CharacterInventoryProps {
   selectedCharacter: string;
   getAllCharacters: () => Promise<void>;
   allCharacters: CharacterSetEntry[];
+  resetInState: () => void;
 }
 
 export const SAVE: string = "pushGoals";
@@ -46,11 +43,11 @@ interface CharacterInventoryState {
 /**
  * Allows users to define a character inventory for a project
  */
-export class CharacterInventory extends React.Component<
-  CharacterInventoryProps & LocalizeContextProps,
+export default class CharacterInventory extends React.Component<
+  CharacterInventoryProps,
   CharacterInventoryState
 > {
-  constructor(props: CharacterInventoryProps & LocalizeContextProps) {
+  constructor(props: CharacterInventoryProps) {
     super(props);
     this.state = { cancelDialogOpen: false };
   }
@@ -67,6 +64,11 @@ export class CharacterInventory extends React.Component<
 
   handleClose() {
     this.setState({ cancelDialogOpen: false });
+  }
+
+  quit() {
+    this.props.resetInState();
+    history.push(Path.Goals);
   }
 
   render() {
@@ -107,7 +109,7 @@ export class CharacterInventory extends React.Component<
                 color="primary"
                 onClick={() => {
                   this.props.uploadInventory();
-                  history.push(Path.Goals);
+                  this.quit();
                 }}
                 style={{ margin: theme.spacing(1) }}
               >
@@ -145,7 +147,7 @@ export class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => history.push(Path.Goals)}
+              onClick={() => this.quit()}
               variant="contained"
               color="secondary"
               autoFocus
@@ -161,5 +163,3 @@ export class CharacterInventory extends React.Component<
     );
   }
 }
-
-export default withLocalize(CharacterInventory);

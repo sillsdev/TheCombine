@@ -1,12 +1,12 @@
-import { Dispatch } from "react";
-import * as backend from "../../../../../backend";
+import * as backend from "backend";
+import { StoreStateDispatch } from "types/actions";
 import {
-  getAllCharacters,
   fetchWords,
-} from "../../../CharacterInventoryActions";
+  getAllCharacters,
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {
-  return async (dispatch: Dispatch<any>) => {
+  return async (dispatch: StoreStateDispatch) => {
     try {
       let allWords = await backend.getFrontierWords();
       let changedWords = allWords.filter((word) =>
@@ -23,7 +23,7 @@ export function findAndReplace(findValue: string, replaceValue: string) {
       dispatch(fetchWords());
       dispatch(getAllCharacters());
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 }

@@ -3,10 +3,10 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "../../App/DefaultState";
-import PasswordReset from "../ResetPage/component";
-import * as ResetActions from "../actions";
-import { RequestState } from "../reducer";
+import { defaultState } from "components/App/DefaultState";
+import PasswordReset from "components/PasswordReset/ResetPage/component";
+import * as ResetActions from "components/PasswordReset/actions";
+import { RequestState } from "components/PasswordReset/reducer";
 
 var testRenderer: ReactTestRenderer;
 const createMockStore = configureMockStore([]);

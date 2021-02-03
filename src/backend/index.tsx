@@ -1,16 +1,16 @@
 import axios from "axios";
 
-import authHeader from "../components/Login/AuthHeaders";
-import history, { Path } from "../history";
-import { Goal } from "../types/goals";
-import { Project } from "../types/project";
-import { RuntimeConfig } from "../types/runtimeConfig";
-import SemanticDomainWithSubdomains from "../types/SemanticDomain";
-import { User } from "../types/user";
-import { UserEdit } from "../types/userEdit";
-import { UserRole } from "../types/userRole";
-import { MergeWord, Word } from "../types/word";
-import * as LocalStorage from "./localStorage";
+import authHeader from "components/Login/AuthHeaders";
+import history, { Path } from "browserHistory";
+import { Goal } from "types/goals";
+import { Project } from "types/project";
+import { RuntimeConfig } from "types/runtimeConfig";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import { User } from "types/user";
+import { UserEdit } from "types/userEdit";
+import { UserRole } from "types/userRole";
+import { MergeWord, Word } from "types/word";
+import * as LocalStorage from "backend/localStorage";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;

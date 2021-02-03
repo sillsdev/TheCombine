@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
     public interface IUserEditRepository
     {
         Task<List<UserEdit>> GetAllUserEdits(string projectId);
-        Task<UserEdit> GetUserEdit(string projectId, string userEditId);
+        Task<UserEdit?> GetUserEdit(string projectId, string userEditId);
         Task<UserEdit> Create(UserEdit userEdit);
         Task<bool> Delete(string projectId, string userEditId);
         Task<bool> DeleteAllUserEdits(string projectId);

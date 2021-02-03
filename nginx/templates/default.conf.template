@@ -1,5 +1,6 @@
 server {
     listen 80;
+    listen  [::]:80;
     server_name ${SERVER_NAME};
     server_tokens off;
 
@@ -14,6 +15,7 @@ server {
 
 server {
     listen              443 ssl;
+    listen              [::]:443 ssl;
     server_name         ${SERVER_NAME};
     ssl_certificate     ${SSL_CERTIFICATE};
     ssl_certificate_key ${SSL_PRIVATE_KEY};
@@ -22,6 +24,10 @@ server {
 
     # Allow clients to import large projects.
     client_max_body_size  250m;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
 
     location /v1 {
         proxy_pass         http://backend:5000;

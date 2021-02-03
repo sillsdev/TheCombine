@@ -6,8 +6,8 @@ import { MemoryRouter } from "react-router-dom";
 import renderer from "react-test-renderer";
 import thunk from "redux-thunk";
 
-import App from "./component";
-import { defaultState } from "./DefaultState";
+import App from "components/App/component";
+import { defaultState } from "components/App/DefaultState";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>

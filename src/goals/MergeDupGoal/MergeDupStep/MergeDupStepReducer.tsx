@@ -1,7 +1,10 @@
-import { StoreAction, StoreActions } from "../../../rootActions";
-import { Word } from "../../../types/word";
-import { uuid } from "../../../utilities";
-import { MergeTreeAction, MergeTreeActions } from "./MergeDupStepActions";
+import { StoreAction, StoreActions } from "rootActions";
+import { Word } from "types/word";
+import { uuid } from "utilities";
+import {
+  MergeTreeAction,
+  MergeTreeActions,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
   defaultData,
   defaultTree,
@@ -10,7 +13,7 @@ import {
   MergeTree,
   MergeTreeWord,
   TreeDataSense,
-} from "./MergeDupsTree";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export const defaultState: MergeTreeState = {
   data: defaultData,

@@ -4,17 +4,21 @@ import React, { createRef, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getProjectName } from "../../backend";
-import { StoreState } from "../../types";
-import { getNowDateTimeString } from "../../utilities";
+import { getProjectName } from "backend";
+import { StoreState } from "types";
+import { getNowDateTimeString } from "utilities";
 import {
   asyncDownloadExport,
   ExportStatus,
   resetExport,
-} from "./ExportProjectActions";
+} from "components/ProjectExport/ExportProjectActions";
+
+interface DownloadButtonProps {
+  colorSecondary?: boolean;
+}
 
 /** A button to show export status */
-export default function DownloadButton() {
+export default function DownloadButton(props: DownloadButtonProps) {
   const exportState = useSelector(
     (state: StoreState) => state.exportProjectState
   );
@@ -53,7 +57,7 @@ export default function DownloadButton() {
       case ExportStatus.InProgress:
         return "projectExport.exportInProgress";
       case ExportStatus.Success:
-        return "projectExport.downloadInProgress";
+        return "projectExport.downloadReady";
       case ExportStatus.Failure:
         return "projectExport.exportFailed";
     }
@@ -83,7 +87,11 @@ export default function DownloadButton() {
     <React.Fragment>
       {exportState.status !== ExportStatus.Default && (
         <Tooltip title={<Translate id={textId()} />} placement="bottom">
-          <IconButton tabIndex={-1} onClick={iconFunction()}>
+          <IconButton
+            tabIndex={-1}
+            onClick={iconFunction()}
+            color={props.colorSecondary ? "secondary" : "primary"}
+          >
             {icon()}
           </IconButton>
         </Tooltip>

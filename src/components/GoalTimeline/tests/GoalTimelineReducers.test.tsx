@@ -1,15 +1,15 @@
-import * as actions from "../GoalsActions";
-import { goalsReducer } from "../GoalsReducer";
-import { Goal, GoalsState } from "../../../types/goals";
-import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import { defaultState } from "../DefaultState";
-import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
-import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
-import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
-import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
-import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
-import { StoreAction, StoreActions } from "../../../rootActions";
+import * as actions from "components/GoalTimeline/GoalsActions";
+import { goalsReducer } from "components/GoalTimeline/GoalsReducer";
+import { Goal, GoalsState } from "types/goals";
+import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { HandleFlags } from "goals/HandleFlags/HandleFlags";
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
+import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
+import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
+import { ValidateChars } from "goals/ValidateChars/ValidateChars";
+import { StoreAction, StoreActions } from "rootActions";
 
 const loadUserEditsAction: actions.GoalAction = {
   type: actions.GoalsActions.LOAD_USER_EDITS,

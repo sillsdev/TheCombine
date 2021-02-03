@@ -34,10 +34,7 @@ namespace BackendFramework.Helper
         /// <returns> The path to the extracted contents. </returns>
         public static string ExtractZipFile(string zipFilePath, string? extractionDir, bool deleteZipFile = false)
         {
-            if (extractionDir is null)
-            {
-                extractionDir = GetRandomTempDir(false);
-            }
+            extractionDir ??= GetRandomTempDir(false);
 
             Directory.CreateDirectory(extractionDir);
             ZipFile.ExtractToDirectory(zipFilePath, extractionDir);

@@ -1,6 +1,6 @@
-import { Hash } from "../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { User } from "../types/user";
-import { getUser } from ".";
+import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { User } from "types/user";
+import { getUser } from "backend";
 
 export enum LocalStorageKey {
   Avatar = "avatar",
@@ -24,9 +24,9 @@ export function setAvatar(src: string) {
   localStorage.setItem(LocalStorageKey.Avatar, src);
 }
 
-export function getCurrentUser(): User | null {
+export function getCurrentUser(): User | undefined {
   const userString = localStorage.getItem(LocalStorageKey.User);
-  return userString ? JSON.parse(userString) : null;
+  return userString ? JSON.parse(userString) : undefined;
 }
 export function setCurrentUser(user: User) {
   const userString = JSON.stringify(user);

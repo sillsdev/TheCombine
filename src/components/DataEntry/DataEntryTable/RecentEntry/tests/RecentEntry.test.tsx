@@ -3,21 +3,21 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { simpleWord, Word } from "../../../../../types/word";
-import { defaultState } from "../../../../App/DefaultState";
-import EditTextDialog from "../../../../Buttons/EditTextDialog";
-import AudioPlayer from "../../../../Pronunciations/AudioPlayer";
-import AudioRecorder from "../../../../Pronunciations/AudioRecorder";
-import Recorder from "../../../../Pronunciations/Recorder";
+import { simpleWord, Word } from "types/word";
+import { defaultState } from "components/App/DefaultState";
+import EditTextDialog from "components/Buttons/EditTextDialog";
+import AudioPlayer from "components/Pronunciations/AudioPlayer";
+import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import Recorder from "components/Pronunciations/Recorder";
 import {
   EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
-} from "../../EntryCellComponents";
-import RecentEntry from "../RecentEntry";
+} from "components/DataEntry/DataEntryTable/EntryCellComponents";
+import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 
-jest.mock("../../../../../backend");
-jest.mock("../../../../Pronunciations/Recorder");
+jest.mock("backend");
+jest.mock("components/Pronunciations/Recorder");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);

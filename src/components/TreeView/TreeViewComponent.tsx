@@ -1,15 +1,16 @@
 import React from "react";
 import { Grid, Zoom } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import TreeProps from "./TreeProps";
-import TreeDepiction from "./TreeDepiction";
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import { createDomains } from "./TreeViewReducer";
+
+import TreeProps from "components/TreeView/TreeProps";
+import TreeDepiction from "components/TreeView/TreeDepiction";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import { createDomains } from "components/TreeView/TreeViewReducer";
 
 // Domain data
-import en from "../../resources/semantic-domains/en.json";
-import es from "../../resources/semantic-domains/es.json";
-import fr from "../../resources/semantic-domains/fr.json";
+import en from "resources/semantic-domains/en.json";
+import es from "resources/semantic-domains/es.json";
+import fr from "resources/semantic-domains/fr.json";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;

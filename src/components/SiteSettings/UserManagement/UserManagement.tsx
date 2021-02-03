@@ -6,10 +6,10 @@ import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 
-import { avatarSrc, deleteUser, getAllUsers } from "../../../backend";
-import { User } from "../../../types/user";
-import UserList from "./UserList";
-import ConfirmDeletion from "./ConfirmDeletion";
+import { avatarSrc, deleteUser, getAllUsers } from "backend";
+import { User } from "types/user";
+import UserList from "components/SiteSettings/UserManagement/UserList";
+import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 
 const customStyles = {
   content: {
@@ -33,7 +33,7 @@ interface UserState {
   prevUserToEdit?: User;
 }
 
-class UserManagment extends React.Component<UserProps, UserState> {
+class UserManagement extends React.Component<UserProps, UserState> {
   constructor(props: UserProps) {
     super(props);
     this.state = {
@@ -132,4 +132,4 @@ class UserManagment extends React.Component<UserProps, UserState> {
   }
 }
 
-export default UserManagment;
+export default UserManagement;

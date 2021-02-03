@@ -54,11 +54,12 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAudioImport()
         {
-            var filePath = Path.Combine(Util.AssetsDir, "sound.mp3");
+            const string soundFileName = "sound.mp3";
+            var filePath = Path.Combine(Util.AssetsDir, soundFileName);
 
             // Open the file to read to controller.
-            using var fstream = File.OpenRead(filePath);
-            var formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
+            using var stream = File.OpenRead(filePath);
+            var formFile = new FormFile(stream, 0, stream.Length, "name", soundFileName);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             var word = _wordRepo.Create(RandomWord()).Result;
@@ -82,7 +83,7 @@ namespace Backend.Tests.Controllers
             origWord.Audio.Add("a.wav");
 
             // Test delete function
-            var action = _audioController.Delete(_projId, origWord.Id, "a.wav").Result;
+            _ = _audioController.Delete(_projId, origWord.Id, "a.wav").Result;
 
             // Original word persists
             Assert.IsTrue(_wordRepo.GetAllWords(_projId).Result.Count == 2);

@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
-import GoalHistory from "../../GoalHistory";
-import { defaultState } from "../../DefaultState";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import GoalHistory from "components/GoalTimeline/GoalHistory";
 
 const createMockStore = configureMockStore([thunk]);
 

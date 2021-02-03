@@ -3,11 +3,11 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { baseDomain } from "../../../../types/SemanticDomain";
-import { defaultState } from "../../../App/DefaultState";
-import { ExistingDataTable } from "../ExistingDataTable";
+import { baseDomain } from "types/SemanticDomain";
+import { defaultState } from "components/App/DefaultState";
+import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
 
-jest.mock("../ImmutableExistingData");
+jest.mock("components/DataEntry/ExistingDataTable/ImmutableExistingData");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);

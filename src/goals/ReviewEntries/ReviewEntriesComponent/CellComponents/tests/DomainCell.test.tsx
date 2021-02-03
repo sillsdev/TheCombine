@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "../../../../../components/App/DefaultState";
-import mockWords from "../../tests/MockWords";
-import DomainCell from "../DomainCell";
+import { defaultState } from "components/App/DefaultState";
+import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
+import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 
 const createMockStore = configureMockStore([]);
 

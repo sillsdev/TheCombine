@@ -3,8 +3,8 @@ import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { defaultState } from "../../App/DefaultState";
-import AvatarUpload from "../AvatarUpload";
+import { defaultState } from "components/App/DefaultState";
+import AvatarUpload from "components/UserSettings/AvatarUpload";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);

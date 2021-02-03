@@ -3,9 +3,9 @@ import { List, People } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ProjectManagement from "./ProjectManagement/ProjectManagement";
-import UserManagment from "./UserManagment/UserManagment";
+import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
+import UserManagement from "components/SiteSettings//UserManagement/UserManagement";
 
 export default function SiteSettingsComponent() {
   return (
@@ -21,7 +21,7 @@ export default function SiteSettingsComponent() {
       <BaseSettingsComponent
         icon={<People />}
         title={<Translate id="projectSettings.userList" />}
-        body={<UserManagment />}
+        body={<UserManagement />}
       />
     </Grid>
   );

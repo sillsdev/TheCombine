@@ -3,8 +3,8 @@ import {
   RESET_PASSWORD_ATTEMPT,
   RESET_PASSWORD_FAIL,
   RESET_PASSWORD_SUCCESS,
-} from "./actions";
-import { StoreAction } from "../../rootActions";
+} from "components/PasswordReset/actions";
+import { StoreAction } from "rootActions";
 
 export enum RequestState {
   None,

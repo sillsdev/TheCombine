@@ -12,7 +12,7 @@ import { Clear } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import LoadingButton from "./LoadingButton";
+import LoadingButton from "components/Buttons/LoadingButton";
 
 interface EditTextDialogProps {
   open: boolean;

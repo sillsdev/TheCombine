@@ -75,6 +75,7 @@ namespace BackendFramework.Services
         }
     }
 
+    [Serializable]
     public class MissingProjectException : Exception
     {
         public MissingProjectException(string message)
@@ -215,8 +216,8 @@ namespace BackendFramework.Services
             liftWriter.WriteHeader(header);
 
             // Write out every word with all of its information
-            var allWords = wordRepo.GetAllWords(projectId).Result;
-            var frontier = wordRepo.GetFrontier(projectId).Result;
+            var allWords = await wordRepo.GetAllWords(projectId);
+            var frontier = await wordRepo.GetFrontier(projectId);
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
 
@@ -303,7 +304,7 @@ namespace BackendFramework.Services
                 string sdList;
                 using (var reader = new StreamReader(resource, Encoding.UTF8))
                 {
-                    sdList = reader.ReadToEndAsync().Result;
+                    sdList = await reader.ReadToEndAsync();
                 }
 
                 var sdLines = sdList.Split(Environment.NewLine);
@@ -529,7 +530,12 @@ namespace BackendFramework.Services
             /// </summary>
             public async void FinishEntry(LiftEntry entry)
             {
-                var newWord = new Word { Guid = entry.Guid };
+                var newWord = new Word
+                {
+                    Guid = entry.Guid,
+                    Created = Time.ToUtcIso8601(entry.DateCreated),
+                    Modified = Time.ToUtcIso8601(entry.DateModified)
+                };
                 var proj = await _projectService.GetProject(_projectId);
                 if (proj is null)
                 {
@@ -583,7 +589,7 @@ namespace BackendFramework.Services
                     {
                         SemanticDomains = new List<SemanticDomain>(),
                         Glosses = new List<Gloss>(),
-                        Guid = new Guid(sense.Id),
+                        Guid = new Guid(sense.Id)
                     };
 
                     // Add glosses

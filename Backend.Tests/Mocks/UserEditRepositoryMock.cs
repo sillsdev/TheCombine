@@ -22,10 +22,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(cloneList.Where(userEdit => userEdit.ProjectId == projectId).ToList());
         }
 
-        public Task<UserEdit> GetUserEdit(string projectId, string userEditId)
+        public Task<UserEdit?> GetUserEdit(string projectId, string userEditId)
         {
-            var foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
-            return Task.FromResult(foundUserEdit.Clone());
+            try
+            {
+                var foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
+                return Task.FromResult<UserEdit?>(foundUserEdit.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                return Task.FromResult<UserEdit?>(null);
+            }
         }
 
         public Task<UserEdit> Create(UserEdit userEdit)

@@ -1,4 +1,3 @@
 ---
 aws_config_dir: "/home/{{ combine_user }}/.aws"
-aws_s3_profile: upload
-aws_download_profile: download
+aws_s3_profile: s3_read_write

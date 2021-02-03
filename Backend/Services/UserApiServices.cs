@@ -136,8 +136,13 @@ namespace BackendFramework.Services
             foreach (var (projectRoleKey, projectRoleValue) in user.ProjectRoles)
             {
                 // Convert each userRoleId to its respective role and add to the mapping
-                var permissions = _userRole.GetUserRole(projectRoleKey, projectRoleValue).Result.Permissions;
-                var validEntry = new ProjectPermissions(projectRoleKey, permissions);
+                var userRole = await _userRole.GetUserRole(projectRoleKey, projectRoleValue);
+                if (userRole is null)
+                {
+                    return null;
+                }
+
+                var validEntry = new ProjectPermissions(projectRoleKey, userRole.Permissions);
                 projectPermissionMap.Add(validEntry);
             }
 
@@ -175,7 +180,7 @@ namespace BackendFramework.Services
         {
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
             users.ForEach(Sanitize);
-            return (users);
+            return users;
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>
@@ -187,25 +192,34 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId </summary>
-        public async Task<User> GetUser(string userId)
+        /// <param name="userId"> User ID to retrieve. </param>
+        /// <param name="sanitize"> Whether to sanitize (remove) sensitive information for the User instance. </param>
+        public async Task<User?> GetUser(string userId, bool sanitize = true)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
 
             var userList = await _userDatabase.Users.FindAsync(filter);
-            var user = userList.FirstOrDefault();
-            Sanitize(user);
-            return user;
+
+            try
+            {
+                var user = await userList.FirstAsync();
+                if (sanitize)
+                {
+                    Sanitize(user);
+                }
+                return user;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>
         public async Task<string?> GetUserAvatar(string userId)
         {
-            var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.Eq(x => x.Id, userId);
-
-            var userList = await _userDatabase.Users.FindAsync(filter);
-            var user = userList.FirstOrDefault();
+            var user = await GetUser(userId, false);
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
@@ -223,27 +237,23 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NotFound;
             }
-            else if (updateResult.ModifiedCount > 0)
+
+            if (updateResult.ModifiedCount > 0)
             {
                 return ResultOfUpdate.Updated;
             }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
+
+            return ResultOfUpdate.NoChange;
         }
 
         /// <summary> Adds a <see cref="User"/> </summary>
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User?> Create(User user)
         {
-            // Check if collection is not empty
-            var users = await GetAllUsers();
-
-            // Check to see if username or email address is taken
-            if (users.Count != 0 && _userDatabase.Users.Find(
-                x => (x.Username.ToLowerInvariant() == user.Username.ToLowerInvariant() ||
-                x.Email.ToLowerInvariant() == user.Email.ToLowerInvariant())).ToList().Count > 0)
+            // Confirm that email and username aren't empty and aren't taken
+            if (user.Email.Length == 0 || user.Username.Length == 0 ||
+                await GetUserIdByEmail(user.Email) != null ||
+                await GetUserIdByUsername(user.Username) != null)
             {
                 return null;
             }
@@ -274,10 +284,51 @@ namespace BackendFramework.Services
             user.Token = "";
         }
 
+        /// <summary> Gets userid for specified email </summary>
+        /// <returns> A string with the userid, or null if not found </returns>
+        public async Task<string?> GetUserIdByEmail(string email)
+        {
+            var user = (await GetAllUsers()).Find(x =>
+                x.Email.ToLowerInvariant() == email.ToLowerInvariant());
+            return user?.Id;
+        }
+
+        /// <summary> Gets userid for specified username </summary>
+        /// <returns> A string with the userid, or null if not found </returns>
+        public async Task<string?> GetUserIdByUsername(string username)
+        {
+            var user = (await GetAllUsers()).Find(x =>
+                x.Username.ToLowerInvariant() == username.ToLowerInvariant());
+            return user?.Id;
+        }
+
         /// <summary> Updates <see cref="User"/> with specified userId </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
+            // Confirm user exists.
+            var oldUser = await GetUser(userId);
+            if (oldUser == null)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+
+            // Confirm that email and username aren't empty and aren't taken by another user.
+            if (user.Email.Length == 0 || user.Username.Length == 0)
+            {
+                return ResultOfUpdate.Failed;
+            }
+            if (user.Email.ToLowerInvariant() != oldUser.Email.ToLowerInvariant()
+                && await GetUserIdByEmail(user.Email) != null)
+            {
+                return ResultOfUpdate.Failed;
+            }
+            if (user.Username.ToLowerInvariant() != oldUser.Username.ToLowerInvariant()
+                && await GetUserIdByUsername(user.Username) != null)
+            {
+                return ResultOfUpdate.Failed;
+            }
+
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
 
             // Note: Nulls out values not in update body
@@ -317,14 +368,13 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NotFound;
             }
-            else if (updateResult.ModifiedCount > 0)
+
+            if (updateResult.ModifiedCount > 0)
             {
                 return ResultOfUpdate.Updated;
             }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
+
+            return ResultOfUpdate.NoChange;
         }
     }
 
@@ -335,7 +385,7 @@ namespace BackendFramework.Services
             ProjectId = projectId;
             Permissions = permissions;
         }
-        public string ProjectId { get; set; }
-        public List<int> Permissions { get; set; }
+        public string ProjectId { get; }
+        public List<int> Permissions { get; }
     }
 }

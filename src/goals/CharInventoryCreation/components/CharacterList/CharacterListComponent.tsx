@@ -12,8 +12,8 @@ import {
   Translate,
 } from "react-localize-redux";
 
-import { CharacterSetEntry } from "../../CharacterInventoryReducer";
-import CharacterCard from "./CharacterCard";
+import { CharacterSetEntry } from "goals/CharInventoryCreation//CharacterInventoryReducer";
+import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;

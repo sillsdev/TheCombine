@@ -3,6 +3,7 @@
 
 import os
 from pathlib import Path
+from sys import stderr
 from typing import Dict, Union
 
 env_defaults: Dict[str, Union[str, int]] = {
@@ -23,8 +24,6 @@ env_defaults: Dict[str, Union[str, int]] = {
 class MissingEnvironmentVariableError(Exception):
     """Exception to raise when an environment variable's value cannot be found."""
 
-    pass
-
 
 def get_setting(env_var: str) -> Union[str, int, bool]:
     """
@@ -44,19 +43,16 @@ def get_setting(env_var: str) -> Union[str, int, bool]:
 
 
 def update_link(src: Path, dest: Path) -> None:
-    """
-    Create/move a symbolic link at 'dest' to point to 'src'.
-
-    If dest already exists and is not a link, it is deleted first.
-    """
-    if dest.exists():
-        if dest.is_symlink():
-            link_target = os.readlink(dest)
-            if link_target != src:
-                dest.unlink()
-            else:
-                # src already points to the dest
-                return
-        else:
+    """Create/move a symbolic link at 'dest' to point to 'src'."""
+    if dest.is_symlink():
+        link_target = os.readlink(dest)
+        if link_target != src:
             dest.unlink()
-    dest.symlink_to(src)
+            dest.symlink_to(src)
+    elif not dest.exists():
+        dest.symlink_to(src)
+    else:
+        print(
+            "WARNING: Cannot create sym_link: " f"{src} -> {dest}",
+            file=stderr,
+        )

@@ -1,8 +1,8 @@
-import { StoreAction, StoreActions } from "../../rootActions";
+import { StoreAction, StoreActions } from "rootActions";
 import {
   PronunciationsAction,
   PronunciationsStatus,
-} from "./PronunciationsActions";
+} from "components/Pronunciations/PronunciationsActions";
 
 export interface PronunciationsState {
   type: PronunciationsStatus;
@@ -20,12 +20,17 @@ export const pronunciationsReducer = (
 ): PronunciationsState => {
   switch (action.type) {
     case PronunciationsStatus.Playing:
+      return {
+        ...defaultState,
+        ...action,
+      };
     case PronunciationsStatus.Recording:
       return {
         ...defaultState,
         ...action,
       };
     case PronunciationsStatus.Default:
+      return defaultState;
     case StoreActions.RESET:
       return defaultState;
     default:

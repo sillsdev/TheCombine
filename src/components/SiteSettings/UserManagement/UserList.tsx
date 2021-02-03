@@ -8,7 +8,7 @@ import {
   ListItemText,
   Typography,
 } from "@material-ui/core";
-import { DeleteForever } from "@material-ui/icons";
+import { DeleteForever, VpnKey } from "@material-ui/icons";
 import * as React from "react";
 import {
   LocalizeContextProps,
@@ -16,9 +16,9 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { getUserId } from "../../../backend/localStorage";
-import theme from "../../../types/theme";
-import { User } from "../../../types/user";
+import { getUserId } from "backend/localStorage";
+import theme from "types/theme";
+import { User } from "types/user";
 
 interface UserListProps {
   allUsers: User[];
@@ -99,11 +99,16 @@ class UserList extends React.Component<
                   style={{ marginRight: theme.spacing(1) }}
                 />
                 <ListItemText primary={`${user.name} (${user.username})`} />
-                {user.id !== this.state.currentUserId && (
-                  <Button onClick={() => this.props.handleOpenModal(user)}>
-                    <DeleteForever />
-                  </Button>
-                )}
+                {user.id !== this.state.currentUserId &&
+                  (user.isAdmin ? (
+                    <Button disabled>
+                      <VpnKey />
+                    </Button>
+                  ) : (
+                    <Button onClick={() => this.props.handleOpenModal(user)}>
+                      <DeleteForever />
+                    </Button>
+                  ))}
               </ListItem>
             ))}
           </List>

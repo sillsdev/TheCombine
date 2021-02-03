@@ -137,25 +137,25 @@ echo_verbose "4. Unpack the backup."
 tar xzvf ${RESTORE_DIR}/${RESTORE_FILE} -C ${RESTORE_DIR}
 
 echo verbose "5. Stop the current containers."
-docker-compose down
+/usr/local/bin/docker-compose down
 
 echo_verbose "6. Start up just the backend and the database."
-aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
-docker-compose up --detach database backend
+/usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
+/usr/local/bin/docker-compose up --detach database backend
 
 
 echo_verbose "7. Restore the database."
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${RESTORE_DIR}/${DB_FILES_SUBDIR}/ ${DB_CONTAINER}:${DB_FILES_SUBDIR}
-docker-compose exec database mongorestore --drop --gzip --quiet
-docker-compose exec database rm -rf ${DB_FILES_SUBDIR}
+/usr/local/bin/docker-compose exec database mongorestore --drop --gzip --quiet
+/usr/local/bin/docker-compose exec database rm -rf ${DB_FILES_SUBDIR}
 
 echo_verbose "8. Copy the backend files."
 # if CLEAN is set, delete the existing files
 if [ "$CLEAN" == "1" ] ; then
   # we run the rm command inside a bash shell so that the shell will do wildcard
   # expansion
-  docker-compose exec --user root --workdir /home/app/${BACKEND_FILES_SUBDIR} backend /bin/bash -c "rm -rf *"
+  /usr/local/bin/docker-compose exec --user root --workdir /home/app/${BACKEND_FILES_SUBDIR} backend /bin/bash -c "rm -rf *"
 fi
 BE_CONTAINER=`docker ps | grep backend | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR}/ ${BE_CONTAINER}:/home/app
@@ -163,11 +163,11 @@ docker cp ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR}/ ${BE_CONTAINER}:/home/app
 # of the container, the app user will not be the owner (the backend process is
 # running as "app").  In addition, it is possible that the backup is from a
 # different host with different UIDs.
-docker-compose exec --user root backend find /home/app/${BACKEND_FILES_SUBDIR} -exec chown app:app {} \;
+/usr/local/bin/docker-compose exec --user root backend find /home/app/${BACKEND_FILES_SUBDIR} -exec chown app:app {} \;
 
 echo_verbose "9. Cleanup Restore files."
 rm -rf ${RESTORE_DIR}
 
 echo_verbose "10. Restart the containers."
-docker-compose down
-docker-compose up --detach
+/usr/local/bin/docker-compose down
+/usr/local/bin/docker-compose up --detach

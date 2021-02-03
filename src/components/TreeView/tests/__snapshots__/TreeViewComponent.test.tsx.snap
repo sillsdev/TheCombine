@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Tests AddWords Constructs correctly 1`] = `
+exports[`TreeView Constructs correctly to match snapshot 1`] = `
 <div
   className="MuiContainer-root MuiContainer-maxWidthLg"
   in={true}

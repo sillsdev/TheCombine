@@ -1,6 +1,5 @@
 import React from "react";
 import { forwardRef, Ref } from "react";
-
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Check from "@material-ui/icons/Check";
@@ -17,7 +16,7 @@ import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 
-export default {
+const tableIcons = {
   Add: forwardRef((props: any, ref: Ref<SVGSVGElement>) => (
     <AddBox {...props} ref={ref} />
   )),
@@ -70,3 +69,5 @@ export default {
     <ViewColumn {...props} ref={ref} />
   )),
 };
+
+export default tableIcons;

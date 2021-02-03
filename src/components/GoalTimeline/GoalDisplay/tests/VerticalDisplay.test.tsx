@@ -1,8 +1,8 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import { defaultState } from "../../DefaultState";
-import VerticalDisplay from "../VerticalDisplay";
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import VerticalDisplay from "components/GoalTimeline/GoalDisplay/VerticalDisplay";
 
 // Constants
 const goals = [...defaultState.allPossibleGoals];

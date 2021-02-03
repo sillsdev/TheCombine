@@ -3,8 +3,8 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import { archiveProject, restoreProject } from "../../../backend";
-import ButtonConfirmation from "../../Buttons/ButtonConfirmation";
+import { archiveProject, restoreProject } from "backend";
+import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
 
 interface ProjectButtonWithConfirmationProps {
   archive: boolean;

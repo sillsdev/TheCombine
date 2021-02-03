@@ -2,7 +2,7 @@ import { AddComment, Comment } from "@material-ui/icons";
 import React from "react";
 import renderer from "react-test-renderer";
 
-import EntryNote from "../EntryNote";
+import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
 
 const mockText = "Test text";
 

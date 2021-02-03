@@ -40,7 +40,6 @@ class LetsEncryptCert(BaseCert):
     def update_renew_before_expiry(domain: str, renew_before_expiry_period: int) -> None:
         """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
         renew_before_expiry = str(renew_before_expiry_period)
-        print(f"Setting renew before expiry for {domain} " f"to {renew_before_expiry}")
         renew_config = f"{LetsEncryptCert.LETSENCRYPT_DIR}/renewal/{domain}.conf"
         if os.path.exists(renew_config):
             os.system(
@@ -127,7 +126,6 @@ class LetsEncryptCert(BaseCert):
                 "--agree-tos "
                 "--non-interactive "
             )
-            print(f"Requesting Let's Encrypt Certificate:\n{cert_cmd}")
             return os.system(cert_cmd) == 0
         return False
 

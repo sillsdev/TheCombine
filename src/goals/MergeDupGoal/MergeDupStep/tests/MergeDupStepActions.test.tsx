@@ -1,18 +1,15 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as backend from "../../../../backend";
+import { MergeWord, multiGlossWord, Sense, State, Word } from "types/word";
+import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { mergeAll } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
-  MergeWord,
-  multiGlossWord,
-  Sense,
-  State,
-  Word,
-} from "../../../../types/word";
-import { MergeDups } from "../../MergeDups";
-import { mergeAll } from "../MergeDupStepActions";
-import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
-import { goalDataMock } from "./MockMergeDupData";
+  MergeData,
+  MergeTree,
+  Hash,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList = {
@@ -76,22 +73,24 @@ for (let i = 0; i <= mockMerges.length; i++) {
   mergeList[JSON.stringify(mockMerges[i])] = mergeResults[i];
 }
 
-function mockMergeWords(parent: Word, children: MergeWord[]) {
-  expect(mockMerges).toContainEqual({ parent, children });
-  const args = JSON.stringify({ parent, children });
-  return Promise.resolve(mergeList[args]);
+const mockGetWords = jest.fn();
+const mockMergeWords = jest.fn();
+function setMockFunctions() {
+  mockGetWords.mockImplementation((id: mockWordListIndex) =>
+    Promise.resolve(mockWordList[id])
+  );
+  mockMergeWords.mockImplementation((parent: Word, children: MergeWord[]) => {
+    expect(mockMerges).toContainEqual({ parent, children });
+    const args = JSON.stringify({ parent, children });
+    return Promise.resolve(mergeList[args]);
+  });
 }
 
-jest.mock("../../../../backend", () => {
-  const realBackend = jest.requireActual("../../../../backend");
+jest.mock("backend", () => {
   return {
-    ...realBackend,
-    mergeWords: jest.fn((parent: Word, children: MergeWord[]) =>
-      mockMergeWords(parent, children)
-    ),
-    getWord: jest.fn((id: mockWordListIndex) => {
-      return Promise.resolve(mockWordList[id]);
-    }),
+    getWord: (id: mockWordListIndex) => mockGetWords(id),
+    mergeWords: (parent: Word, children: MergeWord[]) =>
+      mockMergeWords(parent, children),
   };
 });
 
@@ -126,6 +125,7 @@ const data: { data: MergeData } = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  setMockFunctions();
 });
 
 // Don't move or merge anything
@@ -152,7 +152,7 @@ test("no merge", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(backend.mergeWords).toHaveBeenCalledTimes(0);
+  expect(mockMergeWords).toHaveBeenCalledTimes(0);
 });
 
 // Merge sense 3 from B as duplicate into sense 1 from A
@@ -175,12 +175,12 @@ test("merge senses from different words", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(backend.mergeWords).toHaveBeenCalledTimes(2);
-  expect(backend.mergeWords).toHaveBeenCalledWith(
+  expect(mockMergeWords).toHaveBeenCalledTimes(2);
+  expect(mockMergeWords).toHaveBeenCalledWith(
     mockMerge2a.parent,
     mockMerge2a.children
   );
-  expect(backend.mergeWords).toHaveBeenCalledWith(
+  expect(mockMergeWords).toHaveBeenCalledWith(
     mockMerge2b.parent,
     mockMerge2b.children
   );
@@ -210,12 +210,12 @@ test("move sense between words", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(backend.mergeWords).toHaveBeenCalledTimes(2);
-  expect(backend.mergeWords).toHaveBeenCalledWith(
+  expect(mockMergeWords).toHaveBeenCalledTimes(2);
+  expect(mockMergeWords).toHaveBeenCalledWith(
     mockMerge3a.parent,
     mockMerge3a.children
   );
-  expect(backend.mergeWords).toHaveBeenCalledWith(
+  expect(mockMergeWords).toHaveBeenCalledWith(
     mockMerge3b.parent,
     mockMerge3b.children
   );
@@ -245,8 +245,8 @@ test("merge senses within a word", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(backend.mergeWords).toHaveBeenCalledTimes(1);
-  expect(backend.mergeWords).toHaveBeenCalledWith(
+  expect(mockMergeWords).toHaveBeenCalledTimes(1);
+  expect(mockMergeWords).toHaveBeenCalledWith(
     mockMerge4a.parent,
     mockMerge4a.children
   );

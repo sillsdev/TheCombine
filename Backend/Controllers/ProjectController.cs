@@ -104,11 +104,15 @@ namespace BackendFramework.Controllers
         {
             await _projectService.Create(project);
 
-            // Get user
+            // Get user.
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
+            if (currentUser is null)
+            {
+                return new NotFoundObjectResult(currentUserId);
+            }
 
-            // Give Project admin privileges to user who creates a Project
+            // Give Project admin privileges to user who creates a Project.
             var userRole = new UserRole
             {
                 Permissions = new List<int>
@@ -123,16 +127,11 @@ namespace BackendFramework.Controllers
             };
             userRole = await _userRoleService.Create(userRole);
 
-            // Update user with userRole
-            if (currentUser.ProjectRoles is null)
-            {
-                currentUser.ProjectRoles = new Dictionary<string, string>();
-            }
-
-            // Generate the userRoles and update the user
+            // Update user with userRole.
+            // Generate the userRoles and update the user.
             currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userService.Update(currentUserId, currentUser);
-            // Generate the JWT based on those new userRoles
+            // Generate the JWT based on those new userRoles.
             var currentUpdatedUser = await _userService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
             {
@@ -157,18 +156,12 @@ namespace BackendFramework.Controllers
             }
 
             var result = await _projectService.Update(projectId, project);
-            if (result == ResultOfUpdate.NotFound)
+            return result switch
             {
-                return new NotFoundObjectResult(projectId);
-            }
-            else if (result == ResultOfUpdate.Updated)
-            {
-                return new OkObjectResult(projectId);
-            }
-            else
-            {
-                return new StatusCodeResult(304);
-            }
+                ResultOfUpdate.NotFound => new NotFoundObjectResult(projectId),
+                ResultOfUpdate.Updated => new OkObjectResult(projectId),
+                _ => new StatusCodeResult(304)
+            };
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
@@ -253,6 +246,11 @@ namespace BackendFramework.Controllers
 
             // Fetch the user -> fetch user role -> update user role
             var changeUser = await _userService.GetUser(userId);
+            if (changeUser is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+
             string userRoleId;
             if (changeUser.ProjectRoles.ContainsKey(projectId))
             {
@@ -260,7 +258,6 @@ namespace BackendFramework.Controllers
             }
             else
             {
-
                 // Generate the userRole
                 var usersRole = new UserRole { ProjectId = projectId };
                 usersRole = await _userRoleService.Create(usersRole);
@@ -271,20 +268,20 @@ namespace BackendFramework.Controllers
                 await _userService.Update(changeUser.Id, changeUser);
             }
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            if (userRole is null)
+            {
+                return new NotFoundObjectResult(userRoleId);
+            }
+
             userRole.Permissions = new List<int>(permissions);
 
             var result = await _userRoleService.Update(userRoleId, userRole);
-
-            if (result == ResultOfUpdate.NotFound)
+            return result switch
             {
-                return new NotFoundObjectResult(userId);
-            }
-            if (result == ResultOfUpdate.Updated)
-            {
-                return new OkObjectResult(userId);
-            }
-
-            return new StatusCodeResult(304);
+                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
+                ResultOfUpdate.Updated => new OkObjectResult(userId),
+                _ => new StatusCodeResult(304)
+            };
         }
 
         /// <summary> Check if lift import has already happened for this project </summary>
@@ -370,26 +367,25 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(status);
             }
-            else if (activeTokenExists && userIsRegistered
-               && !currentUser.ProjectRoles.ContainsKey(projectId)
-               && await _projectService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
+
+            if (activeTokenExists && userIsRegistered
+                                  && !currentUser.ProjectRoles.ContainsKey(projectId)
+                                  && await _projectService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
                 return new OkObjectResult(status);
             }
-            else
-            {
-                status[0] = false;
-                status[1] = false;
-                return new OkObjectResult(status);
-            }
+
+            status[0] = false;
+            status[1] = false;
+            return new OkObjectResult(status);
         }
 
         public class EmailInviteData
         {
-            public string EmailAddress;
-            public string Message;
-            public string ProjectId;
-            public string Domain;
+            public readonly string EmailAddress;
+            public readonly string Message;
+            public readonly string ProjectId;
+            public readonly string Domain;
 
             public EmailInviteData()
             {

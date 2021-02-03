@@ -1,9 +1,6 @@
-import { Dispatch } from "react";
-import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
-
-import { resetPasswordRequest, resetPassword } from "../../backend";
-import history, { Path } from "../../history";
+import { resetPasswordRequest, resetPassword } from "backend";
+import history, { Path } from "browserHistory";
+import { StoreStateDispatch } from "types/actions";
 
 export const RESET_PASSWORD_ATTEMPT = "RESET_PASSWORD_ATTEMPT";
 export type RESET_PASSWORD_ATTEMPT = typeof RESET_PASSWORD_ATTEMPT;
@@ -37,18 +34,14 @@ export function resetFail(): ResetAction {
 }
 
 export function asyncResetRequest(emailOrUsername: string) {
-  return async (
-    dispatch: Dispatch<ResetAction | ThunkAction<any, {}, {}, AnyAction>>
-  ) => {
+  return async (_dispatch: StoreStateDispatch) => {
     // make call
     await resetPasswordRequest(emailOrUsername);
   };
 }
 
 export function asyncReset(token: string, password: string) {
-  return async (
-    dispatch: Dispatch<ResetAction | ThunkAction<any, {}, {}, AnyAction>>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(resetAttempt());
     // call reset
     const success = await resetPassword(token, password);

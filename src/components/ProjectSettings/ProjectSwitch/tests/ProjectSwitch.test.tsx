@@ -4,8 +4,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultProject, randomProject } from "../../../../types/project";
-import { ProjectSwitch } from "../ProjectSwitch";
+import { defaultProject, randomProject } from "types/project";
+import { ProjectSwitch } from "components/ProjectSettings/ProjectSwitch/ProjectSwitch";
 
 const projects = [randomProject(), randomProject(), randomProject()];
 var switchMaster: ReactTestRenderer;

@@ -9,8 +9,8 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import Bounce from "react-reveal/Bounce";
 
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import DomainTile, { Direction } from "./DomainTile";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import DomainTile, { Direction } from "components/TreeView/DomainTile";
 
 export interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;

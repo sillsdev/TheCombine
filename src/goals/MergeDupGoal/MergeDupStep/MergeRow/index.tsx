@@ -1,8 +1,9 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../../types";
-import { MergeTreeAction, setVern } from "../MergeDupStepActions";
-import MergeRowComponent from "./MergeRowComponent";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import MergeRowComponent from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeRowComponent";
 
 export function mapStateToProps(state: StoreState) {
   return {
@@ -11,9 +12,7 @@ export function mapStateToProps(state: StoreState) {
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction>
-) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setVern: (wordID: string, vern: string) => {
       dispatch(setVern(wordID, vern));

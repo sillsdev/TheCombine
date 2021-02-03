@@ -2,9 +2,9 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { RouteComponentProps } from "react-router-dom";
 
-import * as Backend from "../../backend";
-import history, { Path } from "../../history";
-import Register from "../Login/RegisterPage/RegisterComponent";
+import * as Backend from "backend";
+import history, { Path } from "browserHistory";
+import Register from "components/Login/RegisterPage/RegisterComponent";
 
 export interface ProjectInviteDispatchProps {
   register?: (

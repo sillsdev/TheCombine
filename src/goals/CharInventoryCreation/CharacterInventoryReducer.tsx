@@ -1,9 +1,9 @@
+import { StoreActions, StoreAction } from "rootActions";
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
   getCharacterStatus,
-} from "./CharacterInventoryActions";
-import { StoreActions, StoreAction } from "../../rootActions";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
 
 export interface CharacterInventoryState {
   validCharacters: string[];
@@ -34,7 +34,8 @@ export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,
   action: StoreAction | CharacterInventoryAction
 ): CharacterInventoryState => {
-  let validCharacters: string[], rejectedCharacters: string[];
+  let validCharacters: string[];
+  let rejectedCharacters: string[];
   let characterSet: CharacterSetEntry[];
   switch (action.type) {
     case CharacterInventoryType.SET_VALID_CHARACTERS:
@@ -54,6 +55,7 @@ export const characterInventoryReducer = (
         return entry;
       });
       return { ...state, validCharacters, rejectedCharacters, characterSet };
+
     case CharacterInventoryType.SET_REJECTED_CHARACTERS:
       rejectedCharacters = [...new Set(action.payload)];
       validCharacters = state.validCharacters.filter(
@@ -111,14 +113,21 @@ export const characterInventoryReducer = (
 
     case CharacterInventoryType.SET_SELECTED_CHARACTER:
       return { ...state, selectedCharacter: action.payload[0] };
+
     case CharacterInventoryType.SET_ALL_WORDS:
       return { ...state, allWords: action.payload };
+
     case CharacterInventoryType.SET_CHARACTER_SET:
       return action.characterSet
         ? { ...state, characterSet: action.characterSet }
         : state;
+
+    case CharacterInventoryType.RESET:
+      return defaultState;
+
     case StoreActions.RESET:
       return defaultState;
+
     default:
       return state;
   }

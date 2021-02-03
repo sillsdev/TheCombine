@@ -1,8 +1,8 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
 
-import history, { Path } from "../../history";
-import tractor from "../../resources/tractor.png";
+import history, { Path } from "browserHistory";
+import tractor from "resources/tractor.png";
 
 /**
  * A custom 404 page that should be displayed anytime the user tries to navigate

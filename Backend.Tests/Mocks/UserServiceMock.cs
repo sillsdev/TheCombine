@@ -22,10 +22,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
-        public Task<User> GetUser(string id)
+        public Task<User?> GetUser(string id, bool sanitize = true)
         {
-            var foundUser = _users.Single(user => user.Id == id);
-            return Task.FromResult(foundUser.Clone());
+            try
+            {
+                var foundUser = _users.Single(user => user.Id == id);
+                return Task.FromResult<User?>(foundUser.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                return Task.FromResult<User?>(null);
+            }
         }
 
         public Task<string?> GetUserAvatar(string id)
@@ -52,6 +59,18 @@ namespace Backend.Tests.Mocks
             var foundUser = _users.Single(user => user.Id == id);
             var success = _users.Remove(foundUser);
             return Task.FromResult(success);
+        }
+
+        public Task<string?> GetUserIdByEmail(string email)
+        {
+            var user = _users.Find(u => u.Email.ToLowerInvariant() == email.ToLowerInvariant());
+            return Task.FromResult(user?.Id);
+        }
+
+        public Task<string?> GetUserIdByUsername(string username)
+        {
+            var user = _users.Find(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant());
+            return Task.FromResult(user?.Id);
         }
 
         public Task<ResultOfUpdate> Update(string id, User user, bool updateIsAdmin = false)
@@ -84,7 +103,7 @@ namespace Backend.Tests.Mocks
                 }
 
                 foundUser = MakeJwt(foundUser).Result;
-                return Task.FromResult<User?>(foundUser);
+                return Task.FromResult(foundUser);
             }
             catch (InvalidOperationException)
             {

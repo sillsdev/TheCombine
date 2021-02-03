@@ -1,11 +1,9 @@
-import { ThunkDispatch } from "redux-thunk";
-
-import * as backend from "../../../backend";
-import history, { Path } from "../../../history";
-import { StoreState } from "../../../types";
-import { defaultProject, Project, WritingSystem } from "../../../types/project";
-import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
-import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
+import * as backend from "backend";
+import history, { Path } from "browserHistory";
+import { StoreStateDispatch } from "types/actions";
+import { defaultProject, Project, WritingSystem } from "types/project";
+import { asyncCreateUserEdits } from "components/GoalTimeline/GoalsActions";
+import { setCurrentProject } from "components/Project/ProjectActions";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -42,13 +40,7 @@ export function asyncCreateProject(
   analysisLanguages: WritingSystem[],
   languageData?: File
 ) {
-  return async (
-    dispatch: ThunkDispatch<
-      StoreState,
-      any,
-      CreateProjectAction | ProjectAction | GoalAction
-    >
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress(name, vernacularLanguage, analysisLanguages));
     // Create project
     let project: Project = { ...defaultProject };
@@ -71,7 +63,7 @@ export function asyncCreateProject(
                 dispatch(success(name, vernacularLanguage, analysisLanguages));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
-                  dispatch(asyncGetUserEdits());
+                  dispatch(asyncCreateUserEdits());
                   history.push(Path.ProjSettings);
                 }, 1000);
               })
@@ -89,7 +81,7 @@ export function asyncCreateProject(
         } else {
           dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
-            dispatch(asyncGetUserEdits());
+            dispatch(asyncCreateUserEdits());
             history.push(Path.ProjSettings);
           }, 1000);
         }

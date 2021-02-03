@@ -113,12 +113,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            var returnUserRole = await _userRoleService.Create(userRole);
-            if (returnUserRole is null)
-            {
-                return BadRequest();
-            }
-
+            await _userRoleService.Create(userRole);
             return new OkObjectResult(userRole.Id);
         }
 
@@ -165,18 +160,12 @@ namespace BackendFramework.Controllers
             }
 
             var result = await _userRoleService.Update(userRoleId, userRole);
-            if (result == ResultOfUpdate.NotFound)
+            return result switch
             {
-                return new NotFoundObjectResult(userRoleId);
-            }
-            else if (result == ResultOfUpdate.Updated)
-            {
-                return new OkObjectResult(userRoleId);
-            }
-            else
-            {
-                return new StatusCodeResult(304);
-            }
+                ResultOfUpdate.NotFound => new NotFoundObjectResult(userRoleId),
+                ResultOfUpdate.Updated => new OkObjectResult(userRoleId),
+                _ => new StatusCodeResult(304)
+            };
         }
     }
 }

@@ -3,43 +3,28 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultProject as mockProject } from "../../../types/project";
-import SemanticDomainWithSubdomains, {
-  baseDomain,
-} from "../../../types/SemanticDomain";
-import {
-  DomainWord,
-  Sense,
-  simpleWord,
-  State,
-  Word,
-} from "../../../types/word";
-import { defaultState } from "../../App/DefaultState";
+import { defaultState } from "components/App/DefaultState";
 import DataEntryComponent, {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
-} from "../DataEntryComponent";
-import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
-import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
+} from "components/DataEntry/DataEntryComponent";
+import { DataEntryHeader } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
+import { DataEntryTable } from "components/DataEntry/DataEntryTable/DataEntryTable";
+import { defaultProject } from "types/project";
+import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
+import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
 
 jest.mock("@material-ui/core/Dialog");
-jest.mock("../../../backend", () => {
+jest.mock("backend", () => {
   return {
-    createWord: jest.fn((_word: Word) => {
-      return Promise.resolve(mockWord);
-    }),
-    getFrontierWords: jest.fn(() => {
-      return Promise.resolve([mockWord]);
-    }),
-    getProject: jest.fn((_id: string) => {
-      return Promise.resolve(mockProject);
-    }),
+    getFrontierWords: () => mockGetFrontierWords(),
+    getProject: () => mockGetProject(),
   };
 });
-jest.mock("../../AppBar/AppBarComponent"); // ReactTestRenderer doesn't like rendering UserMenu
-jest.mock("../../Pronunciations/Recorder");
-jest.mock("../../TreeView");
+jest.mock("components/AppBar/AppBarComponent"); // ReactTestRenderer doesn't like rendering UserMenu
+jest.mock("components/Pronunciations/Recorder");
+jest.mock("components/TreeView");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -49,20 +34,30 @@ const mockDomainWord: DomainWord = {
   gloss: mockWord.senses[0].glosses[0],
 };
 
+const mockGetFrontierWords = jest.fn();
+const mockGetProject = jest.fn();
+function setMockFunctions() {
+  mockGetFrontierWords.mockResolvedValue([]);
+  mockGetProject.mockResolvedValue(defaultProject);
+  mockWindow();
+}
+
 //Needed to mock window until refactored
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+function mockWindow() {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
 
 function createDataEntryComponentInstance(
   dom: SemanticDomainWithSubdomains
@@ -74,8 +69,9 @@ function createDataEntryComponentInstance(
   ).root;
 }
 
-describe("Tests DataEntryComponent", () => {
+describe("DataEntryComponent", () => {
   it("Questions hidden on complete clicked", () => {
+    setMockFunctions();
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
     const parentInstance: ReactTestInstance = createDataEntryComponentInstance(
       newDomain
@@ -100,48 +96,49 @@ describe("Tests DataEntryComponent", () => {
     expect(questionSwitch.props.checked).toBeFalsy();
   });
 
-  it("should return empty Word Array when given empty Word Array", () => {
-    let words: Word[] = [];
-    let expectedWords: Word[] = [];
-    expect(filterWords(words)).toEqual(expectedWords);
+  describe("filterWords", () => {
+    it("should return empty Word Array when given empty Word Array", () => {
+      const words: Word[] = [];
+      const expectedWords: Word[] = [];
+      expect(filterWords(words)).toEqual(expectedWords);
+    });
+
+    it("should filter out words that are inaccessible", () => {
+      const words: Word[] = [
+        {
+          ...mockWord,
+          senses: [
+            {
+              glosses: [],
+              semanticDomains: [],
+            },
+          ],
+        },
+      ];
+      const expectedWords: Word[] = [];
+      expect(filterWords(words)).toEqual(expectedWords);
+    });
+
+    it("should not filter words that are accessible", () => {
+      const words: Word[] = [
+        {
+          ...mockWord,
+          senses: [
+            {
+              glosses: [],
+              semanticDomains: [],
+              accessibility: State.Active,
+            },
+          ],
+        },
+      ];
+      const expectedWords: Word[] = [...words];
+      expect(filterWords(words)).toEqual(expectedWords);
+    });
   });
 
-  it("should filter out words that are inaccessible", () => {
-    let words: Word[] = [
-      {
-        ...mockWord,
-        senses: [
-          {
-            glosses: [],
-            semanticDomains: [],
-          },
-        ],
-      },
-    ];
-    let expectedWords: Word[] = [];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
-  it("should not filter words that are accessible", () => {
-    let words: Word[] = [
-      {
-        ...mockWord,
-        senses: [
-          {
-            glosses: [],
-            semanticDomains: [],
-            accessibility: State.Active,
-          },
-        ],
-      },
-    ];
-    let expectedWords: Word[] = [...words];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
-  it("filters out words that do not match desired domain", () => {
-    jest.clearAllMocks();
-    var mockDomains: SemanticDomainWithSubdomains[] = [
+  it("filterWordsByDomain filters out words that do not match desired domain", () => {
+    const mockDomains: SemanticDomainWithSubdomains[] = [
       { ...baseDomain },
       { ...baseDomain },
     ];
@@ -151,7 +148,7 @@ describe("Tests DataEntryComponent", () => {
     mockDomains[1].name = "weather";
     mockDomains[1].id = "ID_two";
 
-    let sense: Sense[] = [
+    const sense: Sense[] = [
       {
         glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[0]],
@@ -164,7 +161,7 @@ describe("Tests DataEntryComponent", () => {
       },
     ];
 
-    var unfilteredWords: Word[] = [
+    const unfilteredWords: Word[] = [
       {
         ...mockWord,
         vernacular: "one",
@@ -182,8 +179,8 @@ describe("Tests DataEntryComponent", () => {
       },
     ];
 
-    let domainWords: DomainWord[] = [];
-    let curDomainWord: DomainWord = {
+    const domainWords: DomainWord[] = [];
+    const curDomainWord: DomainWord = {
       word: unfilteredWords[1],
       gloss: unfilteredWords[1].senses[0].glosses[0],
     };
@@ -193,21 +190,21 @@ describe("Tests DataEntryComponent", () => {
     );
   });
 
-  it("sorts words alphabetically", () => {
-    let mockDomain = baseDomain;
+  it("sortDomainWordByVern sorts words alphabetically", () => {
+    const mockDomain = baseDomain;
     mockDomain.name = "daily";
-    let unfilteredWords: Word[] = [
+    const unfilteredWords: Word[] = [
       { ...mockWord },
       { ...mockWord },
       { ...mockWord },
     ];
-    let filteredDomainWords: DomainWord[] = [
+    const filteredDomainWords: DomainWord[] = [
       { ...mockDomainWord },
       { ...mockDomainWord },
       { ...mockDomainWord },
     ];
 
-    for (let currentWord of unfilteredWords) {
+    for (const currentWord of unfilteredWords) {
       currentWord.senses[0].semanticDomains[0] = mockDomain;
     }
     unfilteredWords[0].vernacular = "Always";
@@ -218,7 +215,7 @@ describe("Tests DataEntryComponent", () => {
     filteredDomainWords[1].word = unfilteredWords[1];
     filteredDomainWords[2].word = unfilteredWords[2];
 
-    let expectedList = [
+    const expectedList = [
       filteredDomainWords[2],
       filteredDomainWords[0],
       filteredDomainWords[1],

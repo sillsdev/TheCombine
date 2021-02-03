@@ -1,12 +1,9 @@
-import { Dispatch } from "react";
-import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
-
-import * as backend from "../../backend";
-import * as LocalStorage from "../../backend/localStorage";
-import history, { Path } from "../../history";
-import { StoreAction, reset } from "../../rootActions";
-import { User } from "../../types/user";
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
+import history, { Path } from "browserHistory";
+import { reset } from "rootActions";
+import { StoreStateDispatch } from "types/actions";
+import { User } from "types/user";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -58,7 +55,7 @@ export interface UserAction {
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {
-  return async (dispatch: Dispatch<UserAction>, getState: any) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
@@ -107,8 +104,8 @@ export function loginReset(): UserAction {
 }
 
 export function logoutAndResetStore() {
-  return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const user: User | null = LocalStorage.getCurrentUser();
+  return (dispatch: StoreStateDispatch) => {
+    const user = LocalStorage.getCurrentUser();
     if (user) {
       dispatch(logout(user.username));
     }
@@ -123,16 +120,14 @@ export function asyncRegister(
   email: string,
   password: string
 ) {
-  return async (
-    dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    let newUser: User = new User(name, username, password);
+    const newUser = new User(name, username, password);
     newUser.email = email;
     await backend
       .addUser(newUser)
-      .then((res) => {
+      .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());
@@ -153,16 +148,14 @@ export function asyncRegisterForEmailInvite(
   email: string,
   password: string
 ) {
-  return async (
-    dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    let newUser: User = new User(name, username, password);
+    const newUser = new User(name, username, password);
     newUser.email = email;
     await backend
       .addUser(newUser)
-      .then((res) => {
+      .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());

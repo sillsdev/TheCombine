@@ -10,7 +10,7 @@ namespace BackendFramework.Interfaces
         Task<bool> Delete(string projectId, string wordId);
         Task<List<Word>> Merge(string projectId, MergeWords mergeWords);
         Task<bool> WordIsUnique(Word word);
-        Task<Word> Delete(string projectId, string wordId, string fileName);
+        Task<Word?> Delete(string projectId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string wordId);
     }
 }

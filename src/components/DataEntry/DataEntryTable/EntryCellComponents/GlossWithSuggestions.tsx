@@ -3,7 +3,7 @@ import { Autocomplete } from "@material-ui/lab";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import SpellChecker from "../../spellChecker";
+import SpellChecker from "components/DataEntry/spellChecker";
 
 interface GlossWithSuggestionsProps {
   isNew?: boolean;

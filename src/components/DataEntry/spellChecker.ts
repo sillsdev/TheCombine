@@ -1,6 +1,6 @@
 import nspell from "nspell";
 
-import { aff, dic } from "../../resources/dictionaries";
+import { aff, dic } from "resources/dictionaries";
 
 class SpellChecker {
   spell: nspell;
@@ -15,6 +15,7 @@ class SpellChecker {
         break;
       default:
         this.spell = nspell(aff.en, dic.en);
+        break;
     }
   }
 

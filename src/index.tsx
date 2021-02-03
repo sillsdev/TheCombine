@@ -1,39 +1,33 @@
-//external modules
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { renderToStaticMarkup } from "react-dom/server";
-
-//TC modules
-import App from "./components/App/component";
-import * as serviceWorker from "./serviceWorker";
-import { store, persistor } from "./store";
 import { LocalizeProvider } from "react-localize-redux";
-
-//additional files
-import globalTranslations from "./resources/translations.json";
 import { Router } from "react-router-dom";
-import history from "./history";
 import { PersistGate } from "redux-persist/integration/react";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import theme from "./types/theme";
+
+import history from "browserHistory";
+import App from "components/App/component";
+import globalTranslations from "resources/translations.json";
+import { store, persistor } from "store";
+import theme from "types/theme";
 
 const localizedLanguages = [
   { name: "English", code: "en" },
   { name: "Spanish", code: "es" },
   { name: "French", code: "fr" },
 ];
-
+const localizedTags = localizedLanguages.map((l) => l.code);
+const getPrimarySubtag = (bcp: string) => bcp.split("-")[0];
+const getLocalizedLanguage = (bcp: string) =>
+  localizedTags.includes(getPrimarySubtag(bcp)) ? getPrimarySubtag(bcp) : "en";
 const localizeInit = {
   languages: localizedLanguages,
   translation: globalTranslations,
   options: {
     renderToStaticMarkup,
-    defaultLanguage:
-      localizedLanguages.find((l) => l.code === navigator.language) !==
-      undefined
-        ? navigator.language
-        : "en",
+    defaultLanguage: getLocalizedLanguage(navigator.language),
   },
 };
 
@@ -52,7 +46,3 @@ ReactDOM.render(
   </ThemeProvider>,
   document.getElementById("root")
 );
-
-// Learn more about service workers: https://developers.google.com/web/fundamentals/primers/service-workers/
-// https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-serviceWorker.register();

@@ -1,7 +1,8 @@
-import ActiveUsersComponent from "./ActiveUsers";
-import ProjectUsers from "./ProjectUsers";
 import { connect } from "react-redux";
-import { StoreState } from "../../../types";
+
+import ActiveUsersComponent from "components/ProjectSettings/ProjectUsers/ActiveUsers";
+import ProjectUsers from "components/ProjectSettings/ProjectUsers/ProjectUsers";
+import { StoreState } from "types";
 
 function mapStateToProps(state: StoreState) {
   return {

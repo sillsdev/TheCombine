@@ -1,9 +1,10 @@
-import ProjectImport from "./ProjectImport";
-import { Project } from "../../../types/project";
-import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
-import { Dispatch } from "redux";
 import { connect } from "react-redux";
-import { StoreState } from "../../../types";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
+import { setCurrentProject } from "components/Project/ProjectActions";
+import ProjectImport from "components/ProjectSettings/ProjectImport/ProjectImport";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -11,7 +12,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     updateProject: (newProject: Project) =>
       dispatch(setCurrentProject(newProject)),

@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import LoadingButton from "./LoadingButton";
+import LoadingButton from "components/Buttons/LoadingButton";
 
 interface ButtonConfirmationProps {
   open: boolean;

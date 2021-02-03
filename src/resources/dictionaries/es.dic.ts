@@ -1,4 +1,4 @@
-export default `68226
+const dicEs = `68226
 a
 ababa/S
 ababillar/RED
@@ -68225,3 +68225,5 @@ zurumbático/GS
 zurupeto/S
 zutano/GS
 zuzar`;
+
+export default dicEs;

@@ -1,4 +1,4 @@
-import * as utilities from "../utilities";
+import * as utilities from "utilities";
 
 describe("utilities", () => {
   describe("quicksort", () => {

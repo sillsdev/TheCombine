@@ -60,7 +60,7 @@ namespace Backend.Tests.Controllers
 
             for (var i = 1; i < 4; i++)
             {
-                project.SemanticDomains.Add(new SemanticDomain()
+                project.SemanticDomains.Add(new SemanticDomain
                 {
                     Id = $"{i}",
                     Name = Util.RandString(),
@@ -68,7 +68,7 @@ namespace Backend.Tests.Controllers
                 });
                 for (var j = 1; j < 4; j++)
                 {
-                    project.SemanticDomains.Add(new SemanticDomain()
+                    project.SemanticDomains.Add(new SemanticDomain
                     {
                         Id = $"{i}.{j}",
                         Name = Util.RandString(),
@@ -76,7 +76,7 @@ namespace Backend.Tests.Controllers
                     });
                     for (var k = 1; k < 4; k++)
                     {
-                        project.SemanticDomains.Add(new SemanticDomain()
+                        project.SemanticDomains.Add(new SemanticDomain
                         {
                             Id = $"{i}.{j}.{k}",
                             Name = Util.RandString(),
@@ -110,7 +110,7 @@ namespace Backend.Tests.Controllers
             _projectService.Create(RandomProject());
 
             var action = _controller.Get(project.Id).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundProjects = ((ObjectResult)action).Value as Project;
             Assert.AreEqual(project, foundProjects);
@@ -175,8 +175,8 @@ namespace Backend.Tests.Controllers
         public void TestProjectDuplicateCheck()
         {
             var project1 = _projectService.Create(RandomProject()).Result;
-            var project2 = _projectService.Create(RandomProject()).Result;
-            var project3 = _projectService.Create(RandomProject()).Result;
+            _ = _projectService.Create(RandomProject()).Result;
+            _ = _projectService.Create(RandomProject()).Result;
             var modProject = project1.Clone();
             modProject.Name = "Proj";
             _ = _controller.Put(modProject.Id, modProject);

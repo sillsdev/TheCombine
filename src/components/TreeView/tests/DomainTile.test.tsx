@@ -1,7 +1,8 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import DomainTile, { Direction } from "../DomainTile";
-import MockDomain from "./MockSemanticDomain";
+
+import DomainTile, { Direction } from "components/TreeView/DomainTile";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 
 var tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();

@@ -3,9 +3,9 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import ProjectScreen from "../ProjectScreenComponent";
+import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 
-jest.mock("../../AppBar/AppBarComponent", () => "div");
+jest.mock("components/AppBar/AppBarComponent", () => "div");
 
 const createMockStore = configureMockStore([]);
 const state = {

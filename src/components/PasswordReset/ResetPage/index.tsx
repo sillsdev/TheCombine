@@ -1,9 +1,11 @@
-import PasswordReset from "./component";
-import { StoreState } from "../../../types";
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { ResetAction, asyncReset } from "../actions";
-import { ResetDispatchProps } from "./component";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { asyncReset } from "components/PasswordReset/actions";
+import PasswordReset, {
+  ResetDispatchProps,
+} from "components/PasswordReset/ResetPage/component";
 
 export function mapStateToProps(state: StoreState) {
   return {
@@ -12,7 +14,7 @@ export function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, ResetAction>
+  dispatch: StoreStateDispatch
 ): ResetDispatchProps {
   return {
     passwordReset: (token: string, password: string) => {

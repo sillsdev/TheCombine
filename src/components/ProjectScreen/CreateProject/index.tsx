@@ -1,15 +1,13 @@
-import CreateProject from "./CreateProjectComponent";
-import { StoreState } from "../../../types";
-
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { WritingSystem } from "types/project";
 import {
-  CreateProjectAction,
   asyncCreateProject,
   reset,
-} from "./CreateProjectActions";
-import { ProjectAction } from "../../Project/ProjectActions";
-import { WritingSystem } from "../../../types/project";
+} from "components/ProjectScreen/CreateProject/CreateProjectActions";
+import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -20,9 +18,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, CreateProjectAction | ProjectAction>
-) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     asyncCreateProject: (
       name: string,

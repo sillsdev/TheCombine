@@ -1,8 +1,9 @@
-import FindAndReplace from "./FindAndReplaceComponent";
 import { connect } from "react-redux";
-import { StoreState } from "../../../../../types";
-import { ThunkDispatch } from "redux-thunk";
-import { findAndReplace } from "./FindAndReplaceActions";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { findAndReplace } from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/FindAndReplaceActions";
+import FindAndReplace from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/FindAndReplaceComponent";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -10,7 +11,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(dispatch: ThunkDispatch<StoreState, any, any>) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     findAndReplace: (findValue: string, replaceValue: string) => {
       dispatch(findAndReplace(findValue, replaceValue));

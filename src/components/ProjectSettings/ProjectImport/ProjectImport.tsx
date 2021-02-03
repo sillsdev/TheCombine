@@ -5,11 +5,11 @@ import {
   withLocalize,
 } from "react-localize-redux";
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
-
-import * as backend from "../../../backend";
-import { Project } from "../../../types/project";
-import FileInputButton from "../../Buttons/FileInputButton";
 import { renderToStaticMarkup } from "react-dom/server";
+
+import * as backend from "backend";
+import FileInputButton from "components/Buttons/FileInputButton";
+import { Project } from "types/project";
 
 enum UploadState {
   Awaiting,

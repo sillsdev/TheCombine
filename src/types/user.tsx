@@ -1,4 +1,4 @@
-import { Hash } from "../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export class User {
   id: string = "";

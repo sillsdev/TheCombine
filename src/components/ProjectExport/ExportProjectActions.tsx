@@ -1,7 +1,5 @@
-import { ThunkDispatch } from "redux-thunk";
-
-import { deleteLift, downloadLift, exportLift } from "../../backend";
-import { StoreState } from "../../types";
+import { deleteLift, downloadLift, exportLift } from "backend";
+import { StoreStateDispatch } from "types/actions";
 
 export enum ExportStatus {
   Default = "DEFAULT",
@@ -16,9 +14,7 @@ export interface ExportProjectAction {
 }
 
 export function asyncExportProject(projectId: string) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress(projectId));
     exportLift(projectId).catch(() => {
       dispatch(failure(projectId));
@@ -27,15 +23,13 @@ export function asyncExportProject(projectId: string) {
 }
 
 export function downloadIsReady(projectId: string) {
-  return (dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>) => {
+  return (dispatch: StoreStateDispatch) => {
     dispatch(success(projectId));
   };
 }
 
 export function asyncDownloadExport(projectId: string) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
-  ) => {
+  return async (dispatch: StoreStateDispatch) => {
     return await downloadLift(projectId).catch(() => {
       dispatch(failure(projectId));
     });
@@ -43,7 +37,7 @@ export function asyncDownloadExport(projectId: string) {
 }
 
 export function resetExport(projectId?: string) {
-  return (dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>) => {
+  return (dispatch: StoreStateDispatch) => {
     dispatch(reset());
     deleteLift(projectId);
   };

@@ -1,8 +1,8 @@
 import { Drawer, Grid, List } from "@material-ui/core";
 import React from "react";
 
-import { DomainWord, SemanticDomain } from "../../../types/word";
-import { ImmutableExistingData } from "./ImmutableExistingData";
+import { DomainWord, SemanticDomain } from "types/word";
+import { ImmutableExistingData } from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
 
 interface ExistingDataTableProps {
   domain: SemanticDomain;

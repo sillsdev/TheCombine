@@ -4,12 +4,12 @@ import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { updateProject } from "../../../backend";
-import { Project, WritingSystem } from "../../../types/project";
-import theme from "../../../types/theme";
+import { Project, WritingSystem } from "types/project";
+import theme from "types/theme";
 
 interface LanguageProps {
   project: Project;
+  saveChangesToProject: (project: Project) => Promise<void>;
 }
 
 interface LanguageState {
@@ -41,7 +41,8 @@ export default class ProjectLanguages extends React.Component<
       1
     )[0];
     this.props.project.analysisWritingSystems.splice(0, 0, newDefault);
-    updateProject(this.props.project)
+    this.props
+      .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
       .catch((err) => console.error(err));
   }
@@ -53,7 +54,8 @@ export default class ProjectLanguages extends React.Component<
       font: this.state.font,
     };
     this.props.project.analysisWritingSystems.push(ws);
-    updateProject(this.props.project)
+    this.props
+      .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
       .catch((err) => console.error(err));
   }

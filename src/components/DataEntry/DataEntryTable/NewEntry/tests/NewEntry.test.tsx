@@ -3,10 +3,10 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "../../../../App/DefaultState";
-import NewEntry from "../NewEntry";
+import { defaultState } from "components/App/DefaultState";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 
-jest.mock("../../../../Pronunciations/Recorder");
+jest.mock("components/Pronunciations/Recorder");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);

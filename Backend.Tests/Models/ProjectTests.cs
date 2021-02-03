@@ -123,8 +123,8 @@ namespace Backend.Tests.Models
         public void TestToString()
         {
             var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
-            var systring = system.ToString();
-            Assert.IsTrue(systring.Contains(Name) && systring.Contains(Bcp47));
+            var sysString = system.ToString();
+            Assert.IsTrue(sysString.Contains(Name) && sysString.Contains(Bcp47));
         }
 
         [Test]

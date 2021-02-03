@@ -14,9 +14,13 @@ import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import { StoreState } from "../../types";
-import ButtonConfirmation from "../Buttons/ButtonConfirmation";
-import { playing, PronunciationsStatus, reset } from "./PronunciationsActions";
+import { StoreState } from "types";
+import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
+import {
+  playing,
+  PronunciationsStatus,
+  reset,
+} from "components/Pronunciations/PronunciationsActions";
 
 export interface PlayerProps {
   pronunciationUrl: string;

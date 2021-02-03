@@ -1,17 +1,15 @@
-//external modules
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
-//TC modules
-import { Path } from "../../history";
-import Login from "../Login/LoginPage";
-import Register from "../Login/RegisterPage";
-import PageNotFound from "../PageNotFound/component";
-import PasswordReset from "../PasswordReset/ResetPage";
-import ResetRequest from "../PasswordReset/RequestPage";
-import PrivateRoute from "../PrivateRoute";
-import ProjectInvite from "../ProjectInvite";
-import AppWithBar from "./AppLoggedIn";
+import { Path } from "browserHistory";
+import Login from "components/Login/LoginPage";
+import Register from "components/Login/RegisterPage";
+import PageNotFound from "components/PageNotFound/component";
+import PasswordReset from "components/PasswordReset/ResetPage";
+import ResetRequest from "components/PasswordReset/RequestPage";
+import PrivateRoute from "components/PrivateRoute";
+import ProjectInvite from "components/ProjectInvite";
+import AppWithBar from "components/App/AppLoggedIn";
 
 /**
  * The top-level component

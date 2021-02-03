@@ -1,26 +1,23 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
 
-import { StoreState } from "../../types";
-import { Goal } from "../../types/goals";
-import GoalTimeline from "./GoalTimelineComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Goal } from "types/goals";
+import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
 import {
   asyncAddGoalToHistory,
   asyncGetUserEdits,
-  GoalAction,
-} from "./GoalsActions";
+} from "components/GoalTimeline/GoalsActions";
 
 export function mapStateToProps(state: StoreState) {
   return {
     allPossibleGoals: state.goalsState.allPossibleGoals,
-    history: state.goalsState.historyState.history.reverse(),
+    history: state.goalsState.historyState.history,
     suggestions: state.goalsState.suggestionsState.suggestions,
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, GoalAction>
-) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     chooseGoal: (goal: Goal) => {
       dispatch(asyncAddGoalToHistory(goal));

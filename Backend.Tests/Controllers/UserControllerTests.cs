@@ -61,10 +61,17 @@ namespace Backend.Tests.Controllers
             _userService.Create(RandomUser());
 
             var action = _controller.Get(user.Id).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
+            Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUser = ((ObjectResult)action).Value as User;
             Assert.AreEqual(user, foundUser);
+        }
+
+        [Test]
+        public void TestGetMissingUser()
+        {
+            var action = _controller.Get("INVALID_USER_ID").Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
 
         [Test]

@@ -3,10 +3,13 @@ import {
   defaultState,
   TreeViewState,
   createDomains,
-} from "../TreeViewReducer";
-import { TreeViewAction, TreeActionType } from "../TreeViewActions";
-import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
-import { StoreAction, StoreActions } from "../../../rootActions";
+} from "components/TreeView/TreeViewReducer";
+import {
+  TreeViewAction,
+  TreeActionType,
+} from "components/TreeView/TreeViewActions";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import { StoreAction, StoreActions } from "rootActions";
 
 describe("Test the TreeViewReducer", () => {
   it("Creates a SemanticDomain from a JSON string using createDomains", () => {

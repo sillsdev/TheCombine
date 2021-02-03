@@ -3,12 +3,14 @@ import { Delete, RestoreFromTrash } from "@material-ui/icons";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import * as backend from "../../../../backend";
-import DeleteDialog from "../../../../components/Buttons/DeleteDialog";
-import { StoreState } from "../../../../types";
-import { updateAllWords } from "../ReviewEntriesActions";
-import { ReviewEntriesWord } from "../ReviewEntriesTypes";
-import AlignedList, { SPACER } from "./AlignedList";
+import * as backend from "backend";
+import DeleteDialog from "components/Buttons/DeleteDialog";
+import { StoreState } from "types";
+import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import AlignedList, {
+  SPACER,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;

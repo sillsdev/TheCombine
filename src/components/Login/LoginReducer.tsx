@@ -1,5 +1,5 @@
-import { StoreAction, StoreActions } from "../../rootActions";
-import * as LoginAction from "./LoginActions";
+import { StoreAction, StoreActions } from "rootActions";
+import * as LoginAction from "components/Login/LoginActions";
 
 export interface LoginState {
   username: string;
@@ -71,8 +71,11 @@ export const loginReducer = (
         registerSuccess: false,
       };
     case LoginAction.LOGIN_RESET:
+      return defaultState;
     case LoginAction.LOGOUT:
+      return defaultState;
     case StoreActions.RESET:
+      return defaultState;
     case LoginAction.REGISTER_RESET:
       return defaultState;
     default:

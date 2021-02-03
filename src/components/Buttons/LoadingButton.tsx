@@ -2,7 +2,7 @@ import { Button, CircularProgress } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 
-import { buttonSuccess } from "../../types/theme";
+import { buttonSuccess } from "types/theme";
 
 interface LoadingProps {
   loading: boolean;

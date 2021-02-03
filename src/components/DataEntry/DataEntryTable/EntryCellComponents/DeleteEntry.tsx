@@ -3,7 +3,7 @@ import { Delete } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import DeleteDialog from "../../../Buttons/DeleteDialog";
+import DeleteDialog from "components/Buttons/DeleteDialog";
 
 interface DeleteEntryProps {
   removeEntry: () => void;

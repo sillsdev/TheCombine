@@ -1,9 +1,10 @@
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import { StoreState } from "../../../types";
-import { Project } from "../../../types/project";
-import { ProjectAction, setCurrentProject } from "../../Project/ProjectActions";
-import ProjectSwitch from "./ProjectSwitch";
+
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
+import { setCurrentProject } from "components/Project/ProjectActions";
+import ProjectSwitch from "components/ProjectSettings/ProjectSwitch/ProjectSwitch";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -11,7 +12,7 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-export function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setCurrentProject: (project: Project) => {
       dispatch(setCurrentProject(project));

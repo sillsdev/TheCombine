@@ -5,6 +5,7 @@
     {
         Updated,
         NoChange,
-        NotFound
+        NotFound,
+        Failed
     }
 }

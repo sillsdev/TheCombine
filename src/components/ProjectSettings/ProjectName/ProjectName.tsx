@@ -2,12 +2,11 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import { updateProject } from "../../../backend";
-import { Project } from "../../../types/project";
+import { Project } from "types/project";
 
 interface NameProps {
   project: Project;
-  setCurrentProject: (project: Project) => void;
+  saveChangesToProject: (project: Project) => void;
 }
 
 interface NameState {
@@ -26,14 +25,7 @@ class ProjectName extends React.Component<
   }
 
   private updateName(newName: string) {
-    // Update backend
-    updateProject({
-      ...this.props.project,
-      name: newName,
-    });
-
-    // Update redux store
-    this.props.setCurrentProject({
+    this.props.saveChangesToProject({
       ...this.props.project,
       name: newName,
     });

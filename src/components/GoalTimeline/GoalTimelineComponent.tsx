@@ -2,9 +2,9 @@ import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-import { Goal } from "../../types/goals";
-import HorizontalDisplay from "./GoalDisplay/HorizontalDisplay";
-import VerticalDisplay from "./GoalDisplay/VerticalDisplay";
+import { Goal } from "types/goals";
+import HorizontalDisplay from "components/GoalTimeline/GoalDisplay/HorizontalDisplay";
+import VerticalDisplay from "components/GoalTimeline/GoalDisplay/VerticalDisplay";
 
 const timelineStyle = {
   centerDisplays: {
@@ -79,22 +79,9 @@ export default class GoalTimeline extends React.Component<
   // Given a change event, find which goal the user selected, and choose it
   // as the next goal to work on.
   handleChange(name: string) {
-    let goal: Goal | undefined = this.findGoalByName(
-      this.props.allPossibleGoals,
-      name
-    );
+    const goal = this.props.allPossibleGoals.find((goal) => goal.name === name);
     if (goal) {
       this.props.chooseGoal(goal);
-    }
-  }
-
-  // Search through the list of possible goals, and find which one the user
-  // selected
-  findGoalByName(goals: Goal[], name: string): Goal | undefined {
-    for (var goal of goals) {
-      if (goal.name === name) {
-        return goal;
-      }
     }
   }
 
@@ -216,7 +203,7 @@ export default class GoalTimeline extends React.Component<
               <Translate id={"goal.selector.past"} />
             </Typography>
             <VerticalDisplay
-              data={this.props.history}
+              data={[...this.props.history].reverse()}
               scrollToEnd={false}
               handleChange={this.handleChange}
               height={35}

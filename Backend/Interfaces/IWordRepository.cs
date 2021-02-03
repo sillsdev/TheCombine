@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
     public interface IWordRepository
     {
         Task<List<Word>> GetAllWords(string projectId);
-        Task<Word> GetWord(string projectId, string wordId);
+        Task<Word?> GetWord(string projectId, string wordId);
         Task<Word> Create(Word word);
         Task<Word> Add(Word word);
         Task<bool> DeleteAllWords(string projectId);

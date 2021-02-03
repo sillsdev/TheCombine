@@ -8,9 +8,10 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 import validator from "validator";
-import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
-import * as Backend from "../../../backend";
-import * as LocalStorage from "../../../backend/localStorage";
+
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import * as Backend from "backend";
+import * as LocalStorage from "backend/localStorage";
 
 interface InviteProps {
   close: () => void;

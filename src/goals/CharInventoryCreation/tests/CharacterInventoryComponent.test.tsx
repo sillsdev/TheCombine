@@ -1,14 +1,14 @@
 import React from "react";
-import CharacterInventoryComponent, {
-  CharacterInventory,
-  SAVE,
-  CANCEL,
-} from "../CharacterInventoryComponent";
 import ReactDOM from "react-dom";
-import { Project } from "../../../types/project";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { Provider } from "react-redux";
-import { store } from "../../../store";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
+
+import { store } from "store";
+import { Project } from "types/project";
+import CharacterInventory, {
+  CANCEL,
+  SAVE,
+} from "goals/CharInventoryCreation/CharacterInventoryComponent";
 
 // Constants
 const SET_INV = jest.fn();
@@ -32,7 +32,7 @@ beforeAll(() => {
   renderer.act(() => {
     charMaster = renderer.create(
       <Provider store={store}>
-        <CharacterInventoryComponent
+        <CharacterInventory
           currentProject={{ validCharacters: ["a"] } as Project}
           setValidCharacters={SET_INV}
           uploadInventory={UPLOAD_INV}
@@ -42,6 +42,7 @@ beforeAll(() => {
           fetchWords={jest.fn()}
           selectedCharacter={""}
           allCharacters={[]}
+          resetInState={jest.fn()}
         />
       </Provider>
     );
@@ -54,12 +55,12 @@ beforeEach(() => {
   UPLOAD_INV.mockClear();
 });
 
-describe("Testing Character Inventory Component", () => {
+describe("Character Inventory Component", () => {
   it("Renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={store}>
-        <CharacterInventoryComponent
+        <CharacterInventory
           setValidCharacters={SET_INV}
           setRejectedCharacters={jest.fn()}
           setSelectedCharacter={jest.fn()}
@@ -69,6 +70,7 @@ describe("Testing Character Inventory Component", () => {
           selectedCharacter={""}
           getAllCharacters={jest.fn(() => Promise.resolve())}
           allCharacters={[]}
+          resetInState={jest.fn()}
         />
       </Provider>,
       div

@@ -1,12 +1,13 @@
-import ResetRequest from "./component";
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../types";
-import { ResetRequestDispatchProps } from "./component";
-import { asyncResetRequest } from "../actions";
+
+import { StoreStateDispatch } from "types/actions";
+import { asyncResetRequest } from "components/PasswordReset/actions";
+import ResetRequest, {
+  ResetRequestDispatchProps,
+} from "components/PasswordReset/RequestPage/component";
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, any>
+  dispatch: StoreStateDispatch
 ): ResetRequestDispatchProps {
   return {
     passwordResetRequest: (emailOrUsername: string) => {

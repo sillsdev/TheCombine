@@ -3,13 +3,13 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { Goal } from "../../../types/goals";
-import { defaultState } from "../DefaultState";
-import GoalTimeline from "../GoalTimelineComponent";
+import { Goal } from "types/goals";
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
-jest.mock("../../AppBar/AppBarComponent", () => "div");
+jest.mock("components/AppBar/AppBarComponent", () => "div");
 
 // Constants
 const LOAD_EDITS = jest.fn();
@@ -40,18 +40,6 @@ beforeEach(() => {
 });
 
 describe("GoalTimelineVertical", () => {
-  describe("findGoalByName", () => {
-    it("Finds a goal by name when prompted", () => {
-      expect(timeHandle.findGoalByName(goals, goals[2].name)).toEqual(goals[2]);
-    });
-
-    it("Returns undefined when prompted for a non-existant goal", () => {
-      expect(timeHandle.findGoalByName(goals.slice(1), goals[0].name)).toBe(
-        undefined
-      );
-    });
-  });
-
   describe("handleChange", () => {
     it("Selects a goal from suggestions based on name", () => {
       timeHandle.handleChange(goals[2].name);

@@ -1,5 +1,8 @@
-import { StoreAction, StoreActions } from "../../rootActions";
-import { ExportProjectAction, ExportStatus } from "./ExportProjectActions";
+import { StoreAction, StoreActions } from "rootActions";
+import {
+  ExportProjectAction,
+  ExportStatus,
+} from "components/ProjectExport/ExportProjectActions";
 
 export interface ExportProjectState {
   projectId: string;

@@ -1,4 +1,4 @@
-export default `# This Source Code Form is subject to the terms of the Mozilla Public
+const affFr = `# This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # AFFIXES DU DICTIONNAIRE ORTHOGRAPHIQUE FRANÇAIS “CLASSIQUE” v6.3
@@ -8737,3 +8737,5 @@ SFX q. aire u aire
 SFX q. dre du dre
 SFX q. valoir valu/q' .valoir
 SFX q. aître u/q' aître`;
+
+export default affFr;

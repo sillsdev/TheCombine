@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
@@ -24,15 +25,21 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="Word"/> with specified wordId and projectId </summary>
-        public async Task<Word> GetWord(string projectId, string wordId)
+        public async Task<Word?> GetWord(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
             var wordList = await _wordDatabase.Words.FindAsync(filter);
-
-            return wordList.FirstOrDefault();
+            try
+            {
+                return await wordList.FirstAsync();
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified
@@ -53,12 +60,25 @@ namespace BackendFramework.Services
         public async Task<Word> Create(Word word)
         {
             PopulateWordGuids(word);
-            word.Created = DateTime.UtcNow.ToLongTimeString();
+
+            // Only update date time stamps if they are blank to allow services such as LiftApiService to set before
+            // creation.
+            if (word.Created.Length == 0)
+            {
+                // Use Roundtrip-suitable ISO 8601 format.
+                word.Created = Time.UtcNowIso8601();
+            }
+            if (word.Modified.Length == 0)
+            {
+                word.Modified = Time.UtcNowIso8601();
+            }
+
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
         }
 
+        /// <remarks> This method should be removed once all legacy data has been converted. </remarks>
         internal static void PopulateWordGuids(Word word)
         {
             if (word.Guid is null || Guid.Empty.Equals(word.Guid))

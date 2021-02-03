@@ -16,7 +16,8 @@ namespace BackendFramework.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word edits.
+        /// This Guid is important for Lift round-tripping with other applications and must remain stable through
+        /// Word edits.
         /// </summary>
         /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
         [BsonElement("guid")]

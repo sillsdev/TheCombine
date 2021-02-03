@@ -1,10 +1,10 @@
-import { StoreAction, StoreActions } from "../../../../rootActions";
+import { StoreAction, StoreActions } from "rootActions";
 import {
   CreateProjectAction,
   IN_PROGRESS,
   RESET,
-} from "../CreateProjectActions";
-import * as reducer from "../CreateProjectReducer";
+} from "components/ProjectScreen/CreateProject/CreateProjectActions";
+import * as reducer from "components/ProjectScreen/CreateProject/CreateProjectReducer";
 
 const emptyWritingSystem = {
   name: "",

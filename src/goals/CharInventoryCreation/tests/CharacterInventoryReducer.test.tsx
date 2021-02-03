@@ -2,12 +2,12 @@ import {
   characterInventoryReducer,
   CharacterInventoryState,
   defaultState,
-} from "../CharacterInventoryReducer";
+} from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
-} from "../CharacterInventoryActions";
-import { StoreAction, StoreActions } from "../../../rootActions";
+} from "goals/CharInventoryCreation/CharacterInventoryActions";
+import { StoreAction, StoreActions } from "rootActions";
 
 const DATA: string[] = ["a", "b"];
 const BAD_RESP: string[] = ["If", "this", "appears", "there's", "an", "issue"];

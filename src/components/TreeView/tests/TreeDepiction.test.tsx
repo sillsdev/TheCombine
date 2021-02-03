@@ -1,8 +1,9 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import TreeDepiction from "../TreeDepiction";
-import MockDomain from "./MockSemanticDomain";
-import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
+
+import TreeDepiction from "components/TreeView/TreeDepiction";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {

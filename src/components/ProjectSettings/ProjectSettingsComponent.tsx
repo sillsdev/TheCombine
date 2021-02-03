@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import {
   FormControl,
   Grid,
@@ -22,17 +18,19 @@ import {
   Language,
 } from "@material-ui/icons";
 
-import * as backend from "../../backend";
-import { AutoComplete } from "../../types/AutoComplete";
-import { Project } from "../../types/project";
-import { UserRole } from "../../types/userRole";
-import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ExportProjectButton from "../ProjectExport";
-import ProjectImport from "./ProjectImport";
-import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
-import ProjectName from "./ProjectName";
-import ProjectSwitch from "./ProjectSwitch";
-import ProjectUsers, { ActiveUsers } from "./ProjectUsers";
+import * as backend from "backend";
+import { AutoComplete } from "types/AutoComplete";
+import { Project } from "types/project";
+import { UserRole } from "types/userRole";
+import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import ExportProjectButton from "components/ProjectExport";
+import ProjectImport from "components/ProjectSettings/ProjectImport";
+import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
+import ProjectName from "components/ProjectSettings/ProjectName";
+import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
+import ProjectUsers, {
+  ActiveUsers,
+} from "components/ProjectSettings/ProjectUsers";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -46,11 +44,11 @@ interface ProjectSettingsState {
   loading: boolean;
 }
 
-class ProjectSettingsComponent extends React.Component<
-  ProjectSettingsProps & LocalizeContextProps,
+export default class ProjectSettingsComponent extends React.Component<
+  ProjectSettingsProps,
   ProjectSettingsState
 > {
-  constructor(props: ProjectSettingsProps & LocalizeContextProps) {
+  constructor(props: ProjectSettingsProps) {
     super(props);
     this.state = { loading: true };
   }
@@ -113,7 +111,7 @@ class ProjectSettingsComponent extends React.Component<
                 title={
                   <Translate id="projectSettings.language.interfaceLanguage" />
                 }
-                body={<ProjectLanguages project={this.props.project} />}
+                body={<ProjectLanguages />}
               />
             )}
 
@@ -201,5 +199,3 @@ class ProjectSettingsComponent extends React.Component<
     );
   }
 }
-
-export default withLocalize(ProjectSettingsComponent);

@@ -4,19 +4,19 @@ import { Translate } from "react-localize-redux";
 
 import DupFinder, {
   DefaultParams,
-} from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import theme from "../../../../types/theme";
-import { SemanticDomain, Sense, Word } from "../../../../types/word";
-import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
-import Recorder from "../../../Pronunciations/Recorder";
+} from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import theme from "types/theme";
+import { SemanticDomain, Sense, Word } from "types/word";
+import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Recorder from "components/Pronunciations/Recorder";
 import {
   DeleteEntry,
   EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
-} from "../EntryCellComponents";
-import SenseDialog from "./SenseDialog";
-import VernDialog from "./VernDialog";
+} from "components/DataEntry/DataEntryTable/EntryCellComponents";
+import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
+import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 
 interface NewEntryProps {
   allVerns: string[];

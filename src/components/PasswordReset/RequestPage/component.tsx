@@ -2,9 +2,9 @@ import { Card, Grid, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
 import { LocalizeContextProps, Translate } from "react-localize-redux";
 
-import { isEmailTaken, isUsernameTaken } from "../../../backend";
-import history, { Path } from "../../../history";
-import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
+import { isEmailTaken, isUsernameTaken } from "backend";
+import history, { Path } from "browserHistory";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
 export interface ResetRequestDispatchProps {
   passwordResetRequest: (email: string) => void;

@@ -3,7 +3,7 @@ import { AddComment, Comment } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import EditTextDialog from "../../../Buttons/EditTextDialog";
+import EditTextDialog from "components/Buttons/EditTextDialog";
 
 interface EntryNoteProps {
   noteText: string;

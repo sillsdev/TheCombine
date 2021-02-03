@@ -1,17 +1,19 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../types";
+
 import {
-  MergeTreeAction,
-  advanceStep,
-  refreshWords,
+  asyncAdvanceStep,
+  asyncRefreshWords,
+} from "components/GoalTimeline/GoalsActions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import {
   moveSenses,
   mergeAll,
   orderSense,
   orderDuplicate,
-} from "./MergeDupStepActions";
-import MergeDupStepComponent from "./MergeDupStepComponent";
-import { MergeTreeReference } from "./MergeDupsTree";
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
   return {
@@ -19,15 +21,13 @@ export function mapStateToProps(state: StoreState) {
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction>
-) {
+export function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     advanceStep: () => {
-      dispatch(advanceStep());
+      dispatch(asyncAdvanceStep());
     },
     refreshWords: () => {
-      dispatch(refreshWords());
+      dispatch(asyncRefreshWords());
     },
     moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
       dispatch(moveSenses(src, dest));

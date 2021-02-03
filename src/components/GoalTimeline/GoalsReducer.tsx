@@ -1,7 +1,7 @@
-import { GoalsState } from "../../types/goals";
-import { GoalsActions, GoalAction } from "./GoalsActions";
-import { defaultState } from "./DefaultState";
-import { StoreAction, StoreActions } from "../../rootActions";
+import { GoalsState } from "types/goals";
+import { GoalsActions, GoalAction } from "components/GoalTimeline/GoalsActions";
+import { defaultState } from "components/GoalTimeline/DefaultState";
+import { StoreAction, StoreActions } from "rootActions";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
