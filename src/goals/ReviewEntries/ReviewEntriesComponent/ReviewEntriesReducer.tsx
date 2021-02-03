@@ -43,22 +43,18 @@ export const reviewEntriesReducer = (
 
     case ReviewEntriesActionTypes.UpdateWord:
       // Update the specified word's IDs and data
-      return {
-        ...state,
-        words: state.words.map((word) => {
-          if (word.id === action.id) {
-            return {
-              ...action.newWord,
-              id: action.newId,
-              vernacular: action.newWord.vernacular,
-              senses: action.newWord.senses.map((sense) => ({
-                ...sense,
-                senseId: sense.senseId + OLD_SENSE,
-              })),
-            };
-          } else return word;
-        }),
+      const newState = { ...state };
+      const updateIndex = newState.words.findIndex((w) => w.id === action.id);
+      newState.words[updateIndex] = {
+        ...action.newWord,
+        id: action.newId,
+        vernacular: action.newWord.vernacular,
+        senses: action.newWord.senses.map((sense) => ({
+          ...sense,
+          senseId: sense.senseId + OLD_SENSE,
+        })),
       };
+      return newState;
 
     case ReviewEntriesActionTypes.ClearReviewEntriesState:
       return defaultState;
