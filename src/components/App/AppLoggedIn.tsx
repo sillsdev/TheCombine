@@ -3,22 +3,16 @@ import React, { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 
 import { getBasePath, Path } from "browserHistory";
+import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
-import SignalRHub from "components/App/SignalRHub";
+import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
+import ProjectSettings from "components/ProjectSettings";
+import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
+import UserSettings from "components/UserSettings/UserSettings";
 
 const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalRoute = loadable(() => import("components/GoalRoute/component"));
-const ProjectScreen = loadable(
-  () => import("components/ProjectScreen/ProjectScreenComponent")
-);
-const ProjectSettings = loadable(() => import("components/ProjectSettings"));
-const SiteSettings = loadable(
-  () => import("components/SiteSettings/SiteSettingsComponent")
-);
-const UserSettings = loadable(
-  () => import("components/UserSettings/UserSettings")
-);
 
 export default function AppWithBar() {
   const location = useLocation();
