@@ -1,3 +1,0 @@
----
-aws_config_dir: "/home/{{ combine_user }}/.aws"
-aws_s3_profile: s3_read_write
