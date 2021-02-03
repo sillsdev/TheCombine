@@ -40,7 +40,7 @@
 
 - name: Install Docker Engine
   apt:
-    name: "{{ docker_packages }}"
+    name: "{{ docker_packages[apt_arch] }}"
   notify: reboot target
 
 - name: Configure Docker Image
@@ -59,6 +59,7 @@
     owner: root
     group: root
     mode: 0755
+  when: ansible_architecture == "x86_64"
 
 - name: Create link for /usr/bin/docker-compose
   file:
@@ -68,3 +69,5 @@
     owner: root
     group: root
     mode: 0777
+  when: ansible_architecture == "x86_64"
+

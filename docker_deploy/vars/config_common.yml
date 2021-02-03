@@ -1,4 +1,13 @@
 ---
+
+# Default values for Docker Installation
+architecture_map:
+  x86_64: amd64
+  aarch64: arm64
+
+apt_arch: "{{ architecture_map[ansible_architecture] }}"
+
+
 source_dir: "{{ ansible_env.HOME }}/src/combine"
 
 backend_env_file: ".env.backend.prod"
