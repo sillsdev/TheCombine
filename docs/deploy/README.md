@@ -99,15 +99,15 @@ Run the first playbook to install all the packages that are needed by _TheCombin
 files:
 
 ```
-cd <COMBINE>/docker_deploy
+cd <COMBINE>/deploy
 ansible-playbook playbook_target_setup.yml --limit <target> -u <target_user> -K --ask-vault-pass
 ```
 
 Notes:
 
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
-- The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/docker_deploy). If it is not, then you need to
-  create your own inventory file (see [below](#creating-your-own-inventory-file)).
+- The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
+  your own inventory file (see [below](#creating-your-own-inventory-file)).
 
 ### Running the _TheCombine_ Docker Containers
 
@@ -286,6 +286,5 @@ For example, use hidden file in your home directory, such as <tt>\$HOME/.ansible
 
 Currently, `docker-compose` is not managed by an _Ubuntu_ software repository and the software version is specified in
 the command that fetches the software from the source repository. To make managing software versions easier,
-`./docker_deploy/vars/packages.yml` has been created to specify the software version of `docker-compose` and similar
-packages. To update the version of one of these packages, update the version in this file and re-run the specified
-playbook.
+`./deploy/vars/packages.yml` has been created to specify the software version of `docker-compose` and similar packages.
+To update the version of one of these packages, update the version in this file and re-run the specified playbook.
