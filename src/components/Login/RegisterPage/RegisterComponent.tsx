@@ -20,7 +20,7 @@ import history, { Path } from "browserHistory";
 import { buttonSuccess } from "types/theme";
 import { passwordRequirements, usernameRequirements } from "utilities";
 
-export interface RegisterDispatchProps {
+interface RegisterDispatchProps {
   register?: (
     name: string,
     username: string,
@@ -36,7 +36,7 @@ export interface RegisterStateProps {
   failureMessage: string;
 }
 
-export interface RegisterProps {
+interface RegisterProps {
   returnToEmailInvite?: () => void;
 }
 

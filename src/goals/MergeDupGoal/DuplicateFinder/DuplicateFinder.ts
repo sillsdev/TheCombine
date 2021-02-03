@@ -2,7 +2,7 @@ import * as backend from "backend";
 import { hasSenses, Word } from "types/word";
 import { quicksort } from "utilities";
 
-export interface FinderParams {
+interface FinderParams {
   maxScore: number;
   maxCount: number;
   subCost: number;
@@ -25,7 +25,7 @@ export const DefaultParams: FinderParams = {
   lengthFilter: 2,
 };
 
-export interface ScoredWord {
+interface ScoredWord {
   word: Word;
   score: number;
 }

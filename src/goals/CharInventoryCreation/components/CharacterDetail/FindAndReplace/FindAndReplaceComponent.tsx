@@ -2,13 +2,13 @@ import { Button, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-export interface FindAndReplaceProps {
+interface FindAndReplaceProps {
   initialFindValue: string;
   allWords: string[];
   findAndReplace: (findValue: string, replaceValue: string) => void;
 }
 
-export interface FindAndReplaceState {
+interface FindAndReplaceState {
   findValue: string;
   replaceValue: string;
 }

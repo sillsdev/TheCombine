@@ -4,8 +4,6 @@ import {
   asyncAdvanceStep,
   asyncRefreshWords,
 } from "components/GoalTimeline/GoalsActions";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import {
   moveSenses,
   mergeAll,
@@ -14,14 +12,16 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 
-export function mapStateToProps(state: StoreState) {
+function mapStateToProps(state: StoreState) {
   return {
     words: state.mergeDuplicateGoal.tree.words,
   };
 }
 
-export function mapDispatchToProps(dispatch: StoreStateDispatch) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     advanceStep: () => {
       dispatch(asyncAdvanceStep());

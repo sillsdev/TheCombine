@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 import { renderToStaticMarkup } from "react-dom/server";
 
@@ -28,11 +24,11 @@ interface ImportState {
   uploadState: UploadState;
 }
 
-export class ProjectImport extends React.Component<
-  ImportProps & LocalizeContextProps,
+export default class ProjectImport extends React.Component<
+  ImportProps,
   ImportState
 > {
-  constructor(props: ImportProps & LocalizeContextProps) {
+  constructor(props: ImportProps) {
     super(props);
     this.updateLiftFile = this.updateLiftFile.bind(this);
     this.state = {
@@ -126,5 +122,3 @@ export class ProjectImport extends React.Component<
     );
   }
 }
-
-export default withLocalize(ProjectImport);

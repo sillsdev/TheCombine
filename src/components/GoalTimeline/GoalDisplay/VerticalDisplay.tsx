@@ -1,10 +1,6 @@
-import React from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
 import { Typography, GridList, GridListTile, Button } from "@material-ui/core";
+import React from "react";
+import { Translate } from "react-localize-redux";
 
 import { Goal } from "types/goals";
 
@@ -22,24 +18,25 @@ const style = {
   },
 };
 
-export interface VerticalDisplayProps {
+interface VerticalDisplayProps {
   data: Goal[];
   height: number;
   numPanes: number;
   scrollToEnd: boolean;
   handleChange: (name: string) => void;
 }
-export interface VerticalDisplayStates {
+
+interface VerticalDisplayStates {
   scrollVisible: boolean;
 }
 
-export class VerticalDisplay extends React.Component<
-  VerticalDisplayProps & LocalizeContextProps,
+export default class VerticalDisplay extends React.Component<
+  VerticalDisplayProps,
   VerticalDisplayStates
 > {
   optionHeight: number;
 
-  constructor(props: VerticalDisplayProps & LocalizeContextProps) {
+  constructor(props: VerticalDisplayProps) {
     super(props);
     this.state = { scrollVisible: false };
     this.optionHeight = this.props.height / 3 - 1.25;
@@ -118,5 +115,3 @@ export class VerticalDisplay extends React.Component<
     );
   }
 }
-
-export default withLocalize(VerticalDisplay);

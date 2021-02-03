@@ -167,7 +167,7 @@ interface ImmutableWritingSystemProps {
   iconAction?: () => void;
 }
 
-export function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
+function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
   return (
     <Grid container spacing={1}>
       {props.index !== undefined && <Grid item>{`${props.index + 1}. `}</Grid>}
