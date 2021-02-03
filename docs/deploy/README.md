@@ -1,4 +1,4 @@
-# Deploy _TheCombine_ In Docker Containers
+# How To Deploy _TheCombine_
 
 This document describes how to install the framework that is needed to deploy _TheCombine_ to a target machine in Docker
 containers.
