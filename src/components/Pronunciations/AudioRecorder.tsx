@@ -3,7 +3,7 @@ import React from "react";
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 
-export interface RecorderProps {
+interface RecorderProps {
   wordId: string;
   recorder?: Recorder;
   uploadAudio?: (wordId: string, audioFile: File) => void;

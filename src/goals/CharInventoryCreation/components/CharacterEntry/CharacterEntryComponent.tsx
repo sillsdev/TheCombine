@@ -1,16 +1,12 @@
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
 
-import theme from "types/theme";
 import CharactersInput from "goals/CharInventoryCreation/components/CharacterEntry/CharactersInput";
+import theme from "types/theme";
 
-export interface CharacterEntryProps {
+interface CharacterEntryProps {
   setValidCharacters: (inventory: string[]) => void;
   validCharacters: string[];
   setRejectedCharacters: (inventory: string[]) => void;
@@ -25,11 +21,11 @@ interface CharacterEntryState {
  * Allows for viewing and entering accepted and rejected characters in a
  * character set
  */
-export class CharacterEntry extends React.Component<
-  CharacterEntryProps & LocalizeContextProps,
+export default class CharacterEntry extends React.Component<
+  CharacterEntryProps,
   CharacterEntryState
 > {
-  constructor(props: CharacterEntryProps & LocalizeContextProps) {
+  constructor(props: CharacterEntryProps) {
     super(props);
     this.state = {
       checked: false,
@@ -99,5 +95,3 @@ export class CharacterEntry extends React.Component<
     );
   }
 }
-
-export default withLocalize(CharacterEntry);

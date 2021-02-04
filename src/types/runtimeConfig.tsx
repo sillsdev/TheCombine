@@ -1,4 +1,4 @@
-export interface RuntimeConfigItems {
+interface RuntimeConfigItems {
   baseUrl: string;
   captchaRequired: boolean;
   captchaSiteKey: string;

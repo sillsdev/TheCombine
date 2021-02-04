@@ -1,6 +1,6 @@
 import { Card, Grid, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
-import { LocalizeContextProps, Translate } from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
@@ -10,7 +10,7 @@ export interface ResetRequestDispatchProps {
   passwordResetRequest: (email: string) => void;
 }
 
-export interface ResetRequestState {
+interface ResetRequestState {
   emailOrUsername: string;
   emailOrUsernameExists: boolean;
   loading: boolean;
@@ -18,10 +18,10 @@ export interface ResetRequestState {
 }
 
 export default class ResetRequest extends React.Component<
-  ResetRequestDispatchProps & LocalizeContextProps,
+  ResetRequestDispatchProps,
   ResetRequestState
 > {
-  constructor(props: ResetRequestDispatchProps & LocalizeContextProps) {
+  constructor(props: ResetRequestDispatchProps) {
     super(props);
     this.state = {
       emailOrUsernameExists: true,

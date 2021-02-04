@@ -1,16 +1,13 @@
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import BaseGoalSelect from "goals/DefaultGoal/BaseGoalWidget/BaseGoalWidget";
 import { Goal } from "types/goals";
 
-export interface GoalSuggestionsProps {
+interface GoalSuggestionsProps {
   suggestions: Goal[];
 }
 
-export class GoalSuggestions extends React.Component<
-  GoalSuggestionsProps & LocalizeContextProps
-> {
+export default class GoalSuggestions extends React.Component<GoalSuggestionsProps> {
   render() {
     return (
       <div className="GoalSuggestions">
@@ -21,5 +18,3 @@ export class GoalSuggestions extends React.Component<
     );
   }
 }
-
-export default withLocalize(GoalSuggestions);
