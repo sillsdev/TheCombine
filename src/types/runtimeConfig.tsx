@@ -11,7 +11,7 @@ declare global {
 }
 
 const defaultConfig: RuntimeConfigItems = {
-  baseUrl: "https://localhost:5001",
+  baseUrl: "http://localhost:5000",
   captchaRequired: true,
   captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
 };
