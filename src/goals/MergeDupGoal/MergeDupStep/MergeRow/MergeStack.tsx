@@ -11,14 +11,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 
-import { StoreState } from "types";
 import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import {
   Hash,
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { StoreState } from "types";
 
-export interface MergeStackProps {
+interface MergeStackProps {
   wordID: string;
   senseID: string;
   sense: Hash<string>;

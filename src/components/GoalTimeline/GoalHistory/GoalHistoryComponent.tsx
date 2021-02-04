@@ -1,16 +1,13 @@
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 import BaseGoalSelect from "goals/DefaultGoal/BaseGoalWidget/BaseGoalWidget";
 import { Goal } from "types/goals";
 
-export interface GoalHistoryProps {
+interface GoalHistoryProps {
   history: Goal[];
 }
 
-export class GoalHistory extends React.Component<
-  GoalHistoryProps & LocalizeContextProps
-> {
+export default class GoalHistory extends React.Component<GoalHistoryProps> {
   render() {
     return (
       <div className="GoalHistory">
@@ -21,5 +18,3 @@ export class GoalHistory extends React.Component<
     );
   }
 }
-
-export default withLocalize(GoalHistory);

@@ -1,8 +1,8 @@
+import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
-import { Typography } from "@material-ui/core";
 
-export interface CharacterInfoProps {
+interface CharacterInfoProps {
   character: string;
   allWords: string[];
 }

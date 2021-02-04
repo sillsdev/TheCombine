@@ -7,19 +7,15 @@ import {
 } from "@material-ui/core";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { projectDuplicateCheck } from "backend";
-import { WritingSystem } from "types/project";
-import theme from "types/theme";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { WritingSystem } from "types/project";
+import theme from "types/theme";
 
-export interface CreateProjectProps {
+interface CreateProjectProps {
   asyncCreateProject: (
     name: string,
     vernacularLanguage: WritingSystem,
@@ -41,11 +37,11 @@ interface CreateProjectState {
   fileName?: string;
 }
 
-export class CreateProject extends React.Component<
-  CreateProjectProps & LocalizeContextProps,
+export default class CreateProject extends React.Component<
+  CreateProjectProps,
   CreateProjectState
 > {
-  constructor(props: CreateProjectProps & LocalizeContextProps) {
+  constructor(props: CreateProjectProps) {
     super(props);
 
     this.state = {
@@ -277,5 +273,3 @@ export class CreateProject extends React.Component<
     );
   }
 }
-
-export default withLocalize(CreateProject);

@@ -1,12 +1,11 @@
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { RouteComponentProps } from "react-router-dom";
 
 import * as Backend from "backend";
 import history, { Path } from "browserHistory";
 import Register from "components/Login/RegisterPage/RegisterComponent";
 
-export interface ProjectInviteDispatchProps {
+interface ProjectInviteDispatchProps {
   register?: (
     name: string,
     user: string,
@@ -27,17 +26,13 @@ interface ProjectInviteState {
   isAlreadyUser: boolean;
 }
 
-class ProjectInvite extends React.Component<
-  ProjectInviteDispatchProps &
-    ProjectInviteStateProps &
-    LocalizeContextProps &
-    RouteComponentProps,
+export default class ProjectInvite extends React.Component<
+  ProjectInviteDispatchProps & ProjectInviteStateProps & RouteComponentProps,
   ProjectInviteState
 > {
   constructor(
     props: ProjectInviteDispatchProps &
       ProjectInviteStateProps &
-      LocalizeContextProps &
       RouteComponentProps
   ) {
     super(props);
@@ -100,5 +95,3 @@ class ProjectInvite extends React.Component<
     );
   }
 }
-
-export default withLocalize(ProjectInvite);

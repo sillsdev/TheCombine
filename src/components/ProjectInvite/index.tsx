@@ -18,7 +18,7 @@ function mapStateToProps(state: StoreState): ProjectInviteStateProps {
   };
 }
 
-export function mapDispatchToProps(dispatch: StoreStateDispatch) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     register: (name: string, user: string, email: string, password: string) => {
       dispatch(asyncRegisterForEmailInvite(name, user, email, password));
