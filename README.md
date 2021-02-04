@@ -198,6 +198,10 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+#### `npm run analyze`
+
+Run after `npm run build` to analyze the contents build bundle chunks.
+
 ### `npm run import-sem-doms`
 
 Imports Semantic Domains from the provided xml file.
