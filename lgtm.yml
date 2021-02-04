@@ -1,0 +1,6 @@
+
+path_classifiers:
+  # Exclude our spelling dictionaries from analysis
+  library:
+    - exclude: src/resources/dictionaries/*.aff.ts
+    - exclude: src/resources/dictionaries/*.dic.ts
