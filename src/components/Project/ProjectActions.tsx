@@ -3,14 +3,11 @@ import { StoreStateDispatch } from "types/actions";
 import { Project } from "types/project";
 
 export const SET_CURRENT_PROJECT = "SET_CURRENT_PROJECT";
-export type SET_CURRENT_PROJECT = typeof SET_CURRENT_PROJECT;
 
-type ProjectType = SET_CURRENT_PROJECT;
-
-//action types
+type ProjectActionType = typeof SET_CURRENT_PROJECT;
 
 export interface ProjectAction {
-  type: ProjectType;
+  type: ProjectActionType;
   payload: Project;
 }
 
