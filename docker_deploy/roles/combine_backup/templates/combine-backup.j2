@@ -7,10 +7,11 @@
 set -e
 
 VERBOSE="0"
+VERBOSE_CMD="echo"
 
 echo_verbose() {
   if [ "${VERBOSE}" == "1" ] ; then
-    echo $@
+    ${VERBOSE_CMD} $@
   fi
 }
 
@@ -24,27 +25,40 @@ usage() {
 USAGE
 }
 
+if [[ $- == *i* ]] ; then
+    # interactive shell
+    EXEC_OPTS=""
+    QUIET_OPT=""
+else
+    EXEC_OPTS="-T"
+    # currently, "--quiet" works for both mongodump and aws commands
+    QUIET_OPT="--quiet"
+fi
+
 while [[ $# -gt 0 ]] ; do
   arg="$1"
 
   case ${arg} in
     -h|--help)
-      usage
-      exit 0
-      ;;
+        usage
+        exit 0
+        ;;
     -v|--verbose)
-      VERBOSE="1"
-      ;;
+        VERBOSE="1"
+        ;;
+    -s|--syslog)
+        VERBOSE_CMD="logger -p local0.notice -t ${0##*/}[$$]"
+        ;;
     -?)
-      echo "Invalid option: ${arg}."
-      usage
-      exit 2
-      ;;
+        echo "Invalid option: ${arg}."
+        usage
+        exit 2
+        ;;
     *)
-      echo "Unrecognized argument: ${arg}"
-      usage
-      exit 1
-      ;;
+        echo "Unrecognized argument: ${arg}"
+        usage
+        exit 1
+        ;;
   esac
   shift
 done
@@ -74,15 +88,15 @@ else
 fi
 
 echo_verbose "3. Stop the current containers."
-docker-compose down
+/usr/local/bin/docker-compose down
 
 echo_verbose "4. Start up just the backend and the database."
-aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
-docker-compose up --detach database backend
+/usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
+/usr/local/bin/docker-compose up --detach database backend
 
 
 echo_verbose "5. Dump the database."
-docker-compose exec database mongodump --db CombineDatabase --gzip --quiet
+/usr/local/bin/docker-compose exec ${EXEC_OPTS} database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${DB_CONTAINER}:${DB_FILES_SUBDIR}/ ${BACKUP_DIR}
 
@@ -92,7 +106,7 @@ docker cp ${BE_CONTAINER}:/home/app/${BACKEND_FILES_SUBDIR}/ ${BACKUP_DIR}
 
 echo_verbose "7. Create the tarball for the backup."
 cd ${BACKUP_DIR}
-tar --create --file=${BACKUP_FILE} --gzip --verbose ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
+tar --create --file=${BACKUP_FILE} --gzip ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
 
 echo_verbose "8. Remove old backup files."
 # Running in ${BACKUP_DIR}
@@ -101,7 +115,7 @@ ALL_BACKUPS=(`ls combine-backup*.tar.gz`)
 
 for bu in "${ALL_BACKUPS[@]}"; do
   if [ "$bu" != "$BACKUP_FILE" ] ; then
-  	  echo "Removing $bu"
+      echo_verbose "Removing $bu"
       rm $bu
   fi
 done
@@ -109,9 +123,9 @@ done
 echo_verbose "9. Push backup to AWS S3 storage."
 #    need to specify full path because $PATH does not contain
 #    /usr/local/bin when run as a cron job
-/usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
+/usr/local/bin/aws ${QUIET_OPT} s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
 
 echo_verbose "10. Restart the containers."
 cd ${COMBINE_APP_DIR}
-docker-compose down
-docker-compose up --detach
+/usr/local/bin/docker-compose down
+/usr/local/bin/docker-compose up --detach

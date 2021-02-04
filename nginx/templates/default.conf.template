@@ -25,6 +25,10 @@ server {
     # Allow clients to import large projects.
     client_max_body_size  250m;
 
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
     location /v1 {
         proxy_pass         http://backend:5000;
         proxy_http_version 1.1;

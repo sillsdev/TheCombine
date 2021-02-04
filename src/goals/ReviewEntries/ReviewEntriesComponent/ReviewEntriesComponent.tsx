@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import MaterialTable from "material-table";
+import MaterialTable from "@material-table/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
