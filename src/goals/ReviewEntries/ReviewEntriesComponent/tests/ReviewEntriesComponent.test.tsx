@@ -46,7 +46,7 @@ jest.mock("utilities", () => {
   };
 });
 // To deal with the table not wanting to behave in testing.
-jest.mock("material-table", () => {
+jest.mock("@material-table/core", () => {
   return {
     __esModule: true,
     default: () => mockMaterialTable(),
