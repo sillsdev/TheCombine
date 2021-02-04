@@ -11,4 +11,3 @@ path_classifiers:
     - "Backend.Tests/*"
     - "src/**/tests/*"
     - "src/**/*.tests.tsx"
-    
