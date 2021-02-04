@@ -1,13 +1,5 @@
 path_classifiers:
-  docs:
-    - "docs/*""
-    - "user_guide/docs/*""
+  # Classify our spelling dictionaries as library content
   library:
-    - "Backend/Data/*"
     - "src/resources/dictionaries/*.aff.ts"
     - "src/resources/dictionaries/*.dic.ts"
-    - "src/resources/semantic-domains/*.json"
-  test:
-    - "Backend.Tests/*"
-    - "src/**/tests/*"
-    - "src/**/*.test.tsx"
