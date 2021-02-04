@@ -1,3 +1,4 @@
+import loadable from "@loadable/component";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
@@ -9,7 +10,8 @@ import PasswordReset from "components/PasswordReset/ResetPage";
 import ResetRequest from "components/PasswordReset/RequestPage";
 import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite";
-import AppWithBar from "components/App/AppLoggedIn";
+
+const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
 /**
  * The top-level component

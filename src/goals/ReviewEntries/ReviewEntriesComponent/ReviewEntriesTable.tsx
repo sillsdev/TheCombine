@@ -1,4 +1,4 @@
-import MaterialTable from "material-table";
+import MaterialTable from "@material-table/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
