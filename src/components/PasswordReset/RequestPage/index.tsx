@@ -6,7 +6,7 @@ import ResetRequest, {
   ResetRequestDispatchProps,
 } from "components/PasswordReset/RequestPage/component";
 
-export function mapDispatchToProps(
+function mapDispatchToProps(
   dispatch: StoreStateDispatch
 ): ResetRequestDispatchProps {
   return {

@@ -15,7 +15,7 @@ import {
 import { CharacterSetEntry } from "goals/CharInventoryCreation//CharacterInventoryReducer";
 import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
 
-export interface CharacterListProps {
+interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;
   allCharacters: CharacterSetEntry[];
 }

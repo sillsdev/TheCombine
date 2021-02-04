@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import { asyncRegister, registerReset } from "components/Login/LoginActions";
 import Register, {
   RegisterStateProps,
 } from "components/Login/RegisterPage/RegisterComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
   return {
@@ -15,7 +15,7 @@ function mapStateToProps(state: StoreState): RegisterStateProps {
   };
 }
 
-export function mapDispatchToProps(dispatch: StoreStateDispatch) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     register: (
       name: string,

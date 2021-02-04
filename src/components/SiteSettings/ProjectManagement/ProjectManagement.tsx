@@ -3,10 +3,10 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { getAllProjects } from "backend";
-import { Project } from "types/project";
-import theme from "types/theme";
 import ExportProjectButton from "components/ProjectExport";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
+import { Project } from "types/project";
+import theme from "types/theme";
 
 interface ProjectManagementState {
   activeProjects: Project[];

@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import { Typography, GridList, GridListTile, Button } from "@material-ui/core";
 
 import { Goal } from "types/goals";
@@ -22,7 +18,7 @@ const style = {
   },
 };
 
-export interface HorizontalDisplayProps {
+interface HorizontalDisplayProps {
   data: Goal[];
   width: number;
   numPanes: number;
@@ -30,12 +26,10 @@ export interface HorizontalDisplayProps {
   handleChange: (name: string) => void;
 }
 
-export class HorizontalDisplay extends React.Component<
-  HorizontalDisplayProps & LocalizeContextProps
-> {
+export default class HorizontalDisplay extends React.Component<HorizontalDisplayProps> {
   optionWidth: number;
 
-  constructor(props: HorizontalDisplayProps & LocalizeContextProps) {
+  constructor(props: HorizontalDisplayProps) {
     super(props);
 
     this.optionWidth = this.props.width / 3 - 1;
@@ -105,5 +99,3 @@ export class HorizontalDisplay extends React.Component<
     );
   }
 }
-
-export default withLocalize(HorizontalDisplay);

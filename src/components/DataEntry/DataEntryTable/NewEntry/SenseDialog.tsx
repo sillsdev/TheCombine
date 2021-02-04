@@ -7,25 +7,21 @@ import {
   withStyles,
 } from "@material-ui/core";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
-import theme from "types/theme";
-import { Sense, Word } from "types/word";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { parseWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "types/theme";
+import { Sense, Word } from "types/word";
 
-function SenseDialog(
-  props: {
-    selectedWord: Word;
-    open: boolean;
-    handleClose: (senseIndex?: number) => void;
-    analysisLang: string;
-  } & LocalizeContextProps
-) {
+interface SenseDialogProps {
+  selectedWord: Word;
+  open: boolean;
+  handleClose: (senseIndex?: number) => void;
+  analysisLang: string;
+}
+
+export default function SenseDialog(props: SenseDialogProps) {
   return (
     <Dialog
       open={props.open}
@@ -100,4 +96,3 @@ export function SenseList(props: SenseListProps) {
     </React.Fragment>
   );
 }
-export default withLocalize(SenseDialog);

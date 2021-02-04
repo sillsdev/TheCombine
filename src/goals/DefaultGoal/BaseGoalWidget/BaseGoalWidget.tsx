@@ -1,19 +1,17 @@
+import { Card, CardContent } from "@material-ui/core";
 import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
   Translate,
 } from "react-localize-redux";
-import { Card, CardContent } from "@material-ui/core";
 
 import { GoalProps } from "types/goals";
 
 // Width of each card
-export const WIDTH = 200;
-
+const WIDTH = 200;
 // The percent of regular size that deselected cards shrink to
 const SCALE_FACTOR_FOR_DESELECTED = 0.9;
-
 // Width of each not-selected card
 const DESELECTED_WIDTH = WIDTH * SCALE_FACTOR_FOR_DESELECTED;
 
