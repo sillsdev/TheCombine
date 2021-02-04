@@ -10,4 +10,4 @@ path_classifiers:
   test:
     - "Backend.Tests/*"
     - "src/**/tests/*"
-    - "src/**/*.tests.tsx"
+    - "src/**/*.test.tsx"
