@@ -55,14 +55,11 @@ namespace BackendFramework.Services
             return deleted.DeletedCount != 0;
         }
 
-        /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>
-        /// <returns> The word created </returns>
-        public async Task<Word> Create(Word word)
+        /// <summary>
+        /// If the <see cref="Word"/> Created or Modified times are blank, fill them in the current time.
+        /// </summary>
+        private static void PopulateBlankWordTimes(Word word)
         {
-            PopulateWordGuids(word);
-
-            // Only update date time stamps if they are blank to allow services such as LiftApiService to set before
-            // creation.
             if (word.Created.Length == 0)
             {
                 // Use Roundtrip-suitable ISO 8601 format.
@@ -72,7 +69,18 @@ namespace BackendFramework.Services
             {
                 word.Modified = Time.UtcNowIso8601();
             }
+        }
 
+        /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
+        /// <returns> The word created </returns>
+        public async Task<Word> Create(Word word)
+        {
+            PopulateWordGuids(word);
+            PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
@@ -96,9 +104,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the WordsCollection </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
         /// <returns> The word created </returns>
         public async Task<Word> Add(Word word)
         {
+            PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             return word;
         }
