@@ -391,7 +391,7 @@ To build the user guide and serve it dynamically (automatically reloading on cha
 (venv) $ tox -e user-guide-serve
 ```
 
-To build the user guide statically into `user-guide/site`:
+To build the user guide statically into `docs/user-guide/site`:
 
 ```bash
 (venv) $ tox -e user-guide
