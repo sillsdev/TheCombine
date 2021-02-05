@@ -2,14 +2,12 @@ import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { User } from "types/user";
 import * as LocalStorage from "backend/localStorage";
 
-const mockAvatar: string = "mockAvatar";
+const mockAvatar = "mockAvatar";
 const mockBlacklist: Hash<boolean> = { mockKey: true };
-const mockProjectId: string = "mockProjId";
-const mockUserId: string = "mockUserId";
-const mockUser: User = {
-  ...new User("mockName", "mockUsername", "mockPass"),
-  id: mockUserId,
-};
+const mockProjectId = "mockProjId";
+const mockUserId = "mockUserId";
+const mockUser = new User("mockName", "mockUsername", "mockPass");
+mockUser.id = mockUserId;
 
 let oldAvatar: string;
 let oldMergeDupsBlacklist: Hash<boolean>;
@@ -20,6 +18,7 @@ beforeAll(() => {
   oldAvatar = LocalStorage.getAvatar();
   oldMergeDupsBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
+  oldUser = LocalStorage.getCurrentUser();
 });
 
 beforeEach(() => {

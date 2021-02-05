@@ -1,15 +1,15 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { MergeWord, multiGlossWord, Sense, State, Word } from "types/word";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { mergeAll } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
+  Hash,
   MergeData,
   MergeTree,
-  Hash,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { MergeWord, multiGlossWord, Sense, State, Word } from "types/word";
 
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList = {
@@ -69,7 +69,7 @@ const mockMerge4a: parentWithMergeChildren = {
 const mockMerges = [mockMerge2a, mockMerge2b, mockMerge3a, mockMerge4a];
 const mergeResults = [["WA2", "WB2"], ["WB2"], ["WA3", "WB2"], ["WA4"]];
 const mergeList: Hash<string[]> = {};
-for (let i = 0; i <= mockMerges.length; i++) {
+for (let i = 0; i < mockMerges.length; i++) {
   mergeList[JSON.stringify(mockMerges[i])] = mergeResults[i];
 }
 

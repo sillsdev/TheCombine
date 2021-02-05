@@ -135,7 +135,7 @@ namespace BackendFramework.Services
             addParent.History = new List<string>();
             addParent.Audio = new List<string>();
 
-            // Generate new child words form child word field
+            // Generate new child words from ChildrenWords.
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
                 // Get child word
@@ -145,16 +145,16 @@ namespace BackendFramework.Services
                     throw new KeyNotFoundException($"Unable to locate word: ${newChildWordState.SrcWordId}");
                 }
 
-                // Copy over audio if child doesn't have own surviving entry
+                // Copy over audio if child doesn't have own surviving entry.
                 if (!newChildWordState.SenseStates.Exists(x => x == State.Separate))
                 {
                     addParent.Audio.AddRange(currentChildWord.Audio);
                 }
 
-                // Remove child from frontier
+                // Remove child from frontier.
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
-                // Iterate through senses of that word and change to corresponding state in mergewords
+                // Iterate through senses of that word and change to corresponding state in mergewords.
                 if (currentChildWord.Senses.Count != newChildWordState.SenseStates.Count)
                 {
                     throw new FormatException("Sense counts don't match");
