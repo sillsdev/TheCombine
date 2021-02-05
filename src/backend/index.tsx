@@ -99,14 +99,13 @@ export async function mergeWords(
     SrcWordID: child.wordID,
     SenseStates: child.senses,
   }));
-  let merge = {
+  let mergeWords = {
     Parent: parent,
     ChildrenWords: childrenWords,
-    Time: Date.now().toString(),
   };
   let resp = await backendServer.put(
     `projects/${LocalStorage.getProjectId()}/words`,
-    merge,
+    mergeWords,
     { headers: authHeader() }
   );
   return resp.data;
