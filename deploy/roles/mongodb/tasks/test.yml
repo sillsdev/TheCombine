@@ -1,5 +1,0 @@
----
-
-  - name: Test MongoDB installation
-    debug:
-      msg: "TO DO: MongoDB installation tests"

@@ -1,42 +1,131 @@
 #!/bin/bash
 
-DATE_STR=`date +%Y-%m-%d-%T`
-COMBINE_HOST={{ ansible_hostname }}
-BACKUP_FILE="combine-backup-${DATE_STR}.tar.gz"
+######################################################
+# Backup job for docker containers running TheCombine
+######################################################
+
+set -e
+
+VERBOSE="0"
+VERBOSE_CMD="echo"
+
+echo_verbose() {
+  if [ "${VERBOSE}" == "1" ] ; then
+    ${VERBOSE_CMD} $@
+  fi
+}
+
+usage() {
+  cat <<USAGE
+  Usage: $0 [-h] [-v]
+     Creates a backup of the combine database and backend containers
+  Options:
+     -h: help - print this message
+     -v: verbose - print progress of backup
+USAGE
+}
+
+if [[ $- == *i* ]] ; then
+    # interactive shell
+    EXEC_OPTS=""
+    QUIET_OPT=""
+else
+    EXEC_OPTS="-T"
+    # currently, "--quiet" works for both mongodump and aws commands
+    QUIET_OPT="--quiet"
+fi
+
+while [[ $# -gt 0 ]] ; do
+  arg="$1"
+
+  case ${arg} in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+    -v|--verbose)
+        VERBOSE="1"
+        ;;
+    -s|--syslog)
+        VERBOSE_CMD="logger -p local0.notice -t ${0##*/}[$$]"
+        ;;
+    -?)
+        echo "Invalid option: ${arg}."
+        usage
+        exit 2
+        ;;
+    *)
+        echo "Unrecognized argument: ${arg}"
+        usage
+        exit 1
+        ;;
+  esac
+  shift
+done
+
+echo_verbose "1. Setup some useful environment variables."
+DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
+COMBINE_HOST="{{ combine_server_name | replace('.', '-') }}"
+BACKUP_FILE="combine-backup.tar.gz"
 AWS_FILE="s3://{{ aws_s3_backup_loc }}/${COMBINE_HOST}-${DATE_STR}.tar.gz"
-COMBINE_HOME=${COMBINE_HOME:="/home/combine"}
-BACKUP_DIR="${COMBINE_HOME}/backups"
+COMBINE_APP_DIR=${COMBINE_APP_DIR:="{{ combine_app_dir }}"}
+BACKUP_DIR=${BACKUP_DIR:="{{ combine_backup_dir }}"}
+BACKEND_FILES_SUBDIR="{{ backend_files_subdir }}"
+DB_FILES_SUBDIR="{{ mongo_files_subdir }}"
 
+cd ${COMBINE_APP_DIR}
+
+echo_verbose "2. Prepare the backup directory."
 if [ ! -e "${BACKUP_DIR}" ] ; then
-  mkdir ${BACKUP_DIR}
+  mkdir -p ${BACKUP_DIR}
+else
+  for item in ${BACKUP_DIR}/${DB_FILES_SUBDIR} ${BACKUP_DIR}/${BACKEND_FILES_SUBDIR} ${BACKUP_DIR}/${BACKUP_FILE}
+  do
+    if [ -e "${item}" ] ; then
+      rm -rf ${item}
+    fi
+  done
 fi
 
-cd ${COMBINE_HOME}
-# Dump the database - use default output directory, 'dump'
-mongodump --db CombineDatabase --gzip --quiet
-# Create compressed tarball of the database dump and the backend files
-tar czf ${BACKUP_DIR}/${BACKUP_FILE} dump .CombineFiles
+echo_verbose "3. Stop the current containers."
+/usr/local/bin/docker-compose down
 
-# Cleanup
-# Remove the dump files
-if [ -e dump ] ; then
-  rm -rf dump
-fi
+echo_verbose "4. Start up just the backend and the database."
+/usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
+/usr/local/bin/docker-compose up --detach database backend
 
-# Remove old backups
+
+echo_verbose "5. Dump the database."
+/usr/local/bin/docker-compose exec ${EXEC_OPTS} database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
+DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
+docker cp ${DB_CONTAINER}:${DB_FILES_SUBDIR}/ ${BACKUP_DIR}
+
+echo_verbose "6. Copy the backend files (commands are run relative the 'app' user's home directory)."
+BE_CONTAINER=`docker ps | grep backend | sed "s/.* \([^ ][^ ]*\)$/\1/"`
+docker cp ${BE_CONTAINER}:/home/app/${BACKEND_FILES_SUBDIR}/ ${BACKUP_DIR}
+
+echo_verbose "7. Create the tarball for the backup."
 cd ${BACKUP_DIR}
+tar --create --file=${BACKUP_FILE} --gzip ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
+
+echo_verbose "8. Remove old backup files."
+# Running in ${BACKUP_DIR}
+rm -rf ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
 ALL_BACKUPS=(`ls combine-backup*.tar.gz`)
 
 for bu in "${ALL_BACKUPS[@]}"; do
   if [ "$bu" != "$BACKUP_FILE" ] ; then
-	  echo "Removing $bu"
-    rm $bu
+      echo_verbose "Removing $bu"
+      rm $bu
   fi
 done
 
-# if aws-cli is installed, push backup to AWS S3 storage
-# need to specify full path because $PATH does not contain
-# /usr/local/bin when run as a cron job
-if [ -e /usr/local/bin/aws ] ; then
-  /usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
-fi
+echo_verbose "9. Push backup to AWS S3 storage."
+#    need to specify full path because $PATH does not contain
+#    /usr/local/bin when run as a cron job
+/usr/local/bin/aws ${QUIET_OPT} s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
+
+echo_verbose "10. Restart the containers."
+cd ${COMBINE_APP_DIR}
+/usr/local/bin/docker-compose down
+/usr/local/bin/docker-compose up --detach
