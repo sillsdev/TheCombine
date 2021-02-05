@@ -108,22 +108,16 @@ echo_verbose "7. Create the tarball for the backup."
 cd ${BACKUP_DIR}
 tar --create --file=${BACKUP_FILE} --gzip ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
 
-echo_verbose "8. Remove old backup files."
-# Running in ${BACKUP_DIR}
-rm -rf ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
-ALL_BACKUPS=(`ls combine-backup*.tar.gz`)
-
-for bu in "${ALL_BACKUPS[@]}"; do
-  if [ "$bu" != "$BACKUP_FILE" ] ; then
-      echo_verbose "Removing $bu"
-      rm $bu
-  fi
-done
-
-echo_verbose "9. Push backup to AWS S3 storage."
+echo_verbose "8. Push backup to AWS S3 storage."
 #    need to specify full path because $PATH does not contain
 #    /usr/local/bin when run as a cron job
 /usr/local/bin/aws ${QUIET_OPT} s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
+
+echo_verbose "9. Remove backup files."
+# Running in ${BACKUP_DIR}
+rm -rf ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
+ALL_BACKUPS=(`ls combine-backup*.tar.gz`)
+rm ${BACKUP_FILE}
 
 echo_verbose "10. Restart the containers."
 cd ${COMBINE_APP_DIR}
