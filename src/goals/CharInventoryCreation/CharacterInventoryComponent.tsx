@@ -12,15 +12,15 @@ import * as React from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
-import { Project } from "types/project";
-import theme from "types/theme";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
 import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
 import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
+import { Project } from "types/project";
+import theme from "types/theme";
 
-export interface CharacterInventoryProps {
+interface CharacterInventoryProps {
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   setSelectedCharacter: (character: string) => void;

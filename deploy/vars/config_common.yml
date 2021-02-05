@@ -1,134 +1,66 @@
 ---
-# Configuration variable that are common to production and development
+source_dir: "{{ ansible_env.HOME }}/src/combine"
 
-# configure URL to access the application
-url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('languagetechnology.org', true) }}"
-url_hostname: "thecombine"
+backend_env_file: ".env.backend.prod"
+backend_env_dir: "{{ source_dir }}/Backend"
 
-www_app_dir: "/var/www/{{ url_hostname }}.org/htdocs"
-www_app_owner: www-data
-www_app_group: www-data
+frontend_env_file: ".env.frontend.prod"
+frontend_env_dir: "{{ source_dir }}"
 
-# Combine Application variables
-www_uploads_dir: /var/thecombine/uploads
-www_uploads_owner: www-data
-www_uploads_group: www-data
-
-combine_backend_dir: /home/{{ combine_user }}/Backend
-
-###############################################
-# non-root user for accessing certificates from
-# the certificate server,
-#(thecombine.languagetechnology.org)
-###############################################
-cert_server_user: cert-user
-cert_server_login_key_path: site_files/root_keys
-
-# mongo_path: /hddlinux/mongodb
-mongo_path: /var/lib/mongodb
-
-### Version/distro
-base_distribution: "{{ansible_distribution | lower}}"
-base_distribution_release: "{{ansible_distribution_release}}"
-
-###############################################
-# Configuration for Combine User (& SSL config)
-###############################################
 combine_user: combine
-combine_group: combine
+combine_group: app
+combine_app_dir: /opt/combine
+combine_backup_dir: "{{ combine_app_dir }}/backups"
+combine_restore_dir: "{{ combine_app_dir }}/restore"
 
-###############################################
-# Backend logging levels
-# To override the default logging level, run the playbook
-# with the following option:
-#  -e app_loglevel='Debug'
-###############################################
-backend_loglevel_default: "{{ app_loglevel | default('Information') }}"
-backend_loglevel_system: "{{ sys_loglevel | default('Information') }}"
-backend_loglevel_microsoft: "{{ ms_loglevel | default('Information') }}"
+# common configuration items that are shared between the certmgr and frontend
+# containers and across target types:
+ssl_dir: "/etc/cert_store/nginx/{{ combine_server_name }}"
+ssl_certificate: "{{ ssl_dir }}/fullchain.pem"
+ssl_private_key: "{{ ssl_dir }}/privkey.pem"
 
-###############################################
-# SSL config for certificate for Backend Web Server (Kestrel)
-###############################################
-backend_cert_name: "localhost.pem"
-backend_key_name: "localhost.key"
-backend_csr_name: "localhost.csr"
+# SSL Certificate variables
+# for both Let's Encrypt and Self-signed certs
+#
+# The following variables must be defined in the group_vars or host_vars files
+# for your target:
+#   AWS S3 storage configuration
+#     - aws_s3_loc
+#     - aws_s3_backup_loc
+#     - aws_s3_cert_loc
 
-backend_pfx_cert_name: "localhost.pfx"
-backend_cert_email: jimgrady.jg@gmail.com
-backend_cert_country: US
-backend_cert_state: Texas
-backend_cert_locality: Dallas
-backend_cert_org: SIL International
+combine_cert_env_vars:
+  - key: "CERT_MODE"
+    value: "{{ cert_mode }}"
+  - key: "CERT_EMAIL"
+    value: "{{ cert_email }}"
+  - key: "CERT_STAGING"
+    value: "{{ cert_is_staging }}"
+  - key: "MAX_CONNECT_TRIES"
+    value: "{{ cert_max_connect_tries }}"
+  - key: "SERVER_NAME"
+    value: "{{ combine_server_name }}"
+  - key: "CERT_ADDL_DOMAINS"
+    value: "{{ combine_addl_domain_list | default([]) }}"
+  - key: "CERT_PROXY_DOMAINS"
+    value: "{{ combine_cert_proxy_list | default([]) }}"
+  - key: "CERT_PROXY_RENEWAL"
+    value: 60
+  - key: "CERT_SELF_RENEWAL"
+    value: 30
+  - key: "AWS_S3_CERT_LOC"
+    value: "{{ aws_s3_cert_loc }}"
+  - key: "AWS_S3_PROFILE"
+    value: "{{ aws_s3_profile }}"
 
-ssl_path: "/home/{{ combine_user }}/.ssl"
-ssl_path_owner: "{{ combine_user }}"
-ssl_path_group: "{{ combine_user }}"
-
-ssl_letsencrypt_install: false
-
-ssl_items:
-  - name: "localhost"
-    state: selfsign
-    request:
-      country_code: "{{ backend_cert_country }}"
-      state: "{{ backend_cert_state }}"
-      locality: "{{ backend_cert_locality }}"
-      organization: "{{ backend_cert_org }}"
-      organization_unit: "Language Technology"
-      common_name: "{{ url_hostname }}"
-      alt_names:
-        - key: DNS.1
-          value: "localhost"
-    sign:
-
-# Apache configuration
-apache_server_name: "{{ url_hostname }}.{{ url_domain }}"
-# apache_ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
-# apache_ssl_path: "/etc/apache2/ssl"
-# apache_cert_name: "cert.pem"
-# apache_key_name:  "privkey.pem"
-# apache_csr_name:  "{{ url_hostname }}.csr"
-
-apache_module_enable:
-  - headers
-  - proxy
-  - proxy_http
-  - proxy_wstunnel
-  - rewrite
-  - ssl
-
-apache_site_enable:
-  - "{{ url_hostname }}_languagetechnology_org.conf"
-
-apache_vhosts:
-  - server_name: "{{ apache_server_name }}"
-    server_admin: jimgrady.jg@gmail.com
-    server_file_name: "{{ url_hostname }}_languagetechnology_org"
-    template: vhost_proxypath_ssl.conf.j2
-    document_root: "{{ www_app_dir }}"
-    directory_extra:
-      - RewriteEngine On
-    virtual_hosts:
-      - has_ssl: false
-        listen: "{{ apache_listen_address }}"
-        port: 80
-        has_redirect_permanent: true
-
-      - has_ssl: true
-        listen: "{{ apache_listen_address }}"
-        port: 443
-        log_level: debug
-        ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
-        certificate_file: "cert.pem"
-        key_file: "privkey.pem"
-        #        chain_file: "fullchain.pem"
-        extra:
-          - '<ifModule mod_headers.c>'
-          - '    <Files "service-worker.js">'
-          - '        Header Set Service-Worker-allowed "/"'
-          - '    </Files>'
-          - '</IfModule>'
-        reverse_proxy: true
-        proxy:
-          - '/v1/ https://127.0.0.1:5001/v1/'
+combine_frontend_env_vars:
+  - key: "SERVER_NAME"
+    value: "{{ combine_server_name }}"
+  - key: "SSL_CERTIFICATE"
+    value: "{{ ssl_certificate }}"
+  - key: "SSL_PRIVATE_KEY"
+    value: "{{ ssl_private_key }}"
+  - key: "CERT_ADDL_DOMAINS"
+    value: "{{ combine_addl_domain_list | default([]) }}"
+  - key: "CERT_PROXY_DOMAINS"
+    value: "{{ combine_cert_proxy_list | default([]) }}"

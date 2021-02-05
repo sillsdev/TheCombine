@@ -16,8 +16,8 @@ import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 
-export const MAX_TILE_WIDTH = 150;
-export const MIN_TILE_WIDTH = 75;
+const MAX_TILE_WIDTH = 150;
+const MIN_TILE_WIDTH = 75;
 
 interface TreeDepictionProps {
   currentDomain: SemanticDomainWithSubdomains;

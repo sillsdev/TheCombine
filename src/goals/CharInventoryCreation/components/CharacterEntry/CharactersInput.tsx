@@ -1,9 +1,9 @@
-import * as React from "react";
 import { TextField } from "@material-ui/core";
+import * as React from "react";
 
 import theme from "types/theme";
 
-export interface CharactersInputProps {
+interface CharactersInputProps {
   setCharacters: (characters: string[]) => void;
   characters: string[];
   label: JSX.Element;

@@ -1,7 +1,0 @@
----
-
-ap_ssid: "{{ansible_hostname}}_ap"
-ap_passphrase: "BigRed@1979"
-ap_gateway: "10.10.0.1"
-ap_domain: languagetechnology.org
-ap_hostname: "{{ansible_hostname}}"

@@ -7,7 +7,7 @@ import renderer, {
 } from "react-test-renderer";
 
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
-import { CreateProject } from "components/ProjectScreen/CreateProject/CreateProjectComponent";
+import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 
 const createMockStore = configureMockStore([]);
 const mockState = {

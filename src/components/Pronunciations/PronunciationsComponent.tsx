@@ -5,7 +5,7 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 
-export interface PronunciationProps {
+interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
   recorder?: Recorder;

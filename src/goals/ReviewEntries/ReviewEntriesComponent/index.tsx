@@ -13,7 +13,6 @@ import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/Re
 
 function mapStateToProps(state: StoreState) {
   return {
-    words: state.reviewEntriesState.words,
     language: state.reviewEntriesState.analysisLanguage,
   };
 }

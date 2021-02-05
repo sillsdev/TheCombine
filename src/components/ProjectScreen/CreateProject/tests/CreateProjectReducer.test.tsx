@@ -1,8 +1,8 @@
 import { StoreAction, StoreActions } from "rootActions";
 import {
+  CREATE_PROJECT_IN_PROGRESS,
+  CREATE_PROJECT_RESET,
   CreateProjectAction,
-  IN_PROGRESS,
-  RESET,
 } from "components/ProjectScreen/CreateProject/CreateProjectActions";
 import * as reducer from "components/ProjectScreen/CreateProject/CreateProjectReducer";
 
@@ -30,7 +30,7 @@ describe("createActionReducer Tests", () => {
   };
 
   let inProgress: CreateProjectAction = {
-    type: IN_PROGRESS,
+    type: CREATE_PROJECT_IN_PROGRESS,
     payload: project,
   };
 
@@ -38,7 +38,7 @@ describe("createActionReducer Tests", () => {
   test("no state, expecting default state", () => {
     expect(
       reducer.createProjectReducer(undefined, {
-        type: RESET,
+        type: CREATE_PROJECT_RESET,
         payload: project,
       })
     ).toEqual(reducer.defaultState);

@@ -4,7 +4,7 @@ import { Translate } from "react-localize-redux";
 
 import { highlight } from "types/theme";
 
-export interface CharacterWordsProps {
+interface CharacterWordsProps {
   character: string;
   allWords: string[];
 }

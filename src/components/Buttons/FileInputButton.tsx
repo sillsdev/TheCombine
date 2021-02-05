@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 
-export interface BrowseProps {
+interface BrowseProps {
   updateFile: (file: File) => void;
   accept?: string;
   children?: React.ReactNode;

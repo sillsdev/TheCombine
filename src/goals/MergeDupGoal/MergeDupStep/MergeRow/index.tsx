@@ -1,18 +1,18 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import MergeRowComponent from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeRowComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
 
-export function mapStateToProps(state: StoreState) {
+function mapStateToProps(state: StoreState) {
   return {
     words: state.mergeDuplicateGoal.tree.words,
     data: state.mergeDuplicateGoal.data,
   };
 }
 
-export function mapDispatchToProps(dispatch: StoreStateDispatch) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setVern: (wordID: string, vern: string) => {
       dispatch(setVern(wordID, vern));

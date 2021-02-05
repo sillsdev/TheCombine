@@ -8,11 +8,11 @@ import {
 
 export type MenuType = [string, () => void];
 
-export interface ContextMenuProps {
+interface ContextMenuProps {
   options: MenuType[];
   anchorName: string;
 }
-export interface ContextMenuState {
+interface ContextMenuState {
   isOpen: boolean;
 }
 

@@ -1,10 +1,6 @@
+import { Grid, LinearProgress, Paper, Typography } from "@material-ui/core";
 import React from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
-import { LinearProgress, Paper, Grid, Typography } from "@material-ui/core";
+import { Translate } from "react-localize-redux";
 
 interface ProgressProps {
   currentStep: number;
@@ -14,9 +10,7 @@ interface ProgressProps {
 /**
  * Displays how much progress has been made in a goal
  */
-export class DisplayProg extends React.Component<
-  ProgressProps & LocalizeContextProps
-> {
+export default class DisplayProg extends React.Component<ProgressProps> {
   render() {
     return this.props.numSteps > 1 ? (
       <Paper key={this.props.currentStep}>
@@ -48,5 +42,3 @@ export class DisplayProg extends React.Component<
     return `${this.props.currentStep} / ${this.props.numSteps}`;
   }
 }
-
-export default withLocalize(DisplayProg);

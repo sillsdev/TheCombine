@@ -6,30 +6,26 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import { Project } from "types/project";
 
-export interface ChooseProjectProps {
+interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;
 }
 
-export interface ChooseProjectState {
+interface ChooseProjectState {
   projectList: Project[];
 }
 
-class ChooseProject extends React.Component<
-  ChooseProjectProps & LocalizeContextProps,
+export default class ChooseProject extends React.Component<
+  ChooseProjectProps,
   ChooseProjectState
 > {
-  constructor(props: ChooseProjectProps & LocalizeContextProps) {
+  constructor(props: ChooseProjectProps) {
     super(props);
     this.state = { projectList: [] };
     const userId = getUserId();
@@ -71,5 +67,3 @@ class ChooseProject extends React.Component<
     );
   }
 }
-
-export default withLocalize(ChooseProject);

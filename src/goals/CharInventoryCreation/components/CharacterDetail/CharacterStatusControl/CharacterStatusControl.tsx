@@ -1,9 +1,8 @@
+import { Button, ButtonGroup } from "@material-ui/core";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
 
-export interface CharacterStatusControlProps {
+interface CharacterStatusControlProps {
   character: string;
   accept: (character: string) => void;
   unset: (character: string) => void;

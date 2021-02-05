@@ -1,9 +1,5 @@
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
-import { maxNumSteps } from "types/goalUtilities";
-import { State, Word } from "types/word";
 import DupFinder from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { MergeDups, MergeStepData } from "goals/MergeDupGoal/MergeDups";
 import {
@@ -11,6 +7,10 @@ import {
   MergeTreeReference,
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { maxNumSteps } from "types/goalUtilities";
+import { State, Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
@@ -336,7 +336,7 @@ export function mergeAll() {
 
 // Blacklist Functions
 
-export function generateBlacklistHash(wordIDs: string[]) {
+function generateBlacklistHash(wordIDs: string[]) {
   return wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
 }
 

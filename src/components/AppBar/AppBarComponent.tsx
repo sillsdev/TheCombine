@@ -10,7 +10,7 @@ import NavigationButtons from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
 import UserMenu from "components/AppBar/UserMenu";
 
-export interface AppBarComponentProps {
+interface AppBarComponentProps {
   currentTab: Path;
 }
 

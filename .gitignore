@@ -67,16 +67,8 @@ __pycache__
 *.pyc
 venv
 
-# Auto-generated SSL keys and certificate requests
-deploy/site_info/
-deploy/site_files/
-deploy/**/*.retry
-deploy/roles_galaxy/
-
 # Host file to be used for ad hoc testing/development
-deploy/*.hosts
 deploy/*.hosts.yml
-docker_deploy/*.hosts.yml
 
 # YAML files for ad hoc testing/development
 _*.yml

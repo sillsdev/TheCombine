@@ -5,37 +5,44 @@
 # Group: server
 #################################################
 
-config_base_url: "https://thecombine.languagetechnology.org"
-config_captcha_required: "true"
-config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
+# TheCombine is installed on the Live Server by TeamCity.  It will set the
+# IMAGE_TAG environment variable to major.minor.build_no and launch
+# Docker compose
+image_tag: "${IMAGE_TAG}"
 
-# Server is set to UTC
-install_backups: "yes"
-backup_hour:    "1,7"
-backup_minute:  "15"
+combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 
-#apache web server config items
-apache_listen_address: "*"
+# SSL cert variables specific to Server targets
+cert_mode: "letsencrypt"
+combine_cert_proxy_list:
+  - nuc2.thecombine.app
+  - nuc1.thecombine.app
 
-#set backend logging levels
-app_loglevel: "Debug"
-sys_loglevel: "Debug"
-ms_loglevel: "Debug"
+aws_user: "{{ combine_user }}"
+aws_group: "{{ combine_group }}"
 
+# AWS S3 storage configuration
+aws_s3_loc: thecombine.app
+aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
+aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
 
-certbot_install_from_source: no
-certbot_auto_renew: true
-certbot_auto_renew_user: root
-certbot_auto_renew_hour: 3
-certbot_auto_renew_minute: 30
-#certbot_auto_renew_options: "--quiet --no-self-upgrade --pre-hook 'systemctl stop apache2' --post-hook 'systemctl start apache2' "
-certbot_auto_renew_options: "--quiet --no-self-upgrade "
-certbot_admin_email: jimgrady.jg@gmail.com
-certbot_create_if_missing: true
-certbot_create_method: standalone
-certbot_certs:
-  - domains:
-      - thecombine.languagetechnology.org
-certbot_create_command: "{{ certbot_script }} certonly --standalone --noninteractive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }}"
-certbot_create_standalone_stop_services:
-  - apache2
+# Live server accesses the following AWS services:
+# S3:
+#   - store SSL certificates for the NUCs
+#   - store backups
+# ECR:
+#   - install container images
+aws_s3_profile: s3_read_write
+aws_ecr_profile: ecr_read_only
+
+my_aws_profiles:
+  - "{{ aws_s3_profile }}"
+  - "{{ aws_ecr_profile }}"
+
+# Define backup times (UTC)
+backup_hour: "3"
+backup_minute: "15"
+# Maximum number of backups to keep on AWS S3 service
+max_backups: "3"

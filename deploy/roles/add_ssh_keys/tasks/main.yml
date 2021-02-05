@@ -1,9 +1,0 @@
----
-
-- name: Add NUC root accounts as authorized users
-  authorized_key:
-    user: "{{ cert_server_user }}"
-    state: present
-    key: "{{ lookup('file', '{{ item }}') }}"
-  with_fileglob:
-    - "../../{{ cert_server_login_key_path }}/*.pub"

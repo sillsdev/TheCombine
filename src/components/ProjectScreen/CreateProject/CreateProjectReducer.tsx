@@ -1,8 +1,8 @@
 import {
-  IN_PROGRESS,
-  SUCCESS,
-  FAILURE,
-  RESET,
+  CREATE_PROJECT_IN_PROGRESS,
+  CREATE_PROJECT_SUCCESS,
+  CREATE_PROJECT_FAILURE,
+  CREATE_PROJECT_RESET,
   CreateProjectAction,
 } from "components/ProjectScreen/CreateProject/CreateProjectActions";
 import { Project, WritingSystem } from "types/project";
@@ -32,7 +32,7 @@ export const createProjectReducer = (
   action: StoreAction | CreateProjectAction
 ): CreateProjectState => {
   switch (action.type) {
-    case IN_PROGRESS:
+    case CREATE_PROJECT_IN_PROGRESS:
       return {
         name: action.payload.name,
         vernacularLanguage: action.payload.vernacularLanguage,
@@ -41,7 +41,7 @@ export const createProjectReducer = (
         inProgress: true,
         errorMsg: "",
       };
-    case SUCCESS:
+    case CREATE_PROJECT_SUCCESS:
       return {
         name: action.payload.name,
         vernacularLanguage: action.payload.vernacularLanguage,
@@ -50,7 +50,7 @@ export const createProjectReducer = (
         inProgress: false,
         errorMsg: "",
       };
-    case FAILURE:
+    case CREATE_PROJECT_FAILURE:
       return {
         name: action.payload.name,
         vernacularLanguage: action.payload.vernacularLanguage,
@@ -59,7 +59,7 @@ export const createProjectReducer = (
         inProgress: false,
         errorMsg: action.payload.errorMsg || "",
       };
-    case RESET:
+    case CREATE_PROJECT_RESET:
       return defaultState;
     case StoreActions.RESET:
       return defaultState;

@@ -1,3 +1,0 @@
-[submodule "deploy/roles_common"]
-	path = deploy/roles_common
-	url = ../ops-ansible-common-roles.git

@@ -1,5 +1,5 @@
 import { TextField, Typography } from "@material-ui/core";
-import { Column } from "material-table";
+import { Column } from "@material-table/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 

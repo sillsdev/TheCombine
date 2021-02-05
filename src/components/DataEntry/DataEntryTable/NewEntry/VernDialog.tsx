@@ -7,26 +7,22 @@ import {
   withStyles,
 } from "@material-ui/core";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
-import theme from "types/theme";
-import { Word } from "types/word";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import { parseWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "types/theme";
+import { Word } from "types/word";
 
-export function VernDialog(
-  props: {
-    vernacularWords: Word[];
-    open: boolean;
-    handleClose: (selectedWordId?: string) => void;
-    analysisLang: string;
-  } & LocalizeContextProps
-) {
+interface vernDialogProps {
+  vernacularWords: Word[];
+  open: boolean;
+  handleClose: (selectedWordId?: string) => void;
+  analysisLang: string;
+}
+
+export default function VernDialog(props: vernDialogProps) {
   return (
     <Dialog
       open={props.open}
@@ -101,4 +97,3 @@ export function VernList(props: VernListProps) {
     </React.Fragment>
   );
 }
-export default withLocalize(VernDialog);

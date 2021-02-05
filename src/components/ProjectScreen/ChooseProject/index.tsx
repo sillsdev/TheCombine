@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 
-import { StoreStateDispatch } from "types/actions";
-import { Project } from "types/project";
 import { setCurrentProject } from "components/Project/ProjectActions";
 import ChooseProjectComponent from "components/ProjectScreen/ChooseProject/ChooseProjectComponent";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
 
-export function mapDispatchToProps(dispatch: StoreStateDispatch) {
+function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setCurrentProject: (project: Project) => {
       dispatch(setCurrentProject(project));

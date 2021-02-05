@@ -1,5 +1,4 @@
 ---
-
 - name: check for aws version
   command: aws --version
   register: aws_version
@@ -12,15 +11,16 @@
       - zip
 
 - name: retrieve aws-cli installation package
-  command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  args:
-    chdir: /opt
+  get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /opt/awscliv2.zip
   when: aws_version.rc != 0
 
 - name: unpack aws-cli installation package
-  command: unzip awscliv2.zip
-  args:
-    chdir: /opt
+  unarchive:
+    src: /opt/awscliv2.zip
+    dest: /opt
+    remote_src: yes
   when: aws_version.rc != 0
 
 - name: install aws-cli
@@ -36,16 +36,16 @@
   file:
     path: "{{ aws_config_dir }}"
     state: directory
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
+    owner: "{{ aws_user }}"
+    group: "{{ aws_group }}"
     mode: 0700
 
 - name: set aws configuration
   template:
     src: "{{ item }}.j2"
     dest: "{{ aws_config_dir }}/{{ item }}"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
+    owner: "{{ aws_user }}"
+    group: "{{ aws_group }}"
     mode: 0600
   with_items:
     - config

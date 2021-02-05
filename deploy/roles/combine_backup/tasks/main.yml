@@ -1,17 +1,50 @@
 ---
+#######################################################
+#
+# Install and configure the backup script for the docker
+# containers
 
-- name: install backup script
-  template:
-    src: combine-backup.j2
-    dest: /usr/local/bin/combine-backup
-    owner: root
-    group: root
+- name: create folders for backups
+  file:
+    name: "{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
     mode: 0755
+    state: directory
+  with_items:
+    - "{{ combine_backup_dir }}"
+    - "{{ combine_app_dir }}/bin"
 
-- name: set daily backup
+- name: install backup/restore scripts
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ combine_app_dir }}/bin/{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+  with_items:
+    - combine-backup
+    - combine-restore
+    - combine-cleanup
+    - combine-backup-job
+
+- name: set environment variables for backup job
+  cron:
+    env: yes
+    user: "{{ combine_user }}"
+    name: MAX_BACKUPS
+    value: "{{ max_backups }}"
+  when:
+    - backup_hour is defined
+    - backup_minute is defined
+
+- name: schedule regular backups
   cron:
     name: combine daily backup
-    job: /usr/local/bin/combine-backup
+    job: "{{ combine_app_dir }}/bin/combine-backup-job"
     user: "{{ combine_user }}"
     hour: "{{ backup_hour }}"
     minute: "{{ backup_minute }}"
+  when:
+    - backup_hour is defined
+    - backup_minute is defined

@@ -22,14 +22,14 @@ import {
 } from "react-beautiful-dnd";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import theme from "types/theme";
-import { uuid } from "utilities";
 import {
   MergeTreeReference,
   MergeTreeWord,
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
+import theme from "types/theme";
+import { uuid } from "utilities";
 
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];
@@ -37,8 +37,7 @@ export interface SideBar {
   senseID: string;
 }
 
-//interface for component props
-export interface MergeDupStepProps {
+interface MergeDupStepProps {
   words: { [wordID: string]: MergeTreeWord };
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (wordID: string, senseID: string, order: number) => void;
@@ -50,8 +49,7 @@ export interface MergeDupStepProps {
   advanceStep?: () => void;
 }
 
-//interface for component state
-export interface MergeDupStepState {
+interface MergeDupStepState {
   portrait: boolean;
   sideBar: SideBar;
 }

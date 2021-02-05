@@ -1,0 +1,5 @@
+path_classifiers:
+  # Classify our spelling dictionaries as library content
+  library:
+    - "src/resources/dictionaries/*.aff.ts"
+    - "src/resources/dictionaries/*.dic.ts"

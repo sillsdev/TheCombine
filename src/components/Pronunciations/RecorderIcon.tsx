@@ -4,15 +4,15 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import { StoreState } from "types";
-import { recorderStatus } from "types/theme";
 import {
   PronunciationsStatus,
   recording,
   reset,
 } from "components/Pronunciations/PronunciationsActions";
+import { StoreState } from "types";
+import { recorderStatus } from "types/theme";
 
-export interface RecorderIconProps {
+interface RecorderIconProps {
   wordId: string;
   startRecording: () => void;
   stopRecording: () => void;

@@ -1,7 +1,0 @@
----
-
-nodejs_repo: node_12.x
-nodejs_name: "Node.js 12.x"
-nodejs_pkg:  nodejs
-nodejs_deprecated:
-  - node_10.x

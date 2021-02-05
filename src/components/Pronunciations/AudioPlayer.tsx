@@ -14,15 +14,15 @@ import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import { StoreState } from "types";
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
 import {
   playing,
   PronunciationsStatus,
   reset,
 } from "components/Pronunciations/PronunciationsActions";
+import { StoreState } from "types";
 
-export interface PlayerProps {
+interface PlayerProps {
   pronunciationUrl: string;
   wordId: string;
   fileName: string;

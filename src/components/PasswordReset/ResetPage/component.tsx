@@ -5,10 +5,10 @@ import { Translate } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 
 import history, { Path } from "browserHistory";
-import { passwordRequirements } from "utilities";
 import { RequestState } from "components/PasswordReset/reducer";
+import { passwordRequirements } from "utilities";
 
-export interface MatchParams {
+interface MatchParams {
   token: string;
 }
 
@@ -16,11 +16,11 @@ export interface ResetDispatchProps {
   passwordReset: (token: string, password: string) => void;
 }
 
-export interface PasswordResetProps extends RouteComponentProps<MatchParams> {
+interface PasswordResetProps extends RouteComponentProps<MatchParams> {
   resetState: RequestState;
 }
 
-export interface PasswordResetState {
+interface PasswordResetState {
   token: string;
   password: string;
   passwordConfirm: string;

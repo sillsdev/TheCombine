@@ -6,47 +6,30 @@ import { StoreStateDispatch } from "types/actions";
 import { User } from "types/user";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
-export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
-
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
-export type LOGIN_FAILURE = typeof LOGIN_FAILURE;
-
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export type LOGIN_SUCCESS = typeof LOGIN_SUCCESS;
-
 export const LOGIN_RESET = "LOGIN_RESET";
-export type LOGIN_RESET = typeof LOGIN_RESET;
-
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGOUT = "LOGOUT";
-export type LOGOUT = typeof LOGOUT;
-
 export const REGISTER_ATTEMPT = "REGISTER_ATTEMPT";
-export type REGISTER_ATTEMPT = typeof REGISTER_ATTEMPT;
-
-export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
-export type REGISTER_SUCCESS = typeof REGISTER_SUCCESS;
-
 export const REGISTER_FAILURE = "REGISTER_FAILURE";
-export type REGISTER_FAILURE = typeof REGISTER_FAILURE;
-
 export const REGISTER_RESET = "REGISTER_RESET";
-export type REGISTER_RESET = typeof REGISTER_RESET;
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+
+export type LoginType =
+  | typeof LOGIN_ATTEMPT
+  | typeof LOGIN_FAILURE
+  | typeof LOGIN_SUCCESS
+  | typeof LOGIN_RESET
+  | typeof REGISTER_ATTEMPT
+  | typeof REGISTER_FAILURE
+  | typeof REGISTER_SUCCESS
+  | typeof REGISTER_RESET
+  | typeof LOGOUT;
 
 export interface LoginData {
   username: string;
   password?: string;
 }
-
-export type LoginType =
-  | LOGIN_ATTEMPT
-  | LOGIN_FAILURE
-  | LOGIN_SUCCESS
-  | LOGIN_RESET
-  | REGISTER_ATTEMPT
-  | REGISTER_FAILURE
-  | REGISTER_SUCCESS
-  | REGISTER_RESET
-  | LOGOUT;
 
 export interface UserAction {
   type: LoginType;

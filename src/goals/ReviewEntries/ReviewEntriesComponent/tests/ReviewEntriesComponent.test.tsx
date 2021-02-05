@@ -46,7 +46,7 @@ jest.mock("utilities", () => {
   };
 });
 // To deal with the table not wanting to behave in testing.
-jest.mock("material-table", () => {
+jest.mock("@material-table/core", () => {
   return {
     __esModule: true,
     default: () => mockMaterialTable(),
@@ -76,7 +76,6 @@ beforeEach(() => {
     renderer.create(
       <Provider store={mockStore}>
         <ReviewEntriesComponent
-          words={mockWords}
           language="en"
           setAnalysisLanguage={jest.fn()}
           clearState={jest.fn()}
