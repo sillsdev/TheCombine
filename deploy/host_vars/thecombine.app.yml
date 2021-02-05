@@ -1,0 +1,6 @@
+---
+combine_server_name: thecombine.app
+combine_addl_domain_list:
+  - thecombine.languagetechnology.org
+config_captcha_required: "true"
+config_captcha_sitekey: "6Le0BjwaAAAAAD4UhsUf0P5sRkna3LzDZvKzZscC"
