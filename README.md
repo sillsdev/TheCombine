@@ -38,15 +38,7 @@ A rapid word collection tool.
 1. Clone this repo:
 
    ```bash
-   # The `--recurse-submodules` is used to fetch many of the Ansible roles used
-   # by the Ansible playbooks in the deploy folder.
-   $ git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
-   ```
-
-   If you've already cloned the repo without `--recurse-submodules`, run:
-
-   ```bash
-   $ git submodule update --init --recursive
+   $ git clone https://github.com/sillsdev/TheCombine.git
    ```
 
 2. Install:
@@ -483,7 +475,7 @@ start up the backend.
 ### Production
 
 The process for configuring and deploying _TheCombine_ for production targets is described in
-[docs/docker_deploy/README.md](docs/docker_deploy/README.md).
+[docs/deploy/README.md](docs/deploy/README.md).
 
 ## Learn More
 
