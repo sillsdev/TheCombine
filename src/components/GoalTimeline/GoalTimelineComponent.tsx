@@ -2,9 +2,9 @@ import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-import { Goal } from "types/goals";
 import HorizontalDisplay from "components/GoalTimeline/GoalDisplay/HorizontalDisplay";
 import VerticalDisplay from "components/GoalTimeline/GoalDisplay/VerticalDisplay";
+import { Goal } from "types/goals";
 
 const timelineStyle = {
   centerDisplays: {
@@ -27,7 +27,7 @@ const timelineStyle = {
   },
 };
 
-export interface GoalTimelineProps {
+interface GoalTimelineProps {
   chooseGoal: (goal: Goal) => void;
   loadHistory: () => void;
 
@@ -36,7 +36,7 @@ export interface GoalTimelineProps {
   suggestions: Goal[];
 }
 
-export interface GoalTimelineState {
+interface GoalTimelineState {
   portrait: boolean;
   reducedLandScape: boolean;
 }

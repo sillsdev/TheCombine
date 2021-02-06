@@ -43,27 +43,24 @@ export function resetExport(projectId?: string) {
   };
 }
 
-export function inProgress(projectId: string): ExportProjectAction {
+function inProgress(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.InProgress,
     projectId,
   };
 }
-
-export function success(projectId: string): ExportProjectAction {
+function success(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.Success,
     projectId,
   };
 }
-
-export function failure(projectId: string): ExportProjectAction {
+function failure(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.Failure,
     projectId,
   };
 }
-
-export function reset(): ExportProjectAction {
+function reset(): ExportProjectAction {
   return { type: ExportStatus.Default };
 }

@@ -24,7 +24,7 @@ namespace BackendFramework.Services
         {
             var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
 
-            // We only want to add the deleted word if the word started in the frontier
+            // We only want to add the deleted word if the word started in the frontier.
             if (wordIsInFrontier)
             {
                 var wordToDelete = await _repo.GetWord(projectId, wordId);
@@ -34,6 +34,7 @@ namespace BackendFramework.Services
                 }
 
                 wordToDelete.Id = "";
+                wordToDelete.Modified = "";
                 wordToDelete.History = new List<string> { wordId };
                 wordToDelete.Accessibility = State.Deleted;
 
@@ -65,6 +66,7 @@ namespace BackendFramework.Services
             {
                 wordWithAudioToDelete.Audio.Remove(fileName);
                 wordWithAudioToDelete.Id = "";
+                wordWithAudioToDelete.Modified = "";
                 wordWithAudioToDelete.ProjectId = projectId;
 
                 // Keep track of the old word, adding it to the history.
@@ -93,6 +95,7 @@ namespace BackendFramework.Services
             }
 
             word.Id = "";
+            word.Modified = "";
             word.ProjectId = projectId;
             word.Accessibility = State.Deleted;
 
@@ -114,7 +117,7 @@ namespace BackendFramework.Services
             {
                 word.Id = "";
                 word.ProjectId = projectId;
-                word.Modified = Time.UtcNowIso8601();
+                word.Modified = "";
 
                 // Keep track of the old word, adding it to the history.
                 word.History.Add(wordId);
@@ -135,26 +138,26 @@ namespace BackendFramework.Services
             addParent.History = new List<string>();
             addParent.Audio = new List<string>();
 
-            // Generate new child words form child word field
+            // Generate new child words from ChildrenWords.
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
-                // Get child word
+                // Get child word.
                 var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
                 if (currentChildWord is null)
                 {
                     throw new KeyNotFoundException($"Unable to locate word: ${newChildWordState.SrcWordId}");
                 }
 
-                // Copy over audio if child doesn't have own surviving entry
+                // Copy over audio if child doesn't have own surviving entry.
                 if (!newChildWordState.SenseStates.Exists(x => x == State.Separate))
                 {
                     addParent.Audio.AddRange(currentChildWord.Audio);
                 }
 
-                // Remove child from frontier
+                // Remove child from frontier.
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
-                // Iterate through senses of that word and change to corresponding state in mergewords
+                // Iterate through senses of that word and change to corresponding state in merged words.
                 if (currentChildWord.Senses.Count != newChildWordState.SenseStates.Count)
                 {
                     throw new FormatException("Sense counts don't match");
@@ -169,9 +172,11 @@ namespace BackendFramework.Services
 
                 // Add child word to the database
                 currentChildWord.Id = "";
+                // Erase time old Modified date timestamp so the are recalculated.
+                currentChildWord.Modified = "";
                 await _repo.Add(currentChildWord);
 
-                // Handle different states
+                // Handle different states.
                 var separateWord = currentChildWord.Clone();
                 separateWord.Senses = new List<Sense>();
                 separateWord.Id = "";
@@ -179,7 +184,7 @@ namespace BackendFramework.Services
                 {
                     switch (newChildWordState.SenseStates[i])
                     {
-                        // Add the word to the parent's history
+                        // Add the word to the parent's history.
                         case State.Sense:
                         case State.Duplicate:
                             if (!addParent.History.Contains(currentChildWord.Id))
@@ -187,7 +192,7 @@ namespace BackendFramework.Services
                                 addParent.History.Add(currentChildWord.Id);
                             }
                             break;
-                        // Add the sense to a separate word and the word to its history
+                        // Add the sense to a separate word and the word to its history.
                         case State.Separate:
                             currentChildWord.Senses[i].Accessibility = State.Active;
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
@@ -205,6 +210,7 @@ namespace BackendFramework.Services
                 if (separateWord.Senses.Count != 0)
                 {
                     separateWord.ProjectId = projectId;
+                    separateWord.Modified = "";
                     var newSeparate = await _repo.Create(separateWord);
                     newWordsList.Add(newSeparate);
                 }
@@ -212,6 +218,7 @@ namespace BackendFramework.Services
 
             // Add parent with child history to the database
             addParent.ProjectId = projectId;
+            addParent.Modified = "";
             var newParent = await _repo.Create(addParent);
             newWordsList.Insert(0, newParent);
             return newWordsList;

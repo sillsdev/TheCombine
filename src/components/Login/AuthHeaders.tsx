@@ -1,6 +1,6 @@
 import { getCurrentUser } from "backend/localStorage";
 
-export interface AuthHeader {
+interface AuthHeader {
   authorization?: string;
 }
 

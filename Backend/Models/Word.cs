@@ -404,15 +404,11 @@ namespace BackendFramework.Models
     {
         public Word Parent { get; set; }
         public List<MergeSourceWord> ChildrenWords { get; set; }
-        public string MergedBy { get; set; }
-        public string Time { get; set; }
 
         public MergeWords()
         {
             Parent = new Word();
             ChildrenWords = new List<MergeSourceWord>();
-            MergedBy = "";
-            Time = "";
         }
     }
 

@@ -1,21 +1,20 @@
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
-import { StoreStateDispatch } from "types/actions";
-import { defaultProject, Project, WritingSystem } from "types/project";
 import { asyncCreateUserEdits } from "components/GoalTimeline/GoalsActions";
 import { setCurrentProject } from "components/Project/ProjectActions";
+import { StoreStateDispatch } from "types/actions";
+import { defaultProject, Project, WritingSystem } from "types/project";
 
-export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
-export type IN_PROGRESS = typeof IN_PROGRESS;
+export const CREATE_PROJECT_FAILURE = "CREATE_PROJECT_FAILURE";
+export const CREATE_PROJECT_IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
+export const CREATE_PROJECT_RESET = "CREATE_PROJECT_RESET";
+export const CREATE_PROJECT_SUCCESS = "CREATE_PROJECT_SUCCESS";
 
-export const SUCCESS = "CREATE_PROJECT_SUCCESS";
-export type SUCCESS = typeof SUCCESS;
-
-export const FAILURE = "CREATE_PROJECT_FAILURE";
-export type FAILURE = typeof FAILURE;
-
-export const RESET = "CREATE_PROJECT_RESET";
-export type RESET = typeof RESET;
+type CreateProjectType =
+  | typeof CREATE_PROJECT_FAILURE
+  | typeof CREATE_PROJECT_IN_PROGRESS
+  | typeof CREATE_PROJECT_RESET
+  | typeof CREATE_PROJECT_SUCCESS;
 
 export interface CreateProjectData {
   name: string;
@@ -24,9 +23,6 @@ export interface CreateProjectData {
   languageData?: File;
   errorMsg?: string;
 }
-type CreateProjectType = IN_PROGRESS | SUCCESS | FAILURE | RESET;
-
-//action types
 
 export interface CreateProjectAction {
   type: CreateProjectType;
@@ -106,7 +102,7 @@ export function inProgress(
   analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
-    type: IN_PROGRESS,
+    type: CREATE_PROJECT_IN_PROGRESS,
     payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
@@ -117,7 +113,7 @@ export function success(
   analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
-    type: SUCCESS,
+    type: CREATE_PROJECT_SUCCESS,
     payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
@@ -129,14 +125,14 @@ export function failure(
   errorMsg: string = ""
 ): CreateProjectAction {
   return {
-    type: FAILURE,
+    type: CREATE_PROJECT_FAILURE,
     payload: { name, errorMsg, vernacularLanguage, analysisLanguages },
   };
 }
 
 export function reset(): CreateProjectAction {
   return {
-    type: RESET,
+    type: CREATE_PROJECT_RESET,
     payload: {
       name: "",
       vernacularLanguage: { name: "", bcp47: "", font: "" },

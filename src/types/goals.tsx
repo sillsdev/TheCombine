@@ -5,22 +5,18 @@ import {
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
 import { User } from "types/user";
 
-export enum GoalOption {
+enum GoalOption {
   Complete,
   Abandon,
   Current,
 }
 
-export type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
+type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
 
-export type GoalStep = CreateCharInvStepData | MergeStepData; // | OtherTypes
+type GoalStep = CreateCharInvStepData | MergeStepData; // | OtherTypes
 
 export interface GoalProps {
   goal?: Goal;
-}
-
-export interface GoalViewState {
-  state: GoalsState;
 }
 
 // The representation of goals in the redux store
@@ -95,6 +91,6 @@ export class Goal {
   }
 }
 
-export function generateGuid(): string {
+function generateGuid(): string {
   return Math.floor(Math.random() * 9999999).toString();
 }

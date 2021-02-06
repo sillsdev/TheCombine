@@ -27,7 +27,7 @@ const project = {
 describe("CreateProjectAction Tests", () => {
   let mockState: reducer.CreateProjectState = reducer.defaultState;
   let CreateProject: action.CreateProjectAction = {
-    type: action.IN_PROGRESS,
+    type: action.CREATE_PROJECT_IN_PROGRESS,
     payload: {
       name: project.name,
       vernacularLanguage: project.vernacularLanguage,
@@ -43,7 +43,7 @@ describe("CreateProjectAction Tests", () => {
         project.analysisLanguages
       )
     ).toEqual({
-      type: action.IN_PROGRESS,
+      type: action.CREATE_PROJECT_IN_PROGRESS,
       payload: {
         name: project.name,
         vernacularLanguage: project.vernacularLanguage,

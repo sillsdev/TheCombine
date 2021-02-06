@@ -1,7 +1,6 @@
 import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import * as React from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import {
@@ -12,8 +11,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeStack";
 
-//interface for component props
-export interface MergeRowProps {
+interface MergeRowProps {
   setVern: (wordID: string, vern: string) => void;
   wordID: string;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
@@ -24,9 +22,7 @@ export interface MergeRowProps {
   sideBar: SideBar;
 }
 
-export class MergeRow extends React.Component<
-  MergeRowProps & LocalizeContextProps
-> {
+export default class MergeRow extends React.Component<MergeRowProps> {
   render() {
     let filled = !!this.props.words[this.props.wordID];
     let verns: string[] = [];
@@ -117,6 +113,3 @@ export class MergeRow extends React.Component<
     );
   }
 }
-
-//export class as default
-export default withLocalize(MergeRow);

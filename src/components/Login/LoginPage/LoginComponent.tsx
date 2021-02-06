@@ -31,7 +31,7 @@ export interface LoginStateProps {
   loginFailure: boolean | undefined;
 }
 
-export interface LoginState {
+interface LoginState {
   username: string;
   password: string;
   isVerified: boolean;
