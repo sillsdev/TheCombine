@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { getProjectName } from "backend";
 import { StoreState } from "types";
+import theme from "types/theme";
 import { getNowDateTimeString } from "utilities";
 import {
   asyncDownloadExport,
@@ -74,6 +75,14 @@ export default function DownloadButton(props: DownloadButtonProps) {
     }
   }
 
+  function iconColor() {
+    return exportState.status === ExportStatus.Failure
+      ? theme.palette.error.main
+      : props.colorSecondary
+      ? theme.palette.secondary.main
+      : theme.palette.primary.main;
+  }
+
   function iconFunction() {
     switch (exportState.status) {
       case ExportStatus.Success:
@@ -90,7 +99,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
           <IconButton
             tabIndex={-1}
             onClick={iconFunction()}
-            color={props.colorSecondary ? "secondary" : "primary"}
+            style={{ color: iconColor() }}
           >
             {icon()}
           </IconButton>
