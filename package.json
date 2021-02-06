@@ -40,7 +40,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/styles": "^4.11.3",
     "@matt-block/react-recaptcha-v2": "^1.0.6",
-    "@microsoft/signalr": "^3.1.11",
+    "@microsoft/signalr": "^5.0.2",
     "axios": "^0.21.1",
     "make-dir": "^3.1.0",
     "mui-language-picker": "^1.1.10",
