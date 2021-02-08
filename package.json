@@ -61,7 +61,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "source-map-explorer": "^2.5.2",
-    "uuid": "^3.4.0",
+    "uuid": "^8.3.2",
     "validator": "^13.5.2",
     "xml2js": "^0.4.23"
   },
