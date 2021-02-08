@@ -74,7 +74,7 @@ export const recorderStatus = {
 };
 
 export function tabColor(currentTab: Path, tabName: Path) {
-  return currentTab === tabName ? "inherit" : themeColors.shade;
+  return currentTab === tabName ? themeColors.shade : "inherit";
 }
 
 // Can have a number of additional options passed in; here, sticks with defaults
