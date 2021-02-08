@@ -7,12 +7,12 @@ import { Translate } from "react-localize-redux";
 import { themeColors } from "types/theme";
 
 interface LoadingDoneProps {
-  loading: boolean;
-  done: boolean;
-  doneText?: React.ReactNode | string;
-  disabled?: boolean;
-  children?: React.ReactNode;
   buttonProps?: ButtonProps;
+  children?: React.ReactNode;
+  disabled?: boolean;
+  done?: boolean;
+  doneText?: React.ReactNode | string;
+  loading?: boolean;
 }
 
 /**
@@ -34,7 +34,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
       {props.done ? (
         <React.Fragment>
           <Check />
-          {props.doneText ? props.doneText : <Translate id="buttons.done" />}
+          {props.doneText ?? <Translate id="buttons.done" />}
         </React.Fragment>
       ) : (
         props.children

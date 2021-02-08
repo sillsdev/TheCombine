@@ -5,10 +5,10 @@ import React from "react";
 import { themeColors } from "types/theme";
 
 interface LoadingProps {
-  loading: boolean;
-  children?: React.ReactNode;
   buttonProps?: ButtonProps;
+  children?: React.ReactNode;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 /**
