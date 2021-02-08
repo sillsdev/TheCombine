@@ -48,18 +48,26 @@
       apt_key:
         url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
         state: present
+      tags:
+        - node
 
     - name: Add repository for node.js
       apt_repository:
         repo: deb https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
         state: present
+      tags:
+        - node
 
     - name: Add src repository for node.js
       apt_repository:
         repo: deb-src https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
         state: present
+      tags:
+        - node
 
     - name: Install nodejs
       apt:
         name: "{{ nodejs_pkg }}"
         state: latest
+      tags:
+        - node
