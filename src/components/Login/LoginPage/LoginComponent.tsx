@@ -10,11 +10,7 @@ import {
 import { Help } from "@material-ui/icons";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -43,13 +39,11 @@ interface LoginError {
   password: boolean;
 }
 
-export class Login extends React.Component<
-  LoginDispatchProps & LoginStateProps & LocalizeContextProps,
+export default class Login extends React.Component<
+  LoginDispatchProps & LoginStateProps,
   LoginState
 > {
-  constructor(
-    props: LoginDispatchProps & LoginStateProps & LocalizeContextProps
-  ) {
+  constructor(props: LoginDispatchProps & LoginStateProps) {
     super(props);
     this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
 
@@ -232,5 +226,3 @@ export class Login extends React.Component<
     );
   }
 }
-
-export default withLocalize(Login);
