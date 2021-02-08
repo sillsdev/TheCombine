@@ -305,7 +305,7 @@ export class Register extends React.Component<
                     disabled={this.props.inProgress}
                     style={{
                       backgroundColor: this.props.success
-                        ? buttonSuccess
+                        ? themeColors.buttonSuccess
                         : undefined,
                     }}
                   >
