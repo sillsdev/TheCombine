@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -27,6 +26,7 @@ import {
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
+import theme from "types/theme";
 import { uuid } from "utilities";
 
 export interface SideBar {
@@ -237,7 +237,7 @@ class MergeDupStep extends React.Component<
     let newId = uuid();
     //visual definition
     return (
-      <Box style={{ maxHeight: "100%" }}>
+      <React.Fragment>
         {/* Merging pane */}
         <div
           style={{
@@ -279,9 +279,18 @@ class MergeDupStep extends React.Component<
         <Grid container justify="flex-end">
           <Grid item>
             <Button
+              color="secondary"
+              variant="contained"
+              style={{ marginRight: theme.spacing(3) }}
+              onClick={() => this.next()}
+              title={this.props.translate("mergeDups.helpText.skip") as string}
+            >
+              {this.props.translate("buttons.skip")}
+            </Button>
+            <Button
               color="primary"
               variant="contained"
-              style={{ marginRight: 30 }}
+              style={{ marginRight: theme.spacing(3) }}
               onClick={() => this.saveContinue()}
               title={
                 this.props.translate(
@@ -291,18 +300,9 @@ class MergeDupStep extends React.Component<
             >
               {this.props.translate("buttons.saveAndContinue")}
             </Button>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ marginRight: 30 }}
-              onClick={() => this.next()}
-              title={this.props.translate("mergeDups.helpText.skip") as string}
-            >
-              {this.props.translate("buttons.skip")}
-            </Button>
           </Grid>
         </Grid>
-      </Box>
+      </React.Fragment>
     );
   }
 }
