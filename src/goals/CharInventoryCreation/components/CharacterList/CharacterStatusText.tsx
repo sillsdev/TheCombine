@@ -14,7 +14,7 @@ export default function CharacterStatusText(props: CharacterStatusTextProps) {
     return (
       <Typography
         variant="body2"
-        style={{ color: themeColors.accepted }}
+        style={{ color: themeColors.success }}
         component="p"
       >
         <Translate id="buttons.accepted" />
@@ -24,7 +24,7 @@ export default function CharacterStatusText(props: CharacterStatusTextProps) {
     return (
       <Typography
         variant="body2"
-        style={{ color: themeColors.rejected }}
+        style={{ color: themeColors.error }}
         component="p"
       >
         <Translate id="buttons.rejected" />

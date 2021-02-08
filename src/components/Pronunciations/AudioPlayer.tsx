@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     icon: {
-      color: themeColors.play,
+      color: themeColors.success,
     },
   })
 );

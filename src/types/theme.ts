@@ -9,14 +9,11 @@ export const themeColors = {
   primary: blue[600],
   secondary: grey[200],
   error: red[600],
-  success: green[500], // Buttons/
+  success: green[600],
   highlight: yellow[100], // CellComponents/
   shade: blue[700], // tabColor()
-  accepted: green[600], // CharacterStatusText.tsx
-  rejected: red[600], // CharacterStatusText.tsx
   recordIdle: red[500], // RecorderIcon.tsx
   recordActive: red[900], // RecorderIcon.tsx
-  play: green[800], // AudioPlayer.tsx
 };
 
 // Constants used in multiple themes
