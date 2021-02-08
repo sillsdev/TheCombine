@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardContent,
-  CircularProgress,
   Grid,
   Link,
   TextField,
@@ -18,6 +17,7 @@ import {
 } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
+import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 export interface LoginDispatchProps {
@@ -213,18 +213,17 @@ export class Login extends React.Component<
                 </Grid>
 
                 <Grid item xs={4} sm={3}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
+                  <LoadingButton
+                    buttonProps={{
+                      type: "submit",
+                      color: "primary",
+                    }}
                     disabled={!this.state.isVerified}
+                    loading={this.props.loginAttempt}
                   >
                     <Translate id="login.login" />
-                  </Button>
+                  </LoadingButton>
                 </Grid>
-
-                <br />
-                {this.props.loginAttempt && <CircularProgress size={30} />}
               </Grid>
             </CardContent>
           </form>
