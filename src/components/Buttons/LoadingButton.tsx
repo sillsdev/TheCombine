@@ -26,7 +26,7 @@ export default function LoadingButton(props: LoadingProps) {
         <CircularProgress
           size={24}
           style={{
-            color: themeColors.buttonSuccess,
+            color: themeColors.success,
             position: "absolute",
             top: "50%",
             left: "50%",

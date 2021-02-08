@@ -26,7 +26,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
       {...props.buttonProps}
       disabled={props.disabled || props.loading}
       style={{
-        backgroundColor: props.done ? themeColors.buttonSuccess : undefined,
+        backgroundColor: props.done ? themeColors.success : undefined,
         color: props.done ? "white" : undefined,
         ...props.buttonProps?.style,
       }}
@@ -43,7 +43,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
         <CircularProgress
           size={24}
           style={{
-            color: themeColors.buttonSuccess,
+            color: themeColors.success,
             position: "absolute",
             top: "50%",
             left: "50%",

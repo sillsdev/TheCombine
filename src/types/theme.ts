@@ -9,7 +9,7 @@ export const themeColors = {
   primary: blue[600],
   secondary: grey[200],
   error: red[600],
-  buttonSuccess: green[500], // Buttons/; RegisterComponent.tsx
+  success: green[500], // Buttons/
   highlight: yellow[100], // CellComponents/
   shade: blue[700], // tabColor()
   accepted: green[600], // CharacterStatusText.tsx
