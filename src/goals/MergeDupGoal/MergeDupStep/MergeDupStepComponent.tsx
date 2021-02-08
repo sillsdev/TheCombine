@@ -9,7 +9,6 @@ import {
   GridList,
   GridListTile,
   IconButton,
-  Paper,
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
@@ -28,7 +27,6 @@ import {
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
-import theme from "types/theme";
 import { uuid } from "utilities";
 
 export interface SideBar {
@@ -278,36 +276,32 @@ class MergeDupStep extends React.Component<
           </GridList>
         </div>
         {/* Merge button */}
-        <Paper
-          square
-          style={{
-            position: "fixed",
-            width: "100vw",
-            height: "25vh",
-            zIndex: theme.zIndex.drawer,
-          }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            style={{ float: "right", marginRight: 30 }}
-            onClick={(_) => this.saveContinue()}
-            title={
-              this.props.translate(
-                "mergeDups.helpText.saveAndContinue"
-              ) as string
-            }
-          >
-            {this.props.translate("buttons.saveAndContinue")}
-          </Button>
-          <Button
-            style={{ float: "right", marginRight: 30 }}
-            onClick={(_) => this.next()}
-            title={this.props.translate("mergeDups.helpText.skip") as string}
-          >
-            {this.props.translate("buttons.skip")}
-          </Button>
-        </Paper>
+        <Grid container justify="flex-end">
+          <Grid item>
+            <Button
+              color="primary"
+              variant="contained"
+              style={{ marginRight: 30 }}
+              onClick={() => this.saveContinue()}
+              title={
+                this.props.translate(
+                  "mergeDups.helpText.saveAndContinue"
+                ) as string
+              }
+            >
+              {this.props.translate("buttons.saveAndContinue")}
+            </Button>
+            <Button
+              color="secondary"
+              variant="contained"
+              style={{ marginRight: 30 }}
+              onClick={() => this.next()}
+              title={this.props.translate("mergeDups.helpText.skip") as string}
+            >
+              {this.props.translate("buttons.skip")}
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
     );
   }
