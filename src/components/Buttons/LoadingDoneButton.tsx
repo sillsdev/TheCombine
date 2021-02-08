@@ -24,7 +24,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
       type="submit"
       variant="contained"
       {...props.buttonProps}
-      disabled={props.disabled ? props.disabled : props.loading}
+      disabled={props.disabled || props.loading}
       style={{
         backgroundColor: props.done ? themeColors.buttonSuccess : undefined,
         color: props.done ? "white" : undefined,

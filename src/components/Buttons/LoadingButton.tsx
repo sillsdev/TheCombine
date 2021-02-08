@@ -8,6 +8,7 @@ interface LoadingProps {
   loading: boolean;
   children?: React.ReactNode;
   buttonProps?: ButtonProps;
+  disabled?: boolean;
 }
 
 /**
@@ -15,7 +16,11 @@ interface LoadingProps {
  */
 export default function LoadingButton(props: LoadingProps) {
   return (
-    <Button variant="contained" disabled={props.loading} {...props.buttonProps}>
+    <Button
+      variant="contained"
+      disabled={props.disabled || props.loading}
+      {...props.buttonProps}
+    >
       {props.children}
       {props.loading && (
         <CircularProgress
