@@ -86,18 +86,21 @@ namespace BackendFramework
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: When moving to NGINX deployment, can remove this configure.
-            //    CORS isn't needed when a reverse proxy proxies all frontend and backend traffic.
-            var corsOrigin = Environment.GetEnvironmentVariable("COMBINE_CORS_ORIGIN") ?? "http://localhost:3000";
-            services.AddCors(options =>
+            // Only add CORS rules if running outside of Docker/NGINX environment. Rules are not needed in a
+            // true reverse proxy setup.
+            if (!IsInContainer())
             {
-                options.AddPolicy(AllowedOrigins,
-                    builder => builder
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .WithOrigins(corsOrigin)
-                        .AllowCredentials());
-            });
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(AllowedOrigins,
+                        builder => builder
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            // Add URL for React CLI using during development.
+                            .WithOrigins("http://localhost:3000")
+                            .AllowCredentials());
+                });
+            }
 
             // Configure JWT Authentication
             const string secretKeyEnvName = "COMBINE_JWT_SECRET_KEY";
