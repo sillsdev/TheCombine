@@ -60,16 +60,6 @@ const baseTheme = createMuiTheme({
   },
 });
 
-// Used in IconHolder
-export const recorderStatus = {
-  idle: {
-    color: themeColors.recordIdle,
-  },
-  active: {
-    color: themeColors.recordActive,
-  },
-};
-
 export function tabColor(currentTab: Path, tabName: Path) {
   return currentTab === tabName ? themeColors.shade : "inherit";
 }
