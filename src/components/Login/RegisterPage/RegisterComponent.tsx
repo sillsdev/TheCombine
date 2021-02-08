@@ -17,7 +17,7 @@ import {
 
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
-import { buttonSuccess } from "types/theme";
+import { themeColors } from "types/theme";
 import { passwordRequirements, usernameRequirements } from "utilities";
 
 interface RegisterDispatchProps {
@@ -321,7 +321,7 @@ export class Register extends React.Component<
                       <CircularProgress
                         size={24}
                         style={{
-                          color: buttonSuccess,
+                          color: themeColors.buttonSuccess,
                           position: "absolute",
                           top: "50%",
                           left: "50%",

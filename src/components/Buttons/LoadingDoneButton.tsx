@@ -1,10 +1,10 @@
 import { Button, CircularProgress } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import { Check } from "@material-ui/icons";
-import { Translate } from "react-localize-redux";
 import React from "react";
+import { Translate } from "react-localize-redux";
 
-import { buttonSuccess } from "types/theme";
+import { themeColors } from "types/theme";
 
 interface LoadingDoneProps {
   loading: boolean;
@@ -26,7 +26,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
       {...props.buttonProps}
       disabled={props.disabled ? props.disabled : props.loading}
       style={{
-        backgroundColor: props.done ? buttonSuccess : undefined,
+        backgroundColor: props.done ? themeColors.buttonSuccess : undefined,
         color: props.done ? "white" : undefined,
         ...props.buttonProps?.style,
       }}
@@ -43,7 +43,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
         <CircularProgress
           size={24}
           style={{
-            color: buttonSuccess,
+            color: themeColors.buttonSuccess,
             position: "absolute",
             top: "50%",
             left: "50%",

@@ -5,32 +5,34 @@ import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { Path } from "browserHistory";
 
 // Constants which define colors later:
-const primary: string = blue[600];
-const secondary: string = grey[200];
-const error: string = red[600];
-
-export const buttonSuccess = green[500]; // createProjectComponent and RegisterComponent
-export const highlight = yellow[100]; // goals/CharInventoryCreation/components/SampleWords/WordTileComponent.tsx
-
-export const shade = blue[700]; //Buttons on AppBar Component
-
-export const accepted = green[600];
-export const rejected = red[600];
+export const themeColors = {
+  primary: blue[600],
+  secondary: grey[200],
+  error: red[600],
+  buttonSuccess: green[500], // Buttons/; RegisterComponent.tsx
+  highlight: yellow[100], // CellComponents/
+  shade: blue[700], // tabColor()
+  accepted: green[600], // CharacterStatusText.tsx
+  rejected: red[600], // CharacterStatusText.tsx
+  recordIdle: red[500], // RecorderIcon.tsx
+  recordActive: red[900], // RecorderIcon.tsx
+  play: green[800], // AudioPlayer.tsx
+};
 
 // Constants used in multiple themes
 const palette = {
   type: "light",
   primary: {
-    main: primary,
+    main: themeColors.primary,
   },
   secondary: {
-    main: secondary,
+    main: themeColors.secondary,
   },
   error: {
-    main: error,
+    main: themeColors.error,
   },
   background: {
-    default: secondary,
+    default: themeColors.secondary,
   },
   contrastThreshold: 3,
   tonalOffset: 0.2,
@@ -64,18 +66,15 @@ const baseTheme = createMuiTheme({
 // Used in IconHolder
 export const recorderStatus = {
   idle: {
-    color: red[500],
+    color: themeColors.recordIdle,
   },
   active: {
-    color: red[900],
+    color: themeColors.recordActive,
   },
 };
 
 export function tabColor(currentTab: Path, tabName: Path) {
-  const colors = ["inherit", shade];
-  if (currentTab === tabName) {
-    return colors[1];
-  } else return colors[0];
+  return currentTab === tabName ? "inherit" : themeColors.shade;
 }
 
 // Can have a number of additional options passed in; here, sticks with defaults
