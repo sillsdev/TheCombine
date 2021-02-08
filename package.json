@@ -19,7 +19,7 @@
     "import-sem-doms": "tsc scripts/importSemanticDomains.ts && node scripts/importSemanticDomains.js",
     "license-report": "npm install && license-checker --production",
     "license-summary": "npm install && license-checker --production --summary",
-    "lint": "eslint --ext js,ts,tsx,jsx src",
+    "lint": "eslint --max-warnings=0 --ext js,ts,tsx,jsx src",
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
     "set-admin-user": "tsc scripts/setAdminUser.ts && node scripts/setAdminUser.js",
     "start": "npm install && npm-run-all --parallel backend database frontend",
