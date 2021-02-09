@@ -3,7 +3,7 @@ import { Translate } from "react-localize-redux";
 import { TextField, Chip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 
-import { highlight } from "types/theme";
+import { themeColors } from "types/theme";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { uuid } from "utilities";
@@ -35,7 +35,7 @@ export default function SenseCell(
           disableUnderline: !props.editable,
           style:
             props.sortingByGloss && index === 0
-              ? { backgroundColor: highlight }
+              ? { backgroundColor: themeColors.highlight }
               : {},
         }}
         // Handles editing sense's local glosses

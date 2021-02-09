@@ -8,7 +8,7 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "backend";
-import { AutoComplete } from "types/AutoComplete";
+import { AutoComplete } from "types/project";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
 import {

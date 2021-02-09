@@ -2,12 +2,13 @@ import { Button, CircularProgress } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 
-import { buttonSuccess } from "types/theme";
+import { themeColors } from "types/theme";
 
 interface LoadingProps {
-  loading: boolean;
-  children?: React.ReactNode;
   buttonProps?: ButtonProps;
+  children?: React.ReactNode;
+  disabled?: boolean;
+  loading?: boolean;
 }
 
 /**
@@ -15,13 +16,17 @@ interface LoadingProps {
  */
 export default function LoadingButton(props: LoadingProps) {
   return (
-    <Button variant="contained" disabled={props.loading} {...props.buttonProps}>
+    <Button
+      variant="contained"
+      disabled={props.disabled || props.loading}
+      {...props.buttonProps}
+    >
       {props.children}
       {props.loading && (
         <CircularProgress
           size={24}
           style={{
-            color: buttonSuccess,
+            color: themeColors.success,
             position: "absolute",
             top: "50%",
             left: "50%",
