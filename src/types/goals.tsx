@@ -1,3 +1,5 @@
+import { v1 } from "uuid";
+
 import {
   CreateCharInvData,
   CreateCharInvStepData,
@@ -87,10 +89,6 @@ export class Goal {
     this.data = data;
     this.completed = false;
     this.result = GoalOption.Current;
-    this.hash = generateGuid();
+    this.hash = v1();
   }
-}
-
-function generateGuid(): string {
-  return Math.floor(Math.random() * 9999999).toString();
 }

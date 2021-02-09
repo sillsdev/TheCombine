@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
-import { highlight } from "types/theme";
+import { themeColors } from "types/theme";
 
 interface CharacterWordsProps {
   character: string;
@@ -47,9 +47,8 @@ function highlightCharacterInWord(character: string, word: string) {
       newWord.push(
         <span
           style={{
-            background: highlight,
+            background: themeColors.highlight,
             padding: "3px 0",
-            //borderBottom: "2px solid red"
           }}
         >
           {letter}
