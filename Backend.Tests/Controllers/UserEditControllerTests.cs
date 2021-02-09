@@ -135,7 +135,7 @@ namespace Backend.Tests.Controllers
 
             // Create wrapper object
             const int modGoalIndex = 0;
-            var wrapperObj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
+            var wrapperObj = new UserEditStepWrapper(modGoalIndex, stringUserEdit);
 
             _ = _userEditController.Put(_projId, origUserEdit.Id, wrapperObj);
 

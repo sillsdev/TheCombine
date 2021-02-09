@@ -35,6 +35,12 @@ jest.mock("backend", () => {
   return {
     addGoalToUserEdit: (id: string, goal: Goal) =>
       mockAddGoalToUserEdit(id, goal),
+    addStepToGoal: (
+      id: string,
+      goalIndex: number,
+      step: string,
+      stepIndex?: number
+    ) => mockAddStepToGoal(id, goalIndex, step, stepIndex),
     createUserEdit: () => mockCreateUserEdit(),
     getUser: (id: string) => mockGetUser(id),
     getUserEditById: (id: string, index: string) =>
@@ -44,20 +50,22 @@ jest.mock("backend", () => {
 });
 
 const mockAddGoalToUserEdit = jest.fn();
+const mockAddStepToGoal = jest.fn();
 const mockCreateUserEdit = jest.fn();
 const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockLoadMergeDupsData = jest.fn();
 const mockUpdateUser = jest.fn();
 function setMockFunctions() {
-  mockAddGoalToUserEdit.mockResolvedValue(mockGoal);
+  mockAddGoalToUserEdit.mockResolvedValue(0);
+  mockAddStepToGoal.mockResolvedValue(0);
   mockCreateUserEdit.mockResolvedValue({});
   mockGetUser.mockResolvedValue(mockUser);
   mockGetUserEditById.mockResolvedValue(mockUserEdit);
-  mockLoadMergeDupsData.mockImplementation((goal: Goal) => {
+  mockLoadMergeDupsData.mockImplementation((goal: MergeDups) => {
     goal.data = { plannedWords: goalDataMock.plannedWords };
     goal.numSteps = goalDataMock.plannedWords.length;
-    return goal;
+    return Promise.resolve(goal);
   });
   mockUpdateUser.mockResolvedValue(mockUser);
 }
@@ -178,9 +186,12 @@ describe("GoalsActions", () => {
   });
 
   describe("asyncAddGoalToHistory", () => {
-    it("should create an async action to add a goal to history", async () => {
+    beforeEach(() => {
       LocalStorage.setCurrentUser(mockUser);
       LocalStorage.setProjectId(mockProjectId);
+    });
+
+    it("should create an async action to add a goal to history", async () => {
       const goal: Goal = new CreateCharInv();
       await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
       const addGoalToHistory: actions.AddGoalToHistoryAction = {
@@ -189,10 +200,44 @@ describe("GoalsActions", () => {
       };
       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
     });
+
+    it("should create multiple actions to add a MergeDups to history", async () => {
+      const goal: Goal = new MergeDups();
+      goal.numSteps = maxNumSteps(goal.goalType);
+      goal.steps = [
+        {
+          words: [...goalDataMock.plannedWords[0]],
+        },
+      ];
+      const mockStoreState = {
+        goalsState: {
+          historyState: {
+            history: [goal],
+          },
+          allPossibleGoals: [...defaultState.allPossibleGoals],
+          suggestionsState: {
+            suggestions: [...defaultState.suggestionsState.suggestions],
+          },
+        },
+      };
+      mockStore = createMockStore(mockStoreState);
+      await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
+      const setWordData: MergeTreeAction = {
+        type: MergeTreeActions.SET_DATA,
+        payload: [...goalDataMock.plannedWords[0]],
+      };
+      expect(mockStore.getActions()).toContainEqual(setWordData);
+    });
+
+    it("should load goal data for MergeDups", async () => {
+      const goal: Goal = new MergeDups();
+      await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
+      expect(mockLoadMergeDupsData).toBeCalled();
+    });
   });
 
-  describe("asyncLoadGoalData", () => {
-    it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
+  describe("loadGoalData", () => {
+    it("should load MergeDups data", async () => {
       const goalToUpdate: Goal = new MergeDups();
       goalToUpdate.numSteps = maxNumSteps(goalToUpdate.goalType);
       goalToUpdate.steps = [
@@ -214,16 +259,6 @@ describe("GoalsActions", () => {
         },
       ];
 
-      const updateGoal: actions.UpdateGoalAction = {
-        type: actions.GoalsActions.UPDATE_GOAL,
-        payload: [expectedUpdatedGoal],
-      };
-
-      const setWordData: MergeTreeAction = {
-        type: MergeTreeActions.SET_DATA,
-        payload: [...goalDataMock.plannedWords[0]],
-      };
-
       const mockStoreState = {
         goalsState: {
           historyState: {
@@ -237,44 +272,20 @@ describe("GoalsActions", () => {
       };
 
       mockStore = createMockStore(mockStoreState);
-      await mockStore.dispatch<any>(actions.asyncLoadGoalData(goalToUpdate));
-      expect(mockStore.getActions()).toEqual([updateGoal, setWordData]);
-    });
-
-    it("should not dispatch any actions", async () => {
-      const goal: Goal = new HandleFlags();
-      const expectedGoal: Goal = new HandleFlags();
-      const returnedGoal = await mockStore.dispatch<any>(
-        actions.asyncLoadGoalData(goal)
+      expect(await actions.loadGoalData(goalToUpdate)).toEqual(
+        expectedUpdatedGoal
       );
-      expect(returnedGoal.data).toEqual(expectedGoal.data);
-      expect(mockStore.getActions()).toEqual([]);
-    });
-
-    it("should load goal data for MergeDups", async () => {
-      let goal: Goal = new MergeDups();
-      goal = await mockStore.dispatch<any>(actions.asyncLoadGoalData(goal));
-      const data = goal.data as MergeDupData;
-      expect(data.plannedWords.length).toBeGreaterThan(0);
-    });
-
-    it("should not load any goal data", async () => {
-      const goal: Goal = new HandleFlags();
-      const returnedGoal = await mockStore.dispatch<any>(
-        actions.asyncLoadGoalData(goal)
-      );
-      expect(returnedGoal.data).toEqual({});
     });
   });
 
-  describe("updateStepData", () => {
+  describe("updateStepFromData", () => {
     it("should update the step data of a goal", () => {
       const goal = new MergeDups();
       goal.data = goalDataMock;
       expect(goal.steps).toEqual([]);
       expect(goal.currentStep).toEqual(0);
 
-      const updatedGoal = actions.updateStepData(goal);
+      const updatedGoal = actions.updateStepFromData(goal);
       expect((updatedGoal.steps[0] as MergeStepData).words).toEqual(
         (goal.data as MergeDupData).plannedWords[0]
       );
@@ -283,11 +294,11 @@ describe("GoalsActions", () => {
 
     it("should not update the step data of an unimplemented goal", () => {
       const goal = new HandleFlags();
-      expect(goal.steps).toEqual([]);
+      expect(goal.steps).toEqual([{}]);
       expect(goal.currentStep).toEqual(0);
 
-      const updatedGoal: HandleFlags = actions.updateStepData(goal);
-      expect(updatedGoal.steps).toEqual([]);
+      const updatedGoal: HandleFlags = actions.updateStepFromData(goal);
+      expect(updatedGoal.steps).toEqual([{}]);
       expect(updatedGoal.currentStep).toEqual(0);
     });
   });

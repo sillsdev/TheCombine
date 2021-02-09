@@ -360,13 +360,14 @@ function blacklistSetAndAllSubsets(
 
 // Used in MergeDups cases of GoalActions functions
 
-export function getMergeStepData(
+export function dispatchMergeStepData(
   goal: MergeDups,
   dispatch: StoreStateDispatch
 ) {
   const stepData = goal.steps[goal.currentStep] as MergeStepData;
   if (stepData) {
-    dispatch(setWordData(stepData.words));
+    const stepWords = stepData.words ?? [];
+    dispatch(setWordData(stepWords));
   }
 }
 

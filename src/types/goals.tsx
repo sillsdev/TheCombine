@@ -1,4 +1,4 @@
-import { v1 } from "uuid";
+import { v4 } from "uuid";
 
 import {
   CreateCharInvData,
@@ -15,7 +15,7 @@ enum GoalOption {
 
 type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
 
-type GoalStep = CreateCharInvStepData | MergeStepData; // | OtherTypes
+export type GoalStep = CreateCharInvStepData | MergeStepData | {}; // | OtherTypes
 
 export interface GoalProps {
   goal?: Goal;
@@ -77,7 +77,7 @@ export class Goal {
   constructor(
     type = GoalType.Default,
     name = GoalName.Default,
-    steps: GoalStep[] = [],
+    steps: GoalStep[] = [{}],
     data: GoalData = {}
   ) {
     this.goalType = type;
@@ -89,6 +89,6 @@ export class Goal {
     this.data = data;
     this.completed = false;
     this.result = GoalOption.Current;
-    this.hash = v1();
+    this.hash = v4();
   }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { Typography, GridList, GridListTile, Button } from "@material-ui/core";
 
-import { Goal } from "types/goals";
+import { Goal, GoalType } from "types/goals";
 
 const style = {
   container: {
@@ -23,7 +23,7 @@ interface HorizontalDisplayProps {
   width: number;
   numPanes: number;
   scrollToEnd: boolean;
-  handleChange: (name: string) => void;
+  handleChange: (goalType: GoalType) => void;
 }
 
 export default class HorizontalDisplay extends React.Component<HorizontalDisplayProps> {
@@ -47,8 +47,9 @@ export default class HorizontalDisplay extends React.Component<HorizontalDisplay
             { ...style.buttonStyle, width: this.optionWidth + "vw" } as any
           }
           onClick={() => {
-            this.props.handleChange(goal.name);
+            this.props.handleChange(goal.goalType);
           }}
+          disabled={goal.completed}
         >
           <Typography variant={"h6"}>
             <Translate id={goal.name + ".title"} />

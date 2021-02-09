@@ -2,7 +2,7 @@ import axios from "axios";
 
 import authHeader from "components/Login/AuthHeaders";
 import history, { Path } from "browserHistory";
-import { Goal } from "types/goals";
+import { Goal, GoalStep } from "types/goals";
 import { Project } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
 import SemanticDomainWithSubdomains from "types/SemanticDomain";
@@ -400,10 +400,11 @@ export async function avatarSrc(userId: string): Promise<string> {
   return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
+/** Returns index of added goal */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<Goal> {
+): Promise<number> {
   const stepData = JSON.stringify(goal.steps);
   const userEditTuple = {
     goalType: goal.goalType.toString(),
@@ -420,17 +421,19 @@ export async function addGoalToUserEdit(
   return resp.data;
 }
 
+/** Returns index of step within specified goal */
 export async function addStepToGoal(
   userEditId: string,
   goalIndex: number,
-  goal: Goal
-): Promise<Goal> {
-  const newEdit = JSON.stringify(goal.steps);
-  const userEditTuple = { goalIndex, newEdit };
+  step: GoalStep,
+  stepIndex?: number // If undefined, step will be added to end.
+): Promise<number> {
+  const stepString = JSON.stringify(step);
+  const stepEditTuple = { goalIndex, stepString, stepIndex };
   return await backendServer
     .put(
       `projects/${LocalStorage.getProjectId()}/useredits/${userEditId}`,
-      userEditTuple,
+      stepEditTuple,
       {
         headers: { ...authHeader() },
       }

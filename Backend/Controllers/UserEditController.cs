@@ -183,12 +183,12 @@ namespace BackendFramework.Controllers
             return new NotFoundObjectResult(editIndex);
         }
 
-        /// <summary> Adds a step to specified goal </summary>
+        /// <summary> Adds/updates a step to/in specified goal </summary>
         /// <remarks> PUT: v1/projects/{projectId}/useredits/{userEditId} </remarks>
-        /// <returns> Index of newest edit </returns>
+        /// <returns> Index of added/modified step in specified goal </returns>
         [HttpPut("{userEditId}")]
         public async Task<IActionResult> Put(string projectId, string userEditId,
-            [FromBody] UserEditObjectWrapper userEdit)
+            [FromBody] UserEditStepWrapper stepEdit)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -208,22 +208,40 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            // Ensure userEdit exists
+            // Ensure userEdit exists.
             var document = await _repo.GetUserEdit(projectId, userEditId);
             if (document is null)
             {
                 return new NotFoundResult();
             }
 
-            // Ensure index exists
-            if (userEdit.GoalIndex >= document.Edits.Count)
+            // Ensure indices exist.
+            if (stepEdit.GoalIndex < 0 || stepEdit.GoalIndex >= document.Edits.Count)
             {
-                return new BadRequestObjectResult("Goal index out of range");
+                return new BadRequestObjectResult("Goal index out of range.");
+            }
+            Console.WriteLine(stepEdit.StepIndex);
+            var maxStepIndex = document.Edits[stepEdit.GoalIndex].StepData.Count;
+            var stepIndex = stepEdit.StepIndex ?? maxStepIndex;
+            Console.WriteLine(stepIndex);
+            if (stepIndex < 0 || stepIndex > maxStepIndex)
+            {
+                return new BadRequestObjectResult("Step index out of range.");
             }
 
-            await _userEditService.AddStepToGoal(projectId, userEditId, userEdit.GoalIndex, userEdit.NewEdit);
+            // Add new step to or update step in goal.
+            if (stepIndex == maxStepIndex)
+            {
+                await _userEditService.AddStepToGoal(
+                    projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString);
+            }
+            else
+            {
+                await _userEditService.UpdateStepInGoal(
+                    projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString, stepIndex);
+            }
 
-            return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count - 1);
+            return new OkObjectResult(stepIndex);
         }
 
         /// <summary> Deletes <see cref="UserEdit"/> with specified id </summary>
