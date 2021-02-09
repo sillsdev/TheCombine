@@ -85,7 +85,6 @@ const mockUserId = "789";
 let mockUser = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
-const mockGoal: Goal = new CreateCharInv();
 
 beforeAll(() => {
   // Save things in localStorage to restore once tests are done

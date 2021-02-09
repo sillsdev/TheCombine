@@ -1,6 +1,6 @@
 import * as Backend from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { MergeDupData, MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { MergeDupData } from "goals/MergeDupGoal/MergeDups";
 import {
   dispatchMergeStepData,
   loadMergeDupsData,
