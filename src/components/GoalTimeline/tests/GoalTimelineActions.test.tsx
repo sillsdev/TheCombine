@@ -200,7 +200,7 @@ describe("GoalsActions", () => {
       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
     });
 
-    it("should create multiple actions to add a MergeDups to history", async () => {
+    it("should create another action to add a MergeDups to history", async () => {
       const goal: Goal = new MergeDups();
       goal.numSteps = maxNumSteps(goal.goalType);
       goal.steps = [
@@ -208,18 +208,6 @@ describe("GoalsActions", () => {
           words: [...goalDataMock.plannedWords[0]],
         },
       ];
-      const mockStoreState = {
-        goalsState: {
-          historyState: {
-            history: [goal],
-          },
-          allPossibleGoals: [...defaultState.allPossibleGoals],
-          suggestionsState: {
-            suggestions: [...defaultState.suggestionsState.suggestions],
-          },
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
       await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
       const setWordData: MergeTreeAction = {
         type: MergeTreeActions.SET_DATA,

@@ -296,6 +296,7 @@ class MergeDupStep extends React.Component<
         </Grid>
       </React.Fragment>
     ) : (
+      // ToDo: create component with translated text and button back to goals.
       "Nothing to merge."
     );
   }
