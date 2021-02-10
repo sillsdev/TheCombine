@@ -185,7 +185,7 @@ export function getUserEditId(): string | undefined {
   }
 }
 
-function convertEditToGoal(edit: Edit): Goal {
+export function convertEditToGoal(edit: Edit): Goal {
   const goal = goalTypeToGoal(edit.goalType);
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
   goal.completed = true;

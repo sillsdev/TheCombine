@@ -19,7 +19,7 @@ import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDup
 import { Goal } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { User } from "types/user";
-import { UserEdit } from "types/userEdit";
+import { Edit, UserEdit } from "types/userEdit";
 
 jest.mock("goals/MergeDupGoal/MergeDupStep/MergeDupStepActions", () => {
   const realMergeDupActions = jest.requireActual(
@@ -85,6 +85,16 @@ const mockUserId = "789";
 let mockUser = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
+function mockGoalWithSteps(): Goal {
+  const goal = new MergeDups();
+  goal.numSteps = maxNumSteps(goal.goalType);
+  goal.steps = [
+    {
+      words: [...goalDataMock.plannedWords[0]],
+    },
+  ];
+  return goal;
+}
 
 beforeAll(() => {
   // Save things in localStorage to restore once tests are done
@@ -225,26 +235,15 @@ describe("GoalsActions", () => {
 
   describe("loadGoalData", () => {
     it("should load MergeDups data", async () => {
-      const goalToUpdate: Goal = new MergeDups();
-      goalToUpdate.numSteps = maxNumSteps(goalToUpdate.goalType);
-      goalToUpdate.steps = [
-        {
-          words: [...goalDataMock.plannedWords[0]],
-        },
-      ];
+      const goalToUpdate = mockGoalWithSteps();
 
-      const expectedUpdatedGoal: Goal = new MergeDups();
+      const expectedUpdatedGoal = mockGoalWithSteps();
       expectedUpdatedGoal.currentStep = 0;
       expectedUpdatedGoal.hash = goalToUpdate.hash;
       expectedUpdatedGoal.numSteps = goalToUpdate.numSteps;
       expectedUpdatedGoal.data = {
         plannedWords: [...goalDataMock.plannedWords],
       };
-      expectedUpdatedGoal.steps = [
-        {
-          words: [...goalDataMock.plannedWords[0]],
-        },
-      ];
 
       const mockStoreState = {
         goalsState: {
@@ -303,6 +302,19 @@ describe("GoalsActions", () => {
     it("should return undefined when no userEditId exists for the project", () => {
       LocalStorage.setProjectId("differentThanMockProjectId");
       expect(actions.getUserEditId()).toEqual(undefined);
+    });
+  });
+
+  describe("convertEditToGoal", () => {
+    it("should build a completed goal with the same goalType and steps", () => {
+      const oldGoal = mockGoalWithSteps();
+      const edit: Edit = {
+        goalType: oldGoal.goalType,
+        stepData: oldGoal.steps.map((s) => JSON.stringify(s)),
+      };
+      const newGoal = actions.convertEditToGoal(edit);
+      expect(newGoal.goalType).toEqual(oldGoal.goalType);
+      expect(newGoal.steps).toEqual(oldGoal.steps);
     });
   });
 });
