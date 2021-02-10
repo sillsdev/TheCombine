@@ -51,6 +51,9 @@ DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
 COMBINE_HOST="{{ combine_server_name | replace('.', '-') }}"
 BACKUP_FILE="combine-backup.tar.gz"
 AWS_FILE="${AWS_BUCKET}/${COMBINE_HOST}-${DATE_STR}.tar.gz"
+# turn off the color coding for docker-compose output - adds unreadable escape
+# characters to syslog
+COMPOSE_OPTS="--no-ansi"
 
 cd ${COMBINE_APP_DIR}
 
@@ -69,11 +72,11 @@ fi
 
 ((step++))
 echo_verbose "${step}. Stop the frontend and certmgr containers."
-/usr/local/bin/docker-compose stop --timeout 0 frontend certmgr
+/usr/local/bin/docker-compose ${COMPOSE_OPTS} stop --timeout 0 frontend certmgr
 
 ((step++))
 echo_verbose "${step}. Dump the database."
-/usr/local/bin/docker-compose exec -T database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
+/usr/local/bin/docker-compose ${COMPOSE_OPTS} exec -T database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${DB_CONTAINER}:${DB_FILES_SUBDIR}/ ${BACKUP_DIR}
 
@@ -103,4 +106,4 @@ rm ${BACKUP_FILE}
 ((step++))
 echo_verbose "${step}. Restart the frontend and certmgr containers."
 cd ${COMBINE_APP_DIR}
-/usr/local/bin/docker-compose start certmgr frontend
+/usr/local/bin/docker-compose ${COMPOSE_OPTS} start certmgr frontend
