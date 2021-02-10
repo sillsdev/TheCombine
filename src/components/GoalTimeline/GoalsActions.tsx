@@ -137,7 +137,7 @@ export function dispatchStepData(goal: Goal) {
   return (dispatch: StoreStateDispatch) => {
     switch (goal.goalType) {
       case GoalType.MergeDups:
-        dispatchMergeStepData(goal, dispatch);
+        dispatch(dispatchMergeStepData(goal));
         break;
       default:
         break;
@@ -188,6 +188,7 @@ export function getUserEditId(): string | undefined {
 export function convertEditToGoal(edit: Edit): Goal {
   const goal = goalTypeToGoal(edit.goalType);
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
+  goal.numSteps = goal.steps.length;
   goal.completed = true;
   return goal;
 }
