@@ -6,18 +6,9 @@
 
 set -e
 
-VERBOSE="0"
-VERBOSE_CMD="echo"
-
-echo_verbose() {
-  if [ "${VERBOSE}" == "1" ] ; then
-    ${VERBOSE_CMD} $@
-  fi
-}
-
 usage() {
   cat <<USAGE
-  Usage: $0 [-h] [-v]
+  Usage: $0 [options]
      Creates a backup of the combine database and backend containers
   Options:
      -h: help - print this message
@@ -25,15 +16,7 @@ usage() {
 USAGE
 }
 
-if [[ $- == *i* ]] ; then
-    # interactive shell
-    EXEC_OPTS=""
-    QUIET_OPT=""
-else
-    EXEC_OPTS="-T"
-    # currently, "--quiet" works for both mongodump and aws commands
-    QUIET_OPT="--quiet"
-fi
+. $(cd $(dirname $0); pwd)/combine-env
 
 while [[ $# -gt 0 ]] ; do
   arg="$1"
@@ -45,9 +28,7 @@ while [[ $# -gt 0 ]] ; do
         ;;
     -v|--verbose)
         VERBOSE="1"
-        ;;
-    -s|--syslog)
-        VERBOSE_CMD="logger -p local0.notice -t ${0##*/}[$$]"
+        QUIET_OPT=""
         ;;
     -?)
         echo "Invalid option: ${arg}."
@@ -63,19 +44,18 @@ while [[ $# -gt 0 ]] ; do
   shift
 done
 
-echo_verbose "1. Setup some useful environment variables."
+step=1
+
+echo_verbose "${step}. Setup some useful environment variables."
 DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
 COMBINE_HOST="{{ combine_server_name | replace('.', '-') }}"
 BACKUP_FILE="combine-backup.tar.gz"
-AWS_FILE="s3://{{ aws_s3_backup_loc }}/${COMBINE_HOST}-${DATE_STR}.tar.gz"
-COMBINE_APP_DIR=${COMBINE_APP_DIR:="{{ combine_app_dir }}"}
-BACKUP_DIR=${BACKUP_DIR:="{{ combine_backup_dir }}"}
-BACKEND_FILES_SUBDIR="{{ backend_files_subdir }}"
-DB_FILES_SUBDIR="{{ mongo_files_subdir }}"
+AWS_FILE="${AWS_BUCKET}/${COMBINE_HOST}-${DATE_STR}.tar.gz"
 
 cd ${COMBINE_APP_DIR}
 
-echo_verbose "2. Prepare the backup directory."
+((step++))
+echo_verbose "${step}. Prepare the backup directory."
 if [ ! -e "${BACKUP_DIR}" ] ; then
   mkdir -p ${BACKUP_DIR}
 else
@@ -87,39 +67,40 @@ else
   done
 fi
 
-echo_verbose "3. Stop the current containers."
-/usr/local/bin/docker-compose down
+((step++))
+echo_verbose "${step}. Stop the frontend and certmgr containers."
+/usr/local/bin/docker-compose stop --timeout 0 frontend certmgr
 
-echo_verbose "4. Start up just the backend and the database."
-/usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
-/usr/local/bin/docker-compose up --detach database backend
-
-
-echo_verbose "5. Dump the database."
-/usr/local/bin/docker-compose exec ${EXEC_OPTS} database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
+((step++))
+echo_verbose "${step}. Dump the database."
+/usr/local/bin/docker-compose exec -T database /usr/bin/mongodump --db=CombineDatabase --gzip ${QUIET_OPT}
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${DB_CONTAINER}:${DB_FILES_SUBDIR}/ ${BACKUP_DIR}
 
-echo_verbose "6. Copy the backend files (commands are run relative the 'app' user's home directory)."
+((step++))
+echo_verbose "${step}. Copy the backend files (commands are run relative the 'app' user's home directory)."
 BE_CONTAINER=`docker ps | grep backend | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${BE_CONTAINER}:/home/app/${BACKEND_FILES_SUBDIR}/ ${BACKUP_DIR}
 
-echo_verbose "7. Create the tarball for the backup."
+((step++))
+echo_verbose "${step}. Create the tarball for the backup."
 cd ${BACKUP_DIR}
 tar --create --file=${BACKUP_FILE} --gzip ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
 
-echo_verbose "8. Push backup to AWS S3 storage."
+((step++))
+echo_verbose "${step}. Push backup to AWS S3 storage."
 #    need to specify full path because $PATH does not contain
 #    /usr/local/bin when run as a cron job
 /usr/local/bin/aws ${QUIET_OPT} s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
 
-echo_verbose "9. Remove backup files."
+((step++))
+echo_verbose "${step}. Remove backup files."
 # Running in ${BACKUP_DIR}
 rm -rf ${BACKEND_FILES_SUBDIR} ${DB_FILES_SUBDIR}
 ALL_BACKUPS=(`ls combine-backup*.tar.gz`)
 rm ${BACKUP_FILE}
 
-echo_verbose "10. Restart the containers."
+((step++))
+echo_verbose "${step}. Restart the frontend and certmgr containers."
 cd ${COMBINE_APP_DIR}
-/usr/local/bin/docker-compose down
-/usr/local/bin/docker-compose up --detach
+/usr/local/bin/docker-compose start certmgr frontend
