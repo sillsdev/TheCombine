@@ -210,7 +210,7 @@ describe("GoalsActions", () => {
       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
     });
 
-    it("should create another action to add a MergeDups to history", async () => {
+    it("should create another action to add MergeDups data", async () => {
       const goal: Goal = new MergeDups();
       goal.numSteps = maxNumSteps(goal.goalType);
       goal.steps = [
@@ -230,6 +230,30 @@ describe("GoalsActions", () => {
       const goal: Goal = new MergeDups();
       await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
       expect(mockLoadMergeDupsData).toBeCalled();
+    });
+  });
+
+  describe("dispatchStepData", () => {
+    it("should not create any action for an unimplemented goal", async () => {
+      const goal: Goal = new HandleFlags();
+      await mockStore.dispatch<any>(actions.dispatchStepData(goal));
+      expect(mockStore.getActions()).toEqual([]);
+    });
+
+    it("should create an action to add MergeDups data", async () => {
+      const goal: Goal = new MergeDups();
+      goal.numSteps = maxNumSteps(goal.goalType);
+      goal.steps = [
+        {
+          words: [...goalDataMock.plannedWords[0]],
+        },
+      ];
+      await mockStore.dispatch<any>(actions.dispatchStepData(goal));
+      const setWordData: MergeTreeAction = {
+        type: MergeTreeActions.SET_DATA,
+        payload: [...goalDataMock.plannedWords[0]],
+      };
+      expect(mockStore.getActions()).toEqual([setWordData]);
     });
   });
 
