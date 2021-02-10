@@ -47,7 +47,7 @@ describe("GoalTimelineVertical", () => {
       expect(CHOOSE_GOAL.mock.calls[0][0].goalType).toEqual(goals[2].goalType);
     });
 
-    it("Goes default for a non-existent goalType", () => {
+    it("Defaults to generic GoalType.Default=-1 for a non-existent goalType", () => {
       timeHandle.handleChange(-2);
       expect(CHOOSE_GOAL).toBeCalled();
       expect(CHOOSE_GOAL.mock.calls[0][0].goalType).toEqual(-1);

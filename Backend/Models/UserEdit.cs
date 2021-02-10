@@ -76,6 +76,8 @@ namespace BackendFramework.Models
         public string StepString { get; set; }
 
         [BsonElement("stepIndex")]
+        /* A null StepIndex implies index equal to the length of the step list--
+         * i.e. the step is to be added to the end of the list. */
         public int? StepIndex { get; set; }
 
         public UserEditStepWrapper(int goalIndex, string stepString, int? stepIndex = null)
