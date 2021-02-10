@@ -220,10 +220,8 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestObjectResult("Goal index out of range.");
             }
-            Console.WriteLine(stepEdit.StepIndex);
             var maxStepIndex = document.Edits[stepEdit.GoalIndex].StepData.Count;
             var stepIndex = stepEdit.StepIndex ?? maxStepIndex;
-            Console.WriteLine(stepIndex);
             if (stepIndex < 0 || stepIndex > maxStepIndex)
             {
                 return new BadRequestObjectResult("Step index out of range.");
