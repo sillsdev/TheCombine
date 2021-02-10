@@ -2,7 +2,7 @@ import { Typography, GridList, GridListTile, Button } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { Goal } from "types/goals";
+import { Goal, GoalType } from "types/goals";
 
 const style = {
   container: {
@@ -23,7 +23,7 @@ interface VerticalDisplayProps {
   height: number;
   numPanes: number;
   scrollToEnd: boolean;
-  handleChange: (name: string) => void;
+  handleChange: (goalType: GoalType) => void;
 }
 
 interface VerticalDisplayStates {
@@ -54,9 +54,10 @@ export default class VerticalDisplay extends React.Component<
             { ...style.buttonStyle, height: this.optionHeight + "vw" } as any
           }
           onClick={() => {
-            this.props.handleChange(goal.name);
+            this.props.handleChange(goal.goalType);
           }}
           fullWidth
+          disabled={goal.completed}
         >
           <Typography variant={"h6"}>
             <Translate id={goal.name + ".title"} />

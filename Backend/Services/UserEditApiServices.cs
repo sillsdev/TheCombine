@@ -24,15 +24,15 @@ namespace BackendFramework.Services
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             // Get userEdit to change
-            var userEntry = await _repo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _repo.GetUserEdit(projectId, userEditId);
             const int invalidEditIndex = -1;
             var failureResult = new Tuple<bool, int>(false, invalidEditIndex);
-            if (userEntry is null)
+            if (oldUserEdit is null)
             {
                 return failureResult;
             }
 
-            var newUserEdit = userEntry.Clone();
+            var newUserEdit = oldUserEdit.Clone();
 
             // Add the new goal index to Edits list
             newUserEdit.Edits.Add(edit);
@@ -54,18 +54,36 @@ namespace BackendFramework.Services
             return new Tuple<bool, int>(replaceSucceeded, indexOfNewestEdit);
         }
 
-        /// <summary> Adds a string representation of a step to a <see cref="Edit"/> at a specified index </summary>
+        /// <summary> Adds a string representation of a step to a specified <see cref="Edit"/> </summary>
         /// <returns> A bool: success of operation </returns>
-        public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string userEdit)
+        public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string newStep)
         {
-            var addUserEdit = await _repo.GetUserEdit(projectId, userEditId);
-            if (addUserEdit is null)
+            var oldUserEdit = await _repo.GetUserEdit(projectId, userEditId);
+            if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count)
             {
                 return false;
             }
 
-            var newUserEdit = addUserEdit.Clone();
-            newUserEdit.Edits[goalIndex].StepData.Add(userEdit);
+            var newUserEdit = oldUserEdit.Clone();
+            newUserEdit.Edits[goalIndex].StepData.Add(newStep);
+            var updateResult = await _repo.Replace(projectId, userEditId, newUserEdit);
+            return updateResult;
+        }
+
+        /// <summary> Updates a specified step to in a specified <see cref="Edit"/> </summary>
+        /// <returns> A bool: success of operation </returns>
+        public async Task<bool> UpdateStepInGoal(
+            string projectId, string userEditId, int goalIndex, string updatedStep, int stepIndex)
+        {
+            var oldUserEdit = await _repo.GetUserEdit(projectId, userEditId);
+            if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count
+                || stepIndex >= oldUserEdit.Edits[goalIndex].StepData.Count)
+            {
+                return false;
+            }
+
+            var newUserEdit = oldUserEdit.Clone();
+            newUserEdit.Edits[goalIndex].StepData[stepIndex] = updatedStep;
             var updateResult = await _repo.Replace(projectId, userEditId, newUserEdit);
             return updateResult;
         }
