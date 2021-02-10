@@ -262,6 +262,11 @@ describe("GoalsActions", () => {
         expectedUpdatedGoal
       );
     });
+
+    it("should not load data for an unimplemented goal", async () => {
+      const goal = new HandleFlags();
+      expect(await actions.loadGoalData(goal)).toEqual(goal);
+    });
   });
 
   describe("updateStepFromData", () => {
@@ -280,12 +285,7 @@ describe("GoalsActions", () => {
 
     it("should not update the step data of an unimplemented goal", () => {
       const goal = new HandleFlags();
-      expect(goal.steps).toEqual([{}]);
-      expect(goal.currentStep).toEqual(0);
-
-      const updatedGoal: HandleFlags = actions.updateStepFromData(goal);
-      expect(updatedGoal.steps).toEqual([{}]);
-      expect(updatedGoal.currentStep).toEqual(0);
+      expect(actions.updateStepFromData(goal)).toEqual(goal);
     });
   });
 
