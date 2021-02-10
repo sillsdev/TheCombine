@@ -400,16 +400,20 @@ export async function avatarSrc(userId: string): Promise<string> {
   return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
+function convertGoalToBackendEdit(goal: Goal) {
+  const stepData = goal.steps.map((s) => JSON.stringify(s));
+  return {
+    goalType: goal.goalType.toString(),
+    stepData,
+  };
+}
+
 /** Returns index of added goal */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
 ): Promise<number> {
-  const stepData = JSON.stringify(goal.steps);
-  const userEditTuple = {
-    goalType: goal.goalType.toString(),
-    stepData: [stepData],
-  };
+  const userEditTuple = convertGoalToBackendEdit(goal);
   const projectId = LocalStorage.getProjectId();
   const resp = await backendServer.post(
     `projects/${projectId}/useredits/${userEditId}`,
