@@ -1,5 +1,6 @@
 ---
 aws_config_dir: "/home/{{ aws_user }}/.aws"
+aws_cli_version: 2.1.24
 
 # Define a list of profiles to be installed on the target.
 

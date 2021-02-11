@@ -50,3 +50,5 @@
     - name: setup container backups
       import_role:
         name: combine_backup
+      tags:
+        - backups

@@ -42,7 +42,7 @@ my_aws_profiles:
   - "{{ aws_ecr_profile }}"
 
 # Define backup times (UTC)
-backup_hour: "3"
+backup_hour: "10"
 backup_minute: "15"
 # Maximum number of backups to keep on AWS S3 service
 max_backups: "3"
