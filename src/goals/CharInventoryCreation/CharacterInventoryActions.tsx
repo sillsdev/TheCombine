@@ -222,6 +222,7 @@ export function getChanges(
   return changes;
 }
 
+// Returns undefined if CharacterStatus unchanged.
 function getChange(
   c: string,
   oldAcc: string[],
@@ -250,7 +251,9 @@ function getChange(
   if (newAcc.includes(c)) {
     return [c, CharacterStatus.Undecided, CharacterStatus.Accepted];
   }
-  return [c, CharacterStatus.Undecided, CharacterStatus.Rejected];
+  if (newRej.includes(c)) {
+    return [c, CharacterStatus.Undecided, CharacterStatus.Rejected];
+  }
 }
 
 function updateCurrentProject(state: StoreState): Project {
