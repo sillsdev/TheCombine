@@ -6,7 +6,6 @@ import {
   convertGoalToEdit,
   maxNumSteps,
 } from "types/goalUtilities";
-import { Edit } from "types/userEdit";
 
 describe("goalUtilities", () => {
   describe("convertGoalToEdit, convertEditToGoal", () => {
