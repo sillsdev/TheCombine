@@ -67,7 +67,6 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.Complet
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
-            shell=True,
             check=True,
         )
         if verbose:
