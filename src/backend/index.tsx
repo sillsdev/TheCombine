@@ -1,8 +1,10 @@
 import axios from "axios";
 
-import authHeader from "components/Login/AuthHeaders";
+import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
+import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
+import { convertGoalToEdit } from "types/goalUtilities";
 import { Project } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
 import SemanticDomainWithSubdomains from "types/SemanticDomain";
@@ -10,7 +12,6 @@ import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
 import { UserRole } from "types/userRole";
 import { MergeWord, Word } from "types/word";
-import * as LocalStorage from "backend/localStorage";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -72,9 +73,7 @@ export async function createWord(word: Word): Promise<Word> {
 export async function getWord(id: string): Promise<Word> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/words/${id}`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -82,9 +81,7 @@ export async function getWord(id: string): Promise<Word> {
 export async function getAllWords(): Promise<Word[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/words`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -192,9 +189,7 @@ export async function getAllUsers(): Promise<User[]> {
 export async function getAllUsersInCurrentProject(): Promise<User[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/users`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -400,27 +395,17 @@ export async function avatarSrc(userId: string): Promise<string> {
   return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
-function convertGoalToBackendEdit(goal: Goal) {
-  const stepData = goal.steps.map((s) => JSON.stringify(s));
-  return {
-    goalType: goal.goalType.toString(),
-    stepData,
-  };
-}
-
 /** Returns index of added goal */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
 ): Promise<number> {
-  const userEditTuple = convertGoalToBackendEdit(goal);
+  const edit = convertGoalToEdit(goal);
   const projectId = LocalStorage.getProjectId();
   const resp = await backendServer.post(
     `projects/${projectId}/useredits/${userEditId}`,
-    userEditTuple,
-    {
-      headers: authHeader(),
-    }
+    edit,
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -438,22 +423,19 @@ export async function addStepToGoal(
     .put(
       `projects/${LocalStorage.getProjectId()}/useredits/${userEditId}`,
       stepEditTuple,
-      {
-        headers: { ...authHeader() },
-      }
+      { headers: authHeader() }
     )
     .then((resp) => {
       return resp.data;
     });
 }
 
-export async function createUserEdit(): Promise<Object> {
+/** Returns User with updated .workedProjects */
+export async function createUserEdit(): Promise<User> {
   let resp = await backendServer.post(
     `projects/${LocalStorage.getProjectId()}/useredits`,
     "",
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -468,12 +450,11 @@ export async function getUserEditById(
   return resp.data;
 }
 
-export async function getAllUserEdits(): Promise<Goal[]> {
+/** Returns array with every UserEdit for the current project */
+export async function getAllUserEdits(): Promise<UserEdit[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/useredits`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -491,9 +472,7 @@ export async function getSemanticDomains(): Promise<
 export async function getUserRoles(): Promise<UserRole[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/userroles`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -501,9 +480,7 @@ export async function getUserRoles(): Promise<UserRole[]> {
 export async function canUploadLift(): Promise<boolean> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/liftcheck`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -515,9 +492,7 @@ export async function addUserRole(
   await backendServer.put(
     `projects/${LocalStorage.getProjectId()}/users/${user.id}`,
     permissions,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
 }
 
@@ -534,9 +509,7 @@ export async function emailInviteToProject(
       ProjectId: projectId,
       Domain: window.location.origin,
     },
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -548,9 +521,7 @@ export async function validateLink(
   let resp = await backendServer.put(
     `projects/invite/${projectId}/validate/${token}`,
     "",
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
