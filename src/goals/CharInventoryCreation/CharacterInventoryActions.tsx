@@ -1,13 +1,13 @@
 import * as backend from "backend";
 import { saveChangesToProject } from "components/Project/ProjectActions";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
-import { Project } from "types/project";
 import {
   CharacterInventoryState,
   CharacterSetEntry,
   CharacterStatus,
 } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Project } from "types/project";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
@@ -104,17 +104,15 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
     else if (status === CharacterStatus.Rejected)
       dispatch(addToRejectedCharacters([character]));
     else if (status === CharacterStatus.Undecided) {
-      const state = getState();
-
-      const validCharacters = state.characterInventoryState.validCharacters.filter(
-        (c) => c !== character
-      );
-      dispatch(setValidCharacters(validCharacters));
-
-      const rejectedCharacters = state.characterInventoryState.rejectedCharacters.filter(
-        (c) => c !== character
-      );
-      dispatch(setRejectedCharacters(rejectedCharacters));
+      const state = getState().characterInventoryState;
+      const valid = state.validCharacters.filter((c) => c !== character);
+      if (valid.length < state.validCharacters.length) {
+        dispatch(setValidCharacters(valid));
+      }
+      const rejected = state.rejectedCharacters.filter((c) => c !== character);
+      if (rejected.length < state.rejectedCharacters.length) {
+        dispatch(setRejectedCharacters(rejected));
+      }
     }
   };
 }
