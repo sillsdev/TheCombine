@@ -5,14 +5,14 @@ import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getProjectName } from "backend";
-import { StoreState } from "types";
-import theme from "types/theme";
-import { getNowDateTimeString } from "utilities";
 import {
   asyncDownloadExport,
   ExportStatus,
   resetExport,
 } from "components/ProjectExport/ExportProjectActions";
+import { StoreState } from "types";
+import { themeColors } from "types/theme";
+import { getNowDateTimeString } from "utilities";
 
 interface DownloadButtonProps {
   colorSecondary?: boolean;
@@ -36,9 +36,13 @@ export default function DownloadButton(props: DownloadButtonProps) {
     }
   }, [downloadLink, fileUrl]);
 
+  function makeExportName(projectName: string) {
+    return `${projectName}_${getNowDateTimeString()}.zip`;
+  }
+
   async function download() {
     const projectName = await getProjectName(exportState.projectId);
-    setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
+    setFileName(makeExportName(projectName));
     asyncDownloadExport(exportState.projectId)(dispatch)
       .then((url) => {
         if (url) {
@@ -77,10 +81,10 @@ export default function DownloadButton(props: DownloadButtonProps) {
 
   function iconColor() {
     return exportState.status === ExportStatus.Failure
-      ? theme.palette.error.main
+      ? themeColors.error
       : props.colorSecondary
-      ? theme.palette.secondary.main
-      : theme.palette.primary.main;
+      ? themeColors.secondary
+      : themeColors.primary;
   }
 
   function iconFunction() {
