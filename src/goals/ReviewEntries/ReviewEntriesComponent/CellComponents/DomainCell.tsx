@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import TreeView from "components/TreeView";
 import { StoreState } from "types";
-import { highlight } from "types/theme";
+import { themeColors } from "types/theme";
 import { SemanticDomain } from "types/word";
 import {
   ReviewEntriesSense,
@@ -63,7 +63,7 @@ export default function DomainCell(props: DomainCellProps) {
 
   function getChipStyle(senseIndex: number, domainIndex: number) {
     return props.sortingByDomains && senseIndex === 0 && domainIndex === 0
-      ? { backgroundColor: highlight }
+      ? { backgroundColor: themeColors.highlight }
       : {};
   }
 

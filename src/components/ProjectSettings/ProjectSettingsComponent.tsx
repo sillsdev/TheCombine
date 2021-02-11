@@ -19,8 +19,7 @@ import {
 } from "@material-ui/icons";
 
 import * as backend from "backend";
-import { AutoComplete } from "types/AutoComplete";
-import { Project } from "types/project";
+import { AutoComplete, Project } from "types/project";
 import { UserRole } from "types/userRole";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "components/ProjectExport";
