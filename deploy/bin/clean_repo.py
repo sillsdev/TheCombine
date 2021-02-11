@@ -15,6 +15,7 @@ import argparse
 import json
 import re
 import subprocess
+import sys
 from typing import Dict, List, Optional, Union
 
 # Type definitions for results from AWS "describe-images"
@@ -55,26 +56,34 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess:
+def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> Optional[subprocess.CompletedProcess]:
     """Run an AWS command and print the command and results if verbose is set."""
     if verbose:
         print(aws_cmd)
-    aws_results = subprocess.run(
-        aws_cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        universal_newlines=True,
-        check=True,
-    )
-    if verbose:
-        result_fragments = aws_results.stdout.split("\\n")
-        for fragment in result_fragments:
-            if fragment == result_fragments[0]:
-                print(f"STDOUT: {fragment}")
-            else:
-                print(f"\t{fragment}")
-        print(f"STDERR: {aws_results.stderr}")
-    return aws_results
+    try:
+        aws_results = subprocess.run(
+            aws_cmd,
+            stdin=None,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            check=True,
+        )
+        if verbose:
+            result_fragments = aws_results.stdout.split("\\n")
+            for fragment in result_fragments:
+                if fragment == result_fragments[0]:
+                    print(f"STDOUT: {fragment}")
+                else:
+                    print(f"\t{fragment}")
+            print(f"STDERR: {aws_results.stderr}")
+        return aws_results
+
+    except subprocess.CalledProcessError as err:
+        print(f"CalledProcessError returned {err.returncode}")
+        print(f"stdout: {err.stdout}")
+        print(f"stderr: {err.stderr}")
+        sys.exit(err.returncode)
 
 
 def build_aws_cmd(
