@@ -7,12 +7,6 @@ import {
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
 import { User } from "types/user";
 
-enum GoalOption {
-  Complete,
-  Abandon,
-  Current,
-}
-
 type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
 
 export type GoalStep = CreateCharInvStepData | MergeStepData | {}; // | OtherTypes
@@ -71,7 +65,7 @@ export class Goal {
   currentStep: number;
   data: GoalData;
   completed: boolean;
-  result: GoalOption;
+  changes: any;
   hash: string;
 
   constructor(
@@ -88,7 +82,7 @@ export class Goal {
     this.currentStep = 0;
     this.data = data;
     this.completed = false;
-    this.result = GoalOption.Current;
+    this.changes = {};
     this.hash = v4();
   }
 }
