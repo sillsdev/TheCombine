@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { StoreStateDispatch } from "types/actions";
 import { setCharacterStatus } from "goals/CharInventoryCreation/CharacterInventoryActions";
-import CharacterStatusControl from "goals/CharInventoryCreation/components/CharacterDetail/CharacterStatusControl/CharacterStatusControl";
 import { CharacterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import CharacterStatusControl from "goals/CharInventoryCreation/components/CharacterDetail/CharacterStatusControl/CharacterStatusControl";
+import { StoreStateDispatch } from "types/actions";
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
