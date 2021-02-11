@@ -142,15 +142,19 @@ def main() -> None:
             # No tags exist for this image
             if args.untagged:
                 image_ids.append(f'imageDigest={image_struct["imageDigest"]}')
-    # Remove all the specified image(s)
+    # Remove all the specified image(s) in blocks of 100 (AWS limit)
     if len(image_ids) > 0:
-        aws_cmd = build_aws_cmd(
-            args.profile, args.repo, "batch-delete-image", ["--image-ids"] + image_ids
-        )
-        if args.dry_run:
-            print(f"AWS Command: {aws_cmd}")
-        else:
-            run_aws_cmd(aws_cmd, args.verbose)
+        for i in range(0, len(image_ids), 100):
+            aws_cmd = build_aws_cmd(
+                args.profile,
+                args.repo,
+                "batch-delete-image",
+                ["--image-ids"] + image_ids[i : i + 100],
+            )
+            if args.dry_run:
+                print(f"AWS Command: {aws_cmd}")
+            else:
+                run_aws_cmd(aws_cmd, args.verbose)
     elif args.verbose:
         print("No images/tags were deleted.")
 
