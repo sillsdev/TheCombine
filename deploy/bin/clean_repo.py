@@ -29,6 +29,7 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--profile", help="AWS user profile to use to connect to AWS ECR")
+    parser.add_argument("--untagged", action="store_true", help="Delete untagged images.")
     parser.add_argument("repo", help="Docker image repository to be cleaned.")
     parser.add_argument(
         "--keep",
@@ -55,7 +56,9 @@ def parse_args() -> argparse.Namespace:
 
 
 def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess:
-    """Run an AWS command and print the results if verbose is set."""
+    """Run an AWS command and print the command and results if verbose is set."""
+    if verbose:
+        print(aws_cmd)
     aws_results = subprocess.run(
         aws_cmd,
         stdout=subprocess.PIPE,
@@ -64,7 +67,13 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.Complet
         check=True,
     )
     if verbose:
-        print(aws_results)
+        result_fragments = aws_results.stdout.split("\\n")
+        for fragment in result_fragments:
+            if fragment == result_fragments[0]:
+                print(f"STDOUT: {fragment}")
+            else:
+                print(f"\t{fragment}")
+        print(f"STDERR: {aws_results.stderr}")
     return aws_results
 
 
@@ -97,11 +106,10 @@ def main() -> None:
     keep_pattern: str = ""
     if args.keep_pattern is not None:
         keep_pattern = "^(?:% s)$" % "|".join(args.keep_pattern)
-        if args.verbose:
-            print(f"keep_pattern: {keep_pattern}")
 
-    # Create a list of tags that are not on our list of tags to keep
-    old_tags: List[str] = []
+    # Create a list of image ids (tags or digest) that are not on our list
+    # of tags to keep
+    image_ids: List[str] = []
 
     # Iterate over image descriptions returned by AWS
     for image_struct in repo_images["imageDetails"]:
@@ -109,24 +117,26 @@ def main() -> None:
         # untagged images are left alone.
         if "imageTags" in image_struct:
             for tag in image_struct["imageTags"]:
-                if args.verbose:
-                    print(f"Testing tag: {tag} from {image_struct['imagePushedAt']}")
+                # 'latest' is a special tag - always points to most recent
+                # untagged image.  Delete this image by digest name if untagged
+                # images are to be deleted
+                if tag == "latest":
+                    if args.untagged:
+                        image_ids.append(f"imageDigest={image_struct['imageDigest']}")
                 # check to see if there are patterns to test
-                if keep_pattern and not re.match(keep_pattern, tag):
+                elif keep_pattern and not re.match(keep_pattern, tag):
                     # now check to see if it matches any exact tags specified
                     if not args.keep or tag not in args.keep:
-                        old_tags.append(tag)
-
+                        image_ids.append(f"imageTag={tag}")
+        else:
+            # No tags exist for this image
+            if args.untagged:
+                image_ids.append(f'imageDigest={image_struct["imageDigest"]}')
     # Remove all the specified image(s)
-    if len(old_tags) > 0:
-        # Initialize list of images to be removed with the option name for the
-        # aws ecr command
-        image_ids: List[str] = ["--image-ids"]
-
-        # Convert the list of tags to a set of image-ids for the AWS ECR command
-        for tag in old_tags:
-            image_ids.append(f"imageTag={tag}")
-        aws_cmd = build_aws_cmd(args.profile, args.repo, "batch-delete-image", image_ids)
+    if len(image_ids) > 0:
+        aws_cmd = build_aws_cmd(
+            args.profile, args.repo, "batch-delete-image", ["--image-ids"] + image_ids
+        )
         if args.dry_run:
             print(f"AWS Command: {aws_cmd}")
         else:
