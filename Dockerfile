@@ -11,12 +11,12 @@ RUN pip install --upgrade pip && \
     pip install tox
 
 COPY dev-requirements.txt tox.ini ./
-COPY user_guide user_guide
+COPY docs/user_guide docs/user_guide
 
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:12 AS frontend_builder
+FROM node:14 AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -41,7 +41,7 @@ RUN mkdir ${FRONTEND_HOST_DIR}/nuc
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 
 # Setup web content
-COPY --from=user_guide_builder /app/user_guide/site ${USER_GUIDE_HOST_DIR}
+COPY --from=user_guide_builder /app/docs/user_guide/site ${USER_GUIDE_HOST_DIR}
 COPY --from=frontend_builder /app/build ${FRONTEND_HOST_DIR}
 COPY nginx/pages/nuc_home.html ${FRONTEND_HOST_DIR}/nuc/index.html
 COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.html

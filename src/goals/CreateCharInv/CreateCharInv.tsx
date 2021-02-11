@@ -10,7 +10,7 @@ export interface CreateCharInvStepData {
 
 export class CreateCharInv extends Goal {
   constructor(
-    steps: CreateCharInvStepData[] = [],
+    steps: CreateCharInvStepData[] = [{ inventory: [] }],
     data: CreateCharInvData = { inventory: [[]] }
   ) {
     super(GoalType.CreateCharInv, GoalName.CreateCharInv, steps, data);

@@ -55,7 +55,7 @@ Backend.Tests/bin/Avatars/*
 mongo_database
 
 # User Guide
-user_guide/site
+docs/user_guide/site
 
 # Vagrant instances
 .vagrant/

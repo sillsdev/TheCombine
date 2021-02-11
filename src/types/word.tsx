@@ -60,10 +60,9 @@ export interface MergeWord {
   senses: State[];
 }
 
-export interface Merge {
+export interface MergeWords {
   parent: Word;
   children: MergeWord[];
-  time: string;
 }
 
 //used in ExistingDataTable
@@ -73,12 +72,12 @@ export interface DomainWord {
 }
 
 export function hasSenses(word: Word): boolean {
-  let returnval =
+  return (
     word.senses &&
     word.senses.length > 0 &&
     word.senses[0].glosses &&
-    word.senses[0].glosses.length > 0;
-  return returnval;
+    word.senses[0].glosses.length > 0
+  );
 }
 
 export function simpleWord(vern: string, gloss: string): Word {

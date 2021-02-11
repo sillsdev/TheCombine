@@ -8,7 +8,6 @@ import {
   Theme,
   Tooltip,
 } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
 import { Delete, PlayArrow, Stop } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
@@ -21,6 +20,7 @@ import {
   reset,
 } from "components/Pronunciations/PronunciationsActions";
 import { StoreState } from "types";
+import { themeColors } from "types/theme";
 
 interface PlayerProps {
   pronunciationUrl: string;
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     icon: {
-      color: green[800],
+      color: themeColors.success,
     },
   })
 );

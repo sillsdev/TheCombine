@@ -5,9 +5,7 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
-import RegisterComponent, {
-  Register,
-} from "components/Login/RegisterPage/RegisterComponent";
+import Register from "components/Login/RegisterPage/RegisterComponent";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
@@ -29,7 +27,7 @@ describe("Testing register component", () => {
   beforeEach(() => {
     renderer.act(() => {
       registerMaster = renderer.create(
-        <RegisterComponent
+        <Register
           inProgress={false}
           success={false}
           failureMessage=""
@@ -44,7 +42,7 @@ describe("Testing register component", () => {
   it("Renders properly", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <RegisterComponent
+      <Register
         inProgress={false}
         success={false}
         failureMessage=""

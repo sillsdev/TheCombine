@@ -10,7 +10,7 @@ import {
   reset,
 } from "components/Pronunciations/PronunciationsActions";
 import { StoreState } from "types";
-import { recorderStatus } from "types/theme";
+import { themeColors } from "types/theme";
 
 interface RecorderIconProps {
   wordId: string;
@@ -29,10 +29,10 @@ export default function RecorderIcon(props: RecorderIconProps) {
       marginRight: theme.spacing(1),
     },
     iconPress: {
-      color: recorderStatus.active.color,
+      color: themeColors.recordActive,
     },
     iconRelease: {
-      color: recorderStatus.idle.color,
+      color: themeColors.recordIdle,
     },
   }));
 

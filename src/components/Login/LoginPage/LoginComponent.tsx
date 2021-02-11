@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardContent,
-  CircularProgress,
   Grid,
   Link,
   TextField,
@@ -11,13 +10,10 @@ import {
 import { Help } from "@material-ui/icons";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
+import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 export interface LoginDispatchProps {
@@ -43,13 +39,11 @@ interface LoginError {
   password: boolean;
 }
 
-export class Login extends React.Component<
-  LoginDispatchProps & LoginStateProps & LocalizeContextProps,
+export default class Login extends React.Component<
+  LoginDispatchProps & LoginStateProps,
   LoginState
 > {
-  constructor(
-    props: LoginDispatchProps & LoginStateProps & LocalizeContextProps
-  ) {
+  constructor(props: LoginDispatchProps & LoginStateProps) {
     super(props);
     this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
 
@@ -213,18 +207,17 @@ export class Login extends React.Component<
                 </Grid>
 
                 <Grid item xs={4} sm={3}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
+                  <LoadingButton
+                    buttonProps={{
+                      type: "submit",
+                      color: "primary",
+                    }}
                     disabled={!this.state.isVerified}
+                    loading={this.props.loginAttempt}
                   >
                     <Translate id="login.login" />
-                  </Button>
+                  </LoadingButton>
                 </Grid>
-
-                <br />
-                {this.props.loginAttempt && <CircularProgress size={30} />}
               </Grid>
             </CardContent>
           </form>
@@ -233,5 +226,3 @@ export class Login extends React.Component<
     );
   }
 }
-
-export default withLocalize(Login);

@@ -42,7 +42,7 @@ A rapid word collection tool.
    ```
 
 2. Install:
-   - [Node.js 12 (LTS)](https://nodejs.org/en/download/)
+   - [Node.js 14 (LTS)](https://nodejs.org/en/download/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
@@ -76,8 +76,8 @@ A rapid word collection tool.
 
 6. Run `npm start` from the project directory to install dependencies and start the project.
 
-7. Consult our [C#](docs/c_sharp_style_guide.md) and [JavaScript/TypeScript](docs/ts_style_guide.md) style guides for
-   best coding practices in this project.
+7. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md)
+   style guides for best coding practices in this project.
 
 [chocolatey]: https://chocolatey.org/
 
@@ -391,7 +391,7 @@ To build the user guide and serve it dynamically (automatically reloading on cha
 (venv) $ tox -e user-guide-serve
 ```
 
-To build the user guide statically into `user-guide/site`:
+To build the user guide statically into `docs/user-guide/site`:
 
 ```bash
 (venv) $ tox -e user-guide

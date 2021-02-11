@@ -67,33 +67,40 @@ namespace BackendFramework.Models
         }
     }
 
-    public class UserEditObjectWrapper
+    public class UserEditStepWrapper
     {
         [BsonElement("goalIndex")]
         public int GoalIndex { get; set; }
 
-        [BsonElement("newEdit")]
-        public string NewEdit { get; set; }
+        [BsonElement("stepString")]
+        public string StepString { get; set; }
 
-        public UserEditObjectWrapper(int goalIndex, string newEdit)
+        [BsonElement("stepIndex")]
+        /* A null StepIndex implies index equal to the length of the step list--
+         * i.e. the step is to be added to the end of the list. */
+        public int? StepIndex { get; set; }
+
+        public UserEditStepWrapper(int goalIndex, string stepString, int? stepIndex = null)
         {
             GoalIndex = goalIndex;
-            NewEdit = newEdit;
+            StepString = stepString;
+            StepIndex = stepIndex;
         }
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is UserEditObjectWrapper other) || GetType() != obj.GetType())
+            if (!(obj is UserEditStepWrapper other) || GetType() != obj.GetType())
             {
                 return false;
             }
 
-            return other.GoalIndex.Equals(GoalIndex) && other.NewEdit.Equals(NewEdit);
+            return other.GoalIndex.Equals(GoalIndex)
+                && other.StepString.Equals(StepString) && other.StepIndex.Equals(StepIndex);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GoalIndex, NewEdit);
+            return HashCode.Combine(GoalIndex, StepString, StepIndex);
         }
     }
 

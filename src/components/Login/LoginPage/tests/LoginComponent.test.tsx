@@ -5,9 +5,7 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
-import LoginComponent, {
-  Login,
-} from "components/Login/LoginPage/LoginComponent";
+import Login from "components/Login/LoginPage/LoginComponent";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
@@ -29,7 +27,7 @@ describe("Testing login component", () => {
   beforeEach(() => {
     renderer.act(() => {
       loginMaster = renderer.create(
-        <LoginComponent
+        <Login
           logout={LOGOUT}
           loginAttempt={false}
           loginFailure={false}
@@ -44,7 +42,7 @@ describe("Testing login component", () => {
   it("Renders properly", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <LoginComponent
+      <Login
         logout={LOGOUT}
         loginAttempt={false}
         loginFailure={false}

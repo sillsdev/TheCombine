@@ -154,6 +154,9 @@ export const mergeDupStepReducer = (
     }
 
     case MergeTreeActions.SET_DATA: {
+      if (action.payload.length === 0) {
+        return defaultState;
+      }
       let words: Hash<Word> = {};
       let senses: Hash<TreeDataSense> = {};
       let wordsTree: Hash<MergeTreeWord> = {};

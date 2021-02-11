@@ -1,7 +1,10 @@
 import { randomIntString } from "utilities";
-import { AutoComplete } from "types/AutoComplete";
 import { SemanticDomain } from "types/word";
 
+export enum AutoComplete {
+  Off = "Off",
+  On = "On",
+}
 export interface CustomField {
   name: string;
   type: string;
@@ -11,6 +14,7 @@ export interface WritingSystem {
   bcp47: string;
   font: string;
 }
+
 export interface Project {
   id: string;
   name: string;

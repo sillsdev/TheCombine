@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -41,14 +41,16 @@ beforeEach(() => {
 
 describe("GoalTimelineVertical", () => {
   describe("handleChange", () => {
-    it("Selects a goal from suggestions based on name", () => {
-      timeHandle.handleChange(goals[2].name);
-      expect(CHOOSE_GOAL).toHaveBeenCalledWith(goals[2]);
+    it("Selects a goal from suggestions", () => {
+      timeHandle.handleChange(goals[2].goalType);
+      expect(CHOOSE_GOAL).toBeCalled();
+      expect(CHOOSE_GOAL.mock.calls[0][0].goalType).toEqual(goals[2].goalType);
     });
 
-    it("Doesn't select a non-existent goal by name", () => {
-      timeHandle.handleChange("The goal is a lie");
-      expect(CHOOSE_GOAL).toHaveBeenCalledTimes(0);
+    it("Defaults to generic GoalType.Default=-1 for a non-existent goalType", () => {
+      timeHandle.handleChange(-2);
+      expect(CHOOSE_GOAL).toBeCalled();
+      expect(CHOOSE_GOAL.mock.calls[0][0].goalType).toEqual(-1);
     });
   });
 

@@ -3,7 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import { characterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
-import { accepted, rejected } from "types/theme";
+import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {
   status: characterStatus;
@@ -12,13 +12,21 @@ interface CharacterStatusTextProps {
 export default function CharacterStatusText(props: CharacterStatusTextProps) {
   if (props.status === "accepted") {
     return (
-      <Typography variant="body2" style={{ color: accepted }} component="p">
+      <Typography
+        variant="body2"
+        style={{ color: themeColors.success }}
+        component="p"
+      >
         <Translate id="buttons.accepted" />
       </Typography>
     );
   } else if (props.status === "rejected") {
     return (
-      <Typography variant="body2" style={{ color: rejected }} component="p">
+      <Typography
+        variant="body2"
+        style={{ color: themeColors.error }}
+        component="p"
+      >
         <Translate id="buttons.rejected" />
       </Typography>
     );

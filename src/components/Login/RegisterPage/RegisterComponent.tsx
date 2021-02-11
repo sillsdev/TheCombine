@@ -2,22 +2,16 @@ import {
   Button,
   Card,
   CardContent,
-  CircularProgress,
   Grid,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Check } from "@material-ui/icons";
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
-import { buttonSuccess } from "types/theme";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { passwordRequirements, usernameRequirements } from "utilities";
 
 interface RegisterDispatchProps {
@@ -55,18 +49,12 @@ interface RegisterState {
   };
 }
 
-export class Register extends React.Component<
-  RegisterDispatchProps &
-    RegisterStateProps &
-    RegisterProps &
-    LocalizeContextProps,
+export default class Register extends React.Component<
+  RegisterDispatchProps & RegisterStateProps & RegisterProps,
   RegisterState
 > {
   constructor(
-    props: RegisterProps &
-      RegisterDispatchProps &
-      RegisterStateProps &
-      LocalizeContextProps
+    props: RegisterProps & RegisterDispatchProps & RegisterStateProps
   ) {
     super(props);
     this.state = {
@@ -298,39 +286,14 @@ export class Register extends React.Component<
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={this.props.inProgress}
-                    style={{
-                      backgroundColor: this.props.success
-                        ? buttonSuccess
-                        : undefined,
-                    }}
+                  <LoadingDoneButton
+                    loading={this.props.inProgress}
+                    done={this.props.success}
+                    doneText={<Translate id="login.registerSuccess" />}
+                    buttonProps={{ color: "primary" }}
                   >
-                    {this.props.success ? (
-                      <React.Fragment>
-                        <Check />
-                        <Translate id="login.registerSuccess" />
-                      </React.Fragment>
-                    ) : (
-                      <Translate id="login.register" />
-                    )}
-                    {this.props.inProgress && (
-                      <CircularProgress
-                        size={24}
-                        style={{
-                          color: buttonSuccess,
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          marginTop: -12,
-                          marginLeft: -12,
-                        }}
-                      />
-                    )}
-                  </Button>
+                    <Translate id="login.register" />
+                  </LoadingDoneButton>
                 </Grid>
               </Grid>
             </CardContent>
@@ -340,5 +303,3 @@ export class Register extends React.Component<
     );
   }
 }
-
-export default withLocalize(Register);

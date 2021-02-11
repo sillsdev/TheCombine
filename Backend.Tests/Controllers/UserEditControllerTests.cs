@@ -100,25 +100,25 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestAddEditsToGoal()
+        public void TestAddGoalToUserEdit()
         {
             var userEdit = RandomUserEdit();
             _userEditRepo.Create(userEdit);
-            var newEditStep = new Edit();
-            newEditStep.StepData.Add("This is a new step");
-            var updateEdit = userEdit.Clone();
-            updateEdit.Edits.Add(newEditStep);
+            var newEdit = new Edit();
+            newEdit.StepData.Add("This is a new step");
+            var updatedUserEdit = userEdit.Clone();
+            updatedUserEdit.Edits.Add(newEdit);
 
-            _ = _userEditController.Post(_projId, userEdit.Id, newEditStep).Result;
+            _ = _userEditController.Post(_projId, userEdit.Id, newEdit).Result;
 
             var allUserEdits = _userEditRepo.GetAllUserEdits(_projId).Result;
-            Assert.Contains(updateEdit, allUserEdits);
+            Assert.Contains(updatedUserEdit, allUserEdits);
         }
 
         [Test]
-        public void TestGoalToUserEdit()
+        public void TestAddStepToGoal()
         {
-            // Generate db entry to test
+            // Generate db entry to test.
             var rnd = new Random();
             var count = rnd.Next(1, 13);
 
@@ -128,17 +128,17 @@ namespace Backend.Tests.Controllers
             }
             var origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
-            // Generate correct result for comparison
+            // Generate correct result for comparison.
             var modUserEdit = origUserEdit.Clone();
-            const string stringUserEdit = "This is another step added";
-            modUserEdit.Edits[0].StepData.Add(stringUserEdit);
-
-            // Create wrapper object
+            const string stringStep = "This is another step added.";
             const int modGoalIndex = 0;
-            var wrapperObj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
+            modUserEdit.Edits[modGoalIndex].StepData.Add(stringStep);
 
-            _ = _userEditController.Put(_projId, origUserEdit.Id, wrapperObj);
+            // Create and put wrapper object.
+            var stepWrapperObj = new UserEditStepWrapper(modGoalIndex, stringStep);
+            _ = _userEditController.Put(_projId, origUserEdit.Id, stepWrapperObj);
 
+            // Step count should have increased by 1.
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
 
             var userEdit = _userEditRepo.GetUserEdit(_projId, origUserEdit.Id).Result;
@@ -147,7 +147,27 @@ namespace Backend.Tests.Controllers
                 Assert.Fail();
                 return;
             }
-            Assert.Contains(stringUserEdit, userEdit.Edits[modGoalIndex].StepData);
+            Assert.Contains(stringStep, userEdit.Edits[modGoalIndex].StepData);
+
+            // Now update a step within the goal.
+            const string modStringStep = "This is a replacement step.";
+            const int modStepIndex = 1;
+            modUserEdit.Edits[modGoalIndex].StepData[modStepIndex] = modStringStep;
+
+            // Create and put wrapper object.
+            stepWrapperObj = new UserEditStepWrapper(modGoalIndex, modStringStep, modStepIndex);
+            _ = _userEditController.Put(_projId, origUserEdit.Id, stepWrapperObj);
+
+            // Step count should not have further increased.
+            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
+
+            userEdit = _userEditRepo.GetUserEdit(_projId, origUserEdit.Id).Result;
+            if (userEdit is null)
+            {
+                Assert.Fail();
+                return;
+            }
+            Assert.Contains(modStringStep, userEdit.Edits[modGoalIndex].StepData);
         }
 
         [Test]

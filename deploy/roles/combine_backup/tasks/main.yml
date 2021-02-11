@@ -23,9 +23,10 @@
     group: "{{ combine_group }}"
     mode: 0755
   with_items:
+    - combine-env
     - combine-backup
     - combine-restore
-    - combine-cleanup
+    - combine-clean-aws
     - combine-backup-job
 
 - name: set environment variables for backup job
@@ -41,7 +42,7 @@
 - name: schedule regular backups
   cron:
     name: combine daily backup
-    job: "{{ combine_app_dir }}/bin/combine-backup-job"
+    job: "{{ combine_app_dir }}/bin/combine-backup-job  2>&1 | /usr/bin/logger -t combine_backup"
     user: "{{ combine_user }}"
     hour: "{{ backup_hour }}"
     minute: "{{ backup_minute }}"

@@ -12,20 +12,26 @@
 
 - name: retrieve aws-cli installation package
   get_url:
-    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-{{ aws_cli_version }}.zip"
     dest: /opt/awscliv2.zip
-  when: aws_version.rc != 0
+  when: aws_cli_version not in aws_version.stdout
 
 - name: unpack aws-cli installation package
   unarchive:
     src: /opt/awscliv2.zip
     dest: /opt
     remote_src: yes
-  when: aws_version.rc != 0
+  when: aws_cli_version not in aws_version.stdout
 
 - name: install aws-cli
   command: /opt/aws/install
   when: aws_version.rc != 0
+
+- name: update aws-cli
+  command: /opt/aws/install --update
+  when:
+    - aws_version.rc == 0
+    - aws_cli_version not in aws_version.stdout
 
 - name: clean-up installation package
   file:

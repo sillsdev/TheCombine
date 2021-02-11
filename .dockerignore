@@ -5,7 +5,7 @@
 !nginx
 !public
 !src
-!user_guide
+!docs/user_guide
 !.env
 !dev-requirements.txt
 !package*.json
@@ -13,4 +13,4 @@
 !tox.ini
 
 # Ignore user guide build directory.
-user_guide/site
+docs/user_guide/site

@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -9,7 +8,6 @@ import {
   GridList,
   GridListTile,
   IconButton,
-  Paper,
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
@@ -43,8 +41,6 @@ interface MergeDupStepProps {
   orderSense: (wordID: string, senseID: string, order: number) => void;
   orderDuplicate: (ref: MergeTreeReference, order: number) => void;
   mergeAll?: () => Promise<void>;
-  // Should update the words content in this GoalStep
-  refreshWords?: () => void;
   // Will advance to the next goal step and update the words content
   advanceStep?: () => void;
 }
@@ -64,9 +60,6 @@ class MergeDupStep extends React.Component<
       portrait: true,
       sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" },
     };
-    if (this.props.refreshWords) {
-      this.props.refreshWords();
-    }
   }
 
   clearSideBar() {
@@ -76,9 +69,6 @@ class MergeDupStep extends React.Component<
     this.clearSideBar();
     if (this.props.advanceStep) {
       this.props.advanceStep();
-    }
-    if (this.props.refreshWords) {
-      this.props.refreshWords();
     }
   }
   saveContinue() {
@@ -238,8 +228,8 @@ class MergeDupStep extends React.Component<
   render() {
     let newId = uuid();
     //visual definition
-    return (
-      <Box style={{ maxHeight: "100%" }}>
+    return Object.keys(this.props.words).length ? (
+      <React.Fragment>
         {/* Merging pane */}
         <div
           style={{
@@ -278,37 +268,36 @@ class MergeDupStep extends React.Component<
           </GridList>
         </div>
         {/* Merge button */}
-        <Paper
-          square
-          style={{
-            position: "fixed",
-            width: "100vw",
-            height: "25vh",
-            zIndex: theme.zIndex.drawer,
-          }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            style={{ float: "right", marginRight: 30 }}
-            onClick={(_) => this.saveContinue()}
-            title={
-              this.props.translate(
-                "mergeDups.helpText.saveAndContinue"
-              ) as string
-            }
-          >
-            {this.props.translate("buttons.saveAndContinue")}
-          </Button>
-          <Button
-            style={{ float: "right", marginRight: 30 }}
-            onClick={(_) => this.next()}
-            title={this.props.translate("mergeDups.helpText.skip") as string}
-          >
-            {this.props.translate("buttons.skip")}
-          </Button>
-        </Paper>
-      </Box>
+        <Grid container justify="flex-end">
+          <Grid item>
+            <Button
+              color="secondary"
+              variant="contained"
+              style={{ marginRight: theme.spacing(3) }}
+              onClick={() => this.next()}
+              title={this.props.translate("mergeDups.helpText.skip") as string}
+            >
+              {this.props.translate("buttons.skip")}
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              style={{ marginRight: theme.spacing(3) }}
+              onClick={() => this.saveContinue()}
+              title={
+                this.props.translate(
+                  "mergeDups.helpText.saveAndContinue"
+                ) as string
+              }
+            >
+              {this.props.translate("buttons.saveAndContinue")}
+            </Button>
+          </Grid>
+        </Grid>
+      </React.Fragment>
+    ) : (
+      // ToDo: create component with translated text and button back to goals.
+      "Nothing to merge."
     );
   }
 }

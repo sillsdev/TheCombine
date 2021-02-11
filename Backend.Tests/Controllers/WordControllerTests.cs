@@ -229,7 +229,6 @@ namespace Backend.Tests.Controllers
             var parentChildMergeObject = new MergeWords
             {
                 Parent = RandomWord(),
-                Time = Util.RandString(),
                 ChildrenWords = new List<MergeSourceWord>()
             };
 
