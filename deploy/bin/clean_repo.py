@@ -63,7 +63,6 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.Complet
     try:
         aws_results = subprocess.run(
             aws_cmd,
-            stdin=None,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
@@ -73,10 +72,10 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.Complet
             result_fragments = aws_results.stdout.split("\\n")
             for fragment in result_fragments:
                 if fragment == result_fragments[0]:
-                    print(f"STDOUT: {fragment}")
+                    print(f"stdout: {fragment}")
                 else:
                     print(f"\t{fragment}")
-            print(f"STDERR: {aws_results.stderr}")
+            print(f"stderr: {aws_results.stderr}")
         return aws_results
 
     except subprocess.CalledProcessError as err:
@@ -143,13 +142,20 @@ def main() -> None:
             if args.untagged:
                 image_ids.append(f'imageDigest={image_struct["imageDigest"]}')
     # Remove all the specified image(s) in blocks of 100 (AWS limit)
+    # Although not specified in the AWS CLI documentation, when trying to delete
+    # more than 100 images in a single command, the following error message is
+    # printed on stderr:
+    #    An error occurred (InvalidParameterException) when calling the BatchDeleteImage
+    #    operation: Invalid parameter at 'imageIds' failed to satisfy constraint:
+    #    'Member must have length less than or equal to 100'
     if len(image_ids) > 0:
-        for i in range(0, len(image_ids), 100):
+        aws_delete_limit = 100
+        for i in range(0, len(image_ids), aws_delete_limit):
             aws_cmd = build_aws_cmd(
                 args.profile,
                 args.repo,
                 "batch-delete-image",
-                ["--image-ids"] + image_ids[i : i + 100],
+                ["--image-ids"] + image_ids[i : i + aws_delete_limit],
             )
             if args.dry_run:
                 print(f"AWS Command: {aws_cmd}")
