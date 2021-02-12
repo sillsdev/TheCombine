@@ -6,16 +6,6 @@
 
 set -e
 
-VERBOSE="0"
-BACKUP=""
-CLEAN="0"
-
-echo_verbose() {
-  if [ "${VERBOSE}" == "1" ] ; then
-    echo $@
-  fi
-}
-
 usage() {
   cat <<USAGE
 Usage: $0 [-h] [-v] [backup_file]
@@ -33,6 +23,10 @@ Options:
         print progress of backup
 USAGE
 }
+
+. $(cd $(dirname $0); pwd)/combine-env
+BACKUP=""
+CLEAN="0"
 
 while [[ $# -gt 0 ]] ; do
   arg="$1"
@@ -63,11 +57,7 @@ done
 echo_verbose "1. Prepare for the restore."
 
 RESTORE_FILE="combine-backup.tar.gz"
-AWS_BACKUPS="s3://{{ aws_s3_backup_loc }}"
-COMBINE_APP_DIR=${COMBINE_APP_DIR:="{{ combine_app_dir }}"}
 RESTORE_DIR=${RESTORE_DIR:="{{ combine_restore_dir }}"}
-BACKEND_FILES_SUBDIR="{{ backend_files_subdir }}"
-DB_FILES_SUBDIR="{{ mongo_files_subdir }}"
 
 cd ${COMBINE_APP_DIR}
 
@@ -103,10 +93,10 @@ else
 fi
 
 if [ -z "${BACKUP}" ] ; then
-  aws_backup_list=( $(/usr/local/bin/aws s3 ls ${AWS_BACKUPS} --recursive --profile {{ aws_s3_profile }} | sed "s/.* backups\///") )
+  aws_backup_list=( $(/usr/local/bin/aws s3 ls ${AWS_BUCKET} --recursive --profile {{ aws_s3_profile }} | sed "s/.* backups\///") )
   aws_backups_available={{ '${#aws_backup_list[@]}' }}
   if [[ $aws_backups_available -eq 0 ]] ; then
-    echo "No backups available from ${AWS_BACKUPS}"
+    echo "No backups available from ${AWS_BUCKET}"
     exit 0
   fi
   echo "Backup List:"
@@ -130,7 +120,8 @@ fi
 echo "BACKUP == '${BACKUP}'"
 
 echo_verbose "3. Fetch the selected backup, ${BACKUP}."
-AWS_FILE="${AWS_BACKUPS}/${BACKUP}"
+AWS_FILE="${AWS_BUCKET}/${BACKUP}"
+echo_verbose "${AWS_FILE} copied to ${RESTORE_DIR}/${RESTORE_FILE}"
 /usr/local/bin/aws s3 cp ${AWS_FILE} ${RESTORE_DIR}/${RESTORE_FILE} --profile {{ aws_s3_profile }}
 
 echo_verbose "4. Unpack the backup."

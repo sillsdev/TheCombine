@@ -1,9 +1,6 @@
 import { connect } from "react-redux";
 
-import {
-  asyncAdvanceStep,
-  asyncRefreshWords,
-} from "components/GoalTimeline/GoalsActions";
+import { asyncAdvanceStep } from "components/GoalTimeline/GoalsActions";
 import {
   moveSenses,
   mergeAll,
@@ -25,9 +22,6 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     advanceStep: () => {
       dispatch(asyncAdvanceStep());
-    },
-    refreshWords: () => {
-      dispatch(asyncRefreshWords());
     },
     moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
       dispatch(moveSenses(src, dest));

@@ -2,7 +2,12 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
-import { mergeAll } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import {
+  dispatchMergeStepData,
+  mergeAll,
+  MergeTreeAction,
+  MergeTreeActions,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
   Hash,
   MergeData,
@@ -250,4 +255,23 @@ test("merge senses within a word", async () => {
     mockMerge4a.parent,
     mockMerge4a.children
   );
+});
+
+describe("dispatchMergeStepData", () => {
+  it("should create an action to add MergeDups data", async () => {
+    const goal = new MergeDups();
+    goal.steps = [
+      {
+        words: [...goalDataMock.plannedWords[0]],
+      },
+    ];
+
+    const mockStore = createMockStore();
+    await mockStore.dispatch<any>(dispatchMergeStepData(goal));
+    const setWordData: MergeTreeAction = {
+      type: MergeTreeActions.SET_DATA,
+      payload: [...goalDataMock.plannedWords[0]],
+    };
+    expect(mockStore.getActions()).toEqual([setWordData]);
+  });
 });
