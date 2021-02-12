@@ -121,6 +121,7 @@ export default class CharacterInventory extends React.Component<
                 done={this.state.saveSuccessful}
                 loading={this.state.saveInProgress}
                 buttonProps={{
+                  id: SAVE,
                   color: "primary",
                   onClick: () => this.save(),
                   style: { margin: theme.spacing(1) },
