@@ -1,4 +1,5 @@
 import MaterialTable from "@material-table/core";
+import { Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
@@ -31,7 +32,11 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
   return (
     <MaterialTable<any>
       icons={tableIcons}
-      title={<Translate id={"reviewEntries.title"} />}
+      title={
+        <Typography component="h1" variant="h4">
+          <Translate id={"reviewEntries.title"} />
+        </Typography>
+      }
       columns={columns}
       data={words}
       editable={{
