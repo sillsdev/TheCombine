@@ -54,14 +54,14 @@ while [[ $# -gt 0 ]] ; do
   shift
 done
 
-echo_verbose "1. Prepare for the restore."
+print_step "Prepare for the restore."
 
 RESTORE_FILE="combine-backup.tar.gz"
 RESTORE_DIR=${RESTORE_DIR:="{{ combine_restore_dir }}"}
 
 cd ${COMBINE_APP_DIR}
 
-echo_verbose "2. Prepare the restore directory."
+print_step "Prepare the restore directory."
 if [ ! -e "${RESTORE_DIR}" ] ; then
   mkdir -p ${RESTORE_DIR}
 else
@@ -119,29 +119,29 @@ if [ -z "${BACKUP}" ] ; then
 fi
 echo "BACKUP == '${BACKUP}'"
 
-echo_verbose "3. Fetch the selected backup, ${BACKUP}."
+print_step "Fetch the selected backup, ${BACKUP}."
 AWS_FILE="${AWS_BUCKET}/${BACKUP}"
 echo_verbose "${AWS_FILE} copied to ${RESTORE_DIR}/${RESTORE_FILE}"
 /usr/local/bin/aws s3 cp ${AWS_FILE} ${RESTORE_DIR}/${RESTORE_FILE} --profile {{ aws_s3_profile }}
 
-echo_verbose "4. Unpack the backup."
+print_step "Unpack the backup."
 tar xzvf ${RESTORE_DIR}/${RESTORE_FILE} -C ${RESTORE_DIR}
 
-echo verbose "5. Stop the current containers."
+print_step "Stop the current containers."
 /usr/local/bin/docker-compose down
 
-echo_verbose "6. Start up just the backend and the database."
+print_step "Start up just the backend and the database."
 /usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
 /usr/local/bin/docker-compose up --detach database backend
 
 
-echo_verbose "7. Restore the database."
+print_step "Restore the database."
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${RESTORE_DIR}/${DB_FILES_SUBDIR}/ ${DB_CONTAINER}:${DB_FILES_SUBDIR}
 /usr/local/bin/docker-compose exec database mongorestore --drop --gzip --quiet
 /usr/local/bin/docker-compose exec database rm -rf ${DB_FILES_SUBDIR}
 
-echo_verbose "8. Copy the backend files."
+print_step "Copy the backend files."
 # if CLEAN is set, delete the existing files
 if [ "$CLEAN" == "1" ] ; then
   # we run the rm command inside a bash shell so that the shell will do wildcard
@@ -156,7 +156,7 @@ docker cp ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR}/ ${BE_CONTAINER}:/home/app
 # different host with different UIDs.
 /usr/local/bin/docker-compose exec --user root backend find /home/app/${BACKEND_FILES_SUBDIR} -exec chown app:app {} \;
 
-echo_verbose "9. Cleanup Restore files."
+print_step "Cleanup Restore files."
 rm -rf ${RESTORE_DIR}
 
 echo_verbose "10. Restart the containers."
