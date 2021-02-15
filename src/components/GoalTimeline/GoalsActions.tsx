@@ -9,8 +9,7 @@ import history, { Path } from "browserHistory";
 import { StoreState } from "types";
 import { ActionWithPayload, StoreStateDispatch } from "types/actions";
 import { Goal, GoalType } from "types/goals";
-import { goalTypeToGoal } from "types/goalUtilities";
-import { Edit } from "types/userEdit";
+import { convertEditToGoal } from "types/goalUtilities";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -183,14 +182,6 @@ export function getUserEditId(): string | undefined {
       return user.workedProjects[key];
     }
   }
-}
-
-export function convertEditToGoal(edit: Edit): Goal {
-  const goal = goalTypeToGoal(edit.goalType);
-  goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
-  goal.numSteps = goal.steps.length;
-  goal.completed = true;
-  return goal;
 }
 
 async function saveCurrentStep(goal: Goal, goalIndex: number) {

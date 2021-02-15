@@ -1,14 +1,19 @@
 import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
+import { useSelector } from "react-redux";
+
+import { StoreState } from "types";
 
 interface CharacterInfoProps {
   character: string;
-  allWords: string[];
 }
 
 /** Displays basic information about a character */
 export default function CharacterInfo(props: CharacterInfoProps) {
+  const allWords = useSelector(
+    (state: StoreState) => state.characterInventoryState.allWords
+  );
   return (
     <React.Fragment>
       <Typography variant="body1">{charToHexValue(props.character)}</Typography>
@@ -16,7 +21,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
         [Character details has not been implemented]
       </Typography>
       <Typography variant="body1">
-        {countCharacterOccurences(props.character, props.allWords)}{" "}
+        {countCharacterOccurences(props.character, allWords)}{" "}
         <Translate id="charInventory.characterSet.occurrences" />
       </Typography>
     </React.Fragment>

@@ -113,10 +113,14 @@ namespace BackendFramework.Models
         [BsonElement("stepData")]
         public List<string> StepData { get; set; }
 
+        [BsonElement("changes")]
+        public string Changes { get; set; }
+
         public Edit()
         {
             GoalType = 0;
             StepData = new List<string>();
+            Changes = "{}";
         }
 
         public Edit Clone()
@@ -124,7 +128,8 @@ namespace BackendFramework.Models
             var clone = new Edit
             {
                 GoalType = GoalType,
-                StepData = new List<string>()
+                StepData = new List<string>(),
+                Changes = (string)Changes.Clone()
             };
 
             foreach (var stepData in StepData)
@@ -145,12 +150,13 @@ namespace BackendFramework.Models
             return
                 GoalType.Equals(other.GoalType) &&
                 other.StepData.Count == StepData.Count &&
-                other.StepData.All(StepData.Contains);
+                other.StepData.All(StepData.Contains) &&
+                other.Changes.Equals(Changes);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GoalType, StepData);
+            return HashCode.Combine(GoalType, StepData, Changes);
         }
     }
 
