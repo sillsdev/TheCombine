@@ -47,8 +47,8 @@
       tags:
         - aws
 
-    - name: setup container backups
+    - name: setup container maintenance scripts
       import_role:
-        name: combine_backup
+        name: combine_maintenance
       tags:
         - backups
