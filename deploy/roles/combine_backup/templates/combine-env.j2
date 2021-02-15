@@ -12,9 +12,15 @@ BACKUP_DIR=${BACKUP_DIR:="{{ combine_backup_dir }}"}
 BACKEND_FILES_SUBDIR="{{ backend_files_subdir }}"
 DB_FILES_SUBDIR="{{ mongo_files_subdir }}"
 AWS_BUCKET="s3://{{ aws_s3_backup_loc }}"
+step=1
 
 echo_verbose() {
   if [ "${VERBOSE}" == "1" ] ; then
     ${VERBOSE_CMD} $@
   fi
+}
+
+print_step() {
+  echo_verbose "${step}. " $@
+  ((step++))
 }
