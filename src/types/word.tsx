@@ -52,7 +52,7 @@ export class Word {
   audio: string[] = [];
   created: string = "";
   modified: string = "";
-  accessibility: string = "";
+  accessibility: State = State.Active;
   history: string[] = [];
   partOfSpeech: string = "";
   editedBy: string[] = [];
