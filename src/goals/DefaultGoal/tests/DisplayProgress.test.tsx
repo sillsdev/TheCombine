@@ -3,7 +3,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import DisplayProg from "goals/DefaultGoal/DisplayProg";
+import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { Goal } from "types/goals";
 
@@ -20,13 +20,13 @@ function createMockStoreWithGoals(goals: Goal[]) {
   mockStore = createMockStore(mockStoreState);
 }
 
-describe("DisplayProg", () => {
+describe("DisplayProgress", () => {
   it("Renders with no goal without crashing", () => {
     createMockStoreWithGoals([]);
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <DisplayProg />
+          <DisplayProgress />
         </Provider>
       );
     });
@@ -37,7 +37,7 @@ describe("DisplayProg", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <DisplayProg />
+          <DisplayProgress />
         </Provider>
       );
     });
@@ -48,7 +48,7 @@ describe("DisplayProg", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <DisplayProg />
+          <DisplayProgress />
         </Provider>
       );
     });

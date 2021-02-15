@@ -8,7 +8,7 @@ import { StoreState } from "types";
 /**
  * Displays how much progress has been made in a goal
  */
-export default function DisplayProg() {
+export default function DisplayProgress() {
   const goalHistory = useSelector(
     (state: StoreState) => state.goalsState.historyState.history
   );

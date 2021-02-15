@@ -5,7 +5,7 @@ import { RouteComponentProps } from "react-router-dom";
 
 import EmptyGoalComponent from "components/EmptyGoal/EmptyGoalComponent";
 import PageNotFound from "components/PageNotFound/component";
-import DisplayProg from "goals/DefaultGoal/DisplayProg";
+import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 
@@ -46,7 +46,7 @@ export default function BaseGoalScreen(props: RouteComponentProps<TParams>) {
 
   return goal ? (
     <React.Fragment>
-      <DisplayProg />
+      <DisplayProgress />
       {displayComponent(goal)}
     </React.Fragment>
   ) : (
