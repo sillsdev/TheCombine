@@ -1,6 +1,6 @@
 import React from "react";
 
-import BaseGoalSelect from "goals/DefaultGoal/BaseGoalWidget/BaseGoalWidget";
+import BaseGoalSelect from "components/GoalTimeline/GoalHistory/GoalWidget";
 import { Goal } from "types/goals";
 
 interface GoalHistoryProps {

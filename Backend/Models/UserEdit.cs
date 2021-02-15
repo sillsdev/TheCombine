@@ -106,6 +106,9 @@ namespace BackendFramework.Models
 
     public class Edit
     {
+        [BsonElement("guid")]
+        public Guid Guid { get; set; }
+
         /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
         [BsonElement("goalType")]
         public int GoalType { get; set; }
@@ -118,6 +121,7 @@ namespace BackendFramework.Models
 
         public Edit()
         {
+            Guid = Guid.NewGuid();
             GoalType = 0;
             StepData = new List<string>();
             Changes = "{}";
@@ -127,6 +131,7 @@ namespace BackendFramework.Models
         {
             var clone = new Edit
             {
+                Guid = Guid,
                 GoalType = GoalType,
                 StepData = new List<string>(),
                 Changes = (string)Changes.Clone()
@@ -147,16 +152,14 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return
-                GoalType.Equals(other.GoalType) &&
+            return other.Guid.Equals(Guid) && other.GoalType.Equals(GoalType) &&
                 other.StepData.Count == StepData.Count &&
-                other.StepData.All(StepData.Contains) &&
-                other.Changes.Equals(Changes);
+                other.StepData.All(StepData.Contains) && other.Changes.Equals(Changes);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GoalType, StepData, Changes);
+            return HashCode.Combine(Guid, GoalType, StepData, Changes);
         }
     }
 
