@@ -336,7 +336,7 @@ export default class DupFinder {
     words.forEach((scoredWord) => {
       if (
         scoredWord.score <= this.maxScore &&
-        outputCollection.length <= this.maxCount
+        outputCollection.length < this.maxCount
       ) {
         outputCollection.push(scoredWord.word);
       }
