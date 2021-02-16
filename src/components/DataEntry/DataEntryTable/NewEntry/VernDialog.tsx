@@ -19,7 +19,7 @@ interface vernDialogProps {
   vernacularWords: Word[];
   open: boolean;
   handleClose: (selectedWordId?: string) => void;
-  analysisLang: string;
+  analysisLang?: string;
 }
 
 export default function VernDialog(props: vernDialogProps) {
@@ -43,7 +43,7 @@ export default function VernDialog(props: vernDialogProps) {
 interface VernListProps {
   vernacularWords: Word[];
   closeDialog: (selectedWordId: string) => void;
-  analysisLang: string;
+  analysisLang?: string;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/

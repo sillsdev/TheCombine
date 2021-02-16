@@ -1,10 +1,6 @@
 import Recorder from "components/Pronunciations/Recorder";
-import { SemanticDomain, Sense, State, Word } from "types/word";
+import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
 import { uuid } from "utilities";
-
-export const OLD_SENSE: string = "-old";
-export const SEP_CHAR: string = ",";
-const SEPARATOR: string = SEP_CHAR + " ";
 
 export class ReviewEntriesWord {
   id: string = "";
@@ -15,19 +11,12 @@ export class ReviewEntriesWord {
   recorder?: Recorder;
 }
 
-export interface ReviewEntriesSense {
-  senseId: string;
-  glosses: string;
-  domains: SemanticDomain[];
-  deleted: boolean;
-}
-
 export function parseWord(
   word: Word,
-  analysisLang: string, // bcp47 code
+  analysisLang?: string, // bcp47 code
   commonRecorder?: Recorder
 ) {
-  let currentWord: ReviewEntriesWord = {
+  const currentWord: ReviewEntriesWord = {
     id: word.id,
     vernacular: word.vernacular,
     senses: [],
@@ -35,42 +24,36 @@ export function parseWord(
     noteText: word.note.text,
     recorder: commonRecorder,
   };
-
-  for (let sense of word.senses) {
-    currentWord.senses.push(parseSense(sense, analysisLang));
-  }
+  currentWord.senses = word.senses.map(
+    (s) => new ReviewEntriesSense(s, analysisLang)
+  );
   return currentWord;
 }
-// Convert a Sense into a ReviewEntriesSense
-function parseSense(sense: Sense, analysisLang: string) {
-  let hasGloss: boolean;
-  let currentSense: ReviewEntriesSense = {
-    glosses: "",
-    domains: [],
-    deleted: sense.accessibility === State.Deleted,
-    senseId: uuid() + OLD_SENSE,
-  };
 
-  // Add domains
-  if (sense.semanticDomains)
-    currentSense = {
-      ...currentSense,
-      domains: [...sense.semanticDomains],
-    };
+export class ReviewEntriesSense {
+  senseId: string = "";
+  glosses: Gloss[] = [];
+  domains: SemanticDomain[] = [];
+  deleted: boolean = false;
 
-  // Find all glosses in the current language
-  hasGloss = false;
-  if (sense.glosses)
-    for (let gloss of sense.glosses)
-      if (gloss.language === analysisLang) {
-        hasGloss = true;
-        currentSense.glosses += gloss.def + SEPARATOR;
-      }
+  static OLD_SENSE = "-old";
+  static SEPARATOR = ", ";
 
-  // Format the glosses + push them
-  if (hasGloss)
-    currentSense.glosses = currentSense.glosses.slice(0, -SEPARATOR.length);
-  else currentSense.glosses = "";
+  constructor(sense: Sense, analysisLang?: string) {
+    this.deleted = sense.accessibility === State.Deleted;
+    this.senseId = sense.guid ?? uuid() + ReviewEntriesSense.OLD_SENSE;
+    this.domains = [...sense.semanticDomains];
+    this.glosses = analysisLang
+      ? sense.glosses.filter((g) => g.language === analysisLang)
+      : [...sense.glosses];
+  }
 
-  return currentSense;
+  static glossString(sense: ReviewEntriesSense): string {
+    return sense.glosses.map((g) => g.def).join(ReviewEntriesSense.SEPARATOR);
+  }
+  static glossesFromString(glossString: string, language: string): Gloss[] {
+    return glossString
+      .split(ReviewEntriesSense.SEPARATOR.trim())
+      .map((def) => ({ def: def.trim(), language }));
+  }
 }

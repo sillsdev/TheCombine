@@ -1,13 +1,15 @@
-import React, { ReactNode } from "react";
-import { Translate } from "react-localize-redux";
 import { TextField, Chip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import React, { ReactNode } from "react";
+import { Translate } from "react-localize-redux";
+import { useSelector } from "react-redux";
 
-import { themeColors } from "types/theme";
-import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import { uuid } from "utilities";
+import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { StoreState } from "types";
+import { themeColors } from "types/theme";
+import { uuid } from "utilities";
 
 interface SenseCellProps {
   editable: boolean;
@@ -17,6 +19,10 @@ interface SenseCellProps {
 export default function SenseCell(
   props: FieldParameterStandard & SenseCellProps
 ) {
+  const analysisLang = useSelector(
+    (state: StoreState) => state.reviewEntriesState.analysisLanguage
+  );
+
   function inputField(
     sense: ReviewEntriesSense,
     index: number,
@@ -26,7 +32,7 @@ export default function SenseCell(
       <TextField
         fullWidth
         key={`glosses${props.rowData.id}`}
-        value={props.value[index].glosses}
+        value={ReviewEntriesSense.glossString(props.value[index])}
         error={sense.glosses.length === 0}
         placeholder={noGloss}
         disabled={sense.deleted}
@@ -45,11 +51,17 @@ export default function SenseCell(
             ...props.rowData,
             senses: [
               ...props.rowData.senses.slice(0, index),
-              { ...sense, glosses: event.target.value },
-              ...props.rowData.senses.slice(
-                index + 1,
-                props.rowData.senses.length
-              ),
+              {
+                ...sense,
+                /* The way things are now, if we enable loading glosses from all langauges into ReviewEntries,
+                 * editing a sense may overwrite all its glosses' languages with the active analysisLanguage.
+                 */
+                glosses: ReviewEntriesSense.glossesFromString(
+                  event.target.value,
+                  analysisLang
+                ),
+              },
+              ...props.rowData.senses.slice(index + 1),
             ],
           })
         }
@@ -70,7 +82,7 @@ export default function SenseCell(
               ...props.rowData.senses,
               {
                 deleted: false,
-                glosses: "",
+                glosses: [],
                 domains: [],
                 senseId: uuid(),
               },
