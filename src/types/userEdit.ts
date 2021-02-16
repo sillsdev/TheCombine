@@ -6,4 +6,5 @@ export interface UserEdit {
 export interface Edit {
   goalType: number;
   stepData: string[];
+  changes: string;
 }
