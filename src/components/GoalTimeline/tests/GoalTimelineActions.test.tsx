@@ -130,7 +130,7 @@ describe("GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal],
+      payload: goal,
     };
     expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
   });
@@ -148,7 +148,7 @@ describe("GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [goal],
+      payload: goal,
     };
     expect(actions.updateGoal(goal)).toEqual(expectedAction);
   });
@@ -194,7 +194,7 @@ describe("GoalsActions", () => {
       await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
       const addGoalToHistory: actions.AddGoalToHistoryAction = {
         type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-        payload: [goal],
+        payload: goal,
       };
       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
       expect(mockAddGoalToUserEdit).toBeCalledTimes(1);

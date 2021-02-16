@@ -9,7 +9,7 @@ import {
 
 describe("goalUtilities", () => {
   describe("convertGoalToEdit, convertEditToGoal", () => {
-    it("should maintain goalType, steps, and changes", () => {
+    it("should maintain guid, goalType, steps, and changes", () => {
       const oldGoal: Goal = new MergeDups();
       oldGoal.numSteps = maxNumSteps(oldGoal.goalType);
       oldGoal.steps = [
@@ -23,6 +23,7 @@ describe("goalUtilities", () => {
       oldGoal.changes = { merges: [{}, {}] };
       const edit = convertGoalToEdit(oldGoal);
       const newGoal = convertEditToGoal(edit);
+      expect(newGoal.guid).toEqual(oldGoal.guid);
       expect(newGoal.goalType).toEqual(oldGoal.goalType);
       expect(newGoal.steps).toEqual(oldGoal.steps);
       expect(newGoal.numSteps).toEqual(oldGoal.steps.length);
