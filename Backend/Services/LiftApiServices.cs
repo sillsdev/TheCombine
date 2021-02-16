@@ -188,17 +188,18 @@ namespace BackendFramework.Services
                 Directory.Delete(liftExportDir, true);
             }
 
-            var zipDir = Path.Combine(liftExportDir, "Lift");
+            var projNameAsPath = Sanitization.MakeFriendlyForPath(proj.Name, "Lift");
+            var zipDir = Path.Combine(liftExportDir, projNameAsPath);
             Directory.CreateDirectory(zipDir);
 
             // Add audio dir inside zip dir.
             var audioDir = Path.Combine(zipDir, "audio");
             Directory.CreateDirectory(audioDir);
-            var liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
+            var liftPath = Path.Combine(zipDir, projNameAsPath + ".lift");
 
             // noBOM will work with PrinceXML
             using var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
-            var rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
+            var rangesDest = Path.Combine(zipDir, projNameAsPath + ".lift-ranges");
 
             // Write header of lift document.
             var header =
