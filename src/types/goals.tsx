@@ -57,6 +57,7 @@ export enum GoalName {
 }
 
 export class Goal {
+  guid: string;
   goalType: GoalType;
   name: GoalName;
   user: User;
@@ -66,7 +67,6 @@ export class Goal {
   data: GoalData;
   completed: boolean;
   changes: any;
-  hash: string;
 
   constructor(
     type = GoalType.Default,
@@ -74,6 +74,7 @@ export class Goal {
     steps: GoalStep[] = [{}],
     data: GoalData = {}
   ) {
+    this.guid = v4();
     this.goalType = type;
     this.name = name;
     this.user = new User("", "", "");
@@ -83,6 +84,5 @@ export class Goal {
     this.data = data;
     this.completed = false;
     this.changes = {};
-    this.hash = v4();
   }
 }

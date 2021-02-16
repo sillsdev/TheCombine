@@ -1,15 +1,15 @@
+import { defaultState } from "components/GoalTimeline/DefaultState";
 import * as actions from "components/GoalTimeline/GoalsActions";
 import { goalsReducer } from "components/GoalTimeline/GoalsReducer";
-import { Goal, GoalsState } from "types/goals";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
-import { defaultState } from "components/GoalTimeline/DefaultState";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
-import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { StoreAction, StoreActions } from "rootActions";
+import { Goal, GoalsState } from "types/goals";
 
 const loadUserEditsAction: actions.GoalAction = {
   type: actions.GoalsActions.LOAD_USER_EDITS,
@@ -54,7 +54,7 @@ describe("Test GoalsReducers", () => {
 
     const addGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal],
+      payload: goal,
     };
     const newState: GoalsState = {
       historyState: {
@@ -83,7 +83,7 @@ describe("Test GoalsReducers", () => {
 
     const addGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal],
+      payload: goal,
     };
     const newState: GoalsState = {
       historyState: {
@@ -115,7 +115,7 @@ describe("Test GoalsReducers", () => {
 
     const addGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [chosenGoal],
+      payload: chosenGoal,
     };
     const newState: GoalsState = {
       historyState: {
@@ -197,7 +197,7 @@ describe("Test GoalsReducers", () => {
 
     const updateGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [goal2],
+      payload: goal2,
     };
 
     const newState: GoalsState = {
