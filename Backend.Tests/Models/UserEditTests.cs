@@ -1,4 +1,5 @@
-﻿using BackendFramework.Models;
+﻿using System.Collections.Generic;
+using BackendFramework.Models;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -26,6 +27,8 @@ namespace Backend.Tests.Models
     public class EditTests
     {
         private const int GoalType = 1;
+        private List<string> StepData = new List<string>() { "step" };
+        private const string Changes = "{wordIds:[]}";
 
         [Test]
         public void TestEquals()
@@ -33,12 +36,22 @@ namespace Backend.Tests.Models
 
             var edit = new Edit { GoalType = GoalType };
             Assert.That(edit.Equals(new Edit { GoalType = GoalType }));
+            edit.StepData = StepData;
+            Assert.That(edit.Equals(new Edit { GoalType = GoalType, StepData = StepData }));
+            edit.Changes = Changes;
+            Assert.That(edit.Equals(
+                new Edit { GoalType = GoalType, StepData = StepData, Changes = Changes }));
+
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var edit = new Edit { GoalType = GoalType };
+            Assert.IsFalse(edit.Equals(null));
+            edit = new Edit { StepData = StepData };
+            Assert.IsFalse(edit.Equals(null));
+            edit = new Edit { Changes = Changes };
             Assert.IsFalse(edit.Equals(null));
         }
     }

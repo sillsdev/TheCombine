@@ -25,10 +25,14 @@ export const defaultState: CharacterInventoryState = {
 export interface CharacterSetEntry {
   character: string;
   occurrences: number;
-  status: characterStatus;
+  status: CharacterStatus;
 }
 
-export type characterStatus = "accepted" | "undecided" | "rejected";
+export enum CharacterStatus {
+  Accepted = "accepted",
+  Rejected = "rejected",
+  Undecided = "undecided",
+}
 
 export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,
