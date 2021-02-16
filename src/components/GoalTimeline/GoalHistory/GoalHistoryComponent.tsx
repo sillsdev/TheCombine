@@ -1,6 +1,6 @@
 import React from "react";
 
-import BaseGoalSelect from "goals/DefaultGoal/BaseGoalWidget/BaseGoalWidget";
+import GoalWidget from "components/GoalTimeline/GoalHistory/GoalWidget";
 import { Goal } from "types/goals";
 
 interface GoalHistoryProps {
@@ -12,7 +12,7 @@ export default class GoalHistory extends React.Component<GoalHistoryProps> {
     return (
       <div className="GoalHistory">
         {this.props.history.map((goal) => (
-          <BaseGoalSelect key={goal.goalType} goal={goal} />
+          <GoalWidget key={goal.goalType} goal={goal} />
         ))}
       </div>
     );
