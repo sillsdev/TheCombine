@@ -152,7 +152,7 @@ const columns: Column<any>[] = [
           return 1;
         }
       }
-      return 0;
+      return a.senses.length - b.senses.length;
     },
   },
   // Delete Sense column
