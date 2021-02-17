@@ -1,4 +1,5 @@
 import * as backend from "backend";
+import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
@@ -7,6 +8,7 @@ import {
 } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
+import { Goal } from "types/goals";
 import { Project } from "types/project";
 
 export enum CharacterInventoryType {
@@ -118,11 +120,13 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
 }
 
 // Sends the character inventory to the server.
-export function uploadInventory() {
+export function uploadInventory(goal: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
     const changes = getChangesFromState(state);
     if (changes.length) {
+      goal.changes = { charChanges: changes };
+      await dispatch(asyncUpdateOrAddGoal(goal));
       const updatedProject = updateCurrentProject(state);
       await saveChangesToProject(updatedProject, dispatch);
     }

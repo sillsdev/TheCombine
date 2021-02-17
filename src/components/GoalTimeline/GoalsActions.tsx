@@ -149,6 +149,22 @@ export function dispatchStepData(goal: Goal) {
   };
 }
 
+export function asyncUpdateOrAddGoal(goal: Goal) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const userEditId = getUserEditId();
+    if (userEditId) {
+      const goalHistory = getState().goalsState.historyState.history;
+      let goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
+      if (goalIndex === -1) {
+        dispatch(addGoalToHistory(goal));
+      } else {
+        dispatch(updateGoal(goal));
+      }
+      await Backend.addGoalToUserEdit(userEditId, goal);
+    }
+  };
+}
+
 // Helper Funtions
 
 export async function loadGoalData(goal: Goal) {

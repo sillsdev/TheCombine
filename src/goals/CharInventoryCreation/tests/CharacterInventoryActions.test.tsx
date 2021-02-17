@@ -12,8 +12,10 @@ import {
   defaultState,
 } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { StoreState } from "types";
-import { defaultProject, Project } from "types/project";
+import { defaultProject } from "types/project";
 import { User } from "types/user";
+import { Goal } from "types/goals";
+import { Action } from "redux";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -66,11 +68,11 @@ let mockUser = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-jest.mock("backend", () => ({
-  updateProject: jest.fn((_project: Project) => {
-    return Promise.resolve("projectId");
-  }),
+jest.mock("backend");
+jest.mock("components/GoalTimeline/GoalsActions", () => ({
+  asyncUpdateOrAddGoal: (goal: Goal) => mockAsyncUpdateOrAddGoal(goal),
 }));
+const mockAsyncUpdateOrAddGoal = jest.fn();
 
 const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
@@ -105,26 +107,29 @@ describe("CharacterInventoryActions", () => {
     });
   });
 
-  test("uploadInventory dispatches correct actions", async () => {
+  test("uploadInventory dispatches correct action", async () => {
+    // Mock out the goal-related things called by uploadInventory.
+    const mockAction: Action = { type: null };
+    mockAsyncUpdateOrAddGoal.mockReturnValue(mockAction);
+    const mockGoal = { changes: {} } as Goal;
+
     LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId(mockProjectId);
     let mockStore = createMockStore(MOCK_STATE);
-    const mockUpload = Actions.uploadInventory();
+    const mockUpload = Actions.uploadInventory(mockGoal);
     await mockUpload(
       mockStore.dispatch,
       mockStore.getState as () => StoreState
     );
     expect(updateProject).toHaveBeenCalledTimes(1);
-    expect(mockStore.getActions()).toEqual([
-      {
-        type: SET_CURRENT_PROJECT,
-        payload: {
-          characterSet: [],
-          rejectedCharacters: REJECT_DATA,
-          validCharacters: VALID_DATA,
-        },
+    expect(mockStore.getActions()).toContainEqual({
+      type: SET_CURRENT_PROJECT,
+      payload: {
+        characterSet: [],
+        rejectedCharacters: REJECT_DATA,
+        validCharacters: VALID_DATA,
       },
-    ]);
+    });
   });
 
   test("getChanges returns correct changes", () => {

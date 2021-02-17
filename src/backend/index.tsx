@@ -395,7 +395,8 @@ export async function avatarSrc(userId: string): Promise<string> {
   return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
-/** Returns index of added goal */
+/** Returns index of added goal, or of updated goal
+ * if goal with same guid already exists in the UserEdit */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal

@@ -143,9 +143,9 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(output);
         }
 
-        /// <summary> Adds a goal to <see cref="UserEdit"/> with specified id </summary>
+        /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits/{userEditId} </remarks>
-        /// <returns> Index of newest edit </returns>
+        /// <returns> Index of added/updated edit </returns>
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody] Edit newEdit)
         {
