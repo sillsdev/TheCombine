@@ -1,0 +1,17 @@
+---
+- name: stop running containers
+  command: docker-compose down
+  args:
+    chdir: "{{ combine_app_dir }}"
+
+- name: run backend to create admin user
+  command:
+    "docker-compose run -e COMBINE_ADMIN_USERNAME={{ combine_admin_username }} \
+    -e COMBINE_ADMIN_PASSWORD='{{ combine_admin_password }}' backend"
+  args:
+    chdir: "{{ combine_app_dir }}"
+
+- name: startup TheCombine
+  command: docker-compose up --detach
+  args:
+    chdir: "{{ combine_app_dir }}"
