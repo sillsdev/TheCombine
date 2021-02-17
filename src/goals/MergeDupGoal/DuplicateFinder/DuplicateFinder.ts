@@ -16,7 +16,7 @@ interface FinderParams {
 //use spread operator on default params to assign to parameters
 export const DefaultParams: FinderParams = {
   maxScore: 3,
-  maxCount: 8,
+  maxCount: 5,
   subCost: 1,
   insCost: 2,
   delCost: 2,
@@ -336,7 +336,7 @@ export default class DupFinder {
     words.forEach((scoredWord) => {
       if (
         scoredWord.score <= this.maxScore &&
-        outputCollection.length <= this.maxCount
+        outputCollection.length < this.maxCount
       ) {
         outputCollection.push(scoredWord.word);
       }
