@@ -4,6 +4,11 @@
 # Install and configure the backup script for the docker
 # containers
 
+- name: install required Python packages
+  pip:
+    name: pymongo
+    state: present
+
 - name: create folders for backups
   file:
     name: "{{ item }}"
@@ -28,6 +33,18 @@
     - combine-restore
     - combine-clean-aws
     - combine-backup-job
+
+- name: install additional maintenance scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ combine_app_dir }}/bin/{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+  with_items:
+    - rm_project.py
+    - add_user_to_proj.py
+    - make_user_admin.py
 
 - name: set environment variables for backup job
   cron:

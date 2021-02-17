@@ -13,6 +13,7 @@ combine_pull_images: true
 combine_image_backend: combine/backend
 combine_image_frontend: combine/frontend
 combine_image_certmgr: combine/certmgr
+combine_image_database: combine/database
 
 #######################################
 # Environment variable defaults for the

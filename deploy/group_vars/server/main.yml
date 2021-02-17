@@ -13,6 +13,7 @@ image_tag: "${IMAGE_TAG}"
 combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
 combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_database: "{{ aws_ecr }}/combine/database:{{ image_tag }}"
 
 # SSL cert variables specific to Server targets
 cert_mode: "letsencrypt"

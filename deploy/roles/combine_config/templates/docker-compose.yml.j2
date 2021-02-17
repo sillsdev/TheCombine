@@ -55,7 +55,11 @@ services:
     restart: unless-stopped
 
   database:
-    image: mongo:{{ mongodb_version }}
+{% if combine_pull_images %}
+    image: {{ combine_image_database }}
+{% else %}
+    build: ./Database
+{% endif %}
     volumes:
       - database_data:/data/db
     expose:
