@@ -17,3 +17,5 @@ src/resources/dictionaries/* linguist-detectable=false
 *.json eol=lf
 *.md eol=lf
 *.yml eol=lf
+
+*vault* diff=ansible-vault merge=binary
