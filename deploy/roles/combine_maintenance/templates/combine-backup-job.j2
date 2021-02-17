@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd {{ combine_app_dir }}
+
+# Remove old import/export files if configured
+{%if clean_files is defined and clean_files %}
+/usr/local/bin/docker-compose exec -T backend find /home/app/${BACKEND_FILES_SUBDIR} {{ clean_files_select | join(' ') }} -delete
+{% endif %}
+
+# Backup the CombineDatabase and the .CombineFiles in the backend
+bin/combine-backup
+# Cleanup the old backups stored in AWS S3 service
+bin/combine-clean-aws
