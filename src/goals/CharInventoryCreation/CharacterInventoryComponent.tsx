@@ -17,14 +17,16 @@ import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDet
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
 import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
 import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
+import { Goal } from "types/goals";
 import { Project } from "types/project";
 import theme from "types/theme";
 
 interface CharacterInventoryProps {
+  goal: Goal;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   setSelectedCharacter: (character: string) => void;
-  uploadInventory: () => Promise<void>;
+  uploadInventory: (goal: Goal) => Promise<void>;
   fetchWords: () => void;
   currentProject: Project;
   selectedCharacter: string;
@@ -74,7 +76,7 @@ export default class CharacterInventory extends React.Component<
 
   async save() {
     this.setState({ saveInProgress: true });
-    await this.props.uploadInventory();
+    await this.props.uploadInventory(this.props.goal);
     this.setState({ saveInProgress: false, saveSuccessful: true });
     // Manually pause so user can see save success.
     setTimeout(() => this.quit(), 1000);
