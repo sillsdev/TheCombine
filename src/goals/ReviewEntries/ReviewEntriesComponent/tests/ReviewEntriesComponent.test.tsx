@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
-import { OLD_SENSE } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords, {
   mockCreateWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
@@ -59,7 +59,7 @@ const mockUpdateAllWords = jest.fn();
 const mockUuid = jest.fn();
 function setMockFunctions() {
   mockGetFrontierWords.mockResolvedValue(
-    mockWords.map((word) => mockCreateWord(word, "en"))
+    mockWords.map((word) => mockCreateWord(word))
   );
   mockMaterialTable.mockReturnValue(React.Fragment);
 }
@@ -94,7 +94,7 @@ describe("ReviewEntriesComponent", () => {
         ...value,
         senses: value.senses.map((sense) => ({
           ...sense,
-          senseId: sense.senseId + OLD_SENSE,
+          senseId: sense.senseId + ReviewEntriesSense.OLD_SENSE,
         })),
         recorder: expect.any(Object),
       }))
