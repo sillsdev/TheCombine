@@ -1,9 +1,8 @@
-import { Note, Sense, State, Word } from "types/word";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
-  SEP_CHAR,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { Note, Sense, State, Word } from "types/word";
 
 export const mockWords: ReviewEntriesWord[] = [
   {
@@ -13,7 +12,10 @@ export const mockWords: ReviewEntriesWord[] = [
     senses: [
       {
         senseId: "1",
-        glosses: "bup, AHHHHHH",
+        glosses: [
+          { def: "bup", language: "en" },
+          { def: "AHHHHHH", language: "en" },
+        ],
         domains: [{ name: "domain", id: "number" }],
         deleted: false,
       },
@@ -26,7 +28,7 @@ export const mockWords: ReviewEntriesWord[] = [
     senses: [
       {
         senseId: "2",
-        glosses: "gloss",
+        glosses: [{ def: "gloss", language: "en" }],
         domains: [{ name: "domain", id: "number" }],
         deleted: false,
       },
@@ -34,28 +36,20 @@ export const mockWords: ReviewEntriesWord[] = [
   },
 ];
 
-export function mockCreateWord(
-  word: ReviewEntriesWord,
-  language: string
-): Word {
+export function mockCreateWord(word: ReviewEntriesWord): Word {
   return {
     ...new Word(),
     id: word.id,
     vernacular: word.vernacular,
-    senses: word.senses.map((sense) => createMockSense(sense, language)),
+    senses: word.senses.map((sense) => createMockSense(sense)),
     note: new Note(word.noteText),
   };
 }
 
-export function createMockSense(
-  sense: ReviewEntriesSense,
-  language: string
-): Sense {
+function createMockSense(sense: ReviewEntriesSense): Sense {
   return {
-    glosses: sense.glosses
-      .split(SEP_CHAR)
-      .map((value: any) => ({ def: value.trim(), language })),
-    semanticDomains: sense.domains,
+    glosses: [...sense.glosses],
+    semanticDomains: [...sense.domains],
     accessibility: State.Active,
   };
 }
