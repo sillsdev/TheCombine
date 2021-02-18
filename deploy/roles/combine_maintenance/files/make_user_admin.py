@@ -32,12 +32,13 @@ def main():
         if user_id is not None:
             result = db_cmd(
                 f'db.UsersCollection.updateOne({{ _id : ObjectId("{user_id}")}},'
-                '{ $set: { isAdmin : true }})'
+                "{ $set: { isAdmin : true }})"
             )
             if result is not None and args.verbose and result["acknowledged"]:
                 print(f"{user} is a Site Admin.")
         elif args.verbose:
-            print(f'Cannot find user {user}.')
+            print(f"Cannot find user {user}.")
+
 
 if __name__ == "__main__":
     main()
