@@ -1,6 +1,5 @@
 import Recorder from "components/Pronunciations/Recorder";
 import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
-import { uuid } from "utilities";
 
 export class ReviewEntriesWord {
   id: string = "";
@@ -41,13 +40,20 @@ export class ReviewEntriesSense {
 
   constructor(sense: Sense, analysisLang?: string) {
     this.deleted = sense.accessibility === State.Deleted;
-    this.senseId = sense.guid ?? uuid() + ReviewEntriesSense.OLD_SENSE;
+    this.senseId = sense.guid + ReviewEntriesSense.OLD_SENSE;
     this.domains = [...sense.semanticDomains];
     this.glosses = analysisLang
       ? sense.glosses.filter((g) => g.language === analysisLang)
       : [...sense.glosses];
   }
 
+  static getGuid(sense: ReviewEntriesSense) {
+    const id = sense.senseId;
+    if (id.endsWith(ReviewEntriesSense.OLD_SENSE)) {
+      return id.slice(0, -ReviewEntriesSense.OLD_SENSE.length);
+    }
+    return id;
+  }
   static glossString(sense: ReviewEntriesSense): string {
     return sense.glosses.map((g) => g.def).join(ReviewEntriesSense.SEPARATOR);
   }

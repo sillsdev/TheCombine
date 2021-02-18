@@ -10,7 +10,7 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import { maxNumSteps } from "types/goalUtilities";
-import { State, Word } from "types/word";
+import { Sense, State, Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
@@ -251,6 +251,7 @@ export async function mergeWord(
       word.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {
           parent.senses.push({
+            guid: sense.guid,
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
           });

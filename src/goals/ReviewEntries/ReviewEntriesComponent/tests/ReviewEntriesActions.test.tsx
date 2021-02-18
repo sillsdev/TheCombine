@@ -30,50 +30,42 @@ jest.mock("backend/localStorage", () => ({
 const mockStore = configureMockStore([thunk])();
 
 // Dummy glosses, domains, senses used in testing
-const gloss0: Gloss = { language: "en", def: "gloss" };
-const gloss1: Gloss = { language: "en", def: "infinite" };
-const gloss_foreign: Gloss = { language: "es", def: "glossario" };
+const langEn = "en";
+const langEs = "es";
+const gloss0: Gloss = { language: langEn, def: "gloss" };
+const gloss0Es: Gloss = { language: langEs, def: "glossario" };
+const gloss1: Gloss = { language: langEn, def: "infinite" };
 const domain0: SemanticDomain = { name: "Universe", id: "1" };
 const domain1: SemanticDomain = { name: "Shadow", id: "8.3.3.2.1" };
-const sense0_frontier: Sense = {
+const commonGuid = "mockGuid";
+const sense0: () => Sense = () => ({
+  guid: commonGuid + "0",
+  glosses: [{ ...gloss0 }, { ...gloss0Es }],
+  semanticDomains: [{ ...domain0 }],
+});
+const sense1_frontier: Sense = {
+  guid: commonGuid + "1",
   glosses: [gloss1],
   semanticDomains: [domain1],
   accessibility: State.Active,
 };
-const sense0_local: ReviewEntriesSense = {
-  senseId: "sense0",
-  glosses: [gloss1],
-  domains: [domain1],
-  deleted: false,
-};
+const sense1_local = new ReviewEntriesSense(sense1_frontier);
 
 function mockFrontierWord(): Word {
   return {
     ...new Word(),
+    guid: commonGuid,
     id: "word",
     vernacular: "word",
-    senses: [
-      {
-        glosses: [gloss0, gloss_foreign],
-        semanticDomains: [domain0],
-      },
-    ],
+    senses: [sense0()],
   };
 }
-
 function mockWord(): ReviewEntriesWord {
   return {
     ...new ReviewEntriesWord(),
     id: "word",
     vernacular: "word",
-    senses: [
-      {
-        senseId: "oldWordSense" + ReviewEntriesSense.OLD_SENSE,
-        glosses: [gloss0],
-        domains: [domain0],
-        deleted: false,
-      },
-    ],
+    senses: [new ReviewEntriesSense(sense0(), langEn)],
   };
 }
 
@@ -100,7 +92,7 @@ describe("ReviewEntriesActions", () => {
     const newWord = mockWord();
     newWord.senses[0].glosses.push(gloss1);
     const newFrontierWord = mockFrontierWord();
-    newFrontierWord.senses[0].glosses = [gloss0, gloss1, gloss_foreign];
+    newFrontierWord.senses[0].glosses = [gloss0, gloss1, gloss0Es];
 
     await makeDispatch(newWord, mockWord());
     checkResultantData(newFrontierWord);
@@ -118,9 +110,12 @@ describe("ReviewEntriesActions", () => {
 
   it("Adds a new sense", async () => {
     const newWord = mockWord();
-    newWord.senses.push(sense0_local);
+    newWord.senses.push(sense1_local);
     const newFrontierWord = mockFrontierWord();
-    newFrontierWord.senses.push(sense0_frontier);
+    newFrontierWord.senses.push({
+      ...sense1_frontier,
+      guid: expect.any(String),
+    });
 
     await makeDispatch(newWord, mockWord());
     checkResultantData(newFrontierWord);
@@ -130,18 +125,18 @@ describe("ReviewEntriesActions", () => {
   it("Removes a gloss from an extant sense", async () => {
     const oldWord = mockWord();
     oldWord.senses.push({
-      ...sense0_local,
-      glosses: [...sense0_local.glosses, gloss0],
+      ...sense1_local,
+      glosses: [...sense1_local.glosses, gloss0],
     });
     const newWord = mockWord();
-    newWord.senses.push(sense0_local);
+    newWord.senses.push(sense1_local);
     const oldFrontierWord = mockFrontierWord();
     oldFrontierWord.senses.push({
-      ...sense0_frontier,
-      glosses: [...sense0_frontier.glosses, gloss0],
+      ...sense1_frontier,
+      glosses: [...sense1_frontier.glosses, gloss0],
     });
     const newFrontierWord = mockFrontierWord();
-    newFrontierWord.senses.push(sense0_frontier);
+    newFrontierWord.senses.push(sense1_frontier);
 
     mockBackendReturn(oldFrontierWord);
     await makeDispatch(newWord, oldWord);
@@ -151,18 +146,18 @@ describe("ReviewEntriesActions", () => {
   it("Removes a domain from an extant sense", async () => {
     const oldWord = mockWord();
     oldWord.senses.push({
-      ...sense0_local,
-      domains: [...sense0_local.domains, domain0],
+      ...sense1_local,
+      domains: [...sense1_local.domains, domain0],
     });
     const newWord = mockWord();
-    newWord.senses.push(sense0_local);
+    newWord.senses.push(sense1_local);
     const oldFrontierWord = mockFrontierWord();
     oldFrontierWord.senses.push({
-      ...sense0_frontier,
-      semanticDomains: [...sense0_frontier.semanticDomains, domain0],
+      ...sense1_frontier,
+      semanticDomains: [...sense1_frontier.semanticDomains, domain0],
     });
     const newFrontierWord = mockFrontierWord();
-    newFrontierWord.senses.push(sense0_frontier);
+    newFrontierWord.senses.push(sense1_frontier);
 
     mockBackendReturn(oldFrontierWord);
     await makeDispatch(newWord, oldWord);
@@ -171,9 +166,9 @@ describe("ReviewEntriesActions", () => {
 
   it("Removes a sense", async () => {
     const oldWord = mockWord();
-    oldWord.senses.push(sense0_local);
+    oldWord.senses.push(sense1_local);
     const oldFrontierWord = mockFrontierWord();
-    oldFrontierWord.senses.push(sense0_frontier);
+    oldFrontierWord.senses.push(sense1_frontier);
 
     mockBackendReturn(oldFrontierWord);
     await makeDispatch(mockWord(), oldWord);
@@ -194,7 +189,7 @@ describe("ReviewEntriesActions", () => {
 
   it("Ignores a new sense with no glosses, domains", async () => {
     const newWord = mockWord();
-    newWord.senses.push({ ...sense0_local, glosses: [], domains: [] });
+    newWord.senses.push({ ...sense1_local, glosses: [], domains: [] });
 
     await makeDispatch(newWord, mockWord());
     checkResultantData(mockFrontierWord());
@@ -236,7 +231,7 @@ describe("ReviewEntriesActions", () => {
   it("Rejects a new sense with no glosses", async () => {
     const newWord = mockWord();
     newWord.senses.push({
-      ...sense0_local,
+      ...sense1_local,
       glosses: [],
     });
 
@@ -250,7 +245,7 @@ describe("ReviewEntriesActions", () => {
   it("Rejects new sense with no domains", async () => {
     const newWord = mockWord();
     newWord.senses.push({
-      ...sense0_local,
+      ...sense1_local,
       domains: [],
     });
 
@@ -262,15 +257,16 @@ describe("ReviewEntriesActions", () => {
   });
 
   it("Sets the analysis language", async () => {
+    const langFr = "fr";
     mockGetProject.mockImplementation(() =>
       Promise.resolve({
         ...defaultProject,
-        analysisWritingSystems: [{ bcp47: "fr" }],
+        analysisWritingSystems: [{ bcp47: langFr }],
       })
     );
     await mockStore.dispatch<any>(setAnalysisLang());
 
-    expect(mockStore.getActions()[0].analysisLanguage).toBe("fr");
+    expect(mockStore.getActions()[0].analysisLanguage).toBe(langFr);
     expect(mockStore.getActions()[0].type).toBe("SET_ANALYSIS_LANGUAGE");
   });
 });
@@ -284,7 +280,7 @@ function mockBackendReturn(data: Word) {
 function makeDispatch(
   newWord: ReviewEntriesWord,
   oldWord: ReviewEntriesWord,
-  language = "en"
+  language = langEn
 ) {
   return mockStore.dispatch<any>(
     updateFrontierWord(newWord, oldWord, language)

@@ -48,6 +48,7 @@ export function mockCreateWord(word: ReviewEntriesWord): Word {
 
 function createMockSense(sense: ReviewEntriesSense): Sense {
   return {
+    guid: ReviewEntriesSense.getGuid(sense),
     glosses: [...sense.glosses],
     semanticDomains: [...sense.domains],
     accessibility: State.Active,

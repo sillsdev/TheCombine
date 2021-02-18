@@ -187,39 +187,36 @@ export function updateFrontierWord(
 
     // Update the senses.
     const newSenses = [];
-    for (let i = 0; i < editSource.senses.length; i++) {
-      const displaySense = editSource.senses[i];
-
+    for (const editSense of editSource.senses) {
       // If the sense was deleted, nothing else matters.
-      if (displaySense.deleted) {
+      if (editSense.deleted) {
         continue;
       }
 
-      // If we align with an original sense, copy it over.
-      const editSense: Sense =
-        i < editWord.senses.length
-          ? { ...editWord.senses[i] }
-          : ({
-              glosses: [],
-              accessibility: State.Active,
-            } as any);
+      // If we match an original sense, copy it over.
+      const oldSense = editWord.senses.find(
+        (s) => s.guid === ReviewEntriesSense.getGuid(editSense)
+      );
+      const newSense: Sense = oldSense
+        ? { ...oldSense }
+        : { ...new Sense(), accessibility: State.Active };
 
       // Use the edited semantic domains.
-      editSense.semanticDomains = [...displaySense.domains];
+      newSense.semanticDomains = [...editSense.domains];
 
       // If there are edited glosses, replace the previous glosses with them.
-      if (displaySense.glosses.length) {
-        const newGlosses = [...displaySense.glosses];
+      if (editSense.glosses.length) {
+        const newGlosses = [...editSense.glosses];
         // If a language was specified, add all glosses of other langauges from the original.
         if (language) {
           newGlosses.push(
-            ...editSense.glosses.filter((g) => g.language !== language)
+            ...newSense.glosses.filter((g) => g.language !== language)
           );
         }
-        editSense.glosses = newGlosses;
+        newSense.glosses = newGlosses;
       }
 
-      newSenses.push(editSense);
+      newSenses.push(newSense);
     }
     editWord.senses = newSenses;
 
