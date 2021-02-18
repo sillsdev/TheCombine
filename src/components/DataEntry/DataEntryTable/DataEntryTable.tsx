@@ -12,7 +12,6 @@ import { AutoComplete } from "types/project";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
 import {
-  Gloss,
   Note,
   SemanticDomain,
   Sense,

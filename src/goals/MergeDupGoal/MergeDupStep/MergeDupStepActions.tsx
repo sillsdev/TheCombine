@@ -10,7 +10,7 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import { maxNumSteps } from "types/goalUtilities";
-import { Sense, State, Word } from "types/word";
+import { State, Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
