@@ -20,7 +20,7 @@ const ReviewEntriesComponent = loadable(
 function displayComponent(goal: Goal) {
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
-      return <CharInventoryCreation />;
+      return <CharInventoryCreation goal={goal} />;
     case GoalType.MergeDups:
       return <MergeDupStep />;
     case GoalType.ReviewEntries:
