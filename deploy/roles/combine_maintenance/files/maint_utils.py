@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Run a command in a docker container and return a subprocess.CompletedProcess."""
 
+import json
 import re
 import subprocess
 import sys
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 
 def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
@@ -30,23 +31,39 @@ def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
         sys.exit(err.returncode)
 
 
-def db_cmd(cmd: str) -> subprocess.CompletedProcess:
+def db_cmd(cmd: str) -> Optional[Dict[str, Any]]:
     """Run the supplied database command using the mongo shell in the database container."""
-    return run_docker_cmd(
+    db_results = run_docker_cmd(
         "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]
     )
-
-
-def object_id(buffer: str) -> Optional[str]:
-    """Extract a MongoDB ObjectId from a string."""
-    obj_id_pattern = re.compile(r'^.*ObjectId\("([0-9a-f]{24})"\).*$', re.MULTILINE|re.DOTALL)
-    obj_id_match = obj_id_pattern.match(buffer)
-    if obj_id_match:
-        return obj_id_match.group(1)
+    result_str = object_id_to_str(db_results.stdout)
+    if result_str:
+        result_dict = json.loads(result_str)
+        return result_dict
     return None
 
 
+def object_id_to_str(buffer: str) -> str:
+    """Extract a MongoDB ObjectId from a string."""
+    obj_id_pattern = re.compile(r'ObjectId\(("[0-9a-f]{24}")\)', re.MULTILINE)
+    return obj_id_pattern.sub(r"\1", buffer)
+
+
 def get_project_id(project_name: str) -> Optional[str]:
-    """Look up the MongoDB Object Id for the project from the Project Name."""
+    """Look up the MongoDB ObjectId for the project from the Project Name."""
     results = db_cmd(f'db.ProjectsCollection.findOne({{ name: "{project_name}"}},{{ name: 1}})')
-    return object_id(results.stdout)
+    if results is not None:
+        return results["_id"]
+    return None
+
+
+def get_user_id(user: str) -> Optional[str]:
+    """Look up the MongoDB ObjectId for a user from username or e-mail."""
+    results = db_cmd(f'db.UsersCollection.findOne({{ username: "{user}"}}, {{ username: 1 }})')
+    if results is not None and "_id" in results:
+        return results["_id"]
+    else:
+        results = db_cmd(f'db.UsersCollection.findOne({{ email: "{user}"}}, {{ username: 1 }})')
+        if results is not None and "_id" in results:
+            return results["_id"]
+    return None

@@ -26,7 +26,7 @@ To add the user to the project, we need to:
 import argparse
 import sys
 
-from maint_utils import db_cmd, get_project_id, object_id
+from maint_utils import db_cmd, get_project_id, get_user_id
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,7 +43,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--user", required=True, help="Username or e-mail of the user to be added to the project"
     )
-    parser.add_argument("--admin", help="Add the user as an admin for the project")
+    parser.add_argument(
+        "--admin", action="store_true", help="Add the user as an admin for the project"
+    )
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
@@ -54,31 +56,60 @@ def main():
     """Add a user to a project."""
     args = parse_args()
     # 1. Lookup the user id
-    results = db_cmd(
-        f'db.UsersCollection.findOne({{ username: "{args.user}"}}, {{ username: 1 }})'
-    )
-    user_id = object_id(results.stdout)
-    if not user_id:
-        results = db_cmd(
-            f'db.UsersCollection.findOne({{ email: "{args.user}"}}, {{ username: 1 }})'
-        )
-        user_id = object_id(results.stdout)
-    if not user_id:
+    user_id = get_user_id(args.user)
+    if user_id is None:
         print(f"Cannot find user {args.user}")
         sys.exit(1)
-    print(f"User Id: {user_id}")
+    if args.verbose:
+        print(f"User Id: {user_id}")
 
-    # Check to see if this user is already in the project.
+    # Look up the project id
     proj_id = get_project_id(args.project)
-    if not proj_id:
+    if proj_id is None:
         print(f"Cannot find project {args.project}")
         sys.exit(2)
-    print(f"Project ID: {proj_id}")
-    results = db_cmd(
-        f'db.UsersCollection.find({{ _id: ObjectId("{user_id}"), "projectRoles.{proj_id}": {{ $exists: true}} }}, {{ "projectRoles.{proj_id}" : 1}})'
-    )
-    print(results.stdout)
-    print(results.stderr)
+    if args.verbose:
+        print(f"Project ID: {proj_id}")
+
+    # 2. Check to see if the user is already in the project.
+    # define the query selection and projection arguments separately to
+    # improve readability
+    select_crit = f'{{ _id: ObjectId("{user_id}"), "projectRoles.{proj_id}": {{ $exists: true}} }}'
+    projection = f'{{ "projectRoles.{proj_id}" : 1}}'
+    result = db_cmd(f"db.UsersCollection.find({select_crit}, {projection})")
+    if result is not None:
+        # The user is in the project
+        if not args.admin:
+            print(f"{args.user} is already a member of {args.project}")
+            sys.exit(0)
+        user_role_id = result["projectRoles"][proj_id]
+        if args.verbose:
+            print(f"UserRole ID: {user_role_id}")
+        select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
+        update_role = '{ $set: { "permissions" : [5,4,3,2,1]} }'
+        db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
+        if args.verbose:
+            print(f"Updated Role {user_role_id} with permissions [5,4,3,2,1]")
+    else:
+        #  3. The user is not in the project:
+        #      a. create a document in the UserRolesCollection,
+        if args.admin:
+            user_permissions = [5, 4, 3, 2, 1]
+        else:
+            user_permissions = [3, 2, 1]
+        insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
+        insert_result = db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
+        if insert_result is not None:
+            #      b. add the new role to the user's document in the UsersCollection
+            user_role_id = insert_result["insertedId"]
+            select_user = f'{{ _id: ObjectId("{user_id}")}}'
+            update_user = f'{{ $set : {{"projectRoles.{proj_id}" : "{user_role_id}" }}}}'
+            add_role_result = db_cmd(f"db.UsersCollection.updateOne({select_user}, {update_user})")
+            if add_role_result is None:
+                print(f"Could not add {args.user} to {args.project}.")
+                sys.exit(3)
+            elif args.verbose:
+                print(f"{args.user} added to {args.project} with permissions {user_permissions}")
 
 
 if __name__ == "__main__":
