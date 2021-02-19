@@ -53,7 +53,7 @@ export default function DeleteCell(props: DeleteCellProps) {
           <IconButton
             size="small"
             onClick={() => {
-              props.delete!(value.senseId);
+              props.delete!(value.guid);
             }}
           >
             {value.deleted ? <RestoreFromTrash /> : <Delete />}

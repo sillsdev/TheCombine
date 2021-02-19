@@ -78,15 +78,7 @@ export default function SenseCell(
           props.onRowDataChange &&
           props.onRowDataChange({
             ...props.rowData,
-            senses: [
-              ...props.rowData.senses,
-              {
-                deleted: false,
-                glosses: [],
-                domains: [],
-                senseId: uuid(),
-              },
-            ],
+            senses: [...props.rowData.senses, new ReviewEntriesSense()],
           })
         }
       />

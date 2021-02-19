@@ -15,7 +15,7 @@ const newWord: ReviewEntriesWord = {
   vernacular: "toadTOAD",
   senses: [
     {
-      senseId: "1",
+      guid: "1",
       glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
         { name: "domain", id: "number" },
@@ -31,7 +31,7 @@ const result: ReviewEntriesWord = {
   vernacular: "toadTOAD",
   senses: [
     {
-      senseId: "1" + ReviewEntriesSense.OLD_SENSE,
+      guid: "1",
       glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
         { name: "domain", id: "number" },
@@ -66,9 +66,8 @@ describe("ReviewEntriesReducer", () => {
     expect(
       reviewEntriesReducer(mockState, {
         type: ReviewEntriesActionTypes.UpdateWord,
-        id: mockWords[0].id,
-        newId: result.id,
-        newWord: newWord,
+        oldId: mockWords[0].id,
+        newWord: { ...newWord, id: result.id },
       })
     ).toEqual({ ...mockState, words: [result, mockWords[1]] });
   });

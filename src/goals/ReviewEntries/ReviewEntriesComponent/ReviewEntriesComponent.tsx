@@ -3,10 +3,7 @@ import React from "react";
 import { getFrontierWords } from "backend";
 import Recorder from "components/Pronunciations/Recorder";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTable";
-import {
-  parseWord,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { Word } from "types/word";
 
 // Component state/props
@@ -54,7 +51,11 @@ export default class ReviewEntriesComponent extends React.Component<
 
     for (let word of frontier) {
       // Create a new currentword
-      currentWord = parseWord(word, this.props.language, this.recorder);
+      currentWord = new ReviewEntriesWord(
+        word,
+        this.props.language,
+        this.recorder
+      );
 
       // Remove the trailing newlines + push to newWords
       newWords.push(currentWord);
