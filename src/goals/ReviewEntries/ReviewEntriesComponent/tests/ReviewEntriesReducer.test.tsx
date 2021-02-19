@@ -3,10 +3,7 @@ import {
   defaultState,
   reviewEntriesReducer,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
-import {
-  ReviewEntriesSense,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 const newWord: ReviewEntriesWord = {

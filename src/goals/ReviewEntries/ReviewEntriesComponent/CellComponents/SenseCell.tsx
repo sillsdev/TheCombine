@@ -9,7 +9,6 @@ import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesCompone
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
-import { uuid } from "utilities";
 
 interface SenseCellProps {
   editable: boolean;

@@ -2,10 +2,7 @@ import {
   ReviewEntriesAction,
   ReviewEntriesActionTypes,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
-import {
-  ReviewEntriesSense,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreAction, StoreActions } from "rootActions";
 
 export interface ReviewEntriesState {
