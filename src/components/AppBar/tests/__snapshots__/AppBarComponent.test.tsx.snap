@@ -69,6 +69,7 @@ Array [
 
 exports[`NavigationButtons has only one tab shaded 2`] = `
 <button
+  aria-describedby={null}
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
   disabled={false}
   id="project-name"
@@ -80,6 +81,7 @@ exports[`NavigationButtons has only one tab shaded 2`] = `
   onKeyUp={[Function]}
   onMouseDown={[Function]}
   onMouseLeave={[Function]}
+  onMouseOver={[Function]}
   onMouseUp={[Function]}
   onTouchEnd={[Function]}
   onTouchMove={[Function]}
@@ -90,6 +92,7 @@ exports[`NavigationButtons has only one tab shaded 2`] = `
     }
   }
   tabIndex={0}
+  title={null}
   type="button"
 >
   <span
@@ -114,6 +117,7 @@ exports[`NavigationButtons has only one tab shaded 2`] = `
 
 exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
 <button
+  aria-describedby={null}
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
   disabled={false}
   id="project-name"
@@ -125,6 +129,7 @@ exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
   onKeyUp={[Function]}
   onMouseDown={[Function]}
   onMouseLeave={[Function]}
+  onMouseOver={[Function]}
   onMouseUp={[Function]}
   onTouchEnd={[Function]}
   onTouchMove={[Function]}
@@ -135,6 +140,7 @@ exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
     }
   }
   tabIndex={0}
+  title={null}
   type="button"
 >
   <span
