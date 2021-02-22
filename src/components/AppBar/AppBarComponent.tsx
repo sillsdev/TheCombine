@@ -26,21 +26,19 @@ export default function AppBarComponent(props: AppBarComponentProps) {
             spacing={2}
             alignItems="center"
           >
-            <Grid item xs>
+            <Grid item xs={8} sm={7} md={5} lg={4}>
               <Logo />
               {getProjectId() !== "" && (
                 <NavigationButtons currentTab={props.currentTab} />
               )}
+              <DownloadButton colorSecondary />
             </Grid>
-            <Grid item xs>
+            <Grid item xs={3} sm={4}>
               {getProjectId() !== "" && (
                 <ProjectNameButton currentTab={props.currentTab} />
               )}
             </Grid>
-            <Grid item>
-              <DownloadButton colorSecondary />
-            </Grid>
-            <Grid item>
+            <Grid item xs={1} md={"auto"}>
               <UserMenu />
             </Grid>
           </Grid>
