@@ -77,7 +77,7 @@ function buttonStyle(orientation: Orientation, size: number): CSSProperties {
     case "vertical":
       return {
         height: size + "vw",
-        padding: "2vw",
+        padding: "1vw",
         width: "100%",
       };
   }
