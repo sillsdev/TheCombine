@@ -131,7 +131,6 @@ print_step "Stop the current containers."
 /usr/local/bin/docker-compose down
 
 print_step "Start up just the backend and the database."
-/usr/local/bin/aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{ aws_ecr }}
 /usr/local/bin/docker-compose up --detach database backend
 
 
