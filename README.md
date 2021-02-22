@@ -84,15 +84,31 @@ A rapid word collection tool.
    - [VS Code](https://code.visualstudio.com/download) and the following extensions:
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
+   - [chocolatey](https://chocolatey.org/): (Windows only) a Windows package manager.
    - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 4.1.131201`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
-   certificate
-4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
+   certificate.
+4. (Linux,macOS Only) Install
+   [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) and then:
+
+   - configure `git` to use `ansible-vault` for comparing encrypted vault files:
+     ```
+     git config --global diff.ansible-vault.textconv "ansible-vault view"
+     ```
+   - save the ansible vault password in a file, e.g. `${HOME}/.vault-password`
+   - set the permissions for the vault password file to `0600`
+   - edit your `.profile` to export the enviroment variable `ANSIBLE_VAULT_PASSWORD_FILE` set to the path of the file
+     with the vault password:
+     ```
+     export ANSIBLE_VAULT_PASSWORD_FILE=${HOME}/.vault-password
+     ```
+
+5. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
    _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
    _System_ app (Windows).
-5. If you want the email services to work you will need to set the following environment variables. These values must be
+6. If you want the email services to work you will need to set the following environment variables. These values must be
    kept secret, so ask your email administrator to supply them.
 
    - `COMBINE_SMTP_SERVER`
@@ -102,12 +118,10 @@ A rapid word collection tool.
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-6. Run `npm start` from the project directory to install dependencies and start the project.
+7. Run `npm start` from the project directory to install dependencies and start the project.
 
-7. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
+8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
-
-[chocolatey]: https://chocolatey.org/
 
 ## Available Scripts
 
