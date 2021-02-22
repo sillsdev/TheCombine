@@ -1,4 +1,5 @@
-import { Button } from "@material-ui/core";
+import { Button, Hidden } from "@material-ui/core";
+import { Settings } from "@material-ui/icons";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -14,17 +15,20 @@ export default function ProjectNameButton(props: ProjectNameButtonProps) {
   const projectName = useSelector((state: any) => state.currentProject.name);
 
   return (
-    <Button
-      id="project-name"
-      onClick={() => {
-        history.push(Path.ProjSettings);
-      }}
-      color="inherit"
-      style={{
-        background: tabColor(props.currentTab, Path.ProjSettings),
-      }}
-    >
-      {projectName}
-    </Button>
+    <React.Fragment>
+      <Button
+        id="project-name"
+        onClick={() => {
+          history.push(Path.ProjSettings);
+        }}
+        color="inherit"
+        style={{
+          background: tabColor(props.currentTab, Path.ProjSettings),
+        }}
+      >
+        <Settings />
+        <Hidden xsDown>{projectName}</Hidden>
+      </Button>
+    </React.Fragment>
   );
 }
