@@ -45,6 +45,7 @@
     - rm_project.py
     - add_user_to_proj.py
     - make_user_admin.py
+    - maint_utils.py
 
 - name: set environment variables for backup job
   cron:
