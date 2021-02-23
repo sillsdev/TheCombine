@@ -1,11 +1,20 @@
-import { Button, Grid, Tooltip, Typography } from "@material-ui/core";
-import { Add, ArrowUpward, Clear, Done } from "@material-ui/icons";
+import { Grid, IconButton, Tooltip, Typography } from "@material-ui/core";
+import {
+  Add,
+  ArrowUpward,
+  Clear,
+  Delete,
+  Done,
+  Search,
+} from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { getFrontierWords } from "backend";
 import { Project, WritingSystem } from "types/project";
 import theme from "types/theme";
+import { getGlossLangsFromWords } from "types/word";
 
 interface LanguageProps {
   project: Project;
@@ -17,6 +26,7 @@ interface LanguageState {
   name: string;
   bcp47: string;
   font: string;
+  langsInProject?: string;
 }
 
 export default class ProjectLanguages extends React.Component<
@@ -47,6 +57,14 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => console.error(err));
   }
 
+  deleteAnalysisWritingSystem(index: number) {
+    this.props.project.analysisWritingSystems.splice(index, 1);
+    this.props
+      .saveChangesToProject(this.props.project)
+      .then(() => this.resetState())
+      .catch((err) => console.error(err));
+  }
+
   addAnalysisWritingSystem() {
     const ws = {
       name: this.state.name,
@@ -67,6 +85,35 @@ export default class ProjectLanguages extends React.Component<
         .map((ws) => ws.bcp47)
         .includes(this.state.bcp47)
     );
+  }
+
+  writingSystemButtons(index: number) {
+    if (index === 0) {
+      return;
+    }
+    return (
+      <React.Fragment>
+        <ButtonWithIconAndTooltip
+          icon={<ArrowUpward fontSize="inherit" />}
+          textId="projectSettings.language.makeDefaultAnalysisLanguage"
+          small
+          onClick={() => this.setNewAnalysisDefault(index)}
+        />
+        <ButtonWithIconAndTooltip
+          icon={<Delete fontSize="inherit" />}
+          textId="projectSettings.language.deleteAnalysisLanguage"
+          small
+          onClick={() => this.deleteAnalysisWritingSystem(index)}
+        />
+      </React.Fragment>
+    );
+  }
+
+  async getAllGlossLangs() {
+    const langCodes = getGlossLangsFromWords(await getFrontierWords());
+    langCodes.sort();
+    const langsInProject = langCodes.join(", ");
+    this.setState({ langsInProject });
   }
 
   resetState() {
@@ -92,8 +139,7 @@ export default class ProjectLanguages extends React.Component<
                 key={index}
                 ws={writingSystem}
                 index={index}
-                icon={index && <MakeDefaultButton />}
-                iconAction={() => this.setNewAnalysisDefault(index)}
+                buttons={this.writingSystemButtons(index)}
               />
             )
           )}
@@ -112,59 +158,44 @@ export default class ProjectLanguages extends React.Component<
               />
             </Grid>{" "}
             <Grid item>
-              <Button
+              <IconButton
                 id="submitNewLang"
-                size="large"
                 disabled={!this.isNewWritingSystem()}
                 onClick={() => this.addAnalysisWritingSystem()}
               >
                 <Done />
-              </Button>
+              </IconButton>
             </Grid>{" "}
             <Grid item>
-              <Button size="large" onClick={() => this.resetState()}>
+              <IconButton onClick={() => this.resetState()}>
                 <Clear />
-              </Button>
+              </IconButton>
             </Grid>
           </Grid>
         ) : (
-          <Tooltip
-            title={
-              <Translate id="projectSettings.language.addAnalysisLanguage" />
-            }
-            placement="right"
-          >
-            <Button
-              id="addNewLang"
+          <React.Fragment>
+            <ButtonWithIconAndTooltip
+              icon={<Add />}
+              textId="projectSettings.language.addAnalysisLanguage"
               onClick={() => this.setState({ add: true })}
-            >
-              <Add />
-            </Button>
-          </Tooltip>
+            />
+            <ButtonWithIconAndTooltip
+              icon={<Search />}
+              textId="projectSettings.language.getGlossLanguages"
+              onClick={() => this.getAllGlossLangs()}
+            />
+            {this.state.langsInProject}
+          </React.Fragment>
         )}
       </React.Fragment>
     );
   }
 }
 
-function MakeDefaultButton() {
-  return (
-    <Tooltip
-      title={
-        <Translate id="projectSettings.language.makeDefaultAnalysisLanguage" />
-      }
-      placement="right"
-    >
-      <ArrowUpward fontSize="inherit" />
-    </Tooltip>
-  );
-}
-
 interface ImmutableWritingSystemProps {
   ws: WritingSystem;
   index?: number;
-  icon?: any;
-  iconAction?: () => void;
+  buttons?: JSX.Element;
 }
 
 function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
@@ -187,11 +218,27 @@ function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
         {": "}
         {props.ws.font}
       </Grid>
-      {props.icon ? (
-        <Grid item>
-          <Button onClick={props.iconAction}>{props.icon}</Button>
-        </Grid>
-      ) : null}
+      <Grid item>{props.buttons}</Grid>
     </Grid>
+  );
+}
+
+interface ButtonWithIconAndTooltipProps {
+  icon: JSX.Element;
+  textId: string;
+  small?: boolean;
+  onClick?: () => void;
+}
+
+function ButtonWithIconAndTooltip(props: ButtonWithIconAndTooltipProps) {
+  return (
+    <Tooltip title={<Translate id={props.textId} />} placement="right">
+      <IconButton
+        onClick={props.onClick}
+        size={props.small ? "small" : "medium"}
+      >
+        {props.icon}
+      </IconButton>
+    </Tooltip>
   );
 }
