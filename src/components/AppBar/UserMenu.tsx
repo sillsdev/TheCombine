@@ -1,4 +1,4 @@
-import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
+import { Avatar, Button, Hidden, Menu, MenuItem } from "@material-ui/core";
 import {
   ExitToApp,
   Help,
@@ -11,7 +11,7 @@ import { Translate } from "react-localize-redux";
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
-import theme from "types/theme";
+import theme, { tabColor } from "types/theme";
 
 export async function getIsAdmin(): Promise<boolean> {
   const userId = LocalStorage.getUserId();
@@ -22,10 +22,14 @@ export async function getIsAdmin(): Promise<boolean> {
   return false;
 }
 
+interface UserMenuProps {
+  currentTab: Path;
+}
+
 /**
  * Avatar in appbar with dropdown UserMenu
  */
-export default function UserMenu() {
+export default function UserMenu(props: UserMenuProps) {
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
   const avatar = LocalStorage.getAvatar();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -47,7 +51,11 @@ export default function UserMenu() {
         aria-haspopup="true"
         onClick={handleClick}
         color="secondary"
+        style={{
+          background: tabColor(props.currentTab, Path.UserSettings),
+        }}
       >
+        <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
         ) : (

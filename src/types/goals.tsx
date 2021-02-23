@@ -1,15 +1,16 @@
 import { v4 } from "uuid";
 
 import {
+  CreateCharInvChanges,
   CreateCharInvData,
   CreateCharInvStepData,
 } from "goals/CreateCharInv/CreateCharInv";
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
 import { User } from "types/user";
 
-type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
-
-export type GoalStep = CreateCharInvStepData | MergeStepData | {}; // | OtherTypes
+export type GoalData = CreateCharInvData | MergeDupData | {};
+export type GoalStep = CreateCharInvStepData | MergeStepData | {};
+export type GoalChanges = CreateCharInvChanges | {};
 
 export interface GoalProps {
   goal?: Goal;
@@ -66,7 +67,7 @@ export class Goal {
   currentStep: number;
   data: GoalData;
   completed: boolean;
-  changes: any;
+  changes: GoalChanges;
 
   constructor(
     type = GoalType.Default,

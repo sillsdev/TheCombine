@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button, Hidden } from "@material-ui/core";
 import React from "react";
 
 import history, { Path } from "browserHistory";
@@ -13,12 +13,12 @@ export default function Logo() {
         history.push(Path.ProjScreen);
       }}
     >
-      <img
-        srcSet={`${logo} 1200w, ${smallLogo} 600w`}
-        src={logo}
-        height="50"
-        alt="Logo"
-      />
+      <Hidden xsDown>
+        <img src={logo} height="50" alt="Logo" />
+      </Hidden>
+      <Hidden smUp>
+        <img src={smallLogo} height="50" alt="Logo" />
+      </Hidden>
     </Button>
   );
 }
