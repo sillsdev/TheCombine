@@ -93,13 +93,13 @@ export default class ProjectLanguages extends React.Component<
     }
     return (
       <React.Fragment>
-        <ButtonWithIconAndTooltip
+        <IconButtonWithTooltip
           icon={<ArrowUpward fontSize="inherit" />}
           textId="projectSettings.language.makeDefaultAnalysisLanguage"
           small
           onClick={() => this.setNewAnalysisDefault(index)}
         />
-        <ButtonWithIconAndTooltip
+        <IconButtonWithTooltip
           icon={<Delete fontSize="inherit" />}
           textId="projectSettings.language.deleteAnalysisLanguage"
           small
@@ -174,12 +174,12 @@ export default class ProjectLanguages extends React.Component<
           </Grid>
         ) : (
           <React.Fragment>
-            <ButtonWithIconAndTooltip
+            <IconButtonWithTooltip
               icon={<Add />}
               textId="projectSettings.language.addAnalysisLanguage"
               onClick={() => this.setState({ add: true })}
             />
-            <ButtonWithIconAndTooltip
+            <IconButtonWithTooltip
               icon={<Search />}
               textId="projectSettings.language.getGlossLanguages"
               onClick={() => this.getAllGlossLangs()}
@@ -223,14 +223,14 @@ function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
   );
 }
 
-interface ButtonWithIconAndTooltipProps {
+interface IconButtonWithTooltipProps {
   icon: JSX.Element;
   textId: string;
   small?: boolean;
   onClick?: () => void;
 }
 
-function ButtonWithIconAndTooltip(props: ButtonWithIconAndTooltipProps) {
+function IconButtonWithTooltip(props: IconButtonWithTooltipProps) {
   return (
     <Tooltip title={<Translate id={props.textId} />} placement="right">
       <IconButton
