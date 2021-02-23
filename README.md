@@ -220,19 +220,19 @@ Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
 For VSCode, run the **Debug Jest Tests** configuration within the Run tab on the left taskbar.
 
-### `npm run fmt-backend`
+#### `npm run fmt-backend`
 
 Automatically format the C# source files in the backend.
 
-### `npm run lint`
+#### `npm run lint`
 
 Runs ESLint on the codebase to detect code problems that should be fixed.
 
-### `npm run fmt-frontend`
+#### `npm run fmt-frontend`
 
 Auto-format frontend code in the `src` folder.
 
-### `npm run build`
+#### `npm run build`
 
 Builds the app for production to the `build` folder.
 
@@ -248,7 +248,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 Run after `npm run build` to analyze the contents build bundle chunks.
 
-### `npm run import-sem-doms`
+#### `npm run import-sem-doms`
 
 Imports Semantic Domains from the provided xml file.
 
