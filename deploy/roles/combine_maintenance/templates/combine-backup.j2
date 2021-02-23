@@ -46,7 +46,7 @@ done
 
 step=1
 
-echo_verbose "${step}. Setup some useful environment variables."
+print_step "Setup some useful environment variables."
 DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
 COMBINE_HOST="{{ combine_server_name | replace('.', '-') }}"
 BACKUP_FILE="combine-backup.tar.gz"

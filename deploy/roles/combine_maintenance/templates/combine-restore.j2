@@ -158,6 +158,6 @@ docker cp ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR}/ ${BE_CONTAINER}:/home/app
 print_step "Cleanup Restore files."
 rm -rf ${RESTORE_DIR}
 
-echo_verbose "10. Restart the containers."
+print_step "Restart the containers."
 /usr/local/bin/docker-compose down
 /usr/local/bin/docker-compose up --detach

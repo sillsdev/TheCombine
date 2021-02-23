@@ -39,8 +39,9 @@ A rapid word collection tool.
 2. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Running the Automated Tests](#running-the-automated-tests)
-   3. [Generate License Report](#generate-license-report)
-   4. [Set Project Version](#set-project-version)
+   3. [Import Semantic Domains](#import-semantic-domains)
+   4. [Generate License Report](#generate-license-report)
+   5. [Set Project Version](#set-project-version)
 3. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
 
    1. [Environments](#environments)
@@ -154,6 +155,22 @@ Runs only the backend.
 
 Runs only the mongo database.
 
+#### `npm run build`
+
+Builds the app for production to the `build` folder.
+
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.
+
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+#### `npm run analyze`
+
+Run after `npm run build` to analyze the contents build bundle chunks.
+
 ### Running the Automated Tests
 
 #### `npm test`
@@ -232,23 +249,7 @@ Runs ESLint on the codebase to detect code problems that should be fixed.
 
 Auto-format frontend code in the `src` folder.
 
-#### `npm run build`
-
-Builds the app for production to the `build` folder.
-
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.
-
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-#### `npm run analyze`
-
-Run after `npm run build` to analyze the contents build bundle chunks.
-
-#### `npm run import-sem-doms`
+### Import Semantic Domains
 
 Imports Semantic Domains from the provided xml file.
 
