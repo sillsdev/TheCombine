@@ -108,7 +108,7 @@ Notes:
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
 - The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
   your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
-  group in the inventory file, e.g. `qa`
+  group in the inventory file, e.g. `qa`.
 
 ### Install TheCombine
 
