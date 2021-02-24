@@ -3,24 +3,18 @@
 Add user to a project.
 
 This script will add a user to a Combine project in the database
-Assumptions:
-  - The Javascript is run with the following variables set:
-      - user: user's username or e-mail address
-      - projName: name of the project to which the user is
-        to be added
-      - isAdmin: set to true/false to determine the user permissions.
-        If set to "True", the permissions are set to [5,4,3,2,1], otherwise
-        they are set to [3,2,1]
 
 To add the user to the project, we need to:
  1. Look up the user id - check the "user" info against the username and
     email fields in the UsersCollection.
  2. Check to see if the user is already in the project.  If he/she is
-    already a member, update the permissions if "isAdmin" is set to True,
-    otherwise do nothing.
+    already a member and the --admin argument is used, set the permissions to
+    [5,4,3,2,1], otherwise do nothing.
  3. If the user is not in the project:
      a. create a document in the UserRolesCollection,
      b. add the new role to the user's document in the UsersCollection
+     c. set the permissions field in the user role to [5,4,3,2,1] if the
+        --admin argument is used, [3,2,1] otherwise.
 """
 
 import argparse

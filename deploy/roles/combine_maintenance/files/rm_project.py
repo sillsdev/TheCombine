@@ -2,10 +2,6 @@
 """
 Remove a project and its associated data from TheCombine.
 
-Assumptions:
-  - The Javascript is run with the variable "projectName" defined
-    and set to the name of the project to be deleted.
-
 To delete a project from the database, we need to delete:
  1. documents in the
      - FrontierCollection,
