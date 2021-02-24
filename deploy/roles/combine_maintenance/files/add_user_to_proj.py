@@ -100,10 +100,13 @@ def main():
             update_user = f'{{ $set : {{"projectRoles.{proj_id}" : "{user_role_id}" }}}}'
             add_role_result = db_cmd(f"db.UsersCollection.updateOne({select_user}, {update_user})")
             if add_role_result is None:
-                print(f"Could not add {args.user} to {args.project}.")
+                print(f"Could not add new role to {args.user}.", file=sys.stderr)
                 sys.exit(3)
             elif args.verbose:
                 print(f"{args.user} added to {args.project} with permissions {user_permissions}")
+        else:
+            print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)
+            sys.exit(4)
 
 
 if __name__ == "__main__":
