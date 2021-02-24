@@ -24,6 +24,7 @@ To delete a project from the backend, we need to delete:
 """
 
 import argparse
+import sys
 
 from maint_utils import db_cmd, get_project_id, run_docker_cmd
 
@@ -64,7 +65,7 @@ def main():
     args = parse_args()
     for project in args.projects:
         project_id = get_project_id(project)
-        if project_id:
+        if project_id is not None:
             if args.verbose:
                 print(f"Remove project {project}")
                 print(f"Project ID: {project_id}")
@@ -79,8 +80,9 @@ def main():
                 delete_from_user_fields(project_id, field)
             delete_from_projects(project_id)
             run_docker_cmd("backend", ["rm", "-rf", f"/home/app/.CombineFiles/{project_id}"])
-        elif args.verbose:
-            print(f"Cannot find {project}")
+        else:
+            print(f"Cannot find {project}", file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
