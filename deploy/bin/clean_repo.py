@@ -142,12 +142,7 @@ def main() -> None:
             if args.untagged:
                 image_ids.append(f'imageDigest={image_struct["imageDigest"]}')
     # Remove all the specified image(s) in blocks of 100 (AWS limit)
-    # Although not specified in the AWS CLI documentation, when trying to delete
-    # more than 100 images in a single command, the following error message is
-    # printed on stderr:
-    #    An error occurred (InvalidParameterException) when calling the BatchDeleteImage
-    #    operation: Invalid parameter at 'imageIds' failed to satisfy constraint:
-    #    'Member must have length less than or equal to 100'
+    # See https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_BatchDeleteImage.html
     if len(image_ids) > 0:
         aws_delete_limit = 100
         for i in range(0, len(image_ids), aws_delete_limit):
