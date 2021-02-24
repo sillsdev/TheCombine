@@ -251,7 +251,7 @@ namespace BackendFramework.Services
         public async Task<User?> Create(User user)
         {
             // Confirm that email and username aren't empty and aren't taken
-            if (user.Email.Length == 0 || user.Username.Length == 0 ||
+            if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username) ||
                 await GetUserIdByEmail(user.Email) != null ||
                 await GetUserIdByUsername(user.Username) != null)
             {
@@ -314,7 +314,7 @@ namespace BackendFramework.Services
             }
 
             // Confirm that email and username aren't empty and aren't taken by another user.
-            if (user.Email.Length == 0 || user.Username.Length == 0)
+            if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username))
             {
                 return ResultOfUpdate.Failed;
             }

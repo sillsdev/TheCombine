@@ -62,7 +62,7 @@ namespace BackendFramework.Services
         public async Task<Project?> Create(Project project)
         {
             // Confirm that project name isn't empty or taken
-            if (project.Name.Length == 0 || (await GetProjectIdByName(project.Name)) != null)
+            if (string.IsNullOrEmpty(project.Name) || (await GetProjectIdByName(project.Name)) != null)
             {
                 return null;
             }
@@ -84,7 +84,7 @@ namespace BackendFramework.Services
         public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
             // Confirm that project name isn't empty or taken
-            if (project.Name.Length == 0)
+            if (string.IsNullOrEmpty(project.Name))
             {
                 return ResultOfUpdate.Failed;
             }
