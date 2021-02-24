@@ -6,7 +6,7 @@
 
 - name: run backend to create admin user
   command:
-    "docker-compose run -e COMBINE_ADMIN_USERNAME={{ combine_admin_username }} \
+    "docker-compose run -e COMBINE_ADMIN_USERNAME=\"{{ combine_admin_username }}\" \
     -e COMBINE_ADMIN_PASSWORD=\"{{ combine_admin_password }}\" \
     -e COMBINE_ADMIN_EMAIL=\"{{ combine_admin_email }}\" backend"
   args:

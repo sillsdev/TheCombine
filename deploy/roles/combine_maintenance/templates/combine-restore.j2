@@ -133,7 +133,6 @@ print_step "Stop the current containers."
 print_step "Start up just the backend and the database."
 /usr/local/bin/docker-compose up --detach database backend
 
-
 print_step "Restore the database."
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
 docker cp ${RESTORE_DIR}/${DB_FILES_SUBDIR}/ ${DB_CONTAINER}:${DB_FILES_SUBDIR}
