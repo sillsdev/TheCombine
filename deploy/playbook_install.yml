@@ -26,7 +26,7 @@
     # AWS credentials while testing.  By default, vars/aws.yml is used.  To
     # use a different file, such as _test_aws.yml, add the following to your
     # ansible-playbook command:
-    #   -e "ansible_credentials=_test_aws.yml"
+    #   -e "aws_credentials=_test_aws.yml"
     - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
