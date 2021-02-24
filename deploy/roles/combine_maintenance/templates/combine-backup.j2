@@ -44,8 +44,6 @@ while [[ $# -gt 0 ]] ; do
   shift
 done
 
-step=1
-
 print_step "Setup some useful environment variables."
 DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
 COMBINE_HOST="{{ combine_server_name | replace('.', '-') }}"
