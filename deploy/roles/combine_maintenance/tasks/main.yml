@@ -36,16 +36,20 @@
 
 - name: install additional maintenance scripts
   copy:
-    src: "{{ item }}"
-    dest: "{{ combine_app_dir }}/bin/{{ item }}"
+    src: "{{ item.name }}"
+    dest: "{{ combine_app_dir }}/bin/{{ item.name }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
-    mode: 0755
+    mode: 0{{ item.mode }}
   with_items:
-    - rm_project.py
-    - add_user_to_proj.py
-    - make_user_admin.py
-    - maint_utils.py
+    - name: rm_project.py
+      mode: 755
+    - name: add_user_to_proj.py
+      mode: 755
+    - name: make_user_admin.py
+      mode: 755
+    - name: maint_utils.py
+      mode: 644
 
 - name: set environment variables for backup job
   cron:
