@@ -308,7 +308,7 @@ namespace BackendFramework.Services
         {
             // Confirm user exists.
             var oldUser = await GetUser(userId);
-            if (oldUser == null)
+            if (oldUser is null)
             {
                 return ResultOfUpdate.NotFound;
             }
