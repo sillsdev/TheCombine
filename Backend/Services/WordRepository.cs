@@ -65,7 +65,7 @@ namespace BackendFramework.Services
                 // Use Roundtrip-suitable ISO 8601 format.
                 word.Created = Time.UtcNowIso8601();
             }
-            if (string.IsNullOrEmpty(word.Created))
+            if (string.IsNullOrEmpty(word.Modified))
             {
                 word.Modified = Time.UtcNowIso8601();
             }
