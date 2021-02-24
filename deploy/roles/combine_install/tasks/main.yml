@@ -1,11 +1,10 @@
 ---
 #########################################################################
-# Starts the Combine on a new machine through the following
+# Installs the Combine on a new machine through the following
 # tasks:
 #  - create .env file to specify the image tag for the docker containers
+#  - logs into the AWS Elastic Container Registry
 #  - pulls the docker images
-#  - creates the 'admin' user for TheCombine
-#  - starts TheCombine application
 #########################################################################
 
 - name: create .env file
