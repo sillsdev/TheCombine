@@ -37,11 +37,17 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public Task<Project> Create(Project project)
+        public Task<Project?> Create(Project project)
         {
+            // Confirm that project name isn't empty or taken
+            if (string.IsNullOrEmpty(project.Name) || GetProjectIdByName(project.Name).Result != null)
+            {
+                return Task.FromResult<Project?>(null);
+            }
+
             project.Id = Guid.NewGuid().ToString();
             _projects.Add(project.Clone());
-            return Task.FromResult(project.Clone());
+            return Task.FromResult<Project?>(project.Clone());
         }
 
         public Task<bool> DeleteAllProjects()
@@ -94,16 +100,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
-        public Task<bool> DuplicateCheck(string projectName)
+        public Task<string?> GetProjectIdByName(string projectName)
         {
-            foreach (var project in _projects)
-            {
-                if (project.Name == projectName)
-                {
-                    return Task.FromResult(true);
-                }
-            }
-            return Task.FromResult(false);
+            var project = _projects.Find(x =>
+                x.Name == projectName);
+            return Task.FromResult(project?.Id);
         }
 
         public Task<bool> CanImportLift(string projectId)

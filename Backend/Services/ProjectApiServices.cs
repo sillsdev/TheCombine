@@ -59,8 +59,14 @@ namespace BackendFramework.Services
 
         /// <summary> Adds a <see cref="Project"/> </summary>
         /// <returns> The project created </returns>
-        public async Task<Project> Create(Project project)
+        public async Task<Project?> Create(Project project)
         {
+            // Confirm that project name isn't empty or taken
+            if (string.IsNullOrEmpty(project.Name) || (await GetProjectIdByName(project.Name)) != null)
+            {
+                return null;
+            }
+
             await _projectDatabase.Projects.InsertOneAsync(project);
             return project;
         }
@@ -77,6 +83,17 @@ namespace BackendFramework.Services
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
+            // Confirm that project name isn't empty or taken
+            if (string.IsNullOrEmpty(project.Name))
+            {
+                return ResultOfUpdate.Failed;
+            }
+            var projectIdWithName = await GetProjectIdByName(project.Name);
+            if (projectIdWithName != null && projectIdWithName != project.Id)
+            {
+                return ResultOfUpdate.Failed;
+            }
+
             var filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
 
             // Note: Nulls out values not in update body
@@ -177,17 +194,11 @@ namespace BackendFramework.Services
             }
         }
 
-        public async Task<bool> DuplicateCheck(string projectName)
+        public async Task<string?> GetProjectIdByName(string projectName)
         {
-            var projects = await GetAllProjects();
-            foreach (var project in projects)
-            {
-                if (project.Name == projectName)
-                {
-                    return true;
-                }
-            }
-            return false;
+            var project = (await GetAllProjects()).Find(x =>
+                x.Name == projectName);
+            return project?.Id;
         }
 
         public async Task<bool> CanImportLift(string projectId)

@@ -109,7 +109,7 @@ namespace Backend.Tests.Controllers
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
-            var action = _controller.Get(project.Id).Result;
+            var action = _controller.Get(project!.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundProjects = ((ObjectResult)action).Value as Project;
@@ -130,7 +130,7 @@ namespace Backend.Tests.Controllers
         public void TestUpdateProject()
         {
             var origProject = _projectService.Create(RandomProject()).Result;
-            var modProject = origProject.Clone();
+            var modProject = origProject!.Clone();
             modProject.Name = "Mark";
 
             _ = _controller.Put(modProject.Id, modProject);
@@ -144,7 +144,7 @@ namespace Backend.Tests.Controllers
             var origProject = _projectService.Create(RandomProject()).Result;
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
 
-            _ = _controller.Delete(origProject.Id).Result;
+            _ = _controller.Delete(origProject!.Id).Result;
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -165,7 +165,7 @@ namespace Backend.Tests.Controllers
         {
             var project = _projectService.Create(RandomProject()).Result;
             var sdList = (List<SemanticDomainWithSubdomains>)(
-                (ObjectResult)_controller.GetSemDoms(project.Id).Result).Value;
+                (ObjectResult)_controller.GetSemDoms(project!.Id).Result).Value;
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
@@ -177,12 +177,12 @@ namespace Backend.Tests.Controllers
             var project1 = _projectService.Create(RandomProject()).Result;
             _ = _projectService.Create(RandomProject()).Result;
             _ = _projectService.Create(RandomProject()).Result;
-            var modProject = project1.Clone();
+            var modProject = project1!.Clone();
             modProject.Name = "Proj";
             _ = _controller.Put(modProject.Id, modProject);
 
-            Assert.AreEqual(_projectService.DuplicateCheck("Proj").Result, true);
-            Assert.AreEqual(_projectService.DuplicateCheck("NewProj").Result, false);
+            Assert.AreEqual(((ObjectResult)_controller.ProjectDuplicateCheck("Proj").Result).Value, true);
+            Assert.AreEqual(((ObjectResult)_controller.ProjectDuplicateCheck("NewProj").Result).Value, false);
         }
     }
 }

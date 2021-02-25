@@ -60,12 +60,12 @@ namespace BackendFramework.Services
         /// </summary>
         private static void PopulateBlankWordTimes(Word word)
         {
-            if (word.Created.Length == 0)
+            if (string.IsNullOrEmpty(word.Created))
             {
                 // Use Roundtrip-suitable ISO 8601 format.
                 word.Created = Time.UtcNowIso8601();
             }
-            if (word.Modified.Length == 0)
+            if (string.IsNullOrEmpty(word.Modified))
             {
                 word.Modified = Time.UtcNowIso8601();
             }
@@ -213,9 +213,12 @@ namespace BackendFramework.Services
                 filterDef.Eq(x => x.ProjectId, word.ProjectId),
                 filterDef.Eq(x => x.Id, word.Id));
 
-            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
-            var added = await AddFrontier(word);
-            return deleted.DeletedCount > 0;
+            var deleted = (await _wordDatabase.Frontier.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await AddFrontier(word);
+            }
+            return deleted;
         }
 
         /// <summary> Updates <see cref="Word"/> in the Words collection with same wordId and projectId </summary>
@@ -227,9 +230,12 @@ namespace BackendFramework.Services
                 filterDef.Eq(x => x.ProjectId, word.ProjectId),
                 filterDef.Eq(x => x.Id, word.Id));
 
-            var deleted = await _wordDatabase.Words.DeleteOneAsync(filter);
-            var added = await Add(word);
-            return deleted.DeletedCount > 0;
+            var deleted = (await _wordDatabase.Words.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await Add(word);
+            }
+            return deleted;
         }
     }
 }
