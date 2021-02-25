@@ -34,6 +34,12 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
+            if (projectId == "populateguids")
+            {
+                await _wordRepo.PopulateAllGuids();
+                return new OkResult();
+            }
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
