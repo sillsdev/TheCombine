@@ -28,7 +28,7 @@ namespace Backend.Tests.Controllers
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
             _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project()).Result.Id;
+            _projId = _projectService.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordRepo, _wordService, _projectService, _permissionService);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
