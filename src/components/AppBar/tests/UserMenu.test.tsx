@@ -2,6 +2,7 @@ import { Button, MenuItem } from "@material-ui/core";
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 import { User } from "types/user";
 
@@ -13,8 +14,9 @@ jest.mock("backend", () => {
 
 jest.mock("backend/localStorage", () => {
   return {
-    getUserId: () => mockGetUserId(),
     getAvatar: jest.fn(),
+    getCurrentUser: jest.fn(),
+    getUserId: () => mockGetUserId(),
   };
 });
 
@@ -39,7 +41,7 @@ beforeEach(() => {
 describe("UserMenu", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
-      testRenderer = renderer.create(<UserMenu />);
+      testRenderer = renderer.create(<UserMenu currentTab={Path.Root} />);
     });
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
   });

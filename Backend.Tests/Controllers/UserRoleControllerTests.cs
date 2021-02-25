@@ -25,7 +25,7 @@ namespace Backend.Tests.Controllers
             _permissionService = new PermissionServiceMock();
             _userRoleService = new UserRoleServiceMock();
             _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project()).Result.Id;
+            _projId = _projectService.Create(new Project { Name = "UserRoleControllerTests" }).Result!.Id;
             _userRoleController = new UserRoleController(_userRoleService, _projectService, _permissionService);
         }
 

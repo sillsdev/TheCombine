@@ -107,7 +107,24 @@ Notes:
 
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
 - The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
-  your own inventory file (see [below](#creating-your-own-inventory-file)).
+  your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
+  group in the inventory file, e.g. `qa`.
+
+### Install TheCombine
+
+To install _TheCombine_ run the following command:
+
+```
+cd <COMBINE>/deploy
+ansible-playbook playbook_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
+```
+
+Notes:
+
+- This is not needed for the Production server or for the QA server. _TheCombine_ is installed on these systems using
+  the CI/CD tools.
+- You will be prompted for the version of _TheCombine_ to install. The version is the Docker image tag in the AWS ECR
+  image repository. The standard releases are tagged with the version number, e.g. _0.6.5_.
 
 ### Running the _TheCombine_ Docker Containers
 
