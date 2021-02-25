@@ -287,6 +287,7 @@ namespace BackendFramework
         {
             const string createAdminUsernameArg = "create-admin-username";
             const string createAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
+            const string createAdminEmailEnv = "COMBINE_ADMIN_EMAIL";
 
             var username = Configuration.GetValue<string>(createAdminUsernameArg);
             if (username is null)
@@ -299,6 +300,14 @@ namespace BackendFramework
             if (password is null)
             {
                 _logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
+                                 $"when using {createAdminUsernameArg} command line option.");
+                throw new EnvironmentNotConfiguredException();
+            }
+
+            var adminEmail = Environment.GetEnvironmentVariable(createAdminEmailEnv);
+            if (adminEmail is null)
+            {
+                _logger.LogError($"Must set {createAdminEmailEnv} environment variable " +
                                  $"when using {createAdminUsernameArg} command line option.");
                 throw new EnvironmentNotConfiguredException();
             }
@@ -324,12 +333,12 @@ namespace BackendFramework
                 return true;
             }
 
-            _logger.LogInformation($"Creating admin user: {username}");
-            var user = new User { Username = username, Password = password, IsAdmin = true };
+            _logger.LogInformation($"Creating admin user: {username} ({adminEmail})");
+            var user = new User { Username = username, Password = password, Email = adminEmail, IsAdmin = true };
             var returnedUser = userService.Create(user).Result;
             if (returnedUser is null)
             {
-                _logger.LogError("Failed to create admin user.");
+                _logger.LogError($"Failed to create admin user {username}, {adminEmail}.");
                 throw new AdminUserCreationException();
             }
 
