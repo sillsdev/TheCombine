@@ -1,0 +1,162 @@
+#!/bin/bash
+
+#########################################################
+# Restore scrips for docker containers running TheCombine
+#########################################################
+
+set -e
+
+usage() {
+  cat <<USAGE
+Usage: $0 [-h] [-v] [backup_file]
+   Restores the combine database and backend containers from the specified
+   backup on AWS.  If the backup is not specified, the currently available
+   backups are listed.
+Options:
+   -c, --clean:
+        remove backend files in /home/app/.CombineFiles in the backend
+        container.  Normally, the files are restored on top of the existing
+        backend files.
+   -h, --help:
+        print this message
+   -v: verbose
+        print progress of backup
+USAGE
+}
+
+. $(cd $(dirname $0); pwd)/combine-env
+BACKUP=""
+CLEAN="0"
+
+while [[ $# -gt 0 ]] ; do
+  arg="$1"
+
+  case ${arg} in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -v|--verbose)
+      VERBOSE="1"
+      ;;
+    -c|--clean)
+      CLEAN="1"
+      ;;
+    -?)
+      echo "Invalid option: ${arg}."
+      usage
+      exit 1
+      ;;
+    *)
+      BACKUP=`basename $arg`
+      ;;
+  esac
+  shift
+done
+
+print_step "Prepare for the restore."
+
+RESTORE_FILE="combine-backup.tar.gz"
+RESTORE_DIR=${RESTORE_DIR:="{{ combine_restore_dir }}"}
+
+cd ${COMBINE_APP_DIR}
+
+print_step "Prepare the restore directory."
+if [ ! -e "${RESTORE_DIR}" ] ; then
+  mkdir -p ${RESTORE_DIR}
+else
+  for item in ${RESTORE_DIR}/${DB_FILES_SUBDIR} ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR} ${RESTORE_DIR}/${RESTORE_FILE}
+  do
+    if [ -e "${item}" ] ; then
+      rm -rf ${item}
+    fi
+  done
+fi
+
+if [ ! -x /usr/local/bin/aws ] ; then
+  echo "aws-cli v2 is not installed."
+  exit 2
+else
+  AWS_VER=`/usr/local/bin/aws --version`
+  aws_ver_pattern='aws-cli/([0-9][0-9]*).*'
+  if [[ $AWS_VER =~ $aws_ver_pattern ]] ; then
+    AWS_MAJ_VERSION=${BASH_REMATCH[1]}
+    if [ "${AWS_MAJ_VERSION}" != "2" ] ; then
+      echo "aws-cli is installed but is not version 2:"
+      echo "${AWS_VER}"
+      exit 3
+    fi
+  else
+    echo "Cannot determine the AWS version. :-("
+    exit 4
+  fi
+fi
+
+if [ -z "${BACKUP}" ] ; then
+  aws_backup_list=( $(/usr/local/bin/aws s3 ls ${AWS_BUCKET} --recursive --profile {{ aws_s3_profile }} | sed "s/.* backups\///") )
+  aws_backups_available={{ '${#aws_backup_list[@]}' }}
+  if [[ $aws_backups_available -eq 0 ]] ; then
+    echo "No backups available from ${AWS_BUCKET}"
+    exit 0
+  fi
+  echo "Backup List:"
+  for key in "${!aws_backup_list[@]}" ; do
+    index=$((key+1))
+    echo -e "\t$index: ${aws_backup_list[$key]}"
+  done
+  read -p "Enter the number of the backup you would like to restore (0 = None):" backup_num
+  if [ -z "$backup_num" ] || [ "$backup_num" == "0" ] ; then
+    echo "No backup selected.  Exiting."
+    exit 0
+  fi
+  num_re='^[0-9]+$'
+  if ! [[ $backup_num =~ $num_re ]] || [[ $backup_num -gt ${aws_backups_available} ]]; then
+   echo "Invalid selection"
+   exit 5
+  fi
+  key=$((backup_num-1))
+  BACKUP=${aws_backup_list[$key]}
+fi
+echo "BACKUP == '${BACKUP}'"
+
+print_step "Fetch the selected backup, ${BACKUP}."
+AWS_FILE="${AWS_BUCKET}/${BACKUP}"
+echo_verbose "${AWS_FILE} copied to ${RESTORE_DIR}/${RESTORE_FILE}"
+/usr/local/bin/aws s3 cp ${AWS_FILE} ${RESTORE_DIR}/${RESTORE_FILE} --profile {{ aws_s3_profile }}
+
+print_step "Unpack the backup."
+tar xzvf ${RESTORE_DIR}/${RESTORE_FILE} -C ${RESTORE_DIR}
+
+print_step "Stop the current containers."
+/usr/local/bin/docker-compose down
+
+print_step "Start up just the backend and the database."
+/usr/local/bin/docker-compose up --detach database backend
+
+print_step "Restore the database."
+DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
+docker cp ${RESTORE_DIR}/${DB_FILES_SUBDIR}/ ${DB_CONTAINER}:${DB_FILES_SUBDIR}
+/usr/local/bin/docker-compose exec database mongorestore --drop --gzip --quiet
+/usr/local/bin/docker-compose exec database rm -rf ${DB_FILES_SUBDIR}
+
+print_step "Copy the backend files."
+# if CLEAN is set, delete the existing files
+if [ "$CLEAN" == "1" ] ; then
+  # we run the rm command inside a bash shell so that the shell will do wildcard
+  # expansion
+  /usr/local/bin/docker-compose exec --user root --workdir /home/app/${BACKEND_FILES_SUBDIR} backend /bin/bash -c "rm -rf *"
+fi
+BE_CONTAINER=`docker ps | grep backend | sed "s/.* \([^ ][^ ]*\)$/\1/"`
+docker cp ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR}/ ${BE_CONTAINER}:/home/app
+# change permissions for the copied files.  Since the tarball is created outside
+# of the container, the app user will not be the owner (the backend process is
+# running as "app").  In addition, it is possible that the backup is from a
+# different host with different UIDs.
+/usr/local/bin/docker-compose exec --user root backend find /home/app/${BACKEND_FILES_SUBDIR} -exec chown app:app {} \;
+
+print_step "Cleanup Restore files."
+rm -rf ${RESTORE_DIR}
+
+print_step "Restart the containers."
+/usr/local/bin/docker-compose down
+/usr/local/bin/docker-compose up --detach

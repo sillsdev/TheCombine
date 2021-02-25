@@ -10,7 +10,7 @@ export const themeColors = {
   secondary: grey[200],
   error: red[600],
   success: green[600],
-  highlight: yellow[100], // CellComponents/
+  highlight: yellow[200],
   shade: blue[700], // tabColor()
   recordIdle: red[500], // RecorderIcon.tsx
   recordActive: red[900], // RecorderIcon.tsx

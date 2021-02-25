@@ -15,11 +15,14 @@ namespace BackendFramework.Services
             _repo = repo;
         }
 
-        /// <summary> Adds an <see cref="Edit"/> to a specified <see cref="UserEdit"/> </summary>
+        /// <summary>
+        /// Adds an <see cref="Edit"/> to a specified <see cref="UserEdit"/>,
+        /// or updates existing one if edit with same <see cref="Guid"/> already present.
+        /// </summary>
         /// <returns>
         /// Tuple of
         ///     bool: success of operation
-        ///     int: index at which the new edit was placed or -1 on failure
+        ///     int: index at which the edit was placed or -1 on failure
         /// </returns>
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
@@ -34,21 +37,23 @@ namespace BackendFramework.Services
 
             var newUserEdit = oldUserEdit.Clone();
 
-            // Add the new goal index to Edits list
-            newUserEdit.Edits.Add(edit);
-
-            // Replace the old UserEdit object with the new one that contains the new list entry
-            var replaceSucceeded = await _repo.Replace(projectId, userEditId, newUserEdit);
-            var indexOfNewestEdit = invalidEditIndex;
-            if (replaceSucceeded)
+            // Update existing Edit if guid exists, otherwise add new one at end of List.
+            var indexOfNewestEdit = newUserEdit.Edits.FindIndex(e => e.Guid == edit.Guid);
+            if (indexOfNewestEdit > invalidEditIndex)
             {
-                var newestEdit = await _repo.GetUserEdit(projectId, userEditId);
-                if (newestEdit is null)
-                {
-                    return failureResult;
-                }
+                newUserEdit.Edits[indexOfNewestEdit] = edit;
+            }
+            else
+            {
+                newUserEdit.Edits.Add(edit);
+                indexOfNewestEdit = newUserEdit.Edits.Count - 1;
+            }
 
-                indexOfNewestEdit = newestEdit.Edits.Count - 1;
+            // Replace the old UserEdit object with the new one that contains the new/updated edit
+            var replaceSucceeded = await _repo.Replace(projectId, userEditId, newUserEdit);
+            if (!replaceSucceeded)
+            {
+                indexOfNewestEdit = invalidEditIndex;
             }
 
             return new Tuple<bool, int>(replaceSucceeded, indexOfNewestEdit);

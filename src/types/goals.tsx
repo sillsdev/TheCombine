@@ -1,21 +1,16 @@
 import { v4 } from "uuid";
 
 import {
+  CreateCharInvChanges,
   CreateCharInvData,
   CreateCharInvStepData,
 } from "goals/CreateCharInv/CreateCharInv";
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
 import { User } from "types/user";
 
-enum GoalOption {
-  Complete,
-  Abandon,
-  Current,
-}
-
-type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
-
-export type GoalStep = CreateCharInvStepData | MergeStepData | {}; // | OtherTypes
+export type GoalData = CreateCharInvData | MergeDupData | {};
+export type GoalStep = CreateCharInvStepData | MergeStepData | {};
+export type GoalChanges = CreateCharInvChanges | {};
 
 export interface GoalProps {
   goal?: Goal;
@@ -63,6 +58,7 @@ export enum GoalName {
 }
 
 export class Goal {
+  guid: string;
   goalType: GoalType;
   name: GoalName;
   user: User;
@@ -71,8 +67,7 @@ export class Goal {
   currentStep: number;
   data: GoalData;
   completed: boolean;
-  result: GoalOption;
-  hash: string;
+  changes: GoalChanges;
 
   constructor(
     type = GoalType.Default,
@@ -80,6 +75,7 @@ export class Goal {
     steps: GoalStep[] = [{}],
     data: GoalData = {}
   ) {
+    this.guid = v4();
     this.goalType = type;
     this.name = name;
     this.user = new User("", "", "");
@@ -88,7 +84,6 @@ export class Goal {
     this.currentStep = 0;
     this.data = data;
     this.completed = false;
-    this.result = GoalOption.Current;
-    this.hash = v4();
+    this.changes = {};
   }
 }

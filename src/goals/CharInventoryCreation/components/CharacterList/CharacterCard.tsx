@@ -7,14 +7,14 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { characterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import { CharacterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import theme from "types/theme";
 
 interface CharacterCardProps {
   char: string;
   count: number;
-  status: characterStatus;
+  status: CharacterStatus;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   fontHeight: number;
   cardWidth: number;

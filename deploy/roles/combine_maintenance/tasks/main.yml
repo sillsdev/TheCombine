@@ -1,0 +1,73 @@
+---
+#######################################################
+#
+# Install and configure the backup script for the docker
+# containers
+
+- name: install required Python packages
+  pip:
+    name: pymongo
+    state: present
+
+- name: create folders for backups
+  file:
+    name: "{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ combine_backup_dir }}"
+    - "{{ combine_app_dir }}/bin"
+
+- name: install backup/restore scripts
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ combine_app_dir }}/bin/{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+  with_items:
+    - combine-env
+    - combine-backup
+    - combine-restore
+    - combine-clean-aws
+    - combine-backup-job
+
+- name: install additional maintenance scripts
+  copy:
+    src: "{{ item.name }}"
+    dest: "{{ combine_app_dir }}/bin/{{ item.name }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - name: rm_project.py
+      mode: "0755"
+    - name: add_user_to_proj.py
+      mode: "0755"
+    - name: make_user_admin.py
+      mode: "0755"
+    - name: maint_utils.py
+      mode: "0644"
+
+- name: set environment variables for backup job
+  cron:
+    env: yes
+    user: "{{ combine_user }}"
+    name: MAX_BACKUPS
+    value: "{{ max_backups }}"
+  when:
+    - backup_hour is defined
+    - backup_minute is defined
+
+- name: schedule regular backups
+  cron:
+    name: combine daily backup
+    job: "{{ combine_app_dir }}/bin/combine-backup-job  2>&1 | /usr/bin/logger -t combine_backup"
+    user: "{{ combine_user }}"
+    hour: "{{ backup_hour }}"
+    minute: "{{ backup_minute }}"
+  when:
+    - backup_hour is defined
+    - backup_minute is defined

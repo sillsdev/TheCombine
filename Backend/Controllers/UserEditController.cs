@@ -32,6 +32,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
         /// <remarks> GET: v1/projects/{projectId}/useredits </remarks>
+        /// <returns> UserEdit list </returns>
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
@@ -80,6 +81,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns <see cref="UserEdit"/>s with specified id </summary>
         /// <remarks> GET: v1/projects/{projectId}/useredits/{userEditId} </remarks>
+        /// <returns> UserEdit </returns>
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
@@ -141,9 +143,9 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(output);
         }
 
-        /// <summary> Adds a goal to <see cref="UserEdit"/> with specified id </summary>
+        /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits/{userEditId} </remarks>
-        /// <returns> Index of newest edit </returns>
+        /// <returns> Index of added/updated edit </returns>
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody] Edit newEdit)
         {

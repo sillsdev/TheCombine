@@ -1,15 +1,11 @@
-import React from "react";
 import ReactDOM from "react-dom";
 
-import { SemanticDomain } from "types/word";
-import {
-  ReviewEntriesWord,
-  SEP_CHAR,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import { Gloss, SemanticDomain } from "types/word";
 
-const GLOSS = "hoovy";
+const GLOSS: Gloss = { def: "hoovy", language: "en" };
 const DOMAIN: SemanticDomain = { name: "Person", id: "0.1" };
 const DOMAIN2: SemanticDomain = { name: "Universe", id: "1" };
 const WORD: ReviewEntriesWord = {
@@ -19,13 +15,16 @@ const WORD: ReviewEntriesWord = {
   senses: [
     {
       senseId: "sense0",
-      glosses: "meaning of life" + SEP_CHAR + "life's meaning",
+      glosses: [
+        { def: "meaning of life", language: "en" },
+        { def: "life's meaning", language: "en" },
+      ],
       domains: [DOMAIN2, { name: "Joke", id: "0.0" }],
       deleted: false,
     },
     {
       senseId: "sense1",
-      glosses: "heavy noise" + SEP_CHAR + GLOSS,
+      glosses: [{ def: "heavy noise", language: "en" }, GLOSS],
       domains: [DOMAIN, { name: "Joke", id: "0" }],
       deleted: false,
     },
@@ -37,7 +36,7 @@ const WORD_0 = {
   senses: [
     {
       senseId: "",
-      glosses: "~",
+      glosses: [{ def: "~", language: "en" }],
       domains: [{ name: "", id: "7.7.6" }],
       deleted: false,
     },
@@ -47,7 +46,7 @@ const WORD_1 = {
   senses: [
     {
       senseId: "",
-      glosses: "a",
+      glosses: [{ def: "a", language: "en" }],
       domains: [{ name: "", id: "9.9.9.9.9" }],
       deleted: false,
     },
@@ -57,7 +56,7 @@ const WORD_2 = {
   senses: [
     {
       senseId: "",
-      glosses: "b",
+      glosses: [{ def: "b", language: "en" }],
       domains: [{ name: "", id: "0.0.0.0.0" }],
       deleted: false,
     },
@@ -67,7 +66,7 @@ const WORD_3 = {
   senses: [
     {
       senseId: "",
-      glosses: "\0",
+      glosses: [{ def: "\0", language: "en" }],
       domains: [{ name: "", id: "7.7.7" }],
       deleted: false,
     },
@@ -80,43 +79,52 @@ describe("Tests cell column functions", () => {
   // Vernacular is the only one which isn't just returning another object, and thus the only one tested here
   it("Renders vernacular without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<div>{columns[0].render(mockWords[0])}</div>, div);
-    ReactDOM.unmountComponentAtNode(div);
+    if (columns[0].render) {
+      ReactDOM.render(<div>{columns[0].render(mockWords[0], "row")}</div>, div);
+      ReactDOM.unmountComponentAtNode(div);
+    } else {
+      fail(
+        "There is no render on column[0]: domains.\nDid the vernacular get moved to a different column?"
+      );
+    }
   });
 
   // Test searching senses
   it("Returns true when searching a word for an extant gloss", () => {
-    if (columns[1].customFilterAndSearch !== undefined)
-      expect(columns[1].customFilterAndSearch(GLOSS, WORD)).toBeTruthy();
-    else
+    if (columns[1].customFilterAndSearch) {
+      expect(columns[1].customFilterAndSearch(GLOSS.def, WORD)).toBeTruthy();
+    } else {
       fail(
         "There is no customFilterAndSearch on column[1]: senses.\nDid the senses get moved to a different column?"
       );
+    }
   });
 
   it("Returns false when searching a word for a nonexistent gloss", () => {
-    if (columns[1].customFilterAndSearch)
+    if (columns[1].customFilterAndSearch) {
       expect(
-        columns[1].customFilterAndSearch(`${GLOSS}-NOT!`, WORD)
+        columns[1].customFilterAndSearch(`${GLOSS.def}-NOT!`, WORD)
       ).toBeFalsy();
-    else
+    } else {
       fail(
         "There is no customFilterAndSearch on column[1]: senses.\nDid the senses get moved to a different column?"
       );
+    }
   });
 
   // Test sorting senses
   it("Properly sorts a list by senses", () => {
-    if (columns[1].customSort)
+    if (columns[1].customSort) {
       expect(
         [...SORT_BY_DOMAINS].sort((a, b) =>
           columns[1].customSort ? columns[1].customSort(a, b, "row") : 0
         )
       ).toEqual(SORT_BY_GLOSSES);
-    else
+    } else {
       fail(
         "There is no customSort on column[1]: senses.\nDid the senses get moved to a different column?"
       );
+    }
   });
 
   // Test searching domains
@@ -124,10 +132,11 @@ describe("Tests cell column functions", () => {
     if (columns[3].customFilterAndSearch) {
       expect(columns[3].customFilterAndSearch(DOMAIN.id, WORD)).toBeTruthy();
       expect(columns[3].customFilterAndSearch(DOMAIN.name, WORD)).toBeTruthy();
-    } else
+    } else {
       fail(
         "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
+    }
   });
 
   it("Returns true when searching a word for an extant domain id:name", () => {
@@ -141,10 +150,11 @@ describe("Tests cell column functions", () => {
           WORD
         )
       ).toBeTruthy();
-    } else
+    } else {
       fail(
         "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
+    }
   });
 
   it("Handles extra whitespace and different capitalization", () => {
@@ -155,19 +165,21 @@ describe("Tests cell column functions", () => {
           WORD
         )
       ).toBeTruthy();
-    } else
+    } else {
       fail(
         "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
+    }
   });
 
   it("Returns false when searching a word for a nonexistent domain", () => {
     if (columns[3].customFilterAndSearch) {
       expect(columns[3].customFilterAndSearch("asdfghjkl", WORD)).toBeFalsy();
-    } else
+    } else {
       fail(
         "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
+    }
   });
 
   it("Returns false when searching for domain id:name that don't occur together", () => {
@@ -175,23 +187,25 @@ describe("Tests cell column functions", () => {
       expect(
         columns[3].customFilterAndSearch(`${DOMAIN.id}:${DOMAIN2.name}`, WORD)
       ).toBeFalsy();
-    } else
+    } else {
       fail(
         "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
+    }
   });
 
   // Test sorting domains
   it("Properly sorts a list by domains", () => {
-    if (columns[3].customSort)
+    if (columns[3].customSort) {
       expect(
         [...SORT_BY_GLOSSES].sort((a, b) =>
           columns[3].customSort ? columns[3].customSort(a, b, "row") : 0
         )
       ).toEqual(SORT_BY_DOMAINS);
-    else
+    } else {
       fail(
         "There is no customSort on column[3]: domains.\nDid the domains get moved to a different column?"
       );
+    }
   });
 });

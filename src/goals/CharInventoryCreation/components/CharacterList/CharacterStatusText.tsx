@@ -2,15 +2,15 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { characterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import { CharacterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {
-  status: characterStatus;
+  status: CharacterStatus;
 }
 
 export default function CharacterStatusText(props: CharacterStatusTextProps) {
-  if (props.status === "accepted") {
+  if (props.status === CharacterStatus.Accepted) {
     return (
       <Typography
         variant="body2"
@@ -20,7 +20,7 @@ export default function CharacterStatusText(props: CharacterStatusTextProps) {
         <Translate id="buttons.accepted" />
       </Typography>
     );
-  } else if (props.status === "rejected") {
+  } else if (props.status === CharacterStatus.Rejected) {
     return (
       <Typography
         variant="body2"

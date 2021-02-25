@@ -13,7 +13,6 @@ namespace Backend.Tests.Helper
             "1",
             "a-5"
         };
-
         [TestCaseSource(nameof(_validIds))]
         public void TestValidIds(string id)
         {
@@ -67,7 +66,6 @@ namespace Backend.Tests.Helper
             "a 5.png",
             "a,5.png"
         };
-
         [TestCaseSource(nameof(_validFileNames))]
         public void TestValidFileNames(string fileName)
         {
@@ -101,6 +99,31 @@ namespace Backend.Tests.Helper
         public void TestInvalidFileNames(string fileName)
         {
             Assert.False(Sanitization.SanitizeFileName(fileName));
+        }
+
+        private static List<List<string>> _namesUnfriendlyFriendly = new List<List<string>>
+        {
+            new List<string>{"A1phaNum3ricN0Change", "A1phaNum3ricN0Change"},
+            new List<string>{"RémöveOrRèpláceÄccênts", "RemoveOrReplaceAccents"},
+            new List<string>{"math+and=currency$to<dash", "math-and-currency-to-dash"},
+            new List<string>{"make spaces underscores", "make_spaces_underscores"},
+            new List<string>{"(){}[]", "()()()"},
+            new List<string>{"こんにちは", "-----"},
+        };
+        [TestCaseSource(nameof(_namesUnfriendlyFriendly))]
+        public void TestMakeFriendlyForPath(List<string> nameName)
+        {
+            Assert.AreEqual(Sanitization.MakeFriendlyForPath(nameName[0]), nameName[1]);
+        }
+
+        [Test]
+        public void TestMakeFriendlyForPathFallback()
+        {
+            const string fallback = "Lift";
+            const string nonEmpty = "qwerty";
+            Assert.AreEqual(Sanitization.MakeFriendlyForPath(""), "");
+            Assert.AreEqual(Sanitization.MakeFriendlyForPath("", fallback), fallback);
+            Assert.AreEqual(Sanitization.MakeFriendlyForPath(nonEmpty, fallback), nonEmpty);
         }
     }
 }

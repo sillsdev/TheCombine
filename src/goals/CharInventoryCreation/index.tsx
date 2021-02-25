@@ -1,7 +1,5 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import {
   fetchWords,
   getAllCharacters,
@@ -12,6 +10,9 @@ import {
   uploadInventory,
 } from "goals/CharInventoryCreation/CharacterInventoryActions";
 import CharacterInventory from "goals/CharInventoryCreation/CharacterInventoryComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/actions";
+import { Goal } from "types/goals";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -29,7 +30,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
       dispatch(setRejectedCharacters(inventory)),
     setSelectedCharacter: (character: string) =>
       dispatch(setSelectedCharacter(character)),
-    uploadInventory: () => dispatch(uploadInventory()),
+    uploadInventory: (goal: Goal) => dispatch(uploadInventory(goal)),
     fetchWords: () => dispatch(fetchWords()),
     getAllCharacters: () => dispatch(getAllCharacters()),
     resetInState: () => dispatch(resetInState()),

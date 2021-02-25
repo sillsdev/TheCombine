@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace BackendFramework.Helper
 {
@@ -35,6 +37,61 @@ namespace BackendFramework.Helper
                 ' '
             }.ToImmutableList();
             return fileName.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c));
+        }
+
+        /// <summary>
+        /// Convert a string (e.g., a project name), into one friendly to use in a path.
+        /// Uses alphanumeric and '-' '_' ',' '(' ')'.
+        /// Returns converted string, unless length 0, then returns fallback.
+        /// </summary>
+        public static string MakeFriendlyForPath(string name, string fallback = "")
+        {
+            // Method modified from https://stackoverflow.com/a/780800
+            var normalizedName = name.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedName)
+            {
+                switch (char.GetUnicodeCategory(c))
+                {
+                    case UnicodeCategory.LowercaseLetter:
+                    case UnicodeCategory.UppercaseLetter:
+                    case UnicodeCategory.DecimalDigitNumber:
+                        stringBuilder.Append(c);
+                        break;
+                    case UnicodeCategory.DashPunctuation:
+                    case UnicodeCategory.CurrencySymbol:
+                    case UnicodeCategory.MathSymbol:
+                    case UnicodeCategory.OtherLetter:
+                    case UnicodeCategory.OtherSymbol:
+                        stringBuilder.Append('-');
+                        break;
+                    case UnicodeCategory.ConnectorPunctuation:
+                    case UnicodeCategory.LineSeparator:
+                    case UnicodeCategory.ParagraphSeparator:
+                    case UnicodeCategory.SpaceSeparator:
+                        stringBuilder.Append('_');
+                        break;
+                    case UnicodeCategory.OpenPunctuation:
+                    case UnicodeCategory.InitialQuotePunctuation:
+                        stringBuilder.Append('(');
+                        break;
+                    case UnicodeCategory.ClosePunctuation:
+                    case UnicodeCategory.FinalQuotePunctuation:
+                        stringBuilder.Append(')');
+                        break;
+                    case UnicodeCategory.OtherPunctuation:
+                        stringBuilder.Append(',');
+                        break;
+                }
+            }
+
+            var safeString = stringBuilder.ToString();
+            if (safeString.Length > 0)
+            {
+                return safeString;
+            }
+            return fallback;
         }
     }
 }

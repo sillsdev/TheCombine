@@ -7,24 +7,26 @@ import {
   DialogTitle,
   Grid,
 } from "@material-ui/core";
-import { Save } from "@material-ui/icons";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
 import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
 import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
+import { Goal } from "types/goals";
 import { Project } from "types/project";
 import theme from "types/theme";
 
 interface CharacterInventoryProps {
+  goal: Goal;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   setSelectedCharacter: (character: string) => void;
-  uploadInventory: () => void;
+  uploadInventory: (goal: Goal) => Promise<void>;
   fetchWords: () => void;
   currentProject: Project;
   selectedCharacter: string;
@@ -38,6 +40,8 @@ export const CANCEL: string = "cancelInventoryCreation";
 
 interface CharacterInventoryState {
   cancelDialogOpen: boolean;
+  saveInProgress: boolean;
+  saveSuccessful: boolean;
 }
 
 /**
@@ -49,7 +53,11 @@ export default class CharacterInventory extends React.Component<
 > {
   constructor(props: CharacterInventoryProps) {
     super(props);
-    this.state = { cancelDialogOpen: false };
+    this.state = {
+      cancelDialogOpen: false,
+      saveInProgress: false,
+      saveSuccessful: false,
+    };
   }
 
   componentDidMount() {
@@ -64,6 +72,14 @@ export default class CharacterInventory extends React.Component<
 
   handleClose() {
     this.setState({ cancelDialogOpen: false });
+  }
+
+  async save() {
+    this.setState({ saveInProgress: true });
+    await this.props.uploadInventory(this.props.goal);
+    this.setState({ saveInProgress: false, saveSuccessful: true });
+    // Manually pause so user can see save success.
+    setTimeout(() => this.quit(), 1000);
   }
 
   quit() {
@@ -103,18 +119,18 @@ export default class CharacterInventory extends React.Component<
           <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
             <Grid container justify="center">
-              <Button
-                id={SAVE}
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  this.props.uploadInventory();
-                  this.quit();
+              <LoadingDoneButton
+                done={this.state.saveSuccessful}
+                loading={this.state.saveInProgress}
+                buttonProps={{
+                  id: SAVE,
+                  color: "primary",
+                  onClick: () => this.save(),
+                  style: { margin: theme.spacing(1) },
                 }}
-                style={{ margin: theme.spacing(1) }}
               >
-                <Save /> <Translate id="buttons.save" />
-              </Button>
+                <Translate id="buttons.save" />
+              </LoadingDoneButton>
               <Button
                 id={CANCEL}
                 variant="contained"

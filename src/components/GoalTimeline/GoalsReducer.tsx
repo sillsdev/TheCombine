@@ -1,7 +1,7 @@
-import { GoalsState } from "types/goals";
-import { GoalsActions, GoalAction } from "components/GoalTimeline/GoalsActions";
 import { defaultState } from "components/GoalTimeline/DefaultState";
+import { GoalsActions, GoalAction } from "components/GoalTimeline/GoalsActions";
 import { StoreAction, StoreActions } from "rootActions";
+import { GoalsState } from "types/goals";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
@@ -20,7 +20,7 @@ export const goalsReducer = (
       };
     case GoalsActions.ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
       let suggestions = state.suggestionsState.suggestions;
-      let goalToAdd = action.payload[0];
+      let goalToAdd = action.payload;
       return {
         ...state,
         historyState: {
@@ -33,14 +33,14 @@ export const goalsReducer = (
         },
       };
     case GoalsActions.UPDATE_GOAL: {
+      const history = [...state.historyState.history];
+      const goalIndex = history.findIndex(
+        (g) => g.guid === action.payload.guid
+      );
+      history.splice(goalIndex, 1, action.payload);
       return {
         ...state,
-        historyState: {
-          history: [
-            ...state.historyState.history.slice(0, -1),
-            action.payload[0],
-          ],
-        },
+        historyState: { history },
       };
     }
     case StoreActions.RESET:

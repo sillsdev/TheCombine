@@ -16,7 +16,7 @@ import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDup
 import { Goal } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { User } from "types/user";
-import { Edit, UserEdit } from "types/userEdit";
+import { UserEdit } from "types/userEdit";
 
 jest.mock("goals/MergeDupGoal/MergeDupStep/MergeDupStepActions", () => {
   const realMergeDupActions = jest.requireActual(
@@ -58,7 +58,7 @@ const mockUpdateUser = jest.fn();
 function setMockFunctions() {
   mockAddGoalToUserEdit.mockResolvedValue(0);
   mockAddStepToGoal.mockResolvedValue(0);
-  mockCreateUserEdit.mockResolvedValue({});
+  mockCreateUserEdit.mockResolvedValue(mockUser);
   mockDispatchMergeStepData.mockReturnValue(mockAction);
   mockGetUser.mockResolvedValue(mockUser);
   mockGetUserEditById.mockResolvedValue(mockUserEdit);
@@ -130,7 +130,7 @@ describe("GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal],
+      payload: goal,
     };
     expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
   });
@@ -148,7 +148,7 @@ describe("GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [goal],
+      payload: goal,
     };
     expect(actions.updateGoal(goal)).toEqual(expectedAction);
   });
@@ -194,7 +194,7 @@ describe("GoalsActions", () => {
       await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
       const addGoalToHistory: actions.AddGoalToHistoryAction = {
         type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-        payload: [goal],
+        payload: goal,
       };
       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
       expect(mockAddGoalToUserEdit).toBeCalledTimes(1);
@@ -352,29 +352,6 @@ describe("GoalsActions", () => {
     it("should return undefined when no userEditId exists for the project", () => {
       LocalStorage.setProjectId("differentThanMockProjectId");
       expect(actions.getUserEditId()).toEqual(undefined);
-    });
-  });
-
-  describe("convertEditToGoal", () => {
-    it("should build a completed goal with the same goalType and steps", () => {
-      const oldGoal: Goal = new MergeDups();
-      oldGoal.numSteps = maxNumSteps(oldGoal.goalType);
-      oldGoal.steps = [
-        {
-          words: [...goalDataMock.plannedWords[0]],
-        },
-        {
-          words: [...goalDataMock.plannedWords[1]],
-        },
-      ];
-      const edit: Edit = {
-        goalType: oldGoal.goalType,
-        stepData: oldGoal.steps.map((s) => JSON.stringify(s)),
-      };
-      const newGoal = actions.convertEditToGoal(edit);
-      expect(newGoal.goalType).toEqual(oldGoal.goalType);
-      expect(newGoal.steps).toEqual(oldGoal.steps);
-      expect(newGoal.numSteps).toEqual(oldGoal.steps.length);
     });
   });
 });

@@ -3,14 +3,16 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { simpleWord, testWordList, Word } from "types/word";
 import {
   StyledMenuItem,
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import { simpleWord, testWordList, Word } from "types/word";
 
 const createMockStore = configureMockStore([]);
-const mockStore = createMockStore({});
+const mockStore = createMockStore({
+  reviewEntriesState: { analysisLang: "en" },
+});
 
 describe("VernList ", () => {
   it("renders without crashing", () => {

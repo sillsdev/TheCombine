@@ -1,12 +1,15 @@
 import * as backend from "backend";
+import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
+import {
+  CharacterInventoryState,
+  CharacterSetEntry,
+  CharacterStatus,
+} from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
+import { Goal } from "types/goals";
 import { Project } from "types/project";
-import {
-  CharacterSetEntry,
-  characterStatus,
-} from "goals/CharInventoryCreation/CharacterInventoryReducer";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
@@ -96,33 +99,37 @@ export function resetInState(): CharacterInventoryAction {
 
 // Dispatch Functions
 
-export function setCharacterStatus(character: string, status: characterStatus) {
+export function setCharacterStatus(character: string, status: CharacterStatus) {
   return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    if (status === "accepted") dispatch(addToValidCharacters([character]));
-    else if (status === "rejected")
+    if (status === CharacterStatus.Accepted)
+      dispatch(addToValidCharacters([character]));
+    else if (status === CharacterStatus.Rejected)
       dispatch(addToRejectedCharacters([character]));
-    else if (status === "undecided") {
-      const state = getState();
-
-      const validCharacters = state.characterInventoryState.validCharacters.filter(
-        (c) => c !== character
-      );
-      dispatch(setValidCharacters(validCharacters));
-
-      const rejectedCharacters = state.characterInventoryState.rejectedCharacters.filter(
-        (c) => c !== character
-      );
-      dispatch(setRejectedCharacters(rejectedCharacters));
+    else if (status === CharacterStatus.Undecided) {
+      const state = getState().characterInventoryState;
+      const valid = state.validCharacters.filter((c) => c !== character);
+      if (valid.length < state.validCharacters.length) {
+        dispatch(setValidCharacters(valid));
+      }
+      const rejected = state.rejectedCharacters.filter((c) => c !== character);
+      if (rejected.length < state.rejectedCharacters.length) {
+        dispatch(setRejectedCharacters(rejected));
+      }
     }
   };
 }
 
 // Sends the character inventory to the server.
-export function uploadInventory() {
+export function uploadInventory(goal: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
-    const updatedProject = updateCurrentProject(state);
-    await saveChangesToProject(updatedProject, dispatch);
+    const changes = getChangesFromState(state);
+    if (changes.length) {
+      goal.changes = { charChanges: changes };
+      await dispatch(asyncUpdateOrAddGoal(goal));
+      const updatedProject = updateCurrentProject(state);
+      await saveChangesToProject(updatedProject, dispatch);
+    }
   };
 }
 
@@ -178,10 +185,77 @@ export function getCharacterStatus(
   char: string,
   validChars: string[],
   rejectedChars: string[]
-): characterStatus {
-  if (validChars.includes(char)) return "accepted";
-  if (rejectedChars.includes(char)) return "rejected";
-  return "undecided";
+): CharacterStatus {
+  if (validChars.includes(char)) {
+    return CharacterStatus.Accepted;
+  }
+  if (rejectedChars.includes(char)) {
+    return CharacterStatus.Rejected;
+  }
+  return CharacterStatus.Undecided;
+}
+
+export type CharacterChange = [string, CharacterStatus, CharacterStatus];
+
+function getChangesFromState(state: StoreState): CharacterChange[] {
+  const proj = state.currentProject;
+  const charInvState = state.characterInventoryState;
+  return getChanges(proj, charInvState);
+}
+
+export function getChanges(
+  proj: Project,
+  charInvState: CharacterInventoryState
+): CharacterChange[] {
+  const oldAcc = proj.validCharacters;
+  const newAcc = charInvState.validCharacters;
+  const oldRej = proj.rejectedCharacters;
+  const newRej = charInvState.rejectedCharacters;
+  const allCharacters = [
+    ...new Set([...oldAcc, ...newAcc, ...oldRej, ...newRej]),
+  ];
+  const changes: CharacterChange[] = [];
+  allCharacters.forEach((c) => {
+    const change = getChange(c, oldAcc, newAcc, oldRej, newRej);
+    if (change) {
+      changes.push(change);
+    }
+  });
+  return changes;
+}
+
+// Returns undefined if CharacterStatus unchanged.
+function getChange(
+  c: string,
+  oldAcc: string[],
+  newAcc: string[],
+  oldRej: string[],
+  newRej: string[]
+): CharacterChange | undefined {
+  if (oldAcc.includes(c)) {
+    if (!newAcc.includes(c)) {
+      if (newRej.includes(c)) {
+        return [c, CharacterStatus.Accepted, CharacterStatus.Rejected];
+      }
+      return [c, CharacterStatus.Accepted, CharacterStatus.Undecided];
+    }
+    return;
+  }
+  if (oldRej.includes(c)) {
+    if (!newRej.includes(c)) {
+      if (newAcc.includes(c)) {
+        return [c, CharacterStatus.Rejected, CharacterStatus.Accepted];
+      }
+      return [c, CharacterStatus.Rejected, CharacterStatus.Undecided];
+    }
+    return;
+  }
+  if (newAcc.includes(c)) {
+    return [c, CharacterStatus.Undecided, CharacterStatus.Accepted];
+  }
+  if (newRej.includes(c)) {
+    return [c, CharacterStatus.Undecided, CharacterStatus.Rejected];
+  }
 }
 
 function updateCurrentProject(state: StoreState): Project {

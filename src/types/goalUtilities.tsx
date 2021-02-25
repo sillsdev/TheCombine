@@ -7,6 +7,7 @@ import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
 import { Goal, GoalType } from "types/goals";
+import { Edit } from "types/userEdit";
 
 export function maxNumSteps(type: GoalType) {
   switch (type) {
@@ -38,4 +39,22 @@ export function goalTypeToGoal(type: GoalType) {
     default:
       return new Goal();
   }
+}
+
+export function convertGoalToEdit(goal: Goal): Edit {
+  const guid = goal.guid;
+  const goalType = goal.goalType as number;
+  const stepData = goal.steps.map((s) => JSON.stringify(s));
+  const changes = JSON.stringify(goal.changes);
+  return { guid, goalType, stepData, changes };
+}
+
+export function convertEditToGoal(edit: Edit): Goal {
+  const goal = goalTypeToGoal(edit.goalType);
+  goal.guid = edit.guid;
+  goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
+  goal.numSteps = goal.steps.length;
+  goal.changes = JSON.parse(edit.changes);
+  goal.completed = true;
+  return goal;
 }

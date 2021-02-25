@@ -6,10 +6,8 @@ import {
   updateFrontierWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import {
-  OLD_SENSE,
   ReviewEntriesSense,
   ReviewEntriesWord,
-  SEP_CHAR,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { defaultProject } from "types/project";
 import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
@@ -31,14 +29,12 @@ jest.mock("backend/localStorage", () => ({
 // Mocks
 const mockStore = configureMockStore([thunk])();
 
-// Dummy glosses and domains used in testing
+// Dummy glosses, domains, senses used in testing
 const gloss0: Gloss = { language: "en", def: "gloss" };
 const gloss1: Gloss = { language: "en", def: "infinite" };
 const gloss_foreign: Gloss = { language: "es", def: "glossario" };
 const domain0: SemanticDomain = { name: "Universe", id: "1" };
 const domain1: SemanticDomain = { name: "Shadow", id: "8.3.3.2.1" };
-
-// New  senses
 const sense0_frontier: Sense = {
   glosses: [gloss1],
   semanticDomains: [domain1],
@@ -46,273 +42,220 @@ const sense0_frontier: Sense = {
 };
 const sense0_local: ReviewEntriesSense = {
   senseId: "sense0",
-  glosses: gloss1.def,
+  glosses: [gloss1],
   domains: [domain1],
   deleted: false,
 };
 
-// Old frontier word: the version of this word in the frontier
-const oldFrontierWord: Word = {
-  ...new Word(),
-  id: "word",
-  vernacular: "word",
-  senses: [
-    {
-      glosses: [gloss0, gloss_foreign],
-      semanticDomains: [domain0],
-    },
-  ],
-};
+function mockFrontierWord(): Word {
+  return {
+    ...new Word(),
+    id: "word",
+    vernacular: "word",
+    senses: [
+      {
+        glosses: [gloss0, gloss_foreign],
+        semanticDomains: [domain0],
+      },
+    ],
+  };
+}
 
-// oldWord: the version of this word in local memory
-const oldWord: ReviewEntriesWord = {
-  ...new ReviewEntriesWord(),
-  id: "word",
-  vernacular: "word",
-  senses: [
-    {
-      senseId: "oldWordSense" + OLD_SENSE,
-      glosses: gloss0.def,
-      domains: [domain0],
-      deleted: false,
-    },
-  ],
-};
+function mockWord(): ReviewEntriesWord {
+  return {
+    ...new ReviewEntriesWord(),
+    id: "word",
+    vernacular: "word",
+    senses: [
+      {
+        senseId: "oldWordSense" + ReviewEntriesSense.OLD_SENSE,
+        glosses: [gloss0],
+        domains: [domain0],
+        deleted: false,
+      },
+    ],
+  };
+}
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockStore.clearActions();
   mockUpdateWord.mockImplementation(() => Promise.resolve(new Word()));
-  mockBackendReturn(oldFrontierWord);
+  mockBackendReturn(mockFrontierWord());
 });
 
 describe("ReviewEntriesActions", () => {
   // Tests adding data
   it("Changes the vernacular", async () => {
-    await makeDispatch({ ...oldWord, vernacular: "foo2" }, oldWord);
-    checkResultantData({ ...oldFrontierWord, vernacular: "foo2" });
+    const newWord = mockWord();
+    newWord.vernacular = "foo2";
+    const newFrontierWord = mockFrontierWord();
+    newFrontierWord.vernacular = "foo2";
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(newFrontierWord);
   });
 
   it("Adds a gloss to an extant sense", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: oldWord.senses.map((value) => {
-          return {
-            ...value,
-            glosses: value.glosses + SEP_CHAR + gloss1.def,
-          };
-        }),
-      },
-      oldWord
-    );
-    checkResultantData({
-      ...oldFrontierWord,
-      senses: [
-        {
-          ...oldFrontierWord.senses[0],
-          glosses: [gloss0, gloss1, gloss_foreign],
-        },
-      ],
-    });
+    const newWord = mockWord();
+    newWord.senses[0].glosses.push(gloss1);
+    const newFrontierWord = mockFrontierWord();
+    newFrontierWord.senses[0].glosses = [gloss0, gloss1, gloss_foreign];
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(newFrontierWord);
   });
 
   it("Adds a domain to an extant sense", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: oldWord.senses.map((value) => {
-          return {
-            ...value,
-            domains: [...value.domains, domain1],
-          };
-        }),
-      },
-      oldWord
-    );
-    checkResultantData({
-      ...oldFrontierWord,
-      senses: oldFrontierWord.senses.map((sense) => {
-        return {
-          ...sense,
-          semanticDomains: [...sense.semanticDomains, domain1],
-        };
-      }),
-    });
+    const newWord = mockWord();
+    newWord.senses[0].domains.push(domain1);
+    const newFrontierWord = mockFrontierWord();
+    newFrontierWord.senses[0].semanticDomains.push(domain1);
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(newFrontierWord);
   });
 
   it("Adds a new sense", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: [...oldWord.senses, sense0_local],
-      },
-      oldWord
-    );
-    checkResultantData({
-      ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier],
-    });
+    const newWord = mockWord();
+    newWord.senses.push(sense0_local);
+    const newFrontierWord = mockFrontierWord();
+    newFrontierWord.senses.push(sense0_frontier);
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(newFrontierWord);
   });
 
   // Tests removing data
   it("Removes a gloss from an extant sense", async () => {
-    mockBackendReturn({
-      ...oldFrontierWord,
-      senses: [
-        ...oldFrontierWord.senses,
-        { ...sense0_frontier, glosses: [...sense0_frontier.glosses, gloss0] },
-      ],
+    const oldWord = mockWord();
+    oldWord.senses.push({
+      ...sense0_local,
+      glosses: [...sense0_local.glosses, gloss0],
     });
-    await makeDispatch(
-      { ...oldWord, senses: [...oldWord.senses, sense0_local] },
-      {
-        ...oldWord,
-        senses: [
-          ...oldWord.senses,
-          {
-            ...sense0_local,
-            glosses: sense0_local.glosses + SEP_CHAR + gloss0.def,
-          },
-        ],
-      }
-    );
-    checkResultantData({
-      ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier],
+    const newWord = mockWord();
+    newWord.senses.push(sense0_local);
+    const oldFrontierWord = mockFrontierWord();
+    oldFrontierWord.senses.push({
+      ...sense0_frontier,
+      glosses: [...sense0_frontier.glosses, gloss0],
     });
+    const newFrontierWord = mockFrontierWord();
+    newFrontierWord.senses.push(sense0_frontier);
+
+    mockBackendReturn(oldFrontierWord);
+    await makeDispatch(newWord, oldWord);
+    checkResultantData(newFrontierWord);
   });
 
   it("Removes a domain from an extant sense", async () => {
-    mockBackendReturn({
-      ...oldFrontierWord,
-      senses: [
-        ...oldFrontierWord.senses,
-        {
-          ...sense0_frontier,
-          semanticDomains: [...sense0_frontier.semanticDomains, domain0],
-        },
-      ],
+    const oldWord = mockWord();
+    oldWord.senses.push({
+      ...sense0_local,
+      domains: [...sense0_local.domains, domain0],
     });
-    await makeDispatch(
-      { ...oldWord, senses: [...oldWord.senses, sense0_local] },
-      {
-        ...oldWord,
-        senses: [
-          ...oldWord.senses,
-          {
-            ...sense0_local,
-            domains: [...sense0_local.domains, domain0],
-          },
-        ],
-      }
-    );
-    checkResultantData({
-      ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier],
+    const newWord = mockWord();
+    newWord.senses.push(sense0_local);
+    const oldFrontierWord = mockFrontierWord();
+    oldFrontierWord.senses.push({
+      ...sense0_frontier,
+      semanticDomains: [...sense0_frontier.semanticDomains, domain0],
     });
+    const newFrontierWord = mockFrontierWord();
+    newFrontierWord.senses.push(sense0_frontier);
+
+    mockBackendReturn(oldFrontierWord);
+    await makeDispatch(newWord, oldWord);
+    checkResultantData(newFrontierWord);
   });
 
   it("Removes a sense", async () => {
-    mockBackendReturn({
-      ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier],
-    });
-    await makeDispatch(oldWord, {
-      ...oldWord,
-      senses: [...oldWord.senses, sense0_local],
-    });
-    checkResultantData(oldFrontierWord);
+    const oldWord = mockWord();
+    oldWord.senses.push(sense0_local);
+    const oldFrontierWord = mockFrontierWord();
+    oldFrontierWord.senses.push(sense0_frontier);
+
+    mockBackendReturn(oldFrontierWord);
+    await makeDispatch(mockWord(), oldWord);
+    checkResultantData(mockFrontierWord());
   });
 
   // Tests circumventing bad data
   it("Restores vernacular when vernacular deleted", async () => {
-    mockBackendReturn({
-      ...oldFrontierWord,
-      vernacular: "",
-    });
-    await makeDispatch(
-      {
-        ...oldWord,
-        vernacular: "",
-      },
-      oldWord
-    );
-    checkResultantData(oldFrontierWord);
+    const newWord = mockWord();
+    newWord.vernacular = "";
+    const oldFrontierWord = mockFrontierWord();
+    oldFrontierWord.vernacular = "";
+
+    mockBackendReturn(oldFrontierWord);
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(mockFrontierWord());
   });
 
-  it("Ignores a new sense with no gloss and no domains", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: [
-          ...oldWord.senses,
-          { ...sense0_local, glosses: "", domains: [] },
-        ],
-      },
-      oldWord
-    );
-    checkResultantData(oldFrontierWord);
+  it("Ignores a new sense with no glosses, domains", async () => {
+    const newWord = mockWord();
+    newWord.senses.push({ ...sense0_local, glosses: [], domains: [] });
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(mockFrontierWord());
   });
 
   it("Reverts glosses when all glosses of an old word removed", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: oldWord.senses.map((value) => ({ ...value, glosses: "" })),
-      },
-      oldWord
-    );
-    checkResultantData(oldFrontierWord);
+    const newWord = mockWord();
+    newWord.senses = newWord.senses.map((s) => ({ ...s, glosses: [] }));
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(mockFrontierWord());
   });
 
   it("Reverts domains when all domains of an old word removed", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: oldWord.senses.map((value) => ({ ...value, domains: [] })),
-      },
-      oldWord
-    );
-    checkResultantData(oldFrontierWord);
+    const newWord = mockWord();
+    newWord.senses = newWord.senses.map((s) => ({ ...s, domains: [] }));
+
+    await makeDispatch(newWord, mockWord());
+    checkResultantData(mockFrontierWord());
   });
 
   // Tests rejection of bad data
   it("Rejects a vernacular which is empty and cannot be restored", async () => {
-    mockBackendReturn({ ...oldFrontierWord, vernacular: "" });
+    const oldWord = mockWord();
+    oldWord.vernacular = "";
+    const newWord = mockWord();
+    newWord.vernacular = "";
+    const oldFrontierWord = mockFrontierWord();
+    oldFrontierWord.vernacular = "";
+
+    mockBackendReturn(oldFrontierWord);
     expect(
-      await makeDispatch(
-        { ...oldWord, vernacular: "" },
-        { ...oldWord, vernacular: "" }
-      )
+      await makeDispatch(newWord, oldWord)
         .then(() => false)
         .catch(() => true)
     ).toBeTruthy();
   });
 
-  it("Rejects a new sense with no gloss", async () => {
+  it("Rejects a new sense with no glosses", async () => {
+    const newWord = mockWord();
+    newWord.senses.push({
+      ...sense0_local,
+      glosses: [],
+    });
+
     expect(
-      await makeDispatch(
-        {
-          ...oldWord,
-          senses: [...oldWord.senses, { ...sense0_local, glosses: "" }],
-        },
-        oldWord
-      )
+      await makeDispatch(newWord, mockWord())
         .then(() => false)
         .catch(() => true)
     ).toBeTruthy();
   });
 
   it("Rejects new sense with no domains", async () => {
+    const newWord = mockWord();
+    newWord.senses.push({
+      ...sense0_local,
+      domains: [],
+    });
+
     expect(
-      await makeDispatch(
-        {
-          ...oldWord,
-          senses: [...oldWord.senses, { ...sense0_local, domains: [] }],
-        },
-        oldWord
-      )
+      await makeDispatch(newWord, mockWord())
         .then(() => false)
         .catch(() => true)
     ).toBeTruthy();

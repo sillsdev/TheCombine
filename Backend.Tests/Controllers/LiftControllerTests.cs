@@ -247,8 +247,9 @@ namespace Backend.Tests.Controllers
 
             // Write LiftFile contents to a temporary directory.
             var extractedExportDir = ExtractZipFileContents(contents);
-            var exportPath = Path.Combine(extractedExportDir,
-                Path.Combine("Lift", "NewLiftFile.lift"));
+            var sanitizedProjName = Sanitization.MakeFriendlyForPath(_proj.Name, "Lift");
+            var exportPath = Path.Combine(
+                extractedExportDir, sanitizedProjName, sanitizedProjName + ".lift");
             var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
             //      kept vs deleted
@@ -333,17 +334,17 @@ namespace Backend.Tests.Controllers
 
             // Assert the file was created with desired hierarchy.
             Assert.That(Directory.Exists(exportedDirectory));
-            Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
+            var sanitizedProjName = Sanitization.MakeFriendlyForPath(proj1.Name, "Lift");
+            var exportedProjDir = Path.Combine(exportedDirectory, sanitizedProjName);
+            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                Assert.That(File.Exists(Path.Combine(
-                    exportedDirectory, "Lift", "audio", audioFile)));
+                Assert.That(File.Exists(Path.Combine(exportedProjDir, "audio", audioFile)));
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "WritingSystems")));
+            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
-                exportedDirectory,
-                "Lift", "WritingSystems", roundTripObj.Language + ".ldml")));
-            Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
+                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")));
+            Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")));
             Directory.Delete(exportedDirectory, true);
 
             // Clean up.
@@ -395,18 +396,19 @@ namespace Backend.Tests.Controllers
 
             // Assert the file was created with desired hierarchy.
             Assert.That(Directory.Exists(exportedDirectory));
-            Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
+            sanitizedProjName = Sanitization.MakeFriendlyForPath(proj2.Name, "Lift");
+            exportedProjDir = Path.Combine(exportedDirectory, sanitizedProjName);
+            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                var path = Path.Combine(exportedDirectory, "Lift", "audio", audioFile);
+                var path = Path.Combine(exportedProjDir, "audio", audioFile);
                 Assert.That(File.Exists(path),
                     $"The file {audioFile} can not be found at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "WritingSystems")));
+            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
-                exportedDirectory,
-                "Lift", "WritingSystems", roundTripObj.Language + ".ldml")));
-            Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
+                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")));
+            Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")));
             Directory.Delete(exportedDirectory, true);
 
             // Clean up.

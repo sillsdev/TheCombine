@@ -1,0 +1,33 @@
+---
+#########################################################################
+# Installs the Combine on a new machine through the following
+# tasks:
+#  - create .env file to specify the image tag for the docker containers
+#  - logs into the AWS Elastic Container Registry
+#  - pulls the docker images
+#########################################################################
+
+- name: create .env file
+  template:
+    src: env.j2
+    dest: "{{ combine_app_dir }}/.env"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0644
+
+- name: login to AWS ECR
+  shell:
+    cmd: "aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{aws_ecr}}"
+  become: yes
+  become_user: "{{ combine_user }}"
+  tags:
+    - install_sw
+
+- name: pull Combine container images
+  command: docker-compose pull
+  become: yes
+  become_user: "{{ combine_user }}"
+  args:
+    chdir: "{{ combine_app_dir }}"
+  tags:
+    - install_sw

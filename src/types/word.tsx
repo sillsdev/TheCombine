@@ -16,8 +16,11 @@ export interface Gloss {
 export interface SemanticDomain {
   name: string;
   id: string;
+  // TODO: The backend also stores a description field. Should that be
+  //    exposed?
 }
 export class Sense {
+  guid?: string;
   glosses: Gloss[];
   semanticDomains: SemanticDomain[] = [];
   accessibility?: State;
@@ -31,8 +34,8 @@ export class Sense {
 }
 
 export class Note {
-  text: string;
   language: string; // bcp-47 code
+  text: string;
 
   constructor(text: string = "", lang: string = "") {
     this.text = text;
@@ -42,27 +45,25 @@ export class Note {
 
 export class Word {
   id: string = "";
+  guid: string = "";
   vernacular: string = "";
+  plural: string = "";
   senses: Sense[] = [];
   audio: string[] = [];
   created: string = "";
   modified: string = "";
+  accessibility: State = State.Active;
   history: string[] = [];
   partOfSpeech: string = "";
   editedBy: string[] = [];
   otherField: string = "";
-  plural: string = "";
+  projectId: string = "";
   note: Note = new Note();
 }
 
 export interface MergeWord {
   wordID: string;
   senses: State[];
-}
-
-export interface MergeWords {
-  parent: Word;
-  children: MergeWord[];
 }
 
 //used in ExistingDataTable

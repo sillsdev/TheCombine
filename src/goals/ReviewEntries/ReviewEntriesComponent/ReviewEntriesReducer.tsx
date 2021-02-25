@@ -1,12 +1,12 @@
-import { StoreAction, StoreActions } from "rootActions";
 import {
   ReviewEntriesAction,
   ReviewEntriesActionTypes,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import {
-  OLD_SENSE,
+  ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { StoreAction, StoreActions } from "rootActions";
 
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
@@ -53,7 +53,7 @@ export const reviewEntriesReducer = (
               vernacular: action.newWord.vernacular,
               senses: action.newWord.senses.map((sense) => ({
                 ...sense,
-                senseId: sense.senseId + OLD_SENSE,
+                senseId: sense.senseId + ReviewEntriesSense.OLD_SENSE,
               })),
             };
           } else return word;

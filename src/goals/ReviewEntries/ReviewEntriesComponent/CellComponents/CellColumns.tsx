@@ -3,15 +3,15 @@ import { Column } from "@material-table/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { SemanticDomain } from "types/word";
-import {
-  ReviewEntriesSense,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
 import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { SemanticDomain } from "types/word";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
@@ -122,37 +122,37 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      let regex: RegExp = new RegExp(term.trim().toLowerCase());
-      for (let sense of rowData.senses)
-        if (regex.exec(sense.glosses.toLowerCase()) !== null) return true;
+      const regex = new RegExp(term.trim().toLowerCase());
+      for (const sense of rowData.senses) {
+        const glossesString = ReviewEntriesSense.glossString(sense);
+        if (regex.exec(glossesString.toLowerCase()) !== null) {
+          return true;
+        }
+      }
       return false;
     },
-    customSort: (a: any, b: any): number => {
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
       if (currentSort !== SortStyle.GLOSS) {
         currentSort = SortStyle.GLOSS;
       }
 
-      let count = 0;
-      let compare = 0;
-
-      while (
-        count < a.senses.length &&
-        count < b.senses.length &&
-        compare === 0
+      for (
+        let count = 0;
+        count < a.senses.length && count < b.senses.length;
+        count++
       ) {
-        for (
-          let i = 0;
-          i < a.senses[count].glosses.length &&
-          i < b.senses[count].glosses.length &&
-          compare === 0;
-          i++
-        )
-          compare =
-            a.senses[count].glosses.codePointAt(i) -
-            b.senses[count].glosses.codePointAt(i);
-        count++;
+        const glossStringA = ReviewEntriesSense.glossString(a.senses[count]);
+        const glossStringB = ReviewEntriesSense.glossString(b.senses[count]);
+        if (glossStringA !== glossStringB) {
+          const glossStrings = [glossStringA, glossStringB];
+          glossStrings.sort();
+          if (glossStringA === glossStrings[0]) {
+            return -1;
+          }
+          return 1;
+        }
       }
-      return compare;
+      return a.senses.length - b.senses.length;
     },
   },
   // Delete Sense column
@@ -195,7 +195,7 @@ const columns: Column<any>[] = [
         if (props.onRowDataChange)
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map((sense: ReviewEntriesSense) => {
+            senses: props.rowData.senses.map((sense) => {
               if (sense.senseId === senseId)
                 return {
                   ...sense,

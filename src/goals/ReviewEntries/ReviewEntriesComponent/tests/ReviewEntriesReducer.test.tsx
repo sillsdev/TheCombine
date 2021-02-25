@@ -4,7 +4,7 @@ import {
   reviewEntriesReducer,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 import {
-  OLD_SENSE,
+  ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
@@ -16,7 +16,7 @@ const newWord: ReviewEntriesWord = {
   senses: [
     {
       senseId: "1",
-      glosses: "bupBUP",
+      glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
         { name: "domain", id: "number" },
         { name: "domain2", id: "number2" },
@@ -31,8 +31,8 @@ const result: ReviewEntriesWord = {
   vernacular: "toadTOAD",
   senses: [
     {
-      senseId: "1" + OLD_SENSE,
-      glosses: "bupBUP",
+      senseId: "1" + ReviewEntriesSense.OLD_SENSE,
+      glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
         { name: "domain", id: "number" },
         { name: "domain2", id: "number2" },

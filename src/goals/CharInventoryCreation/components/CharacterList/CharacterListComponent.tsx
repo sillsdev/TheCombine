@@ -5,6 +5,7 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
+import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
 import * as React from "react";
 import {
   LocalizeContextProps,
@@ -70,16 +71,20 @@ export class CharacterList extends React.Component<
               }}
             >
               <MenuItem value={SortOrder.CharacterAscending}>
-                {this.props.translate("charInventory.characters")} 🡡
+                {this.props.translate("charInventory.characters")}
+                <ArrowUpward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.CharacterDescending}>
-                {this.props.translate("charInventory.characters")} 🡣
+                {this.props.translate("charInventory.characters")}
+                <ArrowDownward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.OccurrencesAscending}>
-                {this.props.translate("charInventory.occurrences")} 🡡
+                {this.props.translate("charInventory.occurrences")}
+                <ArrowUpward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.OccurrencesDescending}>
-                {this.props.translate("charInventory.occurrences")} 🡣
+                {this.props.translate("charInventory.occurrences")}
+                <ArrowDownward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.Status}>
                 {this.props.translate("charInventory.status")}
