@@ -1,7 +1,6 @@
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import {
-  parseWord,
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -28,8 +27,7 @@ interface ReviewUpdateWords {
 
 interface ReviewUpdateWord {
   type: ReviewEntriesActionTypes.UpdateWord;
-  id: string;
-  newId: string;
+  oldId: string;
   newWord: ReviewEntriesWord;
 }
 
@@ -60,14 +58,12 @@ export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
 }
 
 function updateWord(
-  id: string,
-  newId: string,
+  oldId: string,
   newWord: ReviewEntriesWord
 ): ReviewUpdateWord {
   return {
     type: ReviewEntriesActionTypes.UpdateWord,
-    id,
-    newId,
+    oldId,
     newWord,
   };
 }
@@ -95,14 +91,12 @@ export function setAnalysisLang() {
   };
 }
 
-// Returns a cleaned array of senses ready to be saved:
-// * If a sense has no glosses, its old glosses are retrieved and added (if possible)
-// * If a sense has no domains, its old domains are retrieved and added (if possible)
-// * If a sense cannot have its data recovered, reject it
-// * If a new sense is utterly blank and was just created, it is removed
-// * If a new sense is also deleted, it is removed
-// * If a new sense has a gloss but no domain, or a domain but no gloss, reject it
-// * If the user attempts to delete all senses, return old senses
+// Returns a cleaned array of senses ready to be saved (none with .deleted=true):
+// * If a sense is marked as deleted or is utterly blank, it is removed
+// * If a sense has no glosses, its old glosses are recovered (if possible)
+// * If a sense has no domains, its old domains are recovered (if possible)
+// * If after attempted recovery, a new sense still has no gloss or no domain, return error
+// * If the user attempts to delete all senses, return old senses with deleted senses removed
 function cleanSenses(
   senses: ReviewEntriesSense[],
   oldSenses: ReviewEntriesSense[]
@@ -113,8 +107,7 @@ function cleanSenses(
   for (const newSense of senses) {
     // Skip new senses which are deleted or empty.
     if (
-      (newSense.deleted &&
-        !newSense.senseId.endsWith(ReviewEntriesSense.OLD_SENSE)) ||
+      newSense.deleted ||
       (newSense.glosses.length === 0 && newSense.domains.length === 0)
     ) {
       continue;
@@ -122,7 +115,7 @@ function cleanSenses(
 
     // If new sense is missing some information, attempt to retrieve it.
     if (newSense.glosses.length === 0 || newSense.domains.length === 0) {
-      const oldSense = oldSenses.find((s) => s.senseId === newSense.senseId);
+      const oldSense = oldSenses.find((s) => s.guid === newSense.guid);
       if (oldSense) {
         if (!newSense.glosses.length) {
           newSense.glosses = [...oldSense.glosses];
@@ -141,7 +134,10 @@ function cleanSenses(
     cleanSenses.push(newSense);
   }
 
-  return cleanSenses;
+  if (cleanSenses.length) {
+    return cleanSenses;
+  }
+  return oldSenses.filter((s) => !s.deleted);
 }
 
 // Clean the vernacular field of a word:
@@ -182,84 +178,75 @@ export function updateFrontierWord(
     // Get the original word, for updating.
     const editWord = await backend.getWord(editSource.id);
 
-    // Update the vernacular.
+    // Update the data.
     editWord.vernacular = editSource.vernacular;
-
-    // Update the senses.
-    const newSenses = [];
-    for (let i = 0; i < editSource.senses.length; i++) {
-      const displaySense = editSource.senses[i];
-
-      // If the sense was deleted, nothing else matters.
-      if (displaySense.deleted) {
-        continue;
-      }
-
-      // If we align with an original sense, copy it over.
-      const editSense: Sense =
-        i < editWord.senses.length
-          ? { ...editWord.senses[i] }
-          : ({
-              glosses: [],
-              accessibility: State.Active,
-            } as any);
-
-      // Use the edited semantic domains.
-      editSense.semanticDomains = [...displaySense.domains];
-
-      // If there are edited glosses, replace the previous glosses with them.
-      if (displaySense.glosses.length) {
-        const newGlosses = [...displaySense.glosses];
-        // If a language was specified, add all glosses of other langauges from the original.
-        if (language) {
-          newGlosses.push(
-            ...editSense.glosses.filter((g) => g.language !== language)
-          );
-        }
-        editSense.glosses = newGlosses;
-      }
-
-      newSenses.push(editSense);
-    }
-    editWord.senses = newSenses;
-
-    // Update the note.
+    editWord.senses = editSource.senses.map((s) =>
+      getSenseFromEditSense(s, editWord.senses, language)
+    );
     editWord.note = new Note(editSource.noteText, editWord.note?.language);
 
-    const newId = (await backend.updateWord(editWord)).id;
-    dispatch(updateWord(editWord.id, newId, editSource));
+    // Update the word in the backend, and retrieve the id.
+    editSource.id = (await backend.updateWord(editWord)).id;
+
+    // Update the review entries word in the state.
+    dispatch(updateWord(editWord.id, editSource));
   };
 }
 
-// Performs an action then converts the ReviewEntriesWord into a Word to send to the backend
+// Creates a new Sense from a cleaned ReviewEntriesSense and array of old senses.
+export function getSenseFromEditSense(
+  editSense: ReviewEntriesSense,
+  oldSenses: Sense[],
+  language?: string
+) {
+  // If we match an old sense, copy it over.
+  const oldSense = oldSenses.find((s) => s.guid === editSense.guid);
+  const newSense: Sense = oldSense
+    ? { ...oldSense }
+    : { ...new Sense(), accessibility: State.Active };
+
+  // Use the edited semantic domains.
+  newSense.semanticDomains = [...editSense.domains];
+
+  // If there are edited glosses, replace the previous glosses with them.
+  if (editSense.glosses.length) {
+    const newGlosses = [...editSense.glosses];
+    // If a language was specified, add all glosses of other langauges from the original.
+    if (language) {
+      newGlosses.push(
+        ...newSense.glosses.filter((g) => g.language !== language)
+      );
+    }
+    newSense.glosses = newGlosses;
+  }
+  return newSense;
+}
+
+// Performs specified backend Word-updating function, then makes state ReviewEntriesWord-updating dispatch
 function refreshWord(
   oldWordId: string,
-  action: (wordId: string) => Promise<string>
+  wordUpdater: (wordId: string) => Promise<string>
 ) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const newWordId = await action(oldWordId);
+    const newWordId = await wordUpdater(oldWordId);
     const newWord = await backend.getWord(newWordId);
 
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : { name: "English", bcp47: "en", font: "" };
-
+    const analysisLang =
+      getState().currentProject.analysisWritingSystems[0]?.bcp47 ?? "en";
     dispatch(
-      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang.bcp47))
+      updateWord(oldWordId, new ReviewEntriesWord(newWord, analysisLang))
     );
   };
 }
 
 export function deleteAudio(wordId: string, fileName: string) {
-  let deleteAction = (wordId: string) => {
-    return backend.deleteAudio(wordId, fileName);
-  };
-  return refreshWord(wordId, deleteAction);
+  return refreshWord(wordId, (wordId: string) =>
+    backend.deleteAudio(wordId, fileName)
+  );
 }
 
 export function uploadAudio(wordId: string, audioFile: File) {
-  let uploadAction = (wordId: string) => {
-    return backend.uploadAudio(wordId, audioFile);
-  };
-  return refreshWord(wordId, uploadAction);
+  return refreshWord(wordId, (wordId: string) =>
+    backend.uploadAudio(wordId, audioFile)
+  );
 }

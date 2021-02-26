@@ -25,7 +25,6 @@ import {
 jest.mock("backend", () => {
   return {
     createWord: (word: Word) => mockCreateWord(word),
-    getFrontierWords: () => mockGetFrontierWords(),
     getProject: (id: string) => mockGetProject(id),
     getWord: (id: string) => mockGetWord(id),
     updateWord: (word: Word) => mockUpdateWord(word),
@@ -40,7 +39,7 @@ let testHandle: ReactTestInstance;
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
-const mockWord = simpleWord("", "");
+const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiGlossWord("vern", ["gloss1", "gloss2"]);
 const mockSemanticDomain: SemanticDomain = {
   name: "",
@@ -50,16 +49,14 @@ const hideQuestionsMock = jest.fn();
 const getWordsFromBackendMock = jest.fn();
 
 const mockCreateWord = jest.fn();
-const mockGetFrontierWords = jest.fn();
 const mockGetProject = jest.fn();
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
 function setMockFunction() {
-  mockCreateWord.mockResolvedValue(mockWord);
-  mockGetFrontierWords.mockResolvedValue([mockWord]);
+  mockCreateWord.mockResolvedValue(mockWord());
   mockGetProject.mockResolvedValue(defaultProject);
   mockGetWord.mockResolvedValue([mockMultiWord]);
-  mockUpdateWord.mockResolvedValue(mockWord);
+  mockUpdateWord.mockResolvedValue(mockWord());
 }
 
 beforeEach(() => {
@@ -130,74 +127,69 @@ describe("DataEntryTable", () => {
     expect(hideQuestionsMock).toBeCalledTimes(1);
   });
 
-  it("adds a sense to a word that has no senses already", () => {
-    let semanticDomain: SemanticDomain = mockSemanticDomain;
-    let word: Word = mockWord;
-    let gloss = "yeet";
-    let newSense: Sense = {
-      glosses: [{ language: "en", def: gloss }],
-      semanticDomains: [semanticDomain],
-      accessibility: State.Active,
-    };
+  it("adds a sense to a word that has no senses", () => {
+    const word = mockWord();
+    word.senses = [];
+    const gloss = "firstSense";
+    const language = "es";
+
+    const expectedSense = new Sense(gloss, language, mockSemanticDomain);
+    expectedSense.accessibility = State.Active;
+    expectedSense.guid = expect.any(String);
     const expectedWord: Word = {
       ...word,
-      senses: [...word.senses, newSense],
+      senses: [expectedSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
-      expectedWord
+
+    const resultWord = addSenseToWord(
+      mockSemanticDomain,
+      word,
+      gloss,
+      language
     );
+    expect(resultWord).toEqual(expectedWord);
   });
 
   it("adds a sense to a word that already has a sense", () => {
-    let semanticDomain: SemanticDomain = mockSemanticDomain;
-    let existingSense: Sense = {
-      glosses: [{ language: "", def: "" }],
-      semanticDomains: [{ name: "domain", id: "10.2" }],
-    };
-    let word: Word = {
-      ...mockWord,
-      senses: [...mockWord.senses, existingSense],
-    };
-    let gloss = "yeet";
-    let expectedSense: Sense = {
-      glosses: [{ language: "en", def: gloss }],
-      semanticDomains: [semanticDomain],
-      accessibility: State.Active,
-    };
+    const word = mockWord();
+    const gloss = "newSense";
+    const language = "es";
+
+    const expectedSense = new Sense(gloss, language, mockSemanticDomain);
+    expectedSense.accessibility = State.Active;
+    expectedSense.guid = expect.any(String);
     const expectedWord: Word = {
       ...word,
       senses: [...word.senses, expectedSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
-      expectedWord
+
+    const resultWord = addSenseToWord(
+      mockSemanticDomain,
+      word,
+      gloss,
+      language
     );
+    expect(resultWord).toEqual(expectedWord);
   });
 
-  it("adds a semantic domain to an existing sense", () => {
-    let semanticDomain: SemanticDomain = mockSemanticDomain;
-    let sense: Sense = {
-      glosses: [{ language: "en", def: "yeet" }],
-      semanticDomains: [],
-      accessibility: State.Active,
+  it("adds a semantic domain to existing sense", () => {
+    const word = mockWord();
+    const gloss = "senseToBeModified";
+    const language = "fr";
+    const sense = new Sense(gloss, language);
+    word.senses = [sense];
+
+    const expectedSense: Sense = {
+      ...sense,
+      semanticDomains: [mockSemanticDomain],
     };
-    let word: Word = {
-      ...mockWord,
-      senses: [...mockWord.senses, sense],
+    const expectedWord: Word = {
+      ...word,
+      senses: [expectedSense],
     };
-    let senseIndex = word.senses.length - 1;
-    let expectedWord: Word = {
-      ...mockWord,
-      senses: [
-        ...mockWord.senses,
-        {
-          ...sense,
-          semanticDomains: [semanticDomain],
-        },
-      ],
-    };
-    expect(addSemanticDomainToSense(semanticDomain, word, senseIndex)).toEqual(
-      expectedWord
-    );
+
+    const resultWord = addSemanticDomainToSense(mockSemanticDomain, word, 0);
+    expect(resultWord).toEqual(expectedWord);
   });
 
   it("doesn't update word in backend if sense is a duplicate", (done) => {

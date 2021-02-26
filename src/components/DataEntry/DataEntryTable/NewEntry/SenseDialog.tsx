@@ -10,7 +10,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import { parseWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
 import { Sense, Word } from "types/word";
 
@@ -75,13 +75,15 @@ export function SenseList(props: SenseListProps) {
             </div>
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
-                rowData={parseWord(
-                  {
-                    ...props.selectedWord,
-                    senses: [sense],
-                  } as Word,
-                  props.analysisLang
-                )}
+                rowData={
+                  new ReviewEntriesWord(
+                    {
+                      ...props.selectedWord,
+                      senses: [sense],
+                    },
+                    props.analysisLang
+                  )
+                }
                 sortingByDomains={false}
               />
             </div>
