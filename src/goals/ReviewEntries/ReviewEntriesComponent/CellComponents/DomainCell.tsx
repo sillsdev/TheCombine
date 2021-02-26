@@ -19,7 +19,7 @@ import { SemanticDomain } from "types/word";
 interface DomainCellProps {
   rowData: ReviewEntriesWord;
   sortingByDomains: boolean;
-  editDomains?: (senseId: string, newDomains: SemanticDomain[]) => void;
+  editDomains?: (guid: string, newDomains: SemanticDomain[]) => void;
 }
 
 export default function DomainCell(props: DomainCellProps) {
@@ -43,7 +43,7 @@ export default function DomainCell(props: DomainCellProps) {
         throw new Error(
           "Cannot add domain without the selectedDomain property."
         );
-      props.editDomains(senseToChange.senseId, [
+      props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
         {
           name: selectedDomain.name,
@@ -56,7 +56,7 @@ export default function DomainCell(props: DomainCellProps) {
   function deleteDomain(toDelete: SemanticDomain, sense: ReviewEntriesSense) {
     if (props.editDomains)
       props.editDomains(
-        sense.senseId,
+        sense.guid,
         sense.domains.filter((domain) => domain.id !== toDelete.id)
       );
   }
@@ -78,7 +78,7 @@ export default function DomainCell(props: DomainCellProps) {
               sense.domains.map((domain, domainIndex) => (
                 <Grid
                   item
-                  key={`${domain.name}::${props.rowData.id}:${sense.senseId}`}
+                  key={`${domain.name}::${props.rowData.id}:${sense.guid}`}
                 >
                   <Chip
                     color={sense.deleted ? "secondary" : "default"}
@@ -93,7 +93,7 @@ export default function DomainCell(props: DomainCellProps) {
                 </Grid>
               ))
             ) : (
-              <Grid item xs key={`noDomain${sense.senseId}`}>
+              <Grid item xs key={`noDomain${sense.guid}`}>
                 <Chip
                   label={<Translate id="reviewEntries.noDomain" />}
                   color={props.sortingByDomains ? "default" : "secondary"}
@@ -103,7 +103,7 @@ export default function DomainCell(props: DomainCellProps) {
             )}
             {props.editDomains && !sense.deleted && (
               <IconButton
-                key={`buttonFor${sense.senseId}`}
+                key={`buttonFor${sense.guid}`}
                 onClick={() => prepAddDomain(sense)}
               >
                 <Add />

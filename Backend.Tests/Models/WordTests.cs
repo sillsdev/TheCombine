@@ -1,4 +1,5 @@
-﻿using BackendFramework.Models;
+﻿using System;
+using BackendFramework.Models;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -8,11 +9,14 @@ namespace Backend.Tests.Models
         private const string Vernacular = "fr";
         private const string Text = "Text";
 
+        /// <summary> Words create a unique Guid by default. Use a common GUID to ensure equality in tests. </summary>
+        private readonly Guid _commonGuid = Guid.NewGuid();
+
         [Test]
         public void TestEquals()
         {
-            var word = new Word { Vernacular = Vernacular };
-            Assert.That(word.Equals(new Word { Vernacular = Vernacular }));
+            var word = new Word { Guid = _commonGuid, Vernacular = Vernacular };
+            Assert.That(word.Equals(new Word { Guid = _commonGuid, Vernacular = Vernacular }));
         }
 
         [Test]
@@ -25,23 +29,25 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNote()
         {
-            var word = new Word { Note = new Note { Language = Vernacular, Text = Text } };
-            Assert.That(word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
+            var word = new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } };
+            Assert.That(word.Equals(
+                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }));
         }
 
         [Test]
         public void TestNotEqualsNote()
         {
-            var word = new Word { Note = new Note { Language = Vernacular, Text = "Bad Text" } };
-            Assert.IsFalse(word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
+            var word = new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = "Bad Text" } };
+            Assert.IsFalse(word.Equals(
+                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }));
         }
 
         [Test]
         public void TestHashCode()
         {
             Assert.AreNotEqual(
-                new Word { Vernacular = "1" }.GetHashCode(),
-                new Word { Vernacular = "2" }.GetHashCode());
+                new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode(),
+                new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode());
         }
     }
 
@@ -85,11 +91,14 @@ namespace Backend.Tests.Models
     {
         private const State Accessibility = State.Active;
 
+        /// <summary> Words create a unique Guid by default. Use a common GUID to ensure equality in tests. </summary>
+        private readonly Guid _commonGuid = Guid.NewGuid();
+
         [Test]
         public void TestEquals()
         {
-            var sense = new Sense { Accessibility = Accessibility };
-            Assert.That(sense.Equals(new Sense { Accessibility = Accessibility }));
+            var sense = new Sense { Guid = _commonGuid, Accessibility = Accessibility };
+            Assert.That(sense.Equals(new Sense { Guid = _commonGuid, Accessibility = Accessibility }));
         }
 
         [Test]
@@ -103,8 +112,8 @@ namespace Backend.Tests.Models
         public void TestHashCode()
         {
             Assert.AreNotEqual(
-                new Sense { Accessibility = State.Active }.GetHashCode(),
-                new Sense { Accessibility = State.Deleted }.GetHashCode());
+                new Sense { Guid = _commonGuid, Accessibility = State.Active }.GetHashCode(),
+                new Sense { Guid = _commonGuid, Accessibility = State.Deleted }.GetHashCode());
         }
     }
 

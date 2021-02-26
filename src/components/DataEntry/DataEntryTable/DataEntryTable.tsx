@@ -12,7 +12,6 @@ import { AutoComplete } from "types/project";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
 import {
-  Gloss,
   Note,
   SemanticDomain,
   Sense,
@@ -79,13 +78,10 @@ export function addSenseToWord(
   gloss: string,
   language: string
 ): Word {
-  const updatedWord: Word = { ...existingWord };
-  const newGloss: Gloss = { language, def: gloss };
-  const newSense: Sense = {
-    glosses: [newGloss],
-    semanticDomains: [semanticDomain],
-    accessibility: State.Active,
-  };
+  const updatedSenses: Sense[] = [...existingWord.senses];
+  const updatedWord: Word = { ...existingWord, senses: updatedSenses };
+  const newSense = new Sense(gloss, language, semanticDomain);
+  newSense.accessibility = State.Active;
   updatedWord.senses.push(newSense);
   return updatedWord;
 }

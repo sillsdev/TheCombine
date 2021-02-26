@@ -11,7 +11,7 @@ import { Translate } from "react-localize-redux";
 
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import { parseWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
 import { Word } from "types/word";
 
@@ -76,13 +76,13 @@ export function VernList(props: VernListProps) {
               <SenseCell
                 editable={false}
                 sortingByGloss={false}
-                value={parseWord(word, props.analysisLang).senses}
-                rowData={parseWord(word, props.analysisLang)}
+                value={new ReviewEntriesWord(word, props.analysisLang).senses}
+                rowData={new ReviewEntriesWord(word, props.analysisLang)}
               />
             </div>
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
-                rowData={parseWord(word, props.analysisLang)}
+                rowData={new ReviewEntriesWord(word, props.analysisLang)}
                 sortingByDomains={false}
               />
             </div>
