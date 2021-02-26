@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Make a user a site administrator."""
     args = parse_args()
     for user in args.users:
