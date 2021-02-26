@@ -78,5 +78,10 @@ namespace Backend.Tests.Mocks
             _words.Add(word.Clone());
             return Task.FromResult(word.Clone());
         }
+
+        public Task<bool> PopulateAllGuids() // ToDo: Remove after used on live server.
+        {
+            return Task.FromResult(false);
+        }
     }
 }

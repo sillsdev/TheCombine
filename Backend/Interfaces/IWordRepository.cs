@@ -9,6 +9,7 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetAllWords(string projectId);
         Task<Word?> GetWord(string projectId, string wordId);
         Task<Word> Create(Word word);
+        Task<bool> PopulateAllGuids(); // ToDo: Remove after used on live server.
         Task<Word> Add(Word word);
         Task<bool> DeleteAllWords(string projectId);
         Task<List<Word>> GetFrontier(string projectId);
