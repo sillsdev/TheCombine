@@ -48,6 +48,22 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Add a user to a project."""
     args = parse_args()
+    # 0. Define user permission sets
+    if args.admin:
+        user_permissions = [
+            int(Permission.DeleteEditSettingsAndUsers),
+            int(Permission.ImportExport),
+            int(Permission.MergeAndCharSet),
+            int(Permission.Unused),
+            int(Permission.WordEntry),
+        ]
+    else:
+        user_permissions = [
+            int(Permission.MergeAndCharSet),
+            int(Permission.Unused),
+            int(Permission.WordEntry),
+        ]
+
     # 1. Lookup the user id
     user_id = get_user_id(args.user)
     if user_id is None:
@@ -79,10 +95,10 @@ def main() -> None:
         if args.verbose:
             print(f"UserRole ID: {user_role_id}")
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
-        update_role = '{ $set: { "permissions" : [5,4,3,2,1]} }'
+        update_role = f'{{ $set: {{"permissions" : {user_permissions}}} }}'
         db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
         if args.verbose:
-            print(f"Updated Role {user_role_id} with permissions [5,4,3,2,1]")
+            print(f"Updated Role {user_role_id} with permissions {user_permissions}")
     else:
         #  3. The user is not in the project:
         #      a. create a document in the UserRolesCollection,
