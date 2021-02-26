@@ -9,10 +9,10 @@
 mongodb_version: 4.4
 
 # Packages installed by playbook_docker.yml
-docker_compose_version: 1.27.4
+docker_compose_version: 1.28.5
 
 # Version for aws-cli installed by aws_access role
-aws_cli_version: 2.1.24
+aws_cli_version: 2.1.28
 
 # Packages required for targets
 required_packages:
