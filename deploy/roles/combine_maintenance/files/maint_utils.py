@@ -78,7 +78,7 @@ def get_project_id(project_name: str) -> Optional[str]:
 
     if len(results) == 1:
         return results[0]["_id"]
-    elif len(results) > 1:
+    if len(results) > 1:
         print(f"More than one project is named {project_name}", file=sys.stderr)
         sys.exit(1)
     return None
@@ -89,8 +89,7 @@ def get_user_id(user: str) -> Optional[str]:
     results = db_cmd(f'db.UsersCollection.findOne({{ username: "{user}"}}, {{ username: 1 }})')
     if results is not None:
         return results["_id"]
-    else:
-        results = db_cmd(f'db.UsersCollection.findOne({{ email: "{user}"}}, {{ username: 1 }})')
-        if results is not None:
-            return results["_id"]
+    results = db_cmd(f'db.UsersCollection.findOne({{ email: "{user}"}}, {{ username: 1 }})')
+    if results is not None:
+        return results["_id"]
     return None
