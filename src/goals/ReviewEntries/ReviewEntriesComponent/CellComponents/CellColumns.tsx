@@ -163,12 +163,12 @@ const columns: Column<any>[] = [
     sorting: false,
     render: () => null,
     editComponent: (props: FieldParameterStandard) => {
-      const deleteSense = (senseId: string) => {
+      const deleteSense = (guid: string) => {
         if (props.onRowDataChange)
           props.onRowDataChange({
             ...props.rowData,
             senses: props.rowData.senses.map((sense) => {
-              if (sense.senseId === senseId)
+              if (sense.guid === guid)
                 return {
                   ...sense,
                   deleted: !sense.deleted,
@@ -191,12 +191,12 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => {
-      const editDomains = (senseId: string, domains: SemanticDomain[]) => {
+      const editDomains = (guid: string, domains: SemanticDomain[]) => {
         if (props.onRowDataChange)
           props.onRowDataChange({
             ...props.rowData,
             senses: props.rowData.senses.map((sense) => {
-              if (sense.senseId === senseId)
+              if (sense.guid === guid)
                 return {
                   ...sense,
                   domains,

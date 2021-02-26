@@ -14,7 +14,7 @@ const WORD: ReviewEntriesWord = {
   vernacular: "pootis",
   senses: [
     {
-      senseId: "sense0",
+      guid: "sense0",
       glosses: [
         { def: "meaning of life", language: "en" },
         { def: "life's meaning", language: "en" },
@@ -23,7 +23,7 @@ const WORD: ReviewEntriesWord = {
       deleted: false,
     },
     {
-      senseId: "sense1",
+      guid: "sense1",
       glosses: [{ def: "heavy noise", language: "en" }, GLOSS],
       domains: [DOMAIN, { name: "Joke", id: "0" }],
       deleted: false,
@@ -35,7 +35,7 @@ const WORD: ReviewEntriesWord = {
 const WORD_0 = {
   senses: [
     {
-      senseId: "",
+      guid: "",
       glosses: [{ def: "~", language: "en" }],
       domains: [{ name: "", id: "7.7.6" }],
       deleted: false,
@@ -45,7 +45,7 @@ const WORD_0 = {
 const WORD_1 = {
   senses: [
     {
-      senseId: "",
+      guid: "",
       glosses: [{ def: "a", language: "en" }],
       domains: [{ name: "", id: "9.9.9.9.9" }],
       deleted: false,
@@ -55,7 +55,7 @@ const WORD_1 = {
 const WORD_2 = {
   senses: [
     {
-      senseId: "",
+      guid: "",
       glosses: [{ def: "b", language: "en" }],
       domains: [{ name: "", id: "0.0.0.0.0" }],
       deleted: false,
@@ -65,7 +65,7 @@ const WORD_2 = {
 const WORD_3 = {
   senses: [
     {
-      senseId: "",
+      guid: "",
       glosses: [{ def: "\0", language: "en" }],
       domains: [{ name: "", id: "7.7.7" }],
       deleted: false,

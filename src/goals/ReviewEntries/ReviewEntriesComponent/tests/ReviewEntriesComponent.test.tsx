@@ -4,7 +4,6 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
-import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords, {
   mockCreateWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
@@ -69,7 +68,7 @@ beforeEach(() => {
   setMockFunctions();
   for (let word of mockWords) {
     for (let sense of word.senses)
-      mockUuid.mockImplementationOnce(() => sense.senseId);
+      mockUuid.mockImplementationOnce(() => sense.guid);
   }
 
   renderer.act(() => {
@@ -92,10 +91,6 @@ describe("ReviewEntriesComponent", () => {
     expect(mockUpdateAllWords).toHaveBeenCalledWith(
       mockWords.map((value) => ({
         ...value,
-        senses: value.senses.map((sense) => ({
-          ...sense,
-          senseId: sense.senseId + ReviewEntriesSense.OLD_SENSE,
-        })),
         recorder: expect.any(Object),
       }))
     );

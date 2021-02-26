@@ -11,7 +11,7 @@ export const mockWords: ReviewEntriesWord[] = [
     vernacular: "toad",
     senses: [
       {
-        senseId: "1",
+        guid: "1",
         glosses: [
           { def: "bup", language: "en" },
           { def: "AHHHHHH", language: "en" },
@@ -27,7 +27,7 @@ export const mockWords: ReviewEntriesWord[] = [
     vernacular: "vern",
     senses: [
       {
-        senseId: "2",
+        guid: "2",
         glosses: [{ def: "gloss", language: "en" }],
         domains: [{ name: "domain", id: "number" }],
         deleted: false,
@@ -48,6 +48,7 @@ export function mockCreateWord(word: ReviewEntriesWord): Word {
 
 function createMockSense(sense: ReviewEntriesSense): Sense {
   return {
+    guid: sense.guid,
     glosses: [...sense.glosses],
     semanticDomains: [...sense.domains],
     accessibility: State.Active,

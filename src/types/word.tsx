@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 import { randomIntString } from "utilities";
 
 export enum State {
@@ -20,13 +22,16 @@ export interface SemanticDomain {
   //    exposed?
 }
 export class Sense {
-  guid?: string;
-  glosses: Gloss[];
+  guid: string;
+  glosses: Gloss[] = [];
   semanticDomains: SemanticDomain[] = [];
   accessibility?: State;
 
-  constructor(gloss: string, lang: string = "", semDom?: SemanticDomain) {
-    this.glosses = [{ def: gloss, language: lang }];
+  constructor(gloss?: string, lang?: string, semDom?: SemanticDomain) {
+    this.guid = v4();
+    if (gloss) {
+      this.glosses.push({ def: gloss, language: lang ?? "" });
+    }
     if (semDom) {
       this.semanticDomains.push(semDom);
     }
@@ -45,7 +50,7 @@ export class Note {
 
 export class Word {
   id: string = "";
-  guid: string = "";
+  guid: string;
   vernacular: string = "";
   plural: string = "";
   senses: Sense[] = [];
@@ -59,6 +64,10 @@ export class Word {
   otherField: string = "";
   projectId: string = "";
   note: Note = new Note();
+
+  constructor() {
+    this.guid = v4();
+  }
 }
 
 export interface MergeWord {
@@ -96,6 +105,20 @@ export function multiGlossWord(vern: string, glosses: string[]): Word {
     id: randomIntString(),
     vernacular: vern,
     senses: glosses.map((gloss) => new Sense(gloss)),
+  };
+}
+
+// Used for unit testing, as the expected result, when the guids don't matter.
+export function multiGlossWordAnyGuid(vern: string, glosses: string[]): Word {
+  return {
+    ...new Word(),
+    id: randomIntString(),
+    guid: expect.any(String),
+    vernacular: vern,
+    senses: glosses.map((gloss) => ({
+      ...new Sense(gloss),
+      guid: expect.any(String),
+    })),
   };
 }
 

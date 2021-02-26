@@ -10,7 +10,6 @@ import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/R
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { Gloss } from "types/word";
-import { uuid } from "utilities";
 
 interface SenseCellProps {
   editable: boolean;
@@ -33,15 +32,7 @@ export default function SenseCell(
           props.onRowDataChange &&
           props.onRowDataChange({
             ...props.rowData,
-            senses: [
-              ...props.rowData.senses,
-              {
-                deleted: false,
-                glosses: [],
-                domains: [],
-                senseId: uuid(),
-              },
-            ],
+            senses: [...props.rowData.senses, new ReviewEntriesSense()],
           })
         }
       />
