@@ -60,12 +60,12 @@ namespace BackendFramework.Services
         /// </summary>
         private static void PopulateBlankWordTimes(Word word)
         {
-            if (word.Created.Length == 0)
+            if (string.IsNullOrEmpty(word.Created))
             {
                 // Use Roundtrip-suitable ISO 8601 format.
                 word.Created = Time.UtcNowIso8601();
             }
-            if (word.Modified.Length == 0)
+            if (string.IsNullOrEmpty(word.Modified))
             {
                 word.Modified = Time.UtcNowIso8601();
             }
