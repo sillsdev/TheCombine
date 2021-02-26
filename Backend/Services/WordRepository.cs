@@ -123,5 +123,39 @@ namespace BackendFramework.Services
             var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
+
+        /// <summary> Updates <see cref="Word"/> in the Frontier collection with same wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
+        public async Task<bool> UpdateFrontier(Word word)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, word.ProjectId),
+                filterDef.Eq(x => x.Id, word.Id));
+
+            var deleted = (await _wordDatabase.Frontier.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await AddFrontier(word);
+            }
+            return deleted;
+        }
+
+        /// <summary> Updates <see cref="Word"/> in the Words collection with same wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
+        private async Task<bool> UpdateWord(Word word)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, word.ProjectId),
+                filterDef.Eq(x => x.Id, word.Id));
+
+            var deleted = (await _wordDatabase.Words.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await Add(word);
+            }
+            return deleted;
+        }
     }
 }
