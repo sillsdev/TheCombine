@@ -38,7 +38,6 @@ interface GoalTimelineProps {
 
 interface GoalTimelineState {
   portrait: boolean;
-  reducedLandScape: boolean;
 }
 
 /**
@@ -54,7 +53,6 @@ export default class GoalTimeline extends React.Component<
     super(props);
     this.state = {
       portrait: window.innerWidth < window.innerHeight,
-      reducedLandScape: (window.innerWidth * 7) / 10 < window.innerHeight,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -66,7 +64,6 @@ export default class GoalTimeline extends React.Component<
   handleWindowSizeChange = () => {
     this.setState({
       portrait: window.innerWidth < window.innerHeight,
-      reducedLandScape: (window.innerWidth * 7) / 10 < window.innerHeight,
     });
   };
 
@@ -156,9 +153,9 @@ export default class GoalTimeline extends React.Component<
 
   renderLandscape() {
     return (
-      <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
+      <GridList cols={13} cellHeight="auto">
         {/* Alternatives */}
-        <GridListTile cols={2}>
+        <GridListTile cols={4}>
           <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
             <Typography variant="h6">
               <Translate id={"goal.selector.other"} />
@@ -174,7 +171,7 @@ export default class GoalTimeline extends React.Component<
         </GridListTile>
 
         {/* Recommendation */}
-        <GridListTile cols={2} style={timelineStyle.paneStyling as any}>
+        <GridListTile cols={3} style={timelineStyle.paneStyling as any}>
           <Typography variant="h5">
             <Translate id={"goal.selector.present"} />
           </Typography>
@@ -182,7 +179,7 @@ export default class GoalTimeline extends React.Component<
         </GridListTile>
 
         {/* History */}
-        <GridListTile cols={2}>
+        <GridListTile cols={4}>
           <div style={timelineStyle.paneStyling as any}>
             <Typography variant="h6">
               <Translate id={"goal.selector.past"} />

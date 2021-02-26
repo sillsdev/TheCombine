@@ -30,7 +30,7 @@ namespace Backend.Tests.Controllers
             _userEditRepo = new UserEditRepositoryMock();
             _userEditService = new UserEditService(_userEditRepo);
             _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project()).Result.Id;
+            _projId = _projectService.Create(new Project { Name = "UserEditControllerTests" }).Result!.Id;
             _userService = new UserServiceMock();
             _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService,
                 _permissionService, _userService)
