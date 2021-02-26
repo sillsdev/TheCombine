@@ -20,15 +20,14 @@ To add the user to the project, we need to:
 import argparse
 import sys
 
-from maint_utils import db_cmd, get_project_id, get_user_id
+from maint_utils import Permission, db_cmd, get_project_id, get_user_id
 
 
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments."""
     parser = argparse.ArgumentParser(
-        description="""Add a user to a project on TheCombine. """
-        """The user can be specified by his/her username or """
-        """by his/her e-mail address.""",
+        description="Add a user to a project on TheCombine. "
+        "The user can be specified by username or e-mail address.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -49,6 +48,22 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Add a user to a project."""
     args = parse_args()
+    # 0. Define user permission sets
+    if args.admin:
+        user_permissions = [
+            int(Permission.DeleteEditSettingsAndUsers),
+            int(Permission.ImportExport),
+            int(Permission.MergeAndCharSet),
+            int(Permission.Unused),
+            int(Permission.WordEntry),
+        ]
+    else:
+        user_permissions = [
+            int(Permission.MergeAndCharSet),
+            int(Permission.Unused),
+            int(Permission.WordEntry),
+        ]
+
     # 1. Lookup the user id
     user_id = get_user_id(args.user)
     if user_id is None:
@@ -61,7 +76,7 @@ def main() -> None:
     proj_id = get_project_id(args.project)
     if proj_id is None:
         print(f"Cannot find project {args.project}")
-        sys.exit(2)
+        sys.exit(1)
     if args.verbose:
         print(f"Project ID: {proj_id}")
 
@@ -80,17 +95,27 @@ def main() -> None:
         if args.verbose:
             print(f"UserRole ID: {user_role_id}")
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
-        update_role = '{ $set: { "permissions" : [5,4,3,2,1]} }'
+        update_role = f'{{ $set: {{"permissions" : {user_permissions}}} }}'
         db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
         if args.verbose:
-            print(f"Updated Role {user_role_id} with permissions [5,4,3,2,1]")
+            print(f"Updated Role {user_role_id} with permissions {user_permissions}")
     else:
         #  3. The user is not in the project:
         #      a. create a document in the UserRolesCollection,
         if args.admin:
-            user_permissions = [5, 4, 3, 2, 1]
+            user_permissions = [
+                int(Permission.DeleteEditSettingsAndUsers),
+                int(Permission.ImportExport),
+                int(Permission.MergeAndCharSet),
+                int(Permission.Unused),
+                int(Permission.WordEntry),
+            ]
         else:
-            user_permissions = [3, 2, 1]
+            user_permissions = [
+                int(Permission.MergeAndCharSet),
+                int(Permission.Unused),
+                int(Permission.WordEntry),
+            ]
         insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
@@ -101,12 +126,12 @@ def main() -> None:
             add_role_result = db_cmd(f"db.UsersCollection.updateOne({select_user}, {update_user})")
             if add_role_result is None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
-                sys.exit(3)
+                sys.exit(1)
             elif args.verbose:
                 print(f"{args.user} added to {args.project} with permissions {user_permissions}")
         else:
             print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)
-            sys.exit(4)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
