@@ -304,7 +304,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Glosses, SemanticDomains);
+            return HashCode.Combine(Guid, Accessibility, Glosses, SemanticDomains);
         }
     }
 
