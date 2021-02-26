@@ -11,7 +11,9 @@ import UserManagement from "components/SiteSettings//UserManagement/UserManageme
 export default function SiteSettingsComponent() {
   return (
     <Grid container justify="center" spacing={6}>
-      <Button onClick={populateAllGuids}>Populate Guids</Button>
+      <Button onClick={populateAllGuids} variant="contained" color="primary">
+        Populate Guids
+      </Button>
 
       {/* Project List */}
       <BaseSettingsComponent

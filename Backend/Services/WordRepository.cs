@@ -118,15 +118,13 @@ namespace BackendFramework.Services
         private async Task<bool> PopulateGuidInHistory(Word word)
         {
             PopulateWordGuids(word);
-            var idsToUpdate = new List<string>(word.History);
-            idsToUpdate.Add(word.Id);
+            var idsToUpdate = new List<string>(word.History) { word.Id };
             var success = true;
             foreach (var priorId in idsToUpdate)
             {
                 var priorWord = await GetWord(word.ProjectId, priorId);
                 if (priorWord != null)
                 {
-                    Console.WriteLine(priorId);
                     success &= await PopulateGuidsAndUpdateWord(priorWord, word.Guid);
                 }
             }
@@ -142,7 +140,6 @@ namespace BackendFramework.Services
             var frontierWords = await _wordDatabase.Frontier.Find(w => true).ToListAsync();
             foreach (var w in frontierWords)
             {
-                Console.WriteLine(w.Guid);
                 success &= await PopulateGuidInHistory(w);
                 success &= await UpdateFrontier(w);
             }
