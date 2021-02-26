@@ -36,7 +36,9 @@ namespace BackendFramework.Controllers
         {
             if (projectId == "populateguids")
             {
+                Console.WriteLine("Starting to populate guids...");
                 await _wordRepo.PopulateAllGuids();
+                Console.WriteLine("Done populating guids! Please verify success in mongo.");
                 return new OkResult();
             }
 
