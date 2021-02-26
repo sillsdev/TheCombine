@@ -590,6 +590,8 @@ namespace BackendFramework.Services
                     {
                         SemanticDomains = new List<SemanticDomain>(),
                         Glosses = new List<Gloss>(),
+                        // FieldWorks uses LiftSense.Id for the GUID field, rather than LiftSense.Guid,
+                        // so follow this convention.
                         Guid = new Guid(sense.Id)
                     };
 
