@@ -26,9 +26,9 @@ from maint_utils import db_cmd, get_project_id, get_user_id
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments."""
     parser = argparse.ArgumentParser(
-        description="""Add a user to a project on TheCombine. """
-        """The user can be specified by his/her username or """
-        """by his/her e-mail address.""",
+        description="Add a user to a project on TheCombine. "
+        "The user can be specified by his/her username or "
+        "by his/her e-mail address.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -61,7 +61,7 @@ def main():
     proj_id = get_project_id(args.project)
     if proj_id is None:
         print(f"Cannot find project {args.project}")
-        sys.exit(2)
+        sys.exit(1)
     if args.verbose:
         print(f"Project ID: {proj_id}")
 
@@ -101,12 +101,12 @@ def main():
             add_role_result = db_cmd(f"db.UsersCollection.updateOne({select_user}, {update_user})")
             if add_role_result is None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
-                sys.exit(3)
+                sys.exit(1)
             elif args.verbose:
                 print(f"{args.user} added to {args.project} with permissions {user_permissions}")
         else:
             print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)
-            sys.exit(4)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
