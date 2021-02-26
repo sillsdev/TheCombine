@@ -11,6 +11,7 @@ import UserManagement from "components/SiteSettings//UserManagement/UserManageme
 export default function SiteSettingsComponent() {
   return (
     <Grid container justify="center" spacing={6}>
+      {/* ToDo: Remove this Button after used on live server. */}
       <Button onClick={populateAllGuids} variant="contained" color="primary">
         Populate Guids
       </Button>

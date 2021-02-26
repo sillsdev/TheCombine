@@ -194,6 +194,7 @@ export async function getAllUsersInCurrentProject(): Promise<User[]> {
   return resp.data;
 }
 
+// ToDo: Remove this function after used on live server.
 export async function populateAllGuids() {
   const resp = await backendServer.get("projects/populateguids/words", {
     headers: authHeader(),

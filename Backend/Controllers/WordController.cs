@@ -34,6 +34,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
+            // ToDo: Remove this if-statement after used on live server.
             if (projectId == "populateguids")
             {
                 Console.WriteLine("Starting to populate guids...");
