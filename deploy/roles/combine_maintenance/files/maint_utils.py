@@ -5,7 +5,7 @@ import json
 import re
 import subprocess
 import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 
 def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
@@ -31,10 +31,13 @@ def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
         sys.exit(err.returncode)
 
 
-def db_cmd(cmd: str) -> Optional[Union[Dict[str, Any], List[Dict[str, Any]]]]:
+def db_cmd(cmd: str) -> Optional[Dict[str, Any]]:
     """Run the supplied database command using the mongo shell in the database container.
 
-    A list of results can be returned if the query to be evaluated returns a list of values.
+    Note:
+        A list of results can be returned if the query to be evaluated returns a list of values.
+        mypy is strict about indexing Union[Dict, List], so in general we cannot properly
+        type hint this return type without generating many false positives.
     """
     db_results = run_docker_cmd(
         "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]
@@ -54,7 +57,7 @@ def object_id_to_str(buffer: str) -> str:
 
 def get_project_id(project_name: str) -> Optional[str]:
     """Look up the MongoDB ObjectId for the project from the Project Name."""
-    results = db_cmd(
+    results: Optional[List[Dict[str, Any]]] = db_cmd(  # type: ignore
         f'db.ProjectsCollection.find({{ name: "{project_name}"}},{{ name: 1}}).toArray()'
     )
 
