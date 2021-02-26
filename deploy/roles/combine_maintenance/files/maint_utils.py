@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 """Run a command in a docker container and return a subprocess.CompletedProcess."""
 
+import enum
 import json
 import re
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
+
+
+@enum.unique
+class Permission(enum.Enum):
+    """Define enumerated type for Combine user permissions."""
+
+    WordEntry = 1
+    Unused = 2
+    MergeAndCharSet = 3
+    ImportExport = 4
+    DeleteEditSettingsAndUsers = 5
 
 
 def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:

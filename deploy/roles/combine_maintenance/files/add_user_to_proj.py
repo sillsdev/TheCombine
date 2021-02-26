@@ -20,15 +20,14 @@ To add the user to the project, we need to:
 import argparse
 import sys
 
-from maint_utils import db_cmd, get_project_id, get_user_id
+from maint_utils import Permission, db_cmd, get_project_id, get_user_id
 
 
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments."""
     parser = argparse.ArgumentParser(
         description="Add a user to a project on TheCombine. "
-        "The user can be specified by his/her username or "
-        "by his/her e-mail address.",
+        "The user can be specified by username or e-mail address.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -88,9 +87,19 @@ def main():
         #  3. The user is not in the project:
         #      a. create a document in the UserRolesCollection,
         if args.admin:
-            user_permissions = [5, 4, 3, 2, 1]
+            user_permissions = [
+                Permission.DeleteEditSettingsAndUsers,
+                Permission.ImportExport,
+                Permission.MergeAndCharSet,
+                Permission.Unused,
+                Permission.WordEntry,
+            ]
         else:
-            user_permissions = [3, 2, 1]
+            user_permissions = [
+                Permission.MergeAndCharSet,
+                Permission.Unused,
+                Permission.WordEntry,
+            ]
         insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
