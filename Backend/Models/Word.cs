@@ -19,9 +19,8 @@ namespace BackendFramework.Models
         /// This Guid is important for Lift round-tripping with other applications and must remain stable through
         /// Word edits.
         /// </summary>
-        /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
         [BsonElement("guid")]
-        public Guid? Guid { get; set; }
+        public Guid Guid { get; set; }
 
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
@@ -66,7 +65,9 @@ namespace BackendFramework.Models
         public Word()
         {
             Id = "";
-            Guid = new Guid();
+
+            // By default generate a new, unique Guid for each new Word.
+            Guid = Guid.NewGuid();
             Vernacular = "";
             Plural = "";
             Created = "";
@@ -236,6 +237,13 @@ namespace BackendFramework.Models
 
     public class Sense
     {
+        /// <summary>
+        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word
+        /// edits.
+        /// </summary>
+        [BsonElement("guid")]
+        public Guid Guid { get; set; }
+
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
@@ -246,15 +254,10 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
 
-        /// <summary>
-        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word edits.
-        /// </summary>
-        /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
-        [BsonElement("guid")]
-        public Guid? Guid { get; set; }
-
         public Sense()
         {
+            // By default generate a new, unique Guid for each new Sense.
+            Guid = Guid.NewGuid();
             Accessibility = State.Active;
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
@@ -289,6 +292,7 @@ namespace BackendFramework.Models
             }
 
             return
+                other.Guid == Guid &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
 
@@ -298,7 +302,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Glosses, SemanticDomains);
+            return HashCode.Combine(Guid, Glosses, SemanticDomains);
         }
     }
 

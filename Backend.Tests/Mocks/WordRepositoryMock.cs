@@ -40,7 +40,6 @@ namespace Backend.Tests.Mocks
         public Task<Word> Create(Word word)
         {
             word.Id = Guid.NewGuid().ToString();
-            WordRepository.PopulateWordGuids(word);
             _words.Add(word.Clone());
             AddFrontier(word.Clone());
             return Task.FromResult(word.Clone());
@@ -77,11 +76,6 @@ namespace Backend.Tests.Mocks
             word.Id = Guid.NewGuid().ToString();
             _words.Add(word.Clone());
             return Task.FromResult(word.Clone());
-        }
-
-        public Task<bool> PopulateAllGuids() // ToDo: Remove after used on live server.
-        {
-            return Task.FromResult(false);
         }
     }
 }

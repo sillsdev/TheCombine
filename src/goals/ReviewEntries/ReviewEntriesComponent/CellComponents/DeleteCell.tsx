@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import * as backend from "backend";
 import DeleteDialog from "components/Buttons/DeleteDialog";
-import { StoreState } from "types";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
+import { StoreState } from "types";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -53,7 +53,7 @@ export default function DeleteCell(props: DeleteCellProps) {
           <IconButton
             size="small"
             onClick={() => {
-              props.delete!(value.senseId);
+              props.delete!(value.guid);
             }}
           >
             {value.deleted ? <RestoreFromTrash /> : <Delete />}

@@ -108,12 +108,7 @@ describe("DataEntryComponent", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [
-            {
-              glosses: [],
-              semanticDomains: [],
-            },
-          ],
+          senses: [new Sense()],
         },
       ];
       const expectedWords: Word[] = [];
@@ -124,13 +119,7 @@ describe("DataEntryComponent", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [
-            {
-              glosses: [],
-              semanticDomains: [],
-              accessibility: State.Active,
-            },
-          ],
+          senses: [{ ...new Sense(), accessibility: State.Active }],
         },
       ];
       const expectedWords: Word[] = [...words];
@@ -150,16 +139,8 @@ describe("DataEntryComponent", () => {
     mockDomains[1].id = "ID_two";
 
     const sense: Sense[] = [
-      {
-        glosses: [{ language: "", def: "" }],
-        semanticDomains: [mockDomains[0]],
-        accessibility: State.Active,
-      },
-      {
-        glosses: [{ language: "", def: "" }],
-        semanticDomains: [mockDomains[1]],
-        accessibility: State.Active,
-      },
+      { ...new Sense("", "", mockDomains[0]), accessibility: State.Active },
+      { ...new Sense("", "", mockDomains[1]), accessibility: State.Active },
     ];
 
     const unfilteredWords: Word[] = [

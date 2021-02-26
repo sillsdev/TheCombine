@@ -251,6 +251,7 @@ export async function mergeWord(
       word.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {
           parent.senses.push({
+            guid: sense.guid,
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
           });
