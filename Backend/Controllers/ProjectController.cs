@@ -399,8 +399,8 @@ namespace BackendFramework.Controllers
         [HttpGet("duplicate/{projectName}")]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
-            var isDuplicate = await _projectService.DuplicateCheck(projectName);
-            return new OkObjectResult(isDuplicate);
+            var projectIdWithName = await _projectService.GetProjectIdByName(projectName);
+            return new OkObjectResult(projectIdWithName != null);
         }
     }
 }

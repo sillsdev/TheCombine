@@ -60,12 +60,12 @@ namespace BackendFramework.Services
         /// </summary>
         private static void PopulateBlankWordTimes(Word word)
         {
-            if (word.Created.Length == 0)
+            if (string.IsNullOrEmpty(word.Created))
             {
                 // Use Roundtrip-suitable ISO 8601 format.
                 word.Created = Time.UtcNowIso8601();
             }
-            if (word.Modified.Length == 0)
+            if (string.IsNullOrEmpty(word.Modified))
             {
                 word.Modified = Time.UtcNowIso8601();
             }
@@ -101,6 +101,65 @@ namespace BackendFramework.Services
                     sense.Guid = Guid.NewGuid();
                 }
             }
+        }
+
+        /// <remarks> This method should be removed once all legacy data has been converted. </remarks>
+        private async Task<bool> PopulateGuidsAndUpdateWord(Word word, Guid? guid = null)
+        {
+            if ((word.Guid is null || Guid.Empty.Equals(word.Guid)) && guid != null)
+            {
+                word.Guid = guid;
+            }
+            PopulateWordGuids(word);
+            return await UpdateWord(word);
+        }
+
+        /// <remarks> This method should be removed once all legacy data has been converted. </remarks>
+        private async Task<bool> PopulateGuidInHistory(Word word)
+        {
+            PopulateWordGuids(word);
+            var idsToUpdate = new List<string>(word.History) { word.Id };
+            var success = true;
+            foreach (var priorId in idsToUpdate)
+            {
+                var priorWord = await GetWord(word.ProjectId, priorId);
+                if (priorWord != null)
+                {
+                    success &= await PopulateGuidsAndUpdateWord(priorWord, word.Guid);
+                }
+            }
+            return success;
+        }
+
+        /// <remarks> This method should be removed once all legacy data has been converted. </remarks>
+        public async Task<bool> PopulateAllGuids()
+        {
+            var success = true;
+
+            // Update frontier words and their predecessors.
+            var frontierWords = await _wordDatabase.Frontier.Find(w => true).ToListAsync();
+            foreach (var w in frontierWords)
+            {
+                success &= await PopulateGuidInHistory(w);
+                success &= await UpdateFrontier(w);
+            }
+
+            // Update deleted words and their predecessors.
+            // Note: this could error if a deleted word has another deleted word in its history.
+            var deletedWords = await _wordDatabase.Words.Find(w => w.Accessibility == State.Deleted).ToListAsync();
+            foreach (var w in deletedWords)
+            {
+                success &= await PopulateGuidInHistory(w);
+            }
+
+            // Catch stragglers.
+            var allWords = await _wordDatabase.Words.Find(w => true).ToListAsync();
+            foreach (var w in allWords)
+            {
+                success &= await PopulateGuidsAndUpdateWord(w);
+            }
+
+            return success;
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the WordsCollection </summary>
@@ -140,6 +199,40 @@ namespace BackendFramework.Services
 
             var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
+        }
+
+        /// <summary> Updates <see cref="Word"/> in the Frontier collection with same wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
+        public async Task<bool> UpdateFrontier(Word word)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, word.ProjectId),
+                filterDef.Eq(x => x.Id, word.Id));
+
+            var deleted = (await _wordDatabase.Frontier.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await AddFrontier(word);
+            }
+            return deleted;
+        }
+
+        /// <summary> Updates <see cref="Word"/> in the Words collection with same wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
+        private async Task<bool> UpdateWord(Word word)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, word.ProjectId),
+                filterDef.Eq(x => x.Id, word.Id));
+
+            var deleted = (await _wordDatabase.Words.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await Add(word);
+            }
+            return deleted;
         }
     }
 }
