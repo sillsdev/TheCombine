@@ -56,7 +56,7 @@ def delete_from_projects(project_id: str) -> None:
     db_cmd(f'db.ProjectsCollection.deleteOne({{ _id: ObjectId("{project_id}")}})')
 
 
-def main():
+def main() -> None:
     """Remove a project and its associated data from TheCombine."""
     args = parse_args()
     for project in args.projects:
