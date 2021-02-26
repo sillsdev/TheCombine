@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 
 @enum.unique
-class Permission(enum.Enum):
+class Permission(enum.IntEnum):
     """Define enumerated type for Combine user permissions."""
 
     WordEntry = 1

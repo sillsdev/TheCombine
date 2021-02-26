@@ -88,17 +88,17 @@ def main():
         #      a. create a document in the UserRolesCollection,
         if args.admin:
             user_permissions = [
-                Permission.DeleteEditSettingsAndUsers,
-                Permission.ImportExport,
-                Permission.MergeAndCharSet,
-                Permission.Unused,
-                Permission.WordEntry,
+                int(Permission.DeleteEditSettingsAndUsers),
+                int(Permission.ImportExport),
+                int(Permission.MergeAndCharSet),
+                int(Permission.Unused),
+                int(Permission.WordEntry),
             ]
         else:
             user_permissions = [
-                Permission.MergeAndCharSet,
-                Permission.Unused,
-                Permission.WordEntry,
+                int(Permission.MergeAndCharSet),
+                int(Permission.Unused),
+                int(Permission.WordEntry),
             ]
         insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
