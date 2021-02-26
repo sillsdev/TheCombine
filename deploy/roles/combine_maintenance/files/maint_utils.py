@@ -54,6 +54,10 @@ def get_project_id(project_name: str) -> Optional[str]:
     results = db_cmd(
         f'db.ProjectsCollection.find({{ name: "{project_name}"}},{{ name: 1}}).toArray()'
     )
+
+    if results is None:
+        return None
+
     if len(results) == 1:
         return results[0]["_id"]
     elif len(results) > 1:
