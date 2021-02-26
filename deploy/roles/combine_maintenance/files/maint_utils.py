@@ -5,7 +5,7 @@ import json
 import re
 import subprocess
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 
 def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
@@ -31,8 +31,11 @@ def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
         sys.exit(err.returncode)
 
 
-def db_cmd(cmd: str) -> Optional[Dict[str, Any]]:
-    """Run the supplied database command using the mongo shell in the database container."""
+def db_cmd(cmd: str) -> Optional[Union[Dict[str, Any], List[Dict[str, Any]]]]:
+    """Run the supplied database command using the mongo shell in the database container.
+
+    A list of results can be returned if the query to be evaluated returns a list of values.
+    """
     db_results = run_docker_cmd(
         "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]
     )
