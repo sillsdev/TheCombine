@@ -268,6 +268,7 @@ namespace BackendFramework.Models
             var clone = new Sense
             {
                 Guid = Guid,
+                Accessibility = Accessibility,
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
@@ -293,6 +294,7 @@ namespace BackendFramework.Models
 
             return
                 other.Guid == Guid &&
+                other.Accessibility == Accessibility &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
 
@@ -302,7 +304,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Glosses, SemanticDomains);
+            return HashCode.Combine(Guid, Accessibility, Glosses, SemanticDomains);
         }
     }
 
