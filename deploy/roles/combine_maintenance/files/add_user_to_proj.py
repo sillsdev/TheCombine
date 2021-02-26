@@ -46,7 +46,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Add a user to a project."""
     args = parse_args()
     # 1. Lookup the user id
