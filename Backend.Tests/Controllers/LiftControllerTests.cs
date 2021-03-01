@@ -215,8 +215,12 @@ namespace Backend.Tests.Controllers
             return ms.ToArray();
         }
 
+        /// <summary>
+        /// Create three words and delete one. Ensure that the deleted word is still exported to Lift format and marked
+        /// as deleted.
+        /// </summary>
         [Test]
-        public async Task TestExportDeleted()
+        public async Task TestDeletedWordsExportToLift()
         {
             var word = RandomWord(_projId);
             var secondWord = RandomWord(_projId);

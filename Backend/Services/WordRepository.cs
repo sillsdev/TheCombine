@@ -79,28 +79,10 @@ namespace BackendFramework.Services
         /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
-            PopulateWordGuids(word);
             PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
-        }
-
-        /// <remarks> This method should be removed once all legacy data has been converted. </remarks>
-        internal static void PopulateWordGuids(Word word)
-        {
-            if (word.Guid is null || Guid.Empty.Equals(word.Guid))
-            {
-                word.Guid = Guid.NewGuid();
-            }
-
-            foreach (var sense in word.Senses)
-            {
-                if (sense.Guid is null || Guid.Empty.Equals(sense.Guid))
-                {
-                    sense.Guid = Guid.NewGuid();
-                }
-            }
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the WordsCollection </summary>
@@ -140,6 +122,40 @@ namespace BackendFramework.Services
 
             var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
+        }
+
+        /// <summary> Updates <see cref="Word"/> in the Frontier collection with same wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
+        public async Task<bool> UpdateFrontier(Word word)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, word.ProjectId),
+                filterDef.Eq(x => x.Id, word.Id));
+
+            var deleted = (await _wordDatabase.Frontier.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await AddFrontier(word);
+            }
+            return deleted;
+        }
+
+        /// <summary> Updates <see cref="Word"/> in the Words collection with same wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
+        private async Task<bool> UpdateWord(Word word)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, word.ProjectId),
+                filterDef.Eq(x => x.Id, word.Id));
+
+            var deleted = (await _wordDatabase.Words.DeleteOneAsync(filter)).DeletedCount > 0;
+            if (deleted)
+            {
+                await Add(word);
+            }
+            return deleted;
         }
     }
 }

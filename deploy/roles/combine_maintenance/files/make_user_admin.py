@@ -9,10 +9,9 @@ from maint_utils import db_cmd, get_user_id
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments."""
     parser = argparse.ArgumentParser(
-        description="""Make an existing user a site administrator """
-        """for TheCombine.  """
-        """The user can be specified by his/her username or """
-        """by his/her e-mail address.""",
+        description="Make an existing user a site administrator "
+        "for TheCombine.  "
+        "The user can be specified by username or e-mail address.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -24,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Make a user a site administrator."""
     args = parse_args()
     for user in args.users:

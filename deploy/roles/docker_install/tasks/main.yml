@@ -52,6 +52,12 @@
     mode: 0600
   notify: restart docker
 
+- name: check for docker-compose version
+  command: docker-compose --version
+  register: compose_version
+  changed_when: false
+  failed_when: false
+
 - name: Install Docker Compose
   get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
@@ -59,6 +65,7 @@
     owner: root
     group: root
     mode: 0755
+  when: docker_compose_version not in compose_version.stdout
 
 - name: Create link for /usr/bin/docker-compose
   file:

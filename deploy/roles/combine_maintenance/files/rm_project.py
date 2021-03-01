@@ -27,11 +27,10 @@ from maint_utils import db_cmd, get_project_id, run_docker_cmd
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
-    # Parse user command line arguments
     parser = argparse.ArgumentParser(
-        description="""Remove a project from the Combine server. """
-        """Project data are deleted from the database and """
-        """the backend containers.""",
+        description="Remove a project from the Combine server. "
+        "Project data are deleted from the database and "
+        "the backend containers.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("projects", nargs="*", help="Project(s) to be removed from TheCombine.")
@@ -56,7 +55,7 @@ def delete_from_projects(project_id: str) -> None:
     db_cmd(f'db.ProjectsCollection.deleteOne({{ _id: ObjectId("{project_id}")}})')
 
 
-def main():
+def main() -> None:
     """Remove a project and its associated data from TheCombine."""
     args = parse_args()
     for project in args.projects:

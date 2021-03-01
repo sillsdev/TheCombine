@@ -1,11 +1,11 @@
-import * as Data from "types/word";
+import { Sense, Word } from "types/word";
 
 export type Hash<V> = { [key: string]: V };
 
-export type TreeDataSense = Data.Sense & { srcWord: string; order: number };
+export type TreeDataSense = Sense & { srcWord: string; order: number };
 
 export interface MergeData {
-  words: Hash<Data.Word>;
+  words: Hash<Word>;
   senses: Hash<TreeDataSense>;
 }
 
