@@ -14,7 +14,7 @@ export const mockWords: ReviewEntriesWord[] = [
         guid: "1",
         glosses: [
           { def: "bup", language: "en" },
-          { def: "AHHHHHH", language: "en" },
+          { def: "AHHHHHH", language: "es" },
         ],
         domains: [{ name: "domain", id: "number" }],
         deleted: false,

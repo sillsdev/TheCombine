@@ -162,7 +162,7 @@ export default function MergeStack(props: MergeStackProps) {
             </div>
             <div>
               {analysisLangs.map((lang) => (
-                <div>
+                <div key={lang}>
                   <Typography variant="caption">{`${lang}: `}</Typography>
                   <Typography display="inline" variant="h5">
                     {glosses

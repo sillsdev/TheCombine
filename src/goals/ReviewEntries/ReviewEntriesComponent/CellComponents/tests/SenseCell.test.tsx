@@ -7,7 +7,7 @@ import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 const state = {
-  reviewEntriesState: { language: "en" },
+  currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },
 };
 const mockStore = configureMockStore([])(state);
 

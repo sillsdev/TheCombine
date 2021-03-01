@@ -30,30 +30,46 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
   );
 
   return (
-    <MaterialTable<any>
-      icons={tableIcons}
-      title={
-        <Typography component="h1" variant="h4">
-          <Translate id={"reviewEntries.title"} />
-        </Typography>
-      }
-      columns={columns}
-      data={words}
-      editable={{
-        onRowUpdate: props.onRowUpdate,
-      }}
-      options={{
-        filtering: true,
-        pageSize:
-          words.length > 0
-            ? Math.min(words.length, ROWS_PER_PAGE[0])
-            : ROWS_PER_PAGE[0],
-        pageSizeOptions: removeDuplicates([
-          Math.min(words.length, ROWS_PER_PAGE[0]),
-          Math.min(words.length, ROWS_PER_PAGE[1]),
-          Math.min(words.length, ROWS_PER_PAGE[2]),
-        ]),
-      }}
-    />
+    <Translate>
+      {({ translate }) => (
+        <MaterialTable<any>
+          icons={tableIcons}
+          title={
+            <Typography component="h1" variant="h4">
+              {translate("reviewEntries.title")}
+            </Typography>
+          }
+          columns={columns}
+          data={words}
+          editable={{
+            onRowUpdate: (
+              newData: ReviewEntriesWord,
+              oldData: ReviewEntriesWord
+            ) =>
+              new Promise(async (resolve, reject) => {
+                await props
+                  .onRowUpdate(newData, oldData)
+                  .then(resolve)
+                  .catch((reason) => {
+                    alert(translate(reason));
+                    reject(reason);
+                  });
+              }),
+          }}
+          options={{
+            filtering: true,
+            pageSize:
+              words.length > 0
+                ? Math.min(words.length, ROWS_PER_PAGE[0])
+                : ROWS_PER_PAGE[0],
+            pageSizeOptions: removeDuplicates([
+              Math.min(words.length, ROWS_PER_PAGE[0]),
+              Math.min(words.length, ROWS_PER_PAGE[1]),
+              Math.min(words.length, ROWS_PER_PAGE[2]),
+            ]),
+          }}
+        />
+      )}
+    </Translate>
   );
 }

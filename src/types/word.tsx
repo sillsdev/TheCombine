@@ -141,6 +141,22 @@ export function testWordList(): Word[] {
   ];
 }
 
+// Removes glosses with empty def and combine glosses with same lang
+export function cleanGlosses(glosses: Gloss[]): Gloss[] {
+  const nonemptyGlosses = glosses.filter((g) => g.def.length);
+  const langs = [...new Set(nonemptyGlosses.map((g) => g.language))];
+  return langs.map(
+    (language) =>
+      ({
+        def: nonemptyGlosses
+          .filter((g) => g.language === language)
+          .map((g) => g.def)
+          .join(", "),
+        language,
+      } as Gloss)
+  );
+}
+
 export function getGlossLangsFromWords(words: Word[]) {
   return reduceMultiType<Word, string[]>(words, [], wordReducer);
 }

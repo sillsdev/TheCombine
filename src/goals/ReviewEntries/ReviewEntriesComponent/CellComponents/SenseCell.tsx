@@ -20,7 +20,7 @@ export default function SenseCell(
   props: FieldParameterStandard & SenseCellProps
 ) {
   const analysisLang = useSelector(
-    (state: StoreState) => state.reviewEntriesState.analysisLanguage
+    (state: StoreState) => state.currentProject.analysisWritingSystems[0].bcp47
   );
 
   function addSense(): ReactNode {

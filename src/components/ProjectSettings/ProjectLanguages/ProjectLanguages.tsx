@@ -43,6 +43,7 @@ export default class ProjectLanguages extends React.Component<
     name: "",
     bcp47: "",
     font: "",
+    langsInProject: undefined,
   };
 
   setNewAnalysisDefault(index: number) {
