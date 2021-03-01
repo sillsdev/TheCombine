@@ -137,7 +137,7 @@ export function updateFrontierWord(
   oldData: ReviewEntriesWord
 ) {
   return async (dispatch: StoreStateDispatch) => {
-    // Clean + check data; if there's something irrepairably bad, return the error
+    // Clean + check data; if there's something wrong, return the error.
     const editSource = cleanWord(newData, oldData);
     if (typeof editSource === "string") {
       return Promise.reject(editSource);
@@ -172,14 +172,10 @@ export function getSenseFromEditSense(
     ? { ...oldSense }
     : { ...new Sense(), accessibility: State.Active };
 
-  // Use the edited semantic domains.
+  // Use the edited, cleaned glosses and domains.
+  newSense.glosses = [...editSense.glosses];
   newSense.semanticDomains = [...editSense.domains];
 
-  // If there are edited glosses, replace the previous glosses with them.
-  const newGlosses = editSense.glosses.filter((g) => g.def.length);
-  if (newGlosses.length) {
-    newSense.glosses = newGlosses;
-  }
   return newSense;
 }
 

@@ -297,13 +297,5 @@ describe("ReviewEntriesActions", () => {
       const resultSense = getSenseFromEditSense(editSense, oldSenses);
       expect(resultSense).toEqual(expectedSense);
     });
-
-    it("Uses old glosses if edit sense has none.", () => {
-      const expectedSense = sense0();
-      const editSense = new ReviewEntriesSense(expectedSense);
-      editSense.glosses = [];
-      const resultSense = getSenseFromEditSense(editSense, oldSenses);
-      expect(resultSense).toEqual(expectedSense);
-    });
   });
 });
