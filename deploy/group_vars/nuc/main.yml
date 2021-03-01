@@ -34,3 +34,16 @@ aws_ecr_profile: ecr_read_only
 my_aws_profiles:
   - "{{ aws_s3_profile }}"
   - "{{ aws_ecr_profile }}"
+
+################################################
+# WiFi access point settings
+################################################
+
+ap_domain: thecombine.app
+ap_ssid: "{{ansible_hostname}}_ap"
+# ap_passphrase is defined in ./vault.yml
+ap_gateway: "{{ combine_listen_address }}"
+ap_hostname: "{{ansible_hostname}}"
+
+# NGINX Configuration - only listen on wifi interface
+combine_listen_addr: "10.10.0.1"

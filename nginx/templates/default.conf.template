@@ -1,6 +1,5 @@
 server {
-    listen 80;
-    listen  [::]:80;
+    listen ${LISTEN_ADDR}:80;
     server_name ${SERVER_NAME};
     server_tokens off;
 
@@ -14,8 +13,7 @@ server {
 }
 
 server {
-    listen              443 ssl;
-    listen              [::]:443 ssl;
+    listen              ${LISTEN_ADDR}:443 ssl;
     server_name         ${SERVER_NAME};
     ssl_certificate     ${SSL_CERTIFICATE};
     ssl_certificate_key ${SSL_PRIVATE_KEY};
