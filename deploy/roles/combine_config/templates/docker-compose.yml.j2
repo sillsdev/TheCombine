@@ -30,8 +30,13 @@ services:
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
     ports:
+{% if combine_listen_addr %}
+      - {{ combine_listen_addr }}:80:80
+      - {{ combine_listen_addr }}:443:443
+{% else %}
       - 80:80
       - 443:443
+{% endif %}
     depends_on:
       - certmgr
       - backend
