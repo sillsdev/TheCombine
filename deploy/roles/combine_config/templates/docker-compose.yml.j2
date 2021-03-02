@@ -30,7 +30,7 @@ services:
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
     ports:
-{% if combine_listen_addr %}
+{% if combine_listen_addr is defined and combine_listen_addr|length %}
       - {{ combine_listen_addr }}:80:80
       - {{ combine_listen_addr }}:443:443
 {% else %}
