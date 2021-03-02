@@ -3,9 +3,10 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { Goal } from "types/goals";
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
+import { Goal, GoalType } from "types/goals";
+import { goalTypeToGoal } from "types/goalUtilities";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
@@ -15,13 +16,17 @@ jest.mock("components/AppBar/AppBarComponent", () => "div");
 const LOAD_EDITS = jest.fn();
 const CHOOSE_GOAL = jest.fn();
 const LOAD_HISTORY = jest.fn();
-const goals = [...defaultState.allPossibleGoals];
+const goals = defaultState.allGoalTypes.map((t) => goalTypeToGoal(t));
+const goalsWithAnyGuids: Goal[] = goals.map((g) => ({
+  ...g,
+  guid: expect.any(String),
+}));
 
 // Mock store
 const STATE = {
   goalsState: {
-    historyState: { history: [...goals] },
-    suggestionsState: { suggestions: [...goals] },
+    goalTypeSuggestions: [...goals],
+    history: [...goals],
   },
 };
 const mockStore = configureMockStore([])(STATE);
@@ -42,31 +47,30 @@ beforeEach(() => {
 describe("GoalTimelineVertical", () => {
   describe("handleChange", () => {
     it("Selects a goal from suggestions", () => {
-      timeHandle.handleChange(goals[2].goalType);
+      timeHandle.handleChange(goals[2]);
       expect(CHOOSE_GOAL).toBeCalled();
       expect(CHOOSE_GOAL.mock.calls[0][0].goalType).toEqual(goals[2].goalType);
-    });
-
-    it("Defaults to generic GoalType.Default=-1 for a non-existent goalType", () => {
-      timeHandle.handleChange(-2);
-      expect(CHOOSE_GOAL).toBeCalled();
-      expect(CHOOSE_GOAL.mock.calls[0][0].goalType).toEqual(-1);
     });
   });
 
   describe("createSuggestionData", () => {
     it("Generates proper suggestion data: no options to append", () => {
-      createTimeMaster([], goals);
-      expect(timeHandle.createSuggestionData()).toEqual(goals.slice(1));
+      createTimeMaster([], defaultState.allGoalTypes);
+      expect(timeHandle.createSuggestionData()).toEqual(
+        goalsWithAnyGuids.slice(1)
+      );
 
       // Cleanup
       createTimeMaster();
     });
 
     it("Generates proper suggestion data: append options", () => {
-      const tmp = [...goals.slice(3), ...goals.slice(0, 2)];
-      createTimeMaster([], goals.slice(2));
-      expect(timeHandle.createSuggestionData()).toEqual(tmp);
+      const expectedGoals = [
+        ...goalsWithAnyGuids.slice(3),
+        ...goalsWithAnyGuids.slice(0, 2),
+      ];
+      createTimeMaster([], defaultState.allGoalTypes.slice(2));
+      expect(timeHandle.createSuggestionData()).toEqual(expectedGoals);
 
       // Cleanup
       createTimeMaster();
@@ -74,12 +78,12 @@ describe("GoalTimelineVertical", () => {
 
     it("Generates proper suggestion data: empty suggestion data", () => {
       createTimeMaster([], []);
-      expect(timeHandle.createSuggestionData()).toEqual(goals);
+      expect(timeHandle.createSuggestionData()).toEqual(goalsWithAnyGuids);
     });
   });
 });
 
-function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
+function createTimeMaster(history?: Goal[], suggestions?: GoalType[]): void {
   renderer.act(() => {
     timeMaster = renderer.create(
       <Provider store={mockStore}>
@@ -90,14 +94,17 @@ function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
   timeHandle = timeMaster.root.findByType(GoalTimeline).instance;
 }
 
-function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {
+function createTimeline(
+  history?: Goal[],
+  suggestions?: GoalType[]
+): ReactElement {
   return (
     <GoalTimeline
       chooseGoal={CHOOSE_GOAL}
       loadHistory={LOAD_HISTORY}
-      allPossibleGoals={goals}
-      history={history ? history : goals.slice(0, 3)}
-      suggestions={suggestions ? suggestions : goals.slice(0, 3)}
+      allGoalTypes={defaultState.allGoalTypes}
+      goalTypeSuggestions={suggestions ?? defaultState.allGoalTypes.slice(0, 3)}
+      history={history ?? goals.slice(0, 3)}
     />
   );
 }

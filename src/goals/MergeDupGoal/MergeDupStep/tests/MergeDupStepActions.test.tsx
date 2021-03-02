@@ -134,9 +134,9 @@ const createMockStore = configureMockStore([thunk]);
 
 const mockStoreState = {
   goalsState: {
-    historyState: { history: [mockGoal] },
-    allPossibleGoals: [],
-    suggestionsState: { suggestions: [] },
+    allGoalTypes: [],
+    goalTypeSuggestions: [],
+    history: [mockGoal],
   },
   mergeDuplicateGoal: { data: {}, tree: {} },
 };

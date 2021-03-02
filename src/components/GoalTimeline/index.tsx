@@ -10,11 +10,7 @@ import { StoreStateDispatch } from "types/actions";
 import { Goal } from "types/goals";
 
 function mapStateToProps(state: StoreState) {
-  return {
-    allPossibleGoals: state.goalsState.allPossibleGoals,
-    history: state.goalsState.historyState.history,
-    suggestions: state.goalsState.suggestionsState.suggestions,
-  };
+  return { ...state.goalsState };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

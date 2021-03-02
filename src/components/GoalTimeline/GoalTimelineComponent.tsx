@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import GoalList from "components/GoalTimeline/GoalList";
-import { Goal, GoalType } from "types/goals";
+import { Goal, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "types/goalUtilities";
 
 const timelineStyle = {
@@ -30,10 +30,6 @@ const timelineStyle = {
 interface GoalTimelineProps {
   chooseGoal: (goal: Goal) => void;
   loadHistory: () => void;
-
-  allPossibleGoals: Goal[];
-  history: Goal[];
-  suggestions: Goal[];
 }
 
 interface GoalTimelineState {
@@ -46,10 +42,10 @@ interface GoalTimelineState {
  * to work on.
  */
 export default class GoalTimeline extends React.Component<
-  GoalTimelineProps,
+  GoalTimelineProps & GoalsState,
   GoalTimelineState
 > {
-  constructor(props: GoalTimelineProps) {
+  constructor(props: GoalTimelineProps & GoalsState) {
     super(props);
     this.state = {
       portrait: window.innerWidth < window.innerHeight,
@@ -75,32 +71,29 @@ export default class GoalTimeline extends React.Component<
 
   // Given a change event, find which goal the user selected, and choose it
   // as the next goal to work on.
-  handleChange(goalType: GoalType) {
-    // Create a new goal to prevent mutating the suggestions list.
-    this.props.chooseGoal(goalTypeToGoal(goalType));
+  handleChange(goal: Goal) {
+    this.props.chooseGoal(goal);
   }
 
   // Creates a list of suggestions, with non-suggested goals at the end and
-  // our main suggestion absent (to be displayed on the suggestions button)
+  // our main suggestion absent (to be displayed on the suggestions button).
   createSuggestionData(): Goal[] {
-    const suggestions = this.props.suggestions;
-    if (!suggestions.length) {
-      return this.props.allPossibleGoals;
+    const suggestions = this.props.goalTypeSuggestions;
+    if (!suggestions?.length) {
+      return this.props.allGoalTypes.map((type) => goalTypeToGoal(type));
     }
     const secondarySuggestions = suggestions.slice(1);
-    const suggestionTypes = suggestions.map((g) => g.goalType);
-    const nonSuggestions = this.props.allPossibleGoals.filter(
-      (g) => !suggestionTypes.includes(g.goalType)
+    const nonSuggestions = this.props.allGoalTypes.filter(
+      (t) => !suggestions.includes(t)
     );
     secondarySuggestions.push(...nonSuggestions);
-    return secondarySuggestions;
+    return secondarySuggestions.map((type) => goalTypeToGoal(type));
   }
 
   // Creates a button for our recommended goal
   goalButton(): ReactElement {
-    const done = this.props.suggestions.length === 0;
-    // Create a new goal to prevent mutating the suggestions list.
-    const goal = goalTypeToGoal(this.props.suggestions[0]?.goalType);
+    const done = this.props.goalTypeSuggestions.length === 0;
+    const goal = goalTypeToGoal(this.props.goalTypeSuggestions[0]);
     return (
       <Button
         style={timelineStyle.centerButton as any}

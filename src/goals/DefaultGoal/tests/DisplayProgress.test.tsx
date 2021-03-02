@@ -12,9 +12,7 @@ let mockStore = createMockStore({});
 function createMockStoreWithGoals(goals: Goal[]) {
   const mockStoreState = {
     goalsState: {
-      historyState: {
-        history: [...goals],
-      },
+      history: [...goals],
     },
   };
   mockStore = createMockStore(mockStoreState);

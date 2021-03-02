@@ -92,13 +92,9 @@ beforeAll(() => {
 
   const mockStoreState = {
     goalsState: {
-      historyState: {
-        history: [...defaultState.historyState.history],
-      },
-      allPossibleGoals: [...defaultState.allPossibleGoals],
-      suggestionsState: {
-        suggestions: [...defaultState.suggestionsState.suggestions],
-      },
+      allGoalTypes: [...defaultState.allGoalTypes],
+      goalTypeSuggestions: [...defaultState.goalTypeSuggestions],
+      history: [...defaultState.history],
     },
   };
 
@@ -226,9 +222,7 @@ describe("GoalsActions", () => {
       expect(goal.currentStep).toEqual(0);
       const mockStoreState = {
         goalsState: {
-          historyState: {
-            history: [goal],
-          },
+          history: [goal],
         },
       };
       mockStore = createMockStore(mockStoreState);
@@ -245,9 +239,7 @@ describe("GoalsActions", () => {
       expect(goal.currentStep + 1).toBeLessThan(goal.numSteps);
       const mockStoreState = {
         goalsState: {
-          historyState: {
-            history: [goal],
-          },
+          history: [goal],
         },
       };
       mockStore = createMockStore(mockStoreState);
@@ -260,9 +252,7 @@ describe("GoalsActions", () => {
       expect(goal.currentStep + 1).toEqual(goal.numSteps);
       const mockStoreState = {
         goalsState: {
-          historyState: {
-            history: [goal],
-          },
+          history: [goal],
         },
       };
       mockStore = createMockStore(mockStoreState);
@@ -275,9 +265,7 @@ describe("GoalsActions", () => {
       goal.numSteps = 2;
       const mockStoreState = {
         goalsState: {
-          historyState: {
-            history: [goal],
-          },
+          history: [goal],
         },
       };
       mockStore = createMockStore(mockStoreState);

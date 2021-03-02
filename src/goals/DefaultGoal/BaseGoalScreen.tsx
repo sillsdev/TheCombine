@@ -9,8 +9,8 @@ import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 
-const CharInventoryCreation = loadable(
-  () => import("goals/CharInventoryCreation")
+const CharInv = loadable(
+  () => import("goals/CreateCharInv/CharInvComponent/CharInv")
 );
 const MergeDupStep = loadable(() => import("goals/MergeDupGoal/MergeDupStep"));
 const ReviewEntriesComponent = loadable(
@@ -20,7 +20,7 @@ const ReviewEntriesComponent = loadable(
 function displayComponent(goal: Goal) {
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
-      return <CharInventoryCreation goal={goal} />;
+      return <CharInv goal={goal} />;
     case GoalType.MergeDups:
       return <MergeDupStep />;
     case GoalType.ReviewEntries:
@@ -39,10 +39,13 @@ export interface TParams {
  */
 export default function BaseGoalScreen(props: RouteComponentProps<TParams>) {
   const goalHistory = useSelector(
-    (state: StoreState) => state.goalsState.historyState.history
+    (state: StoreState) => state.goalsState.history
   );
   const goalIndex = parseInt(props.match.params.id);
   const goal = goalHistory[goalIndex];
+  if (goalIndex < goalHistory.length - 1) {
+    goal.completed = true;
+  }
 
   return goal ? (
     <React.Fragment>

@@ -14,33 +14,27 @@ export const goalsReducer = (
     case GoalsActions.LOAD_USER_EDITS:
       return {
         ...state,
-        historyState: {
-          history: [...action.payload],
-        },
+        history: [...action.payload],
       };
     case GoalsActions.ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
-      let suggestions = state.suggestionsState.suggestions;
-      let goalToAdd = action.payload;
+      const suggestions = state.goalTypeSuggestions;
+      const goalToAdd = action.payload;
       return {
         ...state,
-        historyState: {
-          history: [...state.historyState.history, goalToAdd],
-        },
-        suggestionsState: {
-          suggestions: suggestions.filter(
-            (goal, index) => index !== 0 || goalToAdd.name !== goal.name
-          ),
-        },
+        goalTypeSuggestions: suggestions.filter(
+          (type, index) => index !== 0 || goalToAdd.goalType !== type
+        ),
+        history: [...state.history, goalToAdd],
       };
     case GoalsActions.UPDATE_GOAL: {
-      const history = [...state.historyState.history];
+      const history = [...state.history];
       const goalIndex = history.findIndex(
         (g) => g.guid === action.payload.guid
       );
       history.splice(goalIndex, 1, action.payload);
       return {
         ...state,
-        historyState: { history },
+        history,
       };
     }
     case StoreActions.RESET:

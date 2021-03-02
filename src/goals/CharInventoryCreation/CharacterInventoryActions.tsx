@@ -124,12 +124,14 @@ export function uploadInventory(goal: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
     const changes = getChangesFromState(state);
+    const updatedGoal: Goal = { ...goal };
+    updatedGoal.completed = true;
     if (changes.length) {
-      goal.changes = { charChanges: changes };
-      await dispatch(asyncUpdateOrAddGoal(goal));
+      updatedGoal.changes = { charChanges: changes };
       const updatedProject = updateCurrentProject(state);
       await saveChangesToProject(updatedProject, dispatch);
     }
+    await dispatch(asyncUpdateOrAddGoal(updatedGoal));
   };
 }
 

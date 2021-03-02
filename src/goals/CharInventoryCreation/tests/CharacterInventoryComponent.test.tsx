@@ -1,14 +1,14 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { store } from "store";
-import { Project } from "types/project";
 import CharacterInventory, {
   CANCEL,
   SAVE,
 } from "goals/CharInventoryCreation/CharacterInventoryComponent";
+import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { store } from "store";
+import { Project } from "types/project";
 
 // Constants
 const SET_INV = jest.fn();
@@ -33,6 +33,7 @@ beforeAll(() => {
     charMaster = renderer.create(
       <Provider store={store}>
         <CharacterInventory
+          goal={new CreateCharInv()}
           currentProject={{ validCharacters: ["a"] } as Project}
           setValidCharacters={SET_INV}
           uploadInventory={UPLOAD_INV}
@@ -53,6 +54,7 @@ beforeAll(() => {
 beforeEach(() => {
   SET_INV.mockClear();
   UPLOAD_INV.mockClear();
+  UPLOAD_INV.mockResolvedValue(null);
 });
 
 describe("Character Inventory Component", () => {
@@ -61,6 +63,7 @@ describe("Character Inventory Component", () => {
     ReactDOM.render(
       <Provider store={store}>
         <CharacterInventory
+          goal={new CreateCharInv()}
           setValidCharacters={SET_INV}
           setRejectedCharacters={jest.fn()}
           setSelectedCharacter={jest.fn()}
