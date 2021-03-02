@@ -1,11 +1,10 @@
 ---
-
 - name: Wait for service create_ap
   service_facts:
   register: services_state
   until:
-      - services_state.ansible_facts.services["create_ap.service"] is defined
-      - services_state.ansible_facts.services["create_ap.service"].state == "running"
+    - services_state.ansible_facts.services["create_ap.service"] is defined
+    - services_state.ansible_facts.services["create_ap.service"].state == "running"
   retries: 5
   delay: 5
 
@@ -19,6 +18,6 @@
   assert:
     that:
       - ansible_facts.ap0.active
-      - ansible_facts.ap0.ipv4.address == "10.10.10.1"
+      - ansible_facts.ap0.ipv4.address == combine_listen_addr
 
   tags: test
