@@ -97,9 +97,12 @@ interface GlossListProps {
 }
 
 function GlossList(props: GlossListProps) {
-  const hasGlossInDefaultLang = props.glosses
-    .map((g) => g.language)
-    .includes(props.defaultLang);
+  const langs = props.glosses.map((g) => g.language);
+  if (!langs.includes(props.defaultLang)) {
+    const newGloss = { language: props.defaultLang, def: "" };
+    props.onChange([...props.glosses, newGloss]);
+  }
+
   return (
     <React.Fragment>
       {props.glosses.map((g, i) => (
@@ -113,18 +116,6 @@ function GlossList(props: GlossListProps) {
           }}
         />
       ))}
-      {
-        /* If there's not a gloss in the active analysisLanguage, allow one to be added. */
-        !hasGlossInDefaultLang && (
-          <GlossField
-            gloss={{ def: "", language: props.defaultLang }}
-            key={`${props.keyPrefix}-gloss${props.glosses.length}`}
-            onChange={(gloss: Gloss) =>
-              props.onChange([...props.glosses, gloss])
-            }
-          />
-        )
-      }
     </React.Fragment>
   );
 }
