@@ -1,4 +1,5 @@
 import * as backend from "backend";
+import history, { Path } from "browserHistory";
 import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
@@ -124,14 +125,15 @@ export function uploadInventory(goal: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
     const changes = getChangesFromState(state);
-    const updatedGoal: Goal = { ...goal };
-    updatedGoal.completed = true;
-    if (changes.length) {
-      updatedGoal.changes = { charChanges: changes };
-      const updatedProject = updateCurrentProject(state);
-      await saveChangesToProject(updatedProject, dispatch);
+    if (!changes.length) {
+      dispatch(resetAndExit());
+      return;
     }
-    await dispatch(asyncUpdateOrAddGoal(updatedGoal));
+    const updatedProject = updateCurrentProject(state);
+    await saveChangesToProject(updatedProject, dispatch);
+    dispatch(resetInState());
+    goal.changes = { charChanges: changes };
+    await dispatch(asyncUpdateOrAddGoal(goal));
   };
 }
 
@@ -166,6 +168,13 @@ export function getAllCharacters() {
       });
     });
     dispatch(setCharacterSet(characterSet));
+  };
+}
+
+export function resetAndExit() {
+  return (dispatch: StoreStateDispatch) => {
+    dispatch(resetInState());
+    history.push(Path.Goals);
   };
 }
 

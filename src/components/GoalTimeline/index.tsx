@@ -15,12 +15,8 @@ function mapStateToProps(state: StoreState) {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    chooseGoal: (goal: Goal) => {
-      dispatch(asyncAddGoalToHistory(goal));
-    },
-    loadHistory: () => {
-      dispatch(asyncGetUserEdits());
-    },
+    chooseGoal: (goal: Goal) => dispatch(asyncAddGoalToHistory(goal)),
+    loadHistory: () => dispatch(asyncGetUserEdits()),
   };
 }
 

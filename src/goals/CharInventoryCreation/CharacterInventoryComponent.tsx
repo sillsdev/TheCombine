@@ -10,7 +10,6 @@ import {
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
@@ -32,7 +31,7 @@ interface CharacterInventoryProps {
   selectedCharacter: string;
   getAllCharacters: () => Promise<void>;
   allCharacters: CharacterSetEntry[];
-  resetInState: () => void;
+  quit: () => void;
 }
 
 export const SAVE: string = "pushGoals";
@@ -74,15 +73,7 @@ export default class CharacterInventory extends React.Component<
 
   save() {
     this.setState({ saveInProgress: true });
-    this.props
-      .uploadInventory(this.props.goal)
-      .then(() => this.props.resetInState())
-      .catch(() => this.setState({ saveInProgress: false }));
-  }
-
-  quit() {
-    this.props.resetInState();
-    history.push(Path.Goals);
+    this.props.uploadInventory(this.props.goal);
   }
 
   render() {
@@ -160,7 +151,7 @@ export default class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.quit()}
+              onClick={() => this.props.quit()}
               variant="contained"
               color="secondary"
               autoFocus
