@@ -12,6 +12,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import { getFrontierWords } from "backend";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { Project, WritingSystem } from "types/project";
 import theme from "types/theme";
 import { getGlossLangsFromWords } from "types/word";
@@ -221,25 +222,5 @@ function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
       </Grid>
       <Grid item>{props.buttons}</Grid>
     </Grid>
-  );
-}
-
-interface IconButtonWithTooltipProps {
-  icon: JSX.Element;
-  textId: string;
-  small?: boolean;
-  onClick?: () => void;
-}
-
-function IconButtonWithTooltip(props: IconButtonWithTooltipProps) {
-  return (
-    <Tooltip title={<Translate id={props.textId} />} placement="right">
-      <IconButton
-        onClick={props.onClick}
-        size={props.small ? "small" : "medium"}
-      >
-        {props.icon}
-      </IconButton>
-    </Tooltip>
   );
 }
