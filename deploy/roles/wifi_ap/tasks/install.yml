@@ -1,8 +1,6 @@
 ---
-
 - name: Install packages to create the Access Point
-  apt:
-    name=hostapd,dnsmasq
+  apt: name=hostapd,dnsmasq
     update_cache=yes
     cache_valid_time=3600
     state=present
@@ -15,8 +13,7 @@
 #    var: ansible_facts.services
 
 - name: Stop service
-  service:
-    name=create_ap
+  service: name=create_ap
     state=stopped
   when: "'create_ap' in services"
   notify: Restart create_ap

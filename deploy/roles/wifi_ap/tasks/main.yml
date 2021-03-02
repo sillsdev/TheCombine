@@ -1,5 +1,4 @@
 ---
-
-- { include: install.yml, tags: [ install ] }
+- { include: install.yml, tags: [install] }
 - meta: flush_handlers
-- { include: test.yml, tags: [ test ] }
+- { include: test.yml, tags: [test] }
