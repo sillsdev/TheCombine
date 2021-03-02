@@ -18,13 +18,37 @@
   args:
     chdir: "{{ combine_app_dir }}"
 
+- name: add admin user configuration to backend
+  blockinfile:
+    path: "{{ combine_app_dir }}/.env.backend"
+    insertafter: EOF
+    block: |
+      COMBINE_ADMIN_USERNAME={{ combine_admin_username }}
+      COMBINE_ADMIN_PASSWORD='{{ combine_admin_password }}'
+      COMBINE_ADMIN_EMAIL='{{ combine_admin_email }}'
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0600
+    state: present
+
 - name: run backend to create admin user
-  command:
-    "docker-compose run -e COMBINE_ADMIN_USERNAME=\"{{ combine_admin_username }}\" \
-    -e COMBINE_ADMIN_PASSWORD=\"{{ combine_admin_password }}\" \
-    -e COMBINE_ADMIN_EMAIL=\"{{ combine_admin_email }}\" backend"
+  command: docker-compose --no-ansi up --abort-on-container-exit  backend
   args:
     chdir: "{{ combine_app_dir }}"
+  register: create_admin_cmd
+
+- name: remove admin user configuration to backend
+  blockinfile:
+    path: "{{ combine_app_dir }}/.env.backend"
+    insertafter: EOF
+    block: |
+      COMBINE_ADMIN_USERNAME={{ combine_admin_username }}
+      COMBINE_ADMIN_PASSWORD='{{ combine_admin_password }}'
+      COMBINE_ADMIN_EMAIL='{{ combine_admin_email }}'
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0600
+    state: absent
 
 - name: startup TheCombine
   command: docker-compose up --detach

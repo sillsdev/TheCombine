@@ -15,7 +15,7 @@
 
   vars_prompt:
     - name: combine_version
-      prompt: "Enter Combine version to install: "
+      prompt: "Enter Combine version to install"
       private: no
 
   vars_files:
@@ -39,7 +39,5 @@
     - name: create admin user
       import_role:
         name: create_admin_user
-      become: yes
-      become_user: "{{ combine_user }}"
       tags:
         - install_admin
