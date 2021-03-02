@@ -56,8 +56,6 @@ combine_cert_env_vars:
 combine_frontend_env_vars:
   - key: "SERVER_NAME"
     value: "{{ combine_server_name }}"
-  - key: "LISTEN_ADDR"
-    value: "{{ combine_listen_addr | default('*')}}"
   - key: "SSL_CERTIFICATE"
     value: "{{ ssl_certificate }}"
   - key: "SSL_PRIVATE_KEY"

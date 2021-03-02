@@ -35,9 +35,6 @@ my_aws_profiles:
   - "{{ aws_s3_profile }}"
   - "{{ aws_ecr_profile }}"
 
-# NGINX Configuration - only listen on wifi interface
-combine_listen_addr: "10.10.0.1"
-
 ################################################
 # WiFi access point settings
 ################################################
@@ -45,5 +42,5 @@ has_wifi: yes
 ap_domain: thecombine.app
 ap_ssid: "{{ansible_hostname}}_ap"
 # ap_passphrase is defined in ./vault.yml
-ap_gateway: "{{ combine_listen_addr }}"
+ap_gateway: "10.10.10.1"
 ap_hostname: "{{ansible_hostname}}"
