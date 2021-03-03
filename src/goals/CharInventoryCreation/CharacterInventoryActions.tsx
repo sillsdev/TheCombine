@@ -131,8 +131,12 @@ export function uploadInventory(goal: Goal) {
     }
     const updatedProject = updateCurrentProject(state);
     await saveChangesToProject(updatedProject, dispatch);
-    goal.changes = { charChanges: changes };
-    await dispatch(asyncUpdateOrAddGoal(goal));
+    const updatedGoal: Goal = {
+      ...goal,
+      changes: { charChanges: changes },
+      completed: true,
+    };
+    await dispatch(asyncUpdateOrAddGoal(updatedGoal));
   };
 }
 

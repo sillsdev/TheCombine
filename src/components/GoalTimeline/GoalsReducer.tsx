@@ -28,10 +28,9 @@ export const goalsReducer = (
       };
     case GoalsActions.UPDATE_GOAL: {
       const history = [...state.history];
-      const goalIndex = history.findIndex(
-        (g) => g.guid === action.payload.guid
-      );
-      history.splice(goalIndex, 1, action.payload);
+      const goalToUpdate = action.payload;
+      const goalIndex = history.findIndex((g) => g.guid === goalToUpdate.guid);
+      history.splice(goalIndex, 1, goalToUpdate);
       return {
         ...state,
         history,
