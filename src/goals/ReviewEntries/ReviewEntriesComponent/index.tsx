@@ -7,14 +7,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
-
-function mapStateToProps(state: StoreState) {
-  return {
-    language: state.reviewEntriesState.analysisLanguage,
-  };
-}
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
@@ -28,7 +21,4 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReviewEntriesComponent);
+export default connect(null, mapDispatchToProps)(ReviewEntriesComponent);

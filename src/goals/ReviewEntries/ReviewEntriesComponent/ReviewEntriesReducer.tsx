@@ -7,14 +7,12 @@ import { StoreAction, StoreActions } from "rootActions";
 
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
-  analysisLanguage: string;
   isRecording: boolean;
   wordBeingRecorded: string | undefined;
 }
 
 export const defaultState: ReviewEntriesState = {
   words: [],
-  analysisLanguage: "en",
   isRecording: false,
   wordBeingRecorded: undefined,
 };
