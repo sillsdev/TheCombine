@@ -9,9 +9,6 @@
 - name: populate service facts
   service_facts:
 
-#- debug:
-#    var: ansible_facts.services
-
 - name: Stop service
   service: name=create_ap
     state=stopped

@@ -58,10 +58,6 @@
   changed_when: false
   failed_when: false
 
-- name: print compose check results
-  debug:
-    var: compose_version
-
 - name: Install Docker Compose
   get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
