@@ -52,6 +52,9 @@ export default function MergeStack(props: MergeStackProps) {
   const hashedSenses = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
+  const analysisLangs = useSelector((state: StoreState) =>
+    state.currentProject.analysisWritingSystems.map((ws) => ws.bcp47)
+  );
 
   const updateSidebar = useCallback(() => {
     props.setSidebar({
@@ -109,11 +112,9 @@ export default function MergeStack(props: MergeStackProps) {
   );
   const semDoms = [
     ...new Set(
-      senses
-        .map((sense) =>
-          sense.semanticDomains.map((dom) => `${dom.name} ${dom.id}`)
-        )
-        .flat()
+      senses.flatMap((sense) =>
+        sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)
+      )
     ),
   ];
 
@@ -158,14 +159,22 @@ export default function MergeStack(props: MergeStackProps) {
               )}
             </div>
             <div>
-              {glosses.length > 0 && (
-                <Typography variant={"h5"}>{glosses[0].def}</Typography>
-              )}
+              {analysisLangs.map((lang) => (
+                <div key={lang}>
+                  <Typography variant="caption">{`${lang}: `}</Typography>
+                  <Typography display="inline" variant="h5">
+                    {glosses
+                      .filter((g) => g.language === lang)
+                      .map((g) => g.def)
+                      .join(", ")}
+                  </Typography>
+                </div>
+              ))}
               {/* List semantic domains */}
               <Grid container spacing={2}>
                 {semDoms.map((dom) => (
-                  <Grid item xs key={dom}>
-                    <Chip label={dom} onDelete={() => {}} />
+                  <Grid item key={dom}>
+                    <Chip label={dom} />
                   </Grid>
                 ))}
               </Grid>

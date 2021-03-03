@@ -8,17 +8,12 @@ import { Word } from "types/word";
 
 // Component state/props
 interface ReviewEntriesProps {
-  // Props mapped to store
-  language: string;
-
   // Dispatch changes
   clearState: () => void;
-  setAnalysisLanguage: () => void;
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord,
-    language: string
+    oldData: ReviewEntriesWord
   ) => Promise<void>;
 }
 
@@ -37,7 +32,6 @@ export default class ReviewEntriesComponent extends React.Component<
     this.state = { loaded: false };
     this.recorder = new Recorder();
     this.props.clearState();
-    this.props.setAnalysisLanguage();
     getFrontierWords().then((frontier: Word[]) => {
       this.updateLocalWords(frontier);
       this.setState({ loaded: true });
@@ -51,33 +45,13 @@ export default class ReviewEntriesComponent extends React.Component<
 
     for (let word of frontier) {
       // Create a new currentword
-      currentWord = new ReviewEntriesWord(
-        word,
-        this.props.language,
-        this.recorder
-      );
+      currentWord = new ReviewEntriesWord(word, undefined, this.recorder);
 
       // Remove the trailing newlines + push to newWords
       newWords.push(currentWord);
     }
     this.props.updateAllWords(newWords);
   }
-
-  private onRowUpdate = (
-    newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord
-  ): Promise<void> =>
-    new Promise(async (resolve) => {
-      // Update database and update word ID.
-      // Awaited so user can't edit and submit word with bad ID before it's updated.
-      this.props
-        .updateFrontierWord(newData, oldData, this.props.language)
-        .then(() => {
-          setTimeout(() => {
-            resolve();
-          }, 500);
-        });
-    });
 
   render() {
     return (
@@ -86,7 +60,7 @@ export default class ReviewEntriesComponent extends React.Component<
           onRowUpdate={(
             newData: ReviewEntriesWord,
             oldData: ReviewEntriesWord
-          ) => this.onRowUpdate(newData, oldData)}
+          ) => this.props.updateFrontierWord(newData, oldData)}
         />
       )
     );

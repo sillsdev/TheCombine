@@ -11,7 +11,6 @@ import mockWords, {
 // Mock store + axios
 const state = {
   reviewEntriesState: {
-    language: "en",
     words: mockWords,
   },
   treeViewState: {
@@ -75,8 +74,6 @@ beforeEach(() => {
     renderer.create(
       <Provider store={mockStore}>
         <ReviewEntriesComponent
-          language="en"
-          setAnalysisLanguage={jest.fn()}
           clearState={jest.fn()}
           updateAllWords={mockUpdateAllWords}
           updateFrontierWord={jest.fn()}
