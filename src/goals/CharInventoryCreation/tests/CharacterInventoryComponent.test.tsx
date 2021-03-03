@@ -1,4 +1,3 @@
-import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
@@ -29,7 +28,7 @@ jest.mock("@material-ui/core", () => {
   };
 });
 
-beforeAll(() => {
+function renderCharInvCreation() {
   renderer.act(() => {
     charMaster = renderer.create(
       <Provider store={store}>
@@ -44,44 +43,23 @@ beforeAll(() => {
           fetchWords={jest.fn()}
           selectedCharacter={""}
           allCharacters={[]}
-          quit={jest.fn()}
+          resetInState={jest.fn()}
+          exit={jest.fn()}
         />
       </Provider>
     );
   });
   charHandle = charMaster.root.findByType(CharacterInventory).instance;
-});
+}
 
 beforeEach(() => {
   SET_INV.mockClear();
   UPLOAD_INV.mockClear();
   UPLOAD_INV.mockResolvedValue(null);
+  renderCharInvCreation();
 });
 
 describe("Character Inventory Component", () => {
-  it("Renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <Provider store={store}>
-        <CharacterInventory
-          goal={new CreateCharInv()}
-          setValidCharacters={SET_INV}
-          setRejectedCharacters={jest.fn()}
-          setSelectedCharacter={jest.fn()}
-          uploadInventory={UPLOAD_INV}
-          fetchWords={jest.fn()}
-          currentProject={{ validCharacters: ["a"] } as Project}
-          selectedCharacter={""}
-          getAllCharacters={jest.fn(() => Promise.resolve())}
-          allCharacters={[]}
-          quit={jest.fn()}
-        />
-      </Provider>,
-      div
-    );
-    expect(ReactDOM.unmountComponentAtNode(div)).toBeTruthy();
-  });
-
   it("Renders properly (snapshot test)", () => {
     expect(charMaster.toJSON()).toMatchSnapshot();
   });

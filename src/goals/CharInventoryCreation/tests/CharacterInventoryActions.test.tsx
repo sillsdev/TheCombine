@@ -12,7 +12,6 @@ import {
   CharacterStatus,
   defaultState,
 } from "goals/CharInventoryCreation/CharacterInventoryReducer";
-import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { StoreState } from "types";
 import { defaultProject } from "types/project";
 import { User } from "types/user";
@@ -127,27 +126,6 @@ describe("CharacterInventoryActions", () => {
         validCharacters: VALID_DATA,
       },
     });
-  });
-
-  test("uploadInventory dispatch a state reset", async () => {
-    const mockAction: Action = { type: null };
-    mockAsyncUpdateOrAddGoal.mockReturnValue(mockAction);
-    LocalStorage.setCurrentUser(mockUser);
-    const mockStore = createMockStore(MOCK_STATE);
-    Actions.uploadInventory(new CreateCharInv())(
-      mockStore.dispatch,
-      mockStore.getState as () => StoreState
-    );
-    expect(mockStore.getActions()).toContainEqual(Actions.resetInState());
-  });
-
-  test("resetAndExit dispatch a state reset", async () => {
-    const mockAction: Action = { type: null };
-    mockAsyncUpdateOrAddGoal.mockReturnValue(mockAction);
-    LocalStorage.setCurrentUser(mockUser);
-    const mockStore = createMockStore(MOCK_STATE);
-    Actions.resetAndExit()(mockStore.dispatch);
-    expect(mockStore.getActions()).toEqual([Actions.resetInState()]);
   });
 
   test("getChanges returns correct changes", () => {
