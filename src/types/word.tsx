@@ -140,3 +140,36 @@ export function testWordList(): Word[] {
     simpleWord("Yes", "Mayonnaise"),
   ];
 }
+
+// Removes glosses with empty def and combine glosses with same lang
+export function cleanGlosses(glosses: Gloss[]): Gloss[] {
+  const nonemptyGlosses = glosses.filter((g) => g.def.length);
+  const langs = [...new Set(nonemptyGlosses.map((g) => g.language))];
+  return langs.map(
+    (language) =>
+      ({
+        def: nonemptyGlosses
+          .filter((g) => g.language === language)
+          .map((g) => g.def)
+          .join(", "),
+        language,
+      } as Gloss)
+  );
+}
+
+export function getGlossLangsFromWords(words: Word[]) {
+  return reduceMultiType<Word, string[]>(words, [], wordReducer);
+}
+function reduceMultiType<A, B>(
+  toReduce: A[],
+  initial: B,
+  reducer: (accumulator: B, currentItem: A) => B
+): B {
+  let accumulated = initial;
+  toReduce.forEach((item) => (accumulated = reducer(accumulated, item)));
+  return accumulated;
+}
+function wordReducer(accumulator: string[], word: Word) {
+  const newLangs = word.senses.flatMap((s) => s.glosses).map((g) => g.language);
+  return [...new Set([...accumulator, ...newLangs])];
+}

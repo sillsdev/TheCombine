@@ -3,25 +3,21 @@ import thunk from "redux-thunk";
 
 import {
   getSenseFromEditSense,
-  setAnalysisLang,
   updateFrontierWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { defaultProject } from "types/project";
 import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
 
 const mockGetWord = jest.fn();
-const mockGetProject = jest.fn();
 const mockUpdateWord = jest.fn();
 function mockGetWordResolve(data: Word) {
   mockGetWord.mockResolvedValue(JSON.parse(JSON.stringify(data)));
 }
 
 jest.mock("backend", () => ({
-  getProject: (projectId: string) => mockGetProject(projectId),
   getWord: (wordId: string) => mockGetWord(wordId),
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
@@ -35,7 +31,6 @@ const mockStore = configureMockStore([thunk])();
 // Dummy strings, glosses, and domains.
 const langEn = "en";
 const langEs = "es";
-const langFr = "fr";
 const commonGuid = "mockGuid";
 const gloss0: Gloss = { language: langEn, def: "gloss" };
 const gloss0Es: Gloss = { language: langEs, def: "glossario" };
@@ -70,12 +65,12 @@ function mockFrontierWord(): Word {
     senses: [sense0()],
   };
 }
-function mockReviewEntriesWord(lang: string = langEn): ReviewEntriesWord {
+function mockReviewEntriesWord(): ReviewEntriesWord {
   return {
     ...new ReviewEntriesWord(),
     id: "word",
     vernacular: "word",
-    senses: [new ReviewEntriesSense(sense0(), lang)],
+    senses: [new ReviewEntriesSense(sense0())],
   };
 }
 
@@ -94,12 +89,9 @@ describe("ReviewEntriesActions", () => {
     // Functions to make dispatch and check results at end of each test.
     async function makeDispatch(
       newWord: ReviewEntriesWord,
-      oldWord: ReviewEntriesWord,
-      language = langEn
+      oldWord: ReviewEntriesWord
     ) {
-      await mockStore.dispatch<any>(
-        updateFrontierWord(newWord, oldWord, language)
-      );
+      await mockStore.dispatch<any>(updateFrontierWord(newWord, oldWord));
     }
     function checkResultantData(newFrontierWord: Word) {
       expect(mockUpdateWord.mock.calls[0][0]).toEqual(newFrontierWord);
@@ -120,7 +112,7 @@ describe("ReviewEntriesActions", () => {
         const newWord = mockReviewEntriesWord();
         newWord.senses[0].glosses.push(gloss1);
         const newFrontierWord = mockFrontierWord();
-        newFrontierWord.senses[0].glosses = [gloss0, gloss1, gloss0Es];
+        newFrontierWord.senses[0].glosses = [gloss0, gloss0Es, gloss1];
 
         await makeDispatch(newWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
@@ -135,6 +127,7 @@ describe("ReviewEntriesActions", () => {
         await makeDispatch(newWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
       });
+
       it("Adds a new sense.", async () => {
         const newWord = mockReviewEntriesWord();
         newWord.senses.push(sense1_local());
@@ -228,22 +221,6 @@ describe("ReviewEntriesActions", () => {
         await makeDispatch(newWord, mockReviewEntriesWord());
         checkResultantData(mockFrontierWord());
       });
-
-      it("Reverts glosses when all glosses of an old word removed.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses = newWord.senses.map((s) => ({ ...s, glosses: [] }));
-
-        await makeDispatch(newWord, mockReviewEntriesWord());
-        checkResultantData(mockFrontierWord());
-      });
-
-      it("Reverts domains when all domains of an old word removed.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses = newWord.senses.map((s) => ({ ...s, domains: [] }));
-
-        await makeDispatch(newWord, mockReviewEntriesWord());
-        checkResultantData(mockFrontierWord());
-      });
     });
 
     describe("Rejects bad, irrecoverable data", () => {
@@ -293,23 +270,9 @@ describe("ReviewEntriesActions", () => {
     });
   });
 
-  describe("setAnalysisLange", () => {
-    it("Sets the analysis language.", async () => {
-      mockGetProject.mockImplementation(() =>
-        Promise.resolve({
-          ...defaultProject,
-          analysisWritingSystems: [{ bcp47: langFr }],
-        })
-      );
-      await mockStore.dispatch<any>(setAnalysisLang());
-
-      expect(mockStore.getActions()[0].analysisLanguage).toBe(langFr);
-      expect(mockStore.getActions()[0].type).toBe("SET_ANALYSIS_LANGUAGE");
-    });
-  });
-
   describe("getSenseFromEditSense", () => {
     const oldSenses = [sense0(), sense1()];
+
     it("Creates a new sense.", () => {
       const expectedSense = new Sense("newSense");
       const editSense = new ReviewEntriesSense(expectedSense);
@@ -318,6 +281,7 @@ describe("ReviewEntriesActions", () => {
       const resultSense = getSenseFromEditSense(editSense, oldSenses);
       expect(resultSense).toEqual(expectedSense);
     });
+
     it("Updates an old sense with new domains.", () => {
       const expectedSense = sense0();
       expectedSense.semanticDomains = sense1().semanticDomains;
@@ -325,30 +289,13 @@ describe("ReviewEntriesActions", () => {
       const resultSense = getSenseFromEditSense(editSense, oldSenses);
       expect(resultSense).toEqual(expectedSense);
     });
+
     it("Updates an old sense with new glosses.", () => {
       const expectedSense = sense0();
       expectedSense.glosses = sense1().glosses;
       const editSense = new ReviewEntriesSense(expectedSense);
       const resultSense = getSenseFromEditSense(editSense, oldSenses);
       expect(resultSense).toEqual(expectedSense);
-    });
-    it("Uses old glosses if edit sense has none.", () => {
-      const expectedSense = sense0();
-      const editSense = new ReviewEntriesSense(expectedSense);
-      editSense.glosses = [];
-      const resultSense = getSenseFromEditSense(editSense, oldSenses);
-      expect(resultSense).toEqual(expectedSense);
-    });
-    it("Adds glosses without losing glosses from languages other than the one specified.", () => {
-      const expectedSense = sense0();
-      expectedSense.glosses.push(gloss1);
-      const editSense = new ReviewEntriesSense(expectedSense, langEn);
-      expect(editSense.glosses).not.toContainEqual(gloss0Es);
-      const resultSense = getSenseFromEditSense(editSense, oldSenses, langEn);
-      expect(resultSense.glosses.length).toEqual(expectedSense.glosses.length);
-      resultSense.glosses.forEach((g) => {
-        expect(expectedSense.glosses).toContainEqual(g);
-      });
     });
   });
 });
