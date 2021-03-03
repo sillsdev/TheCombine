@@ -19,5 +19,3 @@
     that:
       - ansible_facts.ap0.active
       - ansible_facts.ap0.ipv4.address == ap_gateway
-
-  tags: test
