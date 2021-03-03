@@ -1,5 +1,4 @@
 import * as backend from "backend";
-import { getProjectId } from "backend/localStorage";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -9,15 +8,9 @@ import { StoreStateDispatch } from "types/actions";
 import { Note, Sense, State } from "types/word";
 
 export enum ReviewEntriesActionTypes {
-  SetAnalysisLanguage = "SET_ANALYSIS_LANGUAGE",
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
-}
-
-interface ReviewSetAnalysisLanguage {
-  type: ReviewEntriesActionTypes.SetAnalysisLanguage;
-  analysisLanguage: string;
 }
 
 interface ReviewUpdateWords {
@@ -36,19 +29,9 @@ interface ReviewClearReviewEntriesState {
 }
 
 export type ReviewEntriesAction =
-  | ReviewSetAnalysisLanguage
   | ReviewUpdateWords
   | ReviewUpdateWord
   | ReviewClearReviewEntriesState;
-
-export function setAnalysisLanguage(
-  analysisLanguage: string
-): ReviewSetAnalysisLanguage {
-  return {
-    type: ReviewEntriesActionTypes.SetAnalysisLanguage,
-    analysisLanguage,
-  };
-}
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -76,26 +59,17 @@ export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
 
 // Return the translation code for our error, or undefined if there is no error
 function getError(sense: ReviewEntriesSense): string | undefined {
-  if (sense.deleted) return undefined;
-  if (sense.glosses.length === 0) return "reviewEntries.error.gloss";
-  else if (sense.domains.length === 0) return "reviewEntries.error.domain";
-  else return undefined;
-}
-
-export function setAnalysisLang() {
-  return async (dispatch: StoreStateDispatch) => {
-    const projectId = getProjectId();
-    const project = await backend.getProject(projectId);
-    // Needs to be changed when multiple analysis writing systems is allowed
-    dispatch(setAnalysisLanguage(project.analysisWritingSystems[0].bcp47));
-  };
+  if (sense.glosses.length === 0) {
+    return "reviewEntries.error.gloss";
+  } else if (sense.domains.length === 0) {
+    return "reviewEntries.error.domain";
+  }
+  return;
 }
 
 // Returns a cleaned array of senses ready to be saved (none with .deleted=true):
 // * If a sense is marked as deleted or is utterly blank, it is removed
-// * If a sense has no glosses, its old glosses are recovered (if possible)
-// * If a sense has no domains, its old domains are recovered (if possible)
-// * If after attempted recovery, a new sense still has no gloss or no domain, return error
+// * If a new sense lacks either gloss or domain, return error
 // * If the user attempts to delete all senses, return old senses with deleted senses removed
 function cleanSenses(
   senses: ReviewEntriesSense[],
@@ -105,25 +79,20 @@ function cleanSenses(
   let error: string | undefined;
 
   for (const newSense of senses) {
+    // Remove empty glosses and duplicate domains.
+    newSense.glosses = newSense.glosses.filter((g) => g.def.length);
+    const domainIds = [...new Set(newSense.domains.map((dom) => dom.id))];
+    domainIds.sort();
+    newSense.domains = domainIds.map(
+      (id) => newSense.domains.find((dom) => dom.id === id)!
+    );
+
     // Skip new senses which are deleted or empty.
     if (
       newSense.deleted ||
       (newSense.glosses.length === 0 && newSense.domains.length === 0)
     ) {
       continue;
-    }
-
-    // If new sense is missing some information, attempt to retrieve it.
-    if (newSense.glosses.length === 0 || newSense.domains.length === 0) {
-      const oldSense = oldSenses.find((s) => s.guid === newSense.guid);
-      if (oldSense) {
-        if (!newSense.glosses.length) {
-          newSense.glosses = [...oldSense.glosses];
-        }
-        if (!newSense.domains.length) {
-          newSense.domains = [...oldSense.domains];
-        }
-      }
     }
 
     error = getError(newSense);
@@ -165,11 +134,10 @@ function cleanWord(
 // Converts the ReviewEntriesWord into a Word to send to the backend
 export function updateFrontierWord(
   newData: ReviewEntriesWord,
-  oldData: ReviewEntriesWord,
-  language?: string
+  oldData: ReviewEntriesWord
 ) {
   return async (dispatch: StoreStateDispatch) => {
-    // Clean + check data; if there's something irrepairably bad, return the error
+    // Clean + check data; if there's something wrong, return the error.
     const editSource = cleanWord(newData, oldData);
     if (typeof editSource === "string") {
       return Promise.reject(editSource);
@@ -181,7 +149,7 @@ export function updateFrontierWord(
     // Update the data.
     editWord.vernacular = editSource.vernacular;
     editWord.senses = editSource.senses.map((s) =>
-      getSenseFromEditSense(s, editWord.senses, language)
+      getSenseFromEditSense(s, editWord.senses)
     );
     editWord.note = new Note(editSource.noteText, editWord.note?.language);
 
@@ -196,29 +164,18 @@ export function updateFrontierWord(
 // Creates a new Sense from a cleaned ReviewEntriesSense and array of old senses.
 export function getSenseFromEditSense(
   editSense: ReviewEntriesSense,
-  oldSenses: Sense[],
-  language?: string
-) {
+  oldSenses: Sense[]
+): Sense {
   // If we match an old sense, copy it over.
   const oldSense = oldSenses.find((s) => s.guid === editSense.guid);
   const newSense: Sense = oldSense
     ? { ...oldSense }
     : { ...new Sense(), accessibility: State.Active };
 
-  // Use the edited semantic domains.
+  // Use the edited, cleaned glosses and domains.
+  newSense.glosses = [...editSense.glosses];
   newSense.semanticDomains = [...editSense.domains];
 
-  // If there are edited glosses, replace the previous glosses with them.
-  if (editSense.glosses.length) {
-    const newGlosses = [...editSense.glosses];
-    // If a language was specified, add all glosses of other langauges from the original.
-    if (language) {
-      newGlosses.push(
-        ...newSense.glosses.filter((g) => g.language !== language)
-      );
-    }
-    newSense.glosses = newGlosses;
-  }
   return newSense;
 }
 

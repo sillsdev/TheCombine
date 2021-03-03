@@ -313,6 +313,16 @@
         "Make this the default analysis language.",
         "Make this the default analysis language.",
         "Make this the default analysis language."
+      ],
+      "deleteAnalysisLanguage": [
+        "Delete this analysis language.",
+        "Delete this analysis language.",
+        "Delete this analysis language."
+      ],
+      "getGlossLanguages": [
+        "Find all language codes used in the current data.",
+        "Find all language codes used in the current data.",
+        "Find all language codes used in the current data."
       ]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],

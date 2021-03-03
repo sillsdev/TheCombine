@@ -24,13 +24,6 @@ export const reviewEntriesReducer = (
   action: ReviewEntriesAction | StoreAction
 ): ReviewEntriesState => {
   switch (action.type) {
-    case ReviewEntriesActionTypes.SetAnalysisLanguage:
-      // Sets the analysis language
-      return {
-        ...state,
-        analysisLanguage: action.analysisLanguage,
-      };
-
     case ReviewEntriesActionTypes.UpdateAllWords:
       // Update the local words
       return {

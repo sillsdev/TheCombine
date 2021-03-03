@@ -11,7 +11,7 @@ import { simpleWord, testWordList, Word } from "types/word";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({
-  reviewEntriesState: { analysisLang: "en" },
+  currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },
 });
 
 describe("VernList ", () => {

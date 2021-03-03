@@ -1,5 +1,4 @@
 import { LanguagePicker } from "mui-language-picker";
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
@@ -44,7 +43,9 @@ function renderProjLangs(proj: Project) {
 function renderAndClickAdd() {
   renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
   expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(0);
-  projectMaster.root.findByProps({ id: "addNewLang" }).props.onClick();
+  projectMaster.root
+    .findByProps({ textId: "projectSettings.language.addAnalysisLanguage" })
+    .props.onClick();
   expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(1);
 }
 
