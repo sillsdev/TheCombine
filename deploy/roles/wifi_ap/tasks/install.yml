@@ -36,7 +36,7 @@
 - name: Add access point configuration
   template:
     src: create_ap.conf.j2
-    dest: /etc/create_ap/create_ap.conf
+    dest: "{{ create_ap_config }}"
     owner: root
     group: root
     mode: 0644
@@ -53,7 +53,7 @@
 - name: Install hosts lists for access point
   template:
     src: create_ap.hosts.j2
-    dest: /etc/create_ap/create_ap.hosts
+    dest: "{{ ap_hosts_config }}"
     owner: root
     group: root
     mode: 0644
@@ -69,42 +69,10 @@
   notify: Start create_ap
 
 - name: Setup create_ap service files
-  copy:
-    src: create_ap/create_ap.service
+  template:
+    src: create_ap.service.j2
     dest: /usr/lib/systemd/system/create_ap.service
     owner: root
     group: root
     mode: 0644
   notify: Start create_ap
-
-- name: Create bash command completion directory
-  file:
-    path: /usr/share/bash-completion/completions
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
-- name: Setup bash command completion
-  copy:
-    src: create_ap/bash_completion
-    dest: /usr/share/bash-completion/completions/create_ap
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Create directory for create_ap documentation
-  file:
-    path: /usr/share/doc/create_ap/
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
-- name: Install create_ap documentation
-  copy:
-    src: create_ap/README.md
-    dest: /usr/share/doc/create_ap/README.md
-    owner: root
-    group: root
-    mode: 0644

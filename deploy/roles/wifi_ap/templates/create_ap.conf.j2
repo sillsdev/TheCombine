@@ -26,4 +26,3 @@ INTERNET_IFACE={{ ansible_interfaces | join(" ") | regex_replace('^.*\\b(e[nt][a
 SSID={{ ap_ssid }}
 PASSPHRASE={{ ap_passphrase }}
 USE_PSK=0
-DOMAIN={{ ap_domain }}

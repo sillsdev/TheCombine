@@ -1,8 +1,9 @@
 ## Try this first
 
-If you are facing any problems with Realtek adapters (e.g. Edimax EW-7811Un) first try to run create_ap with `-w 2`
-(i.e. use WPA2 only) or use it without passphrase. If you are still facing any problems or you want to also use WPA1,
-then follow the instructions below.
+If you are facing any problems with Realtek adapters (e.g. Edimax EW-7811Un)
+first try to run create_ap with `-w 2` (i.e. use WPA2 only) or use it
+without passphrase. If you are still facing any problems or you want to
+also use WPA1, then follow the instructions below.
 
 NOTE: The instructions below are only valid for Realtek adapters with 8192 chipset.
 
@@ -25,9 +26,10 @@ apt-get build-dep hostapd
 
 ## Install driver
 
-The driver in the mainline of Linux kernel doesn't work well with the 8192 adapters. For this reason you need to install
-the driver that is provided from Realtek. Their driver can not be compiled with newer kernels, but since it was an
-open-source release under GPL license some people were able to fixed it and make it compile.
+The driver in the mainline of Linux kernel doesn't work well with the 8192 adapters.
+For this reason you need to install the driver that is provided from Realtek. Their
+driver can not be compiled with newer kernels, but since it was an open-source
+release under GPL license some people were able to fixed it and make it compile.
 
 With the following commands you can install a fixed version of Realtek's driver:
 
@@ -43,12 +45,13 @@ After installation, unload the previous driver and load the new one, or just reb
 
 ## Install hostapd
 
-Realtek's driver is using an old subsystem which is called `wireless-extensions` (or `wext`). Hostapd works only with
-the new subsystem (which is called `nl80211`). For this reason Realtek wrote a patch for hostapd. You can install it
-with the following commands:
+Realtek's driver is using an old subsystem which is called `wireless-extensions`
+(or `wext`). Hostapd works only with the new subsystem (which is called `nl80211`).
+For this reason Realtek wrote a patch for hostapd. You can install it with the
+following commands:
 
-If you have ArchLinux install [hostapd-rtl871xdrv](https://aur.archlinux.org/packages/hostapd-rtl871xdrv) from AUR or
-just run:
+If you have ArchLinux install [hostapd-rtl871xdrv](https://aur.archlinux.org/packages/hostapd-rtl871xdrv)
+from AUR or just run:
 
 ```
 yaourt -S hostapd-rtl871xdrv
