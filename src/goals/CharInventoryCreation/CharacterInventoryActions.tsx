@@ -126,12 +126,11 @@ export function uploadInventory(goal: Goal) {
     const state = getState();
     const changes = getChangesFromState(state);
     if (!changes.length) {
-      dispatch(resetAndExit());
+      exit();
       return;
     }
     const updatedProject = updateCurrentProject(state);
     await saveChangesToProject(updatedProject, dispatch);
-    dispatch(resetInState());
     goal.changes = { charChanges: changes };
     await dispatch(asyncUpdateOrAddGoal(goal));
   };
@@ -171,14 +170,11 @@ export function getAllCharacters() {
   };
 }
 
-export function resetAndExit() {
-  return (dispatch: StoreStateDispatch) => {
-    dispatch(resetInState());
-    history.push(Path.Goals);
-  };
-}
-
 // Helper Functions
+
+export function exit() {
+  history.push(Path.Goals);
+}
 
 function countCharacterOccurences(char: string, words: string[]) {
   let count = 0;

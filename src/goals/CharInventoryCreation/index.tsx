@@ -1,9 +1,10 @@
 import { connect } from "react-redux";
 
 import {
+  exit,
   fetchWords,
   getAllCharacters,
-  resetAndExit,
+  resetInState,
   setRejectedCharacters,
   setSelectedCharacter,
   setValidCharacters,
@@ -33,7 +34,8 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     uploadInventory: (goal: Goal) => dispatch(uploadInventory(goal)),
     fetchWords: () => dispatch(fetchWords()),
     getAllCharacters: () => dispatch(getAllCharacters()),
-    quit: () => dispatch(resetAndExit()),
+    resetInState: () => dispatch(resetInState()),
+    exit,
   };
 }
 
