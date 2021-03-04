@@ -91,26 +91,6 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         private const string InProgress = "IN_PROGRESS";
 
-        // A list into which we can store entries from a lift import to be loaded into the database.
-        private static List<Word>? importEntries;
-        public void ClearImportEntries()
-        {
-            importEntries = null;
-        }
-        public List<Word> GetImportEntries()
-        {
-            return importEntries ?? new List<Word>();
-        }
-        public bool InitializeImportEntries()
-        {
-            if (importEntries != null)
-            {
-                return false;
-            }
-            importEntries = new List<Word>();
-            return true;
-        }
-
         public LiftService()
         {
             if (!Sldr.IsInitialized)
@@ -531,18 +511,23 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); //end range element
         }
 
-
-        private sealed class LiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
+        private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
             private readonly IProjectService _projectService;
             private readonly IWordRepository _wordRepo;
+            private List<Word> importEntries = new List<Word>();
 
             public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
             {
                 _projectId = projectId;
                 _projectService = projectService;
                 _wordRepo = wordRepo;
+            }
+
+            public async Task<List<Word>> SaveImportEntries()
+            {
+                return await _wordRepo.Create(importEntries);
             }
 
             /// <summary>
@@ -672,14 +657,7 @@ namespace BackendFramework.Services
                 }
 
                 newWord.ProjectId = _projectId;
-                if (importEntries is null)
-                {
-                    await _wordRepo.Create(newWord);
-                }
-                else
-                {
-                    importEntries.Add(newWord);
-                }
+                importEntries.Add(newWord);
             }
 
             /// <summary> Creates the object to transfer all the data from a word </summary>

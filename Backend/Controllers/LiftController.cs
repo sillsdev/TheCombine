@@ -152,18 +152,12 @@ namespace BackendFramework.Controllers
             try
             {
                 // Sets the projectId of our parser to add words to that project
-                var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+                var liftMerger = (ILiftMerger)_liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from lift file
-                while (!_liftService.InitializeImportEntries())
-                {
-                    Console.WriteLine("There is already another import in progress.");
-                    await Task.Delay(1000);
-                }
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
-                await _wordRepo.Create(_liftService.GetImportEntries());
-                _liftService.ClearImportEntries();
+                await liftMerger.SaveImportEntries();
 
                 // Add character set to project from ldml file
                 var proj = await _projectService.GetProject(projectId);
