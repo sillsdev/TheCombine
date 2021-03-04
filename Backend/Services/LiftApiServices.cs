@@ -516,7 +516,7 @@ namespace BackendFramework.Services
             private readonly string _projectId;
             private readonly IProjectService _projectService;
             private readonly IWordRepository _wordRepo;
-            private List<Word> importEntries = new List<Word>();
+            private readonly List<Word> _importEntries = new List<Word>();
 
             public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
             {
@@ -527,7 +527,7 @@ namespace BackendFramework.Services
 
             public async Task<List<Word>> SaveImportEntries()
             {
-                return await _wordRepo.Create(importEntries);
+                return await _wordRepo.Create(_importEntries);
             }
 
             /// <summary>
@@ -657,7 +657,7 @@ namespace BackendFramework.Services
                 }
 
                 newWord.ProjectId = _projectId;
-                importEntries.Add(newWord);
+                _importEntries.Add(newWord);
             }
 
             /// <summary> Creates the object to transfer all the data from a word </summary>
