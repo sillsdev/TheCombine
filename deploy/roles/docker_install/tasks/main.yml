@@ -74,7 +74,7 @@
     owner: root
     group: root
     mode: 0755
-  when: docker_compose_version not in compose_version.stdout
+  when: compose_version.rc != 0 or docker_compose_version not in compose_version.stdout
 
 - name: Create link for /usr/bin/docker-compose
   file:
