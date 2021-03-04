@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using BackendFramework.Services;
 
 namespace Backend.Tests.Mocks
 {
