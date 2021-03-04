@@ -1,0 +1,11 @@
+---
+- name: Start create_ap
+  systemd:
+    name: create_ap
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Restart create_ap
+  service: name=create_ap
+    state=restarted

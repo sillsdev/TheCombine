@@ -34,3 +34,8 @@ aws_ecr_profile: ecr_read_only
 my_aws_profiles:
   - "{{ aws_s3_profile }}"
   - "{{ aws_ecr_profile }}"
+
+################################################
+# WiFi access point settings
+################################################
+has_wifi: no

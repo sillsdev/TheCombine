@@ -1,0 +1,10 @@
+---
+- name: Install WiFi Access point
+  include: install.yml
+  tags:
+    - install
+- meta: flush_handlers
+- name: Set WiFi Access point
+  include: test.yml
+  tags:
+    - test
