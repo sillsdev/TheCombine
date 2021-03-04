@@ -91,6 +91,26 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         private const string InProgress = "IN_PROGRESS";
 
+        // A list into which we can store entries from a lift import to be loaded into the database.
+        private static List<Word>? importEntries;
+        public void ClearImportEntries()
+        {
+            importEntries = null;
+        }
+        public List<Word> GetImportEntries()
+        {
+            return importEntries ?? new List<Word>();
+        }
+        public bool InitializeImportEntries()
+        {
+            if (importEntries != null)
+            {
+                return false;
+            }
+            importEntries = new List<Word>();
+            return true;
+        }
+
         public LiftService()
         {
             if (!Sldr.IsInitialized)
@@ -652,7 +672,14 @@ namespace BackendFramework.Services
                 }
 
                 newWord.ProjectId = _projectId;
-                await _wordRepo.Create(newWord);
+                if (importEntries is null)
+                {
+                    await _wordRepo.Create(newWord);
+                }
+                else
+                {
+                    importEntries.Add(newWord);
+                }
             }
 
             /// <summary> Creates the object to transfer all the data from a word </summary>

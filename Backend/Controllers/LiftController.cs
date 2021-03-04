@@ -156,7 +156,14 @@ namespace BackendFramework.Controllers
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from lift file
+                while (!_liftService.InitializeImportEntries())
+                {
+                    Console.WriteLine("There is already another import in progress.");
+                    await Task.Delay(1000);
+                }
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                await _wordRepo.Create(_liftService.GetImportEntries());
+                _liftService.ClearImportEntries();
 
                 // Add character set to project from ldml file
                 var proj = await _projectService.GetProject(projectId);

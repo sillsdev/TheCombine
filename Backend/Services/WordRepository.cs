@@ -71,18 +71,28 @@ namespace BackendFramework.Services
             }
         }
 
-        /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>
+        /// <summary> Adds a <see cref="Word"/> (or list of words) to the WordsCollection and Frontier </summary>
         /// <remarks>
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <returns> The word created </returns>
+        /// <returns> The word(s) created </returns>
         public async Task<Word> Create(Word word)
         {
             PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
+        }
+        public async Task<List<Word>> Create(List<Word> words)
+        {
+            foreach (var w in words)
+            {
+                PopulateBlankWordTimes(w);
+            }
+            await _wordDatabase.Words.InsertManyAsync(words);
+            await AddFrontier(words);
+            return words;
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the WordsCollection </summary>
@@ -104,12 +114,17 @@ namespace BackendFramework.Services
             return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
-        /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
-        /// <returns> The word created </returns>
+        /// <summary> Adds a <see cref="Word"/> (or list of words) only to the Frontier </summary>
+        /// <returns> The word(s) created </returns>
         public async Task<Word> AddFrontier(Word word)
         {
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
+        }
+        public async Task<List<Word>> AddFrontier(List<Word> words)
+        {
+            await _wordDatabase.Frontier.InsertManyAsync(words);
+            return words;
         }
 
         /// <summary> Removes <see cref="Word"/> from the Frontier with specified wordId and projectId </summary>
