@@ -15,6 +15,12 @@ services:
     env_file:
       - ./.env.backend
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-backend
+{% endif %}
 
   frontend:
 {% if combine_pull_images %}
@@ -41,6 +47,12 @@ services:
       - certmgr
       - backend
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-frontend
+{% endif %}
 
   certmgr:
 {% if combine_pull_images %}
@@ -58,6 +70,12 @@ services:
       - /home/combine/.aws:/root/.aws:ro
 {% endif %}
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-certmgr
+{% endif %}
 
   database:
     image: mongo:{{ mongodb_version }}
@@ -66,6 +84,12 @@ services:
     expose:
       - 27017
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-database
+{% endif %}
 
 volumes:
   backend_data:

@@ -6,3 +6,7 @@ docker_packages:
   - docker-ce
   - docker-ce-cli
   - containerd.io
+
+combine_log_directory: /var/log/combine
+docker_log_file: docker.log
+container_log_file: app.log

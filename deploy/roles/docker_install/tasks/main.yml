@@ -43,7 +43,26 @@
     name: "{{ docker_packages }}"
   notify: reboot target
 
-- name: Configure Docker Logging
+- name: Create directory for TheCombine logs
+  file:
+    path: "{{ combine_log_directory }}"
+    state: directory
+    owner: syslog
+    group: adm
+    mode: 0775
+  when: combine_use_syslog
+
+- name: Setup rsyslog to log to separate file
+  template:
+    src: combine-log.conf.j2
+    dest: /etc/rsyslog.d/30-docker.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: combine_use_syslog
+  notify: restart rsyslog
+
+- name: Configure Default Docker Logging
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
@@ -52,14 +71,15 @@
     mode: 0600
   notify: restart docker
 
-- name: Configure separate docker log for rsyslog
-  copy:
-    src: docker.conf
-    dest: /etc/rsyslog.d/docker.conf
+- name: Configure Combine Log Rotation
+  template:
+    src: logrotate.conf.j2
+    dest: /etc/logrotate.d/docker
     owner: root
     group: root
-    mode: 0755
-  notify: restart rsyslog
+    mode: 0644
+  when: combine_use_syslog
+  notify: restart logrotate
 
 - name: check for docker-compose version
   command: docker-compose --version

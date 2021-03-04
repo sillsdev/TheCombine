@@ -1,6 +1,9 @@
 {
-  "log-driver": "syslog",
+  "log-driver": "json-file",
   "log-opts": {
-    "tag": "docker-container- {{.ImageName}} - {{.ID}}"
+    "max-size": "10m",
+    "max-file": "3",
+    "labels": "production_status",
+    "env": "os,customer"
   }
 }
