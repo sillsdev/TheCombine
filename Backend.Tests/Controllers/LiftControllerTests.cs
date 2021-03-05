@@ -265,8 +265,8 @@ namespace Backend.Tests.Controllers
 
             // Delete the export
             await _liftController.DeleteLiftFile(userId);
-            var notFoundResult = _liftController.DownloadLiftFile(_projId, userId).Result as NotFoundObjectResult;
-            Assert.NotNull(notFoundResult);
+            var notFoundResult = _liftController.DownloadLiftFile(_projId, userId).Result;
+            Assert.That(notFoundResult is NotFoundObjectResult);
         }
 
         private static RoundTripObj[] _roundTripCases =
