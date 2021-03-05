@@ -152,7 +152,7 @@ namespace BackendFramework.Controllers
             try
             {
                 // Sets the projectId of our parser to add words to that project
-                var liftMerger = (ILiftMerger)_liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+                var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from lift file

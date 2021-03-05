@@ -474,7 +474,7 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> GetLiftImporterExporter(
+        public ILiftMerger GetLiftImporterExporter(
             string projectId, IProjectService projectService, IWordRepository wordRepo)
         {
             return new LiftMerger(projectId, projectService, wordRepo);
@@ -525,15 +525,24 @@ namespace BackendFramework.Services
                 _wordRepo = wordRepo;
             }
 
+            /// <summary>
+            /// <see cref="Word"/>s are added to the private field <see cref="_importEntries"/>
+            /// during lift import. This saves the contents of _importEntries to the database.
+            /// </summary>
+            /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                return await _wordRepo.Create(_importEntries);
+                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
+                _importEntries.Clear();
+                return savedWords;
             }
 
             /// <summary>
-            /// The meat of lift import is done here.
-            /// This reads in all necessary attributes of a word and adds it to the database.
+            /// A significant portion of lift import is done here. This reads in all necessary
+            /// attributes to create a word from <paramref name="entry"/>, adding the result
+            /// to <see cref="_importEntries"/> to be saved to the database.
             /// </summary>
+            /// <param name="entry"></param>
             public async void FinishEntry(LiftEntry entry)
             {
                 var newWord = new Word
@@ -621,7 +630,8 @@ namespace BackendFramework.Services
                     {
                         // Splits on the space between the number and name of the semantic domain
                         var splitSemDom = semanticDomainString.Split(" ", 2);
-                        newSense.SemanticDomains.Add(new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
+                        newSense.SemanticDomains.Add(
+                            new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
                     }
 
                     newWord.Senses.Add(newSense);

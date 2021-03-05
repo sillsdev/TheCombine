@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
 {
     public interface ILiftService
     {
-        ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> GetLiftImporterExporter(
+        ILiftMerger GetLiftImporterExporter(
             string projectId, IProjectService projectService, IWordRepository wordRepo);
         void LdmlImport(string filePath, string langTag, IProjectService projectService, Project project);
         Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectService projectService);

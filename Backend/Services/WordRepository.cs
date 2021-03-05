@@ -71,12 +71,13 @@ namespace BackendFramework.Services
             }
         }
 
-        /// <summary> Adds a <see cref="Word"/> (or list of words) to the WordsCollection and Frontier </summary>
+        /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>
         /// <remarks>
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <returns> The word(s) created </returns>
+        /// <param name="word"></param>
+        /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
             PopulateBlankWordTimes(word);
@@ -84,6 +85,14 @@ namespace BackendFramework.Services
             await AddFrontier(word);
             return word;
         }
+
+        /// <summary> Adds a list of <see cref="Word"/>s to the WordsCollection and Frontier </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
+        /// <param name="words"></param>
+        /// <returns> The words created </returns>
         public async Task<List<Word>> Create(List<Word> words)
         {
             foreach (var w in words)
@@ -114,13 +123,18 @@ namespace BackendFramework.Services
             return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
-        /// <summary> Adds a <see cref="Word"/> (or list of words) only to the Frontier </summary>
-        /// <returns> The word(s) created </returns>
+        /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
+        /// <param name="word"></param>
+        /// <returns> The word created </returns>
         public async Task<Word> AddFrontier(Word word)
         {
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
         }
+
+        /// <summary> Adds a list of <see cref="Word"/>s only to the Frontier </summary>
+        /// <param name="words"></param>
+        /// <returns> The words created </returns>
         public async Task<List<Word>> AddFrontier(List<Word> words)
         {
             await _wordDatabase.Frontier.InsertManyAsync(words);
