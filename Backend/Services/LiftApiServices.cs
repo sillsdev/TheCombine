@@ -542,6 +542,10 @@ namespace BackendFramework.Services
             /// attributes to create a word from <paramref name="entry"/>, adding the result
             /// to <see cref="_importEntries"/> to be saved to the database.
             /// </summary>
+            /// <remarks>
+            /// This method cannot safely be marked async because Parent classes are not async aware and do not await
+            /// it.
+            /// </remarks>
             /// <param name="entry"></param>
             public void FinishEntry(LiftEntry entry)
             {
