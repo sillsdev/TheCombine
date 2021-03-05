@@ -361,7 +361,7 @@ namespace Backend.Tests.Controllers
             // Init the project the .zip info is added to.
             var proj2 = RandomProject();
             proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
-            proj2 = _projServ.Create(proj1).Result;
+            proj2 = _projServ.Create(proj2).Result;
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
