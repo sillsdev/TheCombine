@@ -6,3 +6,13 @@
   service:
     name: docker
     state: restarted
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: restart rotatelog
+  service:
+    name: rotatelog
+    state: restarted

@@ -157,6 +157,7 @@ namespace BackendFramework.Controllers
 
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                await liftMerger.SaveImportEntries();
 
                 // Add character set to project from ldml file
                 var proj = await _projectService.GetProject(projectId);

@@ -15,6 +15,12 @@ services:
     env_file:
       - ./.env.backend
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-backend
+{% endif %}
 
   frontend:
 {% if combine_pull_images %}
@@ -30,12 +36,23 @@ services:
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
     ports:
+{% if combine_listen_addr is defined and combine_listen_addr|length %}
+      - {{ combine_listen_addr }}:80:80
+      - {{ combine_listen_addr }}:443:443
+{% else %}
       - 80:80
       - 443:443
+{% endif %}
     depends_on:
       - certmgr
       - backend
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-frontend
+{% endif %}
 
   certmgr:
 {% if combine_pull_images %}
@@ -53,6 +70,12 @@ services:
       - /home/combine/.aws:/root/.aws:ro
 {% endif %}
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-certmgr
+{% endif %}
 
   database:
     image: mongo:{{ mongodb_version }}
@@ -61,6 +84,12 @@ services:
     expose:
       - 27017
     restart: unless-stopped
+{% if combine_use_syslog %}
+    logging:
+        driver: syslog
+        options:
+               tag: combine-database
+{% endif %}
 
 volumes:
   backend_data:

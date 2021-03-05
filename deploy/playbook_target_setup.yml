@@ -29,6 +29,11 @@
       import_role:
         name: package_install
 
+    - name: setup WiFi access point
+      import_role:
+        name: wifi_ap
+      when: has_wifi
+
     - name: install docker subsystem
       import_role:
         name: docker_install

@@ -68,6 +68,7 @@ def main() -> None:
     # Define the configuration for the development environment
     dev_config = {
         "combine_pull_images": args.pull_images,
+        "combine_use_syslog": False,
         "combine_image_frontend": f"combine/frontend:{image_tag}",
         "combine_image_backend": f"combine/backend:{image_tag}",
         "combine_image_certmgr": f"combine/certmgr:{image_tag}",

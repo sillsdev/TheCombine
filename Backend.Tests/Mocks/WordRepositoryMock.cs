@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using BackendFramework.Services;
 
 namespace Backend.Tests.Mocks
 {
@@ -45,6 +44,15 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word.Clone());
         }
 
+        public Task<List<Word>> Create(List<Word> words)
+        {
+            foreach (var w in words)
+            {
+                Create(w);
+            }
+            return Task.FromResult(words);
+        }
+
         public Task<bool> DeleteAllWords(string projectId)
         {
             _words.Clear();
@@ -61,6 +69,15 @@ namespace Backend.Tests.Mocks
         {
             _frontier.Add(word.Clone());
             return Task.FromResult(word.Clone());
+        }
+
+        public Task<List<Word>> AddFrontier(List<Word> words)
+        {
+            foreach (var w in words)
+            {
+                AddFrontier(w);
+            }
+            return Task.FromResult(words);
         }
 
         public Task<bool> DeleteFrontier(string projectId, string wordId)
