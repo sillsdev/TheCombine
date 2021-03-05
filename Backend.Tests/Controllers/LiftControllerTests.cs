@@ -317,7 +317,6 @@ namespace Backend.Tests.Controllers
                 return;
             }
 
-            Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
@@ -377,8 +376,6 @@ namespace Backend.Tests.Controllers
                 Assert.Fail();
                 return;
             }
-
-            Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
             File.Delete(exportedFilePath);
