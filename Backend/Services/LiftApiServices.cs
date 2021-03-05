@@ -517,8 +517,7 @@ namespace BackendFramework.Services
             private readonly IProjectService _projectService;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new List<Word>();
-            private readonly List<string> _citationForms = new List<string>();
-            private readonly List<string> _lexicalForms = new List<string>();
+            private readonly List<string> _languages = new List<string>();
 
             public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
             {
@@ -528,32 +527,35 @@ namespace BackendFramework.Services
             }
 
             /// <summary>
+            /// If the <see cref="VernacularWritingSystem"/> of the <see cref="Project"/> has empty bcp47 and
+            /// <see cref="_languages"/> list is nonempty, add the first entry of the list to the project.
+            /// </summary>
+            /// <returns> A bool true if no error. </returns>
+            private async Task<bool> AddVernacularLanguage()
+            {
+                var proj = await _projectService.GetProject(_projectId);
+                if (proj is null)
+                {
+                    throw new MissingProjectException($"Project does not exist: {_projectId}");
+                }
+                if (String.IsNullOrEmpty(proj.VernacularWritingSystem.Bcp47) && _languages.Count() > 0)
+                {
+                    proj.VernacularWritingSystem.Bcp47 = (string)_languages.First().Clone();
+                    await _projectService.Update(_projectId, proj);
+                    _languages.Clear();
+                }
+                return true;
+            }
+
+            /// <summary>
             /// <see cref="Word"/>s are added to the private field <see cref="_importEntries"/>
             /// during lift import. This saves the contents of _importEntries to the database.
             /// </summary>
             /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                // Add vernacular writing system, if missing
-                var proj = await _projectService.GetProject(_projectId);
-                if (proj is null)
-                {
-                    throw new MissingProjectException($"Project does not exist: {_projectId}");
-                }
-                if (String.IsNullOrEmpty(proj.VernacularWritingSystem.Bcp47))
-                {
-                    // Prefer citation form for vernacular
-                    if (_citationForms.Count() > 0)
-                    {
-                        proj.VernacularWritingSystem.Bcp47 = _citationForms.First();
-                        await _projectService.Update(_projectId, proj);
-                    }
-                    else if (_lexicalForms.Count() > 0)
-                    {
-                        proj.VernacularWritingSystem.Bcp47 = _lexicalForms.First();
-                        await _projectService.Update(_projectId, proj);
-                    }
-                }
+                // Add vernacular writing system, if missing.
+                await AddVernacularLanguage();
 
                 var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
                 _importEntries.Clear();
@@ -587,22 +589,20 @@ namespace BackendFramework.Services
                 // TODO: currently we just store the first listed option, we may want to choose eventually
                 if (!entry.CitationForm.IsEmpty) // Prefer citation form for vernacular
                 {
-                    var form = entry.CitationForm.FirstValue;
-                    newWord.Vernacular = form.Value.Text;
-                    var key = form.Key;
-                    if (!(String.IsNullOrEmpty(key) || _citationForms.Contains(key)))
+                    var (lang, vern) = entry.CitationForm.FirstValue;
+                    newWord.Vernacular = vern.Text;
+                    if (!(String.IsNullOrEmpty(lang) || _languages.Contains(lang)))
                     {
-                        _citationForms.Add(key);
+                        _languages.Add(lang);
                     }
                 }
                 else if (!entry.LexicalForm.IsEmpty) // Use lexeme form as backup
                 {
-                    var form = entry.CitationForm.FirstValue;
-                    newWord.Vernacular = form.Value.Text;
-                    var key = form.Key;
-                    if (!(String.IsNullOrEmpty(key) || _lexicalForms.Contains(key)))
+                    var (lang, vern) = entry.CitationForm.FirstValue;
+                    newWord.Vernacular = vern.Text;
+                    if (!(String.IsNullOrEmpty(lang) || _languages.Contains(lang)))
                     {
-                        _lexicalForms.Add(key);
+                        _languages.Add(lang);
                     }
                 }
                 else // this is not a word if there is no vernacular

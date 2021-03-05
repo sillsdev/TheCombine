@@ -307,7 +307,7 @@ namespace Backend.Tests.Controllers
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
-                Assert.That(!(result is BadRequestObjectResult));
+                Assert.That(result is OkObjectResult);
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
@@ -317,19 +317,19 @@ namespace Backend.Tests.Controllers
                 return;
             }
 
-            Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
+            Assert.AreEqual(roundTripObj.Language, proj1.VernacularWritingSystem.Bcp47);
             Assert.That(proj1.LiftImported);
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
-            Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
+            Assert.AreEqual(roundTripObj.NumOfWords, allWords.Count);
 
             // We are currently only testing guids on the single-entry data sets.
-            if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
+            if (!String.IsNullOrEmpty(roundTripObj.EntryGuid) && allWords.Count == 1)
             {
-                Assert.AreEqual(allWords[0].Guid.ToString(), roundTripObj.EntryGuid);
-                if (roundTripObj.SenseGuid != "")
+                Assert.AreEqual(roundTripObj.EntryGuid, allWords[0].Guid.ToString());
+                if (!String.IsNullOrEmpty(roundTripObj.SenseGuid))
                 {
-                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripObj.SenseGuid);
+                    Assert.AreEqual(roundTripObj.SenseGuid, allWords[0].Senses[0].Guid.ToString());
                 }
             }
 
@@ -368,7 +368,7 @@ namespace Backend.Tests.Controllers
 
                 // Make api call.
                 var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
-                Assert.That(!(result2 is BadRequestObjectResult));
+                Assert.That(result2 is OkObjectResult);
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;

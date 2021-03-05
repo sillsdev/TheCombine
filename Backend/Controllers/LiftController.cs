@@ -181,7 +181,7 @@ namespace BackendFramework.Controllers
                 project.LiftImported = true;
                 await _projectService.Update(projectId, project);
 
-                return new ObjectResult(resp);
+                return new OkObjectResult(resp);
             }
             // If anything wrong happened, it's probably something wrong with the file itself
             catch (Exception)
