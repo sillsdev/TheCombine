@@ -95,7 +95,7 @@ A rapid word collection tool.
    [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) and then:
 
    - configure `git` to use `ansible-vault` for comparing encrypted vault files:
-     
+
      ```
      git config --global diff.ansible-vault.textconv "ansible-vault view"
      ```
