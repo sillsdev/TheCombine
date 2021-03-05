@@ -569,7 +569,7 @@ With an active virtual environment, install Python development requirements for 
 
 ```bash
 (venv) $ python -m pip install --upgrade pip pip-tools
-(venv) $ pip-sync dev-requirements.txt
+(venv) $ python -m piptools sync dev-requirements.txt
 ```
 
 Note, you can also now perform automated code formatting of Python code:
@@ -588,7 +588,7 @@ To upgrade all pinned dependencies, run the following command under Python 3.6 s
 backwards-compatible.
 
 ```bash
-(venv) $ pip-compile --upgrade dev-requirements.in
+(venv) $ python -m piptools compile --upgrade dev-requirements.in
 ```
 
 Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
