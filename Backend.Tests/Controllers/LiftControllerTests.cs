@@ -307,7 +307,7 @@ namespace Backend.Tests.Controllers
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
-                Assert.That(!(result is BadRequestObjectResult));
+                Assert.That(result is OkObjectResult);
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
@@ -368,7 +368,7 @@ namespace Backend.Tests.Controllers
 
                 // Make api call.
                 var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
-                Assert.That(!(result2 is BadRequestObjectResult));
+                Assert.That(result2 is OkObjectResult);
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;
