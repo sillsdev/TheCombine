@@ -532,7 +532,7 @@ namespace BackendFramework.Services
             /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
+                var savedWords = await _wordRepo.Create(_importEntries);
                 _importEntries.Clear();
                 return savedWords;
             }
