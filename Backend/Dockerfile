@@ -23,6 +23,13 @@ ENV HOME=/home/app
 ENV APP_HOME=${HOME}/backend
 ENV APP_FILES=${HOME}/.CombineFiles
 
+# Install system dependencies.
+RUN apt-get update \
+    && apt-get install -y \
+        # icu.net dependency: libdl.so
+        libc6-dev \
+     && rm -rf /var/lib/apt/lists/*
+
 # Create the home directory for the new app user.
 RUN mkdir -p $HOME
 
