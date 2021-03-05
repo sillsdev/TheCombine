@@ -1,0 +1,9 @@
+# Create a template for the target log file
+$FileCreateMode 0644
+$template CUSTOM_LOGS,"{{ combine_log_directory }}/%programname%.log"
+
+if $programname == 'dockerd' then \
+  /var/log/combine/dockerd.log
+
+if $programname startswith  'combine-' then ?CUSTOM_LOGS
+& ~
