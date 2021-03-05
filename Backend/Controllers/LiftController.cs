@@ -149,45 +149,42 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("No lift files detected");
             }
 
+            // Sets the projectId of our parser to add words to that project
+            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
+
+            // Import words from lift file
+            var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+            await liftMerger.SaveImportEntries();
+
+            // Add character set to project from ldml file
+            var proj = await _projectService.GetProject(projectId);
+            if (proj is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
             try
             {
-                // Sets the projectId of our parser to add words to that project
-                var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
-
-                // Import words from lift file
-                var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
-                await liftMerger.SaveImportEntries();
-
-                // Add character set to project from ldml file
-                var proj = await _projectService.GetProject(projectId);
-                if (proj is null)
-                {
-                    return new NotFoundObjectResult(projectId);
-                }
-
                 _liftService.LdmlImport(
                     Path.Combine(liftStoragePath, "WritingSystems"),
                     proj.VernacularWritingSystem.Bcp47, _projectService, proj);
-
-                // Store that we have imported Lift data already for this project to signal the frontend
-                // not to attempt to import again.
-                var project = await _projectService.GetProject(projectId);
-                if (project is null)
-                {
-                    return new NotFoundObjectResult(projectId);
-                }
-
-                project.LiftImported = true;
-                await _projectService.Update(projectId, project);
-
-                return new ObjectResult(resp);
             }
-            // If anything wrong happened, it's probably something wrong with the file itself
             catch (Exception)
             {
-                return new UnsupportedMediaTypeResult();
+                Console.WriteLine("There appears to be a problem with LdmlImport.");
             }
+
+            // Store that we have imported Lift data already for this project to signal the frontend
+            // not to attempt to import again.
+            var project = await _projectService.GetProject(projectId);
+            if (project is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+            project.LiftImported = true;
+            await _projectService.Update(projectId, project);
+
+            return new OkObjectResult(resp);
         }
 
         /// <summary> Packages project data into zip file </summary>
