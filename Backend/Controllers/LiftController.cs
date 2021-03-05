@@ -163,16 +163,9 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(projectId);
             }
-            try
-            {
-                _liftService.LdmlImport(
-                    Path.Combine(liftStoragePath, "WritingSystems"),
-                    proj.VernacularWritingSystem.Bcp47, _projectService, proj);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("There appears to be a problem with LdmlImport.");
-            }
+            _liftService.LdmlImport(
+                Path.Combine(liftStoragePath, "WritingSystems"),
+                proj.VernacularWritingSystem.Bcp47, _projectService, proj);
 
             // Store that we have imported Lift data already for this project to signal the frontend
             // not to attempt to import again.
