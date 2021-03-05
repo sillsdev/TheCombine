@@ -52,6 +52,13 @@
     mode: 0775
   when: combine_use_syslog
 
+  # Create the configuration file for logging the Docker events.  Note that
+  # the default logging configuration is 50-default.conf.  Since "30" < "50",
+  # the docker configuration will be processed first and the stop command at
+  # the end of the file ("& ~") will prevent the log message from being duplicated
+  # in /var/log/syslog.  If it becomes useful to have the messages in
+  # /var/log/syslog as well, change the configuration file name to one that is
+  # > "50".
 - name: Setup rsyslog to log to separate file
   template:
     src: combine-log.conf.j2
