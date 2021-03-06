@@ -19,18 +19,20 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
     <PackageReference Include="MailKit" Version="2.10.0" />
-    <PackageReference Include="icu.net" Version="2.6.0" />
-    <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.1.4-beta" />
-    <PackageReference Include="SIL.Core" Version="7.0.0-alpha0822" />
-    <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0822">
+
+    <!-- SIL Maintained Dependencies. -->
+    <PackageReference Include="icu.net" Version="2.7.1" />
+    <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
+    <PackageReference Include="SIL.Core" Version="8.0.0" />
+    <PackageReference Include="SIL.Core.Desktop" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0822">
+    <PackageReference Include="SIL.DictionaryServices" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="7.0.0-alpha0822">
+    <PackageReference Include="SIL.Lift" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="7.0.0-alpha0822" />
+    <PackageReference Include="SIL.WritingSystems" Version="8.0.0" />
   </ItemGroup>
 </Project>
