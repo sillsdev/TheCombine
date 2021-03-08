@@ -297,7 +297,9 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 1
 
             // Init the project the .zip info is added to.
-            var proj1 = _projServ.Create(RandomProject()).Result;
+            var proj1 = RandomProject();
+            proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
+            proj1 = _projServ.Create(proj1).Result;
 
             // Upload the zip file.
             // Generate api parameter with filestream.
@@ -317,7 +319,6 @@ namespace Backend.Tests.Controllers
                 return;
             }
 
-            Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
@@ -358,7 +359,9 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 2
 
             // Init the project the .zip info is added to.
-            var proj2 = _projServ.Create(RandomProject()).Result;
+            var proj2 = RandomProject();
+            proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
+            proj2 = _projServ.Create(proj2).Result;
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
@@ -377,8 +380,6 @@ namespace Backend.Tests.Controllers
                 Assert.Fail();
                 return;
             }
-
-            Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
             File.Delete(exportedFilePath);
