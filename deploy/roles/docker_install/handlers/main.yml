@@ -11,8 +11,3 @@
   service:
     name: rsyslog
     state: restarted
-
-- name: restart logrotate
-  service:
-    name: logrotate
-    state: restarted
