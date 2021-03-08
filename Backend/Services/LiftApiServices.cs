@@ -542,8 +542,12 @@ namespace BackendFramework.Services
             /// attributes to create a word from <paramref name="entry"/>, adding the result
             /// to <see cref="_importEntries"/> to be saved to the database.
             /// </summary>
+            /// <remarks>
+            /// This method cannot safely be marked async because Parent classes are not async aware and do not await
+            /// it.
+            /// </remarks>
             /// <param name="entry"></param>
-            public async void FinishEntry(LiftEntry entry)
+            public void FinishEntry(LiftEntry entry)
             {
                 var newWord = new Word
                 {
@@ -551,7 +555,7 @@ namespace BackendFramework.Services
                     Created = Time.ToUtcIso8601(entry.DateCreated),
                     Modified = Time.ToUtcIso8601(entry.DateModified)
                 };
-                var proj = await _projectService.GetProject(_projectId);
+                var proj = _projectService.GetProject(_projectId).Result;
                 if (proj is null)
                 {
                     throw new MissingProjectException($"Project does not exist: {_projectId}");
@@ -573,7 +577,7 @@ namespace BackendFramework.Services
                     if (proj.VernacularWritingSystem.Bcp47 == "")
                     {
                         proj.VernacularWritingSystem.Bcp47 = entry.CitationForm.FirstValue.Key;
-                        await _projectService.Update(_projectId, proj);
+                        _projectService.Update(_projectId, proj);
                     }
                 }
                 else if (!entry.LexicalForm.IsEmpty) // lexeme form for backup
@@ -582,7 +586,7 @@ namespace BackendFramework.Services
                     if (proj.VernacularWritingSystem.Bcp47 == "")
                     {
                         proj.VernacularWritingSystem.Bcp47 = entry.LexicalForm.FirstValue.Key;
-                        await _projectService.Update(_projectId, proj);
+                        _projectService.Update(_projectId, proj);
                     }
                 }
                 else // this is not a word if there is no vernacular
