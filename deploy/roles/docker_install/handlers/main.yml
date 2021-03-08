@@ -12,7 +12,7 @@
     name: rsyslog
     state: restarted
 
-- name: restart rotatelog
+- name: restart logrotate
   service:
-    name: rotatelog
+    name: logrotate
     state: restarted
