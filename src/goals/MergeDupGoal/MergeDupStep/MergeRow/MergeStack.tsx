@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 
@@ -19,8 +19,8 @@ import {
 import { StoreState } from "types";
 
 interface MergeStackProps {
-  wordID: string;
-  senseID: string;
+  wordId: string;
+  senseId: string;
   sense: Hash<string>;
   index: number;
   setSidebar: (el: SideBar) => void;
@@ -59,8 +59,8 @@ export default function MergeStack(props: MergeStackProps) {
   const updateSidebar = useCallback(() => {
     props.setSidebar({
       senses: senseEntries,
-      wordID: props.wordID,
-      senseID: props.senseID,
+      wordId: props.wordId,
+      senseId: props.senseId,
     });
   }, [props, senseEntries]);
 
@@ -83,8 +83,8 @@ export default function MergeStack(props: MergeStackProps) {
   }, [hashedSenses, props.sense]);
 
   if (
-    props.sideBar.wordID === props.wordID &&
-    props.sideBar.senseID === props.senseID &&
+    props.sideBar.wordId === props.wordId &&
+    props.sideBar.senseId === props.senseId &&
     !arraysEqual(
       props.sideBar.senses.map((a) => a.id),
       senseEntries.map((a) => a.id)
@@ -108,7 +108,7 @@ export default function MergeStack(props: MergeStackProps) {
   );
 
   const senses = Object.values(props.sense).map(
-    (senseID) => hashedSenses[senseID]
+    (senseId) => hashedSenses[senseId]
   );
   const semDoms = [
     ...new Set(
@@ -122,10 +122,10 @@ export default function MergeStack(props: MergeStackProps) {
 
   return (
     <Draggable
-      key={props.senseID}
+      key={props.senseId}
       draggableId={JSON.stringify({
-        word: props.wordID,
-        sense: props.senseID,
+        word: props.wordId,
+        sense: props.senseId,
       })}
       index={props.index}
     >
