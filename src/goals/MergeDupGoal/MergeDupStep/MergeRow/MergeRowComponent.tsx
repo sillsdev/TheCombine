@@ -97,7 +97,7 @@ export default class MergeRow extends React.Component<MergeRowProps> {
                     index={index}
                     wordId={this.props.wordId}
                     senseId={item}
-                    sense={this.props.words[this.props.wordId].senses[item]}
+                    senses={this.props.words[this.props.wordId].senses[item]}
                   />
                 ))}
               {provided.placeholder}

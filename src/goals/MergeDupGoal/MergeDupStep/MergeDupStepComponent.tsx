@@ -30,8 +30,12 @@ import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
 import theme from "types/theme";
 import { uuid } from "utilities";
 
+interface SideBarSense {
+  id: string;
+  data: TreeDataSense;
+}
 export interface SideBar {
-  senses: { id: string; data: TreeDataSense }[];
+  senses: SideBarSense[];
   wordId: string;
   senseId: string;
 }
@@ -82,25 +86,24 @@ class MergeDupStep extends React.Component<
   }
 
   handleDrop(res: DropResult) {
-    let srcRefs = [];
+    const srcRefs: MergeTreeReference[] = [];
 
-    let srcRef: MergeTreeReference = JSON.parse(res.draggableId);
+    const srcRef: MergeTreeReference = JSON.parse(res.draggableId);
     if (!srcRef.duplicate) {
-      for (let key in this.props.words[srcRef.wordId].senses[srcRef.senseId]) {
-        srcRefs.push({
-          wordId: srcRef.wordId,
-          senseId: srcRef.senseId,
-          duplicate: key,
-        });
+      const wordId = srcRef.wordId;
+      const senseId = srcRef.senseId;
+      for (const key in this.props.words[wordId].senses[senseId]) {
+        srcRefs.push({ wordId, senseId, duplicate: key });
       }
     } else {
       srcRefs.push(srcRef);
     }
 
     if (res.combine) {
-      let combineRef: MergeTreeReference = JSON.parse(res.combine.draggableId);
-      // this is a combine operation
-      let destRefs: MergeTreeReference[] = [];
+      const combineRef: MergeTreeReference = JSON.parse(
+        res.combine.draggableId
+      );
+      const destRefs: MergeTreeReference[] = [];
       srcRefs.forEach(() =>
         destRefs.push({
           wordId: combineRef.wordId,
@@ -112,8 +115,8 @@ class MergeDupStep extends React.Component<
     } else if (res.destination) {
       if (res.source.droppableId !== res.destination.droppableId) {
         // move to different word
-        let destRefs = [];
-        let destSense = uuid();
+        const destRefs = [];
+        const destSense = uuid();
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (let _ in srcRefs) {
           destRefs.push({
@@ -143,6 +146,59 @@ class MergeDupStep extends React.Component<
     }
   }
 
+  senseCardContent(sense: TreeDataSense) {
+    return (
+      <CardContent>
+        <Typography variant={"h5"}>
+          {sense.glosses.map((g) => g.def).join(", ")}
+        </Typography>
+        <Grid container spacing={2}>
+          {sense.semanticDomains.map((dom) => (
+            <Grid item xs key={dom.name}>
+              <Chip label={`${dom.name} ${dom.id}`} />
+            </Grid>
+          ))}
+        </Grid>
+      </CardContent>
+    );
+  }
+
+  sideBarSenseDraggable(sense: SideBarSense, index: number) {
+    return (
+      <Draggable
+        key={sense.id}
+        draggableId={JSON.stringify({
+          wordId: this.state.sideBar.wordId,
+          senseId: this.state.sideBar.senseId,
+          duplicate: sense.id,
+        })}
+        index={index}
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <Card
+              style={{
+                marginBottom: 8,
+                marginTop: 8,
+                background: snapshot.isDragging
+                  ? "lightgreen"
+                  : index === 0
+                  ? "white"
+                  : "lightgrey",
+              }}
+            >
+              {this.senseCardContent(sense.data)}
+            </Card>
+          </div>
+        )}
+      </Draggable>
+    );
+  }
+
   renderSideBar() {
     if (this.state.sideBar.senses.length <= 1) return <div />;
     return (
@@ -159,10 +215,7 @@ class MergeDupStep extends React.Component<
             <div
               ref={providedDroppable.innerRef}
               {...providedDroppable.droppableProps}
-              /*
-                  Set padding to 30 and add the height of the appbar (64) to the
-                  top padding
-              */
+              /* Add the height of the appbar (64) to the top padding. */
               style={{ padding: 30, paddingTop: 64 + 30 }}
             >
               <IconButton onClick={() => this.clearSideBar()}>
@@ -171,53 +224,10 @@ class MergeDupStep extends React.Component<
               <Typography variant="h5">
                 {this.props.words[this.state.sideBar.wordId].vern}
               </Typography>
-              {this.state.sideBar.senses.map((entry, index) => (
-                <Draggable
-                  key={entry.id}
-                  draggableId={JSON.stringify({
-                    word: this.state.sideBar.wordId,
-                    sense: this.state.sideBar.senseId,
-                    duplicate: entry.id,
-                  })}
-                  index={index}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <Card
-                        style={{
-                          marginBottom: 8,
-                          marginTop: 8,
-                          background: snapshot.isDragging
-                            ? "lightgreen"
-                            : index === 0
-                            ? "white"
-                            : "lightgrey",
-                        }}
-                      >
-                        <CardContent>
-                          <Typography variant={"h5"}>
-                            {entry.data.glosses.length > 0 &&
-                              entry.data.glosses
-                                .map((gloss) => gloss.def)
-                                .reduce((gloss, acc) => `${acc}, ${gloss}`)}
-                          </Typography>
-                          <Grid container spacing={2}>
-                            {entry.data.semanticDomains.map((semdom) => (
-                              <Grid item xs key={semdom.name}>
-                                <Chip label={`${semdom.name} ${semdom.id}`} />
-                              </Grid>
-                            ))}
-                          </Grid>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              {this.state.sideBar.senses.map(
+                (sense: SideBarSense, index: number) =>
+                  this.sideBarSenseDraggable(sense, index)
+              )}
               {providedDroppable.placeholder}
             </div>
           )}

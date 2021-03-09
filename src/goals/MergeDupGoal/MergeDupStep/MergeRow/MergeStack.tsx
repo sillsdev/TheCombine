@@ -21,7 +21,7 @@ import { StoreState } from "types";
 interface MergeStackProps {
   wordId: string;
   senseId: string;
-  sense: Hash<string>;
+  senses: Hash<string>;
   index: number;
   setSidebar: (el: SideBar) => void;
   sideBar: SideBar;
@@ -35,7 +35,7 @@ interface MergeSenseEntry {
 interface MergeGloss {
   def: string;
   language: string;
-  sense: string;
+  senseId: string;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]) {
@@ -75,12 +75,12 @@ export default function MergeStack(props: MergeStackProps) {
 
   useEffect(() => {
     setSenseEntries(
-      Object.entries(props.sense).map((s) => ({
+      Object.entries(props.senses).map((s) => ({
         id: s[0],
         data: hashedSenses[s[1]],
       }))
     );
-  }, [hashedSenses, props.sense]);
+  }, [hashedSenses, props.senses]);
 
   if (
     props.sideBar.wordId === props.wordId &&
@@ -99,7 +99,7 @@ export default function MergeStack(props: MergeStackProps) {
       glosses.push({
         def: gloss.def,
         language: gloss.language,
-        sense: entry.id,
+        senseId: entry.id,
       });
     }
   }
@@ -107,9 +107,7 @@ export default function MergeStack(props: MergeStackProps) {
     (v, i, a) => a.findIndex((o) => o.def === v.def) === i
   );
 
-  const senses = Object.values(props.sense).map(
-    (senseId) => hashedSenses[senseId]
-  );
+  const senses = Object.values(props.senses).map((id) => hashedSenses[id]);
   const semDoms = [
     ...new Set(
       senses.flatMap((sense) =>
@@ -118,14 +116,14 @@ export default function MergeStack(props: MergeStackProps) {
     ),
   ];
 
-  const showMoreButton = Object.keys(props.sense).length > 1;
+  const showMoreButton = Object.keys(props.senses).length > 1;
 
   return (
     <Draggable
       key={props.senseId}
       draggableId={JSON.stringify({
-        word: props.wordId,
-        sense: props.senseId,
+        wordId: props.wordId,
+        senseId: props.senseId,
       })}
       index={props.index}
     >
