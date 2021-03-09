@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
+using SIL.IO;
 
 [assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
@@ -63,6 +64,11 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
+
+            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+
+            // Clear out any files left by a failed import
+            RobustIO.DeleteDirectoryAndContents(liftStoragePath);
 
             var file = fileUpload.File;
             if (file is null)
@@ -133,7 +139,6 @@ namespace BackendFramework.Controllers
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
             FileOperations.CopyDirectory(extractedDirPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
