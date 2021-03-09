@@ -13,6 +13,7 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -26,6 +27,7 @@ namespace Backend.Tests.Controllers
         private LiftController _liftController = null!;
         private IHubContext<CombineHub> _notifyService = null!;
         private IPermissionService _permissionService = null!;
+        private ILogger<LiftController> _logger = null!;
 
         private string _projName = "LiftControllerTests";
         private string _projId = null!;
@@ -39,8 +41,9 @@ namespace Backend.Tests.Controllers
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             _notifyService = new HubContextMock();
+            _logger = new MockLogger();
             _liftController = new LiftController(
-                _wordRepo, _projServ, _permissionService, _liftService, _notifyService);
+                _wordRepo, _projServ, _permissionService, _liftService, _notifyService, _logger);
             _wordService = new WordService(_wordRepo);
         }
 
@@ -422,6 +425,24 @@ namespace Backend.Tests.Controllers
             foreach (var project in new List<Project> { proj1, proj2 })
             {
                 _projServ.Delete(project.Id);
+            }
+        }
+
+        private class MockLogger : ILogger<LiftController>
+        {
+            public IDisposable BeginScope<TState>(TState state)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsEnabled(LogLevel logLevel)
+            {
+                return true;
+            }
+
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+            {
+                Console.WriteLine($"{logLevel}: {eventId} {state} {exception.Message}");
             }
         }
     }
