@@ -179,7 +179,7 @@ namespace BackendFramework.Controllers
                 liftParseResult = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
                 await liftMerger.SaveImportEntries();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, $"Error importing lift file {fileUpload.Name} into {projectId}");
                 return new BadRequestObjectResult("Error processing the lift data. Contact support for help.");
