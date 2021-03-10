@@ -1,3 +1,12 @@
+"""
+SelfSignedCert certificate module.
+
+The SelfSignedCert creates a Self-Signed certificate that can be used:
+  1. as a temporary certificate so that NGINX will stay up while Let's ENcrypt
+     performs an HTTP challenge; or
+  2. for servers for testing that are not reachable by Let's Encrypt.
+"""
+
 import os
 from pathlib import Path
 
