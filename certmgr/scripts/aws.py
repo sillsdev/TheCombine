@@ -32,7 +32,7 @@ def aws_s3_put(src: Path, dest: str) -> None:
     subprocess.call(aws_cmd, shell=True)
 
 
-def aws_s3_get(src: str, dest: Path) -> None:
+def aws_s3_get(src: str, dest: Path) -> bool:
     """
     Get a file from the configured AWS S3 Bucket.
 
@@ -42,7 +42,7 @@ def aws_s3_get(src: str, dest: Path) -> None:
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(src)
     aws_cmd = f"aws s3 cp --profile {aws_s3_profile} {aws_s3_uri} {dest}"
-    subprocess.call(aws_cmd, shell=True)
+    return subprocess.call(aws_cmd, shell=True) == 0
 
 
 def aws_push_certs() -> None:
