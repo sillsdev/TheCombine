@@ -95,13 +95,16 @@ A rapid word collection tool.
    [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) and then:
 
    - configure `git` to use `ansible-vault` for comparing encrypted vault files:
+
      ```
      git config --global diff.ansible-vault.textconv "ansible-vault view"
      ```
+
    - save the ansible vault password in a file, e.g. `${HOME}/.vault-password`
    - set the permissions for the vault password file to `0600`
-   - edit your `.profile` to export the enviroment variable `ANSIBLE_VAULT_PASSWORD_FILE` set to the path of the file
+   - edit your `.profile` to export the environment variable `ANSIBLE_VAULT_PASSWORD_FILE` set to the path of the file
      with the vault password:
+
      ```
      export ANSIBLE_VAULT_PASSWORD_FILE=${HOME}/.vault-password
      ```
@@ -352,7 +355,8 @@ the commands listed are run from the project root directory because the `docker-
 Run:
 
 ```bash
-$ docker-compose run -e COMBINE_ADMIN_USERNAME=<USER_NAME> -e COMBINE_ADMIN_PASSWORD="<PASSWORD>" -e COMBINE_ADMIN_EMAIL="<EMAIL_ADDRESS>" backend
+$ docker-compose run -e COMBINE_ADMIN_USERNAME=<USER_NAME> -e COMBINE_ADMIN_PASSWORD="<PASSWORD>" \
+    -e COMBINE_ADMIN_EMAIL="<EMAIL_ADDRESS>" backend
 ```
 
 filling in your values for `<USER_NAME>`, `<PASSWORD>`, and `<EMAIL_ADDRESS>`.
@@ -569,7 +573,7 @@ With an active virtual environment, install Python development requirements for 
 
 ```bash
 (venv) $ python -m pip install --upgrade pip pip-tools
-(venv) $ pip-sync dev-requirements.txt
+(venv) $ python -m piptools sync dev-requirements.txt
 ```
 
 Note, you can also now perform automated code formatting of Python code:
@@ -588,7 +592,7 @@ To upgrade all pinned dependencies, run the following command under Python 3.6 s
 backwards-compatible.
 
 ```bash
-(venv) $ pip-compile --upgrade dev-requirements.in
+(venv) $ python -m piptools compile --upgrade dev-requirements.in
 ```
 
 Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
@@ -621,7 +625,3 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [React-Redux](https://redux.js.org/basics/usage-with-react)
 - [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (Language Localization)
 - [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
-
-```
-
-```

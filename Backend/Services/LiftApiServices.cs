@@ -474,7 +474,7 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> GetLiftImporterExporter(
+        public ILiftMerger GetLiftImporterExporter(
             string projectId, IProjectService projectService, IWordRepository wordRepo)
         {
             return new LiftMerger(projectId, projectService, wordRepo);
@@ -511,12 +511,12 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); //end range element
         }
 
-
-        private sealed class LiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
+        private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
             private readonly IProjectService _projectService;
             private readonly IWordRepository _wordRepo;
+            private readonly List<Word> _importEntries = new List<Word>();
 
             public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
             {
@@ -526,10 +526,28 @@ namespace BackendFramework.Services
             }
 
             /// <summary>
-            /// The meat of lift import is done here.
-            /// This reads in all necessary attributes of a word and adds it to the database.
+            /// <see cref="Word"/>s are added to the private field <see cref="_importEntries"/>
+            /// during lift import. This saves the contents of _importEntries to the database.
             /// </summary>
-            public async void FinishEntry(LiftEntry entry)
+            /// <returns> The words saved. </returns>
+            public async Task<List<Word>> SaveImportEntries()
+            {
+                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
+                _importEntries.Clear();
+                return savedWords;
+            }
+
+            /// <summary>
+            /// A significant portion of lift import is done here. This reads in all necessary
+            /// attributes to create a word from <paramref name="entry"/>, adding the result
+            /// to <see cref="_importEntries"/> to be saved to the database.
+            /// </summary>
+            /// <remarks>
+            /// This method cannot safely be marked async because Parent classes are not async aware and do not await
+            /// it.
+            /// </remarks>
+            /// <param name="entry"></param>
+            public void FinishEntry(LiftEntry entry)
             {
                 var newWord = new Word
                 {
@@ -537,11 +555,6 @@ namespace BackendFramework.Services
                     Created = Time.ToUtcIso8601(entry.DateCreated),
                     Modified = Time.ToUtcIso8601(entry.DateModified)
                 };
-                var proj = await _projectService.GetProject(_projectId);
-                if (proj is null)
-                {
-                    throw new MissingProjectException($"Project does not exist: {_projectId}");
-                }
 
                 // Add Note if one exists.
                 // Note: Currently only support for a single note is included.
@@ -556,20 +569,10 @@ namespace BackendFramework.Services
                 if (!entry.CitationForm.IsEmpty) // Prefer citation form for vernacular
                 {
                     newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
-                    if (proj.VernacularWritingSystem.Bcp47 == "")
-                    {
-                        proj.VernacularWritingSystem.Bcp47 = entry.CitationForm.FirstValue.Key;
-                        await _projectService.Update(_projectId, proj);
-                    }
                 }
                 else if (!entry.LexicalForm.IsEmpty) // lexeme form for backup
                 {
                     newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
-                    if (proj.VernacularWritingSystem.Bcp47 == "")
-                    {
-                        proj.VernacularWritingSystem.Bcp47 = entry.LexicalForm.FirstValue.Key;
-                        await _projectService.Update(_projectId, proj);
-                    }
                 }
                 else // this is not a word if there is no vernacular
                 {
@@ -616,7 +619,8 @@ namespace BackendFramework.Services
                     {
                         // Splits on the space between the number and name of the semantic domain
                         var splitSemDom = semanticDomainString.Split(" ", 2);
-                        newSense.SemanticDomains.Add(new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
+                        newSense.SemanticDomains.Add(
+                            new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
                     }
 
                     newWord.Senses.Add(newSense);
@@ -652,7 +656,7 @@ namespace BackendFramework.Services
                 }
 
                 newWord.ProjectId = _projectId;
-                await _wordRepo.Create(newWord);
+                _importEntries.Add(newWord);
             }
 
             /// <summary> Creates the object to transfer all the data from a word </summary>

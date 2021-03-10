@@ -265,8 +265,8 @@ namespace Backend.Tests.Controllers
 
             // Delete the export
             await _liftController.DeleteLiftFile(userId);
-            var notFoundResult = _liftController.DownloadLiftFile(_projId, userId).Result as NotFoundObjectResult;
-            Assert.NotNull(notFoundResult);
+            var notFoundResult = _liftController.DownloadLiftFile(_projId, userId).Result;
+            Assert.That(notFoundResult is NotFoundObjectResult);
         }
 
         private static RoundTripObj[] _roundTripCases =
@@ -297,7 +297,9 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 1
 
             // Init the project the .zip info is added to.
-            var proj1 = _projServ.Create(RandomProject()).Result;
+            var proj1 = RandomProject();
+            proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
+            proj1 = _projServ.Create(proj1).Result;
 
             // Upload the zip file.
             // Generate api parameter with filestream.
@@ -307,7 +309,7 @@ namespace Backend.Tests.Controllers
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
-                Assert.That(!(result is BadRequestObjectResult));
+                Assert.That(result is OkObjectResult);
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
@@ -317,7 +319,6 @@ namespace Backend.Tests.Controllers
                 return;
             }
 
-            Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
@@ -358,7 +359,9 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 2
 
             // Init the project the .zip info is added to.
-            var proj2 = _projServ.Create(RandomProject()).Result;
+            var proj2 = RandomProject();
+            proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
+            proj2 = _projServ.Create(proj2).Result;
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
@@ -368,7 +371,7 @@ namespace Backend.Tests.Controllers
 
                 // Make api call.
                 var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
-                Assert.That(!(result2 is BadRequestObjectResult));
+                Assert.That(result2 is OkObjectResult);
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;
@@ -377,8 +380,6 @@ namespace Backend.Tests.Controllers
                 Assert.Fail();
                 return;
             }
-
-            Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
             File.Delete(exportedFilePath);
