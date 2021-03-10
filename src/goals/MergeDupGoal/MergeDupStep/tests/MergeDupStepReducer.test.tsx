@@ -1,6 +1,3 @@
-import { StoreAction, StoreActions } from "rootActions";
-import { testWordList } from "types/word";
-import { randElement, uuid } from "utilities";
 import {
   clearTree,
   moveSense,
@@ -12,12 +9,13 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
-  defaultData,
-  defaultTree,
   Hash,
   MergeTreeReference,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { StoreAction, StoreActions } from "rootActions";
+import { testWordList } from "types/word";
+import { randElement, uuid } from "utilities";
 
 // Actions to test
 //
@@ -79,9 +77,7 @@ describe("MergeDupStep reducer tests", () => {
 
   test("clear data", () => {
     let newState = mergeDupStepReducer(fullState, clearTree());
-    expect(JSON.stringify(newState)).toEqual(
-      JSON.stringify({ tree: defaultTree, data: defaultData })
-    );
+    expect(JSON.stringify(newState)).toEqual(JSON.stringify(defaultState));
   });
 
   test("set data", () => {

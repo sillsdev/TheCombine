@@ -24,12 +24,3 @@ export interface MergeTreeWord {
 export interface MergeTree {
   words: Hash<MergeTreeWord>;
 }
-
-export const defaultTree = {
-  words: {},
-};
-
-export const defaultData = {
-  words: {},
-  senses: {},
-};

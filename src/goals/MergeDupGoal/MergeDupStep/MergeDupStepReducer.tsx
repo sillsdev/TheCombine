@@ -6,8 +6,6 @@ import {
   MergeTreeActions,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
-  defaultData,
-  defaultTree,
   Hash,
   MergeData,
   MergeTree,
@@ -15,6 +13,8 @@ import {
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
+const defaultTree = { words: {} };
+const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
@@ -31,17 +31,23 @@ export const mergeDupStepReducer = (
 ): MergeTreeState => {
   switch (action.type) {
     case MergeTreeActions.SET_VERNACULAR: {
-      state.tree.words[action.payload.wordID].vern = action.payload.data;
-      state.tree.words = { ...state.tree.words };
-      state.tree = { ...state.tree };
-      return { ...state };
+      const word = { ...state.tree.words[action.payload.wordID] };
+      word.vern = action.payload.data;
+
+      const words = { ...state.tree.words };
+      words[action.payload.wordID] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.SET_PLURAL: {
-      state.tree.words[action.payload.wordID].plural = action.payload.data;
-      state.tree.words = { ...state.tree.words };
-      state.tree = { ...state.tree };
-      return { ...state };
+      const word = { ...state.tree.words[action.payload.wordID] };
+      word.plural = action.payload.data;
+
+      const words = { ...state.tree.words };
+      words[action.payload.wordID] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.ORDER_SENSE: {
@@ -63,13 +69,12 @@ export const mergeDupStepReducer = (
         word.senses[sense[0]] = sense[1];
       }
 
-      let treeWords: Hash<MergeTreeWord> = JSON.parse(
+      const words: Hash<MergeTreeWord> = JSON.parse(
         JSON.stringify(state.tree.words)
       );
-      treeWords[action.payload.wordID] = word;
-      state = { ...state, tree: { ...state.tree, words: treeWords } };
+      words[action.payload.wordID] = word;
 
-      return state;
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.ORDER_DUPLICATE: {
@@ -89,18 +94,15 @@ export const mergeDupStepReducer = (
         newDups[dup[0]] = dup[1];
       }
 
-      let newSenses = { ...state.tree.words[ref.word].senses };
-      newSenses[ref.sense] = newDups;
+      const senses = { ...state.tree.words[ref.word].senses };
+      senses[ref.sense] = newDups;
 
-      state.tree.words[ref.word] = {
-        ...state.tree.words[ref.word],
-        senses: newSenses,
-      };
-      state.tree.words = { ...state.tree.words };
-      state.tree = { ...state.tree };
-      state = { ...state };
+      const word = { ...state.tree.words[ref.word], senses };
 
-      return state;
+      const words = { ...state.tree.words };
+      words[ref.word] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.MOVE_SENSE: {
@@ -184,7 +186,7 @@ export const mergeDupStepReducer = (
     }
 
     case MergeTreeActions.CLEAR_TREE: {
-      return { tree: { ...defaultTree }, data: { ...defaultData } };
+      return defaultState;
     }
 
     case StoreActions.RESET: {
