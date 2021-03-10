@@ -93,7 +93,7 @@ export async function mergeWords(
   parent = JSON.parse(JSON.stringify(parent));
   parent.id = "";
   let childrenWords = children.map((child) => ({
-    SrcWordID: child.wordID,
+    SrcWordId: child.wordId,
     SenseStates: child.senses,
   }));
   let mergeWords = {
