@@ -8,6 +8,7 @@ import time
 from typing import Dict, cast
 
 from base_cert import BaseCert
+from cert_proxy_client import CertProxyClient
 from cert_proxy_server import CertProxyServer
 from letsencrypt_cert import LetsEncryptCert
 from self_signed_cert import SelfSignedCert
@@ -18,6 +19,7 @@ if __name__ == "__main__":
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
         "cert-server": CertProxyServer(),
+        "cert-client": CertProxyClient(),
     }
 
     cert_store = get_setting("CERT_STORE")
