@@ -75,6 +75,7 @@ describe("MergeDupStep reducer tests", () => {
         return words[ref.wordId].senses[ref.senseId][ref.duplicate];
       }
     }
+    return undefined;
   };
 
   test("clear data", () => {
