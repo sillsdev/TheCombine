@@ -88,7 +88,7 @@ class CertProxyClient(BaseCert):
         """
         if not self.cert_dir.exists() or not self.cert.exists():
             return CertState.Missing
-        time_to_expire = get_time_to_expire(self.cert)
+        time_to_expire = self.get_time_to_expire()
         if time_to_expire.days < 0:
             return CertState.Expired
         if time_to_expire.days == 0:
