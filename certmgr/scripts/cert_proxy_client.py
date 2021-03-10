@@ -29,17 +29,14 @@ class CertState(enum.IntEnum):
 
 class CertProxyClient(BaseCert):
     """
-    Manage certificates for the server and provice proxy certificate services.
+    Fetch and maintain an SSL certificate stored in an AWS S3 bucket.
 
-    CertProxyServer is a kind of LetsEncryptCert object that uses the base class
-    functionality to manage its own certificate and, in addition, acts as a proxy
-    for servers that are not reachable from the internet.  As a proxy, it creates
-    certificates for these servers and pushes them to an Amazon Web Services S3
-    bucket.
+    CertProxyClient that fetches an SSL certificate that was created for the
+    client by a CertProxyServer instance and stored in an AWS S3 bucket.
     """
 
     def __init__(self) -> None:
-        """Initialize CertProxyServer instance."""
+        """Initialize CertProxyClient instance."""
         # pylint: disable=too-many-instance-attributes
         # Ten are required in this case.
         self.cert_store = cast(str, get_setting("CERT_STORE"))
@@ -93,7 +90,7 @@ class CertProxyClient(BaseCert):
             return CertState.Expired
         if time_to_expire.days == 0:
             return CertState.Missing
-        if time_to_expire.days < self.renew_before_expiry:
+        if time_to_expire.days < int(self.renew_before_expiry):
             return CertState.Renewable
         return CertState.Ready
 
