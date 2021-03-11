@@ -64,7 +64,7 @@ function getError(sense: ReviewEntriesSense): string | undefined {
   } else if (sense.domains.length === 0) {
     return "reviewEntries.error.domain";
   }
-  return;
+  return undefined;
 }
 
 // Returns a cleaned array of senses ready to be saved (none with .deleted=true):

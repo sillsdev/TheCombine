@@ -31,7 +31,7 @@ interface UserListState {
   filterInput: string;
   filteredNonProjUsers: User[];
   filteredProjUsers: User[];
-  hoverUserID: string;
+  hoverUserId: string;
 }
 
 class UserList extends React.Component<
@@ -43,7 +43,7 @@ class UserList extends React.Component<
 
     this.state = {
       filterInput: "",
-      hoverUserID: "",
+      hoverUserId: "",
       filteredNonProjUsers: [],
       filteredProjUsers: [],
     };
@@ -96,8 +96,8 @@ class UserList extends React.Component<
           {this.state.filteredProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              onMouseEnter={() => this.setState({ hoverUserID: user.id })}
-              onMouseLeave={() => this.setState({ hoverUserID: "" })}
+              onMouseEnter={() => this.setState({ hoverUserId: user.id })}
+              onMouseLeave={() => this.setState({ hoverUserId: "" })}
             >
               <ListItemIcon>
                 <Done />
@@ -113,11 +113,11 @@ class UserList extends React.Component<
           {this.state.filteredNonProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              onMouseEnter={() => this.setState({ hoverUserID: user.id })}
-              onMouseLeave={() => this.setState({ hoverUserID: "" })}
+              onMouseEnter={() => this.setState({ hoverUserId: user.id })}
+              onMouseLeave={() => this.setState({ hoverUserId: "" })}
             >
               <ListItemText primary={`${user.name} (${user.username})`} />
-              {this.state.hoverUserID === user.id && (
+              {this.state.hoverUserId === user.id && (
                 <Button
                   onClick={() => {
                     this.props.addToProject(user);

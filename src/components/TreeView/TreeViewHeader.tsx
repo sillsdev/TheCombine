@@ -105,10 +105,10 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
       );
 
       index += navigationAmount;
-      if (0 <= index && index < brotherDomains.length)
+      if (0 <= index && index < brotherDomains.length) {
         return brotherDomains[index];
+      }
     }
-
     // No brother domain navigationAmount over from currentDomain
     return undefined;
   }
@@ -149,11 +149,14 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
     parent: SemanticDomainWithSubdomains,
     number: string
   ): SemanticDomainWithSubdomains | undefined {
-    for (let domain of parent.subdomains)
-      if (domain.id === number) return domain;
-
-    if (parent.id === number) return parent;
-    else return undefined;
+    for (const domain of parent.subdomains)
+      if (domain.id === number) {
+        return domain;
+      }
+    if (parent.id === number) {
+      return parent;
+    }
+    return undefined;
   }
 
   // Searches for a semantic domain by name
@@ -163,16 +166,20 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
   ): SemanticDomainWithSubdomains | undefined {
     let check = (checkAgainst: SemanticDomainWithSubdomains | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
-    if (check(domain)) return domain;
-
+    if (check(domain)) {
+      return domain;
+    }
     // If there are subdomains
     if (domain.subdomains.length > 0) {
       let tempDomain: SemanticDomainWithSubdomains | undefined;
       for (const sub of domain.subdomains) {
         tempDomain = searchDomainByName(sub, target);
-        if (check(tempDomain)) return tempDomain;
+        if (check(tempDomain)) {
+          return tempDomain;
+        }
       }
     }
+    return undefined;
   }
 
   // Dispatch the search for a specified domain, and switches to it if it exists
