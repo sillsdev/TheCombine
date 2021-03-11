@@ -427,13 +427,13 @@ namespace BackendFramework.Models
         [BsonElement("srcWordId")]
         public string SrcWordId;
 
-        [BsonElement("senseStates")]
-        public List<State> SenseStates;
+        [BsonElement("getAudio")]
+        public bool GetAudio;
 
         public MergeSourceWord()
         {
             SrcWordId = "";
-            SenseStates = new List<State>();
+            GetAudio = false;
         }
     }
 

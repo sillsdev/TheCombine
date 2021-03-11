@@ -15,12 +15,10 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import {
-  MergeSourceWord,
   MergeWords,
   multiGlossWord,
   multiGlossWordAnyGuid,
   Sense,
-  State,
   Word,
 } from "types/word";
 
@@ -60,25 +58,25 @@ const mockWordList: { [key in mockWordListIndex]: Word } = {
 const mockMerge2a: MergeWords = {
   parent: { ...mockWordList["WA2"], id: "WA", history: [] },
   children: [
-    { srcWordId: "WA", senseStates: [State.Sense, State.Sense] },
-    { srcWordId: "WB", senseStates: [State.Duplicate, State.Separate] },
+    { srcWordId: "WA", getAudio: true },
+    { srcWordId: "WB", getAudio: false },
   ],
 };
 const mockMerge2b: MergeWords = {
   parent: { ...mockWordList["WB2"], id: "WB", history: [] },
-  children: [{ srcWordId: "WB2", senseStates: [State.Sense] }],
+  children: [{ srcWordId: "WB", getAudio: false }],
 };
 const mockMerge3a: MergeWords = {
   parent: { ...mockWordList["WA3"], id: "WA", history: [] },
   children: [
-    { srcWordId: "WA", senseStates: [State.Sense, State.Sense] },
-    { srcWordId: "WB", senseStates: [State.Sense, State.Separate] },
+    { srcWordId: "WA", getAudio: true },
+    { srcWordId: "WB", getAudio: false },
   ],
 };
 const mockMerge3b = mockMerge2b;
 const mockMerge4a: MergeWords = {
   parent: { ...mockWordList["WA4"], id: "WA", history: [] },
-  children: [{ srcWordId: "WA", senseStates: [State.Sense, State.Duplicate] }],
+  children: [{ srcWordId: "WA", getAudio: true }],
 };
 
 // These tests were written before guids were implemented, so guids can obstruct.
@@ -96,11 +94,11 @@ function hashMerge(merge: MergeWords) {
   return JSON.stringify(stripGuid(merge));
 }
 
-const mockMerges = [mockMerge2a, mockMerge2b, mockMerge3a, mockMerge4a];
-const mergeResults = [["WA2", "WB2"], ["WB2"], ["WA3", "WB2"], ["WA4"]];
-const mergeList: Hash<string[]> = {};
-for (let i = 0; i < mockMerges.length; i++) {
-  mergeList[hashMerge(mockMerges[i])] = mergeResults[i];
+const mockMergesArray = [mockMerge2a, mockMerge2b, mockMerge3a, mockMerge4a];
+const mergeResults = ["WA2", "WB2", "WA3", "WA4"];
+const mergeList: Hash<string> = {};
+for (let i = 0; i < mockMergesArray.length; i++) {
+  mergeList[hashMerge(mockMergesArray[i])] = mergeResults[i];
 }
 
 const mockGetWords = jest.fn();
@@ -109,20 +107,22 @@ function setMockFunctions() {
   mockGetWords.mockImplementation((id: mockWordListIndex) =>
     Promise.resolve(mockWordList[id])
   );
-  mockMergeWords.mockImplementation(
-    (parent: Word, children: MergeSourceWord[]) => {
-      expect(mockMerges).toContainEqual({ parent, children });
-      const args = hashMerge({ parent, children });
-      return Promise.resolve(mergeList[args]);
+  mockMergeWords.mockImplementation((mergeWordsArray: MergeWords[]) => {
+    const results = [];
+    for (const merge of mergeWordsArray) {
+      expect(mockMergesArray).toContainEqual(merge);
+      const arg = hashMerge(merge);
+      results.push(mergeList[arg]);
     }
-  );
+    return Promise.resolve(results);
+  });
 }
 
 jest.mock("backend", () => {
   return {
     getWord: (id: mockWordListIndex) => mockGetWords(id),
-    mergeWords: (parent: Word, children: MergeSourceWord[]) =>
-      mockMergeWords(parent, children),
+    mergeWords: (mergeWordsArray: MergeWords[]) =>
+      mockMergeWords(mergeWordsArray),
   };
 });
 
@@ -184,7 +184,7 @@ test("no merge", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(mockMergeWords).toHaveBeenCalledTimes(0);
+  expect(mockMergeWords).not.toHaveBeenCalled();
 });
 
 // Merge sense 3 from B as duplicate into sense 1 from A
@@ -207,15 +207,10 @@ test("merge senses from different words", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(mockMergeWords).toHaveBeenCalledTimes(2);
-  expect(mockMergeWords).toHaveBeenCalledWith(
-    mockMerge2a.parent,
-    mockMerge2a.children
-  );
-  expect(mockMergeWords).toHaveBeenCalledWith(
-    mockMerge2b.parent,
-    mockMerge2b.children
-  );
+  expect(mockMergeWords).toHaveBeenCalledTimes(1);
+  for (const mergeWords of [mockMerge2a, mockMerge2b]) {
+    expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
+  }
 });
 
 // Move sense 3 from B to A
@@ -242,15 +237,10 @@ test("move sense between words", async () => {
   });
   await mockStore.dispatch<any>(mergeAll());
 
-  expect(mockMergeWords).toHaveBeenCalledTimes(2);
-  expect(mockMergeWords).toHaveBeenCalledWith(
-    mockMerge3a.parent,
-    mockMerge3a.children
-  );
-  expect(mockMergeWords).toHaveBeenCalledWith(
-    mockMerge3b.parent,
-    mockMerge3b.children
-  );
+  expect(mockMergeWords).toHaveBeenCalledTimes(1);
+  for (const mergeWords of [mockMerge3a, mockMerge3b]) {
+    expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
+  }
 });
 
 // Merge sense 1 and 2 in A as duplicates
@@ -278,10 +268,7 @@ test("merge senses within a word", async () => {
   await mockStore.dispatch<any>(mergeAll());
 
   expect(mockMergeWords).toHaveBeenCalledTimes(1);
-  expect(mockMergeWords).toHaveBeenCalledWith(
-    mockMerge4a.parent,
-    mockMerge4a.children
-  );
+  expect(mockMergeWords).toHaveBeenCalledWith([mockMerge4a]);
 });
 
 describe("dispatchMergeStepData", () => {

@@ -72,7 +72,7 @@ export class Word {
 
 export interface MergeSourceWord {
   srcWordId: string;
-  senseStates: State[];
+  getAudio: boolean;
 }
 export interface MergeWords {
   parent: Word;
@@ -114,15 +114,16 @@ export function multiGlossWord(vern: string, glosses: string[]): Word {
 
 // Used for unit testing, as the expected result, when the guids don't matter.
 export function multiGlossWordAnyGuid(vern: string, glosses: string[]): Word {
+  const senses = glosses.map((g) => ({
+    ...new Sense(g),
+    guid: expect.any(String),
+  }));
   return {
     ...new Word(),
     id: randomIntString(),
     guid: expect.any(String),
     vernacular: vern,
-    senses: glosses.map((gloss) => ({
-      ...new Sense(gloss),
-      guid: expect.any(String),
-    })),
+    senses,
   };
 }
 
