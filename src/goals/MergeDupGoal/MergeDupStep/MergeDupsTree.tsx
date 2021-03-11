@@ -2,7 +2,7 @@ import { Sense, Word } from "types/word";
 
 export type Hash<V> = { [key: string]: V };
 
-export type TreeDataSense = Sense & { srcWord: string; order: number };
+export type TreeDataSense = Sense & { srcWordId: string; order: number };
 
 export interface MergeData {
   words: Hash<Word>;
@@ -10,8 +10,8 @@ export interface MergeData {
 }
 
 export interface MergeTreeReference {
-  word: string;
-  sense: string;
+  wordId: string;
+  senseId: string;
   duplicate: string;
 }
 

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
+using SIL.IO;
+using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
@@ -26,15 +28,17 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
         private readonly IHubContext<CombineHub> _notifyService;
+        private readonly ILogger<LiftController> _logger;
 
         public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<CombineHub> notifyService)
+            ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = liftService;
             _permissionService = permissionService;
             _notifyService = notifyService;
+            _logger = logger;
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -63,6 +67,11 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
+
+            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+
+            // Clear out any files left by a failed import
+            RobustIO.DeleteDirectoryAndContents(liftStoragePath);
 
             var file = fileUpload.File;
             if (file is null)
@@ -133,7 +142,6 @@ namespace BackendFramework.Controllers
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
             FileOperations.CopyDirectory(extractedDirPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
@@ -149,24 +157,33 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("No lift files detected");
             }
 
+            int liftParseResult;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
-            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
-
-            // Import words from lift file
-            var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
-            await liftMerger.SaveImportEntries();
-
-            // Add character set to project from ldml file
-            var proj = await _projectService.GetProject(projectId);
-            if (proj is null)
+            try
             {
-                return new NotFoundObjectResult(projectId);
-            }
+                // Add character set to project from ldml file
+                var proj = await _projectService.GetProject(projectId);
+                if (proj is null)
+                {
+                    return new NotFoundObjectResult(projectId);
+                }
 
-            _liftService.LdmlImport(
-                Path.Combine(liftStoragePath, "WritingSystems"),
-                proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+                _liftService.LdmlImport(
+                    Path.Combine(liftStoragePath, "WritingSystems"),
+                    proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
+
+                // Import words from lift file
+                liftParseResult = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                await liftMerger.SaveImportEntries();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error importing lift file {fileUpload.Name} into project {projectId}.");
+                return new BadRequestObjectResult("Error processing the lift data. Contact support for help.");
+            }
 
             // Store that we have imported Lift data already for this project to signal the frontend
             // not to attempt to import again.
@@ -179,7 +196,7 @@ namespace BackendFramework.Controllers
             project.LiftImported = true;
             await _projectService.Update(projectId, project);
 
-            return new OkObjectResult(resp);
+            return new OkObjectResult(liftParseResult);
         }
 
         /// <summary> Packages project data into zip file </summary>

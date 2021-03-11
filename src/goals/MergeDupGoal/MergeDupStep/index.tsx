@@ -26,8 +26,8 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
       dispatch(moveSenses(src, dest));
     },
-    orderSense: (wordID: string, senseID: string, order: number) => {
-      dispatch(orderSense(wordID, senseID, order));
+    orderSense: (wordId: string, senseId: string, order: number) => {
+      dispatch(orderSense(wordId, senseId, order));
     },
     orderDuplicate: (ref: MergeTreeReference, order: number) => {
       dispatch(orderDuplicate(ref, order));
