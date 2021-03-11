@@ -62,6 +62,8 @@ services:
 {% endif %}
     env_file:
       - ./.env.certmgr
+    environment:
+      PYTHONUNBUFFERED: 1
     volumes:
       - letsencrypt:/etc/letsencrypt
       - cert_store:/etc/cert_store

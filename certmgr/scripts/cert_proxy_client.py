@@ -84,14 +84,16 @@ class CertProxyClient(BaseCert):
         above for possible values.
         """
         if not self.cert_dir.exists() or not self.cert.exists():
+            print("No certificate found.")
             return CertState.Missing
         time_to_expire = self.get_time_to_expire()
         if time_to_expire.days < 0:
+            print(f"Certificate expired {-time_to_expire.days} ago.")
             return CertState.Expired
-        if time_to_expire.days == 0:
-            return CertState.Missing
         if time_to_expire.days < int(self.renew_before_expiry):
+            print(f"Certificate expires in {time_to_expire.days} days.")
             return CertState.Renewable
+        print(f"Certificate expires in {time_to_expire.days} days - no action.")
         return CertState.Ready
 
     def fetch_certificates(self) -> bool:
@@ -122,6 +124,7 @@ class CertProxyClient(BaseCert):
 
     def renew(self) -> None:
         """Renew the certificate from the AWS S3 bucket."""
+        print("Checking if SSL certificate is due for renewal.")
         cert_state = self.get_cert_state()
         if cert_state != CertState.Ready:
             if self.fetch_certificates():
