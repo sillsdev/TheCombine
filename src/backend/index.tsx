@@ -11,7 +11,7 @@ import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
 import { UserRole } from "types/userRole";
-import { MergeWord, Word } from "types/word";
+import { MergeSourceWord, MergeWords, Word } from "types/word";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -86,20 +86,13 @@ export async function getAllWords(): Promise<Word[]> {
   return resp.data;
 }
 
+/** Returns array of ids of the post-merge words. */
 export async function mergeWords(
   parent: Word,
-  children: MergeWord[]
+  children: MergeSourceWord[]
 ): Promise<string[]> {
   parent = JSON.parse(JSON.stringify(parent));
-  parent.id = "";
-  let childrenWords = children.map((child) => ({
-    SrcWordId: child.wordId,
-    SenseStates: child.senses,
-  }));
-  let mergeWords = {
-    Parent: parent,
-    ChildrenWords: childrenWords,
-  };
+  const mergeWords: MergeWords = { parent, children };
   let resp = await backendServer.put(
     `projects/${LocalStorage.getProjectId()}/words`,
     mergeWords,

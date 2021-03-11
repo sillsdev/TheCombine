@@ -15,7 +15,8 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import {
-  MergeWord,
+  MergeSourceWord,
+  MergeWords,
   multiGlossWord,
   multiGlossWordAnyGuid,
   Sense,
@@ -56,36 +57,32 @@ const mockWordList: { [key in mockWordListIndex]: Word } = {
 };
 
 // mockMergeN is for test treeN below
-interface parentWithMergeChildren {
-  parent: Word;
-  children: MergeWord[];
-}
-const mockMerge2a: parentWithMergeChildren = {
+const mockMerge2a: MergeWords = {
   parent: { ...mockWordList["WA2"], id: "WA", history: [] },
   children: [
-    { wordId: "WA", senses: [State.Sense, State.Sense] },
-    { wordId: "WB", senses: [State.Duplicate, State.Separate] },
+    { srcWordId: "WA", senseStates: [State.Sense, State.Sense] },
+    { srcWordId: "WB", senseStates: [State.Duplicate, State.Separate] },
   ],
 };
-const mockMerge2b: parentWithMergeChildren = {
+const mockMerge2b: MergeWords = {
   parent: { ...mockWordList["WB2"], id: "WB", history: [] },
-  children: [{ wordId: "WB2", senses: [State.Sense] }],
+  children: [{ srcWordId: "WB2", senseStates: [State.Sense] }],
 };
-const mockMerge3a: parentWithMergeChildren = {
+const mockMerge3a: MergeWords = {
   parent: { ...mockWordList["WA3"], id: "WA", history: [] },
   children: [
-    { wordId: "WA", senses: [State.Sense, State.Sense] },
-    { wordId: "WB", senses: [State.Sense, State.Separate] },
+    { srcWordId: "WA", senseStates: [State.Sense, State.Sense] },
+    { srcWordId: "WB", senseStates: [State.Sense, State.Separate] },
   ],
 };
 const mockMerge3b = mockMerge2b;
-const mockMerge4a: parentWithMergeChildren = {
+const mockMerge4a: MergeWords = {
   parent: { ...mockWordList["WA4"], id: "WA", history: [] },
-  children: [{ wordId: "WA", senses: [State.Sense, State.Duplicate] }],
+  children: [{ srcWordId: "WA", senseStates: [State.Sense, State.Duplicate] }],
 };
 
 // These tests were written before guids were implemented, so guids can obstruct.
-function stripGuid(merge: parentWithMergeChildren): parentWithMergeChildren {
+function stripGuid(merge: MergeWords): MergeWords {
   return {
     parent: {
       ...merge.parent,
@@ -95,7 +92,7 @@ function stripGuid(merge: parentWithMergeChildren): parentWithMergeChildren {
     children: merge.children,
   };
 }
-function hashMerge(merge: parentWithMergeChildren) {
+function hashMerge(merge: MergeWords) {
   return JSON.stringify(stripGuid(merge));
 }
 
@@ -112,17 +109,19 @@ function setMockFunctions() {
   mockGetWords.mockImplementation((id: mockWordListIndex) =>
     Promise.resolve(mockWordList[id])
   );
-  mockMergeWords.mockImplementation((parent: Word, children: MergeWord[]) => {
-    expect(mockMerges).toContainEqual({ parent, children });
-    const args = hashMerge({ parent, children });
-    return Promise.resolve(mergeList[args]);
-  });
+  mockMergeWords.mockImplementation(
+    (parent: Word, children: MergeSourceWord[]) => {
+      expect(mockMerges).toContainEqual({ parent, children });
+      const args = hashMerge({ parent, children });
+      return Promise.resolve(mergeList[args]);
+    }
+  );
 }
 
 jest.mock("backend", () => {
   return {
     getWord: (id: mockWordListIndex) => mockGetWords(id),
-    mergeWords: (parent: Word, children: MergeWord[]) =>
+    mergeWords: (parent: Word, children: MergeSourceWord[]) =>
       mockMergeWords(parent, children),
   };
 });

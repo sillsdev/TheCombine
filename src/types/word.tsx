@@ -70,9 +70,13 @@ export class Word {
   }
 }
 
-export interface MergeWord {
-  wordId: string;
-  senses: State[];
+export interface MergeSourceWord {
+  srcWordId: string;
+  senseStates: State[];
+}
+export interface MergeWords {
+  parent: Word;
+  children: MergeSourceWord[];
 }
 
 //used in ExistingDataTable

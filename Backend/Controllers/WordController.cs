@@ -206,9 +206,9 @@ namespace BackendFramework.Controllers
             try
             {
                 var newWordList = await _wordService.Merge(projectId, mergeWords);
-                return new ObjectResult(newWordList.Select(i => i.Id).ToList());
+                return new OkObjectResult(newWordList.Select(w => w.Id).ToList());
             }
-            catch (Exception)
+            catch
             {
                 return new BadRequestResult();
             }

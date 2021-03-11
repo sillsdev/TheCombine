@@ -188,7 +188,7 @@ namespace Backend.Tests.Controllers
             var mergeObject = new MergeWords
             {
                 Parent = thisWord,
-                ChildrenWords = new List<MergeSourceWord>
+                Children = new List<MergeSourceWord>
                 {
                     new MergeSourceWord
                     {
@@ -229,7 +229,7 @@ namespace Backend.Tests.Controllers
             var parentChildMergeObject = new MergeWords
             {
                 Parent = RandomWord(),
-                ChildrenWords = new List<MergeSourceWord>()
+                Children = new List<MergeSourceWord>()
             };
 
             // Set the child info
@@ -242,7 +242,7 @@ namespace Backend.Tests.Controllers
                     SrcWordId = _repo.Add(child).Result.Id,
                     SenseStates = new List<State> { State.Duplicate, State.Sense, State.Separate }
                 };
-                parentChildMergeObject.ChildrenWords.Add(newGenChild);
+                parentChildMergeObject.Children.Add(newGenChild);
             }
 
             var newWordList = _wordService.Merge(_projId, parentChildMergeObject).Result;

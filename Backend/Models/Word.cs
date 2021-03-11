@@ -408,20 +408,26 @@ namespace BackendFramework.Models
     /// </summary>
     public class MergeWords
     {
+        [BsonElement("parent")]
         public Word Parent { get; set; }
-        public List<MergeSourceWord> ChildrenWords { get; set; }
+
+        [BsonElement("children")]
+        public List<MergeSourceWord> Children { get; set; }
 
         public MergeWords()
         {
             Parent = new Word();
-            ChildrenWords = new List<MergeSourceWord>();
+            Children = new List<MergeSourceWord>();
         }
     }
 
     /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
     public class MergeSourceWord
     {
+        [BsonElement("srcWordId")]
         public string SrcWordId;
+
+        [BsonElement("senseStates")]
         public List<State> SenseStates;
 
         public MergeSourceWord()

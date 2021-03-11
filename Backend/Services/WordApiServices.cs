@@ -136,20 +136,19 @@ namespace BackendFramework.Services
 
             var addParent = mergeWords.Parent.Clone();
             addParent.History = new List<string>();
-            addParent.Audio = new List<string>();
 
-            // Generate new child words from ChildrenWords.
-            foreach (var newChildWordState in mergeWords.ChildrenWords)
+            // Generate new child words from Children.
+            foreach (var childSource in mergeWords.Children)
             {
                 // Get child word.
-                var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
+                var currentChildWord = await _repo.GetWord(projectId, childSource.SrcWordId);
                 if (currentChildWord is null)
                 {
-                    throw new KeyNotFoundException($"Unable to locate word: ${newChildWordState.SrcWordId}");
+                    throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
                 }
 
                 // Copy over audio if child doesn't have own surviving entry.
-                if (!newChildWordState.SenseStates.Exists(x => x == State.Separate))
+                if (!childSource.SenseStates.Exists(x => x == State.Separate))
                 {
                     addParent.Audio.AddRange(currentChildWord.Audio);
                 }
@@ -158,17 +157,17 @@ namespace BackendFramework.Services
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
                 // Iterate through senses of that word and change to corresponding state in merged words.
-                if (currentChildWord.Senses.Count != newChildWordState.SenseStates.Count)
+                if (currentChildWord.Senses.Count != childSource.SenseStates.Count)
                 {
                     throw new FormatException("Sense counts don't match");
                 }
                 for (var i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    currentChildWord.Senses[i].Accessibility = newChildWordState.SenseStates[i];
+                    currentChildWord.Senses[i].Accessibility = childSource.SenseStates[i];
                 }
 
                 // Change the child word's history to its previous self
-                currentChildWord.History = new List<string> { newChildWordState.SrcWordId };
+                currentChildWord.History = new List<string> { childSource.SrcWordId };
 
                 // Add child word to the database
                 currentChildWord.Id = "";
@@ -182,7 +181,7 @@ namespace BackendFramework.Services
                 separateWord.Id = "";
                 for (var i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    switch (newChildWordState.SenseStates[i])
+                    switch (childSource.SenseStates[i])
                     {
                         // Add the word to the parent's history.
                         case State.Sense:
@@ -217,10 +216,12 @@ namespace BackendFramework.Services
             }
 
             // Add parent with child history to the database
+            addParent.Id = "";
             addParent.ProjectId = projectId;
             addParent.Modified = "";
-            var newParent = await _repo.Create(addParent);
-            newWordsList.Insert(0, newParent);
+            addParent.Audio = addParent.Audio.Distinct().ToList();
+            addParent = await _repo.Create(addParent);
+            newWordsList.Insert(0, addParent);
             return newWordsList;
         }
 
