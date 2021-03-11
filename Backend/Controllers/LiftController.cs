@@ -181,7 +181,7 @@ namespace BackendFramework.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Error importing lift file {fileUpload.Name} into {projectId}");
+                _logger.LogError(e, $"Error importing lift file {fileUpload.Name} into project {projectId}.");
                 return new BadRequestObjectResult("Error processing the lift data. Contact support for help.");
             }
 
