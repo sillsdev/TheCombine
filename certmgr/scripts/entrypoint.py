@@ -3,8 +3,8 @@
 
 
 import os
+import signal
 import sys
-import time
 from typing import Dict, cast
 
 from base_cert import BaseCert
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         cert_obj.create()
         while True:
             # sleep for 12 hours before checking for renewal
-            time.sleep(12 * 3600)
+            signal.sigtimedwait([signal.SIGUSR1], 60.0)
             cert_obj.renew()
     else:
         print(f"Cannot run {cert_mode} mode")
