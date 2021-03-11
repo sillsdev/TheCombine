@@ -508,7 +508,10 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    $ docker-compose logs --follow backend
    ```
 
-   Note that `-f` may be used as shorthand for `--follow`.
+   (`--follow` may be abbreviated as `-f`).
+
+   The `--follow` option will show you the current logs and updte the display as items are logged. To just get the
+   current snapshot of the logs, do not add the `--follow` option.
 
 7. To stop
 
