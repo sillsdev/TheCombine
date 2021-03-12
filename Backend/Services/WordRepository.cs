@@ -154,7 +154,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
-        /// <returns> A long: number of words deleted </returns>
+        /// <returns> Number of words deleted </returns>
         public async Task<long> DeleteFrontier(string projectId, List<string> wordIds)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();

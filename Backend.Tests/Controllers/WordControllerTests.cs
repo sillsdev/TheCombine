@@ -225,7 +225,7 @@ namespace Backend.Tests.Controllers
             }
             Assert.AreEqual(_repo.GetFrontier(_projId).Result.Count, numberOfChildren);
 
-            var mergeWordsList = new List<MergeWords>() { mergeWords };
+            var mergeWordsList = new List<MergeWords> { mergeWords };
             var newWords = _wordService.Merge(_projId, mergeWordsList).Result;
 
             // Check for correct history length;
@@ -242,7 +242,7 @@ namespace Backend.Tests.Controllers
         {
             var mergeWordsA = new MergeWords { Parent = RandomWord() };
             var mergeWordsB = new MergeWords { Parent = RandomWord() };
-            var mergeWordsList = new List<MergeWords>() { mergeWordsA, mergeWordsB };
+            var mergeWordsList = new List<MergeWords> { mergeWordsA, mergeWordsB };
             var newWords = _wordService.Merge(_projId, mergeWordsList).Result;
 
             Assert.That(newWords, Has.Count.EqualTo(2));
