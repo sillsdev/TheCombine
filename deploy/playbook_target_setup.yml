@@ -52,6 +52,11 @@
       tags:
         - aws
 
+    - name: setup certificate update from AWS S3
+      import_role:
+        name: cert_update
+      when: cert_mode == "cert-client"
+
     - name: setup container maintenance scripts
       import_role:
         name: combine_maintenance

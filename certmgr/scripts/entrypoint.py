@@ -14,7 +14,20 @@ from letsencrypt_cert import LetsEncryptCert
 from self_signed_cert import SelfSignedCert
 from utils import get_setting
 
-if __name__ == "__main__":
+
+def handle_user_sig1():
+    """
+    Handle the signal sent when Ethernet detected.
+
+    This function is a no-op since the purpose of the signal is to terminate the
+    timeout until the next time to check renewal.  This handler is used to replace
+    the default handler.
+    """
+    print("Ethernet connection detected.")
+
+
+def main() -> None:
+    """Run the main processing loop for the certmgr instance."""
     mode_choices: Dict[str, BaseCert] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
@@ -32,10 +45,18 @@ if __name__ == "__main__":
 
     if cert_obj is not None:
         cert_obj.create()
+        eth_signal = signal.SIGUSR1
+        signal.signal(eth_signal, handle_user_sig1)
         while True:
             # sleep for 12 hours before checking for renewal
-            signal.sigtimedwait([signal.SIGUSR1], 60.0)
+            got_sig = signal.sigtimedwait([eth_signal], 60*12)
+            if got_sig is not None:
+                print(f"Renew triggered by signal ({got_sig.si_signo}).")
             cert_obj.renew()
     else:
         print(f"Cannot run {cert_mode} mode")
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
