@@ -213,9 +213,6 @@ namespace Backend.Tests.Controllers
         [Test]
         public void MergeWordsMultiChild()
         {
-            // Each parent word is assumed correct as it is calculated in the frontend, except:
-            // The history and audio are built in the backend.
-
             // Build a mergeWords with a parent with 3 children.
             var mergeWords = new MergeWords { Parent = RandomWord() };
             const int numberOfChildren = 3;
@@ -238,6 +235,24 @@ namespace Backend.Tests.Controllers
             // Confirm that parent added to repo and children not in frontier.
             Assert.IsNotNull(_repo.GetWord(_projId, dbParent.Id).Result);
             Assert.AreEqual(_repo.GetFrontier(_projId).Result.Count, 1);
+        }
+
+        [Test]
+        public void MergeWordsMultiple()
+        {
+            var mergeWordsA = new MergeWords { Parent = RandomWord() };
+            var mergeWordsB = new MergeWords { Parent = RandomWord() };
+            var mergeWordsList = new List<MergeWords>() { mergeWordsA, mergeWordsB };
+            var newWords = _wordService.Merge(_projId, mergeWordsList).Result;
+
+            Assert.That(newWords, Has.Count.EqualTo(2));
+            Assert.AreNotEqual(newWords.First().Id, newWords.Last().Id);
+
+            var frontier = _repo.GetFrontier(_projId).Result;
+            Assert.That(frontier, Has.Count.EqualTo(2));
+            Assert.AreNotEqual(frontier.First().Id, frontier.Last().Id);
+            Assert.Contains(frontier.First(), newWords);
+            Assert.Contains(frontier.Last(), newWords);
         }
 
         [Test]
