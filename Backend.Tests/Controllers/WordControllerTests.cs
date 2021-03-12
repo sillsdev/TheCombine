@@ -216,7 +216,7 @@ namespace Backend.Tests.Controllers
             // Build a mergeWords with a parent with 3 children.
             var mergeWords = new MergeWords { Parent = RandomWord() };
             const int numberOfChildren = 3;
-            for (int i = 0; i < numberOfChildren; i++)
+            foreach (var _ in Enumerable.Range(0, numberOfChildren))
             {
                 var child = RandomWord();
                 var id = _repo.Create(child).Result.Id;

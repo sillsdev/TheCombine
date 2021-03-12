@@ -128,8 +128,7 @@ namespace BackendFramework.Services
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
-        private async Task<Word> MergePrepParent(
-            string projectId, MergeWords mergeWords)
+        private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
