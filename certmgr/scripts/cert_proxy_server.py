@@ -8,7 +8,6 @@ the NUCs, by fetching their certificates and pushing them to an AWS S3 Bucket.
 
 
 from pathlib import Path
-from typing import cast
 
 from aws import aws_push_certs
 from letsencrypt_cert import LetsEncryptCert
@@ -17,7 +16,7 @@ from utils import get_setting, update_link
 
 class CertProxyServer(LetsEncryptCert):
     """
-    Manage certificates for the server and provice proxy certificate services.
+    Manage certificates for the server and provide proxy certificate services.
 
     CertProxyServer is a kind of LetsEncryptCert object that uses the base class
     functionality to manage its own certificate and, in addition, acts as a proxy
@@ -29,7 +28,7 @@ class CertProxyServer(LetsEncryptCert):
     def __init__(self) -> None:
         """Initialize CertProxyServer instance."""
         super().__init__()
-        self.renew_before_expiry = cast(int, get_setting("CERT_PROXY_RENEWAL"))
+        self.renew_before_expiry = int(get_setting("CERT_PROXY_RENEWAL"))
 
     def create(self) -> None:
         """
@@ -61,7 +60,7 @@ class CertProxyServer(LetsEncryptCert):
            the S3 bucket to use; {domain} is the individual domain from the
            CERT_PROXY_DOMAINS variable.
         """
-        domain_list = cast(str, get_setting("CERT_PROXY_DOMAINS")).split()
+        domain_list = get_setting("CERT_PROXY_DOMAINS").split()
         cert_created = False
         for domain in domain_list:
             if self.get_cert([domain]):

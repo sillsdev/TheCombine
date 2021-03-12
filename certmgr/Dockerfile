@@ -16,7 +16,7 @@
 FROM debian:buster
 
 RUN apt-get update && \
-    apt-get install -y apt-utils curl certbot zip && \
+    apt-get install -y apt-utils curl certbot zip procps && \
     apt-get autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
