@@ -153,6 +153,18 @@ namespace BackendFramework.Services
             return deleted.DeletedCount > 0;
         }
 
+        /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
+        /// <returns> Number of words deleted </returns>
+        public async Task<long> DeleteFrontier(string projectId, List<string> wordIds)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, projectId),
+                filterDef.In(x => x.Id, wordIds));
+            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(filter);
+            return deleted.DeletedCount;
+        }
+
         /// <summary> Updates <see cref="Word"/> in the Frontier collection with same wordId and projectId </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> UpdateFrontier(Word word)

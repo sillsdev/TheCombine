@@ -10,7 +10,7 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import { maxNumSteps } from "types/goalUtilities";
-import { State, Word } from "types/word";
+import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
@@ -155,38 +155,34 @@ export function mergeSense() {
 
 type SenseWithState = TreeDataSense & { state: State };
 
-export async function mergeWord(
+// Given a wordId, constructs from the state the corresponing MergeWords.
+// Returns the MergeWords, or undefined if the parent and child are identical.
+function getMergeWords(
   wordId: string,
-  getState: () => StoreState,
-  mapping: Hash<{ srcWordId: string; order: number }>
-): Promise<Hash<{ srcWordId: string; order: number }>> {
-  // find and build MergeWord[]
+  getState: () => StoreState
+): MergeWords | undefined {
+  // Find and build MergeSourceWord[].
   const word = getState().mergeDuplicateGoal.tree.words[wordId];
   if (word) {
     const data = getState().mergeDuplicateGoal.data;
 
-    // create a list of all senses and add merge type tags slit by src word
+    // Create list of all senses and add merge type tags slit by src word.
     const senses: Hash<SenseWithState[]> = {};
 
     const allSenses = Object.values(word.senses).map((sense) =>
       Object.values(sense)
     );
 
-    // build senses array
+    // Build senses array.
     for (const senseList of allSenses) {
       for (const sense of senseList) {
         const senseData = data.senses[sense];
-        let wordId = senseData.srcWordId;
-
-        const map = mapping[`${wordId}:${senseData.order}`];
-        if (map) {
-          wordId = map.srcWordId;
-        }
+        const wordId = senseData.srcWordId;
 
         if (!senses[wordId]) {
-          const dbWord = await backend.getWord(wordId);
+          const dbWord = data.words[wordId];
 
-          // add each sense into senses as separate
+          // Add each sense into senses as separate.
           senses[wordId] = [];
           for (const sense of dbWord.senses) {
             senses[wordId].push({
@@ -204,16 +200,9 @@ export async function mergeWord(
     Object.values(word.senses).forEach((senseHash) => {
       const senseIds = Object.values(senseHash);
 
-      // Set the first sense to be merged as sense.
+      // Set the first sense to be merged as State.Sense.
       const senseData = data.senses[senseIds[0]];
-      let wordId = senseData.srcWordId;
-      let senseIndex = senseData.order;
-      const map = mapping[`${wordId}:${senseData.order}`];
-      if (map) {
-        wordId = map.srcWordId;
-        senseIndex = map.order;
-      }
-      const mainSense = senses[wordId][senseIndex];
+      const mainSense = senses[senseData.srcWordId][senseData.order];
       mainSense.state = State.Sense;
 
       // Merge the rest as duplicates.
@@ -230,19 +219,29 @@ export async function mergeWord(
       });
     });
 
-    // clean order of senses in each src word to reflect
-    // the order in the backend
+    // Clean order of senses in each src word to reflect backend order.
     Object.values(senses).forEach((wordSenses) => {
       wordSenses = wordSenses.sort((a, b) => a.order - b.order);
       senses[wordSenses[0].srcWordId] = wordSenses;
     });
 
-    // construct parent word
-    const parent: Word = { ...data.words[wordId], senses: [] };
+    // Don't return empty merges: when the only child is the parent word
+    // and has the same number of senses as parent (all with State.Sense).
+    if (Object.values(senses).length === 1) {
+      const onlyChild = Object.values(senses)[0];
+      if (
+        onlyChild[0].srcWordId === wordId &&
+        onlyChild.length === data.words[wordId].senses.length &&
+        !onlyChild.find((s) => s.state !== State.Sense)
+      ) {
+        return undefined;
+      }
+    }
 
-    // construct sense children
-    const children = Object.values(senses).map((word) => {
-      word.forEach((sense) => {
+    // Construct parent and children.
+    const parent: Word = { ...data.words[wordId], senses: [] };
+    const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
+      sList.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {
           parent.senses.push({
             guid: sense.guid,
@@ -252,61 +251,13 @@ export async function mergeWord(
         }
       });
       return {
-        wordId: word[0].srcWordId,
-        senses: word.map((sense) => sense.state),
+        srcWordId: sList[0].srcWordId,
+        getAudio: !sList.find((sense) => sense.state === State.Separate),
       };
     });
 
-    // a merge is an identity if the only child is the parent word
-    // and it has the same number of senses as parent (all with State.Sense)
-    if (
-      children.length === 1 &&
-      children[0].wordId === wordId &&
-      children[0].senses.length === data.words[wordId].senses.length &&
-      !children[0].senses.find((s) => s !== State.Sense)
-    ) {
-      // if the merge is an identity don't bother sending a merge
-      return mapping;
-    }
-
-    // send database call
-    const newWords = await backend.mergeWords(parent, children);
-    let separateIndex = 0;
-    const keepCounts: number[] = [];
-    for (let i in newWords) {
-      keepCounts[i] = 0;
-    }
-
-    for (const child of children) {
-      // if merge contains separate increment index
-      if (child.senses.includes(State.Separate)) {
-        separateIndex++;
-      }
-
-      for (const senseIndex in child.senses) {
-        const src = `${child.wordId}:${senseIndex}`;
-        switch (child.senses[senseIndex]) {
-          case State.Sense:
-            mapping[src] = { srcWordId: newWords[0], order: keepCounts[0] };
-            keepCounts[0]++;
-            break;
-          case State.Separate:
-            mapping[src] = {
-              srcWordId: newWords[separateIndex],
-              order: keepCounts[separateIndex],
-            };
-            keepCounts[separateIndex]++;
-            break;
-          case State.Duplicate:
-            mapping[src] = { srcWordId: newWords[0], order: -1 };
-            break;
-          default:
-            break;
-        }
-      }
-    }
+    return { parent, children };
   }
-  return mapping;
 }
 
 export function mergeAll() {
@@ -318,10 +269,16 @@ export function mergeAll() {
     LocalStorage.setMergeDupsBlacklist(blacklist);
 
     // Merge words.
-    let mapping: Hash<{ srcWordId: string; order: number }> = {};
     const words = Object.keys(getState().mergeDuplicateGoal.tree.words);
-    for (const wordId of words) {
-      mapping = await mergeWord(wordId, getState, mapping);
+    const mergeWordsArray: MergeWords[] = [];
+    words.forEach((id) => {
+      const wordsToMerge = getMergeWords(id, getState);
+      if (wordsToMerge) {
+        mergeWordsArray.push(wordsToMerge);
+      }
+    });
+    if (mergeWordsArray.length) {
+      await backend.mergeWords(mergeWordsArray);
     }
   };
 }

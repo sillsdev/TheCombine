@@ -180,7 +180,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void MergeWordsIdentity()
+        public void MergeWordsOneChild()
         {
             var thisWord = RandomWord();
             thisWord = _repo.Create(thisWord).Result;
@@ -188,17 +188,13 @@ namespace Backend.Tests.Controllers
             var mergeObject = new MergeWords
             {
                 Parent = thisWord,
-                ChildrenWords = new List<MergeSourceWord>
+                Children = new List<MergeSourceWord>
                 {
-                    new MergeSourceWord
-                    {
-                        SrcWordId = thisWord.Id,
-                        SenseStates = new List<State> {State.Sense, State.Sense, State.Sense}
-                    }
+                    new MergeSourceWord { SrcWordId = thisWord.Id }
                 }
             };
 
-            var newWords = _wordService.Merge(_projId, mergeObject).Result;
+            var newWords = _wordService.Merge(_projId, new List<MergeWords> { mergeObject }).Result;
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
@@ -211,54 +207,52 @@ namespace Backend.Tests.Controllers
 
             // Check that new word has the right history
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
-            var intermediateWord = _repo.GetWord(_projId, newWords.First().History.First()).Result;
-            if (intermediateWord is null)
-            {
-                Assert.Fail();
-                return;
-            }
-            Assert.That(intermediateWord.History, Has.Count.EqualTo(1));
-            Assert.AreEqual(intermediateWord.History.First(), thisWord.Id);
+            Assert.AreEqual(newWords.First().History.First(), thisWord.Id);
         }
 
         [Test]
-        public void MergeWords()
+        public void MergeWordsMultiChild()
         {
-            // The parent word is inherently correct as it is calculated by the frontend as the desired result of the
-            // merge
-            var parentChildMergeObject = new MergeWords
+            // Build a mergeWords with a parent with 3 children.
+            var mergeWords = new MergeWords { Parent = RandomWord() };
+            const int numberOfChildren = 3;
+            foreach (var _ in Enumerable.Range(0, numberOfChildren))
             {
-                Parent = RandomWord(),
-                ChildrenWords = new List<MergeSourceWord>()
-            };
-
-            // Set the child info
-            var childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
-            foreach (var child in childWords)
-            {
-                // Generate mergeSourceWord with new child Id and desired child state list
-                var newGenChild = new MergeSourceWord
-                {
-                    SrcWordId = _repo.Add(child).Result.Id,
-                    SenseStates = new List<State> { State.Duplicate, State.Sense, State.Separate }
-                };
-                parentChildMergeObject.ChildrenWords.Add(newGenChild);
+                var child = RandomWord();
+                var id = _repo.Create(child).Result.Id;
+                Assert.IsNotNull(_repo.GetWord(_projId, id).Result);
+                mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
             }
+            Assert.AreEqual(_repo.GetFrontier(_projId).Result.Count, numberOfChildren);
 
-            var newWordList = _wordService.Merge(_projId, parentChildMergeObject).Result;
+            var mergeWordsList = new List<MergeWords> { mergeWords };
+            var newWords = _wordService.Merge(_projId, mergeWordsList).Result;
 
-            // Check for parent is in the db
-            var dbParent = newWordList.First();
-            Assert.AreEqual(dbParent.Senses.Count, 3);
-            Assert.AreEqual(dbParent.History.Count, 3);
+            // Check for correct history length;
+            var dbParent = newWords.First();
+            Assert.AreEqual(dbParent.History.Count, numberOfChildren);
 
-            // Check that separate words were made
-            Assert.AreEqual(newWordList.Count, 4);
+            // Confirm that parent added to repo and children not in frontier.
+            Assert.IsNotNull(_repo.GetWord(_projId, dbParent.Id).Result);
+            Assert.AreEqual(_repo.GetFrontier(_projId).Result.Count, 1);
+        }
 
-            foreach (var word in newWordList)
-            {
-                Assert.Contains(_repo.GetWord(_projId, word.Id).Result, _repo.GetAllWords(_projId).Result);
-            }
+        [Test]
+        public void MergeWordsMultiple()
+        {
+            var mergeWordsA = new MergeWords { Parent = RandomWord() };
+            var mergeWordsB = new MergeWords { Parent = RandomWord() };
+            var mergeWordsList = new List<MergeWords> { mergeWordsA, mergeWordsB };
+            var newWords = _wordService.Merge(_projId, mergeWordsList).Result;
+
+            Assert.That(newWords, Has.Count.EqualTo(2));
+            Assert.AreNotEqual(newWords.First().Id, newWords.Last().Id);
+
+            var frontier = _repo.GetFrontier(_projId).Result;
+            Assert.That(frontier, Has.Count.EqualTo(2));
+            Assert.AreNotEqual(frontier.First().Id, frontier.Last().Id);
+            Assert.Contains(frontier.First(), newWords);
+            Assert.Contains(frontier.Last(), newWords);
         }
 
         [Test]

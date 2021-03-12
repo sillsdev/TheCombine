@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -189,7 +189,7 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId}/words </remarks>
         /// <returns> List of ids of new words </returns>
         [HttpPut]
-        public async Task<IActionResult> Put(string projectId, [FromBody] MergeWords mergeWords)
+        public async Task<IActionResult> Put(string projectId, [FromBody] List<MergeWords> mergeWordsList)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
@@ -205,10 +205,10 @@ namespace BackendFramework.Controllers
 
             try
             {
-                var newWordList = await _wordService.Merge(projectId, mergeWords);
-                return new ObjectResult(newWordList.Select(i => i.Id).ToList());
+                var newWords = await _wordService.Merge(projectId, mergeWordsList);
+                return new OkObjectResult(newWords.Select(w => w.Id).ToList());
             }
-            catch (Exception)
+            catch
             {
                 return new BadRequestResult();
             }

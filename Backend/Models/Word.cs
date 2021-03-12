@@ -409,12 +409,12 @@ namespace BackendFramework.Models
     public class MergeWords
     {
         public Word Parent { get; set; }
-        public List<MergeSourceWord> ChildrenWords { get; set; }
+        public List<MergeSourceWord> Children { get; set; }
 
         public MergeWords()
         {
             Parent = new Word();
-            ChildrenWords = new List<MergeSourceWord>();
+            Children = new List<MergeSourceWord>();
         }
     }
 
@@ -422,12 +422,12 @@ namespace BackendFramework.Models
     public class MergeSourceWord
     {
         public string SrcWordId;
-        public List<State> SenseStates;
+        public bool GetAudio;
 
         public MergeSourceWord()
         {
             SrcWordId = "";
-            SenseStates = new List<State>();
+            GetAudio = false;
         }
     }
 
