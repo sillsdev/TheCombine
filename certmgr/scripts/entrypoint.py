@@ -45,11 +45,11 @@ def main() -> None:
 
     if cert_obj is not None:
         cert_obj.create()
-        eth_signal = signal.SIGUSR1
-        signal.signal(eth_signal, handle_user_sig1)
+        usr1_signal = signal.SIGUSR1
+        signal.signal(usr1_signal, handle_user_sig1)
         while True:
-            # sleep for 12 hours before checking for renewal
-            got_sig = signal.sigtimedwait([eth_signal], 60*12)
+            # check for renewal after 12 hours or SIGUSR1 received
+            got_sig = signal.sigtimedwait([usr1_signal], 60*12)
             if got_sig is not None:
                 print(f"Renew triggered by signal ({got_sig.si_signo}).")
             cert_obj.renew()
