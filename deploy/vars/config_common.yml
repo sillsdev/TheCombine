@@ -39,9 +39,9 @@ combine_cert_env_vars:
   - key: "CERT_PROXY_DOMAINS"
     value: "{{ combine_cert_proxy_list | default([]) }}"
   - key: "CERT_PROXY_RENEWAL"
-    value: 60
+    value: "{{ cert_proxy_renewal | default(60) }}"
   - key: "CERT_SELF_RENEWAL"
-    value: 30
+    value: "{{ cert_self_renewal | default(30) }}"
   - key: "AWS_S3_CERT_LOC"
     value: "{{ aws_s3_cert_loc }}"
   - key: "AWS_S3_PROFILE"

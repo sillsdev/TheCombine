@@ -9,12 +9,11 @@ volume for the certbot data as well as the letsencrypt certificates.
 import os
 from pathlib import Path
 import time
-from typing import List, cast
+from typing import List
 
 from base_cert import BaseCert
-import requests
 from self_signed_cert import SelfSignedCert
-from utils import get_setting, update_link
+from utils import get_setting, is_reachable, update_link
 
 
 class LetsEncryptCert(BaseCert):
@@ -26,15 +25,15 @@ class LetsEncryptCert(BaseCert):
         """Initialize class from environment variables."""
         # pylint: disable=too-many-instance-attributes
         # Ten are required in this case.
-        self.cert_store = cast(str, get_setting("CERT_STORE"))
-        self.server_name = cast(str, get_setting("SERVER_NAME"))
-        self.email = cast(str, get_setting("CERT_EMAIL"))
-        self.max_connect_tries: int = int(get_setting("MAX_CONNECT_TRIES"))
+        self.cert_store = get_setting("CERT_STORE")
+        self.server_name = get_setting("SERVER_NAME")
+        self.email = get_setting("CERT_EMAIL")
+        self.max_connect_tries = int(get_setting("MAX_CONNECT_TRIES"))
         self.staging = get_setting("CERT_STAGING") != "0"
         self.cert_dir = Path(f"{LetsEncryptCert.LETSENCRYPT_DIR}/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"{self.cert_dir}/fullchain.pem")
-        self.renew_before_expiry = cast(int, get_setting("CERT_SELF_RENEWAL"))
+        self.renew_before_expiry = int(get_setting("CERT_SELF_RENEWAL"))
 
     @staticmethod
     def update_renew_before_expiry(domain: str, renew_before_expiry_period: int) -> None:
@@ -77,7 +76,7 @@ class LetsEncryptCert(BaseCert):
             if link_target == self.cert_dir:
                 is_letsencrypt_cert = True
 
-        # if we do not have a certificate from letsncrypt, then we:
+        # if we do not have a certificate from letsencrypt, then we:
         #  1. wait for the webserver to come up since we use the webroot
         #     challenge method;
         #  2. request a certificate from Let's Encrypt using certbot
@@ -89,7 +88,7 @@ class LetsEncryptCert(BaseCert):
 
             # Get additional variables for certbot
             domain_list: List[str] = [self.server_name]
-            domain_list.extend(cast(str, get_setting("CERT_ADDL_DOMAINS")).split())
+            domain_list.extend(get_setting("CERT_ADDL_DOMAINS").split())
 
             if self.get_cert(domain_list):
                 # update the certificate link for the Nginx web server
@@ -141,18 +140,8 @@ class LetsEncryptCert(BaseCert):
         """
         attempt_count = 0
         while attempt_count < self.max_connect_tries:
-            try:
-                # Don't allow redirect errors since letsencrypt connects
-                # on port 80 and since we have a self-signed cert for now
-                # it will cause errors
-                resp: requests.Response = requests.get(
-                    f"http://{self.server_name}", allow_redirects=False
-                )
-            except requests.ConnectionError:
-                attempt_count += 1
-            else:
-                if resp.status_code in (200, 301):
-                    return True
-                attempt_count += 1
+            if is_reachable(f"http://{self.server_name}", False):
+                return True
+            attempt_count += 1
             time.sleep(10)
         return False
