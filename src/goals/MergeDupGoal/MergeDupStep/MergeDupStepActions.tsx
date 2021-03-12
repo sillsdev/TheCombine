@@ -198,11 +198,9 @@ function getMergeWords(
     Object.values(word.senses).forEach((senseHash) => {
       const senseIds = Object.values(senseHash);
 
-      // Set the first sense to be merged as sense.
+      // Set the first sense to be merged as State.Sense.
       const senseData = data.senses[senseIds[0]];
-      const wordId = senseData.srcWordId;
-      const senseIndex = senseData.order;
-      const mainSense = senses[wordId][senseIndex];
+      const mainSense = senses[senseData.srcWordId][senseData.order];
       mainSense.state = State.Sense;
 
       // Merge the rest as duplicates.
@@ -219,30 +217,26 @@ function getMergeWords(
       });
     });
 
-    // clean order of senses in each src word to reflect
-    // the order in the backend
+    // Clean order of senses in each src word to reflect backend order.
     const childSources = Object.values(senses);
     childSources.forEach((wordSenses) => {
       wordSenses = wordSenses.sort((a, b) => a.order - b.order);
       senses[wordSenses[0].srcWordId] = wordSenses;
     });
 
-    // a merge is an identity if the only child is the parent word
-    // and it has the same number of senses as parent (all with State.Sense)
+    // Don't return empty merges: when the only child is the parent word
+    // and has the same number of senses as parent (all with State.Sense).
     if (
       childSources.length === 1 &&
       childSources[0][0].srcWordId === wordId &&
       childSources[0].length === data.words[wordId].senses.length &&
       !childSources[0].find((s) => s.state !== State.Sense)
     ) {
-      // if the merge is an identity don't bother sending a merge
       return undefined;
     }
 
-    // construct parent word
+    // Construct parent and children.
     const parent: Word = { ...data.words[wordId], senses: [] };
-
-    // construct sense children
     const children: MergeSourceWord[] = childSources.map((wordSenses) => {
       wordSenses.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {
