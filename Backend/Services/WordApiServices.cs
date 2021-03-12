@@ -177,7 +177,7 @@ namespace BackendFramework.Services
         {
             var newWords = new List<Word>();
             await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m)
-                                             .ContinueWith(Task => newWords.Add(Task.Result))));
+                                             .ContinueWith(task => newWords.Add(task.Result))));
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
             return await _repo.Create(newWords);
         }

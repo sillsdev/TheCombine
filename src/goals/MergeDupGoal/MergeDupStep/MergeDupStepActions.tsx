@@ -155,6 +155,8 @@ export function mergeSense() {
 
 type SenseWithState = TreeDataSense & { state: State };
 
+// Given a wordId, constructs from the state the corresponing MergeWords.
+// Returns the MergeWords, or undefined if the parent and child are identical.
 function getMergeWords(
   wordId: string,
   getState: () => StoreState
