@@ -218,27 +218,28 @@ function getMergeWords(
     });
 
     // Clean order of senses in each src word to reflect backend order.
-    const childSources = Object.values(senses);
-    childSources.forEach((wordSenses) => {
+    Object.values(senses).forEach((wordSenses) => {
       wordSenses = wordSenses.sort((a, b) => a.order - b.order);
       senses[wordSenses[0].srcWordId] = wordSenses;
     });
 
     // Don't return empty merges: when the only child is the parent word
     // and has the same number of senses as parent (all with State.Sense).
-    if (
-      childSources.length === 1 &&
-      childSources[0][0].srcWordId === wordId &&
-      childSources[0].length === data.words[wordId].senses.length &&
-      !childSources[0].find((s) => s.state !== State.Sense)
-    ) {
-      return undefined;
+    if (Object.values(senses).length === 1) {
+      const onlyChild = Object.values(senses)[0];
+      if (
+        onlyChild[0].srcWordId === wordId &&
+        onlyChild.length === data.words[wordId].senses.length &&
+        !onlyChild.find((s) => s.state !== State.Sense)
+      ) {
+        return undefined;
+      }
     }
 
     // Construct parent and children.
     const parent: Word = { ...data.words[wordId], senses: [] };
-    const children: MergeSourceWord[] = childSources.map((wordSenses) => {
-      wordSenses.forEach((sense) => {
+    const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
+      sList.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {
           parent.senses.push({
             guid: sense.guid,
@@ -248,8 +249,8 @@ function getMergeWords(
         }
       });
       return {
-        srcWordId: wordSenses[0].srcWordId,
-        getAudio: !wordSenses.find((s) => s.state === State.Separate),
+        srcWordId: sList[0].srcWordId,
+        getAudio: !sList.find((sense) => sense.state === State.Separate),
       };
     });
 
