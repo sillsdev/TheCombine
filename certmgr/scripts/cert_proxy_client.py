@@ -65,7 +65,6 @@ class CertProxyClient(BaseCert):
             match = re.match(r"notAfter=(.*)\n", results.stdout)
             if match:
                 expires_str = match.group(1)
-                print(f"Expires on {expires_str}")
                 # convert to a datetime object
                 expires_dt: datetime = datetime.strptime(expires_str, "%b %d %H:%M:%S %Y %Z")
                 return expires_dt - datetime.now()
@@ -124,7 +123,6 @@ class CertProxyClient(BaseCert):
 
     def renew(self) -> None:
         """Renew the certificate from the AWS S3 bucket."""
-        print("Checking if SSL certificate is due for renewal.")
         cert_state = self.get_cert_state()
         if cert_state != CertState.Ready:
             if self.fetch_certificates():
