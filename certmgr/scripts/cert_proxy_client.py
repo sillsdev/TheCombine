@@ -64,7 +64,7 @@ class CertProxyClient(BaseCert):
             if match:
                 expires_str = match.group(1)
                 # convert to a datetime object
-                expires_dt: datetime = datetime.strptime(expires_str, "%b %d %H:%M:%S %Y %Z")
+                expires_dt = datetime.strptime(expires_str, "%b %d %H:%M:%S %Y %Z")
                 return expires_dt - datetime.now()
             return None
         except subprocess.CalledProcessError as err:
