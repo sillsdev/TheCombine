@@ -194,7 +194,7 @@ namespace Backend.Tests.Controllers
                 }
             };
 
-            var newWords = _wordService.Merge(_projId, new List<MergeWords>() { mergeObject }).Result;
+            var newWords = _wordService.Merge(_projId, new List<MergeWords> { mergeObject }).Result;
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
