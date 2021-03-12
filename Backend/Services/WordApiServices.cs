@@ -130,8 +130,6 @@ namespace BackendFramework.Services
         /// <returns> Word to add. </returns>
         private async Task<Word> PrepMerge(string projectId, MergeWords mergeWords)
         {
-            var newWordsList = new List<Word>();
-
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
             parent.History = new List<string>();
