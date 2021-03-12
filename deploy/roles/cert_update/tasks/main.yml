@@ -10,8 +10,8 @@
   template:
     src: trigger_cert_sync.j2
     dest: "{{ combine_app_dir }}/bin/trigger_cert_sync"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
+    owner: root
+    group: root
     mode: 0755
 
 - name: Trigger certificate check when wired ethernet is connected

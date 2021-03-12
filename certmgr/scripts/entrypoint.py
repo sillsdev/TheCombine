@@ -24,7 +24,7 @@ def handle_user_sig1(signum: int, frame: types.FrameType) -> None:
     timeout until the next time to check renewal.  This handler is used to replace
     the default handler.
     """
-    pass
+    print(f"Signal handler for {signum} called")
 
 
 def main() -> None:
