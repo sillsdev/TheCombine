@@ -128,7 +128,8 @@ namespace BackendFramework.Services
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
-        private async Task<Word> PrepMerge(string projectId, MergeWords mergeWords)
+        private async Task<Word> MergePrepParent(
+            string projectId, MergeWords mergeWords, List<Word>? wordsToAdd)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
@@ -157,7 +158,19 @@ namespace BackendFramework.Services
             parent.Id = "";
             parent.Modified = "";
 
+            if (wordsToAdd != null)
+            {
+                wordsToAdd.Add(parent);
+            }
             return parent;
+        }
+
+        /// <summary> Deletes all the merge children from the frontier. </summary>
+        /// <returns> Number of words deleted. </returns>
+        private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
+        {
+            var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
+            return await _repo.DeleteFrontier(projectId, childIds);
         }
 
         /// <summary>
@@ -168,15 +181,8 @@ namespace BackendFramework.Services
         public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
         {
             var newWords = new List<Word>();
-            foreach (var mergeWords in mergeWordsList)
-            {
-                newWords.Add(await PrepMerge(projectId, mergeWords));
-            }
-            foreach (var mergeWords in mergeWordsList)
-            {
-                List<string> childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
-                await _repo.DeleteFrontier(projectId, childIds);
-            }
+            await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m, newWords)));
+            await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
             return await _repo.Create(newWords);
         }
 
