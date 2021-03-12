@@ -129,7 +129,7 @@ namespace BackendFramework.Services
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
         private async Task<Word> MergePrepParent(
-            string projectId, MergeWords mergeWords, List<Word>? wordsToAdd)
+            string projectId, MergeWords mergeWords)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
@@ -158,10 +158,6 @@ namespace BackendFramework.Services
             parent.Id = "";
             parent.Modified = "";
 
-            if (wordsToAdd != null)
-            {
-                wordsToAdd.Add(parent);
-            }
             return parent;
         }
 
@@ -181,7 +177,8 @@ namespace BackendFramework.Services
         public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
         {
             var newWords = new List<Word>();
-            await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m, newWords)));
+            await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m)
+                                             .ContinueWith(Task => newWords.Add(Task.Result))));
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
             return await _repo.Create(newWords);
         }
