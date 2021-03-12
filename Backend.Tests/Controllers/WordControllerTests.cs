@@ -180,7 +180,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void MergeWordsIdentity()
+        public void MergeWordsOneChild()
         {
             var thisWord = RandomWord();
             thisWord = _repo.Create(thisWord).Result;
@@ -211,23 +211,33 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void MergeWords()
+        public void MergeWordsMultiChild()
         {
             // Each parent word is assumed correct as it is calculated in the frontend, except:
             // The history and audio are built in the backend.
 
             // Build a mergeWords with a parent with 3 children.
             var mergeWords = new MergeWords { Parent = RandomWord() };
-            var childIds = new List<string> { "child1", "child2", "child3" };
-            mergeWords.Children = childIds.Select(id => new MergeSourceWord { SrcWordId = id }).ToList();
+            const int numberOfChildren = 3;
+            for (int i = 0; i < numberOfChildren; i++)
+            {
+                var child = RandomWord();
+                var id = _repo.Create(child).Result.Id;
+                Assert.IsNotNull(_repo.GetWord(_projId, id).Result);
+                mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
+            }
+            Assert.AreEqual(_repo.GetFrontier(_projId).Result.Count, numberOfChildren);
 
             var mergeWordsList = new List<MergeWords>() { mergeWords };
             var newWords = _wordService.Merge(_projId, mergeWordsList).Result;
 
-            // Check for parent in the db.
+            // Check for correct history length;
             var dbParent = newWords.First();
-            Assert.AreEqual(dbParent.History.Count, 3);
+            Assert.AreEqual(dbParent.History.Count, numberOfChildren);
+
+            // Confirm that parent added to repo and children not in frontier.
             Assert.IsNotNull(_repo.GetWord(_projId, dbParent.Id).Result);
+            Assert.AreEqual(_repo.GetFrontier(_projId).Result.Count, 1);
         }
 
         [Test]
