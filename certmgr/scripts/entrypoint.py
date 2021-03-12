@@ -20,8 +20,8 @@ def handle_user_sig1(signum: int, frame: types.FrameType) -> None:
     """
     Handle the SIGUSR1 signal.
 
-    This function is a no-op since the purpose of the signal is to terminate the
-    timeout until the next time to check renewal.  This handler is used to replace
+    This function is a no-op since the purpose of the signal is to allow asynchronouse
+    checking of the certificate(s) for renewal.  This handler is used to replace
     the default handler.
     """
     print(f"Signal handler for {signum} called")
@@ -46,11 +46,16 @@ def main() -> None:
 
     if cert_obj is not None:
         cert_obj.create()
+        # The certmgr will respond to the SIGUSR1 signal by checking for certificate
+        # renewal ahead of the scheduled time.  The initial use for this is to
+        # allow the NUC to trigger the certmgr (running in "cert-client" mode) to
+        # check for an updated certificate when it detects that the wired ethernet
+        # connection is up.
         usr1_signal = signal.SIGUSR1
         signal.signal(usr1_signal, handle_user_sig1)
         while True:
             # check for renewal after 12 hours or SIGUSR1 received
-            got_sig = signal.sigtimedwait([usr1_signal], 60 * 12)
+            got_sig = signal.sigtimedwait([usr1_signal], 12 * 3600)  # 12 hrs x 3600 sec/hr
             if got_sig is not None:
                 print(f"Renew triggered by signal ({got_sig.si_signo}).")
             cert_obj.renew()

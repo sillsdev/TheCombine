@@ -2,28 +2,29 @@
 CertClient certificate module.
 
 The CertProxyClient derives from LetsEncryptCert.  It fetches its certificate from
-the configured AWS S3 Bucket.  .
+the configured AWS S3 Bucket.
 """
 
 from datetime import datetime, timedelta
-import enum
+from enum import Enum, auto
 from pathlib import Path
 import re
 import subprocess
+from typing import Optional
 
 from aws import aws_s3_get
 from base_cert import BaseCert
 from utils import get_setting, is_reachable, update_link
 
 
-@enum.unique
-class CertState(enum.IntEnum):
+class CertState(Enum):
     """Define enumeration for recognized certificate states."""
 
-    Missing = 0
-    Expired = 1
-    Renewable = 2
-    Ready = 3
+    Missing = auto()
+    Error = auto()
+    Expired = auto()
+    Renewable = auto()
+    Ready = auto()
 
 
 class CertProxyClient(BaseCert):
@@ -36,8 +37,6 @@ class CertProxyClient(BaseCert):
 
     def __init__(self) -> None:
         """Initialize CertProxyClient instance."""
-        # pylint: disable=too-many-instance-attributes
-        # Ten are required in this case.
         self.cert_store = get_setting("CERT_STORE")
         self.server_name = get_setting("SERVER_NAME")
         self.cert_dir = Path(f"{self.cert_store}/aws/{self.server_name}")
@@ -45,7 +44,7 @@ class CertProxyClient(BaseCert):
         self.cert = Path(f"{self.cert_dir}/fullchain.pem")
         self.renew_before_expiry = int(get_setting("CERT_SELF_RENEWAL"))
 
-    def get_time_to_expire(self) -> timedelta:
+    def get_time_to_expire(self) -> Optional[timedelta]:
         """
         Calculate the time to expiration for a certificate.
 
@@ -67,12 +66,12 @@ class CertProxyClient(BaseCert):
                 # convert to a datetime object
                 expires_dt: datetime = datetime.strptime(expires_str, "%b %d %H:%M:%S %Y %Z")
                 return expires_dt - datetime.now()
-            return timedelta(0)
+            return None
         except subprocess.CalledProcessError as err:
             print(f"CalledProcessError returned {err.returncode}")
             print(f"stdout: {err.stdout}")
             print(f"stderr: {err.stderr}")
-            return timedelta(0)
+            return None
 
     def get_cert_state(self) -> CertState:
         """
@@ -85,6 +84,9 @@ class CertProxyClient(BaseCert):
             print("No certificate found.")
             return CertState.Missing
         time_to_expire = self.get_time_to_expire()
+        if time_to_expire is None:
+            print("Cannot get expiration time for existing certificate")
+            return CertState.Error
         if time_to_expire.days < 0:
             print(f"Certificate expired {-time_to_expire.days} ago.")
             return CertState.Expired
@@ -113,7 +115,7 @@ class CertProxyClient(BaseCert):
         """
         Fetch the proxy certificate for this server from the AWS S3 Bucket.
 
-        Fetches the proxy certficate that was created for this server by an
+        Fetches the proxy certificate that was created for this server by an
         instance of CertProxyServer.  This requires that the server be on a
         network that can reach the AWS S3 service to fetch the initial
         certificate.
@@ -123,6 +125,6 @@ class CertProxyClient(BaseCert):
     def renew(self) -> None:
         """Renew the certificate from the AWS S3 bucket."""
         cert_state = self.get_cert_state()
-        if cert_state != CertState.Ready:
+        if cert_state is not CertState.Ready:
             if self.fetch_certificates():
                 update_link(self.cert_dir, self.nginx_cert_dir)

@@ -16,7 +16,7 @@ from utils import get_setting, update_link
 
 class CertProxyServer(LetsEncryptCert):
     """
-    Manage certificates for the server and provice proxy certificate services.
+    Manage certificates for the server and provide proxy certificate services.
 
     CertProxyServer is a kind of LetsEncryptCert object that uses the base class
     functionality to manage its own certificate and, in addition, acts as a proxy
