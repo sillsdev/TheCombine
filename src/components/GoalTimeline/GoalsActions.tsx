@@ -207,6 +207,7 @@ export function getUserEditId(): string | undefined {
       return user.workedProjects[key];
     }
   }
+  return undefined;
 }
 
 async function saveCurrentStep(goal: Goal, goalIndex: number) {

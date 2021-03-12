@@ -6,8 +6,6 @@ import {
   MergeTreeActions,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
-  defaultData,
-  defaultTree,
   Hash,
   MergeData,
   MergeTree,
@@ -15,6 +13,8 @@ import {
   TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
+const defaultTree = { words: {} };
+const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
@@ -31,51 +31,59 @@ export const mergeDupStepReducer = (
 ): MergeTreeState => {
   switch (action.type) {
     case MergeTreeActions.SET_VERNACULAR: {
-      state.tree.words[action.payload.wordID].vern = action.payload.data;
-      state.tree.words = { ...state.tree.words };
-      state.tree = { ...state.tree };
-      return { ...state };
+      const word = { ...state.tree.words[action.payload.wordId] };
+      word.vern = action.payload.data;
+
+      const words = { ...state.tree.words };
+      words[action.payload.wordId] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.SET_PLURAL: {
-      state.tree.words[action.payload.wordID].plural = action.payload.data;
-      state.tree.words = { ...state.tree.words };
-      state.tree = { ...state.tree };
-      return { ...state };
+      const word = { ...state.tree.words[action.payload.wordId] };
+      word.plural = action.payload.data;
+
+      const words = { ...state.tree.words };
+      words[action.payload.wordId] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.ORDER_SENSE: {
       // reorder sense
-      let word = JSON.parse(
-        JSON.stringify(state.tree.words[action.payload.wordID])
+      const word = JSON.parse(
+        JSON.stringify(state.tree.words[action.payload.wordId])
       );
-      let senses = Object.entries(word.senses);
-      let sense = { ...word.senses[action.payload.senseID] };
+      const senses = Object.entries(word.senses);
+      const sense = { ...word.senses[action.payload.senseId] };
 
       senses.splice(
-        senses.findIndex((s) => s[0] === action.payload.senseID),
+        senses.findIndex((s) => s[0] === action.payload.senseId),
         1
       );
-      senses.splice(action.payload.order, 0, [action.payload.senseID, sense]);
+      senses.splice(action.payload.order, 0, [action.payload.senseId, sense]);
 
       word.senses = {};
-      for (let sense of senses) {
+      for (const sense of senses) {
         word.senses[sense[0]] = sense[1];
       }
 
-      let treeWords: Hash<MergeTreeWord> = JSON.parse(
+      const words: Hash<MergeTreeWord> = JSON.parse(
         JSON.stringify(state.tree.words)
       );
-      treeWords[action.payload.wordID] = word;
-      state = { ...state, tree: { ...state.tree, words: treeWords } };
+      words[action.payload.wordId] = word;
 
-      return state;
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.ORDER_DUPLICATE: {
-      let ref = action.payload.ref;
-      let dups = Object.entries(state.tree.words[ref.word].senses[ref.sense]);
-      let dup = state.tree.words[ref.word].senses[ref.sense][ref.duplicate];
+      const ref = action.payload.ref;
+      const dups = Object.entries(
+        state.tree.words[ref.wordId].senses[ref.senseId]
+      );
+      const dup =
+        state.tree.words[ref.wordId].senses[ref.senseId][ref.duplicate];
 
       dups.splice(
         dups.findIndex((s) => s[0] === ref.duplicate),
@@ -83,69 +91,65 @@ export const mergeDupStepReducer = (
       );
       dups.splice(action.payload.order, 0, [ref.duplicate, dup]);
 
-      let newDups: Hash<string> = {};
-
+      const newDups: Hash<string> = {};
       for (let dup of dups) {
         newDups[dup[0]] = dup[1];
       }
 
-      let newSenses = { ...state.tree.words[ref.word].senses };
-      newSenses[ref.sense] = newDups;
+      const senses = { ...state.tree.words[ref.wordId].senses };
+      senses[ref.senseId] = newDups;
 
-      state.tree.words[ref.word] = {
-        ...state.tree.words[ref.word],
-        senses: newSenses,
-      };
-      state.tree.words = { ...state.tree.words };
-      state.tree = { ...state.tree };
-      state = { ...state };
+      const word = { ...state.tree.words[ref.wordId], senses };
 
-      return state;
+      const words = { ...state.tree.words };
+      words[ref.wordId] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.MOVE_SENSE: {
-      let treeState: MergeTree = JSON.parse(JSON.stringify(state.tree));
-      for (let op in action.payload.src) {
-        let src = action.payload.src[op];
-        let dest = action.payload.dest[op];
+      const treeState: MergeTree = JSON.parse(JSON.stringify(state.tree));
+      for (const op in action.payload.src) {
+        const src = action.payload.src[op];
+        const dest = action.payload.dest[op];
         // only perform move if src and dest are different
         if (JSON.stringify(src) !== JSON.stringify(dest)) {
           // perform move
-          let srcSenseID =
-            treeState.words[src.word].senses[src.sense][src.duplicate];
-          let srcWordID = state.data.senses[srcSenseID].srcWord;
+          const srcSenseId =
+            treeState.words[src.wordId].senses[src.senseId][src.duplicate];
+          const srcWordId = state.data.senses[srcSenseId].srcWordId;
 
           // tree elements need to be added to words if they don't exist
-          if (!treeState.words[dest.word]) {
-            treeState.words[dest.word] = {
+          if (!treeState.words[dest.wordId]) {
+            treeState.words[dest.wordId] = {
               senses: {},
-              vern: state.data.words[srcWordID].vernacular,
-              plural: state.data.words[srcWordID].plural,
+              vern: state.data.words[srcWordId].vernacular,
+              plural: state.data.words[srcWordId].plural,
             };
           }
 
-          if (!treeState.words[dest.word].senses[dest.sense]) {
-            treeState.words[dest.word].senses[dest.sense] = {};
+          if (!treeState.words[dest.wordId].senses[dest.senseId]) {
+            treeState.words[dest.wordId].senses[dest.senseId] = {};
           }
 
-          let destSense = treeState.words[dest.word].senses[dest.sense];
-          destSense[dest.duplicate] = srcSenseID;
-          treeState.words[dest.word].senses[dest.sense] = destSense;
+          const destSense = treeState.words[dest.wordId].senses[dest.senseId];
+          destSense[dest.duplicate] = srcSenseId;
+          treeState.words[dest.wordId].senses[dest.senseId] = destSense;
 
           // cleanup src
-          delete treeState.words[src.word].senses[src.sense][src.duplicate];
+          delete treeState.words[src.wordId].senses[src.senseId][src.duplicate];
 
           // if we removed last dup in a sense, remove sense from word
           if (
-            Object.keys(treeState.words[src.word].senses[src.sense]).length ===
-            0
+            Object.keys(treeState.words[src.wordId].senses[src.senseId])
+              .length === 0
           ) {
-            delete treeState.words[src.word].senses[src.sense];
+            delete treeState.words[src.wordId].senses[src.senseId];
           }
 
           // if we removed last sense in a word, remove word from tree
-          if (Object.keys(treeState.words[src.word].senses).length === 0) {
-            delete treeState.words[src.word];
+          if (Object.keys(treeState.words[src.wordId].senses).length === 0) {
+            delete treeState.words[src.wordId];
           }
         }
       }
@@ -157,16 +161,16 @@ export const mergeDupStepReducer = (
       if (action.payload.length === 0) {
         return defaultState;
       }
-      let words: Hash<Word> = {};
-      let senses: Hash<TreeDataSense> = {};
-      let wordsTree: Hash<MergeTreeWord> = {};
+      const words: Hash<Word> = {};
+      const senses: Hash<TreeDataSense> = {};
+      const wordsTree: Hash<MergeTreeWord> = {};
       action.payload.forEach((word) => {
         words[word.id] = JSON.parse(JSON.stringify(word));
-        let treeSenses: Hash<Hash<string>> = {};
+        const treeSenses: Hash<Hash<string>> = {};
         word.senses.forEach((sense, index) => {
-          let id = uuid();
-          let id2 = uuid();
-          senses[id] = { ...sense, srcWord: word.id, order: index };
+          const id = uuid();
+          const id2 = uuid();
+          senses[id] = { ...sense, srcWordId: word.id, order: index };
           treeSenses[id2] = {};
           treeSenses[id2][uuid()] = id;
         });
@@ -184,7 +188,7 @@ export const mergeDupStepReducer = (
     }
 
     case MergeTreeActions.CLEAR_TREE: {
-      return { tree: { ...defaultTree }, data: { ...defaultData } };
+      return defaultState;
     }
 
     case StoreActions.RESET: {

@@ -71,7 +71,7 @@ export class Word {
 }
 
 export interface MergeWord {
-  wordID: string;
+  wordId: string;
   senses: State[];
 }
 

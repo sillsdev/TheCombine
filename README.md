@@ -502,6 +502,15 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    $ docker-compose logs --follow
    ```
 
+   To view the logs from a single service, e.g. the `backend`:
+
+   ```bash
+   $ docker-compose logs --follow backend
+   ```
+
+   The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged.
+   To just get the current snapshot of the logs, do not add the `--follow` option.
+
 7. To stop
 
    ```bash

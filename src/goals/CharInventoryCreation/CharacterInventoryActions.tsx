@@ -267,6 +267,7 @@ function getChange(
   if (newRej.includes(c)) {
     return [c, CharacterStatus.Undecided, CharacterStatus.Rejected];
   }
+  return undefined;
 }
 
 function updateCurrentProject(state: StoreState): Project {

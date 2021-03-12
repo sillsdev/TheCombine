@@ -14,8 +14,8 @@ function mapStateToProps(state: StoreState) {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    setVern: (wordID: string, vern: string) => {
-      dispatch(setVern(wordID, vern));
+    setVern: (wordId: string, vern: string) => {
+      dispatch(setVern(wordId, vern));
     },
   };
 }

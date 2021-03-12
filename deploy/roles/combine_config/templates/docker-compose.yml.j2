@@ -62,11 +62,13 @@ services:
 {% endif %}
     env_file:
       - ./.env.certmgr
+    environment:
+      PYTHONUNBUFFERED: 1
     volumes:
       - letsencrypt:/etc/letsencrypt
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
-{% if cert_mode == "cert-server" %}
+{% if cert_mode == "cert-server" or cert_mode == "cert-client" %}
       - /home/combine/.aws:/root/.aws:ro
 {% endif %}
     restart: unless-stopped

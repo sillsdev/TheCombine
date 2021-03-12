@@ -63,25 +63,25 @@ interface parentWithMergeChildren {
 const mockMerge2a: parentWithMergeChildren = {
   parent: { ...mockWordList["WA2"], id: "WA", history: [] },
   children: [
-    { wordID: "WA", senses: [State.Sense, State.Sense] },
-    { wordID: "WB", senses: [State.Duplicate, State.Separate] },
+    { wordId: "WA", senses: [State.Sense, State.Sense] },
+    { wordId: "WB", senses: [State.Duplicate, State.Separate] },
   ],
 };
 const mockMerge2b: parentWithMergeChildren = {
   parent: { ...mockWordList["WB2"], id: "WB", history: [] },
-  children: [{ wordID: "WB2", senses: [State.Sense] }],
+  children: [{ wordId: "WB2", senses: [State.Sense] }],
 };
 const mockMerge3a: parentWithMergeChildren = {
   parent: { ...mockWordList["WA3"], id: "WA", history: [] },
   children: [
-    { wordID: "WA", senses: [State.Sense, State.Sense] },
-    { wordID: "WB", senses: [State.Sense, State.Separate] },
+    { wordId: "WA", senses: [State.Sense, State.Sense] },
+    { wordId: "WB", senses: [State.Sense, State.Separate] },
   ],
 };
 const mockMerge3b = mockMerge2b;
 const mockMerge4a: parentWithMergeChildren = {
   parent: { ...mockWordList["WA4"], id: "WA", history: [] },
-  children: [{ wordID: "WA", senses: [State.Sense, State.Duplicate] }],
+  children: [{ wordId: "WA", senses: [State.Sense, State.Duplicate] }],
 };
 
 // These tests were written before guids were implemented, so guids can obstruct.
@@ -148,10 +148,10 @@ const data: { data: MergeData } = {
       WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
     },
     senses: {
-      S1: { ...new Sense("Sense 1"), srcWord: "WA", order: 0 },
-      S2: { ...new Sense("Sense 2"), srcWord: "WA", order: 1 },
-      S3: { ...new Sense("Sense 3"), srcWord: "WB", order: 0 },
-      S4: { ...new Sense("Sense 4"), srcWord: "WB", order: 1 },
+      S1: { ...new Sense("Sense 1"), srcWordId: "WA", order: 0 },
+      S2: { ...new Sense("Sense 2"), srcWordId: "WA", order: 1 },
+      S3: { ...new Sense("Sense 3"), srcWordId: "WB", order: 0 },
+      S4: { ...new Sense("Sense 4"), srcWordId: "WB", order: 1 },
     },
   },
 };
