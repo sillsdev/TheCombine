@@ -4,20 +4,20 @@
 import os
 from pathlib import Path
 from sys import stderr
-from typing import Dict, Union
+from typing import Dict
 
 import requests
 
-env_defaults: Dict[str, Union[str, int]] = {
+env_defaults: Dict[str, str] = {
     "CERT_MODE": "self-signed",
     "CERT_STORE": "/etc/cert_store",
     "CERT_EMAIL": "",
-    "CERT_STAGING": 0,
-    "MAX_CONNECT_TRIES": 15,
+    "CERT_STAGING": "0",
+    "MAX_CONNECT_TRIES": "15",
     "CERT_ADDL_DOMAINS": "",
     "SERVER_NAME": "",
-    "CERT_SELF_RENEWAL": 30,  # days before expiry
-    "CERT_PROXY_RENEWAL": 60,  # days before expiry
+    "CERT_SELF_RENEWAL": "30",  # days before expiry
+    "CERT_PROXY_RENEWAL": "60",  # days before expiry
     "CERT_PROXY_DOMAINS": "",
     "AWS_S3_CERT_LOC": "thecombine.app/certs",
 }
@@ -27,7 +27,7 @@ class MissingEnvironmentVariableError(Exception):
     """Exception to raise when an environment variable's value cannot be found."""
 
 
-def get_setting(env_var: str) -> Union[str, int, bool]:
+def get_setting(env_var: str) -> str:
     """
     Look up environment variable.
 

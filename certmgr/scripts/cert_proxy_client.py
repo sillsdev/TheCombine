@@ -10,7 +10,6 @@ import enum
 from pathlib import Path
 import re
 import subprocess
-from typing import cast
 
 from aws import aws_s3_get
 from base_cert import BaseCert
@@ -39,12 +38,12 @@ class CertProxyClient(BaseCert):
         """Initialize CertProxyClient instance."""
         # pylint: disable=too-many-instance-attributes
         # Ten are required in this case.
-        self.cert_store = cast(str, get_setting("CERT_STORE"))
-        self.server_name = cast(str, get_setting("SERVER_NAME"))
+        self.cert_store = get_setting("CERT_STORE")
+        self.server_name = get_setting("SERVER_NAME")
         self.cert_dir = Path(f"{self.cert_store}/aws/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"{self.cert_dir}/fullchain.pem")
-        self.renew_before_expiry = cast(int, get_setting("CERT_SELF_RENEWAL"))
+        self.renew_before_expiry = int(get_setting("CERT_SELF_RENEWAL"))
 
     def get_time_to_expire(self) -> timedelta:
         """
@@ -89,7 +88,7 @@ class CertProxyClient(BaseCert):
         if time_to_expire.days < 0:
             print(f"Certificate expired {-time_to_expire.days} ago.")
             return CertState.Expired
-        if time_to_expire.days < int(self.renew_before_expiry):
+        if time_to_expire.days < self.renew_before_expiry:
             print(f"Certificate expires in {time_to_expire.days} days.")
             return CertState.Renewable
         print(f"Certificate expires in {time_to_expire.days} days - no action.")

@@ -5,7 +5,8 @@
 import os
 import signal
 import sys
-from typing import Dict, cast
+import types
+from typing import Dict
 
 from base_cert import BaseCert
 from cert_proxy_client import CertProxyClient
@@ -15,15 +16,15 @@ from self_signed_cert import SelfSignedCert
 from utils import get_setting
 
 
-def handle_user_sig1():
+def handle_user_sig1(signum: int, frame: types.FrameType) -> None:
     """
-    Handle the signal sent when Ethernet detected.
+    Handle the SIGUSR1 signal.
 
     This function is a no-op since the purpose of the signal is to terminate the
     timeout until the next time to check renewal.  This handler is used to replace
     the default handler.
     """
-    print("Ethernet connection detected.")
+    pass
 
 
 def main() -> None:
@@ -39,7 +40,7 @@ def main() -> None:
     for subdir in ("nginx", "selfsigned"):
         os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
 
-    cert_mode = cast(str, get_setting("CERT_MODE"))
+    cert_mode = get_setting("CERT_MODE")
     print(f"Running in {cert_mode} mode")
     cert_obj = mode_choices.get(cert_mode, None)
 
@@ -49,7 +50,7 @@ def main() -> None:
         signal.signal(usr1_signal, handle_user_sig1)
         while True:
             # check for renewal after 12 hours or SIGUSR1 received
-            got_sig = signal.sigtimedwait([usr1_signal], 60*12)
+            got_sig = signal.sigtimedwait([usr1_signal], 60 * 12)
             if got_sig is not None:
                 print(f"Renew triggered by signal ({got_sig.si_signo}).")
             cert_obj.renew()
