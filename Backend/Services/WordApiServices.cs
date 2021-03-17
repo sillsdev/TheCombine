@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -128,100 +126,60 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        /// <summary> Makes a parent from merging other words and some number of separate words </summary>
-        /// <returns> List of words added: Parent first, followed by separate words in order added </returns>
-        public async Task<List<Word>> Merge(string projectId, MergeWords mergeWords)
+        /// <summary> Prepares a merge parent to be added to the database. </summary>
+        /// <returns> Word to add. </returns>
+        private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
         {
-            var newWordsList = new List<Word>();
+            var parent = mergeWords.Parent.Clone();
+            parent.ProjectId = projectId;
+            parent.History = new List<string>();
 
-            var addParent = mergeWords.Parent.Clone();
-            addParent.History = new List<string>();
-            addParent.Audio = new List<string>();
-
-            // Generate new child words from ChildrenWords.
-            foreach (var newChildWordState in mergeWords.ChildrenWords)
+            // Add child to history.
+            foreach (var childSource in mergeWords.Children)
             {
-                // Get child word.
-                var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
-                if (currentChildWord is null)
+                parent.History.Add(childSource.SrcWordId);
+                if (childSource.GetAudio)
                 {
-                    throw new KeyNotFoundException($"Unable to locate word: ${newChildWordState.SrcWordId}");
-                }
-
-                // Copy over audio if child doesn't have own surviving entry.
-                if (!newChildWordState.SenseStates.Exists(x => x == State.Separate))
-                {
-                    addParent.Audio.AddRange(currentChildWord.Audio);
-                }
-
-                // Remove child from frontier.
-                await _repo.DeleteFrontier(projectId, currentChildWord.Id);
-
-                // Iterate through senses of that word and change to corresponding state in merged words.
-                if (currentChildWord.Senses.Count != newChildWordState.SenseStates.Count)
-                {
-                    throw new FormatException("Sense counts don't match");
-                }
-                for (var i = 0; i < currentChildWord.Senses.Count; i++)
-                {
-                    currentChildWord.Senses[i].Accessibility = newChildWordState.SenseStates[i];
-                }
-
-                // Change the child word's history to its previous self
-                currentChildWord.History = new List<string> { newChildWordState.SrcWordId };
-
-                // Add child word to the database
-                currentChildWord.Id = "";
-                // Erase time old Modified date timestamp so the are recalculated.
-                currentChildWord.Modified = "";
-                await _repo.Add(currentChildWord);
-
-                // Handle different states.
-                var separateWord = currentChildWord.Clone();
-                separateWord.Senses = new List<Sense>();
-                separateWord.Id = "";
-                for (var i = 0; i < currentChildWord.Senses.Count; i++)
-                {
-                    switch (newChildWordState.SenseStates[i])
+                    var child = await _repo.GetWord(projectId, childSource.SrcWordId);
+                    if (child is null)
                     {
-                        // Add the word to the parent's history.
-                        case State.Sense:
-                        case State.Duplicate:
-                            if (!addParent.History.Contains(currentChildWord.Id))
-                            {
-                                addParent.History.Add(currentChildWord.Id);
-                            }
-                            break;
-                        // Add the sense to a separate word and the word to its history.
-                        case State.Separate:
-                            currentChildWord.Senses[i].Accessibility = State.Active;
-                            separateWord.Senses.Add(currentChildWord.Senses[i]);
-                            if (!separateWord.History.Contains(currentChildWord.Id))
-                            {
-                                separateWord.History.Add(currentChildWord.Id);
-                            }
-                            break;
-                        default:
-                            throw new NotSupportedException();
+                        throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
                     }
-                }
-
-                // Add a new word to the database with all of the senses with separate tags from this word
-                if (separateWord.Senses.Count != 0)
-                {
-                    separateWord.ProjectId = projectId;
-                    separateWord.Modified = "";
-                    var newSeparate = await _repo.Create(separateWord);
-                    newWordsList.Add(newSeparate);
+                    parent.Audio.AddRange(child.Audio);
                 }
             }
 
-            // Add parent with child history to the database
-            addParent.ProjectId = projectId;
-            addParent.Modified = "";
-            var newParent = await _repo.Create(addParent);
-            newWordsList.Insert(0, newParent);
-            return newWordsList;
+            // Remove duplicates.
+            parent.Audio = parent.Audio.Distinct().ToList();
+            parent.History = parent.History.Distinct().ToList();
+
+            // Clear fields to be automatically regenerated.
+            parent.Id = "";
+            parent.Modified = "";
+
+            return parent;
+        }
+
+        /// <summary> Deletes all the merge children from the frontier. </summary>
+        /// <returns> Number of words deleted. </returns>
+        private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
+        {
+            var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
+            return await _repo.DeleteFrontier(projectId, childIds);
+        }
+
+        /// <summary>
+        /// Given a list of MergeWords, preps the words to be added, removes the children
+        /// from the frontier, and adds the new words to the database.
+        /// </summary>
+        /// <returns> List of new words added. </returns>
+        public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
+        {
+            var newWords = new List<Word>();
+            await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m)
+                                             .ContinueWith(task => newWords.Add(task.Result))));
+            await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
+            return await _repo.Create(newWords);
         }
 
         /// <summary> Checks if a word being added is an exact duplicate of a preexisting word </summary>

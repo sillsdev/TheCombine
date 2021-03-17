@@ -29,7 +29,7 @@ namespace Backend.Tests.Models
     {
         private const int GoalType = 1;
         private Guid Guid = Guid.NewGuid();
-        private List<string> StepData = new List<string>() { "step" };
+        private List<string> StepData = new List<string> { "step" };
         private const string Changes = "{wordIds:[]}";
 
         [Test]
