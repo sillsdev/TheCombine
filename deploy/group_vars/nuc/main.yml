@@ -5,19 +5,20 @@
 # Group: nuc
 #################################################
 
-# TheCombine is installed on the QA Server by TeamCity.  It will set the
-# IMAGE_TAG environment variable to major.minor.build_no and launch
-# Docker compose
+# TheCombine is installed using Ansible and the playbook_install.yml
+# playbook.  It will set the IMAGE_TAG environment variable to
+# value provided by the user and launch docker-compose
 image_tag: "${IMAGE_TAG}"
 
 combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
 combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 
-# SSL cert variables specific to QA targets
+# SSL cert variables specific to NUC targets
 cert_mode: "cert-client"
 cert_email: ""
 cert_self_renewal: 60
+combine_alias_domain_list: []
 combine_cert_proxy_list: []
 
 # setup variables for roles/aws_access
@@ -35,6 +36,13 @@ aws_ecr_profile: ecr_read_only
 my_aws_profiles:
   - "{{ aws_s3_profile }}"
   - "{{ aws_ecr_profile }}"
+
+################################################
+# Disable Google reCAPTCHA for the NUC
+# (expected to work with no internet connection)
+################################################
+config_captcha_required: "false"
+config_captcha_sitekey: "none"
 
 ################################################
 # WiFi access point settings
