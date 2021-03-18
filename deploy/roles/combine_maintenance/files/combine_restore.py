@@ -63,7 +63,10 @@ def run_cmd(cmd: List[str], check_results: bool = True) -> subprocess.CompletedP
 def aws_strip_bucket(obj_name: str) -> str:
     """Strip the bucket name from the beginning of the supplied object name."""
     m = re.match(r"^[^/]+/(.*)", obj_name)
-    return m.group(1)
+    if m is not None:
+        return m.group(1)
+    else:
+        return obj_name
 
 
 def main() -> None:
@@ -184,14 +187,25 @@ def main() -> None:
 
     run_cmd(
         [
-            "docker-compose", "exec", "-T", "database",
-            "mongorestore", "--drop", "--gzip", "--quiet",
+            "docker-compose",
+            "exec",
+            "-T",
+            "database",
+            "mongorestore",
+            "--drop",
+            "--gzip",
+            "--quiet",
         ]
     )
     run_cmd(
         [
-            "docker-compose", "exec", "-T", "database",
-            "rm", "-rf", config["db_files_subdir"],
+            "docker-compose",
+            "exec",
+            "-T",
+            "database",
+            "rm",
+            "-rf",
+            config["db_files_subdir"],
         ]
     )
 
@@ -202,31 +216,51 @@ def main() -> None:
         # expansion
         run_cmd(
             [
-                "docker-compose", "exec", "-T", "--user", "root",
-                "--workdir", f"/home/app/{config['backend_files_subdir']}",
-                "backend", "/bin/bash", "-c", "rm -rf *"
+                "docker-compose",
+                "exec",
+                "-T",
+                "--user",
+                "root",
+                "--workdir",
+                f"/home/app/{config['backend_files_subdir']}",
+                "backend",
+                "/bin/bash",
+                "-c",
+                "rm -rf *",
             ]
         )
 
     be_container = run_cmd(
-        ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}", ]
+        [
+            "docker",
+            "ps",
+            "--filter",
+            "name=backend",
+            "--format",
+            "{{.Names}}",
+        ]
     ).stdout.strip()
 
-    run_cmd(
-        [
-            "docker", "cp", config["backend_files_subdir"],
-            f"{be_container}:/home/app"
-        ]
-    )
+    run_cmd(["docker", "cp", config["backend_files_subdir"], f"{be_container}:/home/app"])
     # change permissions for the copied files.  Since the tarball is created outside
     # of the container, the app user will not be the owner (the backend process is
     # running as "app").  In addition, it is possible that the backup is from a
     # different host with different UIDs.
     run_cmd(
         [
-            "docker-compose", "exec", "-T", "--user", "root", "backend",
-            "find", f"/home/app/{config['backend_files_subdir']}",
-            "-exec", "chown", "app:app", "{}", ';',
+            "docker-compose",
+            "exec",
+            "-T",
+            "--user",
+            "root",
+            "backend",
+            "find",
+            f"/home/app/{config['backend_files_subdir']}",
+            "-exec",
+            "chown",
+            "app:app",
+            "{}",
+            ";",
         ]
     )
 
