@@ -12,9 +12,7 @@ import { Goal } from "types/goals";
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = {
   goalsState: {
-    historyState: {
-      history: [new Goal()],
-    },
+    history: [new Goal()],
   },
 };
 const mockStore = createMockStore(mockStoreState);
@@ -39,7 +37,7 @@ describe("BaseGoalScreen", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <BaseGoalScreen {...mockProps(-1)} />
+          <BaseGoalScreen {...mockProps(222)} />
         </Provider>
       );
     });

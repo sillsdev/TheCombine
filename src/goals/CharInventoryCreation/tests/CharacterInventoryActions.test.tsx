@@ -1,4 +1,5 @@
-import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
+import { Action } from "redux";
+import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import { updateProject } from "backend";
@@ -15,7 +16,6 @@ import { StoreState } from "types";
 import { defaultProject } from "types/project";
 import { User } from "types/user";
 import { Goal } from "types/goals";
-import { Action } from "redux";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -69,13 +69,13 @@ mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("backend");
+jest.mock("browserHistory");
 jest.mock("components/GoalTimeline/GoalsActions", () => ({
   asyncUpdateOrAddGoal: (goal: Goal) => mockAsyncUpdateOrAddGoal(goal),
 }));
 const mockAsyncUpdateOrAddGoal = jest.fn();
 
 const createMockStore = configureMockStore([thunk]);
-const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
 
 beforeAll(() => {
   // Save things in localStorage to restore once tests are done
@@ -86,10 +86,6 @@ beforeAll(() => {
 beforeEach(() => {
   LocalStorage.remove(LocalStorage.LocalStorageKey.ProjectId);
   LocalStorage.remove(LocalStorage.LocalStorageKey.User);
-});
-
-afterEach(() => {
-  mockStore.clearActions();
 });
 
 afterAll(() => {
@@ -115,7 +111,7 @@ describe("CharacterInventoryActions", () => {
 
     LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId(mockProjectId);
-    let mockStore = createMockStore(MOCK_STATE);
+    const mockStore = createMockStore(MOCK_STATE);
     const mockUpload = Actions.uploadInventory(mockGoal);
     await mockUpload(
       mockStore.dispatch,

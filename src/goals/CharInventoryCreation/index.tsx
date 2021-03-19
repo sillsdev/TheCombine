@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 
 import {
+  exit,
   fetchWords,
   getAllCharacters,
   resetInState,
@@ -34,6 +35,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     fetchWords: () => dispatch(fetchWords()),
     getAllCharacters: () => dispatch(getAllCharacters()),
     resetInState: () => dispatch(resetInState()),
+    exit,
   };
 }
 

@@ -23,13 +23,9 @@ describe("Test GoalsReducers", () => {
 
   it("Should return the default state", () => {
     const state: GoalsState = {
-      historyState: {
-        history: [],
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: [],
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: [],
+      history: [],
     };
 
     const action: StoreAction = {
@@ -40,16 +36,13 @@ describe("Test GoalsReducers", () => {
 
   it("Should add a goal to history and remove it from suggestions", () => {
     const goal: Goal = new CreateCharInv();
-    const suggestionsArray: Goal[] = [goal];
+    const mockGoalTypeSuggestions = [goal.goalType];
+    const mockHistory = [goal];
 
     const state: GoalsState = {
-      historyState: {
-        history: [],
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: [],
     };
 
     const addGoalAction: actions.GoalAction = {
@@ -57,28 +50,21 @@ describe("Test GoalsReducers", () => {
       payload: goal,
     };
     const newState: GoalsState = {
-      historyState: {
-        history: suggestionsArray,
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: [],
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: [],
+      history: mockHistory,
     };
     expect(goalsReducer(state, addGoalAction)).toEqual(newState);
   });
 
   it("Should add a goal to history but not remove any goals from non-existent suggestions", () => {
     const goal: Goal = new CreateCharInv();
+    const mockHistory = [goal];
 
     const state: GoalsState = {
-      historyState: {
-        history: [],
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: [],
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: [],
+      history: [],
     };
 
     const addGoalAction: actions.GoalAction = {
@@ -86,29 +72,21 @@ describe("Test GoalsReducers", () => {
       payload: goal,
     };
     const newState: GoalsState = {
-      historyState: {
-        history: [goal],
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: [],
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: [],
+      history: mockHistory,
     };
     expect(goalsReducer(state, addGoalAction)).toEqual(newState);
   });
 
   it("Should add a goal to history but not remove it from suggestions", () => {
     const goal: Goal = new CreateCharInv();
-    const suggestionsArray: Goal[] = [goal];
+    const mockGoalTypeSuggestions = [goal.goalType];
 
     const state: GoalsState = {
-      historyState: {
-        history: [],
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: [],
     };
 
     const chosenGoal: Goal = new HandleFlags();
@@ -118,13 +96,9 @@ describe("Test GoalsReducers", () => {
       payload: chosenGoal,
     };
     const newState: GoalsState = {
-      historyState: {
-        history: [chosenGoal],
-      },
-      allPossibleGoals: [],
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: [],
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: [chosenGoal],
     };
     expect(goalsReducer(state, addGoalAction)).toEqual(newState);
   });
@@ -135,18 +109,14 @@ describe("Test GoalsReducers", () => {
     const goal3: Goal = new ReviewEntries();
     const goal4: Goal = new SpellCheckGloss();
     const goal5: Goal = new CreateStrWordInv();
-    const historyArray: Goal[] = [goal, goal2];
-    const allPossibleGoalsArray: Goal[] = [goal3];
-    const suggestionsArray: Goal[] = [goal4, goal5];
+    const mockAllGoalTypesArray = [goal3.goalType];
+    const mockGoalTypeSuggestions = [goal4.goalType, goal5.goalType];
+    const mockHistory = [goal, goal2];
 
     const state: GoalsState = {
-      historyState: {
-        history: historyArray,
-      },
-      allPossibleGoals: allPossibleGoalsArray,
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: mockAllGoalTypesArray,
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: mockHistory,
     };
 
     const goal6: Goal = new HandleFlags();
@@ -158,13 +128,9 @@ describe("Test GoalsReducers", () => {
     };
 
     const newState: GoalsState = {
-      historyState: {
-        history: [goal6, goal7],
-      },
-      allPossibleGoals: allPossibleGoalsArray,
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: mockAllGoalTypesArray,
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: [goal6, goal7],
     };
 
     expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
@@ -176,24 +142,19 @@ describe("Test GoalsReducers", () => {
     const goal3: Goal = new ReviewEntries();
     const goal4: Goal = new SpellCheckGloss();
     const goal5: Goal = new CreateStrWordInv();
-    const historyArray: Goal[] = [goal, goal2];
-    const allPossibleGoalsArray: Goal[] = [goal3];
-    const suggestionsArray: Goal[] = [goal4, goal5];
+    const mockAllGoalTypesArray = [goal3.goalType];
+    const mockGoalTypeSuggestions = [goal4.goalType, goal5.goalType];
+    const mockHistory = [goal, goal2];
 
     const state: GoalsState = {
-      historyState: {
-        history: historyArray,
-      },
-      allPossibleGoals: allPossibleGoalsArray,
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: mockAllGoalTypesArray,
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: mockHistory,
     };
 
     const updatedGoal: Goal = Object.assign(goal2);
     updatedGoal.currentStep++;
-
-    const updatedHistory: Goal[] = [goal, updatedGoal];
+    const updatedHistory = [goal, updatedGoal];
 
     const updateGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
@@ -201,13 +162,9 @@ describe("Test GoalsReducers", () => {
     };
 
     const newState: GoalsState = {
-      historyState: {
-        history: updatedHistory,
-      },
-      allPossibleGoals: allPossibleGoalsArray,
-      suggestionsState: {
-        suggestions: suggestionsArray,
-      },
+      allGoalTypes: mockAllGoalTypesArray,
+      goalTypeSuggestions: mockGoalTypeSuggestions,
+      history: updatedHistory,
     };
 
     expect(goalsReducer(state, updateGoalAction)).toEqual(newState);

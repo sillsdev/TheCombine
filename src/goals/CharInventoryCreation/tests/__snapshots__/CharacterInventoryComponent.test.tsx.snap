@@ -339,13 +339,11 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
           onTouchStart={[Function]}
           style={
             Object {
-              "backgroundColor": undefined,
-              "color": undefined,
               "margin": 8,
             }
           }
           tabIndex={0}
-          type="submit"
+          type="button"
         >
           <span
             className="MuiButton-label"

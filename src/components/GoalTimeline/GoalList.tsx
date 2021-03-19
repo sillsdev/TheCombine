@@ -36,7 +36,7 @@ interface GoalListProps {
   size: number;
   numPanes: number;
   scrollToEnd?: boolean;
-  handleChange: (goalType: GoalType) => void;
+  handleChange: (goal: Goal) => void;
 }
 
 export default function GoalList(props: GoalListProps) {
@@ -53,7 +53,7 @@ export default function GoalList(props: GoalListProps) {
       {props.data.length > 0
         ? props.data.map((g) =>
             makeGoalTile(tileSize, props.orientation, g, () =>
-              props.handleChange(g.goalType)
+              props.handleChange(g)
             )
           )
         : makeGoalTile(tileSize, props.orientation)}
@@ -96,7 +96,10 @@ export function makeGoalTile(
         variant={goal ? "outlined" : "contained"}
         style={buttonStyle(orientation, size)}
         onClick={onClick}
-        disabled={!goal || goal.completed}
+        disabled={
+          /* Hide completed, except goaltypes for which the completed view is implemented. */
+          !goal || (goal.completed && goal.goalType !== GoalType.CreateCharInv)
+        }
       >
         <Typography variant={"h6"}>
           <Translate
