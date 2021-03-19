@@ -19,15 +19,7 @@ docker-compose.yml
 nginx/scripts
 /backups
 /restore
-scripts/backup_conf.json
-scripts/add_user_to_proj.py
-scripts/combine_backup.py
-scripts/combine_restore.py
-scripts/add_user_to_proy.py
-scripts/make_user_admin.py
-scripts/rm_project.py
-scripts/script_step.py
-scripts/maint_utils.py
+backup_conf.json
 
 # Misc
 .DS_Store

@@ -2,9 +2,7 @@
 
 import enum
 import json
-from pathlib import Path
 import re
-import shutil
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
@@ -94,16 +92,6 @@ def get_user_id(user: str) -> Optional[str]:
     if results is not None:
         return results["_id"]
     return None
-
-
-def rm_backup_files(path_list: List[Path]) -> None:
-    """Clean out the directory used to build the backup tarball."""
-    for item in path_list:
-        if item.exists():
-            if item.is_dir():
-                shutil.rmtree(item)
-            else:
-                item.unlink()
 
 
 def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess:

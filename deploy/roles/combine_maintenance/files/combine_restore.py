@@ -9,9 +9,10 @@ import re
 import shutil
 import sys
 import tarfile
+import tempfile
 from typing import Dict
 
-from maint_utils import rm_backup_files, run_cmd
+from maint_utils import run_cmd
 from script_step import ScriptStep
 
 
@@ -35,15 +36,15 @@ def parse_args() -> argparse.Namespace:
 
 def aws_strip_bucket(obj_name: str) -> str:
     """Strip the bucket name from the beginning of the supplied object name."""
-    m = re.match(r"^[^/]+/(.*)", obj_name)
-    if m is not None:
-        return m.group(1)
-    else:
-        return obj_name
+    match = re.match(r"^[^/]+/(.*)", obj_name)
+    if match is not None:
+        return match.group(1)
+    return obj_name
 
 
 def main() -> None:
     """Restore TheCombine from a backup stored in the AWS S3 service."""
+    workdir = Path.cwd()
     args = parse_args()
 
     config: Dict[str, str] = json.loads(args.config.read_text())
@@ -52,29 +53,12 @@ def main() -> None:
 
     step.print("Prepare for the restore.", args.verbose)
 
+    restore_dir = Path(tempfile.gettempdir()) / f"restore{os.getpid()}"
     restore_file = "combine-backup.tar.gz"
-    restore_dir = Path(config["restore_dir"])
 
-    try:
-        # Change the current working Directory
-        os.chdir(f"{config['combine_app_dir']}")
-    except OSError:
-        print(f"Cannot change directory to {config['combine_app_dir']}")
-        sys.exit(1)
+    compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
 
-    # save current directory to return to it later
-    workdir = Path.cwd()
-
-    if not restore_dir.exists():
-        restore_dir.mkdir(0o755, parents=True, exist_ok=True)
-    else:
-        rm_backup_files(
-            [
-                restore_dir / config["db_files_subdir"],
-                restore_dir / config["backend_files_subdir"],
-                restore_dir / restore_file,
-            ]
-        )
+    restore_dir.mkdir(0o755, parents=True)
 
     if not args.file:
         # Get the list of backups but throw away the header
@@ -132,6 +116,8 @@ def main() -> None:
     run_cmd(
         [
             "docker-compose",
+            "-f",
+            str(compose_file),
             "stop",
             "--timeout",
             "0",
@@ -161,6 +147,8 @@ def main() -> None:
     run_cmd(
         [
             "docker-compose",
+            "-f",
+            str(compose_file),
             "exec",
             "-T",
             "database",
@@ -173,6 +161,8 @@ def main() -> None:
     run_cmd(
         [
             "docker-compose",
+            "-f",
+            str(compose_file),
             "exec",
             "-T",
             "database",
@@ -190,6 +180,8 @@ def main() -> None:
         run_cmd(
             [
                 "docker-compose",
+                "-f",
+                str(compose_file),
                 "exec",
                 "-T",
                 "--user",
@@ -222,6 +214,8 @@ def main() -> None:
     run_cmd(
         [
             "docker-compose",
+            "-f",
+            str(compose_file),
             "exec",
             "-T",
             "--user",
@@ -242,7 +236,7 @@ def main() -> None:
     shutil.rmtree(restore_dir)
 
     step.print("Restart the containers.", args.verbose)
-    run_cmd(["docker-compose", "start", "certmgr", "frontend"])
+    run_cmd(["docker-compose", "-f", str(compose_file), "start", "certmgr", "frontend"])
 
 
 if __name__ == "__main__":

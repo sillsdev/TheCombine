@@ -111,7 +111,7 @@ def main() -> None:
         "combine_backup_dir": project_dir / "backups",
         "backend_files_subdir": ".CombineFiles",
         "mongo_files_subdir": "dump",
-        "aws_s3_backup_loc": "s3://thecombine.app/backups",
+        "aws_s3_backup_loc": "thecombine.app/backups",
         "aws_s3_profile": "s3_read_write",
         "combine_host": "{{ combine_server_name | replace('.', '-') }}",
         "combine_restore_dir": project_dir / "restore",
@@ -185,7 +185,9 @@ def main() -> None:
         lstrip_blocks=True,
     )
     templ_name = "backup_conf.json.j2"
-    templ_path = project_dir / "scripts" / "backup_conf.json"
+    templ_path = (
+        project_dir / "deploy" / "roles" / "combine_maintenance" / "files" / "backup_conf.json"
+    )
     template = jinja_env.get_template(templ_name)
     print(f"Writing: {templ_path}")
     templ_path.write_text(template.render(dev_config))
