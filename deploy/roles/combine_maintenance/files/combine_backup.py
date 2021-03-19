@@ -32,9 +32,7 @@ def main() -> None:
     """Create a backup of TheCombine database and backend files."""
     args = parse_args()
 
-    f_config = open(args.config)
-    config: Dict[str, str] = json.load(f_config)
-    f_config.close()
+    config: Dict[str, str] = json.loads(args.config.read_text())
 
     step = ScriptStep()
 
@@ -127,14 +125,14 @@ def main() -> None:
         "Copy the backend files (commands are run relative the 'app' user's home directory).",
         args.verbose,
     )
-    be_container = run_cmd(
+    backend_container = run_cmd(
         ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
     ).stdout.strip()
     run_cmd(
         [
             "docker",
             "cp",
-            f"{be_container}:/home/app/{config['backend_files_subdir']}/",
+            f"{backend_container}:/home/app/{config['backend_files_subdir']}/",
             str(backup_dir),
         ]
     )

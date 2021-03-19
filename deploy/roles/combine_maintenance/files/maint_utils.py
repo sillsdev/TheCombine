@@ -106,7 +106,7 @@ def rm_backup_files(path_list: List[Path]) -> None:
                 item.unlink()
 
 
-def run_cmd(cmd: List[str],  *, check_results: bool = True) -> subprocess.CompletedProcess:
+def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     try:
         return subprocess.run(

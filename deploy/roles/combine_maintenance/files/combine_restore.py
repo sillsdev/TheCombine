@@ -46,9 +46,7 @@ def main() -> None:
     """Restore TheCombine from a backup stored in the AWS S3 service."""
     args = parse_args()
 
-    f_config = open(args.config)
-    config: Dict[str, str] = json.load(f_config)
-    f_config.close()
+    config: Dict[str, str] = json.loads(args.config.read_text())
 
     step = ScriptStep()
 
@@ -205,7 +203,7 @@ def main() -> None:
             ]
         )
 
-    be_container = run_cmd(
+    backend_container = run_cmd(
         [
             "docker",
             "ps",
@@ -216,7 +214,7 @@ def main() -> None:
         ]
     ).stdout.strip()
 
-    run_cmd(["docker", "cp", config["backend_files_subdir"], f"{be_container}:/home/app"])
+    run_cmd(["docker", "cp", config["backend_files_subdir"], f"{backend_container}:/home/app"])
     # change permissions for the copied files.  Since the tarball is created outside
     # of the container, the app user will not be the owner (the backend process is
     # running as "app").  In addition, it is possible that the backup is from a
