@@ -1,7 +1,14 @@
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
+import { updateGoal } from "components/GoalTimeline/GoalsActions";
 import DupFinder from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { MergeDups, MergeStepData } from "goals/MergeDupGoal/MergeDups";
+import {
+  CompletedMerge,
+  MergeDups,
+  MergesCompleted,
+  MergeStepData,
+} from "goals/MergeDupGoal/MergeDups";
+import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
   Hash,
   MergeTreeReference,
@@ -9,6 +16,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
+import { Goal, GoalType } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
@@ -159,12 +167,12 @@ type SenseWithState = TreeDataSense & { state: State };
 // Returns the MergeWords, or undefined if the parent and child are identical.
 function getMergeWords(
   wordId: string,
-  getState: () => StoreState
+  mergeTree: MergeTreeState
 ): MergeWords | undefined {
   // Find and build MergeSourceWord[].
-  const word = getState().mergeDuplicateGoal.tree.words[wordId];
+  const word = mergeTree.tree.words[wordId];
   if (word) {
-    const data = getState().mergeDuplicateGoal.data;
+    const data = mergeTree.data;
 
     // Create list of all senses and add merge type tags slit by src word.
     const senses: Hash<SenseWithState[]> = {};
@@ -261,24 +269,52 @@ function getMergeWords(
 }
 
 export function mergeAll() {
-  return async (_dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     // Generate blacklist.
-    const wordIds = Object.keys(getState().mergeDuplicateGoal.data.words);
+    const mergeTree = getState().mergeDuplicateGoal;
+    const wordIds = Object.keys(mergeTree.data.words);
     const blacklist = LocalStorage.getMergeDupsBlacklist();
     blacklistSetAndAllSubsets(blacklist, wordIds);
     LocalStorage.setMergeDupsBlacklist(blacklist);
 
     // Merge words.
-    const words = Object.keys(getState().mergeDuplicateGoal.tree.words);
+    const words = Object.keys(mergeTree.tree.words);
     const mergeWordsArray: MergeWords[] = [];
     words.forEach((id) => {
-      const wordsToMerge = getMergeWords(id, getState);
+      const wordsToMerge = getMergeWords(id, mergeTree);
       if (wordsToMerge) {
         mergeWordsArray.push(wordsToMerge);
       }
     });
     if (mergeWordsArray.length) {
-      await backend.mergeWords(mergeWordsArray);
+      const parentIds = await backend.mergeWords(mergeWordsArray);
+      const childrenIds = [
+        ...new Set(
+          mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
+        ),
+      ];
+      const completedMerge = { childrenIds, parentIds };
+      const goal = getState().goalsState.currentGoal;
+      if (goal) {
+        dispatch(addCompletedMergeToGoal(goal, completedMerge));
+      }
+    }
+  };
+}
+
+function addCompletedMergeToGoal(
+  goal: MergeDups,
+  completedMerge: CompletedMerge
+) {
+  return (dispatch: StoreStateDispatch) => {
+    if (goal.goalType === GoalType.MergeDups) {
+      const changes = goal.changes as MergesCompleted;
+      if (!changes.merges) {
+        changes.merges = [];
+      }
+      changes.merges.push(completedMerge);
+      goal.changes = changes;
+      dispatch(updateGoal(goal));
     }
   };
 }

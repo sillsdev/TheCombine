@@ -5,12 +5,16 @@ import {
   CreateCharInvData,
   CreateCharInvStepData,
 } from "goals/CreateCharInv/CreateCharInv";
-import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDups";
+import {
+  MergeDupData,
+  MergesCompleted,
+  MergeStepData,
+} from "goals/MergeDupGoal/MergeDups";
 import { User } from "types/user";
 
 export type GoalData = CreateCharInvData | MergeDupData | {};
 export type GoalStep = CreateCharInvStepData | MergeStepData | {};
-export type GoalChanges = CreateCharInvChanges | {};
+export type GoalChanges = CreateCharInvChanges | MergesCompleted | {};
 
 export interface GoalProps {
   goal?: Goal;
@@ -19,6 +23,7 @@ export interface GoalProps {
 // The representation of goals in the redux store
 export interface GoalsState {
   allGoalTypes: GoalType[];
+  currentGoal: Goal;
   goalTypeSuggestions: GoalType[];
   history: Goal[];
 }

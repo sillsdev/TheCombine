@@ -13,7 +13,7 @@ import {
   MergeStepData,
 } from "goals/MergeDupGoal/MergeDups";
 import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { Goal } from "types/goals";
+import { Goal, GoalsState } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
@@ -90,9 +90,10 @@ beforeAll(() => {
   oldProjectId = LocalStorage.getProjectId();
   oldUser = LocalStorage.getCurrentUser();
 
-  const mockStoreState = {
+  const mockStoreState: { goalsState: GoalsState } = {
     goalsState: {
       allGoalTypes: [...defaultState.allGoalTypes],
+      currentGoal: new Goal(),
       goalTypeSuggestions: [...defaultState.goalTypeSuggestions],
       history: [...defaultState.history],
     },

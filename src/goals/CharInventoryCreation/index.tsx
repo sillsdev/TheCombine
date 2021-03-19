@@ -20,6 +20,7 @@ function mapStateToProps(state: StoreState) {
     currentProject: state.currentProject,
     selectedCharacter: state.characterInventoryState.selectedCharacter,
     allCharacters: state.characterInventoryState.characterSet,
+    goal: state.goalsState.currentGoal,
   };
 }
 
@@ -35,7 +36,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     fetchWords: () => dispatch(fetchWords()),
     getAllCharacters: () => dispatch(getAllCharacters()),
     resetInState: () => dispatch(resetInState()),
-    exit,
+    exit: () => dispatch(exit()),
   };
 }
 
