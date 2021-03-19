@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--clean", action="store_true", help="Clean out Backend files before restoring from backup"
     )
-    default_config = Path(os.path.dirname(sys.argv[0])) / "backup_conf.json"
+    default_config = Path(__file__).resolve().parent / "backup_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)
     parser.add_argument("--file", help="name of file in AWS S3 to be restored.")
     return parser.parse_args()

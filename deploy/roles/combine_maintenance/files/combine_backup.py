@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
-    default_config = Path(os.path.dirname(sys.argv[0])) / "backup_conf.json"
+    default_config = Path(__file__).resolve().parent / "backup_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)
     return parser.parse_args()
 
