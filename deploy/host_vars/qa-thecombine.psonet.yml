@@ -1,5 +1,0 @@
----
-combine_server_name: qa-thecombine.psonet
-combine_addl_domain_list: []
-config_captcha_required: "true"
-config_captcha_sitekey: "6LeG1LYZAAAAAPELEO16SkI6eY3gom8PoNJen35a"

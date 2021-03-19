@@ -126,7 +126,7 @@ def main() -> None:
         if "imageTags" in image_struct:
             for tag in image_struct["imageTags"]:
                 # check to see if there are patterns to test
-                if keep_pattern and not re.match(keep_pattern, tag):
+                if not (keep_pattern and re.match(keep_pattern, tag)):
                     # now check to see if it matches any exact tags specified
                     if not args.keep or tag not in args.keep:
                         # 'latest' is a special tag - always points to most recent
