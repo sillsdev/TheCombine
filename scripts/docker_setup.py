@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import shutil
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
@@ -106,6 +107,14 @@ def main() -> None:
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
         "mongodb_version": "4.4",
+        "combine_app_dir": project_dir,
+        "combine_backup_dir": "{{ combine_app_dir }}/backups",
+        "backend_files_subdir": ".CombineFiles",
+        "mongo_files_subdir": "dump",
+        "aws_s3_backup_loc": "s3://thecombine.app/backups",
+        "aws_s3_profile": "s3_read_write",
+        "combine_host": "{{ combine_server_name | replace('.', '-') }}",
+        "combine_restore_dir": "{{ combine_app_dir }}/restore",
     }
 
     # Templated file map
@@ -147,6 +156,39 @@ def main() -> None:
     # Restrict permissions for the environment files
     for env_file in [project_dir / ".env.backend", project_dir / ".env.frontend"]:
         env_file.chmod(0o600)
+
+    # Copy maintenance scripts from Ansible role to scripts directory
+    roles_dir = project_dir / "deploy" / "roles" / "combine_maintenance"
+    script_dest = project_dir / "scripts"
+    for script in (
+        "add_user_to_proj.py",
+        "combine_backup.py",
+        "combine_restore.py",
+        "maint_utils.py",
+        "make_user_admin.py",
+        "rm_project.py",
+        "script_step.py",
+    ):
+        shutil.copyfile(roles_dir / "files" / script, script_dest / script)
+        if script in ("maint_utils.py", "script_step.py"):
+            (script_dest / script).chmod(0o644)
+        else:
+            (script_dest / script).chmod(0o755)
+    # setup maintenance configuration
+    jinja_env = Environment(
+        loader=PackageLoader(
+            "docker_setup",
+            str(Path("..") / "deploy" / "roles" / "combine_maintenance" / "templates"),
+        ),
+        autoescape=select_autoescape(["html", "xml"]),
+        trim_blocks=True,
+        lstrip_blocks=True,
+    )
+    templ_name = "backup_conf.json.j2"
+    templ_path = project_dir / "scripts" / "backup_conf.json"
+    template = jinja_env.get_template(templ_name)
+    print(f"Writing: {templ_path}")
+    templ_path.write_text(template.render(dev_config))
 
 
 if __name__ == "__main__":
