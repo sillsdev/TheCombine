@@ -108,13 +108,13 @@ def main() -> None:
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
         "mongodb_version": "4.4",
         "combine_app_dir": project_dir,
-        "combine_backup_dir": "{{ combine_app_dir }}/backups",
+        "combine_backup_dir": project_dir / "backups",
         "backend_files_subdir": ".CombineFiles",
         "mongo_files_subdir": "dump",
         "aws_s3_backup_loc": "s3://thecombine.app/backups",
         "aws_s3_profile": "s3_read_write",
         "combine_host": "{{ combine_server_name | replace('.', '-') }}",
-        "combine_restore_dir": "{{ combine_app_dir }}/restore",
+        "combine_restore_dir": project_dir / "restore",
     }
 
     # Templated file map

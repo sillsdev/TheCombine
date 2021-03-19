@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
-"""Run a command in a docker container and return a subprocess.CompletedProcess."""
+"""Collection of utility functions for the Combine maintenance scripts."""
 
 import enum
 import json
+from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
@@ -21,7 +22,7 @@ class Permission(enum.IntEnum):
 
 
 def run_docker_cmd(service: str, cmd: List[str]) -> subprocess.CompletedProcess:
-    """Run a command in a docker container."""
+    """Run a command in a docker container and return a subprocess.CompletedProcess."""
     docker_cmd = [
         "docker-compose",
         "exec",
@@ -93,3 +94,30 @@ def get_user_id(user: str) -> Optional[str]:
     if results is not None:
         return results["_id"]
     return None
+
+
+def rm_backup_files(path_list: List[Path]) -> None:
+    """Clean out the directory used to build the backup tarball."""
+    for item in path_list:
+        if item.exists():
+            if item.is_dir():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
+
+
+def run_cmd(cmd: List[str],  *, check_results: bool = True) -> subprocess.CompletedProcess:
+    """Run a command with subprocess and catch any CalledProcessErrors."""
+    try:
+        return subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            check=check_results,
+        )
+    except subprocess.CalledProcessError as err:
+        print(f"CalledProcessError returned {err.returncode}")
+        print(f"stdout: {err.stdout}")
+        print(f"stderr: {err.stderr}")
+        sys.exit(err.returncode)

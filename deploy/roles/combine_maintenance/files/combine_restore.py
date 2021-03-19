@@ -7,11 +7,11 @@ import os
 from pathlib import Path
 import re
 import shutil
-import subprocess
 import sys
 import tarfile
-from typing import Dict, List
+from typing import Dict
 
+from maint_utils import rm_backup_files, run_cmd
 from script_step import ScriptStep
 
 
@@ -25,39 +25,12 @@ def parse_args() -> argparse.Namespace:
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
     parser.add_argument(
-        "--clean", action="store_true", help="Cleanout Backend files before restoring from backup"
+        "--clean", action="store_true", help="Clean out Backend files before restoring from backup"
     )
     default_config = Path(os.path.dirname(sys.argv[0])) / "backup_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)
     parser.add_argument("--file", help="name of file in AWS S3 to be restored.")
     return parser.parse_args()
-
-
-def rm_backup_files(path_list: List[Path]) -> None:
-    """Clean out the directory used to build the backup tarball."""
-    for item in path_list:
-        if item.exists():
-            if item.is_dir():
-                shutil.rmtree(item)
-            else:
-                item.unlink()
-
-
-def run_cmd(cmd: List[str], check_results: bool = True) -> subprocess.CompletedProcess:
-    """Run a command with subprocess and catch any CalledProcessErrors."""
-    try:
-        return subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=check_results,
-        )
-    except subprocess.CalledProcessError as err:
-        print(f"CalledProcessError returned {err.returncode}")
-        print(f"stdout: {err.stdout}")
-        print(f"stderr: {err.stderr}")
-        sys.exit(err.returncode)
 
 
 def aws_strip_bucket(obj_name: str) -> str:
@@ -73,10 +46,13 @@ def main() -> None:
     """Restore TheCombine from a backup stored in the AWS S3 service."""
     args = parse_args()
 
-    config: Dict[str, str] = json.load(open(args.config))
+    f_config = open(args.config)
+    config: Dict[str, str] = json.load(f_config)
+    f_config.close()
+
     step = ScriptStep()
 
-    step.print(args.verbose, "Prepare for the restore.")
+    step.print("Prepare for the restore.", args.verbose)
 
     restore_file = "combine-backup.tar.gz"
     restore_dir = Path(config["restore_dir"])
@@ -92,7 +68,7 @@ def main() -> None:
     workdir = Path.cwd()
 
     if not restore_dir.exists():
-        restore_dir.mkdir(0o755, True, True)
+        restore_dir.mkdir(0o755, parents=True, exist_ok=True)
     else:
         rm_backup_files(
             [
@@ -117,7 +93,7 @@ def main() -> None:
                 ]
             )
             .stdout.strip()
-            .split("\n")[1::]
+            .split("\n")[1:]
         )
         if len(aws_backup_list) == 0:
             print(f"No backups available from {config['aws_bucket']}")
@@ -139,7 +115,7 @@ def main() -> None:
     else:
         backup = args.file
 
-    step.print(args.verbose, f"Fetch the selected backup, {backup}.")
+    step.print(f"Fetch the selected backup, {backup}.", args.verbose)
     aws_file = f"{config['aws_bucket']}/{backup}"
 
     run_cmd(
@@ -154,7 +130,7 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Stop the frontend and certmgr containers.")
+    step.print("Stop the frontend and certmgr containers.", args.verbose)
     run_cmd(
         [
             "docker-compose",
@@ -166,13 +142,12 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Unpack the backup.")
+    step.print("Unpack the backup.", args.verbose)
     os.chdir(restore_dir)
-    tar = tarfile.open(restore_file, "r:gz")
-    tar.extractall()
-    tar.close()
+    with tarfile.open(restore_file, "r:gz") as tar:
+        tar.extractall()
 
-    step.print(args.verbose, "Restore the database.")
+    step.print("Restore the database.", args.verbose)
     db_container = run_cmd(
         ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
     ).stdout.strip()
@@ -209,7 +184,7 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Copy the backend files.")
+    step.print("Copy the backend files.", args.verbose)
     # if --clean option was used, delete the existing backend files
     if args.clean:
         # we run the rm command inside a bash shell so that the shell will do wildcard
@@ -264,11 +239,11 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Cleanup Restore files.")
+    step.print("Cleanup Restore files.", args.verbose)
     os.chdir(workdir)
     shutil.rmtree(restore_dir)
 
-    step.print(args.verbose, "Restart the containers.")
+    step.print("Restart the containers.", args.verbose)
     run_cmd(["docker-compose", "start", "certmgr", "frontend"])
 
 

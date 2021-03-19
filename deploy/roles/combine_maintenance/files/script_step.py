@@ -8,7 +8,7 @@ class ScriptStep:
         """Initialize the step number to 1."""
         self.step_num = 1
 
-    def print(self, verbose: bool, descr: str) -> None:
+    def print(self, descr: str, verbose: bool) -> None:
         """Print the step number with its description and bump the step number."""
         if verbose:
             print(f"{self.step_num}. {descr}")

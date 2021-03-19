@@ -6,12 +6,11 @@ from datetime import datetime
 import json
 import os
 from pathlib import Path
-import shutil
-import subprocess
 import sys
 import tarfile
-from typing import Dict, List
+from typing import Dict
 
+from maint_utils import rm_backup_files, run_cmd
 from script_step import ScriptStep
 
 
@@ -29,38 +28,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def rm_backup_files(path_list: List[Path]) -> None:
-    """Clean out the directory used to build the backup tarball."""
-    for item in path_list:
-        if item.exists():
-            if item.is_dir():
-                shutil.rmtree(item)
-            else:
-                item.unlink()
-
-
-def run_cmd(cmd: List[str], check_results: bool = True) -> subprocess.CompletedProcess:
-    """Run a command with subprocess and catch any CalledProcessErrors."""
-    try:
-        return subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=check_results,
-        )
-    except subprocess.CalledProcessError as err:
-        print(f"CalledProcessError returned {err.returncode}")
-        print(f"stdout: {err.stdout}")
-        print(f"stderr: {err.stderr}")
-        sys.exit(err.returncode)
-
-
 def main() -> None:
     """Create a backup of TheCombine database and backend files."""
     args = parse_args()
 
-    config: Dict[str, str] = json.load(open(args.config))
+    f_config = open(args.config)
+    config: Dict[str, str] = json.load(f_config)
+    f_config.close()
+
     step = ScriptStep()
 
     date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
@@ -81,9 +56,9 @@ def main() -> None:
     # save current directory to return to it later
     workdir = Path.cwd()
 
-    step.print(args.verbose, "Prepare the backup directory.")
+    step.print("Prepare the backup directory.", args.verbose)
     if not backup_dir.exists():
-        backup_dir.mkdir(0o755, True, True)
+        backup_dir.mkdir(0o755, parents=True, exist_ok=True)
     else:
         rm_backup_files(
             [
@@ -93,7 +68,7 @@ def main() -> None:
             ]
         )
 
-    step.print(args.verbose, "Stop the frontend and certmgr containers.")
+    step.print("Stop the frontend and certmgr containers.", args.verbose)
     run_cmd(
         [
             "docker-compose",
@@ -106,7 +81,7 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Dump the database.")
+    step.print("Dump the database.", args.verbose)
     run_cmd(
         [
             "docker-compose",
@@ -130,7 +105,7 @@ def main() -> None:
             "ls",
             config["db_files_subdir"],
         ],
-        False,
+        check_results=False,
     )
     if check_backup_results.returncode != 0:
         print("No database backup file - most likely empty database.", file=sys.stderr)
@@ -149,8 +124,8 @@ def main() -> None:
     )
 
     step.print(
-        args.verbose,
         "Copy the backend files (commands are run relative the 'app' user's home directory).",
+        args.verbose,
     )
     be_container = run_cmd(
         ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
@@ -164,15 +139,14 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Create the tarball for the backup.")
+    step.print("Create the tarball for the backup.", args.verbose)
     os.chdir(backup_dir)
 
-    tar = tarfile.open(backup_file, "x:gz")
-    for name in [config["backend_files_subdir"], config["db_files_subdir"]]:
-        tar.add(name)
-    tar.close()
+    with tarfile.open(backup_file, "x:gz") as tar:
+        for name in (config["backend_files_subdir"], config["db_files_subdir"]):
+            tar.add(name)
 
-    step.print(args.verbose, "Push backup to AWS S3 storage.")
+    step.print("Push backup to AWS S3 storage.", args.verbose)
     #    need to specify full path because $PATH does not contain
     #    /usr/local/bin when run as a cron job
     run_cmd(
@@ -188,13 +162,13 @@ def main() -> None:
         ]
     )
 
-    step.print(args.verbose, "Remove backup files.")
+    step.print("Remove backup files.", args.verbose)
     # Running in backup_dir
     rm_backup_files(
         [Path(config["db_files_subdir"]), Path(config["backend_files_subdir"]), Path(backup_file)]
     )
 
-    step.print(args.verbose, "Restart the frontend and certmgr containers.")
+    step.print("Restart the frontend and certmgr containers.", args.verbose)
     os.chdir(workdir)
     run_cmd(["docker-compose", compose_opts, "start", "certmgr", "frontend"])
 
