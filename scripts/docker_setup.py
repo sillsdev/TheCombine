@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
@@ -106,7 +107,7 @@ def main() -> None:
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
         "mongodb_version": "4.4",
-        "combine_app_dir": project_dir,
+        "combine_app_dir": re.sub(r"\\", r"\\\\", str(project_dir)),
         "backend_files_subdir": ".CombineFiles",
         "mongo_files_subdir": "dump",
         "aws_s3_backup_loc": "thecombine.app/backups",
