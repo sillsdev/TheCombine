@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import logging
 import os
 from pathlib import Path
 import re
@@ -46,9 +47,13 @@ def main() -> None:
     workdir = Path.cwd()
     args = parse_args()
     config: Dict[str, str] = json.loads(args.config.read_text())
+    if args.verbose:
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+    else:
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
 
     step = ScriptStep()
-    step.print("Prepare for the restore.", args.verbose)
+    step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
         restore_file = "combine-backup.tar.gz"
         compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
@@ -90,7 +95,7 @@ def main() -> None:
         else:
             backup = args.file
 
-        step.print(f"Fetch the selected backup, {backup}.", args.verbose)
+        step.print(f"Fetch the selected backup, {backup}.")
         aws_file = f"{config['aws_bucket']}/{backup}"
 
         run_cmd(
@@ -99,13 +104,13 @@ def main() -> None:
                 "s3",
                 "cp",
                 aws_file,
-                str(restore_dir / restore_file),
+                str(Path(restore_dir) / restore_file),
                 "--profile",
                 config["aws_s3_profile"],
             ]
         )
 
-        step.print("Stop the frontend and certmgr containers.", args.verbose)
+        step.print("Stop the frontend and certmgr containers.")
         run_cmd(
             [
                 "docker-compose",
@@ -119,12 +124,12 @@ def main() -> None:
             ]
         )
 
-        step.print("Unpack the backup.", args.verbose)
+        step.print("Unpack the backup.")
         os.chdir(restore_dir)
         with tarfile.open(restore_file, "r:gz") as tar:
             tar.extractall()
 
-        step.print("Restore the database.", args.verbose)
+        step.print("Restore the database.")
         db_container = run_cmd(
             ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
         ).stdout.strip()
@@ -165,7 +170,7 @@ def main() -> None:
             ]
         )
 
-        step.print("Copy the backend files.", args.verbose)
+        step.print("Copy the backend files.")
         # if --clean option was used, delete the existing backend files
         if args.clean:
             # we run the rm command inside a bash shell so that the shell will do wildcard
@@ -224,10 +229,10 @@ def main() -> None:
             ]
         )
 
-        step.print("Cleanup Restore files.", args.verbose)
+        step.print("Cleanup Restore files.")
         os.chdir(workdir)
 
-    step.print("Restart the containers.", args.verbose)
+    step.print("Restart the containers.")
     run_cmd(["docker-compose", "-f", str(compose_file), "start", "certmgr", "frontend"])
 
 

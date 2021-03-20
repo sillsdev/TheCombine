@@ -4,6 +4,7 @@
 import argparse
 from datetime import datetime
 import json
+import logging
 import os
 from pathlib import Path
 import sys
@@ -34,9 +35,14 @@ def main() -> None:
     workdir = Path.cwd()
     args = parse_args()
     config: Dict[str, str] = json.loads(args.config.read_text())
+    if args.verbose:
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+    else:
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+
     step = ScriptStep()
 
-    step.print("Prepare the backup directory.", args.verbose)
+    step.print("Prepare the backup directory.")
     with tempfile.TemporaryDirectory() as backup_dir:
         backup_file = "combine-backup.tar.gz"
         date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
@@ -46,7 +52,7 @@ def main() -> None:
         compose_opts = "--no-ansi"
         compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
 
-        step.print("Stop the frontend and certmgr containers.", args.verbose)
+        step.print("Stop the frontend and certmgr containers.")
         run_cmd(
             [
                 "docker-compose",
@@ -61,7 +67,7 @@ def main() -> None:
             ]
         )
 
-        step.print("Dump the database.", args.verbose)
+        step.print("Dump the database.")
         run_cmd(
             [
                 "docker-compose",
@@ -103,13 +109,12 @@ def main() -> None:
                 "docker",
                 "cp",
                 f"{db_container}:{config['db_files_subdir']}/",
-                str(backup_dir),
+                backup_dir,
             ]
         )
 
         step.print(
-            "Copy the backend files (commands are run relative the 'app' user's home directory).",
-            args.verbose,
+            "Copy the backend files (commands are run relative the 'app' user's home directory)."
         )
         backend_container = run_cmd(
             ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
@@ -123,7 +128,7 @@ def main() -> None:
             ]
         )
 
-        step.print("Create the tarball for the backup.", args.verbose)
+        step.print("Create the tarball for the backup.")
         # cd to backup_dir so that files in the tarball are relative to the backup_dir
         os.chdir(backup_dir)
 
@@ -131,7 +136,7 @@ def main() -> None:
             for name in (config["backend_files_subdir"], config["db_files_subdir"]):
                 tar.add(name)
 
-        step.print("Push backup to AWS S3 storage.", args.verbose)
+        step.print("Push backup to AWS S3 storage.")
         #    need to specify full path because $PATH does not contain
         #    /usr/local/bin when run as a cron job
         print(f"Current directory is {Path.cwd()}.")
@@ -148,12 +153,12 @@ def main() -> None:
             ]
         )
 
-        step.print("Remove backup files.", args.verbose)
+        step.print("Remove backup files.")
 
         # Change back to workdir so that we can delete the backup_dir
         os.chdir(workdir)
 
-    step.print("Restart the frontend and certmgr containers.", args.verbose)
+    step.print("Restart the frontend and certmgr containers.")
     run_cmd(
         ["docker-compose", "-f", str(compose_file), compose_opts, "start", "certmgr", "frontend"]
     )
