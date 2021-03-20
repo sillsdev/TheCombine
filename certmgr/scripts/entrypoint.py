@@ -51,12 +51,11 @@ def main() -> None:
         # allow the NUC to trigger the certmgr (running in "cert-client" mode) to
         # check for an updated certificate when it detects that the wired ethernet
         # connection is up.
-        usr1_signal = signal.SIGUSR1  # type: ignore
+        usr1_signal = signal.SIGUSR1
         signal.signal(usr1_signal, handle_user_sig1)
         while True:
             # check for renewal after 12 hours or SIGUSR1 received
-            # (12 hrs x 3600 sec/hr)
-            got_sig = signal.sigtimedwait([usr1_signal], 12 * 3600)  # type: ignore
+            got_sig = signal.sigtimedwait([usr1_signal], 12 * 3600)  # (12 hrs x 3600 sec/hr)
             if got_sig is not None:
                 print(f"Renew triggered by signal ({got_sig.si_signo}).")
             cert_obj.renew()
