@@ -6,7 +6,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import sys
 import tarfile
 import tempfile
@@ -46,137 +45,165 @@ def main() -> None:
     """Restore TheCombine from a backup stored in the AWS S3 service."""
     workdir = Path.cwd()
     args = parse_args()
-
     config: Dict[str, str] = json.loads(args.config.read_text())
 
     step = ScriptStep()
-
     step.print("Prepare for the restore.", args.verbose)
+    with tempfile.TemporaryDirectory() as restore_dir:
+        restore_file = "combine-backup.tar.gz"
+        compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
 
-    restore_dir = Path(tempfile.gettempdir()) / f"restore{os.getpid()}"
-    restore_file = "combine-backup.tar.gz"
+        if not args.file:
+            # Get the list of backups but throw away the header
+            aws_backup_list = (
+                run_cmd(
+                    [
+                        "aws",
+                        "s3",
+                        "ls",
+                        config["aws_bucket"],
+                        "--recursive",
+                        "--profile",
+                        config["aws_s3_profile"],
+                    ]
+                )
+                .stdout.strip()
+                .split("\n")[1:]
+            )
+            if len(aws_backup_list) == 0:
+                print(f"No backups available from {config['aws_bucket']}")
+                sys.exit(0)
 
-    compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
+            # Print out the list of backups to choose from.  In the process,
+            # update each line in the backup list to just be the AWS S3 object name.
+            print("Backup List:")
+            for i, item in enumerate(aws_backup_list):
+                aws_backup_list[i] = aws_strip_bucket(item.split()[3])
+                print(f"{i+1}: {aws_backup_list[i]}")
+            backup_num = int(
+                input("Enter the number of the backup you would like to restore (0 = None):")
+            )
+            if backup_num == 0:
+                print("No backup selected.  Exiting.")
+                sys.exit(0)
+            backup = aws_backup_list[backup_num - 1]
+        else:
+            backup = args.file
 
-    restore_dir.mkdir(0o755, parents=True)
+        step.print(f"Fetch the selected backup, {backup}.", args.verbose)
+        aws_file = f"{config['aws_bucket']}/{backup}"
 
-    if not args.file:
-        # Get the list of backups but throw away the header
-        aws_backup_list = (
+        run_cmd(
+            [
+                "aws",
+                "s3",
+                "cp",
+                aws_file,
+                str(restore_dir / restore_file),
+                "--profile",
+                config["aws_s3_profile"],
+            ]
+        )
+
+        step.print("Stop the frontend and certmgr containers.", args.verbose)
+        run_cmd(
+            [
+                "docker-compose",
+                "-f",
+                str(compose_file),
+                "stop",
+                "--timeout",
+                "0",
+                "frontend",
+                "certmgr",
+            ]
+        )
+
+        step.print("Unpack the backup.", args.verbose)
+        os.chdir(restore_dir)
+        with tarfile.open(restore_file, "r:gz") as tar:
+            tar.extractall()
+
+        step.print("Restore the database.", args.verbose)
+        db_container = run_cmd(
+            ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
+        ).stdout.strip()
+        run_cmd(
+            [
+                "docker",
+                "cp",
+                config["db_files_subdir"],
+                f"{db_container}:/",
+            ]
+        )
+
+        run_cmd(
+            [
+                "docker-compose",
+                "-f",
+                str(compose_file),
+                "exec",
+                "-T",
+                "database",
+                "mongorestore",
+                "--drop",
+                "--gzip",
+                "--quiet",
+            ]
+        )
+        run_cmd(
+            [
+                "docker-compose",
+                "-f",
+                str(compose_file),
+                "exec",
+                "-T",
+                "database",
+                "rm",
+                "-rf",
+                config["db_files_subdir"],
+            ]
+        )
+
+        step.print("Copy the backend files.", args.verbose)
+        # if --clean option was used, delete the existing backend files
+        if args.clean:
+            # we run the rm command inside a bash shell so that the shell will do wildcard
+            # expansion
             run_cmd(
                 [
-                    "aws",
-                    "s3",
-                    "ls",
-                    config["aws_bucket"],
-                    "--recursive",
-                    "--profile",
-                    config["aws_s3_profile"],
+                    "docker-compose",
+                    "-f",
+                    str(compose_file),
+                    "exec",
+                    "-T",
+                    "--user",
+                    "root",
+                    "--workdir",
+                    f"/home/app/{config['backend_files_subdir']}",
+                    "backend",
+                    "/bin/bash",
+                    "-c",
+                    "rm -rf *",
                 ]
             )
-            .stdout.strip()
-            .split("\n")[1:]
-        )
-        if len(aws_backup_list) == 0:
-            print(f"No backups available from {config['aws_bucket']}")
-            sys.exit(0)
 
-        # Print out the list of backups to choose from.  In the process,
-        # update each line in the backup list to just be the AWS S3 object name.
-        print("Backup List:")
-        for i, item in enumerate(aws_backup_list):
-            aws_backup_list[i] = aws_strip_bucket(item.split()[3])
-            print(f"{i+1}: {aws_backup_list[i]}")
-        backup_num = int(
-            input("Enter the number of the backup you would like to restore (0 = None):")
-        )
-        if backup_num == 0:
-            print("No backup selected.  Exiting.")
-            sys.exit(0)
-        backup = aws_backup_list[backup_num - 1]
-    else:
-        backup = args.file
+        backend_container = run_cmd(
+            [
+                "docker",
+                "ps",
+                "--filter",
+                "name=backend",
+                "--format",
+                "{{.Names}}",
+            ]
+        ).stdout.strip()
 
-    step.print(f"Fetch the selected backup, {backup}.", args.verbose)
-    aws_file = f"{config['aws_bucket']}/{backup}"
-
-    run_cmd(
-        [
-            "aws",
-            "s3",
-            "cp",
-            aws_file,
-            str(restore_dir / restore_file),
-            "--profile",
-            config["aws_s3_profile"],
-        ]
-    )
-
-    step.print("Stop the frontend and certmgr containers.", args.verbose)
-    run_cmd(
-        [
-            "docker-compose",
-            "-f",
-            str(compose_file),
-            "stop",
-            "--timeout",
-            "0",
-            "frontend",
-            "certmgr",
-        ]
-    )
-
-    step.print("Unpack the backup.", args.verbose)
-    os.chdir(restore_dir)
-    with tarfile.open(restore_file, "r:gz") as tar:
-        tar.extractall()
-
-    step.print("Restore the database.", args.verbose)
-    db_container = run_cmd(
-        ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
-    ).stdout.strip()
-    run_cmd(
-        [
-            "docker",
-            "cp",
-            config["db_files_subdir"],
-            f"{db_container}:/",
-        ]
-    )
-
-    run_cmd(
-        [
-            "docker-compose",
-            "-f",
-            str(compose_file),
-            "exec",
-            "-T",
-            "database",
-            "mongorestore",
-            "--drop",
-            "--gzip",
-            "--quiet",
-        ]
-    )
-    run_cmd(
-        [
-            "docker-compose",
-            "-f",
-            str(compose_file),
-            "exec",
-            "-T",
-            "database",
-            "rm",
-            "-rf",
-            config["db_files_subdir"],
-        ]
-    )
-
-    step.print("Copy the backend files.", args.verbose)
-    # if --clean option was used, delete the existing backend files
-    if args.clean:
-        # we run the rm command inside a bash shell so that the shell will do wildcard
-        # expansion
+        run_cmd(["docker", "cp", config["backend_files_subdir"], f"{backend_container}:/home/app"])
+        # change permissions for the copied files.  Since the tarball is created outside
+        # of the container, the app user will not be the owner (the backend process is
+        # running as "app").  In addition, it is possible that the backup is from a
+        # different host with different UIDs.
         run_cmd(
             [
                 "docker-compose",
@@ -186,54 +213,19 @@ def main() -> None:
                 "-T",
                 "--user",
                 "root",
-                "--workdir",
-                f"/home/app/{config['backend_files_subdir']}",
                 "backend",
-                "/bin/bash",
-                "-c",
-                "rm -rf *",
+                "find",
+                f"/home/app/{config['backend_files_subdir']}",
+                "-exec",
+                "chown",
+                "app:app",
+                "{}",
+                ";",
             ]
         )
 
-    backend_container = run_cmd(
-        [
-            "docker",
-            "ps",
-            "--filter",
-            "name=backend",
-            "--format",
-            "{{.Names}}",
-        ]
-    ).stdout.strip()
-
-    run_cmd(["docker", "cp", config["backend_files_subdir"], f"{backend_container}:/home/app"])
-    # change permissions for the copied files.  Since the tarball is created outside
-    # of the container, the app user will not be the owner (the backend process is
-    # running as "app").  In addition, it is possible that the backup is from a
-    # different host with different UIDs.
-    run_cmd(
-        [
-            "docker-compose",
-            "-f",
-            str(compose_file),
-            "exec",
-            "-T",
-            "--user",
-            "root",
-            "backend",
-            "find",
-            f"/home/app/{config['backend_files_subdir']}",
-            "-exec",
-            "chown",
-            "app:app",
-            "{}",
-            ";",
-        ]
-    )
-
-    step.print("Cleanup Restore files.", args.verbose)
-    os.chdir(workdir)
-    shutil.rmtree(restore_dir)
+        step.print("Cleanup Restore files.", args.verbose)
+        os.chdir(workdir)
 
     step.print("Restart the containers.", args.verbose)
     run_cmd(["docker-compose", "-f", str(compose_file), "start", "certmgr", "frontend"])
