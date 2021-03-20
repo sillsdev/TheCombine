@@ -153,9 +153,8 @@ def main() -> None:
             ]
         )
 
-        step.print("Remove backup files.")
-
-        # Change back to workdir so that we can delete the backup_dir
+        # Change back to workdir so that the temporary backup_dir can be deleted
+        # when we leave this context
         os.chdir(workdir)
 
     step.print("Restart the frontend and certmgr containers.")

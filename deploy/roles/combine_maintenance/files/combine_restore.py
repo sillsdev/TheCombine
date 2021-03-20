@@ -228,8 +228,6 @@ def main() -> None:
                 ";",
             ]
         )
-
-        step.print("Cleanup Restore files.")
         os.chdir(workdir)
 
     step.print("Restart the containers.")
