@@ -157,23 +157,6 @@ def main() -> None:
     for env_file in [project_dir / ".env.backend", project_dir / ".env.frontend"]:
         env_file.chmod(0o600)
 
-    # Copy maintenance scripts from Ansible role to scripts directory
-    roles_dir = project_dir / "deploy" / "roles" / "combine_maintenance"
-    script_dest = project_dir / "scripts"
-    for script in (
-        "add_user_to_proj.py",
-        "combine_backup.py",
-        "combine_restore.py",
-        "maint_utils.py",
-        "make_user_admin.py",
-        "rm_project.py",
-        "script_step.py",
-    ):
-        shutil.copyfile(roles_dir / "files" / script, script_dest / script)
-        if script in ("maint_utils.py", "script_step.py"):
-            (script_dest / script).chmod(0o644)
-        else:
-            (script_dest / script).chmod(0o755)
     # setup maintenance configuration
     jinja_env = Environment(
         loader=PackageLoader(
