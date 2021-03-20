@@ -7,33 +7,28 @@ import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {
   status: CharacterStatus;
+  inline?: boolean;
 }
 
 export default function CharacterStatusText(props: CharacterStatusTextProps) {
-  if (props.status === CharacterStatus.Accepted) {
-    return (
-      <Typography
-        variant="body2"
-        style={{ color: themeColors.success }}
-        component="p"
-      >
-        <Translate id="buttons.accepted" />
-      </Typography>
-    );
-  } else if (props.status === CharacterStatus.Rejected) {
-    return (
-      <Typography
-        variant="body2"
-        style={{ color: themeColors.error }}
-        component="p"
-      >
-        <Translate id="buttons.rejected" />
-      </Typography>
-    );
-  }
   return (
-    <Typography variant="body2" color="textSecondary" component="p">
-      <Translate id="buttons.undecided" />
+    <Typography
+      variant="body2"
+      color="textSecondary"
+      component="p"
+      style={CharacterStatusStyle(props.status)}
+      display={props.inline ? "inline" : "initial"}
+    >
+      <Translate id={`buttons.${props.status}`} />
     </Typography>
   );
+}
+
+function CharacterStatusStyle(status: CharacterStatus) {
+  switch (status) {
+    case CharacterStatus.Accepted:
+      return { color: themeColors.success };
+    case CharacterStatus.Rejected:
+      return { color: themeColors.error };
+  }
 }

@@ -10,7 +10,7 @@ import { StoreState } from "types";
  */
 export default function DisplayProgress() {
   const goalHistory = useSelector(
-    (state: StoreState) => state.goalsState.historyState.history
+    (state: StoreState) => state.goalsState.history
   );
   const goalIndex = goalHistory.length - 1;
   const goal = goalHistory[goalIndex];

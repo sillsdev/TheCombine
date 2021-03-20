@@ -87,20 +87,24 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const userEditId = getUserEditId();
     if (userEditId) {
-      // Load data.
-      goal = await loadGoalData(goal);
-      goal = updateStepFromData(goal);
+      const goalHistory = getState().goalsState.history;
+      let goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
+      if (goalIndex === -1) {
+        // Load data.
+        goal = await loadGoalData(goal);
+        goal = updateStepFromData(goal);
 
-      // Dispatch to state.
-      dispatch(dispatchStepData(goal));
-      dispatch(addGoalToHistory(goal));
+        // Dispatch to state.
+        dispatch(dispatchStepData(goal));
+        dispatch(addGoalToHistory(goal));
 
-      // Save to database.
-      const goalIndex = await Backend.addGoalToUserEdit(userEditId, goal);
-      await saveCurrentStep(goal, goalIndex);
+        // Save to database.
+        goalIndex = await Backend.addGoalToUserEdit(userEditId, goal);
+        await saveCurrentStep(goal, goalIndex);
+      }
 
       // Serve goal.
       history.push(`${Path.Goals}/${goalIndex}`);
@@ -110,7 +114,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
 
 export function asyncAdvanceStep(goal?: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const goalHistory = getState().goalsState.historyState.history;
+    const goalHistory = getState().goalsState.history;
     let goalIndex: number;
     if (goal !== undefined) {
       goalIndex = goalHistory.findIndex((g) => g.guid === goal!.guid);
@@ -153,7 +157,7 @@ export function asyncUpdateOrAddGoal(goal: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const userEditId = getUserEditId();
     if (userEditId) {
-      const goalHistory = getState().goalsState.historyState.history;
+      const goalHistory = getState().goalsState.history;
       let goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
       if (goalIndex === -1) {
         dispatch(addGoalToHistory(goal));

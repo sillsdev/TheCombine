@@ -606,6 +606,13 @@
       ],
       "yes": ["yes", "si", "oui"],
       "no": ["no", "no", "non"]
+    },
+    "changes": {
+      "noChanges": [
+        "No changes made in this goal.",
+        "No changes made in this goal.",
+        "No changes made in this goal."
+      ]
     }
   },
   "mergeDups": {

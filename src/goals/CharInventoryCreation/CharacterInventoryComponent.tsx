@@ -10,8 +10,7 @@ import {
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "browserHistory";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import LoadingButton from "components/Buttons/LoadingButton";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
@@ -33,6 +32,7 @@ interface CharacterInventoryProps {
   getAllCharacters: () => Promise<void>;
   allCharacters: CharacterSetEntry[];
   resetInState: () => void;
+  exit: () => void;
 }
 
 export const SAVE: string = "pushGoals";
@@ -41,7 +41,6 @@ export const CANCEL: string = "cancelInventoryCreation";
 interface CharacterInventoryState {
   cancelDialogOpen: boolean;
   saveInProgress: boolean;
-  saveSuccessful: boolean;
 }
 
 /**
@@ -56,7 +55,6 @@ export default class CharacterInventory extends React.Component<
     this.state = {
       cancelDialogOpen: false,
       saveInProgress: false,
-      saveSuccessful: false,
     };
   }
 
@@ -74,17 +72,13 @@ export default class CharacterInventory extends React.Component<
     this.setState({ cancelDialogOpen: false });
   }
 
-  async save() {
+  save() {
     this.setState({ saveInProgress: true });
-    await this.props.uploadInventory(this.props.goal);
-    this.setState({ saveInProgress: false, saveSuccessful: true });
-    // Manually pause so user can see save success.
-    setTimeout(() => this.quit(), 1000);
+    this.props.uploadInventory(this.props.goal);
   }
 
-  quit() {
+  componentWillUnmount() {
     this.props.resetInState();
-    history.push(Path.Goals);
   }
 
   render() {
@@ -119,8 +113,7 @@ export default class CharacterInventory extends React.Component<
           <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
             <Grid container justify="center">
-              <LoadingDoneButton
-                done={this.state.saveSuccessful}
+              <LoadingButton
                 loading={this.state.saveInProgress}
                 buttonProps={{
                   id: SAVE,
@@ -130,7 +123,7 @@ export default class CharacterInventory extends React.Component<
                 }}
               >
                 <Translate id="buttons.save" />
-              </LoadingDoneButton>
+              </LoadingButton>
               <Button
                 id={CANCEL}
                 variant="contained"
@@ -163,7 +156,7 @@ export default class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.quit()}
+              onClick={() => this.props.exit()}
               variant="contained"
               color="secondary"
               autoFocus
