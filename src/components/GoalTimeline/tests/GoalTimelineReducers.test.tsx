@@ -5,7 +5,6 @@ import {
 import * as actions from "components/GoalTimeline/GoalsActions";
 import { goalsReducer } from "components/GoalTimeline/GoalsReducer";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
-import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
@@ -80,14 +79,11 @@ describe("Test GoalsReducers", () => {
       const goal2: Goal = new MergeDups();
       const goal3: Goal = new ReviewEntries();
       const goal4: Goal = new SpellCheckGloss();
-      const goal5: Goal = new CreateStrWordInv();
-      const mockAllGoalTypesArray = [goal3.goalType];
-      const mockGoalTypeSuggestions = [goal4.goalType, goal5.goalType];
+      const mockGoalTypeSuggestions = [goal3.goalType, goal4.goalType];
       const mockHistory = [goal, goal2];
 
       const state: GoalsState = {
         ...emtpyGoalState(),
-        allGoalTypes: mockAllGoalTypesArray,
         goalTypeSuggestions: mockGoalTypeSuggestions,
         history: mockHistory,
       };
@@ -102,7 +98,6 @@ describe("Test GoalsReducers", () => {
 
       const newState: GoalsState = {
         ...emtpyGoalState(),
-        allGoalTypes: mockAllGoalTypesArray,
         goalTypeSuggestions: mockGoalTypeSuggestions,
         history: [goal6, goal7],
       };
@@ -111,21 +106,31 @@ describe("Test GoalsReducers", () => {
     });
   });
 
+  describe("GoalsActions.SET_CURRENT_GOAL", () => {
+    it("Should replace the current goal with specified goal", () => {
+      const currentGoal: Goal = new CreateCharInv();
+      const updateGoalAction: actions.GoalAction = {
+        type: actions.GoalsActions.SET_CURRENT_GOAL,
+        payload: currentGoal,
+      };
+      const newState: GoalsState = { ...defaultState, currentGoal };
+      expect(goalsReducer(defaultState, updateGoalAction)).toEqual(newState);
+    });
+  });
+
   describe("GoalsActions.UPDATE_GOAL", () => {
-    it("Should replace the most recent goal with an updated version", () => {
+    it("Should replace the goal with an updated version", () => {
       const goal: Goal = new CreateCharInv();
-      const goal2: Goal = new ReviewEntries();
+      const goal2: Goal = new MergeDups();
       const goal3: Goal = new ReviewEntries();
       const goal4: Goal = new SpellCheckGloss();
-      const goal5: Goal = new CreateStrWordInv();
-      const mockAllGoalTypesArray = [goal3.goalType];
-      const mockGoalTypeSuggestions = [goal4.goalType, goal5.goalType];
+      const mockAllGoalTypesArray = [goal3.goalType, goal4.goalType];
       const mockHistory = [goal, goal2];
 
       const state: GoalsState = {
         ...emtpyGoalState(),
         allGoalTypes: mockAllGoalTypesArray,
-        goalTypeSuggestions: mockGoalTypeSuggestions,
+        currentGoal: goal2,
         history: mockHistory,
       };
 
@@ -141,7 +146,7 @@ describe("Test GoalsReducers", () => {
       const newState: GoalsState = {
         ...emtpyGoalState(),
         allGoalTypes: mockAllGoalTypesArray,
-        goalTypeSuggestions: mockGoalTypeSuggestions,
+        currentGoal: updatedGoal,
         history: updatedHistory,
       };
 

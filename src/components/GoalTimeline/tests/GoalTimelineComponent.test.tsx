@@ -103,6 +103,7 @@ function createTimeline(
       chooseGoal={CHOOSE_GOAL}
       loadHistory={LOAD_HISTORY}
       allGoalTypes={defaultState.allGoalTypes}
+      currentGoal={defaultState.currentGoal}
       goalTypeSuggestions={suggestions ?? defaultState.allGoalTypes.slice(0, 3)}
       history={history ?? goals.slice(0, 3)}
     />

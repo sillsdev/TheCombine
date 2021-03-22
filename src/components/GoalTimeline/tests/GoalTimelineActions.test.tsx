@@ -123,31 +123,42 @@ afterAll(() => {
 });
 
 describe("GoalsActions", () => {
-  it("AddGoalToHistoryAction should create an action to add a goal to history", () => {
-    const goal: Goal = new CreateCharInv();
-    const expectedAction: actions.AddGoalToHistoryAction = {
-      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: goal,
-    };
-    expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
-  });
+  describe("action creators", () => {
+    it("addGoalToHistory should create an action to add a goal to history", () => {
+      const goal: Goal = new CreateCharInv();
+      const expectedAction: actions.AddGoalToHistoryAction = {
+        type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
+        payload: goal,
+      };
+      expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
+    });
 
-  it("LoadUserEditsAction should create an action to load user edits", () => {
-    const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
-    const expectedAction: actions.LoadUserEditsAction = {
-      type: actions.GoalsActions.LOAD_USER_EDITS,
-      payload: goalHistory,
-    };
-    expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
-  });
+    it("loadUserEdits should create an action to load user edits", () => {
+      const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
+      const expectedAction: actions.LoadUserEditsAction = {
+        type: actions.GoalsActions.LOAD_USER_EDITS,
+        payload: goalHistory,
+      };
+      expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
+    });
 
-  it("UpdateGoalAction should create an action to update a goal", () => {
-    const goal: Goal = new CreateCharInv();
-    const expectedAction: actions.UpdateGoalAction = {
-      type: actions.GoalsActions.UPDATE_GOAL,
-      payload: goal,
-    };
-    expect(actions.updateGoal(goal)).toEqual(expectedAction);
+    it("setCurrentGoal should create an action to set the current goal", () => {
+      const goal = new Goal();
+      const expectedAction: actions.SetCurrentGoalAction = {
+        type: actions.GoalsActions.SET_CURRENT_GOAL,
+        payload: goal,
+      };
+      expect(actions.setCurrentGoal(goal)).toEqual(expectedAction);
+    });
+
+    it("updateGoal should create an action to update a goal", () => {
+      const goal: Goal = new CreateCharInv();
+      const expectedAction: actions.UpdateGoalAction = {
+        type: actions.GoalsActions.UPDATE_GOAL,
+        payload: goal,
+      };
+      expect(actions.updateGoal(goal)).toEqual(expectedAction);
+    });
   });
 
   it("asyncLoadExistingUserEdits should create an async action to load user edits", async () => {

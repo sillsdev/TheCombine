@@ -60,8 +60,8 @@ export function generateCleanJSON(
   fnDom: SemanticDomainWithSubdomains[]
 ) {
   domain.forEach(function (subDomain) {
-    let newEnglishEntry: SemanticDomainWithSubdomains = new SemanticDomainWithSubdomains(),
-      newForiegnEntry: SemanticDomainWithSubdomains = new SemanticDomainWithSubdomains();
+    const newEnglishEntry = new SemanticDomainWithSubdomains();
+    const newForiegnEntry = new SemanticDomainWithSubdomains();
 
     newEnglishEntry.name = subDomain.Name[0].AUni[0]._;
     newEnglishEntry.id = subDomain.Abbreviation[0].AUni[0]._;
