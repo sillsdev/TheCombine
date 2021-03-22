@@ -218,15 +218,20 @@ describe("GoalsActions", () => {
       LocalStorage.setProjectId(mockProjectId);
     });
 
-    it("should increase current step and dispatch a goal update", async () => {
-      const goal = new Goal();
-      expect(goal.currentStep).toEqual(0);
+    function setMockGoalState(goal: Goal) {
       const mockStoreState = {
         goalsState: {
+          currentGoal: goal,
           history: [goal],
         },
       };
       mockStore = createMockStore(mockStoreState);
+    }
+
+    it("should increase current step and dispatch a goal update", async () => {
+      const goal = new Goal();
+      expect(goal.currentStep).toEqual(0);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(goal.currentStep).toEqual(1);
       expect(mockStore.getActions()[0].type).toEqual(
@@ -238,12 +243,7 @@ describe("GoalsActions", () => {
       const goal = new Goal();
       goal.numSteps = 2;
       expect(goal.currentStep + 1).toBeLessThan(goal.numSteps);
-      const mockStoreState = {
-        goalsState: {
-          history: [goal],
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(1);
     });
@@ -251,12 +251,7 @@ describe("GoalsActions", () => {
     it("should not make backend call if goal finished", async () => {
       const goal = new Goal();
       expect(goal.currentStep + 1).toEqual(goal.numSteps);
-      const mockStoreState = {
-        goalsState: {
-          history: [goal],
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(0);
     });
@@ -264,12 +259,7 @@ describe("GoalsActions", () => {
     it("should create MergeDups action when goal is unfinished MergeDups", async () => {
       const goal = new MergeDups();
       goal.numSteps = 2;
-      const mockStoreState = {
-        goalsState: {
-          history: [goal],
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
     });
