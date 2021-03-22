@@ -1,7 +1,8 @@
 import loadable from "@loadable/component";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { setCurrentGoal } from "components/GoalTimeline/GoalsActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { StoreState } from "types";
@@ -33,6 +34,12 @@ function displayComponent(goal: Goal) {
  */
 export default function BaseGoalScreen() {
   const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    return function cleanup() {
+      dispatch(setCurrentGoal());
+    };
+  });
   return (
     <React.Fragment>
       <DisplayProgress />

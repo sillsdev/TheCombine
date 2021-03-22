@@ -1,9 +1,6 @@
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
-import {
-  asyncUpdateOrAddGoal,
-  setCurrentGoal,
-} from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
@@ -129,7 +126,7 @@ export function uploadInventory(goal: Goal) {
     const state = getState();
     const changes = getChangesFromState(state);
     if (!changes.length) {
-      dispatch(exit());
+      exit();
       return;
     }
     const updatedProject = updateCurrentProject(state);
@@ -140,13 +137,6 @@ export function uploadInventory(goal: Goal) {
       completed: true,
     };
     await dispatch(asyncUpdateOrAddGoal(updatedGoal));
-  };
-}
-
-export function exit() {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentGoal());
-    history.push(Path.Goals);
   };
 }
 
@@ -185,6 +175,10 @@ export function getAllCharacters() {
 }
 
 // Helper Functions
+
+export function exit() {
+  history.push(Path.Goals);
+}
 
 function countCharacterOccurences(char: string, words: string[]) {
   let count = 0;

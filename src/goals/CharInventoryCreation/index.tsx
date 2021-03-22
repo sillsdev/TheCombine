@@ -36,7 +36,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     fetchWords: () => dispatch(fetchWords()),
     getAllCharacters: () => dispatch(getAllCharacters()),
     resetInState: () => dispatch(resetInState()),
-    exit: () => dispatch(exit()),
+    exit,
   };
 }
 
