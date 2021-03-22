@@ -12,6 +12,7 @@ import tarfile
 import tempfile
 from typing import Dict
 
+import humanfriendly
 from maint_utils import run_cmd
 from script_step import ScriptStep
 
@@ -44,7 +45,6 @@ def aws_strip_bucket(obj_name: str) -> str:
 
 def main() -> None:
     """Restore TheCombine from a backup stored in the AWS S3 service."""
-    workdir = Path.cwd()
     args = parse_args()
     config: Dict[str, str] = json.loads(args.config.read_text())
     if args.verbose:
@@ -55,10 +55,13 @@ def main() -> None:
     step = ScriptStep()
     step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
+        logging.info("Temporary Directory is %s.", restore_dir)
         restore_file = "combine-backup.tar.gz"
         compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
 
-        if not args.file:
+        if args.file:
+            backup = args.file
+        else:
             # Get the list of backups but throw away the header
             aws_backup_list = (
                 run_cmd(
@@ -83,17 +86,19 @@ def main() -> None:
             # update each line in the backup list to just be the AWS S3 object name.
             print("Backup List:")
             for i, item in enumerate(aws_backup_list):
-                aws_backup_list[i] = aws_strip_bucket(item.split()[3])
-                print(f"{i+1}: {aws_backup_list[i]}")
+                backup_components = item.split()
+                aws_backup_list[i] = (
+                    humanfriendly.format_size(int(backup_components[2])),
+                    aws_strip_bucket(backup_components[3]),
+                )
+                print(f"{i+1}: {aws_backup_list[i][1]} ({aws_backup_list[i][0]})")
             backup_num = int(
                 input("Enter the number of the backup you would like to restore (0 = None):")
             )
             if backup_num == 0:
                 print("No backup selected.  Exiting.")
                 sys.exit(0)
-            backup = aws_backup_list[backup_num - 1]
-        else:
-            backup = args.file
+            backup = aws_backup_list[backup_num - 1][1]
 
         step.print(f"Fetch the selected backup, {backup}.")
         aws_file = f"{config['aws_bucket']}/{backup}"
@@ -228,7 +233,7 @@ def main() -> None:
                 ";",
             ]
         )
-        os.chdir(workdir)
+    #        os.chdir(workdir)
 
     step.print("Restart the containers.")
     run_cmd(["docker-compose", "-f", str(compose_file), "start", "certmgr", "frontend"])

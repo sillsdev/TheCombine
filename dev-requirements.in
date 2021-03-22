@@ -3,6 +3,7 @@ mypy
 flake8
 pep8-naming
 black
+humanfriendly
 isort
 Jinja2
 mkdocs-material

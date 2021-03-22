@@ -143,7 +143,6 @@ def main() -> None:
         run_cmd(
             [
                 "aws",
-                config["quiet_opt"],
                 "s3",
                 "cp",
                 backup_file,
