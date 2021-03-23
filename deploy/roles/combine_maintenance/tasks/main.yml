@@ -6,7 +6,7 @@
 
 - name: install required Python packages
   pip:
-    name: pymongo
+    name: humanfriendly
     state: present
 
 - name: create folders for backups
@@ -48,9 +48,11 @@
       mode: "0755"
     - name: maint_utils.py
       mode: "0644"
-    - name: combine-backup.py
+    - name: script_step.py
+      mode: "0644"
+    - name: combine_backup.py
       mode: "0755"
-    - name: combine-restore.py
+    - name: combine_restore.py
       mode: "0755"
 
 - name: set environment variables for backup job
