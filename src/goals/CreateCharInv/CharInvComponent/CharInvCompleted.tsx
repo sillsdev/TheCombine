@@ -1,19 +1,19 @@
 import { ArrowRightAlt } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { useSelector } from "react-redux";
 
 import { Typography } from "@material-ui/core";
 import { CharacterChange } from "goals/CharInventoryCreation/CharacterInventoryActions";
 import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInv";
-import { Goal } from "types/goals";
+import { StoreState } from "types";
 
-interface CharInvCompletedProps {
-  goal: Goal;
-}
-
-export default function CharInvCompleted(props: CharInvCompletedProps) {
-  const changes = props.goal.changes as CreateCharInvChanges;
+export default function CharInvCompleted() {
+  const changes = useSelector(
+    (state: StoreState) =>
+      state.goalsState.currentGoal.changes as CreateCharInvChanges
+  );
   return (
     <React.Fragment>
       <Typography component="h1" variant="h4">

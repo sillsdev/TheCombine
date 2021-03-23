@@ -12,25 +12,32 @@ import { Goal, GoalType } from "types/goals";
 import { convertEditToGoal } from "types/goalUtilities";
 
 export enum GoalsActions {
-  LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
+  LOAD_USER_EDITS = "LOAD_USER_EDITS",
+  SET_CURRENT_GOAL = "SET_CURRENT_GOAL",
   UPDATE_GOAL = "UPDATE_GOAL",
 }
 
 export type GoalAction =
-  | LoadUserEditsAction
   | AddGoalToHistoryAction
+  | LoadUserEditsAction
+  | SetCurrentGoalAction
   | UpdateGoalAction;
 
 // Action Creators
+
+export interface AddGoalToHistoryAction extends ActionWithPayload<Goal> {
+  type: GoalsActions.ADD_GOAL_TO_HISTORY;
+  payload: Goal;
+}
 
 export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.LOAD_USER_EDITS;
   payload: Goal[];
 }
 
-export interface AddGoalToHistoryAction extends ActionWithPayload<Goal> {
-  type: GoalsActions.ADD_GOAL_TO_HISTORY;
+export interface SetCurrentGoalAction extends ActionWithPayload<Goal> {
+  type: GoalsActions.SET_CURRENT_GOAL;
   payload: Goal;
 }
 
@@ -45,6 +52,10 @@ export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
 
 export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
   return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
+}
+
+export function setCurrentGoal(goal?: Goal): SetCurrentGoalAction {
+  return { type: GoalsActions.SET_CURRENT_GOAL, payload: goal ?? new Goal() };
 }
 
 export function updateGoal(goal: Goal): UpdateGoalAction {
@@ -104,6 +115,8 @@ export function asyncAddGoalToHistory(goal: Goal) {
         // Save to database.
         goalIndex = await Backend.addGoalToUserEdit(userEditId, goal);
         await saveCurrentStep(goal, goalIndex);
+      } else {
+        dispatch(setCurrentGoal(goal));
       }
 
       // Serve goal.
@@ -112,16 +125,12 @@ export function asyncAddGoalToHistory(goal: Goal) {
   };
 }
 
-export function asyncAdvanceStep(goal?: Goal) {
+export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const goalHistory = getState().goalsState.history;
-    let goalIndex: number;
-    if (goal !== undefined) {
-      goalIndex = goalHistory.findIndex((g) => g.guid === goal!.guid);
-    } else {
-      goalIndex = goalHistory.length - 1;
-      goal = goalHistory[goalIndex];
-    }
+    const goalsState = getState().goalsState;
+    let goal = goalsState.currentGoal;
+    const goalHistory = goalsState.history;
+    const goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
     goal.currentStep++;
     if (goal.currentStep < goal.numSteps) {
       // Update data.

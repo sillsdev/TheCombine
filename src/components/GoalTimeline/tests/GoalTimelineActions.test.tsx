@@ -13,7 +13,7 @@ import {
   MergeStepData,
 } from "goals/MergeDupGoal/MergeDups";
 import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { Goal } from "types/goals";
+import { Goal, GoalsState } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
@@ -90,9 +90,10 @@ beforeAll(() => {
   oldProjectId = LocalStorage.getProjectId();
   oldUser = LocalStorage.getCurrentUser();
 
-  const mockStoreState = {
+  const mockStoreState: { goalsState: GoalsState } = {
     goalsState: {
       allGoalTypes: [...defaultState.allGoalTypes],
+      currentGoal: new Goal(),
       goalTypeSuggestions: [...defaultState.goalTypeSuggestions],
       history: [...defaultState.history],
     },
@@ -122,31 +123,42 @@ afterAll(() => {
 });
 
 describe("GoalsActions", () => {
-  it("AddGoalToHistoryAction should create an action to add a goal to history", () => {
-    const goal: Goal = new CreateCharInv();
-    const expectedAction: actions.AddGoalToHistoryAction = {
-      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: goal,
-    };
-    expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
-  });
+  describe("action creators", () => {
+    it("addGoalToHistory should create an action to add a goal to history", () => {
+      const goal: Goal = new CreateCharInv();
+      const expectedAction: actions.AddGoalToHistoryAction = {
+        type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
+        payload: goal,
+      };
+      expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
+    });
 
-  it("LoadUserEditsAction should create an action to load user edits", () => {
-    const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
-    const expectedAction: actions.LoadUserEditsAction = {
-      type: actions.GoalsActions.LOAD_USER_EDITS,
-      payload: goalHistory,
-    };
-    expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
-  });
+    it("loadUserEdits should create an action to load user edits", () => {
+      const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
+      const expectedAction: actions.LoadUserEditsAction = {
+        type: actions.GoalsActions.LOAD_USER_EDITS,
+        payload: goalHistory,
+      };
+      expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
+    });
 
-  it("UpdateGoalAction should create an action to update a goal", () => {
-    const goal: Goal = new CreateCharInv();
-    const expectedAction: actions.UpdateGoalAction = {
-      type: actions.GoalsActions.UPDATE_GOAL,
-      payload: goal,
-    };
-    expect(actions.updateGoal(goal)).toEqual(expectedAction);
+    it("setCurrentGoal should create an action to set the current goal", () => {
+      const goal = new Goal();
+      const expectedAction: actions.SetCurrentGoalAction = {
+        type: actions.GoalsActions.SET_CURRENT_GOAL,
+        payload: goal,
+      };
+      expect(actions.setCurrentGoal(goal)).toEqual(expectedAction);
+    });
+
+    it("updateGoal should create an action to update a goal", () => {
+      const goal: Goal = new CreateCharInv();
+      const expectedAction: actions.UpdateGoalAction = {
+        type: actions.GoalsActions.UPDATE_GOAL,
+        payload: goal,
+      };
+      expect(actions.updateGoal(goal)).toEqual(expectedAction);
+    });
   });
 
   it("asyncLoadExistingUserEdits should create an async action to load user edits", async () => {
@@ -217,15 +229,20 @@ describe("GoalsActions", () => {
       LocalStorage.setProjectId(mockProjectId);
     });
 
-    it("should increase current step and dispatch a goal update", async () => {
-      const goal = new Goal();
-      expect(goal.currentStep).toEqual(0);
+    function setMockGoalState(goal: Goal) {
       const mockStoreState = {
         goalsState: {
+          currentGoal: goal,
           history: [goal],
         },
       };
       mockStore = createMockStore(mockStoreState);
+    }
+
+    it("should increase current step and dispatch a goal update", async () => {
+      const goal = new Goal();
+      expect(goal.currentStep).toEqual(0);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(goal.currentStep).toEqual(1);
       expect(mockStore.getActions()[0].type).toEqual(
@@ -237,12 +254,7 @@ describe("GoalsActions", () => {
       const goal = new Goal();
       goal.numSteps = 2;
       expect(goal.currentStep + 1).toBeLessThan(goal.numSteps);
-      const mockStoreState = {
-        goalsState: {
-          history: [goal],
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(1);
     });
@@ -250,12 +262,7 @@ describe("GoalsActions", () => {
     it("should not make backend call if goal finished", async () => {
       const goal = new Goal();
       expect(goal.currentStep + 1).toEqual(goal.numSteps);
-      const mockStoreState = {
-        goalsState: {
-          history: [goal],
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(0);
     });
@@ -263,12 +270,7 @@ describe("GoalsActions", () => {
     it("should create MergeDups action when goal is unfinished MergeDups", async () => {
       const goal = new MergeDups();
       goal.numSteps = 2;
-      const mockStoreState = {
-        goalsState: {
-          history: [goal],
-        },
-      };
-      mockStore = createMockStore(mockStoreState);
+      setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
     });

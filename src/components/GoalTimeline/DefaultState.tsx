@@ -1,4 +1,4 @@
-import { GoalsState, GoalType } from "types/goals";
+import { Goal, GoalsState, GoalType } from "types/goals";
 
 const implementedTypes: GoalType[] = [
   GoalType.CreateCharInv,
@@ -8,6 +8,16 @@ const implementedTypes: GoalType[] = [
 
 export const defaultState: GoalsState = {
   allGoalTypes: implementedTypes,
+  currentGoal: new Goal(),
   goalTypeSuggestions: [...implementedTypes],
   history: [],
 };
+
+export function emtpyGoalState(): GoalsState {
+  return {
+    allGoalTypes: [],
+    currentGoal: { ...new Goal(), guid: expect.any(String) },
+    goalTypeSuggestions: [],
+    history: [],
+  };
+}
