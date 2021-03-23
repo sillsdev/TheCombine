@@ -165,12 +165,12 @@ const tree1: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        senses: { ID1: { ID1: "S1" }, ID2: { ID1: "S2" } },
+        sensesGuids: { ID1: { ID1: "S1" }, ID2: { ID1: "S2" } },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        senses: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
+        sensesGuids: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
         vern: "BBB",
         plural: "BBBS",
       },
@@ -192,11 +192,11 @@ const tree2: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        senses: { ID1: { ID1: "S1", ID2: "S3" }, ID2: { ID1: "S2" } },
+        sensesGuids: { ID1: { ID1: "S1", ID2: "S3" }, ID2: { ID1: "S2" } },
         vern: "AAA",
         plural: "AAAS",
       },
-      WB: { senses: { ID1: { ID1: "S4" } }, vern: "BBB", plural: "BBBS" },
+      WB: { sensesGuids: { ID1: { ID1: "S4" } }, vern: "BBB", plural: "BBBS" },
     },
   },
 };
@@ -218,12 +218,16 @@ const tree3: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        senses: { ID1: { ID1: "S1" }, ID2: { ID1: "S2" }, ID3: { ID1: "S3" } },
+        sensesGuids: {
+          ID1: { ID1: "S1" },
+          ID2: { ID1: "S2" },
+          ID3: { ID1: "S3" },
+        },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        senses: { ID1: { ID1: "S4" } },
+        sensesGuids: { ID1: { ID1: "S4" } },
         vern: "BBB",
         plural: "BBBS",
       },
@@ -248,12 +252,12 @@ const tree4: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        senses: { ID1: { ID1: "S1", ID2: "S2" } },
+        sensesGuids: { ID1: { ID1: "S1", ID2: "S2" } },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        senses: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
+        sensesGuids: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
         vern: "BBB",
         plural: "BBBS",
       },

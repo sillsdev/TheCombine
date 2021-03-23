@@ -11,31 +11,26 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 
-import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import {
-  Hash,
-  TreeDataSense,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+  MergeSense,
+  SideBar,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 
 interface MergeStackProps {
   wordId: string;
-  senseId: string;
+  mergeSenseId: string;
   senses: Hash<string>;
   index: number;
   setSidebar: (el: SideBar) => void;
   sideBar: SideBar;
 }
 
-interface MergeSenseEntry {
-  id: string;
-  data: TreeDataSense;
-}
-
 interface MergeGloss {
   def: string;
   language: string;
-  senseId: string;
+  mergeSenseId: string;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]) {
@@ -48,7 +43,7 @@ function arraysEqual<T>(arr1: T[], arr2: T[]) {
 
 export default function MergeStack(props: MergeStackProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
-  const [senseEntries, setSenseEntries] = useState<MergeSenseEntry[]>([]);
+  const [senseEntries, setSenseEntries] = useState<MergeSense[]>([]);
   const hashedSenses = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
@@ -60,7 +55,7 @@ export default function MergeStack(props: MergeStackProps) {
     props.setSidebar({
       senses: senseEntries,
       wordId: props.wordId,
-      senseId: props.senseId,
+      mergeSenseId: props.mergeSenseId,
     });
   }, [props, senseEntries]);
 
@@ -84,10 +79,10 @@ export default function MergeStack(props: MergeStackProps) {
 
   if (
     props.sideBar.wordId === props.wordId &&
-    props.sideBar.senseId === props.senseId &&
+    props.sideBar.mergeSenseId === props.mergeSenseId &&
     !arraysEqual(
-      props.sideBar.senses.map((a) => a.id),
-      senseEntries.map((a) => a.id)
+      props.sideBar.senses.map((s) => s.id),
+      senseEntries.map((s) => s.id)
     )
   ) {
     updateSidebar();
@@ -99,7 +94,7 @@ export default function MergeStack(props: MergeStackProps) {
       glosses.push({
         def: gloss.def,
         language: gloss.language,
-        senseId: entry.id,
+        mergeSenseId: entry.id,
       });
     }
   }
@@ -120,10 +115,10 @@ export default function MergeStack(props: MergeStackProps) {
 
   return (
     <Draggable
-      key={props.senseId}
+      key={props.mergeSenseId}
       draggableId={JSON.stringify({
         wordId: props.wordId,
-        senseId: props.senseId,
+        mergeSenseId: props.mergeSenseId,
       })}
       index={props.index}
     >

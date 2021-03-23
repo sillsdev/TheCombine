@@ -30,11 +30,11 @@ export default class MergeRow extends React.Component<MergeRowProps> {
       verns = [
         ...new Set(
           Object.values(
-            this.props.words[this.props.wordId].senses
-          ).flatMap((dups) =>
-            Object.values(dups).map(
-              (id) =>
-                this.props.data.words[this.props.data.senses[id].srcWordId]
+            this.props.words[this.props.wordId].sensesGuids
+          ).flatMap((senseGuids) =>
+            Object.values(senseGuids).map(
+              (guid) =>
+                this.props.data.words[this.props.data.senses[guid].srcWordId]
                   .vernacular
             )
           )
@@ -88,16 +88,16 @@ export default class MergeRow extends React.Component<MergeRowProps> {
             <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
               {filled &&
                 Object.keys(
-                  this.props.words[this.props.wordId].senses
-                ).map((item, index) => (
+                  this.props.words[this.props.wordId].sensesGuids
+                ).map((id, index) => (
                   <MergeStack
                     sideBar={this.props.sideBar}
                     setSidebar={this.props.setSidebar}
-                    key={item}
+                    key={id}
                     index={index}
                     wordId={this.props.wordId}
-                    senseId={item}
-                    senses={this.props.words[this.props.wordId].senses[item]}
+                    mergeSenseId={id}
+                    senses={this.props.words[this.props.wordId].sensesGuids[id]}
                   />
                 ))}
               {provided.placeholder}

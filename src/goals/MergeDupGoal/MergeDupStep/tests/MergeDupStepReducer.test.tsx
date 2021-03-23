@@ -27,19 +27,16 @@ describe("MergeDupStep reducer tests", () => {
   const fullState = mergeDupStepReducer(undefined, setWordData(testWordList()));
 
   // helper functions for working with a tree
-  const getRefByID = (
-    id: string,
+  const getRefByGuid = (
+    guid: string,
     words: Hash<MergeTreeWord>
   ): MergeTreeReference | undefined => {
     for (const wordId of Object.keys(words)) {
-      for (const senseId of Object.keys(words[wordId].senses)) {
-        for (const dupID of Object.keys(words[wordId].senses[senseId])) {
-          if (words[wordId].senses[senseId][dupID] === id) {
-            return {
-              wordId: wordId,
-              senseId: senseId,
-              duplicate: dupID,
-            };
+      for (const mergeSenseId of Object.keys(words[wordId].sensesGuids)) {
+        const senseGuids = words[wordId].sensesGuids[mergeSenseId];
+        for (const duplicateId of Object.keys(senseGuids)) {
+          if (senseGuids[duplicateId] === guid) {
+            return { wordId, mergeSenseId, duplicateId };
           }
         }
       }
@@ -49,21 +46,24 @@ describe("MergeDupStep reducer tests", () => {
 
   const getRandomRef = (words?: Hash<MergeTreeWord>): MergeTreeReference => {
     if (!words || Object.keys(words).length === 0) {
-      return { wordId: uuid(), senseId: uuid(), duplicate: uuid() };
+      return { wordId: uuid(), mergeSenseId: uuid(), duplicateId: uuid() };
     }
+
     let wordId = "";
-    let senseId = "";
-    while (!wordId || !senseId || !words[wordId].senses[senseId]) {
+    let mergeSenseId = "";
+    while (
+      !wordId ||
+      !mergeSenseId ||
+      !words[wordId].sensesGuids[mergeSenseId]
+    ) {
       // This while loops make sure words with no senses aren't selected.
       wordId = randElement(Object.keys(words));
-      senseId = randElement(Object.keys(words[wordId].senses));
+      mergeSenseId = randElement(Object.keys(words[wordId].sensesGuids));
     }
-    const dupID = randElement(Object.keys(words[wordId].senses[senseId]));
-    return {
-      wordId: wordId,
-      senseId: senseId,
-      duplicate: dupID,
-    };
+    const duplicateId = randElement(
+      Object.keys(words[wordId].sensesGuids[mergeSenseId])
+    );
+    return { wordId, mergeSenseId, duplicateId };
   };
 
   const getRef = (
@@ -71,8 +71,8 @@ describe("MergeDupStep reducer tests", () => {
     words: Hash<MergeTreeWord>
   ): string | undefined => {
     if (words[ref.wordId]) {
-      if (words[ref.wordId].senses[ref.senseId]) {
-        return words[ref.wordId].senses[ref.senseId][ref.duplicate];
+      if (words[ref.wordId].sensesGuids[ref.mergeSenseId]) {
+        return words[ref.wordId].sensesGuids[ref.mergeSenseId][ref.duplicateId];
       }
     }
     return undefined;
@@ -92,36 +92,35 @@ describe("MergeDupStep reducer tests", () => {
       // check each sense of word
       for (const [index, sense] of word.senses.entries()) {
         const treeSense = { ...sense, srcWordId: word.id, order: index };
-        expect(
-          Object.values(data.data.senses).map((a) => JSON.stringify(a))
-        ).toContain(JSON.stringify(treeSense));
-        const ids = Object.keys(data.data.senses);
-        const id_res = ids.find(
-          (id) =>
-            JSON.stringify(data.data.senses[id]) === JSON.stringify(treeSense)
+        const senses = data.data.senses;
+        expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
+          JSON.stringify(treeSense)
         );
-        expect(id_res).toBeTruthy();
+        const guids = Object.keys(senses);
+        const guid = guids.find(
+          (g) => JSON.stringify(senses[g]) === JSON.stringify(treeSense)
+        );
+        expect(guid).toBeTruthy();
         // check that this sense is somewhere in the tree
-        expect(getRefByID(id_res ?? "", data.tree.words)).toBeTruthy();
+        expect(getRefByGuid(guid ?? "", data.tree.words)).toBeTruthy();
       }
     }
   });
 
   test("move sense", () => {
     // move a random card to a new location and check that it is there
-    const srcRef = getRandomRef(fullState.tree.words);
-    const src =
-      fullState.tree.words[srcRef.wordId].senses[srcRef.senseId][
-        srcRef.duplicate
-      ];
+    const words = fullState.tree.words;
+    const srcRef = getRandomRef(words);
+    const srcGuid =
+      words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId][srcRef.duplicateId];
     const destRef = getRandomRef();
     const newState = mergeDupStepReducer(fullState, moveSense(srcRef, destRef));
 
-    const finalRef = getRefByID(src, newState.tree.words);
+    const finalRef = getRefByGuid(srcGuid, newState.tree.words);
     if (finalRef) {
       expect(finalRef.wordId).toEqual(destRef.wordId);
-      expect(finalRef.senseId).toEqual(destRef.senseId);
-      expect(finalRef.duplicate).toEqual(destRef.duplicate);
+      expect(finalRef.mergeSenseId).toEqual(destRef.mergeSenseId);
+      expect(finalRef.duplicateId).toEqual(destRef.duplicateId);
     } else {
       fail("destination should exist");
     }
@@ -130,8 +129,9 @@ describe("MergeDupStep reducer tests", () => {
   test("Move sense deletes src", () => {
     let srcRef = getRandomRef(fullState.tree.words);
     while (
-      Object.values(fullState.tree.words[srcRef.wordId].senses[srcRef.senseId])
-        .length !== 1
+      Object.values(
+        fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
+      ).length !== 1
     ) {
       srcRef = getRandomRef(fullState.tree.words);
     }

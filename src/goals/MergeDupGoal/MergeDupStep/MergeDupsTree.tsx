@@ -11,12 +11,12 @@ export interface MergeData {
 
 export interface MergeTreeReference {
   wordId: string;
-  senseId: string;
-  duplicate: string;
+  mergeSenseId: string;
+  duplicateId: string;
 }
 
 export interface MergeTreeWord {
-  senses: Hash<Hash<string>>;
+  sensesGuids: Hash<Hash<string>>;
   vern: string;
   plural: string;
 }

@@ -49,7 +49,7 @@ interface OrderSenseMergeAction {
   type: MergeTreeActions.ORDER_SENSE;
   payload: {
     wordId: string;
-    senseId: string;
+    mergeSenseId: string;
     order: number;
   };
 }
@@ -134,12 +134,12 @@ export function setWordData(words: Word[]): SetDataMergeAction {
 
 export function orderSense(
   wordId: string,
-  senseId: string,
+  mergeSenseId: string,
   order: number
 ): OrderSenseMergeAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
-    payload: { wordId, senseId, order },
+    payload: { wordId, mergeSenseId, order },
   };
 }
 
@@ -177,14 +177,10 @@ function getMergeWords(
     // Create list of all senses and add merge type tags slit by src word.
     const senses: Hash<SenseWithState[]> = {};
 
-    const allSenses = Object.values(word.senses).map((sense) =>
-      Object.values(sense)
-    );
-
     // Build senses array.
-    for (const senseList of allSenses) {
-      for (const sense of senseList) {
-        const senseData = data.senses[sense];
+    for (const senseGuids of Object.values(word.sensesGuids)) {
+      for (const guid of Object.values(senseGuids)) {
+        const senseData = data.senses[guid];
         const wordId = senseData.srcWordId;
 
         if (!senses[wordId]) {
@@ -205,16 +201,16 @@ function getMergeWords(
     }
 
     // Set sense and duplicate senses.
-    Object.values(word.senses).forEach((senseHash) => {
-      const senseIds = Object.values(senseHash);
+    Object.values(word.sensesGuids).forEach((senseGuids) => {
+      const guids = Object.values(senseGuids);
 
       // Set the first sense to be merged as State.Sense.
-      const senseData = data.senses[senseIds[0]];
+      const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.order];
       mainSense.state = State.Sense;
 
       // Merge the rest as duplicates.
-      const dups = senseIds.slice(1).map((id) => data.senses[id]);
+      const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
         const dupSense = senses[dup.srcWordId][dup.order];
         dupSense.state = State.Duplicate;
