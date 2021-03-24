@@ -9,29 +9,14 @@ import { Goal } from "types/goals";
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore = createMockStore({});
-function createMockStoreWithGoals(goals: Goal[]) {
-  const mockStoreState = {
-    goalsState: {
-      history: [...goals],
-    },
-  };
+function createMockStoreWithGoal(goal: Goal) {
+  const mockStoreState = { goalsState: { currentGoal: goal } };
   mockStore = createMockStore(mockStoreState);
 }
 
 describe("DisplayProgress", () => {
-  it("Renders with no goal without crashing", () => {
-    createMockStoreWithGoals([]);
-    renderer.act(() => {
-      renderer.create(
-        <Provider store={mockStore}>
-          <DisplayProgress />
-        </Provider>
-      );
-    });
-  });
-
   it("Renders with default goal without crashing", () => {
-    createMockStoreWithGoals([new Goal()]);
+    createMockStoreWithGoal(new Goal());
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
@@ -42,7 +27,7 @@ describe("DisplayProgress", () => {
   });
 
   it("Renders with multi-step goal without crashing", () => {
-    createMockStoreWithGoals([new MergeDups()]);
+    createMockStoreWithGoal(new MergeDups());
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>

@@ -20,6 +20,7 @@ function mapStateToProps(state: StoreState) {
     currentProject: state.currentProject,
     selectedCharacter: state.characterInventoryState.selectedCharacter,
     allCharacters: state.characterInventoryState.characterSet,
+    goal: state.goalsState.currentGoal,
   };
 }
 

@@ -1,5 +1,4 @@
 import { Grid, LinearProgress, Paper, Typography } from "@material-ui/core";
-import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -9,11 +8,7 @@ import { StoreState } from "types";
  * Displays how much progress has been made in a goal
  */
 export default function DisplayProgress() {
-  const goalHistory = useSelector(
-    (state: StoreState) => state.goalsState.history
-  );
-  const goalIndex = goalHistory.length - 1;
-  const goal = goalHistory[goalIndex];
+  const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
 
   function getAmountComplete(): number {
     return (goal.currentStep / goal.numSteps) * 100;
@@ -23,7 +18,7 @@ export default function DisplayProgress() {
     return `${goal.currentStep} / ${goal.numSteps}`;
   }*/
 
-  return goal?.numSteps > 1 ? (
+  return goal.numSteps > 1 ? (
     <Paper key={goal.currentStep}>
       <Grid container direction="column">
         <Grid item xs>

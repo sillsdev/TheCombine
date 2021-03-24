@@ -654,13 +654,6 @@
       ]
     }
   },
-  "emptyGoal": {
-    "message": [
-      "This goal has not been implemented yet",
-      "Este objetivo aún no se ha implementado",
-      "Cet objectif n'a pas encore été mis en œuvre"
-    ]
-  },
   "buttons": {
     "accept": ["Accept", "Aceptar", "Accepter"],
     "accepted": ["Accepted", "Aceptado", "Acceptée"],
