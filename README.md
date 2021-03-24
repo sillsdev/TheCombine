@@ -526,11 +526,11 @@ environments. Any of the Python scripts can be run with the `--help` option to s
 
 Task: add an existing user to a project
 
-| Environment     | Command                                                                                                     |
-| --------------- | ----------------------------------------------------------------------------------------------------------- |
-| Development     | _Not Available_                                                                                             |
-| Local Container | `(venv)$ deploy/roles/combine_maintenance/files/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>` |
-| Production      | `$bin/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>`                                           |
+| Environment     | Command                                                                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Development     | _Not Available_                                                                                                    |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>` |
+| Production      | `$ bin/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>`                                                 |
 
 Notes:
 
@@ -542,11 +542,11 @@ Notes:
 
 Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Storage Service (S3).
 
-| Environment     | Command                                                            |
-| --------------- | ------------------------------------------------------------------ |
-| Development     | _Not Available_                                                    |
-| Local Container | `(venv)$ deploy/roles/combine_maintenance/files/combine_backup.py` |
-| Production      | `$bin/combine_backup.py`                                           |
+| Environment     | Command                                                                   |
+| --------------- | ------------------------------------------------------------------------- |
+| Development     | _Not Available_                                                           |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/combine_backup.py` |
+| Production      | `$ bin/combine_backup.py`                                                 |
 
 Notes:
 
@@ -569,11 +569,11 @@ Task: create a new user who is a site administrator
 
 Task: Delete a project
 
-| Environment     | Command                                                                       |
-| --------------- | ----------------------------------------------------------------------------- |
-| Development     | _Not Available_                                                               |
-| Local Container | `(venv)$ deploy/roles/combine_maintenance/files/rm_project.py <PROJECT_NAME>` |
-| Production      | `$bin/rm_project.py <PROJECT_NAME>`                                           |
+| Environment     | Command                                                                              |
+| --------------- | ------------------------------------------------------------------------------------ |
+| Development     | _Not Available_                                                                      |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/rm_project.py <PROJECT_NAME>` |
+| Production      | `$ bin/rm_project.py <PROJECT_NAME>`                                                 |
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
 
@@ -593,8 +593,8 @@ Task: grant admin rights for an existing user
 | Environment     | Command                                                                                |
 | --------------- | -------------------------------------------------------------------------------------- |
 | Development     | `$ npm run set-admin-user -- <USERNAME>` <br> _Note the_ `--` \_before the user name\_ |
-| Local Container | `(venv)$ deploy/roles/combine_maintenance/files/make_user_admin.py <USERNAME>`         |
-| Production      | `$bin/make_user_admin.py <USERNAME>`                                                   |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/make_user_admin.py <USERNAME>`  |
+| Production      | `$ bin/make_user_admin.py <USERNAME>`                                                  |
 
 You may specify more than one `<USER_NAME>` to update multiple users.
 
@@ -602,11 +602,11 @@ You may specify more than one `<USER_NAME>` to update multiple users.
 
 Task: Restore the CombineDatabase and the Backend files from a backup stored on the Amazon Simple Storage Service (S3).
 
-| Environment     | Command                                                                           |
-| --------------- | --------------------------------------------------------------------------------- |
-| Development     | _Not Available_                                                                   |
-| Local Container | `(venv)$ deploy/roles/combine_maintenance/files/combine_restore.py [BACKUP_NAME]` |
-| Production      | `$bin/combine_restore.py [BACKUP_NAME]`                                           |
+| Environment     | Command                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| Development     | _Not Available_                                                                          |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/combine_restore.py [BACKUP_NAME]` |
+| Production      | `$ bin/combine_restore.py [BACKUP_NAME]`                                                 |
 
 Notes:
 
