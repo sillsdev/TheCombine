@@ -11,14 +11,11 @@
 
 - name: create folders for backups
   file:
-    name: "{{ item }}"
+    name: "{{ combine_app_dir }}/bin"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
     mode: 0755
     state: directory
-  with_items:
-    - "{{ combine_backup_dir }}"
-    - "{{ combine_app_dir }}/bin"
 
 - name: install backup/restore scripts
   template:

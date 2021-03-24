@@ -110,7 +110,6 @@ def main() -> None:
         "combine_app_dir": re.sub(r"\\", r"\\\\", str(project_dir)),
         "backend_files_subdir": ".CombineFiles",
         "mongo_files_subdir": "dump",
-        "aws_cli_opt_list": [],
         "aws_s3_backup_loc": "thecombine.app/backups",
         "aws_s3_profile": "default",
         "combine_host": "{{ combine_server_name | replace('.', '-') }}",

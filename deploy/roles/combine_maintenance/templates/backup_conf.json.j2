@@ -1,10 +1,8 @@
 {
   "combine_app_dir": "{{ combine_app_dir }}",
-  "backup_dir": "{{ combine_backup_dir }}",
   "backend_files_subdir": "{{ backend_files_subdir }}",
   "db_files_subdir": "{{ mongo_files_subdir }}",
   "aws_bucket": "s3://{{ aws_s3_backup_loc }}",
   "aws_s3_profile": "{{ aws_s3_profile }}",
   "combine_host": "{{ combine_server_name | replace('.', '-') }}",
-  "restore_dir" : "{{ combine_restore_dir }}"
 }
