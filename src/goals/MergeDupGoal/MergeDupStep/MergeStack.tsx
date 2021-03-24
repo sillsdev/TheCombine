@@ -19,7 +19,7 @@ import { Gloss } from "types/word";
 interface MergeStackProps {
   wordId: string;
   mergeSenseId: string;
-  guids: string[];
+  senses: MergeTreeSense[];
   index: number;
   setSidebar: (el: SideBar) => void;
   sideBar: SideBar;
@@ -39,47 +39,39 @@ function arraysEqual<T>(arr1: T[], arr2: T[]) {
 
 export default function MergeStack(props: MergeStackProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
-  const [senseEntries, setSenseEntries] = useState<MergeTreeSense[]>([]);
-  const allSenses = useSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.data.senses
-  );
   const analysisLangs = useSelector((state: StoreState) =>
     state.currentProject.analysisWritingSystems.map((ws) => ws.bcp47)
   );
 
   const updateSidebar = useCallback(() => {
     props.setSidebar({
-      senses: senseEntries,
+      senses: props.senses,
       ref: { wordId: props.wordId, mergeSenseId: props.mergeSenseId },
     });
-  }, [props, senseEntries]);
+  }, [props, props.senses]);
 
   useEffect(() => {
-    if (senseEntries.length !== duplicateCount) {
-      if (senseEntries.length > duplicateCount) {
+    if (props.senses.length !== duplicateCount) {
+      if (props.senses.length > duplicateCount) {
         updateSidebar();
       }
-      setDuplicateCount(senseEntries.length);
+      setDuplicateCount(props.senses.length);
     }
-  }, [senseEntries.length, duplicateCount, updateSidebar]);
-
-  useEffect(() => {
-    setSenseEntries(props.guids.map((g) => allSenses[g]));
-  }, [allSenses, props.guids]);
+  }, [props.senses.length, duplicateCount, updateSidebar]);
 
   if (
     props.sideBar.ref.wordId === props.wordId &&
     props.sideBar.ref.mergeSenseId === props.mergeSenseId &&
     !arraysEqual(
       props.sideBar.senses.map((s) => s.guid),
-      senseEntries.map((s) => s.guid)
+      props.senses.map((s) => s.guid)
     )
   ) {
     updateSidebar();
   }
 
   let glosses: MergeGloss[] = [];
-  for (const entry of senseEntries) {
+  for (const entry of props.senses) {
     for (const gloss of entry.glosses) {
       glosses.push({ ...gloss, senseGuid: entry.guid });
     }
@@ -88,16 +80,15 @@ export default function MergeStack(props: MergeStackProps) {
     (v, i, a) => a.findIndex((o) => o.def === v.def) === i
   );
 
-  const senses = props.guids.map((g) => allSenses[g]);
   const semDoms = [
     ...new Set(
-      senses.flatMap((sense) =>
+      props.senses.flatMap((sense) =>
         sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)
       )
     ),
   ];
 
-  const showMoreButton = props.guids.length > 1;
+  const showMoreButton = props.senses.length > 1;
 
   return (
     <Draggable

@@ -75,19 +75,24 @@ export default function MergeRow(props: MergeRowProps) {
           </Paper>
           <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
             {filled &&
-              Object.keys(
-                treeWords[props.wordId].sensesGuids
-              ).map((id, index) => (
-                <MergeStack
-                  sideBar={props.sideBar}
-                  setSidebar={props.setSidebar}
-                  key={id}
-                  index={index}
-                  wordId={props.wordId}
-                  mergeSenseId={id}
-                  guids={treeWords[props.wordId].sensesGuids[id]}
-                />
-              ))}
+              Object.keys(treeWords[props.wordId].sensesGuids).map(
+                (id, index) => {
+                  const senses = treeWords[props.wordId].sensesGuids[id].map(
+                    (g) => data.senses[g]
+                  );
+                  return (
+                    <MergeStack
+                      sideBar={props.sideBar}
+                      setSidebar={props.setSidebar}
+                      key={id}
+                      index={index}
+                      wordId={props.wordId}
+                      mergeSenseId={id}
+                      senses={senses}
+                    />
+                  );
+                }
+              )}
             {provided.placeholder}
           </div>
           <div style={{ padding: 16, textAlign: "center" }}>
