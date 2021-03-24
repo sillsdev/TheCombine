@@ -553,7 +553,13 @@ Notes:
 1. The backup script requires that the `aws-cli` version 2 is installed. The [Amazon Web Services](#amazon-web-services)
    section describes how to install and configure `aws-cli`.
 2. The backup script can be run from any directory.
-3. The backup script is configured using `backup_conf.json` in the same directory as the script.
+3. The backup script is configured using `backup_conf.json` in the same directory as the script. You may edit this file
+   to change the configuration, such as, to use a different AWS S3 bucket, or a different hostname (the hostname is used
+   to tag the backup)
+4. The daily backup job on the server will also clean up old backup for the machine that is being backed up. This is not
+   part of `combine_backup.py`; backups made with this script must be managed manually. See the
+   [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
+   for documentation on how to use the command line to list and to manage the backup objects.
 
 ### Create a New Admin User
 
