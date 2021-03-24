@@ -32,7 +32,6 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     """Create a backup of TheCombine database and backend files."""
-    workdir = Path.cwd()
     args = parse_args()
     config: Dict[str, str] = json.loads(args.config.read_text())
     if args.verbose:
@@ -80,7 +79,6 @@ def main() -> None:
                 "/usr/bin/mongodump",
                 "--db=CombineDatabase",
                 "--gzip",
-                config["quiet_opt"],
             ]
         )
 
@@ -114,7 +112,7 @@ def main() -> None:
         )
 
         step.print(
-            "Copy the backend files (commands are run relative the 'app' user's home directory)."
+            "Copy the backend files."
         )
         backend_container = run_cmd(
             ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
@@ -139,7 +137,6 @@ def main() -> None:
         step.print("Push backup to AWS S3 storage.")
         #    need to specify full path because $PATH does not contain
         #    /usr/local/bin when run as a cron job
-        print(f"Current directory is {Path.cwd()}.")
         run_cmd(
             [
                 "aws",
@@ -151,10 +148,6 @@ def main() -> None:
                 config["aws_s3_profile"],
             ]
         )
-
-        # Change back to workdir so that the temporary backup_dir can be deleted
-        # when we leave this context
-        os.chdir(workdir)
 
     step.print("Restart the frontend and certmgr containers.")
     run_cmd(
