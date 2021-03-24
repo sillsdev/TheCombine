@@ -11,16 +11,16 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setSideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { setSidebar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { Gloss } from "types/word";
 
-interface MergeStackProps {
+interface DragSenseProps {
+  index: number;
   wordId: string;
   mergeSenseId: string;
   senses: MergeTreeSense[];
-  index: number;
 }
 
 interface MergeGloss extends Gloss {
@@ -35,19 +35,19 @@ function arraysEqual<T>(arr1: T[], arr2: T[]) {
   return true;
 }
 
-export default function MergeStack(props: MergeStackProps) {
+export default function DragSense(props: DragSenseProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
   const analysisLangs = useSelector((state: StoreState) =>
     state.currentProject.analysisWritingSystems.map((ws) => ws.bcp47)
   );
   const dispatch = useDispatch();
-  const sideBar = useSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.tree.sideBar
+  const sidebar = useSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
 
   const updateSidebar = useCallback(() => {
     dispatch(
-      setSideBar({
+      setSidebar({
         senses: props.senses,
         wordId: props.wordId,
         mergeSenseId: props.mergeSenseId,
@@ -65,10 +65,10 @@ export default function MergeStack(props: MergeStackProps) {
   }, [props.senses.length, duplicateCount, updateSidebar]);
 
   if (
-    sideBar.wordId === props.wordId &&
-    sideBar.mergeSenseId === props.mergeSenseId &&
+    sidebar.wordId === props.wordId &&
+    sidebar.mergeSenseId === props.mergeSenseId &&
     !arraysEqual(
-      sideBar.senses.map((s) => s.guid),
+      sidebar.senses.map((s) => s.guid),
       props.senses.map((s) => s.guid)
     )
   ) {
@@ -92,8 +92,6 @@ export default function MergeStack(props: MergeStackProps) {
       )
     ),
   ];
-
-  const showMoreButton = props.senses.length > 1;
 
   return (
     <Draggable
@@ -119,6 +117,7 @@ export default function MergeStack(props: MergeStackProps) {
           }}
         >
           <CardContent style={{ position: "relative", paddingRight: 40 }}>
+            {/* Button for showing the sidebar. */}
             <div
               style={{
                 position: "absolute",
@@ -127,13 +126,15 @@ export default function MergeStack(props: MergeStackProps) {
                 transform: "translateY(-50%)",
               }}
             >
-              {showMoreButton && (
+              {props.senses.length > 1 && (
                 <IconButton onClick={updateSidebar}>
                   <ArrowForwardIos />
                 </IconButton>
               )}
             </div>
+            {/* Display of sense details. */}
             <div>
+              {/* List glosses */}
               {analysisLangs.map((lang) => (
                 <div key={lang}>
                   <Typography variant="caption">{`${lang}: `}</Typography>

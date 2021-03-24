@@ -6,9 +6,13 @@ import {
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
+const mockState = {
+  ...defaultState,
+  words: mockWords(),
+};
 const newWord: ReviewEntriesWord = {
   ...new ReviewEntriesWord(),
-  id: mockWords[0].id,
+  id: mockState.words[0].id,
   vernacular: "toadTOAD",
   senses: [
     {
@@ -38,10 +42,6 @@ const result: ReviewEntriesWord = {
     },
   ],
 };
-const mockState = {
-  ...defaultState,
-  words: mockWords,
-};
 
 describe("ReviewEntriesReducer", () => {
   it("Returns default state when passed undefined state", () => {
@@ -54,7 +54,7 @@ describe("ReviewEntriesReducer", () => {
     expect(
       reviewEntriesReducer(defaultState, {
         type: ReviewEntriesActionTypes.UpdateAllWords,
-        words: mockWords,
+        words: mockWords(),
       })
     ).toEqual(mockState);
   });
@@ -63,9 +63,9 @@ describe("ReviewEntriesReducer", () => {
     expect(
       reviewEntriesReducer(mockState, {
         type: ReviewEntriesActionTypes.UpdateWord,
-        oldId: mockWords[0].id,
+        oldId: mockWords()[0].id,
         newWord: { ...newWord, id: result.id },
       })
-    ).toEqual({ ...mockState, words: [result, mockWords[1]] });
+    ).toEqual({ ...mockState, words: [result, mockWords()[1]] });
   });
 });

@@ -10,11 +10,11 @@ import {
 } from "goals/MergeDupGoal/MergeDups";
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
-  defaultSideBar,
+  defaultSidebar,
   Hash,
   MergeTreeReference,
   MergeTreeSense,
-  SideBar,
+  Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
@@ -57,9 +57,9 @@ interface SetDataMergeAction {
   payload: Word[];
 }
 
-interface SetSideBarMergeAction {
+interface SetSidebarMergeAction {
   type: MergeTreeActions.SET_SIDEBAR;
-  payload: SideBar;
+  payload: Sidebar;
 }
 
 interface SetWordStringMergeAction {
@@ -73,7 +73,7 @@ export type MergeTreeAction =
   | OrderDuplicateMergeAction
   | OrderSenseMergeAction
   | SetDataMergeAction
-  | SetSideBarMergeAction
+  | SetSidebarMergeAction
   | SetWordStringMergeAction;
 
 // Action Creators
@@ -126,10 +126,10 @@ export function orderDuplicate(
   };
 }
 
-export function setSideBar(sideBar?: SideBar): SetSideBarMergeAction {
+export function setSidebar(sidebar?: Sidebar): SetSidebarMergeAction {
   return {
     type: MergeTreeActions.SET_SIDEBAR,
-    payload: sideBar ?? defaultSideBar,
+    payload: sidebar ?? defaultSidebar,
   };
 }
 

@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 import {
   clearTree,
   moveSense,
@@ -16,7 +18,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreAction, StoreActions } from "rootActions";
 import { testWordList } from "types/word";
-import { randElement, uuid } from "utilities";
+import { randElement } from "utilities";
 
 describe("MergeDupStepReducer", () => {
   // state with data
@@ -49,7 +51,7 @@ describe("MergeDupStepReducer", () => {
 
   function getRandomRef(words?: Hash<MergeTreeWord>): MergeTreeReference {
     if (!words) {
-      return { wordId: uuid(), mergeSenseId: uuid(), order: -1 };
+      return { wordId: v4(), mergeSenseId: v4(), order: -1 };
     }
 
     let wordId = "";

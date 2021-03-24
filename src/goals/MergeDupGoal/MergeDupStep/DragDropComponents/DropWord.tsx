@@ -2,16 +2,16 @@ import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { Droppable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
+import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
 import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeStack";
 import { StoreState } from "types";
 
-interface MergeRowProps {
+interface DropWordProps {
   wordId: string;
   portrait: boolean;
 }
 
-export default function MergeRow(props: MergeRowProps) {
+export default function DropWord(props: DropWordProps) {
   const dispatch = useDispatch();
   const treeWords = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.words
@@ -78,7 +78,7 @@ export default function MergeRow(props: MergeRowProps) {
                     (g) => data.senses[g]
                   );
                   return (
-                    <MergeStack
+                    <DragSense
                       key={id}
                       index={index}
                       wordId={props.wordId}

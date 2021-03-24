@@ -1,6 +1,7 @@
+import { v4 } from "uuid";
+
 import { StoreAction, StoreActions } from "rootActions";
 import { Word } from "types/word";
-import { uuid } from "utilities";
 import {
   MergeTreeAction,
   MergeTreeActions,
@@ -13,6 +14,7 @@ import {
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
@@ -95,8 +97,8 @@ export const mergeDupStepReducer = (
     }
 
     case MergeTreeActions.MOVE_SENSE: {
-      const treeState: MergeTree = JSON.parse(JSON.stringify(state.tree));
-      const words = treeState.words;
+      const oldWords = state.tree.words;
+      const words: Hash<MergeTreeWord> = JSON.parse(JSON.stringify(oldWords));
       for (const op in action.payload.src) {
         const src = action.payload.src[op];
         const dest = action.payload.dest[op];
@@ -111,7 +113,8 @@ export const mergeDupStepReducer = (
             };
           }
 
-          const srcGuid = state.data.senses[src.mergeSenseId].guid;
+          const srcGuid =
+            oldWords[src.wordId].sensesGuids[src.mergeSenseId][src.order];
 
           if (!words[dest.wordId].sensesGuids[dest.mergeSenseId]) {
             words[dest.wordId].sensesGuids[dest.mergeSenseId] = [];
@@ -138,7 +141,7 @@ export const mergeDupStepReducer = (
         }
       }
 
-      return { ...state, tree: treeState };
+      return { ...state, tree: { ...state.tree, words } };
     }
 
     case MergeTreeActions.SET_DATA: {
@@ -153,7 +156,7 @@ export const mergeDupStepReducer = (
         const sensesGuids: Hash<string[]> = {};
         word.senses.forEach((sense, order) => {
           senses[sense.guid] = { ...sense, srcWordId: word.id, order };
-          sensesGuids[uuid()] = [sense.guid];
+          sensesGuids[v4()] = [sense.guid];
         });
         wordsTree[word.id] = {
           sensesGuids,
@@ -171,7 +174,7 @@ export const mergeDupStepReducer = (
     case MergeTreeActions.SET_SIDEBAR: {
       return {
         ...state,
-        tree: { ...state.tree, sideBar: action.payload },
+        tree: { ...state.tree, sidebar: action.payload },
       };
     }
 

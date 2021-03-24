@@ -24,21 +24,21 @@ export interface MergeTreeWord {
   plural: string;
 }
 
-export interface SideBar {
+export interface Sidebar {
   senses: MergeTreeSense[];
   wordId: string;
   mergeSenseId: string;
 }
 
-export const defaultSideBar: SideBar = {
+export const defaultSidebar: Sidebar = {
   senses: [],
   wordId: "",
   mergeSenseId: "",
 };
 
 export interface MergeTree {
-  sideBar: SideBar;
+  sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
 }
 
-export const defaultTree = { sideBar: defaultSideBar, words: {} };
+export const defaultTree = { sidebar: defaultSidebar, words: {} };
