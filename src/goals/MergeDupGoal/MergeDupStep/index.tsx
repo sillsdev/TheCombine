@@ -6,16 +6,18 @@ import {
   mergeAll,
   orderSense,
   orderDuplicate,
+  setSideBar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
-import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import {
+  MergeTreeReference,
+  SideBar,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 
 function mapStateToProps(state: StoreState) {
-  return {
-    words: state.mergeDuplicateGoal.tree.words,
-  };
+  return { ...state.mergeDuplicateGoal.tree };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
@@ -34,6 +36,9 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     },
     mergeAll: () => {
       return dispatch(mergeAll());
+    },
+    setSideBar: (sideBar?: SideBar) => {
+      return dispatch(setSideBar(sideBar));
     },
   };
 }

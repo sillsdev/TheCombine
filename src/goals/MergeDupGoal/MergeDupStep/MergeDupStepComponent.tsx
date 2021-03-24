@@ -25,33 +25,26 @@ import {
   MergeTreeReference,
   MergeTreeSense,
   MergeTreeWord,
+  SideBar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
 import theme from "types/theme";
 import { uuid } from "utilities";
 
-export interface SideBar {
-  senses: MergeTreeSense[];
-  wordId: string;
-  mergeSenseId: string;
-}
-function emptySideBar(): SideBar {
-  return { senses: [], wordId: "", mergeSenseId: "" };
-}
-
 interface MergeDupStepProps {
+  sideBar: SideBar;
   words: Hash<MergeTreeWord>;
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (ref: MergeTreeReference) => void;
   orderDuplicate: (ref: MergeTreeReference, index: number) => void;
-  mergeAll?: () => Promise<void>;
+  mergeAll: () => Promise<void>;
   // Will advance to the next goal step and update the words content
-  advanceStep?: () => void;
+  advanceStep: () => void;
+  setSideBar: (sideBar?: SideBar) => void;
 }
 
 interface MergeDupStepState {
   portrait: boolean;
-  sideBar: SideBar;
 }
 
 class MergeDupStep extends React.Component<
@@ -62,26 +55,19 @@ class MergeDupStep extends React.Component<
     super(props);
     this.state = {
       portrait: true,
-      sideBar: emptySideBar(),
     };
   }
 
-  clearSideBar() {
-    this.setState({ sideBar: emptySideBar() });
-  }
   next() {
-    this.clearSideBar();
-    if (this.props.advanceStep) {
-      this.props.advanceStep();
-    }
+    this.props.setSideBar();
+    this.props.advanceStep();
   }
+
   saveContinue() {
-    this.clearSideBar();
-    if (this.props.mergeAll) {
-      this.props.mergeAll().then(() => {
-        this.next();
-      });
-    }
+    this.props.setSideBar();
+    this.props.mergeAll().then(() => {
+      this.next();
+    });
   }
 
   handleDrop(res: DropResult) {
@@ -167,8 +153,8 @@ class MergeDupStep extends React.Component<
 
   sideBarSenseDraggable(sense: MergeTreeSense, index: number) {
     const ref: MergeTreeReference = {
-      wordId: this.state.sideBar.wordId,
-      mergeSenseId: this.state.sideBar.mergeSenseId,
+      wordId: this.props.sideBar.wordId,
+      mergeSenseId: this.props.sideBar.mergeSenseId,
       index,
     };
     return (
@@ -203,16 +189,16 @@ class MergeDupStep extends React.Component<
   }
 
   renderSideBar() {
-    if (this.state.sideBar.senses.length <= 1) return <div />;
+    if (this.props.sideBar.senses.length <= 1) return <div />;
     return (
       <Drawer
         anchor="right"
         variant="persistent"
-        open={this.state.sideBar.senses.length > 1}
+        open={this.props.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordId} ${this.state.sideBar.mergeSenseId}`}
-          key={this.state.sideBar.mergeSenseId}
+          droppableId={`${this.props.sideBar.wordId} ${this.props.sideBar.mergeSenseId}`}
+          key={this.props.sideBar.mergeSenseId}
         >
           {(providedDroppable) => (
             <div
@@ -221,13 +207,13 @@ class MergeDupStep extends React.Component<
               /* Add the height of the appbar (64) to the top padding. */
               style={{ padding: 30, paddingTop: 64 + 30 }}
             >
-              <IconButton onClick={() => this.clearSideBar()}>
+              <IconButton onClick={() => this.props.setSideBar()}>
                 <ArrowForwardIos />
               </IconButton>
               <Typography variant="h5">
-                {this.props.words[this.state.sideBar.wordId].vern}
+                {this.props.words[this.props.sideBar.wordId].vern}
               </Typography>
-              {this.state.sideBar.senses.map(
+              {this.props.sideBar.senses.map(
                 (sense: MergeTreeSense, index: number) =>
                   this.sideBarSenseDraggable(sense, index)
               )}
@@ -240,7 +226,7 @@ class MergeDupStep extends React.Component<
   }
 
   render() {
-    let newId = uuid();
+    const newId = uuid();
     //visual definition
     return Object.keys(this.props.words).length ? (
       <React.Fragment>
@@ -261,21 +247,11 @@ class MergeDupStep extends React.Component<
             <DragDropContext onDragEnd={(res) => this.handleDrop(res)}>
               {Object.keys(this.props.words).map((key) => (
                 <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
-                  <MergeRow
-                    sideBar={this.state.sideBar}
-                    setSidebar={(el) => this.setState({ sideBar: el })}
-                    portrait={this.state.portrait}
-                    wordId={key}
-                  />
+                  <MergeRow portrait={this.state.portrait} wordId={key} />
                 </GridListTile>
               ))}
               <GridListTile key={newId} style={{ margin: 8 }}>
-                <MergeRow
-                  sideBar={this.state.sideBar}
-                  setSidebar={() => {}}
-                  portrait={this.state.portrait}
-                  wordId={newId}
-                />
+                <MergeRow portrait={this.state.portrait} wordId={newId} />
               </GridListTile>
               {this.renderSideBar()}
             </DragDropContext>

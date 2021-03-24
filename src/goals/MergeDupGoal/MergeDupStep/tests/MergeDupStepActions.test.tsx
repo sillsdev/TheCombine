@@ -9,6 +9,7 @@ import {
   MergeTreeActions,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
+  defaultTree,
   Hash,
   MergeData,
   MergeTree,
@@ -146,18 +147,16 @@ const mockStoreState: {
   mergeDuplicateGoal: { data: {} as MergeData, tree: {} as MergeTree },
 };
 
-const data: { data: MergeData } = {
-  data: {
-    words: {
-      WA: { ...multiSenseWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
-      WB: { ...multiSenseWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
-    },
-    senses: {
-      S1: { ...new Sense("Sense 1"), srcWordId: "WA", index: 0 },
-      S2: { ...new Sense("Sense 2"), srcWordId: "WA", index: 1 },
-      S3: { ...new Sense("Sense 3"), srcWordId: "WB", index: 0 },
-      S4: { ...new Sense("Sense 4"), srcWordId: "WB", index: 1 },
-    },
+const data: MergeData = {
+  words: {
+    WA: { ...multiSenseWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
+    WB: { ...multiSenseWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
+  },
+  senses: {
+    S1: { ...new Sense("Sense 1"), srcWordId: "WA", index: 0 },
+    S2: { ...new Sense("Sense 2"), srcWordId: "WA", index: 1 },
+    S3: { ...new Sense("Sense 3"), srcWordId: "WB", index: 0 },
+    S4: { ...new Sense("Sense 4"), srcWordId: "WB", index: 1 },
   },
 };
 
@@ -167,26 +166,25 @@ beforeEach(() => {
 });
 
 // Don't move or merge anything
-const tree1: { tree: MergeTree } = {
-  tree: {
-    words: {
-      WA: {
-        sensesGuids: { ID1: ["S1"], ID2: ["S2"] },
-        vern: "AAA",
-        plural: "AAAS",
-      },
-      WB: {
-        sensesGuids: { ID1: ["S3"], ID2: ["S4"] },
-        vern: "BBB",
-        plural: "BBBS",
-      },
+const tree1: MergeTree = {
+  ...defaultTree,
+  words: {
+    WA: {
+      sensesGuids: { ID1: ["S1"], ID2: ["S2"] },
+      vern: "AAA",
+      plural: "AAAS",
+    },
+    WB: {
+      sensesGuids: { ID1: ["S3"], ID2: ["S4"] },
+      vern: "BBB",
+      plural: "BBBS",
     },
   },
 };
 test("no merge", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { ...data, ...tree1 },
+    mergeDuplicateGoal: { data, tree: tree1 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
@@ -194,22 +192,21 @@ test("no merge", async () => {
 });
 
 // Merge sense 3 from B as duplicate into sense 1 from A
-const tree2: { tree: MergeTree } = {
-  tree: {
-    words: {
-      WA: {
-        sensesGuids: { ID1: ["S1", "S3"], ID2: ["S2"] },
-        vern: "AAA",
-        plural: "AAAS",
-      },
-      WB: { sensesGuids: { ID1: ["S4"] }, vern: "BBB", plural: "BBBS" },
+const tree2: MergeTree = {
+  ...defaultTree,
+  words: {
+    WA: {
+      sensesGuids: { ID1: ["S1", "S3"], ID2: ["S2"] },
+      vern: "AAA",
+      plural: "AAAS",
     },
+    WB: { sensesGuids: { ID1: ["S4"] }, vern: "BBB", plural: "BBBS" },
   },
 };
 test("merge senses from different words", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { ...data, ...tree2 },
+    mergeDuplicateGoal: { data, tree: tree2 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
@@ -220,26 +217,25 @@ test("merge senses from different words", async () => {
 });
 
 // Move sense 3 from B to A
-const tree3: { tree: MergeTree } = {
-  tree: {
-    words: {
-      WA: {
-        sensesGuids: { ID1: ["S1"], ID2: ["S2"], ID3: ["S3"] },
-        vern: "AAA",
-        plural: "AAAS",
-      },
-      WB: {
-        sensesGuids: { ID1: ["S4"] },
-        vern: "BBB",
-        plural: "BBBS",
-      },
+const tree3: MergeTree = {
+  ...defaultTree,
+  words: {
+    WA: {
+      sensesGuids: { ID1: ["S1"], ID2: ["S2"], ID3: ["S3"] },
+      vern: "AAA",
+      plural: "AAAS",
+    },
+    WB: {
+      sensesGuids: { ID1: ["S4"] },
+      vern: "BBB",
+      plural: "BBBS",
     },
   },
 };
 test("move sense between words", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { ...data, ...tree3 },
+    mergeDuplicateGoal: { data, tree: tree3 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
@@ -250,26 +246,25 @@ test("move sense between words", async () => {
 });
 
 // Merge sense 1 and 2 in A as duplicates
-const tree4: { tree: MergeTree } = {
-  tree: {
-    words: {
-      WA: {
-        sensesGuids: { ID1: ["S1", "S2"] },
-        vern: "AAA",
-        plural: "AAAS",
-      },
-      WB: {
-        sensesGuids: { ID1: ["S3"], ID2: ["S4"] },
-        vern: "BBB",
-        plural: "BBBS",
-      },
+const tree4: MergeTree = {
+  ...defaultTree,
+  words: {
+    WA: {
+      sensesGuids: { ID1: ["S1", "S2"] },
+      vern: "AAA",
+      plural: "AAAS",
+    },
+    WB: {
+      sensesGuids: { ID1: ["S3"], ID2: ["S4"] },
+      vern: "BBB",
+      plural: "BBBS",
     },
   },
 };
 test("merge senses within a word", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { ...data, ...tree4 },
+    mergeDuplicateGoal: { data, tree: tree4 },
   });
   await mockStore.dispatch<any>(mergeAll());
 

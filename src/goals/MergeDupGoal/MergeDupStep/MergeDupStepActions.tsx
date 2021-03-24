@@ -10,9 +10,11 @@ import {
 } from "goals/MergeDupGoal/MergeDups";
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
+  defaultSideBar,
   Hash,
   MergeTreeReference,
   MergeTreeSense,
+  SideBar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
@@ -27,7 +29,7 @@ export enum MergeTreeActions {
   ORDER_SENSE = "ORDER_SENSE",
   SET_DATA = "SET_DATA",
   SET_PLURAL = "SET_PLURAL",
-  SET_SENSE = "SET_SENSE",
+  SET_SIDEBAR = "SET_SIDEBAR",
   SET_VERNACULAR = "SET_VERNACULAR",
 }
 
@@ -55,6 +57,11 @@ interface SetDataMergeAction {
   payload: Word[];
 }
 
+interface SetSideBarMergeAction {
+  type: MergeTreeActions.SET_SIDEBAR;
+  payload: SideBar;
+}
+
 interface SetWordStringMergeAction {
   type: MergeTreeActions.SET_PLURAL | MergeTreeActions.SET_VERNACULAR;
   payload: { wordId: string; data: string };
@@ -66,6 +73,7 @@ export type MergeTreeAction =
   | OrderDuplicateMergeAction
   | OrderSenseMergeAction
   | SetDataMergeAction
+  | SetSideBarMergeAction
   | SetWordStringMergeAction;
 
 // Action Creators
@@ -101,13 +109,6 @@ export function moveSense(
   return moveSenses([src], [dest]);
 }
 
-export function setWordData(words: Word[]): SetDataMergeAction {
-  return {
-    type: MergeTreeActions.SET_DATA,
-    payload: words,
-  };
-}
-
 export function orderSense(ref: MergeTreeReference): OrderSenseMergeAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
@@ -122,6 +123,20 @@ export function orderDuplicate(
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
     payload: { ref, index },
+  };
+}
+
+export function setSideBar(sideBar?: SideBar): SetSideBarMergeAction {
+  return {
+    type: MergeTreeActions.SET_SIDEBAR,
+    payload: sideBar ?? defaultSideBar,
+  };
+}
+
+export function setWordData(words: Word[]): SetDataMergeAction {
+  return {
+    type: MergeTreeActions.SET_DATA,
+    payload: words,
   };
 }
 

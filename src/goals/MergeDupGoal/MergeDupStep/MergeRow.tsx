@@ -3,15 +3,12 @@ import { Droppable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeStack";
 import { StoreState } from "types";
 
 interface MergeRowProps {
   wordId: string;
   portrait: boolean;
-  setSidebar: (el: SideBar) => void;
-  sideBar: SideBar;
 }
 
 export default function MergeRow(props: MergeRowProps) {
@@ -82,8 +79,6 @@ export default function MergeRow(props: MergeRowProps) {
                   );
                   return (
                     <MergeStack
-                      sideBar={props.sideBar}
-                      setSidebar={props.setSidebar}
                       key={id}
                       index={index}
                       wordId={props.wordId}

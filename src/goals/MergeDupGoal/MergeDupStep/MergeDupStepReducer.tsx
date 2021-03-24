@@ -6,6 +6,7 @@ import {
   MergeTreeActions,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
+  defaultTree,
   Hash,
   MergeData,
   MergeTree,
@@ -13,7 +14,6 @@ import {
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
-const defaultTree = { words: {} };
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
   data: defaultData,
@@ -163,8 +163,15 @@ export const mergeDupStepReducer = (
       });
       return {
         ...state,
-        tree: { words: wordsTree },
+        tree: { ...state.tree, words: wordsTree },
         data: { senses, words },
+      };
+    }
+
+    case MergeTreeActions.SET_SIDEBAR: {
+      return {
+        ...state,
+        tree: { ...state.tree, sideBar: action.payload },
       };
     }
 

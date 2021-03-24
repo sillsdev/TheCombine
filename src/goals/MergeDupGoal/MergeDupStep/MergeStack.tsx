@@ -9,9 +9,9 @@ import {
 import { ArrowForwardIos } from "@material-ui/icons";
 import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { setSideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { Gloss } from "types/word";
@@ -21,8 +21,6 @@ interface MergeStackProps {
   mergeSenseId: string;
   senses: MergeTreeSense[];
   index: number;
-  setSidebar: (el: SideBar) => void;
-  sideBar: SideBar;
 }
 
 interface MergeGloss extends Gloss {
@@ -42,13 +40,19 @@ export default function MergeStack(props: MergeStackProps) {
   const analysisLangs = useSelector((state: StoreState) =>
     state.currentProject.analysisWritingSystems.map((ws) => ws.bcp47)
   );
+  const dispatch = useDispatch();
+  const sideBar = useSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.sideBar
+  );
 
   const updateSidebar = useCallback(() => {
-    props.setSidebar({
-      senses: props.senses,
-      wordId: props.wordId,
-      mergeSenseId: props.mergeSenseId,
-    });
+    dispatch(
+      setSideBar({
+        senses: props.senses,
+        wordId: props.wordId,
+        mergeSenseId: props.mergeSenseId,
+      })
+    );
   }, [props]);
 
   useEffect(() => {
@@ -61,10 +65,10 @@ export default function MergeStack(props: MergeStackProps) {
   }, [props.senses.length, duplicateCount, updateSidebar]);
 
   if (
-    props.sideBar.wordId === props.wordId &&
-    props.sideBar.mergeSenseId === props.mergeSenseId &&
+    sideBar.wordId === props.wordId &&
+    sideBar.mergeSenseId === props.mergeSenseId &&
     !arraysEqual(
-      props.sideBar.senses.map((s) => s.guid),
+      sideBar.senses.map((s) => s.guid),
       props.senses.map((s) => s.guid)
     )
   ) {
