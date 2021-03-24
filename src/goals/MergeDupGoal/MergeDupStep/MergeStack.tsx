@@ -46,7 +46,8 @@ export default function MergeStack(props: MergeStackProps) {
   const updateSidebar = useCallback(() => {
     props.setSidebar({
       senses: props.senses,
-      ref: { wordId: props.wordId, mergeSenseId: props.mergeSenseId },
+      wordId: props.wordId,
+      mergeSenseId: props.mergeSenseId,
     });
   }, [props]);
 
@@ -60,8 +61,8 @@ export default function MergeStack(props: MergeStackProps) {
   }, [props.senses.length, duplicateCount, updateSidebar]);
 
   if (
-    props.sideBar.ref.wordId === props.wordId &&
-    props.sideBar.ref.mergeSenseId === props.mergeSenseId &&
+    props.sideBar.wordId === props.wordId &&
+    props.sideBar.mergeSenseId === props.mergeSenseId &&
     !arraysEqual(
       props.sideBar.senses.map((s) => s.guid),
       props.senses.map((s) => s.guid)
