@@ -12,5 +12,5 @@ class ScriptStep:
 
     def print(self, descr: str) -> None:
         """Print the step number with its description and bump the step number."""
-        logging.info("%i. %s", self.step_num, descr)
+        logging.info("  %i. %s", self.step_num, descr)
         self.step_num += 1
