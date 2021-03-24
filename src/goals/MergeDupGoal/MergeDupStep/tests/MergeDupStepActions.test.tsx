@@ -153,10 +153,10 @@ const data: MergeData = {
     WB: { ...multiSenseWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
   },
   senses: {
-    S1: { ...new Sense("Sense 1"), srcWordId: "WA", index: 0 },
-    S2: { ...new Sense("Sense 2"), srcWordId: "WA", index: 1 },
-    S3: { ...new Sense("Sense 3"), srcWordId: "WB", index: 0 },
-    S4: { ...new Sense("Sense 4"), srcWordId: "WB", index: 1 },
+    S1: { ...new Sense("Sense 1"), srcWordId: "WA", order: 0 },
+    S2: { ...new Sense("Sense 2"), srcWordId: "WA", order: 1 },
+    S3: { ...new Sense("Sense 3"), srcWordId: "WB", order: 0 },
+    S4: { ...new Sense("Sense 4"), srcWordId: "WB", order: 1 },
   },
 };
 

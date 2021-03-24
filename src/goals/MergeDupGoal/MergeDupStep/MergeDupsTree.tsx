@@ -4,7 +4,7 @@ export type Hash<V> = { [key: string]: V };
 
 export interface MergeTreeSense extends Sense {
   srcWordId: string;
-  index: number;
+  order: number;
 }
 
 export interface MergeData {
@@ -15,7 +15,7 @@ export interface MergeData {
 export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
-  index: number;
+  order: number;
 }
 
 export interface MergeTreeWord {

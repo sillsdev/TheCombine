@@ -44,7 +44,7 @@ interface MoveSenseMergeAction {
 
 interface OrderDuplicateMergeAction {
   type: MergeTreeActions.ORDER_DUPLICATE;
-  payload: { ref: MergeTreeReference; index: number };
+  payload: { ref: MergeTreeReference; order: number };
 }
 
 interface OrderSenseMergeAction {
@@ -118,11 +118,11 @@ export function orderSense(ref: MergeTreeReference): OrderSenseMergeAction {
 
 export function orderDuplicate(
   ref: MergeTreeReference,
-  index: number
+  order: number
 ): OrderDuplicateMergeAction {
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
-    payload: { ref, index },
+    payload: { ref, order },
   };
 }
 
@@ -181,7 +181,7 @@ function getMergeWords(
             senses[wordId].push({
               ...sense,
               srcWordId: wordId,
-              index: senses[wordId].length,
+              order: senses[wordId].length,
               state: State.Separate,
             });
           }
@@ -193,13 +193,13 @@ function getMergeWords(
     Object.values(word.sensesGuids).forEach((guids) => {
       // Set the first sense to be merged as State.Sense.
       const senseData = data.senses[guids[0]];
-      const mainSense = senses[senseData.srcWordId][senseData.index];
+      const mainSense = senses[senseData.srcWordId][senseData.order];
       mainSense.state = State.Sense;
 
       // Merge the rest as duplicates.
       const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
-        const dupSense = senses[dup.srcWordId][dup.index];
+        const dupSense = senses[dup.srcWordId][dup.order];
         dupSense.state = State.Duplicate;
         // Put this sense's domains in the main sense's.
         for (const dom of dupSense.semanticDomains) {
@@ -212,7 +212,7 @@ function getMergeWords(
 
     // Clean order of senses in each src word to reflect backend order.
     Object.values(senses).forEach((wordSenses) => {
-      wordSenses = wordSenses.sort((a, b) => a.index - b.index);
+      wordSenses = wordSenses.sort((a, b) => a.order - b.order);
       senses[wordSenses[0].srcWordId] = wordSenses;
     });
 

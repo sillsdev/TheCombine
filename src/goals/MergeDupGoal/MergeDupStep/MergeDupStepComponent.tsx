@@ -36,7 +36,7 @@ interface MergeDupStepProps {
   words: Hash<MergeTreeWord>;
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (ref: MergeTreeReference) => void;
-  orderDuplicate: (ref: MergeTreeReference, index: number) => void;
+  orderDuplicate: (ref: MergeTreeReference, order: number) => void;
   mergeAll: () => Promise<void>;
   // Will advance to the next goal step and update the words content
   advanceStep: () => void;
@@ -74,13 +74,13 @@ class MergeDupStep extends React.Component<
     const srcRefs: MergeTreeReference[] = [];
 
     const srcRef: MergeTreeReference = JSON.parse(res.draggableId);
-    if (srcRef.index === undefined) {
+    if (srcRef.order === undefined) {
       const wordId = srcRef.wordId;
       const mergeSenseId = srcRef.mergeSenseId;
       this.props.words[wordId].sensesGuids[
         mergeSenseId
-      ].forEach((_guid, index) =>
-        srcRefs.push({ wordId, mergeSenseId, index })
+      ].forEach((_guid, order) =>
+        srcRefs.push({ wordId, mergeSenseId, order })
       );
     } else {
       srcRefs.push(srcRef);
@@ -95,7 +95,7 @@ class MergeDupStep extends React.Component<
         destRefs.push({
           wordId: combineRef.wordId,
           mergeSenseId: combineRef.mergeSenseId,
-          index: -1,
+          order: -1,
         })
       );
       this.props.moveSenses(srcRefs, destRefs);
@@ -109,24 +109,24 @@ class MergeDupStep extends React.Component<
           destRefs.push({
             wordId: res.destination.droppableId,
             mergeSenseId,
-            index: -1,
+            order: -1,
           });
         }
         this.props.moveSenses(srcRefs, destRefs);
         const ref: MergeTreeReference = {
           wordId: res.destination.droppableId,
           mergeSenseId,
-          index: res.destination.index,
+          order: res.destination.index,
         };
         this.props.orderSense(ref);
       } else {
         // set ordering
-        if (srcRef.index !== undefined) {
+        if (srcRef.order !== undefined) {
           this.props.orderDuplicate(srcRef, res.destination.index);
         } else {
           const ref: MergeTreeReference = {
             ...srcRef,
-            index: res.destination.index,
+            order: res.destination.index,
           };
           this.props.orderSense(ref);
         }
@@ -155,7 +155,7 @@ class MergeDupStep extends React.Component<
     const ref: MergeTreeReference = {
       wordId: this.props.sideBar.wordId,
       mergeSenseId: this.props.sideBar.mergeSenseId,
-      index,
+      order: index,
     };
     return (
       <Draggable

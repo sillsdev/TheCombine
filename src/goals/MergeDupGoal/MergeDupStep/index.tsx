@@ -31,8 +31,8 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     orderSense: (ref: MergeTreeReference) => {
       dispatch(orderSense(ref));
     },
-    orderDuplicate: (ref: MergeTreeReference, index: number) => {
-      dispatch(orderDuplicate(ref, index));
+    orderDuplicate: (ref: MergeTreeReference, order: number) => {
+      dispatch(orderDuplicate(ref, order));
     },
     mergeAll: () => {
       return dispatch(mergeAll());

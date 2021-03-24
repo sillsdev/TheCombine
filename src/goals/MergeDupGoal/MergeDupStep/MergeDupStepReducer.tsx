@@ -60,7 +60,7 @@ export const mergeDupStepReducer = (
       const newSensesGuids = Object.entries(word.sensesGuids).filter(
         (pair) => pair[0] !== id
       );
-      newSensesGuids.splice(action.payload.index, 0, [id, sense]);
+      newSensesGuids.splice(action.payload.order, 0, [id, sense]);
 
       word.sensesGuids = {};
       for (const [key, value] of newSensesGuids) {
@@ -77,8 +77,8 @@ export const mergeDupStepReducer = (
       const ref = action.payload.ref;
       const oldSensesGuids = state.tree.words[ref.wordId].sensesGuids;
       const senseGuids = [...oldSensesGuids[ref.mergeSenseId]];
-      const guid = senseGuids.splice(ref.index, 1)[0];
-      senseGuids.splice(action.payload.index, 0, guid);
+      const guid = senseGuids.splice(ref.order, 1)[0];
+      senseGuids.splice(action.payload.order, 0, guid);
 
       const sensesGuids = { ...oldSensesGuids };
       sensesGuids[ref.mergeSenseId] = senseGuids;
@@ -117,7 +117,7 @@ export const mergeDupStepReducer = (
             words[dest.wordId].sensesGuids[dest.mergeSenseId] = [];
           }
           const destGuids = words[dest.wordId].sensesGuids[dest.mergeSenseId];
-          destGuids.splice(dest.index, 0, srcGuid);
+          destGuids.splice(dest.order, 0, srcGuid);
           words[dest.wordId].sensesGuids[dest.mergeSenseId] = destGuids;
 
           // cleanup src
@@ -151,8 +151,8 @@ export const mergeDupStepReducer = (
       action.payload.forEach((word) => {
         words[word.id] = JSON.parse(JSON.stringify(word));
         const sensesGuids: Hash<string[]> = {};
-        word.senses.forEach((sense, index) => {
-          senses[sense.guid] = { ...sense, srcWordId: word.id, index };
+        word.senses.forEach((sense, order) => {
+          senses[sense.guid] = { ...sense, srcWordId: word.id, order };
           sensesGuids[uuid()] = [sense.guid];
         });
         wordsTree[word.id] = {

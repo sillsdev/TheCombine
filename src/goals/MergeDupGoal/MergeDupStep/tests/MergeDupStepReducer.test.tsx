@@ -30,9 +30,9 @@ describe("MergeDupStepReducer", () => {
     for (const wordId of Object.keys(words)) {
       for (const mergeSenseId of Object.keys(words[wordId].sensesGuids)) {
         const guids = words[wordId].sensesGuids[mergeSenseId];
-        const index = guids.findIndex((g) => g === guid);
-        if (index !== -1) {
-          return { wordId, mergeSenseId, index };
+        const order = guids.findIndex((g) => g === guid);
+        if (order !== -1) {
+          return { wordId, mergeSenseId, order };
         }
       }
     }
@@ -44,12 +44,12 @@ describe("MergeDupStepReducer", () => {
     ref: MergeTreeReference,
     words: Hash<MergeTreeWord>
   ): string => {
-    return words[ref.wordId].sensesGuids[ref.mergeSenseId][ref.index];
+    return words[ref.wordId].sensesGuids[ref.mergeSenseId][ref.order];
   };
 
   function getRandomRef(words?: Hash<MergeTreeWord>): MergeTreeReference {
     if (!words) {
-      return { wordId: uuid(), mergeSenseId: uuid(), index: -1 };
+      return { wordId: uuid(), mergeSenseId: uuid(), order: -1 };
     }
 
     let wordId = "";
@@ -63,10 +63,10 @@ describe("MergeDupStepReducer", () => {
       wordId = randElement(Object.keys(words));
       mergeSenseId = randElement(Object.keys(words[wordId].sensesGuids));
     }
-    const index = randElement(
+    const order = randElement(
       words[wordId].sensesGuids[mergeSenseId].map((_guid, index) => index)
     );
-    return { wordId, mergeSenseId, index };
+    return { wordId, mergeSenseId, order };
   }
 
   test("clearTree", () => {
@@ -82,8 +82,8 @@ describe("MergeDupStepReducer", () => {
       const srcWordId = word.id;
       expect(Object.keys(treeState.data.words)).toContain(srcWordId);
       // check each sense of word
-      for (const [index, sense] of word.senses.entries()) {
-        const treeSense: MergeTreeSense = { ...sense, srcWordId, index };
+      for (const [order, sense] of word.senses.entries()) {
+        const treeSense: MergeTreeSense = { ...sense, srcWordId, order };
         const senses = treeState.data.senses;
         expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
           JSON.stringify(treeSense)
