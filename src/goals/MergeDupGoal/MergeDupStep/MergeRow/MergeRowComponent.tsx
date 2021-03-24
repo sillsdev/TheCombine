@@ -3,18 +3,13 @@ import * as React from "react";
 import { Droppable } from "react-beautiful-dnd";
 
 import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
-import {
-  Hash,
-  MergeData,
-  MergeTreeWord,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeStack";
 
 interface MergeRowProps {
   setVern: (wordId: string, vern: string) => void;
   wordId: string;
-  words: Hash<MergeTreeWord>;
-  data: MergeData;
+  treeState: MergeTreeState;
   portrait: boolean;
   setSidebar: (el: SideBar) => void;
   sideBar: SideBar;
@@ -22,30 +17,29 @@ interface MergeRowProps {
 
 export default class MergeRow extends React.Component<MergeRowProps> {
   render() {
-    const filled = !!this.props.words[this.props.wordId];
+    const treeWords = this.props.treeState.tree.words;
+    const data = this.props.treeState.data;
+    const filled = !!treeWords[this.props.wordId];
     let verns: string[] = [];
     if (filled) {
-      verns = [
+      verns.push(
         ...new Set(
           Object.values(
-            this.props.words[this.props.wordId].sensesGuids
+            treeWords[this.props.wordId].sensesGuids
           ).flatMap((senseGuids) =>
             Object.values(senseGuids).map(
-              (guid) =>
-                this.props.data.words[this.props.data.senses[guid].srcWordId]
-                  .vernacular
+              (g) => data.words[data.senses[g].srcWordId].vernacular
             )
           )
-        ),
-      ];
+        )
+      );
     }
 
     // reset vern if not in vern list
     if (
-      this.props.words[this.props.wordId] &&
-      !verns.includes(this.props.words[this.props.wordId].vern)
+      treeWords[this.props.wordId] &&
+      !verns.includes(treeWords[this.props.wordId].vern)
     ) {
-      // set vern
       this.props.setVern(this.props.wordId, verns[0] || "");
     }
 
@@ -67,7 +61,7 @@ export default class MergeRow extends React.Component<MergeRowProps> {
             <Paper square style={{ padding: 8, height: 44, minWidth: 150 }}>
               {filled && (
                 <Select
-                  value={this.props.words[this.props.wordId].vern}
+                  value={treeWords[this.props.wordId].vern}
                   onChange={(e) =>
                     this.props.setVern(
                       this.props.wordId,
@@ -86,7 +80,7 @@ export default class MergeRow extends React.Component<MergeRowProps> {
             <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
               {filled &&
                 Object.keys(
-                  this.props.words[this.props.wordId].sensesGuids
+                  treeWords[this.props.wordId].sensesGuids
                 ).map((id, index) => (
                   <MergeStack
                     sideBar={this.props.sideBar}
@@ -95,7 +89,7 @@ export default class MergeRow extends React.Component<MergeRowProps> {
                     index={index}
                     wordId={this.props.wordId}
                     mergeSenseId={id}
-                    guids={this.props.words[this.props.wordId].sensesGuids[id]}
+                    guids={treeWords[this.props.wordId].sensesGuids[id]}
                   />
                 ))}
               {provided.placeholder}

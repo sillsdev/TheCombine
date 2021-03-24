@@ -7,8 +7,7 @@ import { StoreStateDispatch } from "types/actions";
 
 function mapStateToProps(state: StoreState) {
   return {
-    words: state.mergeDuplicateGoal.tree.words,
-    data: state.mergeDuplicateGoal.data,
+    treeState: state.mergeDuplicateGoal,
   };
 }
 

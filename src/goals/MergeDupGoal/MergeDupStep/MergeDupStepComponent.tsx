@@ -121,7 +121,7 @@ class MergeDupStep extends React.Component<
         const destRefs: MergeTreeRefWithIndex[] = [];
         const mergeSenseId = uuid();
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (let _ of srcRefs) {
+        for (let _ in srcRefs) {
           destRefs.push({
             wordId: res.destination.droppableId,
             mergeSenseId,

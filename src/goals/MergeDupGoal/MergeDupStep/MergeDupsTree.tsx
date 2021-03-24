@@ -16,14 +16,12 @@ export interface MergeTreeRef {
   wordId: string;
   mergeSenseId: string;
 }
-export interface MergeTreeRefWithGuid {
-  wordId: string;
-  mergeSenseId: string;
+
+export interface MergeTreeRefWithGuid extends MergeTreeRef {
   guid: string;
 }
-export interface MergeTreeRefWithIndex {
-  wordId: string;
-  mergeSenseId: string;
+
+export interface MergeTreeRefWithIndex extends MergeTreeRef {
   index: number;
 }
 
