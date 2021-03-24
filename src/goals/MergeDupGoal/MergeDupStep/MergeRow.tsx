@@ -27,12 +27,8 @@ export default function MergeRow(props: MergeRowProps) {
   if (filled) {
     verns.push(
       ...new Set(
-        Object.values(
-          treeWords[props.wordId].sensesGuids
-        ).flatMap((senseGuids) =>
-          Object.values(senseGuids).map(
-            (g) => data.words[data.senses[g].srcWordId].vernacular
-          )
+        Object.values(treeWords[props.wordId].sensesGuids).flatMap((guids) =>
+          guids.map((g) => data.words[data.senses[g].srcWordId].vernacular)
         )
       )
     );

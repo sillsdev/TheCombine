@@ -174,7 +174,7 @@ function getMergeWords(
 
     // Build senses array.
     for (const senseGuids of Object.values(word.sensesGuids)) {
-      for (const guid of Object.values(senseGuids)) {
+      for (const guid of senseGuids) {
         const senseData = data.senses[guid];
         const wordId = senseData.srcWordId;
 
@@ -196,9 +196,7 @@ function getMergeWords(
     }
 
     // Set sense and duplicate senses.
-    Object.values(word.sensesGuids).forEach((senseGuids) => {
-      const guids = Object.values(senseGuids);
-
+    Object.values(word.sensesGuids).forEach((guids) => {
       // Set the first sense to be merged as State.Sense.
       const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.index];

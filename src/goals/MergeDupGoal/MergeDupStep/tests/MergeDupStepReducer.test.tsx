@@ -107,9 +107,8 @@ describe("MergeDupStepReducer", () => {
     it("deletes src", () => {
       let srcRef = getRandomSrcRef(fullState.tree.words);
       while (
-        Object.values(
-          fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
-        ).length !== 1
+        fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
+          .length !== 1
       ) {
         srcRef = getRandomSrcRef(fullState.tree.words);
       }
