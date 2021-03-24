@@ -14,7 +14,7 @@ import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { defaultProject } from "types/project";
 import { baseDomain } from "types/SemanticDomain";
 import {
-  multiGlossWord,
+  multiSenseWord,
   SemanticDomain,
   Sense,
   simpleWord,
@@ -40,7 +40,7 @@ let testHandle: ReactTestInstance;
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 const mockWord = () => simpleWord("mockVern", "mockGloss");
-const mockMultiWord = multiGlossWord("vern", ["gloss1", "gloss2"]);
+const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockSemanticDomain: SemanticDomain = {
   name: "",
   id: "",

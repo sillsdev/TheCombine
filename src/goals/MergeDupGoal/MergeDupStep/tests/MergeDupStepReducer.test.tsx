@@ -10,8 +10,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
   Hash,
-  MergeTreeRefWithGuid,
-  MergeTreeRefWithIndex,
+  MergeTreeReference,
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
@@ -27,36 +26,47 @@ describe("MergeDupStepReducer", () => {
   const getRefByGuid = (
     guid: string,
     words: Hash<MergeTreeWord>
-  ): MergeTreeRefWithGuid | undefined => {
+  ): MergeTreeReference | undefined => {
     for (const wordId of Object.keys(words)) {
       for (const mergeSenseId of Object.keys(words[wordId].sensesGuids)) {
         const guids = words[wordId].sensesGuids[mergeSenseId];
-        if (guids.includes(guid)) {
-          return { wordId, mergeSenseId, guid };
+        const index = guids.findIndex((g) => g === guid);
+        if (index !== -1) {
+          return { wordId, mergeSenseId, index };
         }
       }
     }
     return undefined;
   };
 
-  function getRandomDestRef(): MergeTreeRefWithIndex {
-    return { wordId: uuid(), mergeSenseId: uuid(), index: -1 };
-  }
+  // helper functions for working with a tree
+  const getGuidByRef = (
+    ref: MergeTreeReference,
+    words: Hash<MergeTreeWord>
+  ): string => {
+    return words[ref.wordId].sensesGuids[ref.mergeSenseId][ref.index];
+  };
 
-  function getRandomSrcRef(words: Hash<MergeTreeWord>): MergeTreeRefWithGuid {
+  function getRandomRef(words?: Hash<MergeTreeWord>): MergeTreeReference {
+    if (!words) {
+      return { wordId: uuid(), mergeSenseId: uuid(), index: -1 };
+    }
+
     let wordId = "";
     let mergeSenseId = "";
     while (
       !wordId ||
       !mergeSenseId ||
-      !words[wordId].sensesGuids[mergeSenseId]
+      !words[wordId].sensesGuids[mergeSenseId].length
     ) {
       // This while loops make sure words with no senses aren't selected.
       wordId = randElement(Object.keys(words));
       mergeSenseId = randElement(Object.keys(words[wordId].sensesGuids));
     }
-    const guid = randElement(words[wordId].sensesGuids[mergeSenseId]);
-    return { wordId, mergeSenseId, guid };
+    const index = randElement(
+      words[wordId].sensesGuids[mergeSenseId].map((_guid, index) => index)
+    );
+    return { wordId, mergeSenseId, index };
   }
 
   test("clearTree", () => {
@@ -89,14 +99,15 @@ describe("MergeDupStepReducer", () => {
   describe("moveSense", () => {
     it("moves a random sense to a new location", () => {
       const words = fullState.tree.words;
-      const srcRef = getRandomSrcRef(words);
-      const destRef = getRandomDestRef();
+      const srcRef = getRandomRef(words);
+      const guid = getGuidByRef(srcRef, words);
+      const destRef = getRandomRef();
       const newState = mergeDupStepReducer(
         fullState,
         moveSense(srcRef, destRef)
       );
 
-      const finalRef = getRefByGuid(srcRef.guid, newState.tree.words);
+      const finalRef = getRefByGuid(guid, newState.tree.words);
       expect(finalRef).toBeDefined();
       if (finalRef) {
         expect(finalRef.wordId).toEqual(destRef.wordId);
@@ -104,23 +115,25 @@ describe("MergeDupStepReducer", () => {
       }
     });
 
-    it("deletes src", () => {
-      let srcRef = getRandomSrcRef(fullState.tree.words);
+    it("deletes in src", () => {
+      const words = fullState.tree.words;
+      let srcRef = getRandomRef(words);
       while (
         fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
           .length !== 1
       ) {
-        srcRef = getRandomSrcRef(fullState.tree.words);
+        srcRef = getRandomRef(words);
       }
+      const guid = getGuidByRef(srcRef, words);
 
-      const destRef = getRandomDestRef();
+      const destRef = getRandomRef();
       const newState = mergeDupStepReducer(
         fullState,
         moveSense(srcRef, destRef)
       );
       const srcGuids =
         newState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId];
-      expect(srcGuids).not.toContainEqual(srcRef.guid);
+      expect(srcGuids).not.toContainEqual(guid);
     });
   });
 

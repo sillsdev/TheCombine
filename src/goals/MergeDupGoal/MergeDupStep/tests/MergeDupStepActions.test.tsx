@@ -16,8 +16,8 @@ import {
 import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import {
   MergeWords,
-  multiGlossWord,
-  multiGlossWordAnyGuid,
+  multiSenseWord,
+  multiSenseWordAnyGuid,
   Sense,
   Word,
 } from "types/word";
@@ -27,30 +27,30 @@ import { MergeTreeState } from "../MergeDupStepReducer";
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList: { [key in mockWordListIndex]: Word } = {
   WA: {
-    ...multiGlossWordAnyGuid("AAA", ["Sense 1", "Sense 2"]),
+    ...multiSenseWordAnyGuid("AAA", ["Sense 1", "Sense 2"]),
     id: "WA",
   },
   WB: {
-    ...multiGlossWordAnyGuid("BBB", ["Sense 3", "Sense 4"]),
+    ...multiSenseWordAnyGuid("BBB", ["Sense 3", "Sense 4"]),
     id: "WB",
   },
   WA2: {
-    ...multiGlossWordAnyGuid("AAA", ["Sense 1", "Sense 2"]),
+    ...multiSenseWordAnyGuid("AAA", ["Sense 1", "Sense 2"]),
     id: "WA2",
     history: ["WA", "WB"],
   },
   WB2: {
-    ...multiGlossWordAnyGuid("BBB", ["Sense 4"]),
+    ...multiSenseWordAnyGuid("BBB", ["Sense 4"]),
     id: "WB2",
     history: ["WB"],
   },
   WA3: {
-    ...multiGlossWordAnyGuid("AAA", ["Sense 1", "Sense 2", "Sense 3"]),
+    ...multiSenseWordAnyGuid("AAA", ["Sense 1", "Sense 2", "Sense 3"]),
     id: "WA3",
     history: ["WA", "WB"],
   },
   WA4: {
-    ...multiGlossWordAnyGuid("AAA", ["Sense 1"]),
+    ...multiSenseWordAnyGuid("AAA", ["Sense 1"]),
     id: "WA4",
     history: ["WA"],
   },
@@ -149,8 +149,8 @@ const mockStoreState: {
 const data: { data: MergeData } = {
   data: {
     words: {
-      WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
-      WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
+      WA: { ...multiSenseWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
+      WB: { ...multiSenseWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
     },
     senses: {
       S1: { ...new Sense("Sense 1"), srcWordId: "WA", index: 0 },

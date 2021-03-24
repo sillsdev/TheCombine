@@ -12,16 +12,9 @@ export interface MergeData {
   senses: Hash<MergeTreeSense>;
 }
 
-export interface MergeTreeRef {
+export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
-}
-
-export interface MergeTreeRefWithGuid extends MergeTreeRef {
-  guid: string;
-}
-
-export interface MergeTreeRefWithIndex extends MergeTreeRef {
   index: number;
 }
 

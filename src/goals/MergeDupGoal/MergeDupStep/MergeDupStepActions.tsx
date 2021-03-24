@@ -11,8 +11,7 @@ import {
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
   Hash,
-  MergeTreeRefWithGuid,
-  MergeTreeRefWithIndex,
+  MergeTreeReference,
   MergeTreeSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
@@ -38,27 +37,22 @@ interface ClearTreeMergeAction {
 
 interface MoveSenseMergeAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: { src: MergeTreeRefWithGuid[]; dest: MergeTreeRefWithIndex[] };
+  payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
 }
 
 interface OrderDuplicateMergeAction {
   type: MergeTreeActions.ORDER_DUPLICATE;
-  payload: { ref: MergeTreeRefWithGuid; index: number };
+  payload: { ref: MergeTreeReference; index: number };
 }
 
 interface OrderSenseMergeAction {
   type: MergeTreeActions.ORDER_SENSE;
-  payload: MergeTreeRefWithIndex;
+  payload: MergeTreeReference;
 }
 
 interface SetDataMergeAction {
   type: MergeTreeActions.SET_DATA;
   payload: Word[];
-}
-
-interface SetSenseMergeAction {
-  type: MergeTreeActions.SET_SENSE;
-  payload: { ref: MergeTreeRefWithGuid; data: number | undefined };
 }
 
 interface SetWordStringMergeAction {
@@ -72,7 +66,6 @@ export type MergeTreeAction =
   | OrderDuplicateMergeAction
   | OrderSenseMergeAction
   | SetDataMergeAction
-  | SetSenseMergeAction
   | SetWordStringMergeAction;
 
 // Action Creators
@@ -92,8 +85,8 @@ export function clearTree(): ClearTreeMergeAction {
 }
 
 export function moveSenses(
-  src: MergeTreeRefWithGuid[],
-  dest: MergeTreeRefWithIndex[]
+  src: MergeTreeReference[],
+  dest: MergeTreeReference[]
 ): MoveSenseMergeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
@@ -102,24 +95,10 @@ export function moveSenses(
 }
 
 export function moveSense(
-  src: MergeTreeRefWithGuid,
-  dest: MergeTreeRefWithIndex
+  src: MergeTreeReference,
+  dest: MergeTreeReference
 ): MoveSenseMergeAction {
   return moveSenses([src], [dest]);
-}
-
-export function setSense(
-  ref: MergeTreeRefWithGuid,
-  data: number | undefined
-): SetSenseMergeAction {
-  return {
-    type: MergeTreeActions.SET_SENSE,
-    payload: { ref, data },
-  };
-}
-
-export function removeSense(ref: MergeTreeRefWithGuid): SetSenseMergeAction {
-  return setSense(ref, undefined);
 }
 
 export function setWordData(words: Word[]): SetDataMergeAction {
@@ -129,7 +108,7 @@ export function setWordData(words: Word[]): SetDataMergeAction {
   };
 }
 
-export function orderSense(ref: MergeTreeRefWithIndex): OrderSenseMergeAction {
+export function orderSense(ref: MergeTreeReference): OrderSenseMergeAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
     payload: ref,
@@ -137,7 +116,7 @@ export function orderSense(ref: MergeTreeRefWithIndex): OrderSenseMergeAction {
 }
 
 export function orderDuplicate(
-  ref: MergeTreeRefWithGuid,
+  ref: MergeTreeReference,
   index: number
 ): OrderDuplicateMergeAction {
   return {

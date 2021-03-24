@@ -76,10 +76,9 @@ export const mergeDupStepReducer = (
     case MergeTreeActions.ORDER_DUPLICATE: {
       const ref = action.payload.ref;
       const oldSensesGuids = state.tree.words[ref.wordId].sensesGuids;
-      const senseGuids = oldSensesGuids[ref.mergeSenseId].filter(
-        (g) => g !== ref.guid
-      );
-      senseGuids.splice(action.payload.index, 0, ref.guid);
+      const senseGuids = [...oldSensesGuids[ref.mergeSenseId]];
+      const guid = senseGuids.splice(ref.index, 1)[0];
+      senseGuids.splice(action.payload.index, 0, guid);
 
       const sensesGuids = { ...oldSensesGuids };
       sensesGuids[ref.mergeSenseId] = senseGuids;
@@ -103,30 +102,28 @@ export const mergeDupStepReducer = (
         const dest = action.payload.dest[op];
         // only perform move if src and dest are different
         if (JSON.stringify(src) !== JSON.stringify(dest)) {
-          // perform move
-          const srcWordId = state.data.senses[src.guid].srcWordId;
-
           // tree elements need to be added to words if they don't exist
           if (!words[dest.wordId]) {
             words[dest.wordId] = {
               sensesGuids: {},
-              vern: state.data.words[srcWordId].vernacular,
-              plural: state.data.words[srcWordId].plural,
+              vern: state.data.words[src.wordId].vernacular,
+              plural: state.data.words[src.wordId].plural,
             };
           }
+
+          const srcGuid = state.data.senses[src.mergeSenseId].guid;
 
           if (!words[dest.wordId].sensesGuids[dest.mergeSenseId]) {
             words[dest.wordId].sensesGuids[dest.mergeSenseId] = [];
           }
-
           const destGuids = words[dest.wordId].sensesGuids[dest.mergeSenseId];
-          destGuids.splice(dest.index, 0, src.guid);
+          destGuids.splice(dest.index, 0, srcGuid);
           words[dest.wordId].sensesGuids[dest.mergeSenseId] = destGuids;
 
           // cleanup src
           const srcSensesGuids = words[src.wordId].sensesGuids;
           const srcSenseGuids = srcSensesGuids[src.mergeSenseId].filter(
-            (g) => g !== src.guid
+            (g) => g !== srcGuid
           );
           if (srcSenseGuids) {
             srcSensesGuids[src.mergeSenseId] = srcSenseGuids;
