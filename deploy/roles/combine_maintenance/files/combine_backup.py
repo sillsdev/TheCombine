@@ -111,9 +111,7 @@ def main() -> None:
             ]
         )
 
-        step.print(
-            "Copy the backend files."
-        )
+        step.print("Copy the backend files.")
         backend_container = run_cmd(
             ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
         ).stdout.strip()
