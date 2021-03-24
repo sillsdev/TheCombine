@@ -48,7 +48,7 @@ export default function MergeStack(props: MergeStackProps) {
       senses: props.senses,
       ref: { wordId: props.wordId, mergeSenseId: props.mergeSenseId },
     });
-  }, [props, props.senses]);
+  }, [props]);
 
   useEffect(() => {
     if (props.senses.length !== duplicateCount) {
