@@ -11,8 +11,9 @@ import {
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
   Hash,
-  MergeTreeReference,
-  TreeDataSense,
+  MergeTreeRefWithGuid,
+  MergeTreeRefWithIndex,
+  MergeTreeSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
@@ -37,21 +38,17 @@ interface ClearTreeMergeAction {
 
 interface MoveSenseMergeAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
+  payload: { src: MergeTreeRefWithGuid[]; dest: MergeTreeRefWithIndex[] };
 }
 
 interface OrderDuplicateMergeAction {
   type: MergeTreeActions.ORDER_DUPLICATE;
-  payload: { ref: MergeTreeReference; order: number };
+  payload: { ref: MergeTreeRefWithGuid; index: number };
 }
 
 interface OrderSenseMergeAction {
   type: MergeTreeActions.ORDER_SENSE;
-  payload: {
-    wordId: string;
-    mergeSenseId: string;
-    order: number;
-  };
+  payload: MergeTreeRefWithIndex;
 }
 
 interface SetDataMergeAction {
@@ -61,7 +58,7 @@ interface SetDataMergeAction {
 
 interface SetSenseMergeAction {
   type: MergeTreeActions.SET_SENSE;
-  payload: { ref: MergeTreeReference; data: number | undefined };
+  payload: { ref: MergeTreeRefWithGuid; data: number | undefined };
 }
 
 interface SetWordStringMergeAction {
@@ -95,8 +92,8 @@ export function clearTree(): ClearTreeMergeAction {
 }
 
 export function moveSenses(
-  src: MergeTreeReference[],
-  dest: MergeTreeReference[]
+  src: MergeTreeRefWithGuid[],
+  dest: MergeTreeRefWithIndex[]
 ): MoveSenseMergeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
@@ -105,14 +102,14 @@ export function moveSenses(
 }
 
 export function moveSense(
-  src: MergeTreeReference,
-  dest: MergeTreeReference
+  src: MergeTreeRefWithGuid,
+  dest: MergeTreeRefWithIndex
 ): MoveSenseMergeAction {
   return moveSenses([src], [dest]);
 }
 
 export function setSense(
-  ref: MergeTreeReference,
+  ref: MergeTreeRefWithGuid,
   data: number | undefined
 ): SetSenseMergeAction {
   return {
@@ -121,7 +118,7 @@ export function setSense(
   };
 }
 
-export function removeSense(ref: MergeTreeReference): SetSenseMergeAction {
+export function removeSense(ref: MergeTreeRefWithGuid): SetSenseMergeAction {
   return setSense(ref, undefined);
 }
 
@@ -132,24 +129,20 @@ export function setWordData(words: Word[]): SetDataMergeAction {
   };
 }
 
-export function orderSense(
-  wordId: string,
-  mergeSenseId: string,
-  order: number
-): OrderSenseMergeAction {
+export function orderSense(ref: MergeTreeRefWithIndex): OrderSenseMergeAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
-    payload: { wordId, mergeSenseId, order },
+    payload: ref,
   };
 }
 
 export function orderDuplicate(
-  ref: MergeTreeReference,
-  order: number
+  ref: MergeTreeRefWithGuid,
+  index: number
 ): OrderDuplicateMergeAction {
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
-    payload: { ref, order },
+    payload: { ref, index },
   };
 }
 
@@ -161,7 +154,9 @@ export function mergeSense() {
   };
 }
 
-type SenseWithState = TreeDataSense & { state: State };
+interface SenseWithState extends MergeTreeSense {
+  state: State;
+}
 
 // Given a wordId, constructs from the state the corresponing MergeWords.
 // Returns the MergeWords, or undefined if the parent and child are identical.
@@ -192,7 +187,7 @@ function getMergeWords(
             senses[wordId].push({
               ...sense,
               srcWordId: wordId,
-              order: senses[wordId].length,
+              index: senses[wordId].length,
               state: State.Separate,
             });
           }
@@ -206,13 +201,13 @@ function getMergeWords(
 
       // Set the first sense to be merged as State.Sense.
       const senseData = data.senses[guids[0]];
-      const mainSense = senses[senseData.srcWordId][senseData.order];
+      const mainSense = senses[senseData.srcWordId][senseData.index];
       mainSense.state = State.Sense;
 
       // Merge the rest as duplicates.
       const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
-        const dupSense = senses[dup.srcWordId][dup.order];
+        const dupSense = senses[dup.srcWordId][dup.index];
         dupSense.state = State.Duplicate;
         // Put this sense's domains in the main sense's.
         for (const dom of dupSense.semanticDomains) {
@@ -225,7 +220,7 @@ function getMergeWords(
 
     // Clean order of senses in each src word to reflect backend order.
     Object.values(senses).forEach((wordSenses) => {
-      wordSenses = wordSenses.sort((a, b) => a.order - b.order);
+      wordSenses = wordSenses.sort((a, b) => a.index - b.index);
       senses[wordSenses[0].srcWordId] = wordSenses;
     });
 

@@ -11,26 +11,22 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 
-import {
-  MergeSense,
-  SideBar,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
-import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
+import { Gloss } from "types/word";
 
 interface MergeStackProps {
   wordId: string;
   mergeSenseId: string;
-  senses: Hash<string>;
+  guids: string[];
   index: number;
   setSidebar: (el: SideBar) => void;
   sideBar: SideBar;
 }
 
-interface MergeGloss {
-  def: string;
-  language: string;
-  mergeSenseId: string;
+interface MergeGloss extends Gloss {
+  senseGuid: string;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]) {
@@ -43,8 +39,8 @@ function arraysEqual<T>(arr1: T[], arr2: T[]) {
 
 export default function MergeStack(props: MergeStackProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
-  const [senseEntries, setSenseEntries] = useState<MergeSense[]>([]);
-  const hashedSenses = useSelector(
+  const [senseEntries, setSenseEntries] = useState<MergeTreeSense[]>([]);
+  const allSenses = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
   const analysisLangs = useSelector((state: StoreState) =>
@@ -54,8 +50,7 @@ export default function MergeStack(props: MergeStackProps) {
   const updateSidebar = useCallback(() => {
     props.setSidebar({
       senses: senseEntries,
-      wordId: props.wordId,
-      mergeSenseId: props.mergeSenseId,
+      ref: { wordId: props.wordId, mergeSenseId: props.mergeSenseId },
     });
   }, [props, senseEntries]);
 
@@ -69,20 +64,15 @@ export default function MergeStack(props: MergeStackProps) {
   }, [senseEntries.length, duplicateCount, updateSidebar]);
 
   useEffect(() => {
-    setSenseEntries(
-      Object.entries(props.senses).map((s) => ({
-        id: s[0],
-        data: hashedSenses[s[1]],
-      }))
-    );
-  }, [hashedSenses, props.senses]);
+    setSenseEntries(props.guids.map((g) => allSenses[g]));
+  }, [allSenses, props.guids]);
 
   if (
-    props.sideBar.wordId === props.wordId &&
-    props.sideBar.mergeSenseId === props.mergeSenseId &&
+    props.sideBar.ref.wordId === props.wordId &&
+    props.sideBar.ref.mergeSenseId === props.mergeSenseId &&
     !arraysEqual(
-      props.sideBar.senses.map((s) => s.id),
-      senseEntries.map((s) => s.id)
+      props.sideBar.senses.map((s) => s.guid),
+      senseEntries.map((s) => s.guid)
     )
   ) {
     updateSidebar();
@@ -90,19 +80,15 @@ export default function MergeStack(props: MergeStackProps) {
 
   let glosses: MergeGloss[] = [];
   for (const entry of senseEntries) {
-    for (const gloss of entry.data.glosses) {
-      glosses.push({
-        def: gloss.def,
-        language: gloss.language,
-        mergeSenseId: entry.id,
-      });
+    for (const gloss of entry.glosses) {
+      glosses.push({ ...gloss, senseGuid: entry.guid });
     }
   }
   glosses = glosses.filter(
     (v, i, a) => a.findIndex((o) => o.def === v.def) === i
   );
 
-  const senses = Object.values(props.senses).map((id) => hashedSenses[id]);
+  const senses = props.guids.map((g) => allSenses[g]);
   const semDoms = [
     ...new Set(
       senses.flatMap((sense) =>
@@ -111,7 +97,7 @@ export default function MergeStack(props: MergeStackProps) {
     ),
   ];
 
-  const showMoreButton = Object.keys(props.senses).length > 1;
+  const showMoreButton = props.guids.length > 1;
 
   return (
     <Draggable

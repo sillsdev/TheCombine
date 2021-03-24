@@ -8,7 +8,10 @@ import {
   orderDuplicate,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
-import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import {
+  MergeTreeRefWithGuid,
+  MergeTreeRefWithIndex,
+} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 
@@ -23,14 +26,17 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     advanceStep: () => {
       dispatch(asyncAdvanceStep());
     },
-    moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
+    moveSenses: (
+      src: MergeTreeRefWithGuid[],
+      dest: MergeTreeRefWithIndex[]
+    ) => {
       dispatch(moveSenses(src, dest));
     },
-    orderSense: (wordId: string, senseId: string, order: number) => {
-      dispatch(orderSense(wordId, senseId, order));
+    orderSense: (ref: MergeTreeRefWithIndex) => {
+      dispatch(orderSense(ref));
     },
-    orderDuplicate: (ref: MergeTreeReference, order: number) => {
-      dispatch(orderDuplicate(ref, order));
+    orderDuplicate: (ref: MergeTreeRefWithGuid, index: number) => {
+      dispatch(orderDuplicate(ref, index));
     },
     mergeAll: () => {
       return dispatch(mergeAll());

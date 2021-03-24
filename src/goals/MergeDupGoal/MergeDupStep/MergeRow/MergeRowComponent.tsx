@@ -6,7 +6,6 @@ import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import {
   Hash,
   MergeData,
-  MergeTreeReference,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeStack";
@@ -14,7 +13,6 @@ import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeRow/MergeStack";
 interface MergeRowProps {
   setVern: (wordId: string, vern: string) => void;
   wordId: string;
-  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   words: Hash<MergeTreeWord>;
   data: MergeData;
   portrait: boolean;
@@ -97,7 +95,7 @@ export default class MergeRow extends React.Component<MergeRowProps> {
                     index={index}
                     wordId={this.props.wordId}
                     mergeSenseId={id}
-                    senses={this.props.words[this.props.wordId].sensesGuids[id]}
+                    guids={this.props.words[this.props.wordId].sensesGuids[id]}
                   />
                 ))}
               {provided.placeholder}

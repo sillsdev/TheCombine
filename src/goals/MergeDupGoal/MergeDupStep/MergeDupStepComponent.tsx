@@ -22,29 +22,32 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import {
   Hash,
-  MergeTreeReference,
+  MergeTreeRef,
+  MergeTreeRefWithGuid,
+  MergeTreeRefWithIndex,
+  MergeTreeSense,
   MergeTreeWord,
-  TreeDataSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import MergeRow from "goals/MergeDupGoal/MergeDupStep/MergeRow";
 import theme from "types/theme";
 import { uuid } from "utilities";
 
-export interface MergeSense {
-  id: string;
-  data: TreeDataSense;
-}
 export interface SideBar {
-  senses: MergeSense[];
-  wordId: string;
-  mergeSenseId: string;
+  senses: MergeTreeSense[];
+  ref: MergeTreeRef;
+}
+function emptySideBar(): SideBar {
+  return { senses: [], ref: { wordId: "", mergeSenseId: "" } };
 }
 
 interface MergeDupStepProps {
   words: Hash<MergeTreeWord>;
-  moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
-  orderSense: (wordId: string, senseId: string, order: number) => void;
-  orderDuplicate: (ref: MergeTreeReference, order: number) => void;
+  moveSenses: (
+    src: MergeTreeRefWithGuid[],
+    dest: MergeTreeRefWithIndex[]
+  ) => void;
+  orderSense: (ref: MergeTreeRefWithIndex) => void;
+  orderDuplicate: (ref: MergeTreeRefWithGuid, index: number) => void;
   mergeAll?: () => Promise<void>;
   // Will advance to the next goal step and update the words content
   advanceStep?: () => void;
@@ -63,12 +66,12 @@ class MergeDupStep extends React.Component<
     super(props);
     this.state = {
       portrait: true,
-      sideBar: { senses: [], wordId: "", mergeSenseId: "" },
+      sideBar: emptySideBar(),
     };
   }
 
   clearSideBar() {
-    this.setState({ sideBar: { senses: [], wordId: "", mergeSenseId: "" } });
+    this.setState({ sideBar: emptySideBar() });
   }
   next() {
     this.clearSideBar();
@@ -86,69 +89,68 @@ class MergeDupStep extends React.Component<
   }
 
   handleDrop(res: DropResult) {
-    const srcRefs: MergeTreeReference[] = [];
+    const srcRefs: MergeTreeRefWithGuid[] = [];
 
-    const srcRef: MergeTreeReference = JSON.parse(res.draggableId);
-    if (!srcRef.duplicateId) {
+    const srcRef: MergeTreeRefWithGuid = JSON.parse(res.draggableId);
+    if (!srcRef.guid) {
       const wordId = srcRef.wordId;
       const mergeSenseId = srcRef.mergeSenseId;
-      for (const duplicateId in Object.keys(
-        this.props.words[wordId].sensesGuids[mergeSenseId]
-      )) {
-        srcRefs.push({ wordId, mergeSenseId, duplicateId });
-      }
+      this.props.words[wordId].sensesGuids[mergeSenseId].forEach((guid) =>
+        srcRefs.push({ wordId, mergeSenseId, guid })
+      );
     } else {
       srcRefs.push(srcRef);
     }
 
     if (res.combine) {
-      const combineRef: MergeTreeReference = JSON.parse(
+      const combineRef: MergeTreeRefWithGuid = JSON.parse(
         res.combine.draggableId
       );
-      const destRefs: MergeTreeReference[] = [];
+      const destRefs: MergeTreeRefWithIndex[] = [];
       srcRefs.forEach(() =>
         destRefs.push({
           wordId: combineRef.wordId,
           mergeSenseId: combineRef.mergeSenseId,
-          duplicateId: uuid(),
+          index: -1,
         })
       );
       this.props.moveSenses(srcRefs, destRefs);
     } else if (res.destination) {
       if (res.source.droppableId !== res.destination.droppableId) {
         // move to different word
-        const destRefs = [];
+        const destRefs: MergeTreeRefWithIndex[] = [];
         const mergeSenseId = uuid();
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (let _ in srcRefs) {
+        for (let _ of srcRefs) {
           destRefs.push({
             wordId: res.destination.droppableId,
             mergeSenseId,
-            duplicateId: uuid(),
+            index: -1,
           });
         }
         this.props.moveSenses(srcRefs, destRefs);
-        this.props.orderSense(
-          res.destination.droppableId,
+        const ref: MergeTreeRefWithIndex = {
+          wordId: res.destination.droppableId,
           mergeSenseId,
-          res.destination.index
-        );
+          index: res.destination.index,
+        };
+        this.props.orderSense(ref);
       } else {
         // set ordering
-        if (srcRef.duplicateId) {
+        if (srcRef.guid === undefined) {
           this.props.orderDuplicate(srcRef, res.destination.index);
         } else {
-          this.props.orderSense(
-            srcRef.wordId,
-            srcRef.mergeSenseId,
-            res.destination.index
-          );
+          const ref: MergeTreeRefWithIndex = {
+            ...srcRef,
+            index: res.destination.index,
+          };
+          this.props.orderSense(ref);
         }
       }
     }
   }
 
-  senseCardContent(sense: TreeDataSense) {
+  senseCardContent(sense: MergeTreeSense) {
     return (
       <CardContent>
         <Typography variant={"h5"}>
@@ -165,14 +167,17 @@ class MergeDupStep extends React.Component<
     );
   }
 
-  sideBarSenseDraggable(sense: MergeSense, index: number) {
-    const ref: MergeTreeReference = {
-      wordId: this.state.sideBar.wordId,
-      mergeSenseId: this.state.sideBar.mergeSenseId,
-      duplicateId: sense.id,
+  sideBarSenseDraggable(sense: MergeTreeSense, index: number) {
+    const ref: MergeTreeRefWithGuid = {
+      ...this.state.sideBar.ref,
+      guid: sense.guid,
     };
     return (
-      <Draggable key={sense.id} draggableId={JSON.stringify(ref)} index={index}>
+      <Draggable
+        key={sense.guid}
+        draggableId={JSON.stringify(ref)}
+        index={index}
+      >
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -190,7 +195,7 @@ class MergeDupStep extends React.Component<
                   : "lightgrey",
               }}
             >
-              {this.senseCardContent(sense.data)}
+              {this.senseCardContent(sense)}
             </Card>
           </div>
         )}
@@ -207,8 +212,8 @@ class MergeDupStep extends React.Component<
         open={this.state.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordId} ${this.state.sideBar.mergeSenseId}`}
-          key={this.state.sideBar.mergeSenseId}
+          droppableId={`${this.state.sideBar.ref.wordId} ${this.state.sideBar.ref.mergeSenseId}`}
+          key={this.state.sideBar.ref.mergeSenseId}
         >
           {(providedDroppable) => (
             <div
@@ -221,10 +226,10 @@ class MergeDupStep extends React.Component<
                 <ArrowForwardIos />
               </IconButton>
               <Typography variant="h5">
-                {this.props.words[this.state.sideBar.wordId].vern}
+                {this.props.words[this.state.sideBar.ref.wordId].vern}
               </Typography>
               {this.state.sideBar.senses.map(
-                (sense: MergeSense, index: number) =>
+                (sense: MergeTreeSense, index: number) =>
                   this.sideBarSenseDraggable(sense, index)
               )}
               {providedDroppable.placeholder}

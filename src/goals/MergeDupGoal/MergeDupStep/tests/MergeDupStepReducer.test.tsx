@@ -10,19 +10,16 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
   Hash,
-  MergeTreeReference,
+  MergeTreeRefWithGuid,
+  MergeTreeRefWithIndex,
+  MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreAction, StoreActions } from "rootActions";
 import { testWordList } from "types/word";
 import { randElement, uuid } from "utilities";
 
-// Actions to test
-//
-// SET_DATA
-// CLEAR_TREE
-
-describe("MergeDupStep reducer tests", () => {
+describe("MergeDupStepReducer", () => {
   // state with data
   const fullState = mergeDupStepReducer(undefined, setWordData(testWordList()));
 
@@ -30,25 +27,23 @@ describe("MergeDupStep reducer tests", () => {
   const getRefByGuid = (
     guid: string,
     words: Hash<MergeTreeWord>
-  ): MergeTreeReference | undefined => {
+  ): MergeTreeRefWithGuid | undefined => {
     for (const wordId of Object.keys(words)) {
       for (const mergeSenseId of Object.keys(words[wordId].sensesGuids)) {
-        const senseGuids = words[wordId].sensesGuids[mergeSenseId];
-        for (const duplicateId of Object.keys(senseGuids)) {
-          if (senseGuids[duplicateId] === guid) {
-            return { wordId, mergeSenseId, duplicateId };
-          }
+        const guids = words[wordId].sensesGuids[mergeSenseId];
+        if (guids.includes(guid)) {
+          return { wordId, mergeSenseId, guid };
         }
       }
     }
     return undefined;
   };
 
-  const getRandomRef = (words?: Hash<MergeTreeWord>): MergeTreeReference => {
-    if (!words || Object.keys(words).length === 0) {
-      return { wordId: uuid(), mergeSenseId: uuid(), duplicateId: uuid() };
-    }
+  function getRandomDestRef(): MergeTreeRefWithIndex {
+    return { wordId: uuid(), mergeSenseId: uuid(), index: -1 };
+  }
 
+  function getRandomSrcRef(words: Hash<MergeTreeWord>): MergeTreeRefWithGuid {
     let wordId = "";
     let mergeSenseId = "";
     while (
@@ -60,86 +55,74 @@ describe("MergeDupStep reducer tests", () => {
       wordId = randElement(Object.keys(words));
       mergeSenseId = randElement(Object.keys(words[wordId].sensesGuids));
     }
-    const duplicateId = randElement(
-      Object.keys(words[wordId].sensesGuids[mergeSenseId])
-    );
-    return { wordId, mergeSenseId, duplicateId };
-  };
+    const guid = randElement(words[wordId].sensesGuids[mergeSenseId]);
+    return { wordId, mergeSenseId, guid };
+  }
 
-  const getRef = (
-    ref: MergeTreeReference,
-    words: Hash<MergeTreeWord>
-  ): string | undefined => {
-    if (words[ref.wordId]) {
-      if (words[ref.wordId].sensesGuids[ref.mergeSenseId]) {
-        return words[ref.wordId].sensesGuids[ref.mergeSenseId][ref.duplicateId];
-      }
-    }
-    return undefined;
-  };
-
-  test("clear data", () => {
+  test("clearTree", () => {
     const newState = mergeDupStepReducer(fullState, clearTree());
     expect(JSON.stringify(newState)).toEqual(JSON.stringify(defaultState));
   });
 
-  test("set data", () => {
+  test("setWordData", () => {
     const wordList = testWordList();
-    const data = mergeDupStepReducer(undefined, setWordData(wordList));
+    const treeState = mergeDupStepReducer(undefined, setWordData(wordList));
     // check if data has all words present
     for (const word of wordList) {
-      expect(Object.keys(data.data.words)).toContain(word.id);
+      const srcWordId = word.id;
+      expect(Object.keys(treeState.data.words)).toContain(srcWordId);
       // check each sense of word
       for (const [index, sense] of word.senses.entries()) {
-        const treeSense = { ...sense, srcWordId: word.id, order: index };
-        const senses = data.data.senses;
+        const treeSense: MergeTreeSense = { ...sense, srcWordId, index };
+        const senses = treeState.data.senses;
         expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
           JSON.stringify(treeSense)
         );
-        const guids = Object.keys(senses);
-        const guid = guids.find(
-          (g) => JSON.stringify(senses[g]) === JSON.stringify(treeSense)
-        );
-        expect(guid).toBeTruthy();
         // check that this sense is somewhere in the tree
-        expect(getRefByGuid(guid ?? "", data.tree.words)).toBeTruthy();
+        expect(
+          getRefByGuid(treeSense.guid, treeState.tree.words)
+        ).toBeDefined();
       }
     }
   });
 
-  test("move sense", () => {
-    // move a random card to a new location and check that it is there
-    const words = fullState.tree.words;
-    const srcRef = getRandomRef(words);
-    const srcGuid =
-      words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId][srcRef.duplicateId];
-    const destRef = getRandomRef();
-    const newState = mergeDupStepReducer(fullState, moveSense(srcRef, destRef));
+  describe("moveSense", () => {
+    it("moves a random sense to a new location", () => {
+      const words = fullState.tree.words;
+      const srcRef = getRandomSrcRef(words);
+      const destRef = getRandomDestRef();
+      const newState = mergeDupStepReducer(
+        fullState,
+        moveSense(srcRef, destRef)
+      );
 
-    const finalRef = getRefByGuid(srcGuid, newState.tree.words);
-    if (finalRef) {
-      expect(finalRef.wordId).toEqual(destRef.wordId);
-      expect(finalRef.mergeSenseId).toEqual(destRef.mergeSenseId);
-      expect(finalRef.duplicateId).toEqual(destRef.duplicateId);
-    } else {
-      fail("destination should exist");
-    }
-  });
+      const finalRef = getRefByGuid(srcRef.guid, newState.tree.words);
+      expect(finalRef).toBeDefined();
+      if (finalRef) {
+        expect(finalRef.wordId).toEqual(destRef.wordId);
+        expect(finalRef.mergeSenseId).toEqual(destRef.mergeSenseId);
+      }
+    });
 
-  test("Move sense deletes src", () => {
-    let srcRef = getRandomRef(fullState.tree.words);
-    while (
-      Object.values(
-        fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
-      ).length !== 1
-    ) {
-      srcRef = getRandomRef(fullState.tree.words);
-    }
+    it("deletes src", () => {
+      let srcRef = getRandomSrcRef(fullState.tree.words);
+      while (
+        Object.values(
+          fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
+        ).length !== 1
+      ) {
+        srcRef = getRandomSrcRef(fullState.tree.words);
+      }
 
-    const destRef = getRandomRef();
-    let newState = mergeDupStepReducer(fullState, moveSense(srcRef, destRef));
-
-    expect(getRef(srcRef, newState.tree.words)).toBe(undefined);
+      const destRef = getRandomDestRef();
+      const newState = mergeDupStepReducer(
+        fullState,
+        moveSense(srcRef, destRef)
+      );
+      const srcGuids =
+        newState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId];
+      expect(srcGuids).not.toContainEqual(srcRef.guid);
+    });
   });
 
   test("Reset returns default state", () => {

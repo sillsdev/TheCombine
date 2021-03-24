@@ -21,6 +21,8 @@ import {
   Sense,
   Word,
 } from "types/word";
+import { GoalsState } from "types/goals";
+import { MergeTreeState } from "../MergeDupStepReducer";
 
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList: { [key in mockWordListIndex]: Word } = {
@@ -131,13 +133,17 @@ mockGoal.data = goalDataMock;
 mockGoal.steps = [{ words: [] }, { words: [] }];
 const createMockStore = configureMockStore([thunk]);
 
-const mockStoreState = {
+const mockStoreState: {
+  goalsState: GoalsState;
+  mergeDuplicateGoal: MergeTreeState;
+} = {
   goalsState: {
     allGoalTypes: [],
+    currentGoal: new MergeDups(),
     goalTypeSuggestions: [],
     history: [mockGoal],
   },
-  mergeDuplicateGoal: { data: {}, tree: {} },
+  mergeDuplicateGoal: { data: {} as MergeData, tree: {} as MergeTree },
 };
 
 const data: { data: MergeData } = {
@@ -147,10 +153,10 @@ const data: { data: MergeData } = {
       WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
     },
     senses: {
-      S1: { ...new Sense("Sense 1"), srcWordId: "WA", order: 0 },
-      S2: { ...new Sense("Sense 2"), srcWordId: "WA", order: 1 },
-      S3: { ...new Sense("Sense 3"), srcWordId: "WB", order: 0 },
-      S4: { ...new Sense("Sense 4"), srcWordId: "WB", order: 1 },
+      S1: { ...new Sense("Sense 1"), srcWordId: "WA", index: 0 },
+      S2: { ...new Sense("Sense 2"), srcWordId: "WA", index: 1 },
+      S3: { ...new Sense("Sense 3"), srcWordId: "WB", index: 0 },
+      S4: { ...new Sense("Sense 4"), srcWordId: "WB", index: 1 },
     },
   },
 };
@@ -165,12 +171,12 @@ const tree1: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        sensesGuids: { ID1: { ID1: "S1" }, ID2: { ID1: "S2" } },
+        sensesGuids: { ID1: ["S1"], ID2: ["S2"] },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        sensesGuids: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
+        sensesGuids: { ID1: ["S3"], ID2: ["S4"] },
         vern: "BBB",
         plural: "BBBS",
       },
@@ -192,11 +198,11 @@ const tree2: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        sensesGuids: { ID1: { ID1: "S1", ID2: "S3" }, ID2: { ID1: "S2" } },
+        sensesGuids: { ID1: ["S1", "S3"], ID2: ["S2"] },
         vern: "AAA",
         plural: "AAAS",
       },
-      WB: { sensesGuids: { ID1: { ID1: "S4" } }, vern: "BBB", plural: "BBBS" },
+      WB: { sensesGuids: { ID1: ["S4"] }, vern: "BBB", plural: "BBBS" },
     },
   },
 };
@@ -218,16 +224,12 @@ const tree3: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        sensesGuids: {
-          ID1: { ID1: "S1" },
-          ID2: { ID1: "S2" },
-          ID3: { ID1: "S3" },
-        },
+        sensesGuids: { ID1: ["S1"], ID2: ["S2"], ID3: ["S3"] },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        sensesGuids: { ID1: { ID1: "S4" } },
+        sensesGuids: { ID1: ["S4"] },
         vern: "BBB",
         plural: "BBBS",
       },
@@ -252,12 +254,12 @@ const tree4: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        sensesGuids: { ID1: { ID1: "S1", ID2: "S2" } },
+        sensesGuids: { ID1: ["S1", "S2"] },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        sensesGuids: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
+        sensesGuids: { ID1: ["S3"], ID2: ["S4"] },
         vern: "BBB",
         plural: "BBBS",
       },
