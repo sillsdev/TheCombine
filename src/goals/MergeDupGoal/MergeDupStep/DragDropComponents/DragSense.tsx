@@ -53,7 +53,7 @@ export default function DragSense(props: DragSenseProps) {
         mergeSenseId: props.mergeSenseId,
       })
     );
-  }, [props]);
+  }, [dispatch, props]);
 
   useEffect(() => {
     if (props.senses.length !== duplicateCount) {

@@ -14,7 +14,6 @@ import {
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
