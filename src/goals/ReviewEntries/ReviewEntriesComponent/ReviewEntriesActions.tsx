@@ -58,7 +58,7 @@ export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
 }
 
 // Return the translation code for our error, or undefined if there is no error
-function getError(
+export function getSenseError(
   sense: ReviewEntriesSense,
   checkGlosses = true,
   checkDomains = false
@@ -100,7 +100,7 @@ function cleanSenses(
       continue;
     }
 
-    error = getError(newSense);
+    error = getSenseError(newSense);
     if (error) {
       return error;
     }
