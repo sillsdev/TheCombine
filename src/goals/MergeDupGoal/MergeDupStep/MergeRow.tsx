@@ -1,0 +1,106 @@
+import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Droppable } from "react-beautiful-dnd";
+import { useDispatch, useSelector } from "react-redux";
+
+import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { SideBar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import MergeStack from "goals/MergeDupGoal/MergeDupStep/MergeStack";
+import { StoreState } from "types";
+
+interface MergeRowProps {
+  wordId: string;
+  portrait: boolean;
+  setSidebar: (el: SideBar) => void;
+  sideBar: SideBar;
+}
+
+export default function MergeRow(props: MergeRowProps) {
+  const dispatch = useDispatch();
+  const treeWords = useSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.words
+  );
+  const data = useSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.data
+  );
+  const filled = !!treeWords[props.wordId];
+  let verns: string[] = [];
+  if (filled) {
+    verns.push(
+      ...new Set(
+        Object.values(
+          treeWords[props.wordId].sensesGuids
+        ).flatMap((senseGuids) =>
+          Object.values(senseGuids).map(
+            (g) => data.words[data.senses[g].srcWordId].vernacular
+          )
+        )
+      )
+    );
+  }
+
+  // reset vern if not in vern list
+  if (
+    treeWords[props.wordId] &&
+    !verns.includes(treeWords[props.wordId].vern)
+  ) {
+    dispatch(setVern(props.wordId, verns[0] || ""));
+  }
+
+  return (
+    <Droppable
+      key={props.wordId}
+      droppableId={props.wordId}
+      isCombineEnabled={true}
+    >
+      {(provided) => (
+        <Paper
+          ref={provided.innerRef}
+          style={{
+            backgroundColor: "lightgrey",
+            paddingBottom: 8,
+          }}
+          {...provided.droppableProps}
+        >
+          <Paper square style={{ padding: 8, height: 44, minWidth: 150 }}>
+            {filled && (
+              <Select
+                value={treeWords[props.wordId].vern}
+                onChange={(e) =>
+                  dispatch(setVern(props.wordId, e.target.value as string))
+                }
+              >
+                {verns.map((vern) => (
+                  <MenuItem value={vern} key={props.wordId + vern}>
+                    <Typography variant="h5">{vern}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </Paper>
+          <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+            {filled &&
+              Object.keys(
+                treeWords[props.wordId].sensesGuids
+              ).map((id, index) => (
+                <MergeStack
+                  sideBar={props.sideBar}
+                  setSidebar={props.setSidebar}
+                  key={id}
+                  index={index}
+                  wordId={props.wordId}
+                  mergeSenseId={id}
+                  guids={treeWords[props.wordId].sensesGuids[id]}
+                />
+              ))}
+            {provided.placeholder}
+          </div>
+          <div style={{ padding: 16, textAlign: "center" }}>
+            <Typography variant="subtitle1">
+              Drag a card here to merge
+            </Typography>
+          </div>
+        </Paper>
+      )}
+    </Droppable>
+  );
+}
