@@ -1,4 +1,7 @@
 {
+{% if combine_use_syslog is defined and combine_use_syslog %}
+  "log-driver": "syslog"
+{% else %}
   "log-driver": "json-file",
   "log-opts": {
     "max-size": "10m",
@@ -6,4 +9,5 @@
     "labels": "production_status",
     "env": "os,customer"
   }
+{% endif %}
 }
