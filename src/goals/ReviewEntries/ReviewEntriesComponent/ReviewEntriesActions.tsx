@@ -58,10 +58,15 @@ export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
 }
 
 // Return the translation code for our error, or undefined if there is no error
-function getError(sense: ReviewEntriesSense): string | undefined {
-  if (sense.glosses.length === 0) {
+export function getSenseError(
+  sense: ReviewEntriesSense,
+  checkGlosses = true,
+  checkDomains = false
+): string | undefined {
+  if (checkGlosses && sense.glosses.length === 0) {
     return "reviewEntries.error.gloss";
-  } else if (sense.domains.length === 0) {
+  }
+  if (checkDomains && sense.domains.length === 0) {
     return "reviewEntries.error.domain";
   }
   return undefined;
@@ -69,7 +74,7 @@ function getError(sense: ReviewEntriesSense): string | undefined {
 
 // Returns a cleaned array of senses ready to be saved (none with .deleted=true):
 // * If a sense is marked as deleted or is utterly blank, it is removed
-// * If a new sense lacks either gloss or domain, return error
+// * If a sense lacks gloss, return error
 // * If the user attempts to delete all senses, return old senses with deleted senses removed
 function cleanSenses(
   senses: ReviewEntriesSense[],
@@ -87,7 +92,7 @@ function cleanSenses(
       (id) => newSense.domains.find((dom) => dom.id === id)!
     );
 
-    // Skip new senses which are deleted or empty.
+    // Skip senses which are deleted or empty.
     if (
       newSense.deleted ||
       (newSense.glosses.length === 0 && newSense.domains.length === 0)
@@ -95,7 +100,7 @@ function cleanSenses(
       continue;
     }
 
-    error = getError(newSense);
+    error = getSenseError(newSense);
     if (error) {
       return error;
     }
