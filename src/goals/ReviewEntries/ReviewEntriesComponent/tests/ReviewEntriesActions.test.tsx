@@ -2,6 +2,7 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import {
+  getSenseError,
   getSenseFromEditSense,
   updateFrontierWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
@@ -253,20 +254,6 @@ describe("ReviewEntriesActions", () => {
             .catch(() => true)
         ).toBeTruthy();
       });
-
-      it("Rejects new sense with no domains.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses.push({
-          ...sense1_local(),
-          domains: [],
-        });
-
-        expect(
-          await makeDispatch(newWord, mockReviewEntriesWord())
-            .then(() => false)
-            .catch(() => true)
-        ).toBeTruthy();
-      });
     });
   });
 
@@ -296,6 +283,33 @@ describe("ReviewEntriesActions", () => {
       const editSense = new ReviewEntriesSense(expectedSense);
       const resultSense = getSenseFromEditSense(editSense, oldSenses);
       expect(resultSense).toEqual(expectedSense);
+    });
+  });
+
+  describe("getSenseError", () => {
+    it("By default, no-gloss triggers error.", () => {
+      const newSense = new ReviewEntriesSense(sense0());
+      expect(getSenseError(newSense)).toBeUndefined();
+      newSense.glosses = [];
+      expect(getSenseError(newSense)).toEqual("reviewEntries.error.gloss");
+    });
+
+    it("By default, no-domain does not trigger error.", () => {
+      const newSense = new ReviewEntriesSense(sense0());
+      expect(getSenseError(newSense)).toBeUndefined();
+      newSense.domains = [];
+      expect(getSenseError(newSense)).toBeUndefined();
+    });
+
+    it("Can allow no-gloss and error for no-domain.", () => {
+      const newSense = new ReviewEntriesSense(sense0());
+      expect(getSenseError(newSense, false, true)).toBeUndefined();
+      newSense.glosses = [];
+      expect(getSenseError(newSense, false, true)).toBeUndefined();
+      newSense.domains = [];
+      expect(getSenseError(newSense, false, true)).toEqual(
+        "reviewEntries.error.domain"
+      );
     });
   });
 });
