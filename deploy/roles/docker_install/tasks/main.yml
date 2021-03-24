@@ -70,8 +70,8 @@
   notify: restart rsyslog
 
 - name: Configure Default Docker Logging
-  copy:
-    src: daemon.json
+  template:
+    src: daemon.json.j2
     dest: /etc/docker/daemon.json
     owner: root
     group: root
