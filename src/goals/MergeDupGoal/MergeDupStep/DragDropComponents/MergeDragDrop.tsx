@@ -6,86 +6,55 @@ import { v4 } from "uuid";
 import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
 import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
 import {
-  moveSenses,
-  orderDuplicate,
+  combineSense,
+  moveSense,
   orderSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import {
-  Hash,
-  MergeTreeReference,
-  MergeTreeWord,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 
 interface MergeDragDropProps {
   portrait: boolean;
-  words: Hash<MergeTreeWord>;
 }
 
 export default function MergeDragDrop(props: MergeDragDropProps) {
   const dispatch = useDispatch();
-  const sidebar = useSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
+  const mergeState = useSelector(
+    (state: StoreState) => state.mergeDuplicateGoal
   );
+  const sidebar = mergeState.tree.sidebar;
+  const words = mergeState.tree.words;
 
   function handleDrop(res: DropResult) {
-    const srcRefs: MergeTreeReference[] = [];
-
-    const srcRef: MergeTreeReference = JSON.parse(res.draggableId);
-    if (srcRef.order === undefined) {
-      const wordId = srcRef.wordId;
-      const mergeSenseId = srcRef.mergeSenseId;
-      props.words[wordId].sensesGuids[mergeSenseId].forEach((_guid, order) =>
-        srcRefs.push({ wordId, mergeSenseId, order })
-      );
-    } else {
-      srcRefs.push(srcRef);
-    }
-
+    const senseRef: MergeTreeReference = JSON.parse(res.draggableId);
     if (res.combine) {
+      // Case 1: the sense was dropped on another sense.
       const combineRef: MergeTreeReference = JSON.parse(
         res.combine.draggableId
       );
-      const destRefs: MergeTreeReference[] = [];
-      srcRefs.forEach(() =>
-        destRefs.push({
-          wordId: combineRef.wordId,
-          mergeSenseId: combineRef.mergeSenseId,
-          order: -1,
-        })
-      );
-      dispatch(moveSenses(srcRefs, destRefs));
+      if (combineRef.order !== undefined) {
+        // If the target is a sidebar sub-sense, it cannot receive a combine.
+        return;
+      }
+      dispatch(combineSense(senseRef, combineRef));
     } else if (res.destination) {
+      // Case 2: The sense was dropped in a droppable.
       if (res.source.droppableId !== res.destination.droppableId) {
-        // move to different word
-        const destRefs: MergeTreeReference[] = [];
-        const mergeSenseId = v4();
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (let _ in srcRefs) {
-          destRefs.push({
-            wordId: res.destination.droppableId,
-            mergeSenseId,
-            order: -1,
-          });
+        // Case 2a: The source, dest droppables are different.
+        const wordId = res.destination.droppableId;
+        if (wordId.split(" ").length > 1) {
+          // If the destination is SidebarDrop, it cannot receive drags from elsewhere.
+          return;
         }
-        dispatch(moveSenses(srcRefs, destRefs));
-        const ref: MergeTreeReference = {
-          wordId: res.destination.droppableId,
-          mergeSenseId,
-          order: res.destination.index,
-        };
-        dispatch(orderSense(ref));
+        // Move the sense to the dest MergeWord.
+        dispatch(moveSense(senseRef, wordId));
       } else {
-        // set ordering
-        if (srcRef.order !== undefined) {
-          dispatch(orderDuplicate(srcRef, res.destination.index));
-        } else {
-          const ref: MergeTreeReference = {
-            ...srcRef,
-            order: res.destination.index,
-          };
-          dispatch(orderSense(ref));
+        // Case 2b: The source, dest droppables are the same, so we reorder, not move.
+        const order = res.destination.index;
+        if (senseRef.order === order) {
+          return;
         }
+        dispatch(orderSense(senseRef, order));
       }
     }
   }
@@ -100,7 +69,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
       >
         <SidebarDrop
           sidebar={sidebar}
-          vernacular={props.words[sidebar.wordId].vern}
+          vernacular={words[sidebar.wordId].vern}
         />
       </Drawer>
     );
@@ -110,13 +79,21 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      {Object.keys(props.words).map((key) => (
+      {Object.keys(words).map((key) => (
         <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
-          <DropWord portrait={props.portrait} wordId={key} />
+          <DropWord
+            mergeState={mergeState}
+            portrait={props.portrait}
+            wordId={key}
+          />
         </GridListTile>
       ))}
       <GridListTile key={newId} style={{ margin: 8 }}>
-        <DropWord portrait={props.portrait} wordId={newId} />
+        <DropWord
+          mergeState={mergeState}
+          portrait={props.portrait}
+          wordId={newId}
+        />
       </GridListTile>
       {renderSidebar()}
     </DragDropContext>

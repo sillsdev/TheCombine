@@ -24,11 +24,12 @@ import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
-  MOVE_SENSE = "MOVE_SENSE",
+  COMBINE_SENSE = "COMBINE_SENSE",
+  MOVE_SENSE = "MOVE_TREE_SENSE",
   ORDER_DUPLICATE = "ORDER_DUPLICATE",
   ORDER_SENSE = "ORDER_SENSE",
+  RESTORE_SENSE = "RESTORE_TREE_SENSE",
   SET_DATA = "SET_DATA",
-  SET_PLURAL = "SET_PLURAL",
   SET_SIDEBAR = "SET_SIDEBAR",
   SET_VERNACULAR = "SET_VERNACULAR",
 }
@@ -37,9 +38,19 @@ interface ClearTreeMergeAction {
   type: MergeTreeActions.CLEAR_TREE;
 }
 
-interface MoveSenseMergeAction {
+interface CombineSenseMergeAction {
+  type: MergeTreeActions.COMBINE_SENSE;
+  payload: { src: MergeTreeReference; dest: MergeTreeReference };
+}
+
+interface MoveTreeSenseMergeAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
+  payload: {
+    wordId: string;
+    mergeSenseId: string;
+    destWordId: string;
+    destOrder?: number;
+  };
 }
 
 interface OrderDuplicateMergeAction {
@@ -52,6 +63,11 @@ interface OrderSenseMergeAction {
   payload: MergeTreeReference;
 }
 
+interface RestoreTreeSenseMergeAction {
+  type: MergeTreeActions.RESTORE_SENSE;
+  payload: { ref: MergeTreeReference; destWordId: string; destOrder?: number };
+}
+
 interface SetDataMergeAction {
   type: MergeTreeActions.SET_DATA;
   payload: Word[];
@@ -62,29 +78,31 @@ interface SetSidebarMergeAction {
   payload: Sidebar;
 }
 
-interface SetWordStringMergeAction {
-  type: MergeTreeActions.SET_PLURAL | MergeTreeActions.SET_VERNACULAR;
-  payload: { wordId: string; data: string };
+interface SetVernacularMergeAction {
+  type: MergeTreeActions.SET_VERNACULAR;
+  payload: { wordId: string; vern: string };
 }
 
 export type MergeTreeAction =
   | ClearTreeMergeAction
-  | MoveSenseMergeAction
+  | CombineSenseMergeAction
+  | MoveTreeSenseMergeAction
   | OrderDuplicateMergeAction
   | OrderSenseMergeAction
+  | RestoreTreeSenseMergeAction
   | SetDataMergeAction
   | SetSidebarMergeAction
-  | SetWordStringMergeAction;
+  | SetVernacularMergeAction;
 
 // Action Creators
 
 export function setVern(
   wordId: string,
   vern: string
-): SetWordStringMergeAction {
+): SetVernacularMergeAction {
   return {
     type: MergeTreeActions.SET_VERNACULAR,
-    payload: { wordId, data: vern },
+    payload: { wordId, vern },
   };
 }
 
@@ -92,34 +110,45 @@ export function clearTree(): ClearTreeMergeAction {
   return { type: MergeTreeActions.CLEAR_TREE };
 }
 
-export function moveSenses(
-  src: MergeTreeReference[],
-  dest: MergeTreeReference[]
-): MoveSenseMergeAction {
+export function combineSense(
+  src: MergeTreeReference,
+  dest: MergeTreeReference
+): CombineSenseMergeAction {
   return {
-    type: MergeTreeActions.MOVE_SENSE,
+    type: MergeTreeActions.COMBINE_SENSE,
     payload: { src, dest },
   };
 }
 
 export function moveSense(
-  src: MergeTreeReference,
-  dest: MergeTreeReference
-): MoveSenseMergeAction {
-  return moveSenses([src], [dest]);
-}
-
-export function orderSense(ref: MergeTreeReference): OrderSenseMergeAction {
+  ref: MergeTreeReference,
+  destWordId: string,
+  destOrder?: number
+): MoveTreeSenseMergeAction | RestoreTreeSenseMergeAction {
+  if (ref.order === undefined) {
+    return {
+      type: MergeTreeActions.MOVE_SENSE,
+      payload: { ...ref, destWordId, destOrder },
+    };
+  }
+  // If ref.order is defined, the sense is being moved out of the sidebar.
   return {
-    type: MergeTreeActions.ORDER_SENSE,
-    payload: ref,
+    type: MergeTreeActions.RESTORE_SENSE,
+    payload: { ref, destWordId, destOrder },
   };
 }
 
-export function orderDuplicate(
+export function orderSense(
   ref: MergeTreeReference,
   order: number
-): OrderDuplicateMergeAction {
+): OrderDuplicateMergeAction | OrderSenseMergeAction {
+  if (ref.order === undefined) {
+    return {
+      type: MergeTreeActions.ORDER_SENSE,
+      payload: { ...ref, order },
+    };
+  }
+  // If ref.order is defined, the sense is being ordered within the sidebar.
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
     payload: { ref, order },

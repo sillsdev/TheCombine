@@ -3,14 +3,10 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
-import {
-  Hash,
-  MergeTreeWord,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import theme from "types/theme";
 
 interface MergeDupStepProps {
-  words: Hash<MergeTreeWord>;
+  wordCount: number;
   advanceStep: () => void;
   clearSidebar: () => void;
   mergeAll: () => Promise<void>;
@@ -45,7 +41,7 @@ class MergeDupStep extends React.Component<
 
   render() {
     //visual definition
-    return Object.keys(this.props.words).length ? (
+    return this.props.wordCount ? (
       <React.Fragment>
         {/* Merging pane */}
         <div
@@ -61,10 +57,7 @@ class MergeDupStep extends React.Component<
               overflow: "auto",
             }}
           >
-            <MergeDragDrop
-              words={this.props.words}
-              portrait={this.state.portrait}
-            />
+            <MergeDragDrop portrait={this.state.portrait} />
           </GridList>
         </div>
         {/* Merge button */}

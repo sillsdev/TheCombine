@@ -1,16 +1,11 @@
-import { v4 } from "uuid";
-
-import {
-  clearTree,
-  moveSense,
-  setWordData,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import * as Actions from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
   defaultState,
   mergeDupStepReducer,
   MergeTreeState,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
+  defaultSidebar,
   Hash,
   MergeTreeReference,
   MergeTreeSense,
@@ -18,11 +13,33 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreAction, StoreActions } from "rootActions";
 import { testWordList } from "types/word";
-import { randElement } from "utilities";
+
+var uuidIndex = 0;
+// getMockUuid(false) gives the next uuid to be assined by our mocked v4.
+function getMockUuid(increment = true): string {
+  const uuid = `mockUuid${uuidIndex}`;
+  if (increment) {
+    uuidIndex++;
+  }
+  return uuid;
+}
+const mockV4 = jest.fn();
+jest.mock("uuid", () => {
+  return {
+    v4: () => mockV4(),
+  };
+});
+
+beforeEach(() => {
+  mockV4.mockImplementation(getMockUuid);
+});
 
 describe("MergeDupStepReducer", () => {
-  // state with data
-  const fullState = mergeDupStepReducer(undefined, setWordData(testWordList()));
+  // a state with no duplicate senses
+  const initState = mergeDupStepReducer(
+    undefined,
+    Actions.setWordData(testWordList())
+  );
 
   // helper functions for working with a tree
   const getRefByGuid = (
@@ -41,44 +58,368 @@ describe("MergeDupStepReducer", () => {
     return undefined;
   };
 
-  // helper functions for working with a tree
-  const getGuidByRef = (
-    ref: MergeTreeReference,
-    words: Hash<MergeTreeWord>
-  ): string => {
-    return words[ref.wordId].sensesGuids[ref.mergeSenseId][ref.order];
+  test("clearTree", () => {
+    const newState = mergeDupStepReducer(initState, Actions.clearTree());
+    expect(JSON.stringify(newState)).toEqual(JSON.stringify(defaultState));
+  });
+
+  function testTreeWords(): Hash<MergeTreeWord> {
+    return {
+      word1: {
+        sensesGuids: { word1_senseA: ["word1_senseA_0"] },
+        vern: "senses:A0",
+      },
+      word2: {
+        sensesGuids: { word2_senseA: ["word2_senseA_0", "word2_senseA_1"] },
+        vern: "senses:A01",
+      },
+      word3: {
+        sensesGuids: {
+          word3_senseA: ["word3_senseA_0"],
+          word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+        },
+        vern: "senses:A0B01",
+      },
+    };
+  }
+  const mockState: MergeTreeState = {
+    data: {
+      words: {},
+      senses: {},
+    },
+    tree: {
+      sidebar: defaultSidebar,
+      words: testTreeWords(),
+    },
   };
 
-  function getRandomRef(words?: Hash<MergeTreeWord>): MergeTreeReference {
-    if (!words) {
-      return { wordId: v4(), mergeSenseId: v4(), order: -1 };
-    }
+  describe("combineSense", () => {
+    it("combine sense from sidebar into other sense", () => {
+      const srcWordId = "word2";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 0,
+      };
 
-    let wordId = "";
-    let mergeSenseId = "";
-    while (
-      !wordId ||
-      !mergeSenseId ||
-      !words[wordId].sensesGuids[mergeSenseId].length
-    ) {
-      // This while loops make sure words with no senses aren't selected.
-      wordId = randElement(Object.keys(words));
-      mergeSenseId = randElement(Object.keys(words[wordId].sensesGuids));
-    }
-    const order = randElement(
-      words[wordId].sensesGuids[mergeSenseId].map((_guid, index) => index)
+      const destWordId = "word1";
+      const destRef: MergeTreeReference = {
+        wordId: destWordId,
+        mergeSenseId: `${destWordId}_senseA`,
+      };
+
+      const testAction = Actions.combineSense(srcRef, destRef);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[srcWordId].sensesGuids = {
+        word2_senseA: ["word2_senseA_1"],
+      };
+      expectedWords[destWordId].sensesGuids = {
+        word1_senseA: ["word1_senseA_0", "word2_senseA_0"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("combine last sense from sidebar into other sense", () => {
+      const srcWordId = "word3";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 0,
+      };
+
+      const destWordId = "word1";
+      const destRef: MergeTreeReference = {
+        wordId: destWordId,
+        mergeSenseId: `${destWordId}_senseA`,
+      };
+
+      const testAction = Actions.combineSense(srcRef, destRef);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[destWordId].sensesGuids = {
+        word1_senseA: ["word1_senseA_0", "word3_senseA_0"],
+      };
+      expectedWords[srcWordId].sensesGuids = {
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("combine last sidebar sense from a word's last sense into other word's sense", () => {
+      const srcWordId = "word1";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 0,
+      };
+
+      const destWordId = "word3";
+      const destRef: MergeTreeReference = {
+        wordId: destWordId,
+        mergeSenseId: `${destWordId}_senseA`,
+      };
+
+      const testAction = Actions.combineSense(srcRef, destRef);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[srcWordId];
+      expectedWords[destWordId].sensesGuids = {
+        word3_senseA: ["word3_senseA_0", "word1_senseA_0"],
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("combine sense into other sense in same word", () => {
+      const wordId = "word3";
+      const srcRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseB`,
+      };
+      const destRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+      };
+
+      const testAction = Actions.combineSense(srcRef, destRef);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].sensesGuids = {
+        word3_senseA: ["word3_senseA_0", "word3_senseB_0", "word3_senseB_1"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("combine sense into other sense in different word", () => {
+      const srcWordId = "word3";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+      };
+
+      const destWordId = "word1";
+      const destRef: MergeTreeReference = {
+        wordId: destWordId,
+        mergeSenseId: `${destWordId}_senseA`,
+      };
+
+      const testAction = Actions.combineSense(srcRef, destRef);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[srcWordId].sensesGuids = {
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      };
+      expectedWords[destWordId].sensesGuids = {
+        word1_senseA: ["word1_senseA_0", "word3_senseA_0"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("combine last sense into other sense in different word", () => {
+      const srcWordId = "word1";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+      };
+
+      const destWordId = "word3";
+      const destRef: MergeTreeReference = {
+        wordId: destWordId,
+        mergeSenseId: `${destWordId}_senseA`,
+      };
+
+      const testAction = Actions.combineSense(srcRef, destRef);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[srcWordId];
+      expectedWords[destWordId].sensesGuids = {
+        word3_senseA: ["word3_senseA_0", "word1_senseA_0"],
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+  });
+
+  describe("moveSense", () => {
+    it("moves a sense out from sidebar to same word", () => {
+      const wordId = "word2";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+        order: 0,
+      };
+      const srcGuid = `${testRef.mergeSenseId}_${testRef.order}`;
+
+      // Intercept the uuid that will be assigned.
+      const nextGuid = getMockUuid(false);
+      const testAction = Actions.moveSense(testRef, wordId);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.RESTORE_SENSE);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].sensesGuids = { word2_senseA: ["word2_senseA_1"] };
+      expectedWords[wordId].sensesGuids[nextGuid] = [srcGuid];
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("moves a sense out from sidebar to different word", () => {
+      const srcWordId = "word2";
+      const testRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 1,
+      };
+      const srcGuid = `${testRef.mergeSenseId}_${testRef.order}`;
+
+      const destWordId = "word3";
+
+      // Intercept the uuid that will be assigned.
+      const nextGuid = getMockUuid(false);
+      const testAction = Actions.moveSense(testRef, destWordId);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.RESTORE_SENSE);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[srcWordId].sensesGuids = {
+        word2_senseA: ["word2_senseA_0"],
+      };
+      expectedWords[destWordId].sensesGuids[nextGuid] = [srcGuid];
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("moves last sense out from sidebar to different word", () => {
+      const srcWordId = "word3";
+      const testRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 0,
+      };
+
+      const destWordId = "word1";
+
+      const testAction = Actions.moveSense(testRef, destWordId);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.RESTORE_SENSE);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[srcWordId].sensesGuids = {
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      };
+      expectedWords[destWordId].sensesGuids = {
+        word1_senseA: ["word1_senseA_0"],
+        word3_senseA: ["word3_senseA_0"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("moves a sense to a different word", () => {
+      const srcWordId = "word3";
+      const testRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseB`,
+      };
+
+      const destWordId = "word1";
+
+      const testAction = Actions.moveSense(testRef, destWordId);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.MOVE_SENSE);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[srcWordId].sensesGuids = {
+        word3_senseA: ["word3_senseA_0"],
+      };
+      expectedWords[destWordId].sensesGuids = {
+        word1_senseA: ["word1_senseA_0"],
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("moves last sense to a different word", () => {
+      const srcWordId = "word1";
+      const testRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+      };
+
+      const destWordId = "word2";
+
+      const testAction = Actions.moveSense(testRef, destWordId);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.MOVE_SENSE);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[srcWordId];
+      expectedWords[destWordId].sensesGuids = {
+        word2_senseA: ["word2_senseA_0", "word2_senseA_1"],
+        word1_senseA: ["word1_senseA_0"],
+      };
+      expect(resultWords).toEqual(expectedWords);
+    });
+  });
+
+  describe("orderSense", () => {
+    it("order sidebar sense", () => {
+      const wordId = "word2";
+      const mergeSenseId = `${wordId}_senseA`;
+      const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
+
+      const testAction = Actions.orderSense(testRef, 1);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].sensesGuids[mergeSenseId] = [
+        "word2_senseA_1",
+        "word2_senseA_0",
+      ];
+      expect(resultWords).toEqual(expectedWords);
+    });
+
+    it("order word sense", () => {
+      const wordId = "word3";
+      const mergeSenseId = `${wordId}_senseA`;
+      const testRef: MergeTreeReference = { wordId, mergeSenseId };
+
+      const testAction = Actions.orderSense(testRef, 1);
+      const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].sensesGuids = {
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+        word3_senseA: ["word3_senseA_0"],
+      };
+      // We have to stringify for this test,
+      // because the order of the .sensesGuids matters.
+      expect(JSON.stringify(resultWords)).toEqual(
+        JSON.stringify(expectedWords)
+      );
+    });
+  });
+
+  test("Reset returns default state", () => {
+    const action: StoreAction = {
+      type: StoreActions.RESET,
+    };
+
+    expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
+      defaultState
     );
-    return { wordId, mergeSenseId, order };
-  }
-
-  test("clearTree", () => {
-    const newState = mergeDupStepReducer(fullState, clearTree());
-    expect(JSON.stringify(newState)).toEqual(JSON.stringify(defaultState));
   });
 
   test("setWordData", () => {
     const wordList = testWordList();
-    const treeState = mergeDupStepReducer(undefined, setWordData(wordList));
+    const treeState = mergeDupStepReducer(
+      undefined,
+      Actions.setWordData(wordList)
+    );
     // check if data has all words present
     for (const word of wordList) {
       const srcWordId = word.id;
@@ -96,56 +437,5 @@ describe("MergeDupStepReducer", () => {
         ).toBeDefined();
       }
     }
-  });
-
-  describe("moveSense", () => {
-    it("moves a random sense to a new location", () => {
-      const words = fullState.tree.words;
-      const srcRef = getRandomRef(words);
-      const guid = getGuidByRef(srcRef, words);
-      const destRef = getRandomRef();
-      const newState = mergeDupStepReducer(
-        fullState,
-        moveSense(srcRef, destRef)
-      );
-
-      const finalRef = getRefByGuid(guid, newState.tree.words);
-      expect(finalRef).toBeDefined();
-      if (finalRef) {
-        expect(finalRef.wordId).toEqual(destRef.wordId);
-        expect(finalRef.mergeSenseId).toEqual(destRef.mergeSenseId);
-      }
-    });
-
-    it("deletes in src", () => {
-      const words = fullState.tree.words;
-      let srcRef = getRandomRef(words);
-      while (
-        fullState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId]
-          .length !== 1
-      ) {
-        srcRef = getRandomRef(words);
-      }
-      const guid = getGuidByRef(srcRef, words);
-
-      const destRef = getRandomRef();
-      const newState = mergeDupStepReducer(
-        fullState,
-        moveSense(srcRef, destRef)
-      );
-      const srcGuids =
-        newState.tree.words[srcRef.wordId].sensesGuids[srcRef.mergeSenseId];
-      expect(srcGuids).not.toContainEqual(guid);
-    });
-  });
-
-  test("Reset returns default state", () => {
-    const action: StoreAction = {
-      type: StoreActions.RESET,
-    };
-
-    expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
-      defaultState
-    );
   });
 });

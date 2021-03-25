@@ -10,7 +10,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 
 function mapStateToProps(state: StoreState) {
-  return { words: state.mergeDuplicateGoal.tree.words };
+  return { wordCount: Object.keys(state.mergeDuplicateGoal.tree.words).length };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

@@ -15,13 +15,12 @@ export interface MergeData {
 export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
-  order: number;
+  order?: number;
 }
 
 export interface MergeTreeWord {
   sensesGuids: Hash<string[]>;
   vern: string;
-  plural: string;
 }
 
 export interface Sidebar {

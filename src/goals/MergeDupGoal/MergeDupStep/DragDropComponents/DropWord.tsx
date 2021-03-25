@@ -1,27 +1,25 @@
 import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { Droppable } from "react-beautiful-dnd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
 import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { StoreState } from "types";
+import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 
 interface DropWordProps {
+  mergeState: MergeTreeState;
   wordId: string;
   portrait: boolean;
 }
 
 export default function DropWord(props: DropWordProps) {
   const dispatch = useDispatch();
-  const treeWords = useSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.tree.words
-  );
-  const data = useSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.data
-  );
+  const treeWords = props.mergeState.tree.words;
+  const data = props.mergeState.data;
   const filled = !!treeWords[props.wordId];
   let verns: string[] = [];
   if (filled) {
+    console.info(treeWords[props.wordId]);
     verns.push(
       ...new Set(
         Object.values(treeWords[props.wordId].sensesGuids).flatMap((guids) =>
