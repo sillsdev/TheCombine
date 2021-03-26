@@ -103,7 +103,7 @@ class CertProxyClient(BaseCert):
             return False
         cert_file_list = ("cert.pem", "chain.pem", "fullchain.pem", "privkey.pem")
 
-        self.cert_dir.mkdir(0o755, True, True)
+        self.cert_dir.mkdir(0o755, parents=True, exist_ok=True)
         for cert_file in cert_file_list:
             if not aws_s3_get(
                 f"{self.server_name}/{cert_file}", Path(f"{self.cert_dir}/{cert_file}")
