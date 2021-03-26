@@ -47,7 +47,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
           return;
         }
         // Move the sense to the dest MergeWord.
-        dispatch(moveSense(senseRef, wordId));
+        dispatch(moveSense(senseRef, wordId, res.destination.index));
       } else {
         // Case 2b: The source, dest droppables are the same, so we reorder, not move.
         const order = res.destination.index;

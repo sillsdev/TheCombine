@@ -45,7 +45,7 @@ interface CombineSenseMergeAction {
 
 interface MoveDuplicateMergeAction {
   type: MergeTreeActions.MOVE_DUPLICATE;
-  payload: { ref: MergeTreeReference; destWordId: string; destOrder?: number };
+  payload: { ref: MergeTreeReference; destWordId: string; destOrder: number };
 }
 
 interface MoveSenseMergeAction {
@@ -54,7 +54,7 @@ interface MoveSenseMergeAction {
     wordId: string;
     mergeSenseId: string;
     destWordId: string;
-    destOrder?: number;
+    destOrder: number;
   };
 }
 
@@ -113,7 +113,7 @@ export function combineSense(
 export function moveSense(
   ref: MergeTreeReference,
   destWordId: string,
-  destOrder?: number
+  destOrder: number
 ): MoveDuplicateMergeAction | MoveSenseMergeAction {
   if (ref.order === undefined) {
     return {

@@ -99,16 +99,17 @@ export const mergeDupStepReducer = (
       }
 
       // Update the destWord.
-      if (action.payload.destOrder === undefined) {
+      const destOrder = action.payload.destOrder;
+      /*if (destOrder < 0) {
         words[destWordId].sensesGuids[mergeSenseId] = [guid];
-      } else {
-        const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-        sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, [guid]]);
+      } else {*/
+      const sensesPairs = Object.entries(words[destWordId].sensesGuids);
+      sensesPairs.splice(destOrder, 0, [mergeSenseId, [guid]]);
 
-        const newSensesGuids: Hash<string[]> = {};
-        sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
-        words[destWordId].sensesGuids = newSensesGuids;
-      }
+      const newSensesGuids: Hash<string[]> = {};
+      sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
+      words[destWordId].sensesGuids = newSensesGuids;
+      //}
 
       return { ...state, tree: { ...state.tree, words } };
     }
@@ -127,11 +128,12 @@ export const mergeDupStepReducer = (
 
       // Update the destWord.
       const guids = [...words[srcWordId].sensesGuids[mergeSenseId]];
-      if (action.payload.destOrder === undefined) {
+      const destOrder = action.payload.destOrder;
+      if (destOrder < 0) {
         words[destWordId].sensesGuids[mergeSenseId] = guids;
       } else {
         const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-        sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, guids]);
+        sensesPairs.splice(destOrder, 0, [mergeSenseId, guids]);
 
         const newSensesGuids: Hash<string[]> = {};
         sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
