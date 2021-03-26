@@ -26,29 +26,49 @@
     </script>
   </head>
   <body>
-    <div style="text-align: center">
-      <h3>
-        <i>I'm not the web page you're looking for.</i>
-      </h3>
-      <h4>
-        To reach <i>TheCombine</i> on a NUC, you need to:
-        <p>
-          1. connect to the WiFi Access point,
-          <script>
-            document.write(ap_name());
-          </script>
-        </p>
-
-        <p>
-          2. navigate to
-          <script>
-            console.log(page_link());
-            document.write(page_link());
-          </script>
-          once you are connected.
-        </p>
-      </h4>
-      <img src="./tractor.png" alt="TheCombine" style="width: 50%" />
+    <div>
+      <table style="width: 100%">
+        <tr>
+          <td style="width: 15%" />
+          <td style="width:70%, text-align:center">
+            <h3>
+              <i>I'm not the web page you're looking for.</i>
+            </h3>
+          </td>
+          <td style="width: 15%" />
+        </tr>
+        <tr>
+          <td style="width: 15%" />
+          <td style="width:70%, text-align:left">
+            <h4>
+              To reach <i>TheCombine</i> on a NUC, you need to:
+              <ol>
+                <li>
+                  connect to the WiFi Access point,
+                  <script>
+                    document.write(ap_name());
+                  </script>
+                </li>
+                <li>
+                  navigate to
+                  <script>
+                    document.write(page_link());
+                  </script>
+                  once you are connected.
+                </li>
+              </ol>
+            </h4>
+          </td>
+          <td style="width: 15%" />
+        </tr>
+        <tr>
+          <td style="width: 15%" />
+          <td style="width: 70%">
+            <img src="./tractor.png" alt="TheCombine" style="width: 70%" />
+          </td>
+          <td style="width: 15%" />
+        </tr>
+      </table>
     </div>
   </body>
 </html>
