@@ -25,10 +25,10 @@ import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
   COMBINE_SENSE = "COMBINE_SENSE",
-  MOVE_SENSE = "MOVE_TREE_SENSE",
+  MOVE_DUPLICATE = "MOVE_DUPLICATE",
+  MOVE_SENSE = "MOVE_SENSE",
   ORDER_DUPLICATE = "ORDER_DUPLICATE",
   ORDER_SENSE = "ORDER_SENSE",
-  RESTORE_SENSE = "RESTORE_TREE_SENSE",
   SET_DATA = "SET_DATA",
   SET_SIDEBAR = "SET_SIDEBAR",
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -43,7 +43,12 @@ interface CombineSenseMergeAction {
   payload: { src: MergeTreeReference; dest: MergeTreeReference };
 }
 
-interface MoveTreeSenseMergeAction {
+interface MoveDuplicateMergeAction {
+  type: MergeTreeActions.MOVE_DUPLICATE;
+  payload: { ref: MergeTreeReference; destWordId: string; destOrder?: number };
+}
+
+interface MoveSenseMergeAction {
   type: MergeTreeActions.MOVE_SENSE;
   payload: {
     wordId: string;
@@ -61,11 +66,6 @@ interface OrderDuplicateMergeAction {
 interface OrderSenseMergeAction {
   type: MergeTreeActions.ORDER_SENSE;
   payload: MergeTreeReference;
-}
-
-interface RestoreTreeSenseMergeAction {
-  type: MergeTreeActions.RESTORE_SENSE;
-  payload: { ref: MergeTreeReference; destWordId: string; destOrder?: number };
 }
 
 interface SetDataMergeAction {
@@ -86,25 +86,15 @@ interface SetVernacularMergeAction {
 export type MergeTreeAction =
   | ClearTreeMergeAction
   | CombineSenseMergeAction
-  | MoveTreeSenseMergeAction
+  | MoveDuplicateMergeAction
+  | MoveSenseMergeAction
   | OrderDuplicateMergeAction
   | OrderSenseMergeAction
-  | RestoreTreeSenseMergeAction
   | SetDataMergeAction
   | SetSidebarMergeAction
   | SetVernacularMergeAction;
 
 // Action Creators
-
-export function setVern(
-  wordId: string,
-  vern: string
-): SetVernacularMergeAction {
-  return {
-    type: MergeTreeActions.SET_VERNACULAR,
-    payload: { wordId, vern },
-  };
-}
 
 export function clearTree(): ClearTreeMergeAction {
   return { type: MergeTreeActions.CLEAR_TREE };
@@ -124,7 +114,7 @@ export function moveSense(
   ref: MergeTreeReference,
   destWordId: string,
   destOrder?: number
-): MoveTreeSenseMergeAction | RestoreTreeSenseMergeAction {
+): MoveDuplicateMergeAction | MoveSenseMergeAction {
   if (ref.order === undefined) {
     return {
       type: MergeTreeActions.MOVE_SENSE,
@@ -133,7 +123,7 @@ export function moveSense(
   }
   // If ref.order is defined, the sense is being moved out of the sidebar.
   return {
-    type: MergeTreeActions.RESTORE_SENSE,
+    type: MergeTreeActions.MOVE_DUPLICATE,
     payload: { ref, destWordId, destOrder },
   };
 }
@@ -166,6 +156,16 @@ export function setWordData(words: Word[]): SetDataMergeAction {
   return {
     type: MergeTreeActions.SET_DATA,
     payload: words,
+  };
+}
+
+export function setVern(
+  wordId: string,
+  vern: string
+): SetVernacularMergeAction {
+  return {
+    type: MergeTreeActions.SET_VERNACULAR,
+    payload: { wordId, vern },
   };
 }
 

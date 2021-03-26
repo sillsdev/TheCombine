@@ -260,7 +260,7 @@ describe("MergeDupStepReducer", () => {
       // Intercept the uuid that will be assigned.
       const nextGuid = getMockUuid(false);
       const testAction = Actions.moveSense(testRef, wordId);
-      expect(testAction.type).toEqual(Actions.MergeTreeActions.RESTORE_SENSE);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.MOVE_DUPLICATE);
       const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
 
       const expectedWords = testTreeWords();
@@ -283,7 +283,7 @@ describe("MergeDupStepReducer", () => {
       // Intercept the uuid that will be assigned.
       const nextGuid = getMockUuid(false);
       const testAction = Actions.moveSense(testRef, destWordId);
-      expect(testAction.type).toEqual(Actions.MergeTreeActions.RESTORE_SENSE);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.MOVE_DUPLICATE);
       const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
 
       const expectedWords = testTreeWords();
@@ -305,7 +305,7 @@ describe("MergeDupStepReducer", () => {
       const destWordId = "word1";
 
       const testAction = Actions.moveSense(testRef, destWordId);
-      expect(testAction.type).toEqual(Actions.MergeTreeActions.RESTORE_SENSE);
+      expect(testAction.type).toEqual(Actions.MergeTreeActions.MOVE_DUPLICATE);
       const resultWords = mergeDupStepReducer(mockState, testAction).tree.words;
 
       const expectedWords = testTreeWords();

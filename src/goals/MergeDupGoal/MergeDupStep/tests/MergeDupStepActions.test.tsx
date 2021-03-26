@@ -282,10 +282,10 @@ describe("MergeDupStepActions", () => {
       expect(resultAction.type).toEqual(MergeTreeActions.MOVE_SENSE);
     });
 
-    it("creates a RESTORE_SENSE action when going from sidebar to word.", () => {
+    it("creates a MOVE_DUPLICATE action when going from sidebar to word.", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
       const resultAction = moveSense(mockRef, wordId);
-      expect(resultAction.type).toEqual(MergeTreeActions.RESTORE_SENSE);
+      expect(resultAction.type).toEqual(MergeTreeActions.MOVE_DUPLICATE);
     });
   });
 

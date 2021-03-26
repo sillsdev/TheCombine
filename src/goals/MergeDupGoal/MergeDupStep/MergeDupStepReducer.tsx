@@ -67,106 +67,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case MergeTreeActions.MOVE_SENSE: {
-      const srcWordId = action.payload.wordId;
-      const mergeSenseId = action.payload.mergeSenseId;
-      const destWordId = action.payload.destWordId;
-
-      if (srcWordId === destWordId) {
-        return state;
-      }
-      const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words)
-      );
-
-      // Update the destWord.
-      const guids = [...words[srcWordId].sensesGuids[mergeSenseId]];
-      if (action.payload.destOrder === undefined) {
-        words[destWordId].sensesGuids[mergeSenseId] = guids;
-      } else {
-        const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-        sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, guids]);
-
-        const newSensesGuids: Hash<string[]> = {};
-        sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
-        words[destWordId].sensesGuids = newSensesGuids;
-      }
-
-      // Cleanup the srcWord.
-      delete words[srcWordId].sensesGuids[mergeSenseId];
-      if (!Object.keys(words[srcWordId].sensesGuids).length) {
-        delete words[srcWordId];
-      }
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActions.ORDER_SENSE: {
-      const word: MergeTreeWord = JSON.parse(
-        JSON.stringify(state.tree.words[action.payload.wordId])
-      );
-
-      // Convert the Hash<string[]> to an array to expose the order.
-      const sensePairs = Object.entries(word.sensesGuids);
-
-      const mergeSenseId = action.payload.mergeSenseId;
-      const oldOrder = sensePairs.findIndex((p) => p[0] === mergeSenseId);
-      const newOrder = action.payload.order;
-
-      // Ensure the move is valid.
-      if (oldOrder === -1 || newOrder === undefined || oldOrder === newOrder) {
-        return state;
-      }
-
-      // Move the sense pair to its new place.
-      const pair = sensePairs.splice(oldOrder, 1)[0];
-      sensePairs.splice(newOrder, 0, pair);
-
-      // Rebuild the Hash<string[]>.
-      word.sensesGuids = {};
-      for (const [key, value] of sensePairs) {
-        word.sensesGuids[key] = value;
-      }
-
-      const words = { ...state.tree.words };
-      words[action.payload.wordId] = word;
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActions.ORDER_DUPLICATE: {
-      const ref = action.payload.ref;
-
-      const oldOrder = ref.order;
-      const newOrder = action.payload.order;
-
-      // Ensure the reorder is valid.
-      if (oldOrder === undefined || oldOrder === newOrder) {
-        return state;
-      }
-
-      // Move the guid.
-      const oldSensesGuids = state.tree.words[ref.wordId].sensesGuids;
-      const guids = [...oldSensesGuids[ref.mergeSenseId]];
-      const guid = guids.splice(oldOrder, 1)[0];
-      guids.splice(newOrder, 0, guid);
-
-      //
-      const sensesGuids = { ...oldSensesGuids };
-      sensesGuids[ref.mergeSenseId] = guids;
-
-      const word: MergeTreeWord = {
-        ...state.tree.words[ref.wordId],
-        sensesGuids,
-      };
-
-      const words = { ...state.tree.words };
-      words[ref.wordId] = word;
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActions.RESTORE_SENSE: {
+    case MergeTreeActions.MOVE_DUPLICATE: {
       const srcRef = action.payload.ref;
       const destWordId = action.payload.destWordId;
       const words: Hash<MergeTreeWord> = JSON.parse(
@@ -208,6 +109,105 @@ export const mergeDupStepReducer = (
         sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
         words[destWordId].sensesGuids = newSensesGuids;
       }
+
+      return { ...state, tree: { ...state.tree, words } };
+    }
+
+    case MergeTreeActions.MOVE_SENSE: {
+      const srcWordId = action.payload.wordId;
+      const mergeSenseId = action.payload.mergeSenseId;
+      const destWordId = action.payload.destWordId;
+
+      if (srcWordId === destWordId) {
+        return state;
+      }
+      const words: Hash<MergeTreeWord> = JSON.parse(
+        JSON.stringify(state.tree.words)
+      );
+
+      // Update the destWord.
+      const guids = [...words[srcWordId].sensesGuids[mergeSenseId]];
+      if (action.payload.destOrder === undefined) {
+        words[destWordId].sensesGuids[mergeSenseId] = guids;
+      } else {
+        const sensesPairs = Object.entries(words[destWordId].sensesGuids);
+        sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, guids]);
+
+        const newSensesGuids: Hash<string[]> = {};
+        sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
+        words[destWordId].sensesGuids = newSensesGuids;
+      }
+
+      // Cleanup the srcWord.
+      delete words[srcWordId].sensesGuids[mergeSenseId];
+      if (!Object.keys(words[srcWordId].sensesGuids).length) {
+        delete words[srcWordId];
+      }
+
+      return { ...state, tree: { ...state.tree, words } };
+    }
+
+    case MergeTreeActions.ORDER_DUPLICATE: {
+      const ref = action.payload.ref;
+
+      const oldOrder = ref.order;
+      const newOrder = action.payload.order;
+
+      // Ensure the reorder is valid.
+      if (oldOrder === undefined || oldOrder === newOrder) {
+        return state;
+      }
+
+      // Move the guid.
+      const oldSensesGuids = state.tree.words[ref.wordId].sensesGuids;
+      const guids = [...oldSensesGuids[ref.mergeSenseId]];
+      const guid = guids.splice(oldOrder, 1)[0];
+      guids.splice(newOrder, 0, guid);
+
+      //
+      const sensesGuids = { ...oldSensesGuids };
+      sensesGuids[ref.mergeSenseId] = guids;
+
+      const word: MergeTreeWord = {
+        ...state.tree.words[ref.wordId],
+        sensesGuids,
+      };
+
+      const words = { ...state.tree.words };
+      words[ref.wordId] = word;
+
+      return { ...state, tree: { ...state.tree, words } };
+    }
+
+    case MergeTreeActions.ORDER_SENSE: {
+      const word: MergeTreeWord = JSON.parse(
+        JSON.stringify(state.tree.words[action.payload.wordId])
+      );
+
+      // Convert the Hash<string[]> to an array to expose the order.
+      const sensePairs = Object.entries(word.sensesGuids);
+
+      const mergeSenseId = action.payload.mergeSenseId;
+      const oldOrder = sensePairs.findIndex((p) => p[0] === mergeSenseId);
+      const newOrder = action.payload.order;
+
+      // Ensure the move is valid.
+      if (oldOrder === -1 || newOrder === undefined || oldOrder === newOrder) {
+        return state;
+      }
+
+      // Move the sense pair to its new place.
+      const pair = sensePairs.splice(oldOrder, 1)[0];
+      sensePairs.splice(newOrder, 0, pair);
+
+      // Rebuild the Hash<string[]>.
+      word.sensesGuids = {};
+      for (const [key, value] of sensePairs) {
+        word.sensesGuids[key] = value;
+      }
+
+      const words = { ...state.tree.words };
+      words[action.payload.wordId] = word;
 
       return { ...state, tree: { ...state.tree, words } };
     }
