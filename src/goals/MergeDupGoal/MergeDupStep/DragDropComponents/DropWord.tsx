@@ -19,7 +19,6 @@ export default function DropWord(props: DropWordProps) {
   const filled = !!treeWords[props.wordId];
   let verns: string[] = [];
   if (filled) {
-    console.info(treeWords[props.wordId]);
     verns.push(
       ...new Set(
         Object.values(treeWords[props.wordId].sensesGuids).flatMap((guids) =>

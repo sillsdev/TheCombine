@@ -183,8 +183,8 @@ export const mergeDupStepReducer = (
       const srcGuids = words[srcWordId].sensesGuids[mergeSenseId];
       const guid = srcGuids.splice(srcRef.order, 1)[0];
 
-      if (srcGuids.length === 1) {
-        // If the sense has no duplicates, this is a full move.
+      if (srcGuids.length === 0) {
+        // If there are no guids left, this is a full move.
         if (srcWordId === destWordId) {
           return state;
         }
