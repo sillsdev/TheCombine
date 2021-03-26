@@ -6,19 +6,16 @@
 
 - name: install required Python packages
   pip:
-    name: pymongo
+    name: humanfriendly
     state: present
 
-- name: create folders for backups
+- name: create folder for scripts
   file:
-    name: "{{ item }}"
+    name: "{{ combine_app_dir }}/bin"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
     mode: 0755
     state: directory
-  with_items:
-    - "{{ combine_backup_dir }}"
-    - "{{ combine_app_dir }}/bin"
 
 - name: install backup/restore scripts
   template:
@@ -28,11 +25,9 @@
     group: "{{ combine_group }}"
     mode: 0755
   with_items:
-    - combine-env
-    - combine-backup
-    - combine-restore
     - combine-clean-aws
     - combine-backup-job
+    - backup_conf.json
 
 - name: install additional maintenance scripts
   copy:
@@ -50,6 +45,12 @@
       mode: "0755"
     - name: maint_utils.py
       mode: "0644"
+    - name: script_step.py
+      mode: "0644"
+    - name: combine_backup.py
+      mode: "0755"
+    - name: combine_restore.py
+      mode: "0755"
 
 - name: set environment variables for backup job
   cron:

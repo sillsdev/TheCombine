@@ -17,6 +17,9 @@ docker-compose.yml
 .env.*
 .env*.local
 nginx/scripts
+/backups
+/restore
+backup_conf.json
 
 # Misc
 .DS_Store

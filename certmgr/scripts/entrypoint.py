@@ -55,7 +55,7 @@ def main() -> None:
         signal.signal(usr1_signal, handle_user_sig1)
         while True:
             # check for renewal after 12 hours or SIGUSR1 received
-            got_sig = signal.sigtimedwait([usr1_signal], 12 * 3600)  # 12 hrs x 3600 sec/hr
+            got_sig = signal.sigtimedwait([usr1_signal], 12 * 3600)  # (12 hrs x 3600 sec/hr)
             if got_sig is not None:
                 print(f"Renew triggered by signal ({got_sig.si_signo}).")
             cert_obj.renew()
