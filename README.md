@@ -53,6 +53,7 @@ A rapid word collection tool.
    3. [Import Semantic Domains](#import-semantic-domains)
    4. [Generate License Report](#generate-license-report)
    5. [Set Project Version](#set-project-version)
+   6. [Inspect Database](#inspect-database)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Add a User to a Project](#add-a-user-to-a-project)
    2. [Backup _TheCombine_](#backup-thecombine)
@@ -489,7 +490,7 @@ To retrieve the current version of the project from the terminal:
 $ npm run --silent version
 ```
 
-#### Inspect Database
+### Inspect Database
 
 To browse the database locally during development, open MongoDB Compass Community.
 

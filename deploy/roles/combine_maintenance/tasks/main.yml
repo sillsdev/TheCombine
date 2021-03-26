@@ -9,7 +9,7 @@
     name: humanfriendly
     state: present
 
-- name: create folders for backups
+- name: create folder for scripts
   file:
     name: "{{ combine_app_dir }}/bin"
     owner: "{{ combine_user }}"

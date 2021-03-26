@@ -232,7 +232,6 @@ def main() -> None:
                 ";",
             ]
         )
-    #        os.chdir(workdir)
 
     step.print("Restart the containers.")
     run_cmd(["docker-compose", "-f", str(compose_file), "start", "certmgr", "frontend"])
