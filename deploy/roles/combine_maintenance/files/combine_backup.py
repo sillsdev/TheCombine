@@ -49,7 +49,7 @@ def main() -> None:
         # turn off the color coding for docker-compose output - adds unreadable escape
         # characters to syslog
         compose_opts = "--no-ansi"
-        compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
+        compose_file = Path(config["docker_compose_file"])
 
         step.print("Stop the frontend and certmgr containers.")
         run_cmd(

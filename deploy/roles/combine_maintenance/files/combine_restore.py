@@ -56,7 +56,7 @@ def main() -> None:
     step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
         restore_file = "combine-backup.tar.gz"
-        compose_file = Path(config["combine_app_dir"]) / "docker-compose.yml"
+        compose_file = Path(config["docker_compose_file"])
 
         if args.file:
             backup = args.file
