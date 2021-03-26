@@ -11,7 +11,6 @@ import {
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { Action } from "redux";
 import { StoreAction, StoreActions } from "rootActions";
 import { testWordList } from "types/word";
 
