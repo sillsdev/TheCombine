@@ -41,7 +41,7 @@ export default function BaseGoalScreen() {
       dispatch(setCurrentGoal());
       dispatch(clearTree());
     };
-  }, [dispatch, setCurrentGoal, clearTree]);
+  }, [dispatch]);
   return (
     <React.Fragment>
       <DisplayProgress />
