@@ -7,8 +7,48 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Noto+Sans&family=Roboto:wght@300;400;500;700&display=swap"
     />
+    <script>
+      function ap_name() {
+        var pattern = new RegExp("^([^/\.]+)[/\.]");
+        var match;
+        var ap;
+        if ((match = pattern.exec(window.location.hostname))) {
+          ap = match[1] + "_ap";
+        } else {
+          ap = "<i>Cannot find access point name</i>";
+        }
+        return ap;
+      }
+
+      function page_link() {
+        return `<a href="${window.location.href}">${window.location.href}</a>`;
+      }
+    </script>
   </head>
   <body>
-    I'm not the web page you're looking for.
+    <div style="text-align: center">
+      <h3>
+        <i>I'm not the web page you're looking for.</i>
+      </h3>
+      <h4>
+        To reach <i>TheCombine</i> on a NUC, you need to:
+        <p>
+          1. connect to the WiFi Access point,
+          <script>
+            document.write(ap_name());
+          </script>
+        </p>
+
+        <p>
+          2. navigate to
+          <script>
+            console.log(page_link());
+            document.write(page_link());
+          </script>
+          once you are connected.
+        </p>
+      </h4>
+      <img src="./tractor.png" alt="TheCombine" style="width: 50%" />
+    </div>
   </body>
 </html>
