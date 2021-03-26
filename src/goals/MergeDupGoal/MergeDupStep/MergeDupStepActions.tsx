@@ -171,12 +171,6 @@ export function setVern(
 
 // Dispatch Functions
 
-export function mergeSense() {
-  return async (_dispatch: StoreStateDispatch, _getState: () => StoreState) => {
-    // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top
-  };
-}
-
 interface SenseWithState extends MergeTreeSense {
   state: State;
 }
@@ -260,6 +254,9 @@ function getMergeWords(
 
     // Construct parent and children.
     const parent: Word = { ...data.words[wordId], senses: [] };
+    if (!parent.vernacular) {
+      parent.vernacular = word.vern;
+    }
     const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
       sList.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {

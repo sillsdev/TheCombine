@@ -23,7 +23,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
     (state: StoreState) => state.mergeDuplicateGoal
   );
   const sidebar = mergeState.tree.sidebar;
-  const words = mergeState.tree.words;
+  const treeWords = mergeState.tree.words;
 
   function handleDrop(res: DropResult) {
     const senseRef: MergeTreeReference = JSON.parse(res.draggableId);
@@ -69,7 +69,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
       >
         <SidebarDrop
           sidebar={sidebar}
-          vernacular={words[sidebar.wordId].vern}
+          vernacular={treeWords[sidebar.wordId]?.vern}
         />
       </Drawer>
     );
@@ -79,7 +79,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      {Object.keys(words).map((key) => (
+      {Object.keys(treeWords).map((key) => (
         <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
           <DropWord
             mergeState={mergeState}

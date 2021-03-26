@@ -84,6 +84,11 @@ export const mergeDupStepReducer = (
       const srcGuids = words[srcWordId].sensesGuids[mergeSenseId];
       const guid = srcGuids.splice(srcRef.order, 1)[0];
 
+      // Check if dropping the sense into a new word.
+      if (words[destWordId] === undefined) {
+        words[destWordId] = { vern: "", sensesGuids: {} };
+      }
+
       if (srcGuids.length === 0) {
         // If there are no guids left, this is a full move.
         if (srcWordId === destWordId) {
@@ -99,17 +104,11 @@ export const mergeDupStepReducer = (
       }
 
       // Update the destWord.
-      const destOrder = action.payload.destOrder;
-      /*if (destOrder < 0) {
-        words[destWordId].sensesGuids[mergeSenseId] = [guid];
-      } else {*/
       const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-      sensesPairs.splice(destOrder, 0, [mergeSenseId, [guid]]);
-
+      sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, [guid]]);
       const newSensesGuids: Hash<string[]> = {};
       sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
       words[destWordId].sensesGuids = newSensesGuids;
-      //}
 
       return { ...state, tree: { ...state.tree, words } };
     }
@@ -126,19 +125,21 @@ export const mergeDupStepReducer = (
         JSON.stringify(state.tree.words)
       );
 
+      // Check if dropping the sense into a new word.
+      if (words[destWordId] === undefined) {
+        if (Object.keys(words[srcWordId].sensesGuids).length === 1) {
+          return state;
+        }
+        words[destWordId] = { vern: "", sensesGuids: {} };
+      }
+
       // Update the destWord.
       const guids = [...words[srcWordId].sensesGuids[mergeSenseId]];
-      const destOrder = action.payload.destOrder;
-      if (destOrder < 0) {
-        words[destWordId].sensesGuids[mergeSenseId] = guids;
-      } else {
-        const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-        sensesPairs.splice(destOrder, 0, [mergeSenseId, guids]);
-
-        const newSensesGuids: Hash<string[]> = {};
-        sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
-        words[destWordId].sensesGuids = newSensesGuids;
-      }
+      const sensesPairs = Object.entries(words[destWordId].sensesGuids);
+      sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, guids]);
+      const newSensesGuids: Hash<string[]> = {};
+      sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
+      words[destWordId].sensesGuids = newSensesGuids;
 
       // Cleanup the srcWord.
       delete words[srcWordId].sensesGuids[mergeSenseId];

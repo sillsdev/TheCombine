@@ -30,15 +30,16 @@ export default function SidebarDrop(props: SidebarDropProps) {
           /* Add the height of the appbar (64) to the top padding. */
           style={{ padding: 30, paddingTop: 64 + 30 }}
         >
-          <IconButton onClick={() => dispatch(setSidebar)}>
+          <IconButton onClick={() => dispatch(setSidebar())}>
             <ArrowForwardIos />
           </IconButton>
           <Typography variant="h5">{props.vernacular}</Typography>
           {props.sidebar.senses.map((sense: MergeTreeSense, index: number) => (
             <SidebarDragSense
+              key={index}
+              index={index}
               sidebar={props.sidebar}
               sense={sense}
-              index={index}
             />
           ))}
           {providedDroppable.placeholder}

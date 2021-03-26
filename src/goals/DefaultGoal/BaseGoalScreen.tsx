@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentGoal } from "components/GoalTimeline/GoalsActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
+import { clearTree } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 
@@ -38,6 +39,7 @@ export default function BaseGoalScreen() {
   useEffect(() => {
     return function cleanup() {
       dispatch(setCurrentGoal());
+      dispatch(clearTree());
     };
   });
   return (
