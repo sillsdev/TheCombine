@@ -38,6 +38,15 @@
     name: /opt/awscliv2.zip
     state: absent
 
+- name: Create link for /usr/bin/aws
+  file:
+    src: "/usr/local/bin/aws"
+    dest: "/usr/bin/aws"
+    state: link
+    owner: root
+    group: root
+    mode: 0777
+
 - name: create aws configuration directory
   file:
     path: "{{ aws_config_dir }}"

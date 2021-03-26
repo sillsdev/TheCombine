@@ -36,31 +36,35 @@ A rapid word collection tool.
 ## Table of Contents
 
 1. [Getting Started with Development](#getting-started-with-development)
-2. [Available Scripts](#available-scripts)
+2. [Docker](#docker)
+   1. [Installing Docker](#installing-docker)
+   2. [Build and Run](#build-and-run)
+3. [Python](#python)
+   1. [Windows Python Installation](#windows-python-installation)
+   2. [Linux Python Installation](#linux-python-installation)
+   3. [macOS Python Installation](#macos-python-installation)
+   4. [Python Packages](#python-packages)
+4. [Amazon Web Services](#amazon-web-services)
+   1. [Installing `aws-cli`](#installing-aws-cli)
+   2. [Configuring `aws-cli`](#configuring-aws-cli)
+5. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Running the Automated Tests](#running-the-automated-tests)
    3. [Import Semantic Domains](#import-semantic-domains)
    4. [Generate License Report](#generate-license-report)
    5. [Set Project Version](#set-project-version)
-3. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
-
-   1. [Environments](#environments)
-   2. [Development Environment Scripts](#development-environment-scripts)
-   3. [Local Docker Container Scripts](#local-docker-container-scripts)
-
-   4. [Production Environment Scripts](#production-environment-scripts)
-
-4. [Docker](#docker)
-   1. [Installing Docker](#installing-docker)
-   2. [Build and Run](#build-and-run)
-5. [Python](#python)
-   1. [Windows Python Installation](#windows-python-installation)
-   2. [Linux Python Installation](#linux-python-installation)
-   3. [macOS Python Installation](#macos-python-installation)
-   4. [Python Packages](#python-packages)
-6. [User Guide](#user-guide)
-7. [Production](#production)
-8. [Learn More](#learn-more)
+   6. [Inspect Database](#inspect-database)
+6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
+   1. [Add a User to a Project](#add-a-user-to-a-project)
+   2. [Backup _TheCombine_](#backup-thecombine)
+   3. [Create a New Admin User](#create-a-new-admin-user)
+   4. [Delete a Project](#delete-a-project)
+   5. [Drop Database](#drop-database)
+   6. [Grant Admin Rights](#grant-admin-rights)
+   7. [Restore _TheCombine_](#restore-thecombine)
+7. [User Guide](#user-guide)
+8. [Production](#production)
+9. [Learn More](#learn-more)
 
 ## Getting Started with Development
 
@@ -126,6 +130,204 @@ A rapid word collection tool.
 
 8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
+
+## Docker
+
+### Installing Docker
+
+Install [Docker](https://docs.docker.com/get-docker/).
+
+(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately. This is included by default
+in Docker Desktop for Windows and macOS.
+
+(macOS / Windows Only) If you are on macOS or Windows without
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
+allocated at least 4GB of Memory in Preferences | Resources.
+
+### Build and Run
+
+For information on _Docker Compose_ see the [Docker Compose documentation](https://docs.docker.com/compose/).
+
+1. Create the required docker files by running the configuration script in an activated Python virtual environment from
+   _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
+
+```bash
+(venv) $ python scripts/docker_setup.py
+
+# To view options, run with --help
+```
+
+2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
+   Backend container. If you have defined them as OS variables in the
+   [Getting Started with Development](#getting-started-with-development) section above, then these variables will
+   already be set. If not, then you will need to edit `.env.backend` and provide values for the variables that are
+   listed.
+
+3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to all of the
+   following `docker` commands). On Windows and macOS, Docker Desktop must be running.
+
+```bash
+$ docker-compose build --parallel
+```
+
+4. Start the containers
+
+```bash
+$ docker-compose up --detach
+```
+
+5. Browse to https://localhost.
+
+_By default self-signed certificates are included, so you will need to accept a warning in the browser._
+
+6. To view logs:
+
+```bash
+$ docker-compose logs --follow
+```
+
+To view the logs from a single service, e.g. the `backend`:
+
+```bash
+$ docker-compose logs --follow backend
+```
+
+The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged. To
+just get the current snapshot of the logs, do not add the `--follow` option.
+
+7. To stop
+
+```bash
+$ docker-compose down
+```
+
+Add the `--volumes` option to remove any stored data when the containers are stopped.
+
+## Python
+
+A Python script, `scripts/docker_setup.py` is used to configure the files needed to run _TheCombine_ in Docker
+containers. Python is required to create the `docker-compose` environment and to run some of the maintenance scripts.
+
+### Windows Python Installation
+
+- Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
+
+- Select the "Download Python" button at the top of the page. This will download the latest appropriate x86-64
+  executable installer.
+
+- Once Python is installed, create an isolated Python [virtual environment](https://docs.python.org/3/library/venv.html)
+  using the [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher installed globally into the
+  `PATH`.
+
+```bash
+$ py -m venv venv
+$ venv\Scripts\activate
+```
+
+### Linux Python Installation
+
+To install Python 3 on Ubuntu, run the following commands:
+
+```bash
+$ sudo apt update
+$ sudo apt install python3 python3-venv
+```
+
+Create an isolated Python virtual environment
+
+```bash
+$ python3 -m venv venv
+$ . venv/bin/activate
+```
+
+### macOS Python Installation
+
+Install [Homebrew](https://brew.sh/).
+
+Install Python 3 using Homebrew:
+
+```bash
+$ brew install python
+```
+
+Once Python is installed, create an isolated Python virtual environment:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+```
+
+### Python Packages
+
+**Important**: All Python commands and scripts should be executed within a terminal using an activated Python virtual
+environment. This will be denoted with the `(venv)` prefix on the prompt.
+
+With an active virtual environment, install Python development requirements for this project:
+
+```bash
+(venv) $ python -m pip install --upgrade pip pip-tools
+(venv) $ python -m piptools sync dev-requirements.txt
+```
+
+Note, you can also now perform automated code formatting of Python code:
+
+```bash
+(venv) $ tox -e fmt
+```
+
+To run all Python linting steps:
+
+```bash
+(venv) $ tox
+```
+
+To upgrade all pinned dependencies, run the following command under Python 3.6 so the requirements are
+backwards-compatible.
+
+```bash
+(venv) $ python -m piptools compile --upgrade dev-requirements.in
+```
+
+Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
+supporting Python 3.6 and 3.7+.
+
+## Amazon Web Services
+
+_TheCombine_ stores its backup in an Amazon Simple Storage Service (S3) bucket. In order to run the backup and restore
+scripts for _TheCombine_, you will need to install and configure the `aws-cli`, version 2.
+
+### Installing `aws-cli`
+
+To install `aws-cli` follow the instructions for your operating system:
+
+- [AWS CLI for Linux](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
+- [AWS CLI for macOS](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html)
+- [AWS CLI for Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
+
+### Configuring `aws-cli`
+
+Once `aws-cli` is installed, you will need to configure it so that it has access to the bucket where _TheCombine's_
+backup are stored. Configure your access by running:
+
+```
+aws configure
+```
+
+You will be prompted for the following information:
+
+- AWS Access Key ID
+- AWS Secret Access Key
+- Default region name
+- Default output format
+
+Choose the default, `None`, for the _Default output format_. The other items will be provided through a secure
+communication mechanism.
+
+This will configure a default profile which will be sufficient for most users.
+
+See the Amazon document on
+[Named Profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) to add access to multiple
+S3 buckets or to an AWS Elastic Container Registry.
 
 ## Available Scripts
 
@@ -288,106 +490,48 @@ To retrieve the current version of the project from the terminal:
 $ npm run --silent version
 ```
 
-## Maintenance Scripts for TheCombine
-
-### Environments
-
-There are three different environments in which _TheCombine_ may be run:
-
-1. _Development Environment_ - To run _TheCombine_ in the development environment, run `npm start` from the project
-   directory.
-2. _In Local Docker Containers_ - To run _TheCombine_ from your software development project inside Docker containers
-   see the [Docker](#docker) section.
-3. _Production Environment_ - The
-   [How To Deploy TheCombine](#https://github.com/sillsdev/TheCombine/blob/master/docs/deploy/README.md) Document
-   describes how to configure a production machine and install _TheCombine_ on it.
-
-### Development Environment Scripts
-
-#### Inspect Database
+### Inspect Database
 
 To browse the database locally during development, open MongoDB Compass Community.
 
 1. Under New Connection, enter `mongodb://localhost:27017`
 2. Under Databases, select CombineDatabase
 
-#### Drop Database
+## Maintenance Scripts for TheCombine
 
-To completely erase the current Mongo database, run:
+The maintenance scripts enable certain maintenance tasks on your instance of _TheCombine_. _TheCombine_ may be running
+in one of three environments:
 
-```bash
-$ npm run drop-database
-```
-
-#### Create a New Admin User
-
-To create a new admin user:
-
-1. first set the required environment variables:
-   - `COMBINE_ADMIN_PASSWORD`
-   - `COMBINE_ADMIN_EMAIL`
-2. run:
+1. _Development Environment_ - To run _TheCombine_ in the development environment, run `npm start` from the project
+   directory. Unless specified otherwise, each of the maintenance commands are to be run from the project directory.
+2. _In Local Docker Containers_ - To run _TheCombine_ from your software development project inside Docker containers
+   see the [Docker](#docker) section. Unless specified otherwise, each of the maintenance commands are to be run from
+   the project directory. Python scripts must be run in the virtual environment.
+3. _Production Environment_ - The
+   [How To Deploy TheCombine](#https://github.com/sillsdev/TheCombine/blob/master/docs/deploy/README.md) Document
+   describes how to configure a production machine and install _TheCombine_ on it. For each of the commands below, use
+   `ssh` to connect to the target system where _TheCombine_ is running and run the following commands to set the user
+   and working directory:
 
    ```bash
-   $ cd Backend
-   $ dotnet run create-admin-username=admin
+   sudo su -l combine
+   cd /opt/combine
    ```
 
-The exit code will be set to `0` on success and non-`0` otherwise.
+   Unless specified otherwise, each of the maintenance commands are to be run from `/opt/bin/combine`
 
-#### Grant Admin Rights
+The descriptions of each of the maintenance tasks below provide instructions for completing the task in each of the
+environments. Any of the Python scripts can be run with the `--help` option to see more usage options.
 
-To grant admin rights for an existing user, run:
+### Add a User to a Project
 
-```bash
-# Note the -- before the user name.
-$ npm run set-admin-user -- <USERNAME>
-```
+Task: add an existing user to a project
 
-### Local Docker Container Scripts
-
-This section assumes that the project docker environment has been initialized and started. It is important that each of
-the commands listed are run from the project root directory because the `docker-compose` commands expect the
-`docker-compose.yml` file to be in the working directory.
-
-#### Create a New Admin User
-
-Run:
-
-```bash
-$ docker-compose run -e COMBINE_ADMIN_USERNAME=<USER_NAME> -e COMBINE_ADMIN_PASSWORD="<PASSWORD>" \
-    -e COMBINE_ADMIN_EMAIL="<EMAIL_ADDRESS>" backend
-```
-
-filling in your values for `<USER_NAME>`, `<PASSWORD>`, and `<EMAIL_ADDRESS>`.
-
-#### Grant Admin Rights
-
-To grant admin rights for an existing user, run:
-
-```bash
-$ deploy/roles/combine_maintenance/files/make_user_admin.py <USER_NAME>
-```
-
-Note that you may specify more than one `<USER_NAME>` to update multiple users.
-
-#### Delete a Project
-
-To delete a project, run:
-
-```bash
-$ deploy/roles/combine_maintenance/files/rm_project.py <PROJECT_NAME>
-```
-
-Note that you may specify more than one `<PROJECT_NAME>` to delete multiple projects.
-
-#### Add a User to a Project
-
-To add a user to a project, run:
-
-```bash
-$ deploy/roles/combine_maintenance/files/add_user_to_proj.py  --project <PROJECT_NAME> --user <USER>
-```
+| Environment     | Command                                                                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Development     | _Not Available_                                                                                                    |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>` |
+| Production      | `$ bin/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>`                                                 |
 
 Notes:
 
@@ -395,217 +539,91 @@ Notes:
 2. The user is added to the project with normal project member permissions (`[3,2,1]`). Add the `--admin` option to add
    the user with project administrator permissions (`[5,4,3,2,1]`)
 
-### Production Environment scripts
+### Backup _TheCombine_
 
-This method is for the case where _TheCombine_ has been deployed to a system according to the
-[How To Deploy TheCombine](#https://github.com/sillsdev/TheCombine/blob/master/docs/deploy/README.md) document.
+Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Storage Service (S3).
 
-For each of the commands below, use `ssh` to connect to the target system where _TheCombine_ is running and run the
-following commands to set the user and working directory:
-
-```bash
-sudo su -l combine
-cd /opt/combine
-```
-
-#### Create a New Admin User
-
-The site administrator is created by the `playbook_install.yml` as described in the
-[How To Deploy TheCombine](#https://github.com/sillsdev/TheCombine/blob/master/docs/deploy/README.md) document.
-
-#### Grant Admin Rights
-
-To grant admin rights for an existing user, run:
-
-```bash
-$ bin/make_user_admin.py <USER_NAME>
-```
-
-Note that you may specify more than one `<USER_NAME>` to update multiple users.
-
-#### Delete a Project
-
-To delete a project, run:
-
-```bash
-$ bin/rm_project.py <PROJECT_NAME>
-```
-
-Note that you may specify more than one `<PROJECT_NAME>` to delete multiple projects.
-
-#### Add a User to a Project
-
-To add a user to a project, run:
-
-```bash
-$ bin/add_user_to_proj.py  --project <PROJECT_NAME> --user <USER>
-```
+| Environment     | Command                                                                   |
+| --------------- | ------------------------------------------------------------------------- |
+| Development     | _Not Available_                                                           |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/combine_backup.py` |
+| Production      | `$ bin/combine_backup.py`                                                 |
 
 Notes:
 
-1. The `--project` and `--user` options may be shortened to `--p` and `--u` respectively.
-2. The user is added to the project with normal project member permissions (`[3,2,1]`). Add the `--admin` option to add
-   the user with project administrator permissions (`[5,4,3,2,1]`)
+1. The backup script requires that the `aws-cli` version 2 is installed. The [Amazon Web Services](#amazon-web-services)
+   section describes how to install and configure `aws-cli`.
+2. The backup script can be run from any directory.
+3. The backup script is configured using `backup_conf.json` in the same directory as the script. You may edit this file
+   to change the configuration, such as, to use a different AWS S3 bucket, or a different hostname (the hostname is used
+   to tag the backup)
+4. The daily backup job on the server will also clean up old backup for the machine that is being backed up. This is not
+   part of `combine_backup.py`; backups made with this script must be managed manually. See the
+   [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
+   for documentation on how to use the command line to list and to manage the backup objects.
 
-## Docker
+### Create a New Admin User
 
-### Installing Docker
+Task: create a new user who is a site administrator
 
-Install [Docker](https://docs.docker.com/get-docker/).
+| Environment     | Command                                                                                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Development     | set/export `COMBINE_ADMIN_PASSWORD`<br>set/export `COMBINE_ADMIN_EMAIL`<br>`$ cd Backend`<br>`$ dotnet run create-admin-username=admin`              |
+| Local Container | `$ docker-compose run -e COMBINE_ADMIN_USERNAME=<USER_NAME> -e COMBINE_ADMIN_PASSWORD="<PASSWORD>" -e COMBINE_ADMIN_EMAIL="<EMAIL_ADDRESS>" backend` |
+| Production      | `$ ansible-playbook playbook_install --limit <target_name> -u sillsdev -K`<br>Run from the `deploy` directory in the project on the host machine     |
 
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately. This is included by default
-in Docker Desktop for Windows and macOS.
+### Delete a Project
 
-(macOS / Windows Only) If you are on macOS or Windows without
-[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
-allocated at least 4GB of Memory in Preferences | Resources.
+Task: Delete a project
 
-### Build and Run
+| Environment     | Command                                                                              |
+| --------------- | ------------------------------------------------------------------------------------ |
+| Development     | _Not Available_                                                                      |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/rm_project.py <PROJECT_NAME>` |
+| Production      | `$ bin/rm_project.py <PROJECT_NAME>`                                                 |
 
-For information on _Docker Compose_ see the [Docker Compose documentation](https://docs.docker.com/compose/).
+You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
 
-1. Create the required docker files by running the configuration script in an activated Python virtual environment from
-   _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
+### Drop Database
 
-```bash
-(venv) $ python scripts/docker_setup.py
+Task: completely erase the current Mongo database
 
-# To view options, run with --help
-```
+| Environment                   | Command                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| Development                   | `$ npm run drop-database`                                                       |
+| Local Container or Production | `$ docker-compose exec database mongo CombineDatabase --eval db.dropDatabase()` |
 
-2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
-   Backend container. If you have defined them as OS variables in the
-   [Getting Started with Development](#getting-started-with-development) section above, then these variables will
-   already be set. If not, then you will need to edit `.env.backend` and provide values for the variables that are
-   listed.
+### Grant Admin Rights
 
-3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to all of the
-   following `docker` commands). On Windows and macOS, Docker Desktop must be running.
+Task: grant admin rights for an existing user
 
-   ```bash
-   $ docker-compose build --parallel
-   ```
+| Environment     | Command                                                                                |
+| --------------- | -------------------------------------------------------------------------------------- |
+| Development     | `$ npm run set-admin-user -- <USERNAME>` <br> _Note the_ `--` \_before the user name\_ |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/make_user_admin.py <USERNAME>`  |
+| Production      | `$ bin/make_user_admin.py <USERNAME>`                                                  |
 
-4. Start the containers
+You may specify more than one `<USER_NAME>` to update multiple users.
 
-   ```bash
-   $ docker-compose up --detach
-   ```
+### Restore _TheCombine_
 
-5. Browse to https://localhost.
+Task: Restore the CombineDatabase and the Backend files from a backup stored on the Amazon Simple Storage Service (S3).
 
-   _By default self-signed certificates are included, so you will need to accept a warning in the browser._
+| Environment     | Command                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| Development     | _Not Available_                                                                          |
+| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/combine_restore.py [BACKUP_NAME]` |
+| Production      | `$ bin/combine_restore.py [BACKUP_NAME]`                                                 |
 
-6. To view logs:
+Notes:
 
-   ```bash
-   $ docker-compose logs --follow
-   ```
-
-   To view the logs from a single service, e.g. the `backend`:
-
-   ```bash
-   $ docker-compose logs --follow backend
-   ```
-
-   The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged.
-   To just get the current snapshot of the logs, do not add the `--follow` option.
-
-7. To stop
-
-   ```bash
-   $ docker-compose down
-   ```
-
-   Add the `--volumes` option to remove any stored data when the containers are stopped.
-
-## Python
-
-A Python script, `scripts/docker_setup.py` is used to configure the files needed to run _TheCombine_ in Docker
-containers. Python is required to create the `docker-compose` environment and to run some of the maintenance scripts.
-
-### Windows Python Installation
-
-- Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
-
-- Select the "Download Python" button at the top of the page. This will download the latest appropriate x86-64
-  executable installer.
-
-- Once Python is installed, create an isolated Python [virtual environment](https://docs.python.org/3/library/venv.html)
-  using the [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher installed globally into the
-  `PATH`.
-
-```bash
-$ py -m venv venv
-$ venv\Scripts\activate
-```
-
-### Linux Python Installation
-
-To install Python 3 on Ubuntu, run the following commands:
-
-```bash
-$ sudo apt update
-$ sudo apt install python3 python3-venv
-```
-
-Create an isolated Python virtual environment
-
-```bash
-$ python3 -m venv venv
-$ . venv/bin/activate
-```
-
-### macOS Python Installation
-
-Install [Homebrew](https://brew.sh/).
-
-Install Python 3 using Homebrew:
-
-```bash
-$ brew install python
-```
-
-Once Python is installed, create an isolated Python virtual environment:
-
-```bash
-$ python3 -m venv venv
-$ source venv/bin/activate
-```
-
-### Python Packages
-
-**Important**: All Python commands and scripts should be executed within a terminal using an activated Python virtual
-environment. This will be denoted with the `(venv)` prefix on the prompt.
-
-With an active virtual environment, install Python development requirements for this project:
-
-```bash
-(venv) $ python -m pip install --upgrade pip pip-tools
-(venv) $ python -m piptools sync dev-requirements.txt
-```
-
-Note, you can also now perform automated code formatting of Python code:
-
-```bash
-(venv) $ tox -e fmt
-```
-
-To run all Python linting steps:
-
-```bash
-(venv) $ tox
-```
-
-To upgrade all pinned dependencies, run the following command under Python 3.6 so the requirements are
-backwards-compatible.
-
-```bash
-(venv) $ python -m piptools compile --upgrade dev-requirements.in
-```
-
-Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
-supporting Python 3.6 and 3.7+.
+1. The restore script requires that the `aws-cli` version 2 is installed. The
+   [Amazon Web Services](#amazon-web-services) section describes how to install and configure `aws-cli`.
+2. The restore script can be run from any directory.
+3. The restore script is configured using `backup_conf.json` in the same directory as the script.
+4. The restore script takes an optional backup name. This is the name of the backup in the AWS S3 bucket, not a local
+   file. If the backup name is not provided, the restore script will list the available backups and allow you to choose
+   one for the restore operation.
 
 ## User Guide
 

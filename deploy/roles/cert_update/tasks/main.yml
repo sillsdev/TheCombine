@@ -6,6 +6,17 @@
 # to the network
 ###########################################
 
+- name: create required folders for cert_update
+  file:
+    name: "{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ combine_app_dir }}"
+    - "{{ combine_app_dir }}/bin"
+
 - name: install script to check certificate on demand
   template:
     src: trigger_cert_sync.j2
