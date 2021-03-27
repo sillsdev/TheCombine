@@ -10,17 +10,6 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Noto+Sans&family=Roboto:wght@300;400;500;700&display=swap"
     />
-    <script>
-      function write_ap_name() {
-        var pattern = new RegExp("^([^/.]+)[/.]");
-        var match;
-        if ((match = pattern.exec(window.location.hostname))) {
-          document.write(match[1] + "_ap");
-        } else {
-          document.write("<i>Cannot find access point name</i>");
-        }
-      }
-    </script>
   </head>
   <body>
     <div>
@@ -40,13 +29,7 @@
             <h4>
               To reach <i>TheCombine</i> on a NUC, you need to:
               <ol>
-                <li>
-                  connect to the WiFi Access point,
-                  <script>
-                    write_ap_name();
-                  </script>
-                  ;
-                </li>
+                <li id="ap_pointer">Connect to the NUC's access point; and</li>
                 <li>
                   reload this page.
                   <button type="button" onclick="window.location.reload(true)">
@@ -67,5 +50,13 @@
         </tr>
       </table>
     </div>
+    <script>
+      var pattern = new RegExp("^([^/.]+)[/.]");
+      var match;
+      if ((match = pattern.exec(window.location.hostname))) {
+        document.getElementById("ap_pointer").innerHTML =
+          "Connect to the NUC's access point, " + match[1] + "_ap; and";
+      }
+    </script>
   </body>
 </html>
