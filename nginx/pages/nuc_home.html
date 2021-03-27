@@ -14,13 +14,11 @@
       function write_ap_name() {
         var pattern = new RegExp("^([^/.]+)[/.]");
         var match;
-        var ap;
         if ((match = pattern.exec(window.location.hostname))) {
-          ap = match[1] + "_ap";
+          document.write(match[1] + "_ap");
         } else {
-          ap = "<i>Cannot find access point name</i>";
+          document.write("<i>Cannot find access point name</i>");
         }
-        document.write(ap);
       }
     </script>
   </head>
