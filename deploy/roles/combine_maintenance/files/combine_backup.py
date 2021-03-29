@@ -12,7 +12,8 @@ import tarfile
 import tempfile
 from typing import Dict
 
-from maint_utils import run_cmd
+from combine_app import CombineApp
+from maint_utils import get_container_id, run_cmd
 from script_step import ScriptStep
 
 
@@ -25,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
-    default_config = Path(__file__).resolve().parent / "backup_conf.json"
+    default_config = Path(__file__).resolve().parent / "script_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)
     return parser.parse_args()
 
@@ -38,7 +39,10 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
-
+    combine = CombineApp(config["docker_compose_file"])
+    # turn off the color coding for docker-compose output - adds unreadable escape
+    # characters to syslog
+    combine.set_no_ansi()
     step = ScriptStep()
 
     step.print("Prepare the backup directory.")
@@ -46,50 +50,23 @@ def main() -> None:
         backup_file = "combine-backup.tar.gz"
         date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         aws_file = f"{config['aws_bucket']}/{config['combine_host']}-{date_str}.tar.gz"
-        # turn off the color coding for docker-compose output - adds unreadable escape
-        # characters to syslog
-        compose_opts = "--no-ansi"
-        compose_file = Path(config["docker_compose_file"])
 
         step.print("Stop the frontend and certmgr containers.")
-        run_cmd(
-            [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                compose_opts,
-                "stop",
-                "--timeout",
-                "0",
-                "frontend",
-                "certmgr",
-            ]
-        )
+        combine.stop(["frontend", "certmgr"])
 
         step.print("Dump the database.")
-        run_cmd(
+        combine.exec(
+            "database",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                compose_opts,
-                "exec",
-                "-T",
-                "database",
                 "/usr/bin/mongodump",
                 "--db=CombineDatabase",
                 "--gzip",
-            ]
+            ],
         )
 
-        check_backup_results = run_cmd(
+        check_backup_results = combine.exec(
+            "database",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                "exec",
-                "-T",
-                "database",
                 "ls",
                 config["db_files_subdir"],
             ],
@@ -99,30 +76,28 @@ def main() -> None:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
 
-        db_container = run_cmd(
-            ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
-        ).stdout.strip()
-        run_cmd(
-            [
-                "docker",
-                "cp",
-                f"{db_container}:{config['db_files_subdir']}/",
-                backup_dir,
-            ]
-        )
+        db_container = get_container_id("database")
+        if db_container is not None:
+            run_cmd(
+                [
+                    "docker",
+                    "cp",
+                    f"{db_container}:{config['db_files_subdir']}/",
+                    backup_dir,
+                ]
+            )
 
         step.print("Copy the backend files.")
-        backend_container = run_cmd(
-            ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
-        ).stdout.strip()
-        run_cmd(
-            [
-                "docker",
-                "cp",
-                f"{backend_container}:/home/app/{config['backend_files_subdir']}/",
-                str(backup_dir),
-            ]
-        )
+        backend_container = get_container_id("backend")
+        if backend_container is not None:
+            run_cmd(
+                [
+                    "docker",
+                    "cp",
+                    f"{backend_container}:/home/app/{config['backend_files_subdir']}/",
+                    str(backup_dir),
+                ]
+            )
 
         step.print("Create the tarball for the backup.")
         # cd to backup_dir so that files in the tarball are relative to the backup_dir
@@ -148,9 +123,7 @@ def main() -> None:
         )
 
     step.print("Restart the frontend and certmgr containers.")
-    run_cmd(
-        ["docker-compose", "-f", str(compose_file), compose_opts, "start", "certmgr", "frontend"]
-    )
+    combine.start(["certmgr", "frontend"])
 
 
 if __name__ == "__main__":

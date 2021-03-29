@@ -19,7 +19,7 @@ docker-compose.yml
 nginx/scripts
 /backups
 /restore
-backup_conf.json
+script_conf.json
 
 # Misc
 .DS_Store

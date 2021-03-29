@@ -12,8 +12,9 @@ import tarfile
 import tempfile
 from typing import Dict
 
+from combine_app import CombineApp
 import humanfriendly
-from maint_utils import run_cmd
+from maint_utils import get_container_id, run_cmd
 from script_step import ScriptStep
 
 
@@ -29,7 +30,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--clean", action="store_true", help="Clean out Backend files before restoring from backup"
     )
-    default_config = Path(__file__).resolve().parent / "backup_conf.json"
+    default_config = Path(__file__).resolve().parent / "script_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)
     parser.add_argument("--file", help="name of file in AWS S3 to be restored.")
     return parser.parse_args()
@@ -51,8 +52,9 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
-
+    combine = CombineApp(config["docker_compose_file"])
     step = ScriptStep()
+
     step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
         restore_file = "combine-backup.tar.gz"
@@ -115,18 +117,7 @@ def main() -> None:
         )
 
         step.print("Stop the frontend and certmgr containers.")
-        run_cmd(
-            [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                "stop",
-                "--timeout",
-                "0",
-                "frontend",
-                "certmgr",
-            ]
-        )
+        combine.stop(["frontend", "certmgr"])
 
         step.print("Unpack the backup.")
         os.chdir(restore_dir)
@@ -134,9 +125,10 @@ def main() -> None:
             tar.extractall()
 
         step.print("Restore the database.")
-        db_container = run_cmd(
-            ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
-        ).stdout.strip()
+        db_container = get_container_id("database")
+        if db_container is None:
+            print("Cannot find the database container.", file=sys.stderr)
+            sys.exit(1)
         run_cmd(
             [
                 "docker",
@@ -146,32 +138,22 @@ def main() -> None:
             ]
         )
 
-        run_cmd(
+        combine.exec(
+            "database",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                "exec",
-                "-T",
-                "database",
                 "mongorestore",
                 "--drop",
                 "--gzip",
                 "--quiet",
-            ]
+            ],
         )
-        run_cmd(
+        combine.exec(
+            "database",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                "exec",
-                "-T",
-                "database",
                 "rm",
                 "-rf",
                 config["db_files_subdir"],
-            ]
+            ],
         )
 
         step.print("Copy the backend files.")
@@ -179,50 +161,33 @@ def main() -> None:
         if args.clean:
             # we run the rm command inside a bash shell so that the shell will do wildcard
             # expansion
-            run_cmd(
+            combine.exec(
+                "backend",
                 [
-                    "docker-compose",
-                    "-f",
-                    str(compose_file),
-                    "exec",
-                    "-T",
+                    "/bin/bash",
+                    "-c",
+                    "rm -rf *",
+                ],
+                exec_opts=[
                     "--user",
                     "root",
                     "--workdir",
                     f"/home/app/{config['backend_files_subdir']}",
-                    "backend",
-                    "/bin/bash",
-                    "-c",
-                    "rm -rf *",
-                ]
+                ],
             )
 
-        backend_container = run_cmd(
-            [
-                "docker",
-                "ps",
-                "--filter",
-                "name=backend",
-                "--format",
-                "{{.Names}}",
-            ]
-        ).stdout.strip()
-
+        backend_container = get_container_id("backend")
+        if backend_container is None:
+            print("Cannot find the backend container.", file=sys.stderr)
+            sys.exit(1)
         run_cmd(["docker", "cp", config["backend_files_subdir"], f"{backend_container}:/home/app"])
         # change permissions for the copied files.  Since the tarball is created outside
         # of the container, the app user will not be the owner (the backend process is
         # running as "app").  In addition, it is possible that the backup is from a
         # different host with different UIDs.
-        run_cmd(
+        combine.exec(
+            "backend",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                "exec",
-                "-T",
-                "--user",
-                "root",
-                "backend",
                 "find",
                 f"/home/app/{config['backend_files_subdir']}",
                 "-exec",
@@ -230,11 +195,16 @@ def main() -> None:
                 "app:app",
                 "{}",
                 ";",
-            ]
+            ],
+            exec_opts=[
+                "--user",
+                "root",
+                "backend",
+            ],
         )
 
     step.print("Restart the containers.")
-    run_cmd(["docker-compose", "-f", str(compose_file), "start", "certmgr", "frontend"])
+    combine.start(["certmgr", "frontend"])
 
 
 if __name__ == "__main__":

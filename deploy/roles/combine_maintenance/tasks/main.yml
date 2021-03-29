@@ -27,7 +27,7 @@
   with_items:
     - combine-clean-aws
     - combine-backup-job
-    - backup_conf.json
+    - script_conf.json
 
 - name: install additional maintenance scripts
   copy:

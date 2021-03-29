@@ -1,0 +1,110 @@
+"""Run commands on the Combine services."""
+
+import json
+from pathlib import Path
+import subprocess
+import sys
+from typing import Any, Dict, List, Optional
+
+from maint_utils import object_id_to_str, run_cmd
+
+
+class CombineApp:
+    """Run commands on the Combine services."""
+
+    def __init__(self, compose_file_path: Path) -> None:
+        """Initialize the CombineApp from the configuration file."""
+        if compose_file_path:
+            self.compose_opts = ["-f", str(compose_file_path)]
+        else:
+            self.compose_opts = []
+
+    def set_no_ansi(self) -> None:
+        """Add '--no-ansi' to the docker-compose options."""
+        self.compose_opts.append("--no-ansi")
+
+    def exec(
+        self,
+        service: str,
+        cmd: List[str],
+        *,
+        exec_opts: List[str] = None,
+        check_results: bool = True,
+    ) -> subprocess.CompletedProcess:
+        """
+        Run a docker-compose 'exec' command in a Combine container.
+
+        Returns a subprocess.CompletedProcess.
+        """
+        exec_opts = exec_opts or []
+        return run_cmd(
+            ["docker-compose"]
+            + self.compose_opts
+            + [
+                "exec",
+                "-T",
+            ]
+            + exec_opts
+            + [
+                service,
+            ]
+            + cmd,
+            check_results=check_results,
+        )
+
+    def db_cmd(self, cmd: str) -> Optional[Dict[str, Any]]:
+        """Run the supplied database command using the mongo shell in the database container.
+
+        Note:
+            A list of results can be returned if the query to be evaluated returns a list of values.
+            mypy is strict about indexing Union[Dict, List], so in general we cannot properly
+            type hint this return type without generating many false positives.
+        """
+        db_results = self.exec(
+            "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]
+        )
+        result_str = object_id_to_str(db_results.stdout)
+        if result_str:
+            result_dict = json.loads(result_str)
+            return result_dict
+        return None
+
+    def start(self, services: List[str]) -> subprocess.CompletedProcess:
+        """Start the specified combine services."""
+        return run_cmd(["docker-compose"] + self.compose_opts + ["start"] + services)
+
+    def stop(self, services: List[str]) -> subprocess.CompletedProcess:
+        """Stop the specified combine services."""
+        return run_cmd(
+            ["docker-compose"] + self.compose_opts + ["stop", "--timeout", "0"] + services
+        )
+
+    def get_project_id(self, project_name: str) -> Optional[str]:
+        """Look up the MongoDB ObjectId for the project from the Project Name."""
+        results: Optional[List[Dict[str, Any]]] = self.db_cmd(  # type: ignore
+            f'db.ProjectsCollection.find({{ name: "{project_name}"}},{{ name: 1}}).toArray()'
+        )
+
+        if results is None:
+            return None
+
+        if len(results) == 1:
+            return results[0]["_id"]
+        if len(results) > 1:
+            print(f"More than one project is named {project_name}", file=sys.stderr)
+            sys.exit(1)
+        return None
+
+    def get_user_id(self, user: str) -> Optional[str]:
+        """Look up the MongoDB ObjectId for a user from username or e-mail."""
+        results = self.db_cmd(
+            f'db.UsersCollection.findOne({{ username: "{user}"}}, {{ username: 1 }})'
+        )
+        if results is not None:
+            return results["_id"]
+        results = self.db_cmd(
+            f'db.UsersCollection.findOne({{ email: "{user}"}}, {{ username: 1 }})'
+        )
+        if results is not None:
+            return results["_id"]
+        return None
