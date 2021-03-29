@@ -1,11 +1,10 @@
 """Collection of utility functions for the Combine maintenance scripts."""
 
 import enum
-import json
 import re
 import subprocess
 import sys
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 
 @enum.unique
