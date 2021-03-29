@@ -52,13 +52,12 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
-    combine = CombineApp(config["docker_compose_file"])
+    combine = CombineApp(Path(config["docker_compose_file"]))
     step = ScriptStep()
 
     step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
         restore_file = "combine-backup.tar.gz"
-        compose_file = Path(config["docker_compose_file"])
 
         if args.file:
             backup = args.file

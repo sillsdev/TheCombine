@@ -32,7 +32,7 @@ def main() -> None:
     """Make a user a site administrator."""
     args = parse_args()
     config: Dict[str, str] = json.loads(args.config.read_text())
-    combine = CombineApp(config["docker_compose_file"])
+    combine = CombineApp(Path(config["docker_compose_file"]))
     for user in args.users:
         user_id = combine.get_user_id(user)
         if user_id is not None:

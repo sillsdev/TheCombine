@@ -28,7 +28,7 @@ class CombineApp:
         service: str,
         cmd: List[str],
         *,
-        exec_opts: List[str] = None,
+        exec_opts: Optional[List[str]] = None,
         check_results: bool = True,
     ) -> subprocess.CompletedProcess:
         """
@@ -56,9 +56,9 @@ class CombineApp:
         """Run the supplied database command using the mongo shell in the database container.
 
         Note:
-            A list of results can be returned if the query to be evaluated returns a list of values.
-            mypy is strict about indexing Union[Dict, List], so in general we cannot properly
-            type hint this return type without generating many false positives.
+            A list of results can be returned if the query to be evaluated returns a list of
+            values.  mypy is strict about indexing Union[Dict, List], so in general we cannot
+            properly type hint this return type without generating many false positives.
         """
         db_results = self.exec(
             "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]

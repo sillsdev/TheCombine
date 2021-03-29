@@ -39,7 +39,7 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
-    combine = CombineApp(config["docker_compose_file"])
+    combine = CombineApp(Path(config["docker_compose_file"]))
     # turn off the color coding for docker-compose output - adds unreadable escape
     # characters to syslog
     combine.set_no_ansi()

@@ -55,7 +55,7 @@ def main() -> None:
     """Add a user to a project."""
     args = parse_args()
     config: Dict[str, str] = json.loads(args.config.read_text())
-    combine = CombineApp(config["docker_compose_file"])
+    combine = CombineApp(Path(config["docker_compose_file"]))
 
     # 0. Define user permission sets
     if args.admin:
