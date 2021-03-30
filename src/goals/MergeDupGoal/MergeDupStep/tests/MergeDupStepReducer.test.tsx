@@ -15,7 +15,7 @@ import { StoreAction, StoreActions } from "rootActions";
 import { testWordList } from "types/word";
 
 var uuidIndex = 0;
-// getMockUuid(false) gives the next uuid to be assined by our mocked v4.
+// getMockUuid(false) gives the next uuid to be assigned by our mocked v4.
 function getMockUuid(increment = true): string {
   const uuid = `mockUuid${uuidIndex}`;
   if (increment) {
