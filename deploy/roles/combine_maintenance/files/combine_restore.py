@@ -12,9 +12,10 @@ import tarfile
 import tempfile
 from typing import Dict
 
+from aws_backup import AwsBackup
 from combine_app import CombineApp
 import humanfriendly
-from maint_utils import get_container_id, run_cmd
+from maint_utils import run_cmd
 from script_step import ScriptStep
 
 
@@ -53,6 +54,7 @@ def main() -> None:
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
     combine = CombineApp(Path(config["docker_compose_file"]))
+    aws = AwsBackup(bucket=config["aws_bucket"], profile=config["aws_s3_profile"])
     step = ScriptStep()
 
     step.print("Prepare for the restore.")
@@ -63,27 +65,15 @@ def main() -> None:
             backup = args.file
         else:
             # Get the list of backups but throw away the header
-            aws_backup_list = (
-                run_cmd(
-                    [
-                        "aws",
-                        "s3",
-                        "ls",
-                        config["aws_bucket"],
-                        "--recursive",
-                        "--profile",
-                        config["aws_s3_profile"],
-                    ]
-                )
-                .stdout.strip()
-                .split("\n")[1:]
-            )
+            aws_backup_list = aws.list().stdout.strip().split("\n")[1:]
+
             if len(aws_backup_list) == 0:
                 print(f"No backups available from {config['aws_bucket']}")
                 sys.exit(0)
 
             # Print out the list of backups to choose from.  In the process,
-            # update each line in the backup list to just be the AWS S3 object name.
+            # update each line in the backup list to be the AWS S3 object name
+            # and its (human-friendly) size.
             print("Backup List:")
             for i, item in enumerate(aws_backup_list):
                 backup_components = item.split()
@@ -101,19 +91,8 @@ def main() -> None:
             backup = aws_backup_list[backup_num - 1][1]
 
         step.print(f"Fetch the selected backup, {backup}.")
-        aws_file = f"{config['aws_bucket']}/{backup}"
 
-        run_cmd(
-            [
-                "aws",
-                "s3",
-                "cp",
-                aws_file,
-                str(Path(restore_dir) / restore_file),
-                "--profile",
-                config["aws_s3_profile"],
-            ]
-        )
+        aws.pull(backup, Path(restore_dir) / restore_file)
 
         step.print("Stop the frontend and certmgr containers.")
         combine.stop(["frontend", "certmgr"])
@@ -124,7 +103,7 @@ def main() -> None:
             tar.extractall()
 
         step.print("Restore the database.")
-        db_container = get_container_id("database")
+        db_container = CombineApp.get_container_id("database")
         if db_container is None:
             print("Cannot find the database container.", file=sys.stderr)
             sys.exit(1)
@@ -175,7 +154,7 @@ def main() -> None:
                 ],
             )
 
-        backend_container = get_container_id("backend")
+        backend_container = CombineApp.get_container_id("backend")
         if backend_container is None:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)
@@ -198,13 +177,10 @@ def main() -> None:
             exec_opts=[
                 "--user",
                 "root",
-                "backend",
             ],
         )
-
-    step.print("Restart the containers.")
-    combine.start(["certmgr", "frontend"])
-
+        step.print("Restart the containers.")
+        combine.start(["certmgr", "frontend"])
 
 if __name__ == "__main__":
     main()

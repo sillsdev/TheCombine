@@ -12,8 +12,9 @@ import tarfile
 import tempfile
 from typing import Dict
 
+from aws_backup import AwsBackup
 from combine_app import CombineApp
-from maint_utils import get_container_id, run_cmd
+from maint_utils import run_cmd
 from script_step import ScriptStep
 
 
@@ -43,13 +44,14 @@ def main() -> None:
     # turn off the color coding for docker-compose output - adds unreadable escape
     # characters to syslog
     combine.set_no_ansi()
+    aws = AwsBackup(bucket=config["aws_bucket"], profile=config["aws_s3_profile"])
     step = ScriptStep()
 
     step.print("Prepare the backup directory.")
     with tempfile.TemporaryDirectory() as backup_dir:
-        backup_file = "combine-backup.tar.gz"
+        backup_file = Path("combine-backup.tar.gz")
         date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        aws_file = f"{config['aws_bucket']}/{config['combine_host']}-{date_str}.tar.gz"
+        aws_file = f"{config['combine_host']}-{date_str}.tar.gz"
 
         step.print("Stop the frontend and certmgr containers.")
         combine.stop(["frontend", "certmgr"])
@@ -76,7 +78,7 @@ def main() -> None:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
 
-        db_container = get_container_id("database")
+        db_container = CombineApp.get_container_id("database")
         if db_container is not None:
             run_cmd(
                 [
@@ -88,7 +90,7 @@ def main() -> None:
             )
 
         step.print("Copy the backend files.")
-        backend_container = get_container_id("backend")
+        backend_container = CombineApp.get_container_id("backend")
         if backend_container is not None:
             run_cmd(
                 [
@@ -108,22 +110,10 @@ def main() -> None:
                 tar.add(name)
 
         step.print("Push backup to AWS S3 storage.")
-        #    need to specify full path because $PATH does not contain
-        #    /usr/local/bin when run as a cron job
-        run_cmd(
-            [
-                "aws",
-                "s3",
-                "cp",
-                backup_file,
-                aws_file,
-                "--profile",
-                config["aws_s3_profile"],
-            ]
-        )
+        aws.push(backup_file, aws_file)
 
-    step.print("Restart the frontend and certmgr containers.")
-    combine.start(["certmgr", "frontend"])
+        step.print("Restart the frontend and certmgr containers.")
+        combine.start(["certmgr", "frontend"])
 
 
 if __name__ == "__main__":

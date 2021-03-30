@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "users", nargs="*", help="Username or e-mail of the user to be added to the project"
+        "users", nargs="*", help="Username or e-mail of the user to be made a site admin"
     )
     default_config = Path(__file__).resolve().parent / "script_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)

@@ -23,8 +23,7 @@ from pathlib import Path
 import sys
 from typing import Dict
 
-from combine_app import CombineApp
-from maint_utils import Permission
+from combine_app import CombineApp, Permission
 
 
 def parse_args() -> argparse.Namespace:
