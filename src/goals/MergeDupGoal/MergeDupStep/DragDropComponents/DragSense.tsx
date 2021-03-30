@@ -59,6 +59,14 @@ export default function DragSense(props: DragSenseProps) {
     );
   }, [dispatch, props]);
 
+  const toggleSidebar = () => {
+    if (isInSidebar) {
+      dispatch(setSidebar());
+    } else {
+      updateSidebar();
+    }
+  };
+
   useEffect(() => {
     if (props.senses.length !== duplicateCount) {
       if (props.senses.length > duplicateCount) {
@@ -134,7 +142,7 @@ export default function DragSense(props: DragSenseProps) {
               }}
             >
               {props.senses.length > 1 && (
-                <IconButton onClick={updateSidebar}>
+                <IconButton onClick={toggleSidebar}>
                   <ArrowForwardIos />
                 </IconButton>
               )}
