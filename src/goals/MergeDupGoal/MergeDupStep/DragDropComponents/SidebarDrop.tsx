@@ -28,7 +28,12 @@ export default function SidebarDrop(props: SidebarDropProps) {
           ref={providedDroppable.innerRef}
           {...providedDroppable.droppableProps}
           /* Add the height of the appbar (64) to the top padding. */
-          style={{ padding: 30, paddingTop: 64 + 30 }}
+          style={{
+            backgroundColor: "lightblue",
+            height: "100%",
+            padding: 30,
+            paddingTop: 64 + 30,
+          }}
         >
           <IconButton onClick={() => dispatch(setSidebar())}>
             <ArrowForwardIos />

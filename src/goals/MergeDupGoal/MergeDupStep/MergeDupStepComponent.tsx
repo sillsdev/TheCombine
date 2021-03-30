@@ -61,17 +61,8 @@ class MergeDupStep extends React.Component<
           </GridList>
         </div>
         {/* Merge button */}
-        <Grid container justify="flex-end">
+        <Grid container justify="flex-start">
           <Grid item>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ marginRight: theme.spacing(3) }}
-              onClick={() => this.next()}
-              title={this.props.translate("mergeDups.helpText.skip") as string}
-            >
-              {this.props.translate("buttons.skip")}
-            </Button>
             <Button
               color="primary"
               variant="contained"
@@ -84,6 +75,15 @@ class MergeDupStep extends React.Component<
               }
             >
               {this.props.translate("buttons.saveAndContinue")}
+            </Button>
+            <Button
+              color="secondary"
+              variant="contained"
+              style={{ marginRight: theme.spacing(3) }}
+              onClick={() => this.next()}
+              title={this.props.translate("mergeDups.helpText.skip") as string}
+            >
+              {this.props.translate("buttons.skip")}
             </Button>
           </Grid>
         </Grid>

@@ -44,6 +44,10 @@ export default function DragSense(props: DragSenseProps) {
   const sidebar = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
+  const isInSidebar =
+    sidebar.wordId === props.wordId &&
+    sidebar.mergeSenseId === props.mergeSenseId &&
+    sidebar.senses.length > 1;
 
   const updateSidebar = useCallback(() => {
     dispatch(
@@ -65,8 +69,7 @@ export default function DragSense(props: DragSenseProps) {
   }, [props.senses.length, duplicateCount, updateSidebar]);
 
   if (
-    sidebar.wordId === props.wordId &&
-    sidebar.mergeSenseId === props.mergeSenseId &&
+    isInSidebar &&
     !arraysEqual(
       sidebar.senses.map((s) => s.guid),
       props.senses.map((s) => s.guid)
@@ -113,7 +116,11 @@ export default function DragSense(props: DragSenseProps) {
             userSelect: "none",
             minWidth: 150,
             maxWidth: 300,
-            background: snapshot.isDragging ? "lightgreen" : "white",
+            background: snapshot.isDragging
+              ? "lightgreen"
+              : isInSidebar
+              ? "lightblue"
+              : "white",
           }}
         >
           <CardContent style={{ position: "relative", paddingRight: 40 }}>
