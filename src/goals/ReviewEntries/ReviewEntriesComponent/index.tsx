@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 
 import {
-  clearReviewEntriesState,
   updateAllWords,
   updateFrontierWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
@@ -11,7 +10,6 @@ import { StoreStateDispatch } from "types/actions";
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    clearState: () => dispatch(clearReviewEntriesState()),
     updateAllWords: (words: ReviewEntriesWord[]) =>
       dispatch(updateAllWords(words)),
     updateFrontierWord: (
