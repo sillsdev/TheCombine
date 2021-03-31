@@ -77,15 +77,25 @@ export default function UserMenu(props: UserMenuProps) {
           horizontal: "right",
         }}
       >
-        <UserMenuList isAdmin={isAdmin} onSelect={handleClose} />
+        <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
     </React.Fragment>
   );
 }
 
+// <Menu> automatically applies a ref to its first child for anchoring. The
+// following prevents a console warning: "Function components cannot be given refs.
+// Attempts to access this ref will fail. Did you mean to use React.forwardRef()?"
+const WrappedUserMenuList = React.forwardRef(
+  (props: React.ComponentProps<typeof UserMenuList>, ref) => (
+    <UserMenuList {...props} forwardedRef={ref} />
+  )
+);
+
 interface UserMenuListProps {
   isAdmin: boolean;
   onSelect: () => void;
+  forwardedRef?: React.ForwardedRef<any>;
 }
 
 /**
@@ -94,7 +104,7 @@ interface UserMenuListProps {
 export function UserMenuList(props: UserMenuListProps) {
   const { REACT_APP_VERSION } = process.env;
   return (
-    <React.Fragment>
+    <div ref={props.forwardedRef}>
       {/* Only show Site Settings link to Admin users. */}
       {props.isAdmin && (
         <MenuItem
@@ -143,6 +153,6 @@ export function UserMenuList(props: UserMenuListProps) {
       <MenuItem disabled style={{ justifyContent: "center" }}>
         v{REACT_APP_VERSION}
       </MenuItem>
-    </React.Fragment>
+    </div>
   );
 }
