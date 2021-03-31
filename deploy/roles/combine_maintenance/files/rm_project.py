@@ -63,7 +63,7 @@ def db_delete_from_projects(project_id: str) -> str:
 def main() -> None:
     """Remove a project and its associated data from TheCombine."""
     args = parse_args()
-    config: Dict[str, str] = json.loads(args.config.read_text())
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
     combine = CombineApp(Path(config["docker_compose_file"]))
 
     for project in args.projects:

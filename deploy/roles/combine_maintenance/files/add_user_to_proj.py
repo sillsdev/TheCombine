@@ -53,7 +53,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Add a user to a project."""
     args = parse_args()
-    config: Dict[str, str] = json.loads(args.config.read_text())
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
     combine = CombineApp(Path(config["docker_compose_file"]))
 
     # 0. Define user permission sets

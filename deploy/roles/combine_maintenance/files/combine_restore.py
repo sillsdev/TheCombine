@@ -48,7 +48,7 @@ def aws_strip_bucket(obj_name: str) -> str:
 def main() -> None:
     """Restore TheCombine from a backup stored in the AWS S3 service."""
     args = parse_args()
-    config: Dict[str, str] = json.loads(args.config.read_text())
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
     if args.verbose:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:

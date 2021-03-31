@@ -31,7 +31,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Make a user a site administrator."""
     args = parse_args()
-    config: Dict[str, str] = json.loads(args.config.read_text())
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
     combine = CombineApp(Path(config["docker_compose_file"]))
     for user in args.users:
         user_id = combine.get_user_id(user)

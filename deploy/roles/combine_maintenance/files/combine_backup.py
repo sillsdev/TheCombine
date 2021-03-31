@@ -35,7 +35,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Create a backup of TheCombine database and backend files."""
     args = parse_args()
-    config: Dict[str, str] = json.loads(args.config.read_text())
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
     if args.verbose:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
