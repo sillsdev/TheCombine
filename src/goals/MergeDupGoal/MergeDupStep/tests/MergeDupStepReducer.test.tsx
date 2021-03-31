@@ -272,6 +272,8 @@ describe("MergeDupStepReducer", () => {
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids = { word2_senseA: ["word2_senseA_1"] };
+      // A new guid is used when a sense is added to a merge word, so use the intercepted
+      // nextGuid for the new sense expected from moving a sense out of a sidebar.
       expectedWords[wordId].sensesGuids[nextGuid] = [srcGuid];
 
       checkTreeWords(testAction, expectedWords);
@@ -296,6 +298,8 @@ describe("MergeDupStepReducer", () => {
       expectedWords[srcWordId].sensesGuids = {
         word2_senseA: ["word2_senseA_0"],
       };
+      // A new guid is used when a sense is added to a merge word, so use the intercepted
+      // nextGuid for the new sense expected from moving a sense out of a sidebar.
       expectedWords[destWordId].sensesGuids[nextGuid] = [srcGuid];
 
       checkTreeWords(testAction, expectedWords);
