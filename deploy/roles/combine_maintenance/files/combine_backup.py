@@ -78,7 +78,7 @@ def main() -> None:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
 
-        db_container = CombineApp.get_container_id("database")
+        db_container = CombineApp.get_container_name("database")
         if db_container is not None:
             run_cmd(
                 [
@@ -90,7 +90,7 @@ def main() -> None:
             )
 
         step.print("Copy the backend files.")
-        backend_container = CombineApp.get_container_id("backend")
+        backend_container = CombineApp.get_container_name("backend")
         if backend_container is not None:
             run_cmd(
                 [

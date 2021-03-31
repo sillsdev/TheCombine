@@ -81,7 +81,7 @@ class CombineApp:
         return obj_id_pattern.sub(r"\1", buffer)
 
     @staticmethod
-    def get_container_id(service: str) -> Optional[str]:
+    def get_container_name(service: str) -> Optional[str]:
         """Look up the docker container ID for the specified service."""
         container_id = run_cmd(
             ["docker", "ps", "--filter", f"name={service}", "--format", "{{.Names}}"]

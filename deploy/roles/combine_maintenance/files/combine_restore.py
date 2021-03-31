@@ -103,7 +103,7 @@ def main() -> None:
             tar.extractall()
 
         step.print("Restore the database.")
-        db_container = CombineApp.get_container_id("database")
+        db_container = CombineApp.get_container_name("database")
         if db_container is None:
             print("Cannot find the database container.", file=sys.stderr)
             sys.exit(1)
@@ -154,7 +154,7 @@ def main() -> None:
                 ],
             )
 
-        backend_container = CombineApp.get_container_id("backend")
+        backend_container = CombineApp.get_container_name("backend")
         if backend_container is None:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)
@@ -181,6 +181,7 @@ def main() -> None:
         )
         step.print("Restart the containers.")
         combine.start(["certmgr", "frontend"])
+
 
 if __name__ == "__main__":
     main()
