@@ -18,9 +18,12 @@ To add the user to the project, we need to:
 """
 
 import argparse
+import json
+from pathlib import Path
 import sys
+from typing import Dict
 
-from maint_utils import Permission, db_cmd, get_project_id, get_user_id
+from combine_app import CombineApp, Permission
 
 
 def parse_args() -> argparse.Namespace:
@@ -39,6 +42,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--admin", action="store_true", help="Add the user as an admin for the project"
     )
+    default_config = Path(__file__).resolve().parent / "script_conf.json"
+    parser.add_argument("--config", help="backup configuration file.", default=default_config)
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
@@ -48,6 +53,9 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Add a user to a project."""
     args = parse_args()
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
+    combine = CombineApp(Path(config["docker_compose_file"]))
+
     # 0. Define user permission sets
     if args.admin:
         user_permissions = [
@@ -65,7 +73,7 @@ def main() -> None:
         ]
 
     # 1. Lookup the user id
-    user_id = get_user_id(args.user)
+    user_id = combine.get_user_id(args.user)
     if user_id is None:
         print(f"Cannot find user {args.user}")
         sys.exit(1)
@@ -73,7 +81,7 @@ def main() -> None:
         print(f"User Id: {user_id}")
 
     # Look up the project id
-    proj_id = get_project_id(args.project)
+    proj_id = combine.get_project_id(args.project)
     if proj_id is None:
         print(f"Cannot find project {args.project}")
         sys.exit(1)
@@ -85,7 +93,7 @@ def main() -> None:
     # improve readability
     select_crit = f'{{ _id: ObjectId("{user_id}"), "projectRoles.{proj_id}": {{ $exists: true}} }}'
     projection = f'{{ "projectRoles.{proj_id}" : 1}}'
-    result = db_cmd(f"db.UsersCollection.find({select_crit}, {projection})")
+    result = combine.db_cmd(f"db.UsersCollection.find({select_crit}, {projection})")
     if result is not None:
         # The user is in the project
         if not args.admin:
@@ -96,7 +104,7 @@ def main() -> None:
             print(f"UserRole ID: {user_role_id}")
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
         update_role = f'{{ $set: {{"permissions" : {user_permissions}}} }}'
-        db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
+        combine.db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
         if args.verbose:
             print(f"Updated Role {user_role_id} with permissions {user_permissions}")
     else:
@@ -117,13 +125,15 @@ def main() -> None:
                 int(Permission.WordEntry),
             ]
         insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
-        insert_result = db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
+        insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
             #      b. add the new role to the user's document in the UsersCollection
             user_role_id = insert_result["insertedId"]
             select_user = f'{{ _id: ObjectId("{user_id}")}}'
             update_user = f'{{ $set : {{"projectRoles.{proj_id}" : "{user_role_id}" }}}}'
-            add_role_result = db_cmd(f"db.UsersCollection.updateOne({select_user}, {update_user})")
+            add_role_result = combine.db_cmd(
+                f"db.UsersCollection.updateOne({select_user}, {update_user})"
+            )
             if add_role_result is None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
                 sys.exit(1)

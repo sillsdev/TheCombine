@@ -20,9 +20,12 @@ To delete a project from the backend, we need to delete:
 """
 
 import argparse
+import json
+from pathlib import Path
 import sys
+from typing import Dict
 
-from maint_utils import db_cmd, get_project_id, run_docker_cmd
+from combine_app import CombineApp
 
 
 def parse_args() -> argparse.Namespace:
@@ -34,32 +37,37 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("projects", nargs="*", help="Project(s) to be removed from TheCombine.")
+    default_config = Path(__file__).resolve().parent / "script_conf.json"
+    parser.add_argument("--config", help="backup configuration file.", default=default_config)
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
     return parser.parse_args()
 
 
-def delete_from_collection(project_id: str, collection: str) -> None:
+def db_delete_from_collection(project_id: str, collection: str) -> str:
     """Remove the specified project from the collection."""
-    db_cmd(f'db.{collection}.deleteMany({{ projectId: "{project_id}"}})')
+    return f'db.{collection}.deleteMany({{ projectId: "{project_id}"}})'
 
 
-def delete_from_user_fields(project_id: str, field: str) -> None:
+def db_delete_from_user_fields(project_id: str, field: str) -> str:
     """Remove the specified project from the field in the UsersCollection."""
-    db_cmd(f'db.UsersCollection.updateMany({{}}, {{ $unset: {{ "{field}.{project_id}" : ""}} }})')
+    return f'db.UsersCollection.updateMany({{}}, {{ $unset: {{ "{field}.{project_id}" : ""}} }})'
 
 
-def delete_from_projects(project_id: str) -> None:
+def db_delete_from_projects(project_id: str) -> str:
     """Remove the specified project from the ProjectsCollection."""
-    db_cmd(f'db.ProjectsCollection.deleteOne({{ _id: ObjectId("{project_id}")}})')
+    return f'db.ProjectsCollection.deleteOne({{ _id: ObjectId("{project_id}")}})'
 
 
 def main() -> None:
     """Remove a project and its associated data from TheCombine."""
     args = parse_args()
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
+    combine = CombineApp(Path(config["docker_compose_file"]))
+
     for project in args.projects:
-        project_id = get_project_id(project)
+        project_id = combine.get_project_id(project)
         if project_id:
             if args.verbose:
                 print(f"Remove project {project}")
@@ -70,11 +78,11 @@ def main() -> None:
                 "UserEditsCollection",
                 "UserRolesCollection",
             ):
-                delete_from_collection(project_id, collection)
+                combine.db_cmd(db_delete_from_collection(project_id, collection))
             for field in ("workedProjects", "projectRoles"):
-                delete_from_user_fields(project_id, field)
-            delete_from_projects(project_id)
-            run_docker_cmd("backend", ["rm", "-rf", f"/home/app/.CombineFiles/{project_id}"])
+                combine.db_cmd(db_delete_from_user_fields(project_id, field))
+            combine.db_cmd(db_delete_from_projects(project_id))
+            combine.exec("backend", ["rm", "-rf", f"/home/app/.CombineFiles/{project_id}"])
         else:
             print(f"Cannot find {project}", file=sys.stderr)
             sys.exit(1)
