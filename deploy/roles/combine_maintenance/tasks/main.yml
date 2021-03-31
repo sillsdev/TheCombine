@@ -17,6 +17,15 @@
     mode: 0755
     state: directory
 
+- name: clean out deprecated scripts
+  file:
+    name: "{{ combine_app_dir }}/bin/{{ item }}"
+    state: absent
+  with_items:
+    - combine-backup
+    - combine-restore
+    - backup_conf.json
+
 - name: install backup/restore scripts
   template:
     src: "{{ item }}.j2"
@@ -27,7 +36,7 @@
   with_items:
     - combine-clean-aws
     - combine-backup-job
-    - backup_conf.json
+    - script_conf.json
 
 - name: install additional maintenance scripts
   copy:

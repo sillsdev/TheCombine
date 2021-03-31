@@ -19,6 +19,7 @@ docker-compose.yml
 nginx/scripts
 /backups
 /restore
+script_conf.json
 backup_conf.json
 
 # Misc

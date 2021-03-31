@@ -2,8 +2,11 @@
 """Make a user a site administrator."""
 
 import argparse
+import json
+from pathlib import Path
+from typing import Dict
 
-from maint_utils import db_cmd, get_user_id
+from combine_app import CombineApp
 
 
 def parse_args() -> argparse.Namespace:
@@ -15,8 +18,10 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "users", nargs="*", help="Username or e-mail of the user to be added to the project"
+        "users", nargs="*", help="Username or e-mail of the user to be made a site admin"
     )
+    default_config = Path(__file__).resolve().parent / "script_conf.json"
+    parser.add_argument("--config", help="backup configuration file.", default=default_config)
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
@@ -26,10 +31,12 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Make a user a site administrator."""
     args = parse_args()
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
+    combine = CombineApp(Path(config["docker_compose_file"]))
     for user in args.users:
-        user_id = get_user_id(user)
+        user_id = combine.get_user_id(user)
         if user_id is not None:
-            result = db_cmd(
+            result = combine.db_cmd(
                 f'db.UsersCollection.updateOne({{ _id : ObjectId("{user_id}")}},'
                 "{ $set: { isAdmin : true }})"
             )

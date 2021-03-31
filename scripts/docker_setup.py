@@ -165,9 +165,9 @@ def main() -> None:
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    templ_name = "backup_conf.json.j2"
+    templ_name = "script_conf.json.j2"
     templ_path = (
-        project_dir / "deploy" / "roles" / "combine_maintenance" / "files" / "backup_conf.json"
+        project_dir / "deploy" / "roles" / "combine_maintenance" / "files" / "script_conf.json"
     )
     template = jinja_env.get_template(templ_name)
     print(f"Writing: {templ_path}")

@@ -12,6 +12,8 @@ import tarfile
 import tempfile
 from typing import Dict
 
+from aws_backup import AwsBackup
+from combine_app import CombineApp
 from maint_utils import run_cmd
 from script_step import ScriptStep
 
@@ -25,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
-    default_config = Path(__file__).resolve().parent / "backup_conf.json"
+    default_config = Path(__file__).resolve().parent / "script_conf.json"
     parser.add_argument("--config", help="backup configuration file.", default=default_config)
     return parser.parse_args()
 
@@ -33,63 +35,40 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Create a backup of TheCombine database and backend files."""
     args = parse_args()
-    config: Dict[str, str] = json.loads(args.config.read_text())
+    config: Dict[str, str] = json.loads(Path(args.config).read_text())
     if args.verbose:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
-
+    combine = CombineApp(Path(config["docker_compose_file"]))
+    # turn off the color coding for docker-compose output - adds unreadable escape
+    # characters to syslog
+    combine.set_no_ansi()
+    aws = AwsBackup(bucket=config["aws_bucket"], profile=config["aws_s3_profile"])
     step = ScriptStep()
 
     step.print("Prepare the backup directory.")
     with tempfile.TemporaryDirectory() as backup_dir:
-        backup_file = "combine-backup.tar.gz"
+        backup_file = Path("combine-backup.tar.gz")
         date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        aws_file = f"{config['aws_bucket']}/{config['combine_host']}-{date_str}.tar.gz"
-        # turn off the color coding for docker-compose output - adds unreadable escape
-        # characters to syslog
-        compose_opts = "--no-ansi"
-        compose_file = Path(config["docker_compose_file"])
+        aws_file = f"{config['combine_host']}-{date_str}.tar.gz"
 
         step.print("Stop the frontend and certmgr containers.")
-        run_cmd(
-            [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                compose_opts,
-                "stop",
-                "--timeout",
-                "0",
-                "frontend",
-                "certmgr",
-            ]
-        )
+        combine.stop(["frontend", "certmgr"])
 
         step.print("Dump the database.")
-        run_cmd(
+        combine.exec(
+            "database",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                compose_opts,
-                "exec",
-                "-T",
-                "database",
                 "/usr/bin/mongodump",
                 "--db=CombineDatabase",
                 "--gzip",
-            ]
+            ],
         )
 
-        check_backup_results = run_cmd(
+        check_backup_results = combine.exec(
+            "database",
             [
-                "docker-compose",
-                "-f",
-                str(compose_file),
-                "exec",
-                "-T",
-                "database",
                 "ls",
                 config["db_files_subdir"],
             ],
@@ -99,9 +78,10 @@ def main() -> None:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
 
-        db_container = run_cmd(
-            ["docker", "ps", "--filter", "name=database", "--format", "{{.Names}}"]
-        ).stdout.strip()
+        db_container = CombineApp.get_container_name("database")
+        if db_container is None:
+            print("Cannot find the database container.", file=sys.stderr)
+            sys.exit(1)
         run_cmd(
             [
                 "docker",
@@ -112,9 +92,10 @@ def main() -> None:
         )
 
         step.print("Copy the backend files.")
-        backend_container = run_cmd(
-            ["docker", "ps", "--filter", "name=backend", "--format", "{{.Names}}"]
-        ).stdout.strip()
+        backend_container = CombineApp.get_container_name("backend")
+        if backend_container is None:
+            print("Cannot find the backend container.", file=sys.stderr)
+            sys.exit(1)
         run_cmd(
             [
                 "docker",
@@ -133,24 +114,10 @@ def main() -> None:
                 tar.add(name)
 
         step.print("Push backup to AWS S3 storage.")
-        #    need to specify full path because $PATH does not contain
-        #    /usr/local/bin when run as a cron job
-        run_cmd(
-            [
-                "aws",
-                "s3",
-                "cp",
-                backup_file,
-                aws_file,
-                "--profile",
-                config["aws_s3_profile"],
-            ]
-        )
+        aws.push(backup_file, aws_file)
 
-    step.print("Restart the frontend and certmgr containers.")
-    run_cmd(
-        ["docker-compose", "-f", str(compose_file), compose_opts, "start", "certmgr", "frontend"]
-    )
+        step.print("Restart the frontend and certmgr containers.")
+        combine.start(["certmgr", "frontend"])
 
 
 if __name__ == "__main__":

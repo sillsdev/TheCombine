@@ -554,7 +554,7 @@ Notes:
 1. The backup script requires that the `aws-cli` version 2 is installed. The [Amazon Web Services](#amazon-web-services)
    section describes how to install and configure `aws-cli`.
 2. The backup script can be run from any directory.
-3. The backup script is configured using `backup_conf.json` in the same directory as the script. You may edit this file
+3. The backup script is configured using `script_conf.json` in the same directory as the script. You may edit this file
    to change the configuration, such as, to use a different AWS S3 bucket, or a different hostname (the hostname is used
    to tag the backup)
 4. The daily backup job on the server will also clean up old backup for the machine that is being backed up. This is not
@@ -620,7 +620,7 @@ Notes:
 1. The restore script requires that the `aws-cli` version 2 is installed. The
    [Amazon Web Services](#amazon-web-services) section describes how to install and configure `aws-cli`.
 2. The restore script can be run from any directory.
-3. The restore script is configured using `backup_conf.json` in the same directory as the script.
+3. The restore script is configured using `script_conf.json` in the same directory as the script.
 4. The restore script takes an optional backup name. This is the name of the backup in the AWS S3 bucket, not a local
    file. If the backup name is not provided, the restore script will list the available backups and allow you to choose
    one for the restore operation.
