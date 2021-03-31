@@ -79,27 +79,31 @@ def main() -> None:
             sys.exit(0)
 
         db_container = CombineApp.get_container_name("database")
-        if db_container is not None:
-            run_cmd(
-                [
-                    "docker",
-                    "cp",
-                    f"{db_container}:{config['db_files_subdir']}/",
-                    backup_dir,
-                ]
-            )
+        if db_container is None:
+            print("Cannot find the database container.", file=sys.stderr)
+            sys.exit(1)
+        run_cmd(
+            [
+                "docker",
+                "cp",
+                f"{db_container}:{config['db_files_subdir']}/",
+                backup_dir,
+            ]
+        )
 
         step.print("Copy the backend files.")
         backend_container = CombineApp.get_container_name("backend")
-        if backend_container is not None:
-            run_cmd(
-                [
-                    "docker",
-                    "cp",
-                    f"{backend_container}:/home/app/{config['backend_files_subdir']}/",
-                    str(backup_dir),
-                ]
-            )
+        if backend_container is None:
+            print("Cannot find the backend container.", file=sys.stderr)
+            sys.exit(1)
+        run_cmd(
+            [
+                "docker",
+                "cp",
+                f"{backend_container}:/home/app/{config['backend_files_subdir']}/",
+                str(backup_dir),
+            ]
+        )
 
         step.print("Create the tarball for the backup.")
         # cd to backup_dir so that files in the tarball are relative to the backup_dir
