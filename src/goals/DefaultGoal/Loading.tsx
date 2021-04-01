@@ -1,5 +1,6 @@
 import { Typography } from "@material-ui/core";
 import React, { useRef } from "react";
+import { Translate } from "react-localize-redux";
 import { Animated } from "react-native";
 
 import tractor from "resources/tractor.png";
@@ -32,7 +33,7 @@ export default function Loading() {
   return (
     <React.Fragment>
       <Typography variant="h4" style={{ textAlign: "center" }}>
-        The Combine is processing your data. Please wait.
+        <Translate id="generic.loadingTitle" />
       </Typography>
       <Animated.View style={[{ transform: [{ translateX: travelAnim }] }]}>
         <img
@@ -44,6 +45,9 @@ export default function Loading() {
           }}
         />
       </Animated.View>
+      <Typography variant="h5" style={{ textAlign: "center" }}>
+        <Translate id="generic.loadingText" />
+      </Typography>
     </React.Fragment>
   );
 }

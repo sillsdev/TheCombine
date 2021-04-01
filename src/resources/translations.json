@@ -1,4 +1,22 @@
 {
+  "generic": {
+    "404Title": [
+      "404: Page not found",
+      "404: Page not found",
+      "404: Page not found"
+    ],
+    "404Text": [
+      "Click on the combine to go back home.",
+      "Click on the combine to go back home.",
+      "Click on the combine to go back home."
+    ],
+    "loadingTitle": ["Loading...", "Loading...", "Loading..."],
+    "loadingText": [
+      "Please wait while The Combine processes your data.",
+      "Please wait while The Combine processes your data.",
+      "Please wait while The Combine processes your data."
+    ]
+  },
   "addWords": {
     "selectEntry": [
       "Select an entry",
