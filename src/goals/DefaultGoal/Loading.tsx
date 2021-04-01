@@ -9,6 +9,20 @@ import tractor from "resources/tractor.png";
  * A custom loading page.
  */
 export default function Loading() {
+  return (
+    <React.Fragment>
+      <Typography variant="h4" style={{ textAlign: "center" }}>
+        <Translate id="generic.loadingTitle" />
+      </Typography>
+      <MovingTractor />
+      <Typography variant="h5" style={{ textAlign: "center" }}>
+        <Translate id="generic.loadingText" />
+      </Typography>
+    </React.Fragment>
+  );
+}
+
+function MovingTractor() {
   const halfWidth = window.innerWidth * 0.75;
   const travelTime = 10000;
   const travelAnim = useRef(new Animated.Value(halfWidth)).current;
@@ -31,23 +45,15 @@ export default function Loading() {
   travelLeft();
 
   return (
-    <React.Fragment>
-      <Typography variant="h4" style={{ textAlign: "center" }}>
-        <Translate id="generic.loadingTitle" />
-      </Typography>
-      <Animated.View style={[{ transform: [{ translateX: travelAnim }] }]}>
-        <img
-          src={tractor}
-          alt="Tractor"
-          style={{
-            width: "50%",
-            margin: "0% 25%",
-          }}
-        />
-      </Animated.View>
-      <Typography variant="h5" style={{ textAlign: "center" }}>
-        <Translate id="generic.loadingText" />
-      </Typography>
-    </React.Fragment>
+    <Animated.View style={[{ transform: [{ translateX: travelAnim }] }]}>
+      <img
+        src={tractor}
+        alt="Tractor"
+        style={{
+          width: "50%",
+          margin: "0% 25%",
+        }}
+      />
+    </Animated.View>
   );
 }
