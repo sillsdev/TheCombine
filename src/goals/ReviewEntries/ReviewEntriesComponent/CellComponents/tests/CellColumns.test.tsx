@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { Gloss, SemanticDomain } from "types/word";
 
@@ -80,7 +79,7 @@ describe("Tests cell column functions", () => {
   it("Renders vernacular without crashing", () => {
     const div = document.createElement("div");
     if (columns[0].render) {
-      ReactDOM.render(<div>{columns[0].render(mockWords[0], "row")}</div>, div);
+      ReactDOM.render(<div>{columns[0].render(WORD, "row")}</div>, div);
       ReactDOM.unmountComponentAtNode(div);
     } else {
       fail(

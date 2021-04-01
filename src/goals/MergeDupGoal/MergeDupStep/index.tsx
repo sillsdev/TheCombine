@@ -2,20 +2,15 @@ import { connect } from "react-redux";
 
 import { asyncAdvanceStep } from "components/GoalTimeline/GoalsActions";
 import {
-  moveSenses,
   mergeAll,
-  orderSense,
-  orderDuplicate,
+  setSidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
-import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 
 function mapStateToProps(state: StoreState) {
-  return {
-    words: state.mergeDuplicateGoal.tree.words,
-  };
+  return { wordCount: Object.keys(state.mergeDuplicateGoal.tree.words).length };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
@@ -23,14 +18,8 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     advanceStep: () => {
       dispatch(asyncAdvanceStep());
     },
-    moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
-      dispatch(moveSenses(src, dest));
-    },
-    orderSense: (wordId: string, senseId: string, order: number) => {
-      dispatch(orderSense(wordId, senseId, order));
-    },
-    orderDuplicate: (ref: MergeTreeReference, order: number) => {
-      dispatch(orderDuplicate(ref, order));
+    clearSidebar: () => {
+      return dispatch(setSidebar());
     },
     mergeAll: () => {
       return dispatch(mergeAll());

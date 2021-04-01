@@ -10,9 +10,11 @@ import {
 } from "goals/MergeDupGoal/MergeDups";
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
 import {
+  defaultSidebar,
   Hash,
   MergeTreeReference,
-  TreeDataSense,
+  MergeTreeSense,
+  Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
@@ -22,12 +24,13 @@ import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",
+  COMBINE_SENSE = "COMBINE_SENSE",
+  MOVE_DUPLICATE = "MOVE_DUPLICATE",
   MOVE_SENSE = "MOVE_SENSE",
   ORDER_DUPLICATE = "ORDER_DUPLICATE",
   ORDER_SENSE = "ORDER_SENSE",
   SET_DATA = "SET_DATA",
-  SET_PLURAL = "SET_PLURAL",
-  SET_SENSE = "SET_SENSE",
+  SET_SIDEBAR = "SET_SIDEBAR",
   SET_VERNACULAR = "SET_VERNACULAR",
 }
 
@@ -35,9 +38,24 @@ interface ClearTreeMergeAction {
   type: MergeTreeActions.CLEAR_TREE;
 }
 
+interface CombineSenseMergeAction {
+  type: MergeTreeActions.COMBINE_SENSE;
+  payload: { src: MergeTreeReference; dest: MergeTreeReference };
+}
+
+interface MoveDuplicateMergeAction {
+  type: MergeTreeActions.MOVE_DUPLICATE;
+  payload: { ref: MergeTreeReference; destWordId: string; destOrder: number };
+}
+
 interface MoveSenseMergeAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
+  payload: {
+    wordId: string;
+    mergeSenseId: string;
+    destWordId: string;
+    destOrder: number;
+  };
 }
 
 interface OrderDuplicateMergeAction {
@@ -47,11 +65,7 @@ interface OrderDuplicateMergeAction {
 
 interface OrderSenseMergeAction {
   type: MergeTreeActions.ORDER_SENSE;
-  payload: {
-    wordId: string;
-    senseId: string;
-    order: number;
-  };
+  payload: MergeTreeReference;
 }
 
 interface SetDataMergeAction {
@@ -59,70 +73,83 @@ interface SetDataMergeAction {
   payload: Word[];
 }
 
-interface SetSenseMergeAction {
-  type: MergeTreeActions.SET_SENSE;
-  payload: { ref: MergeTreeReference; data: number | undefined };
+interface SetSidebarMergeAction {
+  type: MergeTreeActions.SET_SIDEBAR;
+  payload: Sidebar;
 }
 
-interface SetWordStringMergeAction {
-  type: MergeTreeActions.SET_PLURAL | MergeTreeActions.SET_VERNACULAR;
-  payload: { wordId: string; data: string };
+interface SetVernacularMergeAction {
+  type: MergeTreeActions.SET_VERNACULAR;
+  payload: { wordId: string; vern: string };
 }
 
 export type MergeTreeAction =
   | ClearTreeMergeAction
+  | CombineSenseMergeAction
+  | MoveDuplicateMergeAction
   | MoveSenseMergeAction
   | OrderDuplicateMergeAction
   | OrderSenseMergeAction
   | SetDataMergeAction
-  | SetSenseMergeAction
-  | SetWordStringMergeAction;
+  | SetSidebarMergeAction
+  | SetVernacularMergeAction;
 
 // Action Creators
-
-export function setVern(
-  wordId: string,
-  vern: string
-): SetWordStringMergeAction {
-  return {
-    type: MergeTreeActions.SET_VERNACULAR,
-    payload: { wordId, data: vern },
-  };
-}
 
 export function clearTree(): ClearTreeMergeAction {
   return { type: MergeTreeActions.CLEAR_TREE };
 }
 
-export function moveSenses(
-  src: MergeTreeReference[],
-  dest: MergeTreeReference[]
-): MoveSenseMergeAction {
+export function combineSense(
+  src: MergeTreeReference,
+  dest: MergeTreeReference
+): CombineSenseMergeAction {
   return {
-    type: MergeTreeActions.MOVE_SENSE,
+    type: MergeTreeActions.COMBINE_SENSE,
     payload: { src, dest },
   };
 }
 
 export function moveSense(
-  src: MergeTreeReference,
-  dest: MergeTreeReference
-): MoveSenseMergeAction {
-  return moveSenses([src], [dest]);
-}
-
-export function setSense(
   ref: MergeTreeReference,
-  data: number | undefined
-): SetSenseMergeAction {
+  destWordId: string,
+  destOrder: number
+): MoveDuplicateMergeAction | MoveSenseMergeAction {
+  if (ref.order === undefined) {
+    return {
+      type: MergeTreeActions.MOVE_SENSE,
+      payload: { ...ref, destWordId, destOrder },
+    };
+  }
+  // If ref.order is defined, the sense is being moved out of the sidebar.
   return {
-    type: MergeTreeActions.SET_SENSE,
-    payload: { ref, data },
+    type: MergeTreeActions.MOVE_DUPLICATE,
+    payload: { ref, destWordId, destOrder },
   };
 }
 
-export function removeSense(ref: MergeTreeReference): SetSenseMergeAction {
-  return setSense(ref, undefined);
+export function orderSense(
+  ref: MergeTreeReference,
+  order: number
+): OrderDuplicateMergeAction | OrderSenseMergeAction {
+  if (ref.order === undefined) {
+    return {
+      type: MergeTreeActions.ORDER_SENSE,
+      payload: { ...ref, order },
+    };
+  }
+  // If ref.order is defined, the sense is being ordered within the sidebar.
+  return {
+    type: MergeTreeActions.ORDER_DUPLICATE,
+    payload: { ref, order },
+  };
+}
+
+export function setSidebar(sidebar?: Sidebar): SetSidebarMergeAction {
+  return {
+    type: MergeTreeActions.SET_SIDEBAR,
+    payload: sidebar ?? defaultSidebar,
+  };
 }
 
 export function setWordData(words: Word[]): SetDataMergeAction {
@@ -132,36 +159,21 @@ export function setWordData(words: Word[]): SetDataMergeAction {
   };
 }
 
-export function orderSense(
+export function setVern(
   wordId: string,
-  senseId: string,
-  order: number
-): OrderSenseMergeAction {
+  vern: string
+): SetVernacularMergeAction {
   return {
-    type: MergeTreeActions.ORDER_SENSE,
-    payload: { wordId, senseId, order },
-  };
-}
-
-export function orderDuplicate(
-  ref: MergeTreeReference,
-  order: number
-): OrderDuplicateMergeAction {
-  return {
-    type: MergeTreeActions.ORDER_DUPLICATE,
-    payload: { ref, order },
+    type: MergeTreeActions.SET_VERNACULAR,
+    payload: { wordId, vern },
   };
 }
 
 // Dispatch Functions
 
-export function mergeSense() {
-  return async (_dispatch: StoreStateDispatch, _getState: () => StoreState) => {
-    // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top
-  };
+interface SenseWithState extends MergeTreeSense {
+  state: State;
 }
-
-type SenseWithState = TreeDataSense & { state: State };
 
 // Given a wordId, constructs from the state the corresponing MergeWords.
 // Returns the MergeWords, or undefined if the parent and child are identical.
@@ -177,14 +189,10 @@ function getMergeWords(
     // Create list of all senses and add merge type tags slit by src word.
     const senses: Hash<SenseWithState[]> = {};
 
-    const allSenses = Object.values(word.senses).map((sense) =>
-      Object.values(sense)
-    );
-
     // Build senses array.
-    for (const senseList of allSenses) {
-      for (const sense of senseList) {
-        const senseData = data.senses[sense];
+    for (const senseGuids of Object.values(word.sensesGuids)) {
+      for (const guid of senseGuids) {
+        const senseData = data.senses[guid];
         const wordId = senseData.srcWordId;
 
         if (!senses[wordId]) {
@@ -205,16 +213,14 @@ function getMergeWords(
     }
 
     // Set sense and duplicate senses.
-    Object.values(word.senses).forEach((senseHash) => {
-      const senseIds = Object.values(senseHash);
-
+    Object.values(word.sensesGuids).forEach((guids) => {
       // Set the first sense to be merged as State.Sense.
-      const senseData = data.senses[senseIds[0]];
+      const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.order];
       mainSense.state = State.Sense;
 
       // Merge the rest as duplicates.
-      const dups = senseIds.slice(1).map((id) => data.senses[id]);
+      const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
         const dupSense = senses[dup.srcWordId][dup.order];
         dupSense.state = State.Duplicate;
@@ -248,6 +254,9 @@ function getMergeWords(
 
     // Construct parent and children.
     const parent: Word = { ...data.words[wordId], senses: [] };
+    if (!parent.vernacular) {
+      parent.vernacular = word.vern;
+    }
     const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
       sList.forEach((sense) => {
         if (sense.state === State.Sense || sense.state === State.Active) {

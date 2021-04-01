@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentGoal } from "components/GoalTimeline/GoalsActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
+import { clearTree } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 
@@ -38,8 +40,10 @@ export default function BaseGoalScreen() {
   useEffect(() => {
     return function cleanup() {
       dispatch(setCurrentGoal());
+      dispatch(clearReviewEntriesState());
+      dispatch(clearTree());
     };
-  });
+  }, [dispatch]);
   return (
     <React.Fragment>
       <DisplayProgress />

@@ -2,25 +2,42 @@ import { Sense, Word } from "types/word";
 
 export type Hash<V> = { [key: string]: V };
 
-export type TreeDataSense = Sense & { srcWordId: string; order: number };
+export interface MergeTreeSense extends Sense {
+  srcWordId: string;
+  order: number;
+}
 
 export interface MergeData {
   words: Hash<Word>;
-  senses: Hash<TreeDataSense>;
+  senses: Hash<MergeTreeSense>;
 }
 
 export interface MergeTreeReference {
   wordId: string;
-  senseId: string;
-  duplicate: string;
+  mergeSenseId: string;
+  order?: number;
 }
 
 export interface MergeTreeWord {
-  senses: Hash<Hash<string>>;
+  sensesGuids: Hash<string[]>;
   vern: string;
-  plural: string;
 }
 
+export interface Sidebar {
+  senses: MergeTreeSense[];
+  wordId: string;
+  mergeSenseId: string;
+}
+
+export const defaultSidebar: Sidebar = {
+  senses: [],
+  wordId: "",
+  mergeSenseId: "",
+};
+
 export interface MergeTree {
+  sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
 }
+
+export const defaultTree = { sidebar: defaultSidebar, words: {} };

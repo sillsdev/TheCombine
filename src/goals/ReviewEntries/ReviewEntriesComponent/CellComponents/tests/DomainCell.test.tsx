@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -8,6 +7,7 @@ import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWord
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 
 const createMockStore = configureMockStore([]);
+const mockWord = mockWords()[0];
 
 describe("DomainCell", () => {
   const mockStore = createMockStore(defaultState);
@@ -15,7 +15,7 @@ describe("DomainCell", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <DomainCell rowData={mockWords[0]} sortingByDomains={true} />
+        <DomainCell rowData={mockWord} sortingByDomains={true} />
       </Provider>,
       div
     );

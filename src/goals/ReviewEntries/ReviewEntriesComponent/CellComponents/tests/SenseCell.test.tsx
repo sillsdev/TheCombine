@@ -1,4 +1,3 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -10,6 +9,7 @@ const state = {
   currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },
 };
 const mockStore = configureMockStore([])(state);
+const mockWord = mockWords()[0];
 
 describe("SenseCell", () => {
   it("Renders without crashing", () => {
@@ -17,8 +17,8 @@ describe("SenseCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <SenseCell
-            rowData={mockWords[0]}
-            value={mockWords[0].senses}
+            rowData={mockWord}
+            value={mockWord.senses}
             editable={true}
             sortingByGloss={true}
           />

@@ -8,29 +8,27 @@ import { StoreState } from "types";
  * Displays how much progress has been made in a goal
  */
 export default function DisplayProgress() {
-  const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
+  const currentStep = useSelector(
+    (state: StoreState) => state.goalsState.currentGoal.currentStep
+  );
+  const numSteps = useSelector(
+    (state: StoreState) => state.goalsState.currentGoal.numSteps
+  );
+  const percentComplete = (currentStep / numSteps) * 100;
 
-  function getAmountComplete(): number {
-    return (goal.currentStep / goal.numSteps) * 100;
-  }
-
-  /*function getHeaderString(): string {
-    return `${goal.currentStep} / ${goal.numSteps}`;
-  }*/
-
-  return goal.numSteps > 1 ? (
-    <Paper key={goal.currentStep}>
+  return numSteps > 1 ? (
+    <Paper key={currentStep}>
       <Grid container direction="column">
         <Grid item xs>
           <Typography variant={"h4"}>
             <Translate id="goal.progress.step" />
-            {` ${goal.currentStep + 1} `}
+            {` ${currentStep + 1} `}
             <Translate id="goal.progress.of" />
-            {` ${goal.numSteps}`}
+            {` ${numSteps}`}
           </Typography>
         </Grid>
         <Grid item xs>
-          <LinearProgress variant="determinate" value={getAmountComplete()} />
+          <LinearProgress variant="determinate" value={percentComplete} />
         </Grid>
       </Grid>
     </Paper>
