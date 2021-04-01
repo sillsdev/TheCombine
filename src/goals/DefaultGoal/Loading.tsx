@@ -1,0 +1,49 @@
+import { Typography } from "@material-ui/core";
+import React, { useRef } from "react";
+import { Animated } from "react-native";
+
+import tractor from "resources/tractor.png";
+
+/**
+ * A custom loading page.
+ */
+export default function Loading() {
+  const halfWidth = window.innerWidth * 0.75;
+  const travelTime = 10000;
+  const travelAnim = useRef(new Animated.Value(halfWidth)).current;
+  const travelLeft = () => {
+    Animated.timing(travelAnim, {
+      toValue: -1 * halfWidth,
+      duration: travelTime,
+      useNativeDriver: true,
+    }).start();
+    setTimeout(travelReset, travelTime);
+  };
+  const travelReset = () => {
+    Animated.timing(travelAnim, {
+      toValue: halfWidth,
+      duration: 0,
+      useNativeDriver: true,
+    }).start(travelLeft);
+  };
+
+  travelLeft();
+
+  return (
+    <React.Fragment>
+      <Typography variant="h4" style={{ textAlign: "center" }}>
+        The Combine is processing your data. Please wait.
+      </Typography>
+      <Animated.View style={[{ transform: [{ translateX: travelAnim }] }]}>
+        <img
+          src={tractor}
+          alt="Tractor"
+          style={{
+            width: "50%",
+            margin: "0% 25%",
+          }}
+        />
+      </Animated.View>
+    </React.Fragment>
+  );
+}

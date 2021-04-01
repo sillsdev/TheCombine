@@ -6,7 +6,7 @@ import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
-import { Goal, GoalType } from "types/goals";
+import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Edit } from "types/userEdit";
 
 export function maxNumSteps(type: GoalType) {
@@ -55,6 +55,6 @@ export function convertEditToGoal(edit: Edit): Goal {
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
   goal.numSteps = goal.steps.length;
   goal.changes = JSON.parse(edit.changes);
-  goal.completed = true;
+  goal.status = GoalStatus.Completed;
   return goal;
 }

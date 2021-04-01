@@ -9,7 +9,7 @@ import {
 } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
-import { Goal } from "types/goals";
+import { Goal, GoalStatus } from "types/goals";
 import { Project } from "types/project";
 
 export enum CharacterInventoryType {
@@ -134,7 +134,7 @@ export function uploadInventory(goal: Goal) {
     const updatedGoal: Goal = {
       ...goal,
       changes: { charChanges: changes },
-      completed: true,
+      status: GoalStatus.Completed,
     };
     await dispatch(asyncUpdateOrAddGoal(updatedGoal));
   };

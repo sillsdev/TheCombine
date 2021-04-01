@@ -54,6 +54,12 @@ export enum GoalName {
   ValidateStrWords = "validateStrWords",
 }
 
+export enum GoalStatus {
+  Loading = "LOADING",
+  InProgress = "IN_PROGRESS",
+  Completed = "COMPLETED",
+}
+
 export class Goal {
   guid: string;
   goalType: GoalType;
@@ -63,7 +69,7 @@ export class Goal {
   numSteps: number;
   currentStep: number;
   data: GoalData;
-  completed: boolean;
+  status: GoalStatus;
   changes: GoalChanges;
 
   constructor(
@@ -80,7 +86,7 @@ export class Goal {
     this.numSteps = 1;
     this.currentStep = 0;
     this.data = data;
-    this.completed = false;
+    this.status = GoalStatus.Loading;
     this.changes = {};
   }
 }

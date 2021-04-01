@@ -197,16 +197,34 @@ describe("GoalsActions", () => {
       LocalStorage.setProjectId(mockProjectId);
     });
 
-    it("should create an async action and make backend calls", async () => {
+    it("should make appropriate dispatch and backend call", async () => {
       const goal: Goal = new CreateCharInv();
       await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
       const addGoalToHistory: actions.AddGoalToHistoryAction = {
         type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
         payload: goal,
       };
-      expect(mockStore.getActions()).toEqual([addGoalToHistory]);
+      expect(mockStore.getActions()).toContainEqual(addGoalToHistory);
       expect(mockAddGoalToUserEdit).toBeCalledTimes(1);
-      expect(mockAddStepToGoal).toBeCalledTimes(1);
+    });
+  });
+
+  describe("asyncLoadNewGoal", () => {
+    beforeEach(() => {
+      LocalStorage.setCurrentUser(mockUser);
+      LocalStorage.setProjectId(mockProjectId);
+    });
+
+    it("should create an action, but nothing else if no step data to load", async () => {
+      const goal: Goal = new CreateCharInv();
+      await mockStore.dispatch<any>(
+        actions.asyncLoadNewGoal(goal, 0, mockUserEditId)
+      );
+      expect(mockStore.getActions()[0].type).toEqual(
+        actions.GoalsActions.UPDATE_GOAL
+      );
+      expect(mockAddGoalToUserEdit).toBeCalledTimes(0);
+      expect(mockAddStepToGoal).toBeCalledTimes(0);
     });
 
     it("should call MergeDups functions when goal is MergeDups", async () => {
@@ -217,7 +235,9 @@ describe("GoalsActions", () => {
           words: [...goalDataMock.plannedWords[0]],
         },
       ];
-      await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
+      await mockStore.dispatch<any>(
+        actions.asyncLoadNewGoal(goal, 0, mockUserEditId)
+      );
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
       expect(mockLoadMergeDupsData).toBeCalledTimes(1);
     });
@@ -305,7 +325,7 @@ describe("GoalsActions", () => {
 
     it("should not load data for an unimplemented goal", async () => {
       const goal = new HandleFlags();
-      expect(await actions.loadGoalData(goal)).toEqual(goal);
+      expect(await actions.loadGoalData(goal)).toEqual(false);
     });
   });
 
@@ -316,16 +336,16 @@ describe("GoalsActions", () => {
       expect(goal.steps).toEqual([]);
       expect(goal.currentStep).toEqual(0);
 
-      const updatedGoal = actions.updateStepFromData(goal);
-      expect((updatedGoal.steps[0] as MergeStepData).words).toEqual(
+      actions.updateStepFromData(goal);
+      expect((goal.steps[0] as MergeStepData).words).toEqual(
         (goal.data as MergeDupData).plannedWords[0]
       );
-      expect(updatedGoal.currentStep).toEqual(0);
+      expect(goal.currentStep).toEqual(0);
     });
 
     it("should not update the step data of an unimplemented goal", () => {
       const goal = new HandleFlags();
-      expect(actions.updateStepFromData(goal)).toEqual(goal);
+      expect(actions.updateStepFromData(goal)).toEqual(false);
     });
   });
 
