@@ -25,7 +25,7 @@ export default function Loading() {
 function MovingTractor() {
   const halfWidth = window.innerWidth * 0.75;
   const travelTime = 10000;
-  const travelAnim = useRef(new Animated.Value(halfWidth)).current;
+  const travelAnim = useRef(new Animated.Value(0)).current;
   const travelLeft = () => {
     Animated.timing(travelAnim, {
       toValue: -1 * halfWidth,
