@@ -62,9 +62,6 @@ function setMockFunctions() {
   mockDispatchMergeStepData.mockReturnValue(mockAction);
   mockGetUser.mockResolvedValue(mockUser);
   mockGetUserEditById.mockResolvedValue(mockUserEdit);
-  mockLoadMergeDupsData.mockImplementation((goal: MergeDups) =>
-    Promise.resolve(goal)
-  );
   mockUpdateUser.mockResolvedValue(mockUser);
 }
 

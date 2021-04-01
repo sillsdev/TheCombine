@@ -194,16 +194,18 @@ export function asyncUpdateOrAddGoal(goal: Goal) {
 
 // Helper Funtions
 
+// Returns true if input goal updated.
 export async function loadGoalData(goal: Goal): Promise<boolean> {
   switch (goal.goalType) {
     case GoalType.MergeDups: {
-      goal = await loadMergeDupsData(goal);
+      await loadMergeDupsData(goal);
       return true;
     }
   }
   return false;
 }
 
+// Returns true if input goal updated.
 export function updateStepFromData(goal: Goal): boolean {
   switch (goal.goalType) {
     case GoalType.MergeDups: {
