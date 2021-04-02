@@ -18,7 +18,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
-import { GoalType } from "types/goals";
+import { GoalStatus, GoalType } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
@@ -323,6 +323,7 @@ function addCompletedMergeToGoal(
       }
       changes.merges.push(completedMerge);
       goal.changes = changes;
+      goal.status = GoalStatus.Completed;
       dispatch(updateGoal(goal));
     }
   };
@@ -364,6 +365,7 @@ export function dispatchMergeStepData(goal: MergeDups) {
   };
 }
 
+// Modifies the mutable input.
 export async function loadMergeDupsData(goal: MergeDups) {
   const finder = new DupFinder();
   const groups = await finder.getNextDups();
@@ -400,6 +402,4 @@ export async function loadMergeDupsData(goal: MergeDups) {
   // Reset goal steps.
   goal.currentStep = 0;
   goal.steps = [];
-
-  return goal;
 }

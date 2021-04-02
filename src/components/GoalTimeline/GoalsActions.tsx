@@ -8,7 +8,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { StoreState } from "types";
 import { ActionWithPayload, StoreStateDispatch } from "types/actions";
-import { Goal, GoalType } from "types/goals";
+import { Goal, GoalStatus, GoalType } from "types/goals";
 import { convertEditToGoal } from "types/goalUtilities";
 
 export enum GoalsActions {
@@ -104,17 +104,12 @@ export function asyncAddGoalToHistory(goal: Goal) {
       const goalHistory = getState().goalsState.history;
       let goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
       if (goalIndex === -1) {
-        // Load data.
-        goal = await loadGoalData(goal);
-        goal = updateStepFromData(goal);
-
-        // Dispatch to state.
-        dispatch(dispatchStepData(goal));
+        // Add goal with .state=GoalState.Loading.
         dispatch(addGoalToHistory(goal));
-
-        // Save to database.
         goalIndex = await Backend.addGoalToUserEdit(userEditId, goal);
-        await saveCurrentStep(goal, goalIndex);
+
+        // Load the new goal, but don't await, to allow a loading screen.
+        dispatch(asyncLoadNewGoal(goal, goalIndex, userEditId));
       } else {
         dispatch(setCurrentGoal(goal));
       }
@@ -122,6 +117,25 @@ export function asyncAddGoalToHistory(goal: Goal) {
       // Serve goal.
       history.push(`${Path.Goals}/${goalIndex}`);
     }
+  };
+}
+
+export function asyncLoadNewGoal(
+  goal: Goal,
+  goalIndex: number,
+  userEditId: string
+) {
+  return async (dispatch: StoreStateDispatch) => {
+    // Load data.
+    if (await loadGoalData(goal)) {
+      updateStepFromData(goal);
+      dispatch(dispatchStepData(goal));
+      await Backend.addGoalToUserEdit(userEditId, goal);
+      await saveCurrentStep(goal, goalIndex);
+    }
+
+    goal.status = GoalStatus.InProgress;
+    dispatch(updateGoal(goal));
   };
 }
 
@@ -134,7 +148,7 @@ export function asyncAdvanceStep() {
     goal.currentStep++;
     if (goal.currentStep < goal.numSteps) {
       // Update data.
-      goal = updateStepFromData(goal);
+      updateStepFromData(goal);
 
       // Dispatch to state.
       dispatch(dispatchStepData(goal));
@@ -143,7 +157,7 @@ export function asyncAdvanceStep() {
       // Save to database.
       await saveCurrentStep(goal, goalIndex);
     } else {
-      goal.completed = true;
+      goal.status = GoalStatus.Completed;
       dispatch(updateGoal(goal));
       history.push(Path.Goals);
     }
@@ -180,30 +194,29 @@ export function asyncUpdateOrAddGoal(goal: Goal) {
 
 // Helper Funtions
 
-export async function loadGoalData(goal: Goal) {
+// Returns true if input goal updated.
+export async function loadGoalData(goal: Goal): Promise<boolean> {
   switch (goal.goalType) {
-    case GoalType.MergeDups:
-      goal = await loadMergeDupsData(goal);
-      break;
-    default:
-      break;
+    case GoalType.MergeDups: {
+      await loadMergeDupsData(goal);
+      return true;
+    }
   }
-  return goal;
+  return false;
 }
 
-export function updateStepFromData(goal: Goal): Goal {
+// Returns true if input goal updated.
+export function updateStepFromData(goal: Goal): boolean {
   switch (goal.goalType) {
     case GoalType.MergeDups: {
       const currentGoalData = goal.data as MergeDupData;
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep],
       };
-      break;
+      return true;
     }
-    default:
-      break;
   }
-  return goal;
+  return false;
 }
 
 export function getUserEditId(): string | undefined {
