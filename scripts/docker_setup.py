@@ -96,6 +96,12 @@ def main() -> None:
             {"key": "SERVER_NAME", "value": "localhost"},
             {"key": "SSL_CERTIFICATE", "value": "/etc/cert_store/nginx/localhost/fullchain.pem"},
             {"key": "SSL_PRIVATE_KEY", "value": "/etc/cert_store/nginx/localhost/privkey.pem"},
+            {"key": "CONFIG_USE_CONNECTION_URL", "value": "true"},
+            {"key": "CONFIG_CAPTCHA_REQD", "value": json.dumps(not args.no_captcha)},
+            {
+                "key": "CONFIG_CAPTCHA_SITE_KEY",
+                "value": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+            },
         ],
         "combine_cert_env_vars": [
             {"key": "CERT_MODE", "value": "self-signed"},
@@ -104,8 +110,6 @@ def main() -> None:
             {"key": "MAX_CONNECT_TRIES", "value": "10"},
             {"key": "SERVER_NAME", "value": "localhost"},
         ],
-        "config_captcha_required": json.dumps(not args.no_captcha),
-        "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
         "mongodb_version": "4.4",
         "combine_app_dir": re.sub(r"\\", r"\\\\", str(project_dir)),
         "backend_files_subdir": ".CombineFiles",
@@ -121,7 +125,6 @@ def main() -> None:
         "env.frontend.j2": project_dir / ".env.frontend",
         "env.backend.j2": project_dir / ".env.backend",
         "env.certmgr.j2": project_dir / ".env.certmgr",
-        "config.js.j2": project_dir / "nginx" / "scripts" / "config.js",
     }
 
     # Set backend private env_vars if they are defined for our process
@@ -144,7 +147,6 @@ def main() -> None:
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    (project_dir / "nginx" / "scripts").mkdir(exist_ok=True)
 
     for templ_name, templ_path in template_map.items():
         template = jinja_env.get_template(templ_name)
