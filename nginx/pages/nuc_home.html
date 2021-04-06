@@ -59,14 +59,13 @@
     <script>
       var pattern = new RegExp("^([^/.]+)[/.]");
       var match;
-      var ap_name_str
+      var ap_name_str;
       if ((match = pattern.exec(window.location.hostname))) {
-          ap_name_str = match[1] + "_ap";
+        ap_name_str = match[1] + "_ap";
+      } else {
+        ap_name_str = "<i>Unknown</i>";
       }
-      else {
-        ap_name_str = "<i>Unknown</i>"
-      }
-      document.getElementById("ap_name").innerHTML =
+      document.getElementById("ap_name").innerHTML = ap_name_str;
     </script>
   </body>
 </html>
