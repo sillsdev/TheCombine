@@ -16,9 +16,11 @@
 # quote_value() checks to see if the value should
 # be quoted in javascript.  It returns 1 if the
 # first argument is:
-#  - a number (integer or decimal)
+#  - a base-10 integer or decimal number.  Does
+#    not support floating point notation nor
+#    underscores as numeric separators
 #  - already quoted
-#  - a boolean (case insensitive)
+#  - a boolean
 # It returns 0 otherwise
 ###############################################
 
@@ -31,12 +33,9 @@ quote_value() {
     return 1
   else
     # is it a boolean?
-    shopt -s nocasematch
     if [[ $1 =~ ^(true|false)?$ ]] ; then
-      shopt -u nocasematch
       return 1
     fi
-    shopt -u nocasematch
   fi
   return 0
 }
