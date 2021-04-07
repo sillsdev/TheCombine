@@ -1,5 +1,6 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
+import { Translate } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
 import tractor from "resources/tractor.png";
@@ -12,7 +13,7 @@ export default function PageNotFound() {
   return (
     <React.Fragment>
       <Typography variant="h4" style={{ textAlign: "center" }}>
-        404: Page not found
+        <Translate id="generic.404Title" />
       </Typography>
       <img
         src={tractor}
@@ -22,8 +23,8 @@ export default function PageNotFound() {
           history.push(Path.Goals);
         }}
       />
-      <Typography variant="h4" style={{ textAlign: "center" }}>
-        Click on the combine to go back home
+      <Typography variant="h5" style={{ textAlign: "center" }}>
+        <Translate id="generic.404Text" />
       </Typography>
     </React.Fragment>
   );

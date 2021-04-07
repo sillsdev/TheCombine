@@ -1,8 +1,8 @@
 import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
-import React, { CSSProperties, useState } from "react";
+import { CSSProperties, useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import { Goal, GoalType } from "types/goals";
+import { Goal, GoalStatus, GoalType } from "types/goals";
 
 export type Orientation = "horizontal" | "vertical";
 
@@ -98,7 +98,9 @@ export function makeGoalTile(
         onClick={onClick}
         disabled={
           /* Hide completed, except goaltypes for which the completed view is implemented. */
-          !goal || (goal.completed && goal.goalType !== GoalType.CreateCharInv)
+          !goal ||
+          (goal.status === GoalStatus.Completed &&
+            goal.goalType !== GoalType.CreateCharInv)
         }
       >
         <Typography variant={"h6"}>

@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -8,6 +7,7 @@ import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWord
 import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 
 const createMockStore = configureMockStore([]);
+const mockWord = mockWords()[0];
 
 describe("DeleteCell", () => {
   const mockStore = createMockStore(defaultState);
@@ -15,7 +15,7 @@ describe("DeleteCell", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <DeleteCell rowData={mockWords[0]} delete={jest.fn()} />
+        <DeleteCell rowData={mockWord} delete={jest.fn()} />
       </Provider>,
       div
     );

@@ -8,20 +8,10 @@ import mockWords, {
   mockCreateWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
-// Mock store + axios
-const state = {
-  reviewEntriesState: {
-    words: mockWords,
-  },
-  treeViewState: {
-    currentDomain: {
-      name: "domain",
-      id: "number",
-      subdomains: [],
-    },
-  },
-};
-const mockStore = configureMockStore([])(state);
+const mockGetFrontierWords = jest.fn();
+const mockMaterialTable = jest.fn();
+const mockUpdateAllWords = jest.fn();
+const mockUuid = jest.fn();
 
 // Standard dialog mockout.
 jest.mock("@material-ui/core", () => {
@@ -38,9 +28,9 @@ jest.mock("backend", () => {
 });
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
-jest.mock("utilities", () => {
+jest.mock("uuid", () => {
   return {
-    uuid: () => mockUuid(),
+    v4: () => mockUuid(),
   };
 });
 // To deal with the table not wanting to behave in testing.
@@ -51,13 +41,25 @@ jest.mock("@material-table/core", () => {
   };
 });
 
-const mockGetFrontierWords = jest.fn();
-const mockMaterialTable = jest.fn();
-const mockUpdateAllWords = jest.fn();
-const mockUuid = jest.fn();
+// Mock store + axios
+const mockReviewEntryWords = mockWords();
+const state = {
+  reviewEntriesState: {
+    words: mockReviewEntryWords,
+  },
+  treeViewState: {
+    currentDomain: {
+      name: "domain",
+      id: "number",
+      subdomains: [],
+    },
+  },
+};
+const mockStore = configureMockStore([])(state);
+
 function setMockFunctions() {
   mockGetFrontierWords.mockResolvedValue(
-    mockWords.map((word) => mockCreateWord(word))
+    mockReviewEntryWords.map((w) => mockCreateWord(w))
   );
   mockMaterialTable.mockReturnValue(React.Fragment);
 }
@@ -65,7 +67,7 @@ function setMockFunctions() {
 beforeEach(() => {
   // Prep for component creation
   setMockFunctions();
-  for (let word of mockWords) {
+  for (let word of mockReviewEntryWords) {
     for (let sense of word.senses)
       mockUuid.mockImplementationOnce(() => sense.guid);
   }
@@ -86,8 +88,8 @@ beforeEach(() => {
 describe("ReviewEntriesComponent", () => {
   it("Initializes correctly", () => {
     expect(mockUpdateAllWords).toHaveBeenCalledWith(
-      mockWords.map((value) => ({
-        ...value,
+      mockReviewEntryWords.map((word) => ({
+        ...word,
         recorder: expect.any(Object),
       }))
     );

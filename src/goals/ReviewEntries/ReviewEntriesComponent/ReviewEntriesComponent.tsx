@@ -9,7 +9,6 @@ import { Word } from "types/word";
 // Component state/props
 interface ReviewEntriesProps {
   // Dispatch changes
-  clearState: () => void;
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
@@ -31,7 +30,6 @@ export default class ReviewEntriesComponent extends React.Component<
     super(props);
     this.state = { loaded: false };
     this.recorder = new Recorder();
-    this.props.clearState();
     getFrontierWords().then((frontier: Word[]) => {
       this.updateLocalWords(frontier);
       this.setState({ loaded: true });
