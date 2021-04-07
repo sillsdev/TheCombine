@@ -24,19 +24,23 @@
   with_items:
     - combine-backup
     - combine-restore
+    - combine-env
     - backup_conf.json
 
 - name: install backup/restore scripts
   template:
-    src: "{{ item }}.j2"
-    dest: "{{ combine_app_dir }}/bin/{{ item }}"
+    src: "{{ item.name }}.j2"
+    dest: "{{ combine_app_dir }}/bin/{{ item.name }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
-    mode: 0755
+    mode: "{{ item.mode }}"
   with_items:
-    - combine-clean-aws
-    - combine-backup-job
-    - script_conf.json
+    - name: combine-clean-aws
+      mode: "0755"
+    - name: combine-backup-job
+      mode: "0755"
+    - name: script_conf.json
+      mode: "0644"
 
 - name: install additional maintenance scripts
   copy:

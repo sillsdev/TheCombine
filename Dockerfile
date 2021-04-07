@@ -38,6 +38,7 @@ ENV FRONTEND_HOST_DIR /usr/share/nginx/html
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
 RUN mkdir ${FRONTEND_HOST_DIR}/nuc
+RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 
 # Setup web content
@@ -54,4 +55,4 @@ COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png
 COPY nginx/templates/* /etc/nginx/templates/
 
 # Copy additional configuration scripts
-COPY nginx/*.sh /docker-entrypoint.d
+COPY nginx/init/* /docker-entrypoint.d/

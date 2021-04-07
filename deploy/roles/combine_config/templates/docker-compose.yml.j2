@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3"
 services:
   backend:
 {% if combine_pull_images %}
@@ -14,7 +14,7 @@ services:
       - database
     env_file:
       - ./.env.backend
-    restart: unless-stopped
+    restart: always
 {% if combine_use_syslog %}
     logging:
         driver: syslog
@@ -31,7 +31,6 @@ services:
     env_file:
       - ./.env.frontend
     volumes:
-      - ./nginx/scripts:/usr/share/nginx/html/scripts:ro
       - letsencrypt:/etc/letsencrypt
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
@@ -46,7 +45,7 @@ services:
     depends_on:
       - certmgr
       - backend
-    restart: unless-stopped
+    restart: always
 {% if combine_use_syslog %}
     logging:
         driver: syslog
@@ -71,7 +70,7 @@ services:
 {% if cert_mode == "cert-server" or cert_mode == "cert-client" %}
       - /home/combine/.aws:/root/.aws:ro
 {% endif %}
-    restart: unless-stopped
+    restart: always
 {% if combine_use_syslog %}
     logging:
         driver: syslog
@@ -85,7 +84,7 @@ services:
       - database_data:/data/db
     expose:
       - 27017
-    restart: unless-stopped
+    restart: always
 {% if combine_use_syslog %}
     logging:
         driver: syslog
