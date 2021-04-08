@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
-import React, { useRef } from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
-import { Animated } from "react-native";
+//import { Animated } from "react-native";
 
 import tractor from "resources/tractor.png";
 
@@ -14,7 +14,14 @@ export default function Loading() {
       <Typography variant="h4" style={{ textAlign: "center" }}>
         <Translate id="generic.loadingTitle" />
       </Typography>
-      <MovingTractor />
+      <img
+        src={tractor}
+        alt="Tractor"
+        style={{
+          width: "50%",
+          margin: "0% 25%",
+        }}
+      />
       <Typography variant="h5" style={{ textAlign: "center" }}>
         <Translate id="generic.loadingText" />
       </Typography>
@@ -22,7 +29,7 @@ export default function Loading() {
   );
 }
 
-function MovingTractor() {
+/*function MovingTractor() {
   const halfWidth = window.innerWidth * 0.75;
   const travelTime = 10000;
   const travelAnim = useRef(new Animated.Value(0)).current;
@@ -56,4 +63,4 @@ function MovingTractor() {
       />
     </Animated.View>
   );
-}
+}*/
