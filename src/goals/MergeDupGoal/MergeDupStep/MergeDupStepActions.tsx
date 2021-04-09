@@ -373,7 +373,7 @@ export async function loadMergeDupsData(goal: MergeDups) {
   // the first time with greater similarity restriction.
   let newGroups = await getDupGroups(maxNumSteps(goal.goalType), 0);
   if (!newGroups.length) {
-    newGroups = await getDupGroups(maxNumSteps(goal.goalType), 2);
+    newGroups = await getDupGroups(maxNumSteps(goal.goalType));
   }
 
   // Add data to goal.
@@ -389,9 +389,10 @@ async function getDupGroups(
   maxCount: number,
   maxScore?: number
 ): Promise<Word[][]> {
-  const finder = maxScore
-    ? new DupFinder({ ...DefaultParams, maxScore })
-    : new DupFinder();
+  const finder =
+    maxScore === undefined
+      ? new DupFinder()
+      : new DupFinder({ ...DefaultParams, maxScore });
   const groups = await finder.getNextDups();
 
   const usedIDs: string[] = [];
