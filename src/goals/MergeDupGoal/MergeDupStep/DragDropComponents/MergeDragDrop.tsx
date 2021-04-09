@@ -12,6 +12,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
+import theme from "types/theme";
 
 interface MergeDragDropProps {
   portrait: boolean;
@@ -80,7 +81,10 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
   return (
     <DragDropContext onDragEnd={handleDrop}>
       {Object.keys(treeWords).map((key) => (
-        <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
+        <GridListTile
+          key={key}
+          style={{ height: "70vh", margin: theme.spacing(1) }}
+        >
           <DropWord
             mergeState={mergeState}
             portrait={props.portrait}
@@ -88,7 +92,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
           />
         </GridListTile>
       ))}
-      <GridListTile key={newId} style={{ margin: 8 }}>
+      <GridListTile key={newId} style={{ margin: theme.spacing(1) }}>
         <DropWord
           mergeState={mergeState}
           portrait={props.portrait}
