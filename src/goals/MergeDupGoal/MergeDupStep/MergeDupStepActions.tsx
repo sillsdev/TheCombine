@@ -371,9 +371,9 @@ export function dispatchMergeStepData(goal: MergeDups) {
 export async function loadMergeDupsData(goal: MergeDups) {
   // Until we develop a better backend algorithm, run the frontend one twice,
   // the first time with greater similarity restriction.
-  let newGroups = await getDupGroups(maxNumSteps(goal.goalType), 1);
+  let newGroups = await getDupGroups(maxNumSteps(goal.goalType), 0);
   if (!newGroups.length) {
-    newGroups = await getDupGroups(maxNumSteps(goal.goalType));
+    newGroups = await getDupGroups(maxNumSteps(goal.goalType), 2);
   }
 
   // Add data to goal.
