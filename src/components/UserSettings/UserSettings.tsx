@@ -176,7 +176,8 @@ class UserSettings extends React.Component<
                         onChange={(e) => this.updateField(e, "name")}
                         inputProps={{ maxLength: 100 }}
                         style={{
-                          margin: (theme.spacing(1) + "px ").repeat(3) + " 0", // "8px 8px 8px 0"
+                          margin: theme.spacing(1),
+                          marginLeft: 0,
                         }}
                       />
                       <Typography variant="subtitle2" style={{ color: "grey" }}>

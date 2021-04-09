@@ -47,7 +47,7 @@ class MergeDupStep extends React.Component<
         <div
           style={{
             background: "#eee",
-            padding: 8,
+            padding: theme.spacing(1),
           }}
         >
           <GridList

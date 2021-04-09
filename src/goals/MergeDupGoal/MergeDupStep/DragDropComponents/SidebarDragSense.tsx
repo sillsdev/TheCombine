@@ -6,6 +6,7 @@ import {
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import theme from "types/theme";
 
 interface SidebarDragSenseProps {
   sidebar: Sidebar;
@@ -33,8 +34,8 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
         >
           <Card
             style={{
-              marginBottom: 8,
-              marginTop: 8,
+              marginBottom: theme.spacing(1),
+              marginTop: theme.spacing(1),
               background: snapshot.isDragging
                 ? "lightgreen"
                 : props.index === 0
