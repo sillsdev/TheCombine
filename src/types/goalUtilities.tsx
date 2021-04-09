@@ -12,7 +12,7 @@ import { Edit } from "types/userEdit";
 export function maxNumSteps(type: GoalType) {
   switch (type) {
     case GoalType.MergeDups:
-      return 8;
+      return 12;
     default:
       return 1;
   }
