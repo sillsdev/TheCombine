@@ -62,9 +62,6 @@ services:
       - letsencrypt:/etc/letsencrypt
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
-{% if cert_mode == "cert-server" or cert_mode == "cert-client" %}
-      - /home/combine/.aws:/root/.aws:ro
-{% endif %}
     restart: always
 {% if combine_use_syslog %}
     logging:
