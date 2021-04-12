@@ -1,7 +1,9 @@
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { updateGoal } from "components/GoalTimeline/GoalsActions";
-import DupFinder from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import DupFinder, {
+  DefaultParams,
+} from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import {
   CompletedMerge,
   MergeDups,
@@ -367,11 +369,34 @@ export function dispatchMergeStepData(goal: MergeDups) {
 
 // Modifies the mutable input.
 export async function loadMergeDupsData(goal: MergeDups) {
-  const finder = new DupFinder();
+  // Until we develop a better backend algorithm, run the frontend one twice,
+  // the first time with greater similarity restriction.
+  let newGroups = await getDupGroups(maxNumSteps(goal.goalType), 0);
+  if (!newGroups.length) {
+    newGroups = await getDupGroups(maxNumSteps(goal.goalType));
+  }
+
+  // Add data to goal.
+  goal.data = { plannedWords: newGroups };
+  goal.numSteps = newGroups.length;
+
+  // Reset goal steps.
+  goal.currentStep = 0;
+  goal.steps = [];
+}
+
+async function getDupGroups(
+  maxCount: number,
+  maxScore?: number
+): Promise<Word[][]> {
+  const finder =
+    maxScore === undefined
+      ? new DupFinder()
+      : new DupFinder({ ...DefaultParams, maxScore });
   const groups = await finder.getNextDups();
 
   const usedIDs: string[] = [];
-  const newGroups = [];
+  const newGroups: Word[][] = [];
   const blacklist = LocalStorage.getMergeDupsBlacklist();
 
   for (const group of groups) {
@@ -389,17 +414,11 @@ export async function loadMergeDupsData(goal: MergeDups) {
       usedIDs.push(...groupIds);
     }
 
-    // Stop the process once maxNumSteps many groups found.
-    if (newGroups.length === maxNumSteps(goal.goalType)) {
+    // Stop the process once maxCount many groups found.
+    if (newGroups.length === maxCount) {
       break;
     }
   }
 
-  // Add data to goal.
-  goal.data = { plannedWords: newGroups };
-  goal.numSteps = newGroups.length;
-
-  // Reset goal steps.
-  goal.currentStep = 0;
-  goal.steps = [];
+  return newGroups;
 }

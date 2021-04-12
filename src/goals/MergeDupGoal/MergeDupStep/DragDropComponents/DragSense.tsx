@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSidebar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
+import theme from "types/theme";
 import { Gloss } from "types/word";
 
 interface DragSenseProps {
@@ -120,7 +121,7 @@ export default function DragSense(props: DragSenseProps) {
           {...provided.dragHandleProps}
           style={{
             ...provided.draggableProps.style,
-            margin: 8,
+            margin: theme.spacing(1),
             userSelect: "none",
             minWidth: 150,
             maxWidth: 300,

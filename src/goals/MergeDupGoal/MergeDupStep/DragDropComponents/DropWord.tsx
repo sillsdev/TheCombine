@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
 import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
+import theme from "types/theme";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
@@ -47,11 +48,14 @@ export default function DropWord(props: DropWordProps) {
           ref={provided.innerRef}
           style={{
             backgroundColor: "lightgrey",
-            paddingBottom: 8,
+            paddingBottom: theme.spacing(1),
           }}
           {...provided.droppableProps}
         >
-          <Paper square style={{ padding: 8, height: 44, minWidth: 150 }}>
+          <Paper
+            square
+            style={{ padding: theme.spacing(1), height: 44, minWidth: 150 }}
+          >
             {filled && (
               <Select
                 value={treeWords[props.wordId].vern}
