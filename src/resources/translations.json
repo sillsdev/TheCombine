@@ -591,7 +591,13 @@
       "occurrences": ["occurrences", "ocurrencias", "occurrences"],
       "find": ["Find", "Encontrar", "Rechercher"],
       "replace": ["Replace with", "Reemplazar con", "Remplacer avec"],
-      "apply": ["apply", "aplicar", "appliquer"]
+      "findAndReplace": ["Find & Replace", "Find & Replace", "Find & Replace"],
+      "apply": ["apply", "aplicar", "appliquer"],
+      "charDetails": [
+        "[Character Details has not been implemented.]",
+        "[Character Details has not been implemented.]",
+        "[Character Details has not been implemented.]"
+      ]
     },
     "sampleWords": {
       "title": ["Sample Words", "Palabras de muestra", "Exemples de mots"],
@@ -640,6 +646,11 @@
       "Fusionner les doublons"
     ],
     "helpText": {
+      "dragCard": [
+        "Drag a card here to merge.",
+        "Drag a card here to merge.",
+        "Drag a card here to merge."
+      ],
       "root": [
         "Drag words here to start merging them",
         "Arrastra las palabras aquí para comenzar a fusionarlas",

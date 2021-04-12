@@ -1,5 +1,6 @@
 import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { Droppable } from "react-beautiful-dnd";
+import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
@@ -93,7 +94,7 @@ export default function DropWord(props: DropWordProps) {
           </div>
           <div style={{ padding: 16, textAlign: "center" }}>
             <Typography variant="subtitle1">
-              Drag a card here to merge
+              <Translate id="mergeDups.helpText.dragCard" />
             </Typography>
           </div>
         </Paper>
