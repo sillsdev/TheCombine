@@ -1,9 +1,9 @@
+import { Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import { Typography } from "@material-ui/core";
 import { CharacterChange } from "goals/CharInventoryCreation/CharacterInventoryActions";
 import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInv";
@@ -32,7 +32,7 @@ function CharInvChangesMade(changes: CreateCharInvChanges) {
       </Typography>
     );
   }
-  return changes.charChanges.map((c) => CharInvChange(c));
+  return changes.charChanges.map(CharInvChange);
 }
 
 function CharInvChange(change: CharacterChange) {

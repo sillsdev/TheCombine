@@ -670,6 +670,13 @@
         "Arrastra esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
         "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots"
       ]
+    },
+    "completed": {
+      "number": [
+        "Number of merges completed: ",
+        "Number of merges completed: ",
+        "Number of merges completed: "
+      ]
     }
   },
   "buttons": {
