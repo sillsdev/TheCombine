@@ -53,5 +53,3 @@ ap_ssid: "{{ansible_hostname}}_ap"
 # ap_passphrase is defined in ./vault.yml
 ap_gateway: "10.10.10.1"
 ap_hostname: "{{ansible_hostname}}"
-
-combine_listen_addr: "{{ ap_gateway }}"

@@ -35,13 +35,8 @@ services:
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
     ports:
-{% if combine_listen_addr is defined and combine_listen_addr|length %}
-      - {{ combine_listen_addr }}:80:80
-      - {{ combine_listen_addr }}:443:443
-{% else %}
       - 80:80
       - 443:443
-{% endif %}
     depends_on:
       - certmgr
       - backend
@@ -67,9 +62,6 @@ services:
       - letsencrypt:/etc/letsencrypt
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
-{% if cert_mode == "cert-server" or cert_mode == "cert-client" %}
-      - /home/combine/.aws:/root/.aws:ro
-{% endif %}
     restart: always
 {% if combine_use_syslog %}
     logging:
