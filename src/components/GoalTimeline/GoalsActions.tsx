@@ -157,8 +157,6 @@ export function asyncAdvanceStep() {
       // Save to database.
       await saveCurrentStep(goal, goalIndex);
     } else {
-      goal.status = GoalStatus.Completed;
-      dispatch(updateGoal(goal));
       history.push(Path.Goals);
     }
   };

@@ -100,7 +100,8 @@ export function makeGoalTile(
           /* Hide completed, except goaltypes for which the completed view is implemented. */
           !goal ||
           (goal.status === GoalStatus.Completed &&
-            goal.goalType !== GoalType.CreateCharInv)
+            goal.goalType !== GoalType.CreateCharInv &&
+            goal.goalType !== GoalType.MergeDups)
         }
       >
         <Typography variant={"h6"}>

@@ -56,7 +56,7 @@ export function BaseGoalScreen() {
 
   return (
     <React.Fragment>
-      <DisplayProgress />
+      {goal.status !== GoalStatus.Completed && <DisplayProgress />}
       {displayComponent(goal)}
     </React.Fragment>
   );

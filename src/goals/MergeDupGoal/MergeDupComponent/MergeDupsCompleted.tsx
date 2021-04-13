@@ -1,11 +1,21 @@
-import { Typography } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
+import { getWord } from "backend";
 import { CompletedMerge, MergesCompleted } from "goals/MergeDupGoal/MergeDups";
 import { StoreState } from "types";
+import { Sense, Word } from "types/word";
+import theme from "types/theme";
 
 export default function MergeDupsCompleted() {
   const changes = useSelector(
@@ -27,19 +37,116 @@ function MergesMade(changes: MergesCompleted) {
     <div>
       <Typography>
         <Translate id="mergeDups.completed.number" />
-        {changes.merges.length}
+        {changes.merges?.length ?? 0}
       </Typography>
-      {changes.merges.map(MergeChange)}
+      {changes.merges?.map(MergeChange)}
     </div>
   );
 }
 
 function MergeChange(change: CompletedMerge) {
   return (
-    <div>
-      <Typography display="inline">{change.childrenIds.join(", ")}</Typography>
-      <ArrowRightAlt fontSize="inherit" />
-      <Typography display="inline">{change.parentIds.join(", ")}</Typography>
+    <div key={change.parentIds[0]}>
+      <Grid
+        container
+        style={{
+          flexWrap: "nowrap",
+          overflow: "auto",
+        }}
+      >
+        {change.childrenIds.map((id) => (
+          <WordPaper wordId={id} />
+        ))}
+        <Grid
+          key={"arrow"}
+          style={{
+            margin: theme.spacing(1),
+          }}
+        >
+          <ArrowRightAlt />
+        </Grid>
+        {change.parentIds.map((id) => (
+          <WordPaper wordId={id} />
+        ))}
+      </Grid>
     </div>
+  );
+}
+
+interface WordPaperProps {
+  wordId: string;
+}
+function WordPaper(props: WordPaperProps) {
+  const [word, setWord] = useState<Word | undefined>();
+  useEffect(() => {
+    async function fetchWord() {
+      const fetchedWord = await getWord(props.wordId);
+      setWord(fetchedWord);
+    }
+    fetchWord();
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <Grid
+      key={props.wordId}
+      style={{
+        margin: theme.spacing(1),
+      }}
+    >
+      <Paper
+        style={{
+          backgroundColor: "lightgrey",
+          paddingBottom: theme.spacing(1),
+        }}
+      >
+        <Paper
+          square
+          style={{ padding: theme.spacing(1), height: 44, minWidth: 100 }}
+        >
+          <Typography variant="h5">{word?.vernacular}</Typography>
+        </Paper>
+        <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+          {word?.senses.map<JSX.Element>((s) => (
+            <SenseCard sense={s} />
+          ))}
+        </div>
+      </Paper>
+    </Grid>
+  );
+}
+
+interface SenseCardProps {
+  sense: Sense;
+}
+function SenseCard(props: SenseCardProps) {
+  return (
+    <Card
+      key={props.sense.guid}
+      style={{
+        margin: theme.spacing(1),
+        userSelect: "none",
+        minWidth: 150,
+        maxWidth: 300,
+        background: "white",
+      }}
+    >
+      <CardContent style={{ position: "relative", paddingRight: 40 }}>
+        {/* List glosses */}
+        {props.sense.glosses.map((g, index) => (
+          <div key={index}>
+            <Typography variant="caption">{`${g.language}: ${g.def}`}</Typography>
+          </div>
+        ))}
+        {/* List semantic domains */}
+        <Grid container spacing={2}>
+          {props.sense.semanticDomains.map((dom) => (
+            <Grid item key={dom.id}>
+              <Chip label={dom} />
+            </Grid>
+          ))}
+        </Grid>
+      </CardContent>
+    </Card>
   );
 }
