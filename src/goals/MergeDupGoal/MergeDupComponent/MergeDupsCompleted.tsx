@@ -63,7 +63,15 @@ function MergeChange(change: CompletedMerge) {
             margin: theme.spacing(1),
           }}
         >
-          <ArrowRightAlt />
+          <ArrowRightAlt
+            fontSize="large"
+            style={{
+              position: "relative",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
         </Grid>
         {change.parentIds.map((id) => (
           <WordPaper wordId={id} />
@@ -107,22 +115,20 @@ function WordPaper(props: WordPaperProps) {
           <Typography variant="h5">{word?.vernacular}</Typography>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-          {word?.senses.map<JSX.Element>((s) => (
-            <SenseCard sense={s} />
-          ))}
+          {word?.senses.map(SenseCard)}
         </div>
       </Paper>
     </Grid>
   );
 }
 
-interface SenseCardProps {
-  sense: Sense;
-}
-function SenseCard(props: SenseCardProps) {
+function SenseCard(sense: Sense) {
+  const semDoms = [
+    ...new Set(sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)),
+  ];
   return (
     <Card
-      key={props.sense.guid}
+      key={sense.guid}
       style={{
         margin: theme.spacing(1),
         userSelect: "none",
@@ -133,15 +139,18 @@ function SenseCard(props: SenseCardProps) {
     >
       <CardContent style={{ position: "relative", paddingRight: 40 }}>
         {/* List glosses */}
-        {props.sense.glosses.map((g, index) => (
+        {sense.glosses.map((g, index) => (
           <div key={index}>
-            <Typography variant="caption">{`${g.language}: ${g.def}`}</Typography>
+            <Typography variant="caption">{`${g.language}: `}</Typography>
+            <Typography display="inline" variant="h5">
+              {g.def}
+            </Typography>
           </div>
         ))}
         {/* List semantic domains */}
         <Grid container spacing={2}>
-          {props.sense.semanticDomains.map((dom) => (
-            <Grid item key={dom.id}>
+          {semDoms.map((dom) => (
+            <Grid item key={dom}>
               <Chip label={dom} />
             </Grid>
           ))}
