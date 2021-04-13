@@ -4,6 +4,7 @@ import history, { Path } from "browserHistory";
 import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/actions";
 import { User } from "types/user";
+import hash from "crypto";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
@@ -45,6 +46,12 @@ export function asyncLogin(username: string, password: string) {
       .then(async (user: User) => {
         LocalStorage.setCurrentUser(user);
         dispatch(loginSuccess(user.username));
+        // hash the user name and use it in analytics.identify
+        const analyticsId = hash
+          .createHash("sha256")
+          .update(user.id)
+          .digest("hex");
+        analytics.identify(analyticsId);
         if (user.hasAvatar) {
           backend.avatarSrc(user.id).then((avatar) => {
             LocalStorage.setAvatar(avatar);
