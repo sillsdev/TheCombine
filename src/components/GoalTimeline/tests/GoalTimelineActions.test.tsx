@@ -256,32 +256,34 @@ describe("GoalsActions", () => {
       mockStore = createMockStore(mockStoreState);
     }
 
-    it("should increase current step and dispatch a goal update", async () => {
+    it("should increase current step", async () => {
       const goal = new Goal();
+      goal.numSteps = 2;
       expect(goal.currentStep).toEqual(0);
       setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(goal.currentStep).toEqual(1);
-      expect(mockStore.getActions()[0].type).toEqual(
-        actions.GoalsActions.UPDATE_GOAL
-      );
     });
 
-    it("should make backend call if goal unfinished", async () => {
+    it("should make dispatch and backend call if goal unfinished", async () => {
       const goal = new Goal();
       goal.numSteps = 2;
       expect(goal.currentStep + 1).toBeLessThan(goal.numSteps);
       setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(1);
+      expect(mockStore.getActions()[0].type).toEqual(
+        actions.GoalsActions.UPDATE_GOAL
+      );
     });
 
-    it("should not make backend call if goal finished", async () => {
+    it("should not make dispatch nor backend call if goal finished", async () => {
       const goal = new Goal();
       expect(goal.currentStep + 1).toEqual(goal.numSteps);
       setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(0);
+      expect(mockStore.getActions().length).toEqual(0);
     });
 
     it("should create MergeDups action when goal is unfinished MergeDups", async () => {
