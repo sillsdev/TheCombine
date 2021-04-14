@@ -19,54 +19,6 @@ const loadUserEditsAction: actions.GoalAction = {
 };
 
 describe("Test GoalsReducers", () => {
-  describe("GoalsActions.ADD_GOAL_TO_HISTORY", () => {
-    it("Should add a goal to history, set as currentGoal, and remove it from suggestions", () => {
-      const goal: Goal = new CreateCharInv();
-      const mockGoalTypeSuggestions = [goal.goalType];
-      const mockHistory = [goal];
-
-      const state: GoalsState = {
-        ...emtpyGoalState(),
-        goalTypeSuggestions: mockGoalTypeSuggestions,
-      };
-
-      const addGoalAction: actions.GoalAction = {
-        type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-        payload: goal,
-      };
-      const newState: GoalsState = {
-        ...emtpyGoalState(),
-        currentGoal: goal,
-        history: mockHistory,
-      };
-      expect(goalsReducer(state, addGoalAction)).toEqual(newState);
-    });
-
-    it("Should add a goal to history and set as current goal, and leave suggestions alone if not there", () => {
-      const goal: Goal = new CreateCharInv();
-      const mockGoalTypeSuggestions = [goal.goalType];
-
-      const state: GoalsState = {
-        ...emtpyGoalState(),
-        goalTypeSuggestions: mockGoalTypeSuggestions,
-      };
-
-      const chosenGoal: Goal = new HandleFlags();
-
-      const addGoalAction: actions.GoalAction = {
-        type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-        payload: chosenGoal,
-      };
-      const newState: GoalsState = {
-        ...emtpyGoalState(),
-        currentGoal: chosenGoal,
-        goalTypeSuggestions: mockGoalTypeSuggestions,
-        history: [chosenGoal],
-      };
-      expect(goalsReducer(state, addGoalAction)).toEqual(newState);
-    });
-  });
-
   describe("GoalsActions.LOAD_USER_EDITS", () => {
     it("Should return the default state", () => {
       expect(goalsReducer(undefined, loadUserEditsAction)).toEqual(
@@ -115,42 +67,6 @@ describe("Test GoalsReducers", () => {
       };
       const newState: GoalsState = { ...defaultState, currentGoal };
       expect(goalsReducer(defaultState, updateGoalAction)).toEqual(newState);
-    });
-  });
-
-  describe("GoalsActions.UPDATE_GOAL", () => {
-    it("Should replace the goal with an updated version", () => {
-      const goal: Goal = new CreateCharInv();
-      const goal2: Goal = new MergeDups();
-      const goal3: Goal = new ReviewEntries();
-      const goal4: Goal = new SpellCheckGloss();
-      const mockAllGoalTypesArray = [goal3.goalType, goal4.goalType];
-      const mockHistory = [goal, goal2];
-
-      const state: GoalsState = {
-        ...emtpyGoalState(),
-        allGoalTypes: mockAllGoalTypesArray,
-        currentGoal: goal2,
-        history: mockHistory,
-      };
-
-      const updatedGoal: Goal = Object.assign(goal2);
-      updatedGoal.currentStep++;
-      const updatedHistory = [goal, updatedGoal];
-
-      const updateGoalAction: actions.GoalAction = {
-        type: actions.GoalsActions.UPDATE_GOAL,
-        payload: goal2,
-      };
-
-      const newState: GoalsState = {
-        ...emtpyGoalState(),
-        allGoalTypes: mockAllGoalTypesArray,
-        currentGoal: updatedGoal,
-        history: updatedHistory,
-      };
-
-      expect(goalsReducer(state, updateGoalAction)).toEqual(newState);
     });
   });
 

@@ -13,8 +13,8 @@ HTMLDivElement.prototype.scrollIntoView = jest.fn();
 jest.mock("components/AppBar/AppBarComponent", () => "div");
 
 // Constants
-const LOAD_EDITS = jest.fn();
 const CHOOSE_GOAL = jest.fn();
+const CLEAR_HISTORY = jest.fn();
 const LOAD_HISTORY = jest.fn();
 const goals = defaultState.allGoalTypes.map((t) => goalTypeToGoal(t));
 const goalsWithAnyGuids: Goal[] = goals.map((g) => ({
@@ -40,7 +40,6 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  LOAD_EDITS.mockClear();
   CHOOSE_GOAL.mockClear();
 });
 
@@ -101,6 +100,7 @@ function createTimeline(
   return (
     <GoalTimeline
       chooseGoal={CHOOSE_GOAL}
+      clearHistory={CLEAR_HISTORY}
       loadHistory={LOAD_HISTORY}
       allGoalTypes={defaultState.allGoalTypes}
       currentGoal={defaultState.currentGoal}

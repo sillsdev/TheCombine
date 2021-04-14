@@ -12,6 +12,7 @@ export default history;
 
 export enum Path {
   DataEntry = "/app/data-entry",
+  GoalCurrent = "/app/goals/current",
   Goals = "/app/goals",
   Login = "/login",
   ProjInvite = "/app/invite",
@@ -25,7 +26,7 @@ export enum Path {
   UserSettings = "/app/user-settings",
 }
 
-// Given a path string (e.g., /app/goals/3),
+// Given a path string (e.g., /app/goals/?param=no),
 // this function returns the longest valid parent (e.g., /app/goals)
 export function getBasePath(pathname: string): Path {
   while (pathname.length) {

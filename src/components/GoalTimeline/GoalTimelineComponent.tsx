@@ -29,6 +29,7 @@ const timelineStyle = {
 
 interface GoalTimelineProps {
   chooseGoal: (goal: Goal) => void;
+  clearHistory: () => void;
   loadHistory: () => void;
 }
 
@@ -55,6 +56,7 @@ export default class GoalTimeline extends React.Component<
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleWindowSizeChange);
+    this.props.clearHistory();
   }
 
   handleWindowSizeChange = () => {

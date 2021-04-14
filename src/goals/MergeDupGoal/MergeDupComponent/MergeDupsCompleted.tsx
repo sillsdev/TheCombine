@@ -55,7 +55,7 @@ function MergeChange(change: CompletedMerge) {
         }}
       >
         {change.childrenIds.map((id) => (
-          <WordPaper wordId={id} />
+          <WordPaper key={id} wordId={id} />
         ))}
         <Grid
           key={"arrow"}
@@ -74,7 +74,7 @@ function MergeChange(change: CompletedMerge) {
           />
         </Grid>
         {change.parentIds.map((id) => (
-          <WordPaper wordId={id} />
+          <WordPaper key={id} wordId={id} />
         ))}
       </Grid>
     </div>
