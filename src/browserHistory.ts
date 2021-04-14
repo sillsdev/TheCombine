@@ -11,7 +11,7 @@ let history = createBrowserHistory();
 // set up analytics for page navigation
 let prevPath = "";
 history.listen((location) => {
-  if (location.pathname !== prevPath && analytics.invoked) {
+  if (location.pathname !== prevPath) {
     analytics.track("navigate", {
       source: prevPath,
       destination: location.pathname,
