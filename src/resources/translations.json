@@ -594,9 +594,9 @@
       "findAndReplace": ["Find & Replace", "Find & Replace", "Find & Replace"],
       "apply": ["apply", "aplicar", "appliquer"],
       "charDetails": [
-        "[Character Details has not been implemented.]",
-        "[Character Details has not been implemented.]",
-        "[Character Details has not been implemented.]"
+        "(Character Details has not been implemented.)",
+        "(Character Details has not been implemented.)",
+        "(Character Details has not been implemented.)"
       ]
     },
     "sampleWords": {
