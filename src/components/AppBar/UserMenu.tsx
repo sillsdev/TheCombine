@@ -10,7 +10,7 @@ import { Translate } from "react-localize-redux";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import history, { openUserGuide, Path } from "browserHistory";
 import theme, { tabColor } from "types/theme";
 
 export async function getIsAdmin(): Promise<boolean> {
@@ -131,8 +131,7 @@ export function UserMenuList(props: UserMenuListProps) {
 
       <MenuItem
         onClick={() => {
-          // This link does not work in development, but should in production.
-          window.open(`docs`);
+          openUserGuide();
           props.onSelect();
         }}
       >
