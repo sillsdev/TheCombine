@@ -5,6 +5,7 @@
 # Group: server
 #################################################
 
+config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
 # TheCombine is installed on the Live Server by TeamCity.  It will set the
 # IMAGE_TAG environment variable to major.minor.build_no and launch
 # Docker compose
