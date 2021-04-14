@@ -25,11 +25,6 @@
               console.error &&
               console.error("Segment snippet included twice.");
         } else {
-          if (writeKey == "") {
-            // if an analyticsWriteKey was specified but is blank, then
-            // don't enable analytics.
-            return;
-          }
           analytics.invoked = !0;
           analytics.methods = [
             "trackSubmit",
