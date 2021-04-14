@@ -47,6 +47,9 @@ jest.mock("backend", () => {
   };
 });
 
+// mock the track method of segment analytics
+global.analytics = { track: jest.fn() } as any;
+
 const mockAddGoalToUserEdit = jest.fn();
 const mockAddStepToGoal = jest.fn();
 const mockCreateUserEdit = jest.fn();
