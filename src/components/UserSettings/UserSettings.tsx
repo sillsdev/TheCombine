@@ -181,7 +181,8 @@ class UserSettings extends React.Component<
                         }}
                       />
                       <Typography variant="subtitle2" style={{ color: "grey" }}>
-                        <Translate id="login.username" />:{" "}
+                        <Translate id="login.username" />
+                        {": "}
                         {this.state.user.username}
                       </Typography>
                     </Grid>

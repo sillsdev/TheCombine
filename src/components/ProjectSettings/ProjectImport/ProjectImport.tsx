@@ -112,7 +112,8 @@ export default class ProjectImport extends React.Component<
             {/* Displays the name of the selected file */}
             {this.state.liftFilename && (
               <Typography variant="body1" noWrap>
-                <Translate id="createProject.fileSelected" />:{" "}
+                <Translate id="createProject.fileSelected" />
+                {": "}
                 {this.state.liftFilename}
               </Typography>
             )}
