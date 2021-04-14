@@ -46,14 +46,12 @@ export function asyncLogin(username: string, password: string) {
       .then(async (user: User) => {
         LocalStorage.setCurrentUser(user);
         dispatch(loginSuccess(user.username));
-        if (analytics.invoked) {
-          // hash the user name and use it in analytics.identify
-          const analyticsId = hash
-            .createHash("sha256")
-            .update(user.id)
-            .digest("hex");
-          analytics.identify(analyticsId);
-        }
+        // hash the user name and use it in analytics.identify
+        const analyticsId = hash
+          .createHash("sha256")
+          .update(user.id)
+          .digest("hex");
+        analytics.identify(analyticsId);
         if (user.hasAvatar) {
           backend.avatarSrc(user.id).then((avatar) => {
             LocalStorage.setAvatar(avatar);
