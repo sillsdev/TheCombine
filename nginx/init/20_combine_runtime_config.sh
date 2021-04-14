@@ -26,17 +26,18 @@
 
 quote_value() {
   if [[ $1 =~ ^[+-]?[0-9]+([.][0-9]+)?$ ]] ; then
-    # is it a number?
+    # it is a number
     return 1
   elif [[ $1 =~ ^".*"$ ]] ; then
-    # is it already quoted?
+    # it is already quoted
     return 1
   else
-    # is it a boolean?
+    # it is a boolean
     if [[ $1 =~ ^(true|false)?$ ]] ; then
       return 1
     fi
   fi
+  # must be a string
   return 0
 }
 
@@ -51,6 +52,7 @@ env_map=(
   ["CONFIG_USE_CONNECTION_URL"]="useConnectionBaseUrlForApi"
   ["CONFIG_CAPTCHA_REQD"]="captchaRequired"
   ["CONFIG_CAPTCHA_SITE_KEY"]="captchaSiteKey"
+  ["CONFIG_ANALYTICS_WRITE_KEY"]="analyticsWriteKey"
 )
 echo "window['runtimeConfig'] = {" > $OUTFILE
 
@@ -67,4 +69,4 @@ for env_var in "${!env_map[@]}"; do
     fi
   fi
 done
-echo "}" >> $OUTFILE
+echo "};" >> $OUTFILE
