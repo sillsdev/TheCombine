@@ -356,7 +356,7 @@ export default class NewEntry extends React.Component<
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
-                {<Translate id="addWords.pressEnter" />}
+                <Translate id="addWords.pressEnter" />
               </Typography>
             </Grid>
           </Grid>

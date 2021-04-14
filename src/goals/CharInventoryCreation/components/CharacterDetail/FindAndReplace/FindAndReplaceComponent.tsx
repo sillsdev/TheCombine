@@ -51,7 +51,9 @@ export class FindAndReplace extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <Typography variant="overline">Find + Replace</Typography>
+        <Typography variant="overline">
+          {this.props.translate("charInventory.characterSet.findAndReplace")}
+        </Typography>
         <TextField
           label={this.props.translate("charInventory.characterSet.find")}
           value={this.state.findValue}
