@@ -1,6 +1,6 @@
-import * as backend from "backend";
+import { getFrontierWords } from "backend";
 import history, { Path } from "browserHistory";
-import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
@@ -9,7 +9,7 @@ import {
 } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
-import { Goal, GoalStatus } from "types/goals";
+import { Goal } from "types/goals";
 import { Project } from "types/project";
 
 export enum CharacterInventoryType {
@@ -134,15 +134,15 @@ export function uploadInventory(goal: Goal) {
     const updatedGoal: Goal = {
       ...goal,
       changes: { charChanges: changes },
-      status: GoalStatus.Completed,
     };
-    await dispatch(asyncUpdateOrAddGoal(updatedGoal));
+    await dispatch(asyncUpdateGoal(updatedGoal));
+    exit();
   };
 }
 
 export function fetchWords() {
   return async (dispatch: StoreStateDispatch) => {
-    const words = await backend.getFrontierWords();
+    const words = await getFrontierWords();
     dispatch(setAllWords(words.map((word) => word.vernacular)));
   };
 }
@@ -150,7 +150,7 @@ export function fetchWords() {
 export function getAllCharacters() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
-    const words = await backend.getFrontierWords();
+    const words = await getFrontierWords();
     const charactersWithDuplicates: string[] = [];
     words.forEach((word) => charactersWithDuplicates.push(...word.vernacular));
     const characters = [...new Set(charactersWithDuplicates)];

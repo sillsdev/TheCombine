@@ -11,8 +11,11 @@ import ProjectSettings from "components/ProjectSettings";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
 import UserSettings from "components/UserSettings/UserSettings";
 
+const BaseGoalScreen = loadable(
+  () => import("goals/DefaultGoal/BaseGoalScreen")
+);
 const DataEntry = loadable(() => import("components/DataEntry"));
-const GoalRoute = loadable(() => import("components/GoalRoute/component"));
+const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 
 export default function AppWithBar() {
   const location = useLocation();
@@ -25,12 +28,13 @@ export default function AppWithBar() {
       <SignalRHub />
       <AppBar currentTab={currentLoc} />
       <Switch>
-        <Route exact path={Path.ProjScreen} component={ProjectScreen} />
         <Route exact path={Path.DataEntry} component={DataEntry} />
+        <Route exact path={Path.GoalCurrent} component={BaseGoalScreen} />
+        <Route exact path={Path.Goals} component={GoalTimeline} />
+        <Route exact path={Path.ProjScreen} component={ProjectScreen} />
         <Route exact path={Path.ProjSettings} component={ProjectSettings} />
         <Route exact path={Path.SiteSettings} component={SiteSettings} />
         <Route exact path={Path.UserSettings} component={UserSettings} />
-        <Route path={Path.Goals} component={GoalRoute} />
         <Route component={PageNotFound} />
       </Switch>
     </React.Fragment>

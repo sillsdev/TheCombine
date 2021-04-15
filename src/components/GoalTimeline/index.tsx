@@ -2,8 +2,9 @@ import { connect } from "react-redux";
 
 import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
 import {
-  asyncAddGoalToHistory,
+  asyncAddGoal,
   asyncGetUserEdits,
+  loadUserEdits,
 } from "components/GoalTimeline/GoalsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
@@ -15,7 +16,8 @@ function mapStateToProps(state: StoreState) {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    chooseGoal: (goal: Goal) => dispatch(asyncAddGoalToHistory(goal)),
+    chooseGoal: (goal: Goal) => dispatch(asyncAddGoal(goal)),
+    clearHistory: () => dispatch(loadUserEdits()),
     loadHistory: () => dispatch(asyncGetUserEdits()),
   };
 }

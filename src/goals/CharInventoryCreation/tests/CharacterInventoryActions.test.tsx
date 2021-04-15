@@ -71,9 +71,9 @@ mockUser.workedProjects[mockProjectId] = mockUserEditId;
 jest.mock("backend");
 jest.mock("browserHistory");
 jest.mock("components/GoalTimeline/GoalsActions", () => ({
-  asyncUpdateOrAddGoal: (goal: Goal) => mockAsyncUpdateOrAddGoal(goal),
+  asyncUpdateGoal: (goal: Goal) => mockAsyncUpdateGoal(goal),
 }));
-const mockAsyncUpdateOrAddGoal = jest.fn();
+const mockAsyncUpdateGoal = jest.fn();
 
 const createMockStore = configureMockStore([thunk]);
 
@@ -106,7 +106,7 @@ describe("CharacterInventoryActions", () => {
   test("uploadInventory dispatches correct action", async () => {
     // Mock out the goal-related things called by uploadInventory.
     const mockAction: Action = { type: null };
-    mockAsyncUpdateOrAddGoal.mockReturnValue(mockAction);
+    mockAsyncUpdateGoal.mockReturnValue(mockAction);
     const mockGoal = { changes: {} } as Goal;
 
     LocalStorage.setCurrentUser(mockUser);

@@ -1,6 +1,6 @@
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { updateGoal } from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
 import DupFinder, {
   DefaultParams,
 } from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
@@ -20,7 +20,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
-import { GoalStatus, GoalType } from "types/goals";
+import { GoalType } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
@@ -307,7 +307,7 @@ export function mergeAll() {
       const completedMerge = { childrenIds, parentIds };
       const goal = getState().goalsState.currentGoal;
       if (goal) {
-        dispatch(addCompletedMergeToGoal(goal, completedMerge));
+        await dispatch(addCompletedMergeToGoal(goal, completedMerge));
       }
     }
   };
@@ -317,7 +317,7 @@ function addCompletedMergeToGoal(
   goal: MergeDups,
   completedMerge: CompletedMerge
 ) {
-  return (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch) => {
     if (goal.goalType === GoalType.MergeDups) {
       const changes = goal.changes as MergesCompleted;
       if (!changes.merges) {
@@ -325,8 +325,7 @@ function addCompletedMergeToGoal(
       }
       changes.merges.push(completedMerge);
       goal.changes = changes;
-      goal.status = GoalStatus.Completed;
-      dispatch(updateGoal(goal));
+      await dispatch(asyncUpdateGoal(goal));
     }
   };
 }

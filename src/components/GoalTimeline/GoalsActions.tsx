@@ -12,23 +12,8 @@ import { Goal, GoalStatus, GoalType } from "types/goals";
 import { convertEditToGoal } from "types/goalUtilities";
 
 export enum GoalsActions {
-  ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   SET_CURRENT_GOAL = "SET_CURRENT_GOAL",
-  UPDATE_GOAL = "UPDATE_GOAL",
-}
-
-export type GoalAction =
-  | AddGoalToHistoryAction
-  | LoadUserEditsAction
-  | SetCurrentGoalAction
-  | UpdateGoalAction;
-
-// Action Creators
-
-export interface AddGoalToHistoryAction extends ActionWithPayload<Goal> {
-  type: GoalsActions.ADD_GOAL_TO_HISTORY;
-  payload: Goal;
 }
 
 export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
@@ -41,25 +26,16 @@ export interface SetCurrentGoalAction extends ActionWithPayload<Goal> {
   payload: Goal;
 }
 
-export interface UpdateGoalAction extends ActionWithPayload<Goal> {
-  type: GoalsActions.UPDATE_GOAL;
-  payload: Goal;
-}
+export type GoalAction = LoadUserEditsAction | SetCurrentGoalAction;
 
-export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
-  return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: goal };
-}
+// Action Creators
 
-export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
-  return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
+export function loadUserEdits(history?: Goal[]): LoadUserEditsAction {
+  return { type: GoalsActions.LOAD_USER_EDITS, payload: history ?? [] };
 }
 
 export function setCurrentGoal(goal?: Goal): SetCurrentGoalAction {
   return { type: GoalsActions.SET_CURRENT_GOAL, payload: goal ?? new Goal() };
-}
-
-export function updateGoal(goal: Goal): UpdateGoalAction {
-  return { type: GoalsActions.UPDATE_GOAL, payload: goal };
 }
 
 // Dispatch Functions
@@ -77,7 +53,9 @@ export function asyncLoadExistingUserEdits(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     const userEdit = await Backend.getUserEditById(projectId, userEditId);
-    const history = userEdit.edits.map((e) => convertEditToGoal(e));
+    const history = userEdit.edits.map((e, index) =>
+      convertEditToGoal(e, index)
+    );
     dispatch(loadUserEdits(history));
   };
 }
@@ -97,45 +75,38 @@ export function asyncGetUserEdits() {
   };
 }
 
-export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+export function asyncAddGoal(goal: Goal) {
+  return async (dispatch: StoreStateDispatch) => {
     const userEditId = getUserEditId();
     if (userEditId) {
-      const goalHistory = getState().goalsState.history;
-      let goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
-      if (goalIndex === -1) {
-        // Add goal with .state=GoalState.Loading.
-        dispatch(addGoalToHistory(goal));
-        goalIndex = await Backend.addGoalToUserEdit(userEditId, goal);
+      dispatch(setCurrentGoal(goal));
+
+      // Check if this is a new goal.
+      if (goal.index === -1) {
+        goal.index = await Backend.addGoalToUserEdit(userEditId, goal);
 
         // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal(goal, goalIndex, userEditId));
-      } else {
-        dispatch(setCurrentGoal(goal));
+        dispatch(asyncLoadNewGoal(goal, userEditId));
       }
 
       // Serve goal.
-      history.push(`${Path.Goals}/${goalIndex}`);
+      history.push(`${Path.GoalCurrent}`);
     }
   };
 }
 
-export function asyncLoadNewGoal(
-  goal: Goal,
-  goalIndex: number,
-  userEditId: string
-) {
+export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
   return async (dispatch: StoreStateDispatch) => {
     // Load data.
     if (await loadGoalData(goal)) {
       updateStepFromData(goal);
       dispatch(dispatchStepData(goal));
       await Backend.addGoalToUserEdit(userEditId, goal);
-      await saveCurrentStep(goal, goalIndex);
+      await saveCurrentStep(goal);
     }
 
     goal.status = GoalStatus.InProgress;
-    dispatch(updateGoal(goal));
+    dispatch(setCurrentGoal(goal));
   };
 }
 
@@ -143,8 +114,6 @@ export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const goalsState = getState().goalsState;
     let goal = goalsState.currentGoal;
-    const goalHistory = goalsState.history;
-    const goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
     goal.currentStep++;
     if (goal.currentStep < goal.numSteps) {
       // Update data.
@@ -152,13 +121,11 @@ export function asyncAdvanceStep() {
 
       // Dispatch to state.
       dispatch(dispatchStepData(goal));
-      dispatch(updateGoal(goal));
+      dispatch(setCurrentGoal(goal));
 
       // Save to database.
-      await saveCurrentStep(goal, goalIndex);
+      await saveCurrentStep(goal);
     } else {
-      goal.status = GoalStatus.Completed;
-      dispatch(updateGoal(goal));
       history.push(Path.Goals);
     }
   };
@@ -176,17 +143,11 @@ export function dispatchStepData(goal: Goal) {
   };
 }
 
-export function asyncUpdateOrAddGoal(goal: Goal) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+export function asyncUpdateGoal(goal: Goal) {
+  return async (dispatch: StoreStateDispatch) => {
     const userEditId = getUserEditId();
     if (userEditId) {
-      const goalHistory = getState().goalsState.history;
-      let goalIndex = goalHistory.findIndex((g) => g.guid === goal.guid);
-      if (goalIndex === -1) {
-        dispatch(addGoalToHistory(goal));
-      } else {
-        dispatch(updateGoal(goal));
-      }
+      dispatch(setCurrentGoal(goal));
       await Backend.addGoalToUserEdit(userEditId, goal);
     }
   };
@@ -232,10 +193,10 @@ export function getUserEditId(): string | undefined {
   return undefined;
 }
 
-async function saveCurrentStep(goal: Goal, goalIndex: number) {
+async function saveCurrentStep(goal: Goal) {
   const userEditId = getUserEditId();
   if (userEditId) {
     const step = goal.steps[goal.currentStep] ?? {};
-    await Backend.addStepToGoal(userEditId, goalIndex, step, goal.currentStep);
+    await Backend.addStepToGoal(userEditId, goal.index, step, goal.currentStep);
   }
 }

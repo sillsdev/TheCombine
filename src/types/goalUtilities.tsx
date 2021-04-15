@@ -49,9 +49,10 @@ export function convertGoalToEdit(goal: Goal): Edit {
   return { guid, goalType, stepData, changes };
 }
 
-export function convertEditToGoal(edit: Edit): Goal {
+export function convertEditToGoal(edit: Edit, index?: number): Goal {
   const goal = goalTypeToGoal(edit.goalType);
   goal.guid = edit.guid;
+  goal.index = index ?? -1;
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
   goal.numSteps = goal.steps.length;
   goal.changes = JSON.parse(edit.changes);

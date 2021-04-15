@@ -14,17 +14,18 @@ import { Goal, GoalStatus, GoalType } from "types/goals";
 const CharInv = loadable(
   () => import("goals/CreateCharInv/CharInvComponent/CharInv")
 );
-const MergeDupStep = loadable(() => import("goals/MergeDupGoal/MergeDupStep"));
+const MergeDup = loadable(() => import("goals/MergeDupGoal/MergeDupComponent"));
 const ReviewEntriesComponent = loadable(
   () => import("goals/ReviewEntries/ReviewEntriesComponent")
 );
 
 function displayComponent(goal: Goal) {
+  const isCompleted = goal.status === GoalStatus.Completed;
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
-      return <CharInv completed={goal.status === GoalStatus.Completed} />;
+      return <CharInv completed={isCompleted} />;
     case GoalType.MergeDups:
-      return <MergeDupStep />;
+      return <MergeDup completed={isCompleted} />;
     case GoalType.ReviewEntries:
       return <ReviewEntriesComponent />;
     default:
@@ -55,7 +56,7 @@ export function BaseGoalScreen() {
 
   return (
     <React.Fragment>
-      <DisplayProgress />
+      {goal.status !== GoalStatus.Completed && <DisplayProgress />}
       {displayComponent(goal)}
     </React.Fragment>
   );
