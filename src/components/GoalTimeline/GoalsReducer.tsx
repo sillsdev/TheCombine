@@ -15,7 +15,10 @@ export const goalsReducer = (
       return { ...state, history: [...action.payload] };
     }
     case GoalsActions.SET_CURRENT_GOAL: {
-      return { ...state, currentGoal: action.payload };
+      const goalTypeSuggestions = state.goalTypeSuggestions.filter(
+        (type, index) => index !== 0 || action.payload.goalType !== type
+      ); // Remove top suggestion if same as goal to add.
+      return { ...state, currentGoal: action.payload, goalTypeSuggestions };
     }
     case StoreActions.RESET: {
       return defaultState;
