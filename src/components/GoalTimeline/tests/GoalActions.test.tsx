@@ -170,7 +170,7 @@ describe("GoalsActions", () => {
     });
   });
 
-  describe("asyncAddGoalToHistory", () => {
+  describe("asyncAddGoal", () => {
     beforeEach(() => {
       LocalStorage.setCurrentUser(mockUser);
       LocalStorage.setProjectId(mockProjectId);
@@ -276,6 +276,23 @@ describe("GoalsActions", () => {
       setMockGoalState(goal);
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
+    });
+  });
+
+  describe("asyncUpdateGoal", () => {
+    beforeEach(() => {
+      LocalStorage.setCurrentUser(mockUser);
+      LocalStorage.setProjectId(mockProjectId);
+    });
+
+    it("should update in state with a dispatch and in the backend", async () => {
+      const goal: Goal = new MergeDups();
+      await mockStore.dispatch<any>(actions.asyncUpdateGoal(goal));
+      expect(mockStore.getActions().length).toEqual(1);
+      expect(mockStore.getActions()[0].type).toEqual(
+        actions.GoalsActions.SET_CURRENT_GOAL
+      );
+      expect(mockAddGoalToUserEdit).toBeCalledTimes(1);
     });
   });
 
