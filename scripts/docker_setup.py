@@ -79,37 +79,24 @@ def main() -> None:
         "cert_domains": ["localhost"],
         "cert_clean": 0,
         "combine_server_name": "localhost",
-        "ssl_certificate": "/etc/nginx/ssl/localhost/fullchain.pem",
-        "ssl_private_key": "/etc/nginx/ssl/localhost/privkey.pem",
-        "combine_backend_env_vars": "",
-        "combine_private_env_vars": [
-            {"key": "COMBINE_JWT_SECRET_KEY", "value": "JwtSecretKeyForDevelopmentUseOnly"},
-            {"key": "COMBINE_SMTP_SERVER", "value": ""},
-            {"key": "COMBINE_SMTP_PORT", "value": "587"},
-            {"key": "COMBINE_SMTP_ADDRESS", "value": ""},
-            {"key": "COMBINE_SMTP_USERNAME", "value": ""},
-            {"key": "COMBINE_SMTP_PASSWORD", "value": ""},
-            {"key": "COMBINE_SMTP_FROM", "value": ""},
-            {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": "15"},
-        ],
-        "combine_frontend_env_vars": [
-            {"key": "SERVER_NAME", "value": "localhost"},
-            {"key": "SSL_CERTIFICATE", "value": "/etc/cert_store/nginx/localhost/fullchain.pem"},
-            {"key": "SSL_PRIVATE_KEY", "value": "/etc/cert_store/nginx/localhost/privkey.pem"},
-            {"key": "CONFIG_USE_CONNECTION_URL", "value": "true"},
-            {"key": "CONFIG_CAPTCHA_REQD", "value": json.dumps(not args.no_captcha)},
-            {
-                "key": "CONFIG_CAPTCHA_SITE_KEY",
-                "value": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
-            },
-        ],
-        "combine_cert_env_vars": [
-            {"key": "CERT_MODE", "value": "self-signed"},
-            {"key": "CERT_EMAIL", "value": ""},
-            {"key": "CERT_STAGING", "value": "0"},
-            {"key": "MAX_CONNECT_TRIES", "value": "10"},
-            {"key": "SERVER_NAME", "value": "localhost"},
-        ],
+        "combine_jwt_secret_key": os.getenv(
+            "COMBINE_JWT_SECRET_KEY", "JwtSecretKeyForDevelopmentUseOnly"
+        ),
+        "combine_smtp_server": os.getenv("COMBINE_SMTP_SERVER", ""),
+        "combine_smtp_port": os.getenv("COMBINE_SMTP_PORT", "587"),
+        "combine_smtp_address": os.getenv("COMBINE_SMTP_ADDRESS", ""),
+        "combine_smtp_username": os.getenv("COMBINE_SMTP_USERNAME", ""),
+        "combine_smtp_password": os.getenv("COMBINE_SMTP_PASSWORD", ""),
+        "combine_smtp_from": os.getenv("COMBINE_SMTP_FROM", ""),
+        "combine_password_reset_expire_time": os.getenv(
+            "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "15"
+        ),
+        "ssl_certificate": "/etc/cert_store/nginx/localhost/fullchain.pem",
+        "ssl_private_key": "/etc/cert_store/nginx/localhost/privkey.pem",
+        "config_captcha_required": json.dumps(not args.no_captcha),
+        "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+        "cert_max_connect_tries": "10",
+        "server_name": "localhost",
         "mongodb_version": "4.4",
         "combine_app_dir": re.sub(r"\\", r"\\\\", str(project_dir)),
         "backend_files_subdir": ".CombineFiles",
@@ -127,16 +114,6 @@ def main() -> None:
         "env.certmgr.j2": project_dir / ".env.certmgr",
     }
 
-    # Set backend private env_vars if they are defined for our process
-    for env_var in dev_config["combine_private_env_vars"]:
-        if env_var["key"] in os.environ:
-            env_var["value"] = os.environ[env_var["key"]]
-
-    # Set backend common env_vars if they are defined for our process
-    for env_var in dev_config["combine_backend_env_vars"]:
-        if env_var["key"] in os.environ:
-            env_var["value"] = os.environ[env_var["key"]]
-
     # Initialize the Jinja2 environment
     jinja_env = Environment(
         loader=PackageLoader(
@@ -144,7 +121,7 @@ def main() -> None:
             str(Path("..") / "deploy" / "roles" / "combine_config" / "templates"),
         ),
         autoescape=select_autoescape(["html", "xml"]),
-        trim_blocks=True,
+        trim_blocks=False,
         lstrip_blocks=True,
     )
 
@@ -154,7 +131,11 @@ def main() -> None:
         templ_path.write_text(template.render(dev_config))
 
     # Restrict permissions for the environment files
-    for env_file in [project_dir / ".env.backend", project_dir / ".env.frontend"]:
+    for env_file in [
+        project_dir / ".env.backend",
+        project_dir / ".env.frontend",
+        project_dir / ".env.certmgr",
+    ]:
         env_file.chmod(0o600)
 
     # setup maintenance configuration

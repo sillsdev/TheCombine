@@ -19,3 +19,4 @@ src/resources/dictionaries/* linguist-detectable=false
 *.yml eol=lf
 
 *vault* diff=ansible-vault merge=binary
+aws.yml diff=ansible-vault merge=binary

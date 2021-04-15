@@ -20,6 +20,7 @@ env_defaults: Dict[str, str] = {
     "CERT_PROXY_RENEWAL": "60",  # days before expiry
     "CERT_PROXY_DOMAINS": "",
     "AWS_S3_CERT_LOC": "thecombine.app/certs",
+    "AWS_S3_PROFILE": "",
 }
 
 

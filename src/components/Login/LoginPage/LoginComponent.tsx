@@ -12,7 +12,7 @@ import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import * as React from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "browserHistory";
+import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
 
@@ -186,12 +186,7 @@ export default class Login extends React.Component<
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
-                  <Button
-                    onClick={() => {
-                      // This link does not work in development, but should in production.
-                      window.open(`docs`);
-                    }}
-                  >
+                  <Button onClick={openUserGuide}>
                     <Help />
                   </Button>
                 </Grid>
