@@ -1,6 +1,6 @@
 import { getFrontierWords } from "backend";
 import history, { Path } from "browserHistory";
-import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
@@ -135,7 +135,7 @@ export function uploadInventory(goal: Goal) {
       ...goal,
       changes: { charChanges: changes },
     };
-    await dispatch(asyncUpdateOrAddGoal(updatedGoal));
+    await dispatch(asyncUpdateGoal(updatedGoal));
     exit();
   };
 }

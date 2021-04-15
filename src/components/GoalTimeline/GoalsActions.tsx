@@ -143,7 +143,7 @@ export function dispatchStepData(goal: Goal) {
   };
 }
 
-export function asyncUpdateOrAddGoal(goal: Goal) {
+export function asyncUpdateGoal(goal: Goal) {
   return async (dispatch: StoreStateDispatch) => {
     const userEditId = getUserEditId();
     if (userEditId) {

@@ -1,6 +1,6 @@
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { asyncUpdateOrAddGoal } from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
 import DupFinder, {
   DefaultParams,
 } from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
@@ -325,7 +325,7 @@ function addCompletedMergeToGoal(
       }
       changes.merges.push(completedMerge);
       goal.changes = changes;
-      await dispatch(asyncUpdateOrAddGoal(goal));
+      await dispatch(asyncUpdateGoal(goal));
     }
   };
 }
