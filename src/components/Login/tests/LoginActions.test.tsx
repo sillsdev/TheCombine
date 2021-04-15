@@ -15,6 +15,9 @@ jest.mock("backend", () => {
   };
 });
 
+// mock the track and identify methods of segment analytics
+global.analytics = { identify: jest.fn(), track: jest.fn() } as any;
+
 const mockAddUser = jest.fn();
 const mockAuthenticateUser = jest.fn();
 
