@@ -128,24 +128,24 @@ export default class ProjectLanguages extends React.Component<
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          <ImmutableWritingSystem
-            ws={this.props.project.vernacularWritingSystem}
-          />
         </Typography>
+        <ImmutableWritingSystem
+          ws={this.props.project.vernacularWritingSystem}
+        />
         <Typography style={{ marginTop: theme.spacing(1) }}>
           <Translate id="projectSettings.language.analysis" />
           {": "}
-          {this.props.project.analysisWritingSystems.map(
-            (writingSystem, index) => (
-              <ImmutableWritingSystem
-                key={index}
-                ws={writingSystem}
-                index={index}
-                buttons={this.writingSystemButtons(index)}
-              />
-            )
-          )}
         </Typography>
+        {this.props.project.analysisWritingSystems.map(
+          (writingSystem, index) => (
+            <ImmutableWritingSystem
+              key={index}
+              ws={writingSystem}
+              index={index}
+              buttons={this.writingSystemButtons(index)}
+            />
+          )
+        )}
         {this.state.add ? (
           <Grid container spacing={1} alignItems="center">
             <Grid item>
@@ -203,22 +203,28 @@ interface ImmutableWritingSystemProps {
 function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
   return (
     <Grid container spacing={1}>
-      {props.index !== undefined && <Grid item>{`${props.index + 1}. `}</Grid>}
+      {props.index !== undefined && (
+        <Grid item>
+          <Typography>{`${props.index + 1}. `}</Typography>
+        </Grid>
+      )}
       <Grid item>
-        <Translate id="projectSettings.language.name" />
-        {": "}
-        {props.ws.name} {", "}
+        <Typography>
+          <Translate id="projectSettings.language.name" />
+          {`: ${props.ws.name}, `}
+        </Typography>
       </Grid>
       <Grid item>
-        <Translate id="projectSettings.language.bcp47" />
-        {": "}
-        {props.ws.bcp47}
-        {", "}
+        <Typography>
+          <Translate id="projectSettings.language.bcp47" />
+          {`: ${props.ws.bcp47}, `}
+        </Typography>
       </Grid>
       <Grid item>
-        <Translate id="projectSettings.language.font" />
-        {": "}
-        {props.ws.font}
+        <Typography>
+          <Translate id="projectSettings.language.font" />
+          {`: ${props.ws.font}`}
+        </Typography>
       </Grid>
       <Grid item>{props.buttons}</Grid>
     </Grid>
