@@ -31,13 +31,13 @@ describe("Test GoalsReducers", () => {
       const goal2: Goal = new MergeDups();
       const goal3: Goal = new ReviewEntries();
       const goal4: Goal = new SpellCheckGloss();
-      const mockGoalTypeSuggestions = [goal3.goalType, goal4.goalType];
-      const mockHistory = [goal, goal2];
+      const goalTypeSuggestions = [goal3.goalType, goal4.goalType];
+      const history = [goal, goal2];
 
       const state: GoalsState = {
         ...emtpyGoalState(),
-        goalTypeSuggestions: mockGoalTypeSuggestions,
-        history: mockHistory,
+        goalTypeSuggestions,
+        history,
       };
 
       const goal6: Goal = new HandleFlags();
@@ -49,8 +49,7 @@ describe("Test GoalsReducers", () => {
       };
 
       const newState: GoalsState = {
-        ...emtpyGoalState(),
-        goalTypeSuggestions: mockGoalTypeSuggestions,
+        ...state,
         history: [goal6, goal7],
       };
 
@@ -59,13 +58,21 @@ describe("Test GoalsReducers", () => {
   });
 
   describe("GoalsActions.SET_CURRENT_GOAL", () => {
-    it("Should replace the current goal with specified goal", () => {
+    it("Should replace current goal, and remove type from top suggestion", () => {
       const currentGoal: Goal = new CreateCharInv();
       const updateGoalAction: actions.GoalAction = {
         type: actions.GoalsActions.SET_CURRENT_GOAL,
         payload: currentGoal,
       };
-      const newState: GoalsState = { ...defaultState, currentGoal };
+      const goalTypeSuggestions = defaultState.goalTypeSuggestions.slice();
+      if (goalTypeSuggestions[0] === currentGoal.goalType) {
+        goalTypeSuggestions.splice(0, 1);
+      }
+      const newState: GoalsState = {
+        ...defaultState,
+        currentGoal,
+        goalTypeSuggestions,
+      };
       expect(goalsReducer(defaultState, updateGoalAction)).toEqual(newState);
     });
   });
