@@ -73,20 +73,22 @@ def main() -> None:
 
             # Convert the list of backups to a more useful structure
             aws_backup_list: List[Tuple[str, str]] = []
-            for item in backup_list_output:
-                backup_components = item.split()
+            for backup_row in backup_list_output:
+                backup_components = backup_row.split()
                 aws_backup_list.append(
                     (
                         humanfriendly.format_size(int(backup_components[2])),
                         aws_strip_bucket(backup_components[3]),
                     )
                 )
+
             # Print out the list of backups to choose from.  In the process,
             # update each line in the backup list to be the AWS S3 object name
             # and its (human-friendly) size.
             print("Backup List:")
-            for i, item in enumerate(aws_backup_list):
-                print(f"{i+1}: {aws_backup_list[i][1]} ({aws_backup_list[i][0]})")
+            for i, backup_entry in enumerate(aws_backup_list):
+                print(f"{i+1}: {backup_entry[1]} ({backup_entry[0]})")
+
             backup_num = int(
                 input("Enter the number of the backup you would like to restore (0 = None):")
             )
