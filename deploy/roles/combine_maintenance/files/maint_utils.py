@@ -1,5 +1,7 @@
 """Collection of utility functions for the Combine maintenance scripts."""
 
+from __future__ import annotations
+
 import subprocess
 import sys
 from typing import List

@@ -1,5 +1,7 @@
 """Run commands on the Combine services."""
 
+from __future__ import annotations
+
 import enum
 import json
 from pathlib import Path
@@ -43,7 +45,7 @@ class CombineApp:
         *,
         exec_opts: Optional[List[str]] = None,
         check_results: bool = True,
-    ) -> subprocess.CompletedProcess:
+    ) -> subprocess.CompletedProcess[str]:
         """
         Run a docker-compose 'exec' command in a Combine container.
 
@@ -103,15 +105,15 @@ class CombineApp:
         )
         result_str = self.object_id_to_str(db_results.stdout)
         if result_str:
-            result_dict = json.loads(result_str)
+            result_dict: Dict[str, Any] = json.loads(result_str)
             return result_dict
         return None
 
-    def start(self, services: List[str]) -> subprocess.CompletedProcess:
+    def start(self, services: List[str]) -> subprocess.CompletedProcess[str]:
         """Start the specified combine service(s)."""
         return run_cmd(["docker-compose"] + self.compose_opts + ["start"] + services)
 
-    def stop(self, services: List[str]) -> subprocess.CompletedProcess:
+    def stop(self, services: List[str]) -> subprocess.CompletedProcess[str]:
         """Stop the specified combine service(s)."""
         return run_cmd(
             ["docker-compose"] + self.compose_opts + ["stop", "--timeout", "0"] + services
@@ -127,7 +129,7 @@ class CombineApp:
             return None
 
         if len(results) == 1:
-            return results[0]["_id"]
+            return results[0]["_id"]  # type: ignore
         if len(results) > 1:
             print(f"More than one project is named {project_name}", file=sys.stderr)
             sys.exit(1)
@@ -139,10 +141,10 @@ class CombineApp:
             f'db.UsersCollection.findOne({{ username: "{user}"}}, {{ username: 1 }})'
         )
         if results is not None:
-            return results["_id"]
+            return results["_id"]  # type: ignore
         results = self.db_cmd(
             f'db.UsersCollection.findOne({{ email: "{user}"}}, {{ username: 1 }})'
         )
         if results is not None:
-            return results["_id"]
+            return results["_id"]  # type: ignore
         return None
