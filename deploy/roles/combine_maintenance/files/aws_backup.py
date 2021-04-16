@@ -9,7 +9,7 @@ from maint_utils import run_cmd
 class AwsBackup:
     """Simple interface for managing backups in AWS S3 bucket."""
 
-    def __init__(self, *, bucket: str, profile: str):
+    def __init__(self, *, bucket: str, profile: str) -> None:
         """Initialize backup object."""
         self.profile = profile
         self.bucket = bucket
