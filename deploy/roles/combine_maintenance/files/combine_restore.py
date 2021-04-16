@@ -10,7 +10,7 @@ import re
 import sys
 import tarfile
 import tempfile
-from typing import Dict
+from typing import Dict, List, Tuple
 
 from aws_backup import AwsBackup
 from combine_app import CombineApp
@@ -65,22 +65,27 @@ def main() -> None:
             backup = args.file
         else:
             # Get the list of backups but throw away the header
-            aws_backup_list = aws.list().stdout.strip().split("\n")[1:]
+            backup_list_output = aws.list().stdout.strip().split("\n")[1:]
 
-            if len(aws_backup_list) == 0:
+            if len(backup_list_output) == 0:
                 print(f"No backups available from {config['aws_bucket']}")
                 sys.exit(0)
 
+            # Convert the list of backups to a more useful structure
+            aws_backup_list: List[Tuple[str, str]] = []
+            for item in backup_list_output:
+                backup_components = item.split()
+                aws_backup_list.append(
+                    (
+                        humanfriendly.format_size(int(backup_components[2])),
+                        aws_strip_bucket(backup_components[3]),
+                    )
+                )
             # Print out the list of backups to choose from.  In the process,
             # update each line in the backup list to be the AWS S3 object name
             # and its (human-friendly) size.
             print("Backup List:")
             for i, item in enumerate(aws_backup_list):
-                backup_components = item.split()
-                aws_backup_list[i] = (
-                    humanfriendly.format_size(int(backup_components[2])),
-                    aws_strip_bucket(backup_components[3]),
-                )
                 print(f"{i+1}: {aws_backup_list[i][1]} ({aws_backup_list[i][0]})")
             backup_num = int(
                 input("Enter the number of the backup you would like to restore (0 = None):")
