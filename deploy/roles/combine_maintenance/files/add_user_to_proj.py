@@ -59,17 +59,17 @@ def main() -> None:
     # 0. Define user permission sets
     if args.admin:
         user_permissions = [
-            int(Permission.DeleteEditSettingsAndUsers),
-            int(Permission.ImportExport),
-            int(Permission.MergeAndCharSet),
-            int(Permission.Unused),
-            int(Permission.WordEntry),
+            Permission.DeleteEditSettingsAndUsers.value,
+            Permission.ImportExport.value,
+            Permission.MergeAndCharSet.value,
+            Permission.Unused.value,
+            Permission.WordEntry.value,
         ]
     else:
         user_permissions = [
-            int(Permission.MergeAndCharSet),
-            int(Permission.Unused),
-            int(Permission.WordEntry),
+            Permission.MergeAndCharSet.value,
+            Permission.Unused.value,
+            Permission.WordEntry.value,
         ]
 
     # 1. Lookup the user id
@@ -112,17 +112,17 @@ def main() -> None:
         #      a. create a document in the UserRolesCollection,
         if args.admin:
             user_permissions = [
-                int(Permission.DeleteEditSettingsAndUsers),
-                int(Permission.ImportExport),
-                int(Permission.MergeAndCharSet),
-                int(Permission.Unused),
-                int(Permission.WordEntry),
+                Permission.DeleteEditSettingsAndUsers.value,
+                Permission.ImportExport.value,
+                Permission.MergeAndCharSet.value,
+                Permission.Unused.value,
+                Permission.WordEntry.value,
             ]
         else:
             user_permissions = [
-                int(Permission.MergeAndCharSet),
-                int(Permission.Unused),
-                int(Permission.WordEntry),
+                Permission.MergeAndCharSet.value,
+                Permission.Unused.value,
+                Permission.WordEntry.value,
             ]
         insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")

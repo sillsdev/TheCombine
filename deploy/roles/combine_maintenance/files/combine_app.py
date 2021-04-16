@@ -12,7 +12,7 @@ from maint_utils import run_cmd
 
 
 @enum.unique
-class Permission(enum.IntEnum):
+class Permission(enum.Enum):
     """Define enumerated type for Combine user permissions."""
 
     WordEntry = 1
@@ -27,10 +27,10 @@ class CombineApp:
 
     def __init__(self, compose_file_path: Path) -> None:
         """Initialize the CombineApp from the configuration file."""
-        if compose_file_path:
-            self.compose_opts = ["-f", str(compose_file_path)]
-        else:
+        if compose_file_path == "":
             self.compose_opts = []
+        else:
+            self.compose_opts = ["-f", str(compose_file_path)]
 
     def set_no_ansi(self) -> None:
         """Add '--no-ansi' to the docker-compose options."""
@@ -52,10 +52,11 @@ class CombineApp:
                      container that will run the command.
             cmd: A list of strings that specifies the command to be run in the
                      container.
-            exec_opts: A list of addtional options for the docker-compose exec
+            exec_opts: A list of additional options for the docker-compose exec
                      command, for example, to specify a working directory or a
                      specific user to run the command.
-
+            check_results: Indicate if subprocess should not check for failure.
+                     (Default is True)
         Returns a subprocess.CompletedProcess.
         """
         exec_opts = exec_opts or []
@@ -86,7 +87,7 @@ class CombineApp:
         container_id = run_cmd(
             ["docker", "ps", "--filter", f"name={service}", "--format", "{{.Names}}"]
         ).stdout.strip()
-        if not container_id:
+        if container_id == "":
             return None
         return container_id
 
@@ -102,7 +103,7 @@ class CombineApp:
             "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]
         )
         result_str = self.object_id_to_str(db_results.stdout)
-        if result_str:
+        if result_str != "":
             result_dict = json.loads(result_str)
             return result_dict
         return None
