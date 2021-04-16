@@ -56,7 +56,6 @@ class CombineApp:
                      command, for example, to specify a working directory or a
                      specific user to run the command.
             check_results: Indicate if subprocess should not check for failure.
-                     (Default is True)
         Returns a subprocess.CompletedProcess.
         """
         exec_opts = exec_opts or []
