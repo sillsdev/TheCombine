@@ -75,10 +75,12 @@ def main() -> None:
             aws_backup_list: List[Tuple[str, str]] = []
             for item in backup_list_output:
                 backup_components = item.split()
-                aws_backup_list.append((
-                    humanfriendly.format_size(int(backup_components[2])),
-                    aws_strip_bucket(backup_components[3]),
-                ))
+                aws_backup_list.append(
+                    (
+                        humanfriendly.format_size(int(backup_components[2])),
+                        aws_strip_bucket(backup_components[3]),
+                    )
+                )
             # Print out the list of backups to choose from.  In the process,
             # update each line in the backup list to be the AWS S3 object name
             # and its (human-friendly) size.
