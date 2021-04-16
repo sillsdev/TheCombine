@@ -281,15 +281,11 @@ To run all Python linting steps:
 (venv) $ tox
 ```
 
-To upgrade all pinned dependencies, run the following command under Python 3.6 so the requirements are
-backwards-compatible.
+To upgrade all pinned dependencies:
 
 ```bash
 (venv) $ python -m piptools compile --upgrade dev-requirements.in
 ```
-
-Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
-supporting Python 3.6 and 3.7+.
 
 ## Amazon Web Services
 
