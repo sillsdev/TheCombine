@@ -1,0 +1,37 @@
+---
+- name: Install pre-requisite packages
+  apt:
+    name: "{{ k8s_required_pkgs }}"
+
+- name: Check if minikube is installed
+  command: dpkg-query -W minikube
+  register: minikube_check
+  failed_when: minikube_check.rc > 1
+  changed_when: minikube_check.rc == 1
+
+- name: Download minikube
+  get_url: url="{{ minikube_url }}"
+    dest="{{ minikube_pkg_file }}"
+  when:
+    - install_minikube
+    - minikube_check.rc == 1
+
+- name: Install minikube
+  apt: deb="{{ minikube_pkg_file }}"
+  when:
+    - install_minikube
+    - minikube_check.rc == 1
+
+- name: Download the Google Cloud public signing key
+  shell: sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  args:
+    creates: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+- name: Add repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+    filename: kubernetes
+
+- name: Install kubectl
+  apt:
+    name: kubectl
