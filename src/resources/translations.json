@@ -17,6 +17,17 @@
       "Please wait while The Combine processes your data."
     ]
   },
+  "landingPage": {
+    "subtitle": [
+      "A Word-Harvesting Web App",
+      "A Word-Harvesting Web App",
+      "A Word-Harvesting Web App"
+    ],
+    "privacyPolicy": ["Privacy Policy", "Privacy Policy", "Privacy Policy"],
+    "description": [
+      "The Combine ...jasdolfk aisjefo iajeoif jawoiefj oiwaejf oiawjef oiawjefoiwjefoiwjefo woeifj owefij oaijeoi eofijwo eifjwoiejfao iejwoif wje oiwjefoijw e!"
+    ]
+  },
   "addWords": {
     "selectEntry": [
       "Select an entry",

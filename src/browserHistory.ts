@@ -15,6 +15,7 @@ export enum Path {
   GoalCurrent = "/app/goals/current",
   Goals = "/app/goals",
   Login = "/login",
+  PrivacyPolicy = "/privacy-policy",
   ProjInvite = "/app/invite",
   ProjScreen = "/app",
   ProjSettings = "/app/project-settings",
