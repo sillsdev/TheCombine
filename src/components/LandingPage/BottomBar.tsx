@@ -1,8 +1,6 @@
 import { AppBar, Button, Grid, Toolbar, Typography } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "browserHistory";
-
 /** A  bar shown at the bottom of the landing page. */
 export default function BottomBar() {
   const { REACT_APP_VERSION } = process.env;
