@@ -29,9 +29,11 @@ export default function BottomBar() {
               <Button
                 size="small"
                 color="inherit"
-                onClick={() => {
-                  history.push(Path.PrivacyPolicy);
-                }}
+                onClick={() =>
+                  window.open(
+                    "https://software.sil.org/language-software-privacy-policy/"
+                  )
+                }
               >
                 <Typography variant="caption">
                   <Translate id="landingPage.privacyPolicy" />

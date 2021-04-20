@@ -10,7 +10,7 @@ export default function LandingButtons() {
       container
       justify="space-around"
       alignItems="center"
-      style={{ height: "100%", width: "100%" }}
+      style={{ height: "100%" }}
     >
       <LandingButton
         onClick={() => history.push(Path.Register)}
@@ -36,7 +36,12 @@ function LandingButton(props: LandingButtonProps) {
       sm={12}
       style={{ textAlign: "center", paddingBottom: theme.spacing(1) }}
     >
-      <Button variant="contained" color="primary" onClick={props.onClick}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={props.onClick}
+        style={{ width: 150 }}
+      >
         <Typography variant="subtitle1">
           <Translate id={props.textId} />
         </Typography>
