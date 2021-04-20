@@ -4,8 +4,8 @@ using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
-    public interface ISemDomParser
+    public interface ISemanticDomainService
     {
-        Task<List<SemanticDomainWithSubdomains>> ParseSemanticDomains(string projectId);
+        List<SemanticDomainWithSubdomains> ParseSemanticDomains(Project proj);
     }
 }

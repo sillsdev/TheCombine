@@ -16,18 +16,23 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class ProjectController : Controller
     {
-        private readonly IProjectService _projectService;
-        private readonly ISemDomParser _semDomParser;
-        private readonly IUserRoleService _userRoleService;
+        private readonly IProjectRepository _projRepo;
+        private readonly IProjectService _projService;
+        private readonly ISemanticDomainService _semDomService;
+        private readonly IUserRoleRepository _userRoleRepo;
+        private readonly IUserRepository _userRepo;
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
 
-        public ProjectController(IProjectService projectService, ISemDomParser semDomParser,
-            IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService)
+        public ProjectController(IProjectRepository projRepo, IProjectService projService,
+            ISemanticDomainService semDomService, IUserRoleRepository userRoleRepo,
+            IUserRepository userRepo, IUserService userService, IPermissionService permissionService)
         {
-            _projectService = projectService;
-            _semDomParser = semDomParser;
-            _userRoleService = userRoleService;
+            _projRepo = projRepo;
+            _projService = projService;
+            _semDomService = semDomService;
+            _userRoleRepo = userRoleRepo;
+            _userRepo = userRepo;
             _userService = userService;
             _permissionService = permissionService;
         }
@@ -41,7 +46,7 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-            return new ObjectResult(await _projectService.GetAllProjects());
+            return new ObjectResult(await _projRepo.GetAllProjects());
         }
 
         /// <summary> Get a list of <see cref="User"/>s of a specific project </summary>
@@ -55,7 +60,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var allUsers = await _userService.GetAllUsers();
+            var allUsers = await _userRepo.GetAllUsers();
             var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             return new ObjectResult(projectUsers);
@@ -71,7 +76,7 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-            return new ObjectResult(await _projectService.DeleteAllProjects());
+            return new ObjectResult(await _projRepo.DeleteAllProjects());
         }
 
         /// <summary> Returns <see cref="Project"/> with specified id </summary>
@@ -84,7 +89,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundResult();
@@ -102,11 +107,11 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Project project)
         {
-            await _projectService.Create(project);
+            await _projRepo.Create(project);
 
             // Get user.
             var currentUserId = _permissionService.GetUserId(HttpContext);
-            var currentUser = await _userService.GetUser(currentUserId);
+            var currentUser = await _userRepo.GetUser(currentUserId);
             if (currentUser is null)
             {
                 return new NotFoundObjectResult(currentUserId);
@@ -125,12 +130,12 @@ namespace BackendFramework.Controllers
                 },
                 ProjectId = project.Id
             };
-            userRole = await _userRoleService.Create(userRole);
+            userRole = await _userRoleRepo.Create(userRole);
 
             // Update user with userRole.
             // Generate the userRoles and update the user.
             currentUser.ProjectRoles.Add(project.Id, userRole.Id);
-            await _userService.Update(currentUserId, currentUser);
+            await _userRepo.Update(currentUserId, currentUser);
             // Generate the JWT based on those new userRoles.
             var currentUpdatedUser = await _userService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
@@ -138,7 +143,7 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Invalid JWT Token supplied.");
             }
 
-            await _userService.Update(currentUserId, currentUpdatedUser);
+            await _userRepo.Update(currentUserId, currentUpdatedUser);
 
             var output = new ProjectWithUser(project) { UpdatedUser = currentUpdatedUser };
             return new OkObjectResult(output);
@@ -155,7 +160,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var result = await _projectService.Update(projectId, project);
+            var result = await _projRepo.Update(projectId, project);
             return result switch
             {
                 ResultOfUpdate.NotFound => new NotFoundObjectResult(projectId),
@@ -174,7 +179,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var currentProj = await _projectService.GetProject(projectId);
+            var currentProj = await _projRepo.GetProject(projectId);
             if (currentProj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -182,7 +187,7 @@ namespace BackendFramework.Controllers
 
             currentProj.ValidCharacters = project.ValidCharacters;
             currentProj.RejectedCharacters = project.RejectedCharacters;
-            await _projectService.Update(projectId, currentProj);
+            await _projRepo.Update(projectId, currentProj);
 
             return new OkObjectResult(currentProj);
         }
@@ -203,7 +208,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            if (await _projectService.Delete(projectId))
+            if (await _projRepo.Delete(projectId))
             {
                 return new OkResult();
             }
@@ -218,15 +223,13 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/semanticdomains")]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {
-            try
-            {
-                var result = await _semDomParser.ParseSemanticDomains(projectId);
-                return new OkObjectResult(result);
-            }
-            catch
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
             {
                 return new NotFoundResult();
             }
+            var result = _semDomService.ParseSemanticDomains(proj);
+            return new OkObjectResult(result);
         }
 
         // Change user role using project Id
@@ -238,14 +241,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Fetch the user -> fetch user role -> update user role
-            var changeUser = await _userService.GetUser(userId);
+            var changeUser = await _userRepo.GetUser(userId);
             if (changeUser is null)
             {
                 return new NotFoundObjectResult(userId);
@@ -260,14 +263,14 @@ namespace BackendFramework.Controllers
             {
                 // Generate the userRole
                 var usersRole = new UserRole { ProjectId = projectId };
-                usersRole = await _userRoleService.Create(usersRole);
+                usersRole = await _userRoleRepo.Create(usersRole);
                 userRoleId = usersRole.Id;
 
                 // Update the user
                 changeUser.ProjectRoles.Add(projectId, userRoleId);
-                await _userService.Update(changeUser.Id, changeUser);
+                await _userRepo.Update(changeUser.Id, changeUser);
             }
-            var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
                 return new NotFoundObjectResult(userRoleId);
@@ -275,7 +278,7 @@ namespace BackendFramework.Controllers
 
             userRole.Permissions = new List<int>(permissions);
 
-            var result = await _userRoleService.Update(userRoleId, userRole);
+            var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {
                 ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
@@ -299,7 +302,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            return new OkObjectResult(await _projectService.CanImportLift(projectId));
+            return new OkObjectResult(await _projService.CanImportLift(projectId));
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
@@ -308,15 +311,15 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
             var projectId = data.ProjectId;
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, data.EmailAddress);
+            var linkWithIdentifier = await _projService.CreateLinkWithToken(project, data.EmailAddress);
 
-            await _projectService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
+            await _projService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
 
             return new OkObjectResult(linkWithIdentifier);
         }
@@ -328,13 +331,13 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
 
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var users = await _userService.GetAllUsers();
+            var users = await _userRepo.GetAllUsers();
             var status = new bool[2];
             var activeTokenExists = false;
             var userIsRegistered = false;
@@ -370,7 +373,7 @@ namespace BackendFramework.Controllers
 
             if (activeTokenExists && userIsRegistered
                                   && !currentUser.ProjectRoles.ContainsKey(projectId)
-                                  && await _projectService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
+                                  && await _projService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
                 return new OkObjectResult(status);
             }
@@ -399,7 +402,7 @@ namespace BackendFramework.Controllers
         [HttpGet("duplicate/{projectName}")]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
-            var projectIdWithName = await _projectService.GetProjectIdByName(projectName);
+            var projectIdWithName = await _projRepo.GetProjectIdByName(projectName);
             return new OkObjectResult(projectIdWithName != null);
         }
     }

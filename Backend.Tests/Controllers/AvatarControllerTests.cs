@@ -13,6 +13,7 @@ namespace Backend.Tests.Controllers
 {
     public class AvatarControllerTests
     {
+        private IUserRepository _userRepo = null!;
         private IUserService _userService = null!;
         private UserController _userController = null!;
         private AvatarController _avatarController = null!;
@@ -23,9 +24,10 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _permissionService = new PermissionServiceMock();
-            _userService = new UserServiceMock();
-            _userController = new UserController(_userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
-            _avatarController = new AvatarController(_userService, _permissionService)
+            _userRepo = new UserRepositoryMock();
+            _userService = new UserServiceMock(_userRepo);
+            _userController = new UserController(_userRepo, _userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
+            _avatarController = new AvatarController(_userRepo, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
@@ -34,7 +36,7 @@ namespace Backend.Tests.Controllers
             // User controller
             _userController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
-            _userService.Create(_jwtAuthenticatedUser);
+            _userRepo.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _userService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
         }

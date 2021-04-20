@@ -165,6 +165,14 @@ namespace BackendFramework.Models
             hash.Add(Token);
             return hash.ToHashCode();
         }
+
+        /// <summary> Removes avatar path, password, and token. </summary>
+        public void Sanitize()
+        {
+            Avatar = "";
+            Password = "";
+            Token = "";
+        }
     }
 
     /// <summary> Contains username and password for authentication. </summary>

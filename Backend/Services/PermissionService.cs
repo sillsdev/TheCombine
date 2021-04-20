@@ -12,11 +12,11 @@ namespace BackendFramework.Services
 {
     public class PermissionService : IPermissionService
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepo;
 
-        public PermissionService(IUserService userService)
+        public PermissionService(IUserRepository userRepo)
         {
-            _userService = userService;
+            _userRepo = userRepo;
         }
 
         // TODO: This appears intrinsic to mongodb implementation and is brittle.
@@ -55,7 +55,7 @@ namespace BackendFramework.Services
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return false;
@@ -99,7 +99,7 @@ namespace BackendFramework.Services
         public async Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             var userId = GetUserId(request);
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return true;

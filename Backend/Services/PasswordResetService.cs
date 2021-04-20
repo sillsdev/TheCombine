@@ -9,12 +9,12 @@ namespace BackendFramework.Services
     public class PasswordResetService : IPasswordResetService
     {
         private readonly IPasswordResetContext _passwordResets;
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepo;
 
-        public PasswordResetService(IPasswordResetContext passwordResets, IUserService userService)
+        public PasswordResetService(IPasswordResetContext passwordResets, IUserRepository userRepo)
         {
             _passwordResets = passwordResets;
-            _userService = userService;
+            _userRepo = userRepo;
         }
 
         public async Task<PasswordReset> CreatePasswordReset(string email)
@@ -39,9 +39,9 @@ namespace BackendFramework.Services
             var request = await _passwordResets.FindByToken(token);
             if (!(request is null) && DateTime.Now < request.ExpireTime)
             {
-                var user = (await _userService.GetAllUsers()).Single(u =>
+                var user = (await _userRepo.GetAllUsers()).Single(u =>
                     u.Email.ToLowerInvariant() == request.Email.ToLowerInvariant());
-                await _userService.ChangePassword(user.Id, password);
+                await _userRepo.ChangePassword(user.Id, password);
                 await ExpirePasswordReset(request.Email);
                 return true;
             }

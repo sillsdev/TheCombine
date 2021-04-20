@@ -25,16 +25,19 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
-        private readonly IProjectService _projectService;
+        private readonly IProjectRepository _projRepo;
+        private readonly IProjectService _projService;
         private readonly IPermissionService _permissionService;
         private readonly IHubContext<CombineHub> _notifyService;
         private readonly ILogger<LiftController> _logger;
 
-        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
+        public LiftController(IWordRepository wordRepo, IProjectRepository projRepo, IProjectService projService,
+            IPermissionService permissionService, ILiftService liftService, IHubContext<CombineHub> notifyService,
+            ILogger<LiftController> logger)
         {
-            _wordRepo = repo;
-            _projectService = projServ;
+            _wordRepo = wordRepo;
+            _projRepo = projRepo;
+            _projService = projService;
             _liftService = liftService;
             _permissionService = permissionService;
             _notifyService = notifyService;
@@ -63,7 +66,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure Lift file has not already been imported.
-            if (!await _projectService.CanImportLift(projectId))
+            if (!await _projService.CanImportLift(projectId))
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
@@ -159,11 +162,11 @@ namespace BackendFramework.Controllers
 
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
-            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projService, _wordRepo);
             try
             {
                 // Add character set to project from ldml file
-                var proj = await _projectService.GetProject(projectId);
+                var proj = await _projRepo.GetProject(projectId);
                 if (proj is null)
                 {
                     return new NotFoundObjectResult(projectId);
@@ -171,7 +174,7 @@ namespace BackendFramework.Controllers
 
                 _liftService.LdmlImport(
                     Path.Combine(liftStoragePath, "WritingSystems"),
-                    proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+                    proj.VernacularWritingSystem.Bcp47, _projRepo, proj);
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
@@ -187,14 +190,14 @@ namespace BackendFramework.Controllers
 
             // Store that we have imported Lift data already for this project to signal the frontend
             // not to attempt to import again.
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             project.LiftImported = true;
-            await _projectService.Update(projectId, project);
+            await _projRepo.Update(projectId, project);
 
             return new OkObjectResult(liftParseResult);
         }
@@ -224,7 +227,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -266,7 +269,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projectService);
+            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
             return exportedFilepath;
         }
 

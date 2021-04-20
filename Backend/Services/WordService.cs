@@ -9,23 +9,23 @@ namespace BackendFramework.Services
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
     public class WordService : IWordService
     {
-        private readonly IWordRepository _repo;
+        private readonly IWordRepository _wordRepo;
 
-        public WordService(IWordRepository repo)
+        public WordService(IWordRepository wordRepo)
         {
-            _repo = repo;
+            _wordRepo = wordRepo;
         }
 
         /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string wordId)
         {
-            var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
+            var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to add the deleted word if the word started in the frontier.
             if (wordIsInFrontier)
             {
-                var wordToDelete = await _repo.GetWord(projectId, wordId);
+                var wordToDelete = await _wordRepo.GetWord(projectId, wordId);
                 if (wordToDelete is null)
                 {
                     return false;
@@ -41,7 +41,7 @@ namespace BackendFramework.Services
                     senseAcc.Accessibility = State.Deleted;
                 }
 
-                await _repo.Create(wordToDelete);
+                await _wordRepo.Create(wordToDelete);
             }
 
             return wordIsInFrontier;
@@ -51,13 +51,13 @@ namespace BackendFramework.Services
         /// <returns> New word </returns>
         public async Task<Word?> Delete(string projectId, string wordId, string fileName)
         {
-            var wordWithAudioToDelete = await _repo.GetWord(projectId, wordId);
+            var wordWithAudioToDelete = await _wordRepo.GetWord(projectId, wordId);
             if (wordWithAudioToDelete is null)
             {
                 return null;
             }
 
-            var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
+            var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to update words that are in the frontier
             if (wordIsInFrontier)
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
                 // Keep track of the old word, adding it to the history.
                 wordWithAudioToDelete.History.Add(wordId);
 
-                wordWithAudioToDelete = await _repo.Create(wordWithAudioToDelete);
+                wordWithAudioToDelete = await _wordRepo.Create(wordWithAudioToDelete);
             }
 
             return wordWithAudioToDelete;
@@ -80,13 +80,13 @@ namespace BackendFramework.Services
         /// <returns> A string: id of new word </returns>
         public async Task<string?> DeleteFrontierWord(string projectId, string wordId)
         {
-            var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
+            var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
             if (!wordIsInFrontier)
             {
                 return null;
             }
 
-            var word = await _repo.GetWord(projectId, wordId);
+            var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
                 return null;
@@ -100,7 +100,7 @@ namespace BackendFramework.Services
             // Keep track of the old word, adding it to the history.
             word.History.Add(wordId);
 
-            var deletedWord = await _repo.Add(word);
+            var deletedWord = await _wordRepo.Add(word);
             return deletedWord.Id;
         }
 
@@ -108,7 +108,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Update(string projectId, string wordId, Word word)
         {
-            var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
+            var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to update words that are in the frontier
             if (wordIsInFrontier)
@@ -120,7 +120,7 @@ namespace BackendFramework.Services
                 // Keep track of the old word, adding it to the history.
                 word.History.Add(wordId);
 
-                await _repo.Create(word);
+                await _wordRepo.Create(word);
             }
 
             return wordIsInFrontier;
@@ -140,7 +140,7 @@ namespace BackendFramework.Services
                 parent.History.Add(childSource.SrcWordId);
                 if (childSource.GetAudio)
                 {
-                    var child = await _repo.GetWord(projectId, childSource.SrcWordId);
+                    var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId);
                     if (child is null)
                     {
                         throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
@@ -165,7 +165,7 @@ namespace BackendFramework.Services
         private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
         {
             var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
-            return await _repo.DeleteFrontier(projectId, childIds);
+            return await _wordRepo.DeleteFrontier(projectId, childIds);
         }
 
         /// <summary>
@@ -179,14 +179,14 @@ namespace BackendFramework.Services
             await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m)
                                              .ContinueWith(task => newWords.Add(task.Result))));
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
-            return await _repo.Create(newWords);
+            return await _wordRepo.Create(newWords);
         }
 
         /// <summary> Checks if a word being added is an exact duplicate of a preexisting word </summary>
         public async Task<bool> WordIsUnique(Word word)
         {
             // Get all words from frontier
-            var allWords = await _repo.GetFrontier(word.ProjectId);
+            var allWords = await _wordRepo.GetFrontier(word.ProjectId);
 
             // Find all words with matching vernacular
             var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);

@@ -11,6 +11,7 @@ namespace Backend.Tests.Controllers
 {
     public class UserControllerTests
     {
+        private IUserRepository _userRepo = null!;
         private IUserService _userService = null!;
         private UserController _controller = null!;
         private IPermissionService _permissionService = null!;
@@ -19,8 +20,10 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _permissionService = new PermissionServiceMock();
-            _userService = new UserServiceMock();
-            _controller = new UserController(_userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
+            _userRepo = new UserRepositoryMock();
+            _userService = new UserServiceMock(_userRepo);
+            _controller = new UserController(_userRepo, _userService, _permissionService,
+                new EmailServiceMock(), new PasswordResetServiceMock());
         }
 
         private static User RandomUser()
@@ -43,22 +46,22 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetAllUsers()
         {
-            _userService.Create(RandomUser());
-            _userService.Create(RandomUser());
-            _userService.Create(RandomUser());
+            _userRepo.Create(RandomUser());
+            _userRepo.Create(RandomUser());
+            _userRepo.Create(RandomUser());
 
             var users = ((ObjectResult)_controller.GetAllUsers().Result).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
-            _userService.GetAllUsers().Result.ForEach(user => Assert.Contains(user, users));
+            _userRepo.GetAllUsers().Result.ForEach(user => Assert.Contains(user, users));
         }
 
         [Test]
         public void TestGetUser()
         {
-            var user = _userService.Create(RandomUser()).Result ?? throw new Exception();
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
 
-            _userService.Create(RandomUser());
-            _userService.Create(RandomUser());
+            _userRepo.Create(RandomUser());
+            _userRepo.Create(RandomUser());
 
             var action = _controller.Get(user.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
@@ -80,19 +83,19 @@ namespace Backend.Tests.Controllers
             var user = RandomUser();
             var id = (string)((ObjectResult)_controller.Post(user).Result).Value;
             user.Id = id;
-            Assert.Contains(user, _userService.GetAllUsers().Result);
+            Assert.Contains(user, _userRepo.GetAllUsers().Result);
         }
 
         [Test]
         public void TestUpdateUser()
         {
-            var origUser = _userService.Create(RandomUser()).Result ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
             var modUser = origUser.Clone();
             modUser.Username = "Mark";
 
             _ = _controller.Put(modUser.Id, modUser);
 
-            var users = _userService.GetAllUsers().Result;
+            var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
             Assert.Contains(modUser, users);
         }
@@ -100,13 +103,13 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUserCantUpdateIsAdmin()
         {
-            var origUser = _userService.Create(RandomUser()).Result ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
             var modUser = origUser.Clone() ?? throw new Exception();
             modUser.IsAdmin = true;
 
             _ = _controller.Put(modUser.Id, modUser);
 
-            var users = _userService.GetAllUsers().Result;
+            var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
             Assert.Contains(modUser, users);
         }
@@ -114,23 +117,23 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteUser()
         {
-            var origUser = _userService.Create(RandomUser()).Result ?? throw new Exception();
-            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(1));
 
             _ = _controller.Delete(origUser.Id).Result;
-            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
+            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
 
         [Test]
         public void TestDeleteAllUsers()
         {
-            _userService.Create(RandomUser());
-            _userService.Create(RandomUser());
-            _userService.Create(RandomUser());
-            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(3));
+            _userRepo.Create(RandomUser());
+            _userRepo.Create(RandomUser());
+            _userRepo.Create(RandomUser());
+            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(3));
 
             _ = _controller.Delete().Result;
-            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
+            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
 
         [Test]
@@ -141,8 +144,8 @@ namespace Backend.Tests.Controllers
             var username1 = user1.Username;
             var username2 = user2.Username;
 
-            _userService.Create(user1);
-            _userService.Create(user2);
+            _userRepo.Create(user1);
+            _userRepo.Create(user2);
 
             var result1 = (StatusCodeResult)_controller.CheckUsername(username1.ToLowerInvariant()).Result;
             Assert.AreEqual(result1.StatusCode, 400);
@@ -165,8 +168,8 @@ namespace Backend.Tests.Controllers
             var email1 = user1.Email;
             var email2 = user2.Email;
 
-            _userService.Create(user1);
-            _userService.Create(user2);
+            _userRepo.Create(user1);
+            _userRepo.Create(user2);
 
             var result1 = (StatusCodeResult)_controller.CheckEmail(email1.ToLowerInvariant()).Result;
             Assert.AreEqual(result1.StatusCode, 400);

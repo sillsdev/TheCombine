@@ -18,13 +18,16 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserController : Controller
     {
+        private readonly IUserRepository _userRepo;
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
 
-        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService)
+        public UserController(IUserRepository userRepo, IUserService userService,
+            IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService)
         {
+            _userRepo = userRepo;
             _userService = userService;
             _permissionService = permissionService;
             _emailService = emailService;
@@ -39,7 +42,7 @@ namespace BackendFramework.Controllers
         {
             // Find user attached to email or username.
             var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
-            var user = (await _userService.GetAllUsers()).SingleOrDefault(u =>
+            var user = (await _userRepo.GetAllUsers()).SingleOrDefault(u =>
                 u.Email.ToLowerInvariant().Equals(emailOrUsername) ||
                 u.Username.ToLowerInvariant().Equals(emailOrUsername));
 
@@ -90,7 +93,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            return new ObjectResult(await _userService.GetAllUsers());
+            return new ObjectResult(await _userRepo.GetAllUsers());
         }
 
         /// <summary> Deletes all <see cref="User"/>s </summary>
@@ -104,7 +107,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            return new OkObjectResult(await _userService.DeleteAllUsers());
+            return new OkObjectResult(await _userRepo.DeleteAllUsers());
         }
 
         /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
@@ -139,7 +142,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return new NotFoundObjectResult(userId);
@@ -155,7 +158,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] User user)
         {
-            var returnUser = await _userService.Create(user);
+            var returnUser = await _userRepo.Create(user);
             if (returnUser is null)
             {
                 return BadRequest();
@@ -213,7 +216,7 @@ namespace BackendFramework.Controllers
             //     return new ForbidResult();
             // }
 
-            var result = await _userService.Update(userId, user);
+            var result = await _userRepo.Update(userId, user);
             return result switch
             {
                 ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
@@ -232,7 +235,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            if (await _userService.Delete(userId))
+            if (await _userRepo.Delete(userId))
             {
                 return new OkResult();
             }

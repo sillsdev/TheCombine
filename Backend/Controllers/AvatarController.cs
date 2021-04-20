@@ -15,12 +15,12 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class AvatarController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepo;
         private readonly IPermissionService _permissionService;
 
-        public AvatarController(IUserService service, IPermissionService permissionService)
+        public AvatarController(IUserRepository service, IPermissionService permissionService)
         {
-            _userService = service;
+            _userRepo = service;
             _permissionService = permissionService;
         }
 
@@ -30,7 +30,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}/download/avatar")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-            var avatar = await _userService.GetUserAvatar(userId);
+            var user = await _userRepo.GetUser(userId, false);
+            var avatar = string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
+
             if (avatar is null)
             {
                 return new NotFoundObjectResult(userId);
@@ -66,7 +68,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get user to apply avatar to.
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return new NotFoundObjectResult(userId);
@@ -84,7 +86,7 @@ namespace BackendFramework.Controllers
             // Update the user's avatar file.
             user.Avatar = fileUpload.FilePath;
             user.HasAvatar = true;
-            _ = await _userService.Update(userId, user);
+            _ = await _userRepo.Update(userId, user);
 
             return new OkResult();
         }

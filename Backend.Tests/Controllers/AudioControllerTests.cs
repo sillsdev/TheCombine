@@ -18,7 +18,7 @@ namespace Backend.Tests.Controllers
         private WordController _wordController = null!;
         private AudioController _audioController = null!;
 
-        private IProjectService _projectService = null!;
+        private IProjectRepository _projRepo = null!;
         private string _projId = null!;
         private PermissionServiceMock _permissionService = null!;
 
@@ -27,17 +27,17 @@ namespace Backend.Tests.Controllers
         {
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
+            _projRepo = new ProjectRepositoryMock();
+            _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
             _permissionService = new PermissionServiceMock();
-            _wordController = new WordController(_wordRepo, _wordService, _projectService, _permissionService);
+            _wordController = new WordController(_wordRepo, _wordService, _projRepo, _permissionService);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _projectService.Delete(_projId);
+            _projRepo.Delete(_projId);
         }
 
         private static string RandomString(int length = 16)

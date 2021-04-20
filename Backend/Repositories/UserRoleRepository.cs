@@ -6,14 +6,14 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
 
-namespace BackendFramework.Services
+namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="UserRole"/>s </summary>
-    public class UserRoleService : IUserRoleService
+    public class UserRoleRepository : IUserRoleRepository
     {
         private readonly IUserRoleContext _userRoleDatabase;
 
-        public UserRoleService(IUserRoleContext collectionSettings)
+        public UserRoleRepository(IUserRoleContext collectionSettings)
         {
             _userRoleDatabase = collectionSettings;
         }

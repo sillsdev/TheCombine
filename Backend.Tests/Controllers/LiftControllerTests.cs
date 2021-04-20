@@ -22,7 +22,8 @@ namespace Backend.Tests.Controllers
     {
         private IWordRepository _wordRepo = null!;
         private IWordService _wordService = null!;
-        private IProjectService _projServ = null!;
+        private IProjectRepository _projRepo = null!;
+        private IProjectService _projService = null!;
         private ILiftService _liftService = null!;
         private LiftController _liftController = null!;
         private IHubContext<CombineHub> _notifyService = null!;
@@ -36,21 +37,22 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _permissionService = new PermissionServiceMock();
-            _projServ = new ProjectServiceMock();
-            _projId = _projServ.Create(new Project { Name = _projName }).Result!.Id;
+            _projRepo = new ProjectRepositoryMock();
+            _projService = new ProjectServiceMock();
+            _projId = _projRepo.Create(new Project { Name = _projName }).Result!.Id;
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             _notifyService = new HubContextMock();
             _logger = new MockLogger();
             _liftController = new LiftController(
-                _wordRepo, _projServ, _permissionService, _liftService, _notifyService, _logger);
+                _wordRepo, _projRepo, _projService, _permissionService, _liftService, _notifyService, _logger);
             _wordService = new WordService(_wordRepo);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _projServ.Delete(_projId);
+            _projRepo.Delete(_projId);
         }
 
         private static Project RandomProject()
@@ -302,7 +304,7 @@ namespace Backend.Tests.Controllers
             // Init the project the .zip info is added to.
             var proj1 = RandomProject();
             proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
-            proj1 = _projServ.Create(proj1).Result;
+            proj1 = _projRepo.Create(proj1).Result;
 
             // Upload the zip file.
             // Generate api parameter with filestream.
@@ -315,7 +317,7 @@ namespace Backend.Tests.Controllers
                 Assert.That(result is OkObjectResult);
             }
 
-            proj1 = _projServ.GetProject(proj1.Id).Result;
+            proj1 = _projRepo.GetProject(proj1.Id).Result;
             if (proj1 is null)
             {
                 Assert.Fail();
@@ -364,7 +366,7 @@ namespace Backend.Tests.Controllers
             // Init the project the .zip info is added to.
             var proj2 = RandomProject();
             proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
-            proj2 = _projServ.Create(proj2).Result;
+            proj2 = _projRepo.Create(proj2).Result;
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
@@ -377,7 +379,7 @@ namespace Backend.Tests.Controllers
                 Assert.That(result2 is OkObjectResult);
             }
 
-            proj2 = _projServ.GetProject(proj2.Id).Result;
+            proj2 = _projRepo.GetProject(proj2.Id).Result;
             if (proj2 is null)
             {
                 Assert.Fail();
@@ -424,7 +426,7 @@ namespace Backend.Tests.Controllers
             _wordRepo.DeleteAllWords(proj2.Id);
             foreach (var project in new List<Project> { proj1, proj2 })
             {
-                _projServ.Delete(project.Id);
+                _projRepo.Delete(project.Id);
             }
         }
 

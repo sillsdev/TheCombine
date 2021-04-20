@@ -153,7 +153,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
-        public void LdmlImport(string filePath, string langTag, IProjectService projService, Project project)
+        public void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
@@ -163,17 +163,17 @@ namespace BackendFramework.Services
             if (wsDef.CharacterSets.Contains("main"))
             {
                 project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                projService.Update(project.Id, project);
+                projRepo.Update(project.Id, project);
             }
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
         /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
-        public async Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
+        public async Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
         {
             // Validate project exists.
-            var proj = await projService.GetProject(projectId);
+            var proj = await projRepo.GetProject(projectId);
             if (proj is null)
             {
                 throw new MissingProjectException($"Project does not exist: {projectId}");

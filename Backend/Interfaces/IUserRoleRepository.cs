@@ -5,7 +5,7 @@ using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IUserRoleService
+    public interface IUserRoleRepository
     {
         Task<List<UserRole>> GetAllUserRoles(string projectId);
         Task<UserRole?> GetUserRole(string projectId, string userRoleId);
