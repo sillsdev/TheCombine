@@ -146,21 +146,25 @@ namespace Backend.Tests.Controllers
         {
             var userRole = RandomUserRole();
             _userRoleRepo.Create(userRole);
-            var updateRole = userRole.Clone();
-            updateRole.Permissions.Add((int)Permission.WordEntry);
+            var user = new User();
+            user.ProjectRoles[_projId] = userRole.Id;
+            var userId = _userRepo.Create(user).Result!.Id;
 
-            _ = _userRoleController.Put(_projId, userRole.Id, updateRole).Result;
+            var updatePermissions = userRole.Clone().Permissions;
+            updatePermissions.Add((int)Permission.WordEntry);
 
-            var allUserRoles = _userRoleRepo.GetAllUserRoles(_projId).Result;
-
-            Assert.Contains(updateRole, allUserRoles);
+            _ = _userRoleController.UpdateUserRole(_projId, userId, updatePermissions.ToArray()).Result;
+            var action = _userRoleController.Get(_projId, userRole.Id).Result;
+            var updatedUserRole = ((ObjectResult)action).Value as UserRole;
+            Assert.AreEqual(updatePermissions, updatedUserRole?.Permissions);
         }
 
         [Test]
         public void TestUpdateUserRolesMissingProject()
         {
             var userRole = RandomUserRole();
-            var result = _userRoleController.Put(InvalidProjectId, userRole.Id, userRole).Result;
+            var result = _userRoleController.UpdateUserRole(
+                InvalidProjectId, userRole.Id, userRole.Permissions.ToArray()).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -169,7 +173,8 @@ namespace Backend.Tests.Controllers
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var userRole = RandomUserRole();
-            var result = _userRoleController.Put(InvalidProjectId, userRole.Id, userRole).Result;
+            var result = _userRoleController.UpdateUserRole(
+                InvalidProjectId, userRole.Id, userRole.Permissions.ToArray()).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 

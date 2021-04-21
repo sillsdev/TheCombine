@@ -144,33 +144,6 @@ namespace BackendFramework.Controllers
             return new NotFoundObjectResult(userRoleId);
         }
 
-        /// <summary> Updates <see cref="UserRole"/> with specified id </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
-        /// <returns> Id of updated UserRole </returns>
-        [HttpPut("{userRoleId}")]
-        public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
-            {
-                return new ForbidResult();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            var result = await _userRoleRepo.Update(userRoleId, userRole);
-            return result switch
-            {
-                ResultOfUpdate.NotFound => new NotFoundObjectResult(userRoleId),
-                ResultOfUpdate.Updated => new OkObjectResult(userRoleId),
-                _ => new StatusCodeResult(304)
-            };
-        }
-
         /// <summary>
         /// Updates permissions of <see cref="UserRole"/> for <see cref="Project"/> with specified projectId
         /// and <see cref="User"/> with specified userId.
