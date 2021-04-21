@@ -8,6 +8,8 @@
   register: minikube_check
   failed_when: minikube_check.rc > 1
   changed_when: minikube_check.rc == 1
+  when:
+    - install_minikube
 
 - name: Download minikube
   get_url: url="{{ minikube_url }}"
@@ -22,16 +24,31 @@
     - install_minikube
     - minikube_check.rc == 1
 
+- name: Install Microk8s
+  snap:
+    name: microk8s
+    classic: yes
+  when:
+    - install_microk8s
+
+- name: Enable storage on microk8s
+  shell: microk8s enable storage
+  when:
+    - install_microk8s
+
 - name: Download the Google Cloud public signing key
   shell: sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
   args:
     creates: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+  when: install_k8s
 
 - name: Add repository
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
     filename: kubernetes
+  when: install_k8s
 
 - name: Install kubectl
   apt:
     name: kubectl
+  when: install_k8s
