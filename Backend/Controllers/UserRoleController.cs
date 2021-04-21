@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -14,13 +15,15 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserRoleController : Controller
     {
+        private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IProjectRepository _projRepo;
         private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRoleRepository userRoleRepo, IProjectRepository projRepo,
-            IPermissionService permissionService)
+        public UserRoleController(IUserRepository userRepo, IUserRoleRepository userRoleRepo,
+            IProjectRepository projRepo, IPermissionService permissionService)
         {
+            _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
             _projRepo = projRepo;
             _permissionService = permissionService;
@@ -164,6 +167,66 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => new NotFoundObjectResult(userRoleId),
                 ResultOfUpdate.Updated => new OkObjectResult(userRoleId),
+                _ => new StatusCodeResult(304)
+            };
+        }
+
+        /// <summary>
+        /// Updates permissions of <see cref="UserRole"/> for <see cref="Project"/> with specified projectId
+        /// and <see cref="User"/> with specified userId.
+        /// </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userId} </remarks>
+        /// <returns> Id of updated UserRole </returns>
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            {
+                return new ForbidResult();
+            }
+
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
+            // Fetch the user -> fetch user role -> update user role
+            var changeUser = await _userRepo.GetUser(userId);
+            if (changeUser is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+
+            string userRoleId;
+            if (changeUser.ProjectRoles.ContainsKey(projectId))
+            {
+                userRoleId = changeUser.ProjectRoles[projectId];
+            }
+            else
+            {
+                // Generate the userRole
+                var usersRole = new UserRole { ProjectId = projectId };
+                usersRole = await _userRoleRepo.Create(usersRole);
+                userRoleId = usersRole.Id;
+
+                // Update the user
+                changeUser.ProjectRoles.Add(projectId, userRoleId);
+                await _userRepo.Update(changeUser.Id, changeUser);
+            }
+            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            if (userRole is null)
+            {
+                return new NotFoundObjectResult(userRoleId);
+            }
+
+            userRole.Permissions = new List<int>(permissions);
+
+            var result = await _userRoleRepo.Update(userRoleId, userRole);
+            return result switch
+            {
+                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
+                ResultOfUpdate.Updated => new OkObjectResult(userId),
                 _ => new StatusCodeResult(304)
             };
         }

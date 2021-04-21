@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Sends a password reset request </summary>
-        /// <remarks> GET: v1/users/forgot </remarks>
+        /// <remarks> POST: v1/users/forgot </remarks>
         [AllowAnonymous]
         [HttpPost("forgot")]
         public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)

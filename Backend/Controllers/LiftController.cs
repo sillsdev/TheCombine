@@ -19,7 +19,7 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/projects/{projectId}/words")]
+    [Route("v1/projects/{projectId}/lift")]
     [EnableCors("AllowAll")]
     public class LiftController : Controller
     {
@@ -45,7 +45,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/upload </remarks>
+        /// <remarks> POST: v1/projects/{projectId}/lift/upload </remarks>
         /// <returns> Number of words added </returns>
         [HttpPost("upload")]
         // Allow clients to POST large import files to the server (default limit is 28MB).
@@ -203,7 +203,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/lift/export </remarks>
         /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
@@ -274,7 +274,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Downloads project data in zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/lift/download </remarks>
         /// <returns> Binary Lift file </returns>
         [HttpGet("download")]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
@@ -305,7 +305,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Delete prepared export </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/lift/deleteexport </remarks>
         /// <returns> UserId, if successful </returns>
         [HttpGet("deleteexport")]
         public async Task<IActionResult> DeleteLiftFile()
@@ -323,6 +323,26 @@ namespace BackendFramework.Controllers
 
             _liftService.DeleteExport(userId);
             return new OkObjectResult(userId);
+        }
+
+        /// <summary> Check if lift import has already happened for this project </summary>
+        /// <remarks> GET: v1/projects/{projectId}/lift/check </remarks>
+        /// <returns> A bool </returns>
+        [HttpGet("check")]
+        public async Task<IActionResult> CanUploadLift(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            // Sanitize user input
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            return new OkObjectResult(await _projService.CanImportLift(projectId));
         }
     }
 

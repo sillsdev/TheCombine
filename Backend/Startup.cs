@@ -186,45 +186,46 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
-            // Word types
-            services.AddTransient<IWordContext, WordContext>();
-            services.AddTransient<IWordRepository, WordRepository>();
-            services.AddTransient<IWordService, WordService>();
+            // Email types
+            services.AddTransient<IEmailContext, EmailContext>();
+            services.AddTransient<IEmailService, EmailService>();
+
+            // Lift Service - Singleton to avoid initializing the Sldr multiple times,
+            // also to avoid leaking LanguageTag data
+            services.AddSingleton<ILiftService, LiftService>();
+
+            // Password Reset types
+            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
+            services.AddTransient<IPasswordResetService, PasswordResetService>();
+
+            // Permission types
+            services.AddTransient<IPermissionService, PermissionService>();
+
+            // Project types
+            services.AddTransient<IProjectContext, ProjectContext>();
+            services.AddTransient<IProjectInviteService, ProjectInviteService>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<ISemanticDomainService, SemanticDomainService>();
 
             // User types
             services.AddTransient<IUserContext, UserContext>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
 
-            // Lift Service - Singleton to avoid initializing the Sldr multiple times,
-            // also to avoid leaking LanguageTag data
-            services.AddSingleton<ILiftService, LiftService>();
-
-            // User edit types
+            // User Edit types
             services.AddTransient<IUserEditContext, UserEditContext>();
             services.AddTransient<IUserEditRepository, UserEditRepository>();
             services.AddTransient<IUserEditService, UserEditService>();
 
-            // User role types
+            // User Role types
             services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 
-            // Project types
-            services.AddTransient<IProjectContext, ProjectContext>();
-            services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<ISemanticDomainService, SemanticDomainService>();
-
-            // Permission types
-            services.AddTransient<IPermissionService, PermissionService>();
-
-            // Email types
-            services.AddTransient<IEmailContext, EmailContext>();
-            services.AddTransient<IEmailService, EmailService>();
-
-            // Password Reset types
-            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
-            services.AddTransient<IPasswordResetService, PasswordResetService>();
+            // Word types (includes Frontier types)
+            services.AddTransient<IWordContext, WordContext>();
+            services.AddTransient<IWordRepository, WordRepository>();
+            services.AddTransient<IWordService, WordService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

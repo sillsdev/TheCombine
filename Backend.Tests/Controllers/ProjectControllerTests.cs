@@ -14,7 +14,6 @@ namespace Backend.Tests.Controllers
     public class ProjectControllerTests
     {
         private IProjectRepository _projRepo = null!;
-        private IProjectService _projService = null!;
         private ISemanticDomainService _semDomService = null!;
         private ProjectController _controller = null!;
         private UserRoleRepositoryMock _userRoleRepo = null!;
@@ -28,12 +27,11 @@ namespace Backend.Tests.Controllers
         {
             _permissionService = new PermissionServiceMock();
             _projRepo = new ProjectRepositoryMock();
-            _projService = new ProjectServiceMock();
             _semDomService = new SemanticDomainService();
             _userRoleRepo = new UserRoleRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _userService = new UserServiceMock(_userRepo);
-            _controller = new ProjectController(_projRepo, _projService, _semDomService, _userRoleRepo,
+            _controller = new ProjectController(_projRepo, _semDomService, _userRoleRepo,
                 _userRepo, _userService, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller

@@ -10,6 +10,7 @@ namespace Backend.Tests.Controllers
 {
     public class UserRoleControllerTests
     {
+        private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;
         private UserRoleController _userRoleController = null!;
         private IProjectRepository _projRepo = null!;
@@ -22,10 +23,11 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _permissionService = new PermissionServiceMock();
+            _userRepo = new UserRepositoryMock();
             _userRoleRepo = new UserRoleRepositoryMock();
             _projRepo = new ProjectRepositoryMock();
             _projId = _projRepo.Create(new Project { Name = "UserRoleControllerTests" }).Result!.Id;
-            _userRoleController = new UserRoleController(_userRoleRepo, _projRepo, _permissionService);
+            _userRoleController = new UserRoleController(_userRepo, _userRoleRepo, _projRepo, _permissionService);
         }
 
         private UserRole RandomUserRole()

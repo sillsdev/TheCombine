@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -17,19 +16,17 @@ namespace BackendFramework.Controllers
     public class ProjectController : Controller
     {
         private readonly IProjectRepository _projRepo;
-        private readonly IProjectService _projService;
         private readonly ISemanticDomainService _semDomService;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IUserRepository _userRepo;
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
 
-        public ProjectController(IProjectRepository projRepo, IProjectService projService,
-            ISemanticDomainService semDomService, IUserRoleRepository userRoleRepo,
-            IUserRepository userRepo, IUserService userService, IPermissionService permissionService)
+        public ProjectController(IProjectRepository projRepo, ISemanticDomainService semDomService,
+            IUserRoleRepository userRoleRepo, IUserRepository userRepo,
+            IUserService userService, IPermissionService permissionService)
         {
             _projRepo = projRepo;
-            _projService = projService;
             _semDomService = semDomService;
             _userRoleRepo = userRoleRepo;
             _userRepo = userRepo;
@@ -230,173 +227,6 @@ namespace BackendFramework.Controllers
             }
             var result = _semDomService.ParseSemanticDomains(proj);
             return new OkObjectResult(result);
-        }
-
-        // Change user role using project Id
-        [HttpPut("{projectId}/users/{userId}")]
-        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
-            {
-                return new ForbidResult();
-            }
-
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            // Fetch the user -> fetch user role -> update user role
-            var changeUser = await _userRepo.GetUser(userId);
-            if (changeUser is null)
-            {
-                return new NotFoundObjectResult(userId);
-            }
-
-            string userRoleId;
-            if (changeUser.ProjectRoles.ContainsKey(projectId))
-            {
-                userRoleId = changeUser.ProjectRoles[projectId];
-            }
-            else
-            {
-                // Generate the userRole
-                var usersRole = new UserRole { ProjectId = projectId };
-                usersRole = await _userRoleRepo.Create(usersRole);
-                userRoleId = usersRole.Id;
-
-                // Update the user
-                changeUser.ProjectRoles.Add(projectId, userRoleId);
-                await _userRepo.Update(changeUser.Id, changeUser);
-            }
-            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
-            if (userRole is null)
-            {
-                return new NotFoundObjectResult(userRoleId);
-            }
-
-            userRole.Permissions = new List<int>(permissions);
-
-            var result = await _userRoleRepo.Update(userRoleId, userRole);
-            return result switch
-            {
-                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
-                ResultOfUpdate.Updated => new OkObjectResult(userId),
-                _ => new StatusCodeResult(304)
-            };
-        }
-
-        /// <summary> Check if lift import has already happened for this project </summary>
-        [HttpGet("{projectId}/liftcheck")]
-        public async Task<IActionResult> CanUploadLift(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
-            {
-                return new ForbidResult();
-            }
-
-            // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                return new UnsupportedMediaTypeResult();
-            }
-
-            return new OkObjectResult(await _projService.CanImportLift(projectId));
-        }
-
-        /// <summary> Generates invite link and sends email containing link </summary>
-        /// <remarks> PUT: v1/projects/invite </remarks>
-        [HttpPut("invite")]
-        public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
-        {
-            var projectId = data.ProjectId;
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            var linkWithIdentifier = await _projService.CreateLinkWithToken(project, data.EmailAddress);
-
-            await _projService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
-
-            return new OkObjectResult(linkWithIdentifier);
-        }
-
-        /// <summary> Validates token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{token} </remarks>
-        [AllowAnonymous]
-        [HttpPut("invite/{projectId}/validate/{token}")]
-        public async Task<IActionResult> ValidateToken(string projectId, string token)
-        {
-
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            var users = await _userRepo.GetAllUsers();
-            var status = new bool[2];
-            var activeTokenExists = false;
-            var userIsRegistered = false;
-            var tokenObj = new EmailInvite();
-            var currentUser = new User();
-
-            foreach (var tok in project.InviteTokens)
-            {
-                if (tok.Token == token && DateTime.Now < tok.ExpireTime)
-                {
-                    tokenObj = tok;
-                    activeTokenExists = true;
-                    break;
-                }
-            }
-            foreach (var user in users)
-            {
-                if (user.Email == tokenObj.Email)
-                {
-                    currentUser = user;
-                    userIsRegistered = true;
-                    break;
-                }
-            }
-
-            status[0] = activeTokenExists;
-            status[1] = userIsRegistered;
-
-            if (activeTokenExists && !userIsRegistered)
-            {
-                return new OkObjectResult(status);
-            }
-
-            if (activeTokenExists && userIsRegistered
-                                  && !currentUser.ProjectRoles.ContainsKey(projectId)
-                                  && await _projService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
-            {
-                return new OkObjectResult(status);
-            }
-
-            status[0] = false;
-            status[1] = false;
-            return new OkObjectResult(status);
-        }
-
-        public class EmailInviteData
-        {
-            public readonly string EmailAddress;
-            public readonly string Message;
-            public readonly string ProjectId;
-            public readonly string Domain;
-
-            public EmailInviteData()
-            {
-                EmailAddress = "";
-                Message = "";
-                ProjectId = "";
-                Domain = "";
-            }
         }
 
         [HttpGet("duplicate/{projectName}")]
