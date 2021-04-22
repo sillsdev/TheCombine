@@ -115,6 +115,38 @@ export async function getFrontierWords(): Promise<Word[]> {
   return resp.data;
 }
 
+/* InviteController.cs */
+
+export async function emailInviteToProject(
+  projectId: string,
+  emailAddress: string,
+  message: string
+): Promise<string> {
+  let resp = await backendServer.put(
+    `projectinvite`,
+    {
+      EmailAddress: emailAddress,
+      Message: message,
+      ProjectId: projectId,
+      Domain: window.location.origin,
+    },
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
+export async function validateLink(
+  projectId: string,
+  token: string
+): Promise<boolean[]> {
+  let resp = await backendServer.put(
+    `projectinvite/${projectId}/validate/${token}`,
+    "",
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
 /* LiftController.cs */
 
 export async function uploadLift(
@@ -269,38 +301,6 @@ export async function projectDuplicateCheck(
   let resp = await backendServer.get(`projects/duplicate/${projectName}`, {
     headers: authHeader(),
   });
-  return resp.data;
-}
-
-/* ProjectInviteController.cs */
-
-export async function emailInviteToProject(
-  projectId: string,
-  emailAddress: string,
-  message: string
-): Promise<string> {
-  let resp = await backendServer.put(
-    `projectinvite`,
-    {
-      EmailAddress: emailAddress,
-      Message: message,
-      ProjectId: projectId,
-      Domain: window.location.origin,
-    },
-    { headers: authHeader() }
-  );
-  return resp.data;
-}
-
-export async function validateLink(
-  projectId: string,
-  token: string
-): Promise<boolean[]> {
-  let resp = await backendServer.put(
-    `projectinvite/${projectId}/validate/${token}`,
-    "",
-    { headers: authHeader() }
-  );
   return resp.data;
 }
 

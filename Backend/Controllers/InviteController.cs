@@ -10,23 +10,23 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/projectinvite")]
+    [Route("v1/Invite")]
     [EnableCors("AllowAll")]
-    public class ProjectInviteController : Controller
+    public class InviteController : Controller
     {
-        private readonly IProjectInviteService _projInvService;
+        private readonly IInviteService _inviteService;
         private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
 
-        public ProjectInviteController(IProjectInviteService projInvService, IProjectRepository projRepo, IUserRepository userRepo)
+        public InviteController(IInviteService inviteService, IProjectRepository projRepo, IUserRepository userRepo)
         {
-            _projInvService = projInvService;
+            _inviteService = inviteService;
             _projRepo = projRepo;
             _userRepo = userRepo;
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
-        /// <remarks> PUT: v1/projectinvite </remarks>
+        /// <remarks> PUT: v1/Invite </remarks>
         [HttpPut()]
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
@@ -37,15 +37,15 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            var linkWithIdentifier = await _projInvService.CreateLinkWithToken(project, data.EmailAddress);
+            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
 
-            await _projInvService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
+            await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
 
             return new OkObjectResult(linkWithIdentifier);
         }
 
         /// <summary> Validates token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/projectinvite/{projectId}/validate/{token} </remarks>
+        /// <remarks> PUT: v1/Invite/{projectId}/validate/{token} </remarks>
         [AllowAnonymous]
         [HttpPut("{projectId}/validate/{token}")]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
 
             if (activeTokenExists && userIsRegistered
                                   && !currentUser.ProjectRoles.ContainsKey(projectId)
-                                  && await _projInvService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
+                                  && await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
                 return new OkObjectResult(status);
             }

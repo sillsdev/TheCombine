@@ -29,24 +29,20 @@ namespace BackendFramework.Services
             await _passwordResets.ClearAll(email);
         }
 
-
-        /**
-         * <summary> Reset a users password using a Password reset request token </summary>
-         * <returns> returns false if the request has expired </returns>
-         */
+        /// <summary> Reset a users password using a Password reset request token. </summary>
+        /// <returns> Returns false if the request is invalid or expired. </returns>
         async Task<bool> IPasswordResetService.ResetPassword(string token, string password)
         {
             var request = await _passwordResets.FindByToken(token);
-            if (!(request is null) && DateTime.Now < request.ExpireTime)
+            if (request is null || DateTime.Now > request.ExpireTime)
             {
-                var user = (await _userRepo.GetAllUsers()).Single(u =>
-                    u.Email.ToLowerInvariant() == request.Email.ToLowerInvariant());
-                await _userRepo.ChangePassword(user.Id, password);
-                await ExpirePasswordReset(request.Email);
-                return true;
+                return false;
             }
-
-            return false;
+            var user = (await _userRepo.GetAllUsers()).Single(u =>
+                u.Email.ToLowerInvariant() == request.Email.ToLowerInvariant());
+            await _userRepo.ChangePassword(user.Id, password);
+            await ExpirePasswordReset(request.Email);
+            return true;
         }
     }
 }

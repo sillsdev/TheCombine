@@ -3,7 +3,7 @@ using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IProjectInviteService
+    public interface IInviteService
     {
         Task<string> CreateLinkWithToken(Project project, string emailAddress);
         Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project);

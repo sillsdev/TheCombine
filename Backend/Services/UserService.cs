@@ -9,20 +9,17 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
-using MongoDB.Driver;
 
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="User"/>s </summary>
     public class UserService : IUserService
     {
-        private readonly IUserContext _userDatabase;
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
 
-        public UserService(IUserContext collectionSettings, IUserRepository userRepo, IUserRoleRepository userRoleRepo)
+        public UserService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
-            _userDatabase = collectionSettings;
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
         }

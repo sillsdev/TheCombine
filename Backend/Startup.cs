@@ -4,8 +4,8 @@ using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using BackendFramework.Services;
 using BackendFramework.Repositories;
+using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -189,6 +189,7 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IInviteService, InviteService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
@@ -203,7 +204,6 @@ namespace BackendFramework
 
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
-            services.AddTransient<IProjectInviteService, ProjectInviteService>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ISemanticDomainService, SemanticDomainService>();

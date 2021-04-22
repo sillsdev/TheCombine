@@ -8,7 +8,7 @@ using MimeKit;
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Project"/>s </summary>
-    public class ProjectInviteService : IProjectInviteService
+    public class InviteService : IInviteService
     {
         private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
@@ -16,7 +16,7 @@ namespace BackendFramework.Services
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IEmailService _emailService;
 
-        public ProjectInviteService(IProjectRepository projRepo, IUserRepository userRepo,
+        public InviteService(IProjectRepository projRepo, IUserRepository userRepo,
             IUserService userService, IUserRoleRepository userRoleRepo, IEmailService emailService)
         {
             _projRepo = projRepo;

@@ -4,7 +4,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class ProjectInviteServiceMock : IProjectInviteService
+    public class InviteServiceMock : IInviteService
     {
         public Task<string> CreateLinkWithToken(Project project, string emailAddress)
         {
