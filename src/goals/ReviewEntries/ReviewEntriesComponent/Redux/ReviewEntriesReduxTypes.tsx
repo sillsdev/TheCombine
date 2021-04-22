@@ -1,0 +1,27 @@
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+
+export interface ReviewUpdateWord {
+  type: ReviewEntriesActionTypes.UpdateWord;
+  oldId: string;
+  newWord: ReviewEntriesWord;
+}
+
+export enum ReviewEntriesActionTypes {
+  UpdateAllWords = "UPDATE_ALL_WORDS",
+  UpdateWord = "UPDATE_WORD",
+  ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
+}
+
+export interface ReviewUpdateWords {
+  type: ReviewEntriesActionTypes.UpdateAllWords;
+  words: ReviewEntriesWord[];
+}
+
+export interface ReviewClearReviewEntriesState {
+  type: ReviewEntriesActionTypes.ClearReviewEntriesState;
+}
+
+export type ReviewEntriesAction =
+  | ReviewUpdateWords
+  | ReviewUpdateWord
+  | ReviewClearReviewEntriesState;

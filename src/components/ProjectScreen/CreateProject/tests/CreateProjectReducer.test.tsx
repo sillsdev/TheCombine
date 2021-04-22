@@ -1,10 +1,9 @@
 import { StoreAction, StoreActions } from "rootActions";
+import * as reducer from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import {
-  CREATE_PROJECT_IN_PROGRESS,
-  CREATE_PROJECT_RESET,
   CreateProjectAction,
-} from "components/ProjectScreen/CreateProject/CreateProjectActions";
-import * as reducer from "components/ProjectScreen/CreateProject/CreateProjectReducer";
+  CreateProjectActions,
+} from "../Redux/CreateProjectReduxTypes";
 
 const emptyWritingSystem = {
   name: "",
@@ -30,7 +29,7 @@ describe("createActionReducer Tests", () => {
   };
 
   let inProgress: CreateProjectAction = {
-    type: CREATE_PROJECT_IN_PROGRESS,
+    type: CreateProjectActions.CREATE_PROJECT_IN_PROGRESS,
     payload: project,
   };
 
@@ -38,7 +37,7 @@ describe("createActionReducer Tests", () => {
   test("no state, expecting default state", () => {
     expect(
       reducer.createProjectReducer(undefined, {
-        type: CREATE_PROJECT_RESET,
+        type: CreateProjectActions.CREATE_PROJECT_RESET,
         payload: project,
       })
     ).toEqual(reducer.defaultState);

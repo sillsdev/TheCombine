@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { StoreStateDispatch } from "types/actions";
-import { asyncResetRequest } from "components/PasswordReset/actions";
+import { asyncResetRequest } from "components/PasswordReset/Redux/ResetActions";
 import ResetRequest, {
   ResetRequestDispatchProps,
 } from "components/PasswordReset/RequestPage/component";

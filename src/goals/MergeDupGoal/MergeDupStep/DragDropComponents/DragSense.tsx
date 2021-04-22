@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setSidebar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { setSidebar } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import theme from "types/theme";
@@ -80,7 +80,7 @@ export default function DragSense(props: DragSenseProps) {
   if (
     isInSidebar &&
     !arraysEqual(
-      sidebar.senses.map((s) => s.guid),
+      sidebar.senses.map((s: { guid: any }) => s.guid),
       props.senses.map((s) => s.guid)
     )
   ) {

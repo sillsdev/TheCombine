@@ -12,7 +12,10 @@ import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { getWord } from "backend";
-import { CompletedMerge, MergesCompleted } from "goals/MergeDupGoal/MergeDups";
+import {
+  CompletedMerge,
+  MergesCompleted,
+} from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import { Sense, Word } from "types/word";
 import theme from "types/theme";

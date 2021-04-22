@@ -7,7 +7,7 @@ import { StoreStateDispatch } from "types/actions";
 import {
   deleteAudio,
   uploadAudio,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 
 interface PronunciationCellProps {
   wordId: string;

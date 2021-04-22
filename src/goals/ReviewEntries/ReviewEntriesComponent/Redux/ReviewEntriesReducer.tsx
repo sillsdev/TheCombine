@@ -1,7 +1,7 @@
 import {
   ReviewEntriesAction,
   ReviewEntriesActionTypes,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreAction, StoreActions } from "rootActions";
 

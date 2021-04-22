@@ -5,7 +5,7 @@ import { Translate } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 
 import history, { Path } from "browserHistory";
-import { RequestState } from "components/PasswordReset/reducer";
+import { RequestState } from "components/PasswordReset/Redux/ResetActionTypes";
 import { passwordRequirements } from "utilities";
 
 interface MatchParams {

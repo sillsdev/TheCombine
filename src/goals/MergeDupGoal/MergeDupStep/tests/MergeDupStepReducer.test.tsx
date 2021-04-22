@@ -1,9 +1,8 @@
-import * as Actions from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import * as Actions from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import {
   defaultState,
   mergeDupStepReducer,
-  MergeTreeState,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepReducer";
 import {
   defaultSidebar,
   Hash,
@@ -12,6 +11,11 @@ import {
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreAction, StoreActions } from "rootActions";
+import {
+  MergeTreeAction,
+  MergeTreeActions,
+  MergeTreeState,
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 import { testWordList } from "types/word";
 
 var uuidIndex = 0;
@@ -23,15 +27,14 @@ function getMockUuid(increment = true): string {
   }
   return uuid;
 }
-const mockV4 = jest.fn();
-jest.mock("uuid", () => {
-  return {
-    v4: () => mockV4(),
-  };
-});
+
+jest.mock("uuid", () => ({
+  v4: jest.fn(),
+}));
 
 beforeEach(() => {
-  mockV4.mockImplementation(getMockUuid);
+  const mockUuid = require("uuid") as { v4: jest.Mock<string, []> };
+  mockUuid.v4.mockImplementation(() => getMockUuid(true));
 });
 
 describe("MergeDupStepReducer", () => {
@@ -93,7 +96,7 @@ describe("MergeDupStepReducer", () => {
     },
   };
   function checkTreeWords(
-    action: Actions.MergeTreeAction,
+    action: MergeTreeAction,
     expected: Hash<MergeTreeWord>
   ) {
     const result = mergeDupStepReducer(mockState, action).tree.words;
@@ -362,7 +365,7 @@ describe("MergeDupStepReducer", () => {
       const destWordId = "word2";
 
       const testAction = Actions.moveSense(testRef, destWordId, 1);
-      expect(testAction.type).toEqual(Actions.MergeTreeActions.MOVE_SENSE);
+      expect(testAction.type).toEqual(MergeTreeActions.MOVE_SENSE);
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];

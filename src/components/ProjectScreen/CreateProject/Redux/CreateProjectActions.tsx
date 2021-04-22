@@ -1,33 +1,13 @@
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
-import { asyncCreateUserEdits } from "components/GoalTimeline/GoalsActions";
+import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalsActions";
 import { setCurrentProject } from "components/Project/ProjectActions";
 import { StoreStateDispatch } from "types/actions";
 import { defaultProject, Project, WritingSystem } from "types/project";
-
-export const CREATE_PROJECT_FAILURE = "CREATE_PROJECT_FAILURE";
-export const CREATE_PROJECT_IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
-export const CREATE_PROJECT_RESET = "CREATE_PROJECT_RESET";
-export const CREATE_PROJECT_SUCCESS = "CREATE_PROJECT_SUCCESS";
-
-type CreateProjectType =
-  | typeof CREATE_PROJECT_FAILURE
-  | typeof CREATE_PROJECT_IN_PROGRESS
-  | typeof CREATE_PROJECT_RESET
-  | typeof CREATE_PROJECT_SUCCESS;
-
-export interface CreateProjectData {
-  name: string;
-  vernacularLanguage: WritingSystem;
-  analysisLanguages: WritingSystem[];
-  languageData?: File;
-  errorMsg?: string;
-}
-
-export interface CreateProjectAction {
-  type: CreateProjectType;
-  payload: CreateProjectData;
-}
+import {
+  CreateProjectAction,
+  CreateProjectActions,
+} from "./CreateProjectReduxTypes";
 
 //thunk action creator
 export function asyncCreateProject(
@@ -102,7 +82,7 @@ export function inProgress(
   analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
-    type: CREATE_PROJECT_IN_PROGRESS,
+    type: CreateProjectActions.CREATE_PROJECT_IN_PROGRESS,
     payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
@@ -113,7 +93,7 @@ export function success(
   analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
-    type: CREATE_PROJECT_SUCCESS,
+    type: CreateProjectActions.CREATE_PROJECT_SUCCESS,
     payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
@@ -125,14 +105,14 @@ export function failure(
   errorMsg: string = ""
 ): CreateProjectAction {
   return {
-    type: CREATE_PROJECT_FAILURE,
+    type: CreateProjectActions.CREATE_PROJECT_FAILURE,
     payload: { name, errorMsg, vernacularLanguage, analysisLanguages },
   };
 }
 
 export function reset(): CreateProjectAction {
   return {
-    type: CREATE_PROJECT_RESET,
+    type: CreateProjectActions.CREATE_PROJECT_RESET,
     payload: {
       name: "",
       vernacularLanguage: { name: "", bcp47: "", font: "" },

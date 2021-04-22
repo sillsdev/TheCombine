@@ -2,16 +2,10 @@ import { StoreActions, StoreAction } from "rootActions";
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
+  CharacterInventoryState,
+  CharacterSetEntry,
   getCharacterStatus,
-} from "goals/CharInventoryCreation/CharacterInventoryActions";
-
-export interface CharacterInventoryState {
-  validCharacters: string[];
-  rejectedCharacters: string[];
-  allWords: string[];
-  selectedCharacter: string;
-  characterSet: CharacterSetEntry[];
-}
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 
 export const defaultState: CharacterInventoryState = {
   validCharacters: [],
@@ -20,19 +14,6 @@ export const defaultState: CharacterInventoryState = {
   selectedCharacter: "",
   characterSet: [],
 };
-
-/** A character with its occurrences and status, for sorting and filtering in a list */
-export interface CharacterSetEntry {
-  character: string;
-  occurrences: number;
-  status: CharacterStatus;
-}
-
-export enum CharacterStatus {
-  Accepted = "accepted",
-  Rejected = "rejected",
-  Undecided = "undecided",
-}
 
 export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,

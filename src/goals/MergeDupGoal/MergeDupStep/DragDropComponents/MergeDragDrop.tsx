@@ -9,7 +9,7 @@ import {
   combineSense,
   moveSense,
   orderSense,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { StoreState } from "types";
 import theme from "types/theme";
