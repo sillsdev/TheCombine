@@ -205,7 +205,6 @@ namespace BackendFramework
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ISemanticDomainService, SemanticDomainService>();
 
             // User types

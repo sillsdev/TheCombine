@@ -126,5 +126,16 @@ namespace BackendFramework.Repositories
                 x.Name == projectName);
             return project?.Id;
         }
+
+        public async Task<bool> CanImportLift(string projectId)
+        {
+            var project = await GetProject(projectId);
+            if (project is null)
+            {
+                return false;
+            }
+
+            return !project.LiftImported;
+        }
     }
 }

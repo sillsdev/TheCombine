@@ -92,16 +92,5 @@ namespace BackendFramework.Services
                 return false;
             }
         }
-
-        public async Task<bool> CanImportLift(string projectId)
-        {
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
-            {
-                return false;
-            }
-
-            return !project.LiftImported;
-        }
     }
 }

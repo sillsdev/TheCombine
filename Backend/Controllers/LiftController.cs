@@ -26,18 +26,15 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
         private readonly IProjectRepository _projRepo;
-        private readonly IProjectService _projService;
         private readonly IPermissionService _permissionService;
         private readonly IHubContext<CombineHub> _notifyService;
         private readonly ILogger<LiftController> _logger;
 
-        public LiftController(IWordRepository wordRepo, IProjectRepository projRepo, IProjectService projService,
-            IPermissionService permissionService, ILiftService liftService, IHubContext<CombineHub> notifyService,
-            ILogger<LiftController> logger)
+        public LiftController(IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
+            ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
         {
             _wordRepo = wordRepo;
             _projRepo = projRepo;
-            _projService = projService;
             _liftService = liftService;
             _permissionService = permissionService;
             _notifyService = notifyService;
@@ -66,7 +63,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure Lift file has not already been imported.
-            if (!await _projService.CanImportLift(projectId))
+            if (!await _projRepo.CanImportLift(projectId))
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
@@ -162,7 +159,7 @@ namespace BackendFramework.Controllers
 
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
-            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projService, _wordRepo);
+            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
             try
             {
                 // Add character set to project from ldml file
@@ -342,7 +339,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            return new OkObjectResult(await _projService.CanImportLift(projectId));
+            return new OkObjectResult(await _projRepo.CanImportLift(projectId));
         }
     }
 
