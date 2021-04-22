@@ -123,7 +123,7 @@ export async function emailInviteToProject(
   message: string
 ): Promise<string> {
   let resp = await backendServer.put(
-    `projectinvite`,
+    `invite`,
     {
       EmailAddress: emailAddress,
       Message: message,
@@ -140,7 +140,7 @@ export async function validateLink(
   token: string
 ): Promise<boolean[]> {
   let resp = await backendServer.put(
-    `projectinvite/${projectId}/validate/${token}`,
+    `invite/${projectId}/validate/${token}`,
     "",
     { headers: authHeader() }
   );

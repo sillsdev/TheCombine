@@ -10,7 +10,7 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/Invite")]
+    [Route("v1/invite")]
     [EnableCors("AllowAll")]
     public class InviteController : Controller
     {
@@ -26,7 +26,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
-        /// <remarks> PUT: v1/Invite </remarks>
+        /// <remarks> PUT: v1/invite </remarks>
         [HttpPut()]
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
@@ -45,7 +45,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Validates token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/Invite/{projectId}/validate/{token} </remarks>
+        /// <remarks> PUT: v1/invite/{projectId}/validate/{token} </remarks>
         [AllowAnonymous]
         [HttpPut("{projectId}/validate/{token}")]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
