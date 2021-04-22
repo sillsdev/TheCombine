@@ -1,0 +1,58 @@
+---
+# configure kubernetes user
+- name: adding existing user '{{ k8s_user }}' to group docker
+  user:
+    name: "{{ k8s_user }}"
+    groups: docker
+    append: yes
+
+- name: adding existing user '{{ k8s_user }}' to group microk8s
+  user:
+    name: "{{ k8s_user }}"
+    groups: microk8s
+    append: yes
+  when: install_microk8s
+
+- name: Make directory for kubernetes configuration files
+  file:
+    name: "/home/{{ k8s_user }}/kubernetes"
+    state: directory
+    owner: "{{ k8s_user}}"
+    group: "{{ k8s_group }}"
+    mode: 0755
+
+- name: Copy configuration files
+  copy:
+    src: "{{ item}}"
+    dest: "/home/{{ k8s_user }}/kubernetes/{{ item }}"
+    owner: "{{ k8s_user}}"
+    group: "{{ k8s_group }}"
+    mode: 0644
+  with_items:
+    - backend-service.yaml
+    - database-service.yaml
+    - frontend-service.yaml
+    - registry-creds-deployment.yaml
+
+- name: Build configuration files from templates
+  template:
+    src: "{{ item}}.j2"
+    dest: "/home/{{ k8s_user }}/kubernetes/{{ item }}"
+    owner: "{{ k8s_user}}"
+    group: "{{ k8s_group }}"
+    mode: 0644
+  with_items:
+    - backend-data-persistentvolumeclaim.yaml
+    - backend-deployment.yaml
+    - certbot-data-persistentvolumeclaim.yaml
+    - certmgr-claim3-persistentvolumeclaim.yaml
+    - certmgr-deployment.yaml
+    - cert-store-persistentvolumeclaim.yaml
+    - database-data-persistentvolumeclaim.yaml
+    - database-deployment.yaml
+    - env-backend-configmap.yaml
+    - env-certmgr-configmap.yaml
+    - env-frontend-configmap.yaml
+    - frontend-deployment.yaml
+    - letsencrypt-persistentvolumeclaim.yaml
+    - registry-secrets.yaml

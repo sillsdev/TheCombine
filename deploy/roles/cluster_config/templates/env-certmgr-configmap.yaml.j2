@@ -1,0 +1,28 @@
+apiVersion: v1
+data:
+{% if cert_mode == "cert-server" %}
+  AWS_ACCESS_KEY_ID: {{ aws_access_profiles.s3_read_write.key_id }}
+  AWS_DEFAULT_REGION: {{ aws_access_profiles.s3_read_write.region }}
+  AWS_S3_CERT_LOC: {{ aws_s3_cert_loc }}
+  AWS_SECRET_ACCESS_KEY: {{ aws_access_profiles.s3_read_write.secret }}
+{% elif cert_mode == "cert-client" %}
+  AWS_ACCESS_KEY_ID: {{ aws_access_profiles.s3_read_only.key_id }}
+  AWS_DEFAULT_REGION: {{ aws_access_profiles.s3_read_only.region }}
+  AWS_S3_CERT_LOC: {{ aws_s3_cert_loc }}
+  AWS_SECRET_ACCESS_KEY: {{ aws_access_profiles.s3_read_only.secret }}
+{% endif %}
+  CERT_ADDL_DOMAINS: '[]'
+  CERT_EMAIL: "{{ cert_email }}"
+  CERT_MODE: "{{ cert_mode }}"
+  CERT_PROXY_DOMAINS: '[]'
+  CERT_PROXY_RENEWAL: "60"
+  CERT_SELF_RENEWAL: "{{ cert_self_renewal }}"
+  CERT_STAGING: "0"
+  MAX_CONNECT_TRIES: "15"
+  SERVER_NAME: {{ combine_server_name }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: certmgr-env-certmgr
+  name: env-certmgr

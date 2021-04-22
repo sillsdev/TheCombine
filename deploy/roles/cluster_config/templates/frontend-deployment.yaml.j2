@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: frontend
+    spec:
+      containers:
+        - env:
+            - name: CONFIG_CAPTCHA_REQD
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_CAPTCHA_REQD
+                  name: env-frontend
+            - name: CONFIG_CAPTCHA_SITE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_CAPTCHA_SITE_KEY
+                  name: env-frontend
+            - name: CONFIG_USE_CONNECTION_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_USE_CONNECTION_URL
+                  name: env-frontend
+            - name: SERVER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVER_NAME
+                  name: env-frontend
+            - name: SSL_CERTIFICATE
+              valueFrom:
+                configMapKeyRef:
+                  key: SSL_CERTIFICATE
+                  name: env-frontend
+            - name: SSL_PRIVATE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: SSL_PRIVATE_KEY
+                  name: env-frontend
+          image: '{{ combine_image_frontend }}'
+          name: frontend
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/letsencrypt
+              name: letsencrypt
+            - mountPath: /etc/cert_store
+              name: cert-store
+            - mountPath: /var/www/certbot
+              name: certbot-data
+      restartPolicy: Always
+      imagePullSecrets: {{ image_pull_secrets }}
+      volumes:
+        - name: letsencrypt
+          persistentVolumeClaim:
+            claimName: letsencrypt
+        - name: cert-store
+          persistentVolumeClaim:
+            claimName: cert-store
+        - name: certbot-data
+          persistentVolumeClaim:
+            claimName: certbot-data
+status: {}

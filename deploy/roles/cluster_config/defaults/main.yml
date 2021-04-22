@@ -1,0 +1,31 @@
+---
+# User configuration
+k8s_user: sillsdev
+k8s_group: sillsdev
+
+# AWS configuration
+aws_ecr_profile: ecr_read_only
+aws_s3_profile: s3_read_write
+
+image_pull_secrets:
+  - name: awsecr_creds
+# secret name in the Rancher POC
+# - name: us-east-1-ecr-thecombine-token
+
+# Combine configuration
+combine_version: 0.6.9
+
+# Persistent storage size configurations
+backend_data_size: 4Gi
+cert_store_data_size: 1Mi
+certbot_data_size: 1Mi
+certmgr_data_size: 100Mi
+database_data_size: 2Gi
+letsencrypt_data_size: 1Mi
+
+# Backend configuration
+combine_password_reset_time: 15
+combine_smtp_address: no-reply@thecombine.app
+combine_smtp_from: "The Combine"
+combine_smtp_port: 587
+combine_smtp_server: "email-smtp.us-east-1.amazonaws.com"

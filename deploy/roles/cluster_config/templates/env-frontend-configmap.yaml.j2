@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  CONFIG_CAPTCHA_REQD: {{ config_captcha_required }}
+  CONFIG_CAPTCHA_SITE_KEY: {{ config_captcha_sitekey }}
+  CONFIG_USE_CONNECTION_URL: "true"
+  SERVER_NAME: {{ combine_server_name }}
+  SSL_CERTIFICATE: {{ ssl_certificate }}
+  SSL_PRIVATE_KEY: {{ ssl_private_key }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: frontend-env-frontend
+  name: env-frontend
