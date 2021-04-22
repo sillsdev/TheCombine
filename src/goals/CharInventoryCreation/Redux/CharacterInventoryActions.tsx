@@ -1,34 +1,20 @@
 import { getFrontierWords } from "backend";
 import history, { Path } from "browserHistory";
-import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalsActions";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
   CharacterSetEntry,
   CharacterStatus,
-} from "goals/CharInventoryCreation/CharacterInventoryReducer";
+  CharacterInventoryAction,
+  CharacterInventoryType,
+  CharacterChange,
+  getCharacterStatus,
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import { Goal } from "types/goals";
 import { Project } from "types/project";
-
-export enum CharacterInventoryType {
-  SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
-  SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS",
-  ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS",
-  ADD_TO_REJECTED_CHARACTERS = "ADD_TO_REJECTED_CHARACTERS",
-  SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS",
-  SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
-  SET_CHARACTER_SET = "SET_CHARACTER_SET",
-  RESET = "CHARINV_RESET",
-}
-
-export interface CharacterInventoryAction {
-  type: CharacterInventoryType;
-  payload: string[];
-  characterSet?: CharacterSetEntry[];
-}
-
 // Action Creators
 
 export function addToValidCharacters(
@@ -108,11 +94,15 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
       dispatch(addToRejectedCharacters([character]));
     else if (status === CharacterStatus.Undecided) {
       const state = getState().characterInventoryState;
-      const valid = state.validCharacters.filter((c) => c !== character);
+      const valid = state.validCharacters.filter(
+        (c: string) => c !== character
+      );
       if (valid.length < state.validCharacters.length) {
         dispatch(setValidCharacters(valid));
       }
-      const rejected = state.rejectedCharacters.filter((c) => c !== character);
+      const rejected = state.rejectedCharacters.filter(
+        (c: string) => c !== character
+      );
       if (rejected.length < state.rejectedCharacters.length) {
         dispatch(setRejectedCharacters(rejected));
       }
@@ -191,22 +181,6 @@ function countCharacterOccurences(char: string, words: string[]) {
   }
   return count;
 }
-
-export function getCharacterStatus(
-  char: string,
-  validChars: string[],
-  rejectedChars: string[]
-): CharacterStatus {
-  if (validChars.includes(char)) {
-    return CharacterStatus.Accepted;
-  }
-  if (rejectedChars.includes(char)) {
-    return CharacterStatus.Rejected;
-  }
-  return CharacterStatus.Undecided;
-}
-
-export type CharacterChange = [string, CharacterStatus, CharacterStatus];
 
 function getChangesFromState(state: StoreState): CharacterChange[] {
   const proj = state.currentProject;

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import {
   asyncCreateProject,
   reset,
-} from "components/ProjectScreen/CreateProject/CreateProjectActions";
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";

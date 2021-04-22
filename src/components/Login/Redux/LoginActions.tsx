@@ -5,37 +5,7 @@ import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/actions";
 import { User } from "types/user";
 import hash from "crypto";
-
-export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
-export const LOGIN_FAILURE = "LOGIN_FAILURE";
-export const LOGIN_RESET = "LOGIN_RESET";
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export const LOGOUT = "LOGOUT";
-export const REGISTER_ATTEMPT = "REGISTER_ATTEMPT";
-export const REGISTER_FAILURE = "REGISTER_FAILURE";
-export const REGISTER_RESET = "REGISTER_RESET";
-export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
-
-export type LoginType =
-  | typeof LOGIN_ATTEMPT
-  | typeof LOGIN_FAILURE
-  | typeof LOGIN_SUCCESS
-  | typeof LOGIN_RESET
-  | typeof REGISTER_ATTEMPT
-  | typeof REGISTER_FAILURE
-  | typeof REGISTER_SUCCESS
-  | typeof REGISTER_RESET
-  | typeof LOGOUT;
-
-export interface LoginData {
-  username: string;
-  password?: string;
-}
-
-export interface UserAction {
-  type: LoginType;
-  payload: LoginData;
-}
+import { LoginActionTypes, UserAction } from "./LoginReduxTypes";
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {
@@ -67,28 +37,28 @@ export function asyncLogin(username: string, password: string) {
 
 export function loginAttempt(username: string): UserAction {
   return {
-    type: LOGIN_ATTEMPT,
+    type: LoginActionTypes.LOGIN_ATTEMPT,
     payload: { username },
   };
 }
 
 export function loginFailure(username: string): UserAction {
   return {
-    type: LOGIN_FAILURE,
+    type: LoginActionTypes.LOGIN_FAILURE,
     payload: { username },
   };
 }
 
 export function loginSuccess(username: string): UserAction {
   return {
-    type: LOGIN_SUCCESS,
+    type: LoginActionTypes.LOGIN_SUCCESS,
     payload: { username },
   };
 }
 
 export function loginReset(): UserAction {
   return {
-    type: LOGIN_RESET,
+    type: LoginActionTypes.LOGIN_RESET,
     payload: { username: "" },
   };
 }
@@ -161,35 +131,35 @@ export function asyncRegisterForEmailInvite(
 
 export function registerAttempt(username: string): UserAction {
   return {
-    type: REGISTER_ATTEMPT,
+    type: LoginActionTypes.REGISTER_ATTEMPT,
     payload: { username },
   };
 }
 
 export function registerFailure(errorMessage: string): UserAction {
   return {
-    type: REGISTER_FAILURE,
+    type: LoginActionTypes.REGISTER_FAILURE,
     payload: { username: errorMessage },
   };
 }
 
 export function registerSuccess(username: string): UserAction {
   return {
-    type: REGISTER_SUCCESS,
+    type: LoginActionTypes.REGISTER_SUCCESS,
     payload: { username },
   };
 }
 
 export function registerReset(): UserAction {
   return {
-    type: REGISTER_RESET,
+    type: LoginActionTypes.REGISTER_RESET,
     payload: { username: "" },
   };
 }
 
 function logout(username: string): UserAction {
   return {
-    type: LOGOUT,
+    type: LoginActionTypes.LOGOUT,
     payload: { username },
   };
 }

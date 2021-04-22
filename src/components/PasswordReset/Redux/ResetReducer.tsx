@@ -1,21 +1,10 @@
 import {
+  PasswordResetState,
+  RequestState,
   ResetAction,
-  RESET_PASSWORD_ATTEMPT,
-  RESET_PASSWORD_FAIL,
-  RESET_PASSWORD_SUCCESS,
-} from "components/PasswordReset/actions";
+  ResetActions,
+} from "components/PasswordReset/Redux/ResetActionTypes";
 import { StoreAction } from "rootActions";
-
-export enum RequestState {
-  None,
-  Attempt,
-  Fail,
-  Success,
-}
-
-export interface PasswordResetState {
-  resetState: RequestState;
-}
 
 export const defaultState: PasswordResetState = {
   resetState: RequestState.None,
@@ -26,15 +15,15 @@ export const passwordResetReducer = (
   action: StoreAction | ResetAction
 ): PasswordResetState => {
   switch (action.type) {
-    case RESET_PASSWORD_ATTEMPT:
+    case ResetActions.RESET_PASSWORD_ATTEMPT:
       return {
         resetState: RequestState.Attempt,
       };
-    case RESET_PASSWORD_FAIL:
+    case ResetActions.RESET_PASSWORD_FAIL:
       return {
         resetState: RequestState.Fail,
       };
-    case RESET_PASSWORD_SUCCESS:
+    case ResetActions.RESET_PASSWORD_SUCCESS:
       return {
         resetState: RequestState.Success,
       };

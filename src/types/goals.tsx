@@ -3,13 +3,13 @@ import { v4 } from "uuid";
 import {
   CreateCharInvChanges,
   CreateCharInvData,
-  CreateCharInvStepData,
-} from "goals/CreateCharInv/CreateCharInv";
+} from "goals/CreateCharInv/CreateCharInvTypes";
+import { CreateCharInvStepData } from "goals/CreateCharInv/CreateCharInvTypes";
 import {
-  MergeDupData,
   MergesCompleted,
+  MergeDupData,
   MergeStepData,
-} from "goals/MergeDupGoal/MergeDups";
+} from "goals/MergeDupGoal/MergeDupsTypes";
 import { User } from "types/user";
 
 export type GoalData = CreateCharInvData | MergeDupData | {};

@@ -1,6 +1,9 @@
 import { connect } from "react-redux";
 
-import { asyncRegister, registerReset } from "components/Login/LoginActions";
+import {
+  asyncRegister,
+  registerReset,
+} from "components/Login/Redux/LoginActions";
 import Register, {
   RegisterStateProps,
 } from "components/Login/RegisterPage/RegisterComponent";

@@ -5,7 +5,7 @@ import {
   asyncAddGoal,
   asyncGetUserEdits,
   loadUserEdits,
-} from "components/GoalTimeline/GoalsActions";
+} from "components/GoalTimeline/Redux/GoalsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import { Goal } from "types/goals";

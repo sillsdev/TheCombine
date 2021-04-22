@@ -1,5 +1,8 @@
 import { defaultState } from "components/GoalTimeline/DefaultState";
-import { GoalAction, GoalsActions } from "components/GoalTimeline/GoalsActions";
+import {
+  GoalAction,
+  GoalsActions,
+} from "components/GoalTimeline/Redux/GoalsActionsTypes";
 import { StoreAction, StoreActions } from "rootActions";
 import { GoalsState } from "types/goals";
 

@@ -1,15 +1,14 @@
 import * as backend from "backend";
-import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalsActions";
 import DupFinder, {
   DefaultParams,
 } from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   CompletedMerge,
-  MergeDups,
   MergesCompleted,
   MergeStepData,
-} from "goals/MergeDupGoal/MergeDups";
-import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
+} from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   defaultSidebar,
   Hash,
@@ -22,78 +21,19 @@ import { StoreStateDispatch } from "types/actions";
 import { GoalType } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { MergeSourceWord, MergeWords, State, Word } from "types/word";
-
-export enum MergeTreeActions {
-  CLEAR_TREE = "CLEAR_TREE",
-  COMBINE_SENSE = "COMBINE_SENSE",
-  MOVE_DUPLICATE = "MOVE_DUPLICATE",
-  MOVE_SENSE = "MOVE_SENSE",
-  ORDER_DUPLICATE = "ORDER_DUPLICATE",
-  ORDER_SENSE = "ORDER_SENSE",
-  SET_DATA = "SET_DATA",
-  SET_SIDEBAR = "SET_SIDEBAR",
-  SET_VERNACULAR = "SET_VERNACULAR",
-}
-
-interface ClearTreeMergeAction {
-  type: MergeTreeActions.CLEAR_TREE;
-}
-
-interface CombineSenseMergeAction {
-  type: MergeTreeActions.COMBINE_SENSE;
-  payload: { src: MergeTreeReference; dest: MergeTreeReference };
-}
-
-interface MoveDuplicateMergeAction {
-  type: MergeTreeActions.MOVE_DUPLICATE;
-  payload: { ref: MergeTreeReference; destWordId: string; destOrder: number };
-}
-
-interface MoveSenseMergeAction {
-  type: MergeTreeActions.MOVE_SENSE;
-  payload: {
-    wordId: string;
-    mergeSenseId: string;
-    destWordId: string;
-    destOrder: number;
-  };
-}
-
-interface OrderDuplicateMergeAction {
-  type: MergeTreeActions.ORDER_DUPLICATE;
-  payload: { ref: MergeTreeReference; order: number };
-}
-
-interface OrderSenseMergeAction {
-  type: MergeTreeActions.ORDER_SENSE;
-  payload: MergeTreeReference;
-}
-
-interface SetDataMergeAction {
-  type: MergeTreeActions.SET_DATA;
-  payload: Word[];
-}
-
-interface SetSidebarMergeAction {
-  type: MergeTreeActions.SET_SIDEBAR;
-  payload: Sidebar;
-}
-
-interface SetVernacularMergeAction {
-  type: MergeTreeActions.SET_VERNACULAR;
-  payload: { wordId: string; vern: string };
-}
-
-export type MergeTreeAction =
-  | ClearTreeMergeAction
-  | CombineSenseMergeAction
-  | MoveDuplicateMergeAction
-  | MoveSenseMergeAction
-  | OrderDuplicateMergeAction
-  | OrderSenseMergeAction
-  | SetDataMergeAction
-  | SetSidebarMergeAction
-  | SetVernacularMergeAction;
+import {
+  ClearTreeMergeAction,
+  CombineSenseMergeAction,
+  MergeTreeActions,
+  MoveDuplicateMergeAction,
+  MoveSenseMergeAction,
+  OrderDuplicateMergeAction,
+  OrderSenseMergeAction,
+  SetDataMergeAction,
+  SetSidebarMergeAction,
+  SetVernacularMergeAction,
+  MergeTreeState,
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 
 // Action Creators
 

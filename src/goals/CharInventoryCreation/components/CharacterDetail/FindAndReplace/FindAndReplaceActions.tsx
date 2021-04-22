@@ -3,7 +3,7 @@ import { StoreStateDispatch } from "types/actions";
 import {
   fetchWords,
   getAllCharacters,
-} from "goals/CharInventoryCreation/CharacterInventoryActions";
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: StoreStateDispatch) => {

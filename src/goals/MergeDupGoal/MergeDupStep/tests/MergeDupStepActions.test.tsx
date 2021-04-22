@@ -5,11 +5,9 @@ import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   dispatchMergeStepData,
   mergeAll,
-  MergeTreeAction,
-  MergeTreeActions,
   moveSense,
   orderSense,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import {
   defaultTree,
   Hash,
@@ -26,7 +24,11 @@ import {
   Word,
 } from "types/word";
 import { GoalsState } from "types/goals";
-import { MergeTreeState } from "../MergeDupStepReducer";
+import {
+  MergeTreeAction,
+  MergeTreeActions,
+  MergeTreeState,
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList: { [key in mockWordListIndex]: Word } = {

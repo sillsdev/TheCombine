@@ -6,32 +6,12 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
 import { Note, Sense, State } from "types/word";
-
-export enum ReviewEntriesActionTypes {
-  UpdateAllWords = "UPDATE_ALL_WORDS",
-  UpdateWord = "UPDATE_WORD",
-  ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
-}
-
-interface ReviewUpdateWords {
-  type: ReviewEntriesActionTypes.UpdateAllWords;
-  words: ReviewEntriesWord[];
-}
-
-interface ReviewUpdateWord {
-  type: ReviewEntriesActionTypes.UpdateWord;
-  oldId: string;
-  newWord: ReviewEntriesWord;
-}
-
-interface ReviewClearReviewEntriesState {
-  type: ReviewEntriesActionTypes.ClearReviewEntriesState;
-}
-
-export type ReviewEntriesAction =
-  | ReviewUpdateWords
-  | ReviewUpdateWord
-  | ReviewClearReviewEntriesState;
+import {
+  ReviewClearReviewEntriesState,
+  ReviewEntriesActionTypes,
+  ReviewUpdateWord,
+  ReviewUpdateWords,
+} from "./ReviewEntriesReduxTypes";
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {

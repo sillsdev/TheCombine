@@ -1,20 +1,24 @@
 import { localizeReducer } from "react-localize-redux";
 import { combineReducers, Reducer } from "redux";
 
-import { goalsReducer } from "components/GoalTimeline/GoalsReducer";
-import { loginReducer } from "components/Login/LoginReducer";
-import { passwordResetReducer } from "components/PasswordReset/reducer";
+import { goalsReducer } from "components/GoalTimeline/Redux/GoalsReducer";
+import { loginReducer } from "components/Login/Redux/LoginReducer";
+import { passwordResetReducer } from "components/PasswordReset/Redux/ResetReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
 import { exportProjectReducer } from "components/ProjectExport/ExportProjectReducer";
-import { createProjectReducer } from "components/ProjectScreen/CreateProject/CreateProjectReducer";
+import { createProjectReducer } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import { pronunciationsReducer } from "components/Pronunciations/PronunciationsReducer";
 import { treeViewReducer } from "components/TreeView/TreeViewReducer";
-import { characterInventoryReducer } from "goals/CharInventoryCreation/CharacterInventoryReducer";
-import { mergeDupStepReducer } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
-import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { characterInventoryReducer } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
+import { mergeDupStepReducer } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepReducer";
+import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
+import { analyticsReducer } from "types/analytics";
 import { StoreState } from "types";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
+  //analytics state
+  analyticsState: analyticsReducer,
+
   //handles localization through react-localize-redux utilities
   localize: localizeReducer,
 

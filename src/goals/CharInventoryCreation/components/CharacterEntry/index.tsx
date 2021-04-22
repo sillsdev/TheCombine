@@ -5,7 +5,7 @@ import { StoreStateDispatch } from "types/actions";
 import {
   setRejectedCharacters,
   setValidCharacters,
-} from "goals/CharInventoryCreation/CharacterInventoryActions";
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry/CharacterEntryComponent";
 
 function mapStateToProps(state: StoreState) {

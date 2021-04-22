@@ -2,8 +2,11 @@ import {
   defaultState,
   emtpyGoalState,
 } from "components/GoalTimeline/DefaultState";
-import * as actions from "components/GoalTimeline/GoalsActions";
-import { goalsReducer } from "components/GoalTimeline/GoalsReducer";
+import {
+  GoalAction,
+  GoalsActions,
+} from "components/GoalTimeline/Redux/GoalsActionsTypes";
+import { goalsReducer } from "components/GoalTimeline/Redux/GoalsReducer";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -13,8 +16,8 @@ import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { StoreAction, StoreActions } from "rootActions";
 import { Goal, GoalsState } from "types/goals";
 
-const loadUserEditsAction: actions.GoalAction = {
-  type: actions.GoalsActions.LOAD_USER_EDITS,
+const loadUserEditsAction: GoalAction = {
+  type: GoalsActions.LOAD_USER_EDITS,
   payload: [],
 };
 
@@ -43,8 +46,8 @@ describe("Test GoalsReducers", () => {
       const goal6: Goal = new HandleFlags();
       const goal7: Goal = new ValidateChars();
 
-      const loadUserEditsAction: actions.GoalAction = {
-        type: actions.GoalsActions.LOAD_USER_EDITS,
+      const loadUserEditsAction: GoalAction = {
+        type: GoalsActions.LOAD_USER_EDITS,
         payload: [goal6, goal7],
       };
 
@@ -60,8 +63,8 @@ describe("Test GoalsReducers", () => {
   describe("GoalsActions.SET_CURRENT_GOAL", () => {
     it("Should replace current goal, and remove type from top suggestion", () => {
       const currentGoal: Goal = new CreateCharInv();
-      const updateGoalAction: actions.GoalAction = {
-        type: actions.GoalsActions.SET_CURRENT_GOAL,
+      const updateGoalAction: GoalAction = {
+        type: GoalsActions.SET_CURRENT_GOAL,
         payload: currentGoal,
       };
       const goalTypeSuggestions = defaultState.goalTypeSuggestions.slice();

@@ -5,12 +5,11 @@ import { Word } from "types/word";
 import {
   MergeTreeAction,
   MergeTreeActions,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+  MergeTreeState,
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 import {
   defaultTree,
   Hash,
-  MergeData,
-  MergeTree,
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
@@ -20,11 +19,6 @@ export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
 };
-
-export interface MergeTreeState {
-  data: MergeData;
-  tree: MergeTree;
-}
 
 export const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state

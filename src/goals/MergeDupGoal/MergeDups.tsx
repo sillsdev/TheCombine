@@ -1,19 +1,5 @@
 import { Goal, GoalName, GoalType } from "types/goals";
-import { Word } from "types/word";
-
-export interface CompletedMerge {
-  childrenIds: string[];
-  parentIds: string[];
-}
-export interface MergeDupData {
-  plannedWords: Word[][];
-}
-export interface MergesCompleted {
-  merges: CompletedMerge[];
-}
-export interface MergeStepData {
-  words: Word[];
-}
+import { MergeDupData, MergeStepData } from "./MergeDupsTypes";
 
 export class MergeDups extends Goal {
   constructor(

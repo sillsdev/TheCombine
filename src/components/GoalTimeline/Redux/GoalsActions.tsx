@@ -1,33 +1,20 @@
 import * as Backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
-import { MergeDupData } from "goals/MergeDupGoal/MergeDups";
+import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,
   loadMergeDupsData,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import { StoreState } from "types";
-import { ActionWithPayload, StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { convertEditToGoal } from "types/goalUtilities";
-
-export enum GoalsActions {
-  LOAD_USER_EDITS = "LOAD_USER_EDITS",
-  SET_CURRENT_GOAL = "SET_CURRENT_GOAL",
-}
-
-export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
-  type: GoalsActions.LOAD_USER_EDITS;
-  payload: Goal[];
-}
-
-export interface SetCurrentGoalAction extends ActionWithPayload<Goal> {
-  type: GoalsActions.SET_CURRENT_GOAL;
-  payload: Goal;
-}
-
-export type GoalAction = LoadUserEditsAction | SetCurrentGoalAction;
-
+import {
+  GoalsActions,
+  LoadUserEditsAction,
+  SetCurrentGoalAction,
+} from "./GoalsActionsTypes";
 // Action Creators
 
 export function loadUserEdits(history?: Goal[]): LoadUserEditsAction {

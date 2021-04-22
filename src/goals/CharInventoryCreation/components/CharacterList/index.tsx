@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/actions";
-import { setSelectedCharacter } from "goals/CharInventoryCreation/CharacterInventoryActions";
+import { setSelectedCharacter } from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import CharacterListComponent from "goals/CharInventoryCreation/components/CharacterList/CharacterListComponent";
 
 function mapStateToProps(state: StoreState) {

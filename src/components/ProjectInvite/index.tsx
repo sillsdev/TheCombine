@@ -5,7 +5,7 @@ import { StoreStateDispatch } from "types/actions";
 import {
   asyncRegisterForEmailInvite,
   registerReset,
-} from "components/Login/LoginActions";
+} from "components/Login/Redux/LoginActions";
 import ProjectInvite, {
   ProjectInviteStateProps,
 } from "components/ProjectInvite/ProjectInviteComponent";

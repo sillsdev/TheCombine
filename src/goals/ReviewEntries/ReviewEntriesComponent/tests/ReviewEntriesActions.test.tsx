@@ -5,7 +5,7 @@ import {
   getSenseError,
   getSenseFromEditSense,
   updateFrontierWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
