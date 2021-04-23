@@ -21,18 +21,18 @@ namespace BackendFramework.Models
             Token = "";
         }
 
-        public EmailInvite(int expireTimeDays)
+        public EmailInvite(int daysUntilExpires)
         {
             Id = "";
             Email = "";
-            ExpireTime = DateTime.Now.AddDays(expireTimeDays);
+            ExpireTime = DateTime.Now.AddDays(daysUntilExpires);
 
             var byteToken = new byte[TokenSize];
             Rng.GetBytes(byteToken);
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public EmailInvite(int expireTime, string email) : this(expireTime)
+        public EmailInvite(int daysUntilExpires, string email) : this(daysUntilExpires)
         {
             Email = email;
         }

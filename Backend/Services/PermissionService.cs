@@ -149,7 +149,7 @@ namespace BackendFramework.Services
 
         public async Task<User?> MakeJwt(User user)
         {
-            const int tokenExpirationMinutes = 60 * 4;
+            const int hoursUntilExpires = 4;
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
             var key = Encoding.ASCII.GetBytes(secretKey);
@@ -179,7 +179,7 @@ namespace BackendFramework.Services
                     new Claim("UserRoleInfo", claimString)
                 }),
 
-                Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
+                Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
 
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
