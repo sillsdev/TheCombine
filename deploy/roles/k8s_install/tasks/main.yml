@@ -37,7 +37,7 @@
     - install_microk8s
 
 - name: Enable storage on microk8s
-  command: microk8s enable storage
+  command: microk8s enable storage dns
   when:
     - install_microk8s
 
