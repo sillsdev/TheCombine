@@ -239,12 +239,15 @@ namespace BackendFramework.Controllers
             return new NotFoundResult();
         }
 
+        /// <remarks>
+        /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+        /// </remarks>
         public class PasswordResetData
         {
-            public readonly string EmailOrUsername;
-            public readonly string Token;
-            public readonly string NewPassword;
-            public readonly string Domain;
+            public string EmailOrUsername { get; set; }
+            public string Token { get; set; }
+            public string NewPassword { get; set; }
+            public string Domain { get; set; }
 
             public PasswordResetData()
             {
