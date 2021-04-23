@@ -30,9 +30,7 @@ namespace BackendFramework.Services
             var token = new EmailInvite(2, emailAddress);
             project.InviteTokens.Add(token);
             await _projRepo.Update(project.Id, project);
-
-            var linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
-            return linkWithIdentifier;
+            return $"/invite/{project.Id}/{token.Token}";
         }
 
         public async Task<bool> EmailLink(

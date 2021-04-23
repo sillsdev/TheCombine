@@ -38,9 +38,7 @@ namespace BackendFramework.Controllers
             }
 
             var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
-
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
-
             return new OkObjectResult(linkWithIdentifier);
         }
 
