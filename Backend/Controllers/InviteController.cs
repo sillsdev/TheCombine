@@ -98,6 +98,9 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(status);
         }
 
+        /// <remarks>
+        /// All [FromBody] serialization classes must have mutable attributes (i.e. not readonly).
+        /// </remarks>
         public class EmailInviteData
         {
             public string EmailAddress{ get; set; }
