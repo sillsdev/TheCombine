@@ -1,10 +1,11 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
-import * as reducer from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import {
+  defaultState,
   CreateProjectAction,
   CreateProjectActions,
+  CreateProjectState,
 } from "../Redux/CreateProjectReduxTypes";
 
 const createMockStore = configureMockStore([thunk]);
@@ -28,7 +29,7 @@ const project = {
 };
 
 describe("CreateProjectAction Tests", () => {
-  let mockState: reducer.CreateProjectState = reducer.defaultState;
+  let mockState: CreateProjectState = defaultState;
   let CreateProject: CreateProjectAction = {
     type: CreateProjectActions.CREATE_PROJECT_IN_PROGRESS,
     payload: {

@@ -1,21 +1,10 @@
 import { StoreAction, StoreActions } from "rootActions";
-
-export interface AnalyticsState {
-  currentPage: string;
-}
-
-export const defaultState: AnalyticsState = {
-  currentPage: "",
-};
-
-export enum AnalyticsActionTypes {
-  ChangePage = "CHANGE_CURRENT_PAGE",
-}
-
-interface AnalyticsChangePageAction {
-  type: AnalyticsActionTypes.ChangePage;
-  newPage: string;
-}
+import {
+  AnalyticsActionTypes,
+  AnalyticsChangePageAction,
+  AnalyticsState,
+  defaultState,
+} from "./analyticsReduxTypes";
 
 export function changePage(newPage: string): AnalyticsChangePageAction {
   return {

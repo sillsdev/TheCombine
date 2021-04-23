@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { TraverseTreeAction } from "components/TreeView/TreeViewActions";
 import TreeViewComponent from "components/TreeView/TreeViewComponent";

@@ -8,7 +8,7 @@ import { StoreState } from "types";
 import {
   downloadIsReady,
   ExportStatus,
-} from "components/ProjectExport/ExportProjectActions";
+} from "components/ProjectExport/Redux/ExportProjectActions";
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub() {

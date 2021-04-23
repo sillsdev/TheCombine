@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 
 import { updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { SET_CURRENT_PROJECT } from "components/Project/ProjectActions";
+import { SET_CURRENT_PROJECT } from "components/Project/ProjectReduxTypes";
 import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import {
   CharacterInventoryState,

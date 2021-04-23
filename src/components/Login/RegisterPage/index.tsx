@@ -8,7 +8,7 @@ import Register, {
   RegisterStateProps,
 } from "components/Login/RegisterPage/RegisterComponent";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
   return {

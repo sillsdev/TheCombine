@@ -1,10 +1,10 @@
 import { resetPasswordRequest, resetPassword } from "backend";
 import history, { Path } from "browserHistory";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import {
   ResetAction,
   ResetActions,
-} from "components/PasswordReset/Redux/ResetActionTypes";
+} from "components/PasswordReset/Redux/ResetActionReduxTypes";
 
 export function resetAttempt(): ResetAction {
   return {

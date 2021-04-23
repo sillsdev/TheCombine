@@ -1,13 +1,11 @@
-import React from "react";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { defaultState } from "components/App/DefaultState";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+// This test relies on nothing in the store so mock an empty store
+const mockStore = configureMockStore([])({});
 
 let testRenderer: ReactTestRenderer;
 

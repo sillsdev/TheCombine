@@ -1,18 +1,10 @@
 import { StoreAction, StoreActions } from "rootActions";
 import {
+  defaultState,
   PronunciationsAction,
   PronunciationsStatus,
-} from "components/Pronunciations/PronunciationsActions";
-
-export interface PronunciationsState {
-  type: PronunciationsStatus;
-  payload: string;
-}
-
-export const defaultState: PronunciationsState = {
-  type: PronunciationsStatus.Default,
-  payload: "",
-};
+  PronunciationsState,
+} from "./PronunciationsReduxTypes";
 
 export const pronunciationsReducer = (
   state: PronunciationsState = defaultState,

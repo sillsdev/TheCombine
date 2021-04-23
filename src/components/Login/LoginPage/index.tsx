@@ -10,7 +10,7 @@ import Login, {
   LoginStateProps,
 } from "components/Login/LoginPage/LoginComponent";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   return {

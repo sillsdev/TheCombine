@@ -1,28 +1,10 @@
-import { Project, WritingSystem } from "types/project";
 import { StoreAction, StoreActions } from "rootActions";
 import {
   CreateProjectAction,
   CreateProjectActions,
+  CreateProjectState,
+  defaultState,
 } from "./CreateProjectReduxTypes";
-
-export interface CreateProjectState {
-  name: string;
-  vernacularLanguage: WritingSystem;
-  analysisLanguages: WritingSystem[];
-  inProgress: boolean;
-  success: boolean;
-  errorMsg: string;
-  project?: Project;
-}
-
-export const defaultState: CreateProjectState = {
-  name: "",
-  vernacularLanguage: { name: "", bcp47: "", font: "" },
-  analysisLanguages: [{ name: "", bcp47: "", font: "" }],
-  success: false,
-  inProgress: false,
-  errorMsg: "",
-};
 
 export const createProjectReducer = (
   state: CreateProjectState = defaultState,

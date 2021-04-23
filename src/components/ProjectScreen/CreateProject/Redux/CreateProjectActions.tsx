@@ -2,7 +2,7 @@ import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalsActions";
 import { setCurrentProject } from "components/Project/ProjectActions";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import { defaultProject, Project, WritingSystem } from "types/project";
 import {
   CreateProjectAction,

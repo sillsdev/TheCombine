@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import {
   deleteAudio,
   uploadAudio,

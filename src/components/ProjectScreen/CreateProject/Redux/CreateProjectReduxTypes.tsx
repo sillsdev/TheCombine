@@ -1,4 +1,4 @@
-import { WritingSystem } from "types/project";
+import { Project, WritingSystem } from "types/project";
 
 export enum CreateProjectActions {
   CREATE_PROJECT_FAILURE = "CREATE_PROJECT_FAILURE",
@@ -25,3 +25,22 @@ export interface CreateProjectData {
   languageData?: File;
   errorMsg?: string;
 }
+
+export interface CreateProjectState {
+  name: string;
+  vernacularLanguage: WritingSystem;
+  analysisLanguages: WritingSystem[];
+  inProgress: boolean;
+  success: boolean;
+  errorMsg: string;
+  project?: Project;
+}
+
+export const defaultState: CreateProjectState = {
+  name: "",
+  vernacularLanguage: { name: "", bcp47: "", font: "" },
+  analysisLanguages: [{ name: "", bcp47: "", font: "" }],
+  success: false,
+  inProgress: false,
+  errorMsg: "",
+};

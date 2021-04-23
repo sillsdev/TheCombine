@@ -25,3 +25,15 @@ export type ReviewEntriesAction =
   | ReviewUpdateWords
   | ReviewUpdateWord
   | ReviewClearReviewEntriesState;
+
+export interface ReviewEntriesState {
+  words: ReviewEntriesWord[];
+  isRecording: boolean;
+  wordBeingRecorded: string | undefined;
+}
+
+export const defaultState: ReviewEntriesState = {
+  words: [],
+  isRecording: false,
+  wordBeingRecorded: undefined,
+};

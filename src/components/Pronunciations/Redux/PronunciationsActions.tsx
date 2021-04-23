@@ -1,13 +1,7 @@
-export enum PronunciationsStatus {
-  Default = "DEFAULT",
-  Playing = "PLAYING",
-  Recording = "RECORDING",
-}
-
-export interface PronunciationsAction {
-  type: PronunciationsStatus;
-  payload?: string;
-}
+import {
+  PronunciationsAction,
+  PronunciationsStatus,
+} from "./PronunciationsReduxTypes";
 
 export function playing(payload: string): PronunciationsAction {
   return {
