@@ -98,12 +98,15 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(status);
         }
 
+        /// <remarks>
+        /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+        /// </remarks>
         public class EmailInviteData
         {
-            public readonly string EmailAddress;
-            public readonly string Message;
-            public readonly string ProjectId;
-            public readonly string Domain;
+            public string EmailAddress { get; set; }
+            public string Message { get; set; }
+            public string ProjectId { get; set; }
+            public string Domain { get; set; }
 
             public EmailInviteData()
             {
