@@ -45,39 +45,38 @@ export default class ProjectInvite extends React.Component<
   }
 
   getLastURLParam(pathname: string): string {
-    var index = pathname.lastIndexOf("/");
+    const index = pathname.lastIndexOf("/");
     return pathname.substring(index + 1);
   }
   removeLastURLParam(pathname: string): string {
-    var index = pathname.lastIndexOf("/");
+    const index = pathname.lastIndexOf("/");
     return pathname.substr(0, index);
   }
 
   async validateLink() {
-    var pathname = this.props.location.pathname;
-    var token = this.getLastURLParam(pathname);
+    let pathname = this.props.location.pathname;
+    const token = this.getLastURLParam(pathname);
     pathname = this.removeLastURLParam(pathname);
-    var projectId = this.getLastURLParam(pathname);
+    const projectId = this.getLastURLParam(pathname);
 
-    var status = await Backend.validateLink(projectId, token);
-
-    if (status[0] /* Link is valid */) {
+    const status = await Backend.validateLink(projectId, token);
+    if (status.IsTokenValid) {
       this.setState({
         isValidLink: true,
       });
     }
-    if (status[1] /* User is already registered */) {
+    if (status.IsUserRegistered) {
       this.setState({
         isAlreadyUser: true,
       });
     }
-    if (status[0] && status[1]) {
+    if (status.IsTokenValid && status.IsUserRegistered) {
       history.push(Path.Login);
     }
   }
 
   render() {
-    var text = (
+    const text = (
       <Register
         inProgress={this.props.inProgress}
         success={this.props.success}
