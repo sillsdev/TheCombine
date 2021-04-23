@@ -55,6 +55,9 @@ export default class ProjectInvite extends React.Component<
 
   async validateLink() {
     let pathname = this.props.location.pathname;
+
+    // TODO: Use regex to more cleanly parse this.
+    // Parse URL of the form /invite/{projectId}/{token}
     const token = this.getLastURLParam(pathname);
     pathname = this.removeLastURLParam(pathname);
     const projectId = this.getLastURLParam(pathname);
