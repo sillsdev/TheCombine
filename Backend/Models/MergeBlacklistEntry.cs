@@ -11,7 +11,7 @@ namespace BackendFramework.Models
         public string Id { get; set; }
 
         [BsonElement("projectId")]
-        public readonly string ProjectId;
+        public string ProjectId { get; set; }
 
         [BsonElement("userId")]
         public string UserId { get; set; }

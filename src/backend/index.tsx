@@ -200,6 +200,20 @@ export async function canUploadLift(): Promise<boolean> {
   return resp.data;
 }
 
+/* MergeController.cs */
+
+/** Returns array of ids of the post-merge words. */
+export async function mergeWords(
+  mergeWordsArray: MergeWords[]
+): Promise<string[]> {
+  const resp = await backendServer.put(
+    `projects/${LocalStorage.getProjectId()}/merge`,
+    mergeWordsArray,
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
@@ -499,18 +513,6 @@ export async function getWord(id: string): Promise<Word> {
 export async function getAllWords(): Promise<Word[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/words`,
-    { headers: authHeader() }
-  );
-  return resp.data;
-}
-
-/** Returns array of ids of the post-merge words. */
-export async function mergeWords(
-  mergeWordsArray: MergeWords[]
-): Promise<string[]> {
-  const resp = await backendServer.put(
-    `projects/${LocalStorage.getProjectId()}/words`,
-    mergeWordsArray,
     { headers: authHeader() }
   );
   return resp.data;
