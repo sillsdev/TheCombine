@@ -9,6 +9,7 @@ namespace Backend.Tests.Mocks
     internal class PermissionServiceMock : IPermissionService
     {
         private readonly IUserRepository _userRepo;
+        private const string NoHttpContextAvailable = "NO_HTTP_CONTEXT_AVAILABLE";
         private const string UnauthorizedHeader = "UNAUTHORIZED";
 
         public PermissionServiceMock(IUserRepository? userRepo = null)
@@ -57,7 +58,7 @@ namespace Backend.Tests.Mocks
         {
             if (request is null)
             {
-                return "NoHttpContextAvailable";
+                return NoHttpContextAvailable;
             }
             var userId = request.Request.Headers["UserId"].ToString();
             return userId;
