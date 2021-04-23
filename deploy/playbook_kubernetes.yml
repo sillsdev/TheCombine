@@ -41,3 +41,5 @@
     - name: Create Kubernetes Configuration Files
       import_role:
         name: cluster_config
+      tags:
+        - config
