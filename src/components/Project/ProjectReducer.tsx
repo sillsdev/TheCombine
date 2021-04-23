@@ -1,7 +1,8 @@
+import {} from "components/Project/ProjectActions";
 import {
   ProjectAction,
   SET_CURRENT_PROJECT,
-} from "components/Project/ProjectActions";
+} from "components/Project/ProjectReduxTypes";
 import { Project, defaultProject } from "types/project";
 import { setProjectId } from "backend/localStorage";
 import { StoreActions, StoreAction } from "rootActions";

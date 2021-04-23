@@ -5,14 +5,14 @@ import { goalsReducer } from "components/GoalTimeline/Redux/GoalsReducer";
 import { loginReducer } from "components/Login/Redux/LoginReducer";
 import { passwordResetReducer } from "components/PasswordReset/Redux/ResetReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
-import { exportProjectReducer } from "components/ProjectExport/ExportProjectReducer";
+import { exportProjectReducer } from "components/ProjectExport/Redux/ExportProjectReducer";
 import { createProjectReducer } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
-import { pronunciationsReducer } from "components/Pronunciations/PronunciationsReducer";
+import { pronunciationsReducer } from "components/Pronunciations/Redux/PronunciationsReducer";
 import { treeViewReducer } from "components/TreeView/TreeViewReducer";
 import { characterInventoryReducer } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { mergeDupStepReducer } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepReducer";
 import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
-import { analyticsReducer } from "types/analytics";
+import { analyticsReducer } from "types/Redux/analytics";
 import { StoreState } from "types";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({

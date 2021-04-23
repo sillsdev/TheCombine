@@ -6,7 +6,7 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { defaultState } from "components/App/DefaultState";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import { PronunciationsStatus } from "components/Pronunciations/PronunciationsActions";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 

@@ -1,13 +1,13 @@
 import { LocalizeState } from "react-localize-redux";
 
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
-import { PasswordResetState } from "components/PasswordReset/Redux/ResetActionTypes";
-import { ExportProjectState } from "components/ProjectExport/ExportProjectReducer";
-import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
-import { PronunciationsState } from "components/Pronunciations/PronunciationsReducer";
+import { PasswordResetState } from "components/PasswordReset/Redux/ResetActionReduxTypes";
+import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
+import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { TreeViewState } from "components/TreeView/TreeViewReducer";
-import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
-import { AnalyticsState } from "types/analytics";
+import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
+import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 import { CharacterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { GoalsState } from "types/goals";
 import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";

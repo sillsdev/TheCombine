@@ -3,6 +3,8 @@ import * as reducer from "components/ProjectScreen/CreateProject/Redux/CreatePro
 import {
   CreateProjectAction,
   CreateProjectActions,
+  CreateProjectState,
+  defaultState,
 } from "../Redux/CreateProjectReduxTypes";
 
 const emptyWritingSystem = {
@@ -19,7 +21,7 @@ const project = {
 };
 
 describe("createActionReducer Tests", () => {
-  let resultState: reducer.CreateProjectState = {
+  let resultState: CreateProjectState = {
     name: project.name,
     inProgress: true,
     success: false,
@@ -40,12 +42,12 @@ describe("createActionReducer Tests", () => {
         type: CreateProjectActions.CREATE_PROJECT_RESET,
         payload: project,
       })
-    ).toEqual(reducer.defaultState);
+    ).toEqual(defaultState);
   });
 
   test("default state, expecting create project", () => {
     expect(
-      reducer.createProjectReducer({} as reducer.CreateProjectState, inProgress)
+      reducer.createProjectReducer({} as CreateProjectState, inProgress)
     ).toEqual(resultState);
   });
 
@@ -55,10 +57,7 @@ describe("createActionReducer Tests", () => {
     };
 
     expect(
-      reducer.createProjectReducer(
-        {} as reducer.CreateProjectState,
-        resetAction
-      )
-    ).toEqual(reducer.defaultState);
+      reducer.createProjectReducer({} as CreateProjectState, resetAction)
+    ).toEqual(defaultState);
   });
 });

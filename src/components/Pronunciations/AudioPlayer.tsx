@@ -16,11 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
 import {
   playing,
-  PronunciationsStatus,
   reset,
-} from "components/Pronunciations/PronunciationsActions";
+} from "components/Pronunciations/Redux/PronunciationsActions";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
+import { PronunciationsStatus } from "./Redux/PronunciationsReduxTypes";
 
 interface PlayerProps {
   pronunciationUrl: string;

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import { Project } from "types/project";
 import { setCurrentProject } from "components/Project/ProjectActions";
 import ProjectImport from "components/ProjectSettings/ProjectImport/ProjectImport";

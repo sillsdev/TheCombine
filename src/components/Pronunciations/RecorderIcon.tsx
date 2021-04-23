@@ -5,12 +5,12 @@ import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  PronunciationsStatus,
   recording,
   reset,
-} from "components/Pronunciations/PronunciationsActions";
+} from "components/Pronunciations/Redux/PronunciationsActions";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
+import { PronunciationsStatus } from "./Redux/PronunciationsReduxTypes";
 
 interface RecorderIconProps {
   wordId: string;

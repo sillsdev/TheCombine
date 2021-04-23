@@ -2,7 +2,7 @@ import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import { reset } from "rootActions";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import { User } from "types/user";
 import hash from "crypto";
 import { LoginActionTypes, UserAction } from "./LoginReduxTypes";

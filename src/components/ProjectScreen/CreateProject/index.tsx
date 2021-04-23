@@ -6,7 +6,7 @@ import {
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import { WritingSystem } from "types/project";
 
 function mapStateToProps(state: StoreState) {

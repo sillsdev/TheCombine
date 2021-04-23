@@ -1,5 +1,5 @@
 import * as backend from "backend";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import {
   fetchWords,
   getAllCharacters,

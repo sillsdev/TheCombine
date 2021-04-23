@@ -1,21 +1,10 @@
 import {
+  defaultState,
   ReviewEntriesAction,
   ReviewEntriesActionTypes,
+  ReviewEntriesState,
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreAction, StoreActions } from "rootActions";
-
-export interface ReviewEntriesState {
-  words: ReviewEntriesWord[];
-  isRecording: boolean;
-  wordBeingRecorded: string | undefined;
-}
-
-export const defaultState: ReviewEntriesState = {
-  words: [],
-  isRecording: false,
-  wordBeingRecorded: undefined,
-};
 
 export const reviewEntriesReducer = (
   state: ReviewEntriesState = defaultState, //createStore() calls each reducer with undefined state

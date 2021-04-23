@@ -1,6 +1,6 @@
 import { createBrowserHistory } from "history";
 import { store } from "store";
-import { changePage } from "types/analytics";
+import { changePage } from "types/Redux/analytics";
 
 /** The browser history. When combined with React Router, classes can use
  * this to navigate to routes in The Combine. For example, if a route exists

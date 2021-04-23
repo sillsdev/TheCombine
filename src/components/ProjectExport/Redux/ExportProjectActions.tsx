@@ -1,17 +1,6 @@
 import { deleteLift, downloadLift, exportLift } from "backend";
-import { StoreStateDispatch } from "types/actions";
-
-export enum ExportStatus {
-  Default = "DEFAULT",
-  InProgress = "IN_PROGRESS",
-  Success = "SUCCESS",
-  Failure = "FAILURE",
-}
-
-export interface ExportProjectAction {
-  type: ExportStatus;
-  projectId?: string;
-}
+import { StoreStateDispatch } from "types/Redux/actions";
+import { ExportProjectAction, ExportStatus } from "./ExportProjectReduxTypes";
 
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {

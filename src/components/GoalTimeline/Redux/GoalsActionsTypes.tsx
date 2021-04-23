@@ -1,4 +1,4 @@
-import { ActionWithPayload } from "types/actions";
+import { ActionWithPayload } from "types/Redux/actions";
 import { Goal } from "types/goals";
 
 export enum GoalsActions {

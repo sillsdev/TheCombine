@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import { setCurrentProject } from "components/Project/ProjectActions";
 import ChooseProjectComponent from "components/ProjectScreen/ChooseProject/ChooseProjectComponent";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import { Project } from "types/project";
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

@@ -7,7 +7,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return { wordCount: Object.keys(state.mergeDuplicateGoal.tree.words).length };

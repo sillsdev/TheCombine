@@ -1,18 +1,11 @@
 import { StoreAction, StoreActions } from "rootActions";
+import {} from "components/ProjectExport/Redux/ExportProjectActions";
 import {
+  defaultState,
   ExportProjectAction,
+  ExportProjectState,
   ExportStatus,
-} from "components/ProjectExport/ExportProjectActions";
-
-export interface ExportProjectState {
-  projectId: string;
-  status: ExportStatus;
-}
-
-export const defaultState: ExportProjectState = {
-  projectId: "",
-  status: ExportStatus.Default,
-};
+} from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 
 export const exportProjectReducer = (
   state: ExportProjectState = defaultState,

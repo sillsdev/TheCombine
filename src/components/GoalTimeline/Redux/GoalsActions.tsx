@@ -7,7 +7,7 @@ import {
   loadMergeDupsData,
 } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { convertEditToGoal } from "types/goalUtilities";
 import {
