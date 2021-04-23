@@ -16,17 +16,17 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserRoleController : Controller
     {
+        private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
-        private readonly IProjectRepository _projRepo;
         private readonly IPermissionService _permissionService;
 
         public UserRoleController(IUserRepository userRepo, IUserRoleRepository userRoleRepo,
             IProjectRepository projRepo, IPermissionService permissionService)
         {
+            _projRepo = projRepo;
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
-            _projRepo = projRepo;
             _permissionService = permissionService;
         }
 

@@ -12,21 +12,23 @@ namespace Backend.Tests.Controllers
 {
     public class WordControllerTests
     {
+        private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
         private IWordService _wordService = null!;
-        private WordController _wordController = null!;
-        private IProjectRepository _projRepo = null!;
-        private string _projId = null!;
         private IPermissionService _permissionService = null!;
+        private WordController _wordController = null!;
+
+        private string _projId = null!;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
+            _projRepo = new ProjectRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _projRepo = new ProjectRepositoryMock();
+            _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordRepo, _wordService, _projRepo, _permissionService);
+
             _projId = _projRepo.Create(new Project { Name = "WordControllerTests" }).Result!.Id;
         }
 

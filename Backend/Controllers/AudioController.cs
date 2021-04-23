@@ -18,14 +18,14 @@ namespace BackendFramework.Controllers
     public class AudioController : Controller
     {
         private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
         public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
         {
             _wordRepo = repo;
-            _wordService = wordService;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns the audio file in the form of a stream from disk</summary>

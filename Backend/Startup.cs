@@ -210,7 +210,6 @@ namespace BackendFramework
             // User types
             services.AddTransient<IUserContext, UserContext>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUserService, UserService>();
 
             // User Edit types
             services.AddTransient<IUserEditContext, UserEditContext>();

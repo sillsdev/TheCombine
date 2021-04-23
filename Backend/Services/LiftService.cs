@@ -79,8 +79,7 @@ namespace BackendFramework.Services
     [Serializable]
     public class MissingProjectException : Exception
     {
-        public MissingProjectException(string message) : base(message)
-        { }
+        public MissingProjectException(string message) : base(message) { }
 
     }
 

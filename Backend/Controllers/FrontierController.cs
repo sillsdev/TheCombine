@@ -13,18 +13,18 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class FrontierController : Controller
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
         private readonly IProjectRepository _projRepo;
+        private readonly IWordRepository _wordRepo;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
         public FrontierController(IWordRepository wordRepo, IWordService wordService,
             IProjectRepository projRepo, IPermissionService permissionService)
         {
-            _wordRepo = wordRepo;
-            _wordService = wordService;
             _projRepo = projRepo;
+            _wordRepo = wordRepo;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns all words in a project's frontier </summary>

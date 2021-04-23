@@ -191,7 +191,7 @@ namespace BackendFramework.Models
     /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
     public class WithUser
     {
-        public User UpdatedUser;
+        public readonly User UpdatedUser;
 
         public WithUser(User user)
         {

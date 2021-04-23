@@ -20,19 +20,17 @@ namespace BackendFramework.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepo;
-        private readonly IUserService _userService;
-        private readonly IPermissionService _permissionService;
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
+        private readonly IPermissionService _permissionService;
 
-        public UserController(IUserRepository userRepo, IUserService userService,
-            IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService)
+        public UserController(IUserRepository userRepo, IPermissionService permissionService,
+            IEmailService emailService, IPasswordResetService passwordResetService)
         {
             _userRepo = userRepo;
-            _userService = userService;
-            _permissionService = permissionService;
             _emailService = emailService;
             _passwordResetService = passwordResetService;
+            _permissionService = permissionService;
         }
 
         /// <summary> Sends a password reset request </summary>
@@ -68,7 +66,6 @@ namespace BackendFramework.Controllers
             return new InternalServerErrorResult();
         }
 
-
         /// <summary> Resets a password using a token </summary>
         /// <remarks> POST: v1/users/reset </remarks>
         [AllowAnonymous]
@@ -85,15 +82,14 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
-        /// <remarks> GET: v1/users/projects/{projectId}/allusers </remarks>
-        [HttpGet("projects/{projectId}/allusers")]
+        /// <remarks> GET: v1/users </remarks>
+        [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (string.IsNullOrEmpty(_permissionService.GetUserId(HttpContext)))
             {
                 return new ForbidResult();
             }
-
             return new ObjectResult(await _userRepo.GetAllUsers());
         }
 
@@ -119,7 +115,7 @@ namespace BackendFramework.Controllers
         {
             try
             {
-                var user = await _userService.Authenticate(cred.Username, cred.Password);
+                var user = await _permissionService.Authenticate(cred.Username, cred.Password);
                 if (user is null)
                 {
                     return new UnauthorizedResult();
@@ -175,8 +171,8 @@ namespace BackendFramework.Controllers
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
         {
-            var usernameTaken = (await _userService.GetUserIdByUsername(username)) != null;
-            if (usernameTaken)
+            var isAvailable = (await _userRepo.GetUserByUsername(username)) is null;
+            if (!isAvailable)
             {
                 return BadRequest();
             }
@@ -191,8 +187,8 @@ namespace BackendFramework.Controllers
         [HttpPost("checkemail/{email}")]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            var emailTaken = (await _userService.GetUserIdByEmail(email)) != null;
-            if (emailTaken)
+            var isAvailable = (await _userRepo.GetUserByEmail(email)) is null;
+            if (!isAvailable)
             {
                 return BadRequest();
             }

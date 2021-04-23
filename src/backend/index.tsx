@@ -165,17 +165,17 @@ export async function uploadLift(
   return parseInt(resp.toString());
 }
 
-// Tell the backend to create a LIFT file for the project
+/** Tell the backend to create a LIFT file for the project. */
 export async function exportLift(projectId: string) {
   let resp = await backendServer.get(`projects/${projectId}/lift/export`, {
     headers: authHeader(),
   });
   return resp.data;
 }
-// After the backend confirms that a LIFT file is ready, download it
+/** After the backend confirms that a LIFT file is ready, download it. */
 export async function downloadLift(projectId: string): Promise<string> {
-  // For details on how to download binary files with axios, see:
-  //    https://github.com/axios/axios/issues/1392#issuecomment-447263985
+  /** For details on how to download binary files with axios, see:
+   *  https://github.com/axios/axios/issues/1392#issuecomment-447263985  */
   let resp = await backendServer.get(`projects/${projectId}/lift/download`, {
     headers: { ...authHeader(), Accept: "application/zip" },
     responseType: "blob",
@@ -184,7 +184,7 @@ export async function downloadLift(projectId: string): Promise<string> {
     new Blob([resp.request.response], { type: "application/zip" })
   );
 }
-// After downloading a LIFT file, clear it from the backend
+/** After downloading a LIFT file, clear it from the backend. */
 export async function deleteLift(projectId?: string) {
   let projectIdToDelete = projectId ? projectId : LocalStorage.getProjectId();
   await backendServer.get(`projects/${projectIdToDelete}/lift/deleteexport`, {
@@ -364,12 +364,7 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let projectId: string = LocalStorage.getProjectId();
-  /* If an admin user tries to get the list of users,
-   the current projectId may be an empty string,
-   which causes a 404 error. */
-  projectId = projectId ? projectId : "_";
-  let resp = await backendServer.get(`users/projects/${projectId}/allusers`, {
+  let resp = await backendServer.get(`users`, {
     headers: authHeader(),
   });
   return resp.data;

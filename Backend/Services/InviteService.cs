@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -12,18 +11,18 @@ namespace BackendFramework.Services
     {
         private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
-        private readonly IUserService _userService;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IEmailService _emailService;
+        private readonly IPermissionService _permissionService;
 
         public InviteService(IProjectRepository projRepo, IUserRepository userRepo,
-            IUserService userService, IUserRoleRepository userRoleRepo, IEmailService emailService)
+            IPermissionService permissionService, IUserRoleRepository userRoleRepo, IEmailService emailService)
         {
             _projRepo = projRepo;
             _userRepo = userRepo;
-            _userService = userService;
             _userRoleRepo = userRoleRepo;
             _emailService = emailService;
+            _permissionService = permissionService;
         }
 
         public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
@@ -36,7 +35,8 @@ namespace BackendFramework.Services
             return linkWithIdentifier;
         }
 
-        public async Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
+        public async Task<bool> EmailLink(
+            string emailAddress, string emailMessage, string link, string domain, Project project)
         {
             // create email
             var message = new MimeMessage();
@@ -72,10 +72,11 @@ namespace BackendFramework.Services
                 user.ProjectRoles.Add(project.Id, userRole.Id);
                 await _userRepo.Update(user.Id, user);
                 // Generate the JWT based on those new userRoles
-                var updatedUser = await _userService.MakeJwt(user);
+                var updatedUser = await _permissionService.MakeJwt(user);
                 if (updatedUser is null)
                 {
-                    throw new Exception("Unable to generate JWT.");
+                    throw new PermissionService.InvalidJwtTokenError(
+                        "Unable to generate JWT.");
                 }
 
                 await _userRepo.Update(updatedUser.Id, updatedUser);
@@ -87,7 +88,7 @@ namespace BackendFramework.Services
 
                 return true;
             }
-            catch (Exception)
+            catch (PermissionService.InvalidJwtTokenError)
             {
                 return false;
             }

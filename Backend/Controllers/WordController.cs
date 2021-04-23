@@ -15,18 +15,18 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class WordController : Controller
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
         private readonly IProjectRepository _projRepo;
+        private readonly IWordRepository _wordRepo;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
         public WordController(IWordRepository repo, IWordService wordService, IProjectRepository projRepo,
             IPermissionService permissionService)
         {
-            _wordRepo = repo;
-            _wordService = wordService;
             _projRepo = projRepo;
+            _wordRepo = repo;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/> </summary>

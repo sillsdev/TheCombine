@@ -10,24 +10,25 @@ namespace Backend.Tests.Controllers
 {
     public class UserRoleControllerTests
     {
+        private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;
-        private UserRoleController _userRoleController = null!;
-        private IProjectRepository _projRepo = null!;
-        private string _projId = null!;
         private IPermissionService _permissionService = null!;
+        private UserRoleController _userRoleController = null!;
 
+        private string _projId = null!;
         private const string InvalidProjectId = "INVALID_PROJECT_ID";
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
+            _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _userRoleRepo = new UserRoleRepositoryMock();
-            _projRepo = new ProjectRepositoryMock();
-            _projId = _projRepo.Create(new Project { Name = "UserRoleControllerTests" }).Result!.Id;
+            _permissionService = new PermissionServiceMock();
             _userRoleController = new UserRoleController(_userRepo, _userRoleRepo, _projRepo, _permissionService);
+
+            _projId = _projRepo.Create(new Project { Name = "UserRoleControllerTests" }).Result!.Id;
         }
 
         private UserRole RandomUserRole()
@@ -146,8 +147,7 @@ namespace Backend.Tests.Controllers
         {
             var userRole = RandomUserRole();
             _userRoleRepo.Create(userRole);
-            var user = new User();
-            user.ProjectRoles[_projId] = userRole.Id;
+            var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
             var userId = _userRepo.Create(user).Result!.Id;
 
             var updatePermissions = userRole.Clone().Permissions;

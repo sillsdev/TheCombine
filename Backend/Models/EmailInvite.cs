@@ -21,12 +21,11 @@ namespace BackendFramework.Models
             Token = "";
         }
 
-        public EmailInvite(int expireTime)
+        public EmailInvite(int expireTimeDays)
         {
-            var expireTimeDifference = expireTime;
             Id = "";
             Email = "";
-            ExpireTime = DateTime.Now.AddDays(expireTimeDifference);
+            ExpireTime = DateTime.Now.AddDays(expireTimeDays);
 
             var byteToken = new byte[TokenSize];
             Rng.GetBytes(byteToken);

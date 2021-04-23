@@ -23,21 +23,21 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class LiftController : Controller
     {
+        private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
-        private readonly IProjectRepository _projRepo;
-        private readonly IPermissionService _permissionService;
         private readonly IHubContext<CombineHub> _notifyService;
+        private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
 
         public LiftController(IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
             ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
         {
-            _wordRepo = wordRepo;
             _projRepo = projRepo;
+            _wordRepo = wordRepo;
             _liftService = liftService;
-            _permissionService = permissionService;
             _notifyService = notifyService;
+            _permissionService = permissionService;
             _logger = logger;
         }
 
@@ -346,15 +346,10 @@ namespace BackendFramework.Controllers
     [Serializable]
     public class FileSystemError : Exception
     {
-        public FileSystemError()
-        { }
+        public FileSystemError() { }
 
-        public FileSystemError(string message)
-            : base(message)
-        { }
+        public FileSystemError(string message) : base(message) { }
 
-        public FileSystemError(string message, Exception innerException)
-            : base(message, innerException)
-        { }
+        public FileSystemError(string message, Exception innerException) : base(message, innerException) { }
     }
 }

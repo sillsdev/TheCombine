@@ -14,31 +14,29 @@ namespace Backend.Tests.Controllers
     public class AvatarControllerTests
     {
         private IUserRepository _userRepo = null!;
-        private IUserService _userService = null!;
-        private UserController _userController = null!;
-        private AvatarController _avatarController = null!;
         private PermissionServiceMock _permissionService = null!;
+        private AvatarController _avatarController = null!;
+        private UserController _userController = null!;
+
         private User _jwtAuthenticatedUser = null!;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _userRepo = new UserRepositoryMock();
-            _userService = new UserServiceMock(_userRepo);
-            _userController = new UserController(
-                _userRepo, _userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
+            _permissionService = new PermissionServiceMock(_userRepo);
             _avatarController = new AvatarController(_userRepo, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
+            _userController = new UserController(
+                _userRepo, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
 
-            // User controller
             _userController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _userService.Authenticate(
+            _jwtAuthenticatedUser = _permissionService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
         }
 

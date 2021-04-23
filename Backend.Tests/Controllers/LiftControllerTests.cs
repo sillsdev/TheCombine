@@ -20,31 +20,32 @@ namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
-        private IWordRepository _wordRepo = null!;
-        private IWordService _wordService = null!;
         private IProjectRepository _projRepo = null!;
+        private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
-        private LiftController _liftController = null!;
         private IHubContext<CombineHub> _notifyService = null!;
         private IPermissionService _permissionService = null!;
-        private ILogger<LiftController> _logger = null!;
+        private IWordService _wordService = null!;
+        private LiftController _liftController = null!;
 
-        private const string _projName = "LiftControllerTests";
+        private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
+        private const string _projName = "LiftControllerTests";
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _projRepo = new ProjectRepositoryMock();
-            _projId = _projRepo.Create(new Project { Name = _projName }).Result!.Id;
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             _notifyService = new HubContextMock();
-            _logger = new MockLogger();
+            _permissionService = new PermissionServiceMock();
+            _wordService = new WordService(_wordRepo);
             _liftController = new LiftController(
                 _wordRepo, _projRepo, _permissionService, _liftService, _notifyService, _logger);
-            _wordService = new WordService(_wordRepo);
+
+            _logger = new MockLogger();
+            _projId = _projRepo.Create(new Project { Name = _projName }).Result!.Id;
         }
 
         [TearDown]

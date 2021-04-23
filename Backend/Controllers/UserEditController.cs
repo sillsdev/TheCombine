@@ -14,23 +14,20 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserEditController : Controller
     {
-        private readonly IUserEditRepository _userEditRepo;
-        private readonly IUserEditService _userEditService;
         private readonly IProjectRepository _projRepo;
-        private readonly IPermissionService _permissionService;
         private readonly IUserRepository _userRepo;
-        private readonly IUserService _userService;
+        private readonly IUserEditRepository _userEditRepo;
+        private readonly IPermissionService _permissionService;
+        private readonly IUserEditService _userEditService;
 
         public UserEditController(IUserEditRepository userEditRepo, IUserEditService userEditService,
-            IProjectRepository projRepo, IPermissionService permissionService,
-            IUserRepository userRepo, IUserService userService)
+            IProjectRepository projRepo, IPermissionService permissionService, IUserRepository userRepo)
         {
-            _userEditRepo = userEditRepo;
-            _userEditService = userEditService;
             _projRepo = projRepo;
-            _permissionService = permissionService;
             _userRepo = userRepo;
-            _userService = userService;
+            _userEditRepo = userEditRepo;
+            _permissionService = permissionService;
+            _userEditService = userEditService;
         }
 
         /// <summary> Returns all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
@@ -134,7 +131,7 @@ namespace BackendFramework.Controllers
             await _userRepo.Update(currentUserId, currentUser);
 
             // Generate the JWT based on the new userEdit
-            var currentUpdatedUser = await _userService.MakeJwt(currentUser);
+            var currentUpdatedUser = await _permissionService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
             {
                 return new BadRequestObjectResult("Invalid JWT Token supplied.");

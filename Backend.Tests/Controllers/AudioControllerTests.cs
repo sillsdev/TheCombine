@@ -13,24 +13,26 @@ namespace Backend.Tests.Controllers
 {
     public class AudioControllerTests
     {
-        private IWordRepository _wordRepo = null!;
-        private WordService _wordService = null!;
         private IProjectRepository _projRepo = null!;
-        private string _projId = null!;
+        private IWordRepository _wordRepo = null!;
         private PermissionServiceMock _permissionService = null!;
-        private WordController _wordController = null!;
+        private WordService _wordService = null!;
         private AudioController _audioController = null!;
+        private WordController _wordController = null!;
+
+        private string _projId = null!;
 
         [SetUp]
         public void Setup()
         {
-            _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
             _projRepo = new ProjectRepositoryMock();
-            _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
+            _wordRepo = new WordRepositoryMock();
             _permissionService = new PermissionServiceMock();
-            _wordController = new WordController(_wordRepo, _wordService, _projRepo, _permissionService);
+            _wordService = new WordService(_wordRepo);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
+            _wordController = new WordController(_wordRepo, _wordService, _projRepo, _permissionService);
+
+            _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
         }
 
         [TearDown]

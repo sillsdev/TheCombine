@@ -13,36 +13,36 @@ namespace Backend.Tests.Controllers
 {
     public class UserEditControllerTests
     {
+        private IProjectRepository _projRepo = null!;
+        private IUserRepository _userRepo = null!;
         private IUserEditRepository _userEditRepo = null!;
+        private IPermissionService _permissionService = null!;
         private IUserEditService _userEditService = null!;
         private UserEditController _userEditController = null!;
-        private IProjectRepository _projRepo = null!;
-        private string _projId = null!;
-        private IPermissionService _permissionService = null!;
-        private IUserRepository _userRepo = null!;
-        private IUserService _userService = null!;
+
         private User _jwtAuthenticatedUser = null!;
+        private string _projId = null!;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
-            _userEditRepo = new UserEditRepositoryMock();
-            _userEditService = new UserEditService(_userEditRepo);
             _projRepo = new ProjectRepositoryMock();
-            _projId = _projRepo.Create(new Project { Name = "UserEditControllerTests" }).Result!.Id;
             _userRepo = new UserRepositoryMock();
-            _userService = new UserServiceMock(_userRepo);
-            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projRepo,
-                _permissionService, _userRepo, _userService)
+            _userEditRepo = new UserEditRepositoryMock();
+            _permissionService = new PermissionServiceMock(_userRepo);
+            _userEditService = new UserEditService(_userEditRepo);
+            _userEditController = new UserEditController(
+                _userEditRepo, _userEditService, _projRepo, _permissionService, _userRepo)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
+
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _userService.Authenticate(
+            _jwtAuthenticatedUser = _permissionService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
             _userEditController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
+            _projId = _projRepo.Create(new Project { Name = "UserEditControllerTests" }).Result!.Id;
         }
 
         private UserEdit RandomUserEdit()

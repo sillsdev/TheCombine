@@ -55,7 +55,7 @@ namespace BackendFramework.Repositories
         public async Task<Project?> Create(Project project)
         {
             // Confirm that project name isn't empty or taken
-            if (string.IsNullOrEmpty(project.Name) || (await GetProjectIdByName(project.Name)) != null)
+            if (string.IsNullOrEmpty(project.Name) || await GetProjectIdByName(project.Name) != null)
             {
                 return null;
             }

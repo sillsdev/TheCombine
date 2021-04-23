@@ -14,15 +14,15 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class InviteController : Controller
     {
-        private readonly IInviteService _inviteService;
         private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
+        private readonly IInviteService _inviteService;
 
         public InviteController(IInviteService inviteService, IProjectRepository projRepo, IUserRepository userRepo)
         {
-            _inviteService = inviteService;
             _projRepo = projRepo;
             _userRepo = userRepo;
+            _inviteService = inviteService;
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>

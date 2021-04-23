@@ -14,25 +14,24 @@ namespace Backend.Tests.Controllers
     public class ProjectControllerTests
     {
         private IProjectRepository _projRepo = null!;
-        private ISemanticDomainService _semDomService = null!;
-        private ProjectController _controller = null!;
-        private UserRoleRepositoryMock _userRoleRepo = null!;
         private IUserRepository _userRepo = null!;
-        private IUserService _userService = null!;
+        private UserRoleRepositoryMock _userRoleRepo = null!;
         private IPermissionService _permissionService = null!;
+        private ISemanticDomainService _semDomService = null!;
+        private ProjectController _projController = null!;
+
         private User _jwtAuthenticatedUser = null!;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _projRepo = new ProjectRepositoryMock();
-            _semDomService = new SemanticDomainService();
-            _userRoleRepo = new UserRoleRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _userService = new UserServiceMock(_userRepo);
-            _controller = new ProjectController(_projRepo, _semDomService, _userRoleRepo,
-                _userRepo, _userService, _permissionService)
+            _userRoleRepo = new UserRoleRepositoryMock();
+            _permissionService = new PermissionServiceMock(_userRepo);
+            _semDomService = new SemanticDomainService();
+            _projController = new ProjectController(_projRepo, _semDomService, _userRoleRepo,
+                _userRepo, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
@@ -40,10 +39,10 @@ namespace Backend.Tests.Controllers
 
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _userService.Authenticate(
+            _jwtAuthenticatedUser = _permissionService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
 
-            _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
+            _projController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
 
         private static Project RandomProject()
@@ -51,7 +50,10 @@ namespace Backend.Tests.Controllers
             var project = new Project
             {
                 Name = Util.RandString(),
-                VernacularWritingSystem = { Name = Util.RandString(), Bcp47 = Util.RandString(), Font = Util.RandString() },
+                VernacularWritingSystem =
+                {
+                    Name = Util.RandString(), Bcp47 = Util.RandString(), Font = Util.RandString()
+                },
                 AnalysisWritingSystems = new List<WritingSystem>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
@@ -98,7 +100,7 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(RandomProject());
             _projRepo.Create(RandomProject());
 
-            var projects = ((ObjectResult)_controller.GetAllProjects().Result).Value as List<Project>;
+            var projects = ((ObjectResult)_projController.GetAllProjects().Result).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
             _projRepo.GetAllProjects().Result.ForEach(project => Assert.Contains(project, projects));
         }
@@ -111,7 +113,7 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(RandomProject());
             _projRepo.Create(RandomProject());
 
-            var action = _controller.Get(project!.Id).Result;
+            var action = _projController.Get(project!.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundProjects = ((ObjectResult)action).Value as Project;
@@ -123,7 +125,7 @@ namespace Backend.Tests.Controllers
         {
             var project = RandomProject();
             var projectUser = new ProjectWithUser(project);
-            var id = ((ProjectWithUser)((ObjectResult)_controller.Post(projectUser).Result).Value).Id;
+            var id = ((ProjectWithUser)((ObjectResult)_projController.Post(projectUser).Result).Value).Id;
             project.Id = id;
             Assert.Contains(project, _projRepo.GetAllProjects().Result);
         }
@@ -135,7 +137,7 @@ namespace Backend.Tests.Controllers
             var modProject = origProject!.Clone();
             modProject.Name = "Mark";
 
-            _ = _controller.Put(modProject.Id, modProject);
+            _ = _projController.Put(modProject.Id, modProject);
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
             Assert.Contains(modProject, _projRepo.GetAllProjects().Result);
         }
@@ -146,7 +148,7 @@ namespace Backend.Tests.Controllers
             var origProject = _projRepo.Create(RandomProject()).Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
 
-            _ = _controller.Delete(origProject!.Id).Result;
+            _ = _projController.Delete(origProject!.Id).Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -158,7 +160,7 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(RandomProject());
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(3));
 
-            _ = _controller.Delete().Result;
+            _ = _projController.Delete().Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -167,7 +169,7 @@ namespace Backend.Tests.Controllers
         {
             var project = _projRepo.Create(RandomProject()).Result;
             var sdList = (List<SemanticDomainWithSubdomains>)(
-                (ObjectResult)_controller.GetSemDoms(project!.Id).Result).Value;
+                (ObjectResult)_projController.GetSemDoms(project!.Id).Result).Value;
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
@@ -181,10 +183,10 @@ namespace Backend.Tests.Controllers
             _ = _projRepo.Create(RandomProject()).Result;
             var modProject = project1!.Clone();
             modProject.Name = "Proj";
-            _ = _controller.Put(modProject.Id, modProject);
+            _ = _projController.Put(modProject.Id, modProject);
 
-            Assert.AreEqual(((ObjectResult)_controller.ProjectDuplicateCheck("Proj").Result).Value, true);
-            Assert.AreEqual(((ObjectResult)_controller.ProjectDuplicateCheck("NewProj").Result).Value, false);
+            Assert.AreEqual(((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value, true);
+            Assert.AreEqual(((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value, false);
         }
     }
 }

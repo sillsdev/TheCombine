@@ -17,22 +17,19 @@ namespace BackendFramework.Controllers
     public class ProjectController : Controller
     {
         private readonly IProjectRepository _projRepo;
-        private readonly ISemanticDomainService _semDomService;
-        private readonly IUserRoleRepository _userRoleRepo;
         private readonly IUserRepository _userRepo;
-        private readonly IUserService _userService;
+        private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
+        private readonly ISemanticDomainService _semDomService;
 
         public ProjectController(IProjectRepository projRepo, ISemanticDomainService semDomService,
-            IUserRoleRepository userRoleRepo, IUserRepository userRepo,
-            IUserService userService, IPermissionService permissionService)
+            IUserRoleRepository userRoleRepo, IUserRepository userRepo, IPermissionService permissionService)
         {
             _projRepo = projRepo;
-            _semDomService = semDomService;
-            _userRoleRepo = userRoleRepo;
             _userRepo = userRepo;
-            _userService = userService;
+            _userRoleRepo = userRoleRepo;
             _permissionService = permissionService;
+            _semDomService = semDomService;
         }
 
         /// <summary> Returns all <see cref="Project"/>s </summary>
@@ -135,7 +132,7 @@ namespace BackendFramework.Controllers
             currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userRepo.Update(currentUserId, currentUser);
             // Generate the JWT based on those new userRoles.
-            var currentUpdatedUser = await _userService.MakeJwt(currentUser);
+            var currentUpdatedUser = await _permissionService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
             {
                 return new BadRequestObjectResult("Invalid JWT Token supplied.");
