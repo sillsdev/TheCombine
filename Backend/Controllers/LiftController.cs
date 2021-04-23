@@ -19,30 +19,30 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/projects/{projectId}/words")]
+    [Route("v1/projects/{projectId}/lift")]
     [EnableCors("AllowAll")]
     public class LiftController : Controller
     {
+        private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
-        private readonly IProjectService _projectService;
-        private readonly IPermissionService _permissionService;
         private readonly IHubContext<CombineHub> _notifyService;
+        private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
 
-        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
+        public LiftController(IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
             ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
         {
-            _wordRepo = repo;
-            _projectService = projServ;
+            _projRepo = projRepo;
+            _wordRepo = wordRepo;
             _liftService = liftService;
-            _permissionService = permissionService;
             _notifyService = notifyService;
+            _permissionService = permissionService;
             _logger = logger;
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/upload </remarks>
+        /// <remarks> POST: v1/projects/{projectId}/lift/upload </remarks>
         /// <returns> Number of words added </returns>
         [HttpPost("upload")]
         // Allow clients to POST large import files to the server (default limit is 28MB).
@@ -63,7 +63,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure Lift file has not already been imported.
-            if (!await _projectService.CanImportLift(projectId))
+            if (!await _projRepo.CanImportLift(projectId))
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
@@ -159,11 +159,11 @@ namespace BackendFramework.Controllers
 
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
-            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
             try
             {
                 // Add character set to project from ldml file
-                var proj = await _projectService.GetProject(projectId);
+                var proj = await _projRepo.GetProject(projectId);
                 if (proj is null)
                 {
                     return new NotFoundObjectResult(projectId);
@@ -171,7 +171,7 @@ namespace BackendFramework.Controllers
 
                 _liftService.LdmlImport(
                     Path.Combine(liftStoragePath, "WritingSystems"),
-                    proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+                    proj.VernacularWritingSystem.Bcp47, _projRepo, proj);
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
@@ -187,20 +187,20 @@ namespace BackendFramework.Controllers
 
             // Store that we have imported Lift data already for this project to signal the frontend
             // not to attempt to import again.
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             project.LiftImported = true;
-            await _projectService.Update(projectId, project);
+            await _projRepo.Update(projectId, project);
 
             return new OkObjectResult(liftParseResult);
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/lift/export </remarks>
         /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
@@ -224,7 +224,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -266,12 +266,12 @@ namespace BackendFramework.Controllers
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projectService);
+            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
             return exportedFilepath;
         }
 
         /// <summary> Downloads project data in zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/lift/download </remarks>
         /// <returns> Binary Lift file </returns>
         [HttpGet("download")]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
@@ -302,7 +302,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Delete prepared export </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/lift/deleteexport </remarks>
         /// <returns> UserId, if successful </returns>
         [HttpGet("deleteexport")]
         public async Task<IActionResult> DeleteLiftFile()
@@ -321,20 +321,35 @@ namespace BackendFramework.Controllers
             _liftService.DeleteExport(userId);
             return new OkObjectResult(userId);
         }
+
+        /// <summary> Check if lift import has already happened for this project </summary>
+        /// <remarks> GET: v1/projects/{projectId}/lift/check </remarks>
+        /// <returns> A bool </returns>
+        [HttpGet("check")]
+        public async Task<IActionResult> CanUploadLift(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            // Sanitize user input
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            return new OkObjectResult(await _projRepo.CanImportLift(projectId));
+        }
     }
 
     [Serializable]
     public class FileSystemError : Exception
     {
-        public FileSystemError()
-        { }
+        public FileSystemError() { }
 
-        public FileSystemError(string message)
-            : base(message)
-        { }
+        public FileSystemError(string message) : base(message) { }
 
-        public FileSystemError(string message, Exception innerException)
-            : base(message, innerException)
-        { }
+        public FileSystemError(string message, Exception innerException) : base(message, innerException) { }
     }
 }

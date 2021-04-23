@@ -29,7 +29,8 @@ namespace BackendFramework.Services
         public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) { }
 
         /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
-        protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
+        protected override void InsertPronunciationIfNeeded(
+            LexEntry entry, List<string> propertiesAlreadyOutput)
         {
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Any())
             {
@@ -78,10 +79,7 @@ namespace BackendFramework.Services
     [Serializable]
     public class MissingProjectException : Exception
     {
-        public MissingProjectException(string message)
-            : base(message)
-        {
-        }
+        public MissingProjectException(string message) : base(message) { }
 
     }
 
@@ -153,7 +151,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
-        public void LdmlImport(string filePath, string langTag, IProjectService projService, Project project)
+        public void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
@@ -163,17 +161,18 @@ namespace BackendFramework.Services
             if (wsDef.CharacterSets.Contains("main"))
             {
                 project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                projService.Update(project.Id, project);
+                projRepo.Update(project.Id, project);
             }
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
         /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
-        public async Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
+        public async Task<string> LiftExport(
+            string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
         {
             // Validate project exists.
-            var proj = await projService.GetProject(projectId);
+            var proj = await projRepo.GetProject(projectId);
             if (proj is null)
             {
                 throw new MissingProjectException($"Project does not exist: {projectId}");
@@ -474,10 +473,9 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILiftMerger GetLiftImporterExporter(
-            string projectId, IProjectService projectService, IWordRepository wordRepo)
+        public ILiftMerger GetLiftImporterExporter(string projectId, IWordRepository wordRepo)
         {
-            return new LiftMerger(projectId, projectService, wordRepo);
+            return new LiftMerger(projectId, wordRepo);
         }
 
         private static void WriteRangeElement(
@@ -514,14 +512,12 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
-            private readonly IProjectService _projectService;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new List<Word>();
 
-            public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
+            public LiftMerger(string projectId, IWordRepository wordRepo)
             {
                 _projectId = projectId;
-                _projectService = projectService;
                 _wordRepo = wordRepo;
             }
 
@@ -783,8 +779,8 @@ namespace BackendFramework.Services
                 return new LiftEtymology();
             }
 
-            public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type,
-                string rawXml)
+            public LiftObject MergeInReversal(
+                LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml)
             {
                 return new LiftReversal();
             }

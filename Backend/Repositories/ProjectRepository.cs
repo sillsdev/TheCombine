@@ -5,24 +5,17 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
-using MimeKit;
 
-namespace BackendFramework.Services
+namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Project"/>s </summary>
-    public class ProjectService : IProjectService
+    public class ProjectRepository : IProjectRepository
     {
         private readonly IProjectContext _projectDatabase;
-        private readonly IUserService _userService;
-        private readonly IUserRoleService _userRoleService;
-        private readonly IEmailService _emailService;
 
-        public ProjectService(IProjectContext collectionSettings, IUserService userService, IUserRoleService userRoleService, IEmailService emailService)
+        public ProjectRepository(IProjectContext collectionSettings)
         {
             _projectDatabase = collectionSettings;
-            _userService = userService;
-            _userRoleService = userRoleService;
-            _emailService = emailService;
         }
 
         /// <summary> Finds all <see cref="Project"/>s </summary>
@@ -62,7 +55,7 @@ namespace BackendFramework.Services
         public async Task<Project?> Create(Project project)
         {
             // Confirm that project name isn't empty or taken
-            if (string.IsNullOrEmpty(project.Name) || (await GetProjectIdByName(project.Name)) != null)
+            if (string.IsNullOrEmpty(project.Name) || await GetProjectIdByName(project.Name) != null)
             {
                 return null;
             }
@@ -125,73 +118,6 @@ namespace BackendFramework.Services
             }
 
             return ResultOfUpdate.NoChange;
-        }
-
-        public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
-        {
-            var token = new EmailInvite(2, emailAddress);
-            project.InviteTokens.Add(token);
-            await Update(project.Id, project);
-
-            var linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
-            return linkWithIdentifier;
-        }
-
-        public async Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
-        {
-            // create email
-            var message = new MimeMessage();
-            message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
-            message.Subject = "TheCombine Project Invite";
-            message.Body = new TextPart("plain")
-            {
-                Text = $"You have been invited to a TheCombine project called {project.Name}. \n" +
-                       $"To become a member of this project, go to {domain}{link}. \n\n" +
-                       $"Message from Project Admin: {emailMessage} \n\n" +
-                       "If you did not expect an invite please ignore this email."
-            };
-            return await _emailService.SendEmail(message);
-        }
-
-        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
-        {
-            try
-            {
-                var userRole = new UserRole
-                {
-                    Permissions = new List<int>
-                {
-                    (int) Permission.MergeAndCharSet,
-                    (int) Permission.Unused,
-                    (int) Permission.WordEntry
-                },
-                    ProjectId = project.Id
-                };
-                userRole = await _userRoleService.Create(userRole);
-
-                // Generate the userRoles and update the user
-                user.ProjectRoles.Add(project.Id, userRole.Id);
-                await _userService.Update(user.Id, user);
-                // Generate the JWT based on those new userRoles
-                var updatedUser = await _userService.MakeJwt(user);
-                if (updatedUser is null)
-                {
-                    throw new Exception("Unable to generate JWT.");
-                }
-
-                await _userService.Update(updatedUser.Id, updatedUser);
-
-                // Removes token and updates user
-
-                project.InviteTokens.Remove(emailInvite);
-                await Update(project.Id, project);
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public async Task<string?> GetProjectIdByName(string projectName)

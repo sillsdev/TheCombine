@@ -9,16 +9,16 @@ namespace Backend.Tests.Services
 {
     public class PasswordResetServiceTests
     {
-        private IUserService _userService = null!;
+        private IUserRepository _userRepo = null!;
         private PasswordResetContextMock _passwordResets = null!;
         private IPasswordResetService _passwordResetService = null!;
 
         [SetUp]
         public void Setup()
         {
-            _userService = new UserServiceMock();
+            _userRepo = new UserRepositoryMock();
             _passwordResets = new PasswordResetContextMock();
-            _passwordResetService = new PasswordResetService(_passwordResets, _userService);
+            _passwordResetService = new PasswordResetService(_passwordResets, _userRepo);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace Backend.Tests.Services
         {
             // test we can successfully create a request
             var user = new User { Email = "user@domain.com" };
-            _userService.Create(user);
+            _userRepo.Create(user);
 
             var res = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
             Assert.Contains(res, _passwordResets.GetResets());
@@ -36,7 +36,7 @@ namespace Backend.Tests.Services
         public void ResetSuccess()
         {
             var user = new User { Email = "user@domain.com" };
-            _userService.Create(user);
+            _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
             Assert.IsTrue(_passwordResetService.ResetPassword(request.Token, "newPassword").Result);
@@ -47,7 +47,7 @@ namespace Backend.Tests.Services
         public void ResetExpired()
         {
             var user = new User { Email = "user@domain.com" };
-            _userService.Create(user);
+            _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
             request.ExpireTime = DateTime.Now.AddMinutes(-1);
@@ -60,7 +60,7 @@ namespace Backend.Tests.Services
         {
             const string email = "user@domain.com";
             var user = new User { Email = email };
-            _userService.Create(user);
+            _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
             Assert.That(request.Email == email);

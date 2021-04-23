@@ -9,11 +9,11 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class ProjectServiceMock : IProjectService
+    public class ProjectRepositoryMock : IProjectRepository
     {
         private readonly List<Project> _projects;
 
-        public ProjectServiceMock()
+        public ProjectRepositoryMock()
         {
             _projects = new List<Project>();
         }
@@ -83,21 +83,6 @@ namespace Backend.Tests.Mocks
                 return Task.FromResult(ResultOfUpdate.Updated);
             }
             return Task.FromResult(ResultOfUpdate.NotFound);
-        }
-
-        public Task<string> CreateLinkWithToken(Project project, string emailAddress)
-        {
-            return Task.FromResult("");
-        }
-
-        public Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite token)
-        {
-            return Task.FromResult(true);
         }
 
         public Task<string?> GetProjectIdByName(string projectName)

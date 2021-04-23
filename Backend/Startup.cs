@@ -4,6 +4,7 @@ using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Repositories;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -185,44 +186,44 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
-            // Word Types
-            services.AddTransient<IWordContext, WordContext>();
-            services.AddTransient<IWordService, WordService>();
-            services.AddTransient<IWordRepository, WordRepository>();
-
-            // User types
-            services.AddTransient<IUserContext, UserContext>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddTransient<IUserService, UserService>();
+            // Email types
+            services.AddTransient<IEmailContext, EmailContext>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IInviteService, InviteService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
-            // User edit types
-            services.AddTransient<IUserEditContext, UserEditContext>();
-            services.AddTransient<IUserEditService, UserEditService>();
-            services.AddTransient<IUserEditRepository, UserEditRepository>();
-
-            // User role types
-            services.AddTransient<IUserRoleContext, UserRoleContext>();
-            services.AddTransient<IUserRoleService, UserRoleService>();
-
-            // Project types
-            services.AddTransient<IProjectContext, ProjectContext>();
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<ISemDomParser, SemDomParser>();
+            // Password Reset types
+            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
+            services.AddTransient<IPasswordResetService, PasswordResetService>();
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();
 
-            // Email types
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IEmailContext, EmailContext>();
+            // Project types
+            services.AddTransient<IProjectContext, ProjectContext>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<ISemanticDomainService, SemanticDomainService>();
 
-            // Password ResetTypes
-            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
-            services.AddTransient<IPasswordResetService, PasswordResetService>();
+            // User types
+            services.AddTransient<IUserContext, UserContext>();
+            services.AddTransient<IUserRepository, UserRepository>();
+
+            // User Edit types
+            services.AddTransient<IUserEditContext, UserEditContext>();
+            services.AddTransient<IUserEditRepository, UserEditRepository>();
+            services.AddTransient<IUserEditService, UserEditService>();
+
+            // User Role types
+            services.AddTransient<IUserRoleContext, UserRoleContext>();
+            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+
+            // Word types (includes Frontier types)
+            services.AddTransient<IWordContext, WordContext>();
+            services.AddTransient<IWordRepository, WordRepository>();
+            services.AddTransient<IWordService, WordService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -264,7 +265,7 @@ namespace BackendFramework
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
-            if (CreateAdminUser(app.ApplicationServices.GetService<IUserService>()))
+            if (CreateAdminUser(app.ApplicationServices.GetService<IUserRepository>()))
             {
                 _logger.LogInformation("Stopping application");
                 appLifetime.StopApplication();
@@ -275,7 +276,6 @@ namespace BackendFramework
         /// Create a new user with administrator privileges or change the password of an existing user and grant
         /// administrator privileges.
         /// </summary>
-        /// <param name="userService"></param>
         /// <returns> Whether the application should be stopped. </returns>
         /// <exception cref="EnvironmentNotConfiguredException">
         /// If required environment variables are not set.
@@ -283,7 +283,7 @@ namespace BackendFramework
         /// <exception cref="AdminUserCreationException">
         /// If the requested admin user could not be created or updated.
         /// </exception>
-        private bool CreateAdminUser(IUserService userService)
+        private bool CreateAdminUser(IUserRepository userRepo)
         {
             const string createAdminUsernameArg = "create-admin-username";
             const string createAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
@@ -312,19 +312,19 @@ namespace BackendFramework
                 throw new EnvironmentNotConfiguredException();
             }
 
-            var existingUser = userService.GetAllUsers().Result.Find(x => x.Username == username);
+            var existingUser = userRepo.GetAllUsers().Result.Find(x => x.Username == username);
             if (existingUser != null)
             {
                 _logger.LogInformation($"User {username} already exists. Updating password and granting " +
                                        "admin permissions.");
-                if (userService.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
+                if (userRepo.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
                 {
                     _logger.LogError($"Failed to find user {username}.");
                     throw new AdminUserCreationException();
                 }
 
                 existingUser.IsAdmin = true;
-                if (userService.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
+                if (userRepo.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
                 {
                     _logger.LogError($"Failed to find user {username}.");
                     throw new AdminUserCreationException();
@@ -335,7 +335,7 @@ namespace BackendFramework
 
             _logger.LogInformation($"Creating admin user: {username} ({adminEmail})");
             var user = new User { Username = username, Password = password, Email = adminEmail, IsAdmin = true };
-            var returnedUser = userService.Create(user).Result;
+            var returnedUser = userRepo.Create(user).Result;
             if (returnedUser is null)
             {
                 _logger.LogError($"Failed to create admin user {username}, {adminEmail}.");
