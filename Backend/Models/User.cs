@@ -176,6 +176,9 @@ namespace BackendFramework.Models
     }
 
     /// <summary> Contains username and password for authentication. </summary>
+    /// <remarks>
+    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+    /// </remarks>
     public class Credentials
     {
         public string Username { get; set; }
