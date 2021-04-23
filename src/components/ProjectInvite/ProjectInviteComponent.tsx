@@ -60,17 +60,17 @@ export default class ProjectInvite extends React.Component<
     const projectId = this.getLastURLParam(pathname);
 
     const status = await Backend.validateLink(projectId, token);
-    if (status.IsTokenValid) {
+    if (status.isTokenValid) {
       this.setState({
         isValidLink: true,
       });
     }
-    if (status.IsUserRegistered) {
+    if (status.isUserRegistered) {
       this.setState({
         isAlreadyUser: true,
       });
     }
-    if (status.IsTokenValid && status.IsUserRegistered) {
+    if (status.isTokenValid && status.isUserRegistered) {
       history.push(Path.Login);
     }
   }

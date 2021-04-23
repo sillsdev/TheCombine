@@ -1,4 +1,4 @@
 ﻿export interface EmailInviteStatus {
-  IsTokenValid: boolean;
-  IsUserRegistered: boolean;
+  isTokenValid: boolean;
+  isUserRegistered: boolean;
 }
