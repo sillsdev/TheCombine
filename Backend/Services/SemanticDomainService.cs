@@ -8,9 +8,6 @@ namespace BackendFramework.Services
     /// <summary> UNUSED: Creates a tree structure JSON object of semantic domains used by the front end </summary>
     public class SemanticDomainService : ISemanticDomainService
     {
-        public SemanticDomainService()
-        { }
-
         /// <summary> Return <see cref="SemanticDomainWithSubdomains"/> object from a
         /// <see cref="SemanticDomain"/> list of a <see cref="Project"/> </summary>
         public List<SemanticDomainWithSubdomains> ParseSemanticDomains(Project proj)

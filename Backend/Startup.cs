@@ -277,7 +277,6 @@ namespace BackendFramework
         /// Create a new user with administrator privileges or change the password of an existing user and grant
         /// administrator privileges.
         /// </summary>
-        /// <param name="userService"></param>
         /// <returns> Whether the application should be stopped. </returns>
         /// <exception cref="EnvironmentNotConfiguredException">
         /// If required environment variables are not set.

@@ -15,12 +15,11 @@ namespace Backend.Tests.Controllers
     {
         private IWordRepository _wordRepo = null!;
         private WordService _wordService = null!;
-        private WordController _wordController = null!;
-        private AudioController _audioController = null!;
-
         private IProjectRepository _projRepo = null!;
         private string _projId = null!;
         private PermissionServiceMock _permissionService = null!;
+        private WordController _wordController = null!;
+        private AudioController _audioController = null!;
 
         [SetUp]
         public void Setup()
@@ -42,7 +41,7 @@ namespace Backend.Tests.Controllers
 
         private static string RandomString(int length = 16)
         {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..length];
         }
 
         private static Word RandomWord()

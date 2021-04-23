@@ -27,7 +27,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Generates invite link and sends email containing link </summary>
         /// <remarks> PUT: v1/invite </remarks>
-        [HttpPut()]
+        [HttpPut]
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
             var projectId = data.ProjectId;
@@ -57,22 +57,21 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            var users = await _userRepo.GetAllUsers();
-            var status = new bool[2];
             var activeTokenExists = false;
-            var userIsRegistered = false;
             var tokenObj = new EmailInvite();
-            var currentUser = new User();
-
             foreach (var tok in project.InviteTokens)
             {
                 if (tok.Token == token && DateTime.Now < tok.ExpireTime)
                 {
-                    tokenObj = tok;
                     activeTokenExists = true;
+                    tokenObj = tok;
                     break;
                 }
             }
+
+            var users = await _userRepo.GetAllUsers();
+            var currentUser = new User();
+            var userIsRegistered = false;
             foreach (var user in users)
             {
                 if (user.Email == tokenObj.Email)
@@ -83,21 +82,17 @@ namespace BackendFramework.Controllers
                 }
             }
 
-            status[0] = activeTokenExists;
-            status[1] = userIsRegistered;
-
+            var status = new[] { activeTokenExists, userIsRegistered };
             if (activeTokenExists && !userIsRegistered)
             {
                 return new OkObjectResult(status);
             }
-
             if (activeTokenExists && userIsRegistered
                                   && !currentUser.ProjectRoles.ContainsKey(projectId)
                                   && await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
                 return new OkObjectResult(status);
             }
-
             status[0] = false;
             status[1] = false;
             return new OkObjectResult(status);

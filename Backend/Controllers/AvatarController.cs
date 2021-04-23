@@ -18,9 +18,9 @@ namespace BackendFramework.Controllers
         private readonly IUserRepository _userRepo;
         private readonly IPermissionService _permissionService;
 
-        public AvatarController(IUserRepository service, IPermissionService permissionService)
+        public AvatarController(IUserRepository userRepo, IPermissionService permissionService)
         {
-            _userRepo = service;
+            _userRepo = userRepo;
             _permissionService = permissionService;
         }
 

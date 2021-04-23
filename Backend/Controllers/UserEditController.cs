@@ -14,19 +14,19 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserEditController : Controller
     {
-        private readonly IUserEditRepository _editRepo;
-        private readonly IUserEditService _editService;
+        private readonly IUserEditRepository _userEditRepo;
+        private readonly IUserEditService _userEditService;
         private readonly IProjectRepository _projRepo;
         private readonly IPermissionService _permissionService;
         private readonly IUserRepository _userRepo;
         private readonly IUserService _userService;
 
-        public UserEditController(IUserEditRepository editRepo, IUserEditService editService,
+        public UserEditController(IUserEditRepository userEditRepo, IUserEditService userEditService,
             IProjectRepository projRepo, IPermissionService permissionService,
             IUserRepository userRepo, IUserService userService)
         {
-            _editRepo = editRepo;
-            _editService = editService;
+            _userEditRepo = userEditRepo;
+            _userEditService = userEditService;
             _projRepo = projRepo;
             _permissionService = permissionService;
             _userRepo = userRepo;
@@ -51,7 +51,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _editRepo.GetAllUserEdits(projectId));
+            return new ObjectResult(await _userEditRepo.GetAllUserEdits(projectId));
         }
 
         /// <summary> Delete all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
@@ -76,7 +76,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _editRepo.DeleteAllUserEdits(projectId));
+            return new ObjectResult(await _userEditRepo.DeleteAllUserEdits(projectId));
 #else
            return new NotFoundResult();
 #endif
@@ -100,7 +100,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            var userEdit = await _editRepo.GetUserEdit(projectId, userEditId);
+            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (userEdit is null)
             {
                 return new NotFoundObjectResult(userEditId);
@@ -121,7 +121,7 @@ namespace BackendFramework.Controllers
 
             // Generate the new userEdit
             var userEdit = new UserEdit { ProjectId = projectId };
-            await _editRepo.Create(userEdit);
+            await _userEditRepo.Create(userEdit);
             // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userRepo.GetUser(currentUserId);
@@ -171,13 +171,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure userEdit exists
-            var toBeMod = await _editRepo.GetUserEdit(projectId, userEditId);
+            var toBeMod = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (toBeMod is null)
             {
                 return new NotFoundObjectResult(userEditId);
             }
 
-            var (isSuccess, editIndex) = await _editService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+            var (isSuccess, editIndex) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
 
             // If the replacement was successful
             if (isSuccess)
@@ -214,7 +214,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure userEdit exists.
-            var document = await _editRepo.GetUserEdit(projectId, userEditId);
+            var document = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (document is null)
             {
                 return new NotFoundResult();
@@ -235,12 +235,12 @@ namespace BackendFramework.Controllers
             // Add new step to or update step in goal.
             if (stepIndex == maxStepIndex)
             {
-                await _editService.AddStepToGoal(
+                await _userEditService.AddStepToGoal(
                     projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString);
             }
             else
             {
-                await _editService.UpdateStepInGoal(
+                await _userEditService.UpdateStepInGoal(
                     projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString, stepIndex);
             }
 
@@ -264,7 +264,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _editRepo.Delete(projectId, userEditId))
+            if (await _userEditRepo.Delete(projectId, userEditId))
             {
                 return new OkResult();
             }

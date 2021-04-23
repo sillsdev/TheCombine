@@ -26,7 +26,8 @@ namespace Backend.Tests.Controllers
             _permissionService = new PermissionServiceMock();
             _userRepo = new UserRepositoryMock();
             _userService = new UserServiceMock(_userRepo);
-            _userController = new UserController(_userRepo, _userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
+            _userController = new UserController(
+                _userRepo, _userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
             _avatarController = new AvatarController(_userRepo, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
@@ -57,10 +58,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAvatarImport()
         {
-            var filePath = Path.Combine(Util.AssetsDir, "combine.png");
+            const string fileName = "combine.png";
+            var filePath = Path.Combine(Util.AssetsDir, fileName);
             using var stream = File.OpenRead(filePath);
 
-            var formFile = new FormFile(stream, 0, stream.Length, "dave", "combine.png");
+            var formFile = new FormFile(stream, 0, stream.Length, "dave", fileName);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;

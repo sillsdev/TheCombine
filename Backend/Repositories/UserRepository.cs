@@ -6,7 +6,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
 
-namespace BackendFramework.Services
+namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="User"/>s </summary>
     public class UserRepository : IUserRepository
@@ -36,7 +36,7 @@ namespace BackendFramework.Services
 
         /// <summary> Finds <see cref="User"/> with specified userId </summary>
         /// <param name="userId"> User ID to retrieve. </param>
-        /// <param name="sanitize"> Whether to sanitize (remove) sensitive information for the User instance. </param>
+        /// <param name="sanitize"> Whether to sanitize (remove) sensitive information from the User instance. </param>
         public async Task<User?> GetUser(string userId, bool sanitize = true)
         {
             var filterDef = new FilterDefinitionBuilder<User>();

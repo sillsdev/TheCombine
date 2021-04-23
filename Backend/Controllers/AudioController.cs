@@ -29,10 +29,10 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/audio/download </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/audio/download/{fileName} </remarks>
         /// <returns> Audio file stream. </returns>
         [AllowAnonymous]
-        [HttpGet("download")]
+        [HttpGet("download/{fileName}")]
         public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -162,7 +163,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => new NotFoundObjectResult(projectId),
                 ResultOfUpdate.Updated => new OkObjectResult(projectId),
-                _ => new StatusCodeResult(304)
+                _ => new StatusCodeResult((int)HttpStatusCode.NotModified)
             };
         }
 

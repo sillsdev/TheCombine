@@ -29,7 +29,7 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private ILogger<LiftController> _logger = null!;
 
-        private string _projName = "LiftControllerTests";
+        private const string _projName = "LiftControllerTests";
         private string _projId = null!;
 
         [SetUp]
@@ -57,7 +57,7 @@ namespace Backend.Tests.Controllers
         {
             var project = new Project
             {
-                Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4)
+                Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..4]
             };
             return project;
         }
