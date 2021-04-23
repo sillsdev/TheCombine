@@ -38,11 +38,6 @@
       import_role:
         name: docker_install
 
-    - name: install Kubernetes Tools
-      import_role:
-        name: k8s_install
-      when: install_k8s
-
     - name: create combine user
       import_role:
         name: combine_user

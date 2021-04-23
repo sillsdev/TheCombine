@@ -48,7 +48,6 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
-install_k8s: yes
 install_minikube: yes
 install_microk8s: no
 
