@@ -75,7 +75,12 @@ spec:
             - mountPath: /home/app/.CombineFiles
               name: backend-data
       restartPolicy: Always
-      imagePullSecrets: {{ image_pull_secrets }}
+{% if image_pull_secrets is defined and image_pull_secrets | length %}
+      imagePullSecrets:
+{% for pull_secret in image_pull_secrets %}
+         - name: {{ pull_secret }}
+{% endfor %}
+{% endif %}
 {% if node_site is defined and node_site | length %}
       nodeSelector:
         site: {{ node_site }}

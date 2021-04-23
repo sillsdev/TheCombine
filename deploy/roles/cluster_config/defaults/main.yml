@@ -8,7 +8,7 @@ aws_ecr_profile: ecr_read_only
 aws_s3_profile: s3_read_write
 
 image_pull_secrets:
-  - name: awsecr_creds
+  - awsecr-cred
 # secret name in the Rancher POC
 # - name: us-east-1-ecr-thecombine-token
 

@@ -70,7 +70,16 @@ spec:
             - mountPath: /var/www/certbot
               name: certbot-data
       restartPolicy: Always
-      imagePullSecrets: {{ image_pull_secrets }}
+{% if image_pull_secrets is defined and image_pull_secrets | length %}
+      imagePullSecrets:
+{% for secret in image_pull_secrets %}
+         - name: {{ secret }}
+{% endfor %}
+{% endif %}
+{% if node_site is defined and node_site | length %}
+      nodeSelector:
+        site: {{ node_site }}
+{% endif %}
       volumes:
         - name: letsencrypt
           persistentVolumeClaim:
