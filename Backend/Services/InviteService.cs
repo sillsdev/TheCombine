@@ -42,9 +42,11 @@ namespace BackendFramework.Services
             message.Subject = "TheCombine Project Invite";
             message.Body = new TextPart("plain")
             {
-                Text = $"You have been invited to a TheCombine project called {project.Name}. \n" +
-                       $"To become a member of this project, go to {domain}{link}. \n\n" +
-                       $"Message from Project Admin: {emailMessage} \n\n" +
+                Text = $"You have been invited to a TheCombine project called {project.Name}.\n" +
+                       $"To become a member of this project, go to {domain}{link}.\n" +
+                       "During registration, you must use the email address this message was received at for your user " +
+                       "profile.\n\n" +
+                       $"Message from Project Admin: {emailMessage}\n\n" +
                        "If you did not expect an invite please ignore this email."
             };
             return await _emailService.SendEmail(message);
