@@ -3,6 +3,7 @@ import axios from "axios";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
+import { EmailInviteStatus } from "types/invite";
 import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Project } from "types/project";
@@ -138,7 +139,7 @@ export async function emailInviteToProject(
 export async function validateLink(
   projectId: string,
   token: string
-): Promise<boolean[]> {
+): Promise<EmailInviteStatus> {
   let resp = await backendServer.put(
     `invite/${projectId}/validate/${token}`,
     "",
