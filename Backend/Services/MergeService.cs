@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,14 +11,11 @@ namespace BackendFramework.Services
     public class MergeService : IMergeService
     {
         private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
-        private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
 
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo,
-            IProjectRepository projRepo, IWordRepository wordRepo)
+        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IWordRepository wordRepo)
         {
             _mergeBlacklistRepo = mergeBlacklistRepo;
-            _projRepo = projRepo;
             _wordRepo = wordRepo;
         }
 
@@ -82,6 +80,10 @@ namespace BackendFramework.Services
         public async Task<MergeBlacklistEntry> AddToMergeBlacklist(
             string projectId, string userId, List<string> wordIds)
         {
+            if (wordIds.Count() < 2)
+            {
+                throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
+            }
             var blacklist = await _mergeBlacklistRepo.GetAll(projectId);
             foreach (var entry in blacklist)
             {
@@ -98,6 +100,10 @@ namespace BackendFramework.Services
         /// <returns> A bool, true if in the blacklist. </returns>
         public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds)
         {
+            if (wordIds.Count() < 2)
+            {
+                throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
+            }
             var blacklist = await _mergeBlacklistRepo.GetAll(projectId);
             foreach (var entry in blacklist)
             {
@@ -121,12 +127,23 @@ namespace BackendFramework.Services
                 var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id));
                 if (newIds.Count() > 1)
                 {
-                    entry.WordIds = (List<string>)newIds;
+                    entry.WordIds = new List<string>(newIds);
                     newBlacklist.Add(entry);
                 }
             }
             await _mergeBlacklistRepo.Replace(projectId, newBlacklist);
             return newBlacklist;
+        }
+
+        [Serializable]
+        public class InvalidBlacklistEntryError : Exception
+        {
+            public InvalidBlacklistEntryError() { }
+
+            public InvalidBlacklistEntryError(string message) : base(message) { }
+
+            public InvalidBlacklistEntryError(string message, Exception innerException) : base(message, innerException)
+            { }
         }
     }
 }

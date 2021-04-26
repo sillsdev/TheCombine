@@ -28,8 +28,9 @@ namespace BackendFramework.Repositories
         public async Task<Word?> GetWord(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(filterDef.Eq(
-                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, projectId),
+                filterDef.Eq(x => x.Id, wordId));
 
             var wordList = await _wordDatabase.Words.FindAsync(filter);
             try
@@ -146,8 +147,9 @@ namespace BackendFramework.Repositories
         public async Task<bool> DeleteFrontier(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(filterDef.Eq(
-                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.ProjectId, projectId),
+                filterDef.Eq(x => x.Id, wordId));
 
             var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;

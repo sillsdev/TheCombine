@@ -15,14 +15,11 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class MergeController : Controller
     {
-        private readonly IProjectRepository _projRepo;
         private readonly IMergeService _mergeService;
         private readonly IPermissionService _permissionService;
 
-        public MergeController(
-            IProjectRepository projRepo, IMergeService mergeService, IPermissionService permissionService)
+        public MergeController(IMergeService mergeService, IPermissionService permissionService)
         {
-            _projRepo = projRepo;
             _mergeService = mergeService;
             _permissionService = permissionService;
         }
@@ -38,13 +35,6 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
             try
             {
                 var newWords = await _mergeService.Merge(projectId, mergeWordsList);
@@ -54,6 +44,59 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestResult();
             }
+        }
+
+        /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/add </remarks>
+        /// <returns> List of word ids added to blacklist. </returns>
+        [HttpPut("blacklist/add")]
+        public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody] List<string> wordIds)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            {
+                return new ForbidResult();
+            }
+
+            var userId = _permissionService.GetUserId(HttpContext);
+
+            var blacklistEntry = await _mergeService.AddToMergeBlacklist(projectId, userId, wordIds);
+            if (blacklistEntry is null)
+            {
+                return new BadRequestResult();
+            }
+            return new OkObjectResult(blacklistEntry.WordIds);
+        }
+
+        /// <summary> Check if a List of <see cref="Word"/>Ids in merge blacklist. </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/check </remarks>
+        /// <returns> A bool: whether the List is in the blacklist. </returns>
+        [HttpPut("blacklist/check")]
+        public async Task<IActionResult> BlacklistCheck(string projectId, [FromBody] List<string> wordIds)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            {
+                return new ForbidResult();
+            }
+
+            var userId = _permissionService.GetUserId(HttpContext);
+
+            var isInBlacklist = await _mergeService.IsInMergeBlacklist(projectId, wordIds);
+            return new OkObjectResult(isInBlacklist);
+        }
+
+        /// <summary> Update merge blacklist. </summary>
+        /// <remarks> Get: v1/projects/{projectId}/merge/blacklist/update </remarks>
+        /// <returns> Number of entries. </returns>
+        [HttpGet("blacklist/update")]
+        public async Task<IActionResult> BlacklistUpdate(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            {
+                return new ForbidResult();
+            }
+
+            var entries = await _mergeService.UpdateMergeBlacklist(projectId);
+            return new OkObjectResult(entries.Count());
         }
     }
 }

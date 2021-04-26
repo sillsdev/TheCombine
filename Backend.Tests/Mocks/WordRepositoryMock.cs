@@ -83,14 +83,15 @@ namespace Backend.Tests.Mocks
         public Task<bool> DeleteFrontier(string projectId, string wordId)
         {
             var origLength = _frontier.Count;
-            _frontier.RemoveAll(word => word.Id == wordId);
+            _frontier.RemoveAll(word => word.ProjectId == projectId && word.Id == wordId);
             return Task.FromResult(origLength != _frontier.Count);
         }
 
         public Task<long> DeleteFrontier(string projectId, List<string> wordIds)
         {
             long deletedCount = 0;
-            wordIds.ForEach(id => deletedCount += _frontier.RemoveAll(word => word.Id == id));
+            wordIds.ForEach(id => deletedCount += _frontier.RemoveAll(
+                word => word.ProjectId == projectId && word.Id == id));
             return Task.FromResult(deletedCount);
         }
 

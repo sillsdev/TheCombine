@@ -215,6 +215,32 @@ export async function mergeWords(
   return resp.data;
 }
 
+/** Adds a list of wordIds to current project's merge blacklist. */
+export async function blacklistAdd(wordIds: string[]) {
+  await backendServer.put(
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/add`,
+    wordIds,
+    { headers: authHeader() }
+  );
+}
+
+/** Checks if list of wordIds is in current project's merge blacklist. */
+export async function blacklistCheck(wordIds: string[]): Promise<boolean> {
+  const response = await backendServer.put(
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/check`,
+    wordIds,
+    { headers: authHeader() }
+  );
+  return response.data;
+}
+
+/** Updates current project's merge blacklist based on the frontier. */
+export async function blacklistUpdate() {
+  await backendServer.get(
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/update`
+  );
+}
+
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
