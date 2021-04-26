@@ -8,6 +8,17 @@ import { createBrowserHistory } from "history";
  * information.
  */
 let history = createBrowserHistory();
+// set up analytics for page navigation
+let prevPath = "";
+history.listen((location) => {
+  if (location.pathname !== prevPath) {
+    analytics.track("navigate", {
+      source: prevPath,
+      destination: location.pathname,
+    });
+    prevPath = location.pathname;
+  }
+});
 export default history;
 
 export enum Path {
@@ -15,7 +26,7 @@ export enum Path {
   GoalCurrent = "/app/goals/current",
   Goals = "/app/goals",
   Login = "/login",
-  ProjInvite = "/app/invite",
+  ProjInvite = "/invite",
   ProjScreen = "/app",
   ProjSettings = "/app/project-settings",
   PwRequest = "/forgot/request",

@@ -5,7 +5,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
 
-namespace BackendFramework.Services
+namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="UserEdit"/>s </summary>
     public class UserEditRepository : IUserEditRepository
