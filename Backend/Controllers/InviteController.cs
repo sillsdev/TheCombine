@@ -38,32 +38,29 @@ namespace BackendFramework.Controllers
             }
 
             var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
-
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
-
             return new OkObjectResult(linkWithIdentifier);
         }
 
-        /// <summary> Validates token in url and adds user to project </summary>
+        /// <summary> Validates invite token in url and adds user to project </summary>
         /// <remarks> PUT: v1/invite/{projectId}/validate/{token} </remarks>
         [AllowAnonymous]
         [HttpPut("{projectId}/validate/{token}")]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
-
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var activeTokenExists = false;
+            var isTokenValid = false;
             var tokenObj = new EmailInvite();
             foreach (var tok in project.InviteTokens)
             {
                 if (tok.Token == token && DateTime.Now < tok.ExpireTime)
                 {
-                    activeTokenExists = true;
+                    isTokenValid = true;
                     tokenObj = tok;
                     break;
                 }
@@ -71,31 +68,29 @@ namespace BackendFramework.Controllers
 
             var users = await _userRepo.GetAllUsers();
             var currentUser = new User();
-            var userIsRegistered = false;
+            var isUserRegistered = false;
             foreach (var user in users)
             {
                 if (user.Email == tokenObj.Email)
                 {
                     currentUser = user;
-                    userIsRegistered = true;
+                    isUserRegistered = true;
                     break;
                 }
             }
 
-            var status = new[] { activeTokenExists, userIsRegistered };
-            if (activeTokenExists && !userIsRegistered)
+            var status = new EmailInviteStatus(isTokenValid, isUserRegistered);
+            if (isTokenValid && !isUserRegistered)
             {
                 return new OkObjectResult(status);
             }
-            if (activeTokenExists && userIsRegistered
+            if (isTokenValid && isUserRegistered
                                   && !currentUser.ProjectRoles.ContainsKey(projectId)
                                   && await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
                 return new OkObjectResult(status);
             }
-            status[0] = false;
-            status[1] = false;
-            return new OkObjectResult(status);
+            return new OkObjectResult(new EmailInviteStatus(false, false));
         }
 
         /// <remarks>
@@ -114,6 +109,18 @@ namespace BackendFramework.Controllers
                 Message = "";
                 ProjectId = "";
                 Domain = "";
+            }
+        }
+
+        public class EmailInviteStatus
+        {
+            public readonly bool IsTokenValid;
+            public readonly bool IsUserRegistered;
+
+            public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
+            {
+                IsTokenValid = isTokenValid;
+                IsUserRegistered = isUserRegistered;
             }
         }
     }

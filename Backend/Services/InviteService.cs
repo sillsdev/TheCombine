@@ -30,9 +30,7 @@ namespace BackendFramework.Services
             var token = new EmailInvite(2, emailAddress);
             project.InviteTokens.Add(token);
             await _projRepo.Update(project.Id, project);
-
-            var linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
-            return linkWithIdentifier;
+            return $"/invite/{project.Id}/{token.Token}";
         }
 
         public async Task<bool> EmailLink(
@@ -44,9 +42,10 @@ namespace BackendFramework.Services
             message.Subject = "TheCombine Project Invite";
             message.Body = new TextPart("plain")
             {
-                Text = $"You have been invited to a TheCombine project called {project.Name}. \n" +
-                       $"To become a member of this project, go to {domain}{link}. \n\n" +
-                       $"Message from Project Admin: {emailMessage} \n\n" +
+                Text = $"You have been invited to a TheCombine project called {project.Name}.\n" +
+                       $"To become a member of this project, go to {domain}{link}.\n" +
+                       $"Use this email address during registration: {emailAddress}.\n\n" +
+                       $"Message from Project Admin: {emailMessage}\n\n" +
                        "If you did not expect an invite please ignore this email."
             };
             return await _emailService.SendEmail(message);
