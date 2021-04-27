@@ -166,17 +166,17 @@ namespace Backend.Tests.Controllers
             var frontier = _wordRepo.GetFrontier(_projId).Result;
 
             // Ensure the word is valid
-            Assert.IsTrue(frontier.Count == 1);
-            Assert.IsTrue(frontier[0].Id != origWord.Id);
-            Assert.IsTrue(frontier[0].History.Count == 1);
+            Assert.That(frontier, Has.Count.EqualTo(1));
+            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
+            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
 
             // Test the frontier
             Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
 
             // Ensure the deleted word is in the frontier
-            Assert.IsTrue(frontier.Count == 1);
-            Assert.IsTrue(frontier[0].Id != origWord.Id);
-            Assert.IsTrue(frontier[0].History.Count == 1);
+            Assert.That(frontier, Has.Count.EqualTo(1));
+            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
+            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }
 
         [Test]

@@ -184,9 +184,10 @@ namespace Backend.Tests.Controllers
             var modProject = project1!.Clone();
             modProject.Name = "Proj";
             _ = _projController.Put(modProject.Id, modProject);
-
-            Assert.AreEqual(((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value, true);
-            Assert.AreEqual(((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value, false);
+            var isOldProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value;
+            Assert.IsTrue((bool)isOldProjDup);
+            var isNewProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value;
+            Assert.IsFalse((bool)isNewProjDup);
         }
     }
 }

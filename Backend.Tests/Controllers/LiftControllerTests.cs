@@ -389,7 +389,7 @@ namespace Backend.Tests.Controllers
             File.Delete(exportedFilePath);
 
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
-            Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
+            Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
             // We are currently only testing guids on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
