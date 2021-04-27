@@ -1,5 +1,4 @@
 import * as backend from "backend";
-import * as LocalStorage from "backend/localStorage";
 import { asyncUpdateGoal } from "components/GoalTimeline/GoalsActions";
 import DupFinder, {
   DefaultParams,
@@ -281,12 +280,10 @@ function getMergeWords(
 
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    // Generate blacklist.
     const mergeTree = getState().mergeDuplicateGoal;
-    const wordIds = Object.keys(mergeTree.data.words);
-    const blacklist = LocalStorage.getMergeDupsBlacklist();
-    blacklistSetAndAllSubsets(blacklist, wordIds);
-    LocalStorage.setMergeDupsBlacklist(blacklist);
+
+    // Add to blacklist; no need to await.
+    backend.blacklistAdd(Object.keys(mergeTree.data.words));
 
     // Merge words.
     const words = Object.keys(mergeTree.tree.words);
@@ -330,30 +327,6 @@ function addCompletedMergeToGoal(
   };
 }
 
-// Blacklist Functions
-
-function generateBlacklistHash(wordIds: string[]) {
-  return wordIds.sort().reduce((val, acc) => `${acc}:${val}`, "");
-}
-
-// Recursively blacklist all subsets of length at least 2.
-function blacklistSetAndAllSubsets(
-  blacklist: Hash<boolean>,
-  wordIds: string[]
-) {
-  let hash = generateBlacklistHash(wordIds);
-  blacklist[hash] = true;
-  if (wordIds.length > 2) {
-    wordIds.forEach((id) => {
-      const subset = wordIds.filter((i) => i !== id);
-      hash = generateBlacklistHash(subset);
-      if (!blacklist[hash]) {
-        blacklistSetAndAllSubsets(blacklist, subset);
-      }
-    });
-  }
-}
-
 // Used in MergeDups cases of GoalActions functions
 
 export function dispatchMergeStepData(goal: MergeDups) {
@@ -368,6 +341,8 @@ export function dispatchMergeStepData(goal: MergeDups) {
 
 // Modifies the mutable input.
 export async function loadMergeDupsData(goal: MergeDups) {
+  await backend.blacklistUpdate();
+
   // Until we develop a better backend algorithm, run the frontend one twice,
   // the first time with greater similarity restriction.
   let newGroups = await getDupGroups(maxNumSteps(goal.goalType), 0);
@@ -396,8 +371,6 @@ async function getDupGroups(
 
   const usedIDs: string[] = [];
   const newGroups: Word[][] = [];
-  const blacklist = LocalStorage.getMergeDupsBlacklist();
-
   for (const group of groups) {
     // Remove words that are already included.
     const newGroup = group.filter((w) => !usedIDs.includes(w.id));
@@ -407,8 +380,7 @@ async function getDupGroups(
 
     // Add if not blacklisted.
     const groupIds = newGroup.map((w) => w.id);
-    const groupHash = generateBlacklistHash(groupIds);
-    if (!blacklist[groupHash]) {
+    if (!(await backend.blacklistCheck(groupIds))) {
       newGroups.push(newGroup);
       usedIDs.push(...groupIds);
     }

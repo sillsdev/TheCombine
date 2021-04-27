@@ -1,10 +1,8 @@
-import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { User } from "types/user";
 import { getUser } from "backend";
 
 export enum LocalStorageKey {
   Avatar = "avatar",
-  MergeDupsBlacklist = "mergeDupsBlacklist",
   ProjectId = "projectId",
   User = "user",
 }
@@ -31,15 +29,6 @@ export function getCurrentUser(): User | undefined {
 export function setCurrentUser(user: User) {
   const userString = JSON.stringify(user);
   localStorage.setItem(LocalStorageKey.User, userString);
-}
-
-export function getMergeDupsBlacklist(): Hash<boolean> {
-  const blacklist = localStorage.getItem(LocalStorageKey.MergeDupsBlacklist);
-  return blacklist ? JSON.parse(blacklist) : {};
-}
-export function setMergeDupsBlacklist(blacklist: Hash<boolean>) {
-  const blacklistString = JSON.stringify(blacklist);
-  localStorage.setItem(LocalStorageKey.MergeDupsBlacklist, blacklistString);
 }
 
 export function getProjectId(): string {
