@@ -5,6 +5,6 @@ namespace BackendFramework.Interfaces
 {
     public interface IMergeBlacklistContext
     {
-        IMongoCollection<MergeBlacklistEntry> MergeBlacklistEntries { get; }
+        IMongoCollection<MergeBlacklistEntry> MergeBlacklist { get; }
     }
 }

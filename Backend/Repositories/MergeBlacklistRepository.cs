@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="MergeBlacklist"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="MergeBlacklistEntry"/>s. </summary>
     public class MergeBlacklistRepository : IMergeBlacklistRepository
     {
         private readonly IMergeBlacklistContext _mergeBlacklistDatabase;
@@ -21,7 +21,7 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
         public async Task<List<MergeBlacklistEntry>> GetAll(string projectId)
         {
-            return await _mergeBlacklistDatabase.MergeBlacklistEntries.Find(
+            return await _mergeBlacklistDatabase.MergeBlacklist.Find(
                 u => u.ProjectId == projectId).ToListAsync();
         }
 
@@ -29,8 +29,7 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation. </returns>
         public async Task<bool> DeleteAll(string projectId)
         {
-            var deleted = await _mergeBlacklistDatabase.MergeBlacklistEntries.DeleteManyAsync(
-                u => u.ProjectId == projectId);
+            var deleted = await _mergeBlacklistDatabase.MergeBlacklist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
@@ -42,7 +41,7 @@ namespace BackendFramework.Repositories
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
 
-            var blacklistEntryList = await _mergeBlacklistDatabase.MergeBlacklistEntries.FindAsync(filter);
+            var blacklistEntryList = await _mergeBlacklistDatabase.MergeBlacklist.FindAsync(filter);
             try
             {
                 return await blacklistEntryList.FirstAsync();
@@ -57,7 +56,7 @@ namespace BackendFramework.Repositories
         /// <returns> The MergeBlacklistEntry created. </returns>
         public async Task<MergeBlacklistEntry> Create(MergeBlacklistEntry blacklistEntry)
         {
-            await _mergeBlacklistDatabase.MergeBlacklistEntries.InsertOneAsync(blacklistEntry);
+            await _mergeBlacklistDatabase.MergeBlacklist.InsertOneAsync(blacklistEntry);
             return blacklistEntry;
         }
 
@@ -69,7 +68,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
-            var deleted = await _mergeBlacklistDatabase.MergeBlacklistEntries.DeleteOneAsync(filter);
+            var deleted = await _mergeBlacklistDatabase.MergeBlacklist.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -83,7 +82,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.UserId, blacklistEntry.UserId)
                 .Set(x => x.WordIds, blacklistEntry.WordIds);
 
-            var updateResult = await _mergeBlacklistDatabase.MergeBlacklistEntries.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _mergeBlacklistDatabase.MergeBlacklist.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)
             {
                 return ResultOfUpdate.NotFound;
@@ -100,7 +99,7 @@ namespace BackendFramework.Repositories
         public async Task<bool> Replace(string projectId, List<MergeBlacklistEntry> blacklist)
         {
             await DeleteAll(projectId);
-            await _mergeBlacklistDatabase.MergeBlacklistEntries.InsertManyAsync(blacklist);
+            await _mergeBlacklistDatabase.MergeBlacklist.InsertManyAsync(blacklist);
             return true;
         }
 

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
+    /// <summary> A List of wordIds to avoid in future merges. </summary>
     public class MergeBlacklistEntry
     {
         [BsonId]
@@ -19,22 +22,51 @@ namespace BackendFramework.Models
         [BsonElement("wordIds")]
         public List<string> WordIds { get; set; }
 
-        public MergeBlacklistEntry(string projectId, string userId, List<string> wordIds)
+        public MergeBlacklistEntry()
         {
             Id = "";
-            ProjectId = projectId;
-            UserId = userId;
-            WordIds = wordIds;
+            ProjectId = "";
+            UserId = "";
+            WordIds = new List<string>();
         }
 
         public MergeBlacklistEntry Clone()
         {
-            var ClonedWordIds = new List<string>();
+            var clone = new MergeBlacklistEntry
+            {
+                Id = (string)Id.Clone(),
+                ProjectId = (string)ProjectId.Clone(),
+                UserId = (string)UserId.Clone(),
+                WordIds = new List<string>()
+            };
             foreach (var id in WordIds)
             {
-                ClonedWordIds.Add((string)id.Clone());
+                clone.WordIds.Add((string)id.Clone());
             }
-            return new MergeBlacklistEntry(ProjectId, UserId, ClonedWordIds) { Id = (string)Id.Clone() };
+            return clone;
+        }
+
+        public bool ContentEquals(MergeBlacklistEntry other)
+        {
+            return
+                other.ProjectId.Equals(ProjectId) &&
+                other.UserId.Equals(UserId) &&
+                other.WordIds.Count == WordIds.Count &&
+                other.WordIds.All(WordIds.Contains);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is MergeBlacklistEntry other) || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return other.Id.Equals(Id) && ContentEquals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, ProjectId, UserId, WordIds);
         }
     }
 }

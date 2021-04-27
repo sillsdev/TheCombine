@@ -92,7 +92,7 @@ namespace BackendFramework.Services
                     await _mergeBlacklistRepo.Delete(projectId, entry.Id);
                 }
             }
-            var newEntry = new MergeBlacklistEntry(projectId, userId, wordIds);
+            var newEntry = new MergeBlacklistEntry { ProjectId = projectId, UserId = userId, WordIds = wordIds };
             return await _mergeBlacklistRepo.Create(newEntry);
         }
 
