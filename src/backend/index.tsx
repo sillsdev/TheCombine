@@ -237,7 +237,8 @@ export async function blacklistCheck(wordIds: string[]): Promise<boolean> {
 /** Updates current project's merge blacklist based on the frontier. */
 export async function blacklistUpdate() {
   await backendServer.get(
-    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/update`
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/update`,
+    { headers: authHeader() }
   );
 }
 
