@@ -1,4 +1,3 @@
-import { setProjectId } from "backend/localStorage";
 import {
   ProjectAction,
   SET_CURRENT_PROJECT,
@@ -12,7 +11,6 @@ export const projectReducer = (
 ): Project => {
   switch (action.type) {
     case SET_CURRENT_PROJECT:
-      setProjectId(action.payload.id);
       return action.payload;
     case StoreActionTypes.RESET:
       return { ...defaultProject };

@@ -1,4 +1,5 @@
 import { updateProject } from "backend";
+import { setProjectId } from "backend/localStorage";
 import {
   ProjectAction,
   SET_CURRENT_PROJECT,
@@ -18,5 +19,6 @@ export async function saveChangesToProject(
   dispatch: StoreStateDispatch
 ) {
   dispatch(setCurrentProject(project));
+  setProjectId(project.id);
   await updateProject(project);
 }
