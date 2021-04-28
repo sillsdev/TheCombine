@@ -80,7 +80,7 @@ export default function DragSense(props: DragSenseProps) {
   if (
     isInSidebar &&
     !arraysEqual(
-      sidebar.senses.map((s: { guid: any }) => s.guid),
+      sidebar.senses.map((s) => s.guid),
       props.senses.map((s) => s.guid)
     )
   ) {
