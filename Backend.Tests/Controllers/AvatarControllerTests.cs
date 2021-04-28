@@ -13,29 +13,30 @@ namespace Backend.Tests.Controllers
 {
     public class AvatarControllerTests
     {
-        private IUserService _userService = null!;
-        private UserController _userController = null!;
-        private AvatarController _avatarController = null!;
+        private IUserRepository _userRepo = null!;
         private PermissionServiceMock _permissionService = null!;
+        private AvatarController _avatarController = null!;
+        private UserController _userController = null!;
+
         private User _jwtAuthenticatedUser = null!;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
-            _userService = new UserServiceMock();
-            _userController = new UserController(_userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
-            _avatarController = new AvatarController(_userService, _permissionService)
+            _userRepo = new UserRepositoryMock();
+            _permissionService = new PermissionServiceMock(_userRepo);
+            _avatarController = new AvatarController(_userRepo, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
+            _userController = new UserController(
+                _userRepo, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
 
-            // User controller
             _userController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
-            _userService.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _userService.Authenticate(
+            _userRepo.Create(_jwtAuthenticatedUser);
+            _jwtAuthenticatedUser = _permissionService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
         }
 
@@ -55,10 +56,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAvatarImport()
         {
-            var filePath = Path.Combine(Util.AssetsDir, "combine.png");
+            const string fileName = "combine.png";
+            var filePath = Path.Combine(Util.AssetsDir, fileName);
             using var stream = File.OpenRead(filePath);
 
-            var formFile = new FormFile(stream, 0, stream.Length, "dave", "combine.png");
+            var formFile = new FormFile(stream, 0, stream.Length, "dave", fileName);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;

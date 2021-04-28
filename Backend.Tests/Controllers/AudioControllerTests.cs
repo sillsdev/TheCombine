@@ -13,36 +13,37 @@ namespace Backend.Tests.Controllers
 {
     public class AudioControllerTests
     {
+        private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
-        private WordService _wordService = null!;
-        private WordController _wordController = null!;
-        private AudioController _audioController = null!;
-
-        private IProjectService _projectService = null!;
-        private string _projId = null!;
         private PermissionServiceMock _permissionService = null!;
+        private WordService _wordService = null!;
+        private AudioController _audioController = null!;
+        private WordController _wordController = null!;
+
+        private string _projId = null!;
 
         [SetUp]
         public void Setup()
         {
+            _projRepo = new ProjectRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
-            _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
             _permissionService = new PermissionServiceMock();
-            _wordController = new WordController(_wordRepo, _wordService, _projectService, _permissionService);
+            _wordService = new WordService(_wordRepo);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
+            _wordController = new WordController(_wordRepo, _wordService, _projRepo, _permissionService);
+
+            _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
         }
 
         [TearDown]
         public void TearDown()
         {
-            _projectService.Delete(_projId);
+            _projRepo.Delete(_projId);
         }
 
         private static string RandomString(int length = 16)
         {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..length];
         }
 
         private static Word RandomWord()

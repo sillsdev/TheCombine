@@ -8,11 +8,11 @@ namespace BackendFramework.Services
     /// <summary> More complex functions and application logic for <see cref="UserEdit"/>s </summary>
     public class UserEditService : IUserEditService
     {
-        private readonly IUserEditRepository _repo;
+        private readonly IUserEditRepository _userEditRepo;
 
-        public UserEditService(IUserEditRepository repo)
+        public UserEditService(IUserEditRepository userEditRepo)
         {
-            _repo = repo;
+            _userEditRepo = userEditRepo;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace BackendFramework.Services
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             // Get userEdit to change
-            var oldUserEdit = await _repo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             const int invalidEditIndex = -1;
             var failureResult = new Tuple<bool, int>(false, invalidEditIndex);
             if (oldUserEdit is null)
@@ -50,7 +50,7 @@ namespace BackendFramework.Services
             }
 
             // Replace the old UserEdit object with the new one that contains the new/updated edit
-            var replaceSucceeded = await _repo.Replace(projectId, userEditId, newUserEdit);
+            var replaceSucceeded = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
             if (!replaceSucceeded)
             {
                 indexOfNewestEdit = invalidEditIndex;
@@ -63,7 +63,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string newStep)
         {
-            var oldUserEdit = await _repo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count)
             {
                 return false;
@@ -71,7 +71,7 @@ namespace BackendFramework.Services
 
             var newUserEdit = oldUserEdit.Clone();
             newUserEdit.Edits[goalIndex].StepData.Add(newStep);
-            var updateResult = await _repo.Replace(projectId, userEditId, newUserEdit);
+            var updateResult = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
             return updateResult;
         }
 
@@ -80,7 +80,7 @@ namespace BackendFramework.Services
         public async Task<bool> UpdateStepInGoal(
             string projectId, string userEditId, int goalIndex, string updatedStep, int stepIndex)
         {
-            var oldUserEdit = await _repo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count
                 || stepIndex >= oldUserEdit.Edits[goalIndex].StepData.Count)
             {
@@ -89,7 +89,7 @@ namespace BackendFramework.Services
 
             var newUserEdit = oldUserEdit.Clone();
             newUserEdit.Edits[goalIndex].StepData[stepIndex] = updatedStep;
-            var updateResult = await _repo.Replace(projectId, userEditId, newUserEdit);
+            var updateResult = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
             return updateResult;
         }
     }

@@ -165,9 +165,20 @@ namespace BackendFramework.Models
             hash.Add(Token);
             return hash.ToHashCode();
         }
+
+        /// <summary> Removes avatar path, password, and token. </summary>
+        public void Sanitize()
+        {
+            Avatar = "";
+            Password = "";
+            Token = "";
+        }
     }
 
     /// <summary> Contains username and password for authentication. </summary>
+    /// <remarks>
+    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+    /// </remarks>
     public class Credentials
     {
         public string Username { get; set; }
@@ -183,7 +194,7 @@ namespace BackendFramework.Models
     /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
     public class WithUser
     {
-        public User UpdatedUser;
+        public readonly User UpdatedUser;
 
         public WithUser(User user)
         {

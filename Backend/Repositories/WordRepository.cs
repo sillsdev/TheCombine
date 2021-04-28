@@ -6,7 +6,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
 
-namespace BackendFramework.Services
+namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Word"/>s </summary>
     public class WordRepository : IWordRepository

@@ -21,5 +21,14 @@ namespace Backend.Tests.Models
             var user = new User { Name = Name };
             Assert.IsFalse(user.Equals(null));
         }
+
+        [Test]
+        public void TestSanitize()
+        {
+            var user = new User { Avatar = "ava", Password = "pas", Token = "tok" };
+            Assert.IsFalse(user.Equals(new User()));
+            user.Sanitize();
+            Assert.IsTrue(user.Equals(new User()));
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -14,18 +13,18 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class FrontierController : Controller
     {
-        private readonly IWordRepository _repo;
-        private readonly IWordService _wordService;
-        private readonly IProjectService _projectService;
+        private readonly IProjectRepository _projRepo;
+        private readonly IWordRepository _wordRepo;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
-        public FrontierController(IWordRepository repo, IWordService wordService,
-            IProjectService projServ, IPermissionService permissionService)
+        public FrontierController(IWordRepository wordRepo, IWordService wordService,
+            IProjectRepository projRepo, IPermissionService permissionService)
         {
-            _repo = repo;
-            _wordService = wordService;
-            _projectService = projServ;
+            _projRepo = projRepo;
+            _wordRepo = wordRepo;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns all words in a project's frontier </summary>
@@ -39,13 +38,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _repo.GetFrontier(projectId));
+            return new ObjectResult(await _wordRepo.GetFrontier(projectId));
         }
 
         /// <summary> Adds word to a project's frontier </summary>
@@ -64,14 +63,14 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var project = await _projectService.GetProject(projectId);
+            var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             word.ProjectId = projectId;
-            await _repo.AddFrontier(word);
+            await _wordRepo.AddFrontier(word);
             return new OkObjectResult(word.Id);
 #else
             return new NotFoundResult();
@@ -89,7 +88,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);

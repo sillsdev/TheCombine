@@ -11,26 +11,28 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/users")]
+    [Route("v1/users/{userId}/avatar")]
     [EnableCors("AllowAll")]
     public class AvatarController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepo;
         private readonly IPermissionService _permissionService;
 
-        public AvatarController(IUserService service, IPermissionService permissionService)
+        public AvatarController(IUserRepository userRepo, IPermissionService permissionService)
         {
-            _userService = service;
+            _userRepo = userRepo;
             _permissionService = permissionService;
         }
 
         /// <summary> Returns the url of the users avatar on disk </summary>
-        /// <remarks> GET: v1/users/{userId}/download/avatar </remarks>
+        /// <remarks> GET: v1/users/{userId}/avatar/download </remarks>
         /// <returns> Path to local avatar file </returns>
-        [HttpGet("{userId}/download/avatar")]
+        [HttpGet("download")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-            var avatar = await _userService.GetUserAvatar(userId);
+            var user = await _userRepo.GetUser(userId, false);
+            var avatar = string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
+
             if (avatar is null)
             {
                 return new NotFoundObjectResult(userId);
@@ -43,9 +45,9 @@ namespace BackendFramework.Controllers
         /// <summary>
         /// Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars
         /// </summary>
-        /// <remarks> POST: v1/users/{userId}/upload/avatar </remarks>
+        /// <remarks> POST: v1/users/{userId}/avatar/upload </remarks>
         /// <returns> Path to local avatar file </returns>
-        [HttpPost("{userId}/upload/avatar")]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload fileUpload)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
@@ -66,7 +68,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get user to apply avatar to.
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return new NotFoundObjectResult(userId);
@@ -84,7 +86,7 @@ namespace BackendFramework.Controllers
             // Update the user's avatar file.
             user.Avatar = fileUpload.FilePath;
             user.HasAvatar = true;
-            _ = await _userService.Update(userId, user);
+            _ = await _userRepo.Update(userId, user);
 
             return new OkResult();
         }

@@ -14,20 +14,20 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserEditController : Controller
     {
-        private readonly IUserEditRepository _repo;
-        private readonly IUserEditService _userEditService;
-        private readonly IProjectService _projectService;
+        private readonly IProjectRepository _projRepo;
+        private readonly IUserRepository _userRepo;
+        private readonly IUserEditRepository _userEditRepo;
         private readonly IPermissionService _permissionService;
-        private readonly IUserService _userService;
+        private readonly IUserEditService _userEditService;
 
-        public UserEditController(IUserEditRepository repo, IUserEditService userEditService,
-            IProjectService projectService, IPermissionService permissionService, IUserService userService)
+        public UserEditController(IUserEditRepository userEditRepo, IUserEditService userEditService,
+            IProjectRepository projRepo, IPermissionService permissionService, IUserRepository userRepo)
         {
-            _repo = repo;
-            _userService = userService;
-            _projectService = projectService;
-            _userEditService = userEditService;
+            _projRepo = projRepo;
+            _userRepo = userRepo;
+            _userEditRepo = userEditRepo;
             _permissionService = permissionService;
+            _userEditService = userEditService;
         }
 
         /// <summary> Returns all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
@@ -42,13 +42,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _repo.GetAllUserEdits(projectId));
+            return new ObjectResult(await _userEditRepo.GetAllUserEdits(projectId));
         }
 
         /// <summary> Delete all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
@@ -67,13 +67,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _repo.DeleteAllUserEdits(projectId));
+            return new ObjectResult(await _userEditRepo.DeleteAllUserEdits(projectId));
 #else
            return new NotFoundResult();
 #endif
@@ -91,13 +91,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var userEdit = await _repo.GetUserEdit(projectId, userEditId);
+            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (userEdit is null)
             {
                 return new NotFoundObjectResult(userEditId);
@@ -118,26 +118,26 @@ namespace BackendFramework.Controllers
 
             // Generate the new userEdit
             var userEdit = new UserEdit { ProjectId = projectId };
-            await _repo.Create(userEdit);
+            await _userEditRepo.Create(userEdit);
             // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
-            var currentUser = await _userService.GetUser(currentUserId);
+            var currentUser = await _userRepo.GetUser(currentUserId);
             if (currentUser is null)
             {
                 return new NotFoundObjectResult(currentUserId);
             }
 
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
-            await _userService.Update(currentUserId, currentUser);
+            await _userRepo.Update(currentUserId, currentUser);
 
             // Generate the JWT based on the new userEdit
-            var currentUpdatedUser = await _userService.MakeJwt(currentUser);
+            var currentUpdatedUser = await _permissionService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
             {
                 return new BadRequestObjectResult("Invalid JWT Token supplied.");
             }
 
-            await _userService.Update(currentUserId, currentUpdatedUser);
+            await _userRepo.Update(currentUserId, currentUpdatedUser);
 
             var output = new WithUser(currentUpdatedUser);
             return new OkObjectResult(output);
@@ -161,14 +161,14 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure userEdit exists
-            var toBeMod = await _repo.GetUserEdit(projectId, userEditId);
+            var toBeMod = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (toBeMod is null)
             {
                 return new NotFoundObjectResult(userEditId);
@@ -204,14 +204,14 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists.
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure userEdit exists.
-            var document = await _repo.GetUserEdit(projectId, userEditId);
+            var document = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (document is null)
             {
                 return new NotFoundResult();
@@ -255,13 +255,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _repo.Delete(projectId, userEditId))
+            if (await _userEditRepo.Delete(projectId, userEditId))
             {
                 return new OkResult();
             }

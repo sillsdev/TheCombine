@@ -8,11 +8,11 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class UserRoleServiceMock : IUserRoleService
+    public class UserRoleRepositoryMock : IUserRoleRepository
     {
         private readonly List<UserRole> _userRoles;
 
-        public UserRoleServiceMock()
+        public UserRoleRepositoryMock()
         {
             _userRoles = new List<UserRole>();
         }

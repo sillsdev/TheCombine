@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using MongoDB.Bson;
 
 namespace BackendFramework.Services
 {
     public class PermissionService : IPermissionService
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepo;
+        private readonly IUserRoleRepository _userRoleRepo;
 
-        public PermissionService(IUserService userService)
+        public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
-            _userService = userService;
+            _userRepo = userRepo;
+            _userRoleRepo = userRoleRepo;
         }
 
         // TODO: This appears intrinsic to mongodb implementation and is brittle.
@@ -27,7 +33,7 @@ namespace BackendFramework.Services
             // Get authorization header (i.e. JWT token)
             var jwtToken = request.Request.Headers["Authorization"].ToString();
 
-            // Remove "Bearer" from beginning of token
+            // Remove "Bearer " from beginning of token
             var token = jwtToken.Split(" ")[1];
 
             // Parse JWT for project permissions
@@ -55,7 +61,7 @@ namespace BackendFramework.Services
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return false;
@@ -99,7 +105,7 @@ namespace BackendFramework.Services
         public async Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             var userId = GetUserId(request);
-            var user = await _userService.GetUser(userId);
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return true;
@@ -121,20 +127,98 @@ namespace BackendFramework.Services
             return userId;
         }
 
+        /// <summary> Confirms login credentials are valid. </summary>
+        /// <returns> User when credentials are correct, null otherwise. </returns>
+        public async Task<User?> Authenticate(string username, string password)
+        {
+            // Fetch the stored user.
+            var user = await _userRepo.GetUserByUsername(username);
+
+            // Return null if user with specified username not found.
+            if (user is null)
+            {
+                return null;
+            }
+
+            // Extract the bytes from encoded password.
+            var hashedPassword = Convert.FromBase64String(user.Password);
+
+            // If authentication is successful, generate jwt token.
+            return PasswordHash.ValidatePassword(hashedPassword, password) ? await MakeJwt(user) : null;
+        }
+
+        public async Task<User?> MakeJwt(User user)
+        {
+            const int hoursUntilExpires = 4;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
+            var key = Encoding.ASCII.GetBytes(secretKey);
+
+            // Fetch the projects Id and the roles for each Id
+            var projectPermissionMap = new List<ProjectPermissions>();
+
+            foreach (var (projectRoleKey, projectRoleValue) in user.ProjectRoles)
+            {
+                // Convert each userRoleId to its respective role and add to the mapping
+                var userRole = await _userRoleRepo.GetUserRole(projectRoleKey, projectRoleValue);
+                if (userRole is null)
+                {
+                    return null;
+                }
+
+                var validEntry = new ProjectPermissions(projectRoleKey, userRole.Permissions);
+                projectPermissionMap.Add(validEntry);
+            }
+
+            var claimString = projectPermissionMap.ToJson();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim("UserId", user.Id),
+                    new Claim("UserRoleInfo", claimString)
+                }),
+
+                Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
+
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            // Sanitize user to remove password, avatar path, and old token
+            // Then add updated token.
+            user.Sanitize();
+            user.Token = tokenHandler.WriteToken(token);
+
+            if (await _userRepo.Update(user.Id, user) != ResultOfUpdate.Updated)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
         [Serializable]
         public class InvalidJwtTokenError : Exception
         {
-            public InvalidJwtTokenError()
-            { }
+            public InvalidJwtTokenError() { }
 
-            public InvalidJwtTokenError(string message)
-                : base(message)
-            { }
+            public InvalidJwtTokenError(string message) : base(message) { }
 
-            public InvalidJwtTokenError(string message, Exception innerException)
-                : base(message, innerException)
-            { }
+            public InvalidJwtTokenError(string message, Exception innerException) : base(message, innerException) { }
         }
+    }
+
+    public class ProjectPermissions
+    {
+        public ProjectPermissions(string projectId, List<int> permissions)
+        {
+            ProjectId = projectId;
+            Permissions = permissions;
+        }
+        public string ProjectId { get; }
+        public List<int> Permissions { get; }
     }
 }
 

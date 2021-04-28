@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -14,15 +16,17 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class UserRoleController : Controller
     {
-        private readonly IUserRoleService _userRoleService;
-        private readonly IProjectService _projectService;
+        private readonly IProjectRepository _projRepo;
+        private readonly IUserRepository _userRepo;
+        private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService,
-            IPermissionService permissionService)
+        public UserRoleController(IUserRepository userRepo, IUserRoleRepository userRoleRepo,
+            IProjectRepository projRepo, IPermissionService permissionService)
         {
-            _userRoleService = userRoleService;
-            _projectService = projectService;
+            _projRepo = projRepo;
+            _userRepo = userRepo;
+            _userRoleRepo = userRoleRepo;
             _permissionService = permissionService;
         }
 
@@ -37,13 +41,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _userRoleService.GetAllUserRoles(projectId));
+            return new ObjectResult(await _userRoleRepo.GetAllUserRoles(projectId));
         }
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
@@ -58,13 +62,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _userRoleService.DeleteAllUserRoles(projectId));
+            return new ObjectResult(await _userRoleRepo.DeleteAllUserRoles(projectId));
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
@@ -78,13 +82,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
                 return new NotFoundObjectResult(userRoleId);
@@ -107,13 +111,13 @@ namespace BackendFramework.Controllers
             userRole.ProjectId = projectId;
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            await _userRoleService.Create(userRole);
+            await _userRoleRepo.Create(userRole);
             return new OkObjectResult(userRole.Id);
         }
 
@@ -128,43 +132,76 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _userRoleService.Delete(projectId, userRoleId))
+            if (await _userRoleRepo.Delete(projectId, userRoleId))
             {
                 return new OkResult();
             }
             return new NotFoundObjectResult(userRoleId);
         }
 
-        /// <summary> Updates <see cref="UserRole"/> with specified id </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
+        /// <summary>
+        /// Updates permissions of <see cref="UserRole"/> for <see cref="Project"/> with specified projectId
+        /// and <see cref="User"/> with specified userId.
+        /// </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userId} </remarks>
         /// <returns> Id of updated UserRole </returns>
-        [HttpPut("{userRoleId}")]
-        public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
 
-            // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var result = await _userRoleService.Update(userRoleId, userRole);
+            // Fetch the user -> fetch user role -> update user role
+            var changeUser = await _userRepo.GetUser(userId);
+            if (changeUser is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+
+            string userRoleId;
+            if (changeUser.ProjectRoles.ContainsKey(projectId))
+            {
+                userRoleId = changeUser.ProjectRoles[projectId];
+            }
+            else
+            {
+                // Generate the userRole
+                var usersRole = new UserRole { ProjectId = projectId };
+                usersRole = await _userRoleRepo.Create(usersRole);
+                userRoleId = usersRole.Id;
+
+                // Update the user
+                changeUser.ProjectRoles.Add(projectId, userRoleId);
+                await _userRepo.Update(changeUser.Id, changeUser);
+            }
+            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            if (userRole is null)
+            {
+                return new NotFoundObjectResult(userRoleId);
+            }
+
+            userRole.Permissions = new List<int>(permissions);
+
+            var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {
-                ResultOfUpdate.NotFound => new NotFoundObjectResult(userRoleId),
-                ResultOfUpdate.Updated => new OkObjectResult(userRoleId),
-                _ => new StatusCodeResult(304)
+                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
+                ResultOfUpdate.Updated => new OkObjectResult(userId),
+                _ => new StatusCodeResult((int)HttpStatusCode.NotModified)
             };
         }
     }

@@ -1,32 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
 namespace BackendFramework.Services
 {
     /// <summary> UNUSED: Creates a tree structure JSON object of semantic domains used by the front end </summary>
-    public class SemDomParser : ISemDomParser
+    public class SemanticDomainService : ISemanticDomainService
     {
-        private readonly IProjectService _projectService;
-
-        public SemDomParser(IProjectService projectService)
-        {
-            _projectService = projectService;
-        }
-
         /// <summary> Return <see cref="SemanticDomainWithSubdomains"/> object from a
         /// <see cref="SemanticDomain"/> list of a <see cref="Project"/> </summary>
-        public async Task<List<SemanticDomainWithSubdomains>> ParseSemanticDomains(string projectId)
+        public List<SemanticDomainWithSubdomains> ParseSemanticDomains(Project proj)
         {
-            // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
-            if (proj is null)
-            {
-                throw new Exception("Project not found");
-            }
-
             // Ensure semantic domains exist
             var sdList = proj.SemanticDomains;
             if (sdList.Count == 0)

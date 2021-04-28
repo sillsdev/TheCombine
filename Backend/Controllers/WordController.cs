@@ -15,18 +15,18 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class WordController : Controller
     {
+        private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
-        private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
-        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService,
+        public WordController(IWordRepository repo, IWordService wordService, IProjectRepository projRepo,
             IPermissionService permissionService)
         {
+            _projRepo = projRepo;
             _wordRepo = repo;
-            _wordService = wordService;
-            _projectService = projectService;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
@@ -40,7 +40,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -61,7 +61,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -108,7 +108,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -141,7 +141,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -172,7 +172,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -197,7 +197,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
