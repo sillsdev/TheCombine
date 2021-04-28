@@ -2,7 +2,7 @@ import {
   TreeViewAction,
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
 
 export interface TreeViewState {
@@ -47,7 +47,7 @@ export const treeViewReducer = (
   switch (action.type) {
     case TreeActionType.TRAVERSE_TREE:
       return { ...state, currentDomain: action.payload };
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
     default:
       return state;

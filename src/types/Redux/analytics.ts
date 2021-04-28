@@ -1,4 +1,4 @@
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import {
   AnalyticsActionTypes,
   AnalyticsChangePageAction,
@@ -25,7 +25,7 @@ export const analyticsReducer = (
         currentPage: action.newPage,
       };
 
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
 
     default:

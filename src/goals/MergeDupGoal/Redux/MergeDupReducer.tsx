@@ -8,10 +8,10 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
-  MergeTreeActions,
+  MergeTreeActionTypes,
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import { Word } from "types/word";
 
 const defaultData = { words: {}, senses: {} };
@@ -22,14 +22,14 @@ export const defaultState: MergeTreeState = {
 
 export const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
-  action: StoreAction | MergeTreeAction
+  action: MergeTreeAction | StoreAction
 ): MergeTreeState => {
   switch (action.type) {
-    case MergeTreeActions.CLEAR_TREE: {
+    case MergeTreeActionTypes.CLEAR_TREE: {
       return defaultState;
     }
 
-    case MergeTreeActions.COMBINE_SENSE: {
+    case MergeTreeActionTypes.COMBINE_SENSE: {
       const srcRef = action.payload.src;
       const destRef = action.payload.dest;
 
@@ -61,7 +61,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case MergeTreeActions.MOVE_DUPLICATE: {
+    case MergeTreeActionTypes.MOVE_DUPLICATE: {
       const srcRef = action.payload.ref;
       const destWordId = action.payload.destWordId;
       const words: Hash<MergeTreeWord> = JSON.parse(
@@ -107,7 +107,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case MergeTreeActions.MOVE_SENSE: {
+    case MergeTreeActionTypes.MOVE_SENSE: {
       const srcWordId = action.payload.wordId;
       const mergeSenseId = action.payload.mergeSenseId;
       const destWordId = action.payload.destWordId;
@@ -144,7 +144,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case MergeTreeActions.ORDER_DUPLICATE: {
+    case MergeTreeActionTypes.ORDER_DUPLICATE: {
       const ref = action.payload.ref;
 
       const oldOrder = ref.order;
@@ -176,7 +176,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case MergeTreeActions.ORDER_SENSE: {
+    case MergeTreeActionTypes.ORDER_SENSE: {
       const word: MergeTreeWord = JSON.parse(
         JSON.stringify(state.tree.words[action.payload.wordId])
       );
@@ -209,7 +209,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case MergeTreeActions.SET_DATA: {
+    case MergeTreeActionTypes.SET_DATA: {
       if (action.payload.length === 0) {
         return defaultState;
       }
@@ -235,12 +235,12 @@ export const mergeDupStepReducer = (
       };
     }
 
-    case MergeTreeActions.SET_SIDEBAR: {
+    case MergeTreeActionTypes.SET_SIDEBAR: {
       const sidebar = action.payload;
       return { ...state, tree: { ...state.tree, sidebar } };
     }
 
-    case MergeTreeActions.SET_VERNACULAR: {
+    case MergeTreeActionTypes.SET_VERNACULAR: {
       const word = { ...state.tree.words[action.payload.wordId] };
       word.vern = action.payload.vern;
 
@@ -250,7 +250,7 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words } };
     }
 
-    case StoreActions.RESET: {
+    case StoreActionTypes.RESET: {
       return defaultState;
     }
 

@@ -45,7 +45,7 @@ export const defaultState = {
     ...pronunciationsState,
   },
 
-  //general cleanup tools
+  //goal timeline and current goal
   goalsState: {
     ...goalTimelineState,
   },

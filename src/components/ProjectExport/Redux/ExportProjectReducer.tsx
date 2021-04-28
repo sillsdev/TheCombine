@@ -1,4 +1,4 @@
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import {} from "components/ProjectExport/Redux/ExportProjectActions";
 import {
   defaultState,
@@ -32,7 +32,7 @@ export const exportProjectReducer = (
       };
     case ExportStatus.Default:
       return defaultState;
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
     default:
       return state;

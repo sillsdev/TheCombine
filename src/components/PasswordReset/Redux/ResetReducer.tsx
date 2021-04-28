@@ -2,7 +2,7 @@ import {
   PasswordResetState,
   RequestState,
   ResetAction,
-  ResetActions,
+  ResetActionTypes,
 } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { StoreAction } from "rootActions";
 
@@ -15,15 +15,15 @@ export const passwordResetReducer = (
   action: StoreAction | ResetAction
 ): PasswordResetState => {
   switch (action.type) {
-    case ResetActions.RESET_PASSWORD_ATTEMPT:
+    case ResetActionTypes.RESET_PASSWORD_ATTEMPT:
       return {
         resetState: RequestState.Attempt,
       };
-    case ResetActions.RESET_PASSWORD_FAIL:
+    case ResetActionTypes.RESET_PASSWORD_FAIL:
       return {
         resetState: RequestState.Fail,
       };
-    case ResetActions.RESET_PASSWORD_SUCCESS:
+    case ResetActionTypes.RESET_PASSWORD_SUCCESS:
       return {
         resetState: RequestState.Success,
       };

@@ -4,7 +4,7 @@ import {
   PronunciationsStatus,
   PronunciationsState,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const pronunciationsReducer = (
   state: PronunciationsState = defaultState,
@@ -23,7 +23,7 @@ export const pronunciationsReducer = (
       };
     case PronunciationsStatus.Default:
       return defaultState;
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
     default:
       return state;

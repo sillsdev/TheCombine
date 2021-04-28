@@ -5,7 +5,7 @@ import {
   LoginState,
   UserAction,
 } from "components/Login/Redux/LoginReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 const user: LoginData = {
   username: "testUsername",
@@ -135,7 +135,7 @@ describe("LoginReducer Tests", () => {
 
   test("non-default state, expecting reset", () => {
     const resetAction: StoreAction = {
-      type: StoreActions.RESET,
+      type: StoreActionTypes.RESET,
     };
 
     expect(LoginReducer.loginReducer({} as LoginState, resetAction)).toEqual(

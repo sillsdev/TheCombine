@@ -6,7 +6,7 @@ import {
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { Word } from "types/word";
 
-export enum MergeTreeActions {
+export enum MergeTreeActionTypes {
   CLEAR_TREE = "CLEAR_TREE",
   COMBINE_SENSE = "COMBINE_SENSE",
   MOVE_DUPLICATE = "MOVE_DUPLICATE",
@@ -24,21 +24,21 @@ export interface MergeTreeState {
 }
 
 export interface ClearTreeMergeAction {
-  type: MergeTreeActions.CLEAR_TREE;
+  type: MergeTreeActionTypes.CLEAR_TREE;
 }
 
 export interface CombineSenseMergeAction {
-  type: MergeTreeActions.COMBINE_SENSE;
+  type: MergeTreeActionTypes.COMBINE_SENSE;
   payload: { src: MergeTreeReference; dest: MergeTreeReference };
 }
 
 export interface MoveDuplicateMergeAction {
-  type: MergeTreeActions.MOVE_DUPLICATE;
+  type: MergeTreeActionTypes.MOVE_DUPLICATE;
   payload: { ref: MergeTreeReference; destWordId: string; destOrder: number };
 }
 
 export interface MoveSenseMergeAction {
-  type: MergeTreeActions.MOVE_SENSE;
+  type: MergeTreeActionTypes.MOVE_SENSE;
   payload: {
     wordId: string;
     mergeSenseId: string;
@@ -48,27 +48,27 @@ export interface MoveSenseMergeAction {
 }
 
 export interface OrderDuplicateMergeAction {
-  type: MergeTreeActions.ORDER_DUPLICATE;
+  type: MergeTreeActionTypes.ORDER_DUPLICATE;
   payload: { ref: MergeTreeReference; order: number };
 }
 
 export interface OrderSenseMergeAction {
-  type: MergeTreeActions.ORDER_SENSE;
+  type: MergeTreeActionTypes.ORDER_SENSE;
   payload: MergeTreeReference;
 }
 
 export interface SetDataMergeAction {
-  type: MergeTreeActions.SET_DATA;
+  type: MergeTreeActionTypes.SET_DATA;
   payload: Word[];
 }
 
 export interface SetSidebarMergeAction {
-  type: MergeTreeActions.SET_SIDEBAR;
+  type: MergeTreeActionTypes.SET_SIDEBAR;
   payload: Sidebar;
 }
 
 export interface SetVernacularMergeAction {
-  type: MergeTreeActions.SET_VERNACULAR;
+  type: MergeTreeActionTypes.SET_VERNACULAR;
   payload: { wordId: string; vern: string };
 }
 

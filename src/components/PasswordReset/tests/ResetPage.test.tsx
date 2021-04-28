@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import * as ResetActions from "components/PasswordReset/Redux/ResetActions";
+import { resetFail } from "components/PasswordReset/Redux/ResetActions";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import PasswordReset from "components/PasswordReset/ResetPage/component";
 
@@ -159,7 +159,7 @@ describe("PasswordReset", () => {
     var resetPages = testRenderer.root.findAllByType(PasswordReset);
     expect(resetPages.length).toBe(1);
     var resetPage = resetPages[0];
-    mockStore.dispatch(ResetActions.resetFail());
+    mockStore.dispatch(resetFail());
 
     // set state
     resetPage.instance.setState(

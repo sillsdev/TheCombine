@@ -4,7 +4,7 @@ import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProj
 import {
   defaultState,
   CreateProjectAction,
-  CreateProjectActions,
+  CreateProjectActionTypes,
   CreateProjectState,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 
@@ -31,7 +31,7 @@ const project = {
 describe("CreateProjectAction Tests", () => {
   let mockState: CreateProjectState = defaultState;
   let CreateProject: CreateProjectAction = {
-    type: CreateProjectActions.CREATE_PROJECT_IN_PROGRESS,
+    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
     payload: {
       name: project.name,
       vernacularLanguage: project.vernacularLanguage,
@@ -47,7 +47,7 @@ describe("CreateProjectAction Tests", () => {
         project.analysisLanguages
       )
     ).toEqual({
-      type: CreateProjectActions.CREATE_PROJECT_IN_PROGRESS,
+      type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
       payload: {
         name: project.name,
         vernacularLanguage: project.vernacularLanguage,

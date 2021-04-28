@@ -1,13 +1,13 @@
-export enum ResetActions {
+export enum ResetActionTypes {
   RESET_PASSWORD_ATTEMPT = "RESET_PASSWORD_ATTEMPT",
   RESET_PASSWORD_FAIL = "RESET_PASSWORD_FAIL",
   RESET_PASSWORD_SUCCESS = "RESET_PASSWORD_SUCCESS",
 }
 
 export type ResetActionType =
-  | typeof ResetActions.RESET_PASSWORD_ATTEMPT
-  | typeof ResetActions.RESET_PASSWORD_FAIL
-  | typeof ResetActions.RESET_PASSWORD_SUCCESS;
+  | typeof ResetActionTypes.RESET_PASSWORD_ATTEMPT
+  | typeof ResetActionTypes.RESET_PASSWORD_FAIL
+  | typeof ResetActionTypes.RESET_PASSWORD_SUCCESS;
 
 export interface ResetAction {
   type: ResetActionType;
