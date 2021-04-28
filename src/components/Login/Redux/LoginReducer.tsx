@@ -1,5 +1,9 @@
+import {
+  LoginActionTypes,
+  LoginState,
+  UserAction,
+} from "components/Login/Redux/LoginReduxTypes";
 import { StoreAction, StoreActions } from "rootActions";
-import { LoginActionTypes, LoginState, UserAction } from "./LoginReduxTypes";
 
 export const defaultState: LoginState = {
   username: "",

@@ -18,9 +18,9 @@ import {
   playing,
   reset,
 } from "components/Pronunciations/Redux/PronunciationsActions";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
-import { PronunciationsStatus } from "./Redux/PronunciationsReduxTypes";
 
 interface PlayerProps {
   pronunciationUrl: string;

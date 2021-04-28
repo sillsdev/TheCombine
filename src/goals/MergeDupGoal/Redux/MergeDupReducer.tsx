@@ -1,18 +1,18 @@
 import { v4 } from "uuid";
 
-import { StoreAction, StoreActions } from "rootActions";
-import { Word } from "types/word";
-import {
-  MergeTreeAction,
-  MergeTreeActions,
-  MergeTreeState,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 import {
   defaultTree,
   Hash,
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import {
+  MergeTreeAction,
+  MergeTreeActions,
+  MergeTreeState,
+} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { StoreAction, StoreActions } from "rootActions";
+import { Word } from "types/word";
 
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {

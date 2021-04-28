@@ -1,5 +1,5 @@
 import * as backend from "backend";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalsActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import DupFinder, {
   DefaultParams,
 } from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
@@ -16,11 +16,6 @@ import {
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
-import { GoalType } from "types/goals";
-import { maxNumSteps } from "types/goalUtilities";
-import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
@@ -33,7 +28,12 @@ import {
   SetSidebarMergeAction,
   SetVernacularMergeAction,
   MergeTreeState,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
+} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { StoreState } from "types";
+import { GoalType } from "types/goals";
+import { maxNumSteps } from "types/goalUtilities";
+import { StoreStateDispatch } from "types/Redux/actions";
+import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
 // Action Creators
 

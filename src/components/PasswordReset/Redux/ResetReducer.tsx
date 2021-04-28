@@ -3,7 +3,7 @@ import {
   RequestState,
   ResetAction,
   ResetActions,
-} from "components/PasswordReset/Redux/ResetActionReduxTypes";
+} from "components/PasswordReset/Redux/ResetReduxTypes";
 import { StoreAction } from "rootActions";
 
 export const defaultState: PasswordResetState = {

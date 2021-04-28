@@ -5,7 +5,7 @@ import {
   CreateProjectActions,
   CreateProjectState,
   defaultState,
-} from "../Redux/CreateProjectReduxTypes";
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 
 const emptyWritingSystem = {
   name: "",

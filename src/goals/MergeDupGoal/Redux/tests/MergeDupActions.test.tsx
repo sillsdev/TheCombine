@@ -3,19 +3,25 @@ import thunk from "redux-thunk";
 
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
-  dispatchMergeStepData,
-  mergeAll,
-  moveSense,
-  orderSense,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
-import {
   defaultTree,
   Hash,
   MergeData,
   MergeTree,
   MergeTreeReference,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { goalDataMock } from "goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import {
+  dispatchMergeStepData,
+  mergeAll,
+  moveSense,
+  orderSense,
+} from "goals/MergeDupGoal/Redux/MergeDupActions";
+import {
+  MergeTreeAction,
+  MergeTreeActions,
+  MergeTreeState,
+} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
+import { GoalsState } from "types/goals";
 import {
   MergeWords,
   multiSenseWord,
@@ -23,12 +29,6 @@ import {
   Sense,
   Word,
 } from "types/word";
-import { GoalsState } from "types/goals";
-import {
-  MergeTreeAction,
-  MergeTreeActions,
-  MergeTreeState,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList: { [key in mockWordListIndex]: Word } = {
@@ -171,7 +171,7 @@ beforeEach(() => {
   setMockFunctions();
 });
 
-describe("MergeDupStepActions", () => {
+describe("MergeDupActions", () => {
   describe("mergeAll", () => {
     // Don't move or merge anything
     const tree1: MergeTree = {

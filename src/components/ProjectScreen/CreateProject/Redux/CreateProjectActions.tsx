@@ -1,13 +1,13 @@
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
-import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalsActions";
+import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import { setCurrentProject } from "components/Project/ProjectActions";
-import { StoreStateDispatch } from "types/Redux/actions";
-import { defaultProject, Project, WritingSystem } from "types/project";
 import {
   CreateProjectAction,
   CreateProjectActions,
-} from "./CreateProjectReduxTypes";
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { defaultProject, Project, WritingSystem } from "types/project";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 //thunk action creator
 export function asyncCreateProject(

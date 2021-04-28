@@ -4,13 +4,13 @@ import thunk from "redux-thunk";
 import * as LocalStorage from "backend/localStorage";
 import * as LoginAction from "components/Login/Redux/LoginActions";
 import * as LoginReducer from "components/Login/Redux/LoginReducer";
-import * as RootAction from "rootActions";
-import { User } from "types/user";
 import {
   LoginActionTypes,
   LoginType,
   UserAction,
-} from "../Redux/LoginReduxTypes";
+} from "components/Login/Redux/LoginReduxTypes";
+import * as RootAction from "rootActions";
+import { User } from "types/user";
 
 jest.mock("backend", () => {
   return {

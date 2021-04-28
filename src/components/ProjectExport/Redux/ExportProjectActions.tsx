@@ -1,6 +1,9 @@
 import { deleteLift, downloadLift, exportLift } from "backend";
+import {
+  ExportProjectAction,
+  ExportStatus,
+} from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { ExportProjectAction, ExportStatus } from "./ExportProjectReduxTypes";
 
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {

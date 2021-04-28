@@ -1,7 +1,7 @@
 import { localizeReducer } from "react-localize-redux";
 import { combineReducers, Reducer } from "redux";
 
-import { goalsReducer } from "components/GoalTimeline/Redux/GoalsReducer";
+import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import { loginReducer } from "components/Login/Redux/LoginReducer";
 import { passwordResetReducer } from "components/PasswordReset/Redux/ResetReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
@@ -10,10 +10,10 @@ import { createProjectReducer } from "components/ProjectScreen/CreateProject/Red
 import { pronunciationsReducer } from "components/Pronunciations/Redux/PronunciationsReducer";
 import { treeViewReducer } from "components/TreeView/TreeViewReducer";
 import { characterInventoryReducer } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
-import { mergeDupStepReducer } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepReducer";
+import { mergeDupStepReducer } from "goals/MergeDupGoal/Redux/MergeDupReducer";
 import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
-import { analyticsReducer } from "types/Redux/analytics";
 import { StoreState } from "types";
+import { analyticsReducer } from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //analytics state
@@ -37,7 +37,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   pronunciationsState: pronunciationsReducer,
 
   //general cleanup tools
-  goalsState: goalsReducer,
+  goalsState: goalReducer,
 
   //merge duplicates goal
   mergeDuplicateGoal: mergeDupStepReducer,

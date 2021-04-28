@@ -4,7 +4,7 @@ import {
   MergeTreeReference,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { Word } from "../../../../types/word";
+import { Word } from "types/word";
 
 export enum MergeTreeActions {
   CLEAR_TREE = "CLEAR_TREE",

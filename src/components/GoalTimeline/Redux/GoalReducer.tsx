@@ -1,12 +1,12 @@
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import {
   GoalAction,
-  GoalsActions,
-} from "components/GoalTimeline/Redux/GoalsActionsTypes";
+  GoalActionTypes,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { StoreAction, StoreActions } from "rootActions";
 import { GoalsState } from "types/goals";
 
-export const goalsReducer = (
+export const goalReducer = (
   state: GoalsState | undefined,
   action: StoreAction | GoalAction
 ): GoalsState => {
@@ -14,10 +14,10 @@ export const goalsReducer = (
     return defaultState;
   }
   switch (action.type) {
-    case GoalsActions.LOAD_USER_EDITS: {
+    case GoalActionTypes.LOAD_USER_EDITS: {
       return { ...state, history: [...action.payload] };
     }
-    case GoalsActions.SET_CURRENT_GOAL: {
+    case GoalActionTypes.SET_CURRENT_GOAL: {
       const goalTypeSuggestions = state.goalTypeSuggestions.filter(
         (type, index) => index !== 0 || action.payload.goalType !== type
       ); // Remove top suggestion if same as goal to add.

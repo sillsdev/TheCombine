@@ -3,8 +3,8 @@ import { v4 } from "uuid";
 import {
   CreateCharInvChanges,
   CreateCharInvData,
+  CreateCharInvStepData,
 } from "goals/CreateCharInv/CreateCharInvTypes";
-import { CreateCharInvStepData } from "goals/CreateCharInv/CreateCharInvTypes";
 import {
   MergesCompleted,
   MergeDupData,

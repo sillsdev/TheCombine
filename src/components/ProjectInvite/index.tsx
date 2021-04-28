@@ -1,7 +1,5 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
 import {
   asyncRegisterForEmailInvite,
   registerReset,
@@ -9,6 +7,8 @@ import {
 import ProjectInvite, {
   ProjectInviteStateProps,
 } from "components/ProjectInvite/ProjectInviteComponent";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): ProjectInviteStateProps {
   return {

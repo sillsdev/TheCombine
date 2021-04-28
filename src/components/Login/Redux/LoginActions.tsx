@@ -1,11 +1,15 @@
+import hash from "crypto";
+
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
+import {
+  LoginActionTypes,
+  UserAction,
+} from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { User } from "types/user";
-import hash from "crypto";
-import { LoginActionTypes, UserAction } from "./LoginReduxTypes";
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {

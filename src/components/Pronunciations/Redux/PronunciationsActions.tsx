@@ -1,7 +1,7 @@
 import {
   PronunciationsAction,
   PronunciationsStatus,
-} from "./PronunciationsReduxTypes";
+} from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 
 export function playing(payload: string): PronunciationsAction {
   return {

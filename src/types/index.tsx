@@ -1,17 +1,17 @@
 import { LocalizeState } from "react-localize-redux";
 
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
-import { PasswordResetState } from "components/PasswordReset/Redux/ResetActionReduxTypes";
+import { PasswordResetState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { TreeViewState } from "components/TreeView/TreeViewReducer";
-import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
-import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 import { CharacterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { GoalsState } from "types/goals";
-import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
 import { Project } from "types/project";
+import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 
 //root store structure
 export interface StoreState {
