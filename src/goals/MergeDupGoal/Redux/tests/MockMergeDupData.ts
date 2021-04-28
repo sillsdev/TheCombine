@@ -1,5 +1,5 @@
-import { simpleWord } from "types/word";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
+import { simpleWord } from "types/word";
 
 const wordsArrayMock = () => [
   // Each simpleWord() has a randomly generated id

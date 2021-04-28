@@ -1,11 +1,8 @@
 import { connect } from "react-redux";
 
-import { asyncAdvanceStep } from "components/GoalTimeline/Redux/GoalsActions";
-import {
-  mergeAll,
-  setSidebar,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
+import { asyncAdvanceStep } from "components/GoalTimeline/Redux/GoalActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { mergeAll, setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 

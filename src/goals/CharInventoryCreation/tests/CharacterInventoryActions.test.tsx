@@ -15,9 +15,9 @@ import {
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { StoreState } from "types";
+import { Goal } from "types/goals";
 import { defaultProject } from "types/project";
 import { User } from "types/user";
-import { Goal } from "types/goals";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -72,7 +72,7 @@ mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("backend");
 jest.mock("browserHistory");
-jest.mock("components/GoalTimeline/Redux/GoalsActions", () => ({
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncUpdateGoal: (goal: Goal) => mockAsyncUpdateGoal(goal),
 }));
 const mockAsyncUpdateGoal = jest.fn();

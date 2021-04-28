@@ -1,17 +1,17 @@
 import * as backend from "backend";
 import {
+  ReviewClearReviewEntriesState,
+  ReviewEntriesActionTypes,
+  ReviewUpdateWord,
+  ReviewUpdateWords,
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
+import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Note, Sense, State } from "types/word";
-import {
-  ReviewClearReviewEntriesState,
-  ReviewEntriesActionTypes,
-  ReviewUpdateWord,
-  ReviewUpdateWords,
-} from "./ReviewEntriesReduxTypes";
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {

@@ -1,5 +1,8 @@
+import {
+  CreateCharInvData,
+  CreateCharInvStepData,
+} from "goals/CreateCharInv/CreateCharInvTypes";
 import { Goal, GoalName, GoalType } from "types/goals";
-import { CreateCharInvData, CreateCharInvStepData } from "./CreateCharInvTypes";
 
 export class CreateCharInv extends Goal {
   constructor(

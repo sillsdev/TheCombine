@@ -1,10 +1,10 @@
-import { StoreAction, StoreActions } from "rootActions";
 import {
   defaultState,
   PronunciationsAction,
   PronunciationsStatus,
   PronunciationsState,
-} from "./PronunciationsReduxTypes";
+} from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { StoreAction, StoreActions } from "rootActions";
 
 export const pronunciationsReducer = (
   state: PronunciationsState = defaultState,

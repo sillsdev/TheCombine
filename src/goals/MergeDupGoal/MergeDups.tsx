@@ -1,5 +1,5 @@
+import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDupsTypes";
 import { Goal, GoalName, GoalType } from "types/goals";
-import { MergeDupData, MergeStepData } from "./MergeDupsTypes";
 
 export class MergeDups extends Goal {
   constructor(

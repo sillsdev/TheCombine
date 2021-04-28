@@ -1,28 +1,32 @@
 import * as Backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
+import {
+  GoalActionTypes,
+  LoadUserEditsAction,
+  SetCurrentGoalAction,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,
   loadMergeDupsData,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
+} from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { convertEditToGoal } from "types/goalUtilities";
-import {
-  GoalsActions,
-  LoadUserEditsAction,
-  SetCurrentGoalAction,
-} from "./GoalsActionsTypes";
+import { StoreStateDispatch } from "types/Redux/actions";
+
 // Action Creators
 
 export function loadUserEdits(history?: Goal[]): LoadUserEditsAction {
-  return { type: GoalsActions.LOAD_USER_EDITS, payload: history ?? [] };
+  return { type: GoalActionTypes.LOAD_USER_EDITS, payload: history ?? [] };
 }
 
 export function setCurrentGoal(goal?: Goal): SetCurrentGoalAction {
-  return { type: GoalsActions.SET_CURRENT_GOAL, payload: goal ?? new Goal() };
+  return {
+    type: GoalActionTypes.SET_CURRENT_GOAL,
+    payload: goal ?? new Goal(),
+  };
 }
 
 // Dispatch Functions

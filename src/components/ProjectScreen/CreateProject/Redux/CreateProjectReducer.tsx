@@ -1,10 +1,10 @@
-import { StoreAction, StoreActions } from "rootActions";
 import {
   CreateProjectAction,
   CreateProjectActions,
   CreateProjectState,
   defaultState,
-} from "./CreateProjectReduxTypes";
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { StoreAction, StoreActions } from "rootActions";
 
 export const createProjectReducer = (
   state: CreateProjectState = defaultState,

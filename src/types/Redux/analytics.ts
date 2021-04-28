@@ -4,7 +4,7 @@ import {
   AnalyticsChangePageAction,
   AnalyticsState,
   defaultState,
-} from "./analyticsReduxTypes";
+} from "types/Redux/analyticsReduxTypes";
 
 export function changePage(newPage: string): AnalyticsChangePageAction {
   return {

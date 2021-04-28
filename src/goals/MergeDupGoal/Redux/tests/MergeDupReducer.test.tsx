@@ -1,8 +1,3 @@
-import * as Actions from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepActions";
-import {
-  defaultState,
-  mergeDupStepReducer,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupStepReducer";
 import {
   defaultSidebar,
   Hash,
@@ -10,12 +5,17 @@ import {
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { StoreAction, StoreActions } from "rootActions";
+import * as Actions from "goals/MergeDupGoal/Redux/MergeDupActions";
+import {
+  defaultState,
+  mergeDupStepReducer,
+} from "goals/MergeDupGoal/Redux/MergeDupReducer";
 import {
   MergeTreeAction,
   MergeTreeActions,
   MergeTreeState,
-} from "goals/MergeDupGoal/MergeDupStep/Redux/MergeDupReduxTypes";
+} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { StoreAction, StoreActions } from "rootActions";
 import { testWordList } from "types/word";
 
 var uuidIndex = 0;
@@ -37,7 +37,7 @@ beforeEach(() => {
   mockUuid.v4.mockImplementation(() => getMockUuid(true));
 });
 
-describe("MergeDupStepReducer", () => {
+describe("MergeDupReducer", () => {
   // a state with no duplicate senses
   const initState = mergeDupStepReducer(
     undefined,

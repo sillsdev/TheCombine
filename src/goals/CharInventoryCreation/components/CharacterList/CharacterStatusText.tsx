@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import { Translate } from "react-localize-redux";
+
 import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { themeColors } from "types/theme";
 

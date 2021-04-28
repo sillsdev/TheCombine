@@ -3,10 +3,11 @@ import { ArrowRightAlt } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
+
 import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
+import { CharacterChange } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
 import { StoreState } from "types";
-import { CharacterChange } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 
 export default function CharInvCompleted() {
   const changes = useSelector(

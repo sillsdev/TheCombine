@@ -1,11 +1,10 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import PasswordReset from "components/PasswordReset/ResetPage/component";
 import * as ResetActions from "components/PasswordReset/Redux/ResetActions";
-import { RequestState } from "components/PasswordReset/Redux/ResetActionReduxTypes";
+import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
+import PasswordReset from "components/PasswordReset/ResetPage/component";
 
 var testRenderer: ReactTestRenderer;
 // This test relies on nothing in the store so mock an empty store

@@ -2,11 +2,11 @@ import {
   defaultState,
   emtpyGoalState,
 } from "components/GoalTimeline/DefaultState";
+import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import {
   GoalAction,
-  GoalsActions,
-} from "components/GoalTimeline/Redux/GoalsActionsTypes";
-import { goalsReducer } from "components/GoalTimeline/Redux/GoalsReducer";
+  GoalActionTypes,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -16,17 +16,15 @@ import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { StoreAction, StoreActions } from "rootActions";
 import { Goal, GoalsState } from "types/goals";
 
-const loadUserEditsAction: GoalAction = {
-  type: GoalsActions.LOAD_USER_EDITS,
-  payload: [],
-};
-
 describe("Test GoalsReducers", () => {
-  describe("GoalsActions.LOAD_USER_EDITS", () => {
+  describe("GoalActionTypes.LOAD_USER_EDITS", () => {
     it("Should return the default state", () => {
-      expect(goalsReducer(undefined, loadUserEditsAction)).toEqual(
-        defaultState
-      );
+      const loadUserEditsAction: GoalAction = {
+        type: GoalActionTypes.LOAD_USER_EDITS,
+        payload: [],
+      };
+
+      expect(goalReducer(undefined, loadUserEditsAction)).toEqual(defaultState);
     });
 
     it("Should set the goal history to the payload and leave everything else unchanged", () => {
@@ -47,7 +45,7 @@ describe("Test GoalsReducers", () => {
       const goal7: Goal = new ValidateChars();
 
       const loadUserEditsAction: GoalAction = {
-        type: GoalsActions.LOAD_USER_EDITS,
+        type: GoalActionTypes.LOAD_USER_EDITS,
         payload: [goal6, goal7],
       };
 
@@ -56,15 +54,15 @@ describe("Test GoalsReducers", () => {
         history: [goal6, goal7],
       };
 
-      expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
+      expect(goalReducer(state, loadUserEditsAction)).toEqual(newState);
     });
   });
 
-  describe("GoalsActions.SET_CURRENT_GOAL", () => {
+  describe("GoalActionTypes.SET_CURRENT_GOAL", () => {
     it("Should replace current goal, and remove type from top suggestion", () => {
       const currentGoal: Goal = new CreateCharInv();
       const updateGoalAction: GoalAction = {
-        type: GoalsActions.SET_CURRENT_GOAL,
+        type: GoalActionTypes.SET_CURRENT_GOAL,
         payload: currentGoal,
       };
       const goalTypeSuggestions = defaultState.goalTypeSuggestions.slice();
@@ -76,7 +74,7 @@ describe("Test GoalsReducers", () => {
         currentGoal,
         goalTypeSuggestions,
       };
-      expect(goalsReducer(defaultState, updateGoalAction)).toEqual(newState);
+      expect(goalReducer(defaultState, updateGoalAction)).toEqual(newState);
     });
   });
 
@@ -87,7 +85,7 @@ describe("Test GoalsReducers", () => {
       const action: StoreAction = {
         type: StoreActions.RESET,
       };
-      expect(goalsReducer(state, action)).toEqual(defaultState);
+      expect(goalReducer(state, action)).toEqual(defaultState);
     });
   });
 });

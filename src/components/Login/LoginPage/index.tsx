@@ -1,14 +1,14 @@
 import { connect } from "react-redux";
 
+import Login, {
+  LoginDispatchProps,
+  LoginStateProps,
+} from "components/Login/LoginPage/LoginComponent";
 import {
   asyncLogin,
   loginReset,
   logoutAndResetStore,
 } from "components/Login/Redux/LoginActions";
-import Login, {
-  LoginDispatchProps,
-  LoginStateProps,
-} from "components/Login/LoginPage/LoginComponent";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 

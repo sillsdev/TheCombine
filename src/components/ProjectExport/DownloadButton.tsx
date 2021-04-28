@@ -9,10 +9,10 @@ import {
   asyncDownloadExport,
   resetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
+import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { getNowDateTimeString } from "utilities";
-import { ExportStatus } from "./Redux/ExportProjectReduxTypes";
 
 interface DownloadButtonProps {
   colorSecondary?: boolean;

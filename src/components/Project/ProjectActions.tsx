@@ -1,7 +1,10 @@
 import { updateProject } from "backend";
-import { StoreStateDispatch } from "types/Redux/actions";
+import {
+  ProjectAction,
+  SET_CURRENT_PROJECT,
+} from "components/Project/ProjectReduxTypes";
 import { Project } from "types/project";
-import { ProjectAction, SET_CURRENT_PROJECT } from "./ProjectReduxTypes";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 export function setCurrentProject(payload: Project): ProjectAction {
   return {

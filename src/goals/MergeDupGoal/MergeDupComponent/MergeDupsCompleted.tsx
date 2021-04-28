@@ -17,8 +17,8 @@ import {
   MergesCompleted,
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
-import { Sense, Word } from "types/word";
 import theme from "types/theme";
+import { Sense, Word } from "types/word";
 
 export default function MergeDupsCompleted() {
   const changes = useSelector(
