@@ -4,7 +4,7 @@ import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions"
 import { setCurrentProject } from "components/Project/ProjectActions";
 import {
   CreateProjectAction,
-  CreateProjectActions,
+  CreateProjectActionTypes,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { defaultProject, Project, WritingSystem } from "types/project";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -82,7 +82,7 @@ export function inProgress(
   analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
-    type: CreateProjectActions.CREATE_PROJECT_IN_PROGRESS,
+    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
     payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
@@ -93,7 +93,7 @@ export function success(
   analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
-    type: CreateProjectActions.CREATE_PROJECT_SUCCESS,
+    type: CreateProjectActionTypes.CREATE_PROJECT_SUCCESS,
     payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
@@ -105,14 +105,14 @@ export function failure(
   errorMsg: string = ""
 ): CreateProjectAction {
   return {
-    type: CreateProjectActions.CREATE_PROJECT_FAILURE,
+    type: CreateProjectActionTypes.CREATE_PROJECT_FAILURE,
     payload: { name, errorMsg, vernacularLanguage, analysisLanguages },
   };
 }
 
 export function reset(): CreateProjectAction {
   return {
-    type: CreateProjectActions.CREATE_PROJECT_RESET,
+    type: CreateProjectActionTypes.CREATE_PROJECT_RESET,
     payload: {
       name: "",
       vernacularLanguage: { name: "", bcp47: "", font: "" },

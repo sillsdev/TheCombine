@@ -13,10 +13,10 @@ import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import { Goal, GoalsState } from "types/goals";
 
-describe("Test GoalsReducers", () => {
+describe("GoalReducer", () => {
   describe("GoalActionTypes.LOAD_USER_EDITS", () => {
     it("Should return the default state", () => {
       const loadUserEditsAction: GoalAction = {
@@ -78,12 +78,12 @@ describe("Test GoalsReducers", () => {
     });
   });
 
-  describe("StoreActions.RESET", () => {
+  describe("StoreActionTypes.RESET", () => {
     it("Should return the default state", () => {
       const state = emtpyGoalState();
 
       const action: StoreAction = {
-        type: StoreActions.RESET,
+        type: StoreActionTypes.RESET,
       };
       expect(goalReducer(state, action)).toEqual(defaultState);
     });

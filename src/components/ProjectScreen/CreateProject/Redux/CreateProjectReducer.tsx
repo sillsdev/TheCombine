@@ -1,17 +1,17 @@
 import {
   CreateProjectAction,
-  CreateProjectActions,
+  CreateProjectActionTypes,
   CreateProjectState,
   defaultState,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const createProjectReducer = (
   state: CreateProjectState = defaultState,
-  action: StoreAction | CreateProjectAction
+  action: CreateProjectAction | StoreAction
 ): CreateProjectState => {
   switch (action.type) {
-    case CreateProjectActions.CREATE_PROJECT_IN_PROGRESS:
+    case CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS:
       return {
         name: action.payload.name,
         vernacularLanguage: action.payload.vernacularLanguage,
@@ -20,7 +20,7 @@ export const createProjectReducer = (
         inProgress: true,
         errorMsg: "",
       };
-    case CreateProjectActions.CREATE_PROJECT_SUCCESS:
+    case CreateProjectActionTypes.CREATE_PROJECT_SUCCESS:
       return {
         name: action.payload.name,
         vernacularLanguage: action.payload.vernacularLanguage,
@@ -29,7 +29,7 @@ export const createProjectReducer = (
         inProgress: false,
         errorMsg: "",
       };
-    case CreateProjectActions.CREATE_PROJECT_FAILURE:
+    case CreateProjectActionTypes.CREATE_PROJECT_FAILURE:
       return {
         name: action.payload.name,
         vernacularLanguage: action.payload.vernacularLanguage,
@@ -38,9 +38,9 @@ export const createProjectReducer = (
         inProgress: false,
         errorMsg: action.payload.errorMsg || "",
       };
-    case CreateProjectActions.CREATE_PROJECT_RESET:
+    case CreateProjectActionTypes.CREATE_PROJECT_RESET:
       return defaultState;
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
     default:
       return state;

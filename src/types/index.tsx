@@ -32,7 +32,7 @@ export interface StoreState {
   reviewEntriesState: ReviewEntriesState;
   pronunciationsState: PronunciationsState;
 
-  //general cleanup tools
+  //goal timeline and current goal
   goalsState: GoalsState;
 
   //merge duplicates goal

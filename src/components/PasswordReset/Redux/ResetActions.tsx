@@ -2,23 +2,23 @@ import { resetPasswordRequest, resetPassword } from "backend";
 import history, { Path } from "browserHistory";
 import {
   ResetAction,
-  ResetActions,
+  ResetActionTypes,
 } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 export function resetAttempt(): ResetAction {
   return {
-    type: ResetActions.RESET_PASSWORD_ATTEMPT,
+    type: ResetActionTypes.RESET_PASSWORD_ATTEMPT,
   };
 }
 export function resetFail(): ResetAction {
   return {
-    type: ResetActions.RESET_PASSWORD_FAIL,
+    type: ResetActionTypes.RESET_PASSWORD_FAIL,
   };
 }
 export function resetSuccess(): ResetAction {
   return {
-    type: ResetActions.RESET_PASSWORD_SUCCESS,
+    type: ResetActionTypes.RESET_PASSWORD_SUCCESS,
   };
 }
 

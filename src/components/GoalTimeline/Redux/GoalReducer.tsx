@@ -3,7 +3,7 @@ import {
   GoalAction,
   GoalActionTypes,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import { GoalsState } from "types/goals";
 
 export const goalReducer = (
@@ -23,7 +23,7 @@ export const goalReducer = (
       ); // Remove top suggestion if same as goal to add.
       return { ...state, currentGoal: action.payload, goalTypeSuggestions };
     }
-    case StoreActions.RESET: {
+    case StoreActionTypes.RESET: {
       return defaultState;
     }
     default: {

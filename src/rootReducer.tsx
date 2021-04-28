@@ -16,9 +16,6 @@ import { StoreState } from "types";
 import { analyticsReducer } from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
-  //analytics state
-  analyticsState: analyticsReducer,
-
   //handles localization through react-localize-redux utilities
   localize: localizeReducer,
 
@@ -36,7 +33,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   reviewEntriesState: reviewEntriesReducer,
   pronunciationsState: pronunciationsReducer,
 
-  //general cleanup tools
+  //goal timeline and current goal
   goalsState: goalReducer,
 
   //merge duplicates goal
@@ -44,4 +41,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
 
   //character inventory goal
   characterInventoryState: characterInventoryReducer,
+
+  //analytics state
+  analyticsState: analyticsReducer,
 });

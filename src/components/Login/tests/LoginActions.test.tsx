@@ -51,7 +51,7 @@ const logout: UserAction = {
   payload: { username: mockUser.username },
 };
 const reset: RootAction.StoreAction = {
-  type: RootAction.StoreActions.RESET,
+  type: RootAction.StoreActionTypes.RESET,
 };
 const registerAttempt: UserAction = {
   type: LoginActionTypes.REGISTER_ATTEMPT,

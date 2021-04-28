@@ -1,6 +1,6 @@
 import { Project, WritingSystem } from "types/project";
 
-export enum CreateProjectActions {
+export enum CreateProjectActionTypes {
   CREATE_PROJECT_FAILURE = "CREATE_PROJECT_FAILURE",
   CREATE_PROJECT_IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS",
   CREATE_PROJECT_RESET = "CREATE_PROJECT_RESET",
@@ -8,10 +8,10 @@ export enum CreateProjectActions {
 }
 
 type CreateProjectType =
-  | typeof CreateProjectActions.CREATE_PROJECT_FAILURE
-  | typeof CreateProjectActions.CREATE_PROJECT_IN_PROGRESS
-  | typeof CreateProjectActions.CREATE_PROJECT_RESET
-  | typeof CreateProjectActions.CREATE_PROJECT_SUCCESS;
+  | typeof CreateProjectActionTypes.CREATE_PROJECT_FAILURE
+  | typeof CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS
+  | typeof CreateProjectActionTypes.CREATE_PROJECT_RESET
+  | typeof CreateProjectActionTypes.CREATE_PROJECT_SUCCESS;
 
 export interface CreateProjectAction {
   type: CreateProjectType;

@@ -4,7 +4,7 @@ import {
   ReviewEntriesActionTypes,
   ReviewEntriesState,
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const reviewEntriesReducer = (
   state: ReviewEntriesState = defaultState, //createStore() calls each reducer with undefined state
@@ -30,7 +30,7 @@ export const reviewEntriesReducer = (
     case ReviewEntriesActionTypes.ClearReviewEntriesState:
       return defaultState;
 
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
 
     default:

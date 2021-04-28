@@ -5,7 +5,7 @@ import {
   CharacterSetEntry,
   getCharacterStatus,
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
-import { StoreActions, StoreAction } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const defaultState: CharacterInventoryState = {
   validCharacters: [],
@@ -110,7 +110,7 @@ export const characterInventoryReducer = (
     case CharacterInventoryType.RESET:
       return defaultState;
 
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
 
     default:

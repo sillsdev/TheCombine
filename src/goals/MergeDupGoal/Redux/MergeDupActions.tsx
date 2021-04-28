@@ -19,7 +19,7 @@ import {
 import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
-  MergeTreeActions,
+  MergeTreeActionTypes,
   MoveDuplicateMergeAction,
   MoveSenseMergeAction,
   OrderDuplicateMergeAction,
@@ -38,7 +38,7 @@ import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 // Action Creators
 
 export function clearTree(): ClearTreeMergeAction {
-  return { type: MergeTreeActions.CLEAR_TREE };
+  return { type: MergeTreeActionTypes.CLEAR_TREE };
 }
 
 export function combineSense(
@@ -46,7 +46,7 @@ export function combineSense(
   dest: MergeTreeReference
 ): CombineSenseMergeAction {
   return {
-    type: MergeTreeActions.COMBINE_SENSE,
+    type: MergeTreeActionTypes.COMBINE_SENSE,
     payload: { src, dest },
   };
 }
@@ -58,13 +58,13 @@ export function moveSense(
 ): MoveDuplicateMergeAction | MoveSenseMergeAction {
   if (ref.order === undefined) {
     return {
-      type: MergeTreeActions.MOVE_SENSE,
+      type: MergeTreeActionTypes.MOVE_SENSE,
       payload: { ...ref, destWordId, destOrder },
     };
   }
   // If ref.order is defined, the sense is being moved out of the sidebar.
   return {
-    type: MergeTreeActions.MOVE_DUPLICATE,
+    type: MergeTreeActionTypes.MOVE_DUPLICATE,
     payload: { ref, destWordId, destOrder },
   };
 }
@@ -75,27 +75,27 @@ export function orderSense(
 ): OrderDuplicateMergeAction | OrderSenseMergeAction {
   if (ref.order === undefined) {
     return {
-      type: MergeTreeActions.ORDER_SENSE,
+      type: MergeTreeActionTypes.ORDER_SENSE,
       payload: { ...ref, order },
     };
   }
   // If ref.order is defined, the sense is being ordered within the sidebar.
   return {
-    type: MergeTreeActions.ORDER_DUPLICATE,
+    type: MergeTreeActionTypes.ORDER_DUPLICATE,
     payload: { ref, order },
   };
 }
 
 export function setSidebar(sidebar?: Sidebar): SetSidebarMergeAction {
   return {
-    type: MergeTreeActions.SET_SIDEBAR,
+    type: MergeTreeActionTypes.SET_SIDEBAR,
     payload: sidebar ?? defaultSidebar,
   };
 }
 
 export function setWordData(words: Word[]): SetDataMergeAction {
   return {
-    type: MergeTreeActions.SET_DATA,
+    type: MergeTreeActionTypes.SET_DATA,
     payload: words,
   };
 }
@@ -105,7 +105,7 @@ export function setVern(
   vern: string
 ): SetVernacularMergeAction {
   return {
-    type: MergeTreeActions.SET_VERNACULAR,
+    type: MergeTreeActionTypes.SET_VERNACULAR,
     payload: { wordId, vern },
   };
 }

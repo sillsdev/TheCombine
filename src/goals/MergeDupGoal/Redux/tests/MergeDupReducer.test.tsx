@@ -12,10 +12,10 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReducer";
 import {
   MergeTreeAction,
-  MergeTreeActions,
+  MergeTreeActionTypes,
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import { testWordList } from "types/word";
 
 var uuidIndex = 0;
@@ -365,7 +365,7 @@ describe("MergeDupReducer", () => {
       const destWordId = "word2";
 
       const testAction = Actions.moveSense(testRef, destWordId, 1);
-      expect(testAction.type).toEqual(MergeTreeActions.MOVE_SENSE);
+      expect(testAction.type).toEqual(MergeTreeActionTypes.MOVE_SENSE);
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
@@ -414,7 +414,7 @@ describe("MergeDupReducer", () => {
 
   test("Reset returns default state", () => {
     const action: StoreAction = {
-      type: StoreActions.RESET,
+      type: StoreActionTypes.RESET,
     };
 
     expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(

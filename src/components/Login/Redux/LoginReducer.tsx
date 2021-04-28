@@ -3,7 +3,7 @@ import {
   LoginState,
   UserAction,
 } from "components/Login/Redux/LoginReduxTypes";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const defaultState: LoginState = {
   username: "",
@@ -68,7 +68,7 @@ export const loginReducer = (
       return defaultState;
     case LoginActionTypes.LOGOUT:
       return defaultState;
-    case StoreActions.RESET:
+    case StoreActionTypes.RESET:
       return defaultState;
     case LoginActionTypes.REGISTER_RESET:
       return defaultState;
