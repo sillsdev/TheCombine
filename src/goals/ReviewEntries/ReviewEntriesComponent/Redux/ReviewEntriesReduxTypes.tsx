@@ -1,11 +1,5 @@
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
-export interface ReviewUpdateWord {
-  type: ReviewEntriesActionTypes.UpdateWord;
-  oldId: string;
-  newWord: ReviewEntriesWord;
-}
-
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
@@ -15,6 +9,12 @@ export enum ReviewEntriesActionTypes {
 export interface ReviewUpdateWords {
   type: ReviewEntriesActionTypes.UpdateAllWords;
   words: ReviewEntriesWord[];
+}
+
+export interface ReviewUpdateWord {
+  type: ReviewEntriesActionTypes.UpdateWord;
+  oldId: string;
+  newWord: ReviewEntriesWord;
 }
 
 export interface ReviewClearReviewEntriesState {

@@ -1,12 +1,12 @@
 import { CardContent, Typography, Grid, Chip, Card } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
 
-import theme from "types/theme";
 import {
   MergeTreeReference,
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import theme from "types/theme";
 
 interface SidebarDragSenseProps {
   sidebar: Sidebar;
