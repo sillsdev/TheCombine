@@ -18,6 +18,9 @@ import {
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { testWordList } from "types/word";
 
+jest.mock("uuid");
+const mockUuid = require("uuid") as { v4: jest.Mock };
+
 var uuidIndex = 0;
 // getMockUuid(false) gives the next uuid to be assigned by our mocked v4.
 function getMockUuid(increment = true): string {
@@ -28,13 +31,8 @@ function getMockUuid(increment = true): string {
   return uuid;
 }
 
-jest.mock("uuid", () => ({
-  v4: jest.fn(),
-}));
-
 beforeEach(() => {
-  const mockUuid = require("uuid") as { v4: jest.Mock<string, []> };
-  mockUuid.v4.mockImplementation(() => getMockUuid(true));
+  mockUuid.v4.mockImplementation(getMockUuid);
 });
 
 describe("MergeDupReducer", () => {

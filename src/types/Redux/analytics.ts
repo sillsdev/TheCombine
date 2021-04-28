@@ -19,7 +19,6 @@ export const analyticsReducer = (
 ): AnalyticsState => {
   switch (action.type) {
     case AnalyticsActionTypes.ChangePage:
-      // Update the local words
       return {
         ...state,
         currentPage: action.newPage,
