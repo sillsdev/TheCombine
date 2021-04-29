@@ -74,9 +74,9 @@ namespace BackendFramework.Repositories
 
         /// <summary> Updates specified <see cref="MergeBlacklist"/>. </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation. </returns>
-        public async Task<ResultOfUpdate> Update(string entryId, MergeBlacklistEntry blacklistEntry)
+        public async Task<ResultOfUpdate> Update(MergeBlacklistEntry blacklistEntry)
         {
-            var filter = Builders<MergeBlacklistEntry>.Filter.Eq(x => x.Id, entryId);
+            var filter = Builders<MergeBlacklistEntry>.Filter.Eq(x => x.Id, blacklistEntry.Id);
             var updateDef = Builders<MergeBlacklistEntry>.Update
                 .Set(x => x.ProjectId, blacklistEntry.ProjectId)
                 .Set(x => x.UserId, blacklistEntry.UserId)
@@ -93,16 +93,5 @@ namespace BackendFramework.Repositories
             }
             return ResultOfUpdate.NoChange;
         }
-
-        /// <summary> Replace <see cref="MergeBlacklist"/> for specified <see cref="Project"/>. </summary>
-        /// <returns> A bool: success of operation. </returns>
-        public async Task<bool> Replace(string projectId, List<MergeBlacklistEntry> blacklist)
-        {
-            await DeleteAll(projectId);
-            await _mergeBlacklistDatabase.MergeBlacklist.InsertManyAsync(blacklist);
-            return true;
-        }
-
-
     }
 }

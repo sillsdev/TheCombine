@@ -55,26 +55,16 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
         }
 
-        public Task<ResultOfUpdate> Update(string entryId, MergeBlacklistEntry entry)
+        public Task<ResultOfUpdate> Update(MergeBlacklistEntry entry)
         {
-            var foundMergeBlacklist = _mergeBlacklist.Single(ur => ur.Id == entryId);
-            var success = _mergeBlacklist.Remove(foundMergeBlacklist);
+            var foundEntry = _mergeBlacklist.Single(e => e.ProjectId == entry.ProjectId && e.Id == entry.Id);
+            var success = _mergeBlacklist.Remove(foundEntry);
             if (success)
             {
                 _mergeBlacklist.Add(entry.Clone());
                 return Task.FromResult(ResultOfUpdate.Updated);
             }
             return Task.FromResult(ResultOfUpdate.NotFound);
-        }
-
-        public Task<bool> Replace(string projectId, List<MergeBlacklistEntry> blacklist)
-        {
-            _ = DeleteAll(projectId).Result;
-            foreach (var entry in blacklist)
-            {
-                _mergeBlacklist.Add(entry.Clone());
-            }
-            return Task.FromResult(true);
         }
     }
 }

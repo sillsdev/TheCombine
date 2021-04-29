@@ -12,7 +12,6 @@ namespace BackendFramework.Interfaces
         Task<MergeBlacklistEntry> Create(MergeBlacklistEntry mergeBlacklistEntry);
         Task<bool> Delete(string projectId, string entryId);
         Task<bool> DeleteAll(string projectId);
-        Task<ResultOfUpdate> Update(string entryId, MergeBlacklistEntry mergeBlacklistEntry);
-        Task<bool> Replace(string projectId, List<MergeBlacklistEntry> blacklist);
+        Task<ResultOfUpdate> Update(MergeBlacklistEntry mergeBlacklistEntry);
     }
 }

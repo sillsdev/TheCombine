@@ -80,7 +80,7 @@ namespace BackendFramework.Services
         public async Task<MergeBlacklistEntry> AddToMergeBlacklist(
             string projectId, string userId, List<string> wordIds)
         {
-            if (wordIds.Count() < 2)
+            if (wordIds.Count < 2)
             {
                 throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
             }
@@ -100,7 +100,7 @@ namespace BackendFramework.Services
         /// <returns> A bool, true if in the blacklist. </returns>
         public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds)
         {
-            if (wordIds.Count() < 2)
+            if (wordIds.Count < 2)
             {
                 throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
             }
@@ -116,23 +116,34 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Update merge blacklist for specified <see cref="Project"/> to current frontier. </summary>
-        /// <returns> Updated List of <see cref="MergeBlacklistEntry"/>s. </returns>
-        public async Task<List<MergeBlacklistEntry>> UpdateMergeBlacklist(string projectId)
+        /// <returns> Updated List of <see cref="MergeBlacklistEntry"/>s, or null if nothing to update. </returns>
+        public async Task<int> UpdateMergeBlacklist(string projectId)
         {
-            var frontierWordIds = (await _wordRepo.GetFrontier(projectId)).Select(word => word.Id);
             var oldBlacklist = await _mergeBlacklistRepo.GetAll(projectId);
-            var newBlacklist = new List<MergeBlacklistEntry>();
+            if (oldBlacklist is null || oldBlacklist.Count == 0)
+            {
+                return 0;
+            }
+            var frontierWordIds = (await _wordRepo.GetFrontier(projectId)).Select(word => word.Id);
+            var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
-                var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id));
-                if (newIds.Count() > 1)
+                var newIds = new List<string>(entry.WordIds.Where(id => frontierWordIds.Contains(id)));
+                if (newIds.Count < entry.WordIds.Count)
                 {
-                    entry.WordIds = new List<string>(newIds);
-                    newBlacklist.Add(entry);
+                    updateCount++;
+                    if (newIds.Count > 1)
+                    {
+                        entry.WordIds = newIds;
+                        await _mergeBlacklistRepo.Update(entry);
+                    }
+                    else
+                    {
+                        await _mergeBlacklistRepo.Delete(projectId, entry.Id);
+                    }
                 }
             }
-            await _mergeBlacklistRepo.Replace(projectId, newBlacklist);
-            return newBlacklist;
+            return updateCount;
         }
 
         [Serializable]

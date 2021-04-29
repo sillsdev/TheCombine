@@ -9,6 +9,6 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList);
         Task<MergeBlacklistEntry> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds);
         Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds);
-        Task<List<MergeBlacklistEntry>> UpdateMergeBlacklist(string projectId);
+        Task<int> UpdateMergeBlacklist(string projectId);
     }
 }

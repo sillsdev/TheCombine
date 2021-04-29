@@ -84,7 +84,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Update merge blacklist. </summary>
         /// <remarks> Get: v1/projects/{projectId}/merge/blacklist/update </remarks>
-        /// <returns> Number of entries. </returns>
+        /// <returns> Number of updated entries. </returns>
         [HttpGet("blacklist/update")]
         public async Task<IActionResult> BlacklistUpdate(string projectId)
         {
@@ -92,9 +92,7 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-
-            var entries = await _mergeService.UpdateMergeBlacklist(projectId);
-            return new OkObjectResult(entries.Count());
+            return new OkObjectResult(await _mergeService.UpdateMergeBlacklist(projectId));
         }
     }
 }
