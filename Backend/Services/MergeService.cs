@@ -116,7 +116,11 @@ namespace BackendFramework.Services
             return false;
         }
 
-        /// <summary> Update merge blacklist for specified <see cref="Project"/> to current frontier. </summary>
+        /// <summary>
+        /// Update merge blacklist for specified <see cref="Project"/> to current frontier.
+        /// Remove from all blacklist entries any ids for words no longer in the frontier
+        /// and delete entries that no longer have at least two wordIds.
+        /// </summary>
         /// <returns> Updated List of <see cref="MergeBlacklistEntry"/>s, or null if nothing to update. </returns>
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
