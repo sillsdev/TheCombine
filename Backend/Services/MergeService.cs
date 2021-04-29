@@ -84,7 +84,8 @@ namespace BackendFramework.Services
             {
                 throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
             }
-            var blacklist = await _mergeBlacklistRepo.GetAll(projectId);
+            // When we switch from individual to common blacklist, the userId argement here should be removed.
+            var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
             foreach (var entry in blacklist)
             {
                 if (entry.WordIds.All(id => wordIds.Contains(id)))
