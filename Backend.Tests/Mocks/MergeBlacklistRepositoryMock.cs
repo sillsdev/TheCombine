@@ -17,10 +17,13 @@ namespace Backend.Tests.Mocks
             _mergeBlacklist = new List<MergeBlacklistEntry>();
         }
 
-        public Task<List<MergeBlacklistEntry>> GetAll(string projectId)
+        public Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
         {
-            var cloneList = _mergeBlacklist.Select(entry => entry.Clone()).ToList();
-            return Task.FromResult(cloneList.Where(entry => entry.ProjectId == projectId).ToList());
+            var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
+            var enumerable = (userId is null) ?
+                cloneList.Where(e => e.ProjectId == projectId) :
+                cloneList.Where(e => e.ProjectId == projectId && e.UserId == userId);
+            return Task.FromResult(enumerable.ToList());
         }
 
         public Task<MergeBlacklistEntry?> Get(string projectId, string entryId)

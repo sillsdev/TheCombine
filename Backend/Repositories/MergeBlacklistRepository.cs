@@ -19,10 +19,12 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Finds all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
-        public async Task<List<MergeBlacklistEntry>> GetAll(string projectId)
+        public async Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
         {
-            return await _mergeBlacklistDatabase.MergeBlacklist.Find(
-                u => u.ProjectId == projectId).ToListAsync();
+            var listFind = (userId is null) ?
+                _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId) :
+                _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId && e.UserId == userId);
+            return await listFind.ToListAsync();
         }
 
         /// <summary> Removes all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>

@@ -196,6 +196,12 @@ namespace Backend.Tests.Controllers
             Assert.IsTrue((bool)isC);
             var isD = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, wordIdsD).Result)).Value;
             Assert.IsFalse((bool)isD);
+
+            // Check with userId specified.
+            var withSame = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, _userId, wordIdsB).Result)).Value;
+            Assert.IsTrue((bool)withSame);
+            var withDiff = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, "diff", wordIdsB).Result)).Value;
+            Assert.IsFalse((bool)withDiff);
         }
 
         [Test]

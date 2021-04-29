@@ -98,13 +98,13 @@ namespace BackendFramework.Services
 
         /// <summary> Check if List of wordIds is in MergeBlacklist for specified <see cref="Project"/>. </summary>
         /// <returns> A bool, true if in the blacklist. </returns>
-        public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds)
+        public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null)
         {
             if (wordIds.Count < 2)
             {
                 throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
             }
-            var blacklist = await _mergeBlacklistRepo.GetAll(projectId);
+            var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
             foreach (var entry in blacklist)
             {
                 if (wordIds.All(id => entry.WordIds.Contains(id)))

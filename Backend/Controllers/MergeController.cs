@@ -56,9 +56,7 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-
             var userId = _permissionService.GetUserId(HttpContext);
-
             var blacklistEntry = await _mergeService.AddToMergeBlacklist(projectId, userId, wordIds);
             if (blacklistEntry is null)
             {
@@ -67,7 +65,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(blacklistEntry.WordIds);
         }
 
-        /// <summary> Check if a List of <see cref="Word"/>Ids in merge blacklist. </summary>
+        /// <summary> Check if List of <see cref="Word"/>Ids in merge blacklist. </summary>
         /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/check </remarks>
         /// <returns> A bool: whether the List is in the blacklist. </returns>
         [HttpPut("blacklist/check")]
@@ -77,8 +75,23 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-
+            var userId = _permissionService.GetUserId(HttpContext);
             var isInBlacklist = await _mergeService.IsInMergeBlacklist(projectId, wordIds);
+            return new OkObjectResult(isInBlacklist);
+        }
+
+        /// <summary> Check if List of <see cref="Word"/>Ids in specified <see cref="User"/>'s blacklist. </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/check </remarks>
+        /// <returns> A bool: whether the List is in the blacklist. </returns>
+        [HttpPut("blacklist/check/{userid}")]
+        public async Task<IActionResult> BlacklistCheck(
+            string projectId, string userId, [FromBody] List<string> wordIds)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            {
+                return new ForbidResult();
+            }
+            var isInBlacklist = await _mergeService.IsInMergeBlacklist(projectId, wordIds, userId);
             return new OkObjectResult(isInBlacklist);
         }
 
