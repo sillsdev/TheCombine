@@ -222,12 +222,15 @@ namespace Backend.Tests.Controllers
             };
             _ = _wordRepo.AddFrontier(frontier).Result;
 
-            // The only blacklistEntry with at least two ids in the frontier is C.
+            // All entries affected.
             var result = _mergeController.BlacklistUpdate(_projId).Result;
-            var newCount = ((ObjectResult)result).Value as int?;
-            Assert.AreEqual(newCount, 1);
-            var entry = _mergeBlacklistRepo.GetAll(_projId).Result.First();
-            Assert.AreEqual(entry.WordIds, new List<string> { "2", "3" });
+            var updatedCount = ((ObjectResult)result).Value as int?;
+            Assert.AreEqual(updatedCount, 3);
+
+            // The only blacklistEntry with at least two ids in the frontier is C.
+            var entries = _mergeBlacklistRepo.GetAll(_projId).Result;
+            Assert.That(entries, Has.Count.EqualTo(1));
+            Assert.AreEqual(entries.First().WordIds, new List<string> { "2", "3" });
         }
     }
 }
