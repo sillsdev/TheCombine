@@ -75,7 +75,6 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-            var userId = _permissionService.GetUserId(HttpContext);
             var isInBlacklist = await _mergeService.IsInMergeBlacklist(projectId, wordIds);
             return new OkObjectResult(isInBlacklist);
         }
