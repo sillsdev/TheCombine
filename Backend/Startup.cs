@@ -145,6 +145,7 @@ namespace BackendFramework
                 .AddNewtonsoftJson();
 
             services.AddSignalR();
+            services.AddSwaggerGen();
 
             services.Configure<Settings>(
                 options =>
@@ -266,6 +267,19 @@ namespace BackendFramework
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<CombineHub>("/hub");
+            });
+
+            // Configure OpenAPI (Formerly Swagger) schema generation
+            const string openApiRoutePrefix = "openapi";
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = $"/{openApiRoutePrefix}/{{documentName}}/openapi.{{json|yaml}}";
+            });
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"/{openApiRoutePrefix}/v1/openapi.json", "Combine API V1");
+                c.RoutePrefix = openApiRoutePrefix;
             });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the

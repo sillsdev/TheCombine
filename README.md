@@ -339,6 +339,8 @@ In the project directory, you can run:
 Installs the necessary packages and runs the app in the development mode.<br> Open
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).
+
 The page will reload if you make edits.<br> You will also see any lint errors in the console.
 
 > Note: You may need to first browse to https://localhost:5001 and accept the certificate warning in your browser if you
