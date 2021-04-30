@@ -282,8 +282,8 @@ export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const mergeTree = getState().mergeDuplicateGoal;
 
-    // Add to blacklist; no need to await.
-    backend.blacklistAdd(Object.keys(mergeTree.data.words));
+    // Add to blacklist.
+    await backend.blacklistAdd(Object.keys(mergeTree.data.words));
 
     // Merge words.
     const words = Object.keys(mergeTree.tree.words);
