@@ -131,12 +131,12 @@ namespace Backend.Tests.Controllers
 
             // Generate correct result for comparison.
             var modUserEdit = origUserEdit.Clone();
-            const string StringStep = "This is another step added.";
-            const int ModGoalIndex = 0;
-            modUserEdit.Edits[ModGoalIndex].StepData.Add(StringStep);
+            const string stringStep = "This is another step added.";
+            const int modGoalIndex = 0;
+            modUserEdit.Edits[modGoalIndex].StepData.Add(stringStep);
 
             // Create and put wrapper object.
-            var stepWrapperObj = new UserEditStepWrapper(ModGoalIndex, StringStep);
+            var stepWrapperObj = new UserEditStepWrapper(modGoalIndex, stringStep);
             _ = _userEditController.Put(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should have increased by 1.
@@ -148,15 +148,15 @@ namespace Backend.Tests.Controllers
                 Assert.Fail();
                 return;
             }
-            Assert.Contains(StringStep, userEdit.Edits[ModGoalIndex].StepData);
+            Assert.Contains(stringStep, userEdit.Edits[modGoalIndex].StepData);
 
             // Now update a step within the goal.
-            const string ModStringStep = "This is a replacement step.";
-            const int ModStepIndex = 1;
-            modUserEdit.Edits[ModGoalIndex].StepData[ModStepIndex] = ModStringStep;
+            const string modStringStep = "This is a replacement step.";
+            const int modStepIndex = 1;
+            modUserEdit.Edits[modGoalIndex].StepData[modStepIndex] = modStringStep;
 
             // Create and put wrapper object.
-            stepWrapperObj = new UserEditStepWrapper(ModGoalIndex, ModStringStep, ModStepIndex);
+            stepWrapperObj = new UserEditStepWrapper(modGoalIndex, modStringStep, modStepIndex);
             _ = _userEditController.Put(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should not have further increased.
@@ -168,7 +168,7 @@ namespace Backend.Tests.Controllers
                 Assert.Fail();
                 return;
             }
-            Assert.Contains(ModStringStep, userEdit.Edits[ModGoalIndex].StepData);
+            Assert.Contains(modStringStep, userEdit.Edits[modGoalIndex].StepData);
         }
 
         [Test]

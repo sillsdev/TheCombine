@@ -55,12 +55,12 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAudioImport()
         {
-            const string SoundFileName = "sound.mp3";
-            var filePath = Path.Combine(Util.AssetsDir, SoundFileName);
+            const string soundFileName = "sound.mp3";
+            var filePath = Path.Combine(Util.AssetsDir, soundFileName);
 
             // Open the file to read to controller.
             using var stream = File.OpenRead(filePath);
-            var formFile = new FormFile(stream, 0, stream.Length, "name", SoundFileName);
+            var formFile = new FormFile(stream, 0, stream.Length, "name", soundFileName);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             var word = _wordRepo.Create(RandomWord()).Result;

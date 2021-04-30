@@ -105,22 +105,22 @@ namespace Backend.Tests.Services
         {
             // Build a mergeWords with a parent with 3 children.
             var mergeWords = new MergeWords { Parent = RandomWord() };
-            const int NumberOfChildren = 3;
-            foreach (var _ in Enumerable.Range(0, NumberOfChildren))
+            const int numberOfChildren = 3;
+            foreach (var _ in Enumerable.Range(0, numberOfChildren))
             {
                 var child = RandomWord();
                 var id = _wordRepo.Create(child).Result.Id;
                 Assert.IsNotNull(_wordRepo.GetWord(ProjId, id).Result);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
             }
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(NumberOfChildren));
+            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
 
             var mergeWordsList = new List<MergeWords> { mergeWords };
             var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
 
             // Check for correct history length;
             var dbParent = newWords.First();
-            Assert.That(dbParent.History, Has.Count.EqualTo(NumberOfChildren));
+            Assert.That(dbParent.History, Has.Count.EqualTo(numberOfChildren));
 
             // Confirm that parent added to repo and children not in frontier.
             Assert.IsNotNull(_wordRepo.GetWord(ProjId, dbParent.Id).Result);

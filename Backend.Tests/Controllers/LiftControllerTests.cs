@@ -70,7 +70,7 @@ namespace Backend.Tests.Controllers
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
-            const string LiftHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            const string liftHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
                         <ranges>
@@ -85,7 +85,7 @@ namespace Backend.Tests.Controllers
                     </header>
                 ";
 
-            var headerArray = Encoding.ASCII.GetBytes(LiftHeader);
+            var headerArray = Encoding.ASCII.GetBytes(liftHeader);
             fs.Write(headerArray);
 
             for (var i = 0; i < 3; i++)

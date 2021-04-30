@@ -28,8 +28,8 @@ namespace BackendFramework.Services
         {
             // Get userEdit to change
             var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            const int InvalidEditIndex = -1;
-            var failureResult = new Tuple<bool, int>(false, InvalidEditIndex);
+            const int invalidEditIndex = -1;
+            var failureResult = new Tuple<bool, int>(false, invalidEditIndex);
             if (oldUserEdit is null)
             {
                 return failureResult;
@@ -39,7 +39,7 @@ namespace BackendFramework.Services
 
             // Update existing Edit if guid exists, otherwise add new one at end of List.
             var indexOfNewestEdit = newUserEdit.Edits.FindIndex(e => e.Guid == edit.Guid);
-            if (indexOfNewestEdit > InvalidEditIndex)
+            if (indexOfNewestEdit > invalidEditIndex)
             {
                 newUserEdit.Edits[indexOfNewestEdit] = edit;
             }
@@ -53,7 +53,7 @@ namespace BackendFramework.Services
             var replaceSucceeded = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
             if (!replaceSucceeded)
             {
-                indexOfNewestEdit = InvalidEditIndex;
+                indexOfNewestEdit = invalidEditIndex;
             }
 
             return new Tuple<bool, int>(replaceSucceeded, indexOfNewestEdit);

@@ -104,15 +104,15 @@ namespace BackendFramework
             }
 
             // Configure JWT Authentication
-            const string SecretKeyEnvName = "COMBINE_JWT_SECRET_KEY";
-            var secretKey = Environment.GetEnvironmentVariable(SecretKeyEnvName);
+            const string secretKeyEnvName = "COMBINE_JWT_SECRET_KEY";
+            var secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
 
             // The JWT key size must be at least 128 bits long.
-            const int MinKeyLength = 128 / 8;
-            if (secretKey is null || secretKey.Length < MinKeyLength)
+            const int minKeyLength = 128 / 8;
+            if (secretKey is null || secretKey.Length < minKeyLength)
             {
-                _logger.LogError($"Must set {SecretKeyEnvName} environment variable " +
-                                 $"to string of length {MinKeyLength} or longer.");
+                _logger.LogError($"Must set {secretKeyEnvName} environment variable " +
+                                 $"to string of length {minKeyLength} or longer.");
                 throw new EnvironmentNotConfiguredException();
             }
 
@@ -153,31 +153,31 @@ namespace BackendFramework
                     options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                     options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
 
-                    const string EmailServiceFailureMessage = "Email services will not work.";
+                    const string emailServiceFailureMessage = "Email services will not work.";
                     options.SmtpServer = CheckedEnvironmentVariable(
                         "COMBINE_SMTP_SERVER",
                         null,
-                        EmailServiceFailureMessage);
+                        emailServiceFailureMessage);
                     options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
                         "COMBINE_SMTP_PORT",
                         IEmailContext.InvalidPort.ToString(),
-                        EmailServiceFailureMessage)!);
+                        emailServiceFailureMessage)!);
                     options.SmtpUsername = CheckedEnvironmentVariable(
                         "COMBINE_SMTP_USERNAME",
                         null,
-                        EmailServiceFailureMessage);
+                        emailServiceFailureMessage);
                     options.SmtpPassword = CheckedEnvironmentVariable(
                         "COMBINE_SMTP_PASSWORD",
                         null,
-                        EmailServiceFailureMessage);
+                        emailServiceFailureMessage);
                     options.SmtpAddress = CheckedEnvironmentVariable(
                         "COMBINE_SMTP_ADDRESS",
                         null,
-                        EmailServiceFailureMessage);
+                        emailServiceFailureMessage);
                     options.SmtpFrom = CheckedEnvironmentVariable(
                         "COMBINE_SMTP_FROM",
                         null,
-                        EmailServiceFailureMessage);
+                        emailServiceFailureMessage);
                     options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
                         "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
                         Settings.DefaultPasswordResetExpireTime.ToString(),
@@ -290,30 +290,30 @@ namespace BackendFramework
         /// </exception>
         private bool CreateAdminUser(IUserRepository userRepo)
         {
-            const string CreateAdminUsernameArg = "create-admin-username";
-            const string CreateAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
-            const string CreateAdminEmailEnv = "COMBINE_ADMIN_EMAIL";
+            const string createAdminUsernameArg = "create-admin-username";
+            const string createAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
+            const string createAdminEmailEnv = "COMBINE_ADMIN_EMAIL";
 
-            var username = Configuration.GetValue<string>(CreateAdminUsernameArg);
+            var username = Configuration.GetValue<string>(createAdminUsernameArg);
             if (username is null)
             {
                 _logger.LogInformation("No admin user name provided, skipped admin creation");
                 return false;
             }
 
-            var password = Environment.GetEnvironmentVariable(CreateAdminPasswordEnv);
+            var password = Environment.GetEnvironmentVariable(createAdminPasswordEnv);
             if (password is null)
             {
-                _logger.LogError($"Must set {CreateAdminPasswordEnv} environment variable " +
-                                 $"when using {CreateAdminUsernameArg} command line option.");
+                _logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
+                                 $"when using {createAdminUsernameArg} command line option.");
                 throw new EnvironmentNotConfiguredException();
             }
 
-            var adminEmail = Environment.GetEnvironmentVariable(CreateAdminEmailEnv);
+            var adminEmail = Environment.GetEnvironmentVariable(createAdminEmailEnv);
             if (adminEmail is null)
             {
-                _logger.LogError($"Must set {CreateAdminEmailEnv} environment variable " +
-                                 $"when using {CreateAdminUsernameArg} command line option.");
+                _logger.LogError($"Must set {createAdminEmailEnv} environment variable " +
+                                 $"when using {createAdminUsernameArg} command line option.");
                 throw new EnvironmentNotConfiguredException();
             }
 

@@ -26,7 +26,7 @@ namespace BackendFramework.Services
         }
 
         // TODO: This appears intrinsic to mongodb implementation and is brittle.
-        private const int ProjIdLength = 24;
+        private const int projIdLength = 24;
 
         private static SecurityToken GetJwt(HttpContext request)
         {
@@ -78,15 +78,15 @@ namespace BackendFramework.Services
 
             // Retrieve project ID from HTTP request
             // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
-            const string ProjectPath = "projects/";
-            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(ProjectPath) + ProjectPath.Length;
-            if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
+            const string projectPath = "projects/";
+            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
+            if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
             {
                 // If there is no project ID and they are not admin, do not allow changes
                 return user.IsAdmin;
             }
 
-            var projId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
+            var projId = request.Request.Path.ToString().Substring(indexOfProjId, projIdLength);
 
             // Assert that the user has permission for this function
             foreach (var projectEntry in permissionsObj)
@@ -150,7 +150,7 @@ namespace BackendFramework.Services
 
         public async Task<User?> MakeJwt(User user)
         {
-            const int HoursUntilExpires = 4;
+            const int hoursUntilExpires = 4;
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
             var key = Encoding.ASCII.GetBytes(secretKey);
@@ -180,7 +180,7 @@ namespace BackendFramework.Services
                     new Claim("UserRoleInfo", claimString)
                 }),
 
-                Expires = DateTime.UtcNow.AddHours(HoursUntilExpires),
+                Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
 
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
