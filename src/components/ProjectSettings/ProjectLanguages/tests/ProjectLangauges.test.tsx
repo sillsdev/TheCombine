@@ -6,12 +6,11 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/App/DefaultState";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
 import { defaultProject, Project, WritingSystem } from "types/project";
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+// This test relies on nothing in the store so mock an empty store
+const mockStore = configureMockStore([])({});
 const mockAnalysisWritingSystems: WritingSystem[] = [
   { name: "a", bcp47: "a", font: "" },
   { name: "b", bcp47: "b", font: "" },

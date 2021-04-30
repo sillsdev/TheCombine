@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import {
   updateAllWords,
   updateFrontierWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {

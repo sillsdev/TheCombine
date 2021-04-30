@@ -2,12 +2,12 @@ import loadable from "@loadable/component";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setCurrentGoal } from "components/GoalTimeline/GoalsActions";
+import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
-import { clearTree } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import { clearTree } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 

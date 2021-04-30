@@ -1,16 +1,14 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/App/DefaultState";
+import { resetFail } from "components/PasswordReset/Redux/ResetActions";
+import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import PasswordReset from "components/PasswordReset/ResetPage/component";
-import * as ResetActions from "components/PasswordReset/actions";
-import { RequestState } from "components/PasswordReset/reducer";
 
 var testRenderer: ReactTestRenderer;
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+// This test relies on nothing in the store so mock an empty store
+const mockStore = configureMockStore([])({});
 
 beforeEach(() => {
   renderer.act(() => {
@@ -161,7 +159,7 @@ describe("PasswordReset", () => {
     var resetPages = testRenderer.root.findAllByType(PasswordReset);
     expect(resetPages.length).toBe(1);
     var resetPage = resetPages[0];
-    mockStore.dispatch(ResetActions.resetFail());
+    mockStore.dispatch(resetFail());
 
     // set state
     resetPage.instance.setState(
