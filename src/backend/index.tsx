@@ -202,6 +202,51 @@ export async function canUploadLift(): Promise<boolean> {
   return resp.data;
 }
 
+/* MergeController.cs */
+
+/** Returns array of ids of the post-merge words. */
+export async function mergeWords(
+  mergeWordsArray: MergeWords[]
+): Promise<string[]> {
+  const resp = await backendServer.put(
+    `projects/${LocalStorage.getProjectId()}/merge`,
+    mergeWordsArray,
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
+/** Adds a list of wordIds to current project's merge blacklist. */
+export async function blacklistAdd(wordIds: string[]) {
+  await backendServer.put(
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/add`,
+    wordIds,
+    { headers: authHeader() }
+  );
+}
+
+/** Checks if list of wordIds is in current project's merge blacklist. */
+export async function blacklistCheck(wordIds: string[]): Promise<boolean> {
+  /** Until we have an interface to view/clear the merge blacklist,
+   * each user automatically has their own blacklist. */
+  const response = await backendServer.put(
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/check/${LocalStorage.getUserId()}`,
+    wordIds,
+    {
+      headers: authHeader(),
+    }
+  );
+  return response.data;
+}
+
+/** Updates current project's merge blacklist based on the frontier. */
+export async function blacklistUpdate() {
+  await backendServer.get(
+    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/update`,
+    { headers: authHeader() }
+  );
+}
+
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
@@ -505,18 +550,6 @@ export async function getWord(id: string): Promise<Word> {
 export async function getAllWords(): Promise<Word[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/words`,
-    { headers: authHeader() }
-  );
-  return resp.data;
-}
-
-/** Returns array of ids of the post-merge words. */
-export async function mergeWords(
-  mergeWordsArray: MergeWords[]
-): Promise<string[]> {
-  const resp = await backendServer.put(
-    `projects/${LocalStorage.getProjectId()}/words`,
-    mergeWordsArray,
     { headers: authHeader() }
   );
   return resp.data;

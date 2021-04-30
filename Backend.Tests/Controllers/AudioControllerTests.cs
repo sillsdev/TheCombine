@@ -46,12 +46,6 @@ namespace Backend.Tests.Controllers
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..length];
         }
 
-        private static Word RandomWord()
-        {
-            var word = new Word { Vernacular = RandomString(4) };
-            return word;
-        }
-
         [Test]
         public void TestAudioImport()
         {
@@ -63,7 +57,7 @@ namespace Backend.Tests.Controllers
             var formFile = new FormFile(stream, 0, stream.Length, "name", soundFileName);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
-            var word = _wordRepo.Create(RandomWord()).Result;
+            var word = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             // `fileUpload` contains the file stream and the name of the file.
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
@@ -78,7 +72,7 @@ namespace Backend.Tests.Controllers
         public void DeleteAudio()
         {
             // Fill test database
-            var origWord = _wordRepo.Create(RandomWord()).Result;
+            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             // Add audio file to word
             origWord.Audio.Add("a.wav");
@@ -87,22 +81,22 @@ namespace Backend.Tests.Controllers
             _ = _audioController.Delete(_projId, origWord.Id, "a.wav").Result;
 
             // Original word persists
-            Assert.IsTrue(_wordRepo.GetAllWords(_projId).Result.Count == 2);
+            Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
 
             // Get the new word from the database
             var frontier = _wordRepo.GetFrontier(_projId).Result;
 
             // Ensure the new word has no audio files
-            Assert.IsTrue(frontier[0].Audio.Count == 0);
+            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
 
             // Test the frontier
             Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
 
             // Ensure the word with deleted audio is in the frontier
-            Assert.IsTrue(frontier.Count == 1);
-            Assert.IsTrue(frontier[0].Id != origWord.Id);
-            Assert.IsTrue(frontier[0].Audio.Count == 0);
-            Assert.IsTrue(frontier[0].History.Count == 1);
+            Assert.That(frontier, Has.Count.EqualTo(1));
+            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
+            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
+            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }
     }
 }

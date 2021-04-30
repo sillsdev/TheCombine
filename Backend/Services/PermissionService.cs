@@ -19,14 +19,14 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
 
+        // TODO: This appears intrinsic to mongodb implementation and is brittle.
+        private const int ProjIdLength = 24;
+
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
         }
-
-        // TODO: This appears intrinsic to mongodb implementation and is brittle.
-        private const int ProjIdLength = 24;
 
         private static SecurityToken GetJwt(HttpContext request)
         {
@@ -115,6 +115,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
+        /// <exception cref="InvalidJwtTokenError"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)
         {
             var jsonToken = GetJwt(request);

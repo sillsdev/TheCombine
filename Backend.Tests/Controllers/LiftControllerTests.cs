@@ -30,7 +30,8 @@ namespace Backend.Tests.Controllers
 
         private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
-        private const string _projName = "LiftControllerTests";
+        private const string ProjName = "LiftControllerTests";
+        private const string UserId = "LiftControllerTestUserId";
 
         [SetUp]
         public void Setup()
@@ -45,7 +46,7 @@ namespace Backend.Tests.Controllers
                 _wordRepo, _projRepo, _permissionService, _liftService, _notifyService, _logger);
 
             _logger = new MockLogger();
-            _projId = _projRepo.Create(new Project { Name = _projName }).Result!.Id;
+            _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
         }
 
         [TearDown]
@@ -54,22 +55,13 @@ namespace Backend.Tests.Controllers
             _projRepo.Delete(_projId);
         }
 
-        private static Project RandomProject()
-        {
-            var project = new Project
-            {
-                Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..4]
-            };
-            return project;
-        }
-
         public string RandomLiftFile(string path)
         {
             var name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
-            const string header = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            const string liftHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
                         <ranges>
@@ -84,7 +76,7 @@ namespace Backend.Tests.Controllers
                     </header>
                 ";
 
-            var headerArray = Encoding.ASCII.GetBytes(header);
+            var headerArray = Encoding.ASCII.GetBytes(liftHeader);
             fs.Write(headerArray);
 
             for (var i = 0; i < 3; i++)
@@ -131,45 +123,6 @@ namespace Backend.Tests.Controllers
 
             fs.Close();
             return name;
-        }
-
-        private static Word RandomWord(string projId)
-        {
-            var word = new Word { Senses = new List<Sense> { new Sense(), new Sense(), new Sense() } };
-
-            foreach (var sense in word.Senses)
-            {
-                sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
-
-                foreach (var gloss in sense.Glosses)
-                {
-                    gloss.Def = Util.RandString();
-                    gloss.Language = Util.RandString(3);
-                }
-
-                sense.SemanticDomains = new List<SemanticDomain>
-                {
-                    new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
-                };
-
-                foreach (var semdom in sense.SemanticDomains)
-                {
-                    semdom.Name = Util.RandString();
-                    semdom.Id = Util.RandString();
-                    semdom.Description = Util.RandString();
-                }
-            }
-
-            word.Created = Util.RandString();
-            word.Vernacular = Util.RandString();
-            word.Modified = Util.RandString();
-            word.PartOfSpeech = Util.RandString();
-            word.Plural = Util.RandString();
-            word.History = new List<string>();
-            word.ProjectId = projId;
-
-            return word;
         }
 
         private static FileUpload InitFile(Stream fstream, string filename)
@@ -226,9 +179,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestDeletedWordsExportToLift()
         {
-            var word = RandomWord(_projId);
-            var secondWord = RandomWord(_projId);
-            var wordToDelete = RandomWord(_projId);
+            var word = Util.RandomWord(_projId);
+            var secondWord = Util.RandomWord(_projId);
+            var wordToDelete = Util.RandomWord(_projId);
 
             var wordToUpdate = _wordRepo.Create(word).Result;
             wordToDelete = _wordRepo.Create(wordToDelete).Result;
@@ -242,9 +195,8 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, wordToDelete.Id);
 
-            const string userId = "testId";
-            _liftController.ExportLiftFile(_projId, userId).Wait();
-            var result = (FileStreamResult)_liftController.DownloadLiftFile(_projId, userId).Result;
+            _liftController.ExportLiftFile(_projId, UserId).Wait();
+            var result = (FileStreamResult)_liftController.DownloadLiftFile(_projId, UserId).Result;
             Assert.NotNull(result);
 
             // Read contents.
@@ -256,7 +208,7 @@ namespace Backend.Tests.Controllers
 
             // Write LiftFile contents to a temporary directory.
             var extractedExportDir = ExtractZipFileContents(contents);
-            var sanitizedProjName = Sanitization.MakeFriendlyForPath(_projName, "Lift");
+            var sanitizedProjName = Sanitization.MakeFriendlyForPath(ProjName, "Lift");
             var exportPath = Path.Combine(
                 extractedExportDir, sanitizedProjName, sanitizedProjName + ".lift");
             var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
@@ -268,8 +220,8 @@ namespace Backend.Tests.Controllers
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
 
             // Delete the export
-            await _liftController.DeleteLiftFile(userId);
-            var notFoundResult = _liftController.DownloadLiftFile(_projId, userId).Result;
+            await _liftController.DeleteLiftFile(UserId);
+            var notFoundResult = _liftController.DownloadLiftFile(_projId, UserId).Result;
             Assert.That(notFoundResult is NotFoundObjectResult);
         }
 
@@ -301,7 +253,7 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 1
 
             // Init the project the .zip info is added to.
-            var proj1 = RandomProject();
+            var proj1 = Util.RandomProject();
             proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj1 = _projRepo.Create(proj1).Result;
 
@@ -363,7 +315,7 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 2
 
             // Init the project the .zip info is added to.
-            var proj2 = RandomProject();
+            var proj2 = Util.RandomProject();
             proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj2 = _projRepo.Create(proj2).Result;
 
@@ -389,7 +341,7 @@ namespace Backend.Tests.Controllers
             File.Delete(exportedFilePath);
 
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
-            Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
+            Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
             // We are currently only testing guids on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {

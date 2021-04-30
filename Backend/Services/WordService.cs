@@ -126,62 +126,6 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        /// <summary> Prepares a merge parent to be added to the database. </summary>
-        /// <returns> Word to add. </returns>
-        private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
-        {
-            var parent = mergeWords.Parent.Clone();
-            parent.ProjectId = projectId;
-            parent.History = new List<string>();
-
-            // Add child to history.
-            foreach (var childSource in mergeWords.Children)
-            {
-                parent.History.Add(childSource.SrcWordId);
-                if (childSource.GetAudio)
-                {
-                    var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId);
-                    if (child is null)
-                    {
-                        throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
-                    }
-                    parent.Audio.AddRange(child.Audio);
-                }
-            }
-
-            // Remove duplicates.
-            parent.Audio = parent.Audio.Distinct().ToList();
-            parent.History = parent.History.Distinct().ToList();
-
-            // Clear fields to be automatically regenerated.
-            parent.Id = "";
-            parent.Modified = "";
-
-            return parent;
-        }
-
-        /// <summary> Deletes all the merge children from the frontier. </summary>
-        /// <returns> Number of words deleted. </returns>
-        private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
-        {
-            var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
-            return await _wordRepo.DeleteFrontier(projectId, childIds);
-        }
-
-        /// <summary>
-        /// Given a list of MergeWords, preps the words to be added, removes the children
-        /// from the frontier, and adds the new words to the database.
-        /// </summary>
-        /// <returns> List of new words added. </returns>
-        public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
-        {
-            var newWords = new List<Word>();
-            await Task.WhenAll(mergeWordsList.Select(m => MergePrepParent(projectId, m)
-                                             .ContinueWith(task => newWords.Add(task.Result))));
-            await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
-            return await _wordRepo.Create(newWords);
-        }
-
         /// <summary> Checks if a word being added is an exact duplicate of a preexisting word </summary>
         public async Task<bool> WordIsUnique(Word word)
         {
@@ -206,7 +150,7 @@ namespace BackendFramework.Services
                     foreach (var oldSense in matchingVern.Senses)
                     {
                         // If the new sense is a strict subset of the old one, then merge it in
-                        if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
+                        if (newSense.Glosses.All(oldSense.Glosses.Contains))
                         {
                             foundDuplicateSense = true;
 

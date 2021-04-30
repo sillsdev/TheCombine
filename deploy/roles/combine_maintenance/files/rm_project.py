@@ -5,9 +5,10 @@ Remove a project and its associated data from TheCombine.
 To delete a project from the database, we need to delete:
  1. documents in the
      - FrontierCollection,
-     - WordsCollection,
-     - UserEditsCollection, and
-     - UserRolesCollection
+     - MergeBlacklistCollection,
+     - UserEditsCollection,
+     - UserRolesCollection, and
+     - WordsCollection
     with a projectId field that matches the project being deleted;
  2. entries in the workedProject and projectRoles arrays in
     the UsersCollection that reference the project being deleted.
@@ -74,9 +75,10 @@ def main() -> None:
                 print(f"Project ID: {project_id}")
             for collection in (
                 "FrontierCollection",
-                "WordsCollection",
+                "MergeBlacklistCollection",
                 "UserEditsCollection",
                 "UserRolesCollection",
+                "WordsCollection",
             ):
                 combine.db_cmd(db_delete_from_collection(project_id, collection))
             for field in ("workedProjects", "projectRoles"):
