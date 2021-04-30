@@ -1,4 +1,6 @@
 import { createBrowserHistory } from "history";
+import { store } from "store";
+import { changePage } from "types/Redux/analytics";
 
 /** The browser history. When combined with React Router, classes can use
  * this to navigate to routes in The Combine. For example, if a route exists
@@ -8,15 +10,15 @@ import { createBrowserHistory } from "history";
  * information.
  */
 let history = createBrowserHistory();
+
 // set up analytics for page navigation
-let prevPath = "";
 history.listen((location) => {
-  if (location.pathname !== prevPath) {
+  if (location.pathname !== store.getState().analyticsState.currentPage) {
     analytics.track("navigate", {
-      source: prevPath,
+      source: store.getState().analyticsState.currentPage,
       destination: location.pathname,
     });
-    prevPath = location.pathname;
+    store.dispatch(changePage(location.pathname));
   }
 });
 export default history;

@@ -4,8 +4,10 @@ import { Translate } from "react-localize-redux";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 import DownloadButton from "components/ProjectExport/DownloadButton";
-import { ExportStatus } from "components/ProjectExport/ExportProjectActions";
-import { ExportProjectState } from "components/ProjectExport/ExportProjectReducer";
+import {
+  ExportProjectState,
+  ExportStatus,
+} from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 
 interface ExportProjectProps {
   exportProject: (projectId: string) => void;

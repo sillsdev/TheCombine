@@ -1,102 +1,18 @@
-/*import React from "react";
-import { Provider } from "react-redux";
-import renderer, { ReactTestInstance } from "react-test-renderer";
-import configureMockStore from "redux-mock-store";
-
-import { defaultState } from "components/App/DefaultState";*/
 import {
-  /*DataEntryComponent,*/ filterWords,
+  filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
-/*import { DataEntryHeader } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
-import { DataEntryTable } from "components/DataEntry/DataEntryTable/DataEntryTable";
-import { defaultProject } from "types/project";*/
 import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
 import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
 
-/*jest.mock("@material-ui/core/Dialog");
-jest.mock("backend", () => {
-  return {
-    getFrontierWords: () => mockGetFrontierWords(),
-    getProject: () => mockGetProject(),
-  };
-});
-jest.mock("components/AppBar/AppBarComponent"); // ReactTestRenderer doesn't like rendering UserMenu
-jest.mock("components/DataEntry/DataEntryTable/NewEntry/NewEntry");
-jest.mock("components/Pronunciations/Recorder");
-jest.mock("components/TreeView");
-
-const mockNewEntry = jest.fn();
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);*/
 const mockWord = simpleWord("", "");
 const mockDomainWord: DomainWord = {
   word: mockWord,
   gloss: mockWord.senses[0].glosses[0],
 };
 
-/*const mockGetFrontierWords = jest.fn();
-const mockGetProject = jest.fn();
-function setMockFunctions() {
-  mockGetFrontierWords.mockResolvedValue([]);
-  mockGetProject.mockResolvedValue(defaultProject);
-  mockWindow();
-}
-
-//Needed to mock window until refactored
-function mockWindow() {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
-}
-
-function createDataEntryComponentInstance(
-  dom: SemanticDomainWithSubdomains
-): ReactTestInstance {
-  return renderer.create(
-    <Provider store={mockStore}>
-      <DataEntryComponent domain={dom} />
-    </Provider>
-  ).root;
-}*/
-
 describe("DataEntryComponent", () => {
-  /*it("Questions hidden on complete clicked", () => {
-    setMockFunctions();
-    const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
-    //mockNewEntry.mockReturnValue(React.Fragment);
-    const parentInstance = createDataEntryComponentInstance(newDomain);
-
-    const tableInstances = parentInstance.findAllByType(DataEntryTable);
-    const headerInstances = parentInstance.findAllByType(DataEntryHeader);
-    expect(tableInstances.length).toBe(1);
-    expect(headerInstances.length).toBe(1);
-    const tableInstance = tableInstances[0];
-    const headerInstance = headerInstances[0];
-
-    const questionSwitch: ReactTestInstance = headerInstance.findByProps({
-      id: "questionVisibilitySwitch",
-    });
-    questionSwitch.props.onChange();
-    expect(questionSwitch.props.checked).toBeTruthy();
-    const completeButtonHandle = tableInstance.findAllByProps({
-      id: "complete",
-    })[0];
-    completeButtonHandle.props.onClick();
-    expect(questionSwitch.props.checked).toBeFalsy();
-  });*/
-
   describe("filterWords", () => {
     it("should return empty Word Array when given empty Word Array", () => {
       const words: Word[] = [];

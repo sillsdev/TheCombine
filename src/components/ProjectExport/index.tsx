@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
-import { asyncExportProject } from "components/ProjectExport/ExportProjectActions";
 import ExportProjectButton from "components/ProjectExport/ExportProjectButton";
+import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {

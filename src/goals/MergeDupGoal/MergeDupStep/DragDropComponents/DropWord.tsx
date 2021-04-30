@@ -4,8 +4,8 @@ import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
-import { setVern } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { MergeTreeState } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
+import { setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import theme from "types/theme";
 
 interface DropWordProps {

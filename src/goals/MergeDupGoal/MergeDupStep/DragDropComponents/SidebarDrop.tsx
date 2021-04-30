@@ -4,11 +4,11 @@ import { Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 
 import SidebarDragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDragSense";
-import { setSidebar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import {
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 
 interface SidebarDropProps {
   sidebar: Sidebar;

@@ -16,9 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
 import {
   playing,
-  PronunciationsStatus,
   reset,
-} from "components/Pronunciations/PronunciationsActions";
+} from "components/Pronunciations/Redux/PronunciationsActions";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 

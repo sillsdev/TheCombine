@@ -1,13 +1,10 @@
 import { connect } from "react-redux";
 
-import { asyncAdvanceStep } from "components/GoalTimeline/GoalsActions";
-import {
-  mergeAll,
-  setSidebar,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { asyncAdvanceStep } from "components/GoalTimeline/Redux/GoalActions";
 import MergeDupStepComponent from "goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
+import { mergeAll, setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return { wordCount: Object.keys(state.mergeDuplicateGoal.tree.words).length };

@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProjectName } from "backend";
 import {
   asyncDownloadExport,
-  ExportStatus,
   resetExport,
-} from "components/ProjectExport/ExportProjectActions";
+} from "components/ProjectExport/Redux/ExportProjectActions";
+import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { getNowDateTimeString } from "utilities";
