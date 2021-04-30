@@ -19,14 +19,14 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
 
+        // TODO: This appears intrinsic to mongodb implementation and is brittle.
+        private const int ProjIdLength = 24;
+
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
         }
-
-        // TODO: This appears intrinsic to mongodb implementation and is brittle.
-        private const int projIdLength = 24;
 
         private static SecurityToken GetJwt(HttpContext request)
         {
@@ -80,13 +80,13 @@ namespace BackendFramework.Services
             // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
             const string projectPath = "projects/";
             var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
-            if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
+            if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
                 // If there is no project ID and they are not admin, do not allow changes
                 return user.IsAdmin;
             }
 
-            var projId = request.Request.Path.ToString().Substring(indexOfProjId, projIdLength);
+            var projId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
 
             // Assert that the user has permission for this function
             foreach (var projectEntry in permissionsObj)
