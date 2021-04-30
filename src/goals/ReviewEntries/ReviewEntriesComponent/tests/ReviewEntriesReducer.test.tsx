@@ -1,8 +1,8 @@
-import { ReviewEntriesActionTypes } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
 import {
   defaultState,
-  reviewEntriesReducer,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+  ReviewEntriesActionTypes,
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 

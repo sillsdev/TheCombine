@@ -1,16 +1,16 @@
 import { connect } from "react-redux";
 
-import {
-  asyncLogin,
-  loginReset,
-  logoutAndResetStore,
-} from "components/Login/LoginActions";
 import Login, {
   LoginDispatchProps,
   LoginStateProps,
 } from "components/Login/LoginPage/LoginComponent";
+import {
+  asyncLogin,
+  loginReset,
+  logoutAndResetStore,
+} from "components/Login/Redux/LoginActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   return {

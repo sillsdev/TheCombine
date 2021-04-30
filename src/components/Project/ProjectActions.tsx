@@ -1,17 +1,14 @@
 import { updateProject } from "backend";
-import { StoreStateDispatch } from "types/actions";
+import { setProjectId } from "backend/localStorage";
+import {
+  ProjectAction,
+  SET_CURRENT_PROJECT,
+} from "components/Project/ProjectReduxTypes";
 import { Project } from "types/project";
-
-export const SET_CURRENT_PROJECT = "SET_CURRENT_PROJECT";
-
-type ProjectActionType = typeof SET_CURRENT_PROJECT;
-
-export interface ProjectAction {
-  type: ProjectActionType;
-  payload: Project;
-}
+import { StoreStateDispatch } from "types/Redux/actions";
 
 export function setCurrentProject(payload: Project): ProjectAction {
+  setProjectId(payload.id);
   return {
     type: SET_CURRENT_PROJECT,
     payload,

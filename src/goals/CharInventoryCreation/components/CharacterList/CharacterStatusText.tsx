@@ -1,8 +1,7 @@
 import Typography from "@material-ui/core/Typography";
-import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { CharacterStatus } from "goals/CharInventoryCreation/CharacterInventoryReducer";
+import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {

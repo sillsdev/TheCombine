@@ -1,8 +1,12 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-
-import * as action from "components/ProjectScreen/CreateProject/CreateProjectActions";
-import * as reducer from "components/ProjectScreen/CreateProject/CreateProjectReducer";
+import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
+import {
+  defaultState,
+  CreateProjectAction,
+  CreateProjectActionTypes,
+  CreateProjectState,
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 
 const createMockStore = configureMockStore([thunk]);
 
@@ -25,9 +29,9 @@ const project = {
 };
 
 describe("CreateProjectAction Tests", () => {
-  let mockState: reducer.CreateProjectState = reducer.defaultState;
-  let CreateProject: action.CreateProjectAction = {
-    type: action.CREATE_PROJECT_IN_PROGRESS,
+  let mockState: CreateProjectState = defaultState;
+  let CreateProject: CreateProjectAction = {
+    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
     payload: {
       name: project.name,
       vernacularLanguage: project.vernacularLanguage,
@@ -43,7 +47,7 @@ describe("CreateProjectAction Tests", () => {
         project.analysisLanguages
       )
     ).toEqual({
-      type: action.CREATE_PROJECT_IN_PROGRESS,
+      type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
       payload: {
         name: project.name,
         vernacularLanguage: project.vernacularLanguage,
