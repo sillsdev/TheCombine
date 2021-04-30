@@ -20,7 +20,7 @@ import {
 
 import * as backend from "backend";
 import { AutoComplete, Project } from "types/project";
-import { UserRole } from "types/userRole";
+import { UserRole, Permission } from "types/userRole";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "components/ProjectExport";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
@@ -63,14 +63,16 @@ export default class ProjectSettingsComponent extends React.Component<
     );
     let settings: ProjectSettingsState = { ...this.state };
 
-    if (currentRole)
+    if (currentRole !== undefined)
       for (let role of currentRole.permissions) {
-        if (role === 4) {
+        if (role === Permission.ImportExport) {
           settings.projectName = this.props.project.name;
           settings.autocompleteSetting = this.props.project.autocompleteSetting;
           settings.imports = await backend.canUploadLift();
         }
-        if (role === 5) settings.editUsers = true;
+        if (role === Permission.DeleteEditSettingsAndUsers) {
+          settings.editUsers = true;
+        }
       }
     settings.loading = false;
     this.setState(settings);
