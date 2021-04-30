@@ -1,4 +1,5 @@
 import axios from "axios";
+import { StatusCodes } from "http-status-codes";
 
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -30,7 +31,7 @@ backendServer.interceptors.response.use(
     return resp;
   },
   (err) => {
-    if (err.response && err.response.status === 401) {
+    if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
       history.push(Path.Login);
     }
     return Promise.reject(err);
@@ -386,7 +387,9 @@ export function isUsernameTaken(username: string): Promise<boolean> {
   return backendServer
     .post(`users/checkusername/${username}`)
     .then(() => false)
-    .catch((err) => err.response && err.response.status === 400);
+    .catch(
+      (err) => err.response && err.response.status === StatusCodes.BAD_REQUEST
+    );
 }
 
 /** returns true if the email address is in use already */
@@ -394,7 +397,9 @@ export function isEmailTaken(emailAddress: string): Promise<boolean> {
   return backendServer
     .post(`users/checkemail/${emailAddress}`)
     .then(() => false)
-    .catch((err) => err.response && err.response.status === 400);
+    .catch(
+      (err) => err.response && err.response.status === StatusCodes.BAD_REQUEST
+    );
 }
 
 export async function authenticateUser(
