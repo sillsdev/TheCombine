@@ -119,11 +119,11 @@ namespace Backend.Tests.Helper
         [Test]
         public void TestMakeFriendlyForPathFallback()
         {
-            const string fallback = "Lift";
-            const string nonEmpty = "qwerty";
+            const string Fallback = "Lift";
+            const string NonEmpty = "qwerty";
             Assert.AreEqual(Sanitization.MakeFriendlyForPath(""), "");
-            Assert.AreEqual(Sanitization.MakeFriendlyForPath("", fallback), fallback);
-            Assert.AreEqual(Sanitization.MakeFriendlyForPath(nonEmpty, fallback), nonEmpty);
+            Assert.AreEqual(Sanitization.MakeFriendlyForPath("", Fallback), Fallback);
+            Assert.AreEqual(Sanitization.MakeFriendlyForPath(NonEmpty, Fallback), NonEmpty);
         }
     }
 }

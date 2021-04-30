@@ -30,7 +30,8 @@ namespace Backend.Tests.Controllers
 
         private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
-        private const string _projName = "LiftControllerTests";
+        private const string ProjName = "LiftControllerTests";
+        private const string UserId = "LiftControllerTestUserId";
 
         [SetUp]
         public void Setup()
@@ -45,7 +46,7 @@ namespace Backend.Tests.Controllers
                 _wordRepo, _projRepo, _permissionService, _liftService, _notifyService, _logger);
 
             _logger = new MockLogger();
-            _projId = _projRepo.Create(new Project { Name = _projName }).Result!.Id;
+            _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
         }
 
         [TearDown]
@@ -69,7 +70,7 @@ namespace Backend.Tests.Controllers
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
-            const string header = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            const string LiftHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
                         <ranges>
@@ -84,7 +85,7 @@ namespace Backend.Tests.Controllers
                     </header>
                 ";
 
-            var headerArray = Encoding.ASCII.GetBytes(header);
+            var headerArray = Encoding.ASCII.GetBytes(LiftHeader);
             fs.Write(headerArray);
 
             for (var i = 0; i < 3; i++)
@@ -242,9 +243,8 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, wordToDelete.Id);
 
-            const string userId = "testId";
-            _liftController.ExportLiftFile(_projId, userId).Wait();
-            var result = (FileStreamResult)_liftController.DownloadLiftFile(_projId, userId).Result;
+            _liftController.ExportLiftFile(_projId, UserId).Wait();
+            var result = (FileStreamResult)_liftController.DownloadLiftFile(_projId, UserId).Result;
             Assert.NotNull(result);
 
             // Read contents.
@@ -256,7 +256,7 @@ namespace Backend.Tests.Controllers
 
             // Write LiftFile contents to a temporary directory.
             var extractedExportDir = ExtractZipFileContents(contents);
-            var sanitizedProjName = Sanitization.MakeFriendlyForPath(_projName, "Lift");
+            var sanitizedProjName = Sanitization.MakeFriendlyForPath(ProjName, "Lift");
             var exportPath = Path.Combine(
                 extractedExportDir, sanitizedProjName, sanitizedProjName + ".lift");
             var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
@@ -268,8 +268,8 @@ namespace Backend.Tests.Controllers
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
 
             // Delete the export
-            await _liftController.DeleteLiftFile(userId);
-            var notFoundResult = _liftController.DownloadLiftFile(_projId, userId).Result;
+            await _liftController.DeleteLiftFile(UserId);
+            var notFoundResult = _liftController.DownloadLiftFile(_projId, UserId).Result;
             Assert.That(notFoundResult is NotFoundObjectResult);
         }
 

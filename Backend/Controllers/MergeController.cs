@@ -58,10 +58,6 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
             var blacklistEntry = await _mergeService.AddToMergeBlacklist(projectId, userId, wordIds);
-            if (blacklistEntry is null)
-            {
-                return new BadRequestResult();
-            }
             return new OkObjectResult(blacklistEntry.WordIds);
         }
 

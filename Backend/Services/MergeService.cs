@@ -76,6 +76,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>
+        /// <exception cref="InvalidBlacklistEntryError"> Throws when wordIds has count less than 2. </exception>
         /// <returns> The <see cref="MergeBlacklistEntry"/> created. </returns>
         public async Task<MergeBlacklistEntry> AddToMergeBlacklist(
             string projectId, string userId, List<string> wordIds)
@@ -84,11 +85,11 @@ namespace BackendFramework.Services
             {
                 throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
             }
-            // When we switch from individual to common blacklist, the userId argement here should be removed.
+            // When we switch from individual to common blacklist, the userId argument here should be removed.
             var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
             foreach (var entry in blacklist)
             {
-                if (entry.WordIds.All(id => wordIds.Contains(id)))
+                if (entry.WordIds.All(wordIds.Contains))
                 {
                     await _mergeBlacklistRepo.Delete(projectId, entry.Id);
                 }
@@ -98,6 +99,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Check if List of wordIds is in MergeBlacklist for specified <see cref="Project"/>. </summary>
+        /// <exception cref="InvalidBlacklistEntryError"> Throws when wordIds has count less than 2. </exception>
         /// <returns> A bool, true if in the blacklist. </returns>
         public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null)
         {
@@ -108,7 +110,7 @@ namespace BackendFramework.Services
             var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
             foreach (var entry in blacklist)
             {
-                if (wordIds.All(id => entry.WordIds.Contains(id)))
+                if (wordIds.All(entry.WordIds.Contains))
                 {
                     return true;
                 }
@@ -125,7 +127,7 @@ namespace BackendFramework.Services
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
             var oldBlacklist = await _mergeBlacklistRepo.GetAll(projectId);
-            if (oldBlacklist is null || oldBlacklist.Count == 0)
+            if (oldBlacklist.Count == 0)
             {
                 return 0;
             }
@@ -134,18 +136,20 @@ namespace BackendFramework.Services
             foreach (var entry in oldBlacklist)
             {
                 var newIds = new List<string>(entry.WordIds.Where(id => frontierWordIds.Contains(id)));
-                if (newIds.Count < entry.WordIds.Count)
+                if (newIds.Count >= entry.WordIds.Count)
                 {
-                    updateCount++;
-                    if (newIds.Count > 1)
-                    {
-                        entry.WordIds = newIds;
-                        await _mergeBlacklistRepo.Update(entry);
-                    }
-                    else
-                    {
-                        await _mergeBlacklistRepo.Delete(projectId, entry.Id);
-                    }
+                    continue;
+                }
+
+                updateCount++;
+                if (newIds.Count > 1)
+                {
+                    entry.WordIds = newIds;
+                    await _mergeBlacklistRepo.Update(entry);
+                }
+                else
+                {
+                    await _mergeBlacklistRepo.Delete(projectId, entry.Id);
                 }
             }
             return updateCount;

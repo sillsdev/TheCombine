@@ -294,11 +294,11 @@ namespace BackendFramework.Services
 
                 // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                const string semDomListFile = "BackendFramework.Data.sdList.txt";
-                var resource = assembly.GetManifestResourceStream(semDomListFile);
+                const string SemDomListFile = "BackendFramework.Data.sdList.txt";
+                var resource = assembly.GetManifestResourceStream(SemDomListFile);
                 if (resource is null)
                 {
-                    throw new Exception($"Unable to load semantic domain list: {semDomListFile}");
+                    throw new Exception($"Unable to load semantic domain list: {SemDomListFile}");
                 }
 
                 string sdList;

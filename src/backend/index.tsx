@@ -226,7 +226,8 @@ export async function blacklistAdd(wordIds: string[]) {
 
 /** Checks if list of wordIds is in current project's merge blacklist. */
 export async function blacklistCheck(wordIds: string[]): Promise<boolean> {
-  /** Until we have an interface to view/clear the blacklist, each user automatically has their own. */
+  /** Until we have an interface to view/clear the merge blacklist,
+   * each user automatically has their own blacklist. */
   const response = await backendServer.put(
     `/projects/${LocalStorage.getProjectId()}/merge/blacklist/check/${LocalStorage.getUserId()}`,
     wordIds,

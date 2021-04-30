@@ -19,7 +19,8 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private MergeController _mergeController = null!;
 
-        private string _projId = null!;
+        private const string ProjId = "MergeServiceTestProjId";
+        private const string UserId = "MergeServiceTestUserId";
 
         [SetUp]
         public void Setup()
@@ -29,76 +30,72 @@ namespace Backend.Tests.Controllers
             _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo);
             _permissionService = new PermissionServiceMock();
             _mergeController = new MergeController(_mergeService, _permissionService);
-
-            _projId = Guid.NewGuid().ToString();
         }
 
         [Test]
-        public void BlacklistAdd()
+        public void BlacklistAddTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(_projId).Result;
+            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
 
             var wordIdsA = new List<string> { "1", "2" };
             var wordIdsB = new List<string> { "3", "1" };
             var wordIdsC = new List<string> { "1", "2", "3" };
 
             // Add two Lists of wordIds.
-            _ = _mergeController.BlacklistAdd(_projId, wordIdsA).Result;
-            var result = _mergeBlacklistRepo.GetAll(_projId).Result;
+            _ = _mergeController.BlacklistAdd(ProjId, wordIdsA).Result;
+            var result = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.AreEqual(result.First().WordIds, wordIdsA);
-            _ = _mergeController.BlacklistAdd(_projId, wordIdsB).Result;
-            result = _mergeBlacklistRepo.GetAll(_projId).Result;
+            _ = _mergeController.BlacklistAdd(ProjId, wordIdsB).Result;
+            result = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(2));
 
             // Add a List of wordIds that contains both previous lists.
-            _ = _mergeController.BlacklistAdd(_projId, wordIdsC).Result;
-            result = _mergeBlacklistRepo.GetAll(_projId).Result;
+            _ = _mergeController.BlacklistAdd(ProjId, wordIdsC).Result;
+            result = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.AreEqual(result.First().WordIds, wordIdsC);
         }
 
         [Test]
-        public void BlacklistCheck()
+        public void BlacklistCheckTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(_projId).Result;
-            var _userId = "1234567890";
+            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
 
             var wordIdsB = new List<string> { "3", "1" };
             var wordIdsC = new List<string> { "1", "2", "3" };
             var wordIdsD = new List<string> { "1", "4" };
 
-            _ = _mergeService.AddToMergeBlacklist(_projId, _userId, wordIdsC);
+            _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIdsC);
 
-            var isB = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, wordIdsB).Result)).Value;
+            var isB = ((ObjectResult)_mergeController.BlacklistCheck(ProjId, wordIdsB).Result).Value;
             Assert.IsTrue((bool)isB);
-            var isC = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, wordIdsC).Result)).Value;
+            var isC = ((ObjectResult)_mergeController.BlacklistCheck(ProjId, wordIdsC).Result).Value;
             Assert.IsTrue((bool)isC);
-            var isD = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, wordIdsD).Result)).Value;
+            var isD = ((ObjectResult)_mergeController.BlacklistCheck(ProjId, wordIdsD).Result).Value;
             Assert.IsFalse((bool)isD);
 
             // Check with userId specified.
-            var withSame = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, _userId, wordIdsB).Result)).Value;
+            var withSame = ((ObjectResult)_mergeController.BlacklistCheck(ProjId, UserId, wordIdsB).Result).Value;
             Assert.IsTrue((bool)withSame);
-            var withDiff = ((ObjectResult)(_mergeController.BlacklistCheck(_projId, "diff", wordIdsB).Result)).Value;
+            var withDiff = ((ObjectResult)_mergeController.BlacklistCheck(ProjId, "diff", wordIdsB).Result).Value;
             Assert.IsFalse((bool)withDiff);
         }
 
         [Test]
-        public void BlacklistUpdate()
+        public void BlacklistUpdateTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(_projId).Result;
-            var _userId = "1234567890";
+            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
 
             var wordIdsC = new List<string> { "1", "2", "3" };
             var wordIdsD = new List<string> { "1", "4" };
             var wordIdsE = new List<string> { "5", "1" };
 
-            _ = _mergeService.AddToMergeBlacklist(_projId, _userId, wordIdsC);
-            _ = _mergeService.AddToMergeBlacklist(_projId, _userId, wordIdsD);
-            _ = _mergeService.AddToMergeBlacklist(_projId, _userId, wordIdsE);
+            _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIdsC);
+            _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIdsD);
+            _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIdsE);
 
-            var oldBlacklist = _mergeBlacklistRepo.GetAll(_projId).Result;
+            var oldBlacklist = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(oldBlacklist, Has.Count.EqualTo(3));
 
             // Make sure all wordIds are in the frontier EXCEPT 1.
@@ -109,12 +106,12 @@ namespace Backend.Tests.Controllers
             _ = _wordRepo.AddFrontier(frontier).Result;
 
             // All entries affected.
-            var result = _mergeController.BlacklistUpdate(_projId).Result;
+            var result = _mergeController.BlacklistUpdate(ProjId).Result;
             var updatedCount = ((ObjectResult)result).Value as int?;
             Assert.AreEqual(updatedCount, 3);
 
             // The only blacklistEntry with at least two ids in the frontier is C.
-            var entries = _mergeBlacklistRepo.GetAll(_projId).Result;
+            var entries = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(entries, Has.Count.EqualTo(1));
             Assert.AreEqual(entries.First().WordIds, new List<string> { "2", "3" });
         }

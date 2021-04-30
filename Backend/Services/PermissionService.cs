@@ -78,8 +78,8 @@ namespace BackendFramework.Services
 
             // Retrieve project ID from HTTP request
             // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
-            const string projectPath = "projects/";
-            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
+            const string ProjectPath = "projects/";
+            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(ProjectPath) + ProjectPath.Length;
             if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
                 // If there is no project ID and they are not admin, do not allow changes
@@ -115,6 +115,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
+        /// <exception cref="InvalidJwtTokenError"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)
         {
             var jsonToken = GetJwt(request);
@@ -149,7 +150,7 @@ namespace BackendFramework.Services
 
         public async Task<User?> MakeJwt(User user)
         {
-            const int hoursUntilExpires = 4;
+            const int HoursUntilExpires = 4;
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
             var key = Encoding.ASCII.GetBytes(secretKey);
@@ -179,7 +180,7 @@ namespace BackendFramework.Services
                     new Claim("UserRoleInfo", claimString)
                 }),
 
-                Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
+                Expires = DateTime.UtcNow.AddHours(HoursUntilExpires),
 
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

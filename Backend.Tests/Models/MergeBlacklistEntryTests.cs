@@ -6,16 +6,22 @@ namespace Backend.Tests.Models
 {
     public class MergeBlacklistEntryTests
     {
-        private const string id = "EntryId";
-        private const string projId = "ProjId";
-        private const string userId = "UserId";
-        private List<string> wordIds = new List<string> { "word1", "word2" };
-        private List<string> idsRevd = new List<string> { "word2", "word1" };
+        private const string EntryId = "MergeBlacklistEntryTestId";
+        private const string ProjId = "MergeBlacklistEntryTestProjectId";
+        private const string UserId = "MergeBlacklistEntryTestUserId";
+        private readonly List<string> wordIds = new List<string> { "word1", "word2" };
+        private readonly List<string> idsRevd = new List<string> { "word2", "word1" };
 
         [Test]
         public void TestClone()
         {
-            var entryA = new MergeBlacklistEntry { Id = id, ProjectId = projId, UserId = userId, WordIds = wordIds };
+            var entryA = new MergeBlacklistEntry
+            {
+                Id = EntryId,
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = wordIds
+            };
             var entryB = entryA.Clone();
             Assert.That(entryA.Equals(entryB));
         }
@@ -23,8 +29,20 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-            var entryA = new MergeBlacklistEntry { Id = id, ProjectId = projId, UserId = userId, WordIds = wordIds };
-            var entryB = new MergeBlacklistEntry { Id = id, ProjectId = projId, UserId = userId, WordIds = idsRevd };
+            var entryA = new MergeBlacklistEntry
+            {
+                Id = EntryId,
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = wordIds
+            };
+            var entryB = new MergeBlacklistEntry
+            {
+                Id = EntryId,
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = idsRevd
+            };
             Assert.That(entryA.Equals(entryB));
         }
 
@@ -33,15 +51,15 @@ namespace Backend.Tests.Models
         {
             var entryA = new MergeBlacklistEntry();
             var entryB = new MergeBlacklistEntry();
-            entryA.Id = id;
+            entryA.Id = EntryId;
             Assert.IsFalse(entryA.Equals(entryB));
 
             entryB = entryA.Clone();
-            entryA.ProjectId = projId;
+            entryA.ProjectId = ProjId;
             Assert.IsFalse(entryA.Equals(entryB));
 
             entryB = entryA.Clone();
-            entryA.UserId = userId;
+            entryA.UserId = UserId;
             Assert.IsFalse(entryA.Equals(entryB));
 
             entryB = entryA.Clone();
@@ -52,7 +70,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNull()
         {
-            var edit = new MergeBlacklistEntry { ProjectId = projId };
+            var edit = new MergeBlacklistEntry { ProjectId = ProjId };
             Assert.IsFalse(edit.Equals(null));
         }
     }

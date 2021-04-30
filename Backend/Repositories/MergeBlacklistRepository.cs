@@ -21,7 +21,7 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
         public async Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
         {
-            var listFind = (userId is null) ?
+            var listFind = userId is null ?
                 _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId) :
                 _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId && e.UserId == userId);
             return await listFind.ToListAsync();
@@ -62,7 +62,7 @@ namespace BackendFramework.Repositories
             return blacklistEntry;
         }
 
-        /// <summary> Removes specified <see cref="MergeBlacklist"/> for specified <see cref="Project"/>. </summary>
+        /// <summary> Removes specified <see cref="MergeBlacklistEntry"/> for specified <see cref="Project"/>. </summary>
         /// <returns> A bool: success of operation. </returns>
         public async Task<bool> Delete(string projectId, string entryId)
         {
@@ -74,7 +74,7 @@ namespace BackendFramework.Repositories
             return deleted.DeletedCount > 0;
         }
 
-        /// <summary> Updates specified <see cref="MergeBlacklist"/>. </summary>
+        /// <summary> Updates specified <see cref="MergeBlacklistEntry"/>. </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation. </returns>
         public async Task<ResultOfUpdate> Update(MergeBlacklistEntry blacklistEntry)
         {
