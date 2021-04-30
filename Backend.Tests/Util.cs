@@ -57,7 +57,9 @@ namespace Backend.Tests
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
                 SemanticDomains = new List<SemanticDomain>
                 {
-                    RandomSemanticDomain(),RandomSemanticDomain(),RandomSemanticDomain()
+                    RandomSemanticDomain(),
+                    RandomSemanticDomain(),
+                    RandomSemanticDomain()
                 },
             };
         }

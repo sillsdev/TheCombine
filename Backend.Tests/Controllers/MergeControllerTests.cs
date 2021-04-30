@@ -92,9 +92,12 @@ namespace Backend.Tests.Controllers
             Assert.That(oldBlacklist, Has.Count.EqualTo(3));
 
             // Make sure all wordIds are in the frontier EXCEPT 1.
-            var frontier = new List<Word> {
-                new Word {Id = "2"}, new Word {Id = "3"},
-                new Word {Id = "4"}, new Word {Id = "5"},
+            var frontier = new List<Word>
+            {
+                new Word {Id = "2"},
+                new Word {Id = "3"},
+                new Word {Id = "4"},
+                new Word {Id = "5"}
             };
             _ = _wordRepo.AddFrontier(frontier).Result;
 
