@@ -25,54 +25,10 @@ namespace Backend.Tests.Services
             _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo);
         }
 
-        private Word RandomWord()
-        {
-            var word = new Word
-            {
-                Created = Util.RandString(),
-                Vernacular = Util.RandString(),
-                Modified = Util.RandString(),
-                PartOfSpeech = Util.RandString(),
-                Plural = Util.RandString(),
-                History = new List<string>(),
-                Audio = new List<string>(),
-                EditedBy = new List<string> { Util.RandString(), Util.RandString() },
-                ProjectId = ProjId,
-                Senses = new List<Sense> { new Sense(), new Sense(), new Sense() },
-                Note = new Note { Language = Util.RandString(), Text = Util.RandString() }
-            };
-
-            foreach (var sense in word.Senses)
-            {
-                sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
-
-                foreach (var gloss in sense.Glosses)
-                {
-                    gloss.Def = Util.RandString();
-                    gloss.Language = Util.RandString(3);
-                }
-
-                sense.SemanticDomains = new List<SemanticDomain>
-                {
-                    new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
-                };
-
-                foreach (var semDom in sense.SemanticDomains)
-                {
-                    semDom.Name = Util.RandString();
-                    semDom.Id = Util.RandString();
-                    semDom.Description = Util.RandString();
-                }
-            }
-
-            return word;
-        }
-
         [Test]
         public void MergeWordsOneChildTest()
         {
-            var thisWord = RandomWord();
+            var thisWord = Util.RandomWord(ProjId);
             thisWord = _wordRepo.Create(thisWord).Result;
 
             var mergeObject = new MergeWords
@@ -104,11 +60,11 @@ namespace Backend.Tests.Services
         public void MergeWordsMultiChildTest()
         {
             // Build a mergeWords with a parent with 3 children.
-            var mergeWords = new MergeWords { Parent = RandomWord() };
+            var mergeWords = new MergeWords { Parent = Util.RandomWord(ProjId) };
             const int numberOfChildren = 3;
             foreach (var _ in Enumerable.Range(0, numberOfChildren))
             {
-                var child = RandomWord();
+                var child = Util.RandomWord(ProjId);
                 var id = _wordRepo.Create(child).Result.Id;
                 Assert.IsNotNull(_wordRepo.GetWord(ProjId, id).Result);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
@@ -130,8 +86,8 @@ namespace Backend.Tests.Services
         [Test]
         public void MergeWordsMultipleTest()
         {
-            var mergeWordsA = new MergeWords { Parent = RandomWord() };
-            var mergeWordsB = new MergeWords { Parent = RandomWord() };
+            var mergeWordsA = new MergeWords { Parent = Util.RandomWord(ProjId) };
+            var mergeWordsB = new MergeWords { Parent = Util.RandomWord(ProjId) };
             var mergeWordsList = new List<MergeWords> { mergeWordsA, mergeWordsB };
             var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
 
@@ -191,6 +147,46 @@ namespace Backend.Tests.Services
                 async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds0); });
             Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryError>(
                 async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds1); });
+        }
+
+        [Test]
+        public void UpdateMergeBlacklistTest()
+        {
+            var entryA = new MergeBlacklistEntry
+            {
+                Id = "A",
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = new List<string> { "1", "2", "3" }
+            };
+            var entryB = new MergeBlacklistEntry
+            {
+                Id = "B",
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = new List<string> { "1", "4" }
+            };
+
+            _ = _mergeBlacklistRepo.Create(entryA);
+            _ = _mergeBlacklistRepo.Create(entryB);
+
+            var oldBlacklist = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            Assert.That(oldBlacklist, Has.Count.EqualTo(2));
+
+            // Make sure all wordIds are in the frontier EXCEPT 1.
+            var frontier = new List<Word> {
+                new Word {Id = "2"}, new Word {Id = "3"}, new Word {Id = "4"},
+            };
+            _ = _wordRepo.AddFrontier(frontier).Result;
+
+            // All entries affected.
+            var updatedEntriesCount = _mergeService.UpdateMergeBlacklist(ProjId).Result;
+            Assert.AreEqual(updatedEntriesCount, 2);
+
+            // The only blacklistEntry with at least two ids in the frontier is A.
+            var entries = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            Assert.That(entries, Has.Count.EqualTo(1));
+            Assert.AreEqual(entries.First().WordIds, new List<string> { "2", "3" });
         }
     }
 }

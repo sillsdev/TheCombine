@@ -46,12 +46,6 @@ namespace Backend.Tests.Controllers
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..length];
         }
 
-        private Word RandomWord()
-        {
-            var word = new Word { Vernacular = RandomString(4), ProjectId = _projId };
-            return word;
-        }
-
         [Test]
         public void TestAudioImport()
         {
@@ -63,7 +57,7 @@ namespace Backend.Tests.Controllers
             var formFile = new FormFile(stream, 0, stream.Length, "name", soundFileName);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
-            var word = _wordRepo.Create(RandomWord()).Result;
+            var word = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             // `fileUpload` contains the file stream and the name of the file.
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
@@ -78,7 +72,7 @@ namespace Backend.Tests.Controllers
         public void DeleteAudio()
         {
             // Fill test database
-            var origWord = _wordRepo.Create(RandomWord()).Result;
+            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             // Add audio file to word
             origWord.Audio.Add("a.wav");

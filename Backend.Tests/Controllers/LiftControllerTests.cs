@@ -55,15 +55,6 @@ namespace Backend.Tests.Controllers
             _projRepo.Delete(_projId);
         }
 
-        private static Project RandomProject()
-        {
-            var project = new Project
-            {
-                Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..4]
-            };
-            return project;
-        }
-
         public string RandomLiftFile(string path)
         {
             var name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
@@ -134,45 +125,6 @@ namespace Backend.Tests.Controllers
             return name;
         }
 
-        private static Word RandomWord(string projId)
-        {
-            var word = new Word { Senses = new List<Sense> { new Sense(), new Sense(), new Sense() } };
-
-            foreach (var sense in word.Senses)
-            {
-                sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
-
-                foreach (var gloss in sense.Glosses)
-                {
-                    gloss.Def = Util.RandString();
-                    gloss.Language = Util.RandString(3);
-                }
-
-                sense.SemanticDomains = new List<SemanticDomain>
-                {
-                    new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
-                };
-
-                foreach (var semdom in sense.SemanticDomains)
-                {
-                    semdom.Name = Util.RandString();
-                    semdom.Id = Util.RandString();
-                    semdom.Description = Util.RandString();
-                }
-            }
-
-            word.Created = Util.RandString();
-            word.Vernacular = Util.RandString();
-            word.Modified = Util.RandString();
-            word.PartOfSpeech = Util.RandString();
-            word.Plural = Util.RandString();
-            word.History = new List<string>();
-            word.ProjectId = projId;
-
-            return word;
-        }
-
         private static FileUpload InitFile(Stream fstream, string filename)
         {
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
@@ -227,9 +179,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestDeletedWordsExportToLift()
         {
-            var word = RandomWord(_projId);
-            var secondWord = RandomWord(_projId);
-            var wordToDelete = RandomWord(_projId);
+            var word = Util.RandomWord(_projId);
+            var secondWord = Util.RandomWord(_projId);
+            var wordToDelete = Util.RandomWord(_projId);
 
             var wordToUpdate = _wordRepo.Create(word).Result;
             wordToDelete = _wordRepo.Create(wordToDelete).Result;
@@ -301,7 +253,7 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 1
 
             // Init the project the .zip info is added to.
-            var proj1 = RandomProject();
+            var proj1 = Util.RandomProject();
             proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj1 = _projRepo.Create(proj1).Result;
 
@@ -363,7 +315,7 @@ namespace Backend.Tests.Controllers
             // Roundtrip Part 2
 
             // Init the project the .zip info is added to.
-            var proj2 = RandomProject();
+            var proj2 = Util.RandomProject();
             proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj2 = _projRepo.Create(proj2).Result;
 

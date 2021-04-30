@@ -31,56 +31,12 @@ namespace Backend.Tests.Controllers
             _projId = _projRepo.Create(new Project { Name = "WordControllerTests" }).Result!.Id;
         }
 
-        private Word RandomWord()
-        {
-            var word = new Word
-            {
-                Created = Util.RandString(),
-                Vernacular = Util.RandString(),
-                Modified = Util.RandString(),
-                PartOfSpeech = Util.RandString(),
-                Plural = Util.RandString(),
-                History = new List<string>(),
-                Audio = new List<string>(),
-                EditedBy = new List<string> { Util.RandString(), Util.RandString() },
-                ProjectId = _projId,
-                Senses = new List<Sense> { new Sense(), new Sense(), new Sense() },
-                Note = new Note { Language = Util.RandString(), Text = Util.RandString() }
-            };
-
-            foreach (var sense in word.Senses)
-            {
-                sense.Accessibility = State.Active;
-                sense.Glosses = new List<Gloss> { new Gloss(), new Gloss(), new Gloss() };
-
-                foreach (var gloss in sense.Glosses)
-                {
-                    gloss.Def = Util.RandString();
-                    gloss.Language = Util.RandString(3);
-                }
-
-                sense.SemanticDomains = new List<SemanticDomain>
-                {
-                    new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
-                };
-
-                foreach (var semDom in sense.SemanticDomains)
-                {
-                    semDom.Name = Util.RandString();
-                    semDom.Id = Util.RandString();
-                    semDom.Description = Util.RandString();
-                }
-            }
-
-            return word;
-        }
-
         [Test]
         public void TestGetAllWords()
         {
-            _wordRepo.Create(RandomWord());
-            _wordRepo.Create(RandomWord());
-            _wordRepo.Create(RandomWord());
+            _wordRepo.Create(Util.RandomWord(_projId));
+            _wordRepo.Create(Util.RandomWord(_projId));
+            _wordRepo.Create(Util.RandomWord(_projId));
 
             var words = ((ObjectResult)_wordController.Get(_projId).Result).Value as List<Word>;
             Assert.That(words, Has.Count.EqualTo(3));
@@ -90,10 +46,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetWord()
         {
-            var word = _wordRepo.Create(RandomWord()).Result;
+            var word = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
-            _wordRepo.Create(RandomWord());
-            _wordRepo.Create(RandomWord());
+            _wordRepo.Create(Util.RandomWord(_projId));
+            _wordRepo.Create(Util.RandomWord(_projId));
 
             var action = _wordController.Get(_projId, word.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
@@ -105,7 +61,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void AddWord()
         {
-            var word = RandomWord();
+            var word = Util.RandomWord(_projId);
 
             var id = (string)((ObjectResult)_wordController.Post(_projId, word).Result).Value;
             word.Id = id;
@@ -113,7 +69,7 @@ namespace Backend.Tests.Controllers
             Assert.AreEqual(word, _wordRepo.GetAllWords(_projId).Result[0]);
             Assert.AreEqual(word, _wordRepo.GetFrontier(_projId).Result[0]);
 
-            var oldDuplicate = RandomWord();
+            var oldDuplicate = Util.RandomWord(_projId);
             var newDuplicate = oldDuplicate.Clone();
 
             _ = _wordController.Post(_projId, oldDuplicate).Result;
@@ -132,7 +88,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void UpdateWord()
         {
-            var origWord = _wordRepo.Create(RandomWord()).Result;
+            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             var modWord = origWord.Clone();
             modWord.Vernacular = "NewVernacular";
@@ -154,7 +110,7 @@ namespace Backend.Tests.Controllers
         public void DeleteWord()
         {
             // Fill test database
-            var origWord = _wordRepo.Create(RandomWord()).Result;
+            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             // Test delete function
             _ = _wordController.Delete(_projId, origWord.Id).Result;
