@@ -3,10 +3,10 @@ export enum CharacterInventoryType {
   SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS",
   ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS",
   ADD_TO_REJECTED_CHARACTERS = "ADD_TO_REJECTED_CHARACTERS",
-  SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS",
+  SET_ALL_WORDS = "SET_ALL_WORDS",
   SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
   SET_CHARACTER_SET = "SET_CHARACTER_SET",
-  RESET = "CHARINV_RESET",
+  RESET = "RESET",
 }
 
 export enum CharacterStatus {
@@ -46,7 +46,8 @@ export interface CharacterInventoryState {
   characterSet: CharacterSetEntry[];
 }
 
-/** A character with its occurrences and status, for sorting and filtering in a list */
+/** A character with its occurrences and status,
+ * for sorting and filtering in a list */
 export interface CharacterSetEntry {
   character: string;
   occurrences: number;
