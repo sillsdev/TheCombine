@@ -8,11 +8,11 @@ namespace Backend.Tests
         public void TestRandString()
         {
             var randomString = Util.RandString(10);
-            Assert.IsTrue(char.IsUpper(randomString[0]));
-            Assert.IsTrue(char.IsLower(randomString[1]));
-            Assert.IsTrue(char.IsLower(randomString[2]));
-            Assert.IsTrue(char.IsLower(randomString[3]));
-            Assert.IsTrue(char.IsUpper(randomString[4]));
+            Assert.That(char.IsUpper(randomString[0]));
+            Assert.That(char.IsLower(randomString[1]));
+            Assert.That(char.IsLower(randomString[2]));
+            Assert.That(char.IsLower(randomString[3]));
+            Assert.That(char.IsUpper(randomString[4]));
         }
 
     }
