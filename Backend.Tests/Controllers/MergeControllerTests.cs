@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Backend.Tests.Mocks;
@@ -35,8 +34,6 @@ namespace Backend.Tests.Controllers
         [Test]
         public void BlacklistAddTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
-
             var wordIdsA = new List<string> { "1", "2" };
             var wordIdsB = new List<string> { "3", "1" };
             var wordIdsC = new List<string> { "1", "2", "3" };
@@ -60,8 +57,6 @@ namespace Backend.Tests.Controllers
         [Test]
         public void BlacklistCheckTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
-
             var wordIdsB = new List<string> { "3", "1" };
             var wordIdsC = new List<string> { "1", "2", "3" };
             var wordIdsD = new List<string> { "1", "4" };
@@ -85,8 +80,6 @@ namespace Backend.Tests.Controllers
         [Test]
         public void BlacklistUpdateTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
-
             var wordIdsC = new List<string> { "1", "2", "3" };
             var wordIdsD = new List<string> { "1", "4" };
             var wordIdsE = new List<string> { "5", "1" };
