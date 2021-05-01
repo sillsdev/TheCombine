@@ -11,11 +11,11 @@ import * as React from "react";
 import { Translate } from "react-localize-redux";
 
 import LoadingButton from "components/Buttons/LoadingButton";
-import { CharacterSetEntry } from "goals/CharInventoryCreation/CharacterInventoryReducer";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
 import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
 import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
+import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { Goal } from "types/goals";
 import { Project } from "types/project";
 import theme from "types/theme";

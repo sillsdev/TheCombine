@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
-import { Project } from "types/project";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
+import { StoreState } from "types";
+import { Project } from "types/project";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {

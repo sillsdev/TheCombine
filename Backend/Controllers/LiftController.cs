@@ -342,14 +342,4 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(await _projRepo.CanImportLift(projectId));
         }
     }
-
-    [Serializable]
-    public class FileSystemError : Exception
-    {
-        public FileSystemError() { }
-
-        public FileSystemError(string message) : base(message) { }
-
-        public FileSystemError(string message, Exception innerException) : base(message, innerException) { }
-    }
 }

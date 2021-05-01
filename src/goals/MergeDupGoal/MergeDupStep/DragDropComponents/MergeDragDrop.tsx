@@ -5,12 +5,12 @@ import { v4 } from "uuid";
 
 import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
 import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
+import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   combineSense,
   moveSense,
   orderSense,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+} from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import theme from "types/theme";
 

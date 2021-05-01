@@ -90,7 +90,7 @@ A rapid word collection tool.
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
    - [chocolatey](https://chocolatey.org/): (Windows only) a Windows package manager.
-   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 4.1.131201`
+   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.0.211103`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
@@ -340,9 +340,6 @@ Installs the necessary packages and runs the app in the development mode.<br> Op
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br> You will also see any lint errors in the console.
-
-> Note: You may need to first browse to https://localhost:5001 and accept the certificate warning in your browser if you
-> get Network Errors the first time you try to run the application locally.
 
 #### `npm run frontend`
 

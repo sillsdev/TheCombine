@@ -1,19 +1,10 @@
 import { connect } from "react-redux";
 
-import {
-  exit,
-  fetchWords,
-  getAllCharacters,
-  resetInState,
-  setRejectedCharacters,
-  setSelectedCharacter,
-  setValidCharacters,
-  uploadInventory,
-} from "goals/CharInventoryCreation/CharacterInventoryActions";
 import CharacterInventory from "goals/CharInventoryCreation/CharacterInventoryComponent";
+import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import { Goal } from "types/goals";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -27,16 +18,16 @@ function mapStateToProps(state: StoreState) {
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setValidCharacters: (inventory: string[]) =>
-      dispatch(setValidCharacters(inventory)),
+      dispatch(Actions.setValidCharacters(inventory)),
     setRejectedCharacters: (inventory: string[]) =>
-      dispatch(setRejectedCharacters(inventory)),
+      dispatch(Actions.setRejectedCharacters(inventory)),
     setSelectedCharacter: (character: string) =>
-      dispatch(setSelectedCharacter(character)),
-    uploadInventory: (goal: Goal) => dispatch(uploadInventory(goal)),
-    fetchWords: () => dispatch(fetchWords()),
-    getAllCharacters: () => dispatch(getAllCharacters()),
-    resetInState: () => dispatch(resetInState()),
-    exit,
+      dispatch(Actions.setSelectedCharacter(character)),
+    uploadInventory: (goal: Goal) => dispatch(Actions.uploadInventory(goal)),
+    fetchWords: () => dispatch(Actions.fetchWords()),
+    getAllCharacters: () => dispatch(Actions.getAllCharacters()),
+    resetInState: () => dispatch(Actions.resetInState()),
+    exit: Actions.exit,
   };
 }
 

@@ -1,9 +1,9 @@
 import * as backend from "backend";
-import { StoreStateDispatch } from "types/actions";
 import {
   fetchWords,
   getAllCharacters,
-} from "goals/CharInventoryCreation/CharacterInventoryActions";
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: StoreStateDispatch) => {

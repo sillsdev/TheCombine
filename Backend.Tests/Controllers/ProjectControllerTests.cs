@@ -45,60 +45,12 @@ namespace Backend.Tests.Controllers
             _projController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
 
-        private static Project RandomProject()
-        {
-            var project = new Project
-            {
-                Name = Util.RandString(),
-                VernacularWritingSystem =
-                {
-                    Name = Util.RandString(), Bcp47 = Util.RandString(), Font = Util.RandString()
-                },
-                AnalysisWritingSystems = new List<WritingSystem>(),
-                SemanticDomains = new List<SemanticDomain>()
-            };
-            project.AnalysisWritingSystems.Add(new WritingSystem());
-            project.AnalysisWritingSystems[0].Name = Util.RandString();
-            project.AnalysisWritingSystems[0].Bcp47 = Util.RandString();
-            project.AnalysisWritingSystems[0].Font = Util.RandString();
-
-            for (var i = 1; i < 4; i++)
-            {
-                project.SemanticDomains.Add(new SemanticDomain
-                {
-                    Id = $"{i}",
-                    Name = Util.RandString(),
-                    Description = Util.RandString()
-                });
-                for (var j = 1; j < 4; j++)
-                {
-                    project.SemanticDomains.Add(new SemanticDomain
-                    {
-                        Id = $"{i}.{j}",
-                        Name = Util.RandString(),
-                        Description = Util.RandString()
-                    });
-                    for (var k = 1; k < 4; k++)
-                    {
-                        project.SemanticDomains.Add(new SemanticDomain
-                        {
-                            Id = $"{i}.{j}.{k}",
-                            Name = Util.RandString(),
-                            Description = Util.RandString()
-                        });
-                    }
-                }
-            }
-
-            return project;
-        }
-
         [Test]
         public void TestGetAllProjects()
         {
-            _projRepo.Create(RandomProject());
-            _projRepo.Create(RandomProject());
-            _projRepo.Create(RandomProject());
+            _projRepo.Create(Util.RandomProject());
+            _projRepo.Create(Util.RandomProject());
+            _projRepo.Create(Util.RandomProject());
 
             var projects = ((ObjectResult)_projController.GetAllProjects().Result).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
@@ -108,10 +60,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetProject()
         {
-            var project = _projRepo.Create(RandomProject()).Result;
+            var project = _projRepo.Create(Util.RandomProject()).Result;
 
-            _projRepo.Create(RandomProject());
-            _projRepo.Create(RandomProject());
+            _projRepo.Create(Util.RandomProject());
+            _projRepo.Create(Util.RandomProject());
 
             var action = _projController.Get(project!.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
@@ -123,7 +75,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestCreateProject()
         {
-            var project = RandomProject();
+            var project = Util.RandomProject();
             var projectUser = new ProjectWithUser(project);
             var id = ((ProjectWithUser)((ObjectResult)_projController.Post(projectUser).Result).Value).Id;
             project.Id = id;
@@ -133,7 +85,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateProject()
         {
-            var origProject = _projRepo.Create(RandomProject()).Result;
+            var origProject = _projRepo.Create(Util.RandomProject()).Result;
             var modProject = origProject!.Clone();
             modProject.Name = "Mark";
 
@@ -145,7 +97,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteProject()
         {
-            var origProject = _projRepo.Create(RandomProject()).Result;
+            var origProject = _projRepo.Create(Util.RandomProject()).Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
 
             _ = _projController.Delete(origProject!.Id).Result;
@@ -155,9 +107,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteAllProjects()
         {
-            _projRepo.Create(RandomProject());
-            _projRepo.Create(RandomProject());
-            _projRepo.Create(RandomProject());
+            _projRepo.Create(Util.RandomProject());
+            _projRepo.Create(Util.RandomProject());
+            _projRepo.Create(Util.RandomProject());
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(3));
 
             _ = _projController.Delete().Result;
@@ -167,7 +119,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestParseSemanticDomains()
         {
-            var project = _projRepo.Create(RandomProject()).Result;
+            var project = _projRepo.Create(Util.RandomProject()).Result;
             var sdList = (List<SemanticDomainWithSubdomains>)(
                 (ObjectResult)_projController.GetSemDoms(project!.Id).Result).Value;
             Assert.That(sdList, Has.Count.EqualTo(3));
@@ -178,15 +130,16 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestProjectDuplicateCheck()
         {
-            var project1 = _projRepo.Create(RandomProject()).Result;
-            _ = _projRepo.Create(RandomProject()).Result;
-            _ = _projRepo.Create(RandomProject()).Result;
+            var project1 = _projRepo.Create(Util.RandomProject()).Result;
+            _ = _projRepo.Create(Util.RandomProject()).Result;
+            _ = _projRepo.Create(Util.RandomProject()).Result;
             var modProject = project1!.Clone();
             modProject.Name = "Proj";
             _ = _projController.Put(modProject.Id, modProject);
-
-            Assert.AreEqual(((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value, true);
-            Assert.AreEqual(((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value, false);
+            var isOldProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value;
+            Assert.IsTrue((bool)isOldProjDup);
+            var isNewProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value;
+            Assert.IsFalse((bool)isNewProjDup);
         }
     }
 }

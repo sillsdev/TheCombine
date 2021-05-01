@@ -24,9 +24,7 @@ namespace BackendFramework.Helper
 
         /// <summary> Indicates that an error occured locating the current user's home directory. </summary>
         [Serializable]
-        public class HomeFolderNotFoundException : Exception
-        {
-        }
+        public class HomeFolderNotFoundException : Exception { }
 
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project based on the Word ID.
@@ -95,6 +93,9 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Get the path to the home directory of the current user. </summary>
+        /// <exception cref="HomeFolderNotFoundException">
+        /// Throws when no home path found in local environment variables.
+        /// </exception>
         private static string GetHomePath()
         {
             // Generate path to home on Linux or Windows.

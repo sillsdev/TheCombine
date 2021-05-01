@@ -195,6 +195,11 @@ namespace BackendFramework
             // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
+            // Merge types
+            services.AddTransient<IMergeBlacklistContext, MergeBlacklistContext>();
+            services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
+            services.AddTransient<IMergeService, MergeService>();
+
             // Password Reset types
             services.AddTransient<IPasswordResetContext, PasswordResetContext>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();

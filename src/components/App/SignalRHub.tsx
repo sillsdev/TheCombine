@@ -4,11 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
+import { downloadIsReady } from "components/ProjectExport/Redux/ExportProjectActions";
+import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
-import {
-  downloadIsReady,
-  ExportStatus,
-} from "components/ProjectExport/ExportProjectActions";
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub() {

@@ -5,10 +5,10 @@ import {
   asyncAddGoal,
   asyncGetUserEdits,
   loadUserEdits,
-} from "components/GoalTimeline/GoalsActions";
+} from "components/GoalTimeline/Redux/GoalActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import { Goal } from "types/goals";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return { ...state.goalsState };

@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 
-import { asyncReset } from "components/PasswordReset/actions";
+import { asyncReset } from "components/PasswordReset/Redux/ResetActions";
 import PasswordReset, {
   ResetDispatchProps,
 } from "components/PasswordReset/ResetPage/component";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {
