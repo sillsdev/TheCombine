@@ -343,9 +343,6 @@ To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openap
 
 The page will reload if you make edits.<br> You will also see any lint errors in the console.
 
-> Note: You may need to first browse to https://localhost:5001 and accept the certificate warning in your browser if you
-> get Network Errors the first time you try to run the application locally.
-
 #### `npm run frontend`
 
 Runs only the front end of the app in the development mode.
