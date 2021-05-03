@@ -9,11 +9,12 @@ config_analytics_write_key: ""
 # TheCombine is installed using Ansible and the playbook_install.yml
 # playbook.  It will set the IMAGE_TAG environment variable to
 # value provided by the user and launch docker-compose
+docker_repo: sillsdev
 image_tag: "${IMAGE_TAG}"
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ docker_repo }}/combine-backend:{{ image_tag }}"
+combine_image_frontend: "{{ docker_repo }}/combine-frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ docker_repo }}/combine-certmgr:{{ image_tag }}"
 
 # SSL cert variables specific to NUC targets
 cert_mode: "cert-client"
@@ -32,11 +33,9 @@ aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
 
 aws_s3_profile: s3_read_write
-aws_ecr_profile: ecr_read_only
 
 my_aws_profiles:
   - "{{ aws_s3_profile }}"
-  - "{{ aws_ecr_profile }}"
 
 ################################################
 # Disable Google reCAPTCHA for the NUC

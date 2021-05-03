@@ -15,14 +15,6 @@
     group: "{{ combine_group }}"
     mode: 0644
 
-- name: login to AWS ECR
-  shell:
-    cmd: "aws ecr get-login-password --profile {{ aws_ecr_profile }} | docker login --username AWS --password-stdin {{aws_ecr}}"
-  become: yes
-  become_user: "{{ combine_user }}"
-  tags:
-    - install_sw
-
 - name: pull Combine container images
   command: docker-compose pull
   become: yes

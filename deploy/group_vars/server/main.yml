@@ -9,11 +9,12 @@ config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
 # TheCombine is installed on the Live Server by TeamCity.  It will set the
 # IMAGE_TAG environment variable to major.minor.build_no and launch
 # Docker compose
+docker_repo: sillsdev
 image_tag: "${IMAGE_TAG}"
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ docker_repo }}/combine/backend:{{ image_tag }}"
+combine_image_frontend: "{{ docker_repo }}/combine/frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ docker_repo }}/combine/certmgr:{{ image_tag }}"
 
 # SSL cert variables specific to Server targets
 cert_mode: "letsencrypt"
@@ -36,11 +37,9 @@ aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
 # ECR:
 #   - install container images
 aws_s3_profile: s3_read_write
-aws_ecr_profile: ecr_read_only
 
 my_aws_profiles:
   - "{{ aws_s3_profile }}"
-  - "{{ aws_ecr_profile }}"
 
 # Define backup times (UTC)
 backup_hour: "10"
