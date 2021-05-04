@@ -61,46 +61,18 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(blacklistEntry.WordIds);
         }
 
-        /// <summary> Check if List of <see cref="Word"/>Ids in merge blacklist. </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/check </remarks>
-        /// <returns> A bool: whether the List is in the blacklist. </returns>
-        [HttpPut("blacklist/check")]
-        public async Task<IActionResult> BlacklistCheck(string projectId, [FromBody] List<string> wordIds)
+        /// <summary> Get lists of potential duplicates for merging. </summary>
+        /// <remarks> Get: v1/projects/{projectId}/merge/dups </remarks>
+        /// <returns> List of Lists of <see cref="Word"/>s. </returns>
+        [HttpGet("dups/{userid}")]
+        public async Task<IActionResult> GetPotentialDuplicates(string projectId, string userId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
                 return new ForbidResult();
             }
-            var isInBlacklist = await _mergeService.IsInMergeBlacklist(projectId, wordIds);
-            return new OkObjectResult(isInBlacklist);
-        }
-
-        /// <summary> Check if List of <see cref="Word"/>Ids in specified <see cref="User"/>'s blacklist. </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/check </remarks>
-        /// <returns> A bool: whether the List is in the blacklist. </returns>
-        [HttpPut("blacklist/check/{userid}")]
-        public async Task<IActionResult> BlacklistCheck(
-            string projectId, string userId, [FromBody] List<string> wordIds)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
-            {
-                return new ForbidResult();
-            }
-            var isInBlacklist = await _mergeService.IsInMergeBlacklist(projectId, wordIds, userId);
-            return new OkObjectResult(isInBlacklist);
-        }
-
-        /// <summary> Update merge blacklist. </summary>
-        /// <remarks> Get: v1/projects/{projectId}/merge/blacklist/update </remarks>
-        /// <returns> Number of updated entries. </returns>
-        [HttpGet("blacklist/update")]
-        public async Task<IActionResult> BlacklistUpdate(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
-            {
-                return new ForbidResult();
-            }
-            return new OkObjectResult(await _mergeService.UpdateMergeBlacklist(projectId));
+            await _mergeService.UpdateMergeBlacklist(projectId);
+            return new OkObjectResult(await _mergeService.GetPotentialDuplicates(projectId, userId));
         }
     }
 }

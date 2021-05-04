@@ -1,8 +1,5 @@
 import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
-import DupFinder, {
-  DefaultParams,
-} from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   CompletedMerge,
@@ -31,7 +28,6 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreState } from "types";
 import { GoalType } from "types/goals";
-import { maxNumSteps } from "types/goalUtilities";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
@@ -281,14 +277,7 @@ export function dispatchMergeStepData(goal: MergeDups) {
 
 // Modifies the mutable input.
 export async function loadMergeDupsData(goal: MergeDups) {
-  await backend.blacklistUpdate();
-
-  // Until we develop a better backend algorithm, run the frontend one twice,
-  // the first time with greater similarity restriction.
-  let newGroups = await getDupGroups(maxNumSteps(goal.goalType), 0);
-  if (!newGroups.length) {
-    newGroups = await getDupGroups(maxNumSteps(goal.goalType));
-  }
+  const newGroups = await backend.getDuplicates();
 
   // Add data to goal.
   goal.data = { plannedWords: newGroups };
@@ -297,39 +286,4 @@ export async function loadMergeDupsData(goal: MergeDups) {
   // Reset goal steps.
   goal.currentStep = 0;
   goal.steps = [];
-}
-
-async function getDupGroups(
-  maxCount: number,
-  maxScore?: number
-): Promise<Word[][]> {
-  const finder =
-    maxScore === undefined
-      ? new DupFinder()
-      : new DupFinder({ ...DefaultParams, maxScore });
-  const groups = await finder.getNextDups();
-
-  const usedIDs: string[] = [];
-  const newGroups: Word[][] = [];
-  for (const group of groups) {
-    // Remove words that are already included.
-    const newGroup = group.filter((w) => !usedIDs.includes(w.id));
-    if (newGroup.length < 2) {
-      continue;
-    }
-
-    // Add if not blacklisted.
-    const groupIds = newGroup.map((w) => w.id);
-    if (!(await backend.blacklistCheck(groupIds))) {
-      newGroups.push(newGroup);
-      usedIDs.push(...groupIds);
-    }
-
-    // Stop the process once maxCount many groups found.
-    if (newGroups.length === maxCount) {
-      break;
-    }
-  }
-
-  return newGroups;
 }

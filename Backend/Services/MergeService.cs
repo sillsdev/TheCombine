@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -153,6 +154,193 @@ namespace BackendFramework.Services
                 }
             }
             return updateCount;
+        }
+
+        public async Task<List<List<Word>>> GetPotentialDuplicates(string projectId, string? userId = null)
+        {
+            var collection = await _wordRepo.GetFrontier(projectId);
+            var dupFinder = new DuplicateFinder(5, 10, 3);
+            return await dupFinder.GetSimilarWords(collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
+        }
+
+        private class DuplicateFinder
+        {
+            private readonly IEditDistance _editDist;
+            private readonly int _maxInList;
+            private readonly int _maxLists;
+            private readonly int _maxScore;
+            //private const int _RefWordLength = 5;
+
+            public DuplicateFinder(int maxInList, int maxLists, int maxScore)
+            {
+                _editDist = new LevenshteinDistance();
+                _maxInList = maxInList;
+                _maxLists = maxLists;
+                _maxScore = maxScore;
+            }
+
+            async public Task<List<List<Word>>> GetSimilarWords(List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
+            {
+                var currentMax = _maxScore;
+                var wordLists = new List<List<Word>>() { Capacity = _maxLists + 1 };
+                while (collection.Count > 0 && (wordLists.Count < _maxLists || currentMax > 0))
+                {
+                    var word = collection.First();
+                    collection.RemoveAt(0);
+                    var similarWords = GetSimilarToWord(word, collection);
+                    if (similarWords.Count == 0)
+                    {
+                        continue;
+                    }
+                    var score = GetWordDistance(word, similarWords.First());
+                    if (score > currentMax || (wordLists.Count >= _maxLists && score == currentMax))
+                    {
+                        continue;
+                    }
+                    var ids = new List<string> { word.Id };
+                    ids.AddRange(similarWords.Select(w => w.Id));
+                    if (await isInBlacklist(ids))
+                    {
+                        continue;
+                    };
+                    similarWords.ForEach(w => collection.Remove(w));
+                    similarWords.Insert(0, word);
+                    currentMax = AddListToLists(collection, similarWords, wordLists, score);
+                }
+                return wordLists;
+            }
+
+            private int AddListToLists(
+                List<Word> collection, List<Word> newWordList, List<List<Word>> wordLists, int score)
+            {
+                for (int i = 0; i < wordLists.Count; i++)
+                {
+                    var oldList = wordLists.ElementAt(i);
+                    var oldScore = GetWordDistance(oldList.First(), oldList.ElementAt(1));
+                    if (score <= oldScore)
+                    {
+                        wordLists.Insert(i, newWordList);
+                        break;
+                    }
+                }
+                if (wordLists.Count == _maxLists + 1)
+                {
+                    var toRecycle = wordLists.Last();
+                    toRecycle.RemoveAt(0);
+                    foreach (var simWord in toRecycle)
+                    {
+                        collection.Add(simWord);
+                    }
+                    wordLists.RemoveAt(_maxLists);
+                }
+                var newLast = wordLists.Last();
+                return GetWordDistance(newLast.First(), newLast.ElementAt(1));
+            }
+
+            List<Word> GetSimilarToWord(Word word, List<Word> collection)
+            {
+                // Similar words will be added at index equal to its distance from the specified word.
+                var similarWords = new List<List<Word>>() { Capacity = _maxScore + 1 };
+                int currentMaxScore = _maxScore;
+
+                // We will collect fewer than _maxInList similar words to go with the specified word.
+                int count = 0;
+                int maxCount = _maxInList - 1;
+
+                foreach (var other in collection)
+                {
+                    // Add the word if the score is low enough.
+                    int score = GetWordDistance(word, other);
+                    if (score > currentMaxScore || (count >= maxCount && score >= currentMaxScore))
+                    {
+                        continue;
+                    }
+                    while (score >= similarWords.Count)
+                    {
+                        similarWords.Add(new List<Word>());
+                    }
+                    similarWords.ElementAt(score).Add(other.Clone());
+                    count++;
+
+                    // If adding the word resulted in more than allowed, decrement currentMaxScore.
+                    if (count > maxCount)
+                    {
+                        currentMaxScore = similarWords.Count - 1;
+                        while (count > maxCount)
+                        {
+                            count -= similarWords.ElementAt(currentMaxScore).Count;
+                            similarWords.RemoveAt(currentMaxScore);
+                            currentMaxScore--;
+                        }
+                    }
+
+                    // If we've maxed out with identical words, stop.
+                    if (count == _maxInList && currentMaxScore == 0)
+                    {
+                        break;
+                    }
+                }
+                return similarWords.SelectMany(i => i).ToList();
+            }
+
+            private int GetWordDistance(Word wordA, Word wordB)
+            {
+                // Just compare vernaculars for the moment.
+                var vernDist = GetVernacularDistance(wordA, wordB);
+                return vernDist;
+
+                /* // Algorithm from the frontend doesn't give int scores:
+                 * var vernScore = vernDist * 5.0 / wordA.Vernacular.Length;
+                 * if (vernScore <= 1) { return vernScore; }
+                 * glossDist = GetGlossDistance(wordA, wordB);
+                 * if (glossDist == 0) { return 1; }
+                 * return vernScore + 3 * glossDist; */
+            }
+
+            private int GetVernacularDistance(Word wordA, Word wordB)
+            {
+                return _editDist.GetDistance(wordA.Vernacular, wordB.Vernacular);
+            }
+
+            private int GetGlossDistance(Word wordA, Word wordB)
+            {
+                int minDist = _maxScore + 1;
+
+                // Flatten all sense glosses.
+                var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
+                if (glossesA.Count == 0)
+                {
+                    return minDist;
+                }
+                var glossesB = wordB.Senses.SelectMany(s => s.Glosses).ToList();
+                if (glossesB.Count == 0)
+                {
+                    return minDist;
+                }
+
+                // Find most similar non-empty glosses of the same langauge.
+                foreach (var gA in glossesA)
+                {
+                    if (gA.Def.Length == 0)
+                    {
+                        continue;
+                    }
+                    foreach (var gB in glossesB)
+                    {
+                        if (gB.Def.Length == 0 || gA.Language != gB.Language)
+                        {
+                            continue;
+                        }
+                        var glossDist = _editDist.GetDistance(gA.Def, gB.Def);
+                        if (glossDist == 0)
+                        {
+                            return 0;
+                        }
+                        minDist = Math.Min(minDist, glossDist);
+                    }
+                }
+                return minDist;
+            }
         }
 
         [Serializable]
