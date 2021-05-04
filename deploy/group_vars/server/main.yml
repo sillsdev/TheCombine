@@ -12,9 +12,9 @@ config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
 docker_repo: sillsdev
 image_tag: "${IMAGE_TAG}"
 
-combine_image_backend: "{{ docker_repo }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ docker_repo }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ docker_repo }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ docker_repo }}/combine-backend:{{ image_tag }}"
+combine_image_frontend: "{{ docker_repo }}/combine-frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ docker_repo }}/combine-certmgr:{{ image_tag }}"
 
 # SSL cert variables specific to Server targets
 cert_mode: "letsencrypt"

@@ -58,7 +58,7 @@ def get_image_tag() -> str:
     its value.  If IMAGE_TAG is not defined, return "latest".
     """
     if "IMAGE_TAG" in os.environ:
-        return os.environ["IMAGE_TAGE"]
+        return os.environ["IMAGE_TAG"]
     return "latest"
 
 
@@ -70,9 +70,9 @@ def main() -> None:
     dev_config = {
         "combine_pull_images": args.pull_images,
         "combine_use_syslog": False,
-        "combine_image_frontend": f"combine/frontend:{image_tag}",
-        "combine_image_backend": f"combine/backend:{image_tag}",
-        "combine_image_certmgr": f"combine/certmgr:{image_tag}",
+        "combine_image_frontend": f"combine-frontend:{image_tag}",
+        "combine_image_backend": f"combine-backend:{image_tag}",
+        "combine_image_certmgr": f"combine-certmgr:{image_tag}",
         "cert_email": "",
         "cert_mode": "self-signed",
         "cert_is_staging": 0,
