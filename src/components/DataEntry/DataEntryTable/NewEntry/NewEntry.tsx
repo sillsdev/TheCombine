@@ -2,9 +2,7 @@ import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import DupFinder, {
-  DefaultParams,
-} from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import DupFinder from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "types/theme";
 import { SemanticDomain, Sense, Word } from "types/word";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
@@ -60,11 +58,8 @@ export default class NewEntry extends React.Component<
   NewEntryState
 > {
   readonly maxSuggestions = 5;
-  readonly maxLevDistance = 3; // The default 5 allows too much distance
-  suggestionFinder: DupFinder = new DupFinder({
-    ...DefaultParams,
-    maxScore: this.maxLevDistance,
-  });
+  readonly maxLevDistance = 3;
+  suggestionFinder: DupFinder = new DupFinder();
 
   constructor(props: NewEntryProps) {
     super(props);
@@ -281,7 +276,7 @@ export default class NewEntry extends React.Component<
         const viableVerns: string[] = this.props.allVerns.filter(
           (vern: string) =>
             this.suggestionFinder.getLevenshteinDistance(vern, value) <
-            this.suggestionFinder.maxScore
+            this.maxLevDistance
         );
         const sortedVerns: string[] = viableVerns.sort(
           (a: string, b: string) =>
