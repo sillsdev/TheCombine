@@ -181,8 +181,8 @@ namespace BackendFramework.Services
 
             async public Task<List<List<Word>>> GetSimilarWords(List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
             {
-                var currentMax = _maxScore;
-                var wordLists = new List<Tuple<int, List<Word>>> { Capacity = _maxLists + 1 };
+                double currentMax = _maxScore;
+                var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
                 while (collection.Count > 0 && (wordLists.Count < _maxLists || currentMax > 0))
                 {
                     var word = collection.First();
@@ -241,17 +241,17 @@ namespace BackendFramework.Services
                 return wordLists.Select(list => list.Item2).ToList();
             }
 
-            private List<Tuple<int, Word>> GetSimilarToWord(Word word, List<Word> collection)
+            private List<Tuple<double, Word>> GetSimilarToWord(Word word, List<Word> collection)
             {
                 // If the number of similar words exceeds the max allowable (i.e., .Count = _maxInList),
                 // then the currentMaxScore will be decreased.
-                var similarWords = new List<Tuple<int, Word>> { Capacity = _maxInList };
-                int currentMaxScore = _maxScore;
+                var similarWords = new List<Tuple<double, Word>> { Capacity = _maxInList };
+                double currentMaxScore = _maxScore;
 
                 foreach (var other in collection)
                 {
                     // Add the word if the score is low enough.
-                    int score = GetWordDistance(word, other);
+                    var score = GetWordScore(word, other);
                     if (score > currentMaxScore || (similarWords.Count >= _maxInList - 1 && score >= currentMaxScore))
                     {
                         continue;
@@ -285,28 +285,26 @@ namespace BackendFramework.Services
                 return similarWords;
             }
 
-            private int GetWordDistance(Word wordA, Word wordB)
+            private double GetWordScore(Word wordA, Word wordB)
             {
                 // Just compare vernaculars for the moment.
-                var vernDist = GetVernacularDistance(wordA, wordB);
+                var vernDist = GetVernacularScore(wordA, wordB);
                 return vernDist;
-
-                /* // Algorithm from the frontend doesn't give int scores:
-                 * var vernScore = vernDist * 5.0 / wordA.Vernacular.Length;
-                 * if (vernScore <= 1) { return vernScore; }
+                /* // Algorithm from the frontend:
+                 * if (vernDist <= 1) { return vernDist; }
                  * glossDist = GetGlossDistance(wordA, wordB);
                  * if (glossDist == 0) { return 1; }
-                 * return vernScore + 3 * glossDist; */
+                 * return vernDist + 3 * glossDist; */
             }
 
-            private int GetVernacularDistance(Word wordA, Word wordB)
+            private double GetVernacularScore(Word wordA, Word wordB)
             {
-                return _editDist.GetDistance(wordA.Vernacular, wordB.Vernacular);
+                return GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
             }
 
-            private int GetGlossDistance(Word wordA, Word wordB)
+            private double GetGlossScore(Word wordA, Word wordB)
             {
-                int minDist = _maxScore + 1;
+                var minDist = _maxScore + 1.0;
 
                 // Flatten all sense glosses.
                 var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
@@ -320,7 +318,7 @@ namespace BackendFramework.Services
                     return minDist;
                 }
 
-                // Find most similar non-empty glosses of the same langauge.
+                // Find most similar non-empty glosses of the same language.
                 foreach (var gA in glossesA)
                 {
                     if (gA.Def.Length == 0)
@@ -333,15 +331,22 @@ namespace BackendFramework.Services
                         {
                             continue;
                         }
-                        var glossDist = _editDist.GetDistance(gA.Def, gB.Def);
-                        if (glossDist == 0)
+                        var glossScore = GetScaledDistance(gA.Def, gB.Def);
+                        if (glossScore == 0)
                         {
                             return 0;
                         }
-                        minDist = Math.Min(minDist, glossDist);
+                        minDist = Math.Min(minDist, glossScore);
                     }
                 }
                 return minDist;
+            }
+
+            private double GetScaledDistance(string stringA, string stringB)
+            {
+                return _editDist.GetDistance(stringA, stringB);
+                /* // Algorithm from the frontend doesn't account for stringA.Length == 0:
+                 * return _editDist.GetDistance(stringA, stringB) * 5.0 / stringA.Length; */
             }
         }
 
