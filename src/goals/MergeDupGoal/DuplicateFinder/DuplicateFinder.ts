@@ -34,7 +34,7 @@ export default class DupFinder {
         }
 
         // Recursively compute other entries.
-        const thisSubCost = a[i - 1] == b[j - 1] ? 0 : this.subsitutionCost;
+        const thisSubCost = a[i - 1] === b[j - 1] ? 0 : this.subsitutionCost;
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + this.deletionCost, //deletion
           matrix[i][j - 1] + this.insertionCost, //insertion
