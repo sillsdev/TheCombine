@@ -182,7 +182,7 @@ namespace BackendFramework.Services
             async public Task<List<List<Word>>> GetSimilarWords(List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
             {
                 var currentMax = _maxScore;
-                var wordLists = new List<List<Word>>() { Capacity = _maxLists + 1 };
+                var wordLists = new List<Tuple<int, List<Word>>> { Capacity = _maxLists + 1 };
                 while (collection.Count > 0 && (wordLists.Count < _maxLists || currentMax > 0))
                 {
                     var word = collection.First();
@@ -192,95 +192,97 @@ namespace BackendFramework.Services
                     {
                         continue;
                     }
-                    var score = GetWordDistance(word, similarWords.First());
+                    var score = similarWords.First().Item1;
                     if (score > currentMax || (wordLists.Count >= _maxLists && score == currentMax))
                     {
                         continue;
                     }
+
+                    // Check if set is in blacklist.
                     var ids = new List<string> { word.Id };
-                    ids.AddRange(similarWords.Select(w => w.Id));
+                    ids.AddRange(similarWords.Select(w => w.Item2.Id));
                     if (await isInBlacklist(ids))
                     {
                         continue;
                     };
-                    similarWords.ForEach(w => collection.Remove(w));
-                    similarWords.Insert(0, word);
-                    currentMax = AddListToLists(collection, similarWords, wordLists, score);
-                }
-                return wordLists;
-            }
 
-            private int AddListToLists(
-                List<Word> collection, List<Word> newWordList, List<List<Word>> wordLists, int score)
-            {
-                for (int i = 0; i < wordLists.Count; i++)
-                {
-                    var oldList = wordLists.ElementAt(i);
-                    var oldScore = GetWordDistance(oldList.First(), oldList.ElementAt(1));
-                    if (score <= oldScore)
+                    // Remove similar words from collection and add them to list with main word.
+                    var newWordList = Tuple.Create(score, new List<Word> { word });
+                    similarWords.ForEach(w =>
+                    {
+                        collection.Remove(w.Item2);
+                        newWordList.Item2.Add(w.Item2);
+                    });
+
+                    // Insert at correct place in list.
+                    int i = wordLists.FindIndex(pair => score <= pair.Item1);
+                    if (i == -1)
+                    {
+                        wordLists.Add(newWordList);
+                    }
+                    else
                     {
                         wordLists.Insert(i, newWordList);
-                        break;
                     }
-                }
-                if (wordLists.Count == _maxLists + 1)
-                {
-                    var toRecycle = wordLists.Last();
-                    toRecycle.RemoveAt(0);
-                    foreach (var simWord in toRecycle)
+
+                    // If list is now too long, boot the last one, recycling its similar words.
+                    if (wordLists.Count == _maxLists + 1)
                     {
-                        collection.Add(simWord);
+                        var toRecycle = wordLists.Last().Item2;
+                        toRecycle.RemoveAt(0);
+                        foreach (var simWord in toRecycle)
+                        {
+                            collection.Add(simWord);
+                        }
+                        wordLists.RemoveAt(_maxLists);
+                        currentMax = wordLists.Last().Item1;
                     }
-                    wordLists.RemoveAt(_maxLists);
                 }
-                var newLast = wordLists.Last();
-                return GetWordDistance(newLast.First(), newLast.ElementAt(1));
+                return wordLists.Select(list => list.Item2).ToList();
             }
 
-            List<Word> GetSimilarToWord(Word word, List<Word> collection)
+            private List<Tuple<int, Word>> GetSimilarToWord(Word word, List<Word> collection)
             {
-                // Similar words will be added at index equal to its distance from the specified word.
-                var similarWords = new List<List<Word>>() { Capacity = _maxScore + 1 };
+                // If the number of similar words exceeds the max allowable (i.e., .Count = _maxInList),
+                // then the currentMaxScore will be decreased.
+                var similarWords = new List<Tuple<int, Word>> { Capacity = _maxInList };
                 int currentMaxScore = _maxScore;
-
-                // We will collect fewer than _maxInList similar words to go with the specified word.
-                int count = 0;
-                int maxCount = _maxInList - 1;
 
                 foreach (var other in collection)
                 {
                     // Add the word if the score is low enough.
                     int score = GetWordDistance(word, other);
-                    if (score > currentMaxScore || (count >= maxCount && score >= currentMaxScore))
+                    if (score > currentMaxScore || (similarWords.Count >= _maxInList - 1 && score >= currentMaxScore))
                     {
                         continue;
                     }
-                    while (score >= similarWords.Count)
-                    {
-                        similarWords.Add(new List<Word>());
-                    }
-                    similarWords.ElementAt(score).Add(other.Clone());
-                    count++;
 
-                    // If adding the word resulted in more than allowed, decrement currentMaxScore.
-                    if (count > maxCount)
+                    // Insert at correct place in List.
+                    int i = similarWords.FindIndex(pair => score <= pair.Item1);
+                    var newWord = Tuple.Create(score, other.Clone());
+                    if (i == -1)
                     {
-                        currentMaxScore = similarWords.Count - 1;
-                        while (count > maxCount)
-                        {
-                            count -= similarWords.ElementAt(currentMaxScore).Count;
-                            similarWords.RemoveAt(currentMaxScore);
-                            currentMaxScore--;
-                        }
+                        similarWords.Add(newWord);
+                    }
+                    else
+                    {
+                        similarWords.Insert(i, newWord);
+                    }
+
+                    // Check if list is now 1 too large.
+                    if (similarWords.Count == _maxInList)
+                    {
+                        similarWords.RemoveAt(_maxInList);
+                        currentMaxScore = similarWords.Last().Item1;
                     }
 
                     // If we've maxed out with identical words, stop.
-                    if (count == _maxInList && currentMaxScore == 0)
+                    if (similarWords.Count == _maxInList - 1 && similarWords.Last().Item1 == 0)
                     {
                         break;
                     }
                 }
-                return similarWords.SelectMany(i => i).ToList();
+                return similarWords;
             }
 
             private int GetWordDistance(Word wordA, Word wordB)
