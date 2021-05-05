@@ -288,13 +288,13 @@ namespace BackendFramework.Services
             private double GetWordScore(Word wordA, Word wordB)
             {
                 // Just compare vernaculars for the moment.
-                var vernDist = GetVernacularScore(wordA, wordB);
-                return vernDist;
+                var vernScore = GetVernacularScore(wordA, wordB);
+                return vernScore;
                 /* // Algorithm from the frontend:
-                 * if (vernDist <= 1) { return vernDist; }
-                 * glossDist = GetGlossDistance(wordA, wordB);
-                 * if (glossDist == 0) { return 1; }
-                 * return vernDist + 3 * glossDist; */
+                 * if (vernScore <= 1) { return vernScore; }
+                 * glossScore = GetGlossScore(wordA, wordB);
+                 * if (glossScore == 0) { return 1; }
+                 * return vernScore + 3 * glossScore; */
             }
 
             private double GetVernacularScore(Word wordA, Word wordB)
@@ -356,9 +356,6 @@ namespace BackendFramework.Services
             public InvalidBlacklistEntryError() { }
 
             public InvalidBlacklistEntryError(string message) : base(message) { }
-
-            public InvalidBlacklistEntryError(string message, Exception innerException) : base(message, innerException)
-            { }
         }
     }
 }
