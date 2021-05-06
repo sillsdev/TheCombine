@@ -113,7 +113,7 @@ namespace BackendFramework.Helper
             return wordLists;
         }
 
-        private List<Word> GetIdenticalVernToWord(Word word, List<Word> collection)
+        public List<Word> GetIdenticalVernToWord(Word word, List<Word> collection)
         {
             var identicalWords = new List<Word> { Capacity = _maxInList - 1 };
             foreach (var other in collection)
@@ -161,7 +161,7 @@ namespace BackendFramework.Helper
                 // Check if list is now 1 too large.
                 if (similarWords.Count == _maxInList)
                 {
-                    similarWords.RemoveAt(_maxInList);
+                    similarWords.RemoveAt(_maxInList - 1);
                     currentMaxScore = similarWords.Last().Item1;
                 }
 
@@ -188,7 +188,7 @@ namespace BackendFramework.Helper
             return vernScore;
         }
 
-        private bool HaveIdenticalGloss(Word wordA, Word wordB)
+        public bool HaveIdenticalGloss(Word wordA, Word wordB)
         {
             var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
             if (glossesA.Count == 0)

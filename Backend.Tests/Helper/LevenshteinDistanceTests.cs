@@ -16,7 +16,7 @@ namespace Backend.Tests.Helper
         private const string _BaseWord = "EditDistanceTest";
 
         [OneTimeSetUp]
-        public void Setup()
+        public void OneTimeSetup()
         {
             _levDist = new LevenshteinDistance(_DelCost, _InsCost, _SubCost);
         }
