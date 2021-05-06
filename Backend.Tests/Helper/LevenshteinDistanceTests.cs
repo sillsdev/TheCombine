@@ -12,7 +12,7 @@ namespace Backend.Tests.Helper
 
         private const int _DelCost = 3;
         private const int _InsCost = 4;
-        private const int _SubCost = 5; // Must be <= _DelCost + _InsCost;
+        private const int _SubCost = 5;
         private const string _BaseWord = "EditDistanceTest";
 
         [OneTimeSetUp]
@@ -24,9 +24,9 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetDistanceEmptyWordTest()
         {
-            Assert.AreEqual(0, _levDist.GetDistance("", ""));
-            Assert.AreEqual(_DelCost * _BaseWord.Length, _levDist.GetDistance(_BaseWord, ""));
-            Assert.AreEqual(_InsCost * _BaseWord.Length, _levDist.GetDistance("", _BaseWord));
+            Assert.That(_levDist.GetDistance("", ""), Is.EqualTo(0));
+            Assert.That(_levDist.GetDistance(_BaseWord, ""), Is.EqualTo(_DelCost * _BaseWord.Length));
+            Assert.That(_levDist.GetDistance("", _BaseWord), Is.EqualTo(_InsCost * _BaseWord.Length));
         }
 
         private static readonly List<Tuple<string, int>> _wordScorePairs = new List<Tuple<string, int>> {
@@ -45,17 +45,17 @@ namespace Backend.Tests.Helper
         public void GetDistanceSimilarWordTest(Tuple<string, int> pair)
         {
             var (simWord, score) = pair;
-            Assert.AreEqual(score, _levDist.GetDistance(_BaseWord, simWord));
+            Assert.That(_levDist.GetDistance(_BaseWord, simWord), Is.EqualTo(score));
         }
 
         [Test]
         public void GetDistanceDifferentWordTest()
         {
             const string diffWord = "ZZZZ";
-            Assert.AreEqual(_SubCost * diffWord.Length + _DelCost * (_BaseWord.Length - diffWord.Length),
-                _levDist.GetDistance(_BaseWord, diffWord));
-            Assert.AreEqual(_SubCost * diffWord.Length + _InsCost * (_BaseWord.Length - diffWord.Length),
-                _levDist.GetDistance(diffWord, _BaseWord));
+            Assert.That(_levDist.GetDistance(_BaseWord, diffWord),
+                Is.EqualTo(_SubCost * diffWord.Length + _DelCost * (_BaseWord.Length - diffWord.Length)));
+            Assert.That(_levDist.GetDistance(diffWord, _BaseWord),
+                Is.EqualTo(_SubCost * diffWord.Length + _InsCost * (_BaseWord.Length - diffWord.Length)));
         }
     }
 }

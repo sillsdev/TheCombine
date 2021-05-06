@@ -9,8 +9,19 @@ namespace BackendFramework.Helper
         public readonly int costInsertion;
         public readonly int costSubstitution;
 
+        /// <exception cref="ArgumentException">
+        /// Throws for any non-positive cost or when costDelete + costInsert is less than costSubstitute.
+        /// </exception>
         public LevenshteinDistance(int costDelete, int costInsert, int costSubstitute)
         {
+            if (costDelete <= 0 || costInsert <= 0 || costSubstitute <= 0)
+            {
+                throw new ArgumentException("Edit costs must be positive.");
+            }
+            if (costDelete + costInsert < costSubstitute)
+            {
+                throw new ArgumentException("Substitution cost must be <= the sum of deletion and insertion costs.");
+            }
             this.costDeletion = costDelete;
             this.costInsertion = costInsert;
             this.costSubstitution = costSubstitute;

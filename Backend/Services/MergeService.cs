@@ -124,7 +124,7 @@ namespace BackendFramework.Services
         /// Remove from all blacklist entries any ids for words no longer in the frontier
         /// and delete entries that no longer have at least two wordIds.
         /// </summary>
-        /// <returns> Updated List of <see cref="MergeBlacklistEntry"/>s, or null if nothing to update. </returns>
+        /// <returns> Number of <see cref="MergeBlacklistEntry"/>s updated. </returns>
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
             var oldBlacklist = await _mergeBlacklistRepo.GetAll(projectId);
@@ -156,198 +156,28 @@ namespace BackendFramework.Services
             return updateCount;
         }
 
-        public async Task<List<List<Word>>> GetPotentialDuplicates(string projectId, string? userId = null)
+        /// <summary>
+        /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
+        /// </summary>
+        public async Task<List<List<Word>>> GetPotentialDuplicates(
+            string projectId, int maxInList, int maxLists, string? userId = null)
         {
+            var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
+
+            // First pass, only look for words with identical vernacular.
             var collection = await _wordRepo.GetFrontier(projectId);
-            var dupFinder = new DuplicateFinder(5, 10, 3);
-            return await dupFinder.GetSimilarWords(collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
-        }
+            var wordLists = await dupFinder.GetIdenticalVernWords(
+                collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
 
-        private class DuplicateFinder
-        {
-            private readonly IEditDistance _editDist;
-            private readonly int _maxInList;
-            private readonly int _maxLists;
-            private readonly int _maxScore;
-            //private const int _RefWordLength = 5;
-
-            public DuplicateFinder(int maxInList, int maxLists, int maxScore)
+            // If no such sets found, look for similar words.
+            if (wordLists.Count == 0)
             {
-                _editDist = new LevenshteinDistance();
-                _maxInList = maxInList;
-                _maxLists = maxLists;
-                _maxScore = maxScore;
+                collection = await _wordRepo.GetFrontier(projectId);
+                wordLists = await dupFinder.GetSimilarWords(
+                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
             }
 
-            async public Task<List<List<Word>>> GetSimilarWords(List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
-            {
-                double currentMax = _maxScore;
-                var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
-                while (collection.Count > 0 && (wordLists.Count < _maxLists || currentMax > 0))
-                {
-                    var word = collection.First();
-                    collection.RemoveAt(0);
-                    var similarWords = GetSimilarToWord(word, collection);
-                    if (similarWords.Count == 0)
-                    {
-                        continue;
-                    }
-                    var score = similarWords.First().Item1;
-                    if (score > currentMax || (wordLists.Count >= _maxLists && score == currentMax))
-                    {
-                        continue;
-                    }
-
-                    // Check if set is in blacklist.
-                    var ids = new List<string> { word.Id };
-                    ids.AddRange(similarWords.Select(w => w.Item2.Id));
-                    if (await isInBlacklist(ids))
-                    {
-                        continue;
-                    };
-
-                    // Remove similar words from collection and add them to list with main word.
-                    var newWordList = Tuple.Create(score, new List<Word> { word });
-                    similarWords.ForEach(w =>
-                    {
-                        collection.Remove(w.Item2);
-                        newWordList.Item2.Add(w.Item2);
-                    });
-
-                    // Insert at correct place in list.
-                    int i = wordLists.FindIndex(pair => score <= pair.Item1);
-                    if (i == -1)
-                    {
-                        wordLists.Add(newWordList);
-                    }
-                    else
-                    {
-                        wordLists.Insert(i, newWordList);
-                    }
-
-                    // If list is now too long, boot the last one, recycling its similar words.
-                    if (wordLists.Count == _maxLists + 1)
-                    {
-                        var toRecycle = wordLists.Last().Item2;
-                        toRecycle.RemoveAt(0);
-                        foreach (var simWord in toRecycle)
-                        {
-                            collection.Add(simWord);
-                        }
-                        wordLists.RemoveAt(_maxLists);
-                        currentMax = wordLists.Last().Item1;
-                    }
-                }
-                return wordLists.Select(list => list.Item2).ToList();
-            }
-
-            private List<Tuple<double, Word>> GetSimilarToWord(Word word, List<Word> collection)
-            {
-                // If the number of similar words exceeds the max allowable (i.e., .Count = _maxInList),
-                // then the currentMaxScore will be decreased.
-                var similarWords = new List<Tuple<double, Word>> { Capacity = _maxInList };
-                double currentMaxScore = _maxScore;
-
-                foreach (var other in collection)
-                {
-                    // Add the word if the score is low enough.
-                    var score = GetWordScore(word, other);
-                    if (score > currentMaxScore || (similarWords.Count >= _maxInList - 1 && score >= currentMaxScore))
-                    {
-                        continue;
-                    }
-
-                    // Insert at correct place in List.
-                    int i = similarWords.FindIndex(pair => score <= pair.Item1);
-                    var newWord = Tuple.Create(score, other.Clone());
-                    if (i == -1)
-                    {
-                        similarWords.Add(newWord);
-                    }
-                    else
-                    {
-                        similarWords.Insert(i, newWord);
-                    }
-
-                    // Check if list is now 1 too large.
-                    if (similarWords.Count == _maxInList)
-                    {
-                        similarWords.RemoveAt(_maxInList);
-                        currentMaxScore = similarWords.Last().Item1;
-                    }
-
-                    // If we've maxed out with identical words, stop.
-                    if (similarWords.Count == _maxInList - 1 && similarWords.Last().Item1 == 0)
-                    {
-                        break;
-                    }
-                }
-                return similarWords;
-            }
-
-            private double GetWordScore(Word wordA, Word wordB)
-            {
-                // Just compare vernaculars for the moment.
-                var vernScore = GetVernacularScore(wordA, wordB);
-                return vernScore;
-                /* // Algorithm from the frontend:
-                 * if (vernScore <= 1) { return vernScore; }
-                 * glossScore = GetGlossScore(wordA, wordB);
-                 * if (glossScore == 0) { return 1; }
-                 * return vernScore + 3 * glossScore; */
-            }
-
-            private double GetVernacularScore(Word wordA, Word wordB)
-            {
-                return GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
-            }
-
-            private double GetGlossScore(Word wordA, Word wordB)
-            {
-                var minDist = _maxScore + 1.0;
-
-                // Flatten all sense glosses.
-                var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
-                if (glossesA.Count == 0)
-                {
-                    return minDist;
-                }
-                var glossesB = wordB.Senses.SelectMany(s => s.Glosses).ToList();
-                if (glossesB.Count == 0)
-                {
-                    return minDist;
-                }
-
-                // Find most similar non-empty glosses of the same language.
-                foreach (var gA in glossesA)
-                {
-                    if (gA.Def.Length == 0)
-                    {
-                        continue;
-                    }
-                    foreach (var gB in glossesB)
-                    {
-                        if (gB.Def.Length == 0 || gA.Language != gB.Language)
-                        {
-                            continue;
-                        }
-                        var glossScore = GetScaledDistance(gA.Def, gB.Def);
-                        if (glossScore == 0)
-                        {
-                            return 0;
-                        }
-                        minDist = Math.Min(minDist, glossScore);
-                    }
-                }
-                return minDist;
-            }
-
-            private double GetScaledDistance(string stringA, string stringB)
-            {
-                return _editDist.GetDistance(stringA, stringB);
-                /* // Algorithm from the frontend doesn't account for stringA.Length == 0:
-                 * return _editDist.GetDistance(stringA, stringB) * 5.0 / stringA.Length; */
-            }
+            return wordLists;
         }
 
         [Serializable]

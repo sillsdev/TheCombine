@@ -226,9 +226,12 @@ export async function blacklistAdd(wordIds: string[]) {
 }
 
 /** Get list of potential duplicates for merging. */
-export async function getDuplicates(): Promise<Word[][]> {
+export async function getDuplicates(
+  maxInList: number,
+  maxLists: number
+): Promise<Word[][]> {
   const response = await backendServer.get(
-    `/projects/${LocalStorage.getProjectId()}/merge/dups/${LocalStorage.getUserId()}`,
+    `/projects/${LocalStorage.getProjectId()}/merge/dups/${maxInList}/${maxLists}/${LocalStorage.getUserId()}`,
     { headers: authHeader() }
   );
   return response.data;

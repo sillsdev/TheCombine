@@ -28,6 +28,7 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreState } from "types";
 import { GoalType } from "types/goals";
+import { maxNumSteps } from "types/goalUtilities";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
@@ -277,7 +278,7 @@ export function dispatchMergeStepData(goal: MergeDups) {
 
 // Modifies the mutable input.
 export async function loadMergeDupsData(goal: MergeDups) {
-  const newGroups = await backend.getDuplicates();
+  const newGroups = await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 
   // Add data to goal.
   goal.data = { plannedWords: newGroups };
