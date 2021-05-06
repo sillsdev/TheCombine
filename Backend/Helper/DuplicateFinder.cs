@@ -22,7 +22,47 @@ namespace BackendFramework.Helper
             _maxScore = maxScore;
         }
 
-        async public Task<List<List<Word>>> GetSimilarWords(List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
+        /// <summary>
+        /// Get from specified List several sub-Lists,
+        /// each with multiple <see cref="Word"/>s having a common Vernacular.
+        /// </summary>
+        async public Task<List<List<Word>>> GetIdenticalVernWords(
+            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
+        {
+            var wordLists = new List<List<Word>> { Capacity = _maxLists };
+            while (collection.Count > 0 && wordLists.Count < _maxLists)
+            {
+                var word = collection.First();
+                collection.RemoveAt(0);
+                var similarWords = GetIdenticalVernToWord(word, collection);
+                if (similarWords.Count == 0)
+                {
+                    continue;
+                }
+
+                // Check if set is in blacklist.
+                var ids = new List<string> { word.Id };
+                ids.AddRange(similarWords.Select(w => w.Id));
+                if (await isInBlacklist(ids))
+                {
+                    continue;
+                };
+
+                // Remove from collection and add to main list.
+                similarWords.ForEach(w => collection.Remove(w));
+                similarWords.Insert(0, word);
+                wordLists.Add(similarWords);
+            }
+            return wordLists;
+        }
+
+        /// <summary> Get from specified List several sub-Lists, each a set of similar <see cref="Word"/>s. </summary>
+        /// <returns>
+        /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
+        /// the outer list is ordered by similarity of the first two items in each inner List.
+        /// </returns>
+        async public Task<List<List<Word>>> GetSimilarWords(
+            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
         {
             double currentMax = _maxScore;
             var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
@@ -84,35 +124,7 @@ namespace BackendFramework.Helper
             return wordLists.Select(list => list.Item2).ToList();
         }
 
-        async public Task<List<List<Word>>> GetIdenticalVernWords(List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
-        {
-            var wordLists = new List<List<Word>> { Capacity = _maxLists };
-            while (collection.Count > 0 && wordLists.Count < _maxLists)
-            {
-                var word = collection.First();
-                collection.RemoveAt(0);
-                var similarWords = GetIdenticalVernToWord(word, collection);
-                if (similarWords.Count == 0)
-                {
-                    continue;
-                }
-
-                // Check if set is in blacklist.
-                var ids = new List<string> { word.Id };
-                ids.AddRange(similarWords.Select(w => w.Id));
-                if (await isInBlacklist(ids))
-                {
-                    continue;
-                };
-
-                // Remove from collection and add to main list.
-                similarWords.ForEach(w => collection.Remove(w));
-                similarWords.Insert(0, word);
-                wordLists.Add(similarWords);
-            }
-            return wordLists;
-        }
-
+        /// <summary> Get from specified List a sub-List with same vern as specified <see cref="Word"/>. </summary>
         public List<Word> GetIdenticalVernToWord(Word word, List<Word> collection)
         {
             var identicalWords = new List<Word> { Capacity = _maxInList - 1 };
@@ -130,6 +142,8 @@ namespace BackendFramework.Helper
             return identicalWords;
         }
 
+        /// <summary> Get from specified List a sublist of elements similar to specified <see cref="Word"/>. </summary>
+        /// <returns> List of similar <see cref="Word"/>s, ordered by similarity with most similar first. </returns>
         private List<Tuple<double, Word>> GetSimilarToWord(Word word, List<Word> collection)
         {
             // If the number of similar words exceeds the max allowable (i.e., .Count = _maxInList),
@@ -174,7 +188,14 @@ namespace BackendFramework.Helper
             return similarWords;
         }
 
-        private double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1)
+        /// <summary>
+        /// Computes an edit-distance based score indicating similarity of specified <see cref="Word"/>s.
+        /// </summary>
+        /// <param name="checkGlossThreshold">
+        /// A double (optional): If the Words' vernaculars have a score between this threshold and the _maxScore,
+        /// and if the Words share a common gloss, then we override the score with this threshold.</param>
+        /// <returns> A double: the adjusted distance between the words. </returns>
+        public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1)
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
             if (checkGlossThreshold is null || vernScore <= checkGlossThreshold || vernScore > _maxScore)
@@ -188,6 +209,9 @@ namespace BackendFramework.Helper
             return vernScore;
         }
 
+        /// <summary>
+        /// Check if two <see cref="Word"/>s have <see cref="Gloss"/>es with identical Language and nonempty Def.
+        /// </summary>
         public bool HaveIdenticalGloss(Word wordA, Word wordB)
         {
             var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
@@ -218,6 +242,9 @@ namespace BackendFramework.Helper
             return false;
         }
 
+        /// <summary>
+        /// Gets the edit distance between two strings. Adjust the result depending on length of the first.
+        /// </summary>
         private double GetScaledDistance(string stringA, string stringB)
         {
             return _editDist.GetDistance(stringA, stringB) * 6.0 / (stringA.Length + 1);
