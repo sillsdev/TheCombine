@@ -3,9 +3,7 @@ using System.Linq;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
-using BackendFramework.Models;
 using BackendFramework.Services;
-using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -53,7 +51,5 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.AreEqual(result.First().WordIds, wordIdsC);
         }
-
-        // ToDo: Add test for GetDuplicates.
     }
 }
