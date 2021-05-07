@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static System.Linq.Enumerable;
 using System.Text;
 using BackendFramework.Models;
+using static System.Linq.Enumerable;
 
 namespace Backend.Tests
 {
@@ -35,7 +35,7 @@ namespace Backend.Tests
         public static List<Word> RandomWordList(int length, string? projId = null)
         {
             var wordList = new List<Word>();
-            for (var i = 0; i < length; i++)
+            foreach (var i in Range(0, length))
             {
                 wordList.Add(RandomWord(projId));
             }

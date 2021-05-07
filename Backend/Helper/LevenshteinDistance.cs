@@ -1,5 +1,6 @@
 using System;
 using BackendFramework.Interfaces;
+using static System.Linq.Enumerable;
 
 namespace BackendFramework.Helper
 {
@@ -38,9 +39,9 @@ namespace BackendFramework.Helper
         public int GetDistance(string stringA, string stringB)
         {
             int[,] matrix = new int[stringA.Length + 1, stringB.Length + 1];
-            for (var i = 0; i <= stringA.Length; i++)
+            foreach (var i in Range(0, stringA.Length + 1))
             {
-                for (var j = 0; j <= stringB.Length; j++)
+                foreach (var j in Range(0, stringB.Length + 1))
                 {
                     // Populate first column and row.
                     if (i == 0 || j == 0)
