@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -9,14 +10,17 @@ namespace BackendFramework.Models
     /// <summary> The permissions a <see cref="User"/> has on a particular <see cref="Project"/> </summary>
     public class UserRole
     {
+        [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
         /// <summary> Integer representation of <see cref="Permission"/> </summary>
+        [Required]
         [BsonElement("permissions")]
         public List<int> Permissions { get; set; }
 
+        [Required]
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 

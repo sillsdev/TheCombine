@@ -559,19 +559,19 @@ export interface UserRole {
    * @type {string}
    * @memberof UserRole
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {Array<number>}
    * @memberof UserRole
    */
-  permissions?: Array<number> | null;
+  permissions: Array<number>;
   /**
    *
    * @type {string}
    * @memberof UserRole
    */
-  projectId?: string | null;
+  projectId: string;
 }
 /**
  *
@@ -7158,13 +7158,13 @@ export const UserRoleApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {UserRole} [userRole]
+     * @param {UserRole} userRole
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdUserrolesPost: async (
       projectId: string,
-      userRole?: UserRole,
+      userRole: UserRole,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -7172,6 +7172,12 @@ export const UserRoleApiAxiosParamCreator = function (
         "v1ProjectsProjectIdUserrolesPost",
         "projectId",
         projectId
+      );
+      // verify required parameter 'userRole' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdUserrolesPost",
+        "userRole",
+        userRole
       );
       const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
         `{${"projectId"}}`,
@@ -7217,14 +7223,14 @@ export const UserRoleApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} userId
-     * @param {Array<number>} [requestBody]
+     * @param {Array<number>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdUserrolesUserIdPut: async (
       projectId: string,
       userId: string,
-      requestBody?: Array<number>,
+      requestBody: Array<number>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -7238,6 +7244,12 @@ export const UserRoleApiAxiosParamCreator = function (
         "v1ProjectsProjectIdUserrolesUserIdPut",
         "userId",
         userId
+      );
+      // verify required parameter 'requestBody' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdUserrolesUserIdPut",
+        "requestBody",
+        requestBody
       );
       const localVarPath = `/v1/projects/{projectId}/userroles/{userId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -7449,13 +7461,13 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {UserRole} [userRole]
+     * @param {UserRole} userRole
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdUserrolesPost(
       projectId: string,
-      userRole?: UserRole,
+      userRole: UserRole,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -7476,14 +7488,14 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} userId
-     * @param {Array<number>} [requestBody]
+     * @param {Array<number>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdUserrolesUserIdPut(
       projectId: string,
       userId: string,
-      requestBody?: Array<number>,
+      requestBody: Array<number>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -7598,13 +7610,13 @@ export const UserRoleApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {UserRole} [userRole]
+     * @param {UserRole} userRole
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdUserrolesPost(
       projectId: string,
-      userRole?: UserRole,
+      userRole: UserRole,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -7615,14 +7627,14 @@ export const UserRoleApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} userId
-     * @param {Array<number>} [requestBody]
+     * @param {Array<number>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdUserrolesUserIdPut(
       projectId: string,
       userId: string,
-      requestBody?: Array<number>,
+      requestBody: Array<number>,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -7723,7 +7735,7 @@ export interface UserRoleApiV1ProjectsProjectIdUserrolesPostRequest {
    * @type {UserRole}
    * @memberof UserRoleApiV1ProjectsProjectIdUserrolesPost
    */
-  readonly userRole?: UserRole;
+  readonly userRole: UserRole;
 }
 
 /**
@@ -7751,7 +7763,7 @@ export interface UserRoleApiV1ProjectsProjectIdUserrolesUserIdPutRequest {
    * @type {Array<number>}
    * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserIdPut
    */
-  readonly requestBody?: Array<number>;
+  readonly requestBody: Array<number>;
 }
 
 /**

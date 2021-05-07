@@ -7,6 +7,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -101,7 +102,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/userroles </remarks>
         /// <returns> Id of updated UserRole </returns>
         [HttpPost]
-        public async Task<IActionResult> Post(string projectId, [FromBody] UserRole userRole)
+        public async Task<IActionResult> Post(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -152,7 +153,8 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId}/userroles/{userId} </remarks>
         /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
+        public async Task<IActionResult> UpdateUserRole(
+            string projectId, string userId, [FromBody, BindRequired] int[] permissions)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
