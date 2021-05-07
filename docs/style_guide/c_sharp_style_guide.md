@@ -20,7 +20,7 @@ Use type inference (`var`) wherever possible. This can improve readability and e
 
 Add braces to one-line `if` statements;
 
-```
+```c#
 # Yes:
 if (isEmpty) {
   callFun();
@@ -31,5 +31,47 @@ if (isEmpty)
   callFun();
 ```
 
-> Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous
-> [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
+### Rationale
+
+Avoiding braces can cause developers to miss bugs, such as Apple's infamous
+[goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
+
+## Prefer `Range` for simple loop iteration
+
+As an example, to loop `0`, `1`, `2`, `3`:
+
+```c#
+# Yes:
+using static System.Linq.Enumerable;
+
+foreach (var i in Range(0, 4))
+
+# No:
+for (var i = 0; i < 4; i++)
+```
+
+The signature of [`Range`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range?view=netcore-3.1)
+is:
+
+```c#
+Range (int start, int count);
+```
+
+Another example that loops `1`, `2`, `3`:
+
+```c#
+# Yes:
+using static System.Linq.Enumerable;
+
+foreach (var i in Range(1, 3))
+
+# No:
+for (var i = 1; i < 4; i++)
+```
+
+### Rationale
+
+- Only need to mention loop variable (e.g. `i`) once
+- Remove some error-prone boilerplate (`i++`)
+- Remove the possibly of incrementing the wrong value (e.g. incrementing `i` instead of `j` in an inner loop)
+- Express clearly the intent
