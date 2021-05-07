@@ -12,6 +12,7 @@ namespace BackendFramework.Models
 {
     public class Word
     {
+        [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -20,46 +21,60 @@ namespace BackendFramework.Models
         /// This Guid is important for Lift round-tripping with other applications and must remain stable through
         /// Word edits.
         /// </summary>
+        [Required]
         [BsonElement("guid")]
         public Guid Guid { get; set; }
 
+        [Required]
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
+        [Required]
         [BsonElement("plural")]
         public string Plural { get; set; }
 
+        [Required]
         [BsonElement("senses")]
         public List<Sense> Senses { get; set; }
 
+        [Required]
         [BsonElement("audio")]
         public List<string> Audio { get; set; }
 
+        [Required]
         [BsonElement("created")]
         public string Created { get; set; }
 
+        [Required]
         [BsonElement("modified")]
         public string Modified { get; set; }
 
+        [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
 
+        [Required]
         [BsonElement("history")]
         public List<string> History { get; set; }
 
+        [Required]
         [BsonElement("partOfSpeech")]
         public string PartOfSpeech { get; set; }
 
+        [Required]
         [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
+        [Required]
         [BsonElement("otherField")]
         public string OtherField { get; set; }
 
+        [Required]
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 
+        [Required]
         [BsonElement("note")]
         public Note Note { get; set; }
 
@@ -242,15 +257,19 @@ namespace BackendFramework.Models
         /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word
         /// edits.
         /// </summary>
+        [Required]
         [BsonElement("guid")]
         public Guid Guid { get; set; }
 
+        [Required]
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
+        [Required]
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
+        [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
@@ -312,9 +331,11 @@ namespace BackendFramework.Models
     public class Gloss
     {
         /// <summary> The bcp-47 code for the language the note is written in. </summary>
+        [Required]
         public string Language { get; set; }
 
         /// <summary> The gloss string. </summary>
+        [Required]
         public string Def { get; set; }
 
         public Gloss()
@@ -350,8 +371,11 @@ namespace BackendFramework.Models
 
     public class SemanticDomain
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Id { get; set; }
+        [Required]
         public string Description { get; set; }
 
         public SemanticDomain Clone()

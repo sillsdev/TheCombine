@@ -4,6 +4,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -53,7 +54,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         // TODO: Remove this warning suppression when the function is implemented for release mode.
 #pragma warning disable 1998
-        public async Task<IActionResult> PostFrontier(string projectId, [FromBody] Word word)
+        public async Task<IActionResult> PostFrontier(string projectId, [FromBody, BindRequired] Word word)
 #pragma warning restore 1998
         {
 #if DEBUG

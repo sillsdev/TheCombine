@@ -170,13 +170,13 @@ export interface Gloss {
    * @type {string}
    * @memberof Gloss
    */
-  language?: string | null;
+  language: string;
   /**
    *
    * @type {string}
    * @memberof Gloss
    */
-  def?: string | null;
+  def: string;
 }
 /**
  *
@@ -368,19 +368,19 @@ export interface SemanticDomain {
    * @type {string}
    * @memberof SemanticDomain
    */
-  name?: string | null;
+  name: string;
   /**
    *
    * @type {string}
    * @memberof SemanticDomain
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {string}
    * @memberof SemanticDomain
    */
-  description?: string | null;
+  description: string;
 }
 /**
  *
@@ -393,25 +393,25 @@ export interface Sense {
    * @type {string}
    * @memberof Sense
    */
-  guid?: string;
+  guid: string;
   /**
    *
    * @type {Array<Gloss>}
    * @memberof Sense
    */
-  glosses?: Array<Gloss> | null;
+  glosses: Array<Gloss>;
   /**
    *
    * @type {Array<SemanticDomain>}
    * @memberof Sense
    */
-  semanticDomains?: Array<SemanticDomain> | null;
+  semanticDomains: Array<SemanticDomain>;
   /**
    *
    * @type {State}
    * @memberof Sense
    */
-  accessibility?: State;
+  accessibility: State;
 }
 /**
  *
@@ -584,91 +584,91 @@ export interface Word {
    * @type {string}
    * @memberof Word
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  guid?: string;
+  guid: string;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  vernacular?: string | null;
+  vernacular: string;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  plural?: string | null;
+  plural: string;
   /**
    *
    * @type {Array<Sense>}
    * @memberof Word
    */
-  senses?: Array<Sense> | null;
+  senses: Array<Sense>;
   /**
    *
    * @type {Array<string>}
    * @memberof Word
    */
-  audio?: Array<string> | null;
+  audio: Array<string>;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  created?: string | null;
+  created: string;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  modified?: string | null;
+  modified: string;
   /**
    *
    * @type {State}
    * @memberof Word
    */
-  accessibility?: State;
+  accessibility: State;
   /**
    *
    * @type {Array<string>}
    * @memberof Word
    */
-  history?: Array<string> | null;
+  history: Array<string>;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  partOfSpeech?: string | null;
+  partOfSpeech: string;
   /**
    *
    * @type {Array<string>}
    * @memberof Word
    */
-  editedBy?: Array<string> | null;
+  editedBy: Array<string>;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  otherField?: string | null;
+  otherField: string;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  projectId?: string | null;
+  projectId: string;
   /**
    *
    * @type {Note}
    * @memberof Word
    */
-  note?: Note;
+  note: Note;
 }
 /**
  *
@@ -1697,13 +1697,13 @@ export const FrontierApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsFrontierPost: async (
       projectId: string,
-      word?: Word,
+      word: Word,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -1712,6 +1712,8 @@ export const FrontierApiAxiosParamCreator = function (
         "projectId",
         projectId
       );
+      // verify required parameter 'word' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdWordsFrontierPost", "word", word);
       const localVarPath = `/v1/projects/{projectId}/words/frontier`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -1844,13 +1846,13 @@ export const FrontierApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdWordsFrontierPost(
       projectId: string,
-      word?: Word,
+      word: Word,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -1924,13 +1926,13 @@ export const FrontierApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsFrontierPost(
       projectId: string,
-      word?: Word,
+      word: Word,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -1992,7 +1994,7 @@ export interface FrontierApiV1ProjectsProjectIdWordsFrontierPostRequest {
    * @type {Word}
    * @memberof FrontierApiV1ProjectsProjectIdWordsFrontierPost
    */
-  readonly word?: Word;
+  readonly word: Word;
 }
 
 /**
