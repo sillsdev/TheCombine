@@ -125,7 +125,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Get from specified List a sub-List with same vern as specified <see cref="Word"/>. </summary>
-        public List<Word> GetIdenticalVernToWord(Word word, List<Word> collection)
+        private List<Word> GetIdenticalVernToWord(Word word, List<Word> collection)
         {
             var identicalWords = new List<Word> { Capacity = _maxInList - 1 };
             foreach (var other in collection)
@@ -245,11 +245,12 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
-        /// Gets the edit distance between two strings. Adjust the result depending on length of the first.
+        /// Get the edit distance between two strings; adjust the result depending on length of the first.
+        /// Weights in the function are heristically adjusted to improve duplicate finding.
         /// </summary>
         private double GetScaledDistance(string stringA, string stringB)
         {
-            return _editDist.GetDistance(stringA, stringB) * 7.0 / (stringA.Length + 1);
+            return _editDist.GetDistance(stringA, stringB) * 7.0 / (stringA.Length + 1.0);
         }
     }
 }

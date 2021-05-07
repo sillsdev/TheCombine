@@ -33,10 +33,7 @@ namespace Backend.Tests.Helper
         public void GetIdenticalVernToWordTest()
         {
             const string vern = "Vertacular!";
-            for (var i = 0; i < 10; i++)
-            {
-                _frontier.Add(Util.RandomWord());
-            }
+            _frontier = Util.RandomWordList(10);
             _frontier.ElementAt(1).Vernacular = vern;
             _frontier.ElementAt(2).Vernacular = vern;
             _frontier.ElementAt(5).Vernacular = vern;
@@ -48,10 +45,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsAndMaxInListAndMaxListsTest()
         {
-            for (var i = 0; i < MaxInList * MaxLists; i++)
-            {
-                _frontier.Add(Util.RandomWord(ProjId));
-            }
+            _frontier = Util.RandomWordList(MaxInList * MaxLists, ProjId);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
             var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist).Result;
             Assert.That(wordLists, Has.Count.EqualTo(MaxLists));
@@ -62,10 +56,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsAndMaxScoreTest()
         {
-            for (var i = 0; i < MaxInList * MaxLists; i++)
-            {
-                _frontier.Add(Util.RandomWord(ProjId));
-            }
+            _frontier = Util.RandomWordList(MaxInList * MaxLists, ProjId);
             // Ensure at least one set of similar words, in case MaxScore is too low.
             _frontier.Last().Vernacular = _frontier.First().Vernacular;
 
@@ -95,10 +86,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsBlacklistTest()
         {
-            for (var i = 0; i < MaxInList + 1; i++)
-            {
-                _frontier.Add(Util.RandomWord(ProjId));
-            }
+            _frontier = Util.RandomWordList(MaxInList + 1, ProjId);
             // Make sure the first set only is blacklisted, so all but the first word end up in a lone list.
             _isInBlacklist = (wordList) => Task.FromResult(wordList.First() == _frontier.First().Vernacular);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
