@@ -58,13 +58,13 @@ export interface Credentials {
    * @type {string}
    * @memberof Credentials
    */
-  username?: string | null;
+  username: string;
   /**
    *
    * @type {string}
    * @memberof Credentials
    */
-  password?: string | null;
+  password: string;
 }
 /**
  *
@@ -4729,14 +4729,16 @@ export const UserApiAxiosParamCreator = function (
   return {
     /**
      *
-     * @param {Credentials} [credentials]
+     * @param {Credentials} credentials
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersAuthenticatePost: async (
-      credentials?: Credentials,
+      credentials: Credentials,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'credentials' is not null or undefined
+      assertParamExists("v1UsersAuthenticatePost", "credentials", credentials);
       const localVarPath = `/v1/users/authenticate`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5237,12 +5239,12 @@ export const UserApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
-     * @param {Credentials} [credentials]
+     * @param {Credentials} credentials
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1UsersAuthenticatePost(
-      credentials?: Credentials,
+      credentials: Credentials,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -5501,12 +5503,12 @@ export const UserApiFactory = function (
   return {
     /**
      *
-     * @param {Credentials} [credentials]
+     * @param {Credentials} credentials
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersAuthenticatePost(
-      credentials?: Credentials,
+      credentials: Credentials,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -5652,7 +5654,7 @@ export interface UserApiV1UsersAuthenticatePostRequest {
    * @type {Credentials}
    * @memberof UserApiV1UsersAuthenticatePost
    */
-  readonly credentials?: Credentials;
+  readonly credentials: Credentials;
 }
 
 /**
@@ -5789,7 +5791,7 @@ export class UserApi extends BaseAPI {
    * @memberof UserApi
    */
   public v1UsersAuthenticatePost(
-    requestParameters: UserApiV1UsersAuthenticatePostRequest = {},
+    requestParameters: UserApiV1UsersAuthenticatePostRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using MimeKit;
 using System.Web.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -111,7 +112,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] Credentials cred)
+        public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
             try
             {
