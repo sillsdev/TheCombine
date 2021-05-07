@@ -36,6 +36,8 @@ if (isEmpty)
 
 # Prefer `Range` for simple loop iteration
 
+As an example, to loop `0`, `1`, `2`, `3`: 
+
 ```c#
 # Yes:
 using static System.Linq.Enumerable;
@@ -46,7 +48,26 @@ foreach (var i in Range(0, 4))
 for (var i = 0; i < 4; i++)
 ```
 
-Rationale:
+The signature of [`Range`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range?view=netcore-3.1)
+is:
+
+```c#
+Range (int start, int count);
+```
+
+Another example that loops `1`, `2`, `3`:
+
+```c#
+# Yes:
+using static System.Linq.Enumerable;
+
+foreach (var i in Range(1, 3))
+
+# No:
+for (var i = 1; i < 4; i++)
+```
+
+## Rationale
 
 - Only need to mention loop variable (e.g. `i`) once
 - Remove some error-prone boilerplate (`i++`)
