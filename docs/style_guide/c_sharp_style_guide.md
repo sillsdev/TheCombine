@@ -31,12 +31,14 @@ if (isEmpty)
   callFun();
 ```
 
-> Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous
-> [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
+### Rationale
 
-# Prefer `Range` for simple loop iteration
+Avoiding braces can cause developers to miss bugs, such as Apple's infamous
+[goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
 
-As an example, to loop `0`, `1`, `2`, `3`: 
+## Prefer `Range` for simple loop iteration
+
+As an example, to loop `0`, `1`, `2`, `3`:
 
 ```c#
 # Yes:
@@ -67,7 +69,7 @@ foreach (var i in Range(1, 3))
 for (var i = 1; i < 4; i++)
 ```
 
-## Rationale
+### Rationale
 
 - Only need to mention loop variable (e.g. `i`) once
 - Remove some error-prone boilerplate (`i++`)
