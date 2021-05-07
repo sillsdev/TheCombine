@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -389,8 +390,11 @@ namespace BackendFramework.Models
     /// <summary> Helper object that contains a file along with its name and path </summary>
     public class FileUpload
     {
+        [Required]
         public IFormFile? File { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string FilePath { get; set; }
 
         /// <summary> Models by ASP.NET Core POSTs must have a constructor with zero arguments. </summary>

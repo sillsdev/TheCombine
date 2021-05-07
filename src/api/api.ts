@@ -838,18 +838,18 @@ export const AudioApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsWordIdAudioUploadPost: async (
       projectId: string,
       wordId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -863,6 +863,24 @@ export const AudioApiAxiosParamCreator = function (
         "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
         "wordId",
         wordId
+      );
+      // verify required parameter 'file' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
+        "file",
+        file
+      );
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
+        "name",
+        name
+      );
+      // verify required parameter 'filePath' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
+        "filePath",
+        filePath
       );
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/upload`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -986,18 +1004,18 @@ export const AudioApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdWordsWordIdAudioUploadPost(
       projectId: string,
       wordId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -1081,18 +1099,18 @@ export const AudioApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsWordIdAudioUploadPost(
       projectId: string,
       wordId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -1190,21 +1208,21 @@ export interface AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPostRequest {
    * @type {any}
    * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
    */
-  readonly file?: any;
+  readonly file: any;
 
   /**
    *
    * @type {string}
    * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
    */
-  readonly name?: string;
+  readonly name: string;
 
   /**
    *
    * @type {string}
    * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
    */
-  readonly filePath?: string;
+  readonly filePath: string;
 }
 
 /**
@@ -1336,21 +1354,27 @@ export const AvatarApiAxiosParamCreator = function (
     /**
      *
      * @param {string} userId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersUserIdAvatarUploadPost: async (
       userId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("v1UsersUserIdAvatarUploadPost", "userId", userId);
+      // verify required parameter 'file' is not null or undefined
+      assertParamExists("v1UsersUserIdAvatarUploadPost", "file", file);
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists("v1UsersUserIdAvatarUploadPost", "name", name);
+      // verify required parameter 'filePath' is not null or undefined
+      assertParamExists("v1UsersUserIdAvatarUploadPost", "filePath", filePath);
       const localVarPath = `/v1/users/{userId}/avatar/upload`.replace(
         `{${"userId"}}`,
         encodeURIComponent(String(userId))
@@ -1438,17 +1462,17 @@ export const AvatarApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} userId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1UsersUserIdAvatarUploadPost(
       userId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -1498,17 +1522,17 @@ export const AvatarApiFactory = function (
     /**
      *
      * @param {string} userId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersUserIdAvatarUploadPost(
       userId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -1550,21 +1574,21 @@ export interface AvatarApiV1UsersUserIdAvatarUploadPostRequest {
    * @type {any}
    * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
    */
-  readonly file?: any;
+  readonly file: any;
 
   /**
    *
    * @type {string}
    * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
    */
-  readonly name?: string;
+  readonly name: string;
 
   /**
    *
    * @type {string}
    * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
    */
-  readonly filePath?: string;
+  readonly filePath: string;
 }
 
 /**
@@ -2555,17 +2579,17 @@ export const LiftApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdLiftUploadPost: async (
       projectId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -2573,6 +2597,16 @@ export const LiftApiAxiosParamCreator = function (
         "v1ProjectsProjectIdLiftUploadPost",
         "projectId",
         projectId
+      );
+      // verify required parameter 'file' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdLiftUploadPost", "file", file);
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdLiftUploadPost", "name", name);
+      // verify required parameter 'filePath' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdLiftUploadPost",
+        "filePath",
+        filePath
       );
       const localVarPath = `/v1/projects/{projectId}/lift/upload`.replace(
         `{${"projectId"}}`,
@@ -2730,17 +2764,17 @@ export const LiftApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdLiftUploadPost(
       projectId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -2832,17 +2866,17 @@ export const LiftApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {any} [file]
-     * @param {string} [name]
-     * @param {string} [filePath]
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdLiftUploadPost(
       projectId: string,
-      file?: any,
-      name?: string,
-      filePath?: string,
+      file: any,
+      name: string,
+      filePath: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -2932,21 +2966,21 @@ export interface LiftApiV1ProjectsProjectIdLiftUploadPostRequest {
    * @type {any}
    * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
    */
-  readonly file?: any;
+  readonly file: any;
 
   /**
    *
    * @type {string}
    * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
    */
-  readonly name?: string;
+  readonly name: string;
 
   /**
    *
    * @type {string}
    * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
    */
-  readonly filePath?: string;
+  readonly filePath: string;
 }
 
 /**

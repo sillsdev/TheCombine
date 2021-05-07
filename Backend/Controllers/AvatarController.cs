@@ -6,6 +6,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -48,7 +49,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/{userId}/avatar/upload </remarks>
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadAvatar(string userId, [FromForm, BindRequired] FileUpload fileUpload)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
