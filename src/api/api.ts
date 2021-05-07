@@ -8034,17 +8034,19 @@ export const WordApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsPost: async (
       projectId: string,
-      word?: Word,
+      word: Word,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("v1ProjectsProjectIdWordsPost", "projectId", projectId);
+      // verify required parameter 'word' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdWordsPost", "word", word);
       const localVarPath = `/v1/projects/{projectId}/words`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -8197,14 +8199,14 @@ export const WordApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsWordIdPut: async (
       projectId: string,
       wordId: string,
-      word?: Word,
+      word: Word,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -8215,6 +8217,8 @@ export const WordApiAxiosParamCreator = function (
       );
       // verify required parameter 'wordId' is not null or undefined
       assertParamExists("v1ProjectsProjectIdWordsWordIdPut", "wordId", wordId);
+      // verify required parameter 'word' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdWordsWordIdPut", "word", word);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
@@ -8313,13 +8317,13 @@ export const WordApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdWordsPost(
       projectId: string,
-      word?: Word,
+      word: Word,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -8392,14 +8396,14 @@ export const WordApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdWordsWordIdPut(
       projectId: string,
       wordId: string,
-      word?: Word,
+      word: Word,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -8462,13 +8466,13 @@ export const WordApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsPost(
       projectId: string,
-      word?: Word,
+      word: Word,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -8511,14 +8515,14 @@ export const WordApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {Word} [word]
+     * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdWordsWordIdPut(
       projectId: string,
       wordId: string,
-      word?: Word,
+      word: Word,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -8574,7 +8578,7 @@ export interface WordApiV1ProjectsProjectIdWordsPostRequest {
    * @type {Word}
    * @memberof WordApiV1ProjectsProjectIdWordsPost
    */
-  readonly word?: Word;
+  readonly word: Word;
 }
 
 /**
@@ -8644,7 +8648,7 @@ export interface WordApiV1ProjectsProjectIdWordsWordIdPutRequest {
    * @type {Word}
    * @memberof WordApiV1ProjectsProjectIdWordsWordIdPut
    */
-  readonly word?: Word;
+  readonly word: Word;
 }
 
 /**
