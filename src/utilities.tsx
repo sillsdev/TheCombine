@@ -52,7 +52,7 @@ export function getNowDateTimeString() {
 export interface LevenshteinDistParams {
   delCost: number;
   insCost: number;
-  subCost: number; // Must be <= delCost + insCost.
+  subCost: number; // Must be < delCost + insCost to be relevant.
 }
 export const DefaultLevDistParams: LevenshteinDistParams = {
   delCost: 1,
