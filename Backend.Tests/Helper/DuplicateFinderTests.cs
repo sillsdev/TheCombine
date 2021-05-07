@@ -26,14 +26,14 @@ namespace Backend.Tests.Helper
         {
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, MaxScore);
             _frontier = new List<Word>();
-            _isInBlacklist = (_) => Task.FromResult(false);
+            _isInBlacklist = _ => Task.FromResult(false);
         }
 
         [Test]
         public void GetIdenticalVernToWordTest()
         {
             const string vern = "Vertacular!";
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 _frontier.Add(Util.RandomWord());
             }
@@ -48,7 +48,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsAndMaxInListAndMaxListsTest()
         {
-            for (int i = 0; i < MaxInList * MaxLists; i++)
+            for (var i = 0; i < MaxInList * MaxLists; i++)
             {
                 _frontier.Add(Util.RandomWord(ProjId));
             }
@@ -62,7 +62,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsAndMaxScoreTest()
         {
-            for (int i = 0; i < MaxInList * MaxLists; i++)
+            for (var i = 0; i < MaxInList * MaxLists; i++)
             {
                 _frontier.Add(Util.RandomWord(ProjId));
             }
@@ -95,7 +95,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsBlacklistTest()
         {
-            for (int i = 0; i < MaxInList + 1; i++)
+            for (var i = 0; i < MaxInList + 1; i++)
             {
                 _frontier.Add(Util.RandomWord(ProjId));
             }
@@ -135,13 +135,13 @@ namespace Backend.Tests.Helper
                 Senses = new List<Sense> { senseEmpty, senseGYNGNY, new Sense() }
             };
 
-            Assert.IsFalse(_dupFinder.HaveIdenticalGloss(new Word(), new Word()));
-            Assert.IsFalse(_dupFinder.HaveIdenticalGloss(new Word(), wordWithOnlyGYY));
-            Assert.IsFalse(_dupFinder.HaveIdenticalGloss(wordWithoutGYY, new Word()));
-            Assert.IsFalse(_dupFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordWithoutGYY));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalGloss(new Word(), new Word()));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalGloss(new Word(), wordWithOnlyGYY));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalGloss(wordWithoutGYY, new Word()));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordWithoutGYY));
 
-            Assert.IsTrue(_dupFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordAlsoWithGYY));
-            Assert.IsTrue(_dupFinder.HaveIdenticalGloss(wordAlsoWithGYY, wordWithOnlyGYY));
+            Assert.IsTrue(DuplicateFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordAlsoWithGYY));
+            Assert.IsTrue(DuplicateFinder.HaveIdenticalGloss(wordAlsoWithGYY, wordWithOnlyGYY));
         }
     }
 }

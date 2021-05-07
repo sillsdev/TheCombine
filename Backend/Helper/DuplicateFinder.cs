@@ -26,7 +26,7 @@ namespace BackendFramework.Helper
         /// Get from specified List several sub-Lists,
         /// each with multiple <see cref="Word"/>s having a common Vernacular.
         /// </summary>
-        async public Task<List<List<Word>>> GetIdenticalVernWords(
+        public async Task<List<List<Word>>> GetIdenticalVernWords(
             List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
         {
             var wordLists = new List<List<Word>> { Capacity = _maxLists };
@@ -46,7 +46,7 @@ namespace BackendFramework.Helper
                 if (await isInBlacklist(ids))
                 {
                     continue;
-                };
+                }
 
                 // Remove from collection and add to main list.
                 similarWords.ForEach(w => collection.Remove(w));
@@ -61,7 +61,7 @@ namespace BackendFramework.Helper
         /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
         /// the outer list is ordered by similarity of the first two items in each inner List.
         /// </returns>
-        async public Task<List<List<Word>>> GetSimilarWords(
+        public async Task<List<List<Word>>> GetSimilarWords(
             List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
         {
             double currentMax = _maxScore;
@@ -76,7 +76,7 @@ namespace BackendFramework.Helper
                     continue;
                 }
                 var score = similarWords.First().Item1;
-                if (score > currentMax || (wordLists.Count >= _maxLists && score == currentMax))
+                if (score > currentMax || (wordLists.Count >= _maxLists && Math.Abs(score - currentMax) < 0.001))
                 {
                     continue;
                 }
@@ -87,7 +87,7 @@ namespace BackendFramework.Helper
                 if (await isInBlacklist(ids))
                 {
                     continue;
-                };
+                }
 
                 // Remove similar words from collection and add them to list with main word.
                 var newWordList = Tuple.Create(score, new List<Word> { word });
@@ -98,7 +98,7 @@ namespace BackendFramework.Helper
                 });
 
                 // Insert at correct place in list.
-                int i = wordLists.FindIndex(pair => score <= pair.Item1);
+                var i = wordLists.FindIndex(pair => score <= pair.Item1);
                 if (i == -1)
                 {
                     wordLists.Add(newWordList);
@@ -161,7 +161,7 @@ namespace BackendFramework.Helper
                 }
 
                 // Insert at correct place in List.
-                int i = similarWords.FindIndex(pair => score <= pair.Item1);
+                var i = similarWords.FindIndex(pair => score <= pair.Item1);
                 var newWord = Tuple.Create(score, other.Clone());
                 if (i == -1)
                 {
@@ -191,11 +191,13 @@ namespace BackendFramework.Helper
         /// <summary>
         /// Computes an edit-distance based score indicating similarity of specified <see cref="Word"/>s.
         /// </summary>
+        /// <param name="wordA"> The first of two Words to compare. </param>
+        /// <param name="wordB"> The second of two Words to compare. </param>
         /// <param name="checkGlossThreshold">
         /// A double (optional): If the Words' vernaculars have a score between this threshold and the _maxScore,
         /// and if the Words share a common gloss, then we override the score with this threshold.</param>
         /// <returns> A double: the adjusted distance between the words. </returns>
-        public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1)
+        public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1.0)
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
             if (checkGlossThreshold is null || vernScore <= checkGlossThreshold || vernScore > _maxScore)
@@ -212,7 +214,7 @@ namespace BackendFramework.Helper
         /// <summary>
         /// Check if two <see cref="Word"/>s have <see cref="Gloss"/>es with identical Language and nonempty Def.
         /// </summary>
-        public bool HaveIdenticalGloss(Word wordA, Word wordB)
+        public static bool HaveIdenticalGloss(Word wordA, Word wordB)
         {
             var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
             if (glossesA.Count == 0)
@@ -247,7 +249,7 @@ namespace BackendFramework.Helper
         /// </summary>
         private double GetScaledDistance(string stringA, string stringB)
         {
-            return _editDist.GetDistance(stringA, stringB) * 6.0 / (stringA.Length + 1);
+            return _editDist.GetDistance(stringA, stringB) * 7.0 / (stringA.Length + 1);
         }
     }
 }

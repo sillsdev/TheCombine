@@ -14,7 +14,7 @@ export function randomIntString(): string {
   return Math.floor(Math.random() * 9999999).toString();
 }
 
-//quicksort implmentation O(n log n)
+/** Quicksort implementation O(n log n). */
 export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
   if (arr.length <= 1) return arr;
 
@@ -62,11 +62,11 @@ export const DefaultLevDistParams: LevenshteinDistParams = {
 export class LevenshteinDistance {
   readonly deletionCost: number;
   readonly insertionCost: number;
-  readonly subsitutionCost: number;
+  readonly substitutionCost: number;
   constructor(params: LevenshteinDistParams = DefaultLevDistParams) {
     this.deletionCost = params.delCost;
     this.insertionCost = params.insCost;
-    this.subsitutionCost = params.subCost;
+    this.substitutionCost = params.subCost;
   }
   getDistance(a: string, b: string): number {
     const matrix: number[][] = [];
@@ -79,7 +79,7 @@ export class LevenshteinDistance {
           continue;
         }
         // Recursively compute other entries.
-        const tempSubCost = a[i - 1] === b[j - 1] ? 0 : this.subsitutionCost;
+        const tempSubCost = a[i - 1] === b[j - 1] ? 0 : this.substitutionCost;
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + this.deletionCost,
           matrix[i][j - 1] + this.insertionCost,
