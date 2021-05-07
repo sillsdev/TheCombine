@@ -22,22 +22,21 @@ def execute(command: List[str]) -> None:
 def main() -> None:
     project_dir = Path(__file__).resolve().parent.parent
     os.chdir(project_dir)
-
+    output_dir = project_dir / "src" / "api"
     execute(
         [
             "npx",
             "@openapitools/openapi-generator-cli",
             "generate",
-            "--input-spec",
-            "http://localhost:5000/openapi/v1/openapi.json",
-            "--output",
-            str(project_dir / "src" / "api"),
-            "--generator-name",
-            "typescript-axios",
-            "--additional-properties",
-            "useSingleRequestParameter=true",
+            "--input-spec=http://localhost:5000/openapi/v1/openapi.json",
+            f"--output={output_dir}",
+            "--generator-name=typescript-axios",
+            "--additional-properties=useSingleRequestParameter=true",
+            # TODO: Remove this when path parameter validation issue is resolved.
+            "--skip-validate-spec",
         ]
     )
+    execute(["npm", "run", "fmt-frontend"])
 
 
 if __name__ == "__main__":
