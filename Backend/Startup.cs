@@ -146,6 +146,8 @@ namespace BackendFramework
 
             services.AddSignalR();
             services.AddSwaggerGen();
+            // TODO: Remove this when NewtonsoftJson support is removed.
+            services.AddSwaggerGenNewtonsoftSupport();
 
             services.Configure<Settings>(
                 options =>

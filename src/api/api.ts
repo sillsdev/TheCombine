@@ -43,8 +43,8 @@ import {
  * @enum {string}
  */
 export enum AutocompleteSetting {
-  NUMBER_0 = 0,
-  NUMBER_1 = 1,
+  Off = "Off",
+  On = "On",
 }
 
 /**
@@ -181,6 +181,25 @@ export interface Gloss {
 /**
  *
  * @export
+ * @interface MergeSourceWord
+ */
+export interface MergeSourceWord {
+  /**
+   *
+   * @type {string}
+   * @memberof MergeSourceWord
+   */
+  srcWordId?: string | null;
+  /**
+   *
+   * @type {boolean}
+   * @memberof MergeSourceWord
+   */
+  getAudio?: boolean;
+}
+/**
+ *
+ * @export
  * @interface MergeWords
  */
 export interface MergeWords {
@@ -192,10 +211,10 @@ export interface MergeWords {
   parent?: Word;
   /**
    *
-   * @type {Array<object>}
+   * @type {Array<MergeSourceWord>}
    * @memberof MergeWords
    */
-  children?: Array<object> | null;
+  children?: Array<MergeSourceWord> | null;
 }
 /**
  *
@@ -400,11 +419,11 @@ export interface Sense {
  * @enum {string}
  */
 export enum State {
-  NUMBER_0 = 0,
-  NUMBER_1 = 1,
-  NUMBER_2 = 2,
-  NUMBER_3 = 3,
-  NUMBER_4 = 4,
+  Active = "Active",
+  Deleted = "Deleted",
+  Sense = "Sense",
+  Duplicate = "Duplicate",
+  Separate = "Separate",
 }
 
 /**
