@@ -501,7 +501,7 @@ in one of three environments:
    see the [Docker](#docker) section. Unless specified otherwise, each of the maintenance commands are to be run from
    the project directory. Python scripts must be run in the virtual environment.
 3. _Production Environment_ - The
-   [How To Deploy TheCombine](#https://github.com/sillsdev/TheCombine/blob/master/docs/deploy/README.md) Document
+   [How To Deploy TheCombine](docs/deploy/README.md) Document
    describes how to configure a production machine and install _TheCombine_ on it. For each of the commands below, use
    `ssh` to connect to the target system where _TheCombine_ is running and run the following commands to set the user
    and working directory:
