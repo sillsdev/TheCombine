@@ -23,4 +23,69 @@ describe("utilities", () => {
       expect(utilities.getNowDateTimeString().length).toBe(expectedLength);
     });
   });
+
+  describe("LevenshteinDistance", () => {
+    let finder: utilities.LevenshteinDistance;
+    const testParams: utilities.LevenshteinDistParams = {
+      delCost: 3,
+      insCost: 4,
+      subCost: 5,
+    };
+
+    beforeEach(() => {
+      finder = new utilities.LevenshteinDistance(testParams);
+    });
+
+    describe("getDistance", () => {
+      const baseWord: string = "testing";
+
+      test("with empty word", () => {
+        expect(finder.getDistance("", "")).toEqual(0);
+        expect(finder.getDistance(baseWord, "")).toEqual(
+          baseWord.length * testParams.delCost
+        );
+        expect(finder.getDistance("", baseWord)).toEqual(
+          baseWord.length * testParams.insCost
+        );
+      });
+
+      const similarCases: [string, string, number][] = [
+        ["same word", baseWord, 0],
+        ["1 deletion", "testin", testParams.delCost],
+        ["1 insertion", "testings", testParams.insCost],
+        ["1 substitution", "tasting", testParams.subCost],
+        ["2 substitutions", "tossing", 2 * testParams.subCost],
+        [
+          "1 insertion, 1 deletion",
+          "teasing",
+          testParams.insCost + testParams.delCost,
+        ],
+        [
+          "1 insertion, 1 substitution",
+          "toasting",
+          testParams.insCost + testParams.subCost,
+        ],
+      ];
+      test.each(similarCases)(
+        "with similar word: %p",
+        (_description: string, secondWord: string, expectedDist: number) => {
+          expect(finder.getDistance(baseWord, secondWord)).toEqual(
+            expectedDist
+          );
+        }
+      );
+
+      test("with much different words", () => {
+        const diffWord = "QQQ";
+        expect(finder.getDistance(diffWord, baseWord)).toEqual(
+          diffWord.length * testParams.subCost +
+            (baseWord.length - diffWord.length) * testParams.insCost
+        );
+        expect(finder.getDistance(baseWord, diffWord)).toEqual(
+          diffWord.length * testParams.subCost +
+            (baseWord.length - diffWord.length) * testParams.delCost
+        );
+      });
+    });
+  });
 });
