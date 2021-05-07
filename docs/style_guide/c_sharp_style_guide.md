@@ -33,3 +33,22 @@ if (isEmpty)
 
 > Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous
 > [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
+
+# Prefer `Range` for simple loop iteration
+
+```c#
+# Yes:
+using static System.Linq.Enumerable;
+
+foreach (var i in Range(0, 4))
+
+# No:
+for (var i = 0; i < 4; i++)
+```
+
+Rationale:
+
+- Only need to mention loop variable (e.g. `i`) once
+- Remove some error-prone boilerplate (`i++`)
+- Remove the possibly of incrementing the wrong value (e.g. incrementing `i` instead of `j` in an inner loop)
+- Express clearly the intent
