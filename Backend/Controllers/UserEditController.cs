@@ -5,6 +5,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -147,7 +148,8 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/useredits/{userEditId} </remarks>
         /// <returns> Index of added/updated edit </returns>
         [HttpPost("{userEditId}")]
-        public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody] Edit newEdit)
+        public async Task<IActionResult> Post(
+            string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -190,7 +192,7 @@ namespace BackendFramework.Controllers
         /// <returns> Index of added/modified step in specified goal </returns>
         [HttpPut("{userEditId}")]
         public async Task<IActionResult> Put(string projectId, string userEditId,
-            [FromBody] UserEditStepWrapper stepEdit)
+            [FromBody, BindRequired] UserEditStepWrapper stepEdit)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {

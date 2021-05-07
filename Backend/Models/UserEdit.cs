@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -69,15 +70,18 @@ namespace BackendFramework.Models
 
     public class UserEditStepWrapper
     {
+        [Required]
         [BsonElement("goalIndex")]
         public int GoalIndex { get; set; }
 
+        [Required]
         [BsonElement("stepString")]
         public string StepString { get; set; }
 
-        [BsonElement("stepIndex")]
         /* A null StepIndex implies index equal to the length of the step list--
          * i.e. the step is to be added to the end of the list. */
+        [Required]
+        [BsonElement("stepIndex")]
         public int? StepIndex { get; set; }
 
         public UserEditStepWrapper(int goalIndex, string stepString, int? stepIndex = null)
@@ -106,16 +110,20 @@ namespace BackendFramework.Models
 
     public class Edit
     {
+        [Required]
         [BsonElement("guid")]
         public Guid Guid { get; set; }
 
         /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
+        [Required]
         [BsonElement("goalType")]
         public int GoalType { get; set; }
 
+        [Required]
         [BsonElement("stepData")]
         public List<string> StepData { get; set; }
 
+        [Required]
         [BsonElement("changes")]
         public string Changes { get; set; }
 
