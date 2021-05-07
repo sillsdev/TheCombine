@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
@@ -79,7 +80,7 @@ namespace Backend.Tests.Controllers
             var headerArray = Encoding.ASCII.GetBytes(liftHeader);
             fs.Write(headerArray);
 
-            for (var i = 0; i < 3; i++)
+            foreach (var _ in Range(0, 3))
             {
                 var dateCreated = $"\"{Util.RandString(20)}\"";
                 var dateModified = $"\"{Util.RandString(20)}\"";
