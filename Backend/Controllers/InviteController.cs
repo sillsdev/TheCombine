@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -28,7 +30,7 @@ namespace BackendFramework.Controllers
         /// <summary> Generates invite link and sends email containing link </summary>
         /// <remarks> PUT: v1/invite </remarks>
         [HttpPut]
-        public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
+        public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
             var project = await _projRepo.GetProject(projectId);
@@ -98,9 +100,13 @@ namespace BackendFramework.Controllers
         /// </remarks>
         public class EmailInviteData
         {
+            [Required]
             public string EmailAddress { get; set; }
+            [Required]
             public string Message { get; set; }
+            [Required]
             public string ProjectId { get; set; }
+            [Required]
             public string Domain { get; set; }
 
             public EmailInviteData()
@@ -114,7 +120,9 @@ namespace BackendFramework.Controllers
 
         public class EmailInviteStatus
         {
+            [Required]
             public readonly bool IsTokenValid;
+            [Required]
             public readonly bool IsUserRegistered;
 
             public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)

@@ -139,25 +139,25 @@ export interface EmailInviteData {
    * @type {string}
    * @memberof EmailInviteData
    */
-  emailAddress?: string | null;
+  emailAddress: string;
   /**
    *
    * @type {string}
    * @memberof EmailInviteData
    */
-  message?: string | null;
+  message: string;
   /**
    *
    * @type {string}
    * @memberof EmailInviteData
    */
-  projectId?: string | null;
+  projectId: string;
   /**
    *
    * @type {string}
    * @memberof EmailInviteData
    */
-  domain?: string | null;
+  domain: string;
 }
 /**
  *
@@ -2144,14 +2144,16 @@ export const InviteApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {EmailInviteData} [emailInviteData]
+     * @param {EmailInviteData} emailInviteData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1InvitePut: async (
-      emailInviteData?: EmailInviteData,
+      emailInviteData: EmailInviteData,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'emailInviteData' is not null or undefined
+      assertParamExists("v1InvitePut", "emailInviteData", emailInviteData);
       const localVarPath = `/v1/invite`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2227,12 +2229,12 @@ export const InviteApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {EmailInviteData} [emailInviteData]
+     * @param {EmailInviteData} emailInviteData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1InvitePut(
-      emailInviteData?: EmailInviteData,
+      emailInviteData: EmailInviteData,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -2280,12 +2282,12 @@ export const InviteApiFactory = function (
     },
     /**
      *
-     * @param {EmailInviteData} [emailInviteData]
+     * @param {EmailInviteData} emailInviteData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1InvitePut(
-      emailInviteData?: EmailInviteData,
+      emailInviteData: EmailInviteData,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -2327,7 +2329,7 @@ export interface InviteApiV1InvitePutRequest {
    * @type {EmailInviteData}
    * @memberof InviteApiV1InvitePut
    */
-  readonly emailInviteData?: EmailInviteData;
+  readonly emailInviteData: EmailInviteData;
 }
 
 /**
@@ -2365,7 +2367,7 @@ export class InviteApi extends BaseAPI {
    * @memberof InviteApi
    */
   public v1InvitePut(
-    requestParameters: InviteApiV1InvitePutRequest = {},
+    requestParameters: InviteApiV1InvitePutRequest,
     options?: any
   ) {
     return InviteApiFp(this.configuration)
