@@ -6,6 +6,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -28,7 +29,7 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId}/merge </remarks>
         /// <returns> List of ids of new words </returns>
         [HttpPut]
-        public async Task<IActionResult> Put(string projectId, [FromBody] List<MergeWords> mergeWordsList)
+        public async Task<IActionResult> Put(string projectId, [FromBody, BindRequired] List<MergeWords> mergeWordsList)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
@@ -50,7 +51,7 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId}/merge/blacklist/add </remarks>
         /// <returns> List of word ids added to blacklist. </returns>
         [HttpPut("blacklist/add")]
-        public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody] List<string> wordIds)
+        public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {

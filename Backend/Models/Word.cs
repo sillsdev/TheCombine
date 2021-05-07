@@ -436,7 +436,9 @@ namespace BackendFramework.Models
     /// </summary>
     public class MergeWords
     {
+        [Required]
         public Word Parent { get; set; }
+        [Required]
         public List<MergeSourceWord> Children { get; set; }
 
         public MergeWords()
@@ -449,7 +451,9 @@ namespace BackendFramework.Models
     /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
     public class MergeSourceWord
     {
+        [Required]
         public string SrcWordId;
+        [Required]
         public bool GetAudio;
 
         public MergeSourceWord()

@@ -189,13 +189,13 @@ export interface MergeSourceWord {
    * @type {string}
    * @memberof MergeSourceWord
    */
-  srcWordId?: string | null;
+  srcWordId: string;
   /**
    *
    * @type {boolean}
    * @memberof MergeSourceWord
    */
-  getAudio?: boolean;
+  getAudio: boolean;
 }
 /**
  *
@@ -208,13 +208,13 @@ export interface MergeWords {
    * @type {Word}
    * @memberof MergeWords
    */
-  parent?: Word;
+  parent: Word;
   /**
    *
    * @type {Array<MergeSourceWord>}
    * @memberof MergeWords
    */
-  children?: Array<MergeSourceWord> | null;
+  children: Array<MergeSourceWord>;
 }
 /**
  *
@@ -3095,13 +3095,13 @@ export const MergeApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<string>} [requestBody]
+     * @param {Array<string>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdMergeBlacklistAddPut: async (
       projectId: string,
-      requestBody?: Array<string>,
+      requestBody: Array<string>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -3109,6 +3109,12 @@ export const MergeApiAxiosParamCreator = function (
         "v1ProjectsProjectIdMergeBlacklistAddPut",
         "projectId",
         projectId
+      );
+      // verify required parameter 'requestBody' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdMergeBlacklistAddPut",
+        "requestBody",
+        requestBody
       );
       const localVarPath = `/v1/projects/{projectId}/merge/blacklist/add`.replace(
         `{${"projectId"}}`,
@@ -3227,17 +3233,23 @@ export const MergeApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<MergeWords>} [mergeWords]
+     * @param {Array<MergeWords>} mergeWords
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdMergePut: async (
       projectId: string,
-      mergeWords?: Array<MergeWords>,
+      mergeWords: Array<MergeWords>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("v1ProjectsProjectIdMergePut", "projectId", projectId);
+      // verify required parameter 'mergeWords' is not null or undefined
+      assertParamExists(
+        "v1ProjectsProjectIdMergePut",
+        "mergeWords",
+        mergeWords
+      );
       const localVarPath = `/v1/projects/{projectId}/merge`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -3291,13 +3303,13 @@ export const MergeApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Array<string>} [requestBody]
+     * @param {Array<string>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdMergeBlacklistAddPut(
       projectId: string,
-      requestBody?: Array<string>,
+      requestBody: Array<string>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -3349,13 +3361,13 @@ export const MergeApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Array<MergeWords>} [mergeWords]
+     * @param {Array<MergeWords>} mergeWords
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdMergePut(
       projectId: string,
-      mergeWords?: Array<MergeWords>,
+      mergeWords: Array<MergeWords>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -3389,13 +3401,13 @@ export const MergeApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<string>} [requestBody]
+     * @param {Array<string>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdMergeBlacklistAddPut(
       projectId: string,
-      requestBody?: Array<string>,
+      requestBody: Array<string>,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -3435,13 +3447,13 @@ export const MergeApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<MergeWords>} [mergeWords]
+     * @param {Array<MergeWords>} mergeWords
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdMergePut(
       projectId: string,
-      mergeWords?: Array<MergeWords>,
+      mergeWords: Array<MergeWords>,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -3469,7 +3481,7 @@ export interface MergeApiV1ProjectsProjectIdMergeBlacklistAddPutRequest {
    * @type {Array<string>}
    * @memberof MergeApiV1ProjectsProjectIdMergeBlacklistAddPut
    */
-  readonly requestBody?: Array<string>;
+  readonly requestBody: Array<string>;
 }
 
 /**
@@ -3525,7 +3537,7 @@ export interface MergeApiV1ProjectsProjectIdMergePutRequest {
    * @type {Array<MergeWords>}
    * @memberof MergeApiV1ProjectsProjectIdMergePut
    */
-  readonly mergeWords?: Array<MergeWords>;
+  readonly mergeWords: Array<MergeWords>;
 }
 
 /**
