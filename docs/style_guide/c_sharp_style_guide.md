@@ -20,7 +20,7 @@ Use type inference (`var`) wherever possible. This can improve readability and e
 
 Add braces to one-line `if` statements;
 
-```
+```c#
 # Yes:
 if (isEmpty) {
   callFun();
