@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -38,7 +39,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/forgot </remarks>
         [AllowAnonymous]
         [HttpPost("forgot")]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
+        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetData data)
         {
             // Find user attached to email or username.
             var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
@@ -71,7 +72,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/reset </remarks>
         [AllowAnonymous]
         [HttpPost("forgot/reset")]
-        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetData data)
+        public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
             if (result)
@@ -154,7 +155,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created user </returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] User user)
+        public async Task<IActionResult> Post([FromBody, BindRequired] User user)
         {
             var returnUser = await _userRepo.Create(user);
             if (returnUser is null)
@@ -201,7 +202,7 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/users/{userId} </remarks>
         /// <returns> Id of updated user </returns>
         [HttpPut("{userId}")]
-        public async Task<IActionResult> Put(string userId, [FromBody] User user)
+        public async Task<IActionResult> Put(string userId, [FromBody, BindRequired] User user)
         {
             // The model seems to have flaws, and this prevents an admin from editing a user's user edits
             // One solution is to change the updating user roles so that the backend updates a user's
@@ -245,9 +246,13 @@ namespace BackendFramework.Controllers
         /// </remarks>
         public class PasswordResetData
         {
+            [Required]
             public string EmailOrUsername { get; set; }
+            [Required]
             public string Token { get; set; }
+            [Required]
             public string NewPassword { get; set; }
+            [Required]
             public string Domain { get; set; }
 
             public PasswordResetData()

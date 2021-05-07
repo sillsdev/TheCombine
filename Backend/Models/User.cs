@@ -9,56 +9,71 @@ namespace BackendFramework.Models
 {
     public class User
     {
+        [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [Required]
         [BsonElement("avatar")]
         public string Avatar { get; set; }
 
+        [Required]
         [BsonElement("hasAvatar")]
         public bool HasAvatar { get; set; }
 
+        [Required]
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [Required]
         [BsonElement("email")]
         public string Email { get; set; }
 
+        [Required]
         [BsonElement("phone")]
         public string Phone { get; set; }
 
         /// <summary> Other form of contact if phone/email are unavailable </summary>
+        [Required]
         [BsonElement("otherConnectionField")]
         public string OtherConnectionField { get; set; }
 
         /// <summary> Maps a projectId to a userEditId </summary>
+        [Required]
         [BsonElement("workedProjects")]
         public Dictionary<string, string> WorkedProjects { get; set; }
 
         /// <summary> Maps a projectId to a userRoleId </summary>
+        [Required]
         [BsonElement("projectRoles")]
         public Dictionary<string, string> ProjectRoles { get; set; }
 
         /// <summary> If the user has consented for audio/video containing them to be used </summary>
+        [Required]
         [BsonElement("agreement")]
         public bool Agreement { get; set; }
 
+        [Required]
         [BsonElement("password")]
         public string Password { get; set; }
 
+        [Required]
         [BsonElement("username")]
         public string Username { get; set; }
 
+        [Required]
         [BsonElement("uiLang")]
         public string UILang { get; set; }
 
+        [Required]
         [BsonElement("token")]
         public string Token { get; set; }
 
         /// <summary>
         /// Is set to true if the user is a Database Admin, implicitly grants ALL permissions for ALL Projects
         /// </summary>
+        [Required]
         [BsonElement("isAdmin")]
         public bool IsAdmin { get; set; }
 
@@ -197,6 +212,7 @@ namespace BackendFramework.Models
     /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
     public class WithUser
     {
+        [Required]
         public readonly User UpdatedUser;
 
         public WithUser(User user)

@@ -246,25 +246,25 @@ export interface PasswordResetData {
    * @type {string}
    * @memberof PasswordResetData
    */
-  emailOrUsername?: string | null;
+  emailOrUsername: string;
   /**
    *
    * @type {string}
    * @memberof PasswordResetData
    */
-  token?: string | null;
+  token: string;
   /**
    *
    * @type {string}
    * @memberof PasswordResetData
    */
-  newPassword?: string | null;
+  newPassword: string;
   /**
    *
    * @type {string}
    * @memberof PasswordResetData
    */
-  domain?: string | null;
+  domain: string;
 }
 /**
  *
@@ -437,91 +437,91 @@ export interface User {
    * @type {string}
    * @memberof User
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  avatar?: string | null;
+  avatar: string;
   /**
    *
    * @type {boolean}
    * @memberof User
    */
-  hasAvatar?: boolean;
+  hasAvatar: boolean;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  name?: string | null;
+  name: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  email?: string | null;
+  email: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  phone?: string | null;
+  phone: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  otherConnectionField?: string | null;
+  otherConnectionField: string;
   /**
    *
    * @type {{ [key: string]: string; }}
    * @memberof User
    */
-  workedProjects?: { [key: string]: string } | null;
+  workedProjects: { [key: string]: string };
   /**
    *
    * @type {{ [key: string]: string; }}
    * @memberof User
    */
-  projectRoles?: { [key: string]: string } | null;
+  projectRoles: { [key: string]: string };
   /**
    *
    * @type {boolean}
    * @memberof User
    */
-  agreement?: boolean;
+  agreement: boolean;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  password?: string | null;
+  password: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  username?: string | null;
+  username: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  uiLang?: string | null;
+  uiLang: string;
   /**
    *
    * @type {string}
    * @memberof User
    */
-  token?: string | null;
+  token: string;
   /**
    *
    * @type {boolean}
    * @memberof User
    */
-  isAdmin?: boolean;
+  isAdmin: boolean;
 }
 /**
  *
@@ -4964,14 +4964,20 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {PasswordResetData} [passwordResetData]
+     * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersForgotPost: async (
-      passwordResetData?: PasswordResetData,
+      passwordResetData: PasswordResetData,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'passwordResetData' is not null or undefined
+      assertParamExists(
+        "v1UsersForgotPost",
+        "passwordResetData",
+        passwordResetData
+      );
       const localVarPath = `/v1/users/forgot`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5011,14 +5017,20 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {PasswordResetData} [passwordResetData]
+     * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersForgotResetPost: async (
-      passwordResetData?: PasswordResetData,
+      passwordResetData: PasswordResetData,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'passwordResetData' is not null or undefined
+      assertParamExists(
+        "v1UsersForgotResetPost",
+        "passwordResetData",
+        passwordResetData
+      );
       const localVarPath = `/v1/users/forgot/reset`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5094,14 +5106,16 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {User} [user]
+     * @param {User} user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersPost: async (
-      user?: User,
+      user: User,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'user' is not null or undefined
+      assertParamExists("v1UsersPost", "user", user);
       const localVarPath = `/v1/users`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5232,17 +5246,19 @@ export const UserApiAxiosParamCreator = function (
     /**
      *
      * @param {string} userId
-     * @param {User} [user]
+     * @param {User} user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersUserIdPut: async (
       userId: string,
-      user?: User,
+      user: User,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("v1UsersUserIdPut", "userId", userId);
+      // verify required parameter 'user' is not null or undefined
+      assertParamExists("v1UsersUserIdPut", "user", user);
       const localVarPath = `/v1/users/{userId}`.replace(
         `{${"userId"}}`,
         encodeURIComponent(String(userId))
@@ -5384,12 +5400,12 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {PasswordResetData} [passwordResetData]
+     * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1UsersForgotPost(
-      passwordResetData?: PasswordResetData,
+      passwordResetData: PasswordResetData,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -5407,12 +5423,12 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {PasswordResetData} [passwordResetData]
+     * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1UsersForgotResetPost(
-      passwordResetData?: PasswordResetData,
+      passwordResetData: PasswordResetData,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -5450,12 +5466,12 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {User} [user]
+     * @param {User} user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1UsersPost(
-      user?: User,
+      user: User,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -5520,13 +5536,13 @@ export const UserApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} userId
-     * @param {User} [user]
+     * @param {User} user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1UsersUserIdPut(
       userId: string,
-      user?: User,
+      user: User,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -5611,12 +5627,12 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {PasswordResetData} [passwordResetData]
+     * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersForgotPost(
-      passwordResetData?: PasswordResetData,
+      passwordResetData: PasswordResetData,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -5625,12 +5641,12 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {PasswordResetData} [passwordResetData]
+     * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersForgotResetPost(
-      passwordResetData?: PasswordResetData,
+      passwordResetData: PasswordResetData,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -5649,11 +5665,11 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {User} [user]
+     * @param {User} user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1UsersPost(user?: User, options?: any): AxiosPromise<void> {
+    v1UsersPost(user: User, options?: any): AxiosPromise<void> {
       return localVarFp
         .v1UsersPost(user, options)
         .then((request) => request(axios, basePath));
@@ -5683,13 +5699,13 @@ export const UserApiFactory = function (
     /**
      *
      * @param {string} userId
-     * @param {User} [user]
+     * @param {User} user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1UsersUserIdPut(
       userId: string,
-      user?: User,
+      user: User,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -5752,7 +5768,7 @@ export interface UserApiV1UsersForgotPostRequest {
    * @type {PasswordResetData}
    * @memberof UserApiV1UsersForgotPost
    */
-  readonly passwordResetData?: PasswordResetData;
+  readonly passwordResetData: PasswordResetData;
 }
 
 /**
@@ -5766,7 +5782,7 @@ export interface UserApiV1UsersForgotResetPostRequest {
    * @type {PasswordResetData}
    * @memberof UserApiV1UsersForgotResetPost
    */
-  readonly passwordResetData?: PasswordResetData;
+  readonly passwordResetData: PasswordResetData;
 }
 
 /**
@@ -5780,7 +5796,7 @@ export interface UserApiV1UsersPostRequest {
    * @type {User}
    * @memberof UserApiV1UsersPost
    */
-  readonly user?: User;
+  readonly user: User;
 }
 
 /**
@@ -5829,7 +5845,7 @@ export interface UserApiV1UsersUserIdPutRequest {
    * @type {User}
    * @memberof UserApiV1UsersUserIdPut
    */
-  readonly user?: User;
+  readonly user: User;
 }
 
 /**
@@ -5907,7 +5923,7 @@ export class UserApi extends BaseAPI {
    * @memberof UserApi
    */
   public v1UsersForgotPost(
-    requestParameters: UserApiV1UsersForgotPostRequest = {},
+    requestParameters: UserApiV1UsersForgotPostRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
@@ -5923,7 +5939,7 @@ export class UserApi extends BaseAPI {
    * @memberof UserApi
    */
   public v1UsersForgotResetPost(
-    requestParameters: UserApiV1UsersForgotResetPostRequest = {},
+    requestParameters: UserApiV1UsersForgotResetPostRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
@@ -5951,7 +5967,7 @@ export class UserApi extends BaseAPI {
    * @memberof UserApi
    */
   public v1UsersPost(
-    requestParameters: UserApiV1UsersPostRequest = {},
+    requestParameters: UserApiV1UsersPostRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
