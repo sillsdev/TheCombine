@@ -9,6 +9,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
 using SIL.IO;
@@ -49,7 +50,8 @@ namespace BackendFramework.Controllers
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
         [RequestSizeLimit(250_000_000)]  // 250MB.
-        public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadLiftFile(
+            string projectId, [FromForm, BindRequired] FileUpload fileUpload)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
