@@ -40,7 +40,7 @@ namespace Backend.Tests.Controllers
             _ = _mergeController.BlacklistAdd(ProjId, wordIdsA).Result;
             var result = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.AreEqual(result.First().WordIds, wordIdsA);
+            Assert.That(result.First().WordIds, Is.EqualTo(wordIdsA));
             _ = _mergeController.BlacklistAdd(ProjId, wordIdsB).Result;
             result = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(2));
@@ -49,7 +49,7 @@ namespace Backend.Tests.Controllers
             _ = _mergeController.BlacklistAdd(ProjId, wordIdsC).Result;
             result = _mergeBlacklistRepo.GetAll(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.AreEqual(result.First().WordIds, wordIdsC);
+            Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
         }
     }
 }
