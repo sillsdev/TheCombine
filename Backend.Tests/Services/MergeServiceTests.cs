@@ -49,11 +49,11 @@ namespace Backend.Tests.Services
             // Check that the only word in the frontier is the new word
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.AreEqual(frontier.First(), newWords.First());
+            Assert.That(frontier.First(), Is.EqualTo(newWords.First()));
 
             // Check that new word has the right history
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
-            Assert.AreEqual(newWords.First().History.First(), thisWord.Id);
+            Assert.That(newWords.First().History.First(), Is.EqualTo(thisWord.Id));
         }
 
         [Test]

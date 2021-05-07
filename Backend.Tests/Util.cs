@@ -32,6 +32,16 @@ namespace Backend.Tests
             return RandString(rnd.Next(4, 10));
         }
 
+        public static List<Word> RandomWordList(int length, string? projId = null)
+        {
+            var wordList = new List<Word>();
+            for (var i = 0; i < length; i++)
+            {
+                wordList.Add(RandomWord(projId));
+            }
+            return wordList;
+        }
+
         public static Word RandomWord(string? projId = null)
         {
             return new Word
