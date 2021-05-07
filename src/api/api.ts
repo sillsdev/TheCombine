@@ -277,85 +277,85 @@ export interface Project {
    * @type {string}
    * @memberof Project
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {string}
    * @memberof Project
    */
-  name?: string | null;
+  name: string;
   /**
    *
    * @type {boolean}
    * @memberof Project
    */
-  isActive?: boolean;
+  isActive: boolean;
   /**
    *
    * @type {boolean}
    * @memberof Project
    */
-  liftImported?: boolean;
+  liftImported: boolean;
   /**
    *
    * @type {Array<SemanticDomain>}
    * @memberof Project
    */
-  semanticDomains?: Array<SemanticDomain> | null;
+  semanticDomains: Array<SemanticDomain>;
   /**
    *
    * @type {WritingSystem}
    * @memberof Project
    */
-  vernacularWritingSystem?: WritingSystem;
+  vernacularWritingSystem: WritingSystem;
   /**
    *
    * @type {Array<WritingSystem>}
    * @memberof Project
    */
-  analysisWritingSystems?: Array<WritingSystem> | null;
+  analysisWritingSystems: Array<WritingSystem>;
   /**
    *
    * @type {Array<string>}
    * @memberof Project
    */
-  validCharacters?: Array<string> | null;
+  validCharacters: Array<string>;
   /**
    *
    * @type {Array<string>}
    * @memberof Project
    */
-  rejectedCharacters?: Array<string> | null;
+  rejectedCharacters: Array<string>;
   /**
    *
    * @type {AutocompleteSetting}
    * @memberof Project
    */
-  autocompleteSetting?: AutocompleteSetting;
+  autocompleteSetting: AutocompleteSetting;
   /**
    *
    * @type {Array<object>}
    * @memberof Project
    */
-  customFields?: Array<object> | null;
+  customFields: Array<object>;
   /**
    *
    * @type {Array<string>}
    * @memberof Project
    */
-  wordFields?: Array<string> | null;
+  wordFields: Array<string>;
   /**
    *
    * @type {Array<string>}
    * @memberof Project
    */
-  partsOfSpeech?: Array<string> | null;
+  partsOfSpeech: Array<string>;
   /**
    *
    * @type {Array<EmailInvite>}
    * @memberof Project
    */
-  inviteTokens?: Array<EmailInvite> | null;
+  inviteTokens: Array<EmailInvite>;
 }
 /**
  *
@@ -681,19 +681,19 @@ export interface WritingSystem {
    * @type {string}
    * @memberof WritingSystem
    */
-  name?: string | null;
+  name: string;
   /**
    *
    * @type {string}
    * @memberof WritingSystem
    */
-  bcp47?: string | null;
+  bcp47: string;
   /**
    *
    * @type {string}
    * @memberof WritingSystem
    */
-  font?: string | null;
+  font: string;
 }
 
 /**
@@ -3741,14 +3741,16 @@ export const ProjectApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsPost: async (
-      project?: Project,
+      project: Project,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'project' is not null or undefined
+      assertParamExists("v1ProjectsPost", "project", project);
       const localVarPath = `/v1/projects`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3789,13 +3791,13 @@ export const ProjectApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdCharactersPut: async (
       projectId: string,
-      project?: Project,
+      project: Project,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -3804,6 +3806,8 @@ export const ProjectApiAxiosParamCreator = function (
         "projectId",
         projectId
       );
+      // verify required parameter 'project' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdCharactersPut", "project", project);
       const localVarPath = `/v1/projects/{projectId}/characters`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -3937,17 +3941,19 @@ export const ProjectApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdPut: async (
       projectId: string,
-      project?: Project,
+      project: Project,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("v1ProjectsProjectIdPut", "projectId", projectId);
+      // verify required parameter 'project' is not null or undefined
+      assertParamExists("v1ProjectsProjectIdPut", "project", project);
       const localVarPath = `/v1/projects/{projectId}`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -4157,12 +4163,12 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsPost(
-      project?: Project,
+      project: Project,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -4181,13 +4187,13 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdCharactersPut(
       projectId: string,
-      project?: Project,
+      project: Project,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -4253,13 +4259,13 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ProjectsProjectIdPut(
       projectId: string,
-      project?: Project,
+      project: Project,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -4372,11 +4378,11 @@ export const ProjectApiFactory = function (
     },
     /**
      *
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsPost(project?: Project, options?: any): AxiosPromise<void> {
+    v1ProjectsPost(project: Project, options?: any): AxiosPromise<void> {
       return localVarFp
         .v1ProjectsPost(project, options)
         .then((request) => request(axios, basePath));
@@ -4384,13 +4390,13 @@ export const ProjectApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdCharactersPut(
       projectId: string,
-      project?: Project,
+      project: Project,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -4428,13 +4434,13 @@ export const ProjectApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Project} [project]
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ProjectsProjectIdPut(
       projectId: string,
-      project?: Project,
+      project: Project,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -4497,7 +4503,7 @@ export interface ProjectApiV1ProjectsPostRequest {
    * @type {Project}
    * @memberof ProjectApiV1ProjectsPost
    */
-  readonly project?: Project;
+  readonly project: Project;
 }
 
 /**
@@ -4518,7 +4524,7 @@ export interface ProjectApiV1ProjectsProjectIdCharactersPutRequest {
    * @type {Project}
    * @memberof ProjectApiV1ProjectsProjectIdCharactersPut
    */
-  readonly project?: Project;
+  readonly project: Project;
 }
 
 /**
@@ -4567,7 +4573,7 @@ export interface ProjectApiV1ProjectsProjectIdPutRequest {
    * @type {Project}
    * @memberof ProjectApiV1ProjectsProjectIdPut
    */
-  readonly project?: Project;
+  readonly project: Project;
 }
 
 /**
@@ -4653,7 +4659,7 @@ export class ProjectApi extends BaseAPI {
    * @memberof ProjectApi
    */
   public v1ProjectsPost(
-    requestParameters: ProjectApiV1ProjectsPostRequest = {},
+    requestParameters: ProjectApiV1ProjectsPostRequest,
     options?: any
   ) {
     return ProjectApiFp(this.configuration)

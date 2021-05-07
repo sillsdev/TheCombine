@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -10,49 +11,63 @@ namespace BackendFramework.Models
 {
     public class Project
     {
+        [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [Required]
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [Required]
         [BsonElement("isActive")]
         public bool IsActive { get; set; }
 
+        [Required]
         [BsonElement("liftImported")]
         public bool LiftImported { get; set; }
 
+        [Required]
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
+        [Required]
         [BsonElement("vernacularWritingSystem")]
         public WritingSystem VernacularWritingSystem { get; set; }
 
+        [Required]
         [BsonElement("analysisWritingSystems")]
         public List<WritingSystem> AnalysisWritingSystems { get; set; }
 
+        [Required]
         [BsonElement("validCharacters")]
         public List<string> ValidCharacters { get; set; }
 
+        [Required]
         [BsonElement("rejectedCharacters")]
         public List<string> RejectedCharacters { get; set; }
 
+        [Required]
         [BsonElement("autocompleteSetting")]
         [BsonRepresentation(BsonType.String)]
         public AutocompleteSetting AutocompleteSetting { get; set; }
 
         /// <summary> Not implemented: optional fields for projects </summary>
+        [Required]
         [BsonElement("customFields")]
         public List<CustomField> CustomFields { get; set; }
 
         /// <summary> Not implemented: optional fields for words in a project </summary>
+        [Required]
         [BsonElement("wordFields")]
         public List<string> WordFields { get; set; }
 
+        [Required]
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
 
+        [Required]
         [BsonElement("inviteToken")]
         public List<EmailInvite> InviteTokens { get; set; }
 
@@ -197,7 +212,9 @@ namespace BackendFramework.Models
 
     public class CustomField
     {
+        [Required]
         private string Name { get; set; }
+        [Required]
         private string Type { get; set; }
 
         public CustomField()
@@ -218,8 +235,11 @@ namespace BackendFramework.Models
 
     public class WritingSystem
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Bcp47 { get; set; }
+        [Required]
         public string Font { get; set; }
 
         public WritingSystem()
@@ -262,9 +282,13 @@ namespace BackendFramework.Models
 
     public class SemanticDomainWithSubdomains
     {
+        [Required]
         public string Name;
+        [Required]
         public string Id;
+        [Required]
         public string Description;
+        [Required]
         public List<SemanticDomainWithSubdomains> Subdomains;
 
         public SemanticDomainWithSubdomains(SemanticDomain sd)
@@ -278,6 +302,7 @@ namespace BackendFramework.Models
 
     public class ProjectWithUser : Project
     {
+        [Required]
         public User? UpdatedUser;
 
         public ProjectWithUser(Project baseObj)

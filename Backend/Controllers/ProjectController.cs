@@ -7,6 +7,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -100,7 +101,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects </remarks>
         /// <returns> Id of created Project </returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Project project)
+        public async Task<IActionResult> Post([FromBody, BindRequired] Project project)
         {
             await _projRepo.Create(project);
 
@@ -148,7 +149,7 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
         /// <returns> Id of updated Project </returns>
         [HttpPut("{projectId}")]
-        public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
+        public async Task<IActionResult> Put(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -167,7 +168,7 @@ namespace BackendFramework.Controllers
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
         [HttpPut("{projectId}/characters")]
-        public async Task<IActionResult> PutChars(string projectId, [FromBody] Project project)
+        public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
