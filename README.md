@@ -343,6 +343,15 @@ To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openap
 
 The page will reload if you make edits.<br> You will also see any lint errors in the console.
 
+##### Regenerate OpenAPI bindings for frontend
+
+First, you must install the Java Runtime Environment (JRE) 8 or newer as mentioned in the
+[`openapi-generator` README](https://github.com/OpenAPITools/openapi-generator#13---download-jar).
+
+- For Windows: https://www.microsoft.com/openjdk
+- For macOS: `brew cask install java`
+- Ubuntu: `sudo apt install default-jre`
+
 #### `npm run frontend`
 
 Runs only the front end of the app in the development mode.
