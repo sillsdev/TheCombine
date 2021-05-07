@@ -108,25 +108,25 @@ export interface EmailInvite {
    * @type {string}
    * @memberof EmailInvite
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {string}
    * @memberof EmailInvite
    */
-  email?: string | null;
+  email: string;
   /**
    *
    * @type {string}
    * @memberof EmailInvite
    */
-  token?: string | null;
+  token: string;
   /**
    *
    * @type {string}
    * @memberof EmailInvite
    */
-  expireTime?: string;
+  expireTime: string;
 }
 /**
  *
