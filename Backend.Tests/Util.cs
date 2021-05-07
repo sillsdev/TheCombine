@@ -35,7 +35,7 @@ namespace Backend.Tests
         public static List<Word> RandomWordList(int length, string? projId = null)
         {
             var wordList = new List<Word>();
-            foreach (var i in Range(0, length))
+            foreach (var _ in Range(0, length))
             {
                 wordList.Add(RandomWord(projId));
             }
