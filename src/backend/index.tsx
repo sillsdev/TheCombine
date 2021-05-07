@@ -225,26 +225,16 @@ export async function blacklistAdd(wordIds: string[]) {
   );
 }
 
-/** Checks if list of wordIds is in current project's merge blacklist. */
-export async function blacklistCheck(wordIds: string[]): Promise<boolean> {
-  /** Until we have an interface to view/clear the merge blacklist,
-   * each user automatically has their own blacklist. */
-  const response = await backendServer.put(
-    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/check/${LocalStorage.getUserId()}`,
-    wordIds,
-    {
-      headers: authHeader(),
-    }
-  );
-  return response.data;
-}
-
-/** Updates current project's merge blacklist based on the frontier. */
-export async function blacklistUpdate() {
-  await backendServer.get(
-    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/update`,
+/** Get list of potential duplicates for merging. */
+export async function getDuplicates(
+  maxInList: number,
+  maxLists: number
+): Promise<Word[][]> {
+  const response = await backendServer.get(
+    `/projects/${LocalStorage.getProjectId()}/merge/dups/${maxInList}/${maxLists}/${LocalStorage.getUserId()}`,
     { headers: authHeader() }
   );
+  return response.data;
 }
 
 /* ProjectController.cs */

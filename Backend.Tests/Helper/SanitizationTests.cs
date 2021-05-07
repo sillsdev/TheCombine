@@ -113,7 +113,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_namesUnfriendlyFriendly))]
         public void TestMakeFriendlyForPath(List<string> nameName)
         {
-            Assert.AreEqual(Sanitization.MakeFriendlyForPath(nameName[0]), nameName[1]);
+            Assert.That(Sanitization.MakeFriendlyForPath(nameName[0]), Is.EqualTo(nameName[1]));
         }
 
         [Test]
@@ -121,9 +121,9 @@ namespace Backend.Tests.Helper
         {
             const string fallback = "Lift";
             const string nonEmpty = "qwerty";
-            Assert.AreEqual(Sanitization.MakeFriendlyForPath(""), "");
-            Assert.AreEqual(Sanitization.MakeFriendlyForPath("", fallback), fallback);
-            Assert.AreEqual(Sanitization.MakeFriendlyForPath(nonEmpty, fallback), nonEmpty);
+            Assert.That(Sanitization.MakeFriendlyForPath(""), Is.EqualTo(""));
+            Assert.That(Sanitization.MakeFriendlyForPath("", fallback), Is.EqualTo(fallback));
+            Assert.That(Sanitization.MakeFriendlyForPath(nonEmpty, fallback), Is.EqualTo(nonEmpty));
         }
     }
 }

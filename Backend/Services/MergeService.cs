@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -123,7 +124,7 @@ namespace BackendFramework.Services
         /// Remove from all blacklist entries any ids for words no longer in the frontier
         /// and delete entries that no longer have at least two wordIds.
         /// </summary>
-        /// <returns> Updated List of <see cref="MergeBlacklistEntry"/>s, or null if nothing to update. </returns>
+        /// <returns> Number of <see cref="MergeBlacklistEntry"/>s updated. </returns>
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
             var oldBlacklist = await _mergeBlacklistRepo.GetAll(projectId);
@@ -155,15 +156,36 @@ namespace BackendFramework.Services
             return updateCount;
         }
 
+        /// <summary>
+        /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
+        /// </summary>
+        public async Task<List<List<Word>>> GetPotentialDuplicates(
+            string projectId, int maxInList, int maxLists, string? userId = null)
+        {
+            var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
+
+            // First pass, only look for words with identical vernacular.
+            var collection = await _wordRepo.GetFrontier(projectId);
+            var wordLists = await dupFinder.GetIdenticalVernWords(
+                collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
+
+            // If no such sets found, look for similar words.
+            if (wordLists.Count == 0)
+            {
+                collection = await _wordRepo.GetFrontier(projectId);
+                wordLists = await dupFinder.GetSimilarWords(
+                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
+            }
+
+            return wordLists;
+        }
+
         [Serializable]
         public class InvalidBlacklistEntryError : Exception
         {
             public InvalidBlacklistEntryError() { }
 
             public InvalidBlacklistEntryError(string message) : base(message) { }
-
-            public InvalidBlacklistEntryError(string message, Exception innerException) : base(message, innerException)
-            { }
         }
     }
 }
