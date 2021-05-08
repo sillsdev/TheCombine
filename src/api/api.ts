@@ -227,13 +227,13 @@ export interface Note {
    * @type {string}
    * @memberof Note
    */
-  language?: string | null;
+  language: string;
   /**
    *
    * @type {string}
    * @memberof Note
    */
-  text?: string | null;
+  text: string;
 }
 /**
  *

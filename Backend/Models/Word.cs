@@ -203,9 +203,11 @@ namespace BackendFramework.Models
     public class Note
     {
         /// <summary> The bcp-47 code for the language the note is written in. </summary>
+        [Required]
         public string Language { get; set; }
 
         /// <summary> The contents of the note. </summary>
+        [Required]
         public string Text { get; set; }
 
         public Note()
