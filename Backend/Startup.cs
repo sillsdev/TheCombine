@@ -249,12 +249,6 @@ namespace BackendFramework
                 app.UseHsts();
             }
 
-            // In container deployment, NGINX acts as reverse proxy and handles HTTPS connections.
-            if (!IsInContainer())
-            {
-                app.UseHttpsRedirection();
-            }
-
             app.UseRouting();
             app.UseCors(AllowedOrigins);
 

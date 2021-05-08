@@ -8,6 +8,7 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
+using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
@@ -123,7 +124,7 @@ namespace Backend.Tests.Controllers
             var rnd = new Random();
             var count = rnd.Next(1, 13);
 
-            for (var i = 0; i < count; i++)
+            foreach (var i in Range(0, count))
             {
                 _ = _userEditRepo.Create(RandomUserEdit()).Result;
             }
