@@ -1,6 +1,21 @@
 import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 
+import {
+  AudioApi,
+  AvatarApi,
+  Configuration,
+  ConfigurationParameters,
+  FrontierApi,
+  InviteApi,
+  LiftApi,
+  MergeApi,
+  ProjectApi,
+  UserApi,
+  UserEditApi,
+  UserRoleApi,
+  WordApi,
+} from "api";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
@@ -18,6 +33,23 @@ import { MergeWords, Word } from "types/word";
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
 
+const config_parameters: ConfigurationParameters = { basePath: baseURL };
+const config = new Configuration(config_parameters);
+
+// Configured OpenAPI interfaces.
+const audioApi = new AudioApi();
+const avatarApi = new AvatarApi();
+const frontierApi = new FrontierApi();
+const inviteApi = new InviteApi();
+const liftApi = new LiftApi();
+const mergeApi = new MergeApi();
+const projectApi = new ProjectApi();
+const userApi = new UserApi(config);
+const userEditApi = new UserEditApi(config);
+const userRoleApi = new UserRoleApi(config);
+const wordApi = new WordApi(config);
+
+// TODO: Remove this once converted fully to OpenAPI.
 const backendServer = axios.create({
   baseURL: apiBaseURL,
 });
@@ -384,8 +416,8 @@ export function isUsernameTaken(username: string): Promise<boolean> {
 
 /** returns true if the email address is in use already */
 export function isEmailTaken(emailAddress: string): Promise<boolean> {
-  return backendServer
-    .post(`users/checkemail/${emailAddress}`)
+  return userApi
+    .v1UsersCheckemailEmailPost({ email: emailAddress })
     .then(() => false)
     .catch(
       (err) => err.response && err.response.status === StatusCodes.BAD_REQUEST
