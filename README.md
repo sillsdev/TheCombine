@@ -352,6 +352,12 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 - For macOS: `brew cask install java`
 - Ubuntu: `sudo apt install default-jre`
 
+After that, run the following script to regenerate the frontend OpenAPI bindings in place:
+
+```
+(venv) $ python scripts/generate_openapi.py 
+```
+
 #### `npm run frontend`
 
 Runs only the front end of the app in the development mode.
