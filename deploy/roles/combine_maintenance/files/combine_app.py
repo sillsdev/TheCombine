@@ -45,7 +45,7 @@ class CombineApp:
         *,
         exec_opts: Optional[List[str]] = None,
         check_results: bool = True,
-    ) -> subprocess.CompletedProcess[str]:
+    ) -> subprocess.CompletedProcess:
         """
         Run a docker-compose 'exec' command in a Combine container.
 
@@ -109,11 +109,11 @@ class CombineApp:
             return result_dict
         return None
 
-    def start(self, services: List[str]) -> subprocess.CompletedProcess[str]:
+    def start(self, services: List[str]) -> subprocess.CompletedProcess:
         """Start the specified combine service(s)."""
         return run_cmd(["docker-compose"] + self.compose_opts + ["start"] + services)
 
-    def stop(self, services: List[str]) -> subprocess.CompletedProcess[str]:
+    def stop(self, services: List[str]) -> subprocess.CompletedProcess:
         """Stop the specified combine service(s)."""
         return run_cmd(
             ["docker-compose"] + self.compose_opts + ["stop", "--timeout", "0"] + services
@@ -129,7 +129,7 @@ class CombineApp:
             return None
 
         if len(results) == 1:
-            return results[0]["_id"]  # type: ignore
+            return results[0]["_id"]
         if len(results) > 1:
             print(f"More than one project is named {project_name}", file=sys.stderr)
             sys.exit(1)
@@ -141,10 +141,10 @@ class CombineApp:
             f'db.UsersCollection.findOne({{ username: "{user}"}}, {{ username: 1 }})'
         )
         if results is not None:
-            return results["_id"]  # type: ignore
+            return results["_id"]
         results = self.db_cmd(
             f'db.UsersCollection.findOne({{ email: "{user}"}}, {{ username: 1 }})'
         )
         if results is not None:
-            return results["_id"]  # type: ignore
+            return results["_id"]
         return None
