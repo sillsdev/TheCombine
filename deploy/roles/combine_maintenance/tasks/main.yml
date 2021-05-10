@@ -50,20 +50,24 @@
     group: "{{ combine_group }}"
     mode: "{{ item.mode }}"
   with_items:
-    - name: rm_project.py
-      mode: "0755"
     - name: add_user_to_proj.py
       mode: "0755"
-    - name: make_user_admin.py
-      mode: "0755"
-    - name: maint_utils.py
+    - name: aws_backup.py
       mode: "0644"
-    - name: script_step.py
+    - name: combine_app.py
       mode: "0644"
     - name: combine_backup.py
       mode: "0755"
     - name: combine_restore.py
       mode: "0755"
+    - name: maint_utils.py
+      mode: "0644"
+    - name: make_user_admin.py
+      mode: "0755"
+    - name: rm_project.py
+      mode: "0755"
+    - name: script_step.py
+      mode: "0644"
 
 - name: set environment variables for backup job
   cron:
