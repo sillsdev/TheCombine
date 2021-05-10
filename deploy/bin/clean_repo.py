@@ -56,7 +56,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess[str]:
+def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess:
     """Run an AWS command and print the command and results if verbose is set."""
     if verbose:
         print(aws_cmd)
