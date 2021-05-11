@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BackendFramework.Models;
+using static System.Linq.Enumerable;
 
 namespace Backend.Tests
 {
@@ -16,7 +17,7 @@ namespace Backend.Tests
         {
             var rnd = new Random();
             var sb = new StringBuilder();
-            for (var i = 0; i < length; i++)
+            foreach (var i in Range(0, length))
             {
                 if (i % 4 == 0)
                     sb.Append((char)rnd.Next('A', 'Z'));
@@ -29,6 +30,16 @@ namespace Backend.Tests
         {
             var rnd = new Random();
             return RandString(rnd.Next(4, 10));
+        }
+
+        public static List<Word> RandomWordList(int length, string? projId = null)
+        {
+            var wordList = new List<Word>();
+            foreach (var _ in Range(0, length))
+            {
+                wordList.Add(RandomWord(projId));
+            }
+            return wordList;
         }
 
         public static Word RandomWord(string? projId = null)
@@ -87,18 +98,20 @@ namespace Backend.Tests
         {
             var project = new Project
             {
-                Name = Util.RandString(),
+                Name = RandString(),
                 VernacularWritingSystem = RandomWritingSystem(),
                 AnalysisWritingSystems = new List<WritingSystem> { RandomWritingSystem() },
                 SemanticDomains = new List<SemanticDomain>()
             };
-            for (var i = 1; i < 4; i++)
+
+            const int numSemanticDomains = 3;
+            foreach (var i in Range(1, numSemanticDomains))
             {
                 project.SemanticDomains.Add(RandomSemanticDomain($"{i}"));
-                for (var j = 1; j < 4; j++)
+                foreach (var j in Range(1, numSemanticDomains))
                 {
                     project.SemanticDomains.Add(RandomSemanticDomain($"{i}.{j}"));
-                    for (var k = 1; k < 4; k++)
+                    foreach (var k in Range(1, numSemanticDomains))
                     {
                         project.SemanticDomains.Add(RandomSemanticDomain($"{i}.{j}.{k}"));
                     }

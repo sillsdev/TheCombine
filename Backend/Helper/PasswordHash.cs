@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using static System.Linq.Enumerable;
 
 namespace BackendFramework.Helper
 {
@@ -50,7 +51,7 @@ namespace BackendFramework.Helper
             var computedHash = HashPassword(password, salt);
 
             // Check if the password given to us matches the hash we have stored (after the salt).
-            for (var i = 0; i < computedHash.Length; i++)
+            foreach (var i in Range(0, computedHash.Length))
             {
                 if (computedHash[i] != storedHash[i + SaltLength])
                 {

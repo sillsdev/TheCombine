@@ -14,7 +14,7 @@ export function randomIntString(): string {
   return Math.floor(Math.random() * 9999999).toString();
 }
 
-//quicksort implmentation O(n log n)
+/** Quicksort implementation O(n log n). */
 export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
   if (arr.length <= 1) return arr;
 
@@ -46,4 +46,47 @@ export function getNowDateTimeString() {
   ];
   const strs = vals.map((value) => (value < 10 ? `0${value}` : `${value}`));
   return `${strs.slice(0, 3).join("-")}_${strs.slice(3, 6).join("-")}`;
+}
+
+// A general-purpose edit distance.
+export interface LevenshteinDistParams {
+  delCost: number;
+  insCost: number;
+  subCost: number; // Must be < delCost + insCost to be relevant.
+}
+export const DefaultLevDistParams: LevenshteinDistParams = {
+  delCost: 1,
+  insCost: 1,
+  subCost: 1,
+};
+export class LevenshteinDistance {
+  readonly deletionCost: number;
+  readonly insertionCost: number;
+  readonly substitutionCost: number;
+  constructor(params: LevenshteinDistParams = DefaultLevDistParams) {
+    this.deletionCost = params.delCost;
+    this.insertionCost = params.insCost;
+    this.substitutionCost = params.subCost;
+  }
+  getDistance(a: string, b: string): number {
+    const matrix: number[][] = [];
+    for (let i = 0; i <= a.length; i++) {
+      matrix[i] = [];
+      for (let j = 0; j <= b.length; j++) {
+        // Populate first row & column.
+        if (i === 0 || j === 0) {
+          matrix[i][j] = i * this.deletionCost + j * this.insertionCost;
+          continue;
+        }
+        // Recursively compute other entries.
+        const tempSubCost = a[i - 1] === b[j - 1] ? 0 : this.substitutionCost;
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j] + this.deletionCost,
+          matrix[i][j - 1] + this.insertionCost,
+          matrix[i - 1][j - 1] + tempSubCost
+        );
+      }
+    }
+    return matrix[a.length][b.length];
+  }
 }
