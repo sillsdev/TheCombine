@@ -13,7 +13,7 @@ from typing import List
 
 
 def execute(command: List[str]) -> None:
-    exec_command = ' '.join(command)
+    exec_command = " ".join(command)
     print(f"Executing: {exec_command}")
     os.system(exec_command)
 
