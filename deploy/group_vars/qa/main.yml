@@ -5,6 +5,8 @@
 # Group: qa
 #################################################
 
+# Frontend configuration items:
+config_show_cert_expiration: false
 config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
 # TheCombine is installed on the QA Server by TeamCity.  It will set the
 # IMAGE_TAG environment variable to major.minor.build_no and launch

@@ -52,6 +52,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Simulate running with no e-mail services.",
     )
+    parser.add_argument(
+        "--no-expire",
+        action="store_true",
+        help="Do not show certificate expiration warning indicators.",
+    )
     return parser.parse_args()
 
 
@@ -101,6 +106,7 @@ def main() -> None:
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
         "config_email_enabled": json.dumps(not args.no_email),
+        "config_show_cert_expiration": json.dumps(not args.no_expire),
         "cert_max_connect_tries": "10",
         "server_name": "localhost",
         "mongodb_version": "4.4",
