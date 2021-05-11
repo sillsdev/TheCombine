@@ -8,11 +8,11 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
-import { Project } from "types/project";
-import { User } from "types/user";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
+import { Project } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { User } from "types/user";
 
 const customStyles = {
   content: {
@@ -160,7 +160,6 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
             <EmailInvite close={this.handleCloseModal} />
           </Modal>
         )}
-        {/* </Grid> */}
       </React.Fragment>
     );
   }
