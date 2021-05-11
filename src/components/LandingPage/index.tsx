@@ -17,8 +17,14 @@ export default function LandingPage() {
           <LandingButtons />
         </Grid>
         <Grid item xs={12} sm={8} md={9} lg={10} xl={11}>
-          <Typography style={{ margin: theme.spacing(3) }}>
-            <Translate id="landingPage.description" />
+          <Typography variant={"body2"} style={{ margin: theme.spacing(3) }}>
+            <Translate id="landingPage.descriptionP1" />
+            {<br />}
+            {<br />}
+            <Translate id="landingPage.descriptionP2" />
+            {<br />}
+            {<br />}
+            <Translate id="landingPage.descriptionP3" />
           </Typography>
           <img
             src={tractor}
