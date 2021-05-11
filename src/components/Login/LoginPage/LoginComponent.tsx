@@ -144,15 +144,17 @@ export default class Login extends React.Component<
               />
 
               {/* "Forgot password?" link to reset password */}
-              <Typography>
-                <Link
-                  href={"#"}
-                  onClick={() => history.push(Path.PwRequest)}
-                  variant="subtitle2"
-                >
-                  <Translate id="login.forgotPassword" />
-                </Link>
-              </Typography>
+              {RuntimeConfig.getInstance().emailServicesEnabled() && (
+                <Typography>
+                  <Link
+                    href={"#"}
+                    onClick={() => history.push(Path.PwRequest)}
+                    variant="subtitle2"
+                  >
+                    <Translate id="login.forgotPassword" />
+                  </Link>
+                </Typography>
+              )}
 
               {/* "Failed to log in" */}
               {this.props.loginFailure && (
