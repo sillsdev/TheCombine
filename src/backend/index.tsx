@@ -1,21 +1,7 @@
 import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 
-import {
-  AudioApi,
-  AvatarApi,
-  Configuration,
-  ConfigurationParameters,
-  FrontierApi,
-  InviteApi,
-  LiftApi,
-  MergeApi,
-  ProjectApi,
-  UserApi,
-  UserEditApi,
-  UserRoleApi,
-  WordApi,
-} from "api";
+import * as Api from "api";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
@@ -32,22 +18,21 @@ import { MergeWords, Word } from "types/word";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
-
-const config_parameters: ConfigurationParameters = { basePath: baseURL };
-const config = new Configuration(config_parameters);
+const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
+const config = new Api.Configuration(config_parameters);
 
 // Configured OpenAPI interfaces.
-const audioApi = new AudioApi();
-const avatarApi = new AvatarApi();
-const frontierApi = new FrontierApi();
-const inviteApi = new InviteApi();
-const liftApi = new LiftApi();
-const mergeApi = new MergeApi();
-const projectApi = new ProjectApi();
-const userApi = new UserApi(config);
-const userEditApi = new UserEditApi(config);
-const userRoleApi = new UserRoleApi(config);
-const wordApi = new WordApi(config);
+//const audioApi = new Api.AudioApi();
+//const avatarApi = new Api.AvatarApi();
+//const frontierApi = new Api.FrontierApi();
+//const inviteApi = new Api.InviteApi();
+//const liftApi = new Api.LiftApi();
+//const mergeApi = new Api.MergeApi();
+//const projectApi = new Api.ProjectApi();
+const userApi = new Api.UserApi(config);
+//const userEditApi = new Api.UserEditApi(config);
+//const userRoleApi = new Api.UserRoleApi(config);
+//const wordApi = new Api.WordApi(config);
 
 // TODO: Remove this once converted fully to OpenAPI.
 const backendServer = axios.create({
@@ -378,10 +363,10 @@ export async function projectDuplicateCheck(
 export async function resetPasswordRequest(
   emailOrUsername: string
 ): Promise<boolean> {
-  return await backendServer
-    .post("users/forgot", {
-      domain: window.location.origin,
-      emailOrUsername: emailOrUsername,
+  const domain = window.location.origin;
+  return await userApi
+    .v1UsersForgotPost({
+      passwordResetRequestData: { domain, emailOrUsername },
     })
     .then(() => true)
     .catch(() => false);
@@ -389,77 +374,62 @@ export async function resetPasswordRequest(
 
 export async function resetPassword(
   token: string,
-  password: string
+  newPassword: string
 ): Promise<boolean> {
-  return await backendServer
-    .post(`users/forgot/reset`, {
-      token: token,
-      newPassword: password,
-    })
+  return await userApi
+    .v1UsersForgotResetPost({ passwordResetData: { token, newPassword } })
     .then(() => true)
     .catch(() => false);
 }
 
+/** Returns the created user with id assigned on creation. */
 export async function addUser(user: User): Promise<User> {
-  let resp = await backendServer.post(`users`, user, { headers: authHeader() });
+  const resp = await userApi.v1UsersPost({ user }, { headers: authHeader() });
   return { ...user, id: resp.data };
 }
-/** returns true if the username is in use already */
-export function isUsernameTaken(username: string): Promise<boolean> {
-  return backendServer
-    .post(`users/checkusername/${username}`)
-    .then(() => false)
-    .catch(
-      (err) => err.response && err.response.status === StatusCodes.BAD_REQUEST
-    );
+
+/** Returns true if the username is in use already. */
+export async function isUsernameTaken(username: string): Promise<boolean> {
+  return (await userApi.v1UsersIsusernametakenUsernameGet({ username })).data;
 }
 
-/** returns true if the email address is in use already */
-export function isEmailTaken(emailAddress: string): Promise<boolean> {
-  return userApi
-    .v1UsersCheckemailEmailPost({ email: emailAddress })
-    .then(() => false)
-    .catch(
-      (err) => err.response && err.response.status === StatusCodes.BAD_REQUEST
-    );
+/** Returns true if the email address is in use already. */
+export async function isEmailTaken(email: string): Promise<boolean> {
+  return (await userApi.v1UsersIsemailtakenEmailGet({ email })).data;
 }
 
 export async function authenticateUser(
   username: string,
   password: string
 ): Promise<User> {
-  let resp = await backendServer.post(
-    `users/authenticate`,
-    { Username: username, Password: password },
+  const resp = await userApi.v1UsersAuthenticatePost(
+    { credentials: { username, password } },
     { headers: authHeader() }
   );
   return resp.data;
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(`users`, {
-    headers: authHeader(),
-  });
-  return resp.data;
+  return (await userApi.v1UsersGet({ headers: authHeader() })).data;
 }
 
 export async function getUser(id: string): Promise<User> {
-  let resp = await backendServer.get(`users/${id}`, { headers: authHeader() });
-  return resp.data;
+  return (await backendServer.get(`users/${id}`, { headers: authHeader() }))
+    .data;
 }
 
 export async function updateUser(user: User): Promise<User> {
-  let resp = await backendServer.put(`users/${user.id}`, user, {
-    headers: authHeader(),
-  });
+  const resp = await userApi.v1UsersUserIdPut(
+    { userId: user.id, user },
+    { headers: authHeader() }
+  );
   return { ...user, id: resp.data };
 }
 
 export async function deleteUser(userId: string): Promise<string> {
-  let resp = await backendServer.delete(`users/${userId}`, {
-    headers: authHeader(),
-  });
-  return resp.data;
+  return (
+    await userApi.v1UsersUserIdDelete({ userId }, { headers: authHeader() })
+  ).data;
 }
 
 /* UserEditController.cs */

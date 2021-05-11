@@ -113,18 +113,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestDeleteAllUsers()
-        {
-            _userRepo.Create(RandomUser());
-            _userRepo.Create(RandomUser());
-            _userRepo.Create(RandomUser());
-            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(3));
-
-            _ = _userController.Delete().Result;
-            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(0));
-        }
-
-        [Test]
         public void TestCheckUsername()
         {
             var user1 = RandomUser();

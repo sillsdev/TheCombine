@@ -49,11 +49,12 @@ A rapid word collection tool.
    2. [Configuring `aws-cli`](#configuring-aws-cli)
 5. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
-   2. [Running the Automated Tests](#running-the-automated-tests)
-   3. [Import Semantic Domains](#import-semantic-domains)
-   4. [Generate License Report](#generate-license-report)
-   5. [Set Project Version](#set-project-version)
-   6. [Inspect Database](#inspect-database)
+   2. [Using OpenAPI](#using-openapi)
+   3. [Running the Automated Tests](#running-the-automated-tests)
+   4. [Import Semantic Domains](#import-semantic-domains)
+   5. [Generate License Report](#generate-license-report)
+   6. [Set Project Version](#set-project-version)
+   7. [Inspect Database](#inspect-database)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Add a User to a Project](#add-a-user-to-a-project)
    2. [Backup _TheCombine_](#backup-thecombine)
@@ -296,9 +297,9 @@ scripts for _TheCombine_, you will need to install and configure the `aws-cli`, 
 
 To install `aws-cli` follow the instructions for your operating system:
 
+- [AWS CLI for Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
 - [AWS CLI for Linux](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
 - [AWS CLI for macOS](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html)
-- [AWS CLI for Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
 
 ### Configuring `aws-cli`
 
@@ -339,25 +340,6 @@ In the project directory, you can run:
 Installs the necessary packages and runs the app in the development mode.<br> Open
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).
-
-The page will reload if you make edits.<br> You will also see any lint errors in the console.
-
-##### Regenerate OpenAPI bindings for frontend
-
-First, you must install the Java Runtime Environment (JRE) 8 or newer as mentioned in the
-[`openapi-generator` README](https://github.com/OpenAPITools/openapi-generator#13---download-jar).
-
-- For Windows: https://www.microsoft.com/openjdk
-- For macOS: `brew cask install adoptopenjdk`
-- Ubuntu: `sudo apt install default-jre`
-
-After that, run the following script to regenerate the frontend OpenAPI bindings in place:
-
-```
-(venv) $ python scripts/generate_openapi.py 
-```
-
 #### `npm run frontend`
 
 Runs only the front end of the app in the development mode.
@@ -385,6 +367,28 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 #### `npm run analyze`
 
 Run after `npm run build` to analyze the contents build bundle chunks.
+
+### Using OpenAPI
+
+You need to have run `npm start` or `npm run backend` first.
+
+To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).<br>
+The page will reload if you make edits.<br> You will also see any lint errors in the console.
+
+#### Regenerate OpenAPI bindings for frontend
+
+First, you must install the Java Runtime Environment (JRE) 8 or newer as mentioned in the
+[`openapi-generator` README](https://github.com/OpenAPITools/openapi-generator#13---download-jar).
+
+- For Windows: https://www.microsoft.com/openjdk
+- For Ubuntu: `sudo apt install default-jre`
+- For macOS: `brew install adoptopenjdk`
+
+After that, run the following script to regenerate the frontend OpenAPI bindings in place:
+
+```
+(venv) $ python scripts/generate_openapi.py
+```
 
 ### Running the Automated Tests
 
@@ -517,11 +521,9 @@ in one of three environments:
 2. _In Local Docker Containers_ - To run _TheCombine_ from your software development project inside Docker containers
    see the [Docker](#docker) section. Unless specified otherwise, each of the maintenance commands are to be run from
    the project directory. Python scripts must be run in the virtual environment.
-3. _Production Environment_ - The
-   [How To Deploy TheCombine](docs/deploy/README.md) Document
-   describes how to configure a production machine and install _TheCombine_ on it. For each of the commands below, use
-   `ssh` to connect to the target system where _TheCombine_ is running and run the following commands to set the user
-   and working directory:
+3. _Production Environment_ - The [How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure
+   a production machine and install _TheCombine_ on it. For each of the commands below, use `ssh` to connect to the
+   target system where _TheCombine_ is running and run the following commands to set the user and working directory:
 
    ```bash
    sudo su -l combine
