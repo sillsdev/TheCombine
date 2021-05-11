@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -54,8 +53,8 @@ namespace Backend.Tests.Controllers
             var action = _userController.Get(user.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
-            var foundUser = ((ObjectResult)action).Value as User;
-            Assert.AreEqual(user, foundUser);
+            var foundUser = (User)((ObjectResult)action).Value;
+            Assert.That(foundUser, Is.EqualTo(user));
         }
 
         [Test]
@@ -119,21 +118,20 @@ namespace Backend.Tests.Controllers
             var user2 = RandomUser();
             var username1 = user1.Username;
             var username2 = user2.Username;
-
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (StatusCodeResult)_userController.CheckUsername(username1.ToLowerInvariant()).Result;
-            Assert.AreEqual(result1.StatusCode, (int)HttpStatusCode.BadRequest);
+            var result1 = (ObjectResult)_userController.CheckUsername(username1.ToLowerInvariant()).Result;
+            Assert.IsTrue((bool)result1.Value);
 
-            var result2 = (StatusCodeResult)_userController.CheckUsername(username2.ToUpperInvariant()).Result;
-            Assert.AreEqual(result2.StatusCode, (int)HttpStatusCode.BadRequest);
+            var result2 = (ObjectResult)_userController.CheckUsername(username2.ToUpperInvariant()).Result;
+            Assert.IsTrue((bool)result2.Value);
 
-            var result3 = (StatusCodeResult)_userController.CheckUsername(username1).Result;
-            Assert.AreEqual(result3.StatusCode, (int)HttpStatusCode.BadRequest);
+            var result3 = (ObjectResult)_userController.CheckUsername(username1).Result;
+            Assert.IsTrue((bool)result3.Value);
 
-            var result4 = (StatusCodeResult)_userController.CheckUsername("NewUsername").Result;
-            Assert.AreEqual(result4.StatusCode, (int)HttpStatusCode.OK);
+            var result4 = (ObjectResult)_userController.CheckUsername("NewUsername").Result;
+            Assert.IsFalse((bool)result4.Value);
         }
 
         [Test]
@@ -143,21 +141,20 @@ namespace Backend.Tests.Controllers
             var user2 = RandomUser();
             var email1 = user1.Email;
             var email2 = user2.Email;
-
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (StatusCodeResult)_userController.CheckEmail(email1.ToLowerInvariant()).Result;
-            Assert.AreEqual(result1.StatusCode, (int)HttpStatusCode.BadRequest);
+            var result1 = (ObjectResult)_userController.CheckEmail(email1.ToLowerInvariant()).Result;
+            Assert.IsTrue((bool)result1.Value);
 
-            var result2 = (StatusCodeResult)_userController.CheckEmail(email2.ToUpperInvariant()).Result;
-            Assert.AreEqual(result2.StatusCode, (int)HttpStatusCode.BadRequest);
+            var result2 = (ObjectResult)_userController.CheckEmail(email2.ToUpperInvariant()).Result;
+            Assert.IsTrue((bool)result2.Value);
 
-            var result3 = (StatusCodeResult)_userController.CheckEmail(email1).Result;
-            Assert.AreEqual(result3.StatusCode, (int)HttpStatusCode.BadRequest);
+            var result3 = (ObjectResult)_userController.CheckEmail(email1).Result;
+            Assert.IsTrue((bool)result3.Value);
 
-            var result4 = (StatusCodeResult)_userController.CheckEmail("NewEmail").Result;
-            Assert.AreEqual(result4.StatusCode, (int)HttpStatusCode.OK);
+            var result4 = (ObjectResult)_userController.CheckEmail("NewEmail").Result;
+            Assert.IsFalse((bool)result4.Value);
         }
     }
 }
