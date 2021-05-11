@@ -53,6 +53,7 @@ env_map=(
   ["CONFIG_CAPTCHA_REQD"]="captchaRequired"
   ["CONFIG_CAPTCHA_SITE_KEY"]="captchaSiteKey"
   ["CONFIG_ANALYTICS_WRITE_KEY"]="analyticsWriteKey"
+  ["CONFIG_EMAIL_ENABLED"]="emailServicesEnabled"
 )
 echo "window['runtimeConfig'] = {" > $OUTFILE
 

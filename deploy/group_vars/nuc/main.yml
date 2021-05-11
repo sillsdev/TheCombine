@@ -44,6 +44,7 @@ my_aws_profiles:
 ################################################
 config_captcha_required: "false"
 config_captcha_sitekey: "none"
+config_email_enabled: "false"
 
 ################################################
 # WiFi access point settings

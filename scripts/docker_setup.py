@@ -47,6 +47,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Disable the CAPTCHA from the frontend build.",
     )
+    parser.add_argument(
+        "--no-email",
+        action="store_true",
+        help="Simulate running with no e-mail services.",
+    )
     return parser.parse_args()
 
 
@@ -95,6 +100,7 @@ def main() -> None:
         "ssl_private_key": "/etc/cert_store/nginx/localhost/privkey.pem",
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+        "config_email_enabled": json.dumps(not args.no_email),
         "cert_max_connect_tries": "10",
         "server_name": "localhost",
         "mongodb_version": "4.4",
