@@ -21,8 +21,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 interface UserProps {
@@ -44,7 +44,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
       allUsers: [],
       projUsers: [],
       userAvatar: {},
-      showModal: false
+      showModal: false,
     };
   }
 
@@ -70,18 +70,18 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   private populateUsers() {
     backend
       .getAllUsersInCurrentProject()
-      .then(projUsers => {
+      .then((projUsers) => {
         this.setState({ projUsers });
         backend
           .getAllUsers()
-          .then(returnedUsers => {
-            this.setState(prevState => ({
+          .then((returnedUsers) => {
+            this.setState((prevState) => ({
               allUsers: returnedUsers.filter(
-                user => !prevState.projUsers.find(u => u.id === user.id)
-              )
+                (user) => !prevState.projUsers.find((u) => u.id === user.id)
+              ),
             }));
             const userAvatar = this.state.userAvatar;
-            const promises = projUsers.map(async u => {
+            const promises = projUsers.map(async (u) => {
               if (u.hasAvatar) {
                 userAvatar[u.id] = await backend.avatarSrc(u.id);
               }
@@ -90,9 +90,9 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
               this.setState({ userAvatar });
             });
           })
-          .catch(err => console.error(err));
+          .catch((err) => console.error(err));
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }
 
   addToProject(user: User) {

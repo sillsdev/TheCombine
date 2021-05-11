@@ -17,7 +17,7 @@ const defaultConfig: RuntimeConfigItems = {
   captchaRequired: true,
   captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
   emailServicesEnabled: true,
-  showCertExpiration: true
+  showCertExpiration: true,
 };
 
 export class RuntimeConfig {

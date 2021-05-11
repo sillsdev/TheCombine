@@ -5,7 +5,7 @@ import {
   Grid,
   Link,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
@@ -51,12 +51,12 @@ export default class Login extends React.Component<
       username: "",
       password: "",
       isVerified: !RuntimeConfig.getInstance().captchaRequired(),
-      error: { username: false, password: false }
+      error: { username: false, password: false },
     };
   }
 
   captchaStyle = {
-    margin: "5px"
+    margin: "5px",
   };
 
   componentDidMount() {
@@ -73,7 +73,7 @@ export default class Login extends React.Component<
     const value = e.target.value;
 
     this.setState({
-      [field]: value
+      [field]: value,
     } as Pick<LoginState, K>);
   }
 
@@ -96,7 +96,7 @@ export default class Login extends React.Component<
     return (
       <Grid container justify="center">
         <Card style={{ width: 450 }}>
-          <form onSubmit={e => this.login(e)}>
+          <form onSubmit={(e) => this.login(e)}>
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
@@ -109,7 +109,7 @@ export default class Login extends React.Component<
                 autoComplete="username"
                 label={<Translate id="login.username" />}
                 value={this.state.username}
-                onChange={e => this.updateField(e, "username")}
+                onChange={(e) => this.updateField(e, "username")}
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (
@@ -130,7 +130,7 @@ export default class Login extends React.Component<
                 label={<Translate id="login.password" />}
                 type="password"
                 value={this.state.password}
-                onChange={e => this.updateField(e, "password")}
+                onChange={(e) => this.updateField(e, "password")}
                 error={this.state.error["password"]}
                 helperText={
                   this.state.error["password"] ? (
@@ -176,7 +176,7 @@ export default class Login extends React.Component<
                     siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
                     theme="light"
                     size="normal"
-                    onSuccess={captcha => this.setState({ isVerified: true })}
+                    onSuccess={(captcha) => this.setState({ isVerified: true })}
                     onExpire={() => this.setState({ isVerified: false })}
                     onError={() =>
                       console.log("Something went wrong, check your conenction")
@@ -207,7 +207,7 @@ export default class Login extends React.Component<
                   <LoadingButton
                     buttonProps={{
                       type: "submit",
-                      color: "primary"
+                      color: "primary",
                     }}
                     disabled={!this.state.isVerified}
                     loading={this.props.loginAttempt}
