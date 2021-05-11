@@ -349,7 +349,7 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 [`openapi-generator` README](https://github.com/OpenAPITools/openapi-generator#13---download-jar).
 
 - For Windows: https://www.microsoft.com/openjdk
-- For macOS: `brew cask install java`
+- For macOS: `brew cask install adoptopenjdk`
 - Ubuntu: `sudo apt install default-jre`
 
 After that, run the following script to regenerate the frontend OpenAPI bindings in place:
