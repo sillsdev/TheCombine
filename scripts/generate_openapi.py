@@ -9,14 +9,13 @@ Requirements:
 """
 import os
 from pathlib import Path
-import subprocess
-import sys
 from typing import List
 
 
 def execute(command: List[str]) -> None:
-    print(f"Executing: {' '.join(command)}")
-    subprocess.run(command, stdout=sys.stdout, stderr=sys.stderr, shell=True, check=True)
+    exec_command = ' '.join(command)
+    print(f"Executing: {exec_command}")
+    os.system(exec_command)
 
 
 def main() -> None:
