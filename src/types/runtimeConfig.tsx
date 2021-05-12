@@ -2,6 +2,8 @@ interface RuntimeConfigItems {
   baseUrl: string;
   captchaRequired: boolean;
   captchaSiteKey: string;
+  emailServicesEnabled: boolean;
+  showCertExpiration: boolean;
 }
 
 declare global {
@@ -14,6 +16,8 @@ const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
   captchaRequired: true,
   captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+  emailServicesEnabled: true,
+  showCertExpiration: true,
 };
 
 export class RuntimeConfig {
@@ -63,5 +67,19 @@ export class RuntimeConfig {
       return window.runtimeConfig.captchaRequired;
     }
     return defaultConfig.captchaRequired;
+  }
+
+  public emailServicesEnabled(): boolean {
+    if (window.runtimeConfig.hasOwnProperty("emailServicesEnabled")) {
+      return window.runtimeConfig.emailServicesEnabled;
+    }
+    return defaultConfig.emailServicesEnabled;
+  }
+
+  public showCertExpiration(): boolean {
+    if (window.runtimeConfig.hasOwnProperty("showCertExpiration")) {
+      return window.runtimeConfig.showCertExpiration;
+    }
+    return defaultConfig.showCertExpiration;
   }
 }
