@@ -1,10 +1,11 @@
+import { State } from "api";
 import {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
 import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
-import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
+import { DomainWord, Sense, simpleWord, Word } from "types/word";
 
 const mockWord = simpleWord("", "");
 const mockDomainWord: DomainWord = {
@@ -14,32 +15,34 @@ const mockDomainWord: DomainWord = {
 
 describe("DataEntryComponent", () => {
   describe("filterWords", () => {
-    it("should return empty Word Array when given empty Word Array", () => {
+    it("returns empty Word Array when given empty Word Array.", () => {
       const words: Word[] = [];
       const expectedWords: Word[] = [];
       expect(filterWords(words)).toEqual(expectedWords);
     });
 
-    it("should filter out words that are inaccessible", () => {
+    it("filters out words that aren't Active.", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [new Sense()],
+          senses: [{ ...new Sense(), accessibility: State.Deleted }],
+        },
+        {
+          ...mockWord,
+          senses: [{ ...new Sense(), accessibility: State.Duplicate }],
         },
       ];
-      const expectedWords: Word[] = [];
-      expect(filterWords(words)).toEqual(expectedWords);
+      expect(filterWords(words)).toHaveLength(0);
     });
 
-    it("should not filter words that are accessible", () => {
+    it("doesn't filter words that are Active.", () => {
       const words: Word[] = [
         {
           ...mockWord,
           senses: [{ ...new Sense(), accessibility: State.Active }],
         },
       ];
-      const expectedWords: Word[] = [...words];
-      expect(filterWords(words)).toEqual(expectedWords);
+      expect(filterWords(words)).toHaveLength(1);
     });
   });
 

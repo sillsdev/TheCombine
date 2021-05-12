@@ -20,7 +20,7 @@ namespace Backend.Tests.Mocks
 
         public Task<List<Word>> GetAllWords(string projectId)
         {
-            return Task.FromResult(_words.Select(word => word.Clone()).ToList());
+            return Task.FromResult(_words.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());
         }
 
         public Task<Word?> GetWord(string projectId, string wordId)
@@ -55,28 +55,25 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> DeleteAllWords(string projectId)
         {
-            _words.Clear();
-            _frontier.Clear();
+            _words.RemoveAll(word => word.ProjectId == projectId);
+            _frontier.RemoveAll(word => word.ProjectId == projectId);
             return Task.FromResult(true);
         }
 
         public Task<List<Word>> GetFrontier(string projectId)
         {
-            return Task.FromResult(_frontier.Select(word => word.Clone()).ToList());
+            return Task.FromResult(_frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());
         }
 
         public Task<Word> AddFrontier(Word word)
         {
             _frontier.Add(word.Clone());
-            return Task.FromResult(word.Clone());
+            return Task.FromResult(word);
         }
 
         public Task<List<Word>> AddFrontier(List<Word> words)
         {
-            foreach (var w in words)
-            {
-                AddFrontier(w);
-            }
+            words.ForEach(w => _frontier.Add(w.Clone()));
             return Task.FromResult(words);
         }
 
@@ -99,7 +96,7 @@ namespace Backend.Tests.Mocks
         {
             word.Id = Guid.NewGuid().ToString();
             _words.Add(word.Clone());
-            return Task.FromResult(word.Clone());
+            return Task.FromResult(word);
         }
     }
 }

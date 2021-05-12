@@ -2,6 +2,7 @@ import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { SemanticDomain } from "api";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import {
@@ -13,7 +14,7 @@ import {
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import theme from "types/theme";
-import { SemanticDomain, Sense, Word } from "types/word";
+import { Sense, Word } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
 interface NewEntryProps {

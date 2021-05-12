@@ -1,31 +1,13 @@
 import { v4 } from "uuid";
 
+import { Gloss, Note, SemanticDomain, State } from "api";
 import { randomIntString } from "utilities";
 
-export enum State {
-  Active = "Active",
-  Deleted = "Deleted",
-  Sense = "Sense",
-  Duplicate = "Duplicate",
-  Separate = "Separate",
-}
-
-export interface Gloss {
-  def: string;
-  language: string; // bcp-47 code
-}
-
-export interface SemanticDomain {
-  name: string;
-  id: string;
-  // TODO: The backend also stores a description field. Should that be
-  //    exposed?
-}
 export class Sense {
   guid: string;
   glosses: Gloss[] = [];
   semanticDomains: SemanticDomain[] = [];
-  accessibility?: State;
+  accessibility = State.Active;
 
   constructor(gloss?: string, lang?: string, semDom?: SemanticDomain) {
     this.guid = v4();
@@ -35,16 +17,6 @@ export class Sense {
     if (semDom) {
       this.semanticDomains.push(semDom);
     }
-  }
-}
-
-export class Note {
-  language: string; // bcp-47 code
-  text: string;
-
-  constructor(text: string = "", lang: string = "") {
-    this.text = text;
-    this.language = lang;
   }
 }
 
@@ -63,23 +35,14 @@ export class Word {
   editedBy: string[] = [];
   otherField: string = "";
   projectId: string = "";
-  note: Note = new Note();
+  note: Note = { text: "", language: "" };
 
   constructor() {
     this.guid = v4();
   }
 }
 
-export interface MergeSourceWord {
-  srcWordId: string;
-  getAudio: boolean;
-}
-export interface MergeWords {
-  parent: Word;
-  children: MergeSourceWord[];
-}
-
-//used in ExistingDataTable
+// Used in DataEntry.
 export interface DomainWord {
   word: Word;
   gloss: Gloss;
@@ -109,20 +72,6 @@ export function multiSenseWord(vern: string, glosses: string[]): Word {
     id: randomIntString(),
     vernacular: vern,
     senses: glosses.map((gloss) => new Sense(gloss)),
-  };
-}
-
-// Used for unit testing, as the expected result, when the guids don't matter.
-export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
-  return {
-    ...new Word(),
-    id: randomIntString(),
-    guid: expect.any(String),
-    vernacular: vern,
-    senses: glosses.map((gloss) => ({
-      ...new Sense(gloss),
-      guid: expect.any(String),
-    })),
   };
 }
 

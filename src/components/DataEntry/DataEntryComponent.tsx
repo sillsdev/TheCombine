@@ -2,11 +2,12 @@ import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
 import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
+import { SemanticDomain, State } from "api";
 import { getFrontierWords } from "backend";
 import { Path } from "browserHistory";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
-import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
+import { DomainWord, Sense, Word } from "types/word";
 import AppBarComponent from "components/AppBar/AppBarComponent";
 import TreeViewComponent from "components/TreeView";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
@@ -62,6 +63,7 @@ export function filterWordsByDomain(
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses.filter(
       (s: Sense) =>
+        // This is for States created before .accessiblity was required in the frontend.
         s.accessibility === State.Active || s.accessibility === undefined
     )) {
       domainMatched = false;
@@ -151,9 +153,10 @@ export class DataEntryComponent extends React.Component<
   updateWords = () => {};
 
   render() {
-    let semanticDomain: SemanticDomain = {
+    const semanticDomain: SemanticDomain = {
       name: this.props.domain.name,
       id: this.props.domain.id,
+      description: "",
     };
 
     return (

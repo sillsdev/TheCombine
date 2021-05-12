@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -32,15 +33,77 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestDeleteAllWords()
+        {
+            var inWord1 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var inWord2 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var diffProjId = "OTHER_PROJECT";
+            var outWord = _wordRepo.Create(Util.RandomWord(diffProjId)).Result;
+
+            _ = _wordController.Delete(_projId).Result;
+            Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.Zero);
+            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.Zero);
+            Assert.That(_wordRepo.GetAllWords(diffProjId).Result, Has.Count.EqualTo(1));
+            Assert.That(_wordRepo.GetFrontier(diffProjId).Result, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void TestDeleteFrontierWord()
+        {
+            var wordToDelete = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var otherWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+
+            _ = _wordController.DeleteFrontier(_projId, wordToDelete.Id).Result;
+            var updatedWords = _wordRepo.GetAllWords(_projId).Result;
+            Assert.That(updatedWords, Has.Count.EqualTo(3));
+            updatedWords.ForEach(w => Assert.That(
+                w.Id == wordToDelete.Id ||
+                w.Id == otherWord.Id ||
+                w.Accessibility == State.Deleted));
+            var updatedFrontier = _wordRepo.GetFrontier(_projId).Result;
+            Assert.That(updatedFrontier, Has.Count.EqualTo(1));
+            Assert.That(updatedFrontier.First().Id, Is.EqualTo(otherWord.Id));
+        }
+
+        [Test]
         public void TestGetAllWords()
         {
             _wordRepo.Create(Util.RandomWord(_projId));
             _wordRepo.Create(Util.RandomWord(_projId));
             _wordRepo.Create(Util.RandomWord(_projId));
+            _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
 
-            var words = ((ObjectResult)_wordController.Get(_projId).Result).Value as List<Word>;
+            var words = (List<Word>)((ObjectResult)_wordController.Get(_projId).Result).Value;
             Assert.That(words, Has.Count.EqualTo(3));
             _wordRepo.GetAllWords(_projId).Result.ForEach(word => Assert.Contains(word, words));
+        }
+
+        [Test]
+        public void TestGetFrontier()
+        {
+            var inWord1 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var inWord2 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            _ = _wordRepo.Create(Util.RandomWord("OTHER_PROJECT")).Result;
+
+            var frontier = (List<Word>)((ObjectResult)_wordController.GetFrontier(_projId).Result).Value;
+            Assert.That(frontier, Has.Count.EqualTo(2));
+            Assert.Contains(inWord1, frontier);
+            Assert.Contains(inWord2, frontier);
+        }
+
+        [Test]
+        public void TestGetMissingId()
+        {
+            var missingId = "NEITHER_PROJ_NOR_WORD_ID";
+
+            var wordProjResult = _wordController.Get(missingId).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(wordProjResult);
+
+            var wordResult = _wordController.Get(_projId, missingId).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(wordResult);
+
+            var frontierProjResult = _wordController.GetFrontier(missingId).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(frontierProjResult);
         }
 
         [Test]
@@ -54,12 +117,12 @@ namespace Backend.Tests.Controllers
             var action = _wordController.Get(_projId, word.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
-            var foundWord = ((ObjectResult)action).Value as Word;
+            var foundWord = (Word)((ObjectResult)action).Value;
             Assert.AreEqual(word, foundWord);
         }
 
         [Test]
-        public void AddWord()
+        public void TestAddWord()
         {
             var word = Util.RandomWord(_projId);
 
@@ -73,20 +136,20 @@ namespace Backend.Tests.Controllers
             var newDuplicate = oldDuplicate.Clone();
 
             _ = _wordController.Post(_projId, oldDuplicate).Result;
-            var result = ((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value as string;
+            var result = (string)((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value;
             Assert.AreEqual(result, "Duplicate");
 
             newDuplicate.Senses.RemoveAt(2);
-            result = ((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value as string;
+            result = (string)((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value;
             Assert.AreEqual(result, "Duplicate");
 
             newDuplicate.Senses = new List<Sense>();
-            result = ((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value as string;
+            result = (string)((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value;
             Assert.AreNotEqual(result, "Duplicate");
         }
 
         [Test]
-        public void UpdateWord()
+        public void TestUpdateWord()
         {
             var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
@@ -104,42 +167,6 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
             Assert.Contains(finalWord, _wordRepo.GetFrontier(_projId).Result);
-        }
-
-        [Test]
-        public void DeleteWord()
-        {
-            // Fill test database
-            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
-
-            // Test delete function
-            _ = _wordController.Delete(_projId, origWord.Id).Result;
-
-            // Original word persists
-            Assert.Contains(origWord, _wordRepo.GetAllWords(_projId).Result);
-
-            // Get the new deleted word from the database
-            var frontier = _wordRepo.GetFrontier(_projId).Result;
-
-            // Ensure the word is valid
-            Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
-            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
-
-            // Test the frontier
-            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
-
-            // Ensure the deleted word is in the frontier
-            Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
-            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
-        }
-
-        [Test]
-        public void TestGetMissingWord()
-        {
-            var action = _wordController.Get(_projId, "INVALID_WORD_ID").Result;
-            Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
     }
 }

@@ -7,18 +7,12 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
+import { Note, SemanticDomain, State } from "api";
 import * as Backend from "backend";
 import { AutoComplete } from "types/project";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
-import {
-  Note,
-  SemanticDomain,
-  Sense,
-  simpleWord,
-  State,
-  Word,
-} from "types/word";
+import { Sense, simpleWord, Word } from "types/word";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";

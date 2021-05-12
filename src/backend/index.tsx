@@ -14,7 +14,7 @@ import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
 import { UserRole } from "types/userRole";
-import { MergeWords, Word } from "types/word";
+import { Word } from "types/word";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -24,7 +24,6 @@ const config = new Api.Configuration(config_parameters);
 // Configured OpenAPI interfaces.
 //const audioApi = new Api.AudioApi();
 //const avatarApi = new Api.AvatarApi();
-//const frontierApi = new Api.FrontierApi();
 //const inviteApi = new Api.InviteApi();
 //const liftApi = new Api.LiftApi();
 //const mergeApi = new Api.MergeApi();
@@ -32,7 +31,7 @@ const config = new Api.Configuration(config_parameters);
 const userApi = new Api.UserApi(config);
 //const userEditApi = new Api.UserEditApi(config);
 //const userRoleApi = new Api.UserRoleApi(config);
-//const wordApi = new Api.WordApi(config);
+const wordApi = new Api.WordApi(config);
 
 // TODO: Remove this once converted fully to OpenAPI.
 const backendServer = axios.create({
@@ -114,24 +113,6 @@ export async function avatarSrc(userId: string): Promise<string> {
     )
   );
   return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
-}
-
-/* FrontierController.cs */
-
-export async function deleteFrontierWord(id: string): Promise<string> {
-  let resp = await backendServer.delete(
-    `projects/${LocalStorage.getProjectId()}/words/frontier/${id}`,
-    { headers: authHeader() }
-  );
-  return resp.data;
-}
-
-export async function getFrontierWords(): Promise<Word[]> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/words/frontier`,
-    { headers: authHeader() }
-  );
-  return resp.data;
 }
 
 /* InviteController.cs */
@@ -223,7 +204,7 @@ export async function canUploadLift(): Promise<boolean> {
 
 /** Returns array of ids of the post-merge words. */
 export async function mergeWords(
-  mergeWordsArray: MergeWords[]
+  mergeWordsArray: Api.MergeWords[]
 ): Promise<string[]> {
   const resp = await backendServer.put(
     `projects/${LocalStorage.getProjectId()}/merge`,
@@ -523,43 +504,49 @@ export async function addUserRole(
 /* WordController.cs */
 
 export async function createWord(word: Word): Promise<Word> {
-  let resp = await backendServer.post(
-    `projects/${LocalStorage.getProjectId()}/words`,
-    word,
+  const resp = await wordApi.v1ProjectsProjectIdWordsPost(
+    { projectId: LocalStorage.getProjectId(), word },
     { headers: authHeader() }
   );
   return { ...word, id: resp.data };
 }
 
-export async function getWord(id: string): Promise<Word> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/words/${id}`,
+export async function deleteFrontierWord(wordId: string): Promise<string> {
+  const resp = await wordApi.v1ProjectsProjectIdWordsFrontierWordIdDelete(
+    { projectId: LocalStorage.getProjectId(), wordId },
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
+export async function getWord(wordId: string): Promise<Word> {
+  const resp = await wordApi.v1ProjectsProjectIdWordsWordIdGet(
+    { projectId: LocalStorage.getProjectId(), wordId },
     { headers: authHeader() }
   );
   return resp.data;
 }
 
 export async function getAllWords(): Promise<Word[]> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/words`,
+  const resp = await wordApi.v1ProjectsProjectIdWordsGet(
+    { projectId: LocalStorage.getProjectId() },
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
+export async function getFrontierWords(): Promise<Word[]> {
+  const resp = await wordApi.v1ProjectsProjectIdWordsFrontierGet(
+    { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
   return resp.data;
 }
 
 export async function updateWord(word: Word): Promise<Word> {
-  let resp = await backendServer.put(
-    `projects/${LocalStorage.getProjectId()}/words/${word.id}`,
-    word,
+  const resp = await wordApi.v1ProjectsProjectIdWordsWordIdPut(
+    { projectId: LocalStorage.getProjectId(), wordId: word.id, word },
     { headers: authHeader() }
   );
   return { ...word, id: resp.data };
-}
-
-export async function deleteWord(id: string): Promise<string> {
-  let resp = await backendServer.delete(
-    `projects/${LocalStorage.getProjectId()}/words/${id}`,
-    { headers: authHeader() }
-  );
-  return resp.data;
 }
