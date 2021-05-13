@@ -3,7 +3,6 @@ import { Translate } from "react-localize-redux";
 
 import history, { openUserGuide, Path } from "browserHistory";
 import theme from "types/theme";
-import React from "react";
 
 const buttonHeight = 50;
 const buttonWidth = 145;
