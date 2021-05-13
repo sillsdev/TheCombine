@@ -3,14 +3,31 @@ import { Translate } from "react-localize-redux";
 
 import history, { openUserGuide, Path } from "browserHistory";
 import theme from "types/theme";
+import React from "react";
 
-export default function LandingButtons() {
+const buttonHeight = 50;
+const buttonWidth = 145;
+
+export const horizontalButtonsHeight = buttonHeight + theme.spacing(2);
+const horizontalButtonsWidth = 3 * buttonWidth + theme.spacing(6);
+
+const verticalButtonsHeight = 3 * buttonHeight + theme.spacing(12);
+const verticalButtonsWidth = buttonWidth + theme.spacing(4);
+
+interface LandingButtonsProps {
+  top?: boolean;
+}
+
+export default function LandingButtons(props: LandingButtonsProps) {
   return (
     <Grid
       container
       justify="space-around"
       alignItems="center"
-      style={{ height: "100%" }}
+      style={{
+        height: props.top ? horizontalButtonsHeight : verticalButtonsHeight,
+        width: props.top ? horizontalButtonsWidth : verticalButtonsWidth,
+      }}
     >
       <LandingButton
         onClick={() => history.push(Path.Register)}
@@ -34,13 +51,15 @@ function LandingButton(props: LandingButtonProps) {
     <Grid
       item
       sm={12}
-      style={{ textAlign: "center", paddingBottom: theme.spacing(1) }}
+      style={{
+        textAlign: "center",
+      }}
     >
       <Button
         variant="contained"
         color="primary"
         onClick={props.onClick}
-        style={{ width: 150 }}
+        style={{ height: buttonHeight, width: buttonWidth }}
       >
         <Typography variant="subtitle1">
           <Translate id={props.textId} />

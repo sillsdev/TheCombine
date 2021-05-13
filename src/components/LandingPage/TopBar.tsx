@@ -3,10 +3,12 @@ import { Translate } from "react-localize-redux";
 
 import logo from "resources/CombineLogoV1White.png";
 
+export const topBarHeight = 70;
+
 /** A  bar shown at the top of the landing page. */
 export default function TopBar() {
   return (
-    <div className="NavigationBar" style={{ marginBottom: 75 }}>
+    <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
       <AppBar position="fixed">
         <Toolbar>
           <Grid
