@@ -43,6 +43,12 @@
     name: "{{ docker_packages }}"
   notify: reboot target
 
+- name: Enable Docker service
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
 - name: Create directory for TheCombine logs
   file:
     path: "{{ combine_log_directory }}"
