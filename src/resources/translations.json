@@ -223,12 +223,7 @@
       "Réglages utilisateur"
     ],
     "logout": ["Log Out", "Cerrar sesión", "Se déconnecter"],
-    "userGuide": ["User Guide", "User Guide", "User Guide"],
-    "thirdPartyLicenses": [
-      "Third Party Licenses",
-      "Licencias de terceros",
-      "Licences tierces"
-    ]
+    "userGuide": ["User Guide", "User Guide", "User Guide"]
   },
   "createProject": {
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],

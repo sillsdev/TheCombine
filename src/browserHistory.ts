@@ -66,9 +66,3 @@ export function openUserGuide() {
   const origin = getWindowOrigin();
   window.open(`${origin}/docs`);
 }
-
-/** Open the 3rdPartyLicenses.txt file in a new tab. */
-export function openLicenses() {
-  const origin = getWindowOrigin();
-  window.open(`${origin}/3rdPartyLicenses.txt`);
-}

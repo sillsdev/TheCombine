@@ -11,7 +11,7 @@ import { Translate } from "react-localize-redux";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import history, { openLicenses, openUserGuide, Path } from "browserHistory";
+import history, { openUserGuide, Path } from "browserHistory";
 import theme, { tabColor } from "types/theme";
 
 export async function getIsAdmin(): Promise<boolean> {
@@ -138,16 +138,6 @@ export function UserMenuList(props: UserMenuListProps) {
       >
         <Help style={{ marginRight: theme.spacing(1) }} />
         <Translate id="userMenu.userGuide" />
-      </MenuItem>
-
-      <MenuItem
-        onClick={() => {
-          openLicenses();
-          props.onSelect();
-        }}
-      >
-        <Gavel style={{ marginRight: theme.spacing(1) }} />
-        <Translate id="userMenu.thirdPartyLicenses" />
       </MenuItem>
 
       <MenuItem
