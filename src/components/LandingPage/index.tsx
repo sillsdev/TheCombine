@@ -11,7 +11,10 @@ import tractor from "resources/tractor.png";
 import theme from "types/theme";
 
 const heightBetweenBars =
-  window.visualViewport.height - topBarHeight - bottomBarHeight;
+  window.visualViewport.height -
+  topBarHeight -
+  bottomBarHeight -
+  theme.spacing(1);
 
 export default function LandingPage() {
   return (
@@ -19,20 +22,20 @@ export default function LandingPage() {
       <TopBar />
       <Grid container alignItems="flex-start" justify="space-around">
         <Hidden xsDown>
-          <Grid item xs>
+          <Grid item sm md xl>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
               {body()}
             </Box>
           </Grid>
-          <Grid item xs={2} sm={3} justify="flex-end">
+          <Grid item sm={3} md={2} xl={1}>
             <LandingButtons />
           </Grid>
         </Hidden>
         <Hidden smUp>
-          <Grid item xs={12}>
+          <Grid item xs>
             <LandingButtons top />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs>
             <Box
               style={{
                 maxHeight: heightBetweenBars - horizontalButtonsHeight,
@@ -52,7 +55,11 @@ export default function LandingPage() {
 function body() {
   return (
     <React.Fragment>
-      <Typography variant={"body2"} style={{ margin: theme.spacing(3) }}>
+      <Typography
+        variant="body2"
+        align="justify"
+        style={{ padding: theme.spacing(3) }}
+      >
         <Translate id="landingPage.descriptionP1" />
         {<br />}
         {<br />}

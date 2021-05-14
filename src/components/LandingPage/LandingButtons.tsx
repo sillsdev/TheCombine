@@ -8,10 +8,10 @@ const buttonHeight = 50;
 const buttonWidth = 145;
 
 export const horizontalButtonsHeight = buttonHeight + theme.spacing(2);
-const horizontalButtonsWidth = 3 * buttonWidth + theme.spacing(6);
+const horizontalButtonsWidth = 3 * buttonWidth + theme.spacing(7);
 
-const verticalButtonsHeight = 3 * buttonHeight + theme.spacing(12);
-const verticalButtonsWidth = buttonWidth + theme.spacing(4);
+const verticalButtonsHeight = 3 * buttonHeight + theme.spacing(7);
+const verticalButtonsWidth = buttonWidth + theme.spacing(2);
 
 interface LandingButtonsProps {
   top?: boolean;
@@ -19,15 +19,17 @@ interface LandingButtonsProps {
 
 export default function LandingButtons(props: LandingButtonsProps) {
   return (
-    <Card>
+    <Card
+      style={{
+        height: props.top ? horizontalButtonsHeight : verticalButtonsHeight,
+        width: props.top ? horizontalButtonsWidth : verticalButtonsWidth,
+      }}
+    >
       <Grid
         container
         justify="space-around"
         alignItems="center"
-        style={{
-          height: props.top ? horizontalButtonsHeight : verticalButtonsHeight,
-          width: props.top ? horizontalButtonsWidth : verticalButtonsWidth,
-        }}
+        style={{ height: "100%" }}
       >
         <LandingButton
           onClick={() => history.push(Path.Register)}
