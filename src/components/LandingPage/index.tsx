@@ -17,15 +17,15 @@ export default function LandingPage() {
   return (
     <React.Fragment>
       <TopBar />
-      <Grid container direction="row-reverse" justify="space-around">
+      <Grid container alignItems="flex-start" justify="space-around">
         <Hidden xsDown>
-          <Grid item sm md lg xl justify="flex-end" style={{ width: "100%" }}>
-            <LandingButtons />
-          </Grid>
-          <Grid item sm={8} md={9} lg={10} xl={11}>
-            <Box style={{ maxHeight: heightBetweenBars, overflow: "scroll" }}>
+          <Grid item xs>
+            <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
               {body()}
             </Box>
+          </Grid>
+          <Grid item xs={2} sm={3} justify="flex-end">
+            <LandingButtons />
           </Grid>
         </Hidden>
         <Hidden smUp>
@@ -36,7 +36,7 @@ export default function LandingPage() {
             <Box
               style={{
                 maxHeight: heightBetweenBars - horizontalButtonsHeight,
-                overflow: "scroll",
+                overflow: "auto",
               }}
             >
               {body()}

@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Card, Grid, Typography } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
 import history, { openUserGuide, Path } from "browserHistory";
@@ -19,25 +19,27 @@ interface LandingButtonsProps {
 
 export default function LandingButtons(props: LandingButtonsProps) {
   return (
-    <Grid
-      container
-      justify="space-around"
-      alignItems="center"
-      style={{
-        height: props.top ? horizontalButtonsHeight : verticalButtonsHeight,
-        width: props.top ? horizontalButtonsWidth : verticalButtonsWidth,
-      }}
-    >
-      <LandingButton
-        onClick={() => history.push(Path.Register)}
-        textId="login.register"
-      />
-      <LandingButton
-        onClick={() => history.push(Path.Login)}
-        textId="login.login"
-      />
-      <LandingButton onClick={openUserGuide} textId="userMenu.userGuide" />
-    </Grid>
+    <Card>
+      <Grid
+        container
+        justify="space-around"
+        alignItems="center"
+        style={{
+          height: props.top ? horizontalButtonsHeight : verticalButtonsHeight,
+          width: props.top ? horizontalButtonsWidth : verticalButtonsWidth,
+        }}
+      >
+        <LandingButton
+          onClick={() => history.push(Path.Register)}
+          textId="login.register"
+        />
+        <LandingButton
+          onClick={() => history.push(Path.Login)}
+          textId="login.login"
+        />
+        <LandingButton onClick={openUserGuide} textId="userMenu.userGuide" />
+      </Grid>
+    </Card>
   );
 }
 
@@ -49,7 +51,6 @@ function LandingButton(props: LandingButtonProps) {
   return (
     <Grid
       item
-      sm={12}
       style={{
         textAlign: "center",
       }}
