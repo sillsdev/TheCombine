@@ -11,10 +11,7 @@ import tractor from "resources/tractor.png";
 import theme from "types/theme";
 
 const heightBetweenBars =
-  window.visualViewport.height -
-  topBarHeight -
-  bottomBarHeight -
-  theme.spacing(1);
+  window.innerHeight - topBarHeight - bottomBarHeight - theme.spacing(1);
 
 export default function LandingPage() {
   return (
