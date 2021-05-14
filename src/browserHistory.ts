@@ -51,12 +51,18 @@ export function getBasePath(pathname: string): Path {
   return Path.Root;
 }
 
-// Open the user guide in a new tab.
-// Leads to a 404 in development.
-export function openUserGuide() {
-  // windows.location.origin doesn't work in all browsers, so define it manually.
+/**
+ * windows.location.origin doesn't work in all browsers, so define it manually.
+ * */
+function getWindowOrigin(): string {
   const loc = window.location;
-  const origin =
-    loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "");
+  return `${loc.protocol}//${loc.hostname}${loc.port ? ":" + loc.port : ""}`;
+}
+
+/** Open the user guide in a new tab.
+ * Leads to a 404 in development.
+ */
+export function openUserGuide() {
+  const origin = getWindowOrigin();
   window.open(`${origin}/docs`);
 }
