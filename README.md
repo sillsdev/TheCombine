@@ -463,11 +463,13 @@ To generate a summary of licenses used in production:
 $ npm run license-summary
 ```
 
-To generate a full report of the licenses used in production:
+To generate a full report of the licenses used in production that is included in the built application:
 
 ```bash
 $ npm run license-report
 ```
+
+> Note: This should be performed each time production dependencies are changed. 
 
 ### Set Project Version
 
