@@ -25,39 +25,43 @@
     - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
-    - name: install required packages dependencies
+    - name: Install required packages dependencies
       import_role:
         name: package_install
 
-    - name: setup WiFi access point
+    - name: Setup WiFi access point
       import_role:
         name: wifi_ap
       when: has_wifi
 
-    - name: install docker subsystem
+    - name: Configure Ethernet connection
+      import_role:
+        name: ethernet_config
+
+    - name: Install Docker subsystem
       import_role:
         name: docker_install
 
-    - name: create combine user
+    - name: Create combine user
       import_role:
         name: combine_user
 
-    - name: install combine configuration files
+    - name: Install combine configuration files
       import_role:
         name: combine_config
 
-    - name: setup AWS access
+    - name: Setup AWS access
       import_role:
         name: aws_access
       tags:
         - aws
 
-    - name: setup certificate update from AWS S3
+    - name: Setup certificate update from AWS S3
       import_role:
         name: cert_update
       when: cert_mode == "cert-client"
 
-    - name: setup container maintenance scripts
+    - name: Setup container maintenance scripts
       import_role:
         name: combine_maintenance
       tags:

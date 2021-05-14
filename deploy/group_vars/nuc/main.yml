@@ -50,6 +50,11 @@ config_captcha_sitekey: "none"
 config_email_enabled: "false"
 
 ################################################
+# Ethernet settings
+################################################
+eth_optional: yes
+
+################################################
 # WiFi access point settings
 ################################################
 has_wifi: yes
