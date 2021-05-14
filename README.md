@@ -93,6 +93,8 @@ A rapid word collection tool.
    - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.0.211103`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
+   - [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+     `dotnet tool update --global dotnet-project-licenses`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
    certificate.
 4. (Linux,macOS Only) Install
@@ -457,18 +459,20 @@ Imports Semantic Domains from the provided xml file.
 $ npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
-### Generate License Report
+### Generate License Reports
 
-To generate a summary of licenses used in production:
+To generate a summary of licenses used in production
 
 ```bash
-$ npm run license-summary
+$ npm run license-summary-backend
+$ npm run license-summary-frontend
 ```
 
 To generate a full report of the licenses used in production that is included in the user guide:
 
 ```bash
-$ npm run license-report
+$ npm run license-report-backend
+$ npm run license-report-frontend
 ```
 
 > Note: This should be performed each time production dependencies are changed. 
