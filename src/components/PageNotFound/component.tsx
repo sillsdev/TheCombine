@@ -20,7 +20,7 @@ export default function PageNotFound() {
         alt="Tractor"
         style={{ width: "50%", margin: "0% 25%" }}
         onClick={() => {
-          history.push(Path.Goals);
+          history.push(Path.ProjScreen);
         }}
       />
       <Typography variant="h5" style={{ textAlign: "center" }}>

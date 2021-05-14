@@ -17,6 +17,29 @@
       "Please wait while The Combine processes your data."
     ]
   },
+  "landingPage": {
+    "subtitle": [
+      "A Word-Harvesting Web App",
+      "A Word-Harvesting Web App",
+      "A Word-Harvesting Web App"
+    ],
+    "privacyPolicy": ["Privacy Policy", "Privacy Policy", "Privacy Policy"],
+    "descriptionP1": [
+      "Words are the building blocks of language, vital to both communicating information and sharing culture. A dictionary, filled with words and their meanings, is a fundamental language resource, helping to document and preserve the language for future generations within the community and providing a bridge for communication with other communities. But many minority-language communities around the world have no such resource in their language, putting them at a disadvantage.",
+      "Words are the building blocks of language, vital to both communicating information and sharing culture. A dictionary, filled with words and their meanings, is a fundamental language resource, helping to document and preserve the language for future generations within the community and providing a bridge for communication with other communities. But many minority-language communities around the world have no such resource in their language, putting them at a disadvantage.",
+      "Words are the building blocks of language, vital to both communicating information and sharing culture. A dictionary, filled with words and their meanings, is a fundamental language resource, helping to document and preserve the language for future generations within the community and providing a bridge for communication with other communities. But many minority-language communities around the world have no such resource in their language, putting them at a disadvantage."
+    ],
+    "descriptionP2": [
+      "The Combine is an easy-to-use tool in the Rapid Word Collection (RWC) process—a method of gathering the words that will serve as the backbone for a bilingual dictionary. At the heart of the RWC process are native speakers from a particular language community. Presented with one semantic domain at a time, a group of 4-6 native speakers comes up with as many words in their language as they can think of that are related to that domain. The Combine facilitates the entry of these words into a database, along with translations, audio recordings, and notes, to more fully capture their form and meaning.",
+      "The Combine is an easy-to-use tool in the Rapid Word Collection (RWC) process—a method of gathering the words that will serve as the backbone for a bilingual dictionary. At the heart of the RWC process are native speakers from a particular language community. Presented with one semantic domain at a time, a group of 4-6 native speakers comes up with as many words in their language as they can think of that are related to that domain. The Combine facilitates the entry of these words into a database, along with translations, audio recordings, and notes, to more fully capture their form and meaning.",
+      "The Combine is an easy-to-use tool in the Rapid Word Collection (RWC) process—a method of gathering the words that will serve as the backbone for a bilingual dictionary. At the heart of the RWC process are native speakers from a particular language community. Presented with one semantic domain at a time, a group of 4-6 native speakers comes up with as many words in their language as they can think of that are related to that domain. The Combine facilitates the entry of these words into a database, along with translations, audio recordings, and notes, to more fully capture their form and meaning."
+    ],
+    "descriptionP3": [
+      "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx.",
+      "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx.",
+      "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx."
+    ]
+  },
   "addWords": {
     "selectEntry": [
       "Select an entry",
