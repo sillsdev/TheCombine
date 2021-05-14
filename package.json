@@ -17,7 +17,7 @@
     "frontend": "react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "import-sem-doms": "tsc scripts/importSemanticDomains.ts && node scripts/importSemanticDomains.js",
-    "license-report": " npm install && license-checker-rseidelsohn --production --excludePrivatePackages --plainVertical --out public/3rdPartyLicenses.txt",
+    "license-report": " npm install && license-checker-rseidelsohn --production --excludePrivatePackages --plainVertical --out docs/user_guide/docs/licenses/frontend_licenses.txt",
     "license-summary": "npm install && license-checker-rseidelsohn --production --excludePrivatePackages --summary",
     "lint": "eslint --max-warnings=0 --ext js,ts,tsx,jsx src",
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
