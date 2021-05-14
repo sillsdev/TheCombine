@@ -1,9 +1,21 @@
 tox
+
+# Type Checking.
 mypy
+
+# Linting.
 flake8
 pep8-naming
+
+# Formatting.
 black
-humanfriendly
 isort
-Jinja2
+
+# Documentation.
 mkdocs-material
+
+# Templating/Docker.
+# TODO: Try out Jinja2 3.x after dust has settled from this issue:
+#   https://github.com/pallets/jinja/issues/1168
+Jinja2 < 3
+humanfriendly
