@@ -34,6 +34,6 @@ nav:
   - Data Cleanup: goals.md
   - Admin: admin.md
   - Third Party Licenses:
-    - Frontend: licenses/frontend_licenses.txt
+      - Frontend: licenses/frontend_licenses.txt
 markdown_extensions:
   - admonition
