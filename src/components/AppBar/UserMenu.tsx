@@ -1,7 +1,6 @@
 import { Avatar, Button, Hidden, Menu, MenuItem } from "@material-ui/core";
 import {
   ExitToApp,
-  Gavel,
   Help,
   Person,
   SettingsApplications,
