@@ -10,7 +10,7 @@
   lineinfile:
     path: "{{ item.path }}"
     state: present
-    insertafter: "    en[a-z]\\d"
+    insertafter: "^    en[a-z]\\d"
     line: "      optional: true"
   when: eth_optional
   with_items: "{{ net_config.files }}"
