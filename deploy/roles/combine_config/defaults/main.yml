@@ -3,6 +3,8 @@
 # Default configs for development
 config_captcha_required: true
 config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+config_email_enabled: true
+config_show_cert_expiration: true
 
 #######################################
 # environment variable overrides

@@ -8,10 +8,11 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
-import { Project } from "types/project";
-import { User } from "types/user";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
+import { Project } from "types/project";
+import { RuntimeConfig } from "types/runtimeConfig";
+import { User } from "types/user";
 
 const customStyles = {
   content: {
@@ -133,29 +134,32 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
           />
         </Grid>
 
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Typography>
-              <Translate id="projectSettings.invite.or" />
-            </Typography>
-          </Grid>
+        {RuntimeConfig.getInstance().emailServicesEnabled() && (
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography>
+                <Translate id="projectSettings.invite.or" />
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={this.handleOpenModal}>
-              <Translate id="projectSettings.invite.inviteByEmailLabel" />
-            </Button>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={this.handleOpenModal}>
+                <Translate id="projectSettings.invite.inviteByEmailLabel" />
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
 
-        <Modal
-          isOpen={this.state.showModal}
-          style={customStyles}
-          shouldCloseOnOverlayClick={true}
-          onRequestClose={this.handleCloseModal}
-        >
-          <EmailInvite close={this.handleCloseModal} />
-        </Modal>
-        {/* </Grid> */}
+        {RuntimeConfig.getInstance().emailServicesEnabled() && (
+          <Modal
+            isOpen={this.state.showModal}
+            style={customStyles}
+            shouldCloseOnOverlayClick={true}
+            onRequestClose={this.handleCloseModal}
+          >
+            <EmailInvite close={this.handleCloseModal} />
+          </Modal>
+        )}
       </React.Fragment>
     );
   }

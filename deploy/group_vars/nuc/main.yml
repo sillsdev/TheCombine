@@ -39,11 +39,20 @@ my_aws_profiles:
   - "{{ aws_ecr_profile }}"
 
 ################################################
-# Disable Google reCAPTCHA for the NUC
-# (expected to work with no internet connection)
+# The use model for the Combine when deployed on
+# a NUC is for workshops in areas with unreliable
+# or no internet connection.  As a result, the
+# CAPTCHA and functions that require email are
+# are disabled.
 ################################################
 config_captcha_required: "false"
 config_captcha_sitekey: "none"
+config_email_enabled: "false"
+
+################################################
+# Ethernet settings
+################################################
+eth_optional: yes
 
 ################################################
 # WiFi access point settings

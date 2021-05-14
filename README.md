@@ -89,7 +89,7 @@ A rapid word collection tool.
    - [VS Code](https://code.visualstudio.com/download) and the following extensions:
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
-   - [chocolatey](https://chocolatey.org/): (Windows only) a Windows package manager.
+   - [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
    - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.0.211103`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
@@ -130,6 +130,8 @@ A rapid word collection tool.
 
 8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
+
+[chocolatey]: https://chocolatey.org/
 
 ## Docker
 
@@ -463,11 +465,13 @@ To generate a summary of licenses used in production:
 $ npm run license-summary
 ```
 
-To generate a full report of the licenses used in production:
+To generate a full report of the licenses used in production that is included in the user guide:
 
 ```bash
 $ npm run license-report
 ```
+
+> Note: This should be performed each time production dependencies are changed. 
 
 ### Set Project Version
 
