@@ -31,8 +31,8 @@ Open a web browser and navigate to the URL printed on the label on the top of th
 
 ![alt text](images/04_Combine_URL.jpg "The Combine URL")
 
-The opening page for _The Combine_ will be displayed with a for the _User Guide_ which explains how to use _The Combine_
-![alt text](images/05_Combine_Landing_Page.jpg "The Combine Landing Page")
+The opening page for _The Combine_ will be displayed with a link to the _User Guide_ which explains how to use _The
+Combine_ ![alt text](images/05_Combine_Landing_Page.jpg "The Combine Landing Page")
 
 ## 5. Power Off
 
