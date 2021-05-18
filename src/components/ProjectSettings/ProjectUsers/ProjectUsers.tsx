@@ -99,7 +99,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     const currentUserId: string = getUserId();
     if (user.id !== currentUserId) {
       backend
-        .addUserRole([3, 2, 1], user)
+        .addUserRole([3, 2, 1], user.id)
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);
           this.populateUsers();

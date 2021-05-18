@@ -10,13 +10,16 @@ namespace BackendFramework.Models
     /// <summary> The changes a user has made on a particular project </summary>
     public class UserEdit
     {
+        [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [Required]
         [BsonElement("edits")]
         public List<Edit> Edits { get; set; }
 
+        [Required]
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 

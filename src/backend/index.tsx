@@ -29,8 +29,8 @@ const config = new Api.Configuration(config_parameters);
 //const mergeApi = new Api.MergeApi();
 //const projectApi = new Api.ProjectApi();
 const userApi = new Api.UserApi(config);
-//const userEditApi = new Api.UserEditApi(config);
-//const userRoleApi = new Api.UserRoleApi(config);
+const userEditApi = new Api.UserEditApi(config); //,undefined,backendServer);
+const userRoleApi = new Api.UserRoleApi(config);
 const wordApi = new Api.WordApi(config);
 
 // TODO: Remove this once converted fully to OpenAPI.
@@ -453,28 +453,31 @@ export async function addStepToGoal(
 
 /** Returns User with updated .workedProjects */
 export async function createUserEdit(): Promise<User> {
-  let resp = await backendServer.post(
-    `projects/${LocalStorage.getProjectId()}/useredits`,
-    "",
+  const resp = await userEditApi.v1ProjectsProjectIdUsereditsPost(
+    { projectId: LocalStorage.getProjectId() },
+    { headers: authHeader() }
+  );
+  // Without an interceptor, this has to be done every time a *WithUser object is returned.
+  const user = resp.data.updatedUser;
+  LocalStorage.setCurrentUser(user);
+  return user;
+}
+
+export async function getUserEditById(
+  projectId: string,
+  userEditId: string
+): Promise<UserEdit> {
+  const resp = await userEditApi.v1ProjectsProjectIdUsereditsUserEditIdGet(
+    { projectId, userEditId },
     { headers: authHeader() }
   );
   return resp.data;
 }
 
-export async function getUserEditById(
-  projId: string,
-  index: string
-): Promise<UserEdit> {
-  let resp = await backendServer.get(`projects/${projId}/useredits/${index}`, {
-    headers: authHeader(),
-  });
-  return resp.data;
-}
-
-/** Returns array with every UserEdit for the current project */
+/** Returns array with every UserEdit for the current project. */
 export async function getAllUserEdits(): Promise<UserEdit[]> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/useredits`,
+  const resp = await userEditApi.v1ProjectsProjectIdUsereditsGet(
+    { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
   return resp.data;
@@ -483,8 +486,8 @@ export async function getAllUserEdits(): Promise<UserEdit[]> {
 /* UserRoleController.cs */
 
 export async function getUserRoles(): Promise<UserRole[]> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/userroles`,
+  const resp = await userRoleApi.v1ProjectsProjectIdUserrolesGet(
+    { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
   return resp.data;
@@ -492,13 +495,14 @@ export async function getUserRoles(): Promise<UserRole[]> {
 
 export async function addUserRole(
   permissions: number[],
-  user: User
-): Promise<void> {
-  await backendServer.put(
-    `projects/${LocalStorage.getProjectId()}/userroles/${user.id}`,
-    permissions,
+  userId: string
+): Promise<string> {
+  const projectId = LocalStorage.getProjectId();
+  const resp = await userRoleApi.v1ProjectsProjectIdUserrolesUserIdPut(
+    { projectId, userId, requestBody: permissions },
     { headers: authHeader() }
   );
+  return resp.data;
 }
 
 /* WordController.cs */

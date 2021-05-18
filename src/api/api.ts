@@ -181,6 +181,86 @@ export interface EmailInviteStatus {
 /**
  *
  * @export
+ * @interface FileStream
+ */
+export interface FileStream {
+  /**
+   *
+   * @type {any}
+   * @memberof FileStream
+   * @deprecated
+   */
+  handle?: any | null;
+  /**
+   *
+   * @type {boolean}
+   * @memberof FileStream
+   */
+  canRead?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof FileStream
+   */
+  canWrite?: boolean;
+  /**
+   *
+   * @type {SafeFileHandle}
+   * @memberof FileStream
+   */
+  safeFileHandle?: SafeFileHandle;
+  /**
+   *
+   * @type {string}
+   * @memberof FileStream
+   */
+  name?: string | null;
+  /**
+   *
+   * @type {boolean}
+   * @memberof FileStream
+   */
+  isAsync?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof FileStream
+   */
+  length?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof FileStream
+   */
+  position?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof FileStream
+   */
+  canSeek?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof FileStream
+   */
+  canTimeout?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof FileStream
+   */
+  readTimeout?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof FileStream
+   */
+  writeTimeout?: number;
+}
+/**
+ *
+ * @export
  * @interface Gloss
  */
 export interface Gloss {
@@ -483,6 +563,25 @@ export interface ProjectWithUser {
 /**
  *
  * @export
+ * @interface SafeFileHandle
+ */
+export interface SafeFileHandle {
+  /**
+   *
+   * @type {boolean}
+   * @memberof SafeFileHandle
+   */
+  isInvalid?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof SafeFileHandle
+   */
+  isClosed?: boolean;
+}
+/**
+ *
+ * @export
  * @interface SemanticDomain
  */
 export interface SemanticDomain {
@@ -688,19 +787,19 @@ export interface UserEdit {
    * @type {string}
    * @memberof UserEdit
    */
-  id?: string | null;
+  id: string;
   /**
    *
    * @type {Array<Edit>}
    * @memberof UserEdit
    */
-  edits?: Array<Edit> | null;
+  edits: Array<Edit>;
   /**
    *
    * @type {string}
    * @memberof UserEdit
    */
-  projectId?: string | null;
+  projectId: string;
 }
 /**
  *
@@ -1177,7 +1276,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       fileName: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
         projectId,
@@ -1277,7 +1376,7 @@ export const AudioApiFactory = function (
       wordId: string,
       fileName: string,
       options?: any
-    ): AxiosPromise<object> {
+    ): AxiosPromise<FileStream> {
       return localVarFp
         .v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
           projectId,
@@ -1638,7 +1737,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
       userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1UsersUserIdAvatarDownloadGet(
         userId,
@@ -1706,7 +1805,7 @@ export const AvatarApiFactory = function (
     v1UsersUserIdAvatarDownloadGet(
       userId: string,
       options?: any
-    ): AxiosPromise<object> {
+    ): AxiosPromise<FileStream> {
       return localVarFp
         .v1UsersUserIdAvatarDownloadGet(userId, options)
         .then((request) => request(axios, basePath));
@@ -2479,7 +2578,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftDownloadGet(
         projectId,
@@ -2598,7 +2697,7 @@ export const LiftApiFactory = function (
     v1ProjectsProjectIdLiftDownloadGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<FileStream> {
       return localVarFp
         .v1ProjectsProjectIdLiftDownloadGet(projectId, options)
         .then((request) => request(axios, basePath));
