@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -7,6 +6,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
@@ -34,79 +34,91 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
         /// <remarks> GET: v1/projects/{projectId}/userroles </remarks>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserRole>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Get(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
-            return new ObjectResult(await _userRoleRepo.GetAllUserRoles(projectId));
+            return Ok(await _userRoleRepo.GetAllUserRoles(projectId));
         }
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
         /// <remarks> DELETE: v1/projects/{projectId}/userroles </remarks>
         /// <returns> true: if success, false: if there were no UserRoles </returns>
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Delete(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
-            return new ObjectResult(await _userRoleRepo.DeleteAllUserRoles(projectId));
+            return Ok(await _userRoleRepo.DeleteAllUserRoles(projectId));
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
         /// <remarks> GET: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
         [HttpGet("{userRoleId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserRole))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Get(string projectId, string userRoleId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
-                return new NotFoundObjectResult(userRoleId);
+                return NotFound(userRoleId);
             }
 
-            return new ObjectResult(userRole);
+            return Ok(userRole);
         }
 
         /// <summary> Creates a <see cref="UserRole"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/userroles </remarks>
         /// <returns> Id of updated UserRole </returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Post(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             userRole.ProjectId = projectId;
@@ -115,35 +127,38 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             await _userRoleRepo.Create(userRole);
-            return new OkObjectResult(userRole.Id);
+            return Ok(userRole.Id);
         }
 
         /// <summary> Deletes <see cref="UserRole"/> with specified id </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
         [HttpDelete("{userRoleId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Delete(string projectId, string userRoleId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             if (await _userRoleRepo.Delete(projectId, userRoleId))
             {
-                return new OkResult();
+                return Ok();
             }
-            return new NotFoundObjectResult(userRoleId);
+            return NotFound(userRoleId);
         }
 
         /// <summary>
@@ -153,25 +168,29 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId}/userroles/{userId} </remarks>
         /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserRole(
             string projectId, string userId, [FromBody, BindRequired] int[] permissions)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             // Fetch the user -> fetch user role -> update user role
             var changeUser = await _userRepo.GetUser(userId);
             if (changeUser is null)
             {
-                return new NotFoundObjectResult(userId);
+                return NotFound(userId);
             }
 
             string userRoleId;
@@ -193,7 +212,7 @@ namespace BackendFramework.Controllers
             var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
-                return new NotFoundObjectResult(userRoleId);
+                return NotFound(userRoleId);
             }
 
             userRole.Permissions = new List<int>(permissions);
@@ -201,9 +220,9 @@ namespace BackendFramework.Controllers
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {
-                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
-                ResultOfUpdate.Updated => new OkObjectResult(userId),
-                _ => new StatusCodeResult((int)HttpStatusCode.NotModified)
+                ResultOfUpdate.NotFound => NotFound(userRoleId),
+                ResultOfUpdate.Updated => Ok(userRoleId),
+                _ => StatusCode(StatusCodes.Status304NotModified, userRoleId)
             };
         }
     }

@@ -162,6 +162,25 @@ export interface EmailInviteData {
 /**
  *
  * @export
+ * @interface EmailInviteStatus
+ */
+export interface EmailInviteStatus {
+  /**
+   *
+   * @type {boolean}
+   * @memberof EmailInviteStatus
+   */
+  isTokenValid: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EmailInviteStatus
+   */
+  isUserRegistered: boolean;
+}
+/**
+ *
+ * @export
  * @interface Gloss
  */
 export interface Gloss {
@@ -367,6 +386,103 @@ export interface Project {
 /**
  *
  * @export
+ * @interface ProjectWithUser
+ */
+export interface ProjectWithUser {
+  /**
+   *
+   * @type {User}
+   * @memberof ProjectWithUser
+   */
+  updatedUser: User;
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectWithUser
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectWithUser
+   */
+  name: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ProjectWithUser
+   */
+  isActive: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ProjectWithUser
+   */
+  liftImported: boolean;
+  /**
+   *
+   * @type {Array<SemanticDomain>}
+   * @memberof ProjectWithUser
+   */
+  semanticDomains: Array<SemanticDomain>;
+  /**
+   *
+   * @type {WritingSystem}
+   * @memberof ProjectWithUser
+   */
+  vernacularWritingSystem: WritingSystem;
+  /**
+   *
+   * @type {Array<WritingSystem>}
+   * @memberof ProjectWithUser
+   */
+  analysisWritingSystems: Array<WritingSystem>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ProjectWithUser
+   */
+  validCharacters: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ProjectWithUser
+   */
+  rejectedCharacters: Array<string>;
+  /**
+   *
+   * @type {AutocompleteSetting}
+   * @memberof ProjectWithUser
+   */
+  autocompleteSetting: AutocompleteSetting;
+  /**
+   *
+   * @type {Array<object>}
+   * @memberof ProjectWithUser
+   */
+  customFields: Array<object>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ProjectWithUser
+   */
+  wordFields: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ProjectWithUser
+   */
+  partsOfSpeech: Array<string>;
+  /**
+   *
+   * @type {Array<EmailInvite>}
+   * @memberof ProjectWithUser
+   */
+  inviteTokens: Array<EmailInvite>;
+}
+/**
+ *
+ * @export
  * @interface SemanticDomain
  */
 export interface SemanticDomain {
@@ -388,6 +504,37 @@ export interface SemanticDomain {
    * @memberof SemanticDomain
    */
   description: string;
+}
+/**
+ *
+ * @export
+ * @interface SemanticDomainWithSubdomains
+ */
+export interface SemanticDomainWithSubdomains {
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainWithSubdomains
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainWithSubdomains
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainWithSubdomains
+   */
+  description: string;
+  /**
+   *
+   * @type {Array<SemanticDomainWithSubdomains>}
+   * @memberof SemanticDomainWithSubdomains
+   */
+  subdomains: Array<SemanticDomainWithSubdomains>;
 }
 /**
  *
@@ -533,6 +680,31 @@ export interface User {
 /**
  *
  * @export
+ * @interface UserEdit
+ */
+export interface UserEdit {
+  /**
+   *
+   * @type {string}
+   * @memberof UserEdit
+   */
+  id?: string | null;
+  /**
+   *
+   * @type {Array<Edit>}
+   * @memberof UserEdit
+   */
+  edits?: Array<Edit> | null;
+  /**
+   *
+   * @type {string}
+   * @memberof UserEdit
+   */
+  projectId?: string | null;
+}
+/**
+ *
+ * @export
  * @interface UserEditStepWrapper
  */
 export interface UserEditStepWrapper {
@@ -579,6 +751,19 @@ export interface UserRole {
    * @memberof UserRole
    */
   projectId: string;
+}
+/**
+ *
+ * @export
+ * @interface WithUser
+ */
+export interface WithUser {
+  /**
+   *
+   * @type {User}
+   * @memberof WithUser
+   */
+  updatedUser: User;
 }
 /**
  *
@@ -963,7 +1148,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       fileName: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
         projectId,
@@ -992,7 +1177,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       fileName: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
         projectId,
@@ -1025,7 +1210,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       filePath: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioUploadPost(
         projectId,
@@ -1069,7 +1254,7 @@ export const AudioApiFactory = function (
       wordId: string,
       fileName: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
           projectId,
@@ -1092,7 +1277,7 @@ export const AudioApiFactory = function (
       wordId: string,
       fileName: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<object> {
       return localVarFp
         .v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
           projectId,
@@ -1119,7 +1304,7 @@ export const AudioApiFactory = function (
       name: string,
       filePath: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdWordsWordIdAudioUploadPost(
           projectId,
@@ -1453,7 +1638,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
       userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1UsersUserIdAvatarDownloadGet(
         userId,
@@ -1521,7 +1706,7 @@ export const AvatarApiFactory = function (
     v1UsersUserIdAvatarDownloadGet(
       userId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<object> {
       return localVarFp
         .v1UsersUserIdAvatarDownloadGet(userId, options)
         .then((request) => request(axios, basePath));
@@ -1775,7 +1960,10 @@ export const InviteApiFp = function (configuration?: Configuration) {
       token: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<EmailInviteStatus>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1InviteProjectIdValidateTokenPut(
         projectId,
@@ -1837,7 +2025,7 @@ export const InviteApiFactory = function (
       projectId: string,
       token: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<EmailInviteStatus> {
       return localVarFp
         .v1InviteProjectIdValidateTokenPut(projectId, token, options)
         .then((request) => request(axios, basePath));
@@ -2245,7 +2433,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftCheckGet(
         projectId,
@@ -2268,7 +2456,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftDeleteexportGet(
         projectId,
@@ -2314,7 +2502,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftExportGet(
         projectId,
@@ -2343,7 +2531,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       filePath: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftUploadPost(
         projectId,
@@ -2382,7 +2570,7 @@ export const LiftApiFactory = function (
     v1ProjectsProjectIdLiftCheckGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<boolean> {
       return localVarFp
         .v1ProjectsProjectIdLiftCheckGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -2396,7 +2584,7 @@ export const LiftApiFactory = function (
     v1ProjectsProjectIdLiftDeleteexportGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdLiftDeleteexportGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -2424,7 +2612,7 @@ export const LiftApiFactory = function (
     v1ProjectsProjectIdLiftExportGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdLiftExportGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -2444,7 +2632,7 @@ export const LiftApiFactory = function (
       name: string,
       filePath: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<number> {
       return localVarFp
         .v1ProjectsProjectIdLiftUploadPost(
           projectId,
@@ -2874,7 +3062,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
       requestBody: Array<string>,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergeBlacklistAddPut(
         projectId,
@@ -2904,7 +3092,10 @@ export const MergeApiFp = function (configuration?: Configuration) {
       userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<Array<Word>>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
         projectId,
@@ -2932,7 +3123,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
       mergeWords: Array<MergeWords>,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergePut(
         projectId,
@@ -2971,7 +3162,7 @@ export const MergeApiFactory = function (
       projectId: string,
       requestBody: Array<string>,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<string>> {
       return localVarFp
         .v1ProjectsProjectIdMergeBlacklistAddPut(
           projectId,
@@ -2995,7 +3186,7 @@ export const MergeApiFactory = function (
       maxLists: number,
       userId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<Array<Word>>> {
       return localVarFp
         .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
           projectId,
@@ -3017,7 +3208,7 @@ export const MergeApiFactory = function (
       projectId: string,
       mergeWords: Array<MergeWords>,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<string>> {
       return localVarFp
         .v1ProjectsProjectIdMergePut(projectId, mergeWords, options)
         .then((request) => request(axios, basePath));
@@ -3668,7 +3859,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     async v1ProjectsDelete(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsDelete(
         options
@@ -3690,7 +3881,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       projectName: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsDuplicateProjectNameGet(
         projectName,
@@ -3711,7 +3902,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     async v1ProjectsGet(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Project>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsGet(
         options
@@ -3733,7 +3924,10 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       project: Project,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ProjectWithUser>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsPost(
         project,
@@ -3758,7 +3952,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       project: Project,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdCharactersPut(
         projectId,
@@ -3805,7 +3999,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdGet(
         projectId,
@@ -3830,7 +4024,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       project: Project,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdPut(
         projectId,
@@ -3854,7 +4048,10 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<SemanticDomainWithSubdomains>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdSemanticdomainsGet(
         projectId,
@@ -3877,7 +4074,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsersGet(
         projectId,
@@ -3909,7 +4106,7 @@ export const ProjectApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsDelete(options?: any): AxiosPromise<void> {
+    v1ProjectsDelete(options?: any): AxiosPromise<boolean> {
       return localVarFp
         .v1ProjectsDelete(options)
         .then((request) => request(axios, basePath));
@@ -3923,7 +4120,7 @@ export const ProjectApiFactory = function (
     v1ProjectsDuplicateProjectNameGet(
       projectName: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<boolean> {
       return localVarFp
         .v1ProjectsDuplicateProjectNameGet(projectName, options)
         .then((request) => request(axios, basePath));
@@ -3933,7 +4130,7 @@ export const ProjectApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsGet(options?: any): AxiosPromise<void> {
+    v1ProjectsGet(options?: any): AxiosPromise<Array<Project>> {
       return localVarFp
         .v1ProjectsGet(options)
         .then((request) => request(axios, basePath));
@@ -3944,7 +4141,10 @@ export const ProjectApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsPost(project: Project, options?: any): AxiosPromise<void> {
+    v1ProjectsPost(
+      project: Project,
+      options?: any
+    ): AxiosPromise<ProjectWithUser> {
       return localVarFp
         .v1ProjectsPost(project, options)
         .then((request) => request(axios, basePath));
@@ -3960,7 +4160,7 @@ export const ProjectApiFactory = function (
       projectId: string,
       project: Project,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Project> {
       return localVarFp
         .v1ProjectsProjectIdCharactersPut(projectId, project, options)
         .then((request) => request(axios, basePath));
@@ -3988,7 +4188,7 @@ export const ProjectApiFactory = function (
     v1ProjectsProjectIdGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Project> {
       return localVarFp
         .v1ProjectsProjectIdGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -4004,7 +4204,7 @@ export const ProjectApiFactory = function (
       projectId: string,
       project: Project,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdPut(projectId, project, options)
         .then((request) => request(axios, basePath));
@@ -4018,7 +4218,7 @@ export const ProjectApiFactory = function (
     v1ProjectsProjectIdSemanticdomainsGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<SemanticDomainWithSubdomains>> {
       return localVarFp
         .v1ProjectsProjectIdSemanticdomainsGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -4032,7 +4232,7 @@ export const ProjectApiFactory = function (
     v1ProjectsProjectIdUsersGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<User>> {
       return localVarFp
         .v1ProjectsProjectIdUsersGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -5526,55 +5726,6 @@ export const UserEditApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsDelete: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsDelete",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/useredits`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
     v1ProjectsProjectIdUsereditsGet: async (
       projectId: string,
       options: any = {}
@@ -5937,34 +6088,14 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUsereditsDelete(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsDelete(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
     async v1ProjectsProjectIdUsereditsGet(
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<UserEdit>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsGet(
         projectId,
@@ -5987,7 +6118,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<WithUser>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsPost(
         projectId,
@@ -6038,7 +6169,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       userEditId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserEdit>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdGet(
         projectId,
@@ -6066,7 +6197,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       edit: Edit,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdPost(
         projectId,
@@ -6095,7 +6226,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       userEditStepWrapper: UserEditStepWrapper,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdPut(
         projectId,
@@ -6130,24 +6261,10 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsDelete(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<void> {
-      return localVarFp
-        .v1ProjectsProjectIdUsereditsDelete(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
     v1ProjectsProjectIdUsereditsGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<UserEdit>> {
       return localVarFp
         .v1ProjectsProjectIdUsereditsGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -6161,7 +6278,7 @@ export const UserEditApiFactory = function (
     v1ProjectsProjectIdUsereditsPost(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<WithUser> {
       return localVarFp
         .v1ProjectsProjectIdUsereditsPost(projectId, options)
         .then((request) => request(axios, basePath));
@@ -6197,7 +6314,7 @@ export const UserEditApiFactory = function (
       projectId: string,
       userEditId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<UserEdit> {
       return localVarFp
         .v1ProjectsProjectIdUsereditsUserEditIdGet(
           projectId,
@@ -6219,7 +6336,7 @@ export const UserEditApiFactory = function (
       userEditId: string,
       edit: Edit,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<number> {
       return localVarFp
         .v1ProjectsProjectIdUsereditsUserEditIdPost(
           projectId,
@@ -6242,7 +6359,7 @@ export const UserEditApiFactory = function (
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<number> {
       return localVarFp
         .v1ProjectsProjectIdUsereditsUserEditIdPut(
           projectId,
@@ -6254,20 +6371,6 @@ export const UserEditApiFactory = function (
     },
   };
 };
-
-/**
- * Request parameters for v1ProjectsProjectIdUsereditsDelete operation in UserEditApi.
- * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsDeleteRequest
- */
-export interface UserEditApiV1ProjectsProjectIdUsereditsDeleteRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsDelete
-   */
-  readonly projectId: string;
-}
 
 /**
  * Request parameters for v1ProjectsProjectIdUsereditsGet operation in UserEditApi.
@@ -6402,22 +6505,6 @@ export interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPutRequest {
  * @extends {BaseAPI}
  */
 export class UserEditApi extends BaseAPI {
-  /**
-   *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsDeleteRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserEditApi
-   */
-  public v1ProjectsProjectIdUsereditsDelete(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsDeleteRequest,
-    options?: any
-  ) {
-    return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsDelete(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
   /**
    *
    * @param {UserEditApiV1ProjectsProjectIdUsereditsGetRequest} requestParameters Request parameters.
@@ -6906,7 +6993,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesDelete(
         projectId,
@@ -6929,7 +7016,10 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<UserRole>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesGet(
         projectId,
@@ -6954,7 +7044,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       userRole: UserRole,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesPost(
         projectId,
@@ -6982,7 +7072,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       requestBody: Array<number>,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesUserIdPut(
         projectId,
@@ -7035,7 +7125,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       userRoleId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserRole>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesUserRoleIdGet(
         projectId,
@@ -7072,7 +7162,7 @@ export const UserRoleApiFactory = function (
     v1ProjectsProjectIdUserrolesDelete(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<boolean> {
       return localVarFp
         .v1ProjectsProjectIdUserrolesDelete(projectId, options)
         .then((request) => request(axios, basePath));
@@ -7086,7 +7176,7 @@ export const UserRoleApiFactory = function (
     v1ProjectsProjectIdUserrolesGet(
       projectId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<Array<UserRole>> {
       return localVarFp
         .v1ProjectsProjectIdUserrolesGet(projectId, options)
         .then((request) => request(axios, basePath));
@@ -7102,7 +7192,7 @@ export const UserRoleApiFactory = function (
       projectId: string,
       userRole: UserRole,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdUserrolesPost(projectId, userRole, options)
         .then((request) => request(axios, basePath));
@@ -7120,7 +7210,7 @@ export const UserRoleApiFactory = function (
       userId: string,
       requestBody: Array<number>,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .v1ProjectsProjectIdUserrolesUserIdPut(
           projectId,
@@ -7161,7 +7251,7 @@ export const UserRoleApiFactory = function (
       projectId: string,
       userRoleId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<UserRole> {
       return localVarFp
         .v1ProjectsProjectIdUserrolesUserRoleIdGet(
           projectId,

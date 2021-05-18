@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using BackendFramework.Helper;
@@ -150,13 +149,13 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> Post([FromBody, BindRequired] User user)
         {
             var returnUser = await _userRepo.Create(user);
             if (returnUser is null)
             {
-                return BadRequest();
+                return BadRequest("User creation failed.");
             }
             return Ok(user.Id);
         }
@@ -207,7 +206,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => NotFound(userId),
                 ResultOfUpdate.Updated => Ok(userId),
-                _ => StatusCode((int)HttpStatusCode.NotModified, userId)
+                _ => StatusCode(StatusCodes.Status304NotModified, userId)
             };
         }
 

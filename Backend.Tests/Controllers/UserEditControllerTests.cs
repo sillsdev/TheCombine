@@ -185,20 +185,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestDeleteAllUserEdits()
-        {
-            _userEditRepo.Create(RandomUserEdit());
-            _userEditRepo.Create(RandomUserEdit());
-            _userEditRepo.Create(RandomUserEdit());
-
-            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(3));
-
-            _ = _userEditController.Delete(_projId).Result;
-
-            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
-        }
-
-        [Test]
         public void TestGetMissingUserEdit()
         {
             var action = _userEditController.Get(_projId, "INVALID_USER_EDIT_ID").Result;

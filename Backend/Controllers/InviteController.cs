@@ -5,6 +5,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -30,30 +31,34 @@ namespace BackendFramework.Controllers
         /// <summary> Generates invite link and sends email containing link </summary>
         /// <remarks> PUT: v1/invite </remarks>
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
-            return new OkObjectResult(linkWithIdentifier);
+            return Ok(linkWithIdentifier);
         }
 
         /// <summary> Validates invite token in url and adds user to project </summary>
         /// <remarks> PUT: v1/invite/{projectId}/validate/{token} </remarks>
         [AllowAnonymous]
         [HttpPut("{projectId}/validate/{token}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             var isTokenValid = false;
@@ -84,15 +89,15 @@ namespace BackendFramework.Controllers
             var status = new EmailInviteStatus(isTokenValid, isUserRegistered);
             if (isTokenValid && !isUserRegistered)
             {
-                return new OkObjectResult(status);
+                return Ok(status);
             }
             if (isTokenValid && isUserRegistered
                                   && !currentUser.ProjectRoles.ContainsKey(projectId)
                                   && await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
-                return new OkObjectResult(status);
+                return Ok(status);
             }
-            return new OkObjectResult(new EmailInviteStatus(false, false));
+            return Ok(new EmailInviteStatus(false, false));
         }
 
         /// <remarks>

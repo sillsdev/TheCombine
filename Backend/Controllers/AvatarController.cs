@@ -5,6 +5,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -29,6 +30,8 @@ namespace BackendFramework.Controllers
         /// <remarks> GET: v1/users/{userId}/avatar/download </remarks>
         /// <returns> Path to local avatar file </returns>
         [HttpGet("download")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
             var user = await _userRepo.GetUser(userId, false);
@@ -36,7 +39,7 @@ namespace BackendFramework.Controllers
 
             if (avatar is null)
             {
-                return new NotFoundObjectResult(userId);
+                return NotFound(userId);
             }
 
             var imageFile = System.IO.File.OpenRead(avatar);
@@ -49,30 +52,34 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/{userId}/avatar/upload </remarks>
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm, BindRequired] FileUpload fileUpload)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             var file = fileUpload.File;
             if (file is null)
             {
-                return new BadRequestObjectResult("Null File");
+                return BadRequest("Null File");
             }
 
             // Ensure file is not empty.
             if (file.Length == 0)
             {
-                return new BadRequestObjectResult("Empty File");
+                return BadRequest("Empty File");
             }
 
             // Get user to apply avatar to.
             var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
-                return new NotFoundObjectResult(userId);
+                return NotFound(userId);
             }
 
             // Generate path to store avatar file.
@@ -89,7 +96,7 @@ namespace BackendFramework.Controllers
             user.HasAvatar = true;
             _ = await _userRepo.Update(userId, user);
 
-            return new OkResult();
+            return Ok();
         }
     }
 }
