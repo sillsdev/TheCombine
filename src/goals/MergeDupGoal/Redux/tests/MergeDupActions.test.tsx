@@ -1,7 +1,6 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { MergeWords, State } from "api";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   defaultTree,
@@ -23,7 +22,7 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { GoalsState } from "types/goals";
-import { multiSenseWord, Sense, Word } from "types/word";
+import { MergeWords, multiSenseWord, Sense, State, Word } from "types/word";
 import { randomIntString } from "utilities";
 
 // Used when the guids don't matter.

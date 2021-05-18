@@ -1,7 +1,6 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { Gloss, SemanticDomain, State } from "api";
 import {
   getSenseError,
   getSenseFromEditSense,
@@ -11,7 +10,7 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { Sense, Word } from "types/word";
+import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
 
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
@@ -37,12 +36,8 @@ const commonGuid = "mockGuid";
 const gloss0: Gloss = { language: langEn, def: "gloss" };
 const gloss0Es: Gloss = { language: langEs, def: "glossario" };
 const gloss1: Gloss = { language: langEn, def: "infinite" };
-const domain0: SemanticDomain = { name: "Universe", id: "1", description: "" };
-const domain1: SemanticDomain = {
-  name: "Shadow",
-  id: "8.3.3.2.1",
-  description: "",
-};
+const domain0 = new SemanticDomain("1", "Universe");
+const domain1 = new SemanticDomain("8.3.3.2.1", "Shadow");
 
 // Dummy sense and word creators.
 function sense0(): Sense {

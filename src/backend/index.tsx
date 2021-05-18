@@ -14,7 +14,7 @@ import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { User } from "types/user";
 import { UserEdit } from "types/userEdit";
 import { UserRole } from "types/userRole";
-import { Word } from "types/word";
+import { MergeWords, Word } from "types/word";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -204,7 +204,7 @@ export async function canUploadLift(): Promise<boolean> {
 
 /** Returns array of ids of the post-merge words. */
 export async function mergeWords(
-  mergeWordsArray: Api.MergeWords[]
+  mergeWordsArray: MergeWords[]
 ): Promise<string[]> {
   const resp = await backendServer.put(
     `projects/${LocalStorage.getProjectId()}/merge`,

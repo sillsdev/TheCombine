@@ -1,11 +1,10 @@
-import { State } from "api";
 import {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
 import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
-import { DomainWord, Sense, simpleWord, Word } from "types/word";
+import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
 
 const mockWord = simpleWord("", "");
 const mockDomainWord: DomainWord = {

@@ -1,18 +1,17 @@
-import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
+import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import { SemanticDomain, State } from "api";
 import { getFrontierWords } from "backend";
 import { Path } from "browserHistory";
-import DomainTree from "types/SemanticDomain";
-import theme from "types/theme";
-import { DomainWord, Sense, Word } from "types/word";
 import AppBarComponent from "components/AppBar/AppBarComponent";
 import TreeViewComponent from "components/TreeView";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
+import DomainTree from "types/SemanticDomain";
+import theme from "types/theme";
+import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
 
 interface DataEntryProps {
   domain: DomainTree;

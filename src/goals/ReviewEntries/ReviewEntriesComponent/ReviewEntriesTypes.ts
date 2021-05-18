@@ -1,6 +1,12 @@
-import { Gloss, SemanticDomain, State } from "api";
 import Recorder from "components/Pronunciations/Recorder";
-import { cleanGlosses, Sense, Word } from "types/word";
+import {
+  cleanGlosses,
+  Gloss,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "types/word";
 
 export class ReviewEntriesWord {
   id: string;

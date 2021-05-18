@@ -5,7 +5,6 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { SemanticDomain, State } from "api";
 import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   addSemanticDomainToSense,
@@ -14,7 +13,14 @@ import DataEntryTable, {
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { defaultProject } from "types/project";
 import { baseDomain } from "types/SemanticDomain";
-import { multiSenseWord, Sense, simpleWord, Word } from "types/word";
+import {
+  multiSenseWord,
+  SemanticDomain,
+  Sense,
+  simpleWord,
+  State,
+  Word,
+} from "types/word";
 
 jest.mock("backend", () => {
   return {
@@ -35,11 +41,7 @@ const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
-const mockSemanticDomain: SemanticDomain = {
-  name: "",
-  id: "",
-  description: "",
-};
+const mockSemanticDomain = new SemanticDomain();
 const hideQuestionsMock = jest.fn();
 const getWordsFromBackendMock = jest.fn();
 
@@ -190,12 +192,8 @@ describe("DataEntryTable", () => {
   it("doesn't update word in backend if sense is a duplicate", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
     mockMultiWord.senses[0].semanticDomains = [
-      { name: "", id: "differentSemDomId", description: "" },
-      {
-        name: "",
-        id: testHandle.instance.props.semanticDomain.id,
-        description: "",
-      },
+      new SemanticDomain("differentSemDomId"),
+      new SemanticDomain(testHandle.instance.props.semanticDomain.id),
     ];
     testHandle.instance.setState(
       {
@@ -221,9 +219,9 @@ describe("DataEntryTable", () => {
   it("updates word in backend if gloss exists with different semantic domain", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
     mockMultiWord.senses[0].semanticDomains = [
-      { name: "", id: "differentSemDomId", description: "" },
-      { name: "", id: "anotherDifferentSemDomId", description: "" },
-      { name: "", id: "andAThird", description: "" },
+      new SemanticDomain("differentSemDomId"),
+      new SemanticDomain("anotherDifferentSemDomId"),
+      new SemanticDomain("andAThird"),
     ];
     testHandle.instance.setState(
       {

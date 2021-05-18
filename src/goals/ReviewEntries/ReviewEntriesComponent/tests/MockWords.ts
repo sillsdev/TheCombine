@@ -1,9 +1,8 @@
-import { State } from "api";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { Sense, Word } from "types/word";
+import { Note, SemanticDomain, Sense, State, Word } from "types/word";
 
 export default function mockWords(): ReviewEntriesWord[] {
   return [
@@ -18,7 +17,7 @@ export default function mockWords(): ReviewEntriesWord[] {
             { def: "bup", language: "en" },
             { def: "AHHHHHH", language: "es" },
           ],
-          domains: [{ name: "domain", id: "number", description: "" }],
+          domains: [new SemanticDomain("number", "domain")],
           deleted: false,
         },
       ],
@@ -31,7 +30,7 @@ export default function mockWords(): ReviewEntriesWord[] {
         {
           guid: "2",
           glosses: [{ def: "gloss", language: "en" }],
-          domains: [{ name: "domain", id: "number", description: "" }],
+          domains: [new SemanticDomain("number", "domain")],
           deleted: false,
         },
       ],
@@ -45,7 +44,7 @@ export function mockCreateWord(word: ReviewEntriesWord): Word {
     id: word.id,
     vernacular: word.vernacular,
     senses: word.senses.map((sense) => createMockSense(sense)),
-    note: { text: word.noteText, language: "" },
+    note: new Note(word.noteText),
   };
 }
 

@@ -1,7 +1,30 @@
 import { v4 } from "uuid";
 
-import { Gloss, Note, SemanticDomain, State } from "api";
 import { randomIntString } from "utilities";
+
+export enum State {
+  Active = "Active",
+  Deleted = "Deleted",
+  Sense = "Sense",
+  Duplicate = "Duplicate",
+  Separate = "Separate",
+}
+
+export interface Gloss {
+  def: string;
+  language: string; // bcp-47 code
+}
+
+export class SemanticDomain {
+  id: string;
+  name: string;
+  description = ""; // Only  used in the backend.
+
+  constructor(id?: string, name?: string) {
+    this.id = id ?? "";
+    this.name = name ?? "";
+  }
+}
 
 export class Sense {
   guid: string;
@@ -20,6 +43,16 @@ export class Sense {
   }
 }
 
+export class Note {
+  language: string; // bcp-47 code
+  text: string;
+
+  constructor(text: string = "", lang: string = "") {
+    this.text = text;
+    this.language = lang;
+  }
+}
+
 export class Word {
   id: string = "";
   guid: string;
@@ -35,14 +68,23 @@ export class Word {
   editedBy: string[] = [];
   otherField: string = "";
   projectId: string = "";
-  note: Note = { text: "", language: "" };
+  note: Note = new Note();
 
   constructor() {
     this.guid = v4();
   }
 }
 
-// Used in DataEntry.
+export interface MergeSourceWord {
+  srcWordId: string;
+  getAudio: boolean;
+}
+export interface MergeWords {
+  parent: Word;
+  children: MergeSourceWord[];
+}
+
+// Used in DataEntry
 export interface DomainWord {
   word: Word;
   gloss: Gloss;
@@ -72,6 +114,20 @@ export function multiSenseWord(vern: string, glosses: string[]): Word {
     id: randomIntString(),
     vernacular: vern,
     senses: glosses.map((gloss) => new Sense(gloss)),
+  };
+}
+
+// Used for unit testing, as the expected result, when the guids don't matter.
+export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
+  return {
+    ...new Word(),
+    id: randomIntString(),
+    guid: expect.any(String),
+    vernacular: vern,
+    senses: glosses.map((gloss) => ({
+      ...new Sense(gloss),
+      guid: expect.any(String),
+    })),
   };
 }
 

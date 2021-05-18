@@ -1,4 +1,3 @@
-import { State } from "api";
 import * as backend from "backend";
 import {
   ReviewClearReviewEntriesState,
@@ -12,7 +11,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { Sense } from "types/word";
+import { Note, Sense, State } from "types/word";
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -137,10 +136,7 @@ export function updateFrontierWord(
     editWord.senses = editSource.senses.map((s) =>
       getSenseFromEditSense(s, editWord.senses)
     );
-    editWord.note = {
-      text: editSource.noteText,
-      language: editWord.note?.language ?? "",
-    };
+    editWord.note = new Note(editSource.noteText, editWord.note?.language);
 
     // Update the word in the backend, and retrieve the id.
     editSource.id = (await backend.updateWord(editWord)).id;
