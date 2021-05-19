@@ -2,7 +2,7 @@
 
 _The Combine_ can be installed on a small, portable computer, such as an _Intel NUC_, for use in areas with poor or no
 internet connection. The NUC is configured to create a WiFi Access Point for access to _The Combine_ that is installed
-on the NUC. This documents provides instructions for how to connect to the NUC and start using _The Combine_.
+on the NUC. This document provides instructions for how to connect to the NUC and start using _The Combine_.
 
 ## 1. Power On
 
