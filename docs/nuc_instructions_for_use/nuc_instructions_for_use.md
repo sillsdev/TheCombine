@@ -8,12 +8,16 @@ on the NUC. This documents provides instructions for how to connect to the NUC a
 
 ### Connect Power
 
-Connect the AC adapter to the connect on the back of the NUC. ![alt text](images/00_PowerOn.jpg "Connect Power to NUC")
+Connect the NUC to AC power by plugging the AC adapter into your power source and into the connector on the back of the
+NUC. ![alt text](images/00_PowerOn.jpg "Connect Power to NUC")
 
 ### Turn on Power
 
 Press the Power On button on the top (or front on some models) of the NUC. The light in the power button will turn blue
-and _The Combine_ will be up in approximately 30 seconds. ![alt text](images/01_PowerOn.jpg "Power Up the NUC")
+as the device starts up. Start up will be complete in approximately 30 seconds and you will be ready to connect to _The
+Combine_ (next step). ![alt text](images/01_PowerOn.jpg "Power Up the NUC")
+
+Note that while the NUC is running, the yellow "disk activity light" will flash. This is normal.
 
 ## 3. Connect to WiFi Access Point
 
@@ -36,7 +40,10 @@ Combine_ ![alt text](images/05_Combine_Landing_Page.png "The Combine Landing Pag
 
 ## 5. Power Off
 
-When all the users are done using _The Combine_, you can power off the NUC by pressing the power button again. The light
-in the power button will turn off or turn orange, depending on the model of NUC being used.
+When all the users are done using _The Combine_, power off the NUC by pressing the power button once. **_When the power
+button is pressed, the NUC will start to shutdown immediately. There will be no request for confirmation._** When the
+shutdown is complete, the light in the power button will turn off or turn orange, depending on the model of NUC being
+used. At this point, you may unplug the NUC from the AC power.
 
-**_When the power button is pressed, the NUC will shutdown immediately. There will be no request for confirmation._**
+Note that while you are using _The Combine_ your data are automatically stored in the database; there is no need to save
+your work before shutting down the NUC.
