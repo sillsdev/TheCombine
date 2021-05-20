@@ -466,99 +466,21 @@ export interface Project {
 /**
  *
  * @export
- * @interface ProjectWithUser
+ * @interface ProjectUserValueTuple
  */
-export interface ProjectWithUser {
+export interface ProjectUserValueTuple {
+  /**
+   *
+   * @type {Project}
+   * @memberof ProjectUserValueTuple
+   */
+  item1?: Project;
   /**
    *
    * @type {User}
-   * @memberof ProjectWithUser
+   * @memberof ProjectUserValueTuple
    */
-  updatedUser: User;
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectWithUser
-   */
-  id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectWithUser
-   */
-  name: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof ProjectWithUser
-   */
-  isActive: boolean;
-  /**
-   *
-   * @type {boolean}
-   * @memberof ProjectWithUser
-   */
-  liftImported: boolean;
-  /**
-   *
-   * @type {Array<SemanticDomain>}
-   * @memberof ProjectWithUser
-   */
-  semanticDomains: Array<SemanticDomain>;
-  /**
-   *
-   * @type {WritingSystem}
-   * @memberof ProjectWithUser
-   */
-  vernacularWritingSystem: WritingSystem;
-  /**
-   *
-   * @type {Array<WritingSystem>}
-   * @memberof ProjectWithUser
-   */
-  analysisWritingSystems: Array<WritingSystem>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof ProjectWithUser
-   */
-  validCharacters: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof ProjectWithUser
-   */
-  rejectedCharacters: Array<string>;
-  /**
-   *
-   * @type {AutocompleteSetting}
-   * @memberof ProjectWithUser
-   */
-  autocompleteSetting: AutocompleteSetting;
-  /**
-   *
-   * @type {Array<object>}
-   * @memberof ProjectWithUser
-   */
-  customFields: Array<object>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof ProjectWithUser
-   */
-  wordFields: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof ProjectWithUser
-   */
-  partsOfSpeech: Array<string>;
-  /**
-   *
-   * @type {Array<EmailInvite>}
-   * @memberof ProjectWithUser
-   */
-  inviteTokens: Array<EmailInvite>;
+  item2?: User;
 }
 /**
  *
@@ -850,19 +772,6 @@ export interface UserRole {
    * @memberof UserRole
    */
   projectId: string;
-}
-/**
- *
- * @export
- * @interface WithUser
- */
-export interface WithUser {
-  /**
-   *
-   * @type {User}
-   * @memberof WithUser
-   */
-  updatedUser: User;
 }
 /**
  *
@@ -4026,7 +3935,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<ProjectWithUser>
+      ) => AxiosPromise<ProjectUserValueTuple>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsPost(
         project,
@@ -4243,7 +4152,7 @@ export const ProjectApiFactory = function (
     v1ProjectsPost(
       project: Project,
       options?: any
-    ): AxiosPromise<ProjectWithUser> {
+    ): AxiosPromise<ProjectUserValueTuple> {
       return localVarFp
         .v1ProjectsPost(project, options)
         .then((request) => request(axios, basePath));
@@ -6217,7 +6126,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<WithUser>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsPost(
         projectId,
@@ -6377,7 +6286,7 @@ export const UserEditApiFactory = function (
     v1ProjectsProjectIdUsereditsPost(
       projectId: string,
       options?: any
-    ): AxiosPromise<WithUser> {
+    ): AxiosPromise<User> {
       return localVarFp
         .v1ProjectsProjectIdUsereditsPost(projectId, options)
         .then((request) => request(axios, basePath));

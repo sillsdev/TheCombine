@@ -1,14 +1,12 @@
 import { connect } from "react-redux";
 
-import {
-  asyncRegister,
-  registerReset,
-} from "components/Login/Redux/LoginActions";
+import { asyncRegister } from "components/Login/Redux/LoginActions";
 import Register, {
   RegisterStateProps,
 } from "components/Login/RegisterPage/RegisterComponent";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { reset } from "rootActions";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
   return {
@@ -28,9 +26,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     ) => {
       dispatch(asyncRegister(name, username, email, password));
     },
-    reset: () => {
-      dispatch(registerReset());
-    },
+    reset: () => dispatch(reset()),
   };
 }
 

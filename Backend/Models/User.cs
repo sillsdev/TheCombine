@@ -208,16 +208,4 @@ namespace BackendFramework.Models
             Password = "";
         }
     }
-
-    /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
-    public class WithUser
-    {
-        [Required]
-        public readonly User UpdatedUser;
-
-        public WithUser(User user)
-        {
-            UpdatedUser = user;
-        }
-    }
 }

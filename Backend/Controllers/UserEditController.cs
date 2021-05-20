@@ -90,7 +90,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/useredits </remarks>
         /// <returns> UpdatedUser </returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WithUser))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -124,8 +124,7 @@ namespace BackendFramework.Controllers
 
             await _userRepo.Update(currentUserId, currentUpdatedUser);
 
-            var output = new WithUser(currentUpdatedUser);
-            return Ok(output);
+            return Ok(currentUpdatedUser);
         }
 
         /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>

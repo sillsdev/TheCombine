@@ -300,29 +300,6 @@ namespace BackendFramework.Models
         }
     }
 
-    public class ProjectWithUser : Project
-    {
-        [Required]
-        public User? UpdatedUser;
-
-        public ProjectWithUser(Project baseObj)
-        {
-            Id = baseObj.Id;
-            Name = baseObj.Name;
-            IsActive = baseObj.IsActive;
-            AutocompleteSetting = baseObj.AutocompleteSetting;
-            VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            SemanticDomains = baseObj.SemanticDomains;
-            ValidCharacters = baseObj.ValidCharacters;
-            RejectedCharacters = baseObj.RejectedCharacters;
-            CustomFields = baseObj.CustomFields;
-            WordFields = baseObj.WordFields;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            InviteTokens = baseObj.InviteTokens;
-        }
-    }
-
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AutocompleteSetting
     {

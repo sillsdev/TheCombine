@@ -3,8 +3,7 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { getFrontierWords } from "backend";
-import { Path } from "browserHistory";
-import AppBarComponent from "components/AppBar/AppBarComponent";
+import AppBar from "components/AppBar/AppBarComponent";
 import TreeViewComponent from "components/TreeView";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
@@ -196,7 +195,7 @@ export class DataEntryComponent extends React.Component<
         />
 
         <Dialog fullScreen open={this.state.displaySemanticDomain}>
-          <AppBarComponent currentTab={Path.DataEntry} />
+          <AppBar />
           <TreeViewComponent
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {

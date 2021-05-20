@@ -1,14 +1,16 @@
 import { Grid } from "@material-ui/core";
-import * as React from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import { setProjectId } from "backend/localStorage";
+import { clearCurrentProject } from "components/Project/ProjectActions";
 import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 
 /** Where users create a project or choose an existing one */
 export default function ProjectScreen() {
+  const dispatch = useDispatch();
   /* Disable Data Entry, Data Cleanup, Project Settings until a project is selected or created. */
-  setProjectId("");
+  useEffect(() => clearCurrentProject(dispatch));
 
   return (
     <Grid container justify="center" spacing={2}>

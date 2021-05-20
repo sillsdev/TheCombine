@@ -34,25 +34,14 @@ const userRoleApi = new Api.UserRoleApi(config);
 const wordApi = new Api.WordApi(config);
 
 // TODO: Remove this once converted fully to OpenAPI.
-const backendServer = axios.create({
-  baseURL: apiBaseURL,
-});
+const backendServer = axios.create({ baseURL: apiBaseURL });
 
-backendServer.interceptors.response.use(
-  (resp) => {
-    if (resp.data.updatedUser) {
-      LocalStorage.setCurrentUser(resp.data.updatedUser);
-    }
-    delete resp.data.updatedUser;
-    return resp;
-  },
-  (err) => {
-    if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
-      history.push(Path.Login);
-    }
-    return Promise.reject(err);
+backendServer.interceptors.response.use(undefined, (err) => {
+  if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
+    history.push(Path.Login);
   }
-);
+  return Promise.reject(err);
+});
 
 /* Function in this file match up to functions in Backend/Controllers/. */
 
@@ -92,11 +81,14 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 /* AvatarController.cs */
 
 export async function uploadAvatar(userId: string, img: File): Promise<string> {
-  let data = new FormData();
+  const data = new FormData();
   data.append("file", img);
-  let resp = await backendServer.post(`users/${userId}/avatar/upload`, data, {
+  const resp = await backendServer.post(`users/${userId}/avatar/upload`, data, {
     headers: { ...authHeader(), "content-type": "application/json" },
   });
+  if (userId === LocalStorage.getUserId()) {
+    LocalStorage.setAvatar(await avatarSrc(userId));
+  }
   return resp.data;
 }
 
@@ -261,10 +253,15 @@ export async function getSemanticDomains(): Promise<
 }
 
 export async function createProject(project: Project): Promise<Project> {
-  let resp = await backendServer.post(`projects/`, project, {
+  const resp = await backendServer.post(`projects/`, project, {
     headers: authHeader(),
   });
-  return { ...resp.data };
+  const proj = resp.data.item1;
+  const user = resp.data.item2;
+  if (user.id === LocalStorage.getCurrentUser()) {
+    LocalStorage.setCurrentUser(user);
+  }
+  return proj;
 }
 
 export async function getAllActiveProjectsByUser(
@@ -288,12 +285,10 @@ export async function getAllActiveProjectsByUser(
 }
 
 export async function getProject(id?: string): Promise<Project> {
-  if (!id) {
-    id = LocalStorage.getProjectId();
-  }
-  let resp = await backendServer.get(`projects/${id}`, {
-    headers: authHeader(),
-  });
+  const resp = await backendServer.get(
+    `projects/${id ?? LocalStorage.getProjectId()}`,
+    { headers: authHeader() }
+  );
   return resp.data;
 }
 
@@ -387,7 +382,12 @@ export async function authenticateUser(
     { credentials: { username, password } },
     { headers: authHeader() }
   );
-  return resp.data;
+  const user = resp.data;
+  LocalStorage.setCurrentUser(user);
+  if (user.hasAvatar) {
+    LocalStorage.setAvatar(await avatarSrc(user.id));
+  }
+  return user;
 }
 
 export async function getAllUsers(): Promise<User[]> {
@@ -404,7 +404,11 @@ export async function updateUser(user: User): Promise<User> {
     { userId: user.id, user },
     { headers: authHeader() }
   );
-  return { ...user, id: resp.data };
+  const updatedUser = { ...user, id: resp.data };
+  if (updatedUser.id === LocalStorage.getUserId()) {
+    LocalStorage.setCurrentUser(updatedUser);
+  }
+  return updatedUser;
 }
 
 export async function deleteUser(userId: string): Promise<string> {
@@ -457,8 +461,7 @@ export async function createUserEdit(): Promise<User> {
     { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
-  // Without an interceptor, this has to be done every time a *WithUser object is returned.
-  const user = resp.data.updatedUser;
+  const user = resp.data;
   LocalStorage.setCurrentUser(user);
   return user;
 }

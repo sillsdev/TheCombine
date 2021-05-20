@@ -76,7 +76,6 @@ beforeEach(() => {
     renderer.create(
       <Provider store={mockStore}>
         <ReviewEntriesComponent
-          clearState={jest.fn()}
           updateAllWords={mockUpdateAllWords}
           updateFrontierWord={jest.fn()}
         />

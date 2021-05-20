@@ -110,7 +110,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects </remarks>
         /// <returns> Id of created Project </returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectWithUser))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof((Project, User)))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Post([FromBody, BindRequired] Project project)
@@ -153,8 +153,7 @@ namespace BackendFramework.Controllers
 
             await _userRepo.Update(currentUserId, currentUpdatedUser);
 
-            var output = new ProjectWithUser(project) { UpdatedUser = currentUpdatedUser };
-            return Ok(output);
+            return Ok((project, currentUpdatedUser));
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>

@@ -76,9 +76,8 @@ namespace Backend.Tests.Controllers
         public void TestCreateProject()
         {
             var project = Util.RandomProject();
-            var projectUser = new ProjectWithUser(project);
-            var id = ((ProjectWithUser)((ObjectResult)_projController.Post(projectUser).Result).Value).Id;
-            project.Id = id;
+            var pair = (ValueTuple<Project, User>)((ObjectResult)_projController.Post(project).Result).Value;
+            project.Id = pair.Item1.Id;
             Assert.Contains(project, _projRepo.GetAllProjects().Result);
         }
 

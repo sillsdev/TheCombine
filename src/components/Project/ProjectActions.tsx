@@ -7,12 +7,16 @@ import {
 import { Project } from "types/project";
 import { StoreStateDispatch } from "types/Redux/actions";
 
-export function setCurrentProject(payload: Project): ProjectAction {
-  setProjectId(payload.id);
+export function setCurrentProject(payload?: Project): ProjectAction {
+  setProjectId(payload?.id);
   return {
     type: SET_CURRENT_PROJECT,
     payload,
   };
+}
+
+export function clearCurrentProject(dispatch: StoreStateDispatch) {
+  dispatch(setCurrentProject());
 }
 
 export async function saveChangesToProject(

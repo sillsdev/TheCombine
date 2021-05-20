@@ -11,9 +11,9 @@ export const projectReducer = (
 ): Project => {
   switch (action.type) {
     case SET_CURRENT_PROJECT:
-      return action.payload;
+      return action.payload ?? defaultProject;
     case StoreActionTypes.RESET:
-      return { ...defaultProject };
+      return defaultProject;
     default:
       return state;
   }

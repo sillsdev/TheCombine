@@ -20,11 +20,7 @@ import {
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
 import { isEmailTaken, updateUser } from "backend";
-import {
-  getAvatar,
-  getCurrentUser,
-  setCurrentUser,
-} from "backend/localStorage";
+import { getAvatar, getCurrentUser } from "backend/localStorage";
 import theme from "types/theme";
 import { User } from "types/user";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
@@ -137,14 +133,12 @@ class UserSettings extends React.Component<
   async onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (await this.isEmailOkay()) {
-      const newUser: User = this.state.user;
+      const newUser = this.state.user;
       newUser.name = this.state.name;
       newUser.phone = this.state.phone;
       newUser.email = this.state.email;
-      updateUser(newUser).then((user: User) => {
-        setCurrentUser(user);
-        alert(this.props.translate("userSettings.updateSuccess"));
-      });
+      await updateUser(newUser);
+      alert(this.props.translate("userSettings.updateSuccess"));
     } else {
       this.setState({ emailTaken: true });
     }

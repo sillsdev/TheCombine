@@ -1,12 +1,10 @@
 import { connect } from "react-redux";
 
-import {
-  asyncRegisterForEmailInvite,
-  registerReset,
-} from "components/Login/Redux/LoginActions";
+import { asyncRegisterForEmailInvite } from "components/Login/Redux/LoginActions";
 import ProjectInvite, {
   ProjectInviteStateProps,
 } from "components/ProjectInvite/ProjectInviteComponent";
+import { reset } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
@@ -24,7 +22,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
       dispatch(asyncRegisterForEmailInvite(name, user, email, password));
     },
     reset: () => {
-      dispatch(registerReset());
+      dispatch(reset());
     },
   };
 }
