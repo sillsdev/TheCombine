@@ -1,8 +1,7 @@
-export default interface SemanticDomainWithSubdomains {
+import { SemanticDomain } from "types/word";
+
+export default interface SemanticDomainWithSubdomains extends SemanticDomain {
   // Data of current domain
-  name: string;
-  id: string;
-  description: string;
   questions: string[];
 
   // Data about tangential domains
@@ -11,9 +10,7 @@ export default interface SemanticDomainWithSubdomains {
 }
 
 export const baseDomain: SemanticDomainWithSubdomains = {
-  name: "",
-  id: "",
-  description: "",
+  ...new SemanticDomain(),
   subdomains: [],
   questions: [],
 };

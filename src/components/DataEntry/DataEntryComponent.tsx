@@ -4,10 +4,10 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { getFrontierWords } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
-import TreeViewComponent from "components/TreeView";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
+import TreeViewComponent from "components/TreeView";
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
 import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
@@ -151,11 +151,10 @@ export class DataEntryComponent extends React.Component<
   updateWords = () => {};
 
   render() {
-    const semanticDomain: SemanticDomain = {
-      name: this.props.domain.name,
-      id: this.props.domain.id,
-      description: "",
-    };
+    const semanticDomain = new SemanticDomain(
+      this.props.domain.id,
+      this.props.domain.name
+    );
 
     return (
       <Grid container justify="center" spacing={3} wrap={"nowrap"}>

@@ -4,9 +4,9 @@ import { asyncRegister } from "components/Login/Redux/LoginActions";
 import Register, {
   RegisterStateProps,
 } from "components/Login/RegisterPage/RegisterComponent";
+import { reset } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { reset } from "rootActions";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
   return {
