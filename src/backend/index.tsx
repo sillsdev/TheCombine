@@ -2,6 +2,7 @@ import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 
 import * as Api from "api";
+import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
@@ -21,17 +22,27 @@ const apiBaseURL = `${baseURL}/v1`;
 const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
 const config = new Api.Configuration(config_parameters);
 
+// Create an axios instance to allow for attaching interceptors to it.
+const axiosInstance = axios.create({ baseURL: apiBaseURL });
+
+axiosInstance.interceptors.response.use(undefined, (err) => {
+  if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
+    history.push(Path.Login);
+  }
+  return Promise.reject(err);
+});
+
 // Configured OpenAPI interfaces.
-//const audioApi = new Api.AudioApi();
-//const avatarApi = new Api.AvatarApi();
-//const inviteApi = new Api.InviteApi();
-//const liftApi = new Api.LiftApi();
-//const mergeApi = new Api.MergeApi();
-//const projectApi = new Api.ProjectApi();
-const userApi = new Api.UserApi(config);
-const userEditApi = new Api.UserEditApi(config); //,undefined,backendServer);
-const userRoleApi = new Api.UserRoleApi(config);
-const wordApi = new Api.WordApi(config);
+//const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
+//const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
+//const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
+//const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
+//const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance;
+//const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
+const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
+const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
+const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
+const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 
 // TODO: Remove this once converted fully to OpenAPI.
 const backendServer = axios.create({ baseURL: apiBaseURL });
