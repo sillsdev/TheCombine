@@ -12,6 +12,30 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+import { Edit } from "./edit";
+
+/**
+ *
+ * @export
+ * @interface UserEdit
+ */
+export interface UserEdit {
+  /**
+   *
+   * @type {string}
+   * @memberof UserEdit
+   */
+  id: string;
+  /**
+   *
+   * @type {Array<Edit>}
+   * @memberof UserEdit
+   */
+  edits: Array<Edit>;
+  /**
+   *
+   * @type {string}
+   * @memberof UserEdit
+   */
+  projectId: string;
+}

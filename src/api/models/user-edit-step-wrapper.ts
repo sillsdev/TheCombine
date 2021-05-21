@@ -12,6 +12,28 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface UserEditStepWrapper
+ */
+export interface UserEditStepWrapper {
+  /**
+   *
+   * @type {number}
+   * @memberof UserEditStepWrapper
+   */
+  goalIndex: number;
+  /**
+   *
+   * @type {string}
+   * @memberof UserEditStepWrapper
+   */
+  stepString: string;
+  /**
+   *
+   * @type {number}
+   * @memberof UserEditStepWrapper
+   */
+  stepIndex: number;
+}

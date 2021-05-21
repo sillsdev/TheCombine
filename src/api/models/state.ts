@@ -12,6 +12,15 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @enum {string}
+ */
+export enum State {
+  Active = "Active",
+  Deleted = "Deleted",
+  Sense = "Sense",
+  Duplicate = "Duplicate",
+  Separate = "Separate",
+}

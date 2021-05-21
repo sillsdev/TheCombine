@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface Gloss
+ */
+export interface Gloss {
+  /**
+   *
+   * @type {string}
+   * @memberof Gloss
+   */
+  language: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Gloss
+   */
+  def: string;
+}

@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface PasswordResetData
+ */
+export interface PasswordResetData {
+  /**
+   *
+   * @type {string}
+   * @memberof PasswordResetData
+   */
+  newPassword: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PasswordResetData
+   */
+  token: string;
+}

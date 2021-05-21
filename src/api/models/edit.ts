@@ -12,6 +12,34 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface Edit
+ */
+export interface Edit {
+  /**
+   *
+   * @type {string}
+   * @memberof Edit
+   */
+  guid: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Edit
+   */
+  goalType: number;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Edit
+   */
+  stepData: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof Edit
+   */
+  changes: string;
+}

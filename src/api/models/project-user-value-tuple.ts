@@ -12,6 +12,25 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+import { Project } from "./project";
+import { User } from "./user";
+
+/**
+ *
+ * @export
+ * @interface ProjectUserValueTuple
+ */
+export interface ProjectUserValueTuple {
+  /**
+   *
+   * @type {Project}
+   * @memberof ProjectUserValueTuple
+   */
+  item1?: Project;
+  /**
+   *
+   * @type {User}
+   * @memberof ProjectUserValueTuple
+   */
+  item2?: User;
+}

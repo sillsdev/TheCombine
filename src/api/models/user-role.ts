@@ -12,6 +12,28 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface UserRole
+ */
+export interface UserRole {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRole
+   */
+  id: string;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof UserRole
+   */
+  permissions: Array<number>;
+  /**
+   *
+   * @type {string}
+   * @memberof UserRole
+   */
+  projectId: string;
+}

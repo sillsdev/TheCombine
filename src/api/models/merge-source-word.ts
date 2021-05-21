@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface MergeSourceWord
+ */
+export interface MergeSourceWord {
+  /**
+   *
+   * @type {string}
+   * @memberof MergeSourceWord
+   */
+  srcWordId: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof MergeSourceWord
+   */
+  getAudio: boolean;
+}

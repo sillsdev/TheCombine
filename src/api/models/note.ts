@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface Note
+ */
+export interface Note {
+  /**
+   *
+   * @type {string}
+   * @memberof Note
+   */
+  language: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Note
+   */
+  text: string;
+}

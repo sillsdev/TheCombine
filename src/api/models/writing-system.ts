@@ -12,6 +12,28 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface WritingSystem
+ */
+export interface WritingSystem {
+  /**
+   *
+   * @type {string}
+   * @memberof WritingSystem
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof WritingSystem
+   */
+  bcp47: string;
+  /**
+   *
+   * @type {string}
+   * @memberof WritingSystem
+   */
+  font: string;
+}

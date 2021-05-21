@@ -12,6 +12,28 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface SemanticDomain
+ */
+export interface SemanticDomain {
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
+  description: string;
+}

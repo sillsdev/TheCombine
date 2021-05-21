@@ -12,6 +12,25 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+import { MergeSourceWord } from "./merge-source-word";
+import { Word } from "./word";
+
+/**
+ *
+ * @export
+ * @interface MergeWords
+ */
+export interface MergeWords {
+  /**
+   *
+   * @type {Word}
+   * @memberof MergeWords
+   */
+  parent: Word;
+  /**
+   *
+   * @type {Array<MergeSourceWord>}
+   * @memberof MergeWords
+   */
+  children: Array<MergeSourceWord>;
+}

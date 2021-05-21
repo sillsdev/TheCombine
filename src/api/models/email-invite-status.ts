@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface EmailInviteStatus
+ */
+export interface EmailInviteStatus {
+  /**
+   *
+   * @type {boolean}
+   * @memberof EmailInviteStatus
+   */
+  isTokenValid: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EmailInviteStatus
+   */
+  isUserRegistered: boolean;
+}

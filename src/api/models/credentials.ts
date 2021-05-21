@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface Credentials
+ */
+export interface Credentials {
+  /**
+   *
+   * @type {string}
+   * @memberof Credentials
+   */
+  username: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Credentials
+   */
+  password: string;
+}

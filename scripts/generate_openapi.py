@@ -30,7 +30,10 @@ def main() -> None:
             "--input-spec=http://localhost:5000/openapi/v1/openapi.json",
             f"--output={output_dir}",
             "--generator-name=typescript-axios",
-            "--additional-properties=useSingleRequestParameter=true",
+            "--additional-properties="
+            # For usage of withSeparateModelsAndApi, see: 
+            # https://github.com/OpenAPITools/openapi-generator/issues/5008#issuecomment-613791804
+            "useSingleRequestParameter=true,withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api",
             # TODO: Remove this when path parameter validation issue is resolved.
             "--skip-validate-spec",
         ]

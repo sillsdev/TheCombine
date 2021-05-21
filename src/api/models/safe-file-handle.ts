@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface SafeFileHandle
+ */
+export interface SafeFileHandle {
+  /**
+   *
+   * @type {boolean}
+   * @memberof SafeFileHandle
+   */
+  isInvalid?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof SafeFileHandle
+   */
+  isClosed?: boolean;
+}

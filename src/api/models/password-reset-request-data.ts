@@ -12,6 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ *
+ * @export
+ * @interface PasswordResetRequestData
+ */
+export interface PasswordResetRequestData {
+  /**
+   *
+   * @type {string}
+   * @memberof PasswordResetRequestData
+   */
+  domain: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PasswordResetRequestData
+   */
+  emailOrUsername: string;
+}
