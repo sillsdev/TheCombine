@@ -1,4 +1,4 @@
-import { SemanticDomain, SemanticDomainWithSubdomains } from "types/word";
+import { SemanticDomainWithSubdomains } from "types/word";
 
 export default class TreeSemanticDomain
   implements SemanticDomainWithSubdomains {
