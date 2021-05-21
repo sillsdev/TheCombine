@@ -52,7 +52,7 @@ A rapid word collection tool.
    2. [Using OpenAPI](#using-openapi)
    3. [Running the Automated Tests](#running-the-automated-tests)
    4. [Import Semantic Domains](#import-semantic-domains)
-   5. [Generate License Report](#generate-license-report)
+   5. [Generate License Reports](#generate-license-reports)
    6. [Set Project Version](#set-project-version)
    7. [Inspect Database](#inspect-database)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
