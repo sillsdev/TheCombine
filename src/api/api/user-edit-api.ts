@@ -246,18 +246,18 @@ export const UserEditApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateUserEdit: async (
+    updateUserEditGoal: async (
       projectId: string,
       userEditId: string,
       edit: Edit,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("updateUserEdit", "projectId", projectId);
+      assertParamExists("updateUserEditGoal", "projectId", projectId);
       // verify required parameter 'userEditId' is not null or undefined
-      assertParamExists("updateUserEdit", "userEditId", userEditId);
+      assertParamExists("updateUserEditGoal", "userEditId", userEditId);
       // verify required parameter 'edit' is not null or undefined
-      assertParamExists("updateUserEdit", "edit", edit);
+      assertParamExists("updateUserEditGoal", "edit", edit);
       const localVarPath = `/v1/projects/{projectId}/useredits/{userEditId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"userEditId"}}`, encodeURIComponent(String(userEditId)));
@@ -479,7 +479,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async updateUserEdit(
+    async updateUserEditGoal(
       projectId: string,
       userEditId: string,
       edit: Edit,
@@ -487,7 +487,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserEdit(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserEditGoal(
         projectId,
         userEditId,
         edit,
@@ -608,14 +608,14 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateUserEdit(
+    updateUserEditGoal(
       projectId: string,
       userEditId: string,
       edit: Edit,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .updateUserEdit(projectId, userEditId, edit, options)
+        .updateUserEditGoal(projectId, userEditId, edit, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -710,29 +710,29 @@ export interface UserEditApiGetUserEditRequest {
 }
 
 /**
- * Request parameters for updateUserEdit operation in UserEditApi.
+ * Request parameters for updateUserEditGoal operation in UserEditApi.
  * @export
- * @interface UserEditApiUpdateUserEditRequest
+ * @interface UserEditApiUpdateUserEditGoalRequest
  */
-export interface UserEditApiUpdateUserEditRequest {
+export interface UserEditApiUpdateUserEditGoalRequest {
   /**
    *
    * @type {string}
-   * @memberof UserEditApiUpdateUserEdit
+   * @memberof UserEditApiUpdateUserEditGoal
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof UserEditApiUpdateUserEdit
+   * @memberof UserEditApiUpdateUserEditGoal
    */
   readonly userEditId: string;
 
   /**
    *
    * @type {Edit}
-   * @memberof UserEditApiUpdateUserEdit
+   * @memberof UserEditApiUpdateUserEditGoal
    */
   readonly edit: Edit;
 }
@@ -846,17 +846,17 @@ export class UserEditApi extends BaseAPI {
 
   /**
    *
-   * @param {UserEditApiUpdateUserEditRequest} requestParameters Request parameters.
+   * @param {UserEditApiUpdateUserEditGoalRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserEditApi
    */
-  public updateUserEdit(
-    requestParameters: UserEditApiUpdateUserEditRequest,
+  public updateUserEditGoal(
+    requestParameters: UserEditApiUpdateUserEditGoalRequest,
     options?: any
   ) {
     return UserEditApiFp(this.configuration)
-      .updateUserEdit(
+      .updateUserEditGoal(
         requestParameters.projectId,
         requestParameters.userEditId,
         requestParameters.edit,

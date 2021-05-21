@@ -126,7 +126,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
         /// <returns> Index of added/updated edit </returns>
-        [HttpPost("{userEditId}", Name = "UpdateUserEdit")]
+        [HttpPost("{userEditId}", Name = "UpdateUserEditGoal")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
