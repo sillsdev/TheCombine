@@ -49,125 +49,19 @@ export const UserRoleApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesDelete: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesDelete",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesGet: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesGet",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
      * @param {UserRole} userRole
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUserrolesPost: async (
+    createUserRole: async (
       projectId: string,
       userRole: UserRole,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesPost",
-        "projectId",
-        projectId
-      );
+      assertParamExists("createUserRole", "projectId", projectId);
       // verify required parameter 'userRole' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesPost",
-        "userRole",
-        userRole
-      );
+      assertParamExists("createUserRole", "userRole", userRole);
       const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -211,32 +105,210 @@ export const UserRoleApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteProjectUserRoles: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("deleteProjectUserRoles", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} userRoleId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteUserRole: async (
+      projectId: string,
+      userRoleId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("deleteUserRole", "projectId", projectId);
+      // verify required parameter 'userRoleId' is not null or undefined
+      assertParamExists("deleteUserRole", "userRoleId", userRoleId);
+      const localVarPath = `/v1/projects/{projectId}/userroles/{userRoleId}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"userRoleId"}}`, encodeURIComponent(String(userRoleId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectUserRoles: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getProjectUserRoles", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} userRoleId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserRole: async (
+      projectId: string,
+      userRoleId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getUserRole", "projectId", projectId);
+      // verify required parameter 'userRoleId' is not null or undefined
+      assertParamExists("getUserRole", "userRoleId", userRoleId);
+      const localVarPath = `/v1/projects/{projectId}/userroles/{userRoleId}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"userRoleId"}}`, encodeURIComponent(String(userRoleId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} userId
      * @param {Array<number>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUserrolesUserIdPut: async (
+    updateUserRolePermissions: async (
       projectId: string,
       userId: string,
       requestBody: Array<number>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserIdPut",
-        "projectId",
-        projectId
-      );
+      assertParamExists("updateUserRolePermissions", "projectId", projectId);
       // verify required parameter 'userId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserIdPut",
-        "userId",
-        userId
-      );
+      assertParamExists("updateUserRolePermissions", "userId", userId);
       // verify required parameter 'requestBody' is not null or undefined
       assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserIdPut",
+        "updateUserRolePermissions",
         "requestBody",
         requestBody
       );
@@ -279,118 +351,6 @@ export const UserRoleApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesUserRoleIdDelete: async (
-      projectId: string,
-      userRoleId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserRoleIdDelete",
-        "projectId",
-        projectId
-      );
-      // verify required parameter 'userRoleId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserRoleIdDelete",
-        "userRoleId",
-        userRoleId
-      );
-      const localVarPath = `/v1/projects/{projectId}/userroles/{userRoleId}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"userRoleId"}}`, encodeURIComponent(String(userRoleId)));
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesUserRoleIdGet: async (
-      projectId: string,
-      userRoleId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserRoleIdGet",
-        "projectId",
-        projectId
-      );
-      // verify required parameter 'userRoleId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUserrolesUserRoleIdGet",
-        "userRoleId",
-        userRoleId
-      );
-      const localVarPath = `/v1/projects/{projectId}/userroles/{userRoleId}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"userRoleId"}}`, encodeURIComponent(String(userRoleId)));
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
   };
 };
 
@@ -404,17 +364,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {UserRole} userRole
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUserrolesDelete(
+    async createUserRole(
       projectId: string,
+      userRole: UserRole,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesDelete(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createUserRole(
         projectId,
+        userRole,
         options
       );
       return createRequestFunction(
@@ -430,7 +393,56 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUserrolesGet(
+    async deleteProjectUserRoles(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProjectUserRoles(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} userRoleId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteUserRole(
+      projectId: string,
+      userRoleId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserRole(
+        projectId,
+        userRoleId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProjectUserRoles(
       projectId: string,
       options?: any
     ): Promise<
@@ -439,7 +451,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<Array<UserRole>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectUserRoles(
         projectId,
         options
       );
@@ -453,20 +465,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {UserRole} userRole
+     * @param {string} userRoleId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUserrolesPost(
+    async getUserRole(
       projectId: string,
-      userRole: UserRole,
+      userRoleId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserRole>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getUserRole(
         projectId,
-        userRole,
+        userRoleId,
         options
       );
       return createRequestFunction(
@@ -484,7 +496,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUserrolesUserIdPut(
+    async updateUserRolePermissions(
       projectId: string,
       userId: string,
       requestBody: Array<number>,
@@ -492,62 +504,10 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesUserIdPut(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserRolePermissions(
         projectId,
         userId,
         requestBody,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdUserrolesUserRoleIdDelete(
-      projectId: string,
-      userRoleId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesUserRoleIdDelete(
-        projectId,
-        userRoleId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdUserrolesUserRoleIdGet(
-      projectId: string,
-      userRoleId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserRole>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUserrolesUserRoleIdGet(
-        projectId,
-        userRoleId,
         options
       );
       return createRequestFunction(
@@ -574,45 +534,77 @@ export const UserRoleApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesDelete(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<boolean> {
-      return localVarFp
-        .v1ProjectsProjectIdUserrolesDelete(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<UserRole>> {
-      return localVarFp
-        .v1ProjectsProjectIdUserrolesGet(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
      * @param {UserRole} userRole
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUserrolesPost(
+    createUserRole(
       projectId: string,
       userRole: UserRole,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdUserrolesPost(projectId, userRole, options)
+        .createUserRole(projectId, userRole, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteProjectUserRoles(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<boolean> {
+      return localVarFp
+        .deleteProjectUserRoles(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} userRoleId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteUserRole(
+      projectId: string,
+      userRoleId: string,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .deleteUserRole(projectId, userRoleId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectUserRoles(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<UserRole>> {
+      return localVarFp
+        .getProjectUserRoles(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} userRoleId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserRole(
+      projectId: string,
+      userRoleId: string,
+      options?: any
+    ): AxiosPromise<UserRole> {
+      return localVarFp
+        .getUserRole(projectId, userRoleId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -623,181 +615,136 @@ export const UserRoleApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUserrolesUserIdPut(
+    updateUserRolePermissions(
       projectId: string,
       userId: string,
       requestBody: Array<number>,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdUserrolesUserIdPut(
-          projectId,
-          userId,
-          requestBody,
-          options
-        )
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesUserRoleIdDelete(
-      projectId: string,
-      userRoleId: string,
-      options?: any
-    ): AxiosPromise<void> {
-      return localVarFp
-        .v1ProjectsProjectIdUserrolesUserRoleIdDelete(
-          projectId,
-          userRoleId,
-          options
-        )
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUserrolesUserRoleIdGet(
-      projectId: string,
-      userRoleId: string,
-      options?: any
-    ): AxiosPromise<UserRole> {
-      return localVarFp
-        .v1ProjectsProjectIdUserrolesUserRoleIdGet(
-          projectId,
-          userRoleId,
-          options
-        )
+        .updateUserRolePermissions(projectId, userId, requestBody, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsProjectIdUserrolesDelete operation in UserRoleApi.
+ * Request parameters for createUserRole operation in UserRoleApi.
  * @export
- * @interface UserRoleApiV1ProjectsProjectIdUserrolesDeleteRequest
+ * @interface UserRoleApiCreateUserRoleRequest
  */
-export interface UserRoleApiV1ProjectsProjectIdUserrolesDeleteRequest {
+export interface UserRoleApiCreateUserRoleRequest {
   /**
    *
    * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesDelete
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdUserrolesGet operation in UserRoleApi.
- * @export
- * @interface UserRoleApiV1ProjectsProjectIdUserrolesGetRequest
- */
-export interface UserRoleApiV1ProjectsProjectIdUserrolesGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesGet
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdUserrolesPost operation in UserRoleApi.
- * @export
- * @interface UserRoleApiV1ProjectsProjectIdUserrolesPostRequest
- */
-export interface UserRoleApiV1ProjectsProjectIdUserrolesPostRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesPost
+   * @memberof UserRoleApiCreateUserRole
    */
   readonly projectId: string;
 
   /**
    *
    * @type {UserRole}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesPost
+   * @memberof UserRoleApiCreateUserRole
    */
   readonly userRole: UserRole;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdUserrolesUserIdPut operation in UserRoleApi.
+ * Request parameters for deleteProjectUserRoles operation in UserRoleApi.
  * @export
- * @interface UserRoleApiV1ProjectsProjectIdUserrolesUserIdPutRequest
+ * @interface UserRoleApiDeleteProjectUserRolesRequest
  */
-export interface UserRoleApiV1ProjectsProjectIdUserrolesUserIdPutRequest {
+export interface UserRoleApiDeleteProjectUserRolesRequest {
   /**
    *
    * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserIdPut
+   * @memberof UserRoleApiDeleteProjectUserRoles
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for deleteUserRole operation in UserRoleApi.
+ * @export
+ * @interface UserRoleApiDeleteUserRoleRequest
+ */
+export interface UserRoleApiDeleteUserRoleRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiDeleteUserRole
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserIdPut
+   * @memberof UserRoleApiDeleteUserRole
+   */
+  readonly userRoleId: string;
+}
+
+/**
+ * Request parameters for getProjectUserRoles operation in UserRoleApi.
+ * @export
+ * @interface UserRoleApiGetProjectUserRolesRequest
+ */
+export interface UserRoleApiGetProjectUserRolesRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiGetProjectUserRoles
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getUserRole operation in UserRoleApi.
+ * @export
+ * @interface UserRoleApiGetUserRoleRequest
+ */
+export interface UserRoleApiGetUserRoleRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiGetUserRole
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiGetUserRole
+   */
+  readonly userRoleId: string;
+}
+
+/**
+ * Request parameters for updateUserRolePermissions operation in UserRoleApi.
+ * @export
+ * @interface UserRoleApiUpdateUserRolePermissionsRequest
+ */
+export interface UserRoleApiUpdateUserRolePermissionsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiUpdateUserRolePermissions
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiUpdateUserRolePermissions
    */
   readonly userId: string;
 
   /**
    *
    * @type {Array<number>}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserIdPut
+   * @memberof UserRoleApiUpdateUserRolePermissions
    */
   readonly requestBody: Array<number>;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdUserrolesUserRoleIdDelete operation in UserRoleApi.
- * @export
- * @interface UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdDeleteRequest
- */
-export interface UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdDeleteRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdDelete
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdDelete
-   */
-  readonly userRoleId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdUserrolesUserRoleIdGet operation in UserRoleApi.
- * @export
- * @interface UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGetRequest
- */
-export interface UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGet
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGet
-   */
-  readonly userRoleId: string;
 }
 
 /**
@@ -809,49 +756,17 @@ export interface UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGetRequest {
 export class UserRoleApi extends BaseAPI {
   /**
    *
-   * @param {UserRoleApiV1ProjectsProjectIdUserrolesDeleteRequest} requestParameters Request parameters.
+   * @param {UserRoleApiCreateUserRoleRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserRoleApi
    */
-  public v1ProjectsProjectIdUserrolesDelete(
-    requestParameters: UserRoleApiV1ProjectsProjectIdUserrolesDeleteRequest,
+  public createUserRole(
+    requestParameters: UserRoleApiCreateUserRoleRequest,
     options?: any
   ) {
     return UserRoleApiFp(this.configuration)
-      .v1ProjectsProjectIdUserrolesDelete(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {UserRoleApiV1ProjectsProjectIdUserrolesGetRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserRoleApi
-   */
-  public v1ProjectsProjectIdUserrolesGet(
-    requestParameters: UserRoleApiV1ProjectsProjectIdUserrolesGetRequest,
-    options?: any
-  ) {
-    return UserRoleApiFp(this.configuration)
-      .v1ProjectsProjectIdUserrolesGet(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {UserRoleApiV1ProjectsProjectIdUserrolesPostRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserRoleApi
-   */
-  public v1ProjectsProjectIdUserrolesPost(
-    requestParameters: UserRoleApiV1ProjectsProjectIdUserrolesPostRequest,
-    options?: any
-  ) {
-    return UserRoleApiFp(this.configuration)
-      .v1ProjectsProjectIdUserrolesPost(
+      .createUserRole(
         requestParameters.projectId,
         requestParameters.userRole,
         options
@@ -861,60 +776,92 @@ export class UserRoleApi extends BaseAPI {
 
   /**
    *
-   * @param {UserRoleApiV1ProjectsProjectIdUserrolesUserIdPutRequest} requestParameters Request parameters.
+   * @param {UserRoleApiDeleteProjectUserRolesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserRoleApi
    */
-  public v1ProjectsProjectIdUserrolesUserIdPut(
-    requestParameters: UserRoleApiV1ProjectsProjectIdUserrolesUserIdPutRequest,
+  public deleteProjectUserRoles(
+    requestParameters: UserRoleApiDeleteProjectUserRolesRequest,
     options?: any
   ) {
     return UserRoleApiFp(this.configuration)
-      .v1ProjectsProjectIdUserrolesUserIdPut(
+      .deleteProjectUserRoles(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserRoleApiDeleteUserRoleRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserRoleApi
+   */
+  public deleteUserRole(
+    requestParameters: UserRoleApiDeleteUserRoleRequest,
+    options?: any
+  ) {
+    return UserRoleApiFp(this.configuration)
+      .deleteUserRole(
+        requestParameters.projectId,
+        requestParameters.userRoleId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserRoleApiGetProjectUserRolesRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserRoleApi
+   */
+  public getProjectUserRoles(
+    requestParameters: UserRoleApiGetProjectUserRolesRequest,
+    options?: any
+  ) {
+    return UserRoleApiFp(this.configuration)
+      .getProjectUserRoles(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserRoleApiGetUserRoleRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserRoleApi
+   */
+  public getUserRole(
+    requestParameters: UserRoleApiGetUserRoleRequest,
+    options?: any
+  ) {
+    return UserRoleApiFp(this.configuration)
+      .getUserRole(
+        requestParameters.projectId,
+        requestParameters.userRoleId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserRoleApiUpdateUserRolePermissionsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserRoleApi
+   */
+  public updateUserRolePermissions(
+    requestParameters: UserRoleApiUpdateUserRolePermissionsRequest,
+    options?: any
+  ) {
+    return UserRoleApiFp(this.configuration)
+      .updateUserRolePermissions(
         requestParameters.projectId,
         requestParameters.userId,
         requestParameters.requestBody,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdDeleteRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserRoleApi
-   */
-  public v1ProjectsProjectIdUserrolesUserRoleIdDelete(
-    requestParameters: UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdDeleteRequest,
-    options?: any
-  ) {
-    return UserRoleApiFp(this.configuration)
-      .v1ProjectsProjectIdUserrolesUserRoleIdDelete(
-        requestParameters.projectId,
-        requestParameters.userRoleId,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGetRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserRoleApi
-   */
-  public v1ProjectsProjectIdUserrolesUserRoleIdGet(
-    requestParameters: UserRoleApiV1ProjectsProjectIdUserrolesUserRoleIdGetRequest,
-    options?: any
-  ) {
-    return UserRoleApiFp(this.configuration)
-      .v1ProjectsProjectIdUserrolesUserRoleIdGet(
-        requestParameters.projectId,
-        requestParameters.userRoleId,
         options
       )
       .then((request) => request(this.axios, this.basePath));

@@ -54,137 +54,16 @@ export const ProjectApiAxiosParamCreator = function (
   return {
     /**
      *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsDelete: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/projects`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectName
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsDuplicateProjectNameGet: async (
-      projectName: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectName' is not null or undefined
-      assertParamExists(
-        "v1ProjectsDuplicateProjectNameGet",
-        "projectName",
-        projectName
-      );
-      const localVarPath = `/v1/projects/duplicate/{projectName}`.replace(
-        `{${"projectName"}}`,
-        encodeURIComponent(String(projectName))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsGet: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/projects`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsPost: async (
+    createProject: async (
       project: Project,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'project' is not null or undefined
-      assertParamExists("v1ProjectsPost", "project", project);
+      assertParamExists("createProject", "project", project);
       const localVarPath = `/v1/projects`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -224,24 +103,317 @@ export const ProjectApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteAllProjects: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/projects`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteProject: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("deleteProject", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjectUsers: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getAllProjectUsers", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/users`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjects: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/projects`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProject: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getProject", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSemDoms: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getSemDoms", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/semanticdomains`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectName
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    projectDuplicateCheck: async (
+      projectName: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectName' is not null or undefined
+      assertParamExists("projectDuplicateCheck", "projectName", projectName);
+      const localVarPath = `/v1/projects/duplicate/{projectName}`.replace(
+        `{${"projectName"}}`,
+        encodeURIComponent(String(projectName))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} projectId
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdCharactersPut: async (
+    putChars: async (
       projectId: string,
       project: Project,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdCharactersPut",
-        "projectId",
-        projectId
-      );
+      assertParamExists("putChars", "projectId", projectId);
       // verify required parameter 'project' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdCharactersPut", "project", project);
+      assertParamExists("putChars", "project", project);
       const localVarPath = `/v1/projects/{projectId}/characters`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -285,109 +457,19 @@ export const ProjectApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdDelete: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdDelete", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdGet: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdGet", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdPut: async (
+    updateProject: async (
       projectId: string,
       project: Project,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdPut", "projectId", projectId);
+      assertParamExists("updateProject", "projectId", projectId);
       // verify required parameter 'project' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdPut", "project", project);
+      assertParamExists("updateProject", "project", project);
       const localVarPath = `/v1/projects/{projectId}`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -428,100 +510,6 @@ export const ProjectApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdSemanticdomainsGet: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdSemanticdomainsGet",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/semanticdomains`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUsersGet: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdUsersGet", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/users`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
   };
 };
 
@@ -534,15 +522,156 @@ export const ProjectApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsDelete(
+    async createProject(
+      project: Project,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ProjectUserValueTuple>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createProject(
+        project,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteAllProjects(
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsDelete(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAllProjects(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteProject(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProject(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getAllProjectUsers(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProjectUsers(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getAllProjects(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Project>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProjects(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProject(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getProject(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getSemDoms(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<SemanticDomainWithSubdomains>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getSemDoms(
+        projectId,
         options
       );
       return createRequestFunction(
@@ -558,13 +687,13 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsDuplicateProjectNameGet(
+    async projectDuplicateCheck(
       projectName: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsDuplicateProjectNameGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.projectDuplicateCheck(
         projectName,
         options
       );
@@ -577,40 +706,20 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsGet(
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Project>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsGet(
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
+     * @param {string} projectId
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsPost(
+    async putChars(
+      projectId: string,
       project: Project,
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<ProjectUserValueTuple>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.putChars(
+        projectId,
         project,
         options
       );
@@ -628,137 +737,16 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdCharactersPut(
-      projectId: string,
-      project: Project,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdCharactersPut(
-        projectId,
-        project,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdDelete(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdDelete(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdGet(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdGet(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {Project} project
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdPut(
+    async updateProject(
       projectId: string,
       project: Project,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdPut(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateProject(
         projectId,
         project,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdSemanticdomainsGet(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<SemanticDomainWithSubdomains>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdSemanticdomainsGet(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdUsersGet(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsersGet(
-        projectId,
         options
       );
       return createRequestFunction(
@@ -784,12 +772,86 @@ export const ProjectApiFactory = function (
   return {
     /**
      *
+     * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsDelete(options?: any): AxiosPromise<boolean> {
+    createProject(
+      project: Project,
+      options?: any
+    ): AxiosPromise<ProjectUserValueTuple> {
       return localVarFp
-        .v1ProjectsDelete(options)
+        .createProject(project, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteAllProjects(options?: any): AxiosPromise<boolean> {
+      return localVarFp
+        .deleteAllProjects(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteProject(projectId: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .deleteProject(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjectUsers(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<User>> {
+      return localVarFp
+        .getAllProjectUsers(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjects(options?: any): AxiosPromise<Array<Project>> {
+      return localVarFp
+        .getAllProjects(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProject(projectId: string, options?: any): AxiosPromise<Project> {
+      return localVarFp
+        .getProject(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSemDoms(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<SemanticDomainWithSubdomains>> {
+      return localVarFp
+        .getSemDoms(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -798,36 +860,12 @@ export const ProjectApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsDuplicateProjectNameGet(
+    projectDuplicateCheck(
       projectName: string,
       options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
-        .v1ProjectsDuplicateProjectNameGet(projectName, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsGet(options?: any): AxiosPromise<Array<Project>> {
-      return localVarFp
-        .v1ProjectsGet(options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {Project} project
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsPost(
-      project: Project,
-      options?: any
-    ): AxiosPromise<ProjectUserValueTuple> {
-      return localVarFp
-        .v1ProjectsPost(project, options)
+        .projectDuplicateCheck(projectName, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -837,41 +875,13 @@ export const ProjectApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdCharactersPut(
+    putChars(
       projectId: string,
       project: Project,
       options?: any
     ): AxiosPromise<Project> {
       return localVarFp
-        .v1ProjectsProjectIdCharactersPut(projectId, project, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdDelete(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<void> {
-      return localVarFp
-        .v1ProjectsProjectIdDelete(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Project> {
-      return localVarFp
-        .v1ProjectsProjectIdGet(projectId, options)
+        .putChars(projectId, project, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -881,170 +891,142 @@ export const ProjectApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdPut(
+    updateProject(
       projectId: string,
       project: Project,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdPut(projectId, project, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdSemanticdomainsGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<SemanticDomainWithSubdomains>> {
-      return localVarFp
-        .v1ProjectsProjectIdSemanticdomainsGet(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUsersGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<User>> {
-      return localVarFp
-        .v1ProjectsProjectIdUsersGet(projectId, options)
+        .updateProject(projectId, project, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsDuplicateProjectNameGet operation in ProjectApi.
+ * Request parameters for createProject operation in ProjectApi.
  * @export
- * @interface ProjectApiV1ProjectsDuplicateProjectNameGetRequest
+ * @interface ProjectApiCreateProjectRequest
  */
-export interface ProjectApiV1ProjectsDuplicateProjectNameGetRequest {
+export interface ProjectApiCreateProjectRequest {
+  /**
+   *
+   * @type {Project}
+   * @memberof ProjectApiCreateProject
+   */
+  readonly project: Project;
+}
+
+/**
+ * Request parameters for deleteProject operation in ProjectApi.
+ * @export
+ * @interface ProjectApiDeleteProjectRequest
+ */
+export interface ProjectApiDeleteProjectRequest {
   /**
    *
    * @type {string}
-   * @memberof ProjectApiV1ProjectsDuplicateProjectNameGet
+   * @memberof ProjectApiDeleteProject
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getAllProjectUsers operation in ProjectApi.
+ * @export
+ * @interface ProjectApiGetAllProjectUsersRequest
+ */
+export interface ProjectApiGetAllProjectUsersRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectApiGetAllProjectUsers
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getProject operation in ProjectApi.
+ * @export
+ * @interface ProjectApiGetProjectRequest
+ */
+export interface ProjectApiGetProjectRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectApiGetProject
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getSemDoms operation in ProjectApi.
+ * @export
+ * @interface ProjectApiGetSemDomsRequest
+ */
+export interface ProjectApiGetSemDomsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectApiGetSemDoms
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for projectDuplicateCheck operation in ProjectApi.
+ * @export
+ * @interface ProjectApiProjectDuplicateCheckRequest
+ */
+export interface ProjectApiProjectDuplicateCheckRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectApiProjectDuplicateCheck
    */
   readonly projectName: string;
 }
 
 /**
- * Request parameters for v1ProjectsPost operation in ProjectApi.
+ * Request parameters for putChars operation in ProjectApi.
  * @export
- * @interface ProjectApiV1ProjectsPostRequest
+ * @interface ProjectApiPutCharsRequest
  */
-export interface ProjectApiV1ProjectsPostRequest {
-  /**
-   *
-   * @type {Project}
-   * @memberof ProjectApiV1ProjectsPost
-   */
-  readonly project: Project;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdCharactersPut operation in ProjectApi.
- * @export
- * @interface ProjectApiV1ProjectsProjectIdCharactersPutRequest
- */
-export interface ProjectApiV1ProjectsProjectIdCharactersPutRequest {
+export interface ProjectApiPutCharsRequest {
   /**
    *
    * @type {string}
-   * @memberof ProjectApiV1ProjectsProjectIdCharactersPut
+   * @memberof ProjectApiPutChars
    */
   readonly projectId: string;
 
   /**
    *
    * @type {Project}
-   * @memberof ProjectApiV1ProjectsProjectIdCharactersPut
+   * @memberof ProjectApiPutChars
    */
   readonly project: Project;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdDelete operation in ProjectApi.
+ * Request parameters for updateProject operation in ProjectApi.
  * @export
- * @interface ProjectApiV1ProjectsProjectIdDeleteRequest
+ * @interface ProjectApiUpdateProjectRequest
  */
-export interface ProjectApiV1ProjectsProjectIdDeleteRequest {
+export interface ProjectApiUpdateProjectRequest {
   /**
    *
    * @type {string}
-   * @memberof ProjectApiV1ProjectsProjectIdDelete
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdGet operation in ProjectApi.
- * @export
- * @interface ProjectApiV1ProjectsProjectIdGetRequest
- */
-export interface ProjectApiV1ProjectsProjectIdGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectApiV1ProjectsProjectIdGet
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdPut operation in ProjectApi.
- * @export
- * @interface ProjectApiV1ProjectsProjectIdPutRequest
- */
-export interface ProjectApiV1ProjectsProjectIdPutRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectApiV1ProjectsProjectIdPut
+   * @memberof ProjectApiUpdateProject
    */
   readonly projectId: string;
 
   /**
    *
    * @type {Project}
-   * @memberof ProjectApiV1ProjectsProjectIdPut
+   * @memberof ProjectApiUpdateProject
    */
   readonly project: Project;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdSemanticdomainsGet operation in ProjectApi.
- * @export
- * @interface ProjectApiV1ProjectsProjectIdSemanticdomainsGetRequest
- */
-export interface ProjectApiV1ProjectsProjectIdSemanticdomainsGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectApiV1ProjectsProjectIdSemanticdomainsGet
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdUsersGet operation in ProjectApi.
- * @export
- * @interface ProjectApiV1ProjectsProjectIdUsersGetRequest
- */
-export interface ProjectApiV1ProjectsProjectIdUsersGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectApiV1ProjectsProjectIdUsersGet
-   */
-  readonly projectId: string;
 }
 
 /**
@@ -1056,29 +1038,17 @@ export interface ProjectApiV1ProjectsProjectIdUsersGetRequest {
 export class ProjectApi extends BaseAPI {
   /**
    *
+   * @param {ProjectApiCreateProjectRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ProjectApi
    */
-  public v1ProjectsDelete(options?: any) {
-    return ProjectApiFp(this.configuration)
-      .v1ProjectsDelete(options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiV1ProjectsDuplicateProjectNameGetRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public v1ProjectsDuplicateProjectNameGet(
-    requestParameters: ProjectApiV1ProjectsDuplicateProjectNameGetRequest,
+  public createProject(
+    requestParameters: ProjectApiCreateProjectRequest,
     options?: any
   ) {
     return ProjectApiFp(this.configuration)
-      .v1ProjectsDuplicateProjectNameGet(requestParameters.projectName, options)
+      .createProject(requestParameters.project, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1088,132 +1058,134 @@ export class ProjectApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof ProjectApi
    */
-  public v1ProjectsGet(options?: any) {
+  public deleteAllProjects(options?: any) {
     return ProjectApiFp(this.configuration)
-      .v1ProjectsGet(options)
+      .deleteAllProjects(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {ProjectApiV1ProjectsPostRequest} requestParameters Request parameters.
+   * @param {ProjectApiDeleteProjectRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ProjectApi
    */
-  public v1ProjectsPost(
-    requestParameters: ProjectApiV1ProjectsPostRequest,
+  public deleteProject(
+    requestParameters: ProjectApiDeleteProjectRequest,
     options?: any
   ) {
     return ProjectApiFp(this.configuration)
-      .v1ProjectsPost(requestParameters.project, options)
+      .deleteProject(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {ProjectApiV1ProjectsProjectIdCharactersPutRequest} requestParameters Request parameters.
+   * @param {ProjectApiGetAllProjectUsersRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ProjectApi
    */
-  public v1ProjectsProjectIdCharactersPut(
-    requestParameters: ProjectApiV1ProjectsProjectIdCharactersPutRequest,
+  public getAllProjectUsers(
+    requestParameters: ProjectApiGetAllProjectUsersRequest,
     options?: any
   ) {
     return ProjectApiFp(this.configuration)
-      .v1ProjectsProjectIdCharactersPut(
+      .getAllProjectUsers(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public getAllProjects(options?: any) {
+    return ProjectApiFp(this.configuration)
+      .getAllProjects(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ProjectApiGetProjectRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public getProject(
+    requestParameters: ProjectApiGetProjectRequest,
+    options?: any
+  ) {
+    return ProjectApiFp(this.configuration)
+      .getProject(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ProjectApiGetSemDomsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public getSemDoms(
+    requestParameters: ProjectApiGetSemDomsRequest,
+    options?: any
+  ) {
+    return ProjectApiFp(this.configuration)
+      .getSemDoms(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ProjectApiProjectDuplicateCheckRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public projectDuplicateCheck(
+    requestParameters: ProjectApiProjectDuplicateCheckRequest,
+    options?: any
+  ) {
+    return ProjectApiFp(this.configuration)
+      .projectDuplicateCheck(requestParameters.projectName, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ProjectApiPutCharsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public putChars(requestParameters: ProjectApiPutCharsRequest, options?: any) {
+    return ProjectApiFp(this.configuration)
+      .putChars(requestParameters.projectId, requestParameters.project, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ProjectApiUpdateProjectRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public updateProject(
+    requestParameters: ProjectApiUpdateProjectRequest,
+    options?: any
+  ) {
+    return ProjectApiFp(this.configuration)
+      .updateProject(
         requestParameters.projectId,
         requestParameters.project,
         options
       )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiV1ProjectsProjectIdDeleteRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public v1ProjectsProjectIdDelete(
-    requestParameters: ProjectApiV1ProjectsProjectIdDeleteRequest,
-    options?: any
-  ) {
-    return ProjectApiFp(this.configuration)
-      .v1ProjectsProjectIdDelete(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiV1ProjectsProjectIdGetRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public v1ProjectsProjectIdGet(
-    requestParameters: ProjectApiV1ProjectsProjectIdGetRequest,
-    options?: any
-  ) {
-    return ProjectApiFp(this.configuration)
-      .v1ProjectsProjectIdGet(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiV1ProjectsProjectIdPutRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public v1ProjectsProjectIdPut(
-    requestParameters: ProjectApiV1ProjectsProjectIdPutRequest,
-    options?: any
-  ) {
-    return ProjectApiFp(this.configuration)
-      .v1ProjectsProjectIdPut(
-        requestParameters.projectId,
-        requestParameters.project,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiV1ProjectsProjectIdSemanticdomainsGetRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public v1ProjectsProjectIdSemanticdomainsGet(
-    requestParameters: ProjectApiV1ProjectsProjectIdSemanticdomainsGetRequest,
-    options?: any
-  ) {
-    return ProjectApiFp(this.configuration)
-      .v1ProjectsProjectIdSemanticdomainsGet(
-        requestParameters.projectId,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiV1ProjectsProjectIdUsersGetRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public v1ProjectsProjectIdUsersGet(
-    requestParameters: ProjectApiV1ProjectsProjectIdUsersGetRequest,
-    options?: any
-  ) {
-    return ProjectApiFp(this.configuration)
-      .v1ProjectsProjectIdUsersGet(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

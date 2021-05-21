@@ -44,9 +44,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
-        /// <remarks> POST: v1/projects/{projectId}/lift/upload </remarks>
         /// <returns> Number of words added </returns>
-        [HttpPost("upload")]
+        [HttpPost("upload", Name = "UploadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -207,9 +206,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/export </remarks>
         /// <returns> ProjectId, if export successful </returns>
-        [HttpGet("export")]
+        [HttpGet("export", Name = "ExportLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -283,9 +281,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Downloads project data in zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/download </remarks>
         /// <returns> Binary Lift file </returns>
-        [HttpGet("download")]
+        [HttpGet("download", Name = "DownloadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -317,9 +314,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Delete prepared export </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/deleteexport </remarks>
         /// <returns> UserId, if successful </returns>
-        [HttpGet("deleteexport")]
+        [HttpGet("deleteexport", Name = "DeleteLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteLiftFile()
@@ -340,9 +336,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Check if lift import has already happened for this project </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/check </remarks>
         /// <returns> A bool </returns>
-        [HttpGet("check")]
+        [HttpGet("check", Name = "CanUploadLift")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]

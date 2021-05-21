@@ -339,7 +339,7 @@ export async function resetPasswordRequest(
 ): Promise<boolean> {
   const domain = window.location.origin;
   return await userApi
-    .v1UsersForgotPost({
+    .resetPasswordRequest({
       passwordResetRequestData: { domain, emailOrUsername },
     })
     .then(() => true)
@@ -351,32 +351,32 @@ export async function resetPassword(
   newPassword: string
 ): Promise<boolean> {
   return await userApi
-    .v1UsersForgotResetPost({ passwordResetData: { token, newPassword } })
+    .resetPassword({ passwordResetData: { token, newPassword } })
     .then(() => true)
     .catch(() => false);
 }
 
 /** Returns the created user with id assigned on creation. */
 export async function addUser(user: User): Promise<User> {
-  const resp = await userApi.v1UsersPost({ user }, { headers: authHeader() });
+  const resp = await userApi.createUser({ user }, { headers: authHeader() });
   return { ...user, id: resp.data };
 }
 
 /** Returns true if the username is in use already. */
 export async function isUsernameTaken(username: string): Promise<boolean> {
-  return (await userApi.v1UsersIsusernametakenUsernameGet({ username })).data;
+  return (await userApi.checkUsername({ username })).data;
 }
 
 /** Returns true if the email address is in use already. */
 export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.v1UsersIsemailtakenEmailGet({ email })).data;
+  return (await userApi.checkEmail({ email })).data;
 }
 
 export async function authenticateUser(
   username: string,
   password: string
 ): Promise<User> {
-  const resp = await userApi.v1UsersAuthenticatePost(
+  const resp = await userApi.authenticate(
     { credentials: { username, password } },
     { headers: authHeader() }
   );
@@ -389,7 +389,7 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  return (await userApi.v1UsersGet({ headers: authHeader() })).data;
+  return (await userApi.getAllUsers({ headers: authHeader() })).data;
 }
 
 export async function getUser(id: string): Promise<User> {
@@ -398,7 +398,7 @@ export async function getUser(id: string): Promise<User> {
 }
 
 export async function updateUser(user: User): Promise<User> {
-  const resp = await userApi.v1UsersUserIdPut(
+  const resp = await userApi.updateUser(
     { userId: user.id, user },
     { headers: authHeader() }
   );
@@ -410,9 +410,7 @@ export async function updateUser(user: User): Promise<User> {
 }
 
 export async function deleteUser(userId: string): Promise<string> {
-  return (
-    await userApi.v1UsersUserIdDelete({ userId }, { headers: authHeader() })
-  ).data;
+  return (await userApi.deleteUser({ userId }, { headers: authHeader() })).data;
 }
 
 /* UserEditController.cs */
@@ -455,7 +453,7 @@ export async function addStepToGoal(
 
 /** Returns User with updated .workedProjects */
 export async function createUserEdit(): Promise<User> {
-  const resp = await userEditApi.v1ProjectsProjectIdUsereditsPost(
+  const resp = await userEditApi.createUserEdit(
     { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
@@ -468,7 +466,7 @@ export async function getUserEditById(
   projectId: string,
   userEditId: string
 ): Promise<UserEdit> {
-  const resp = await userEditApi.v1ProjectsProjectIdUsereditsUserEditIdGet(
+  const resp = await userEditApi.getUserEdit(
     { projectId, userEditId },
     { headers: authHeader() }
   );
@@ -477,7 +475,7 @@ export async function getUserEditById(
 
 /** Returns array with every UserEdit for the current project. */
 export async function getAllUserEdits(): Promise<UserEdit[]> {
-  const resp = await userEditApi.v1ProjectsProjectIdUsereditsGet(
+  const resp = await userEditApi.getProjectUserEdits(
     { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
@@ -487,7 +485,7 @@ export async function getAllUserEdits(): Promise<UserEdit[]> {
 /* UserRoleController.cs */
 
 export async function getUserRoles(): Promise<UserRole[]> {
-  const resp = await userRoleApi.v1ProjectsProjectIdUserrolesGet(
+  const resp = await userRoleApi.getProjectUserRoles(
     { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
@@ -499,7 +497,7 @@ export async function addUserRole(
   userId: string
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
-  const resp = await userRoleApi.v1ProjectsProjectIdUserrolesUserIdPut(
+  const resp = await userRoleApi.updateUserRolePermissions(
     { projectId, userId, requestBody: permissions },
     { headers: authHeader() }
   );
@@ -509,7 +507,7 @@ export async function addUserRole(
 /* WordController.cs */
 
 export async function createWord(word: Word): Promise<Word> {
-  const resp = await wordApi.v1ProjectsProjectIdWordsPost(
+  const resp = await wordApi.createWord(
     { projectId: LocalStorage.getProjectId(), word },
     { headers: authHeader() }
   );
@@ -517,7 +515,7 @@ export async function createWord(word: Word): Promise<Word> {
 }
 
 export async function deleteFrontierWord(wordId: string): Promise<string> {
-  const resp = await wordApi.v1ProjectsProjectIdWordsFrontierWordIdDelete(
+  const resp = await wordApi.deleteFrontierWord(
     { projectId: LocalStorage.getProjectId(), wordId },
     { headers: authHeader() }
   );
@@ -525,7 +523,7 @@ export async function deleteFrontierWord(wordId: string): Promise<string> {
 }
 
 export async function getWord(wordId: string): Promise<Word> {
-  const resp = await wordApi.v1ProjectsProjectIdWordsWordIdGet(
+  const resp = await wordApi.getWord(
     { projectId: LocalStorage.getProjectId(), wordId },
     { headers: authHeader() }
   );
@@ -533,7 +531,7 @@ export async function getWord(wordId: string): Promise<Word> {
 }
 
 export async function getAllWords(): Promise<Word[]> {
-  const resp = await wordApi.v1ProjectsProjectIdWordsGet(
+  const resp = await wordApi.getProjectWords(
     { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
@@ -541,7 +539,7 @@ export async function getAllWords(): Promise<Word[]> {
 }
 
 export async function getFrontierWords(): Promise<Word[]> {
-  const resp = await wordApi.v1ProjectsProjectIdWordsFrontierGet(
+  const resp = await wordApi.getProjectFrontierWords(
     { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
@@ -549,7 +547,7 @@ export async function getFrontierWords(): Promise<Word[]> {
 }
 
 export async function updateWord(word: Word): Promise<Word> {
-  const resp = await wordApi.v1ProjectsProjectIdWordsWordIdPut(
+  const resp = await wordApi.updateWord(
     { projectId: LocalStorage.getProjectId(), wordId: word.id, word },
     { headers: authHeader() }
   );

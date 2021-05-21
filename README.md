@@ -82,8 +82,8 @@ A rapid word collection tool.
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
        the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-     - On Ubuntu 18.04, follow these
-       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
+     - On Ubuntu 20.04, follow these
+       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
      Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`

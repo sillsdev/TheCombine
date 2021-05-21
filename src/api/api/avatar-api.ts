@@ -52,12 +52,12 @@ export const AvatarApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1UsersUserIdAvatarDownloadGet: async (
+    downloadAvatar: async (
       userId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
-      assertParamExists("v1UsersUserIdAvatarDownloadGet", "userId", userId);
+      assertParamExists("downloadAvatar", "userId", userId);
       const localVarPath = `/v1/users/{userId}/avatar/download`.replace(
         `{${"userId"}}`,
         encodeURIComponent(String(userId))
@@ -100,7 +100,7 @@ export const AvatarApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1UsersUserIdAvatarUploadPost: async (
+    uploadAvatar: async (
       userId: string,
       file: any,
       name: string,
@@ -108,13 +108,13 @@ export const AvatarApiAxiosParamCreator = function (
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
-      assertParamExists("v1UsersUserIdAvatarUploadPost", "userId", userId);
+      assertParamExists("uploadAvatar", "userId", userId);
       // verify required parameter 'file' is not null or undefined
-      assertParamExists("v1UsersUserIdAvatarUploadPost", "file", file);
+      assertParamExists("uploadAvatar", "file", file);
       // verify required parameter 'name' is not null or undefined
-      assertParamExists("v1UsersUserIdAvatarUploadPost", "name", name);
+      assertParamExists("uploadAvatar", "name", name);
       // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("v1UsersUserIdAvatarUploadPost", "filePath", filePath);
+      assertParamExists("uploadAvatar", "filePath", filePath);
       const localVarPath = `/v1/users/{userId}/avatar/upload`.replace(
         `{${"userId"}}`,
         encodeURIComponent(String(userId))
@@ -182,13 +182,13 @@ export const AvatarApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1UsersUserIdAvatarDownloadGet(
+    async downloadAvatar(
       userId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1UsersUserIdAvatarDownloadGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAvatar(
         userId,
         options
       );
@@ -208,7 +208,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1UsersUserIdAvatarUploadPost(
+    async uploadAvatar(
       userId: string,
       file: any,
       name: string,
@@ -217,7 +217,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1UsersUserIdAvatarUploadPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.uploadAvatar(
         userId,
         file,
         name,
@@ -251,12 +251,9 @@ export const AvatarApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1UsersUserIdAvatarDownloadGet(
-      userId: string,
-      options?: any
-    ): AxiosPromise<FileStream> {
+    downloadAvatar(userId: string, options?: any): AxiosPromise<FileStream> {
       return localVarFp
-        .v1UsersUserIdAvatarDownloadGet(userId, options)
+        .downloadAvatar(userId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -268,7 +265,7 @@ export const AvatarApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1UsersUserIdAvatarUploadPost(
+    uploadAvatar(
       userId: string,
       file: any,
       name: string,
@@ -276,57 +273,57 @@ export const AvatarApiFactory = function (
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .v1UsersUserIdAvatarUploadPost(userId, file, name, filePath, options)
+        .uploadAvatar(userId, file, name, filePath, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1UsersUserIdAvatarDownloadGet operation in AvatarApi.
+ * Request parameters for downloadAvatar operation in AvatarApi.
  * @export
- * @interface AvatarApiV1UsersUserIdAvatarDownloadGetRequest
+ * @interface AvatarApiDownloadAvatarRequest
  */
-export interface AvatarApiV1UsersUserIdAvatarDownloadGetRequest {
+export interface AvatarApiDownloadAvatarRequest {
   /**
    *
    * @type {string}
-   * @memberof AvatarApiV1UsersUserIdAvatarDownloadGet
+   * @memberof AvatarApiDownloadAvatar
    */
   readonly userId: string;
 }
 
 /**
- * Request parameters for v1UsersUserIdAvatarUploadPost operation in AvatarApi.
+ * Request parameters for uploadAvatar operation in AvatarApi.
  * @export
- * @interface AvatarApiV1UsersUserIdAvatarUploadPostRequest
+ * @interface AvatarApiUploadAvatarRequest
  */
-export interface AvatarApiV1UsersUserIdAvatarUploadPostRequest {
+export interface AvatarApiUploadAvatarRequest {
   /**
    *
    * @type {string}
-   * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
+   * @memberof AvatarApiUploadAvatar
    */
   readonly userId: string;
 
   /**
    *
    * @type {any}
-   * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
+   * @memberof AvatarApiUploadAvatar
    */
   readonly file: any;
 
   /**
    *
    * @type {string}
-   * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
+   * @memberof AvatarApiUploadAvatar
    */
   readonly name: string;
 
   /**
    *
    * @type {string}
-   * @memberof AvatarApiV1UsersUserIdAvatarUploadPost
+   * @memberof AvatarApiUploadAvatar
    */
   readonly filePath: string;
 }
@@ -340,33 +337,33 @@ export interface AvatarApiV1UsersUserIdAvatarUploadPostRequest {
 export class AvatarApi extends BaseAPI {
   /**
    *
-   * @param {AvatarApiV1UsersUserIdAvatarDownloadGetRequest} requestParameters Request parameters.
+   * @param {AvatarApiDownloadAvatarRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AvatarApi
    */
-  public v1UsersUserIdAvatarDownloadGet(
-    requestParameters: AvatarApiV1UsersUserIdAvatarDownloadGetRequest,
+  public downloadAvatar(
+    requestParameters: AvatarApiDownloadAvatarRequest,
     options?: any
   ) {
     return AvatarApiFp(this.configuration)
-      .v1UsersUserIdAvatarDownloadGet(requestParameters.userId, options)
+      .downloadAvatar(requestParameters.userId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {AvatarApiV1UsersUserIdAvatarUploadPostRequest} requestParameters Request parameters.
+   * @param {AvatarApiUploadAvatarRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AvatarApi
    */
-  public v1UsersUserIdAvatarUploadPost(
-    requestParameters: AvatarApiV1UsersUserIdAvatarUploadPostRequest,
+  public uploadAvatar(
+    requestParameters: AvatarApiUploadAvatarRequest,
     options?: any
   ) {
     return AvatarApiFp(this.configuration)
-      .v1UsersUserIdAvatarUploadPost(
+      .uploadAvatar(
         requestParameters.userId,
         requestParameters.file,
         requestParameters.name,

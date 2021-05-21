@@ -29,8 +29,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
-        /// <remarks> PUT: v1/invite </remarks>
-        [HttpPut]
+        [HttpPut(Name = "EmailInviteToProject")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
@@ -48,9 +47,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Validates invite token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/invite/{projectId}/validate/{token} </remarks>
         [AllowAnonymous]
-        [HttpPut("{projectId}/validate/{token}")]
+        [HttpPut("{projectId}/validate/{token}", Name = "ValidateToken")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)

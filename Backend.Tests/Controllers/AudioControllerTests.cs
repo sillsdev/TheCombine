@@ -62,7 +62,7 @@ namespace Backend.Tests.Controllers
             // `fileUpload` contains the file stream and the name of the file.
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
-            var action = _wordController.Get(_projId, word.Id).Result;
+            var action = _wordController.GetWord(_projId, word.Id).Result;
 
             var foundWord = (Word)((ObjectResult)action).Value;
             Assert.IsNotNull(foundWord.Audio);
@@ -78,7 +78,7 @@ namespace Backend.Tests.Controllers
             origWord.Audio.Add("a.wav");
 
             // Test delete function
-            _ = _audioController.Delete(_projId, origWord.Id, "a.wav").Result;
+            _ = _audioController.DeleteAudioFile(_projId, origWord.Id, "a.wav").Result;
 
             // Original word persists
             Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));

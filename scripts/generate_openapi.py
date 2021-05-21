@@ -3,7 +3,6 @@
 """Regenerate the frontend OpenAPI bindings to the backend.
 
 Requirements:
-
     - npm/node installed and in PATH
     - java 8+ installed and in PATH
 """
@@ -11,11 +10,15 @@ import os
 from pathlib import Path
 from typing import List
 
+EXIT_SUCCESS = 0
 
-def execute(command: List[str]) -> None:
+
+def execute(command: List[str], check: bool = True) -> None:
     exec_command = " ".join(command)
     print(f"Executing: {exec_command}")
-    os.system(exec_command)
+    ret = os.system(exec_command)
+    if check and ret != EXIT_SUCCESS:
+        raise RuntimeError(f"Execution failed with return code: {ret}")
 
 
 def main() -> None:
