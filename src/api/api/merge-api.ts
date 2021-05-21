@@ -121,7 +121,7 @@ export const MergeApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet: async (
+    v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet: async (
       projectId: string,
       maxInList: number,
       maxLists: number,
@@ -130,29 +130,29 @@ export const MergeApiAxiosParamCreator = function (
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet",
+        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
         "projectId",
         projectId
       );
       // verify required parameter 'maxInList' is not null or undefined
       assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet",
+        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
         "maxInList",
         maxInList
       );
       // verify required parameter 'maxLists' is not null or undefined
       assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet",
+        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
         "maxLists",
         maxLists
       );
       // verify required parameter 'userId' is not null or undefined
       assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet",
+        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
         "userId",
         userId
       );
-      const localVarPath = `/v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userid}`
+      const localVarPath = `/v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"maxInList"}}`, encodeURIComponent(String(maxInList)))
         .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
@@ -291,7 +291,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
+    async v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
       projectId: string,
       maxInList: number,
       maxLists: number,
@@ -303,7 +303,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<Array<Array<Word>>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
         projectId,
         maxInList,
         maxLists,
@@ -386,7 +386,7 @@ export const MergeApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
+    v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
       projectId: string,
       maxInList: number,
       maxLists: number,
@@ -394,7 +394,7 @@ export const MergeApiFactory = function (
       options?: any
     ): AxiosPromise<Array<Array<Word>>> {
       return localVarFp
-        .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
+        .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
           projectId,
           maxInList,
           maxLists,
@@ -444,36 +444,36 @@ export interface MergeApiV1ProjectsProjectIdMergeBlacklistAddPutRequest {
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet operation in MergeApi.
+ * Request parameters for v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet operation in MergeApi.
  * @export
- * @interface MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGetRequest
+ * @interface MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest
  */
-export interface MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGetRequest {
+export interface MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet
+   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
    */
   readonly projectId: string;
 
   /**
    *
    * @type {number}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet
+   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
    */
   readonly maxInList: number;
 
   /**
    *
    * @type {number}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet
+   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
    */
   readonly maxLists: number;
 
   /**
    *
    * @type {string}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet
+   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
    */
   readonly userId: string;
 }
@@ -528,17 +528,17 @@ export class MergeApi extends BaseAPI {
 
   /**
    *
-   * @param {MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGetRequest} requestParameters Request parameters.
+   * @param {MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
-    requestParameters: MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGetRequest,
+  public v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
+    requestParameters: MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest,
     options?: any
   ) {
     return MergeApiFp(this.configuration)
-      .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUseridGet(
+      .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
         requestParameters.projectId,
         requestParameters.maxInList,
         requestParameters.maxLists,

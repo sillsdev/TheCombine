@@ -69,13 +69,13 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Get lists of potential duplicates for merging. </summary>
-        /// <remarks> Get: v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userid} </remarks>
+        /// <remarks> Get: v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userId} </remarks>
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
         /// <param name="userId"> Id of user whose merge blacklist is to be used. </param>
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
-        [HttpGet("dups/{maxInList:int}/{maxLists:int}/{userid}")]
+        [HttpGet("dups/{maxInList:int}/{maxLists:int}/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetPotentialDuplicates(

@@ -34,8 +34,6 @@ def main() -> None:
             # For usage of withSeparateModelsAndApi, see: 
             # https://github.com/OpenAPITools/openapi-generator/issues/5008#issuecomment-613791804
             "useSingleRequestParameter=true,withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api",
-            # TODO: Remove this when path parameter validation issue is resolved.
-            "--skip-validate-spec",
         ]
     )
     execute(["npm", "run", "fmt-frontend"])
