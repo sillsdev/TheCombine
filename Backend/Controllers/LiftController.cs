@@ -207,7 +207,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Packages project data into zip file </summary>
         /// <returns> ProjectId, if export successful </returns>
-        [HttpGet("export", Name = "ExportLiftFiles")]
+        [HttpGet("export", Name = "ExportLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

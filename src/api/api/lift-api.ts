@@ -187,12 +187,12 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    exportLiftFiles: async (
+    exportLiftFile: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("exportLiftFiles", "projectId", projectId);
+      assertParamExists("exportLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/export`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -386,13 +386,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async exportLiftFiles(
+    async exportLiftFile(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.exportLiftFiles(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.exportLiftFile(
         projectId,
         options
       );
@@ -491,9 +491,9 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    exportLiftFiles(projectId: string, options?: any): AxiosPromise<string> {
+    exportLiftFile(projectId: string, options?: any): AxiosPromise<string> {
       return localVarFp
-        .exportLiftFiles(projectId, options)
+        .exportLiftFile(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -562,15 +562,15 @@ export interface LiftApiDownloadLiftFileRequest {
 }
 
 /**
- * Request parameters for exportLiftFiles operation in LiftApi.
+ * Request parameters for exportLiftFile operation in LiftApi.
  * @export
- * @interface LiftApiExportLiftFilesRequest
+ * @interface LiftApiExportLiftFileRequest
  */
-export interface LiftApiExportLiftFilesRequest {
+export interface LiftApiExportLiftFileRequest {
   /**
    *
    * @type {string}
-   * @memberof LiftApiExportLiftFiles
+   * @memberof LiftApiExportLiftFile
    */
   readonly projectId: string;
 }
@@ -667,17 +667,17 @@ export class LiftApi extends BaseAPI {
 
   /**
    *
-   * @param {LiftApiExportLiftFilesRequest} requestParameters Request parameters.
+   * @param {LiftApiExportLiftFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LiftApi
    */
-  public exportLiftFiles(
-    requestParameters: LiftApiExportLiftFilesRequest,
+  public exportLiftFile(
+    requestParameters: LiftApiExportLiftFileRequest,
     options?: any
   ) {
     return LiftApiFp(this.configuration)
-      .exportLiftFiles(requestParameters.projectId, options)
+      .exportLiftFile(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
