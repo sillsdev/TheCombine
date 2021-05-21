@@ -34,10 +34,6 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpGet("download/{fileName}", Name = "DownloadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
@@ -71,10 +67,6 @@ namespace BackendFramework.Controllers
         /// <returns> Path to local audio file </returns>
         [HttpPost("upload", Name = "UploadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
@@ -128,9 +120,6 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
         [HttpDelete("delete/{fileName}", Name = "DeleteAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> DeleteAudioFile(string projectId, string wordId, string fileName)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))

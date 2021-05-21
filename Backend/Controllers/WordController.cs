@@ -34,8 +34,6 @@ namespace BackendFramework.Controllers
         /// <returns> true: if success, false: if there were no words </returns>
         [HttpDelete(Name = "DeleteProjectWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteProjectWords(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
@@ -53,8 +51,6 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -77,8 +73,6 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
         [HttpGet(Name = "GetProjectWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetProjectWords(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -96,8 +90,6 @@ namespace BackendFramework.Controllers
         /// <summary> Returns <see cref="Word"/> with specified id. </summary>
         [HttpGet("{wordId}", Name = "GetWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Word))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetWord(string projectId, string wordId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -120,8 +112,6 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all Frontier <see cref="Word"/> in specified <see cref="Project"/>. </summary>
         [HttpGet("frontier", Name = "GetProjectFrontierWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetProjectFrontierWords(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -140,8 +130,6 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created word </returns>
         [HttpPost(Name = "CreateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> CreateWord(string projectId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -172,8 +160,6 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word </returns>
         [HttpPut("{wordId}", Name = "UpdateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateWord(string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))

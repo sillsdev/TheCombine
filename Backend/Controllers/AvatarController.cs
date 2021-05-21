@@ -30,7 +30,6 @@ namespace BackendFramework.Controllers
         /// <returns> Path to local avatar file </returns>
         [HttpGet("download", Name = "DownloadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
             var user = await _userRepo.GetUser(userId, false);
@@ -51,9 +50,6 @@ namespace BackendFramework.Controllers
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload", Name = "UploadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm, BindRequired] FileUpload fileUpload)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))

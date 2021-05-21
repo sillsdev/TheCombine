@@ -39,7 +39,6 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("forgot", Name = "ResetPasswordRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
         {
             // Find user attached to email or username.
@@ -72,7 +71,6 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("forgot/reset", Name = "ResetPassword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
@@ -86,7 +84,6 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="User"/>s </summary>
         [HttpGet(Name = "GetAllUsers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllUsers()
         {
             if (string.IsNullOrEmpty(_permissionService.GetUserId(HttpContext)))
@@ -100,8 +97,6 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("authenticate", Name = "Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
             try
@@ -122,8 +117,6 @@ namespace BackendFramework.Controllers
         /// <summary> Returns <see cref="User"/> with specified id </summary>
         [HttpGet("{userId}", Name = "GetUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetUser(string userId)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
@@ -143,7 +136,6 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost(Name = "CreateUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
             var returnUser = await _userRepo.Create(user);
@@ -178,8 +170,6 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated user. </returns>
         [HttpPut("{userId}", Name = "UpdateUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
             // The model seems to have flaws, and this prevents an admin from editing a user's user edits
@@ -204,8 +194,6 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes <see cref="User"/> with specified id. </summary>
         [HttpDelete("{userId}", Name = "DeleteUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))

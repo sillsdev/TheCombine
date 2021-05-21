@@ -37,8 +37,6 @@ namespace BackendFramework.Controllers
         /// <returns> UserEdit List </returns>
         [HttpGet(Name = "GetProjectUserEdits")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserEdit>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetProjectUserEdits(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -60,8 +58,6 @@ namespace BackendFramework.Controllers
         /// <returns> UserEdit </returns>
         [HttpGet("{userEditId}", Name = "GetUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserEdit))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetUserEdit(string projectId, string userEditId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -88,9 +84,6 @@ namespace BackendFramework.Controllers
         /// <returns> UpdatedUser </returns>
         [HttpPost(Name = "CreateUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
@@ -128,9 +121,6 @@ namespace BackendFramework.Controllers
         /// <returns> Index of added/updated edit </returns>
         [HttpPost("{userEditId}", Name = "UpdateUserEditGoal")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
@@ -174,9 +164,6 @@ namespace BackendFramework.Controllers
         /// <returns> Index of added/modified step in specified goal </returns>
         [HttpPut("{userEditId}", Name = "UpdateUserEditStep")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
             [FromBody, BindRequired] UserEditStepWrapper stepEdit)
         {
@@ -235,8 +222,6 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes <see cref="UserEdit"/> with specified id </summary>
         [HttpDelete("{userEditId}", Name = "DeleteUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))

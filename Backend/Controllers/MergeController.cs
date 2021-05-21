@@ -30,8 +30,6 @@ namespace BackendFramework.Controllers
         /// <returns> List of ids of new words </returns>
         [HttpPut(Name = "MergeWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> MergeWords(
             string projectId, [FromBody, BindRequired] List<MergeWords> mergeWordsList)
         {
@@ -55,7 +53,6 @@ namespace BackendFramework.Controllers
         /// <returns> List of word ids added to blacklist. </returns>
         [HttpPut("blacklist/add", Name = "BlacklistAdd")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
@@ -76,7 +73,6 @@ namespace BackendFramework.Controllers
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
         [HttpGet("dups/{maxInList:int}/{maxLists:int}/{userId}", Name = "GetPotentialDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetPotentialDuplicates(
             string projectId, int maxInList, int maxLists, string userId)
         {

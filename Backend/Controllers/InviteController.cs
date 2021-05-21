@@ -31,7 +31,6 @@ namespace BackendFramework.Controllers
         /// <summary> Generates invite link and sends email containing link </summary>
         [HttpPut(Name = "EmailInviteToProject")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
@@ -50,7 +49,6 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPut("{projectId}/validate/{token}", Name = "ValidateToken")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
             var project = await _projRepo.GetProject(projectId);
