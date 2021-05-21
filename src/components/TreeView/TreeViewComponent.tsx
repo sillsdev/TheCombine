@@ -2,9 +2,8 @@ import React from "react";
 import { Grid, Zoom } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import TreeProps from "components/TreeView/TreeProps";
 import TreeDepiction from "components/TreeView/TreeDepiction";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { createDomains } from "components/TreeView/TreeViewReducer";
 
 // Domain data
@@ -12,7 +11,9 @@ import en from "resources/semantic-domains/en.json";
 import es from "resources/semantic-domains/es.json";
 import fr from "resources/semantic-domains/fr.json";
 
-interface TreeViewProps extends TreeProps {
+interface TreeViewProps {
+  currentDomain: TreeSemanticDomain;
+  navigateTree: (domain: TreeSemanticDomain) => void;
   returnControlToCaller: () => void;
 }
 
@@ -33,7 +34,7 @@ export class TreeView extends React.Component<
 
     this.animate = this.animate.bind(this);
 
-    let domains: SemanticDomainWithSubdomains[];
+    let domains: TreeSemanticDomain[];
     if (props.activeLanguage) {
       // not defined in unit tests
       switch (props.activeLanguage.code) {
@@ -65,7 +66,7 @@ export class TreeView extends React.Component<
     }
   }
 
-  animate(domain: SemanticDomainWithSubdomains | undefined): Promise<void> {
+  animate(domain?: TreeSemanticDomain): Promise<void> {
     if (this.state.visible) {
       this.setState({ visible: false });
       return new Promise((resolve) =>

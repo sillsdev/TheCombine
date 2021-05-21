@@ -19,8 +19,6 @@ import {
 } from "@material-ui/icons";
 
 import * as backend from "backend";
-import { AutoComplete, Project } from "types/project";
-import { UserRole, Permission } from "types/userRole";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "components/ProjectExport";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
@@ -30,6 +28,12 @@ import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ProjectUsers, {
   ActiveUsers,
 } from "components/ProjectSettings/ProjectUsers";
+import {
+  AutocompleteSetting,
+  Permission,
+  Project,
+  UserRole,
+} from "types/project";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -39,7 +43,7 @@ interface ProjectSettingsState {
   projectName?: string;
   imports?: boolean;
   editUsers?: boolean;
-  autocompleteSetting?: AutoComplete;
+  autocompleteSetting?: AutocompleteSetting;
   loading: boolean;
 }
 
@@ -153,9 +157,10 @@ export default class ProjectSettingsComponent extends React.Component<
                       }>
                     ) => {
                       this.props.project.autocompleteSetting = event.target
-                        .value as AutoComplete;
+                        .value as AutocompleteSetting;
                       this.setState({
-                        autocompleteSetting: event.target.value as AutoComplete,
+                        autocompleteSetting: event.target
+                          .value as AutocompleteSetting,
                       });
                       backend
                         .updateProject(this.props.project)

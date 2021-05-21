@@ -7,7 +7,7 @@ import {
   KeyboardArrowUp,
 } from "@material-ui/icons";
 
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 export enum Direction {
   Down,
@@ -17,14 +17,14 @@ export enum Direction {
 }
 
 interface DomainTileProps {
-  domain: SemanticDomainWithSubdomains;
-  onClick: (domain: SemanticDomainWithSubdomains) => any;
+  domain: TreeSemanticDomain;
+  onClick: (domain: TreeSemanticDomain) => any;
   direction?: Direction | undefined;
 }
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default class DomainTile extends React.Component<DomainTileProps> {
-  domainText(domain: SemanticDomainWithSubdomains): ReactNode {
+  domainText(domain: TreeSemanticDomain): ReactNode {
     return (
       <div style={{ textTransform: "capitalize" }}>
         <Typography variant={"overline"}>{domain.id}</Typography>
@@ -34,7 +34,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
   }
 
   textWithArrow(
-    domain: SemanticDomainWithSubdomains,
+    domain: TreeSemanticDomain,
     direction: Direction | undefined
   ): ReactNode {
     switch (direction) {

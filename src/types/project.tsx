@@ -1,35 +1,16 @@
+import {
+  AutocompleteSetting,
+  Project,
+  UserRole,
+  WritingSystem,
+} from "api/models";
 import { randomIntString } from "utilities";
-import { SemanticDomain } from "types/word";
 
-export enum AutoComplete {
-  Off = "Off",
-  On = "On",
-}
-export interface CustomField {
-  name: string;
-  type: string;
-}
-export interface WritingSystem {
-  name: string;
-  bcp47: string;
-  font: string;
-}
+// Re-export interfaces from backend models.
+export type { Project, UserRole, WritingSystem };
 
-export interface Project {
-  id: string;
-  name: string;
-  isActive: boolean;
-  liftImported: boolean;
-  semanticDomains: SemanticDomain[];
-  vernacularWritingSystem: WritingSystem;
-  analysisWritingSystems: WritingSystem[];
-  validCharacters: string[];
-  rejectedCharacters: string[];
-  autocompleteSetting: AutoComplete;
-  customFields: CustomField[];
-  wordFields: string[];
-  partsOfSpeech: string[];
-}
+// Re-export enums from backend models.
+export { AutocompleteSetting };
 
 export const defaultProject: Project = {
   id: "",
@@ -44,7 +25,8 @@ export const defaultProject: Project = {
   customFields: [],
   wordFields: [],
   partsOfSpeech: [],
-  autocompleteSetting: AutoComplete.On,
+  inviteTokens: [],
+  autocompleteSetting: AutocompleteSetting.On,
 };
 
 // Randomize properties as needed for tests.
@@ -54,4 +36,18 @@ export function randomProject(): Project {
   project.name = randomIntString();
   project.isActive = Math.random() < 0.5;
   return project;
+}
+
+/**The definition of a particular permission `number`.
+ *
+ * @remarks
+ * This must be kept in sync with the Backend `enum` definition.
+ * */
+export enum Permission {
+  DatabaseAdmin = 6,
+  DeleteEditSettingsAndUsers = 5,
+  ImportExport = 4,
+  MergeAndCharSet = 3,
+  Unused = 2,
+  WordEntry = 1,
 }
