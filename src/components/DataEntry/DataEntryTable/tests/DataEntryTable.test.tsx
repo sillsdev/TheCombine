@@ -12,7 +12,6 @@ import DataEntryTable, {
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { defaultProject } from "types/project";
-import { baseDomain } from "types/SemanticDomain";
 import {
   multiSenseWord,
   SemanticDomain,
@@ -64,7 +63,6 @@ beforeEach(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <DataEntryTable
-          domain={baseDomain}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={jest.fn()}
           isSmallScreen={false}

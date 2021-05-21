@@ -1,6 +1,7 @@
+import { User as IUser } from "api/models";
 import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
-export class User {
+export class User implements IUser {
   id: string = "";
   avatar: string = "";
   hasAvatar: boolean = false;

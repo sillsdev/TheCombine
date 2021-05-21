@@ -1,21 +1,32 @@
 import { v4 } from "uuid";
 
 import { randomIntString } from "utilities";
+import {
+  Gloss,
+  MergeSourceWord,
+  MergeWords,
+  Note as INote,
+  SemanticDomain as ISemanticDomain,
+  SemanticDomainWithSubdomains,
+  Sense as ISense,
+  State,
+  Word as IWord,
+} from "api/models";
 
-export enum State {
-  Active = "Active",
-  Deleted = "Deleted",
-  Sense = "Sense",
-  Duplicate = "Duplicate",
-  Separate = "Separate",
-}
+// Re-export interfaces from backend models.
+export type {
+  Gloss,
+  MergeSourceWord,
+  MergeWords,
+  SemanticDomainWithSubdomains,
+};
 
-export interface Gloss {
-  def: string;
-  language: string; // bcp-47 code
-}
+// Re-export enums from backend models.
+export { State };
 
-export class SemanticDomain {
+// Define frontend classes on backend models.
+
+export class SemanticDomain implements ISemanticDomain {
   id: string;
   name: string;
   description = ""; // Only  used in the backend.
@@ -26,7 +37,7 @@ export class SemanticDomain {
   }
 }
 
-export class Sense {
+export class Sense implements ISense {
   guid: string;
   glosses: Gloss[] = [];
   semanticDomains: SemanticDomain[] = [];
@@ -43,7 +54,7 @@ export class Sense {
   }
 }
 
-export class Note {
+export class Note implements INote {
   language: string; // bcp-47 code
   text: string;
 
@@ -53,7 +64,7 @@ export class Note {
   }
 }
 
-export class Word {
+export class Word implements IWord {
   id: string = "";
   guid: string;
   vernacular: string = "";
@@ -73,15 +84,6 @@ export class Word {
   constructor() {
     this.guid = v4();
   }
-}
-
-export interface MergeSourceWord {
-  srcWordId: string;
-  getAudio: boolean;
-}
-export interface MergeWords {
-  parent: Word;
-  children: MergeSourceWord[];
 }
 
 // Used in DataEntry

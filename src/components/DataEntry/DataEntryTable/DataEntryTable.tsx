@@ -12,8 +12,7 @@ import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
-import { AutoComplete } from "types/project";
-import DomainTree from "types/SemanticDomain";
+import { AutocompleteSetting } from "types/project";
 import theme from "types/theme";
 import {
   Note,
@@ -25,7 +24,6 @@ import {
 } from "types/word";
 
 interface DataEntryTableProps {
-  domain: DomainTree;
   semanticDomain: SemanticDomain;
   displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
   getWordsFromBackend: () => Promise<Word[]>;
@@ -118,7 +116,7 @@ export class DataEntryTable extends React.Component<
 
   async getProjectSettings() {
     const proj = await Backend.getProject();
-    const suggestVerns = proj.autocompleteSetting === AutoComplete.On;
+    const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
     let analysisLang = "en";
     if (proj.analysisWritingSystems?.length > 0) {
       analysisLang = proj.analysisWritingSystems[0].bcp47;

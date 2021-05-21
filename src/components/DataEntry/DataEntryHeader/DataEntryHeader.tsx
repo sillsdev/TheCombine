@@ -7,11 +7,11 @@ import {
   LocalizeContextProps,
 } from "react-localize-redux";
 
-import DomainTree from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import theme from "types/theme";
 
 interface DataEntryHeaderProps {
-  domain: DomainTree;
+  domain: TreeSemanticDomain;
   questionsVisible: boolean;
   setQuestionVisibility: (visibility: boolean) => void;
 }

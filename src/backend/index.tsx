@@ -7,14 +7,11 @@ import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
 import { EmailInviteStatus } from "types/invite";
-import { Goal, GoalStep } from "types/goals";
+import { Goal, GoalStep, UserEdit } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
-import { Project } from "types/project";
+import { Project, UserRole } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { User } from "types/user";
-import { UserEdit } from "types/userEdit";
-import { UserRole } from "types/userRole";
 import { MergeWords, Word } from "types/word";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
@@ -248,16 +245,6 @@ export async function getAllProjects(): Promise<Project[]> {
 export async function getAllUsersInCurrentProject(): Promise<User[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/users`,
-    { headers: authHeader() }
-  );
-  return resp.data;
-}
-
-export async function getSemanticDomains(): Promise<
-  SemanticDomainWithSubdomains[]
-> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/semanticdomains`,
     { headers: authHeader() }
   );
   return resp.data;

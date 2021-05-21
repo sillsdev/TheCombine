@@ -8,12 +8,12 @@ import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeade
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
 import TreeViewComponent from "components/TreeView";
-import DomainTree from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import theme from "types/theme";
 import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
 
 interface DataEntryProps {
-  domain: DomainTree;
+  domain: TreeSemanticDomain;
 }
 
 interface DataEntryState {
@@ -169,7 +169,6 @@ export class DataEntryComponent extends React.Component<
             />
             <Divider />
             <DataEntryTable
-              domain={this.props.domain}
               semanticDomain={semanticDomain}
               displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
                 this.setState({

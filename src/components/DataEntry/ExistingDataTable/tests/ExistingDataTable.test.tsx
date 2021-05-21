@@ -3,7 +3,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
-import { baseDomain } from "types/SemanticDomain";
+import { SemanticDomain } from "types/word";
 
 jest.mock("components/DataEntry/ExistingDataTable/ImmutableExistingData");
 
@@ -16,7 +16,7 @@ describe("ExistingData", () => {
       renderer.create(
         <Provider store={mockStore}>
           <ExistingDataTable
-            domain={baseDomain}
+            domain={new SemanticDomain()}
             typeDrawer={false}
             domainWords={[]}
             drawerOpen={false}
@@ -31,7 +31,7 @@ describe("ExistingData", () => {
       renderer.create(
         <Provider store={mockStore}>
           <ExistingDataTable
-            domain={baseDomain}
+            domain={new SemanticDomain()}
             typeDrawer={true}
             domainWords={[]}
             drawerOpen={true}

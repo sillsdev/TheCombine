@@ -3,7 +3,7 @@ import {
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
-import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
 
 const mockWord = simpleWord("", "");
@@ -46,15 +46,10 @@ describe("DataEntryComponent", () => {
   });
 
   it("filterWordsByDomain filters out words that do not match desired domain", () => {
-    const mockDomains: SemanticDomainWithSubdomains[] = [
-      { ...baseDomain },
-      { ...baseDomain },
+    const mockDomains = [
+      new TreeSemanticDomain("ID_one", "daily"),
+      new TreeSemanticDomain("ID_two, weather"),
     ];
-
-    mockDomains[0].name = "daily";
-    mockDomains[0].id = "ID_one";
-    mockDomains[1].name = "weather";
-    mockDomains[1].id = "ID_two";
 
     const sense: Sense[] = [
       { ...new Sense("", "", mockDomains[0]), accessibility: State.Active },
@@ -91,8 +86,7 @@ describe("DataEntryComponent", () => {
   });
 
   it("sortDomainWordByVern sorts words alphabetically", () => {
-    const mockDomain = baseDomain;
-    mockDomain.name = "daily";
+    const mockDomain = new TreeSemanticDomain("ID_one", "daily");
     const unfilteredWords: Word[] = [
       { ...mockWord },
       { ...mockWord },

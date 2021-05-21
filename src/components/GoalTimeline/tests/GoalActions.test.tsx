@@ -15,10 +15,9 @@ import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
-import { Goal, GoalsState } from "types/goals";
+import { Goal, GoalsState, UserEdit } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { User } from "types/user";
-import { UserEdit } from "types/userEdit";
 
 jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {
   const realMergeDupActions = jest.requireActual(
@@ -81,7 +80,7 @@ let oldUser: User | undefined;
 const mockAction: Action = { type: null };
 const mockProjectId = "123";
 const mockUserEditId = "456";
-const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
+const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [], projectId: "" };
 const mockUserId = "789";
 let mockUser = new User("", "", "");
 mockUser.id = mockUserId;

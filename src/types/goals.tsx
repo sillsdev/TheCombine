@@ -1,5 +1,6 @@
 import { v4 } from "uuid";
 
+import { Edit, UserEdit } from "api/models";
 import {
   CreateCharInvChanges,
   CreateCharInvData,
@@ -11,6 +12,9 @@ import {
   MergeStepData,
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import { User } from "types/user";
+
+// Re-export interfaces from backend models.
+export type { Edit, UserEdit };
 
 export type GoalData = CreateCharInvData | MergeDupData | {};
 export type GoalStep = CreateCharInvStepData | MergeStepData | {};
