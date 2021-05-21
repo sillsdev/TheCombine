@@ -156,7 +156,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Checks whether specified username is taken. </summary>
         [AllowAnonymous]
-        [HttpGet("isusernametaken/{username}")]
+        [HttpGet("isusernametaken/{username}", Name = "CheckUsername")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CheckUsername(string username)
         {
@@ -164,9 +164,9 @@ namespace BackendFramework.Controllers
             return Ok(!isAvailable);
         }
 
-        /// <summary> Checks whether specified email adress is taken. </summary>
+        /// <summary> Checks whether specified email address is taken. </summary>
         [AllowAnonymous]
-        [HttpGet("isemailtaken/{email}")]
+        [HttpGet("isemailtaken/{email}", Name = "CheckEmail")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CheckEmail(string email)
         {

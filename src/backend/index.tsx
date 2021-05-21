@@ -377,12 +377,12 @@ export async function addUser(user: User): Promise<User> {
 
 /** Returns true if the username is in use already. */
 export async function isUsernameTaken(username: string): Promise<boolean> {
-  return (await userApi.v1UsersIsusernametakenUsernameGet({ username })).data;
+  return (await userApi.checkUsername({ username })).data;
 }
 
 /** Returns true if the email address is in use already. */
 export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.v1UsersIsemailtakenEmailGet({ email })).data;
+  return (await userApi.checkEmail({ email })).data;
 }
 
 export async function authenticateUser(
