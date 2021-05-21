@@ -31,9 +31,10 @@ def main() -> None:
             f"--output={output_dir}",
             "--generator-name=typescript-axios",
             "--additional-properties="
-            # For usage of withSeparateModelsAndApi, see: 
+            # For usage of withSeparateModelsAndApi, see:
             # https://github.com/OpenAPITools/openapi-generator/issues/5008#issuecomment-613791804
-            "useSingleRequestParameter=true,withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api",
+            "useSingleRequestParameter=true,"
+            "withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api",
         ]
     )
     execute(["npm", "run", "fmt-frontend"])
