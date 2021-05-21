@@ -58,65 +58,12 @@ export const UserEditApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsGet: async (
+    createUserEdit: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsGet",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/useredits`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUsereditsPost: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsPost",
-        "projectId",
-        projectId
-      );
+      assertParamExists("createUserEdit", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/useredits`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -157,23 +104,15 @@ export const UserEditApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdDelete: async (
+    deleteUserEdit: async (
       projectId: string,
       userEditId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdDelete",
-        "projectId",
-        projectId
-      );
+      assertParamExists("deleteUserEdit", "projectId", projectId);
       // verify required parameter 'userEditId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdDelete",
-        "userEditId",
-        userEditId
-      );
+      assertParamExists("deleteUserEdit", "userEditId", userEditId);
       const localVarPath = `/v1/projects/{projectId}/useredits/{userEditId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"userEditId"}}`, encodeURIComponent(String(userEditId)));
@@ -209,27 +148,64 @@ export const UserEditApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectUserEdits: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getProjectUserEdits", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/useredits`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} userEditId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdGet: async (
+    getUserEdit: async (
       projectId: string,
       userEditId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("getUserEdit", "projectId", projectId);
       // verify required parameter 'userEditId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdGet",
-        "userEditId",
-        userEditId
-      );
+      assertParamExists("getUserEdit", "userEditId", userEditId);
       const localVarPath = `/v1/projects/{projectId}/useredits/{userEditId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"userEditId"}}`, encodeURIComponent(String(userEditId)));
@@ -270,30 +246,18 @@ export const UserEditApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdPost: async (
+    updateUserEdit: async (
       projectId: string,
       userEditId: string,
       edit: Edit,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdPost",
-        "projectId",
-        projectId
-      );
+      assertParamExists("updateUserEdit", "projectId", projectId);
       // verify required parameter 'userEditId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdPost",
-        "userEditId",
-        userEditId
-      );
+      assertParamExists("updateUserEdit", "userEditId", userEditId);
       // verify required parameter 'edit' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdPost",
-        "edit",
-        edit
-      );
+      assertParamExists("updateUserEdit", "edit", edit);
       const localVarPath = `/v1/projects/{projectId}/useredits/{userEditId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"userEditId"}}`, encodeURIComponent(String(userEditId)));
@@ -341,27 +305,19 @@ export const UserEditApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdPut: async (
+    updateUserEditStep: async (
       projectId: string,
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdPut",
-        "projectId",
-        projectId
-      );
+      assertParamExists("updateUserEditStep", "projectId", projectId);
       // verify required parameter 'userEditId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdPut",
-        "userEditId",
-        userEditId
-      );
+      assertParamExists("updateUserEditStep", "userEditId", userEditId);
       // verify required parameter 'userEditStepWrapper' is not null or undefined
       assertParamExists(
-        "v1ProjectsProjectIdUsereditsUserEditIdPut",
+        "updateUserEditStep",
         "userEditStepWrapper",
         userEditStepWrapper
       );
@@ -420,39 +376,13 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUsereditsGet(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<UserEdit>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsGet(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdUsereditsPost(
+    async createUserEdit(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createUserEdit(
         projectId,
         options
       );
@@ -470,14 +400,14 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUsereditsUserEditIdDelete(
+    async deleteUserEdit(
       projectId: string,
       userEditId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdDelete(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserEdit(
         projectId,
         userEditId,
         options
@@ -492,18 +422,44 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProjectUserEdits(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<UserEdit>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectUserEdits(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} userEditId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUsereditsUserEditIdGet(
+    async getUserEdit(
       projectId: string,
       userEditId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserEdit>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getUserEdit(
         projectId,
         userEditId,
         options
@@ -523,7 +479,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUsereditsUserEditIdPost(
+    async updateUserEdit(
       projectId: string,
       userEditId: string,
       edit: Edit,
@@ -531,7 +487,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserEdit(
         projectId,
         userEditId,
         edit,
@@ -552,7 +508,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdUsereditsUserEditIdPut(
+    async updateUserEditStep(
       projectId: string,
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
@@ -560,7 +516,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdUsereditsUserEditIdPut(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserEditStep(
         projectId,
         userEditId,
         userEditStepWrapper,
@@ -593,26 +549,9 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<UserEdit>> {
+    createUserEdit(projectId: string, options?: any): AxiosPromise<User> {
       return localVarFp
-        .v1ProjectsProjectIdUsereditsGet(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdUsereditsPost(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<User> {
-      return localVarFp
-        .v1ProjectsProjectIdUsereditsPost(projectId, options)
+        .createUserEdit(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -622,17 +561,27 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdDelete(
+    deleteUserEdit(
       projectId: string,
       userEditId: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .v1ProjectsProjectIdUsereditsUserEditIdDelete(
-          projectId,
-          userEditId,
-          options
-        )
+        .deleteUserEdit(projectId, userEditId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectUserEdits(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<UserEdit>> {
+      return localVarFp
+        .getProjectUserEdits(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -642,17 +591,13 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdGet(
+    getUserEdit(
       projectId: string,
       userEditId: string,
       options?: any
     ): AxiosPromise<UserEdit> {
       return localVarFp
-        .v1ProjectsProjectIdUsereditsUserEditIdGet(
-          projectId,
-          userEditId,
-          options
-        )
+        .getUserEdit(projectId, userEditId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -663,19 +608,14 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdPost(
+    updateUserEdit(
       projectId: string,
       userEditId: string,
       edit: Edit,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .v1ProjectsProjectIdUsereditsUserEditIdPost(
-          projectId,
-          userEditId,
-          edit,
-          options
-        )
+        .updateUserEdit(projectId, userEditId, edit, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -686,146 +626,141 @@ export const UserEditApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdUsereditsUserEditIdPut(
+    updateUserEditStep(
       projectId: string,
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .v1ProjectsProjectIdUsereditsUserEditIdPut(
-          projectId,
-          userEditId,
-          userEditStepWrapper,
-          options
-        )
+        .updateUserEditStep(projectId, userEditId, userEditStepWrapper, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsProjectIdUsereditsGet operation in UserEditApi.
+ * Request parameters for createUserEdit operation in UserEditApi.
  * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsGetRequest
+ * @interface UserEditApiCreateUserEditRequest
  */
-export interface UserEditApiV1ProjectsProjectIdUsereditsGetRequest {
+export interface UserEditApiCreateUserEditRequest {
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsGet
+   * @memberof UserEditApiCreateUserEdit
    */
   readonly projectId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdUsereditsPost operation in UserEditApi.
+ * Request parameters for deleteUserEdit operation in UserEditApi.
  * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsPostRequest
+ * @interface UserEditApiDeleteUserEditRequest
  */
-export interface UserEditApiV1ProjectsProjectIdUsereditsPostRequest {
+export interface UserEditApiDeleteUserEditRequest {
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsPost
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdUsereditsUserEditIdDelete operation in UserEditApi.
- * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdDeleteRequest
- */
-export interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdDeleteRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdDelete
+   * @memberof UserEditApiDeleteUserEdit
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdDelete
+   * @memberof UserEditApiDeleteUserEdit
    */
   readonly userEditId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdUsereditsUserEditIdGet operation in UserEditApi.
+ * Request parameters for getProjectUserEdits operation in UserEditApi.
  * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdGetRequest
+ * @interface UserEditApiGetProjectUserEditsRequest
  */
-export interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdGetRequest {
+export interface UserEditApiGetProjectUserEditsRequest {
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdGet
+   * @memberof UserEditApiGetProjectUserEdits
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getUserEdit operation in UserEditApi.
+ * @export
+ * @interface UserEditApiGetUserEditRequest
+ */
+export interface UserEditApiGetUserEditRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserEditApiGetUserEdit
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdGet
+   * @memberof UserEditApiGetUserEdit
    */
   readonly userEditId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdUsereditsUserEditIdPost operation in UserEditApi.
+ * Request parameters for updateUserEdit operation in UserEditApi.
  * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPostRequest
+ * @interface UserEditApiUpdateUserEditRequest
  */
-export interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPostRequest {
+export interface UserEditApiUpdateUserEditRequest {
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPost
+   * @memberof UserEditApiUpdateUserEdit
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPost
+   * @memberof UserEditApiUpdateUserEdit
    */
   readonly userEditId: string;
 
   /**
    *
    * @type {Edit}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPost
+   * @memberof UserEditApiUpdateUserEdit
    */
   readonly edit: Edit;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdUsereditsUserEditIdPut operation in UserEditApi.
+ * Request parameters for updateUserEditStep operation in UserEditApi.
  * @export
- * @interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPutRequest
+ * @interface UserEditApiUpdateUserEditStepRequest
  */
-export interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPutRequest {
+export interface UserEditApiUpdateUserEditStepRequest {
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPut
+   * @memberof UserEditApiUpdateUserEditStep
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPut
+   * @memberof UserEditApiUpdateUserEditStep
    */
   readonly userEditId: string;
 
   /**
    *
    * @type {UserEditStepWrapper}
-   * @memberof UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPut
+   * @memberof UserEditApiUpdateUserEditStep
    */
   readonly userEditStepWrapper: UserEditStepWrapper;
 }
@@ -839,49 +774,33 @@ export interface UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPutRequest {
 export class UserEditApi extends BaseAPI {
   /**
    *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsGetRequest} requestParameters Request parameters.
+   * @param {UserEditApiCreateUserEditRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserEditApi
    */
-  public v1ProjectsProjectIdUsereditsGet(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsGetRequest,
+  public createUserEdit(
+    requestParameters: UserEditApiCreateUserEditRequest,
     options?: any
   ) {
     return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsGet(requestParameters.projectId, options)
+      .createUserEdit(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsPostRequest} requestParameters Request parameters.
+   * @param {UserEditApiDeleteUserEditRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserEditApi
    */
-  public v1ProjectsProjectIdUsereditsPost(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsPostRequest,
+  public deleteUserEdit(
+    requestParameters: UserEditApiDeleteUserEditRequest,
     options?: any
   ) {
     return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsPost(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsUserEditIdDeleteRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserEditApi
-   */
-  public v1ProjectsProjectIdUsereditsUserEditIdDelete(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsUserEditIdDeleteRequest,
-    options?: any
-  ) {
-    return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsUserEditIdDelete(
+      .deleteUserEdit(
         requestParameters.projectId,
         requestParameters.userEditId,
         options
@@ -891,17 +810,33 @@ export class UserEditApi extends BaseAPI {
 
   /**
    *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsUserEditIdGetRequest} requestParameters Request parameters.
+   * @param {UserEditApiGetProjectUserEditsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserEditApi
    */
-  public v1ProjectsProjectIdUsereditsUserEditIdGet(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsUserEditIdGetRequest,
+  public getProjectUserEdits(
+    requestParameters: UserEditApiGetProjectUserEditsRequest,
     options?: any
   ) {
     return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsUserEditIdGet(
+      .getProjectUserEdits(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserEditApiGetUserEditRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserEditApi
+   */
+  public getUserEdit(
+    requestParameters: UserEditApiGetUserEditRequest,
+    options?: any
+  ) {
+    return UserEditApiFp(this.configuration)
+      .getUserEdit(
         requestParameters.projectId,
         requestParameters.userEditId,
         options
@@ -911,17 +846,17 @@ export class UserEditApi extends BaseAPI {
 
   /**
    *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPostRequest} requestParameters Request parameters.
+   * @param {UserEditApiUpdateUserEditRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserEditApi
    */
-  public v1ProjectsProjectIdUsereditsUserEditIdPost(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPostRequest,
+  public updateUserEdit(
+    requestParameters: UserEditApiUpdateUserEditRequest,
     options?: any
   ) {
     return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsUserEditIdPost(
+      .updateUserEdit(
         requestParameters.projectId,
         requestParameters.userEditId,
         requestParameters.edit,
@@ -932,17 +867,17 @@ export class UserEditApi extends BaseAPI {
 
   /**
    *
-   * @param {UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPutRequest} requestParameters Request parameters.
+   * @param {UserEditApiUpdateUserEditStepRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserEditApi
    */
-  public v1ProjectsProjectIdUsereditsUserEditIdPut(
-    requestParameters: UserEditApiV1ProjectsProjectIdUsereditsUserEditIdPutRequest,
+  public updateUserEditStep(
+    requestParameters: UserEditApiUpdateUserEditStepRequest,
     options?: any
   ) {
     return UserEditApiFp(this.configuration)
-      .v1ProjectsProjectIdUsereditsUserEditIdPut(
+      .updateUserEditStep(
         requestParameters.projectId,
         requestParameters.userEditId,
         requestParameters.userEditStepWrapper,

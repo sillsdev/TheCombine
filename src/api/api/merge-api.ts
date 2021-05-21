@@ -55,23 +55,15 @@ export const MergeApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergeBlacklistAddPut: async (
+    blacklistAdd: async (
       projectId: string,
       requestBody: Array<string>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergeBlacklistAddPut",
-        "projectId",
-        projectId
-      );
+      assertParamExists("blacklistAdd", "projectId", projectId);
       // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergeBlacklistAddPut",
-        "requestBody",
-        requestBody
-      );
+      assertParamExists("blacklistAdd", "requestBody", requestBody);
       const localVarPath = `/v1/projects/{projectId}/merge/blacklist/add`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -121,7 +113,7 @@ export const MergeApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet: async (
+    getPotentialDuplicates: async (
       projectId: string,
       maxInList: number,
       maxLists: number,
@@ -129,29 +121,13 @@ export const MergeApiAxiosParamCreator = function (
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("getPotentialDuplicates", "projectId", projectId);
       // verify required parameter 'maxInList' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
-        "maxInList",
-        maxInList
-      );
+      assertParamExists("getPotentialDuplicates", "maxInList", maxInList);
       // verify required parameter 'maxLists' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
-        "maxLists",
-        maxLists
-      );
+      assertParamExists("getPotentialDuplicates", "maxLists", maxLists);
       // verify required parameter 'userId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet",
-        "userId",
-        userId
-      );
+      assertParamExists("getPotentialDuplicates", "userId", userId);
       const localVarPath = `/v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"maxInList"}}`, encodeURIComponent(String(maxInList)))
@@ -193,19 +169,15 @@ export const MergeApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergePut: async (
+    mergeWords: async (
       projectId: string,
       mergeWords: Array<MergeWords>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdMergePut", "projectId", projectId);
+      assertParamExists("mergeWords", "projectId", projectId);
       // verify required parameter 'mergeWords' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdMergePut",
-        "mergeWords",
-        mergeWords
-      );
+      assertParamExists("mergeWords", "mergeWords", mergeWords);
       const localVarPath = `/v1/projects/{projectId}/merge`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -263,14 +235,14 @@ export const MergeApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdMergeBlacklistAddPut(
+    async blacklistAdd(
       projectId: string,
       requestBody: Array<string>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergeBlacklistAddPut(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.blacklistAdd(
         projectId,
         requestBody,
         options
@@ -291,7 +263,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
+    async getPotentialDuplicates(
       projectId: string,
       maxInList: number,
       maxLists: number,
@@ -303,7 +275,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<Array<Array<Word>>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getPotentialDuplicates(
         projectId,
         maxInList,
         maxLists,
@@ -324,14 +296,14 @@ export const MergeApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdMergePut(
+    async mergeWords(
       projectId: string,
       mergeWords: Array<MergeWords>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdMergePut(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.mergeWords(
         projectId,
         mergeWords,
         options
@@ -364,17 +336,13 @@ export const MergeApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergeBlacklistAddPut(
+    blacklistAdd(
       projectId: string,
       requestBody: Array<string>,
       options?: any
     ): AxiosPromise<Array<string>> {
       return localVarFp
-        .v1ProjectsProjectIdMergeBlacklistAddPut(
-          projectId,
-          requestBody,
-          options
-        )
+        .blacklistAdd(projectId, requestBody, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -386,7 +354,7 @@ export const MergeApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
+    getPotentialDuplicates(
       projectId: string,
       maxInList: number,
       maxLists: number,
@@ -394,13 +362,7 @@ export const MergeApiFactory = function (
       options?: any
     ): AxiosPromise<Array<Array<Word>>> {
       return localVarFp
-        .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
-          projectId,
-          maxInList,
-          maxLists,
-          userId,
-          options
-        )
+        .getPotentialDuplicates(projectId, maxInList, maxLists, userId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -410,91 +372,91 @@ export const MergeApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdMergePut(
+    mergeWords(
       projectId: string,
       mergeWords: Array<MergeWords>,
       options?: any
     ): AxiosPromise<Array<string>> {
       return localVarFp
-        .v1ProjectsProjectIdMergePut(projectId, mergeWords, options)
+        .mergeWords(projectId, mergeWords, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsProjectIdMergeBlacklistAddPut operation in MergeApi.
+ * Request parameters for blacklistAdd operation in MergeApi.
  * @export
- * @interface MergeApiV1ProjectsProjectIdMergeBlacklistAddPutRequest
+ * @interface MergeApiBlacklistAddRequest
  */
-export interface MergeApiV1ProjectsProjectIdMergeBlacklistAddPutRequest {
+export interface MergeApiBlacklistAddRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiV1ProjectsProjectIdMergeBlacklistAddPut
+   * @memberof MergeApiBlacklistAdd
    */
   readonly projectId: string;
 
   /**
    *
    * @type {Array<string>}
-   * @memberof MergeApiV1ProjectsProjectIdMergeBlacklistAddPut
+   * @memberof MergeApiBlacklistAdd
    */
   readonly requestBody: Array<string>;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet operation in MergeApi.
+ * Request parameters for getPotentialDuplicates operation in MergeApi.
  * @export
- * @interface MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest
+ * @interface MergeApiGetPotentialDuplicatesRequest
  */
-export interface MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest {
+export interface MergeApiGetPotentialDuplicatesRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
+   * @memberof MergeApiGetPotentialDuplicates
    */
   readonly projectId: string;
 
   /**
    *
    * @type {number}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
+   * @memberof MergeApiGetPotentialDuplicates
    */
   readonly maxInList: number;
 
   /**
    *
    * @type {number}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
+   * @memberof MergeApiGetPotentialDuplicates
    */
   readonly maxLists: number;
 
   /**
    *
    * @type {string}
-   * @memberof MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet
+   * @memberof MergeApiGetPotentialDuplicates
    */
   readonly userId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdMergePut operation in MergeApi.
+ * Request parameters for mergeWords operation in MergeApi.
  * @export
- * @interface MergeApiV1ProjectsProjectIdMergePutRequest
+ * @interface MergeApiMergeWordsRequest
  */
-export interface MergeApiV1ProjectsProjectIdMergePutRequest {
+export interface MergeApiMergeWordsRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiV1ProjectsProjectIdMergePut
+   * @memberof MergeApiMergeWords
    */
   readonly projectId: string;
 
   /**
    *
    * @type {Array<MergeWords>}
-   * @memberof MergeApiV1ProjectsProjectIdMergePut
+   * @memberof MergeApiMergeWords
    */
   readonly mergeWords: Array<MergeWords>;
 }
@@ -508,17 +470,17 @@ export interface MergeApiV1ProjectsProjectIdMergePutRequest {
 export class MergeApi extends BaseAPI {
   /**
    *
-   * @param {MergeApiV1ProjectsProjectIdMergeBlacklistAddPutRequest} requestParameters Request parameters.
+   * @param {MergeApiBlacklistAddRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public v1ProjectsProjectIdMergeBlacklistAddPut(
-    requestParameters: MergeApiV1ProjectsProjectIdMergeBlacklistAddPutRequest,
+  public blacklistAdd(
+    requestParameters: MergeApiBlacklistAddRequest,
     options?: any
   ) {
     return MergeApiFp(this.configuration)
-      .v1ProjectsProjectIdMergeBlacklistAddPut(
+      .blacklistAdd(
         requestParameters.projectId,
         requestParameters.requestBody,
         options
@@ -528,17 +490,17 @@ export class MergeApi extends BaseAPI {
 
   /**
    *
-   * @param {MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest} requestParameters Request parameters.
+   * @param {MergeApiGetPotentialDuplicatesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
-    requestParameters: MergeApiV1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGetRequest,
+  public getPotentialDuplicates(
+    requestParameters: MergeApiGetPotentialDuplicatesRequest,
     options?: any
   ) {
     return MergeApiFp(this.configuration)
-      .v1ProjectsProjectIdMergeDupsMaxInListMaxListsUserIdGet(
+      .getPotentialDuplicates(
         requestParameters.projectId,
         requestParameters.maxInList,
         requestParameters.maxLists,
@@ -550,17 +512,17 @@ export class MergeApi extends BaseAPI {
 
   /**
    *
-   * @param {MergeApiV1ProjectsProjectIdMergePutRequest} requestParameters Request parameters.
+   * @param {MergeApiMergeWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public v1ProjectsProjectIdMergePut(
-    requestParameters: MergeApiV1ProjectsProjectIdMergePutRequest,
+  public mergeWords(
+    requestParameters: MergeApiMergeWordsRequest,
     options?: any
   ) {
     return MergeApiFp(this.configuration)
-      .v1ProjectsProjectIdMergePut(
+      .mergeWords(
         requestParameters.projectId,
         requestParameters.mergeWords,
         options

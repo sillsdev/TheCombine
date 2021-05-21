@@ -34,8 +34,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="Project"/>s </summary>
-        /// <remarks> GET: v1/projects </remarks>
-        [HttpGet]
+        [HttpGet(Name = "GetAllProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Project>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllProjects()
@@ -48,12 +47,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Get a list of <see cref="User"/>s of a specific project </summary>
-        /// <remarks> GET: v1/projects/{projectId}/users </remarks>
         /// <returns> A list of <see cref="User"/>s </returns>
-        [HttpGet("{projectId}/users")]
+        [HttpGet("{projectId}/users", Name = "GetAllProjectUsers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllUsers(string projectId)
+        public async Task<IActionResult> GetAllProjectUsers(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -67,12 +65,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes all <see cref="Project"/>s </summary>
-        /// <remarks> DELETE: v1/projects </remarks>
         /// <returns> true: if success, false: if there were no projects </returns>
-        [HttpDelete]
+        [HttpDelete(Name = "DeleteAllProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> DeleteAllProjects()
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
@@ -82,12 +79,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns <see cref="Project"/> with specified id </summary>
-        /// <remarks> GET: v1/projects/{projectId} </remarks>
-        [HttpGet("{projectId}")]
+        [HttpGet("{projectId}", Name = "GetProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Get(string projectId)
+        public async Task<IActionResult> GetProject(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -107,13 +103,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Creates a <see cref="Project"/> </summary>
-        /// <remarks> POST: v1/projects </remarks>
         /// <returns> Id of created Project </returns>
-        [HttpPost]
+        [HttpPost(Name = "CreateProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof((Project, User)))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Post([FromBody, BindRequired] Project project)
+        public async Task<IActionResult> CreateProject([FromBody, BindRequired] Project project)
         {
             await _projRepo.Create(project);
 
@@ -157,14 +152,13 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
-        /// <remarks> PUT: v1/projects/{projectId} </remarks>
         /// <returns> Id of updated Project </returns>
-        [HttpPut("{projectId}")]
+        [HttpPut("{projectId}", Name = "UpdateProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Put(string projectId, [FromBody, BindRequired] Project project)
+        public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -181,8 +175,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
-        /// <remarks> PUT: v1/projects/{projectId} </remarks>
-        [HttpPut("{projectId}/characters")]
+        [HttpPut("{projectId}/characters", Name = "PutChars")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -207,13 +200,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes <see cref="Project"/> with specified id </summary>
-        /// <remarks> DELETE: v1/projects/{projectId} </remarks>
-        [HttpDelete("{projectId}")]
+        [HttpDelete("{projectId}", Name = "DeleteProject")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
-        public async Task<IActionResult> Delete(string projectId)
+        public async Task<IActionResult> DeleteProject(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
@@ -236,9 +228,8 @@ namespace BackendFramework.Controllers
         /// <summary>
         /// UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/>
         /// </summary>
-        /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
         [AllowAnonymous]
-        [HttpGet("{projectId}/semanticdomains")]
+        [HttpGet("{projectId}/semanticdomains", Name = "GetSemDoms")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainWithSubdomains>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetSemDoms(string projectId)
@@ -252,7 +243,7 @@ namespace BackendFramework.Controllers
             return Ok(result);
         }
 
-        [HttpGet("duplicate/{projectName}")]
+        [HttpGet("duplicate/{projectName}", Name = "ProjectDuplicateCheck")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {

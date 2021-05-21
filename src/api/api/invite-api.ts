@@ -50,68 +50,20 @@ export const InviteApiAxiosParamCreator = function (
   return {
     /**
      *
-     * @param {string} projectId
-     * @param {string} token
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1InviteProjectIdValidateTokenPut: async (
-      projectId: string,
-      token: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1InviteProjectIdValidateTokenPut",
-        "projectId",
-        projectId
-      );
-      // verify required parameter 'token' is not null or undefined
-      assertParamExists("v1InviteProjectIdValidateTokenPut", "token", token);
-      const localVarPath = `/v1/invite/{projectId}/validate/{token}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"token"}}`, encodeURIComponent(String(token)));
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "PUT",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
      * @param {EmailInviteData} emailInviteData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1InvitePut: async (
+    emailInviteToProject: async (
       emailInviteData: EmailInviteData,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'emailInviteData' is not null or undefined
-      assertParamExists("v1InvitePut", "emailInviteData", emailInviteData);
+      assertParamExists(
+        "emailInviteToProject",
+        "emailInviteData",
+        emailInviteData
+      );
       const localVarPath = `/v1/invite`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -149,6 +101,54 @@ export const InviteApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateToken: async (
+      projectId: string,
+      token: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("validateToken", "projectId", projectId);
+      // verify required parameter 'token' is not null or undefined
+      assertParamExists("validateToken", "token", token);
+      const localVarPath = `/v1/invite/{projectId}/validate/{token}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"token"}}`, encodeURIComponent(String(token)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -161,24 +161,18 @@ export const InviteApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
-     * @param {string} projectId
-     * @param {string} token
+     * @param {EmailInviteData} emailInviteData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1InviteProjectIdValidateTokenPut(
-      projectId: string,
-      token: string,
+    async emailInviteToProject(
+      emailInviteData: EmailInviteData,
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<EmailInviteStatus>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1InviteProjectIdValidateTokenPut(
-        projectId,
-        token,
+      const localVarAxiosArgs = await localVarAxiosParamCreator.emailInviteToProject(
+        emailInviteData,
         options
       );
       return createRequestFunction(
@@ -190,18 +184,24 @@ export const InviteApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {EmailInviteData} emailInviteData
+     * @param {string} projectId
+     * @param {string} token
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1InvitePut(
-      emailInviteData: EmailInviteData,
+    async validateToken(
+      projectId: string,
+      token: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<EmailInviteStatus>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1InvitePut(
-        emailInviteData,
+      const localVarAxiosArgs = await localVarAxiosParamCreator.validateToken(
+        projectId,
+        token,
         options
       );
       return createRequestFunction(
@@ -227,70 +227,70 @@ export const InviteApiFactory = function (
   return {
     /**
      *
+     * @param {EmailInviteData} emailInviteData
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    emailInviteToProject(
+      emailInviteData: EmailInviteData,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .emailInviteToProject(emailInviteData, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} projectId
      * @param {string} token
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1InviteProjectIdValidateTokenPut(
+    validateToken(
       projectId: string,
       token: string,
       options?: any
     ): AxiosPromise<EmailInviteStatus> {
       return localVarFp
-        .v1InviteProjectIdValidateTokenPut(projectId, token, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {EmailInviteData} emailInviteData
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1InvitePut(
-      emailInviteData: EmailInviteData,
-      options?: any
-    ): AxiosPromise<void> {
-      return localVarFp
-        .v1InvitePut(emailInviteData, options)
+        .validateToken(projectId, token, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1InviteProjectIdValidateTokenPut operation in InviteApi.
+ * Request parameters for emailInviteToProject operation in InviteApi.
  * @export
- * @interface InviteApiV1InviteProjectIdValidateTokenPutRequest
+ * @interface InviteApiEmailInviteToProjectRequest
  */
-export interface InviteApiV1InviteProjectIdValidateTokenPutRequest {
+export interface InviteApiEmailInviteToProjectRequest {
+  /**
+   *
+   * @type {EmailInviteData}
+   * @memberof InviteApiEmailInviteToProject
+   */
+  readonly emailInviteData: EmailInviteData;
+}
+
+/**
+ * Request parameters for validateToken operation in InviteApi.
+ * @export
+ * @interface InviteApiValidateTokenRequest
+ */
+export interface InviteApiValidateTokenRequest {
   /**
    *
    * @type {string}
-   * @memberof InviteApiV1InviteProjectIdValidateTokenPut
+   * @memberof InviteApiValidateToken
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof InviteApiV1InviteProjectIdValidateTokenPut
+   * @memberof InviteApiValidateToken
    */
   readonly token: string;
-}
-
-/**
- * Request parameters for v1InvitePut operation in InviteApi.
- * @export
- * @interface InviteApiV1InvitePutRequest
- */
-export interface InviteApiV1InvitePutRequest {
-  /**
-   *
-   * @type {EmailInviteData}
-   * @memberof InviteApiV1InvitePut
-   */
-  readonly emailInviteData: EmailInviteData;
 }
 
 /**
@@ -302,37 +302,37 @@ export interface InviteApiV1InvitePutRequest {
 export class InviteApi extends BaseAPI {
   /**
    *
-   * @param {InviteApiV1InviteProjectIdValidateTokenPutRequest} requestParameters Request parameters.
+   * @param {InviteApiEmailInviteToProjectRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof InviteApi
    */
-  public v1InviteProjectIdValidateTokenPut(
-    requestParameters: InviteApiV1InviteProjectIdValidateTokenPutRequest,
+  public emailInviteToProject(
+    requestParameters: InviteApiEmailInviteToProjectRequest,
     options?: any
   ) {
     return InviteApiFp(this.configuration)
-      .v1InviteProjectIdValidateTokenPut(
-        requestParameters.projectId,
-        requestParameters.token,
-        options
-      )
+      .emailInviteToProject(requestParameters.emailInviteData, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {InviteApiV1InvitePutRequest} requestParameters Request parameters.
+   * @param {InviteApiValidateTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof InviteApi
    */
-  public v1InvitePut(
-    requestParameters: InviteApiV1InvitePutRequest,
+  public validateToken(
+    requestParameters: InviteApiValidateTokenRequest,
     options?: any
   ) {
     return InviteApiFp(this.configuration)
-      .v1InvitePut(requestParameters.emailInviteData, options)
+      .validateToken(
+        requestParameters.projectId,
+        requestParameters.token,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 }

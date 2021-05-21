@@ -52,16 +52,12 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftCheckGet: async (
+    canUploadLift: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdLiftCheckGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("canUploadLift", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/check`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -101,16 +97,12 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftDeleteexportGet: async (
+    deleteLiftFile: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdLiftDeleteexportGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("deleteLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/deleteexport`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -150,16 +142,12 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftDownloadGet: async (
+    downloadLiftFile: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdLiftDownloadGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("downloadLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/download`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -199,16 +187,12 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftExportGet: async (
+    exportLiftFiles: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdLiftExportGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("exportLiftFiles", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/export`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -251,7 +235,7 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftUploadPost: async (
+    uploadLiftFile: async (
       projectId: string,
       file: any,
       name: string,
@@ -259,21 +243,13 @@ export const LiftApiAxiosParamCreator = function (
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdLiftUploadPost",
-        "projectId",
-        projectId
-      );
+      assertParamExists("uploadLiftFile", "projectId", projectId);
       // verify required parameter 'file' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdLiftUploadPost", "file", file);
+      assertParamExists("uploadLiftFile", "file", file);
       // verify required parameter 'name' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdLiftUploadPost", "name", name);
+      assertParamExists("uploadLiftFile", "name", name);
       // verify required parameter 'filePath' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdLiftUploadPost",
-        "filePath",
-        filePath
-      );
+      assertParamExists("uploadLiftFile", "filePath", filePath);
       const localVarPath = `/v1/projects/{projectId}/lift/upload`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -341,13 +317,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdLiftCheckGet(
+    async canUploadLift(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftCheckGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.canUploadLift(
         projectId,
         options
       );
@@ -364,13 +340,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdLiftDeleteexportGet(
+    async deleteLiftFile(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftDeleteexportGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteLiftFile(
         projectId,
         options
       );
@@ -387,13 +363,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdLiftDownloadGet(
+    async downloadLiftFile(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftDownloadGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadLiftFile(
         projectId,
         options
       );
@@ -410,13 +386,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdLiftExportGet(
+    async exportLiftFiles(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftExportGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.exportLiftFiles(
         projectId,
         options
       );
@@ -436,7 +412,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdLiftUploadPost(
+    async uploadLiftFile(
       projectId: string,
       file: any,
       name: string,
@@ -445,7 +421,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdLiftUploadPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.uploadLiftFile(
         projectId,
         file,
         name,
@@ -479,12 +455,9 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftCheckGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<boolean> {
+    canUploadLift(projectId: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .v1ProjectsProjectIdLiftCheckGet(projectId, options)
+        .canUploadLift(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -493,12 +466,9 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftDeleteexportGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<string> {
+    deleteLiftFile(projectId: string, options?: any): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdLiftDeleteexportGet(projectId, options)
+        .deleteLiftFile(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -507,12 +477,12 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftDownloadGet(
+    downloadLiftFile(
       projectId: string,
       options?: any
     ): AxiosPromise<FileStream> {
       return localVarFp
-        .v1ProjectsProjectIdLiftDownloadGet(projectId, options)
+        .downloadLiftFile(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -521,12 +491,9 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftExportGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<string> {
+    exportLiftFiles(projectId: string, options?: any): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdLiftExportGet(projectId, options)
+        .exportLiftFiles(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -538,7 +505,7 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdLiftUploadPost(
+    uploadLiftFile(
       projectId: string,
       file: any,
       name: string,
@@ -546,105 +513,99 @@ export const LiftApiFactory = function (
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .v1ProjectsProjectIdLiftUploadPost(
-          projectId,
-          file,
-          name,
-          filePath,
-          options
-        )
+        .uploadLiftFile(projectId, file, name, filePath, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsProjectIdLiftCheckGet operation in LiftApi.
+ * Request parameters for canUploadLift operation in LiftApi.
  * @export
- * @interface LiftApiV1ProjectsProjectIdLiftCheckGetRequest
+ * @interface LiftApiCanUploadLiftRequest
  */
-export interface LiftApiV1ProjectsProjectIdLiftCheckGetRequest {
+export interface LiftApiCanUploadLiftRequest {
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftCheckGet
+   * @memberof LiftApiCanUploadLift
    */
   readonly projectId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdLiftDeleteexportGet operation in LiftApi.
+ * Request parameters for deleteLiftFile operation in LiftApi.
  * @export
- * @interface LiftApiV1ProjectsProjectIdLiftDeleteexportGetRequest
+ * @interface LiftApiDeleteLiftFileRequest
  */
-export interface LiftApiV1ProjectsProjectIdLiftDeleteexportGetRequest {
+export interface LiftApiDeleteLiftFileRequest {
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftDeleteexportGet
+   * @memberof LiftApiDeleteLiftFile
    */
   readonly projectId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdLiftDownloadGet operation in LiftApi.
+ * Request parameters for downloadLiftFile operation in LiftApi.
  * @export
- * @interface LiftApiV1ProjectsProjectIdLiftDownloadGetRequest
+ * @interface LiftApiDownloadLiftFileRequest
  */
-export interface LiftApiV1ProjectsProjectIdLiftDownloadGetRequest {
+export interface LiftApiDownloadLiftFileRequest {
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftDownloadGet
+   * @memberof LiftApiDownloadLiftFile
    */
   readonly projectId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdLiftExportGet operation in LiftApi.
+ * Request parameters for exportLiftFiles operation in LiftApi.
  * @export
- * @interface LiftApiV1ProjectsProjectIdLiftExportGetRequest
+ * @interface LiftApiExportLiftFilesRequest
  */
-export interface LiftApiV1ProjectsProjectIdLiftExportGetRequest {
+export interface LiftApiExportLiftFilesRequest {
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftExportGet
+   * @memberof LiftApiExportLiftFiles
    */
   readonly projectId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdLiftUploadPost operation in LiftApi.
+ * Request parameters for uploadLiftFile operation in LiftApi.
  * @export
- * @interface LiftApiV1ProjectsProjectIdLiftUploadPostRequest
+ * @interface LiftApiUploadLiftFileRequest
  */
-export interface LiftApiV1ProjectsProjectIdLiftUploadPostRequest {
+export interface LiftApiUploadLiftFileRequest {
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
+   * @memberof LiftApiUploadLiftFile
    */
   readonly projectId: string;
 
   /**
    *
    * @type {any}
-   * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
+   * @memberof LiftApiUploadLiftFile
    */
   readonly file: any;
 
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
+   * @memberof LiftApiUploadLiftFile
    */
   readonly name: string;
 
   /**
    *
    * @type {string}
-   * @memberof LiftApiV1ProjectsProjectIdLiftUploadPost
+   * @memberof LiftApiUploadLiftFile
    */
   readonly filePath: string;
 }
@@ -658,84 +619,81 @@ export interface LiftApiV1ProjectsProjectIdLiftUploadPostRequest {
 export class LiftApi extends BaseAPI {
   /**
    *
-   * @param {LiftApiV1ProjectsProjectIdLiftCheckGetRequest} requestParameters Request parameters.
+   * @param {LiftApiCanUploadLiftRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LiftApi
    */
-  public v1ProjectsProjectIdLiftCheckGet(
-    requestParameters: LiftApiV1ProjectsProjectIdLiftCheckGetRequest,
+  public canUploadLift(
+    requestParameters: LiftApiCanUploadLiftRequest,
     options?: any
   ) {
     return LiftApiFp(this.configuration)
-      .v1ProjectsProjectIdLiftCheckGet(requestParameters.projectId, options)
+      .canUploadLift(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {LiftApiV1ProjectsProjectIdLiftDeleteexportGetRequest} requestParameters Request parameters.
+   * @param {LiftApiDeleteLiftFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LiftApi
    */
-  public v1ProjectsProjectIdLiftDeleteexportGet(
-    requestParameters: LiftApiV1ProjectsProjectIdLiftDeleteexportGetRequest,
+  public deleteLiftFile(
+    requestParameters: LiftApiDeleteLiftFileRequest,
     options?: any
   ) {
     return LiftApiFp(this.configuration)
-      .v1ProjectsProjectIdLiftDeleteexportGet(
-        requestParameters.projectId,
-        options
-      )
+      .deleteLiftFile(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {LiftApiV1ProjectsProjectIdLiftDownloadGetRequest} requestParameters Request parameters.
+   * @param {LiftApiDownloadLiftFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LiftApi
    */
-  public v1ProjectsProjectIdLiftDownloadGet(
-    requestParameters: LiftApiV1ProjectsProjectIdLiftDownloadGetRequest,
+  public downloadLiftFile(
+    requestParameters: LiftApiDownloadLiftFileRequest,
     options?: any
   ) {
     return LiftApiFp(this.configuration)
-      .v1ProjectsProjectIdLiftDownloadGet(requestParameters.projectId, options)
+      .downloadLiftFile(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {LiftApiV1ProjectsProjectIdLiftExportGetRequest} requestParameters Request parameters.
+   * @param {LiftApiExportLiftFilesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LiftApi
    */
-  public v1ProjectsProjectIdLiftExportGet(
-    requestParameters: LiftApiV1ProjectsProjectIdLiftExportGetRequest,
+  public exportLiftFiles(
+    requestParameters: LiftApiExportLiftFilesRequest,
     options?: any
   ) {
     return LiftApiFp(this.configuration)
-      .v1ProjectsProjectIdLiftExportGet(requestParameters.projectId, options)
+      .exportLiftFiles(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {LiftApiV1ProjectsProjectIdLiftUploadPostRequest} requestParameters Request parameters.
+   * @param {LiftApiUploadLiftFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LiftApi
    */
-  public v1ProjectsProjectIdLiftUploadPost(
-    requestParameters: LiftApiV1ProjectsProjectIdLiftUploadPostRequest,
+  public uploadLiftFile(
+    requestParameters: LiftApiUploadLiftFileRequest,
     options?: any
   ) {
     return LiftApiFp(this.configuration)
-      .v1ProjectsProjectIdLiftUploadPost(
+      .uploadLiftFile(
         requestParameters.projectId,
         requestParameters.file,
         requestParameters.name,

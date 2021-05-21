@@ -32,12 +32,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
-        /// <remarks> GET: v1/projects/{projectId}/userroles </remarks>
-        [HttpGet]
+        [HttpGet(Name = "GetProjectUserRoles")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserRole>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Get(string projectId)
+        public async Task<IActionResult> GetProjectUserRoles(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -55,13 +54,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/userroles </remarks>
         /// <returns> true: if success, false: if there were no UserRoles </returns>
-        [HttpDelete]
+        [HttpDelete(Name = "DeleteProjectUserRoles")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Delete(string projectId)
+        public async Task<IActionResult> DeleteProjectUserRoles(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
@@ -79,12 +77,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
-        /// <remarks> GET: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
-        [HttpGet("{userRoleId}")]
+        [HttpGet("{userRoleId}", Name = "GetUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserRole))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Get(string projectId, string userRoleId)
+        public async Task<IActionResult> GetUserRole(string projectId, string userRoleId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -108,13 +105,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Creates a <see cref="UserRole"/> </summary>
-        /// <remarks> POST: v1/projects/{projectId}/userroles </remarks>
         /// <returns> Id of updated UserRole </returns>
-        [HttpPost]
+        [HttpPost(Name = "CreateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Post(string projectId, [FromBody, BindRequired] UserRole userRole)
+        public async Task<IActionResult> CreateUserRole(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -135,12 +131,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes <see cref="UserRole"/> with specified id </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
-        [HttpDelete("{userRoleId}")]
+        [HttpDelete("{userRoleId}", Name = "DeleteUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> Delete(string projectId, string userRoleId)
+        public async Task<IActionResult> DeleteUserRole(string projectId, string userRoleId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
@@ -165,14 +160,13 @@ namespace BackendFramework.Controllers
         /// Updates permissions of <see cref="UserRole"/> for <see cref="Project"/> with specified projectId
         /// and <see cref="User"/> with specified userId.
         /// </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userId} </remarks>
         /// <returns> Id of updated UserRole </returns>
-        [HttpPut("{userId}")]
+        [HttpPut("{userId}", Name = "UpdateUserRolePermissions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> UpdateUserRole(
+        public async Task<IActionResult> UpdateUserRolePermissions(
             string projectId, string userId, [FromBody, BindRequired] int[] permissions)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))

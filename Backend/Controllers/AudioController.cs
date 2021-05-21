@@ -30,10 +30,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/audio/download/{fileName} </remarks>
         /// <returns> Audio file stream. </returns>
         [AllowAnonymous]
-        [HttpGet("download/{fileName}")]
+        [HttpGet("download/{fileName}", Name = "DownloadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -69,9 +68,8 @@ namespace BackendFramework.Controllers
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
         /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/audio/upload </remarks>
         /// <returns> Path to local audio file </returns>
-        [HttpPost("upload")]
+        [HttpPost("upload", Name = "UploadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -128,13 +126,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName} </remarks>
-        [HttpDelete("delete/{fileName}")]
+        [HttpDelete("delete/{fileName}", Name = "DeleteAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
-        public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
+        public async Task<IActionResult> DeleteAudioFile(string projectId, string wordId, string fileName)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {

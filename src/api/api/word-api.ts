@@ -49,218 +49,19 @@ export const WordApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsDelete: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsDelete",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/words`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsFrontierGet: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsFrontierGet",
-        "projectId",
-        projectId
-      );
-      const localVarPath = `/v1/projects/{projectId}/words/frontier`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} wordId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsFrontierWordIdDelete: async (
-      projectId: string,
-      wordId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsFrontierWordIdDelete",
-        "projectId",
-        projectId
-      );
-      // verify required parameter 'wordId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsFrontierWordIdDelete",
-        "wordId",
-        wordId
-      );
-      const localVarPath = `/v1/projects/{projectId}/words/frontier/{wordId}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsGet: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdWordsGet", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/words`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
      * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsPost: async (
+    createWord: async (
       projectId: string,
       word: Word,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdWordsPost", "projectId", projectId);
+      assertParamExists("createWord", "projectId", projectId);
       // verify required parameter 'word' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdWordsPost", "word", word);
+      assertParamExists("createWord", "word", word);
       const localVarPath = `/v1/projects/{projectId}/words`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -308,19 +109,198 @@ export const WordApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdGet: async (
+    deleteFrontierWord: async (
       projectId: string,
       wordId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("deleteFrontierWord", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdWordsWordIdGet", "wordId", wordId);
+      assertParamExists("deleteFrontierWord", "wordId", wordId);
+      const localVarPath = `/v1/projects/{projectId}/words/frontier/{wordId}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteProjectWords: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("deleteProjectWords", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/words`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectFrontierWords: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getProjectFrontierWords", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/words/frontier`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectWords: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getProjectWords", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/words`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWord: async (
+      projectId: string,
+      wordId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getWord", "projectId", projectId);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("getWord", "wordId", wordId);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
@@ -361,22 +341,18 @@ export const WordApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdPut: async (
+    updateWord: async (
       projectId: string,
       wordId: string,
       word: Word,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdPut",
-        "projectId",
-        projectId
-      );
+      assertParamExists("updateWord", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdWordsWordIdPut", "wordId", wordId);
+      assertParamExists("updateWord", "wordId", wordId);
       // verify required parameter 'word' is not null or undefined
-      assertParamExists("v1ProjectsProjectIdWordsWordIdPut", "word", word);
+      assertParamExists("updateWord", "word", word);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
@@ -429,113 +405,18 @@ export const WordApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdWordsDelete(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsDelete(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdWordsFrontierGet(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsFrontierGet(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} wordId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdWordsFrontierWordIdDelete(
-      projectId: string,
-      wordId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsFrontierWordIdDelete(
-        projectId,
-        wordId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ProjectsProjectIdWordsGet(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsGet(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
      * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdWordsPost(
+    async createWord(
       projectId: string,
       word: Word,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createWord(
         projectId,
         word,
         options
@@ -554,14 +435,109 @@ export const WordApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdWordsWordIdGet(
+    async deleteFrontierWord(
+      projectId: string,
+      wordId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFrontierWord(
+        projectId,
+        wordId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteProjectWords(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProjectWords(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProjectFrontierWords(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectFrontierWords(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProjectWords(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectWords(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getWord(
       projectId: string,
       wordId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Word>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getWord(
         projectId,
         wordId,
         options
@@ -581,7 +557,7 @@ export const WordApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdWordsWordIdPut(
+    async updateWord(
       projectId: string,
       wordId: string,
       word: Word,
@@ -589,7 +565,7 @@ export const WordApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdPut(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateWord(
         projectId,
         wordId,
         word,
@@ -619,79 +595,17 @@ export const WordApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsDelete(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<boolean> {
-      return localVarFp
-        .v1ProjectsProjectIdWordsDelete(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsFrontierGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<Word>> {
-      return localVarFp
-        .v1ProjectsProjectIdWordsFrontierGet(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} wordId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsFrontierWordIdDelete(
-      projectId: string,
-      wordId: string,
-      options?: any
-    ): AxiosPromise<string> {
-      return localVarFp
-        .v1ProjectsProjectIdWordsFrontierWordIdDelete(
-          projectId,
-          wordId,
-          options
-        )
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ProjectsProjectIdWordsGet(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<Word>> {
-      return localVarFp
-        .v1ProjectsProjectIdWordsGet(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
      * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsPost(
+    createWord(
       projectId: string,
       word: Word,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdWordsPost(projectId, word, options)
+        .createWord(projectId, word, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -701,13 +615,71 @@ export const WordApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdGet(
+    deleteFrontierWord(
+      projectId: string,
+      wordId: string,
+      options?: any
+    ): AxiosPromise<string> {
+      return localVarFp
+        .deleteFrontierWord(projectId, wordId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteProjectWords(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<boolean> {
+      return localVarFp
+        .deleteProjectWords(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectFrontierWords(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<Word>> {
+      return localVarFp
+        .getProjectFrontierWords(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectWords(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<Word>> {
+      return localVarFp
+        .getProjectWords(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWord(
       projectId: string,
       wordId: string,
       options?: any
     ): AxiosPromise<Word> {
       return localVarFp
-        .v1ProjectsProjectIdWordsWordIdGet(projectId, wordId, options)
+        .getWord(projectId, wordId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -718,148 +690,148 @@ export const WordApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdPut(
+    updateWord(
       projectId: string,
       wordId: string,
       word: Word,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdWordsWordIdPut(projectId, wordId, word, options)
+        .updateWord(projectId, wordId, word, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsProjectIdWordsDelete operation in WordApi.
+ * Request parameters for createWord operation in WordApi.
  * @export
- * @interface WordApiV1ProjectsProjectIdWordsDeleteRequest
+ * @interface WordApiCreateWordRequest
  */
-export interface WordApiV1ProjectsProjectIdWordsDeleteRequest {
+export interface WordApiCreateWordRequest {
   /**
    *
    * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsDelete
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdWordsFrontierGet operation in WordApi.
- * @export
- * @interface WordApiV1ProjectsProjectIdWordsFrontierGetRequest
- */
-export interface WordApiV1ProjectsProjectIdWordsFrontierGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsFrontierGet
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdWordsFrontierWordIdDelete operation in WordApi.
- * @export
- * @interface WordApiV1ProjectsProjectIdWordsFrontierWordIdDeleteRequest
- */
-export interface WordApiV1ProjectsProjectIdWordsFrontierWordIdDeleteRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsFrontierWordIdDelete
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsFrontierWordIdDelete
-   */
-  readonly wordId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdWordsGet operation in WordApi.
- * @export
- * @interface WordApiV1ProjectsProjectIdWordsGetRequest
- */
-export interface WordApiV1ProjectsProjectIdWordsGetRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsGet
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for v1ProjectsProjectIdWordsPost operation in WordApi.
- * @export
- * @interface WordApiV1ProjectsProjectIdWordsPostRequest
- */
-export interface WordApiV1ProjectsProjectIdWordsPostRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsPost
+   * @memberof WordApiCreateWord
    */
   readonly projectId: string;
 
   /**
    *
    * @type {Word}
-   * @memberof WordApiV1ProjectsProjectIdWordsPost
+   * @memberof WordApiCreateWord
    */
   readonly word: Word;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdWordsWordIdGet operation in WordApi.
+ * Request parameters for deleteFrontierWord operation in WordApi.
  * @export
- * @interface WordApiV1ProjectsProjectIdWordsWordIdGetRequest
+ * @interface WordApiDeleteFrontierWordRequest
  */
-export interface WordApiV1ProjectsProjectIdWordsWordIdGetRequest {
+export interface WordApiDeleteFrontierWordRequest {
   /**
    *
    * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsWordIdGet
+   * @memberof WordApiDeleteFrontierWord
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsWordIdGet
+   * @memberof WordApiDeleteFrontierWord
    */
   readonly wordId: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdWordsWordIdPut operation in WordApi.
+ * Request parameters for deleteProjectWords operation in WordApi.
  * @export
- * @interface WordApiV1ProjectsProjectIdWordsWordIdPutRequest
+ * @interface WordApiDeleteProjectWordsRequest
  */
-export interface WordApiV1ProjectsProjectIdWordsWordIdPutRequest {
+export interface WordApiDeleteProjectWordsRequest {
   /**
    *
    * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsWordIdPut
+   * @memberof WordApiDeleteProjectWords
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getProjectFrontierWords operation in WordApi.
+ * @export
+ * @interface WordApiGetProjectFrontierWordsRequest
+ */
+export interface WordApiGetProjectFrontierWordsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetProjectFrontierWords
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getProjectWords operation in WordApi.
+ * @export
+ * @interface WordApiGetProjectWordsRequest
+ */
+export interface WordApiGetProjectWordsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetProjectWords
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getWord operation in WordApi.
+ * @export
+ * @interface WordApiGetWordRequest
+ */
+export interface WordApiGetWordRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetWord
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof WordApiV1ProjectsProjectIdWordsWordIdPut
+   * @memberof WordApiGetWord
+   */
+  readonly wordId: string;
+}
+
+/**
+ * Request parameters for updateWord operation in WordApi.
+ * @export
+ * @interface WordApiUpdateWordRequest
+ */
+export interface WordApiUpdateWordRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateWord
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateWord
    */
   readonly wordId: string;
 
   /**
    *
    * @type {Word}
-   * @memberof WordApiV1ProjectsProjectIdWordsWordIdPut
+   * @memberof WordApiUpdateWord
    */
   readonly word: Word;
 }
@@ -873,49 +845,33 @@ export interface WordApiV1ProjectsProjectIdWordsWordIdPutRequest {
 export class WordApi extends BaseAPI {
   /**
    *
-   * @param {WordApiV1ProjectsProjectIdWordsDeleteRequest} requestParameters Request parameters.
+   * @param {WordApiCreateWordRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public v1ProjectsProjectIdWordsDelete(
-    requestParameters: WordApiV1ProjectsProjectIdWordsDeleteRequest,
+  public createWord(
+    requestParameters: WordApiCreateWordRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsDelete(requestParameters.projectId, options)
+      .createWord(requestParameters.projectId, requestParameters.word, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {WordApiV1ProjectsProjectIdWordsFrontierGetRequest} requestParameters Request parameters.
+   * @param {WordApiDeleteFrontierWordRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public v1ProjectsProjectIdWordsFrontierGet(
-    requestParameters: WordApiV1ProjectsProjectIdWordsFrontierGetRequest,
+  public deleteFrontierWord(
+    requestParameters: WordApiDeleteFrontierWordRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsFrontierGet(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {WordApiV1ProjectsProjectIdWordsFrontierWordIdDeleteRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof WordApi
-   */
-  public v1ProjectsProjectIdWordsFrontierWordIdDelete(
-    requestParameters: WordApiV1ProjectsProjectIdWordsFrontierWordIdDeleteRequest,
-    options?: any
-  ) {
-    return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsFrontierWordIdDelete(
+      .deleteFrontierWord(
         requestParameters.projectId,
         requestParameters.wordId,
         options
@@ -925,73 +881,78 @@ export class WordApi extends BaseAPI {
 
   /**
    *
-   * @param {WordApiV1ProjectsProjectIdWordsGetRequest} requestParameters Request parameters.
+   * @param {WordApiDeleteProjectWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public v1ProjectsProjectIdWordsGet(
-    requestParameters: WordApiV1ProjectsProjectIdWordsGetRequest,
+  public deleteProjectWords(
+    requestParameters: WordApiDeleteProjectWordsRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsGet(requestParameters.projectId, options)
+      .deleteProjectWords(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {WordApiV1ProjectsProjectIdWordsPostRequest} requestParameters Request parameters.
+   * @param {WordApiGetProjectFrontierWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public v1ProjectsProjectIdWordsPost(
-    requestParameters: WordApiV1ProjectsProjectIdWordsPostRequest,
+  public getProjectFrontierWords(
+    requestParameters: WordApiGetProjectFrontierWordsRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsPost(
-        requestParameters.projectId,
-        requestParameters.word,
-        options
-      )
+      .getProjectFrontierWords(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {WordApiV1ProjectsProjectIdWordsWordIdGetRequest} requestParameters Request parameters.
+   * @param {WordApiGetProjectWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public v1ProjectsProjectIdWordsWordIdGet(
-    requestParameters: WordApiV1ProjectsProjectIdWordsWordIdGetRequest,
+  public getProjectWords(
+    requestParameters: WordApiGetProjectWordsRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsWordIdGet(
-        requestParameters.projectId,
-        requestParameters.wordId,
-        options
-      )
+      .getProjectWords(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {WordApiV1ProjectsProjectIdWordsWordIdPutRequest} requestParameters Request parameters.
+   * @param {WordApiGetWordRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public v1ProjectsProjectIdWordsWordIdPut(
-    requestParameters: WordApiV1ProjectsProjectIdWordsWordIdPutRequest,
+  public getWord(requestParameters: WordApiGetWordRequest, options?: any) {
+    return WordApiFp(this.configuration)
+      .getWord(requestParameters.projectId, requestParameters.wordId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {WordApiUpdateWordRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public updateWord(
+    requestParameters: WordApiUpdateWordRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsWordIdPut(
+      .updateWord(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.word,

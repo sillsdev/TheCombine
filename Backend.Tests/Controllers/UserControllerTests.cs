@@ -50,7 +50,7 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(RandomUser());
             _userRepo.Create(RandomUser());
 
-            var action = _userController.Get(user.Id).Result;
+            var action = _userController.GetUser(user.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUser = (User)((ObjectResult)action).Value;
@@ -60,7 +60,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetMissingUser()
         {
-            var action = _userController.Get("INVALID_USER_ID").Result;
+            var action = _userController.GetUser("INVALID_USER_ID").Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
 
@@ -68,7 +68,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateUser()
         {
             var user = RandomUser();
-            var id = (string)((ObjectResult)_userController.Post(user).Result).Value;
+            var id = (string)((ObjectResult)_userController.CreateUser(user).Result).Value;
             user.Id = id;
             Assert.Contains(user, _userRepo.GetAllUsers().Result);
         }
@@ -80,7 +80,7 @@ namespace Backend.Tests.Controllers
             var modUser = origUser.Clone();
             modUser.Username = "Mark";
 
-            _ = _userController.Put(modUser.Id, modUser);
+            _ = _userController.UpdateUser(modUser.Id, modUser);
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
@@ -94,7 +94,7 @@ namespace Backend.Tests.Controllers
             var modUser = origUser.Clone() ?? throw new Exception();
             modUser.IsAdmin = true;
 
-            _ = _userController.Put(modUser.Id, modUser);
+            _ = _userController.UpdateUser(modUser.Id, modUser);
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
@@ -107,7 +107,7 @@ namespace Backend.Tests.Controllers
             var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
             Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(1));
 
-            _ = _userController.Delete(origUser.Id).Result;
+            _ = _userController.DeleteUser(origUser.Id).Result;
             Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
 

@@ -27,9 +27,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns the url of the users avatar on disk </summary>
-        /// <remarks> GET: v1/users/{userId}/avatar/download </remarks>
         /// <returns> Path to local avatar file </returns>
-        [HttpGet("download")]
+        [HttpGet("download", Name = "DownloadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadAvatar(string userId)
@@ -49,9 +48,8 @@ namespace BackendFramework.Controllers
         /// <summary>
         /// Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars
         /// </summary>
-        /// <remarks> POST: v1/users/{userId}/avatar/upload </remarks>
         /// <returns> Path to local avatar file </returns>
-        [HttpPost("upload")]
+        [HttpPost("upload", Name = "UploadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

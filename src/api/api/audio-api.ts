@@ -54,30 +54,18 @@ export const AudioApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete: async (
+    deleteAudioFile: async (
       projectId: string,
       wordId: string,
       fileName: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete",
-        "projectId",
-        projectId
-      );
+      assertParamExists("deleteAudioFile", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete",
-        "wordId",
-        wordId
-      );
+      assertParamExists("deleteAudioFile", "wordId", wordId);
       // verify required parameter 'fileName' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete",
-        "fileName",
-        fileName
-      );
+      assertParamExists("deleteAudioFile", "fileName", fileName);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
@@ -119,30 +107,18 @@ export const AudioApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet: async (
+    downloadAudioFile: async (
       projectId: string,
       wordId: string,
       fileName: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet",
-        "projectId",
-        projectId
-      );
+      assertParamExists("downloadAudioFile", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet",
-        "wordId",
-        wordId
-      );
+      assertParamExists("downloadAudioFile", "wordId", wordId);
       // verify required parameter 'fileName' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet",
-        "fileName",
-        fileName
-      );
+      assertParamExists("downloadAudioFile", "fileName", fileName);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/download/{fileName}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
@@ -186,7 +162,7 @@ export const AudioApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdAudioUploadPost: async (
+    uploadAudioFile: async (
       projectId: string,
       wordId: string,
       file: any,
@@ -195,35 +171,15 @@ export const AudioApiAxiosParamCreator = function (
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
-        "projectId",
-        projectId
-      );
+      assertParamExists("uploadAudioFile", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
-        "wordId",
-        wordId
-      );
+      assertParamExists("uploadAudioFile", "wordId", wordId);
       // verify required parameter 'file' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
-        "file",
-        file
-      );
+      assertParamExists("uploadAudioFile", "file", file);
       // verify required parameter 'name' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
-        "name",
-        name
-      );
+      assertParamExists("uploadAudioFile", "name", name);
       // verify required parameter 'filePath' is not null or undefined
-      assertParamExists(
-        "v1ProjectsProjectIdWordsWordIdAudioUploadPost",
-        "filePath",
-        filePath
-      );
+      assertParamExists("uploadAudioFile", "filePath", filePath);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/upload`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
@@ -292,7 +248,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
+    async deleteAudioFile(
       projectId: string,
       wordId: string,
       fileName: string,
@@ -300,7 +256,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAudioFile(
         projectId,
         wordId,
         fileName,
@@ -321,7 +277,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
+    async downloadAudioFile(
       projectId: string,
       wordId: string,
       fileName: string,
@@ -329,7 +285,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAudioFile(
         projectId,
         wordId,
         fileName,
@@ -352,7 +308,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ProjectsProjectIdWordsWordIdAudioUploadPost(
+    async uploadAudioFile(
       projectId: string,
       wordId: string,
       file: any,
@@ -362,7 +318,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ProjectsProjectIdWordsWordIdAudioUploadPost(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.uploadAudioFile(
         projectId,
         wordId,
         file,
@@ -399,19 +355,14 @@ export const AudioApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
+    deleteAudioFile(
       projectId: string,
       wordId: string,
       fileName: string,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
-          projectId,
-          wordId,
-          fileName,
-          options
-        )
+        .deleteAudioFile(projectId, wordId, fileName, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -422,19 +373,14 @@ export const AudioApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
+    downloadAudioFile(
       projectId: string,
       wordId: string,
       fileName: string,
       options?: any
     ): AxiosPromise<FileStream> {
       return localVarFp
-        .v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
-          projectId,
-          wordId,
-          fileName,
-          options
-        )
+        .downloadAudioFile(projectId, wordId, fileName, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -447,7 +393,7 @@ export const AudioApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1ProjectsProjectIdWordsWordIdAudioUploadPost(
+    uploadAudioFile(
       projectId: string,
       wordId: string,
       file: any,
@@ -456,113 +402,106 @@ export const AudioApiFactory = function (
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .v1ProjectsProjectIdWordsWordIdAudioUploadPost(
-          projectId,
-          wordId,
-          file,
-          name,
-          filePath,
-          options
-        )
+        .uploadAudioFile(projectId, wordId, file, name, filePath, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete operation in AudioApi.
+ * Request parameters for deleteAudioFile operation in AudioApi.
  * @export
- * @interface AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDeleteRequest
+ * @interface AudioApiDeleteAudioFileRequest
  */
-export interface AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDeleteRequest {
+export interface AudioApiDeleteAudioFileRequest {
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete
+   * @memberof AudioApiDeleteAudioFile
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete
+   * @memberof AudioApiDeleteAudioFile
    */
   readonly wordId: string;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete
+   * @memberof AudioApiDeleteAudioFile
    */
   readonly fileName: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet operation in AudioApi.
+ * Request parameters for downloadAudioFile operation in AudioApi.
  * @export
- * @interface AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGetRequest
+ * @interface AudioApiDownloadAudioFileRequest
  */
-export interface AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGetRequest {
+export interface AudioApiDownloadAudioFileRequest {
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet
+   * @memberof AudioApiDownloadAudioFile
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet
+   * @memberof AudioApiDownloadAudioFile
    */
   readonly wordId: string;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet
+   * @memberof AudioApiDownloadAudioFile
    */
   readonly fileName: string;
 }
 
 /**
- * Request parameters for v1ProjectsProjectIdWordsWordIdAudioUploadPost operation in AudioApi.
+ * Request parameters for uploadAudioFile operation in AudioApi.
  * @export
- * @interface AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPostRequest
+ * @interface AudioApiUploadAudioFileRequest
  */
-export interface AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPostRequest {
+export interface AudioApiUploadAudioFileRequest {
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
+   * @memberof AudioApiUploadAudioFile
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
+   * @memberof AudioApiUploadAudioFile
    */
   readonly wordId: string;
 
   /**
    *
    * @type {any}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
+   * @memberof AudioApiUploadAudioFile
    */
   readonly file: any;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
+   * @memberof AudioApiUploadAudioFile
    */
   readonly name: string;
 
   /**
    *
    * @type {string}
-   * @memberof AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPost
+   * @memberof AudioApiUploadAudioFile
    */
   readonly filePath: string;
 }
@@ -576,17 +515,17 @@ export interface AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPostRequest {
 export class AudioApi extends BaseAPI {
   /**
    *
-   * @param {AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDeleteRequest} requestParameters Request parameters.
+   * @param {AudioApiDeleteAudioFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AudioApi
    */
-  public v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
-    requestParameters: AudioApiV1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDeleteRequest,
+  public deleteAudioFile(
+    requestParameters: AudioApiDeleteAudioFileRequest,
     options?: any
   ) {
     return AudioApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsWordIdAudioDeleteFileNameDelete(
+      .deleteAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.fileName,
@@ -597,17 +536,17 @@ export class AudioApi extends BaseAPI {
 
   /**
    *
-   * @param {AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGetRequest} requestParameters Request parameters.
+   * @param {AudioApiDownloadAudioFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AudioApi
    */
-  public v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
-    requestParameters: AudioApiV1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGetRequest,
+  public downloadAudioFile(
+    requestParameters: AudioApiDownloadAudioFileRequest,
     options?: any
   ) {
     return AudioApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsWordIdAudioDownloadFileNameGet(
+      .downloadAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.fileName,
@@ -618,17 +557,17 @@ export class AudioApi extends BaseAPI {
 
   /**
    *
-   * @param {AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPostRequest} requestParameters Request parameters.
+   * @param {AudioApiUploadAudioFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AudioApi
    */
-  public v1ProjectsProjectIdWordsWordIdAudioUploadPost(
-    requestParameters: AudioApiV1ProjectsProjectIdWordsWordIdAudioUploadPostRequest,
+  public uploadAudioFile(
+    requestParameters: AudioApiUploadAudioFileRequest,
     options?: any
   ) {
     return AudioApiFp(this.configuration)
-      .v1ProjectsProjectIdWordsWordIdAudioUploadPost(
+      .uploadAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.file,
