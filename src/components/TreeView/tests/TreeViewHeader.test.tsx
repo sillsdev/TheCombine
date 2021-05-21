@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 
 import MockDomain from "components/TreeView/tests/MockSemanticDomain";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import {
   TreeViewHeader,
   TreeHeaderProps,
