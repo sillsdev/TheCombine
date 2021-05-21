@@ -51,7 +51,7 @@ A rapid word collection tool.
    1. [Running in Development](#running-in-development)
    2. [Running the Automated Tests](#running-the-automated-tests)
    3. [Import Semantic Domains](#import-semantic-domains)
-   4. [Generate License Report](#generate-license-report)
+   4. [Generate License Reports](#generate-license-reports)
    5. [Set Project Version](#set-project-version)
    6. [Inspect Database](#inspect-database)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
