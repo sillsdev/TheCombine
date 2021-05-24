@@ -116,13 +116,13 @@ namespace BackendFramework.Controllers
             // Give Project admin privileges to user who creates a Project.
             var userRole = new UserRole
             {
-                Permissions = new List<int>
+                Permissions = new List<Permission>
                 {
-                    (int) Permission.DeleteEditSettingsAndUsers,
-                    (int) Permission.ImportExport,
-                    (int) Permission.MergeAndCharSet,
-                    (int) Permission.Unused,
-                    (int) Permission.WordEntry
+                    Permission.DeleteEditSettingsAndUsers,
+                    Permission.ImportExport,
+                    Permission.MergeAndCharSet,
+                    Permission.Unused,
+                    Permission.WordEntry
                 },
                 ProjectId = project.Id
             };

@@ -154,7 +154,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}", Name = "UpdateUserRolePermissions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserRolePermissions(
-            string projectId, string userId, [FromBody, BindRequired] int[] permissions)
+            string projectId, string userId, [FromBody, BindRequired] Permission[] permissions)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -196,7 +196,7 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
-            userRole.Permissions = new List<int>(permissions);
+            userRole.Permissions = new List<Permission>(permissions);
 
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch

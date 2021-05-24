@@ -57,11 +57,11 @@ namespace BackendFramework.Services
             {
                 var userRole = new UserRole
                 {
-                    Permissions = new List<int>
+                    Permissions = new List<Permission>
                 {
-                    (int) Permission.MergeAndCharSet,
-                    (int) Permission.Unused,
-                    (int) Permission.WordEntry
+                    Permission.MergeAndCharSet,
+                    Permission.Unused,
+                    Permission.WordEntry
                 },
                     ProjectId = project.Id
                 };

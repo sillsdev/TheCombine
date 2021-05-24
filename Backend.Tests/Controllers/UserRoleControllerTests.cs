@@ -36,11 +36,11 @@ namespace Backend.Tests.Controllers
             var userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<int>
+                Permissions = new List<Permission>
                 {
-                    (int)Permission.DeleteEditSettingsAndUsers,
-                    (int)Permission.ImportExport,
-                    (int)Permission.MergeAndCharSet
+                    Permission.DeleteEditSettingsAndUsers,
+                    Permission.ImportExport,
+                    Permission.MergeAndCharSet
                 }
             };
             return userRole;
@@ -151,7 +151,7 @@ namespace Backend.Tests.Controllers
             var userId = _userRepo.Create(user).Result!.Id;
 
             var updatePermissions = userRole.Clone().Permissions;
-            updatePermissions.Add((int)Permission.WordEntry);
+            updatePermissions.Add(Permission.WordEntry);
 
             _ = _userRoleController.UpdateUserRolePermissions(_projId, userId, updatePermissions.ToArray()).Result;
             var action = _userRoleController.GetUserRole(_projId, userRole.Id).Result;

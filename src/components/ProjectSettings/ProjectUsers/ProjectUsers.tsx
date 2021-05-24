@@ -10,7 +10,7 @@ import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
-import { Project } from "types/project";
+import { Permission, Project } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { User } from "types/user";
 
@@ -99,7 +99,10 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     const currentUserId: string = getUserId();
     if (user.id !== currentUserId) {
       backend
-        .addUserRole([3, 2, 1], user.id)
+        .addUserRole(
+          [Permission.NUMBER_3, Permission.NUMBER_2, Permission.NUMBER_1],
+          user.id
+        )
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);
           this.populateUsers();

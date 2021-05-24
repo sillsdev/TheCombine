@@ -1,5 +1,6 @@
 import {
   AutocompleteSetting,
+  Permission,
   Project,
   UserRole,
   WritingSystem,
@@ -10,7 +11,7 @@ import { randomIntString } from "utilities";
 export type { Project, UserRole, WritingSystem };
 
 // Re-export enums from backend models.
-export { AutocompleteSetting };
+export { AutocompleteSetting, Permission };
 
 export const defaultProject: Project = {
   id: "",
@@ -36,18 +37,4 @@ export function randomProject(): Project {
   project.name = randomIntString();
   project.isActive = Math.random() < 0.5;
   return project;
-}
-
-/**The definition of a particular permission `number`.
- *
- * @remarks
- * This must be kept in sync with the Backend `enum` definition.
- * */
-export enum Permission {
-  DatabaseAdmin = 6,
-  DeleteEditSettingsAndUsers = 5,
-  ImportExport = 4,
-  MergeAndCharSet = 3,
-  Unused = 2,
-  WordEntry = 1,
 }

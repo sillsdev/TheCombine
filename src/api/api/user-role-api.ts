@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { Permission } from "../models";
+// @ts-ignore
 import { UserRole } from "../models";
 /**
  * UserRoleApi - axios parameter creator
@@ -292,26 +294,22 @@ export const UserRoleApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} userId
-     * @param {Array<number>} requestBody
+     * @param {Array<Permission>} permission
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateUserRolePermissions: async (
       projectId: string,
       userId: string,
-      requestBody: Array<number>,
+      permission: Array<Permission>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateUserRolePermissions", "projectId", projectId);
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("updateUserRolePermissions", "userId", userId);
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists(
-        "updateUserRolePermissions",
-        "requestBody",
-        requestBody
-      );
+      // verify required parameter 'permission' is not null or undefined
+      assertParamExists("updateUserRolePermissions", "permission", permission);
       const localVarPath = `/v1/projects/{projectId}/userroles/{userId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
@@ -341,7 +339,7 @@ export const UserRoleApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
+        permission,
         localVarRequestOptions,
         configuration
       );
@@ -492,14 +490,14 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} userId
-     * @param {Array<number>} requestBody
+     * @param {Array<Permission>} permission
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async updateUserRolePermissions(
       projectId: string,
       userId: string,
-      requestBody: Array<number>,
+      permission: Array<Permission>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
@@ -507,7 +505,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserRolePermissions(
         projectId,
         userId,
-        requestBody,
+        permission,
         options
       );
       return createRequestFunction(
@@ -611,18 +609,18 @@ export const UserRoleApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} userId
-     * @param {Array<number>} requestBody
+     * @param {Array<Permission>} permission
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateUserRolePermissions(
       projectId: string,
       userId: string,
-      requestBody: Array<number>,
+      permission: Array<Permission>,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .updateUserRolePermissions(projectId, userId, requestBody, options)
+        .updateUserRolePermissions(projectId, userId, permission, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -741,10 +739,10 @@ export interface UserRoleApiUpdateUserRolePermissionsRequest {
 
   /**
    *
-   * @type {Array<number>}
+   * @type {Array<Permission>}
    * @memberof UserRoleApiUpdateUserRolePermissions
    */
-  readonly requestBody: Array<number>;
+  readonly permission: Array<Permission>;
 }
 
 /**
@@ -861,7 +859,7 @@ export class UserRoleApi extends BaseAPI {
       .updateUserRolePermissions(
         requestParameters.projectId,
         requestParameters.userId,
-        requestParameters.requestBody,
+        requestParameters.permission,
         options
       )
       .then((request) => request(this.axios, this.basePath));

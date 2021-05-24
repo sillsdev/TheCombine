@@ -11,6 +11,7 @@ export * from "./merge-words";
 export * from "./note";
 export * from "./password-reset-data";
 export * from "./password-reset-request-data";
+export * from "./permission";
 export * from "./project";
 export * from "./project-user-value-tuple";
 export * from "./safe-file-handle";

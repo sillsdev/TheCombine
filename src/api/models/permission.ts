@@ -12,30 +12,16 @@
  * Do not edit the class manually.
  */
 
-import { Permission } from "./permission";
-
 /**
  *
  * @export
- * @interface UserRole
+ * @enum {string}
  */
-export interface UserRole {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRole
-   */
-  id: string;
-  /**
-   *
-   * @type {Array<Permission>}
-   * @memberof UserRole
-   */
-  permissions: Array<Permission>;
-  /**
-   *
-   * @type {string}
-   * @memberof UserRole
-   */
-  projectId: string;
+export enum Permission {
+  NUMBER_1 = 1,
+  NUMBER_2 = 2,
+  NUMBER_3 = 3,
+  NUMBER_4 = 4,
+  NUMBER_5 = 5,
+  NUMBER_6 = 6,
 }

@@ -18,7 +18,7 @@ namespace BackendFramework.Models
         /// <summary> Integer representation of <see cref="Permission"/> </summary>
         [Required]
         [BsonElement("permissions")]
-        public List<int> Permissions { get; set; }
+        public List<Permission> Permissions { get; set; }
 
         [Required]
         [BsonElement("projectId")]
@@ -28,7 +28,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             ProjectId = "";
-            Permissions = new List<int>();
+            Permissions = new List<Permission>();
         }
 
         public UserRole Clone()
@@ -37,7 +37,7 @@ namespace BackendFramework.Models
             {
                 Id = (string)Id.Clone(),
                 ProjectId = (string)ProjectId.Clone(),
-                Permissions = new List<int>()
+                Permissions = new List<Permission>()
             };
 
             foreach (var permission in Permissions)

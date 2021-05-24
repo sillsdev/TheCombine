@@ -9,7 +9,7 @@ import authHeader from "components/Login/AuthHeaders";
 import { EmailInviteStatus } from "types/invite";
 import { Goal, GoalStep, UserEdit } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
-import { Project, UserRole } from "types/project";
+import { Permission, Project, UserRole } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { User } from "types/user";
 import { MergeWords, Word } from "types/word";
@@ -493,12 +493,12 @@ export async function getUserRoles(): Promise<UserRole[]> {
 }
 
 export async function addUserRole(
-  permissions: number[],
+  permission: Permission[],
   userId: string
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
   const resp = await userRoleApi.updateUserRolePermissions(
-    { projectId, userId, requestBody: permissions },
+    { projectId, userId, permission },
     { headers: authHeader() }
   );
   return resp.data;

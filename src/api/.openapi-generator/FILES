@@ -30,6 +30,7 @@ models/merge-words.ts
 models/note.ts
 models/password-reset-data.ts
 models/password-reset-request-data.ts
+models/permission.ts
 models/project-user-value-tuple.ts
 models/project.ts
 models/safe-file-handle.ts
