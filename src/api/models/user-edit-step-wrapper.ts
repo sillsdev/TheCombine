@@ -35,5 +35,5 @@ export interface UserEditStepWrapper {
    * @type {number}
    * @memberof UserEditStepWrapper
    */
-  stepIndex: number;
+  stepIndex?: number | null;
 }

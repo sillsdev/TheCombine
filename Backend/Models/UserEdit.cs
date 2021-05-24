@@ -83,7 +83,6 @@ namespace BackendFramework.Models
 
         /* A null StepIndex implies index equal to the length of the step list--
          * i.e. the step is to be added to the end of the list. */
-        [Required]
         [BsonElement("stepIndex")]
         public int? StepIndex { get; set; }
 

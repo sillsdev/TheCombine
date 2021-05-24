@@ -423,9 +423,8 @@ export async function addGoalToUserEdit(
 ): Promise<number> {
   const edit = convertGoalToEdit(goal);
   const projectId = LocalStorage.getProjectId();
-  const resp = await backendServer.post(
-    `projects/${projectId}/useredits/${userEditId}`,
-    edit,
+  const resp = await userEditApi.updateUserEditGoal(
+    { projectId, userEditId, edit },
     { headers: authHeader() }
   );
   return resp.data;
@@ -438,17 +437,14 @@ export async function addStepToGoal(
   step: GoalStep,
   stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
+  const projectId = LocalStorage.getProjectId();
   const stepString = JSON.stringify(step);
-  const stepEditTuple = { goalIndex, stepString, stepIndex };
-  return await backendServer
-    .put(
-      `projects/${LocalStorage.getProjectId()}/useredits/${userEditId}`,
-      stepEditTuple,
-      { headers: authHeader() }
-    )
-    .then((resp) => {
-      return resp.data;
-    });
+  const userEditStepWrapper = { goalIndex, stepString, stepIndex };
+  const resp = await userEditApi.updateUserEditStep(
+    { projectId, userEditId, userEditStepWrapper },
+    { headers: authHeader() }
+  );
+  return resp.data;
 }
 
 /** Returns User with updated .workedProjects */
