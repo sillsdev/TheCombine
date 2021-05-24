@@ -280,6 +280,29 @@ namespace BackendFramework.Models
         }
     }
 
+    public class UserCreatedProject
+    {
+        [Required]
+        public Project Project { get; set; }
+        [Required]
+        public User User { get; set; }
+
+        public UserCreatedProject()
+        {
+            Project = new Project();
+            User = new User();
+        }
+
+        public UserCreatedProject Clone()
+        {
+            return new UserCreatedProject
+            {
+                Project = Project.Clone(),
+                User = User.Clone()
+            };
+        }
+    }
+
     public class SemanticDomainWithSubdomains
     {
         [Required]

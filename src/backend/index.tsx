@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 //const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 //const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 //const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance;
-//const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
+const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
@@ -238,41 +238,41 @@ export async function getDuplicates(
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
-  let resp = await backendServer.get(`projects`, { headers: authHeader() });
+  const resp = await projectApi.getAllProjects({ headers: authHeader() });
   return resp.data;
 }
 
 export async function getAllUsersInCurrentProject(): Promise<User[]> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/users`,
+  const resp = await projectApi.getAllProjectUsers(
+    { projectId: LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
   return resp.data;
 }
 
 export async function createProject(project: Project): Promise<Project> {
-  const resp = await backendServer.post(`projects/`, project, {
-    headers: authHeader(),
-  });
-  const proj = resp.data.item1;
-  const user = resp.data.item2;
-  if (user.id === LocalStorage.getCurrentUser()) {
+  const resp = await projectApi.createProject(
+    { project },
+    { headers: authHeader() }
+  );
+  const user = resp.data.user;
+  if (user.id === LocalStorage.getUserId()) {
     LocalStorage.setCurrentUser(user);
   }
-  return proj;
+  return resp.data.project;
 }
 
 export async function getAllActiveProjectsByUser(
   userId: string
 ): Promise<Project[]> {
-  const user: User = await getUser(userId);
-  const projectIds: string[] = Object.keys(user.projectRoles);
-  let projects: Project[] = [];
+  const user = await getUser(userId);
+  const projectIds = Object.keys(user.projectRoles);
+  const projects: Project[] = [];
   for (const projectId of projectIds) {
     try {
-      await getProject(projectId).then((project) => {
-        project.isActive && projects.push(project);
-      });
+      await getProject(projectId).then(
+        (project) => project.isActive && projects.push(project)
+      );
     } catch (err) {
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
@@ -283,8 +283,8 @@ export async function getAllActiveProjectsByUser(
 }
 
 export async function getProject(id?: string): Promise<Project> {
-  const resp = await backendServer.get(
-    `projects/${id ?? LocalStorage.getProjectId()}`,
+  const resp = await projectApi.getProject(
+    { projectId: id ?? LocalStorage.getProjectId() },
     { headers: authHeader() }
   );
   return resp.data;
@@ -294,41 +294,37 @@ export async function getProjectName(id?: string): Promise<string> {
   return (await getProject(id)).name;
 }
 
-export async function updateProject(project: Project) {
-  let resp = await backendServer.put(`projects/${project.id}`, project, {
-    headers: authHeader(),
-  });
+/** Updates project and returns id of updated project. */
+export async function updateProject(project: Project): Promise<string> {
+  const resp = await projectApi.updateProject(
+    { projectId: project.id, project },
+    { headers: authHeader() }
+  );
   return resp.data;
 }
 
-export async function archiveProject(id: string) {
-  let project = await backendServer.get(`projects/${id}`, {
-    headers: authHeader(),
-  });
-  project.data.isActive = false;
-  let resp = await backendServer.put(`projects/${id}`, project.data, {
-    headers: authHeader(),
-  });
-  return resp.data;
+/** Archives specified project and returns id. */
+export async function archiveProject(id: string): Promise<string> {
+  const project = await getProject(id);
+  project.isActive = false;
+  return await updateProject(project);
 }
 
-export async function restoreProject(id: string) {
-  let project = await backendServer.get(`projects/${id}`, {
-    headers: authHeader(),
-  });
-  project.data.isActive = true;
-  let resp = await backendServer.put(`projects/${id}`, project.data, {
-    headers: authHeader(),
-  });
-  return resp.data;
+/** Restores specified archived project and returns id. */
+export async function restoreProject(id: string): Promise<string> {
+  const project = await getProject(id);
+  project.isActive = true;
+  return await updateProject(project);
 }
 
+/** Returns a boolean indicating whether the specified project name is already taken. */
 export async function projectDuplicateCheck(
   projectName: string
 ): Promise<boolean> {
-  let resp = await backendServer.get(`projects/duplicate/${projectName}`, {
-    headers: authHeader(),
-  });
+  const resp = await projectApi.projectDuplicateCheck(
+    { projectName },
+    { headers: authHeader() }
+  );
   return resp.data;
 }
 

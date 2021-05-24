@@ -100,7 +100,7 @@ namespace BackendFramework.Controllers
         /// <summary> Creates a <see cref="Project"/> </summary>
         /// <returns> Id of created Project </returns>
         [HttpPost(Name = "CreateProject")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof((Project, User)))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserCreatedProject))]
         public async Task<IActionResult> CreateProject([FromBody, BindRequired] Project project)
         {
             await _projRepo.Create(project);
@@ -141,7 +141,7 @@ namespace BackendFramework.Controllers
 
             await _userRepo.Update(currentUserId, currentUpdatedUser);
 
-            return Ok((project, currentUpdatedUser));
+            return Ok(new UserCreatedProject { Project = project, User = currentUpdatedUser });
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>

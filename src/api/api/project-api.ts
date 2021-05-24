@@ -39,11 +39,11 @@ import {
 // @ts-ignore
 import { Project } from "../models";
 // @ts-ignore
-import { ProjectUserValueTuple } from "../models";
-// @ts-ignore
 import { SemanticDomainWithSubdomains } from "../models";
 // @ts-ignore
 import { User } from "../models";
+// @ts-ignore
+import { UserCreatedProject } from "../models";
 /**
  * ProjectApi - axios parameter creator
  * @export
@@ -533,7 +533,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<ProjectUserValueTuple>
+      ) => AxiosPromise<UserCreatedProject>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createProject(
         project,
@@ -779,7 +779,7 @@ export const ProjectApiFactory = function (
     createProject(
       project: Project,
       options?: any
-    ): AxiosPromise<ProjectUserValueTuple> {
+    ): AxiosPromise<UserCreatedProject> {
       return localVarFp
         .createProject(project, options)
         .then((request) => request(axios, basePath));

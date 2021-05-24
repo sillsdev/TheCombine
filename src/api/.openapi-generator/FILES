@@ -31,13 +31,13 @@ models/note.ts
 models/password-reset-data.ts
 models/password-reset-request-data.ts
 models/permission.ts
-models/project-user-value-tuple.ts
 models/project.ts
 models/safe-file-handle.ts
 models/semantic-domain-with-subdomains.ts
 models/semantic-domain.ts
 models/sense.ts
 models/state.ts
+models/user-created-project.ts
 models/user-edit-step-wrapper.ts
 models/user-edit.ts
 models/user-role.ts
