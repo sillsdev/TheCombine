@@ -34,7 +34,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 //const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 //const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 //const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
-//const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance;
+const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
@@ -203,12 +203,9 @@ export async function canUploadLift(): Promise<boolean> {
 /* MergeController.cs */
 
 /** Returns array of ids of the post-merge words. */
-export async function mergeWords(
-  mergeWordsArray: MergeWords[]
-): Promise<string[]> {
-  const resp = await backendServer.put(
-    `projects/${LocalStorage.getProjectId()}/merge`,
-    mergeWordsArray,
+export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
+  const resp = await mergeApi.mergeWords(
+    { projectId: LocalStorage.getProjectId(), mergeWords },
     { headers: authHeader() }
   );
   return resp.data;
@@ -216,9 +213,8 @@ export async function mergeWords(
 
 /** Adds a list of wordIds to current project's merge blacklist. */
 export async function blacklistAdd(wordIds: string[]) {
-  await backendServer.put(
-    `/projects/${LocalStorage.getProjectId()}/merge/blacklist/add`,
-    wordIds,
+  await mergeApi.blacklistAdd(
+    { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
     { headers: authHeader() }
   );
 }
@@ -228,11 +224,13 @@ export async function getDuplicates(
   maxInList: number,
   maxLists: number
 ): Promise<Word[][]> {
-  const response = await backendServer.get(
-    `/projects/${LocalStorage.getProjectId()}/merge/dups/${maxInList}/${maxLists}/${LocalStorage.getUserId()}`,
+  const projectId = LocalStorage.getProjectId();
+  const userId = LocalStorage.getUserId();
+  const resp = await mergeApi.getPotentialDuplicates(
+    { projectId, maxInList, maxLists, userId },
     { headers: authHeader() }
   );
-  return response.data;
+  return resp.data;
 }
 
 /* ProjectController.cs */
