@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 });
 
 // Configured OpenAPI interfaces.
-//const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
+const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 //const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 //const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 //const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
@@ -59,14 +59,10 @@ export async function uploadAudio(
   wordId: string,
   audioFile: File
 ): Promise<string> {
-  let data = new FormData();
-  data.append("file", audioFile);
-  let resp = await backendServer.post(
-    `projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/upload`,
-    data,
-    {
-      headers: { ...authHeader(), "content-type": "application/json" },
-    }
+  const projectId = LocalStorage.getProjectId();
+  const resp = await audioApi.uploadAudioFile(
+    { projectId, wordId, file: audioFile, name: "", filePath: "" },
+    { headers: { ...authHeader(), "content-type": "application/json" } }
   );
   return resp.data;
 }
@@ -75,8 +71,8 @@ export async function deleteAudio(
   wordId: string,
   fileName: string
 ): Promise<string> {
-  let resp = await backendServer.delete(
-    `projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
+  const resp = await audioApi.deleteAudioFile(
+    { projectId: LocalStorage.getProjectId(), wordId, fileName },
     { headers: authHeader() }
   );
   return resp.data;

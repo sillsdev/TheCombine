@@ -29,37 +29,6 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        /// <summary> Returns the audio file in the form of a stream from disk</summary>
-        /// <returns> Audio file stream. </returns>
-        [AllowAnonymous]
-        [HttpGet("download/{fileName}", Name = "DownloadAudioFile")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
-        public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
-        {
-            // if we require authorization and authentication for audio files, the frontend cannot just use the api
-            // endpoint as the src
-            //if (!_permissionService.IsProjectAuthorized("1", HttpContext))
-            //{
-            //    return Forbid();
-            //}
-
-            // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId) ||
-                !Sanitization.SanitizeFileName(fileName))
-            {
-                return new UnsupportedMediaTypeResult();
-            }
-
-            var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
-            var file = System.IO.File.OpenRead(filePath);
-            if (file is null)
-            {
-                return BadRequest("The file does not exist.");
-            }
-
-            return File(file, "application/octet-stream");
-        }
-
         /// <summary>
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
         /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
