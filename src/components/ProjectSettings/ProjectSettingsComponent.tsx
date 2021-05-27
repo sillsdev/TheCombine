@@ -69,12 +69,12 @@ export default class ProjectSettingsComponent extends React.Component<
 
     if (currentRole !== undefined)
       for (let role of currentRole.permissions) {
-        if (role === Permission.ImportExport) {
+        if (role === Permission.NUMBER_4) {
           settings.projectName = this.props.project.name;
           settings.autocompleteSetting = this.props.project.autocompleteSetting;
           settings.imports = await backend.canUploadLift();
         }
-        if (role === Permission.DeleteEditSettingsAndUsers) {
+        if (role === Permission.NUMBER_5) {
           settings.editUsers = true;
         }
       }
