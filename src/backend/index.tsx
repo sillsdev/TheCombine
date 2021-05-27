@@ -78,6 +78,7 @@ export async function deleteAudio(
   return resp.data;
 }
 
+// Use of this url acts as an HttpGet.
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
