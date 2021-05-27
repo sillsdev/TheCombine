@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 
 // Configured OpenAPI interfaces.
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
-//const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
+const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 //const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 //const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
@@ -84,24 +84,22 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /* AvatarController.cs */
 
-export async function uploadAvatar(userId: string, img: File): Promise<string> {
-  const data = new FormData();
-  data.append("file", img);
-  const resp = await backendServer.post(`users/${userId}/avatar/upload`, data, {
-    headers: { ...authHeader(), "content-type": "application/json" },
-  });
+export async function uploadAvatar(userId: string, imgFile: File) {
+  await avatarApi.uploadAvatar(
+    { userId, file: imgFile, filePath: "", name: "" },
+    { headers: { ...authHeader(), "content-type": "application/json" } }
+  );
   if (userId === LocalStorage.getUserId()) {
     LocalStorage.setAvatar(await avatarSrc(userId));
   }
-  return resp.data;
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
 export async function avatarSrc(userId: string): Promise<string> {
-  let resp = await backendServer.get(`users/${userId}/avatar/download`, {
-    headers: authHeader(),
-    responseType: "arraybuffer",
-  });
+  const resp = await avatarApi.downloadAvatar(
+    { userId },
+    { headers: authHeader(), responseType: "arraybuffer" }
+  );
   let image = btoa(
     new Uint8Array(resp.data).reduce(
       (data, byte) => data + String.fromCharCode(byte),

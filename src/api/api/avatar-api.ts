@@ -36,8 +36,6 @@ import {
   BaseAPI,
   RequiredError,
 } from "../base";
-// @ts-ignore
-import { FileStream } from "../models";
 /**
  * AvatarApi - axios parameter creator
  * @export
@@ -186,7 +184,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
       userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAvatar(
         userId,
@@ -251,7 +249,7 @@ export const AvatarApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    downloadAvatar(userId: string, options?: any): AxiosPromise<FileStream> {
+    downloadAvatar(userId: string, options?: any): AxiosPromise<any> {
       return localVarFp
         .downloadAvatar(userId, options)
         .then((request) => request(axios, basePath));

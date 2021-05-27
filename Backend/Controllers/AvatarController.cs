@@ -26,10 +26,10 @@ namespace BackendFramework.Controllers
             _permissionService = permissionService;
         }
 
-        /// <summary> Returns the url of the users avatar on disk </summary>
-        /// <returns> Path to local avatar file </returns>
+        /// <summary> Get user's avatar on disk </summary>
+        /// <returns> Stream of local avatar file </returns>
         [HttpGet("download", Name = "DownloadAvatar")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
             var user = await _userRepo.GetUser(userId, false);
@@ -50,7 +50,7 @@ namespace BackendFramework.Controllers
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload", Name = "UploadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UploadAvatar(string userId, [FromForm, BindRequired] FileUpload fileUpload)
+        public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload fileUpload)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {

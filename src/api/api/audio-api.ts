@@ -101,6 +101,59 @@ export const AudioApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} fileName
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    downloadAudioFile: async (
+      projectId: string,
+      wordId: string,
+      fileName: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("downloadAudioFile", "projectId", projectId);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("downloadAudioFile", "wordId", wordId);
+      // verify required parameter 'fileName' is not null or undefined
+      assertParamExists("downloadAudioFile", "fileName", fileName);
+      const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/download/{fileName}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
+        .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -218,6 +271,35 @@ export const AudioApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} fileName
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async downloadAudioFile(
+      projectId: string,
+      wordId: string,
+      fileName: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAudioFile(
+        projectId,
+        wordId,
+        fileName,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -285,6 +367,24 @@ export const AudioApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} fileName
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    downloadAudioFile(
+      projectId: string,
+      wordId: string,
+      fileName: string,
+      options?: any
+    ): AxiosPromise<any> {
+      return localVarFp
+        .downloadAudioFile(projectId, wordId, fileName, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -330,6 +430,34 @@ export interface AudioApiDeleteAudioFileRequest {
    *
    * @type {string}
    * @memberof AudioApiDeleteAudioFile
+   */
+  readonly fileName: string;
+}
+
+/**
+ * Request parameters for downloadAudioFile operation in AudioApi.
+ * @export
+ * @interface AudioApiDownloadAudioFileRequest
+ */
+export interface AudioApiDownloadAudioFileRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiDownloadAudioFile
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiDownloadAudioFile
+   */
+  readonly wordId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiDownloadAudioFile
    */
   readonly fileName: string;
 }
@@ -396,6 +524,27 @@ export class AudioApi extends BaseAPI {
   ) {
     return AudioApiFp(this.configuration)
       .deleteAudioFile(
+        requestParameters.projectId,
+        requestParameters.wordId,
+        requestParameters.fileName,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {AudioApiDownloadAudioFileRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AudioApi
+   */
+  public downloadAudioFile(
+    requestParameters: AudioApiDownloadAudioFileRequest,
+    options?: any
+  ) {
+    return AudioApiFp(this.configuration)
+      .downloadAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.fileName,
