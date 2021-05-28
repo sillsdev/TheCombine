@@ -36,8 +36,6 @@ import {
   BaseAPI,
   RequiredError,
 } from "../base";
-// @ts-ignore
-import { FileStream } from "../models";
 /**
  * LiftApi - axios parameter creator
  * @export
@@ -367,7 +365,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileStream>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.downloadLiftFile(
         projectId,
@@ -477,10 +475,7 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    downloadLiftFile(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<FileStream> {
+    downloadLiftFile(projectId: string, options?: any): AxiosPromise<any> {
       return localVarFp
         .downloadLiftFile(projectId, options)
         .then((request) => request(axios, basePath));

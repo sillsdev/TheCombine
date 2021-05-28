@@ -51,8 +51,7 @@ namespace BackendFramework.Controllers
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
         [RequestSizeLimit(250_000_000)]  // 250MB.
-        public async Task<IActionResult> UploadLiftFile(
-            string projectId, [FromForm, BindRequired] FileUpload fileUpload)
+        public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -276,7 +275,7 @@ namespace BackendFramework.Controllers
         /// <summary> Downloads project data in zip file </summary>
         /// <returns> Binary Lift file </returns>
         [HttpGet("download", Name = "DownloadLiftFile")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileStream))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);

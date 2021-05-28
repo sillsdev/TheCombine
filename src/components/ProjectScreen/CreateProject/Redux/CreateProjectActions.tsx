@@ -31,7 +31,7 @@ export function asyncCreateProject(
 
         // Upload words
         if (languageData) {
-          backend.uploadLift(createdProject, languageData).then((res) => {
+          backend.uploadLift(createdProject.id, languageData).then((res) => {
             backend
               .getProject(createdProject.id)
               .then((res) => {

@@ -14,7 +14,7 @@ enum UploadState {
 }
 
 interface ImportProps {
-  project: Project;
+  projectId: string;
   updateProject: (newProject: Project) => void;
 }
 
@@ -43,8 +43,8 @@ export default class ProjectImport extends React.Component<
   private async uploadWords() {
     if (this.state.liftFile) {
       this.setState({ uploadState: UploadState.InProgress });
-      await backend.uploadLift(this.props.project, this.state.liftFile);
-      let newProject = await backend.getProject(this.props.project.id);
+      await backend.uploadLift(this.props.projectId, this.state.liftFile);
+      let newProject = await backend.getProject(this.props.projectId);
       this.props.updateProject(newProject);
       this.setState({ uploadState: UploadState.Done, liftFile: undefined });
     }

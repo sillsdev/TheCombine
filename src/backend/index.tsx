@@ -20,7 +20,6 @@ const config = new Api.Configuration(config_parameters);
 
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
-
 axiosInstance.interceptors.response.use(undefined, (err) => {
   if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
     history.push(Path.Login);
@@ -32,7 +31,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
-//const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
+const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
@@ -40,17 +39,15 @@ const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 
-// TODO: Remove this once converted fully to OpenAPI.
-const backendServer = axios.create({ baseURL: apiBaseURL });
+// Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
+// have the internal fields expanded by openapi-generator as params in our Api.
+function fileUpload(file: File) {
+  return { file, filePath: "", name: "" };
+}
 
-backendServer.interceptors.response.use(undefined, (err) => {
-  if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
-    history.push(Path.Login);
-  }
-  return Promise.reject(err);
-});
-
-/* Function in this file match up to functions in Backend/Controllers/. */
+function defaultOptions() {
+  return { headers: authHeader() };
+}
 
 /* AudioController.cs */
 
@@ -60,7 +57,7 @@ export async function uploadAudio(
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
   const resp = await audioApi.uploadAudioFile(
-    { projectId, wordId, file: audioFile, name: "", filePath: "" },
+    { projectId, wordId, ...fileUpload(audioFile) },
     { headers: { ...authHeader(), "content-type": "application/json" } }
   );
   return resp.data;
@@ -70,14 +67,11 @@ export async function deleteAudio(
   wordId: string,
   fileName: string
 ): Promise<string> {
-  const resp = await audioApi.deleteAudioFile(
-    { projectId: LocalStorage.getProjectId(), wordId, fileName },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId(), wordId, fileName };
+  return (await audioApi.deleteAudioFile(params, defaultOptions())).data;
 }
 
-// Use of this url acts as an HttpGet.
+// Use of the returned url acts as an HttpGet.
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
@@ -85,10 +79,8 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 /* AvatarController.cs */
 
 export async function uploadAvatar(userId: string, imgFile: File) {
-  await avatarApi.uploadAvatar(
-    { userId, file: imgFile, filePath: "", name: "" },
-    { headers: { ...authHeader(), "content-type": "application/json" } }
-  );
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  await avatarApi.uploadAvatar({ userId, ...fileUpload(imgFile) }, { headers });
   if (userId === LocalStorage.getUserId()) {
     LocalStorage.setAvatar(await avatarSrc(userId));
   }
@@ -96,11 +88,9 @@ export async function uploadAvatar(userId: string, imgFile: File) {
 
 /** Returns the string to display the image inline in Base64 <img src= */
 export async function avatarSrc(userId: string): Promise<string> {
-  const resp = await avatarApi.downloadAvatar(
-    { userId },
-    { headers: authHeader(), responseType: "arraybuffer" }
-  );
-  let image = btoa(
+  const options = { headers: authHeader(), responseType: "arraybuffer" };
+  const resp = await avatarApi.downloadAvatar({ userId }, options);
+  const image = btoa(
     new Uint8Array(resp.data).reduce(
       (data, byte) => data + String.fromCharCode(byte),
       ""
@@ -119,7 +109,7 @@ export async function emailInviteToProject(
   const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
     { emailInviteData: { emailAddress, message, projectId, domain } },
-    { headers: authHeader() }
+    defaultOptions()
   );
   return resp.data;
 }
@@ -128,82 +118,66 @@ export async function validateLink(
   projectId: string,
   token: string
 ): Promise<Api.EmailInviteStatus> {
-  const resp = await inviteApi.validateToken(
-    { projectId, token },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  return (await inviteApi.validateToken({ projectId, token }, defaultOptions()))
+    .data;
 }
 
 /* LiftController.cs */
 
 export async function uploadLift(
-  project: Project,
-  lift: File
+  projectId: string,
+  liftFile: File
 ): Promise<number> {
-  let data = new FormData();
-  data.append("file", lift);
-  let resp = await backendServer.post(
-    `projects/${project.id}/lift/upload`,
-    data,
-    {
-      headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
-    }
+  const resp = await liftApi.uploadLiftFile(
+    { projectId, ...fileUpload(liftFile) },
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
   );
-  return parseInt(resp.toString());
+  return resp.data;
 }
 
 /** Tell the backend to create a LIFT file for the project. */
 export async function exportLift(projectId: string) {
-  let resp = await backendServer.get(`projects/${projectId}/lift/export`, {
-    headers: authHeader(),
-  });
-  return resp.data;
+  return (await liftApi.exportLiftFile({ projectId }, defaultOptions())).data;
 }
+
 /** After the backend confirms that a LIFT file is ready, download it. */
 export async function downloadLift(projectId: string): Promise<string> {
   /** For details on how to download binary files with axios, see:
    *  https://github.com/axios/axios/issues/1392#issuecomment-447263985  */
-  let resp = await backendServer.get(`projects/${projectId}/lift/download`, {
-    headers: { ...authHeader(), Accept: "application/zip" },
-    responseType: "blob",
-  });
+  const headers = { ...authHeader(), Accept: "application/zip" };
+  const resp = await liftApi.downloadLiftFile(
+    { projectId },
+    { headers, responseType: "blob" }
+  );
   return URL.createObjectURL(
     new Blob([resp.request.response], { type: "application/zip" })
   );
 }
+
 /** After downloading a LIFT file, clear it from the backend. */
 export async function deleteLift(projectId?: string) {
-  let projectIdToDelete = projectId ? projectId : LocalStorage.getProjectId();
-  await backendServer.get(`projects/${projectIdToDelete}/lift/deleteexport`, {
-    headers: authHeader(),
-  });
+  projectId = projectId ? projectId : LocalStorage.getProjectId();
+  await liftApi.deleteLiftFile({ projectId }, defaultOptions());
 }
 
 export async function canUploadLift(): Promise<boolean> {
-  let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/lift/check`,
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const projectId = LocalStorage.getProjectId();
+  return (await liftApi.canUploadLift({ projectId }, defaultOptions())).data;
 }
 
 /* MergeController.cs */
 
 /** Returns array of ids of the post-merge words. */
 export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
-  const resp = await mergeApi.mergeWords(
-    { projectId: LocalStorage.getProjectId(), mergeWords },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId(), mergeWords };
+  return (await mergeApi.mergeWords(params, defaultOptions())).data;
 }
 
 /** Adds a list of wordIds to current project's merge blacklist. */
 export async function blacklistAdd(wordIds: string[]) {
   await mergeApi.blacklistAdd(
     { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
-    { headers: authHeader() }
+    defaultOptions()
   );
 }
 
@@ -216,7 +190,7 @@ export async function getDuplicates(
   const userId = LocalStorage.getUserId();
   const resp = await mergeApi.getPotentialDuplicates(
     { projectId, maxInList, maxLists, userId },
-    { headers: authHeader() }
+    defaultOptions()
   );
   return resp.data;
 }
@@ -224,23 +198,16 @@ export async function getDuplicates(
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
-  const resp = await projectApi.getAllProjects({ headers: authHeader() });
-  return resp.data;
+  return (await projectApi.getAllProjects(defaultOptions())).data;
 }
 
 export async function getAllUsersInCurrentProject(): Promise<User[]> {
-  const resp = await projectApi.getAllProjectUsers(
-    { projectId: LocalStorage.getProjectId() },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await projectApi.getAllProjectUsers(params, defaultOptions())).data;
 }
 
 export async function createProject(project: Project): Promise<Project> {
-  const resp = await projectApi.createProject(
-    { project },
-    { headers: authHeader() }
-  );
+  const resp = await projectApi.createProject({ project }, defaultOptions());
   const user = resp.data.user;
   if (user.id === LocalStorage.getUserId()) {
     LocalStorage.setCurrentUser(user);
@@ -251,8 +218,7 @@ export async function createProject(project: Project): Promise<Project> {
 export async function getAllActiveProjectsByUser(
   userId: string
 ): Promise<Project[]> {
-  const user = await getUser(userId);
-  const projectIds = Object.keys(user.projectRoles);
+  const projectIds = Object.keys((await getUser(userId)).projectRoles);
   const projects: Project[] = [];
   for (const projectId of projectIds) {
     try {
@@ -268,37 +234,31 @@ export async function getAllActiveProjectsByUser(
   return projects;
 }
 
-export async function getProject(id?: string): Promise<Project> {
-  const resp = await projectApi.getProject(
-    { projectId: id ?? LocalStorage.getProjectId() },
-    { headers: authHeader() }
-  );
-  return resp.data;
+export async function getProject(projectId?: string): Promise<Project> {
+  projectId = projectId ? projectId : LocalStorage.getProjectId();
+  return (await projectApi.getProject({ projectId }, defaultOptions())).data;
 }
 
-export async function getProjectName(id?: string): Promise<string> {
-  return (await getProject(id)).name;
+export async function getProjectName(projectId?: string): Promise<string> {
+  return (await getProject(projectId)).name;
 }
 
 /** Updates project and returns id of updated project. */
 export async function updateProject(project: Project): Promise<string> {
-  const resp = await projectApi.updateProject(
-    { projectId: project.id, project },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: project.id, project };
+  return (await projectApi.updateProject(params, defaultOptions())).data;
 }
 
 /** Archives specified project and returns id. */
-export async function archiveProject(id: string): Promise<string> {
-  const project = await getProject(id);
+export async function archiveProject(projectId: string): Promise<string> {
+  const project = await getProject(projectId);
   project.isActive = false;
   return await updateProject(project);
 }
 
 /** Restores specified archived project and returns id. */
-export async function restoreProject(id: string): Promise<string> {
-  const project = await getProject(id);
+export async function restoreProject(projectId: string): Promise<string> {
+  const project = await getProject(projectId);
   project.isActive = true;
   return await updateProject(project);
 }
@@ -307,11 +267,9 @@ export async function restoreProject(id: string): Promise<string> {
 export async function projectDuplicateCheck(
   projectName: string
 ): Promise<boolean> {
-  const resp = await projectApi.projectDuplicateCheck(
-    { projectName },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  return (
+    await projectApi.projectDuplicateCheck({ projectName }, defaultOptions())
+  ).data;
 }
 
 /* UserController.cs */
@@ -340,7 +298,7 @@ export async function resetPassword(
 
 /** Returns the created user with id assigned on creation. */
 export async function addUser(user: User): Promise<User> {
-  const resp = await userApi.createUser({ user }, { headers: authHeader() });
+  const resp = await userApi.createUser({ user }, defaultOptions());
   return { ...user, id: resp.data };
 }
 
@@ -360,7 +318,7 @@ export async function authenticateUser(
 ): Promise<User> {
   const resp = await userApi.authenticate(
     { credentials: { username, password } },
-    { headers: authHeader() }
+    defaultOptions()
   );
   const user = resp.data;
   LocalStorage.setCurrentUser(user);
@@ -371,18 +329,17 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  return (await userApi.getAllUsers({ headers: authHeader() })).data;
+  return (await userApi.getAllUsers(defaultOptions())).data;
 }
 
-export async function getUser(id: string): Promise<User> {
-  return (await backendServer.get(`users/${id}`, { headers: authHeader() }))
-    .data;
+export async function getUser(userId: string): Promise<User> {
+  return (await userApi.getUser({ userId }, defaultOptions())).data;
 }
 
 export async function updateUser(user: User): Promise<User> {
   const resp = await userApi.updateUser(
     { userId: user.id, user },
-    { headers: authHeader() }
+    defaultOptions()
   );
   const updatedUser = { ...user, id: resp.data };
   if (updatedUser.id === LocalStorage.getUserId()) {
@@ -392,7 +349,7 @@ export async function updateUser(user: User): Promise<User> {
 }
 
 export async function deleteUser(userId: string): Promise<string> {
-  return (await userApi.deleteUser({ userId }, { headers: authHeader() })).data;
+  return (await userApi.deleteUser({ userId }, defaultOptions())).data;
 }
 
 /* UserEditController.cs */
@@ -404,10 +361,9 @@ export async function addGoalToUserEdit(
   goal: Goal
 ): Promise<number> {
   const edit = convertGoalToEdit(goal);
-  const projectId = LocalStorage.getProjectId();
   const resp = await userEditApi.updateUserEditGoal(
-    { projectId, userEditId, edit },
-    { headers: authHeader() }
+    { projectId: LocalStorage.getProjectId(), userEditId, edit },
+    defaultOptions()
   );
   return resp.data;
 }
@@ -424,7 +380,7 @@ export async function addStepToGoal(
   const userEditStepWrapper = { goalIndex, stepString, stepIndex };
   const resp = await userEditApi.updateUserEditStep(
     { projectId, userEditId, userEditStepWrapper },
-    { headers: authHeader() }
+    defaultOptions()
   );
   return resp.data;
 }
@@ -433,7 +389,7 @@ export async function addStepToGoal(
 export async function createUserEdit(): Promise<User> {
   const resp = await userEditApi.createUserEdit(
     { projectId: LocalStorage.getProjectId() },
-    { headers: authHeader() }
+    defaultOptions()
   );
   const user = resp.data;
   LocalStorage.setCurrentUser(user);
@@ -444,90 +400,65 @@ export async function getUserEditById(
   projectId: string,
   userEditId: string
 ): Promise<UserEdit> {
-  const resp = await userEditApi.getUserEdit(
-    { projectId, userEditId },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  return (
+    await userEditApi.getUserEdit({ projectId, userEditId }, defaultOptions())
+  ).data;
 }
 
 /** Returns array with every UserEdit for the current project. */
 export async function getAllUserEdits(): Promise<UserEdit[]> {
-  const resp = await userEditApi.getProjectUserEdits(
-    { projectId: LocalStorage.getProjectId() },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await userEditApi.getProjectUserEdits(params, defaultOptions())).data;
 }
 
 /* UserRoleController.cs */
 
 export async function getUserRoles(): Promise<UserRole[]> {
-  const resp = await userRoleApi.getProjectUserRoles(
-    { projectId: LocalStorage.getProjectId() },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
 export async function addUserRole(
   permission: Permission[],
   userId: string
 ): Promise<string> {
-  const projectId = LocalStorage.getProjectId();
-  const resp = await userRoleApi.updateUserRolePermissions(
-    { projectId, userId, permission },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId(), userId, permission };
+  return (await userRoleApi.updateUserRolePermissions(params, defaultOptions()))
+    .data;
 }
 
 /* WordController.cs */
 
 export async function createWord(word: Word): Promise<Word> {
-  const resp = await wordApi.createWord(
-    { projectId: LocalStorage.getProjectId(), word },
-    { headers: authHeader() }
-  );
+  const projectId = LocalStorage.getProjectId();
+  const resp = await wordApi.createWord({ projectId, word }, defaultOptions());
   return { ...word, id: resp.data };
 }
 
 export async function deleteFrontierWord(wordId: string): Promise<string> {
-  const resp = await wordApi.deleteFrontierWord(
-    { projectId: LocalStorage.getProjectId(), wordId },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId(), wordId };
+  return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
 }
 
 export async function getWord(wordId: string): Promise<Word> {
-  const resp = await wordApi.getWord(
-    { projectId: LocalStorage.getProjectId(), wordId },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId(), wordId };
+  return (await wordApi.getWord(params, defaultOptions())).data;
 }
 
 export async function getAllWords(): Promise<Word[]> {
-  const resp = await wordApi.getProjectWords(
-    { projectId: LocalStorage.getProjectId() },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const projectId = LocalStorage.getProjectId();
+  return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;
 }
 
 export async function getFrontierWords(): Promise<Word[]> {
-  const resp = await wordApi.getProjectFrontierWords(
-    { projectId: LocalStorage.getProjectId() },
-    { headers: authHeader() }
-  );
-  return resp.data;
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await wordApi.getProjectFrontierWords(params, defaultOptions())).data;
 }
 
 export async function updateWord(word: Word): Promise<Word> {
   const resp = await wordApi.updateWord(
     { projectId: LocalStorage.getProjectId(), wordId: word.id, word },
-    { headers: authHeader() }
+    defaultOptions()
   );
   return { ...word, id: resp.data };
 }
