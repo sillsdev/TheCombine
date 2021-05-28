@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: combine-ingress
+spec:
+  rules:
+  - host: {{ combine_server_name }}
+    http:
+      paths:
+      - backend:
+          serviceName: frontend
+          servicePort: 80

@@ -19,3 +19,11 @@ combine_image_certmgr: combine/certmgr
 # certmgr
 cert_is_staging: 0
 cert_max_connect_tries: 15
+
+# Persistent storage size configurations
+backend_data_size: 4Gi
+cert_store_data_size: 1Mi
+certbot_data_size: 1Mi
+certmgr_data_size: 100Mi
+database_data_size: 2Gi
+letsencrypt_data_size: 1Mi

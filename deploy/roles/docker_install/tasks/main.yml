@@ -120,3 +120,9 @@
     owner: root
     group: root
     mode: 0777
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: yes

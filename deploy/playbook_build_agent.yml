@@ -6,6 +6,29 @@
 # configuration files that are required to build TheCombine
 # in the TeamCity environment.
 #
+# To Do:
+#  - install node.js on build agent
+#  - create, enable, and start "build-agent" service
+#      /usr/lib/systemd/system/build-agent.service:
+# [Unit]
+# Description=TeamCity Server
+# After=network.target
+#
+# [Service]
+# Type=oneshot
+# User=teamcity
+# Group=teamcity
+# WorkingDirectory=/home/teamcity/BuildAgent/bin
+# Environment="LOG_DIR=/var/log/teamcity"
+# ExecStart=/home/teamcity/BuildAgent/bin/agent.sh start
+# ExecStop=/home/teamcity/BuildAgent/bin/agent.sh stop
+# RemainAfterExit=yes
+# SuccessExitStatus=0 143
+#
+# [Install]
+# WantedBy=multi-user.target
+#
+#
 ##############################################################
 
 - name: Setup TeamCity build agent for TheCombine
@@ -28,6 +51,11 @@
     - name: install required packages dependencies
       import_role:
         name: package_install
+
+    - name: install Java
+      apt:
+        name: openjdk-11-jdk
+        state: present
 
     - name: install docker subsystem
       import_role:

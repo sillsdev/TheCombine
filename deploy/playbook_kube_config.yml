@@ -25,21 +25,6 @@
     - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
-    # - name: Setup WiFi Access Point
-    #   import_role:
-    #     name: wifi_ap
-    #   when: has_wifi
-
-    - name: Install Docker Subsystem
-      import_role:
-        name: docker_install
-
-    - name: Install Kubernetes Tools
-      import_role:
-        name: k8s_install
-
     - name: Create Kubernetes Configuration Files
       import_role:
-        name: cluster_config
-      tags:
-        - config
+        name: k8s_config

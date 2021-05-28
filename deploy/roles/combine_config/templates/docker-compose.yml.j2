@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 services:
   backend:
 {% if combine_pull_images %}
@@ -12,21 +12,26 @@ services:
       - 5000
     depends_on:
       - database
+    labels:
+{% if kompose_pull_secret is defined and kompose_pull_secret | length %}
+      kompose.image-pull-secret: {{ kompose_pull_secret }}
+{% endif %}
     env_file:
       - ./.env.backend
     restart: always
-{% if combine_use_syslog %}
-    logging:
-        driver: syslog
-        options:
-               tag: combine-backend
-{% endif %}
+    labels:
+      kompose.volume.size: {{ backend_data_size }}
 
   frontend:
 {% if combine_pull_images %}
     image: {{ combine_image_frontend }}
 {% else %}
     build: .
+{% endif %}
+    labels:
+      kompose.service.type: nodeport
+{% if kompose_pull_secret is defined and kompose_pull_secret | length %}
+      kompose.image-pull-secret: {{ kompose_pull_secret }}
 {% endif %}
     env_file:
       - ./.env.frontend
@@ -41,18 +46,16 @@ services:
       - certmgr
       - backend
     restart: always
-{% if combine_use_syslog %}
-    logging:
-        driver: syslog
-        options:
-               tag: combine-frontend
-{% endif %}
 
   certmgr:
 {% if combine_pull_images %}
     image: {{ combine_image_certmgr }}
 {% else %}
     build: ./certmgr
+{% endif %}
+    labels:
+{% if kompose_pull_secret is defined and kompose_pull_secret | length %}
+      kompose.image-pull-secret: {{ kompose_pull_secret }}
 {% endif %}
     env_file:
       - ./.env.certmgr
@@ -63,12 +66,6 @@ services:
       - cert_store:/etc/cert_store
       - certbot_data:/var/www/certbot
     restart: always
-{% if combine_use_syslog %}
-    logging:
-        driver: syslog
-        options:
-               tag: combine-certmgr
-{% endif %}
 
   database:
     image: mongo:{{ mongodb_version }}
@@ -77,12 +74,9 @@ services:
     expose:
       - 27017
     restart: always
-{% if combine_use_syslog %}
-    logging:
-        driver: syslog
-        options:
-               tag: combine-database
-{% endif %}
+    labels:
+      kompose.volume.size: {{ database_data_size }}
+
 
 volumes:
   backend_data:

@@ -3,41 +3,59 @@
   apt:
     name: "{{ k8s_required_pkgs }}"
 
-- name: Check if minikube is installed
-  command: dpkg-query -W minikube
-  register: minikube_check
-  failed_when: minikube_check.rc > 1
-  changed_when: minikube_check.rc == 1
-  when:
-    - install_minikube
+- name: Install and Configure Microk8s
+  block:
+    - name: Install microk8s snap
+      snap:
+        name: microk8s
+        classic: yes
 
-- name: Download minikube
-  get_url: url="{{ minikube_url }}"
-    dest="{{ minikube_pkg_file }}"
-  when:
-    - install_minikube
-    - minikube_check.rc == 1
+    - name: Start microk8s
+      command: microk8s start
 
-- name: Install minikube
-  apt: deb="{{ minikube_pkg_file }}"
-  when:
-    - install_minikube
-    - minikube_check.rc == 1
+    - name: Add user to microk8s group
+      user:
+        name: "{{ k8s_user }}"
+        groups: microk8s
+        append: yes
 
-- name: Install Microk8s
-  snap:
-    name: microk8s
-    classic: yes
-  when:
-    - install_microk8s
+    - name: Enable selected microk8s addons
+      command: microk8s enable {{ microk8s_addons | join(' ') }}
 
-- name: Enable storage on microk8s
-  command: microk8s start
-  when:
-    - install_microk8s
+    - name: Get kubeconfig for microk8s
+      command: microk8s config
+      register: kubeconfig
 
-- name: Enable storage on microk8s
-  command: microk8s enable storage dns
+    - name: Create directory for kubectl config file
+      file:
+        path: /home/{{ k8s_user }}/.kube
+        state: directory
+        owner: "{{ k8s_user }}"
+        group: "{{ k8s_group }}"
+        mode: 0700
+
+    - name: Save kubectl configuration for {{ k8s_user }} on {{ ansible_hostname }}
+      copy:
+        content: "{{ kubeconfig.stdout }}"
+        dest: /home/{{ k8s_user }}/.kube/config
+        owner: "{{ k8s_user }}"
+        group: "{{ k8s_group }}"
+        mode: 0600
+
+    - name: Setup local kubectl configuration
+      delegate_to: localhost
+      become: no
+      block:
+        - name: Create directory for kubectl configurations
+          file:
+            path: site_files/{{ ansible_hostname }}
+            state: directory
+            mode: 0700
+
+        - name: Save kubeconfig for this device
+          copy:
+            content: "{{ kubeconfig.stdout }}"
+            dest: site_files/{{ ansible_hostname }}/kubeconfig
   when:
     - install_microk8s
 

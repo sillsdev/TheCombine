@@ -19,6 +19,7 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert
+        kompose.service.type: nodeport
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:
@@ -26,6 +27,16 @@ spec:
     spec:
       containers:
         - env:
+            - name: CERT_ADDL_DOMAINS
+              valueFrom:
+                configMapKeyRef:
+                  key: CERT_ADDL_DOMAINS
+                  name: env-frontend
+            - name: CERT_PROXY_DOMAINS
+              valueFrom:
+                configMapKeyRef:
+                  key: CERT_PROXY_DOMAINS
+                  name: env-frontend
             - name: CONFIG_CAPTCHA_REQD
               valueFrom:
                 configMapKeyRef:
@@ -62,13 +73,6 @@ spec:
             - containerPort: 80
             - containerPort: 443
           resources: {}
-          volumeMounts:
-            - mountPath: /etc/letsencrypt
-              name: letsencrypt
-            - mountPath: /etc/cert_store
-              name: cert-store
-            - mountPath: /var/www/certbot
-              name: certbot-data
       restartPolicy: Always
 {% if image_pull_secrets is defined and image_pull_secrets | length %}
       imagePullSecrets:
@@ -80,14 +84,4 @@ spec:
       nodeSelector:
         site: {{ node_site }}
 {% endif %}
-      volumes:
-        - name: letsencrypt
-          persistentVolumeClaim:
-            claimName: letsencrypt
-        - name: cert-store
-          persistentVolumeClaim:
-            claimName: cert-store
-        - name: certbot-data
-          persistentVolumeClaim:
-            claimName: certbot-data
 status: {}

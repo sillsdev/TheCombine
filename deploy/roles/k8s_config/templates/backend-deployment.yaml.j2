@@ -4,6 +4,7 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)
+    kompose.volume.size: 4Gi
   creationTimestamp: null
   labels:
     io.kompose.service: backend
@@ -20,6 +21,7 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.22.0 (955b78124)
+        kompose.volume.size: 4Gi
       creationTimestamp: null
       labels:
         io.kompose.service: backend
@@ -28,9 +30,9 @@ spec:
         - env:
             - name: COMBINE_JWT_SECRET_KEY
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: COMBINE_JWT_SECRET_KEY
-                  name: env-backend
+                  name: env-backend-secrets
             - name: COMBINE_PASSWORD_RESET_EXPIRE_TIME
               valueFrom:
                 configMapKeyRef:
@@ -48,9 +50,9 @@ spec:
                   name: env-backend
             - name: COMBINE_SMTP_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: COMBINE_SMTP_PASSWORD
-                  name: env-backend
+                  name: env-backend-secrets
             - name: COMBINE_SMTP_PORT
               valueFrom:
                 configMapKeyRef:
@@ -63,9 +65,9 @@ spec:
                   name: env-backend
             - name: COMBINE_SMTP_USERNAME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: COMBINE_SMTP_USERNAME
-                  name: env-backend
+                  name: env-backend-secrets
           image: '{{ combine_image_backend }}'
           name: backend
           ports:

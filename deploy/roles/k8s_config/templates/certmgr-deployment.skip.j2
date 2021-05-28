@@ -28,24 +28,24 @@ spec:
         - env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: AWS_ACCESS_KEY_ID
-                  name: env-certmgr
+                  name: env-certmgr-secrets
             - name: AWS_DEFAULT_REGION
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: AWS_DEFAULT_REGION
-                  name: env-certmgr
+                  name: env-certmgr-secrets
             - name: AWS_S3_CERT_LOC
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: AWS_S3_CERT_LOC
-                  name: env-certmgr
+                  name: env-certmgr-secrets
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: AWS_SECRET_ACCESS_KEY
-                  name: env-certmgr
+                  name: env-certmgr-secrets
             - name: CERT_ADDL_DOMAINS
               valueFrom:
                 configMapKeyRef:

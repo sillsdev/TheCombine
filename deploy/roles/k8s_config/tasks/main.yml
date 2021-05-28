@@ -1,0 +1,96 @@
+---
+# configure kubernetes user
+- name: adding existing user '{{ k8s_user }}' to group docker
+  user:
+    name: "{{ k8s_user }}"
+    groups: docker
+    append: yes
+
+- name: adding existing user '{{ k8s_user }}' to group microk8s
+  user:
+    name: "{{ k8s_user }}"
+    groups: microk8s
+    append: yes
+  when: install_microk8s
+
+- name: Create Kubernetes Configuration
+  delegate_to: localhost
+  become: no
+  block:
+    - name: Create Kubernetes configuration files
+      template:
+        src: "{{ item }}"
+        dest: "{{ k8s_working_dir }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
+        mode: 0600
+      with_fileglob:
+        - "templates/*.yaml.j2"
+
+    - name: Configure registry-creds for Image Pull Secrets
+      block:
+        - name: create registry-creds yaml files
+          template:
+            src: "{{ item}}.j2"
+            dest: "{{ k8s_working_dir }}/{{ item }}"
+            mode: 0600
+          with_items:
+            - registry-secrets.yaml
+            - registry-creds-deployment.yaml
+
+        - name: Apply registry-creds yaml files
+          command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
+          args:
+            chdir: "{{ k8s_working_dir }}"
+          with_items:
+            - registry-secrets.yaml
+            - registry-creds-deployment.yaml
+      when: pull_secrets_manager == "registry_creds"
+
+    - name: Configure Persistent Storage
+      command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
+      args:
+        chdir: "{{ k8s_working_dir }}"
+      with_fileglob:
+        - "{{ k8s_working_dir }}/*-persistentvolumeclaim.yaml"
+
+    - name: Configure Secrets/ConfigMaps
+      command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
+      args:
+        chdir: "{{ k8s_working_dir }}"
+      with_fileglob:
+        - "{{ k8s_working_dir }}/*-configmap.yaml"
+        - "{{ k8s_working_dir }}/*-secrets.yaml"
+
+    - name: Create Deployments
+      command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
+      args:
+        chdir: "{{ k8s_working_dir }}"
+      with_fileglob:
+        - "{{ k8s_working_dir }}/*-deployment.yaml"
+
+    - name: Create Services
+      command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
+      args:
+        chdir: "{{ k8s_working_dir }}"
+      with_fileglob:
+        - "{{ k8s_working_dir }}/*-service.yaml"
+#
+# - name: Configure Deployments
+#   command: kubectl apply -f {{ item }}
+#   args:
+#     chdir: /home/{{ k8s_user }}/kubernetes/
+#   become_user: "{{ k8s_user }}"
+#   with_items:
+#     - database-deployment.yaml
+#     - backend-deployment.yaml
+#     - certmgr-deployment.yaml
+#     - frontend-deployment.yaml
+#
+# - name: Configure Services
+#   command: kubectl apply -f {{ item }}
+#   args:
+#     chdir: /home/{{ k8s_user }}/kubernetes/
+#   become_user: "{{ k8s_user }}"
+#   with_items:
+#     - database-service.yaml
+#     - backend-service.yaml
+#     - frontend-service.yaml

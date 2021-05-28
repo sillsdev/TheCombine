@@ -48,8 +48,9 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
-install_minikube: no
 install_microk8s: yes
+install_helm: yes
+pull_secrets_manager: registry_creds
 
 ################################################
 # Disable Google reCAPTCHA for the NUC
