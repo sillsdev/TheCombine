@@ -6,7 +6,6 @@ import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
-import { EmailInviteStatus } from "types/invite";
 import { Goal, GoalStep, UserEdit } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Permission, Project, UserRole } from "types/project";
@@ -32,7 +31,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 // Configured OpenAPI interfaces.
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
-//const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
+const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 //const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
@@ -117,14 +116,9 @@ export async function emailInviteToProject(
   emailAddress: string,
   message: string
 ): Promise<string> {
-  let resp = await backendServer.put(
-    `invite`,
-    {
-      EmailAddress: emailAddress,
-      Message: message,
-      ProjectId: projectId,
-      Domain: window.location.origin,
-    },
+  const domain = window.location.origin;
+  const resp = await inviteApi.emailInviteToProject(
+    { emailInviteData: { emailAddress, message, projectId, domain } },
     { headers: authHeader() }
   );
   return resp.data;
@@ -133,10 +127,9 @@ export async function emailInviteToProject(
 export async function validateLink(
   projectId: string,
   token: string
-): Promise<EmailInviteStatus> {
-  let resp = await backendServer.put(
-    `invite/${projectId}/validate/${token}`,
-    "",
+): Promise<Api.EmailInviteStatus> {
+  const resp = await inviteApi.validateToken(
+    { projectId, token },
     { headers: authHeader() }
   );
   return resp.data;

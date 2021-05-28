@@ -169,7 +169,7 @@ export const InviteApiFp = function (configuration?: Configuration) {
       emailInviteData: EmailInviteData,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.emailInviteToProject(
         emailInviteData,
@@ -234,7 +234,7 @@ export const InviteApiFactory = function (
     emailInviteToProject(
       emailInviteData: EmailInviteData,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<string> {
       return localVarFp
         .emailInviteToProject(emailInviteData, options)
         .then((request) => request(axios, basePath));
