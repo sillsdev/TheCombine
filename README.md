@@ -51,7 +51,7 @@ A rapid word collection tool.
    1. [Running in Development](#running-in-development)
    2. [Running the Automated Tests](#running-the-automated-tests)
    3. [Import Semantic Domains](#import-semantic-domains)
-   4. [Generate License Report](#generate-license-report)
+   4. [Generate License Reports](#generate-license-reports)
    5. [Set Project Version](#set-project-version)
    6. [Inspect Database](#inspect-database)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
@@ -81,18 +81,20 @@ A rapid word collection tool.
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
        the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-     - On Ubuntu 18.04, follow these
-       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
+     - On Ubuntu 20.04, follow these
+       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
      Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and the following extensions:
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
-   - [chocolatey](https://chocolatey.org/): (Windows only) a Windows package manager.
-   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 4.1.131201`
+   - [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
+   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.0.211103`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
+   - [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+     `dotnet tool update --global dotnet-project-licenses`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
    certificate.
 4. (Linux,macOS Only) Install
@@ -130,6 +132,8 @@ A rapid word collection tool.
 
 8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
+
+[chocolatey]: https://chocolatey.org/
 
 ## Docker
 
@@ -281,15 +285,11 @@ To run all Python linting steps:
 (venv) $ tox
 ```
 
-To upgrade all pinned dependencies, run the following command under Python 3.6 so the requirements are
-backwards-compatible.
+To upgrade all pinned dependencies:
 
 ```bash
 (venv) $ python -m piptools compile --upgrade dev-requirements.in
 ```
-
-Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work around a pinning issue with
-supporting Python 3.6 and 3.7+.
 
 ## Amazon Web Services
 
@@ -344,9 +344,6 @@ Installs the necessary packages and runs the app in the development mode.<br> Op
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br> You will also see any lint errors in the console.
-
-> Note: You may need to first browse to https://localhost:5001 and accept the certificate warning in your browser if you
-> get Network Errors the first time you try to run the application locally.
 
 #### `npm run frontend`
 
@@ -462,19 +459,23 @@ Imports Semantic Domains from the provided xml file.
 $ npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
-### Generate License Report
+### Generate License Reports
 
-To generate a summary of licenses used in production:
-
-```bash
-$ npm run license-summary
-```
-
-To generate a full report of the licenses used in production:
+To generate a summary of licenses used in production
 
 ```bash
-$ npm run license-report
+$ npm run license-summary-backend
+$ npm run license-summary-frontend
 ```
+
+To generate a full report of the licenses used in production that is included in the user guide:
+
+```bash
+$ npm run license-report-backend
+$ npm run license-report-frontend
+```
+
+> Note: This should be performed each time production dependencies are changed. 
 
 ### Set Project Version
 
@@ -508,7 +509,7 @@ in one of three environments:
    see the [Docker](#docker) section. Unless specified otherwise, each of the maintenance commands are to be run from
    the project directory. Python scripts must be run in the virtual environment.
 3. _Production Environment_ - The
-   [How To Deploy TheCombine](#https://github.com/sillsdev/TheCombine/blob/master/docs/deploy/README.md) Document
+   [How To Deploy TheCombine](docs/deploy/README.md) Document
    describes how to configure a production machine and install _TheCombine_ on it. For each of the commands below, use
    `ssh` to connect to the target system where _TheCombine_ is running and run the following commands to set the user
    and working directory:

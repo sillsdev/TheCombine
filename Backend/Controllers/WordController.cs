@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,18 +13,18 @@ namespace BackendFramework.Controllers
     [EnableCors("AllowAll")]
     public class WordController : Controller
     {
+        private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
-        private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
-        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService,
+        public WordController(IWordRepository repo, IWordService wordService, IProjectRepository projRepo,
             IPermissionService permissionService)
         {
+            _projRepo = projRepo;
             _wordRepo = repo;
-            _wordService = wordService;
-            _projectService = projectService;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
@@ -40,7 +38,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -61,7 +59,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -81,7 +79,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -108,7 +106,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -141,7 +139,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -172,7 +170,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
+            var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -183,35 +181,6 @@ namespace BackendFramework.Controllers
                 return new OkResult();
             }
             return new NotFoundObjectResult("The project was found, but the word was not deleted");
-        }
-
-        /// <summary> Merge children <see cref="Word"/>s with the parent </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/words </remarks>
-        /// <returns> List of ids of new words </returns>
-        [HttpPut]
-        public async Task<IActionResult> Put(string projectId, [FromBody] List<MergeWords> mergeWordsList)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
-            {
-                return new ForbidResult();
-            }
-
-            // Ensure project exists
-            var proj = await _projectService.GetProject(projectId);
-            if (proj is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            try
-            {
-                var newWords = await _wordService.Merge(projectId, mergeWordsList);
-                return new OkObjectResult(newWords.Select(w => w.Id).ToList());
-            }
-            catch
-            {
-                return new BadRequestResult();
-            }
         }
     }
 }

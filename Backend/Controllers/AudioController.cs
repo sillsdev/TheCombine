@@ -12,27 +12,27 @@ namespace BackendFramework.Controllers
 
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/projects/{projectId}/words")]
+    [Route("v1/projects/{projectId}/words/{wordId}/audio")]
     [EnableCors("AllowAll")]
 
     public class AudioController : Controller
     {
         private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
         private readonly IPermissionService _permissionService;
+        private readonly IWordService _wordService;
 
         public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
         {
             _wordRepo = repo;
-            _wordService = wordService;
             _permissionService = permissionService;
+            _wordService = wordService;
         }
 
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/download/audio </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/audio/download/{fileName} </remarks>
         /// <returns> Audio file stream. </returns>
         [AllowAnonymous]
-        [HttpGet("{wordId}/download/audio/{fileName}")]
+        [HttpGet("download/{fileName}")]
         public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
@@ -63,9 +63,9 @@ namespace BackendFramework.Controllers
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
         /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
+        /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/audio/upload </remarks>
         /// <returns> Path to local audio file </returns>
-        [HttpPost("{wordId}/upload/audio")]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
@@ -118,7 +118,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName} </remarks>
-        [HttpDelete("{wordId}/audio/delete/{fileName}")]
+        [HttpDelete("delete/{fileName}")]
         public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))

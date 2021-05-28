@@ -1,15 +1,8 @@
-import { CharacterChange } from "goals/CharInventoryCreation/CharacterInventoryActions";
+import {
+  CreateCharInvData,
+  CreateCharInvStepData,
+} from "goals/CreateCharInv/CreateCharInvTypes";
 import { Goal, GoalName, GoalType } from "types/goals";
-
-export interface CreateCharInvChanges {
-  charChanges: CharacterChange[];
-}
-export interface CreateCharInvData {
-  inventory: string[][];
-}
-export interface CreateCharInvStepData {
-  inventory: string[];
-}
 
 export class CreateCharInv extends Goal {
   constructor(

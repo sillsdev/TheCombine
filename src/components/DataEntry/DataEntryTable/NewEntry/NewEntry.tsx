@@ -2,11 +2,6 @@ import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import DupFinder, {
-  DefaultParams,
-} from "goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import theme from "types/theme";
-import { SemanticDomain, Sense, Word } from "types/word";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import {
@@ -17,6 +12,9 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import theme from "types/theme";
+import { SemanticDomain, Sense, Word } from "types/word";
+import { LevenshteinDistance } from "utilities";
 
 interface NewEntryProps {
   allVerns: string[];
@@ -59,12 +57,9 @@ export default class NewEntry extends React.Component<
   NewEntryProps,
   NewEntryState
 > {
-  readonly maxSuggestions = 5;
-  readonly maxLevDistance = 3; // The default 5 allows too much distance
-  suggestionFinder: DupFinder = new DupFinder({
-    ...DefaultParams,
-    maxScore: this.maxLevDistance,
-  });
+  private readonly levDistance = new LevenshteinDistance();
+  private readonly maxSuggestions = 5;
+  private readonly maxLevDistance = 3;
 
   constructor(props: NewEntryProps) {
     super(props);
@@ -280,13 +275,12 @@ export default class NewEntry extends React.Component<
       if (suggestedVerns.length < this.maxSuggestions) {
         const viableVerns: string[] = this.props.allVerns.filter(
           (vern: string) =>
-            this.suggestionFinder.getLevenshteinDistance(vern, value) <
-            this.suggestionFinder.maxScore
+            this.levDistance.getDistance(vern, value) < this.maxLevDistance
         );
         const sortedVerns: string[] = viableVerns.sort(
           (a: string, b: string) =>
-            this.suggestionFinder.getLevenshteinDistance(a, value) -
-            this.suggestionFinder.getLevenshteinDistance(b, value)
+            this.levDistance.getDistance(a, value) -
+            this.levDistance.getDistance(b, value)
         );
         let candidate: string;
         while (

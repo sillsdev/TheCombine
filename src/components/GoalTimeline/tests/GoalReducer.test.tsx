@@ -2,28 +2,29 @@ import {
   defaultState,
   emtpyGoalState,
 } from "components/GoalTimeline/DefaultState";
-import * as actions from "components/GoalTimeline/GoalsActions";
-import { goalsReducer } from "components/GoalTimeline/GoalsReducer";
+import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
+import {
+  GoalAction,
+  GoalActionTypes,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 import { Goal, GoalsState } from "types/goals";
 
-const loadUserEditsAction: actions.GoalAction = {
-  type: actions.GoalsActions.LOAD_USER_EDITS,
-  payload: [],
-};
-
-describe("Test GoalsReducers", () => {
-  describe("GoalsActions.LOAD_USER_EDITS", () => {
+describe("GoalReducer", () => {
+  describe("GoalActionTypes.LOAD_USER_EDITS", () => {
     it("Should return the default state", () => {
-      expect(goalsReducer(undefined, loadUserEditsAction)).toEqual(
-        defaultState
-      );
+      const loadUserEditsAction: GoalAction = {
+        type: GoalActionTypes.LOAD_USER_EDITS,
+        payload: [],
+      };
+
+      expect(goalReducer(undefined, loadUserEditsAction)).toEqual(defaultState);
     });
 
     it("Should set the goal history to the payload and leave everything else unchanged", () => {
@@ -43,8 +44,8 @@ describe("Test GoalsReducers", () => {
       const goal6: Goal = new HandleFlags();
       const goal7: Goal = new ValidateChars();
 
-      const loadUserEditsAction: actions.GoalAction = {
-        type: actions.GoalsActions.LOAD_USER_EDITS,
+      const loadUserEditsAction: GoalAction = {
+        type: GoalActionTypes.LOAD_USER_EDITS,
         payload: [goal6, goal7],
       };
 
@@ -53,15 +54,15 @@ describe("Test GoalsReducers", () => {
         history: [goal6, goal7],
       };
 
-      expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
+      expect(goalReducer(state, loadUserEditsAction)).toEqual(newState);
     });
   });
 
-  describe("GoalsActions.SET_CURRENT_GOAL", () => {
+  describe("GoalActionTypes.SET_CURRENT_GOAL", () => {
     it("Should replace current goal, and remove type from top suggestion", () => {
       const currentGoal: Goal = new CreateCharInv();
-      const updateGoalAction: actions.GoalAction = {
-        type: actions.GoalsActions.SET_CURRENT_GOAL,
+      const updateGoalAction: GoalAction = {
+        type: GoalActionTypes.SET_CURRENT_GOAL,
         payload: currentGoal,
       };
       const goalTypeSuggestions = defaultState.goalTypeSuggestions.slice();
@@ -73,18 +74,18 @@ describe("Test GoalsReducers", () => {
         currentGoal,
         goalTypeSuggestions,
       };
-      expect(goalsReducer(defaultState, updateGoalAction)).toEqual(newState);
+      expect(goalReducer(defaultState, updateGoalAction)).toEqual(newState);
     });
   });
 
-  describe("StoreActions.RESET", () => {
+  describe("StoreActionTypes.RESET", () => {
     it("Should return the default state", () => {
       const state = emtpyGoalState();
 
       const action: StoreAction = {
-        type: StoreActions.RESET,
+        type: StoreActionTypes.RESET,
       };
-      expect(goalsReducer(state, action)).toEqual(defaultState);
+      expect(goalReducer(state, action)).toEqual(defaultState);
     });
   });
 });

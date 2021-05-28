@@ -1,5 +1,7 @@
 """Run commands on the Combine services."""
 
+from __future__ import annotations
+
 import enum
 import json
 from pathlib import Path
@@ -103,7 +105,7 @@ class CombineApp:
         )
         result_str = self.object_id_to_str(db_results.stdout)
         if result_str != "":
-            result_dict = json.loads(result_str)
+            result_dict: Dict[str, Any] = json.loads(result_str)
             return result_dict
         return None
 

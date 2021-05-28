@@ -1,5 +1,7 @@
 """Wrappers to push/pull backups to/from AWS S3 bucket."""
 
+from __future__ import annotations
+
 from pathlib import Path
 import subprocess
 

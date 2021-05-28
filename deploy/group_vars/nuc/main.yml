@@ -1,11 +1,13 @@
 ---
-################################################
+#################################################
 # Group specific configuration items
 #
 # Group: nuc
 ################################################
 
-################################################
+#################################################
+
+config_analytics_write_key: ""
 # TheCombine is installed using Ansible and the playbook_install.yml
 # playbook.  It will set the IMAGE_TAG environment variable to
 # value provided by the user and launch docker-compose
@@ -53,11 +55,20 @@ install_helm: yes
 pull_secrets_manager: registry_creds
 
 ################################################
-# Disable Google reCAPTCHA for the NUC
-# (expected to work with no internet connection)
+# The use model for the Combine when deployed on
+# a NUC is for workshops in areas with unreliable
+# or no internet connection.  As a result, the
+# CAPTCHA and functions that require email are
+# are disabled.
 ################################################
 config_captcha_required: "false"
 config_captcha_sitekey: "none"
+config_email_enabled: "false"
+
+################################################
+# Ethernet settings
+################################################
+eth_optional: yes
 
 ################################################
 # WiFi access point settings

@@ -11,8 +11,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setSidebar } from "goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import theme from "types/theme";
 import { Gloss } from "types/word";
@@ -87,14 +87,17 @@ export default function DragSense(props: DragSenseProps) {
     updateSidebar();
   }
 
-  let glosses: MergeGloss[] = [];
-  for (const entry of props.senses) {
-    for (const gloss of entry.glosses) {
-      glosses.push({ ...gloss, senseGuid: entry.guid });
-    }
-  }
+  // Only display the first sense; others will be deleted as duplicates.
+  // User can select a different one by reordering in the sidebar.
+  const firstSense = props.senses[0];
+  let glosses: MergeGloss[] = firstSense.glosses.map((g) => ({
+    ...g,
+    senseGuid: firstSense.guid,
+  }));
+  // Filter out duplicates.
   glosses = glosses.filter(
-    (v, i, a) => a.findIndex((o) => o.def === v.def) === i
+    (v, i, a) =>
+      a.findIndex((o) => o.def === v.def && o.language === v.language) === i
   );
 
   const semDoms = [

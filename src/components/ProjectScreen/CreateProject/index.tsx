@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
+import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 import {
   asyncCreateProject,
   reset,
-} from "components/ProjectScreen/CreateProject/CreateProjectActions";
-import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import { StoreState } from "types";
-import { StoreStateDispatch } from "types/actions";
 import { WritingSystem } from "types/project";
+import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {

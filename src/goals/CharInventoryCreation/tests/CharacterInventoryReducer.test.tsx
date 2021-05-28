@@ -1,13 +1,13 @@
 import {
   characterInventoryReducer,
-  CharacterInventoryState,
   defaultState,
-} from "goals/CharInventoryCreation/CharacterInventoryReducer";
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import {
+  CharacterInventoryState,
   CharacterInventoryAction,
   CharacterInventoryType,
-} from "goals/CharInventoryCreation/CharacterInventoryActions";
-import { StoreAction, StoreActions } from "rootActions";
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 const DATA: string[] = ["a", "b"];
 const BAD_RESP: string[] = ["If", "this", "appears", "there's", "an", "issue"];
@@ -55,7 +55,7 @@ describe("Test Character Inventory Reducer", () => {
 
   it("Returns default state when passed reset action", () => {
     let action: StoreAction = {
-      type: StoreActions.RESET,
+      type: StoreActionTypes.RESET,
     };
 
     expect(

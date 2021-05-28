@@ -1,4 +1,6 @@
 import { createBrowserHistory } from "history";
+import { store } from "store";
+import { changePage } from "types/Redux/analytics";
 
 /** The browser history. When combined with React Router, classes can use
  * this to navigate to routes in The Combine. For example, if a route exists
@@ -8,6 +10,17 @@ import { createBrowserHistory } from "history";
  * information.
  */
 let history = createBrowserHistory();
+
+// set up analytics for page navigation
+history.listen((location) => {
+  if (location.pathname !== store.getState().analyticsState.currentPage) {
+    analytics.track("navigate", {
+      source: store.getState().analyticsState.currentPage,
+      destination: location.pathname,
+    });
+    store.dispatch(changePage(location.pathname));
+  }
+});
 export default history;
 
 export enum Path {
@@ -15,7 +28,7 @@ export enum Path {
   GoalCurrent = "/app/goals/current",
   Goals = "/app/goals",
   Login = "/login",
-  ProjInvite = "/app/invite",
+  ProjInvite = "/invite",
   ProjScreen = "/app",
   ProjSettings = "/app/project-settings",
   PwRequest = "/forgot/request",
@@ -38,12 +51,18 @@ export function getBasePath(pathname: string): Path {
   return Path.Root;
 }
 
-// Open the user guide in a new tab.
-// Leads to a 404 in development.
-export function openUserGuide() {
-  // windows.location.origin doesn't work in all browsers, so define it manually.
+/**
+ * windows.location.origin doesn't work in all browsers, so define it manually.
+ * */
+function getWindowOrigin(): string {
   const loc = window.location;
-  const origin =
-    loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "");
+  return `${loc.protocol}//${loc.hostname}${loc.port ? ":" + loc.port : ""}`;
+}
+
+/** Open the user guide in a new tab.
+ * Leads to a 404 in development.
+ */
+export function openUserGuide() {
+  const origin = getWindowOrigin();
   window.open(`${origin}/docs`);
 }

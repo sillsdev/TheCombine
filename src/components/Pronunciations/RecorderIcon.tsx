@@ -1,14 +1,13 @@
 import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { FiberManualRecord } from "@material-ui/icons";
-import React from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  PronunciationsStatus,
   recording,
   reset,
-} from "components/Pronunciations/PronunciationsActions";
+} from "components/Pronunciations/Redux/PronunciationsActions";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 

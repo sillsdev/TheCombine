@@ -9,7 +9,7 @@ import {
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
 import SemanticDomainWithSubdomains from "types/SemanticDomain";
-import { StoreAction, StoreActions } from "rootActions";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 describe("Test the TreeViewReducer", () => {
   it("Creates a SemanticDomain from a JSON string using createDomains", () => {
@@ -74,7 +74,7 @@ describe("Test the TreeViewReducer", () => {
 
   it("Returns default state when reset action is passed", () => {
     const action: StoreAction = {
-      type: StoreActions.RESET,
+      type: StoreActionTypes.RESET,
     };
 
     expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);

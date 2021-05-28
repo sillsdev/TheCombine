@@ -4,18 +4,20 @@ import thunk from "redux-thunk";
 
 import { updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { SET_CURRENT_PROJECT } from "components/Project/ProjectActions";
-import * as Actions from "goals/CharInventoryCreation/CharacterInventoryActions";
+import { SET_CURRENT_PROJECT } from "components/Project/ProjectReduxTypes";
+import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import {
   CharacterInventoryState,
   CharacterSetEntry,
   CharacterStatus,
-  defaultState,
-} from "goals/CharInventoryCreation/CharacterInventoryReducer";
+  CharacterInventoryType,
+  CharacterChange,
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { StoreState } from "types";
+import { Goal } from "types/goals";
 import { defaultProject } from "types/project";
 import { User } from "types/user";
-import { Goal } from "types/goals";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -70,7 +72,7 @@ mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("backend");
 jest.mock("browserHistory");
-jest.mock("components/GoalTimeline/GoalsActions", () => ({
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncUpdateGoal: (goal: Goal) => mockAsyncUpdateGoal(goal),
 }));
 const mockAsyncUpdateGoal = jest.fn();
@@ -98,7 +100,7 @@ afterAll(() => {
 describe("CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
     expect(Actions.setValidCharacters(VALID_DATA)).toEqual({
-      type: Actions.CharacterInventoryType.SET_VALID_CHARACTERS,
+      type: CharacterInventoryType.SET_VALID_CHARACTERS,
       payload: VALID_DATA,
     });
   });
@@ -147,7 +149,7 @@ describe("CharacterInventoryActions", () => {
       validCharacters: [accAcc, rejAcc, undAcc],
       rejectedCharacters: [accRej, rejRej, undRej],
     };
-    const expectedChanges: Actions.CharacterChange[] = [
+    const expectedChanges: CharacterChange[] = [
       [accRej, CharacterStatus.Accepted, CharacterStatus.Rejected],
       [accUnd, CharacterStatus.Accepted, CharacterStatus.Undecided],
       [rejAcc, CharacterStatus.Rejected, CharacterStatus.Accepted],

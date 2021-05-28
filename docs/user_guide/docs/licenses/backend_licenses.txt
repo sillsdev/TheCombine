@@ -1,0 +1,3826 @@
+####################################################################################################
+Package:DnsClient
+Version:1.3.1
+project URL:http://dnsclient.michaco.net/
+Description:DnsClient.NET is a simple yet very powerful and high performant open source library for the .NET Framework to do DNS lookups
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
+Package:icu.net
+Version:2.7.1
+project URL:https://github.com/sillsdev/icu-dotnet
+Description:icu.net is a C# Wrapper around ICU4C
+
+This version of icu.net works with (more or less) any version of ICU4C.
+
+NOTE: this package contains the managed wrapper part of icu.net. You'll also have to have the unmanaged binaries of ICU installed. On Linux it is recommended to install the official ICU package that comes with the system. On Windows you can install one of the binary nuget packages, e.g. Icu4c.Win.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Icu4c.Win.Full.Lib
+Version:62.2.1-beta
+project URL:https://github.com/sillsdev/icu
+Description:ICU - International Components for Unicode
+
+This package contains the libraries of a full build of ICU4C for Windows (32- and 64-bit).
+
+The major version number of the nuget package corresponds to the ICU release.
+
+For Linux it is recommended to install the official ICU package that comes with the system.
+licenseUrl:https://www.nuget.org/packages/Icu4c.Win.Full.Lib/62.2.1-beta/License
+license Type:LICENSE.md
+
+####################################################################################################
+Package:MailKit
+Version:2.10.0
+project URL:http://www.mimekit.net/
+Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
+
+Features include:
+* HTTP, Socks4, Socks4a and Socks5 proxy support.
+* SASL Authentication via CRAM-MD5, DIGEST-MD5, LOGIN, NTLM, OAUTHBEARER, PLAIN, SCRAM-SHA-1, SCRAM-SHA-256, SCRAM-SHA-512 and XOAUTH2.
+* A fully-cancellable SmtpClient with support for STARTTLS, 8BITMIME, BINARYMIME, ENHANCEDSTATUSCODES, SIZE, DSN, PIPELINING and SMTPUTF8.
+* A fully-cancellable Pop3Client with support for STLS, UIDL, APOP, PIPELINING, UTF8, and LANG.
+* A fully-cancellable ImapClient with support for ACL, QUOTA, LITERAL+, IDLE, NAMESPACE, ID, CHILDREN, LOGINDISABLED, STARTTLS, MULTIAPPEND, UNSELECT, UIDPLUS, CONDSTORE, ESEARCH, SASL-IR, COMPRESS, WITHIN, ENABLE, QRESYNC, SORT, THREAD, ANNOTATE, LIST-EXTENDED, ESORT, METADATA / METADATA-SERVER, NOTIFY, FILTERS, LIST-STATUS, SORT=DISPLAY, SPECIAL-USE / CREATE-SPECIAL-USE, SEARCH=FUZZY, MOVE, UTF8=ACCEPT / UTF8=ONLY, LITERAL-, APPENDLIMIT, STATUS=SIZE, OBJECTID, REPLACE, SAVEDATE, XLIST, and X-GM-EXT1.
+* Client-side sorting and threading of messages (the Ordinal Subject and the Jamie Zawinski threading algorithms are supported).
+* Asynchronous versions of all methods that hit the network.
+* S/MIME, OpenPGP, DKIM and ARC support via MimeKit.
+* Microsoft TNEF support via MimeKit.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.AspNet.WebApi.Client
+Version:5.2.6
+project URL:https://www.asp.net/web-api
+Description:This package adds support for formatting and content negotiation to System.Net.Http. It includes support for JSON, XML, and form URL encoded data.
+licenseUrl:http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authentication.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core common types used by the various authentication components.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authentication.Core
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core common types used by the various authentication middleware components.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authentication.JwtBearer
+Version:3.1.10
+project URL:https://asp.net/
+Description:ASP.NET Core middleware that enables an application to receive an OpenID Connect bearer token.
+
+This package was built from the source code at https://github.com/aspnet/AspNetCore/tree/e3187077455f953200e3c930430808a30f48b82e
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authorization
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core authorization classes.
+Commonly used types:
+Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute
+Microsoft.AspNetCore.Authorization.AuthorizeAttribute
+
+This package was built from the source code at https://github.com/aspnet/Security/tree/93926543f8469614c2feb23de8a8c0561b8b2463
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authorization.Policy
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core authorization policy helper classes.
+
+This package was built from the source code at https://github.com/aspnet/Security/tree/93926543f8469614c2feb23de8a8c0561b8b2463
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Hosting.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core hosting and startup abstractions for web applications.
+
+This package was built from the source code at https://github.com/aspnet/Hosting/tree/0724e6cde1149ee1a19bfec9c13a2c9327b71213
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Hosting.Server.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core hosting server abstractions for web applications.
+
+This package was built from the source code at https://github.com/aspnet/Hosting/tree/0724e6cde1149ee1a19bfec9c13a2c9327b71213
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Http
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core default HTTP feature implementations.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Http.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core HTTP object model for HTTP requests and responses and also common extension methods for registering middleware in an IApplicationBuilder.
+Commonly used types:
+Microsoft.AspNetCore.Builder.IApplicationBuilder
+Microsoft.AspNetCore.Http.HttpContext
+Microsoft.AspNetCore.Http.HttpRequest
+Microsoft.AspNetCore.Http.HttpResponse
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Http.Extensions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core common extension methods for HTTP abstractions, HTTP headers, HTTP request/response, and session state.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Http.Features
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core HTTP feature interface definitions.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.JsonPatch
+Version:3.1.10
+project URL:https://asp.net/
+Description:ASP.NET Core support for JSON PATCH.
+
+This package was built from the source code at https://github.com/aspnet/AspNetCore/tree/e3187077455f953200e3c930430808a30f48b82e
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.AspNetCore.JsonPatch
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core support for JSON PATCH.
+
+This package was built from the source code at https://github.com/aspnet/JsonPatch/tree/3b485909ebec98d9437058dbcf45dac3ccd1f157
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC abstractions and interfaces for action invocation and dispatching, authorization, action filters, formatters, model binding, routing, validation, and more.
+Commonly used types:
+Microsoft.AspNetCore.Mvc.IActionResult
+
+This package was built from the source code at https://github.com/aspnet/Mvc/tree/a6199bbfbab05583f987bae322fb04566841aaea
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.Core
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC core components. Contains common action result types, attribute routing, application model conventions, API explorer, application parts, filters, formatters, model binding, and more.
+Commonly used types:
+Microsoft.AspNetCore.Mvc.AreaAttribute
+Microsoft.AspNetCore.Mvc.BindAttribute
+Microsoft.AspNetCore.Mvc.ControllerBase
+Microsoft.AspNetCore.Mvc.FromBodyAttribute
+Microsoft.AspNetCore.Mvc.FromFormAttribute
+Microsoft.AspNetCore.Mvc.RequireHttpsAttribute
+Microsoft.AspNetCore.Mvc.RouteAttribute
+
+This package was built from the source code at https://github.com/aspnet/Mvc/tree/a6199bbfbab05583f987bae322fb04566841aaea
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.Formatters.Json
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC formatters for JSON input and output and for JSON PATCH input using Json.NET.
+
+This package was built from the source code at https://github.com/aspnet/Mvc/tree/a6199bbfbab05583f987bae322fb04566841aaea
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.NewtonsoftJson
+Version:3.1.10
+project URL:https://asp.net/
+Description:ASP.NET Core MVC features that use Newtonsoft.Json. Includes input and output formatters for JSON and JSON PATCH.
+
+This package was built from the source code at https://github.com/aspnet/AspNetCore/tree/e3187077455f953200e3c930430808a30f48b82e
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.WebApiCompatShim
+Version:2.2.0
+project URL:https://asp.net/
+Description:Provides compatibility in ASP.NET Core MVC with ASP.NET Web API 2 to simplify migration of existing Web API implementations.
+Commonly used types:
+System.Web.Http.ApiController
+
+This package was built from the source code at https://github.com/aspnet/Mvc/tree/a6199bbfbab05583f987bae322fb04566841aaea
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.ResponseCaching.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core response caching middleware abstractions and feature interface definitions.
+
+This package was built from the source code at https://github.com/aspnet/ResponseCaching/tree/9f49398f28d7c1e0dc0305f8080351c413b0f297
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Routing
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core middleware for routing requests to application logic and for generating links.
+Commonly used types:
+Microsoft.AspNetCore.Routing.Route
+Microsoft.AspNetCore.Routing.RouteCollection
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Routing.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core abstractions for routing requests to application logic and for generating links.
+Commonly used types:
+Microsoft.AspNetCore.Routing.IRouter
+Microsoft.AspNetCore.Routing.RouteData
+
+This package was built from the source code at https://github.com/aspnet/Routing/tree/3d828221a19d91907c52c2f40928b019bee1ef92
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.WebUtilities
+Version:2.2.0
+project URL:https://asp.net/
+Description:ASP.NET Core utilities, such as for working with forms, multipart messages, and query strings.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.CSharp
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides support for compilation and code generation, including dynamic, using the C# language.
+
+Commonly Used Types:
+Microsoft.CSharp.RuntimeBinder.Binder
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
+Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.CSharp
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides support for compilation and code generation, including dynamic, using the C# language.
+
+Commonly Used Types:
+Microsoft.CSharp.RuntimeBinder.Binder
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
+Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.CSharp
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides support for compilation and code generation, including dynamic, using the C# language.
+
+Commonly Used Types:
+Microsoft.CSharp.RuntimeBinder.Binder
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
+Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.CSharp
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides support for compilation and code generation, including dynamic, using the C# language.
+
+Commonly Used Types:
+Microsoft.CSharp.RuntimeBinder.Binder
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
+Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
+Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.DotNet.PlatformAbstractions
+Version:2.1.0
+project URL:https://dot.net/
+Description:Abstractions for making code that uses file system and environment testable.
+licenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+license Type:
+
+####################################################################################################
+Package:Microsoft.DotNet.PlatformAbstractions
+Version:2.0.4
+project URL:https://dot.net/
+Description:Abstractions for making code that uses file system and environment testable.
+licenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Configuration.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:Abstractions of key-value pair based configuration.
+Commonly used types:
+Microsoft.Extensions.Configuration.IConfiguration
+Microsoft.Extensions.Configuration.IConfigurationBuilder
+Microsoft.Extensions.Configuration.IConfigurationProvider
+Microsoft.Extensions.Configuration.IConfigurationRoot
+Microsoft.Extensions.Configuration.IConfigurationSection
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.DependencyInjection
+Version:2.2.0
+project URL:https://asp.net/
+Description:Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.DependencyInjection.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:Abstractions for dependency injection.
+Commonly used types:
+Microsoft.Extensions.DependencyInjection.IServiceCollection
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.DependencyModel
+Version:2.1.0
+project URL:https://dot.net/
+Description:Abstractions for reading `.deps` files.
+licenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.DependencyModel
+Version:2.0.4
+project URL:https://dot.net/
+Description:Abstractions for reading `.deps` files.
+licenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.FileProviders.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:Abstractions of files and directories.
+Commonly used types:
+Microsoft.Extensions.FileProviders.IDirectoryContents
+Microsoft.Extensions.FileProviders.IFileInfo
+Microsoft.Extensions.FileProviders.IFileProvider
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Hosting.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:.NET Core hosting and startup abstractions for applications.
+
+This package was built from the source code at https://github.com/aspnet/Hosting/tree/0724e6cde1149ee1a19bfec9c13a2c9327b71213
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Logging.Abstractions
+Version:2.2.0
+project URL:https://asp.net/
+Description:Logging abstractions for Microsoft.Extensions.Logging.
+Commonly used types:
+Microsoft.Extensions.Logging.ILogger
+Microsoft.Extensions.Logging.ILoggerFactory
+Microsoft.Extensions.Logging.ILogger<TCategoryName>
+Microsoft.Extensions.Logging.LogLevel
+Microsoft.Extensions.Logging.Logger<T>
+Microsoft.Extensions.Logging.LoggerMessage
+Microsoft.Extensions.Logging.Abstractions.NullLogger
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.ObjectPool
+Version:2.2.0
+project URL:https://asp.net/
+Description:A simple object pool implementation.
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Options
+Version:2.2.0
+project URL:https://asp.net/
+Description:Provides a strongly typed way of specifying and accessing settings using dependency injection.
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Primitives
+Version:2.2.0
+project URL:https://asp.net/
+Description:Primitives shared by framework extensions. Commonly used types include:
+Microsoft.Extensions.Primitives.IChangeToken
+Microsoft.Extensions.Primitives.StringValues
+Microsoft.Extensions.Primitives.StringSegment
+
+This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.IdentityModel.JsonWebTokens
+Version:5.5.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.JsonWebTokens
+Version:6.8.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.Logging
+Version:5.5.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes Event Source based logging support.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.Logging
+Version:6.8.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes Event Source based logging support.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.Protocols
+Version:5.5.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Provides base protocol support for OpenIdConnect and WsFederation.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.Protocols.OpenIdConnect
+Version:5.5.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for OpenIdConnect protocol.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.Tokens
+Version:5.5.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.IdentityModel.Tokens
+Version:6.8.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.Net.Http
+Version:2.2.22
+project URL:http://go.microsoft.com/fwlink/?LinkID=280055
+Description:This package includes HttpClient for sending requests over HTTP, as well as HttpRequestMessage and HttpResponseMessage for processing HTTP messages.
+
+This package is not supported in Visual Studio 2010, and is only required for projects targeting .NET Framework 4.5, Windows 8, or Windows Phone 8.1 when consuming a library that uses this package.
+
+Supported Platforms:
+- .NET Framework 4
+- Windows 8
+- Windows Phone 8.1
+- Windows Phone Silverlight 7.5
+- Silverlight 4
+- Portable Class Libraries
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.Net.Http.Headers
+Version:2.2.0
+project URL:https://asp.net/
+Description:HTTP header parser implementations.
+
+This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
+licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:1.1.0
+project URL:https://dot.net/
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:2.0.0
+project URL:https://dot.net/
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+8321c729934c0f8be754953439b88e6e1c120c24 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:1.0.1
+project URL:https://dot.net/
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:2.1.2
+project URL:https://dot.net/
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+6851cc781ad2ff33d4a0f429a6fc1ab85abaff86 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:1.1.1
+project URL:https://dot.net/
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:3.1.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.NETCore.Targets
+Version:1.1.0
+project URL:https://dot.net/
+Description:Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.NETCore.Targets
+Version:1.0.1
+project URL:https://dot.net/
+Description:Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.Win32.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common types for Win32-based libraries.
+
+Commonly Used Types:
+System.ComponentModel.Win32Exception
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.Win32.Primitives
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides common types for Win32-based libraries.
+
+Commonly Used Types:
+System.ComponentModel.Win32Exception
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.Win32.Registry
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides support for accessing and modifying the Windows Registry.
+
+Commonly Used Types:
+Microsoft.Win32.RegistryKey
+Microsoft.Win32.Registry
+Microsoft.Win32.RegistryValueKind
+Microsoft.Win32.RegistryHive
+Microsoft.Win32.RegistryView
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:MimeKit
+Version:2.10.0
+project URL:http://www.mimekit.net/
+Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
+
+      Unlike any other .NET MIME parser, MimeKit's parser does not need to parse string input nor does it use a TextReader. Instead, it parses raw byte streams, thus allowing it to better support undeclared 8bit text in headers as well as message bodies. It also means that MimeKit's parser is significantly faster than other .NET MIME parsers.
+
+      MimeKit's parser also uses a real tokenizer when parsing the headers rather than regex or string.Split() like most other .NET MIME parsers. This means that MimeKit is much more RFC-compliant than any other .NET MIME parser out there, including the commercial implementations.
+
+      In addition to having a far superior parser implementation, MimeKit's object tree is not a derivative of System.Net.Mail objects and thus does not suffer from System.Net.Mail's limitations.
+
+      API documentation can be found on the web at http://www.mimekit.net/docs
+
+      For those that need SMTP, POP3 or IMAP support, check out https://github.com/jstedfast/MailKit
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:MongoDB.Bson
+Version:2.11.5
+project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
+Description:MongoDB's Official Bson Library.
+licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.11.5/License
+license Type:License.txt
+
+####################################################################################################
+Package:MongoDB.Driver
+Version:2.11.5
+project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
+Description:Official .NET driver for MongoDB.
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.11.5/License
+license Type:License.txt
+
+####################################################################################################
+Package:MongoDB.Driver.Core
+Version:2.11.5
+project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
+Description:Core Component of the Official MongoDB .NET Driver.
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.11.5/License
+license Type:License.txt
+
+####################################################################################################
+Package:MongoDB.Libmongocrypt
+Version:1.0.0
+project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
+Description:Libmongocrypt wrapper for the .NET driver.
+licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.0.0/License
+license Type:License.txt
+
+####################################################################################################
+Package:Mono.Posix.NETStandard
+Version:1.0.0
+project URL:https://go.microsoft.com/fwlink/?linkid=869051
+Description:Provides functionality to access Posix/Unix features
+licenseUrl:https://go.microsoft.com/fwlink/?linkid=869050
+license Type:
+
+####################################################################################################
+Package:NDesk.DBus
+Version:0.15.0
+project URL:https://bitbucket.org/hindlemail/dbus-sharp
+Description:D-Bus IPC protocol library and CLR binding (also known as dbus-sharp)
+licenseUrl:https://bitbucket.org/hindlemail/dbus-sharp/src/tip/COPYING
+license Type:
+
+####################################################################################################
+Package:NETStandard.Library
+Version:2.0.3
+project URL:https://dot.net/
+Description:A set of standard .NET APIs that are prescribed to be used and supported together. 
+18a36291e48808fa7ef2d00a764ceb1ec95645a5 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/standard/blob/master/LICENSE.TXT
+license Type:
+
+####################################################################################################
+Package:NETStandard.Library
+Version:1.6.1
+project URL:https://dot.net/
+Description:A set of standard .NET APIs that are prescribed to be used and supported together. This includes all of the APIs in the NETStandard.Platform package plus additional libraries that are core to .NET but built on top of NETStandard.Platform. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:10.0.1
+project URL:http://www.newtonsoft.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:12.0.2
+project URL:https://www.newtonsoft.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:12.0.1
+project URL:https://www.newtonsoft.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:9.0.1
+project URL:http://www.newtonsoft.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:11.0.2
+project URL:https://www.newtonsoft.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:6.0.4
+project URL:http://james.newtonking.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json
+Version:11.0.1
+project URL:https://www.newtonsoft.com/json
+Description:Json.NET is a popular high-performance JSON framework for .NET
+licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json.Bson
+Version:1.0.2
+project URL:http://www.newtonsoft.com/json
+Description:Json.NET BSON adds support for reading and writing BSON
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Newtonsoft.Json.Bson
+Version:1.0.1
+project URL:http://www.newtonsoft.com/json
+Description:Json.NET BSON adds support for reading and writing BSON
+licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json.Bson/master/LICENSE.md
+license Type:
+
+####################################################################################################
+Package:Portable.BouncyCastle
+Version:1.8.8
+project URL:https://www.bouncycastle.org/csharp/
+Description:BouncyCastle portable version with support for .NET 4, .NET Standard 2.0
+licenseUrl:https://www.bouncycastle.org/csharp/licence.html
+license Type:
+
+####################################################################################################
+Package:RelaxNG
+Version:3.2.3
+project URL:https://github.com/mono/mono/tree/master/mcs/class/Commons.Xml.Relaxng
+Description:RelaxngValidatingReader is an implementation to validate XML with RELAX NG
+  grammar. You can use full standard grammar components with it.
+
+  Currently it supports both xml syntax and compact syntax.
+licenseUrl:http://www.mono-project.com/FAQ:_Licensing
+license Type:
+
+####################################################################################################
+Package:runtime.native.System
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System
+Version:4.0.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System.IO.Compression
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System.Net.Http
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System.Net.Security
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System.Security.Cryptography.Apple
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System.Security.Cryptography.OpenSsl
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:runtime.native.System.Security.Cryptography.OpenSsl
+Version:4.3.2
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:SharpCompress
+Version:0.23.0
+project URL:https://github.com/adamhathcock/sharpcompress
+Description:SharpCompress is a compression library for NET Standard 1.0 that can unrar, decompress 7zip, decompress xz, zip/unzip, tar/untar lzip/unlzip, bzip2/unbzip2 and gzip/ungzip with forward-only reading and file random access APIs. Write support for zip/tar/bzip2/gzip is implemented.
+licenseUrl:https://github.com/adamhathcock/sharpcompress/blob/master/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:SIL.Core
+Version:8.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.Core.Desktop
+Version:8.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Core.Desktop provides general UI related utilities for language software.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.DictionaryServices
+Version:8.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.DictionaryServices contains classes for defining a simple lexical model that can be used across applications.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.Lift
+Version:8.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Lift contains classes for reading and writing Lexicon Interchange FormaT (LIFT) data. This assembly currently supports LIFT 0.13.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.WritingSystems
+Version:8.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Spart
+Version:1.0.0
+project URL:https://github.com/sillsdev/spart
+Description:The Spart library is an object oriented recursive descent parser generator framework implemented in C#.
+licenseUrl:https://opensource.org/licenses/Zlib
+license Type:
+
+####################################################################################################
+Package:System.AppContext
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.AppContext class, which allows access to the BaseDirectory property and other application specific data.
+
+Commonly Used Types:
+System.AppContext
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.AppContext
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides the System.AppContext class, which allows access to the BaseDirectory property and other application specific data.
+
+Commonly Used Types:
+System.AppContext
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Buffers
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides resource pooling of any type for performance-critical applications that allocate and deallocate objects frequently.
+
+Commonly Used Types:
+System.Buffers.ArrayPool<T>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Buffers
+Version:4.4.0
+project URL:https://dot.net/
+Description:Provides resource pooling of any type for performance-critical applications that allocate and deallocate objects frequently.
+
+Commonly Used Types:
+System.Buffers.ArrayPool<T>
+ 
+8321c729934c0f8be754953439b88e6e1c120c24 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Buffers
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides resource pooling of any type for performance-critical applications that allocate and deallocate objects frequently.
+
+Commonly Used Types:
+System.Buffers.ArrayPool<T>
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Buffers
+Version:4.5.1
+project URL:https://dot.net/
+Description:Provides resource pooling of any type for performance-critical applications that allocate and deallocate objects frequently.
+
+Commonly Used Types:
+System.Buffers.ArrayPool<T>
+ 
+7601f4f6225089ffb291dc7d58293c7bbf5c5d4f 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Collections
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that define generic collections, which allow developers to create strongly typed collections that provide better type safety and performance than non-generic strongly typed collections.
+
+Commonly Used Types:
+System.Collections.Generic.List<T>
+System.Collections.Generic.Dictionary<TKey, TValue>
+System.Collections.Generic.Queue<T>
+System.Collections.Generic.Stack<T>
+System.Collections.Generic.HashSet<T>
+System.Collections.Generic.LinkedList<T>
+System.Collections.Generic.EqualityComparer<T>
+System.Collections.Generic.Comparer<T>
+System.Collections.Generic.SortedDictionary<TKey, TValue>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Collections
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides classes that define generic collections, which allow developers to create strongly typed collections that provide better type safety and performance than non-generic strongly typed collections.
+
+Commonly Used Types:
+System.Collections.Generic.List<T>
+System.Collections.Generic.Dictionary<TKey, TValue>
+System.Collections.Generic.Queue<T>
+System.Collections.Generic.Stack<T>
+System.Collections.Generic.HashSet<T>
+System.Collections.Generic.LinkedList<T>
+System.Collections.Generic.EqualityComparer<T>
+System.Collections.Generic.Comparer<T>
+System.Collections.Generic.SortedDictionary<TKey, TValue>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Collections.Concurrent
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides several thread-safe collection classes that should be used in place of the corresponding types in the System.Collections.NonGeneric and System.Collections packages whenever multiple threads are accessing the collection concurrently.
+
+Commonly Used Types:
+System.Collections.Concurrent.ConcurrentDictionary<TKey, TValue>
+System.Collections.Concurrent.ConcurrentQueue<T>
+System.Collections.Concurrent.ConcurrentBag<T>
+System.Collections.Concurrent.BlockingCollection<T>
+System.Collections.Concurrent.ConcurrentStack<T>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Collections.NonGeneric
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that define older non-generic collections of objects, such as lists, queues, hash tables and dictionaries. Developers should prefer the generic collections in the System.Collections package.
+
+Commonly Used Types:
+System.Collections.ArrayList
+System.Collections.Hashtable
+System.Collections.CollectionBase
+System.Collections.ReadOnlyCollectionBase
+System.Collections.Stack
+System.Collections.SortedList
+System.Collections.DictionaryBase
+System.Collections.Queue
+System.Collections.Comparer
+System.Collections.CaseInsensitiveComparer
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Collections.NonGeneric
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides classes that define older non-generic collections of objects, such as lists, queues, hash tables and dictionaries. Developers should prefer the generic collections in the System.Collections package.
+
+Commonly Used Types:
+System.Collections.ArrayList
+System.Collections.Hashtable
+System.Collections.CollectionBase
+System.Collections.ReadOnlyCollectionBase
+System.Collections.Stack
+System.Collections.SortedList
+System.Collections.DictionaryBase
+System.Collections.Queue
+System.Collections.Comparer
+System.Collections.CaseInsensitiveComparer
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Collections.Specialized
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides older specialized non-generic collections; for example, a linked list dictionary, a bit vector, and collections that contain only strings.
+
+Commonly Used Types:
+System.Collections.Specialized.NameValueCollection
+System.Collections.Specialized.NameObjectCollectionBase
+System.Collections.Specialized.StringCollection
+System.Collections.Specialized.IOrderedDictionary
+System.Collections.Specialized.HybridDictionary
+System.Collections.Specialized.OrderedDictionary
+System.Collections.Specialized.ListDictionary
+System.Collections.Specialized.StringDictionary
+System.Collections.Specialized.BitVector32
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Collections.Specialized
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides older specialized non-generic collections; for example, a linked list dictionary, a bit vector, and collections that contain only strings.
+
+Commonly Used Types:
+System.Collections.Specialized.NameValueCollection
+System.Collections.Specialized.NameObjectCollectionBase
+System.Collections.Specialized.StringCollection
+System.Collections.Specialized.IOrderedDictionary
+System.Collections.Specialized.HybridDictionary
+System.Collections.Specialized.OrderedDictionary
+System.Collections.Specialized.ListDictionary
+System.Collections.Specialized.StringDictionary
+System.Collections.Specialized.BitVector32
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ComponentModel
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides interfaces for the editing and change tracking of objects used as data sources.
+
+Commonly Used Types:
+System.ComponentModel.CancelEventArgs
+System.IServiceProvider
+System.ComponentModel.IEditableObject
+System.ComponentModel.IChangeTracking
+System.ComponentModel.IRevertibleChangeTracking
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ComponentModel
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides interfaces for the editing and change tracking of objects used as data sources.
+
+Commonly Used Types:
+System.ComponentModel.CancelEventArgs
+System.IServiceProvider
+System.ComponentModel.IEditableObject
+System.ComponentModel.IChangeTracking
+System.ComponentModel.IRevertibleChangeTracking
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ComponentModel.Annotations
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides attributes that are used to define metadata for objects used as data sources.
+
+Commonly Used Types:
+System.ComponentModel.DataAnnotations.ValidationResult
+System.ComponentModel.DataAnnotations.IValidatableObject
+System.ComponentModel.DataAnnotations.ValidationAttribute
+System.ComponentModel.DataAnnotations.RequiredAttribute
+System.ComponentModel.DataAnnotations.StringLengthAttribute
+System.ComponentModel.DataAnnotations.DisplayAttribute
+System.ComponentModel.DataAnnotations.RegularExpressionAttribute
+System.ComponentModel.DataAnnotations.DataTypeAttribute
+System.ComponentModel.DataAnnotations.RangeAttribute
+System.ComponentModel.DataAnnotations.KeyAttribute
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.ComponentModel.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides interfaces that are used to implement the run-time and design-time behavior of components.
+
+Commonly Used Types:
+System.ComponentModel.IComponent
+System.ComponentModel.IContainer
+System.ComponentModel.ISite
+System.ComponentModel.ComponentCollection
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ComponentModel.Primitives
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides interfaces that are used to implement the run-time and design-time behavior of components.
+
+Commonly Used Types:
+System.ComponentModel.IComponent
+System.ComponentModel.IContainer
+System.ComponentModel.ISite
+System.ComponentModel.ComponentCollection
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ComponentModel.TypeConverter
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.ComponentModel.TypeConverter class, which represents a unified way of converting types of values to other types.
+
+Commonly Used Types:
+System.ComponentModel.TypeConverter
+System.ComponentModel.TypeConverterAttribute
+System.ComponentModel.PropertyDescriptor
+System.ComponentModel.StringConverter
+System.ComponentModel.ITypeDescriptorContext
+System.ComponentModel.EnumConverter
+System.ComponentModel.TypeDescriptor
+System.ComponentModel.Int32Converter
+System.ComponentModel.BooleanConverter
+System.ComponentModel.DoubleConverter
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ComponentModel.TypeConverter
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides the System.ComponentModel.TypeConverter class, which represents a unified way of converting types of values to other types.
+
+Commonly Used Types:
+System.ComponentModel.TypeConverter
+System.ComponentModel.TypeConverterAttribute
+System.ComponentModel.PropertyDescriptor
+System.ComponentModel.StringConverter
+System.ComponentModel.ITypeDescriptorContext
+System.ComponentModel.EnumConverter
+System.ComponentModel.TypeDescriptor
+System.ComponentModel.Int32Converter
+System.ComponentModel.BooleanConverter
+System.ComponentModel.DoubleConverter
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Console
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Console class, which represents the standard input, output and error streams for console applications.
+
+Commonly Used Types:
+System.Console
+System.ConsoleColor
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Data.DataSetExtensions
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides extensions to form LINQ expressions and method queries against DataTable objects.
+
+Commonly Used Types:
+System.Data.DataRowComparer
+System.Data.DataRowExtensions
+System.Data.DataTableExtensions
+System.Data.EnumerableRowCollection
+System.Data.EnumerableRowCollectionExtensions
+System.Data.OrderedEnumerableRowCollection
+System.Data.TypedTableBase
+System.Data.TypedTableBaseExtensions
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Diagnostics.Contracts
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides static classes for representing program contracts such as preconditions, postconditions, and invariants.
+
+Commonly Used Types:
+System.Diagnostics.Contracts.Contract
+System.Diagnostics.Contracts.ContractClassAttribute
+System.Diagnostics.Contracts.ContractClassForAttribute
+System.Diagnostics.Contracts.ContractFailureKind
+System.Runtime.CompilerServices.ContractHelper
+System.Diagnostics.Contracts.ContractInvariantMethodAttribute
+System.Diagnostics.Contracts.PureAttribute
+System.Diagnostics.Contracts.ContractArgumentValidatorAttribute
+System.Diagnostics.Contracts.ContractVerificationAttribute
+System.Diagnostics.Contracts.ContractOptionAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.Contracts
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides static classes for representing program contracts such as preconditions, postconditions, and invariants.
+
+Commonly Used Types:
+System.Diagnostics.Contracts.Contract
+System.Diagnostics.Contracts.ContractClassAttribute
+System.Diagnostics.Contracts.ContractClassForAttribute
+System.Diagnostics.Contracts.ContractFailureKind
+System.Runtime.CompilerServices.ContractHelper
+System.Diagnostics.Contracts.ContractInvariantMethodAttribute
+System.Diagnostics.Contracts.PureAttribute
+System.Diagnostics.Contracts.ContractArgumentValidatorAttribute
+System.Diagnostics.Contracts.ContractVerificationAttribute
+System.Diagnostics.Contracts.ContractOptionAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.Debug
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes and attributes that allows basic interaction with a debugger.
+
+Commonly Used Types:
+System.Diagnostics.Debug
+System.Diagnostics.DebuggerStepThroughAttribute
+System.Diagnostics.Debugger
+System.Diagnostics.DebuggerDisplayAttribute
+System.Diagnostics.DebuggerBrowsableAttribute
+System.Diagnostics.DebuggerBrowsableState
+System.Diagnostics.DebuggerHiddenAttribute
+System.Diagnostics.DebuggerNonUserCodeAttribute
+System.Diagnostics.DebuggerTypeProxyAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.Debug
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides classes and attributes that allows basic interaction with a debugger.
+
+Commonly Used Types:
+System.Diagnostics.Debug
+System.Diagnostics.DebuggerStepThroughAttribute
+System.Diagnostics.Debugger
+System.Diagnostics.DebuggerDisplayAttribute
+System.Diagnostics.DebuggerBrowsableAttribute
+System.Diagnostics.DebuggerBrowsableState
+System.Diagnostics.DebuggerHiddenAttribute
+System.Diagnostics.DebuggerNonUserCodeAttribute
+System.Diagnostics.DebuggerTypeProxyAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.DiagnosticSource
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides Classes that allow you to decouple code logging rich (unserializable) diagnostics/telemetry (e.g. framework) from code that consumes it (e.g. tools)
+
+Commonly Used Types:
+System.Diagnostics.DiagnosticListener
+System.Diagnostics.DiagnosticSource
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.DiagnosticSource
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides Classes that allow you to decouple code logging rich (unserializable) diagnostics/telemetry (e.g. framework) from code that consumes it (e.g. tools)
+
+Commonly Used Types:
+System.Diagnostics.DiagnosticListener
+System.Diagnostics.DiagnosticSource
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Diagnostics.Process
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides the System.Diagnostics.Process class, which allows interaction with local and remote processes.
+
+Commonly Used Types:
+System.Diagnostics.Process
+System.Diagnostics.ProcessModule
+System.Diagnostics.ProcessStartInfo
+System.Diagnostics.ProcessThread
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.TextWriterTraceListener
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides trace listeners for directing tracing output to a text writer, such as System.IO.StreamWriter, or a stream, such as a System.IO.FileStream.
+
+Commonly Used Types:
+System.Diagnostics.TextWriterTraceListener
+System.Diagnostics.DelimitedListTraceListener
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.Tools
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides attributes, such as GeneratedCodeAttribute and SuppresMessageAttribute, that are emitted or consumed by analysis tools.
+
+Commonly Used Types:
+System.CodeDom.Compiler.GeneratedCodeAttribute
+System.Diagnostics.CodeAnalysis.SuppressMessageAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.Tools
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides attributes, such as GeneratedCodeAttribute and SuppresMessageAttribute, that are emitted or consumed by analysis tools.
+
+Commonly Used Types:
+System.CodeDom.Compiler.GeneratedCodeAttribute
+System.Diagnostics.CodeAnalysis.SuppressMessageAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.TraceSource
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that help you trace the execution of your code. Developers should prefer the classes in the ETW-based System.Diagnostics.Tracing package.
+
+Commonly Used Types:
+System.Diagnostics.TraceListener
+System.Diagnostics.TraceLevel
+System.Diagnostics.TraceSource
+System.Diagnostics.TraceEventType
+System.Diagnostics.DefaultTraceListener
+System.Diagnostics.Trace
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.TraceSource
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides classes that help you trace the execution of your code. Developers should prefer the classes in the ETW-based System.Diagnostics.Tracing package.
+
+Commonly Used Types:
+System.Diagnostics.TraceListener
+System.Diagnostics.TraceLevel
+System.Diagnostics.TraceSource
+System.Diagnostics.TraceEventType
+System.Diagnostics.DefaultTraceListener
+System.Diagnostics.Trace
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Diagnostics.Tracing
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides class that enable you to create high performance tracing events to be captured by event tracing for Windows (ETW).
+
+Commonly Used Types:
+System.Diagnostics.Tracing.EventSource
+System.Diagnostics.Tracing.EventListener
+System.Diagnostics.Tracing.EventLevel
+System.Diagnostics.Tracing.EventKeywords
+System.Diagnostics.Tracing.EventWrittenEventArgs
+System.Diagnostics.Tracing.EventAttribute
+System.Diagnostics.Tracing.EventSourceAttribute
+System.Diagnostics.Tracing.NonEventAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Dynamic.Runtime
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes and interfaces that support the Dynamic Language Runtime (DLR).
+
+Commonly Used Types:
+System.Runtime.CompilerServices.CallSite
+System.Runtime.CompilerServices.CallSite<T>
+System.Dynamic.IDynamicMetaObjectProvider
+System.Dynamic.DynamicMetaObject
+System.Dynamic.SetMemberBinder
+System.Dynamic.GetMemberBinder
+System.Dynamic.ExpandoObject
+System.Dynamic.DynamicObject
+System.Runtime.CompilerServices.CallSiteBinder
+System.Runtime.CompilerServices.ConditionalWeakTable<TKey, TValue>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Dynamic.Runtime
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides classes and interfaces that support the Dynamic Language Runtime (DLR).
+
+Commonly Used Types:
+System.Runtime.CompilerServices.CallSite
+System.Runtime.CompilerServices.CallSite<T>
+System.Dynamic.IDynamicMetaObjectProvider
+System.Dynamic.DynamicMetaObject
+System.Dynamic.SetMemberBinder
+System.Dynamic.GetMemberBinder
+System.Dynamic.ExpandoObject
+System.Dynamic.DynamicObject
+System.Runtime.CompilerServices.CallSiteBinder
+System.Runtime.CompilerServices.ConditionalWeakTable<TKey, TValue>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Globalization
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that define culture-related information, including language, country/region, calendars in use, format patterns for dates, currency, and numbers, and sort order for strings.
+
+Commonly Used Types:
+System.Globalization.DateTimeFormatInfo
+System.Globalization.CultureInfo
+System.Globalization.NumberFormatInfo
+System.Globalization.CalendarWeekRule
+System.Globalization.TextInfo
+System.Globalization.Calendar
+System.Globalization.CompareInfo
+System.Globalization.CompareOptions
+System.Globalization.UnicodeCategory
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Globalization
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides classes that define culture-related information, including language, country/region, calendars in use, format patterns for dates, currency, and numbers, and sort order for strings.
+
+Commonly Used Types:
+System.Globalization.DateTimeFormatInfo
+System.Globalization.CultureInfo
+System.Globalization.NumberFormatInfo
+System.Globalization.CalendarWeekRule
+System.Globalization.TextInfo
+System.Globalization.Calendar
+System.Globalization.CompareInfo
+System.Globalization.CompareOptions
+System.Globalization.UnicodeCategory
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Globalization.Calendars
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes for performing date calculations using specific calendars, including the Gregorian, Julian, Hijri and Korean calendars.
+
+Commonly Used Types:
+System.Globalization.HijriCalendar
+System.Globalization.GregorianCalendar
+System.Globalization.HebrewCalendar
+System.Globalization.KoreanCalendar
+System.Globalization.ThaiBuddhistCalendar
+System.Globalization.TaiwanCalendar
+System.Globalization.JapaneseCalendar
+System.Globalization.GregorianCalendarTypes
+System.Globalization.PersianCalendar
+System.Globalization.UmAlQuraCalendar
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Globalization.Extensions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes for performing Unicode string normalization, culture-specific string comparisons and support the use of non-ASCII characters for Internet domain names.
+
+Commonly Used Types:
+System.StringNormalizationExtensions
+System.Text.NormalizationForm
+System.Globalization.IdnMapping
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Globalization.Extensions
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides classes for performing Unicode string normalization, culture-specific string comparisons and support the use of non-ASCII characters for Internet domain names.
+
+Commonly Used Types:
+System.StringNormalizationExtensions
+System.Text.NormalizationForm
+System.Globalization.IdnMapping
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IdentityModel.Tokens.Jwt
+Version:5.5.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.IdentityModel.Tokens.Jwt
+Version:6.8.0
+project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.IO
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides base input and output (I/O) types, including System.IO.Stream, System.IO.StreamReader and System.IO.StreamWriter, that allow reading and writing to data streams
+
+Commonly Used Types:
+System.IO.Stream
+System.IO.EndOfStreamException
+System.IO.MemoryStream
+System.IO.StreamReader
+System.IO.StreamWriter
+System.IO.StringWriter
+System.IO.TextWriter
+System.IO.TextReader
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides base input and output (I/O) types, including System.IO.Stream, System.IO.StreamReader and System.IO.StreamWriter, that allow reading and writing to data streams
+
+Commonly Used Types:
+System.IO.Stream
+System.IO.EndOfStreamException
+System.IO.MemoryStream
+System.IO.StreamReader
+System.IO.StreamWriter
+System.IO.StringWriter
+System.IO.TextWriter
+System.IO.TextReader
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO.Compression
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that support the compression and decompression of streams.
+
+Commonly Used Types:
+System.IO.Compression.DeflateStream
+System.IO.Compression.GZipStream
+System.IO.Compression.CompressionMode
+System.IO.Compression.CompressionLevel
+System.IO.Compression.ZipArchiveEntry
+System.IO.Compression.ZipArchive
+System.IO.Compression.ZipArchiveMode
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO.Compression.ZipFile
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that support the compression and decompression of streams using file system paths.
+
+Commonly Used Types:
+System.IO.Compression.ZipFile
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO.FileSystem
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types that allow reading and writing to files and types that provide basic file and directory support.
+
+Commonly Used Types:
+System.IO.FileStream
+System.IO.FileInfo
+System.IO.DirectoryInfo
+System.IO.FileSystemInfo
+System.IO.File
+System.IO.Directory
+System.IO.SearchOption
+System.IO.FileOptions
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO.FileSystem
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides types that allow reading and writing to files and types that provide basic file and directory support.
+
+Commonly Used Types:
+System.IO.FileStream
+System.IO.FileInfo
+System.IO.DirectoryInfo
+System.IO.FileSystemInfo
+System.IO.File
+System.IO.Directory
+System.IO.SearchOption
+System.IO.FileOptions
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO.FileSystem.AccessControl
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides types for managing access and audit control lists for files and directories.
+
+Commonly Used Types:
+System.Security.AccessControl.DirectoryObjectSecurity
+System.Security.AccessControl.DirectorySecurity
+System.Security.AccessControl.FileSecurity
+System.Security.AccessControl.FileSystemAccessRule
+System.Security.AccessControl.FileSystemAuditRule
+System.Security.AccessControl.FileSystemRights
+System.Security.AccessControl.FileSystemSecurity
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.IO.FileSystem.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common enumerations and exceptions for path-based I/O libraries.
+
+Commonly Used Types:
+System.IO.DirectoryNotFoundException
+System.IO.FileAccess
+System.IO.FileLoadException
+System.IO.PathTooLongException
+System.IO.FileMode
+System.IO.FileShare
+System.IO.FileAttributes
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.IO.FileSystem.Primitives
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides common enumerations and exceptions for path-based I/O libraries.
+
+Commonly Used Types:
+System.IO.DirectoryNotFoundException
+System.IO.FileAccess
+System.IO.FileLoadException
+System.IO.PathTooLongException
+System.IO.FileMode
+System.IO.FileShare
+System.IO.FileAttributes
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Linq
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes and interfaces that supports queries that use Language-Integrated Query (LINQ).
+
+Commonly Used Types:
+System.Linq.Enumerable
+System.Linq.IGrouping<TKey, TElement>
+System.Linq.IOrderedEnumerable<TElement>
+System.Linq.ILookup<TKey, TElement>
+System.Linq.Lookup<TKey, TElement>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Linq
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides classes and interfaces that supports queries that use Language-Integrated Query (LINQ).
+
+Commonly Used Types:
+System.Linq.Enumerable
+System.Linq.IGrouping<TKey, TElement>
+System.Linq.IOrderedEnumerable<TElement>
+System.Linq.ILookup<TKey, TElement>
+System.Linq.Lookup<TKey, TElement>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Linq.Expressions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes, interfaces and enumerations that enable language-level code expressions to be represented as objects in the form of expression trees.
+
+Commonly Used Types:
+System.Linq.IQueryable<T>
+System.Linq.IQueryable
+System.Linq.Expressions.Expression<TDelegate>
+System.Linq.Expressions.Expression
+System.Linq.Expressions.ExpressionVisitor
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Linq.Expressions
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides classes, interfaces and enumerations that enable language-level code expressions to be represented as objects in the form of expression trees.
+
+Commonly Used Types:
+System.Linq.Expressions.Expression<TDelegate>
+System.Linq.Expressions.Expression
+System.Linq.Expressions.MemberExpression
+System.Linq.Expressions.ExpressionVisitor
+System.Linq.Expressions.MethodCallExpression
+System.Linq.IQueryable<T>
+System.Linq.IQueryable
+System.Linq.Expressions.NewExpression
+System.Linq.Expressions.ParameterExpression
+System.Linq.Expressions.ConstantExpression
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Linq.Queryable
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides classes for querying data structures that implement IQueryable<T>.
+
+Commonly Used Types:
+System.Linq.Queryable
+System.Linq.EnumerableQuery<T>
+System.Linq.EnumerableQuery
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Memory
+Version:4.5.1
+project URL:https://dot.net/
+Description:Provides types for efficient representation and pooling of managed, stack, and native memory segments and sequences of such segments, along with primitives to parse and format UTF-8 encoded text stored in those memory segments.
+
+Commonly Used Types:
+System.Span
+System.ReadOnlySpan
+System.Memory
+System.ReadOnlyMemory
+System.Buffers.MemoryPool
+System.Buffers.ReadOnlySequence
+System.Buffers.Text.Utf8Parser
+System.Buffers.Text.Utf8Formatter
+ 
+7ee84596d92e178bce54c986df31ccc52479e772 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Memory
+Version:4.5.3
+project URL:https://dot.net/
+Description:Provides types for efficient representation and pooling of managed, stack, and native memory segments and sequences of such segments, along with primitives to parse and format UTF-8 encoded text stored in those memory segments.
+
+Commonly Used Types:
+System.Span
+System.ReadOnlySpan
+System.Memory
+System.ReadOnlyMemory
+System.Buffers.MemoryPool
+System.Buffers.ReadOnlySequence
+System.Buffers.Text.Utf8Parser
+System.Buffers.Text.Utf8Formatter
+ 
+c6cf790234e063b855fcdb50f3fb1b3cfac73275 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Net.Http
+Version:4.3.2
+project URL:https://dot.net/
+Description:Provides a programming interface for modern HTTP applications, including HTTP client components that allow applications to consume web services over HTTP and HTTP components that can be used by both clients and servers for parsing HTTP headers.
+
+Commonly Used Types:
+System.Net.Http.HttpResponseMessage
+System.Net.Http.DelegatingHandler
+System.Net.Http.HttpRequestException
+System.Net.Http.HttpClient
+System.Net.Http.MultipartContent
+System.Net.Http.Headers.HttpContentHeaders
+System.Net.Http.HttpClientHandler
+System.Net.Http.StreamContent
+System.Net.Http.FormUrlEncodedContent
+System.Net.Http.HttpMessageHandler
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.Http
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides a programming interface for modern HTTP applications, including HTTP client components that allow applications to consume web services over HTTP and HTTP components that can be used by both clients and servers for parsing HTTP headers.
+
+Commonly Used Types:
+System.Net.Http.HttpResponseMessage
+System.Net.Http.DelegatingHandler
+System.Net.Http.HttpRequestException
+System.Net.Http.HttpClient
+System.Net.Http.MultipartContent
+System.Net.Http.Headers.HttpContentHeaders
+System.Net.Http.HttpClientHandler
+System.Net.Http.StreamContent
+System.Net.Http.FormUrlEncodedContent
+System.Net.Http.HttpMessageHandler
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.Http
+Version:4.3.4
+project URL:https://dot.net/
+Description:Provides a programming interface for modern HTTP applications, including HTTP client components that allow applications to consume web services over HTTP and HTTP components that can be used by both clients and servers for parsing HTTP headers.
+
+Commonly Used Types:
+System.Net.Http.HttpResponseMessage
+System.Net.Http.DelegatingHandler
+System.Net.Http.HttpRequestException
+System.Net.Http.HttpClient
+System.Net.Http.MultipartContent
+System.Net.Http.Headers.HttpContentHeaders
+System.Net.Http.HttpClientHandler
+System.Net.Http.StreamContent
+System.Net.Http.FormUrlEncodedContent
+System.Net.Http.HttpMessageHandler
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.NameResolution
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Net.Dns class, which enables developers to perform simple domain name resolution.
+
+Commonly Used Types:
+System.Net.Dns
+System.Net.IPHostEntry
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.NetworkInformation
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides access to network traffic data, network address information, and notification of address changes for the local computer.
+
+Commonly Used Types:
+System.Net.NetworkInformation.NetworkInterface
+System.Net.NetworkInformation.NetworkInformationException
+System.Net.NetworkInformation.NetworkAddressChangedEventHandler
+System.Net.NetworkInformation.NetworkInterfaceType
+System.Net.NetworkInformation.OperationalStatus
+System.Net.NetworkInformation.IPGlobalProperties
+System.Net.NetworkInformation.UnicastIPAddressInformation
+System.Net.NetworkInformation.UnicastIPAddressInformationCollection
+System.Net.NetworkInformation.PhysicalAddress
+System.Net.NetworkInformation.TcpConnectionInformation
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common types for network-based libraries, including System.Net.IPAddress, System.Net.IPEndPoint, and System.Net.CookieContainer.
+
+Commonly Used Types:
+System.Net.HttpStatusCode
+System.Net.Sockets.SocketError
+System.Net.Cookie
+System.Net.Sockets.SocketException
+System.Net.IPEndPoint
+System.Net.ICredentials
+System.Net.NetworkCredential
+System.Net.IPAddress
+System.Net.CookieCollection
+System.Net.CookieContainer
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.Security
+Version:4.3.2
+project URL:https://dot.net/
+Description:Provides types, such as System.Net.Security.SslStream, that uses SSL/TLS protocols to provide secure network communication between client and server endpoints.
+
+Commonly Used Types:
+System.Net.Security.SslStream
+System.Net.Security.ExtendedProtectionPolicy
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Net.Sockets
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes such as Socket, TcpClient and UdpClient, which enable developers to send and receive data over the network.
+
+Commonly Used Types:
+System.Net.Sockets.Socket
+System.Net.Sockets.SocketAsyncEventArgs
+System.Net.Sockets.LingerOption
+System.Net.Sockets.SocketAsyncOperation
+System.Net.Sockets.ProtocolType
+System.Net.Sockets.NetworkStream
+System.Net.Sockets.TcpClient
+System.Net.Sockets.SocketType
+System.Net.Sockets.UdpClient
+System.Net.Sockets.SocketShutdown
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Numerics.Vectors
+Version:4.4.0
+project URL:https://dot.net/
+Description:Provides hardware-accelerated numeric types, suitable for high-performance processing and graphics applications.
+
+Commonly Used Types:
+System.Numerics.Matrix3x2
+System.Numerics.Matrix4x4
+System.Numerics.Plane
+System.Numerics.Quaternion
+System.Numerics.Vector2
+System.Numerics.Vector3
+System.Numerics.Vector4
+System.Numerics.Vector
+System.Numerics.Vector<T>
+ 
+8321c729934c0f8be754953439b88e6e1c120c24
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.ObjectModel
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types and interfaces that allow the creation of observable types that provide notifications to clients when changes are made to it.
+
+Commonly Used Types:
+System.ComponentModel.INotifyPropertyChanged
+System.Collections.ObjectModel.ObservableCollection<T>
+System.ComponentModel.PropertyChangedEventHandler
+System.Windows.Input.ICommand
+System.Collections.Specialized.INotifyCollectionChanged
+System.Collections.Specialized.NotifyCollectionChangedEventArgs
+System.Collections.Specialized.NotifyCollectionChangedEventHandler
+System.Collections.ObjectModel.KeyedCollection<TKey, TItem>
+System.ComponentModel.PropertyChangedEventArgs
+System.Collections.ObjectModel.ReadOnlyDictionary<TKey, TValue>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ObjectModel
+Version:4.0.12
+project URL:https://dot.net/
+Description:Provides types and interfaces that allow the creation of observable types that provide notifications to clients when changes are made to it.
+
+Commonly Used Types:
+System.ComponentModel.INotifyPropertyChanged
+System.Collections.ObjectModel.ObservableCollection<T>
+System.ComponentModel.PropertyChangedEventHandler
+System.Windows.Input.ICommand
+System.Collections.Specialized.INotifyCollectionChanged
+System.Collections.Specialized.NotifyCollectionChangedEventArgs
+System.Collections.Specialized.NotifyCollectionChangedEventHandler
+System.Collections.ObjectModel.KeyedCollection<TKey, TItem>
+System.ComponentModel.PropertyChangedEventArgs
+System.Collections.ObjectModel.ReadOnlyDictionary<TKey, TValue>
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Private.DataContractSerialization
+Version:4.3.0
+project URL:https://dot.net/
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.  Provides implementation of System.Runtime.Serialization packages. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types that retrieve information about assemblies, modules, members, parameters, and other entities in managed code by examining their metadata. These types also can be used to manipulate instances of loaded types, for example to hook up events or to invoke methods.
+
+Commonly Used Types:
+System.Reflection.MethodInfo
+System.Reflection.PropertyInfo
+System.Reflection.ParameterInfo
+System.Reflection.FieldInfo
+System.Reflection.ConstructorInfo
+System.Reflection.Assembly
+System.Reflection.MemberInfo
+System.Reflection.EventInfo
+System.Reflection.Module
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides types that retrieve information about assemblies, modules, members, parameters, and other entities in managed code by examining their metadata. These types also can be used to manipulate instances of loaded types, for example to hook up events or to invoke methods.
+
+Commonly Used Types:
+System.Reflection.MethodInfo
+System.Reflection.PropertyInfo
+System.Reflection.ParameterInfo
+System.Reflection.FieldInfo
+System.Reflection.ConstructorInfo
+System.Reflection.Assembly
+System.Reflection.MemberInfo
+System.Reflection.EventInfo
+System.Reflection.Module
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Emit
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that allow a compiler or tool to emit metadata and optionally generate a PE file on disk. The primary clients of these classes are script engines and compilers.
+
+Commonly Used Types:
+System.Reflection.Emit.AssemblyBuilder
+System.Reflection.Emit.FieldBuilder
+System.Reflection.Emit.TypeBuilder
+System.Reflection.Emit.MethodBuilder
+System.Reflection.Emit.ConstructorBuilder
+System.Reflection.Emit.GenericTypeParameterBuilder
+System.Reflection.Emit.ModuleBuilder
+System.Reflection.Emit.PropertyBuilder
+System.Reflection.Emit.AssemblyBuilderAccess
+System.Reflection.Emit.EventBuilder
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Emit
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides classes that allow a compiler or tool to emit metadata and optionally generate a PE file on disk. The primary clients of these classes are script engines and compilers.
+
+Commonly Used Types:
+System.Reflection.Emit.AssemblyBuilder
+System.Reflection.Emit.FieldBuilder
+System.Reflection.Emit.TypeBuilder
+System.Reflection.Emit.MethodBuilder
+System.Reflection.Emit.ConstructorBuilder
+System.Reflection.Emit.GenericTypeParameterBuilder
+System.Reflection.Emit.ModuleBuilder
+System.Reflection.Emit.PropertyBuilder
+System.Reflection.Emit.AssemblyBuilderAccess
+System.Reflection.Emit.EventBuilder
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Emit.ILGeneration
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that allow a compiler or tool to emit Microsoft intermediate language (MSIL). The primary clients of these classes are script engines and compilers.
+
+Commonly Used Types:
+System.Reflection.Emit.ILGenerator
+System.Reflection.Emit.Label
+System.Reflection.Emit.CustomAttributeBuilder
+System.Reflection.Emit.LocalBuilder
+System.Reflection.Emit.ParameterBuilder
+System.Reflection.Emit.SignatureHelper
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Emit.ILGeneration
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides classes that allow a compiler or tool to emit Microsoft intermediate language (MSIL). The primary clients of these classes are script engines and compilers.
+
+Commonly Used Types:
+System.Reflection.Emit.ILGenerator
+System.Reflection.Emit.Label
+System.Reflection.Emit.CustomAttributeBuilder
+System.Reflection.Emit.LocalBuilder
+System.Reflection.Emit.ParameterBuilder
+System.Reflection.Emit.SignatureHelper
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Emit.Lightweight
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Reflection.Emit.DynamicMethod class, which represents a dynamic method that can be compiled, executed, and discarded. Discarded methods are available for garbage collection.
+
+Commonly Used Types:
+System.Reflection.Emit.DynamicMethod
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Emit.Lightweight
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides the System.Reflection.Emit.DynamicMethod class, which represents a dynamic method that can be compiled, executed, and discarded. Discarded methods are available for garbage collection.
+
+Commonly Used Types:
+System.Reflection.Emit.DynamicMethod
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Extensions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides custom attribute extension methods for System.Reflection types.
+
+Commonly Used Types:
+System.Reflection.InterfaceMapping
+System.Reflection.CustomAttributeExtensions
+System.Reflection.RuntimeReflectionExtensions
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Extensions
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides custom attribute extension methods for System.Reflection types.
+
+Commonly Used Types:
+System.Reflection.InterfaceMapping
+System.Reflection.CustomAttributeExtensions
+System.Reflection.RuntimeReflectionExtensions
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common enumerations for reflection-based libraries.
+
+Commonly Used Types:
+System.Reflection.FieldAttributes
+System.Reflection.Emit.OpCode
+System.Reflection.TypeAttributes
+System.Reflection.MethodAttributes
+System.Reflection.CallingConventions
+System.Reflection.PropertyAttributes
+System.Reflection.EventAttributes
+System.Reflection.ParameterAttributes
+System.Reflection.GenericParameterAttributes
+System.Reflection.MethodImplAttributes
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.Primitives
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides common enumerations for reflection-based libraries.
+
+Commonly Used Types:
+System.Reflection.FieldAttributes
+System.Reflection.Emit.OpCode
+System.Reflection.TypeAttributes
+System.Reflection.MethodAttributes
+System.Reflection.CallingConventions
+System.Reflection.PropertyAttributes
+System.Reflection.EventAttributes
+System.Reflection.ParameterAttributes
+System.Reflection.GenericParameterAttributes
+System.Reflection.MethodImplAttributes
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.TypeExtensions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides extensions methods for System.Type that are designed to be source-compatible with older framework reflection-based APIs.
+
+Commonly Used Types:
+System.Reflection.TypeExtensions
+System.Reflection.BindingFlags
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.TypeExtensions
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides extensions methods for System.Type that are designed to be source-compatible with older framework reflection-based APIs.
+
+Commonly Used Types:
+System.Reflection.TypeExtensions
+System.Reflection.BindingFlags
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Reflection.TypeExtensions
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides extensions methods for System.Type that are designed to be source-compatible with older framework reflection-based APIs.
+
+Commonly Used Types:
+System.Reflection.TypeExtensions
+System.Reflection.BindingFlags
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Reflection.TypeExtensions
+Version:4.4.0
+project URL:https://dot.net/
+Description:Provides extensions methods for System.Type that are designed to be source-compatible with older framework reflection-based APIs.
+
+Commonly Used Types:
+System.Reflection.TypeExtensions
+System.Reflection.BindingFlags
+ 
+8321c729934c0f8be754953439b88e6e1c120c24 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Resources.ResourceManager
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes and attributes that allow developers to create, store, and manage various culture-specific resources used in an application.
+
+Commonly Used Types:
+System.Resources.ResourceManager
+System.Resources.NeutralResourcesLanguageAttribute
+System.Resources.SatelliteContractVersionAttribute
+System.Resources.MissingManifestResourceException
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Resources.ResourceManager
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides classes and attributes that allow developers to create, store, and manage various culture-specific resources used in an application.
+
+Commonly Used Types:
+System.Resources.ResourceManager
+System.Resources.NeutralResourcesLanguageAttribute
+System.Resources.SatelliteContractVersionAttribute
+System.Resources.MissingManifestResourceException
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the fundamental primitives, classes and base classes that define commonly-used value and reference data types, events and event handlers, interfaces, attributes, and exceptions. This packages represents the core package, and provides the minimal set of types required to build a managed application.
+
+Commonly Used Types:
+System.Object
+System.Exception
+System.Int16
+System.Int32
+System.Int64
+System.Enum
+System.String
+System.Char
+System.Boolean
+System.SByte
+System.Byte
+System.DateTime
+System.DateTimeOffset
+System.Single
+System.Double
+System.UInt16
+System.UInt32
+System.UInt64
+System.IDisposable
+System.Uri
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides the fundamental primitives, classes and base classes that define commonly-used value and reference data types, events and event handlers, interfaces, attributes, and exceptions. This packages represents the core package, and provides the minimal set of types required to build a managed application.
+
+Commonly Used Types:
+System.Object
+System.Exception
+System.Int16
+System.Int32
+System.Int64
+System.Enum
+System.String
+System.Char
+System.Boolean
+System.SByte
+System.Byte
+System.DateTime
+System.DateTimeOffset
+System.Single
+System.Double
+System.UInt16
+System.UInt32
+System.UInt64
+System.IDisposable
+System.Uri
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.CompilerServices.Unsafe
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
+
+Commonly Used Types:
+System.Runtime.CompilerServices.Unsafe
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Runtime.CompilerServices.Unsafe
+Version:4.5.1
+project URL:https://dot.net/
+Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
+
+Commonly Used Types:
+System.Runtime.CompilerServices.Unsafe
+ 
+7ee84596d92e178bce54c986df31ccc52479e772 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Runtime.CompilerServices.Unsafe
+Version:4.5.2
+project URL:https://dot.net/
+Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
+
+Commonly Used Types:
+System.Runtime.CompilerServices.Unsafe
+ 
+02b11eeee1fbc5f3ef43a1452fe07efd25fa1715 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Runtime.Extensions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides commonly-used classes for performing mathematical functions, conversions, string comparisons and querying environment information.
+
+Commonly Used Types:
+System.Math
+System.Environment
+System.Random
+System.Progress<T>
+System.Convert
+System.Diagnostics.Stopwatch
+System.Runtime.Versioning.FrameworkName
+System.StringComparer
+System.IO.Path
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Extensions
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides commonly-used classes for performing mathematical functions, conversions, string comparisons and querying environment information.
+
+Commonly Used Types:
+System.Math
+System.Environment
+System.Random
+System.Progress<T>
+System.Convert
+System.Diagnostics.Stopwatch
+System.Runtime.Versioning.FrameworkName
+System.StringComparer
+System.IO.Path
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Handles
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides base classes, including System.Runtime.InteropServices.CriticalHandle and System.Runtime.InteropServices.SafeHandle, for types that represent operating system handles.
+
+Commonly Used Types:
+System.Runtime.InteropServices.SafeHandle
+Microsoft.Win32.SafeHandles.SafeWaitHandle
+System.Runtime.InteropServices.CriticalHandle
+System.Threading.WaitHandleExtensions
+System.IO.HandleInheritability
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Handles
+Version:4.0.1
+project URL:https://dot.net/
+Description:Provides base classes, including System.Runtime.InteropServices.CriticalHandle and System.Runtime.InteropServices.SafeHandle, for types that represent operating system handles.
+
+Commonly Used Types:
+System.Runtime.InteropServices.SafeHandle
+Microsoft.Win32.SafeHandles.SafeWaitHandle
+System.Runtime.InteropServices.CriticalHandle
+System.Threading.WaitHandleExtensions
+System.IO.HandleInheritability
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.InteropServices
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types that support COM interop and platform invoke services.
+
+Commonly Used Types:
+System.Runtime.InteropServices.GCHandle
+System.Runtime.InteropServices.GuidAttribute
+System.Runtime.InteropServices.COMException
+System.DllNotFoundException
+System.Runtime.InteropServices.DllImportAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.InteropServices
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides types that support COM interop and platform invoke services.
+
+Commonly Used Types:
+System.Runtime.InteropServices.GCHandle
+System.Runtime.InteropServices.GuidAttribute
+System.Runtime.InteropServices.COMException
+System.DllNotFoundException
+System.Runtime.InteropServices.DllImportAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.InteropServices.RuntimeInformation
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides APIs to query about runtime and OS information.
+
+Commonly Used Types:
+System.Runtime.InteropServices.RuntimeInformation
+System.Runtime.InteropServices.OSPlatform
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.InteropServices.RuntimeInformation
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides APIs to query about runtime and OS information.
+
+Commonly Used Types:
+System.Runtime.InteropServices.RuntimeInformation
+System.Runtime.InteropServices.OSPlatform
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.InteropServices.WindowsRuntime
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that support interoperation between managed code and the Windows Runtime, and that enable the creation of Windows Runtime types with managed code.
+
+Commonly Used Types:
+System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal
+System.Runtime.InteropServices.WindowsRuntime.ReadOnlyArrayAttribute
+System.Runtime.InteropServices.WindowsRuntime.WriteOnlyArrayAttribute
+System.Runtime.InteropServices.WindowsRuntime.ReturnValueNameAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Numerics
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the numeric types System.Numerics.BigInteger and System.Numerics.Complex, which complement the numeric primitives, such as System.Byte, System.Double and System.Int32.
+
+Commonly Used Types:
+System.Numerics.BigInteger
+System.Numerics.Complex
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Serialization.Formatters
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common types for libraries that support runtime serialization.
+
+Commonly Used Types:
+System.SerializableAttribute
+System.Runtime.Serialization.ISerializable
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Serialization.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common types, including System.Runtime.Serialization.DataContractAttribute, for libraries that support data contract serialization.
+
+Commonly Used Types:
+System.Runtime.Serialization.StreamingContext
+System.Runtime.Serialization.OnDeserializingAttribute
+System.Runtime.Serialization.OnDeserializedAttribute
+System.Runtime.Serialization.OnSerializingAttribute
+System.Runtime.Serialization.OnSerializedAttribute
+System.Runtime.Serialization.EnumMemberAttribute
+System.Runtime.Serialization.DataMemberAttribute
+System.Runtime.Serialization.DataContractAttribute
+System.Runtime.Serialization.IgnoreDataMemberAttribute
+System.Runtime.Serialization.SerializationException
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Serialization.Primitives
+Version:4.1.1
+project URL:https://dot.net/
+Description:Provides common types, including System.Runtime.Serialization.DataContractAttribute, for libraries that support data contract serialization.
+
+Commonly Used Types:
+System.Runtime.Serialization.StreamingContext
+System.Runtime.Serialization.OnDeserializingAttribute
+System.Runtime.Serialization.OnDeserializedAttribute
+System.Runtime.Serialization.OnSerializingAttribute
+System.Runtime.Serialization.OnSerializedAttribute
+System.Runtime.Serialization.EnumMemberAttribute
+System.Runtime.Serialization.DataMemberAttribute
+System.Runtime.Serialization.DataContractAttribute
+System.Runtime.Serialization.IgnoreDataMemberAttribute
+System.Runtime.Serialization.SerializationException
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.Serialization.Xml
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes for serializing objects to the Extensible Markup Language (XML) and deserializing XML data to objects.
+
+Commonly Used Types:
+System.Runtime.Serialization.DataContractSerializer
+System.Runtime.Serialization.XmlObjectSerializer
+System.Runtime.Serialization.InvalidDataContractException
+System.Xml.XmlDictionaryReader
+System.Xml.XmlDictionaryWriter
+System.Xml.XmlDictionaryString
+System.Xml.UniqueId
+System.Xml.XmlDictionaryReaderQuotas
+System.Runtime.Serialization.DataContractResolver
+System.Xml.IXmlDictionary
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Runtime.WindowsRuntime
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides extensions methods that improve interoperation between managed code and the Windows Runtime.
+
+Commonly Used Types:
+System.WindowsRuntimeSystemExtensions
+System.IO.WindowsRuntimeStorageExtensions
+System.IO.WindowsRuntimeStreamExtensions
+System.Runtime.InteropServices.WindowsRuntime.AsyncInfo
+System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeBuffer
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.AccessControl
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides base classes that enable managing access and audit control lists on securable objects.
+
+Commonly Used Types:
+System.Security.AccessControl.AccessRule
+System.Security.AccessControl.AuditRule
+System.Security.AccessControl.ObjectAccessRule
+System.Security.AccessControl.ObjectAuditRule
+System.Security.AccessControl.ObjectSecurity
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Security.Claims
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes that implement claims-based identity in the .NET Framework, including classes that represent claims, claims-based identities, and claims-based principals.
+
+Commonly Used Types:
+System.Security.Principal.GenericIdentity
+System.Security.Claims.Claim
+System.Security.Claims.ClaimsIdentity
+System.Security.Claims.ClaimsPrincipal
+System.Security.Principal.GenericPrincipal
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.Algorithms
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides base types for cryptographic algorithms, including hashing, encryption, and signing operations.
+
+Commonly Used Types:
+System.Security.Cryptography.Aes
+System.Security.Cryptography.RSA
+System.Security.Cryptography.RSAParameters
+System.Security.Cryptography.HMACSHA1
+System.Security.Cryptography.SHA256
+System.Security.Cryptography.SHA1
+System.Security.Cryptography.SHA512
+System.Security.Cryptography.SHA384
+System.Security.Cryptography.HMACSHA256
+System.Security.Cryptography.MD5
+System.Security.Cryptography.HMACSHA384
+System.Security.Cryptography.HMACSHA512
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.Cng
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides cryptographic algorithm implementations and key management with Windows Cryptographic Next Generation API (CNG).
+
+Commonly Used Types:
+System.Security.Cryptography.RSACng
+System.Security.Cryptography.ECDsaCng
+System.Security.Cryptography.CngKey
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.Cng
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides cryptographic algorithm implementations and key management with Windows Cryptographic Next Generation API (CNG).
+
+Commonly Used Types:
+System.Security.Cryptography.RSACng
+System.Security.Cryptography.ECDsaCng
+System.Security.Cryptography.CngKey
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Security.Cryptography.Cng
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides cryptographic algorithm implementations and key management with Windows Cryptographic Next Generation API (CNG).
+
+Commonly Used Types:
+System.Security.Cryptography.RSACng
+System.Security.Cryptography.ECDsaCng
+System.Security.Cryptography.CngKey
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Security.Cryptography.Csp
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides cryptographic algorithm implementations and key management with Windows Cryptographic API (CryptoAPI).
+
+Commonly Used Types:
+System.Security.Cryptography.RSACryptoServiceProvider
+System.Security.Cryptography.CspParameters
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.Encoding
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types for representing Abstract Syntax Notation One (ASN.1)-encoded data.
+
+Commonly Used Types:
+System.Security.Cryptography.AsnEncodedData
+System.Security.Cryptography.Oid
+System.Security.Cryptography.OidCollection
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.OpenSsl
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides cryptographic algorithm implementations and key management for non-Windows systems with OpenSSL.
+
+Commonly Used Types:
+System.Security.Cryptography.RSAOpenSsl
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.Pkcs
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides support for PKCS and CMS algorithms.
+
+Commonly Used Types:
+System.Security.Cryptography.Pkcs.EnvelopedCms
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Security.Cryptography.Primitives
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common types for the cryptographic libraries.
+
+Commonly Used Types:
+System.Security.Cryptography.ICryptoTransform
+System.Security.Cryptography.AsymmetricAlgorithm
+System.Security.Cryptography.SymmetricAlgorithm
+System.Security.Cryptography.HashAlgorithm
+System.Security.Cryptography.KeyedHashAlgorithm
+System.Security.Cryptography.HMAC
+System.Security.Cryptography.KeySizes
+System.Security.Cryptography.CryptographicException
+System.Security.Cryptography.CipherMode
+System.Security.Cryptography.PaddingMode
+System.Security.Cryptography.CryptoStream
+System.Security.Cryptography.CryptoStreamMode
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.Primitives
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides common types for the cryptographic libraries.
+
+Commonly Used Types:
+System.Security.Cryptography.ICryptoTransform
+System.Security.Cryptography.AsymmetricAlgorithm
+System.Security.Cryptography.SymmetricAlgorithm
+System.Security.Cryptography.HashAlgorithm
+System.Security.Cryptography.KeyedHashAlgorithm
+System.Security.Cryptography.HMAC
+System.Security.Cryptography.KeySizes
+System.Security.Cryptography.CryptographicException
+System.Security.Cryptography.CipherMode
+System.Security.Cryptography.PaddingMode
+System.Security.Cryptography.CryptoStream
+System.Security.Cryptography.CryptoStreamMode
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Cryptography.X509Certificates
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types for reading, exporting and verifying Authenticode X.509 v3 certificates. These certificates are signed with a private key that uniquely and positively identifies the holder of the certificate.
+
+Commonly Used Types:
+System.Security.Cryptography.X509Certificates.X509Certificate2
+System.Security.Cryptography.X509Certificates.X509Certificate
+System.Security.Cryptography.X509Certificates.X509ContentType
+System.Security.Cryptography.X509Certificates.StoreLocation
+System.Security.Cryptography.X509Certificates.StoreName
+System.Security.Cryptography.X509Certificates.X509FindType
+System.Security.Cryptography.X509Certificates.X509ChainStatus
+System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension
+System.Security.Cryptography.X509Certificates.X509Chain
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Principal
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the base interfaces for principal and identity objects that represents the security context under which code is running.
+
+Commonly Used Types:
+System.Security.Principal.IPrincipal
+System.Security.Principal.IIdentity
+System.Security.Principal.TokenImpersonationLevel
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Principal.Windows
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes for retrieving the current Windows user and for interacting with Windows users and groups.
+
+Commonly Used Types:
+System.Security.Principal.WindowsIdentity
+System.Security.Principal.SecurityIdentifier
+System.Security.Principal.NTAccount
+System.Security.Principal.WindowsPrincipal
+System.Security.Principal.IdentityReference
+System.Security.Principal.IdentityNotMappedException
+System.Security.Principal.WindowsBuiltInRole
+System.Security.Principal.WellKnownSidType
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Security.Principal.Windows
+Version:4.7.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides classes for retrieving the current Windows user and for interacting with Windows users and groups.
+
+Commonly Used Types:
+System.Security.Principal.WindowsIdentity
+System.Security.Principal.SecurityIdentifier
+System.Security.Principal.NTAccount
+System.Security.Principal.WindowsPrincipal
+System.Security.Principal.IdentityReference
+System.Security.Principal.IdentityNotMappedException
+System.Security.Principal.WindowsBuiltInRole
+System.Security.Principal.WellKnownSidType
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Security.SecureString
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides the System.Security.SecureString class, which represents text that should be kept confidential. The text is encrypted for privacy when being used, and deleted from computer memory when no longer needed.
+
+Commonly Used Types:
+System.Security.SecureString
+System.Security.SecureStringMarshal
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Text.Encoding
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides base abstract encoding classes for converting blocks of characters to and from blocks of bytes.
+
+Commonly Used Types:
+System.Text.Encoding
+System.Text.DecoderFallbackException
+System.Text.Decoder
+System.Text.EncoderFallbackException
+System.Text.Encoder
+System.Text.EncoderFallback
+System.Text.EncoderFallbackBuffer
+System.Text.DecoderFallback
+System.Text.DecoderFallbackBuffer
+System.Text.DecoderExceptionFallback
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Text.Encoding
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides base abstract encoding classes for converting blocks of characters to and from blocks of bytes.
+
+Commonly Used Types:
+System.Text.Encoding
+System.Text.DecoderFallbackException
+System.Text.Decoder
+System.Text.EncoderFallbackException
+System.Text.Encoder
+System.Text.EncoderFallback
+System.Text.EncoderFallbackBuffer
+System.Text.DecoderFallback
+System.Text.DecoderFallbackBuffer
+System.Text.DecoderExceptionFallback
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Text.Encoding.CodePages
+Version:4.5.1
+project URL:https://dot.net/
+Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
+
+Commonly Used Types:
+System.Text.CodePagesEncodingProvider
+ 
+99ce22c306b07f99ddae60f443d23a983ae78f7b 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Text.Encoding.CodePages
+Version:4.4.0
+project URL:https://dot.net/
+Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
+
+Commonly Used Types:
+System.Text.CodePagesEncodingProvider
+ 
+8321c729934c0f8be754953439b88e6e1c120c24 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Text.Encoding.Extensions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides support for specific encodings, including ASCII, UTF-7, UTF-8, UTF-16, and UTF-32.
+
+Commonly Used Types:
+System.Text.UTF8Encoding
+System.Text.UnicodeEncoding
+System.Text.ASCIIEncoding
+System.Text.UTF7Encoding
+System.Text.UTF32Encoding
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Text.Encoding.Extensions
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides support for specific encodings, including ASCII, UTF-7, UTF-8, UTF-16, and UTF-32.
+
+Commonly Used Types:
+System.Text.UTF8Encoding
+System.Text.UnicodeEncoding
+System.Text.ASCIIEncoding
+System.Text.UTF7Encoding
+System.Text.UTF32Encoding
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Text.Encodings.Web
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides types for encoding and escaping strings for use in JavaScript, HyperText Markup Language (HTML), and uniform resource locators (URL).
+
+Commonly Used Types:
+System.Text.Encodings.Web.HtmlEncoder
+System.Text.Encodings.Web.UrlEncoder
+System.Text.Encodings.Web.JavaScriptEncoder
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Text.RegularExpressions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Text.RegularExpressions.Regex class, an implementation of a regular expression engine.
+
+Commonly Used Types:
+System.Text.RegularExpressions.Regex
+System.Text.RegularExpressions.RegexOptions
+System.Text.RegularExpressions.Match
+System.Text.RegularExpressions.Group
+System.Text.RegularExpressions.Capture
+System.Text.RegularExpressions.MatchEvaluator
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Text.RegularExpressions
+Version:4.1.0
+project URL:https://dot.net/
+Description:Provides the System.Text.RegularExpressions.Regex class, an implementation of a regular expression engine.
+
+Commonly Used Types:
+System.Text.RegularExpressions.Regex
+System.Text.RegularExpressions.RegexOptions
+System.Text.RegularExpressions.Match
+System.Text.RegularExpressions.Group
+System.Text.RegularExpressions.Capture
+System.Text.RegularExpressions.MatchEvaluator
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the fundamental synchronization primitives, including System.Threading.Monitor and System.Threading.Mutex, that are required when writing asynchronous code.
+
+Commonly Used Types:
+System.Threading.Monitor
+System.Threading.SynchronizationContext
+System.Threading.ManualResetEvent
+System.Threading.AutoResetEvent
+System.Threading.ThreadLocal<T>
+System.Threading.EventWaitHandle
+System.Threading.SemaphoreSlim
+System.Threading.Mutex
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides the fundamental synchronization primitives, including System.Threading.Monitor and System.Threading.Mutex, that are required when writing asynchronous code.
+
+Commonly Used Types:
+System.Threading.Monitor
+System.Threading.SynchronizationContext
+System.Threading.ManualResetEvent
+System.Threading.AutoResetEvent
+System.Threading.ThreadLocal<T>
+System.Threading.EventWaitHandle
+System.Threading.SemaphoreSlim
+System.Threading.Mutex
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Overlapped
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides common types for interacting with asynchronous (or overlapped) input and output (I/O).
+
+Commonly Used Types:
+System.Threading.NativeOverlapped
+System.Threading.Overlapped
+System.Threading.IOCompletionCallback
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Tasks
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.Task<TResult>
+System.Runtime.CompilerServices.TaskAwaiter<TResult>
+System.Threading.Tasks.TaskCompletionSource<TResult>
+System.Threading.Tasks.Task
+System.OperationCanceledException
+System.AggregateException
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Tasks
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.Task<TResult>
+System.Runtime.CompilerServices.TaskAwaiter<TResult>
+System.Threading.Tasks.TaskCompletionSource<TResult>
+System.Threading.Tasks.Task
+System.OperationCanceledException
+System.AggregateException
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Tasks.Extensions
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.ValueTask<TResult>
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Tasks.Extensions
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.ValueTask<TResult>
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Tasks.Extensions
+Version:4.5.1
+project URL:https://dot.net/
+Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.ValueTask<TResult>
+ 
+7ee84596d92e178bce54c986df31ccc52479e772
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Threading.Thread
+Version:4.0.0
+project URL:https://dot.net/
+Description:Provides the System.Threading.Thread class, which allows developers to create and control a thread, set its priority, and get its state.
+
+Commonly Used Types:
+System.Threading.Thread
+System.Threading.ThreadStart
+System.Threading.ParameterizedThreadStart
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Thread
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Threading.Thread class, which allows developers to create and control a thread, set its priority, and get its state.
+
+Commonly Used Types:
+System.Threading.Thread
+System.Threading.ThreadStart
+System.Threading.ParameterizedThreadStart
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.ThreadPool
+Version:4.0.10
+project URL:https://dot.net/
+Description:Provides the System.Threading.ThreadPool class, which contains a pool of threads that can be used to execute tasks, post work items, wait on behalf of other threads, and process timers.
+
+Commonly Used Types:
+System.Threading.ThreadPool
+System.Threading.WaitOrTimerCallback
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.ThreadPool
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Threading.ThreadPool class, which contains a pool of threads that can be used to execute tasks, post work items, wait on behalf of other threads, and process timers.
+
+Commonly Used Types:
+System.Threading.ThreadPool
+System.Threading.WaitOrTimerCallback
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Threading.Timer
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the System.Threading.Timer class, which is a mechanism for executing a method at specified intervals.
+
+Commonly Used Types:
+System.Threading.Timer
+System.Threading.TimerCallback
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.ValueTuple
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides the System.ValueTuple structs, which implement the underlying types for tuples in C# and Visual Basic.
+
+Commonly Used Types:
+System.ValueTuple
+System.ValueTuple<T1>
+System.ValueTuple<T1, T2>
+System.ValueTuple<T1, T2, T3>
+System.ValueTuple<T1, T2, T3, T4>
+System.ValueTuple<T1, T2, T3, T4, T5>
+System.ValueTuple<T1, T2, T3, T4, T5, T6>
+System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+System.ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+ 
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Xml.ReaderWriter
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides provides a fast, non-cached, forward-only way to read and write Extensible Markup Language (XML) data.
+
+Commonly Used Types:
+System.Xml.XmlNodeType
+System.Xml.XmlException
+System.Xml.XmlReader
+System.Xml.XmlWriter
+System.Xml.IXmlLineInfo
+System.Xml.XmlNameTable
+System.Xml.IXmlNamespaceResolver
+System.Xml.XmlNamespaceManager
+System.Xml.XmlQualifiedName
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Xml.ReaderWriter
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides provides a fast, non-cached, forward-only way to read and write Extensible Markup Language (XML) data.
+
+Commonly Used Types:
+System.Xml.XmlNodeType
+System.Xml.XmlException
+System.Xml.XmlReader
+System.Xml.XmlWriter
+System.Xml.IXmlLineInfo
+System.Xml.XmlNameTable
+System.Xml.IXmlNamespaceResolver
+System.Xml.XmlNamespaceManager
+System.Xml.XmlQualifiedName
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Xml.XDocument
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides the classes for Language-Integrated Query (LINQ) to Extensible Markup Language (XML). LINQ to XML is an in-memory XML programming interface that enables you to modify XML documents efficiently and easily.
+
+Commonly Used Types:
+System.Xml.Linq.XElement
+System.Xml.Linq.XAttribute
+System.Xml.Linq.XDocument
+System.Xml.Linq.XText
+System.Xml.Linq.XNode
+System.Xml.Linq.XContainer
+System.Xml.Linq.XComment
+System.Xml.Linq.XObject
+System.Xml.Linq.XProcessingInstruction
+System.Xml.Linq.XDocumentType
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Xml.XDocument
+Version:4.0.11
+project URL:https://dot.net/
+Description:Provides the classes for Language-Integrated Query (LINQ) to Extensible Markup Language (XML). LINQ to XML is an in-memory XML programming interface that enables you to modify XML documents efficiently and easily.
+
+Commonly Used Types:
+System.Xml.Linq.XElement
+System.Xml.Linq.XAttribute
+System.Xml.Linq.XDocument
+System.Xml.Linq.XText
+System.Xml.Linq.XNode
+System.Xml.Linq.XContainer
+System.Xml.Linq.XComment
+System.Xml.Linq.XObject
+System.Xml.Linq.XProcessingInstruction
+System.Xml.Linq.XDocumentType
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Xml.XmlDocument
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides an older in-memory Extensible Markup Language (XML) programming interface that enables you to modify XML documents. Developers should prefer the classes in the System.Xml.XDocument package.
+
+Commonly Used Types:
+System.Xml.XmlNode
+System.Xml.XmlElement
+System.Xml.XmlAttribute
+System.Xml.XmlDocument
+System.Xml.XmlDeclaration
+System.Xml.XmlText
+System.Xml.XmlComment
+System.Xml.XmlNodeList
+System.Xml.XmlWhitespace
+System.Xml.XmlCDataSection
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:System.Xml.XmlSerializer
+Version:4.3.0
+project URL:https://dot.net/
+Description:Provides classes for serializing objects to the Extensible Markup Language (XML) and deserializing XML data to objects.
+
+Commonly Used Types:
+System.Xml.Serialization.IXmlSerializable
+System.Xml.Serialization.XmlSerializer
+System.Xml.Serialization.XmlIgnoreAttribute
+System.Xml.Serialization.XmlElementAttribute
+System.Xml.Serialization.XmlAttributeAttribute
+System.Xml.Serialization.XmlArrayAttribute
+System.Xml.Serialization.XmlRootAttribute
+System.Xml.Serialization.XmlArrayItemAttribute
+System.Xml.Serialization.XmlTypeAttribute
+System.Xml.Serialization.XmlEnumAttribute
+ 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
