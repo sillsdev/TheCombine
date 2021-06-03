@@ -5,7 +5,7 @@ metadata:
   labels:
     io.kompose.service: backend-data
   name: backend-data
-  namespace: thecombine
+  namespace: {{ app_namespace }}
 spec:
   accessModes:
     - ReadWriteOnce

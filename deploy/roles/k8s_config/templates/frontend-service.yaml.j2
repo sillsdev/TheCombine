@@ -9,17 +9,13 @@ metadata:
   labels:
     io.kompose.service: frontend
   name: frontend
-  namespace: thecombine
+  namespace: {{ app_namespace }}
 spec:
   ports:
     - name: "80"
       port: 80
       targetPort: 80
-    - name: "443"
-      port: 443
-      targetPort: 443
   selector:
     io.kompose.service: frontend
-  type: NodePort
 status:
   loadBalancer: {}

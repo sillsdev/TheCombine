@@ -72,6 +72,11 @@
       with_fileglob:
         - "{{ k8s_working_dir }}/*-deployment.yaml"
 
+    - name: Create Ingress
+      command: kubectl --kubeconfig=kubeconfig apply -f combine-ingress.yaml
+      args:
+        chdir: "{{ k8s_working_dir }}"
+
     - name: Create Services
       command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
       args:

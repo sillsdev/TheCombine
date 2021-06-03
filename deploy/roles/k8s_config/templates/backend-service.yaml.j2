@@ -9,7 +9,7 @@ metadata:
   labels:
     io.kompose.service: backend
   name: backend
-  namespace: thecombine
+  namespace: {{ app_namespace }}
 spec:
   ports:
     - name: "5000"
