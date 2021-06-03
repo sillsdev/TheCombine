@@ -1,0 +1,3 @@
+---
+# Local Working directory
+k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}"
