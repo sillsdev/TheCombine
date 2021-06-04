@@ -32,6 +32,7 @@ FROM nginx:1.20
 
 WORKDIR /app
 
+ARG NGINX_CONF_TEMPLATE=templates
 ENV USER_GUIDE_HOST_DIR /usr/share/nginx/user_guide
 ENV FRONTEND_HOST_DIR /usr/share/nginx/html
 
@@ -52,7 +53,7 @@ COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/nuc/tractor.png
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png
 
 # Setup nginx configuration templates
-COPY nginx/templates/* /etc/nginx/templates/
+COPY nginx/${NGINX_CONF_TEMPLATE}/* /etc/nginx/templates/
 
 # Copy additional configuration scripts
 COPY nginx/init/* /docker-entrypoint.d/

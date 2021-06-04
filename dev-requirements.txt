@@ -8,18 +8,14 @@ appdirs==1.4.4
     # via
     #   black
     #   virtualenv
-black==21.5b1
+black==21.5b2
     # via -r dev-requirements.in
-click==8.0.0
+click==8.0.1
     # via
     #   black
     #   mkdocs
     #   nltk
-colorama==0.4.4
-    # via
-    #   click
-    #   tox
-distlib==0.3.1
+distlib==0.3.2
     # via virtualenv
 filelock==3.0.12
     # via
@@ -37,9 +33,12 @@ humanfriendly==9.1
     # via -r dev-requirements.in
 isort==5.8.0
     # via -r dev-requirements.in
+jinja2-base64-filters==0.1.4
+    # via -r dev-requirements.in
 jinja2==2.11.3
     # via
     #   -r dev-requirements.in
+    #   jinja2-base64-filters
     #   mkdocs
 joblib==1.0.1
     # via nltk
@@ -52,13 +51,13 @@ markdown==3.3.4
     #   mkdocs
     #   mkdocs-material
     #   pymdown-extensions
-markupsafe==2.0.0
+markupsafe==2.0.1
     # via jinja2
 mccabe==0.6.1
     # via flake8
 mkdocs-material-extensions==1.0.1
     # via mkdocs-material
-mkdocs-material==7.1.4
+mkdocs-material==7.1.6
     # via
     #   -r dev-requirements.in
     #   mkdocs-material-extensions
@@ -92,8 +91,6 @@ pymdown-extensions==8.2
     # via mkdocs-material
 pyparsing==2.4.7
     # via packaging
-pyreadline==2.1
-    # via humanfriendly
 pyyaml==5.4.1
     # via mkdocs
 regex==2021.4.4
@@ -116,11 +113,11 @@ tornado==6.1
     #   mkdocs
 tox==3.23.1
     # via -r dev-requirements.in
-tqdm==4.60.0
+tqdm==4.61.0
     # via nltk
 typed-ast==1.4.3
     # via mypy
 typing-extensions==3.10.0.0
     # via mypy
-virtualenv==20.4.6
+virtualenv==20.4.7
     # via tox

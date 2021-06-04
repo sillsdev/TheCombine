@@ -30,26 +30,6 @@
       args:
         chdir: "{{ k8s_working_dir }}"
 
-    - name: Configure registry-creds for Image Pull Secrets
-      block:
-        - name: create registry-creds yaml files
-          template:
-            src: "{{ item}}.j2"
-            dest: "{{ k8s_working_dir }}/{{ item }}"
-            mode: 0600
-          with_items:
-            - registry-secrets.yaml
-            - registry-creds-deployment.yaml
-
-        - name: Apply registry-creds yaml files
-          command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
-          args:
-            chdir: "{{ k8s_working_dir }}"
-          with_items:
-            - registry-secrets.yaml
-            - registry-creds-deployment.yaml
-      when: pull_secrets_manager == "registry_creds"
-
     - name: Configure Persistent Storage
       command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
       args:

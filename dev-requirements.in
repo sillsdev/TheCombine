@@ -18,4 +18,5 @@ mkdocs-material
 # TODO: Try out Jinja2 3.x after dust has settled from this issue:
 #   https://github.com/pallets/jinja/issues/1168
 Jinja2 < 3
+jinja2-base64-filters
 humanfriendly

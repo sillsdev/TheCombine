@@ -1,23 +1,6 @@
 server {
-    listen 80;
-    server_name ${SERVER_NAME};
-    server_tokens off;
-
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-
-    location / {
-        return 301 https://$host$request_uri;
-    }
-}
-
-server {
-    listen              443 ssl;
+    listen              80;
     server_name         ${SERVER_NAME};
-    ssl_certificate     ${SSL_CERTIFICATE};
-    ssl_certificate_key ${SSL_PRIVATE_KEY};
-    ssl_protocols       TLSv1.2 TLSv1.3;
     charset             utf-8;
 
     # Allow clients to import large projects.
