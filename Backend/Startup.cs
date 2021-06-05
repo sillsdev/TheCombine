@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Converters;
 
 namespace BackendFramework
 {
@@ -142,7 +143,11 @@ namespace BackendFramework
                 // TODO: This may be able to be removed by reviewing the raw JSON from the frontend to see if there
                 //    is malformed data, such as an integer sent as a string ("10"). .NET Core 3.0's JSON parser
                 //    no longer automatically tries to coerce these values.
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(options =>
+                    // Required so that integer enum's can be passed in JSON as their descriptive string names, rather
+                    //  than by opaque integer values. This makes the OpenAPI schema much more expressive for
+                    //  integer enums. https://stackoverflow.com/a/55541764
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
             services.AddSignalR();
             services.AddSwaggerGen();
