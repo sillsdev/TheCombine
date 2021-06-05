@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { Key } from "ts-key-enum";
 
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
@@ -205,7 +206,7 @@ export default class NewEntry extends React.Component<
   }
 
   handleEnter(e: React.KeyboardEvent, checkGloss: boolean) {
-    if (!this.state.vernOpen && e.key === "Enter") {
+    if (!this.state.vernOpen && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular
       if (this.state.newEntry.vernacular) {
         // The user can conditionally submit a new entry without a gloss

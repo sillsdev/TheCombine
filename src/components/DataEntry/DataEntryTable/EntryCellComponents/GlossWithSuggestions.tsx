@@ -2,6 +2,7 @@ import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { Key } from "ts-key-enum";
 
 import SpellChecker from "components/DataEntry/spellChecker";
 
@@ -65,7 +66,7 @@ export class GlossWithSuggestions extends React.Component<
           />
         )}
         onKeyPress={(e: React.KeyboardEvent) => {
-          if (e.key === "Enter" || e.key === "Tab")
+          if (e.key === Key.Enter || e.key === Key.Tab)
             this.props.handleEnterAndTab(e);
         }}
       />

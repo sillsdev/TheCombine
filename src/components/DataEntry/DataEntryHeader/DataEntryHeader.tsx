@@ -6,6 +6,7 @@ import {
   withLocalize,
   LocalizeContextProps,
 } from "react-localize-redux";
+import { Key } from "ts-key-enum";
 
 import DomainTree from "types/SemanticDomain";
 import theme from "types/theme";
@@ -47,7 +48,7 @@ export class DataEntryHeader extends React.Component<
           style={{ paddingTop: "8px" }}
           disabled={!hasQuestions}
           onKeyPress={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === Key.Enter) {
               this.props.setQuestionVisibility(!this.props.questionsVisible);
             }
           }}

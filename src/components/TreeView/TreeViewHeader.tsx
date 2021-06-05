@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
 import Bounce from "react-reveal/Bounce";
+import { Key } from "ts-key-enum";
 
 import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
@@ -128,15 +129,15 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
   // Navigate tree via arrow keys
   const navigateDomainArrowKeys = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") {
+      if (event.key === Key.ArrowLeft) {
         const domain = getBrotherDomain(-1, props);
         if (domain && domain.id !== props.currentDomain.id)
           props.animate(domain);
-      } else if (event.key === "ArrowRight") {
+      } else if (event.key === Key.ArrowRight) {
         const domain = getBrotherDomain(1, props);
         if (domain && domain.id !== props.currentDomain.id)
           props.animate(domain);
-      } else if (event.key === "ArrowUp") {
+      } else if (event.key === Key.ArrowUp) {
         if (props.currentDomain.parentDomain)
           props.animate(props.currentDomain.parentDomain);
       }
@@ -191,7 +192,7 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
     }
     event.bubbles = false;
 
-    if (event.key === "Enter") {
+    if (event.key === Key.Enter) {
       event.preventDefault();
       // Find parent domain
       let parent: SemanticDomainWithSubdomains | undefined =
