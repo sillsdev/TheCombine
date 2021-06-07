@@ -11,6 +11,7 @@ import {
 import { Clear } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
+import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
@@ -50,7 +51,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
   }
 
   function confirmIfEnter(event: React.KeyboardEvent<any>) {
-    if (event.key === "Enter") {
+    if (event.key === Key.Enter) {
       onConfirm();
     }
   }
