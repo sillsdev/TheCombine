@@ -3,9 +3,9 @@ import { Translate } from "react-localize-redux";
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { Project } from "api/models";
 import * as backend from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
-import { Project } from "types/project";
 
 enum UploadState {
   Awaiting,

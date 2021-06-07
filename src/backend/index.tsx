@@ -2,16 +2,23 @@ import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 
 import * as Api from "api";
+import {
+  EmailInviteStatus,
+  MergeWords,
+  Permission,
+  Project,
+  User,
+  UserEdit,
+  UserRole,
+  Word,
+} from "api/models";
 import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
-import { Goal, GoalStep, UserEdit } from "types/goals";
+import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
-import { Permission, Project, UserRole } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
-import { User } from "types/user";
-import { MergeWords, Word } from "types/word";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -117,7 +124,7 @@ export async function emailInviteToProject(
 export async function validateLink(
   projectId: string,
   token: string
-): Promise<Api.EmailInviteStatus> {
+): Promise<EmailInviteStatus> {
   return (await inviteApi.validateToken({ projectId, token }, defaultOptions()))
     .data;
 }

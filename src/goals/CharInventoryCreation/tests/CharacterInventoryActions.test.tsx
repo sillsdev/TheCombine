@@ -2,6 +2,7 @@ import { Action } from "redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import { User } from "api/models";
 import { updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { SET_CURRENT_PROJECT } from "components/Project/ProjectReduxTypes";
@@ -16,8 +17,8 @@ import {
 import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { StoreState } from "types";
 import { Goal } from "types/goals";
-import { defaultProject } from "types/project";
-import { User } from "types/user";
+import { newProject } from "types/project";
+import { newUser } from "types/user";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -66,7 +67,7 @@ let oldUser: User | undefined;
 const mockProjectId = "123";
 const mockUserEditId = "456";
 const mockUserId = "789";
-let mockUser = new User("", "", "");
+let mockUser = newUser();
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
@@ -140,7 +141,7 @@ describe("CharacterInventoryActions", () => {
     const undAcc = "undecided->accepted";
     const undRej = "undecided->rejected";
     const oldProj = {
-      ...defaultProject,
+      ...newProject(),
       validCharacters: [accAcc, accRej, accUnd],
       rejectedCharacters: [rejAcc, rejRej, rejUnd],
     };

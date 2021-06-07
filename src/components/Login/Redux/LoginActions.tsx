@@ -8,7 +8,7 @@ import {
 } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {
@@ -16,7 +16,7 @@ export function asyncLogin(username: string, password: string) {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
-      .then(async (user: User) => {
+      .then(async (user) => {
         dispatch(loginSuccess(user.username));
         // hash the user name and use it in analytics.identify
         const analyticsId = hash
@@ -68,10 +68,10 @@ export function asyncRegister(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    const newUser = new User(name, username, password);
-    newUser.email = email;
+    const user = newUser(name, username, password);
+    user.email = email;
     await backend
-      .addUser(newUser)
+      .addUser(user)
       .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
@@ -96,10 +96,10 @@ export function asyncRegisterForEmailInvite(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    const newUser = new User(name, username, password);
-    newUser.email = email;
+    const user = newUser(name, username, password);
+    user.email = email;
     await backend
-      .addUser(newUser)
+      .addUser(user)
       .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {

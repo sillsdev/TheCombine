@@ -1,6 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import { User } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import * as LoginAction from "components/Login/Redux/LoginActions";
 import * as LoginReducer from "components/Login/Redux/LoginReducer";
@@ -10,7 +11,7 @@ import {
   UserAction,
 } from "components/Login/Redux/LoginReduxTypes";
 import * as RootAction from "rootActions";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 jest.mock("backend", () => {
   return {
@@ -30,7 +31,7 @@ const createMockStore = configureMockStore([thunk]);
 const mockState = LoginReducer.defaultState;
 
 const mockUser = {
-  ...new User("testName", "testUsername", "testPass"),
+  ...newUser("testName", "testUsername", "testPass"),
   token: "testToken",
   email: "test@e.mail",
 };

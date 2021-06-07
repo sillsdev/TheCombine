@@ -1,6 +1,6 @@
 import { Button, Card, Grid, TextField, Typography } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 

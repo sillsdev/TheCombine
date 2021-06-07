@@ -1,5 +1,6 @@
 import { LocalizeState } from "react-localize-redux";
 
+import { Project } from "api/models";
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
 import { PasswordResetState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
@@ -10,7 +11,6 @@ import { CharacterInventoryState } from "goals/CharInventoryCreation/Redux/Chara
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { GoalsState } from "types/goals";
-import { Project } from "types/project";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 
 //root store structure

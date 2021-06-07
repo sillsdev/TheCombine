@@ -14,7 +14,7 @@ export interface ReviewUpdateWords {
 export interface ReviewUpdateWord {
   type: ReviewEntriesActionTypes.UpdateWord;
   oldId: string;
-  newWord: ReviewEntriesWord;
+  updatedWord: ReviewEntriesWord;
 }
 
 export interface ReviewClearReviewEntriesState {

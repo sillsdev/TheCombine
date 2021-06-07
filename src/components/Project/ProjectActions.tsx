@@ -1,10 +1,10 @@
+import { Project } from "api/models";
 import { updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
 import {
   ProjectAction,
   SET_CURRENT_PROJECT,
 } from "components/Project/ProjectReduxTypes";
-import { Project } from "types/project";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 export function setCurrentProject(payload?: Project): ProjectAction {

@@ -1,10 +1,11 @@
+import { State, Word } from "api/models";
 import {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
-import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
+import { DomainWord, newSense, simpleWord } from "types/word";
 
 const mockWord = simpleWord("", "");
 const mockDomainWord: DomainWord = {
@@ -24,11 +25,11 @@ describe("DataEntryComponent", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [{ ...new Sense(), accessibility: State.Deleted }],
+          senses: [{ ...newSense(), accessibility: State.Deleted }],
         },
         {
           ...mockWord,
-          senses: [{ ...new Sense(), accessibility: State.Duplicate }],
+          senses: [{ ...newSense(), accessibility: State.Duplicate }],
         },
       ];
       expect(filterWords(words)).toHaveLength(0);
@@ -38,7 +39,7 @@ describe("DataEntryComponent", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [{ ...new Sense(), accessibility: State.Active }],
+          senses: [newSense()],
         },
       ];
       expect(filterWords(words)).toHaveLength(1);
@@ -51,26 +52,26 @@ describe("DataEntryComponent", () => {
       new TreeSemanticDomain("ID_two, weather"),
     ];
 
-    const sense: Sense[] = [
-      { ...new Sense("", "", mockDomains[0]), accessibility: State.Active },
-      { ...new Sense("", "", mockDomains[1]), accessibility: State.Active },
+    const senses = [
+      newSense("", "", mockDomains[0]),
+      newSense("", "", mockDomains[1]),
     ];
 
     const unfilteredWords: Word[] = [
       {
         ...mockWord,
         vernacular: "one",
-        senses: [...mockWord.senses, sense[0]],
+        senses: [...mockWord.senses, senses[0]],
       },
       {
         ...mockWord,
         vernacular: "two",
-        senses: [...mockWord.senses, sense[1]],
+        senses: [...mockWord.senses, senses[1]],
       },
       {
         ...mockWord,
         vernacular: "three",
-        senses: [...mockWord.senses, sense[0]],
+        senses: [...mockWord.senses, senses[0]],
       },
     ];
 

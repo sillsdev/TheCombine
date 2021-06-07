@@ -1,89 +1,61 @@
 import { v4 } from "uuid";
 
+import { Gloss, Note, SemanticDomain, Sense, State, Word } from "api/models";
 import { randomIntString } from "utilities";
-import {
-  Gloss,
-  MergeSourceWord,
-  MergeWords,
-  Note as INote,
-  SemanticDomain as ISemanticDomain,
-  SemanticDomainWithSubdomains,
-  Sense as ISense,
-  State,
-  Word as IWord,
-} from "api/models";
 
-// Re-export interfaces from backend models.
-export type {
-  Gloss,
-  MergeSourceWord,
-  MergeWords,
-  SemanticDomainWithSubdomains,
-};
-
-// Re-export enums from backend models.
-export { State };
-
-// Define frontend classes on backend models.
-
-export class SemanticDomain implements ISemanticDomain {
-  id: string;
-  name: string;
-  description = ""; // Only  used in the backend.
-
-  constructor(id?: string, name?: string) {
-    this.id = id ?? "";
-    this.name = name ?? "";
-  }
+export function newGloss(def: string = "", language: string = ""): Gloss {
+  return { def, language };
 }
 
-export class Sense implements ISense {
-  guid: string;
-  glosses: Gloss[] = [];
-  semanticDomains: SemanticDomain[] = [];
-  accessibility = State.Active;
-
-  constructor(gloss?: string, lang?: string, semDom?: SemanticDomain) {
-    this.guid = v4();
-    if (gloss) {
-      this.glosses.push({ def: gloss, language: lang ?? "" });
-    }
-    if (semDom) {
-      this.semanticDomains.push(semDom);
-    }
-  }
+export function newSemanticDomain(
+  id: string = "",
+  name: string = ""
+): SemanticDomain {
+  return { id, name, description: "" };
 }
 
-export class Note implements INote {
-  language: string; // bcp-47 code
-  text: string;
-
-  constructor(text: string = "", lang: string = "") {
-    this.text = text;
-    this.language = lang;
+export function newSense(
+  gloss?: string,
+  lang?: string,
+  semDom?: SemanticDomain
+): Sense {
+  const sense: Sense = {
+    guid: v4(),
+    glosses: [],
+    semanticDomains: [],
+    accessibility: State.Active,
+  };
+  if (gloss) {
+    sense.glosses.push(newGloss(gloss, lang));
   }
+  if (semDom) {
+    sense.semanticDomains.push(semDom);
+  }
+  return sense;
 }
 
-export class Word implements IWord {
-  id: string = "";
-  guid: string;
-  vernacular: string = "";
-  plural: string = "";
-  senses: Sense[] = [];
-  audio: string[] = [];
-  created: string = "";
-  modified: string = "";
-  accessibility: State = State.Active;
-  history: string[] = [];
-  partOfSpeech: string = "";
-  editedBy: string[] = [];
-  otherField: string = "";
-  projectId: string = "";
-  note: Note = new Note();
+export function newNote(text: string = "", language: string = ""): Note {
+  return { text, language };
+}
 
-  constructor() {
-    this.guid = v4();
-  }
+export function newWord(vernacular: string = ""): Word {
+  return {
+    id: "",
+    guid: v4(),
+    vernacular,
+    plural: "",
+    senses: [],
+    audio: [],
+    created: "",
+    modified: "",
+    accessibility: State.Active,
+    history: [],
+    partOfSpeech: "",
+    editedBy: [],
+    otherField: "",
+    projectId: "",
+    note: newNote(),
+  };
 }
 
 // Used in DataEntry
@@ -103,31 +75,28 @@ export function hasSenses(word: Word): boolean {
 
 export function simpleWord(vern: string, gloss: string): Word {
   return {
-    ...new Word(),
+    ...newWord(vern),
     id: randomIntString(),
-    vernacular: vern,
-    senses: [new Sense(gloss)],
+    senses: [newSense(gloss)],
   };
 }
 
 export function multiSenseWord(vern: string, glosses: string[]): Word {
   return {
-    ...new Word(),
+    ...newWord(vern),
     id: randomIntString(),
-    vernacular: vern,
-    senses: glosses.map((gloss) => new Sense(gloss)),
+    senses: glosses.map((gloss) => newSense(gloss)),
   };
 }
 
 // Used for unit testing, as the expected result, when the guids don't matter.
 export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
   return {
-    ...new Word(),
+    ...newWord(vern),
     id: randomIntString(),
     guid: expect.any(String),
-    vernacular: vern,
     senses: glosses.map((gloss) => ({
-      ...new Sense(gloss),
+      ...newSense(gloss),
       guid: expect.any(String),
     })),
   };
@@ -156,15 +125,14 @@ export function testWordList(): Word[] {
 export function cleanGlosses(glosses: Gloss[]): Gloss[] {
   const nonemptyGlosses = glosses.filter((g) => g.def.length);
   const langs = [...new Set(nonemptyGlosses.map((g) => g.language))];
-  return langs.map(
-    (language) =>
-      ({
-        def: nonemptyGlosses
-          .filter((g) => g.language === language)
-          .map((g) => g.def)
-          .join(", "),
-        language,
-      } as Gloss)
+  return langs.map((language) =>
+    newGloss(
+      nonemptyGlosses
+        .filter((g) => g.language === language)
+        .map((g) => g.def)
+        .join(", "),
+      language
+    )
   );
 }
 

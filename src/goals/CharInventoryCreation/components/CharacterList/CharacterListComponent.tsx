@@ -6,7 +6,7 @@ import {
   Select,
 } from "@material-ui/core";
 import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
-import * as React from "react";
+import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,

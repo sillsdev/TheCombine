@@ -1,4 +1,4 @@
-import { User } from "types/user";
+import { User } from "api/models";
 
 export enum LocalStorageKey {
   Avatar = "avatar",

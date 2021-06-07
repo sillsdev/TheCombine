@@ -1,23 +1,25 @@
-import { User as IUser } from "api/models";
-import { Hash } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { User } from "api/models";
 
-export class User implements IUser {
-  id: string = "";
-  avatar: string = "";
-  hasAvatar: boolean = false;
-  email: string = "";
-  phone: string = "";
-  otherConnectionField: string = "";
-  projectRoles: Hash<string> = {};
-  workedProjects: Hash<string> = {};
-  agreement: boolean = false;
-  uiLang: string = "";
-  token: string = "";
-  isAdmin: boolean = false;
-
-  constructor(
-    public name: string,
-    public username: string,
-    public password: string
-  ) {}
+export function newUser(
+  name: string = "",
+  username: string = "",
+  password: string = ""
+): User {
+  return {
+    name,
+    username,
+    password,
+    id: "",
+    avatar: "",
+    hasAvatar: false,
+    email: "",
+    phone: "",
+    otherConnectionField: "",
+    projectRoles: {},
+    workedProjects: {},
+    agreement: false,
+    uiLang: "",
+    token: "",
+    isAdmin: false,
+  };
 }

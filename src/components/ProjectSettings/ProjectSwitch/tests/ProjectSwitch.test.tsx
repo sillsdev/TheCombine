@@ -1,11 +1,10 @@
 import { ListItem } from "@material-ui/core";
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultProject, randomProject } from "types/project";
 import { ProjectSwitch } from "components/ProjectSettings/ProjectSwitch/ProjectSwitch";
+import { newProject, randomProject } from "types/project";
 
 const projects = [randomProject(), randomProject(), randomProject()];
 var switchMaster: ReactTestRenderer;
@@ -15,17 +14,12 @@ const createMockStore = configureMockStore([]);
 
 describe("ProjectSwitch", () => {
   beforeAll(() => {
-    const state = {
-      currentProject: { defaultProject },
-    };
+    const state = { currentProject: newProject() };
     const mockStore = createMockStore(state);
     renderer.act(() => {
       switchMaster = renderer.create(
         <Provider store={mockStore}>
-          <ProjectSwitch
-            project={defaultProject}
-            setCurrentProject={jest.fn()}
-          />
+          <ProjectSwitch project={newProject()} setCurrentProject={jest.fn()} />
         </Provider>
       );
     });

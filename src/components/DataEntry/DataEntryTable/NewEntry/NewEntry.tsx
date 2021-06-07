@@ -3,6 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
+import { SemanticDomain, Word } from "api/models";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import {
@@ -14,7 +15,7 @@ import {
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import theme from "types/theme";
-import { SemanticDomain, Sense, Word } from "types/word";
+import { newSense, newWord } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
 interface NewEntryProps {
@@ -26,7 +27,7 @@ interface NewEntryProps {
     gloss: string,
     audioFileURLs: string[]
   ) => void;
-  addNewWord: (newWord: Word, newAudio: string[]) => void;
+  addNewWord: (newEntry: Word, newAudio: string[]) => void;
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
@@ -65,7 +66,7 @@ export default class NewEntry extends React.Component<
   constructor(props: NewEntryProps) {
     super(props);
     this.state = {
-      newEntry: new Word(),
+      newEntry: newWord(),
       activeGloss: "",
       audioFileURLs: [],
       suggestedVerns: [],
@@ -99,7 +100,7 @@ export default class NewEntry extends React.Component<
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
-        senses: [new Sense(newValue, props.analysisLang, props.semanticDomain)],
+        senses: [newSense(newValue, props.analysisLang, props.semanticDomain)],
       },
       activeGloss: newValue,
     }));
@@ -144,7 +145,7 @@ export default class NewEntry extends React.Component<
 
   resetState() {
     this.setState({
-      newEntry: new Word(),
+      newEntry: newWord(),
       activeGloss: "",
       audioFileURLs: [],
       suggestedVerns: [],
@@ -170,7 +171,7 @@ export default class NewEntry extends React.Component<
       : {
           ...this.state.newEntry,
           senses: [
-            new Sense("", this.props.analysisLang, this.props.semanticDomain),
+            newSense("", this.props.analysisLang, this.props.semanticDomain),
           ],
         };
     this.props.addNewWord(newEntry, this.state.audioFileURLs);
@@ -226,10 +227,7 @@ export default class NewEntry extends React.Component<
     let selectedWord: Word | undefined;
     let senseOpen = false;
     if (selectedWordId === "") {
-      selectedWord = {
-        ...new Word(),
-        vernacular: this.state.newEntry.vernacular,
-      };
+      selectedWord = newWord(this.state.newEntry.vernacular);
     } else if (selectedWordId) {
       selectedWord = this.state.dupVernWords.find(
         (word: Word) => word.id === selectedWordId

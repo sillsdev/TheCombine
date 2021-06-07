@@ -1,12 +1,6 @@
+import { Gloss, SemanticDomain, Sense, State, Word } from "api/models";
 import Recorder from "components/Pronunciations/Recorder";
-import {
-  cleanGlosses,
-  Gloss,
-  SemanticDomain,
-  Sense,
-  State,
-  Word,
-} from "types/word";
+import { cleanGlosses, newSense, newWord } from "types/word";
 
 export class ReviewEntriesWord {
   id: string;
@@ -18,7 +12,7 @@ export class ReviewEntriesWord {
 
   constructor(word?: Word, analysisLang?: string, commonRecorder?: Recorder) {
     if (!word) {
-      word = new Word();
+      word = newWord();
     }
     this.id = word.id;
     this.vernacular = word.vernacular;
@@ -39,7 +33,7 @@ export class ReviewEntriesSense {
 
   constructor(sense?: Sense, analysisLang?: string) {
     if (!sense) {
-      sense = new Sense();
+      sense = newSense();
     }
     this.guid = sense.guid;
     this.glosses = analysisLang

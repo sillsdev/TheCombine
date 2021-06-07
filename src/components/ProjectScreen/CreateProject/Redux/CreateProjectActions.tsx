@@ -1,3 +1,4 @@
+import { WritingSystem } from "api/models";
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
@@ -6,7 +7,7 @@ import {
   CreateProjectAction,
   CreateProjectActionTypes,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
-import { defaultProject, Project, WritingSystem } from "types/project";
+import { newProject } from "types/project";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 //thunk action creator
@@ -19,8 +20,7 @@ export function asyncCreateProject(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress(name, vernacularLanguage, analysisLanguages));
     // Create project
-    let project: Project = { ...defaultProject };
-    project.name = name;
+    const project = newProject(name);
     project.vernacularWritingSystem = vernacularLanguage;
     project.analysisWritingSystems = analysisLanguages;
 

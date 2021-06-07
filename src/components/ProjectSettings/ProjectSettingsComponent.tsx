@@ -18,6 +18,7 @@ import {
   Language,
 } from "@material-ui/icons";
 
+import { AutocompleteSetting, Permission, Project } from "api/models";
 import * as backend from "backend";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "components/ProjectExport";
@@ -28,12 +29,6 @@ import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ProjectUsers, {
   ActiveUsers,
 } from "components/ProjectSettings/ProjectUsers";
-import {
-  AutocompleteSetting,
-  Permission,
-  Project,
-  UserRole,
-} from "types/project";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -61,14 +56,14 @@ export default class ProjectSettingsComponent extends React.Component<
   }
 
   private async getSettings() {
-    let allPermissions: UserRole[] = await backend.getUserRoles();
-    let currentRole: UserRole | undefined = allPermissions.find(
+    const allPermissions = await backend.getUserRoles();
+    const currentRole = allPermissions.find(
       (value) => value.projectId === this.props.project.id
     );
-    let settings: ProjectSettingsState = { ...this.state };
+    const settings: ProjectSettingsState = { ...this.state };
 
     if (currentRole !== undefined)
-      for (let role of currentRole.permissions) {
+      for (const role of currentRole.permissions) {
         if (role === Permission.ImportExport) {
           settings.projectName = this.props.project.name;
           settings.autocompleteSetting = this.props.project.autocompleteSetting;

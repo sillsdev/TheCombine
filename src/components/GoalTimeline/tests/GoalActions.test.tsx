@@ -2,6 +2,7 @@ import { Action } from "redux";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import { User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import * as actions from "components/GoalTimeline/Redux/GoalActions";
@@ -15,9 +16,9 @@ import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
-import { Goal, GoalsState, UserEdit } from "types/goals";
+import { Goal, GoalsState } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {
   const realMergeDupActions = jest.requireActual(
@@ -82,7 +83,7 @@ const mockProjectId = "123";
 const mockUserEditId = "456";
 const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [], projectId: "" };
 const mockUserId = "789";
-let mockUser = new User("", "", "");
+const mockUser = newUser();
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 

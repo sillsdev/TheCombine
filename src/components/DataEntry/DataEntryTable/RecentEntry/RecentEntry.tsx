@@ -1,21 +1,22 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 
-import theme from "types/theme";
-import { Sense, Word } from "types/word";
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
-import Recorder from "components/Pronunciations/Recorder";
+import { Sense, Word } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
+import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Recorder from "components/Pronunciations/Recorder";
+import theme from "types/theme";
+import { newGloss } from "types/word";
 
 interface RecentEntryProps {
   entry: Word;
   senseIndex: number;
-  updateGloss: (newGloss: string) => void;
+  updateGloss: (gloss: string) => void;
   updateNote: (newText: string) => void;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
   removeEntry: () => void;
@@ -42,9 +43,9 @@ export default class RecentEntry extends React.Component<
   constructor(props: RecentEntryProps) {
     super(props);
 
-    let sense: Sense = { ...props.entry.senses[props.senseIndex] };
+    const sense: Sense = { ...props.entry.senses[props.senseIndex] };
     if (sense.glosses.length < 1) {
-      sense.glosses.push({ def: "", language: this.props.analysisLang });
+      sense.glosses.push(newGloss("", this.props.analysisLang));
     }
 
     this.state = {
@@ -59,8 +60,7 @@ export default class RecentEntry extends React.Component<
   }
 
   updateVernField(newValue?: string): Word[] {
-    const vernacular: string = newValue ? newValue : "";
-    this.setState({ vernacular });
+    this.setState({ vernacular: newValue ?? "" });
     return [];
   }
 

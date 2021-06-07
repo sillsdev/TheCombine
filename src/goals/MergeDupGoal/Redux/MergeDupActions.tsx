@@ -1,3 +1,4 @@
+import { MergeSourceWord, MergeWords, State, Word } from "api/models";
 import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -30,7 +31,6 @@ import { StoreState } from "types";
 import { GoalType } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
 // Action Creators
 

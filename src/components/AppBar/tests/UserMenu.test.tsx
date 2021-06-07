@@ -5,7 +5,7 @@ import configureMockStore from "redux-mock-store";
 
 import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 jest.mock("backend", () => {
   return {
@@ -27,7 +27,7 @@ const mockStore = configureMockStore([])();
 
 const mockGetUser = jest.fn();
 const mockGetUserId = jest.fn();
-const mockUser = new User("", "", "");
+const mockUser = newUser();
 const mockUserId = "mockUserId";
 
 function setMockFunctions() {

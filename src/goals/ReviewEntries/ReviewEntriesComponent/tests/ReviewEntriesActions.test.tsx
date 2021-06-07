@@ -1,6 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import { Sense, Word } from "api/models";
 import {
   getSenseError,
   getSenseFromEditSense,
@@ -10,7 +11,7 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { Gloss, SemanticDomain, Sense, State, Word } from "types/word";
+import { newGloss, newSemanticDomain, newSense, newWord } from "types/word";
 
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
@@ -33,46 +34,45 @@ const mockStore = configureMockStore([thunk])();
 const langEn = "en";
 const langEs = "es";
 const commonGuid = "mockGuid";
-const gloss0: Gloss = { language: langEn, def: "gloss" };
-const gloss0Es: Gloss = { language: langEs, def: "glossario" };
-const gloss1: Gloss = { language: langEn, def: "infinite" };
-const domain0 = new SemanticDomain("1", "Universe");
-const domain1 = new SemanticDomain("8.3.3.2.1", "Shadow");
+const gloss0 = newGloss("gloss", langEn);
+const gloss0Es = newGloss("glossario", langEs);
+const gloss1 = newGloss("infinite", langEn);
+const domain0 = newSemanticDomain("1", "Universe");
+const domain1 = newSemanticDomain("8.3.3.2.1", "Shadow");
 
 // Dummy sense and word creators.
 function sense0(): Sense {
   return {
+    ...newSense(),
     guid: commonGuid + "0",
     glosses: [{ ...gloss0 }, { ...gloss0Es }],
     semanticDomains: [{ ...domain0 }],
-    accessibility: State.Active,
   };
 }
 function sense1(): Sense {
   return {
+    ...newSense(),
     guid: commonGuid + "1",
     glosses: [{ ...gloss1 }],
     semanticDomains: [{ ...domain1 }],
-    accessibility: State.Active,
   };
 }
 function sense1_local() {
   return new ReviewEntriesSense(sense1());
 }
-function mockFrontierWord(): Word {
+function mockFrontierWord(vernacular: string = "word"): Word {
   return {
-    ...new Word(),
+    ...newWord(vernacular),
     guid: commonGuid,
     id: "word",
-    vernacular: "word",
     senses: [sense0()],
   };
 }
-function mockReviewEntriesWord(): ReviewEntriesWord {
+function mockReviewEntriesWord(vernacular: string = "word"): ReviewEntriesWord {
   return {
     ...new ReviewEntriesWord(),
     id: "word",
-    vernacular: "word",
+    vernacular,
     senses: [new ReviewEntriesSense(sense0())],
   };
 }
@@ -85,16 +85,16 @@ beforeEach(() => {
 describe("ReviewEntriesActions", () => {
   describe("updateFrontierWord", () => {
     beforeEach(() => {
-      mockUpdateWord.mockResolvedValue(new Word());
+      mockUpdateWord.mockResolvedValue(newWord());
       mockGetWordResolve(mockFrontierWord());
     });
 
     // Functions to make dispatch and check results at end of each test.
     async function makeDispatch(
-      newWord: ReviewEntriesWord,
-      oldWord: ReviewEntriesWord
+      newRevWord: ReviewEntriesWord,
+      oldRevWord: ReviewEntriesWord
     ) {
-      await mockStore.dispatch<any>(updateFrontierWord(newWord, oldWord));
+      await mockStore.dispatch<any>(updateFrontierWord(newRevWord, oldRevWord));
     }
     function checkResultantData(newFrontierWord: Word) {
       expect(mockUpdateWord.mock.calls[0][0]).toEqual(newFrontierWord);
@@ -102,156 +102,148 @@ describe("ReviewEntriesActions", () => {
 
     describe("Adds data", () => {
       it("Changes the vernacular.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.vernacular = "foo2";
-        const newFrontierWord = mockFrontierWord();
-        newFrontierWord.vernacular = "foo2";
+        const newRevWord = mockReviewEntriesWord("foo2");
+        const newFrontierWord = mockFrontierWord("foo2");
 
-        await makeDispatch(newWord, mockReviewEntriesWord());
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
       });
 
       it("Adds a gloss to an extant sense.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses[0].glosses.push(gloss1);
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses[0].glosses.push(gloss1);
         const newFrontierWord = mockFrontierWord();
         newFrontierWord.senses[0].glosses = [gloss0, gloss0Es, gloss1];
 
-        await makeDispatch(newWord, mockReviewEntriesWord());
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
       });
 
       it("Adds a domain to an extant sense.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses[0].domains.push(domain1);
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses[0].domains.push(domain1);
         const newFrontierWord = mockFrontierWord();
         newFrontierWord.senses[0].semanticDomains.push(domain1);
 
-        await makeDispatch(newWord, mockReviewEntriesWord());
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
       });
 
       it("Adds a new sense.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses.push(sense1_local());
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses.push(sense1_local());
         const newFrontierWord = mockFrontierWord();
         newFrontierWord.senses.push({
           ...sense1(),
           guid: expect.any(String),
-          accessibility: State.Active,
         });
 
-        await makeDispatch(newWord, mockReviewEntriesWord());
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
       });
     });
 
     describe("Removes data", () => {
       it("Removes a gloss from an extant sense.", async () => {
-        const oldWord = mockReviewEntriesWord();
+        const oldRevWord = mockReviewEntriesWord();
         const oldSense = sense1_local();
-        oldWord.senses.push({
+        oldRevWord.senses.push({
           ...oldSense,
           glosses: [...oldSense.glosses, gloss0],
         });
-        const newWord = mockReviewEntriesWord();
-        newWord.senses.push(oldSense);
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses.push(oldSense);
         const oldFrontierWord = mockFrontierWord();
         const oldFrontierSense = sense1();
         oldFrontierWord.senses.push({
           ...oldFrontierSense,
           glosses: [...oldFrontierSense.glosses, gloss0],
         });
-        const newFrontierWord = mockFrontierWord();
-        newFrontierWord.senses.push(oldFrontierSense);
+        const frontierWord = mockFrontierWord();
+        frontierWord.senses.push(oldFrontierSense);
 
         mockGetWordResolve(oldFrontierWord);
-        await makeDispatch(newWord, oldWord);
-        checkResultantData(newFrontierWord);
+        await makeDispatch(newRevWord, oldRevWord);
+        checkResultantData(frontierWord);
       });
 
       it("Removes a domain from an extant sense.", async () => {
-        const oldWord = mockReviewEntriesWord();
+        const oldRevWord = mockReviewEntriesWord();
         const oldSense = sense1_local();
-        oldWord.senses.push({
+        oldRevWord.senses.push({
           ...oldSense,
           domains: [...oldSense.domains, domain0],
         });
-        const newWord = mockReviewEntriesWord();
-        newWord.senses.push(oldSense);
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses.push(oldSense);
         const oldFrontierWord = mockFrontierWord();
         const oldFrontierSense = sense1();
         oldFrontierWord.senses.push({
           ...oldFrontierSense,
           semanticDomains: [...oldFrontierSense.semanticDomains, domain0],
         });
-        const newFrontierWord = mockFrontierWord();
-        newFrontierWord.senses.push(oldFrontierSense);
+        const frontierWord = mockFrontierWord();
+        frontierWord.senses.push(oldFrontierSense);
 
         mockGetWordResolve(oldFrontierWord);
-        await makeDispatch(newWord, oldWord);
-        checkResultantData(newFrontierWord);
+        await makeDispatch(newRevWord, oldRevWord);
+        checkResultantData(frontierWord);
       });
 
       it("Removes a sense.", async () => {
-        const oldWord = mockReviewEntriesWord();
-        oldWord.senses.push(sense1_local());
+        const oldRevWord = mockReviewEntriesWord();
+        oldRevWord.senses.push(sense1_local());
         const oldFrontierWord = mockFrontierWord();
         oldFrontierWord.senses.push(sense1());
 
         mockGetWordResolve(oldFrontierWord);
-        await makeDispatch(mockReviewEntriesWord(), oldWord);
+        await makeDispatch(mockReviewEntriesWord(), oldRevWord);
         checkResultantData(mockFrontierWord());
       });
     });
 
     describe("Circumvents bad data", () => {
       it("Restores vernacular when vernacular deleted.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.vernacular = "";
-        const oldFrontierWord = mockFrontierWord();
-        oldFrontierWord.vernacular = "";
+        const newRevWord = mockReviewEntriesWord("");
+        const oldFrontierWord = mockFrontierWord("");
 
         mockGetWordResolve(oldFrontierWord);
-        await makeDispatch(newWord, mockReviewEntriesWord());
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(mockFrontierWord());
       });
 
       it("Ignores a new sense with no glosses, domains.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses.push({ ...sense1_local(), glosses: [], domains: [] });
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses.push({ ...sense1_local(), glosses: [], domains: [] });
 
-        await makeDispatch(newWord, mockReviewEntriesWord());
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(mockFrontierWord());
       });
     });
 
     describe("Rejects bad, irrecoverable data", () => {
       it("Rejects a vernacular which is empty and cannot be restored.", async () => {
-        const oldWord = mockReviewEntriesWord();
-        oldWord.vernacular = "";
-        const newWord = mockReviewEntriesWord();
-        newWord.vernacular = "";
-        const oldFrontierWord = mockFrontierWord();
-        oldFrontierWord.vernacular = "";
+        const oldRevWord = mockReviewEntriesWord("");
+        const newRevWord = mockReviewEntriesWord("");
+        const oldFrontierWord = mockFrontierWord("");
 
         mockGetWordResolve(oldFrontierWord);
         expect(
-          await makeDispatch(newWord, oldWord)
+          await makeDispatch(newRevWord, oldRevWord)
             .then(() => false)
             .catch(() => true)
         ).toBeTruthy();
       });
 
       it("Rejects a new sense with no glosses.", async () => {
-        const newWord = mockReviewEntriesWord();
-        newWord.senses.push({
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.senses.push({
           ...sense1_local(),
           glosses: [],
         });
 
         expect(
-          await makeDispatch(newWord, mockReviewEntriesWord())
+          await makeDispatch(newRevWord, mockReviewEntriesWord())
             .then(() => false)
             .catch(() => true)
         ).toBeTruthy();
@@ -263,10 +255,9 @@ describe("ReviewEntriesActions", () => {
     const oldSenses = [sense0(), sense1()];
 
     it("Creates a new sense.", () => {
-      const expectedSense = new Sense("newSense");
+      const expectedSense = newSense("newSense");
       const editSense = new ReviewEntriesSense(expectedSense);
       expectedSense.guid = expect.any(String);
-      expectedSense.accessibility = State.Active;
       const resultSense = getSenseFromEditSense(editSense, oldSenses);
       expect(resultSense).toEqual(expectedSense);
     });
@@ -290,26 +281,26 @@ describe("ReviewEntriesActions", () => {
 
   describe("getSenseError", () => {
     it("By default, no-gloss triggers error.", () => {
-      const newSense = new ReviewEntriesSense(sense0());
-      expect(getSenseError(newSense)).toBeUndefined();
-      newSense.glosses = [];
-      expect(getSenseError(newSense)).toEqual("reviewEntries.error.gloss");
+      const sense = new ReviewEntriesSense(sense0());
+      expect(getSenseError(sense)).toBeUndefined();
+      sense.glosses = [];
+      expect(getSenseError(sense)).toEqual("reviewEntries.error.gloss");
     });
 
     it("By default, no-domain does not trigger error.", () => {
-      const newSense = new ReviewEntriesSense(sense0());
-      expect(getSenseError(newSense)).toBeUndefined();
-      newSense.domains = [];
-      expect(getSenseError(newSense)).toBeUndefined();
+      const sense = new ReviewEntriesSense(sense0());
+      expect(getSenseError(sense)).toBeUndefined();
+      sense.domains = [];
+      expect(getSenseError(sense)).toBeUndefined();
     });
 
     it("Can allow no-gloss and error for no-domain.", () => {
-      const newSense = new ReviewEntriesSense(sense0());
-      expect(getSenseError(newSense, false, true)).toBeUndefined();
-      newSense.glosses = [];
-      expect(getSenseError(newSense, false, true)).toBeUndefined();
-      newSense.domains = [];
-      expect(getSenseError(newSense, false, true)).toEqual(
+      const sense = new ReviewEntriesSense(sense0());
+      expect(getSenseError(sense, false, true)).toBeUndefined();
+      sense.glosses = [];
+      expect(getSenseError(sense, false, true)).toBeUndefined();
+      sense.domains = [];
+      expect(getSenseError(sense, false, true)).toEqual(
         "reviewEntries.error.domain"
       );
     });

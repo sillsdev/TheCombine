@@ -2,6 +2,7 @@ import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
+import { SemanticDomain, State, Word } from "api/models";
 import { getFrontierWords } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
@@ -10,7 +11,7 @@ import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/Existi
 import TreeViewComponent from "components/TreeView";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import theme from "types/theme";
-import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
+import { DomainWord, newSemanticDomain } from "types/word";
 
 interface DataEntryProps {
   domain: TreeSemanticDomain;
@@ -34,20 +35,12 @@ const paperStyle = {
 
 /** Filter out words that do not have at least 1 active sense */
 export function filterWords(words: Word[]): Word[] {
-  let filteredWords: Word[] = [];
-  for (let word of words) {
-    let shouldInclude = false;
-    for (let sense of word.senses) {
-      if (sense.accessibility === State.Active) {
-        shouldInclude = true;
-        break;
-      }
-    }
-    if (shouldInclude) {
-      filteredWords.push(word);
-    }
-  }
-  return filteredWords;
+  return words.filter(
+    (w) =>
+      w.senses.findIndex((s) =>
+        [State.Active, State.Sense].includes(s.accessibility)
+      ) !== -1
+  );
 }
 
 export function filterWordsByDomain(
@@ -60,7 +53,7 @@ export function filterWordsByDomain(
 
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses.filter(
-      (s: Sense) =>
+      (s) =>
         // This is for States created before .accessiblity was required in the frontend.
         s.accessibility === State.Active || s.accessibility === undefined
     )) {
@@ -151,7 +144,7 @@ export class DataEntryComponent extends React.Component<
   updateWords = () => {};
 
   render() {
-    const semanticDomain = new SemanticDomain(
+    const semanticDomain = newSemanticDomain(
       this.props.domain.id,
       this.props.domain.name
     );

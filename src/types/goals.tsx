@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 
-import { Edit, UserEdit } from "api/models";
+import { User } from "api/models";
 import {
   CreateCharInvChanges,
   CreateCharInvData,
@@ -11,10 +11,7 @@ import {
   MergeDupData,
   MergeStepData,
 } from "goals/MergeDupGoal/MergeDupsTypes";
-import { User } from "types/user";
-
-// Re-export interfaces from backend models.
-export type { Edit, UserEdit };
+import { newUser } from "types/user";
 
 export type GoalData = CreateCharInvData | MergeDupData | {};
 export type GoalStep = CreateCharInvStepData | MergeStepData | {};
@@ -87,7 +84,7 @@ export class Goal {
     this.goalType = type;
     this.index = -1;
     this.name = name;
-    this.user = new User("", "", "");
+    this.user = newUser();
     this.steps = steps;
     this.numSteps = 1;
     this.currentStep = 0;

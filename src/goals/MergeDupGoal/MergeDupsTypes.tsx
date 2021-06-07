@@ -1,4 +1,4 @@
-import { Word } from "types/word";
+import { Word } from "api/models";
 
 export interface CompletedMerge {
   childrenIds: string[];

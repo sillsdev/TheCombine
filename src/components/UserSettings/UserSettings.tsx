@@ -19,11 +19,12 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
+import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
-import theme from "types/theme";
-import { User } from "types/user";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
+import theme from "types/theme";
+import { newUser } from "types/user";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -95,7 +96,7 @@ class UserSettings extends React.Component<
   constructor(props: LocalizeContextProps) {
     super(props);
     const potentialUser = getCurrentUser();
-    const user = potentialUser ? potentialUser : new User("", "", "");
+    const user = potentialUser ?? newUser();
     this.state = {
       user: user,
       name: user.name,
@@ -133,11 +134,12 @@ class UserSettings extends React.Component<
   async onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (await this.isEmailOkay()) {
-      const newUser = this.state.user;
-      newUser.name = this.state.name;
-      newUser.phone = this.state.phone;
-      newUser.email = this.state.email;
-      await updateUser(newUser);
+      await updateUser({
+        ...this.state.user,
+        name: this.state.name,
+        phone: this.state.phone,
+        email: this.state.email,
+      });
       alert(this.props.translate("userSettings.updateSuccess"));
     } else {
       this.setState({ emailTaken: true });

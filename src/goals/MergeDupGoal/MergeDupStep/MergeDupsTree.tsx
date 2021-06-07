@@ -1,4 +1,4 @@
-import { Sense, Word } from "types/word";
+import { Sense, Word } from "api/models";
 
 export type Hash<V> = { [key: string]: V };
 

@@ -8,10 +8,10 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
 import history, { Path } from "browserHistory";
-import { Project } from "types/project";
 
 interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;

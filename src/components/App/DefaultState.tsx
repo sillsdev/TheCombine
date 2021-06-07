@@ -8,7 +8,7 @@ import { defaultState as treeViewState } from "components/TreeView/TreeViewReduc
 import { defaultState as characterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { defaultState as mergeDuplicateGoal } from "goals/MergeDupGoal/Redux/MergeDupReducer";
 import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
-import { defaultProject } from "types/project";
+import { newProject } from "types/project";
 import { defaultState as analyticsState } from "types/Redux/analyticsReduxTypes";
 
 export const defaultState = {
@@ -26,10 +26,7 @@ export const defaultState = {
     name: "Test",
     success: true,
   },
-  currentProject: {
-    ...defaultProject,
-    name: "Project",
-  },
+  currentProject: newProject("Project"),
   exportProjectState: {
     ...exportProjectState,
   },

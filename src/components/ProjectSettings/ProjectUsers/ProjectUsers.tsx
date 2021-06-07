@@ -6,13 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 
+import { Permission, Project, User } from "api/models";
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
-import { Permission, Project } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
-import { User } from "types/user";
 
 const customStyles = {
   content: {

@@ -1,6 +1,7 @@
+import { User } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import { User } from "types/user";
 import authHeader from "components/Login/AuthHeaders";
+import { newUser } from "types/user";
 
 let oldUser: User | undefined;
 
@@ -20,7 +21,7 @@ afterAll(() => {
 
 describe("AuthHeaders Tests", () => {
   test("Creates header that includes token", () => {
-    let user: User = new User("", "", "");
+    const user = newUser();
     user.token = "testToken";
     LocalStorage.setCurrentUser(user);
     const authHeaderOut = authHeader();

@@ -1,6 +1,5 @@
 import { Grid, IconButton, Typography } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
-import * as React from "react";
 
 import CharacterInfo from "goals/CharInventoryCreation/components/CharacterDetail/CharacterInfo";
 import CharacterStatusControl from "goals/CharInventoryCreation/components/CharacterDetail/CharacterStatusControl";

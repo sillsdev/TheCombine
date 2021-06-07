@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
+import { Sense, Word } from "api/models";
 import { getWord } from "backend";
 import {
   CompletedMerge,
@@ -18,7 +19,6 @@ import {
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
-import { Sense, Word } from "types/word";
 
 export default function MergeDupsCompleted() {
   const changes = useSelector(

@@ -1,4 +1,4 @@
-import { SemanticDomainWithSubdomains } from "types/word";
+import { SemanticDomainWithSubdomains } from "api/models";
 
 export default class TreeSemanticDomain
   implements SemanticDomainWithSubdomains {

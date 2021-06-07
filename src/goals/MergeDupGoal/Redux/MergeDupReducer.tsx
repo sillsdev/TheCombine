@@ -1,5 +1,6 @@
 import { v4 } from "uuid";
 
+import { Word } from "api/models";
 import {
   defaultTree,
   Hash,
@@ -12,7 +13,6 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
-import { Word } from "types/word";
 
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {

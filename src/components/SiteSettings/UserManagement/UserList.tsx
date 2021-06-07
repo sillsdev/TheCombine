@@ -9,16 +9,16 @@ import {
   Typography,
 } from "@material-ui/core";
 import { DeleteForever, VpnKey } from "@material-ui/icons";
-import * as React from "react";
+import React from "react";
 import {
   LocalizeContextProps,
   Translate,
   withLocalize,
 } from "react-localize-redux";
 
+import { User } from "api/models";
 import { getUserId } from "backend/localStorage";
 import theme from "types/theme";
-import { User } from "types/user";
 
 interface UserListProps {
   allUsers: User[];
