@@ -5,6 +5,7 @@
 import argparse
 import os
 from pathlib import Path
+from development_config import get_image_name
 
 project_dir = Path(__file__).resolve().parent.parent
 """Absolute path to the checked out repository."""
@@ -25,16 +26,6 @@ def parse_args() -> argparse.Namespace:
         "--compose", action="store_true", help="Generate images for docker compose."
     )
     return parser.parse_args()
-
-
-def get_image_name(repo: str, component: str, tag: str) -> str:
-    """Build the image name from the repo, the component, and the image tag."""
-    tag_str = ""
-    if tag is not None and len(tag):
-        tag_str = f":{tag}"
-    if repo is not None and len(repo):
-        return f"{repo}/combine_{component}{tag_str}"
-    return f"combine_{component}{tag_str}"
 
 
 def build_image(image_name: str, *, build_arg: str = "", push_image: bool = False) -> None:

@@ -17,6 +17,7 @@ Tasks:
 """
 
 import argparse
+import os
 from pathlib import Path
 
 from development_config import get_proj_config
@@ -33,8 +34,12 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--repo",
+        help="Image repository to use instead of a local image"
+    )
+    parser.add_argument(
         "--release",
-        help="Pull specified release from Docker hub rather than use a local image.",
+        help="Pull image from image repo rather than use a local image.",
     )
     parser.add_argument(
         "--no-captcha",
@@ -63,6 +68,7 @@ def main() -> None:
     # Define the configuration for the development environment
     dev_config = get_proj_config(
         project_dir,
+        repo=args.repo,
         release=args.release,
         no_email=args.no_email,
         no_captcha=args.no_captcha,
@@ -89,6 +95,14 @@ def main() -> None:
     # Restrict permissions for the environment files
     for secrets_file in kube_files_dir.glob("*secrets.yaml"):
         secrets_file.chmod(0o600)
+
+    os.chdir(f"{kube_files_dir}")
+    kubectl_config = kube_files_dir / "kubeconfig"
+    if not kubectl_config.exists():
+        os.system("microk8s config > kubeconfig")
+    for k8s_cfg_file in sorted(kube_files_dir.glob("*.yaml")):
+        print(f"Applying {k8s_cfg_file}")
+        os.system(f"kubectl --kubeconfig=kubeconfig apply -f {k8s_cfg_file}")
 
 
 if __name__ == "__main__":

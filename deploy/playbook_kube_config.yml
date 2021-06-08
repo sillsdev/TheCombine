@@ -25,6 +25,34 @@
     - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
+    - name: Setup Kubernetes access from localhost
+      block:
+        - name: Get kubeconfig for microk8s
+          command: microk8s config
+          register: kubeconfig
+
+        - name: Setup local kubectl configuration
+          delegate_to: localhost
+          become: no
+          block:
+            - name: Create directory for kubectl configurations
+              file:
+                path: "{{ k8s_working_dir }}"
+                state: directory
+                mode: 0700
+
+            - name: Save kubeconfig for this device
+              copy:
+                content: "{{ kubeconfig.stdout }}"
+                dest: "{{ k8s_working_dir }}/kubeconfig"
+      when:
+        - install_microk8s
+
+    - name: Setup registry credentials (Amazon/Docker/Azure/Google)
+      import_role:
+        name: registry_creds
+      when: pull_secrets_manager == "registry_creds"
+
     - name: Create Kubernetes Configuration Files
       import_role:
         name: k8s_config

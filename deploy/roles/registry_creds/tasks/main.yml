@@ -1,20 +1,24 @@
 ---
 - name: Configure registry-creds for Image Pull Secrets
+  delegate_to: localhost
+  become: no
   block:
-    - name: create registry-creds yaml files
-      template:
-        src: "{{ item}}.j2"
-        dest: "{{ k8s_working_dir }}/{{ item }}"
-        mode: 0600
-      with_items:
-        - registry-secrets.yaml
-        - registry-creds-deployment.yaml
+    - name: Create directory for registry cred configuration files
+      file:
+        path: "{{ k8s_image_pull_cfg }}"
+        state: directory
+        mode: 0700
 
-    - name: Apply registry-creds yaml files
+    - name: Create registry-creds yaml files
+      template:
+        src: "{{ item }}"
+        dest: "{{ k8s_image_pull_cfg }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
+        mode: 0600
+      with_fileglob:
+        - "templates/*.yaml.j2"
+
+    - name: Apply Kubernetes configuration
       command: kubectl --kubeconfig=kubeconfig apply -f {{ item }}
       args:
         chdir: "{{ k8s_working_dir }}"
-      with_items:
-        - registry-secrets.yaml
-        - registry-creds-deployment.yaml
-  when: pull_secrets_manager == "registry_creds"
+      with_items: "{{ lookup('fileglob', '{{ k8s_image_pull_cfg }}/*.yaml').split(',') | sort }}"

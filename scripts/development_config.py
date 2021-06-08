@@ -12,26 +12,32 @@ import re
 from typing import Dict, List, Optional, Union
 
 
-def get_image_tag(component: str, release: Optional[str]) -> str:
-    """Get the image tag string for the local build or the specified release."""
-    if release is not None:
-        return f"sillsdev/combine-{component}:{release}"
-    return f"combine-{component}:latest"
+def get_image_name(repo: Optional[str], component: str, tag: Optional[str]) -> str:
+    """Build the image name from the repo, the component, and the image tag."""
+    tag_str = ""
+    if tag is not None and len(tag):
+        tag_str = f":{tag}"
+    if repo is not None and len(repo):
+        return f"{repo}/combine_{component}{tag_str}"
+    return f"combine_{component}{tag_str}"
 
 
 def get_proj_config(
     project_dir: Path,
     *,
-    release: Optional[str] = None,
+    repo: Optional[str] = None,
+    release: str = "latest",
     no_email: bool = False,
     no_captcha: bool = False,
     no_expire: bool = False,
 ) -> Dict[str, Union[List[str], str, int, bool]]:
     """Build dictionary of project configuration for development use."""
     return {
-        "combine_use_syslog": False,
-        "combine_image_frontend": get_image_tag("frontend", release),
-        "combine_image_backend": get_image_tag("backend", release),
+        "app_namespace": "thecombine",
+        "backend_data_size": "4Gi",
+        "database_data_size": "2Gi",
+        "combine_image_frontend": get_image_name(repo, "frontend", release),
+        "combine_image_backend": get_image_name(repo, "backend", release),
         "cert_email": "",
         "cert_mode": "self-signed",
         "cert_is_staging": 0,
@@ -59,7 +65,8 @@ def get_proj_config(
         #
         # The following configuration items are only needed for Docker Compose:
         #
-        "combine_image_certmgr": get_image_tag("certmgr", release),  # Docker Compose
+        "combine_use_syslog": False,
+        "combine_image_certmgr": get_image_name(repo, "certmgr", release),  # Docker Compose
         "ssl_certificate": "/etc/cert_store/nginx/localhost/fullchain.pem",
         "ssl_private_key": "/etc/cert_store/nginx/localhost/privkey.pem",
         "cert_max_connect_tries": "10",  # Docker Compose
