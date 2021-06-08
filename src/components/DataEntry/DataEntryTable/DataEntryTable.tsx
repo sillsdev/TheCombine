@@ -163,7 +163,7 @@ export class DataEntryTable extends React.Component<
       word: newWordWithAudio,
       senseIndex: 0,
     };
-    if (insertIndex != undefined && insertIndex < recentlyAddedWords.length) {
+    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
       recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
     } else {
       recentlyAddedWords.push(newWordAccess);
@@ -359,7 +359,7 @@ export class DataEntryTable extends React.Component<
     newVern: string,
     targetWordId?: string
   ) {
-    if (targetWordId != undefined) {
+    if (targetWordId !== undefined) {
       throw new Error("VernDialog on RecentEntry is not yet supported.");
     }
     const oldEntry = this.state.recentlyAddedWords[entryIndex];
@@ -469,7 +469,7 @@ export class DataEntryTable extends React.Component<
       if (entry.word.id === oldWordId) {
         let newSenseIndex = entry.senseIndex;
         if (
-          removedSenseIndex != undefined &&
+          removedSenseIndex !== undefined &&
           newSenseIndex >= removedSenseIndex
         ) {
           newSenseIndex--;

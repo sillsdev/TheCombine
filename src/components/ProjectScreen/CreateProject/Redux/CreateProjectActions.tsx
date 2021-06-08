@@ -64,7 +64,7 @@ export function asyncCreateProject(
       })
       .catch((err) => {
         let errorMessage: string;
-        if (err.response == undefined) {
+        if (err.response === undefined) {
           errorMessage = err.response;
         } else {
           errorMessage = err.response.statusText;

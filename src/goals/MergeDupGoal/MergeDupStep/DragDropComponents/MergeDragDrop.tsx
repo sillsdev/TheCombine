@@ -33,7 +33,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
       const combineRef: MergeTreeReference = JSON.parse(
         res.combine.draggableId
       );
-      if (combineRef.order != undefined) {
+      if (combineRef.order !== undefined) {
         // If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }

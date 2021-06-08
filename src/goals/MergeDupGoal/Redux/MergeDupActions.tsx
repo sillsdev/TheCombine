@@ -53,7 +53,7 @@ export function moveSense(
   destWordId: string,
   destOrder: number
 ): MoveDuplicateMergeAction | MoveSenseMergeAction {
-  if (ref.order == undefined) {
+  if (ref.order === undefined) {
     return {
       type: MergeTreeActionTypes.MOVE_SENSE,
       payload: { ...ref, destWordId, destOrder },
@@ -70,7 +70,7 @@ export function orderSense(
   ref: MergeTreeReference,
   order: number
 ): OrderDuplicateMergeAction | OrderSenseMergeAction {
-  if (ref.order == undefined) {
+  if (ref.order === undefined) {
     return {
       type: MergeTreeActionTypes.ORDER_SENSE,
       payload: { ...ref, order },
