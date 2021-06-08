@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 echo "Creating templates for ${CERT_PROXY_DOMAINS} and ${CERT_ADDL_DOMAINS}"
 
@@ -13,21 +13,28 @@ echo "Creating templates for ${CERT_PROXY_DOMAINS} and ${CERT_ADDL_DOMAINS}"
 ################################################################
 
 if [ -f /etc/nginx/templates/url_moved.conf ] ; then
-  if [ ! -z "${CERT_ADDL_DOMAINS}" ] ; then
-    for ADDL_DOMAIN in ${CERT_ADDL_DOMAINS} ; do
-      echo "Generating template for '${ADDL_DOMAIN}'"
-      sed -e s/%SERVER_NAME%/${ADDL_DOMAIN}/ < /etc/nginx/templates/url_moved.conf > /etc/nginx/templates/${ADDL_DOMAIN}.conf.template
-    done
-    # Update the page for URL moved
-    sed -e s/%SERVER_NAME%/${SERVER_NAME}/g < /etc/nginx/page_templates/url_moved_home.html > ${FRONTEND_HOST_DIR}/url_moved/index.html
-  fi
+    if [ -n "${CERT_ADDL_DOMAINS}" ] ; then
+        for ADDL_DOMAIN in ${CERT_ADDL_DOMAINS} ; do
+            echo "Generating template for '${ADDL_DOMAIN}'"
+            sed -e s/%SERVER_NAME%/${ADDL_DOMAIN}/ < /etc/nginx/templates/url_moved.conf > /etc/nginx/templates/${ADDL_DOMAIN}.conf.template
+        done
+        # Update the page for URL moved
+        sed -e s/%SERVER_NAME%/${SERVER_NAME}/g < /etc/nginx/page_templates/url_moved_home.html > ${FRONTEND_HOST_DIR}/url_moved/index.html
+    fi
 fi
 
 if [ -f /etc/nginx/templates/nuc.conf ] ; then
-  if [ ! -z "${CERT_PROXY_DOMAINS}" ] ; then
-    for PROXY_DOMAIN in ${CERT_PROXY_DOMAINS} ; do
-      echo "Generating template for '${PROXY_DOMAIN}'"
-      sed -e s/%SERVER_NAME%/${PROXY_DOMAIN}/ < /etc/nginx/templates/nuc.conf > /etc/nginx/templates/${PROXY_DOMAIN}.conf.template
-    done
-  fi
+    if [ -n "${CERT_PROXY_DOMAINS}" ] ; then
+        for PROXY_DOMAIN in ${CERT_PROXY_DOMAINS} ; do
+            echo "Generating template for '${PROXY_DOMAIN}'"
+            sed -e s/%SERVER_NAME%/${PROXY_DOMAIN}/ < /etc/nginx/templates/nuc.conf > /etc/nginx/templates/${PROXY_DOMAIN}.conf.template
+        done
+    fi
+fi
+
+# Select default configuration for a Docker Compose environment (default) or a Kubernetes environment
+if [ -n "${ENV_KUBERNETES}" ] ; then
+    cp /etc/nginx/templates/kube_default.conf /etc/nginx/templates/default.conf.template
+else
+    cp /etc/nginx/templates/compose_default.conf /etc/nginx/templates/default.conf.template
 fi
