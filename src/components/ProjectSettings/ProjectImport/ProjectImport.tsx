@@ -81,7 +81,7 @@ export default class ProjectImport extends React.Component<
               color="primary"
               variant="contained"
               disabled={
-                this.state.liftFile === undefined ||
+                this.state.liftFile == undefined ||
                 this.state.uploadState === UploadState.InProgress
               }
               onClick={() => this.uploadWords()}

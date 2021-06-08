@@ -203,7 +203,7 @@ interface ImmutableWritingSystemProps {
 function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
   return (
     <Grid container spacing={1}>
-      {props.index !== undefined && (
+      {props.index != undefined && (
         <Grid item>
           <Typography>{`${props.index + 1}. `}</Typography>
         </Grid>

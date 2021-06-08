@@ -62,7 +62,7 @@ export function filterWordsByDomain(
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses.filter(
       (s: Sense) =>
-        s.accessibility === State.Active || s.accessibility === undefined
+        s.accessibility === State.Active || s.accessibility == undefined
     )) {
       domainMatched = false;
       for (let currentDomain of currentSense.semanticDomains) {

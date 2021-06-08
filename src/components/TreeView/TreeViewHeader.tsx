@@ -197,7 +197,7 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
       // Find parent domain
       let parent: SemanticDomainWithSubdomains | undefined =
         props.currentDomain;
-      while (parent.parentDomain !== undefined) {
+      while (parent.parentDomain != undefined) {
         parent = parent.parentDomain;
       }
 

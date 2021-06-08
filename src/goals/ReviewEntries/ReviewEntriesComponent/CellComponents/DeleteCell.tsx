@@ -44,7 +44,7 @@ export default function DeleteCell(props: DeleteCellProps) {
     setDialogOpen(false);
   }
 
-  return props.delete !== undefined ? (
+  return props.delete != undefined ? (
     <AlignedList
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}

@@ -54,7 +54,7 @@ export class ContextMenu extends React.Component<
 
   closeMenu(event?: React.MouseEvent): void {
     this.setState({ isOpen: false });
-    if (event !== undefined) event.stopPropagation();
+    if (event != undefined) event.stopPropagation();
   }
 
   mapItems(item: MenuType, index: number): ReactElement {

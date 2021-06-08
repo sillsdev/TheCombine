@@ -240,7 +240,7 @@ export default class NewEntry extends React.Component<
   }
 
   handleCloseSenseDialog(senseIndex?: number) {
-    if (senseIndex === undefined) {
+    if (senseIndex == undefined) {
       this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
       const gloss = this.state.selectedWord!.senses[senseIndex].glosses[0].def;

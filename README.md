@@ -475,7 +475,7 @@ $ npm run license-report-backend
 $ npm run license-report-frontend
 ```
 
-> Note: This should be performed each time production dependencies are changed. 
+> Note: This should be performed each time production dependencies are changed.
 
 ### Set Project Version
 
@@ -508,11 +508,9 @@ in one of three environments:
 2. _In Local Docker Containers_ - To run _TheCombine_ from your software development project inside Docker containers
    see the [Docker](#docker) section. Unless specified otherwise, each of the maintenance commands are to be run from
    the project directory. Python scripts must be run in the virtual environment.
-3. _Production Environment_ - The
-   [How To Deploy TheCombine](docs/deploy/README.md) Document
-   describes how to configure a production machine and install _TheCombine_ on it. For each of the commands below, use
-   `ssh` to connect to the target system where _TheCombine_ is running and run the following commands to set the user
-   and working directory:
+3. _Production Environment_ - The [How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure
+   a production machine and install _TheCombine_ on it. For each of the commands below, use `ssh` to connect to the
+   target system where _TheCombine_ is running and run the following commands to set the user and working directory:
 
    ```bash
    sudo su -l combine
@@ -648,8 +646,23 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 ## Learn More
 
+### Backend & Database (C# + ASP<area>.NET + MongoDB)
+
+- [C#](https://www.w3schools.com/cs/default.asp)
+- [Our style guide](docs/style_guide/c_sharp_style_guide.md)
+- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
+- [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
+- [MongoDB](https://docs.mongodb.com/manual/introduction/) (database)
+
+### Frontend (Typescript + React)
+
+- [JS](https://www.w3schools.com/js/default.asp)
+- [TS](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
+- [Our style guide](docs/style_guide/ts_style_guide.md)
 - [React](https://reactjs.org/)
+- [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 - [Redux](https://redux.js.org/)
 - [React-Redux](https://redux.js.org/basics/usage-with-react)
-- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (Language Localization)
-- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
+- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (text localization)
+- [Jest](https://jestjs.io/docs/getting-started) (unit testing)
+- [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)

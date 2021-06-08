@@ -125,7 +125,7 @@ const columns: Column<any>[] = [
       const regex = new RegExp(term.trim().toLowerCase());
       for (const sense of rowData.senses) {
         const glossesString = ReviewEntriesSense.glossString(sense);
-        if (regex.exec(glossesString.toLowerCase()) !== null) {
+        if (regex.exec(glossesString.toLowerCase())) {
           return true;
         }
       }
@@ -230,10 +230,7 @@ const columns: Column<any>[] = [
         const regex: RegExp = new RegExp(terms[0]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
-            if (
-              regex.exec(domain.id) !== null ||
-              regex.exec(domain.name.toLowerCase()) !== null
-            )
+            if (regex.exec(domain.id) || regex.exec(domain.name.toLowerCase()))
               return true;
       } else {
         const regexNumber: RegExp = new RegExp(terms[0]);
@@ -241,8 +238,8 @@ const columns: Column<any>[] = [
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
             if (
-              regexNumber.exec(domain.id) !== null &&
-              regexName.exec(domain.name.toLowerCase()) !== null
+              regexNumber.exec(domain.id) &&
+              regexName.exec(domain.name.toLowerCase())
             )
               return true;
       }

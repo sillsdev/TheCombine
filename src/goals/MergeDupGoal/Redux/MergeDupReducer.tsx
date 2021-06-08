@@ -44,7 +44,7 @@ export const mergeDupStepReducer = (
       const srcWordId = srcRef.wordId;
       const srcGuids = words[srcWordId].sensesGuids[srcRef.mergeSenseId];
       const destGuids = [];
-      if (srcRef.order === undefined || srcGuids.length === 1) {
+      if (srcRef.order == undefined || srcGuids.length === 1) {
         destGuids.push(...srcGuids);
         delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
         if (!Object.keys(words[srcWordId].sensesGuids).length) {
@@ -72,14 +72,14 @@ export const mergeDupStepReducer = (
       let mergeSenseId = srcRef.mergeSenseId;
 
       // Get guid of sense being restored from the sidebar.
-      if (srcRef.order === undefined) {
+      if (srcRef.order == undefined) {
         return state;
       }
       const srcGuids = words[srcWordId].sensesGuids[mergeSenseId];
       const guid = srcGuids.splice(srcRef.order, 1)[0];
 
       // Check if dropping the sense into a new word.
-      if (words[destWordId] === undefined) {
+      if (words[destWordId] == undefined) {
         words[destWordId] = { vern: "", sensesGuids: {} };
       }
 
@@ -120,7 +120,7 @@ export const mergeDupStepReducer = (
       );
 
       // Check if dropping the sense into a new word.
-      if (words[destWordId] === undefined) {
+      if (words[destWordId] == undefined) {
         if (Object.keys(words[srcWordId].sensesGuids).length === 1) {
           return state;
         }
@@ -151,7 +151,7 @@ export const mergeDupStepReducer = (
       const newOrder = action.payload.order;
 
       // Ensure the reorder is valid.
-      if (oldOrder === undefined || oldOrder === newOrder) {
+      if (oldOrder == undefined || oldOrder === newOrder) {
         return state;
       }
 
@@ -189,7 +189,7 @@ export const mergeDupStepReducer = (
       const newOrder = action.payload.order;
 
       // Ensure the move is valid.
-      if (oldOrder === -1 || newOrder === undefined || oldOrder === newOrder) {
+      if (oldOrder === -1 || newOrder == undefined || oldOrder === newOrder) {
         return state;
       }
 
