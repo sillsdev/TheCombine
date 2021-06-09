@@ -496,7 +496,7 @@ $ npm run license-report-backend
 $ npm run license-report-frontend
 ```
 
-> Note: This should be performed each time production dependencies are changed. 
+> Note: This should be performed each time production dependencies are changed.
 
 ### Set Project Version
 
@@ -667,8 +667,24 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 ## Learn More
 
-- [React](https://reactjs.org/)
-- [Redux](https://redux.js.org/)
-- [React-Redux](https://redux.js.org/basics/usage-with-react)
-- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (Language Localization)
+### Backend & Database (C# + ASP<area>.NET + MongoDB)
+
+- [C#](https://www.w3schools.com/cs/default.asp)
+- [Our style guide](docs/style_guide/c_sharp_style_guide.md)
 - [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
+- [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
+- [MongoDB](https://docs.mongodb.com/manual/introduction/) (database)
+- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
+
+### Frontend (Typescript + React + Redux)
+
+- [JS](https://www.w3schools.com/js/default.asp)
+- [TS](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
+- [Our style guide](docs/style_guide/ts_style_guide.md)
+- [React](https://reactjs.org/)
+- [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+- [Redux concepts](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
+- [Redux tutorials](https://redux.js.org/tutorials/typescript-quick-start)
+- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (text localization)
+- [Jest](https://jestjs.io/docs/getting-started) (unit testing)
+- [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)

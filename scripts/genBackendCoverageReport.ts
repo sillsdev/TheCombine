@@ -23,7 +23,7 @@ if (fs.existsSync(coverageInfoFile)) {
     `-targetdir:${coverageTargetDir}`,
   ]);
 
-  if (cmd.stdout != null) {
+  if (cmd.stdout !== null) {
     console.log(`stderr: ${cmd.stderr.toString()}`);
     console.log(`stdout: ${cmd.stdout.toString()}`);
   } else {
