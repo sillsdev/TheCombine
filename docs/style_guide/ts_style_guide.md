@@ -263,20 +263,8 @@ if (error === null)
 if (error)
 ```
 
-- Use `== undefined` / `!= undefined` (not `===` / `!==`) to check for `null` / `undefined` on primitives as it works
-  for both `null`/`undefined` but not other falsy values (like `''`,`0`,`false`) e.g.
-
-**Bad**
-
-```ts
-if (error !== null)
-```
-
-**Good**
-
-```ts
-if (error != undefined)
-```
+> Remark: Use `===` / `!==` to check for `null` / `undefined` on **primitives** that might be other falsy values (like
+> `''`,`0`,`false`).
 
 ## Formatting
 
