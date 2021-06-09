@@ -31,10 +31,3 @@ if [ -f /etc/nginx/templates/nuc.conf ] ; then
         done
     fi
 fi
-
-# Select default configuration for a Docker Compose environment (default) or a Kubernetes environment
-if [ -n "${ENV_KUBERNETES}" ] ; then
-    cp /etc/nginx/templates/kube_default.conf /etc/nginx/templates/default.conf.template
-else
-    cp /etc/nginx/templates/compose_default.conf /etc/nginx/templates/default.conf.template
-fi
