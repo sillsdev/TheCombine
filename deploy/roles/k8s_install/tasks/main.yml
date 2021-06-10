@@ -35,7 +35,7 @@
 
     - name: Create directory for kubectl config file
       file:
-        path: /home/{{ k8s_user }}/.kube
+        path: "{{ ansible_env.HOME }}/.kube"
         state: directory
         owner: "{{ k8s_user }}"
         group: "{{ k8s_group }}"
@@ -44,32 +44,17 @@
     - name: Save kubectl configuration for {{ k8s_user }} on {{ ansible_hostname }}
       copy:
         content: "{{ kubeconfig.stdout }}"
-        dest: /home/{{ k8s_user }}/.kube/config
+        dest: "{{ ansible_env.HOME }}/.kube/config"
         owner: "{{ k8s_user }}"
         group: "{{ k8s_group }}"
         mode: 0600
-
-    - name: Setup local kubectl configuration
-      delegate_to: localhost
-      become: no
-      block:
-        - name: Create directory for kubectl configurations
-          file:
-            path: site_files/{{ ansible_hostname }}
-            state: directory
-            mode: 0700
-
-        - name: Save kubeconfig for this device
-          copy:
-            content: "{{ kubeconfig.stdout }}"
-            dest: site_files/{{ ansible_hostname }}/kubeconfig
   when:
     - install_microk8s
 
 - name: Download the Google Cloud public signing key
-  shell: curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-  args:
-    creates: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+  get_url:
+    dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
 - name: Add repository
   apt_repository:
