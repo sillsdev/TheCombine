@@ -45,7 +45,7 @@ export interface Word {
    * @type {string}
    * @memberof Word
    */
-  plural: string;
+  plural?: string | null;
   /**
    *
    * @type {Array<Sense>}
@@ -87,19 +87,19 @@ export interface Word {
    * @type {string}
    * @memberof Word
    */
-  partOfSpeech: string;
+  partOfSpeech?: string | null;
   /**
    *
    * @type {Array<string>}
    * @memberof Word
    */
-  editedBy: Array<string>;
+  editedBy?: Array<string> | null;
   /**
    *
    * @type {string}
    * @memberof Word
    */
-  otherField: string;
+  otherField?: string | null;
   /**
    *
    * @type {string}

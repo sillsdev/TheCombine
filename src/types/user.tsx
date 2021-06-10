@@ -14,11 +14,8 @@ export function newUser(
     hasAvatar: false,
     email: "",
     phone: "",
-    otherConnectionField: "",
     projectRoles: {},
     workedProjects: {},
-    agreement: false,
-    uiLang: "",
     token: "",
     isAdmin: false,
   };

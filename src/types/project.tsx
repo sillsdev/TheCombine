@@ -20,9 +20,6 @@ export function newProject(name: string = ""): Project {
     analysisWritingSystems: [newWritingSystem()],
     validCharacters: [],
     rejectedCharacters: [],
-    customFields: [],
-    wordFields: [],
-    partsOfSpeech: [],
     inviteTokens: [],
     autocompleteSetting: AutocompleteSetting.On,
   };

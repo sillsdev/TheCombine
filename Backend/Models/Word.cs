@@ -29,7 +29,7 @@ namespace BackendFramework.Models
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("plural")]
         public string Plural { get; set; }
 
@@ -58,15 +58,15 @@ namespace BackendFramework.Models
         [BsonElement("history")]
         public List<string> History { get; set; }
 
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("partOfSpeech")]
         public string PartOfSpeech { get; set; }
 
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("otherField")]
         public string OtherField { get; set; }
 

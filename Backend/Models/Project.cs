@@ -53,17 +53,15 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public AutocompleteSetting AutocompleteSetting { get; set; }
 
-        /// <summary> Not implemented: optional fields for projects </summary>
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("customFields")]
         public List<CustomField> CustomFields { get; set; }
 
-        /// <summary> Not implemented: optional fields for words in a project </summary>
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("wordFields")]
         public List<string> WordFields { get; set; }
 
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
 

@@ -34,8 +34,10 @@ namespace BackendFramework.Models
         [BsonElement("phone")]
         public string Phone { get; set; }
 
-        /// <summary> Other form of contact if phone/email are unavailable </summary>
-        [Required]
+        /// <summary>
+        /// Other form of contact if phone/email are unavailable.
+        /// Not implemented in frontend.
+        /// </summary>
         [BsonElement("otherConnectionField")]
         public string OtherConnectionField { get; set; }
 
@@ -49,8 +51,10 @@ namespace BackendFramework.Models
         [BsonElement("projectRoles")]
         public Dictionary<string, string> ProjectRoles { get; set; }
 
-        /// <summary> If the user has consented for audio/video containing them to be used </summary>
-        [Required]
+        /// <summary>
+        /// If the user has consented for audio/video containing them to be used.
+        /// Not implemented in frontend.
+        /// </summary>
         [BsonElement("agreement")]
         public bool Agreement { get; set; }
 
@@ -62,7 +66,7 @@ namespace BackendFramework.Models
         [BsonElement("username")]
         public string Username { get; set; }
 
-        [Required]
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("uiLang")]
         public string UILang { get; set; }
 

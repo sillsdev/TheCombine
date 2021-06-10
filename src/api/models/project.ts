@@ -88,19 +88,19 @@ export interface Project {
    * @type {Array<object>}
    * @memberof Project
    */
-  customFields: Array<object>;
+  customFields?: Array<object> | null;
   /**
    *
    * @type {Array<string>}
    * @memberof Project
    */
-  wordFields: Array<string>;
+  wordFields?: Array<string> | null;
   /**
    *
    * @type {Array<string>}
    * @memberof Project
    */
-  partsOfSpeech: Array<string>;
+  partsOfSpeech?: Array<string> | null;
   /**
    *
    * @type {Array<EmailInvite>}

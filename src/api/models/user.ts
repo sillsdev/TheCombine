@@ -59,7 +59,7 @@ export interface User {
    * @type {string}
    * @memberof User
    */
-  otherConnectionField: string;
+  otherConnectionField?: string | null;
   /**
    *
    * @type {{ [key: string]: string; }}
@@ -77,7 +77,7 @@ export interface User {
    * @type {boolean}
    * @memberof User
    */
-  agreement: boolean;
+  agreement?: boolean;
   /**
    *
    * @type {string}
@@ -95,7 +95,7 @@ export interface User {
    * @type {string}
    * @memberof User
    */
-  uiLang: string;
+  uiLang?: string | null;
   /**
    *
    * @type {string}
