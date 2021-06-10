@@ -44,8 +44,7 @@ export default class ProjectImport extends React.Component<
     if (this.state.liftFile) {
       this.setState({ uploadState: UploadState.InProgress });
       await backend.uploadLift(this.props.projectId, this.state.liftFile);
-      let newProject = await backend.getProject(this.props.projectId);
-      this.props.updateProject(newProject);
+      this.props.updateProject(await backend.getProject(this.props.projectId));
       this.setState({ uploadState: UploadState.Done, liftFile: undefined });
     }
   }

@@ -159,12 +159,12 @@ describe("ReviewEntriesActions", () => {
           ...oldFrontierSense,
           glosses: [...oldFrontierSense.glosses, gloss0],
         });
-        const frontierWord = mockFrontierWord();
-        frontierWord.senses.push(oldFrontierSense);
+        const newFrontierWord = mockFrontierWord();
+        newFrontierWord.senses.push(oldFrontierSense);
 
         mockGetWordResolve(oldFrontierWord);
         await makeDispatch(newRevWord, oldRevWord);
-        checkResultantData(frontierWord);
+        checkResultantData(newFrontierWord);
       });
 
       it("Removes a domain from an extant sense.", async () => {
@@ -182,12 +182,12 @@ describe("ReviewEntriesActions", () => {
           ...oldFrontierSense,
           semanticDomains: [...oldFrontierSense.semanticDomains, domain0],
         });
-        const frontierWord = mockFrontierWord();
-        frontierWord.senses.push(oldFrontierSense);
+        const newFrontierWord = mockFrontierWord();
+        newFrontierWord.senses.push(oldFrontierSense);
 
         mockGetWordResolve(oldFrontierWord);
         await makeDispatch(newRevWord, oldRevWord);
-        checkResultantData(frontierWord);
+        checkResultantData(newFrontierWord);
       });
 
       it("Removes a sense.", async () => {

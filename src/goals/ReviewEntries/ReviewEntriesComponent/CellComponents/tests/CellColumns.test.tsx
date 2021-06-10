@@ -1,10 +1,11 @@
 import ReactDOM from "react-dom";
 
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { newGloss, newSemanticDomain } from "types/word";
 
-const GLOSS = newGloss("hoovy", "en");
+const LANG = "en";
+const GLOSS = newGloss("hoovy", LANG);
 const DOMAIN = newSemanticDomain("0.1", "Person");
 const DOMAIN2 = newSemanticDomain("1", "Universe");
 const DOMAIN_BAD = newSemanticDomain("0.0", "Joke");
@@ -16,15 +17,15 @@ const WORD: ReviewEntriesWord = {
     {
       guid: "sense0",
       glosses: [
-        newGloss("meaning of life", "en"),
-        newGloss("life's meaning", "en"),
+        newGloss("meaning of life", LANG),
+        newGloss("life's meaning", LANG),
       ],
       domains: [DOMAIN2, DOMAIN_BAD],
       deleted: false,
     },
     {
       guid: "sense1",
-      glosses: [newGloss("heavy noise", "en"), GLOSS],
+      glosses: [newGloss("heavy noise", LANG), GLOSS],
       domains: [DOMAIN, DOMAIN_BAD],
       deleted: false,
     },
@@ -36,7 +37,7 @@ const WORD_0 = {
   senses: [
     {
       guid: "",
-      glosses: [newGloss("~", "en")],
+      glosses: [newGloss("~", LANG)],
       domains: [newSemanticDomain("7.7.6")],
       deleted: false,
     },
@@ -46,7 +47,7 @@ const WORD_1 = {
   senses: [
     {
       guid: "",
-      glosses: [newGloss("a", "en")],
+      glosses: [newGloss("a", LANG)],
       domains: [newSemanticDomain("9.9.9.9.9")],
       deleted: false,
     },
@@ -56,7 +57,7 @@ const WORD_2 = {
   senses: [
     {
       guid: "",
-      glosses: [newGloss("b", "en")],
+      glosses: [newGloss("b", LANG)],
       domains: [newSemanticDomain("0.0.0.0.0")],
       deleted: false,
     },
@@ -66,7 +67,7 @@ const WORD_3 = {
   senses: [
     {
       guid: "",
-      glosses: [newGloss("\0", "en")],
+      glosses: [newGloss("\0", LANG)],
       domains: [newSemanticDomain("7.7.7")],
       deleted: false,
     },
