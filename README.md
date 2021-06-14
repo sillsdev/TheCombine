@@ -133,6 +133,8 @@ A rapid word collection tool.
 8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
 
+Note, those starting development can skip sections related to production/deployment: 2, 4.
+
 [chocolatey]: https://chocolatey.org/
 
 ## Docker
