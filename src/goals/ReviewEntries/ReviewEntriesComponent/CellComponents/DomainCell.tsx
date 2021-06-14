@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
+import { SemanticDomain } from "api/models";
 import TreeView from "components/TreeView";
 import AlignedList, {
   SPACER,
@@ -14,7 +15,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
-import { SemanticDomain } from "types/word";
+import { newSemanticDomain } from "types/word";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;
@@ -45,10 +46,7 @@ export default function DomainCell(props: DomainCellProps) {
         );
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
-        {
-          name: selectedDomain.name,
-          id: selectedDomain.id,
-        },
+        newSemanticDomain(selectedDomain.id, selectedDomain.name),
       ]);
     }
   }

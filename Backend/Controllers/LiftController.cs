@@ -8,11 +8,13 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using SIL.Lift.Parsing;
 using SIL.IO;
-using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
@@ -42,9 +44,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
-        /// <remarks> POST: v1/projects/{projectId}/lift/upload </remarks>
         /// <returns> Number of words added </returns>
-        [HttpPost("upload")]
+        [HttpPost("upload", Name = "UploadLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         // Allow clients to POST large import files to the server (default limit is 28MB).
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
@@ -53,7 +55,7 @@ namespace BackendFramework.Controllers
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Sanitize projectId
@@ -65,7 +67,7 @@ namespace BackendFramework.Controllers
             // Ensure Lift file has not already been imported.
             if (!await _projRepo.CanImportLift(projectId))
             {
-                return new BadRequestObjectResult("A Lift file has already been uploaded");
+                return BadRequest("A Lift file has already been uploaded.");
             }
 
             var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
@@ -76,13 +78,13 @@ namespace BackendFramework.Controllers
             var file = fileUpload.File;
             if (file is null)
             {
-                return new BadRequestObjectResult("Null file");
+                return BadRequest("Null File");
             }
 
             // Ensure file is not empty
             if (file.Length == 0)
             {
-                return new BadRequestObjectResult("Empty File");
+                return BadRequest("Empty File");
             }
 
             // Copy zip file data to a new temporary file
@@ -129,15 +131,15 @@ namespace BackendFramework.Controllers
                         // Both directories seemed important
                         if (numDirs == 2)
                         {
-                            return new BadRequestObjectResult("Your zip file should have one directory");
+                            return BadRequest("Your zip file should have one directory.");
                         }
                         break;
                     }
                 // There were 0 or more than 2 directories
                 default:
                     {
-                        return new BadRequestObjectResult(
-                            "Your zip file structure has the wrong number of directories");
+                        return BadRequest(
+                            "Your zip file structure has the wrong number of directories.");
                     }
             }
 
@@ -150,11 +152,11 @@ namespace BackendFramework.Controllers
             var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
             if (extractedLiftPath.Length > 1)
             {
-                return new BadRequestObjectResult("More than one .lift file detected");
+                return BadRequest("More than one .lift file detected.");
             }
             if (extractedLiftPath.Length == 0)
             {
-                return new BadRequestObjectResult("No lift files detected");
+                return BadRequest("No lift files detected.");
             }
 
             int liftParseResult;
@@ -166,7 +168,7 @@ namespace BackendFramework.Controllers
                 var proj = await _projRepo.GetProject(projectId);
                 if (proj is null)
                 {
-                    return new NotFoundObjectResult(projectId);
+                    return NotFound(projectId);
                 }
 
                 _liftService.LdmlImport(
@@ -182,7 +184,7 @@ namespace BackendFramework.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e, $"Error importing lift file {fileUpload.Name} into project {projectId}.");
-                return new BadRequestObjectResult("Error processing the lift data. Contact support for help.");
+                return BadRequest("Error processing the lift data. Contact support for help.");
             }
 
             // Store that we have imported Lift data already for this project to signal the frontend
@@ -190,19 +192,19 @@ namespace BackendFramework.Controllers
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             project.LiftImported = true;
             await _projRepo.Update(projectId, project);
 
-            return new OkObjectResult(liftParseResult);
+            return Ok(liftParseResult);
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/export </remarks>
         /// <returns> ProjectId, if export successful </returns>
-        [HttpGet("export")]
+        [HttpGet("export", Name = "ExportLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
@@ -214,7 +216,7 @@ namespace BackendFramework.Controllers
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Sanitize projectId
@@ -227,13 +229,13 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             // Check if another export started
             if (_liftService.IsExportInProgress(userId))
             {
-                return new ConflictResult();
+                return Conflict();
             }
 
             // Store in-progress status for the export
@@ -246,7 +248,7 @@ namespace BackendFramework.Controllers
                 if (words.Count == 0)
                 {
                     _liftService.SetExportInProgress(userId, false);
-                    return new BadRequestResult();
+                    return BadRequest("No words to export.");
                 }
 
                 // Export the data to a zip, read into memory, and delete zip
@@ -255,7 +257,7 @@ namespace BackendFramework.Controllers
                 // Store the temporary path to the exported file for user to download later.
                 _liftService.StoreExport(userId, exportedFilepath);
                 await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
-                return new OkObjectResult(projectId);
+                return Ok(projectId);
             }
             catch
             {
@@ -271,9 +273,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Downloads project data in zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/download </remarks>
         /// <returns> Binary Lift file </returns>
-        [HttpGet("download")]
+        [HttpGet("download", Name = "DownloadLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
@@ -284,14 +286,14 @@ namespace BackendFramework.Controllers
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Ensure export exists.
             var filePath = _liftService.RetrieveExport(userId);
             if (filePath is null)
             {
-                return new NotFoundObjectResult(userId);
+                return NotFound(userId);
             }
 
             var file = System.IO.File.OpenRead(filePath);
@@ -302,9 +304,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Delete prepared export </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/deleteexport </remarks>
         /// <returns> UserId, if successful </returns>
-        [HttpGet("deleteexport")]
+        [HttpGet("deleteexport", Name = "DeleteLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> DeleteLiftFile()
         {
             var userId = _permissionService.GetUserId(HttpContext);
@@ -315,22 +317,22 @@ namespace BackendFramework.Controllers
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             _liftService.DeleteExport(userId);
-            return new OkObjectResult(userId);
+            return Ok(userId);
         }
 
         /// <summary> Check if lift import has already happened for this project </summary>
-        /// <remarks> GET: v1/projects/{projectId}/lift/check </remarks>
         /// <returns> A bool </returns>
-        [HttpGet("check")]
+        [HttpGet("check", Name = "CanUploadLift")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CanUploadLift(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Sanitize user input
@@ -339,7 +341,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            return new OkObjectResult(await _projRepo.CanImportLift(projectId));
+            return Ok(await _projRepo.CanImportLift(projectId));
         }
     }
 }

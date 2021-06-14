@@ -7,10 +7,12 @@ import {
 } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
+import { useDispatch } from "react-redux";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { openUserGuide, Path } from "browserHistory";
+import { clearCurrentProject } from "components/Project/ProjectActions";
 import theme, { tabColor } from "types/theme";
 
 export async function getIsAdmin(): Promise<boolean> {
@@ -42,7 +44,7 @@ export default function UserMenu(props: UserMenuProps) {
     setAnchorElement(null);
   }
 
-  getIsAdmin().then((result) => setIsAdmin(result));
+  getIsAdmin().then(setIsAdmin);
 
   return (
     <React.Fragment>
@@ -103,13 +105,14 @@ interface UserMenuListProps {
  */
 export function UserMenuList(props: UserMenuListProps) {
   const { REACT_APP_VERSION } = process.env;
+  const dispatch = useDispatch();
   return (
     <div ref={props.forwardedRef}>
       {/* Only show Site Settings link to Admin users. */}
       {props.isAdmin && (
         <MenuItem
           onClick={() => {
-            LocalStorage.setProjectId("");
+            clearCurrentProject(dispatch);
             history.push(Path.SiteSettings);
             props.onSelect();
           }}

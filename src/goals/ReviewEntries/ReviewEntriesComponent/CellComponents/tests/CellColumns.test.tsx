@@ -1,12 +1,14 @@
 import ReactDOM from "react-dom";
 
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
-import { Gloss, SemanticDomain } from "types/word";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { newGloss, newSemanticDomain } from "types/word";
 
-const GLOSS: Gloss = { def: "hoovy", language: "en" };
-const DOMAIN: SemanticDomain = { name: "Person", id: "0.1" };
-const DOMAIN2: SemanticDomain = { name: "Universe", id: "1" };
+const LANG = "en";
+const GLOSS = newGloss("hoovy", LANG);
+const DOMAIN = newSemanticDomain("0.1", "Person");
+const DOMAIN2 = newSemanticDomain("1", "Universe");
+const DOMAIN_BAD = newSemanticDomain("0.0", "Joke");
 const WORD: ReviewEntriesWord = {
   ...new ReviewEntriesWord(),
   id: "id",
@@ -15,16 +17,16 @@ const WORD: ReviewEntriesWord = {
     {
       guid: "sense0",
       glosses: [
-        { def: "meaning of life", language: "en" },
-        { def: "life's meaning", language: "en" },
+        newGloss("meaning of life", LANG),
+        newGloss("life's meaning", LANG),
       ],
-      domains: [DOMAIN2, { name: "Joke", id: "0.0" }],
+      domains: [DOMAIN2, DOMAIN_BAD],
       deleted: false,
     },
     {
       guid: "sense1",
-      glosses: [{ def: "heavy noise", language: "en" }, GLOSS],
-      domains: [DOMAIN, { name: "Joke", id: "0" }],
+      glosses: [newGloss("heavy noise", LANG), GLOSS],
+      domains: [DOMAIN, DOMAIN_BAD],
       deleted: false,
     },
   ],
@@ -35,8 +37,8 @@ const WORD_0 = {
   senses: [
     {
       guid: "",
-      glosses: [{ def: "~", language: "en" }],
-      domains: [{ name: "", id: "7.7.6" }],
+      glosses: [newGloss("~", LANG)],
+      domains: [newSemanticDomain("7.7.6")],
       deleted: false,
     },
   ],
@@ -45,8 +47,8 @@ const WORD_1 = {
   senses: [
     {
       guid: "",
-      glosses: [{ def: "a", language: "en" }],
-      domains: [{ name: "", id: "9.9.9.9.9" }],
+      glosses: [newGloss("a", LANG)],
+      domains: [newSemanticDomain("9.9.9.9.9")],
       deleted: false,
     },
   ],
@@ -55,8 +57,8 @@ const WORD_2 = {
   senses: [
     {
       guid: "",
-      glosses: [{ def: "b", language: "en" }],
-      domains: [{ name: "", id: "0.0.0.0.0" }],
+      glosses: [newGloss("b", LANG)],
+      domains: [newSemanticDomain("0.0.0.0.0")],
       deleted: false,
     },
   ],
@@ -65,8 +67,8 @@ const WORD_3 = {
   senses: [
     {
       guid: "",
-      glosses: [{ def: "\0", language: "en" }],
-      domains: [{ name: "", id: "7.7.7" }],
+      glosses: [newGloss("\0", LANG)],
+      domains: [newSemanticDomain("7.7.7")],
       deleted: false,
     },
   ],

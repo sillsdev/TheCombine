@@ -1,57 +1,34 @@
+import { AutocompleteSetting, Project, WritingSystem } from "api/models";
 import { randomIntString } from "utilities";
-import { SemanticDomain } from "types/word";
 
-export enum AutoComplete {
-  Off = "Off",
-  On = "On",
-}
-export interface CustomField {
-  name: string;
-  type: string;
-}
-export interface WritingSystem {
-  name: string;
-  bcp47: string;
-  font: string;
+export function newWritingSystem(
+  bcp47: string = "",
+  name: string = "",
+  font: string = ""
+): WritingSystem {
+  return { bcp47, name, font };
 }
 
-export interface Project {
-  id: string;
-  name: string;
-  isActive: boolean;
-  liftImported: boolean;
-  semanticDomains: SemanticDomain[];
-  vernacularWritingSystem: WritingSystem;
-  analysisWritingSystems: WritingSystem[];
-  validCharacters: string[];
-  rejectedCharacters: string[];
-  autocompleteSetting: AutoComplete;
-  customFields: CustomField[];
-  wordFields: string[];
-  partsOfSpeech: string[];
+export function newProject(name: string = ""): Project {
+  return {
+    id: "",
+    name,
+    isActive: true,
+    liftImported: false,
+    semanticDomains: [],
+    vernacularWritingSystem: newWritingSystem(),
+    analysisWritingSystems: [newWritingSystem()],
+    validCharacters: [],
+    rejectedCharacters: [],
+    inviteTokens: [],
+    autocompleteSetting: AutocompleteSetting.On,
+  };
 }
-
-export const defaultProject: Project = {
-  id: "",
-  name: "",
-  isActive: true,
-  liftImported: false,
-  semanticDomains: [],
-  vernacularWritingSystem: { name: "", bcp47: "", font: "" },
-  analysisWritingSystems: [{ name: "", bcp47: "", font: "" }],
-  validCharacters: [],
-  rejectedCharacters: [],
-  customFields: [],
-  wordFields: [],
-  partsOfSpeech: [],
-  autocompleteSetting: AutoComplete.On,
-};
 
 // Randomize properties as needed for tests.
 export function randomProject(): Project {
-  let project = { ...defaultProject };
+  const project = newProject(randomIntString());
   project.id = randomIntString();
-  project.name = randomIntString();
   project.isActive = Math.random() < 0.5;
   return project;
 }

@@ -1,25 +1,30 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Path } from "browserHistory";
 import { defaultState } from "components/App/DefaultState";
-import AppBarComponent from "components/AppBar/AppBarComponent";
+import AppBar from "components/AppBar/AppBarComponent";
 import NavigationButtons from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
+
+const mockPath = jest.fn();
+jest.mock("react-router-dom", () => ({
+  useLocation: () => ({ pathname: mockPath() }),
+}));
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 
 let testRenderer: ReactTestRenderer;
 
-describe("AppBarComponent", () => {
+describe("AppBar", () => {
   it("renders without crashing", () => {
+    mockPath.mockReturnValue(Path.ProjScreen);
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <AppBarComponent currentTab={Path.ProjScreen} />
+          <AppBar />
         </Provider>
       );
     });
@@ -30,7 +35,7 @@ describe("NavigationButtons", () => {
   it("has only one tab shaded", () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <NavigationButtons currentTab={Path.Goals} />
+        <NavigationButtons currentTab={Path.DataEntry} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();
@@ -46,6 +51,7 @@ describe("NavigationButtons", () => {
 
 describe("ProjectNameButton", () => {
   it("has tab shaded when itself is called", () => {
+    mockPath.mockReturnValue(Path.ProjSettings);
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <ProjectNameButton currentTab={Path.ProjSettings} />

@@ -6,8 +6,8 @@ import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 import TreeViewComponent, {
   TreeView,
 } from "components/TreeView/TreeViewComponent";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { store } from "store";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeView;
@@ -58,7 +58,7 @@ describe("TreeView", () => {
   });
 
   it("Sets a new domain upon navigation", async () => {
-    let newDom: SemanticDomainWithSubdomains = {
+    const newDom: TreeSemanticDomain = {
       name: "test",
       id: "test",
       description: "super testy",

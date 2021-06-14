@@ -10,12 +10,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import Bounce from "react-reveal/Bounce";
 import { Key } from "ts-key-enum";
 
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeHeaderProps {
-  currentDomain: SemanticDomainWithSubdomains;
-  animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
+  currentDomain: TreeSemanticDomain;
+  animate: (domain: TreeSemanticDomain) => Promise<void>;
   bounceState: number;
   bounce: () => void;
 }
@@ -98,7 +98,7 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
   function getBrotherDomain(
     navigationAmount: number,
     props: TreeHeaderProps
-  ): SemanticDomainWithSubdomains | undefined {
+  ): TreeSemanticDomain | undefined {
     if (props.currentDomain.parentDomain) {
       const brotherDomains = props.currentDomain.parentDomain.subdomains;
       let index = brotherDomains.findIndex(
@@ -116,13 +116,13 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
 
   function getRightBrother(
     props: TreeHeaderProps
-  ): SemanticDomainWithSubdomains | undefined {
+  ): TreeSemanticDomain | undefined {
     return getBrotherDomain(1, props);
   }
 
   function getLeftBrother(
     props: TreeHeaderProps
-  ): SemanticDomainWithSubdomains | undefined {
+  ): TreeSemanticDomain | undefined {
     return getBrotherDomain(-1, props);
   }
 
@@ -147,9 +147,9 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
 
   // Search for a semantic domain by number
   function searchDomainByNumber(
-    parent: SemanticDomainWithSubdomains,
+    parent: TreeSemanticDomain,
     number: string
-  ): SemanticDomainWithSubdomains | undefined {
+  ): TreeSemanticDomain | undefined {
     for (const domain of parent.subdomains)
       if (domain.id === number) {
         return domain;
@@ -162,17 +162,17 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
 
   // Searches for a semantic domain by name
   function searchDomainByName(
-    domain: SemanticDomainWithSubdomains,
+    domain: TreeSemanticDomain,
     target: string
-  ): SemanticDomainWithSubdomains | undefined {
-    let check = (checkAgainst: SemanticDomainWithSubdomains | undefined) =>
+  ): TreeSemanticDomain | undefined {
+    let check = (checkAgainst: TreeSemanticDomain | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
     if (check(domain)) {
       return domain;
     }
     // If there are subdomains
     if (domain.subdomains.length > 0) {
-      let tempDomain: SemanticDomainWithSubdomains | undefined;
+      let tempDomain: TreeSemanticDomain | undefined;
       for (const sub of domain.subdomains) {
         tempDomain = searchDomainByName(sub, target);
         if (check(tempDomain)) {
@@ -195,8 +195,7 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
     if (event.key === Key.Enter) {
       event.preventDefault();
       // Find parent domain
-      let parent: SemanticDomainWithSubdomains | undefined =
-        props.currentDomain;
+      let parent: TreeSemanticDomain | undefined = props.currentDomain;
       while (parent.parentDomain !== undefined) {
         parent = parent.parentDomain;
       }

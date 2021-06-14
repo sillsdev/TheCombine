@@ -1,7 +1,6 @@
 import hash from "crypto";
 
 import * as backend from "backend";
-import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import {
   LoginActionTypes,
@@ -9,7 +8,7 @@ import {
 } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {
@@ -17,8 +16,7 @@ export function asyncLogin(username: string, password: string) {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
-      .then(async (user: User) => {
-        LocalStorage.setCurrentUser(user);
+      .then(async (user) => {
         dispatch(loginSuccess(user.username));
         // hash the user name and use it in analytics.identify
         const analyticsId = hash
@@ -26,11 +24,6 @@ export function asyncLogin(username: string, password: string) {
           .update(user.id)
           .digest("hex");
         analytics.identify(analyticsId);
-        if (user.hasAvatar) {
-          backend.avatarSrc(user.id).then((avatar) => {
-            LocalStorage.setAvatar(avatar);
-          });
-        }
         history.push(Path.ProjScreen);
       })
       .catch(() => {
@@ -60,21 +53,9 @@ export function loginSuccess(username: string): UserAction {
   };
 }
 
-export function loginReset(): UserAction {
-  return {
-    type: LoginActionTypes.LOGIN_RESET,
-    payload: { username: "" },
-  };
-}
-
 export function logoutAndResetStore() {
   return (dispatch: StoreStateDispatch) => {
-    const user = LocalStorage.getCurrentUser();
-    if (user) {
-      dispatch(logout(user.username));
-    }
     dispatch(reset());
-    LocalStorage.clearLocalStorage();
   };
 }
 
@@ -87,14 +68,14 @@ export function asyncRegister(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    const newUser = new User(name, username, password);
-    newUser.email = email;
+    const user = newUser(name, username, password);
+    user.email = email;
     await backend
-      .addUser(newUser)
+      .addUser(user)
       .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
-          dispatch(registerReset());
+          dispatch(reset());
           history.push(Path.Login);
         }, 1000);
       })
@@ -115,14 +96,14 @@ export function asyncRegisterForEmailInvite(
   return async (dispatch: StoreStateDispatch) => {
     dispatch(registerAttempt(username));
     // Create new user
-    const newUser = new User(name, username, password);
-    newUser.email = email;
+    const user = newUser(name, username, password);
+    user.email = email;
     await backend
-      .addUser(newUser)
+      .addUser(user)
       .then((_res) => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
-          dispatch(registerReset());
+          dispatch(reset());
         }, 1000);
       })
       .catch((err) => {
@@ -150,20 +131,6 @@ export function registerFailure(errorMessage: string): UserAction {
 export function registerSuccess(username: string): UserAction {
   return {
     type: LoginActionTypes.REGISTER_SUCCESS,
-    payload: { username },
-  };
-}
-
-export function registerReset(): UserAction {
-  return {
-    type: LoginActionTypes.REGISTER_RESET,
-    payload: { username: "" },
-  };
-}
-
-function logout(username: string): UserAction {
-  return {
-    type: LoginActionTypes.LOGOUT,
     payload: { username },
   };
 }

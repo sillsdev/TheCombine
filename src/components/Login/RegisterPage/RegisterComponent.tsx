@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "backend";

@@ -1,6 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import { MergeWords, State, Word } from "api/models";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   defaultTree,
@@ -22,14 +23,22 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { GoalsState } from "types/goals";
-import {
-  MergeWords,
-  multiSenseWord,
-  multiSenseWordAnyGuid,
-  Sense,
-  Word,
-} from "types/word";
+import { multiSenseWord, newSense, newWord } from "types/word";
+import { randomIntString } from "utilities";
 
+// Used when the guids don't matter.
+export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
+  return {
+    ...newWord(vern),
+    id: randomIntString(),
+    guid: expect.any(String),
+    senses: glosses.map((gloss) => ({
+      ...newSense(gloss),
+      guid: expect.any(String),
+      accessibility: State.Sense,
+    })),
+  };
+}
 type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
 const mockWordList: { [key in mockWordListIndex]: Word } = {
   WA: {
@@ -159,10 +168,10 @@ const data: MergeData = {
     WB: { ...multiSenseWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
   },
   senses: {
-    S1: { ...new Sense("Sense 1"), srcWordId: "WA", order: 0 },
-    S2: { ...new Sense("Sense 2"), srcWordId: "WA", order: 1 },
-    S3: { ...new Sense("Sense 3"), srcWordId: "WB", order: 0 },
-    S4: { ...new Sense("Sense 4"), srcWordId: "WB", order: 1 },
+    S1: { ...newSense("Sense 1"), srcWordId: "WA", order: 0 },
+    S2: { ...newSense("Sense 2"), srcWordId: "WA", order: 1 },
+    S3: { ...newSense("Sense 3"), srcWordId: "WB", order: 0 },
+    S4: { ...newSense("Sense 4"), srcWordId: "WB", order: 1 },
   },
 };
 

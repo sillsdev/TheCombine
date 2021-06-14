@@ -36,11 +36,11 @@ namespace Backend.Tests.Controllers
             var userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<int>
+                Permissions = new List<Permission>
                 {
-                    (int)Permission.DeleteEditSettingsAndUsers,
-                    (int)Permission.ImportExport,
-                    (int)Permission.MergeAndCharSet
+                    Permission.DeleteEditSettingsAndUsers,
+                    Permission.ImportExport,
+                    Permission.MergeAndCharSet
                 }
             };
             return userRole;
@@ -53,7 +53,7 @@ namespace Backend.Tests.Controllers
             _userRoleRepo.Create(RandomUserRole());
             _userRoleRepo.Create(RandomUserRole());
 
-            var getResult = _userRoleController.Get(_projId).Result;
+            var getResult = _userRoleController.GetProjectUserRoles(_projId).Result;
 
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
@@ -65,7 +65,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetAllUserRolesMissingProject()
         {
-            var result = _userRoleController.Get(InvalidProjectId).Result;
+            var result = _userRoleController.GetProjectUserRoles(InvalidProjectId).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -73,7 +73,7 @@ namespace Backend.Tests.Controllers
         public void TestGetAllUserRolesNoPermission()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _userRoleController.Get(_projId).Result;
+            var result = _userRoleController.GetProjectUserRoles(_projId).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 
@@ -85,7 +85,7 @@ namespace Backend.Tests.Controllers
             _userRoleRepo.Create(RandomUserRole());
             _userRoleRepo.Create(RandomUserRole());
 
-            var action = _userRoleController.Get(_projId, userRole.Id).Result;
+            var action = _userRoleController.GetUserRole(_projId, userRole.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUserRole = ((ObjectResult)action).Value as UserRole;
@@ -95,7 +95,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetMissingUserRole()
         {
-            var action = _userRoleController.Get(_projId, "INVALID_USER_ROLE_ID").Result;
+            var action = _userRoleController.GetUserRole(_projId, "INVALID_USER_ROLE_ID").Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
 
@@ -103,7 +103,7 @@ namespace Backend.Tests.Controllers
         public void TestGetUserRolesMissingProject()
         {
             var userRole = _userRoleRepo.Create(RandomUserRole()).Result;
-            var result = _userRoleController.Get(InvalidProjectId, userRole.Id).Result;
+            var result = _userRoleController.GetUserRole(InvalidProjectId, userRole.Id).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -112,7 +112,7 @@ namespace Backend.Tests.Controllers
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var userRole = _userRoleRepo.Create(RandomUserRole()).Result;
-            var result = _userRoleController.Get(_projId, userRole.Id).Result;
+            var result = _userRoleController.GetUserRole(_projId, userRole.Id).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 
@@ -120,7 +120,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateUserRole()
         {
             var userRole = RandomUserRole();
-            var id = (string)((ObjectResult)_userRoleController.Post(_projId, userRole).Result).Value;
+            var id = (string)((ObjectResult)_userRoleController.CreateUserRole(_projId, userRole).Result).Value;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleRepo.GetAllUserRoles(_projId).Result);
         }
@@ -129,7 +129,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateUserRolesMissingProject()
         {
             var userRole = RandomUserRole();
-            var result = _userRoleController.Post(InvalidProjectId, userRole).Result;
+            var result = _userRoleController.CreateUserRole(InvalidProjectId, userRole).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -138,7 +138,7 @@ namespace Backend.Tests.Controllers
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var userRole = _userRoleRepo.Create(RandomUserRole()).Result;
-            var result = _userRoleController.Post(_projId, userRole).Result;
+            var result = _userRoleController.CreateUserRole(_projId, userRole).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 
@@ -151,10 +151,10 @@ namespace Backend.Tests.Controllers
             var userId = _userRepo.Create(user).Result!.Id;
 
             var updatePermissions = userRole.Clone().Permissions;
-            updatePermissions.Add((int)Permission.WordEntry);
+            updatePermissions.Add(Permission.WordEntry);
 
-            _ = _userRoleController.UpdateUserRole(_projId, userId, updatePermissions.ToArray()).Result;
-            var action = _userRoleController.Get(_projId, userRole.Id).Result;
+            _ = _userRoleController.UpdateUserRolePermissions(_projId, userId, updatePermissions.ToArray()).Result;
+            var action = _userRoleController.GetUserRole(_projId, userRole.Id).Result;
             var updatedUserRole = ((ObjectResult)action).Value as UserRole;
             Assert.AreEqual(updatePermissions, updatedUserRole?.Permissions);
         }
@@ -163,7 +163,7 @@ namespace Backend.Tests.Controllers
         public void TestUpdateUserRolesMissingProject()
         {
             var userRole = RandomUserRole();
-            var result = _userRoleController.UpdateUserRole(
+            var result = _userRoleController.UpdateUserRolePermissions(
                 InvalidProjectId, userRole.Id, userRole.Permissions.ToArray()).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
@@ -173,7 +173,7 @@ namespace Backend.Tests.Controllers
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var userRole = RandomUserRole();
-            var result = _userRoleController.UpdateUserRole(
+            var result = _userRoleController.UpdateUserRolePermissions(
                 InvalidProjectId, userRole.Id, userRole.Permissions.ToArray()).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
@@ -185,7 +185,7 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(1));
 
-            _ = _userRoleController.Delete(_projId, origUserRole.Id).Result;
+            _ = _userRoleController.DeleteUserRole(_projId, origUserRole.Id).Result;
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(0));
         }
@@ -195,7 +195,7 @@ namespace Backend.Tests.Controllers
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var userRole = _userRoleRepo.Create(RandomUserRole()).Result;
-            var result = _userRoleController.Delete(_projId, userRole.Id).Result;
+            var result = _userRoleController.DeleteUserRole(_projId, userRole.Id).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 
@@ -208,7 +208,7 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(3));
 
-            _ = _userRoleController.Delete(_projId).Result;
+            _ = _userRoleController.DeleteProjectUserRoles(_projId).Result;
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(0));
         }
@@ -216,7 +216,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteAllUserRolesMissingProject()
         {
-            var result = _userRoleController.Delete(InvalidProjectId).Result;
+            var result = _userRoleController.DeleteProjectUserRoles(InvalidProjectId).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -224,7 +224,7 @@ namespace Backend.Tests.Controllers
         public void TestDeleteAllUserRolesNoPermission()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _userRoleController.Delete(_projId).Result;
+            var result = _userRoleController.DeleteProjectUserRoles(_projId).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
     }

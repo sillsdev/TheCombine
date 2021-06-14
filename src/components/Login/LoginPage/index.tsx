@@ -6,9 +6,9 @@ import Login, {
 } from "components/Login/LoginPage/LoginComponent";
 import {
   asyncLogin,
-  loginReset,
   logoutAndResetStore,
 } from "components/Login/Redux/LoginActions";
+import { reset } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
@@ -28,7 +28,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch): LoginDispatchProps {
       dispatch(logoutAndResetStore());
     },
     reset: () => {
-      dispatch(loginReset());
+      dispatch(reset());
     },
   };
 }

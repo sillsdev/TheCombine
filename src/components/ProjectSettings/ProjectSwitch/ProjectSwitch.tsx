@@ -1,9 +1,9 @@
 import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
 
+import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
-import { Project } from "types/project";
 import { randomIntString } from "utilities";
 
 interface SwitchProps {

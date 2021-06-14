@@ -1,5 +1,4 @@
-import { User } from "types/user";
-import { getUser } from "backend";
+import { User } from "api/models";
 
 export enum LocalStorageKey {
   Avatar = "avatar",
@@ -34,7 +33,7 @@ export function setCurrentUser(user: User) {
 export function getProjectId(): string {
   return localStorage.getItem(LocalStorageKey.ProjectId) || "";
 }
-export function setProjectId(id: string) {
+export function setProjectId(id = "") {
   localStorage.setItem(LocalStorageKey.ProjectId, id);
 }
 
@@ -45,12 +44,4 @@ export function getUserId(): string {
 
 export function remove(localStorageKey: LocalStorageKey) {
   localStorage.removeItem(localStorageKey);
-}
-
-// Update user in LocalStorage from backend.
-export async function updateUser(userId?: string) {
-  const currentUserId = userId ? userId : getUserId();
-  if (currentUserId) {
-    await getUser(currentUserId).then((user) => setCurrentUser(user));
-  }
 }

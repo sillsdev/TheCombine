@@ -3,9 +3,9 @@ import { Translate } from "react-localize-redux";
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { Project } from "api/models";
 import * as backend from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
-import { Project } from "types/project";
 
 enum UploadState {
   Awaiting,
@@ -14,7 +14,7 @@ enum UploadState {
 }
 
 interface ImportProps {
-  project: Project;
+  projectId: string;
   updateProject: (newProject: Project) => void;
 }
 
@@ -43,9 +43,8 @@ export default class ProjectImport extends React.Component<
   private async uploadWords() {
     if (this.state.liftFile) {
       this.setState({ uploadState: UploadState.InProgress });
-      await backend.uploadLift(this.props.project, this.state.liftFile);
-      let newProject = await backend.getProject(this.props.project.id);
-      this.props.updateProject(newProject);
+      await backend.uploadLift(this.props.projectId, this.state.liftFile);
+      this.props.updateProject(await backend.getProject(this.props.projectId));
       this.setState({ uploadState: UploadState.Done, liftFile: undefined });
     }
   }

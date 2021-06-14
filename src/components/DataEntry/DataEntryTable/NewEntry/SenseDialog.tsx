@@ -9,10 +9,10 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { Word } from "api/models";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
-import { Sense, Word } from "types/word";
 
 interface SenseDialogProps {
   selectedWord: Word;
@@ -64,7 +64,7 @@ export function SenseList(props: SenseListProps) {
         <Translate id="addWords.selectSense" />
       </Typography>
       <MenuList autoFocusItem>
-        {props.selectedWord.senses.map((sense: Sense, index: number) => (
+        {props.selectedWord.senses.map((sense, index) => (
           <StyledMenuItem
             onClick={() => props.closeDialog(index)}
             key={sense.glosses[0].def}

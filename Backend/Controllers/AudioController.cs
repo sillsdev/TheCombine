@@ -1,11 +1,12 @@
 using System.IO;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BackendFramework.Helper;
 
 namespace BackendFramework.Controllers
 {
@@ -28,18 +29,18 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        /// <summary> Returns the audio file in the form of a stream from disk</summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/audio/download/{fileName} </remarks>
+        /// <summary> Gets the audio file in the form of a stream from disk. </summary>
         /// <returns> Audio file stream. </returns>
         [AllowAnonymous]
-        [HttpGet("download/{fileName}")]
+        [HttpGet("download/{fileName}", Name = "DownloadAudioFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
             // endpoint as the src
             //if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             //{
-            //    return new ForbidResult();
+            //    return Forbid();
             //}
 
             // Sanitize user input
@@ -53,7 +54,7 @@ namespace BackendFramework.Controllers
             var file = System.IO.File.OpenRead(filePath);
             if (file is null)
             {
-                return new BadRequestObjectResult("The file does not exist");
+                return BadRequest("The file does not exist.");
             }
 
             return File(file, "application/octet-stream");
@@ -63,15 +64,15 @@ namespace BackendFramework.Controllers
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
         /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/audio/upload </remarks>
         /// <returns> Path to local audio file </returns>
-        [HttpPost("upload")]
+        [HttpPost("upload", Name = "UploadAudioFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // sanitize user input
@@ -83,13 +84,13 @@ namespace BackendFramework.Controllers
             var file = fileUpload.File;
             if (file is null)
             {
-                return new BadRequestObjectResult("Null File");
+                return BadRequest("Null File");
             }
 
             // Ensure file is not empty
             if (file.Length == 0)
             {
-                return new BadRequestObjectResult("Empty File");
+                return BadRequest("Empty File");
             }
 
             // This path should be unique even though it is only based on the Word ID because currently, a new
@@ -106,24 +107,24 @@ namespace BackendFramework.Controllers
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
-                return new NotFoundObjectResult(wordId);
+                return NotFound(wordId);
             }
             word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
             // Update the word with new audio file
             await _wordService.Update(projectId, wordId, word);
 
-            return new ObjectResult(word.Id);
+            return Ok(word.Id);
         }
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName} </remarks>
-        [HttpDelete("delete/{fileName}")]
-        public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
+        [HttpDelete("delete/{fileName}", Name = "DeleteAudioFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> DeleteAudioFile(string projectId, string wordId, string fileName)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // sanitize user input
@@ -135,9 +136,9 @@ namespace BackendFramework.Controllers
             var newWord = await _wordService.Delete(projectId, wordId, fileName);
             if (newWord != null)
             {
-                return new OkObjectResult(newWord.Id);
+                return Ok(newWord.Id);
             }
-            return new NotFoundObjectResult("The project was found, but the word audio was not deleted");
+            return NotFound("The project was found, but the word audio was not deleted");
         }
     }
 }

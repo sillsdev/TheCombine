@@ -176,20 +176,20 @@ namespace Backend.Tests.Services
             // Make sure all wordIds are in the frontier EXCEPT 1.
             var frontier = new List<Word>
             {
-                new Word {Id = "2"},
-                new Word {Id = "3"},
-                new Word {Id = "4"}
+                new Word {Id = "2", ProjectId = ProjId},
+                new Word {Id = "3", ProjectId = ProjId},
+                new Word {Id = "4", ProjectId = ProjId}
             };
             _ = _wordRepo.AddFrontier(frontier).Result;
 
             // All entries affected.
             var updatedEntriesCount = _mergeService.UpdateMergeBlacklist(ProjId).Result;
-            Assert.AreEqual(updatedEntriesCount, 2);
+            Assert.That(updatedEntriesCount, Is.EqualTo(2));
 
             // The only blacklistEntry with at least two ids in the frontier is A.
-            var entries = _mergeBlacklistRepo.GetAll(ProjId).Result;
-            Assert.That(entries, Has.Count.EqualTo(1));
-            Assert.AreEqual(entries.First().WordIds, new List<string> { "2", "3" });
+            var newBlacklist = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            Assert.That(newBlacklist, Has.Count.EqualTo(1));
+            Assert.AreEqual(newBlacklist.First().WordIds, new List<string> { "2", "3" });
         }
     }
 }

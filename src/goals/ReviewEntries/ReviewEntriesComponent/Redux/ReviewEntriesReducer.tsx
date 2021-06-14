@@ -23,7 +23,7 @@ export const reviewEntriesReducer = (
       return {
         ...state,
         words: state.words.map((w) =>
-          w.id === action.oldId ? action.newWord : w
+          w.id === action.oldId ? action.updatedWord : w
         ),
       };
 

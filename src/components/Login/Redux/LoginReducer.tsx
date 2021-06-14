@@ -64,10 +64,7 @@ export const loginReducer = (
         registerFailure: action.payload.username,
         registerSuccess: false,
       };
-    case LoginActionTypes.LOGIN_RESET:
-    case LoginActionTypes.LOGOUT:
     case StoreActionTypes.RESET:
-    case LoginActionTypes.REGISTER_RESET:
       return defaultState;
     default:
       return state;

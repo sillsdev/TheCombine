@@ -1,5 +1,5 @@
 import * as Backend from "backend";
-import * as LocalStorage from "backend/localStorage";
+import { getCurrentUser, getProjectId } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import {
   GoalActionTypes,
@@ -53,7 +53,7 @@ export function asyncLoadExistingUserEdits(
 
 export function asyncGetUserEdits() {
   return async (dispatch: StoreStateDispatch) => {
-    const projectId = LocalStorage.getProjectId();
+    const projectId = getProjectId();
     if (projectId) {
       const userEditId = getUserEditId();
 
@@ -172,9 +172,9 @@ export function updateStepFromData(goal: Goal): boolean {
 }
 
 export function getUserEditId(): string | undefined {
-  const user = LocalStorage.getCurrentUser();
+  const user = getCurrentUser();
   if (user) {
-    const projectId = LocalStorage.getProjectId();
+    const projectId = getProjectId();
     const projectIds = Object.keys(user.workedProjects);
     const key = projectIds.find((id) => id === projectId);
     if (key) {

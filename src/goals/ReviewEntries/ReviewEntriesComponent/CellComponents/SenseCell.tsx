@@ -4,12 +4,13 @@ import React, { ReactNode } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
+import { Gloss } from "api/models";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
-import { Gloss } from "types/word";
+import { newGloss } from "types/word";
 
 interface SenseCellProps {
   editable: boolean;
@@ -99,8 +100,7 @@ interface GlossListProps {
 function GlossList(props: GlossListProps) {
   const langs = props.glosses.map((g) => g.language);
   if (!langs.includes(props.defaultLang)) {
-    const newGloss = { language: props.defaultLang, def: "" };
-    props.onChange([...props.glosses, newGloss]);
+    props.onChange([...props.glosses, newGloss("", props.defaultLang)]);
   }
 
   return (

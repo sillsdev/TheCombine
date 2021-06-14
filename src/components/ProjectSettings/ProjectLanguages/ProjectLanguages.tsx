@@ -11,9 +11,9 @@ import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { Project, WritingSystem } from "types/project";
 import theme from "types/theme";
 import { getGlossLangsFromWords } from "types/word";
 

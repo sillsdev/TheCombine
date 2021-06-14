@@ -6,8 +6,9 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import { Project, WritingSystem } from "api/models";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
-import { defaultProject, Project, WritingSystem } from "types/project";
+import { newProject } from "types/project";
 
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore([])({});
@@ -22,7 +23,7 @@ let pickerHandle: ReactTestInstance;
 let buttonHandle: ReactTestInstance;
 
 function mockProject(systems?: WritingSystem[]) {
-  return { ...defaultProject, analysisWritingSystems: systems ?? [] };
+  return { ...newProject(), analysisWritingSystems: systems ?? [] };
 }
 
 function renderProjLangs(proj: Project) {

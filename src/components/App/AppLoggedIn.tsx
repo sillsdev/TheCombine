@@ -1,8 +1,8 @@
 import loadable from "@loadable/component";
-import React, { useEffect, useState } from "react";
-import { Route, Switch, useLocation } from "react-router-dom";
+import React from "react";
+import { Route, Switch } from "react-router-dom";
 
-import { getBasePath, Path } from "browserHistory";
+import { Path } from "browserHistory";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -18,15 +18,10 @@ const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 
 export default function AppWithBar() {
-  const location = useLocation();
-  const [currentLoc, setCurrentLoc] = useState<Path>(Path.ProjScreen);
-
-  useEffect(() => setCurrentLoc(getBasePath(location.pathname)), [location]);
-
   return (
     <React.Fragment>
       <SignalRHub />
-      <AppBar currentTab={currentLoc} />
+      <AppBar />
       <Switch>
         <Route exact path={Path.DataEntry} component={DataEntry} />
         <Route exact path={Path.GoalCurrent} component={BaseGoalScreen} />

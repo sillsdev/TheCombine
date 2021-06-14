@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Converters;
 
 namespace BackendFramework
 {
@@ -142,9 +143,16 @@ namespace BackendFramework
                 // TODO: This may be able to be removed by reviewing the raw JSON from the frontend to see if there
                 //    is malformed data, such as an integer sent as a string ("10"). .NET Core 3.0's JSON parser
                 //    no longer automatically tries to coerce these values.
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(options =>
+                    // Required so that integer enum's can be passed in JSON as their descriptive string names, rather
+                    //  than by opaque integer values. This makes the OpenAPI schema much more expressive for
+                    //  integer enums. https://stackoverflow.com/a/55541764
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
             services.AddSignalR();
+            services.AddSwaggerGen();
+            // TODO: Remove this when NewtonsoftJson support is removed.
+            services.AddSwaggerGenNewtonsoftSupport();
 
             services.Configure<Settings>(
                 options =>
@@ -260,6 +268,19 @@ namespace BackendFramework
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<CombineHub>("/hub");
+            });
+
+            // Configure OpenAPI (Formerly Swagger) schema generation
+            const string openApiRoutePrefix = "openapi";
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = $"/{openApiRoutePrefix}/{{documentName}}/openapi.{{json|yaml}}";
+            });
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"/{openApiRoutePrefix}/v1/openapi.json", "Combine API V1");
+                c.RoutePrefix = openApiRoutePrefix;
             });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the

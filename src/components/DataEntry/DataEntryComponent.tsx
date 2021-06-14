@@ -1,20 +1,20 @@
-import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
+import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
+import { SemanticDomain, State, Word } from "api/models";
 import { getFrontierWords } from "backend";
-import { Path } from "browserHistory";
-import DomainTree from "types/SemanticDomain";
-import theme from "types/theme";
-import { DomainWord, SemanticDomain, Sense, State, Word } from "types/word";
-import AppBarComponent from "components/AppBar/AppBarComponent";
-import TreeViewComponent from "components/TreeView";
+import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
+import TreeViewComponent from "components/TreeView";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import theme from "types/theme";
+import { DomainWord, newSemanticDomain } from "types/word";
 
 interface DataEntryProps {
-  domain: DomainTree;
+  domain: TreeSemanticDomain;
 }
 
 interface DataEntryState {
@@ -35,20 +35,12 @@ const paperStyle = {
 
 /** Filter out words that do not have at least 1 active sense */
 export function filterWords(words: Word[]): Word[] {
-  let filteredWords: Word[] = [];
-  for (let word of words) {
-    let shouldInclude = false;
-    for (let sense of word.senses) {
-      if (sense.accessibility === State.Active) {
-        shouldInclude = true;
-        break;
-      }
-    }
-    if (shouldInclude) {
-      filteredWords.push(word);
-    }
-  }
-  return filteredWords;
+  return words.filter(
+    (w) =>
+      w.senses.findIndex((s) =>
+        [State.Active, State.Sense].includes(s.accessibility)
+      ) !== -1
+  );
 }
 
 export function filterWordsByDomain(
@@ -61,7 +53,8 @@ export function filterWordsByDomain(
 
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses.filter(
-      (s: Sense) =>
+      (s) =>
+        // This is for States created before .accessiblity was required in the frontend.
         s.accessibility === State.Active || s.accessibility === undefined
     )) {
       domainMatched = false;
@@ -151,10 +144,10 @@ export class DataEntryComponent extends React.Component<
   updateWords = () => {};
 
   render() {
-    let semanticDomain: SemanticDomain = {
-      name: this.props.domain.name,
-      id: this.props.domain.id,
-    };
+    const semanticDomain = newSemanticDomain(
+      this.props.domain.id,
+      this.props.domain.name
+    );
 
     return (
       <Grid container justify="center" spacing={3} wrap={"nowrap"}>
@@ -169,7 +162,6 @@ export class DataEntryComponent extends React.Component<
             />
             <Divider />
             <DataEntryTable
-              domain={this.props.domain}
               semanticDomain={semanticDomain}
               displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
                 this.setState({
@@ -194,7 +186,7 @@ export class DataEntryComponent extends React.Component<
         />
 
         <Dialog fullScreen open={this.state.displaySemanticDomain}>
-          <AppBarComponent currentTab={Path.DataEntry} />
+          <AppBar />
           <TreeViewComponent
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {

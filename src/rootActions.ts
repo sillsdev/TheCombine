@@ -1,3 +1,5 @@
+import { clearLocalStorage } from "backend/localStorage";
+
 export enum StoreActionTypes {
   RESET = "RESET",
 }
@@ -9,6 +11,7 @@ interface Reset {
 export type StoreAction = Reset;
 
 export function reset(): StoreAction {
+  clearLocalStorage();
   return {
     type: StoreActionTypes.RESET,
   };

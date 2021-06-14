@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -27,160 +30,157 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words </remarks>
-        [HttpGet]
-        public async Task<IActionResult> Get(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            {
-                return new ForbidResult();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            return new ObjectResult(await _wordRepo.GetAllWords(projectId));
-        }
-
-        /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/words </remarks>
+        /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
         /// <returns> true: if success, false: if there were no words </returns>
-        [HttpDelete]
-        public async Task<IActionResult> Delete(string projectId)
+        [HttpDelete(Name = "DeleteProjectWords")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> DeleteProjectWords(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-
-            // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
-
-            return new ObjectResult(await _wordRepo.DeleteAllWords(projectId));
+            return Ok(await _wordRepo.DeleteAllWords(projectId));
         }
 
-        /// <summary> Returns <see cref="Word"/> with specified id </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/{wordId} </remarks>
-        [HttpGet("{wordId}")]
-        public async Task<IActionResult> Get(string projectId, string wordId)
+        /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
+        [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-
-            // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
+            var id = await _wordService.DeleteFrontierWord(projectId, wordId);
+            if (id is null)
+            {
+                return NotFound(wordId);
+            }
+            return Ok(wordId);
+        }
 
+        /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
+        [HttpGet(Name = "GetProjectWords")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
+        public async Task<IActionResult> GetProjectWords(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+            return Ok(await _wordRepo.GetAllWords(projectId));
+        }
+
+        /// <summary> Returns <see cref="Word"/> with specified id. </summary>
+        [HttpGet("{wordId}", Name = "GetWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Word))]
+        public async Task<IActionResult> GetWord(string projectId, string wordId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
-                return new NotFoundObjectResult(wordId);
+                return NotFound(wordId);
             }
-
-            return new ObjectResult(word);
+            return Ok(word);
         }
 
-        /// <summary> Creates a <see cref="Word"/> </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words </remarks>
-        /// <returns> Id of created word </returns>
-        [HttpPost]
-        public async Task<IActionResult> Post(string projectId, [FromBody] Word word)
+        /// <summary> Returns all Frontier <see cref="Word"/> in specified <see cref="Project"/>. </summary>
+        [HttpGet("frontier", Name = "GetProjectFrontierWords")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
+        public async Task<IActionResult> GetProjectFrontierWords(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
+            var project = await _projRepo.GetProject(projectId);
+            if (project is null)
+            {
+                return NotFound(projectId);
+            }
+            return Ok(await _wordRepo.GetFrontier(projectId));
+        }
 
-            // Ensure project exists
+        /// <summary> Creates a <see cref="Word"/>. </summary>
+        /// <returns> Id of created word </returns>
+        [HttpPost(Name = "CreateWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> CreateWord(string projectId, [FromBody, BindRequired] Word word)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
-
             word.ProjectId = projectId;
 
-            // If word is not already in frontier, add it
+            // If word is not already in frontier, add it.
             if (await _wordService.WordIsUnique(word))
             {
                 await _wordRepo.Create(word);
             }
-            else // Otherwise it is a duplicate
+            else
             {
-                return new OkObjectResult("Duplicate");
+                // Otherwise it is a duplicate.
+                return Ok("Duplicate");
             }
-
-            return new OkObjectResult(word.Id);
+            return Ok(word.Id);
         }
 
-        /// <summary> Updates <see cref="Word"/> with specified id </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/words/{wordId} </remarks>
+        /// <summary> Updates a <see cref="Word"/>. </summary>
         /// <returns> Id of updated word </returns>
-        [HttpPut("{wordId}")]
-        public async Task<IActionResult> Put(string projectId, string wordId, [FromBody] Word word)
+        [HttpPut("{wordId}", Name = "UpdateWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UpdateWord(string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-
-            // Ensure project exists
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
-
-            // Ensure word exists
             var document = await _wordRepo.GetWord(projectId, wordId);
             if (document is null)
             {
-                return new NotFoundResult();
+                return NotFound(wordId);
             }
 
-            //add the found id to the updated word
+            // Add the found id to the updated word.
             word.Id = document.Id;
             await _wordService.Update(projectId, wordId, word);
-
-            return new OkObjectResult(word.Id);
-        }
-
-        /// <summary> Deletes <see cref="Word"/> with specified ID </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId} </remarks>
-        [HttpDelete("{wordId}")]
-        public async Task<IActionResult> Delete(string projectId, string wordId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            {
-                return new ForbidResult();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
-            if (await _wordService.Delete(projectId, wordId))
-            {
-                return new OkResult();
-            }
-            return new NotFoundObjectResult("The project was found, but the word was not deleted");
+            return Ok(word.Id);
         }
     }
 }

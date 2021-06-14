@@ -1,3 +1,4 @@
+import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import history, { Path } from "browserHistory";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
@@ -13,7 +14,6 @@ import {
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { Goal } from "types/goals";
-import { Project } from "types/project";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 // Action Creators

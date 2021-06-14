@@ -5,21 +5,19 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import { Sense, Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   addSemanticDomainToSense,
   addSenseToWord,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
-import { defaultProject } from "types/project";
-import { baseDomain } from "types/SemanticDomain";
+import { newProject } from "types/project";
 import {
   multiSenseWord,
-  SemanticDomain,
-  Sense,
+  newSemanticDomain,
+  newSense,
   simpleWord,
-  State,
-  Word,
 } from "types/word";
 
 jest.mock("backend", () => {
@@ -41,10 +39,7 @@ const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
-const mockSemanticDomain: SemanticDomain = {
-  name: "",
-  id: "",
-};
+const mockSemanticDomain = newSemanticDomain();
 const hideQuestionsMock = jest.fn();
 const getWordsFromBackendMock = jest.fn();
 
@@ -54,7 +49,7 @@ const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
 function setMockFunction() {
   mockCreateWord.mockResolvedValue(mockWord());
-  mockGetProject.mockResolvedValue(defaultProject);
+  mockGetProject.mockResolvedValue(newProject());
   mockGetWord.mockResolvedValue([mockMultiWord]);
   mockUpdateWord.mockResolvedValue(mockWord());
 }
@@ -67,7 +62,6 @@ beforeEach(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <DataEntryTable
-          domain={baseDomain}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={jest.fn()}
           isSmallScreen={false}
@@ -133,8 +127,7 @@ describe("DataEntryTable", () => {
     const gloss = "firstSense";
     const language = "es";
 
-    const expectedSense = new Sense(gloss, language, mockSemanticDomain);
-    expectedSense.accessibility = State.Active;
+    const expectedSense = newSense(gloss, language, mockSemanticDomain);
     expectedSense.guid = expect.any(String);
     const expectedWord: Word = {
       ...word,
@@ -155,8 +148,7 @@ describe("DataEntryTable", () => {
     const gloss = "newSense";
     const language = "es";
 
-    const expectedSense = new Sense(gloss, language, mockSemanticDomain);
-    expectedSense.accessibility = State.Active;
+    const expectedSense = newSense(gloss, language, mockSemanticDomain);
     expectedSense.guid = expect.any(String);
     const expectedWord: Word = {
       ...word,
@@ -176,7 +168,7 @@ describe("DataEntryTable", () => {
     const word = mockWord();
     const gloss = "senseToBeModified";
     const language = "fr";
-    const sense = new Sense(gloss, language);
+    const sense = newSense(gloss, language);
     word.senses = [sense];
 
     const expectedSense: Sense = {
@@ -195,8 +187,8 @@ describe("DataEntryTable", () => {
   it("doesn't update word in backend if sense is a duplicate", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
     mockMultiWord.senses[0].semanticDomains = [
-      { name: "", id: "differentSemDomId" },
-      { name: "", id: testHandle.instance.props.semanticDomain.id },
+      newSemanticDomain("differentSemDomId"),
+      newSemanticDomain(testHandle.instance.props.semanticDomain.id),
     ];
     testHandle.instance.setState(
       {
@@ -222,9 +214,9 @@ describe("DataEntryTable", () => {
   it("updates word in backend if gloss exists with different semantic domain", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
     mockMultiWord.senses[0].semanticDomains = [
-      { name: "", id: "differentSemDomId" },
-      { name: "", id: "anotherDifferentSemDomId" },
-      { name: "", id: "andAThird" },
+      newSemanticDomain("differentSemDomId"),
+      newSemanticDomain("anotherDifferentSemDomId"),
+      newSemanticDomain("andAThird"),
     ];
     testHandle.instance.setState(
       {

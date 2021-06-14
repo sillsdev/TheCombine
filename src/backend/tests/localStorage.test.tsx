@@ -1,10 +1,11 @@
-import { User } from "types/user";
+import { User } from "api/models";
 import * as LocalStorage from "backend/localStorage";
+import { newUser } from "types/user";
 
 const mockAvatar = "mockAvatar";
 const mockProjectId = "mockProjId";
 const mockUserId = "mockUserId";
-const mockUser = new User("mockName", "mockUsername", "mockPass");
+const mockUser = newUser("mockName", "mockUsername", "mockPass");
 mockUser.id = mockUserId;
 
 let oldAvatar: string;

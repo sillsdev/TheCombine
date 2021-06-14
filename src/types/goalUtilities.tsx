@@ -1,3 +1,4 @@
+import { Edit } from "api/models";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
@@ -7,7 +8,6 @@ import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
 import { Goal, GoalStatus, GoalType } from "types/goals";
-import { Edit } from "types/userEdit";
 
 export function maxNumSteps(type: GoalType) {
   switch (type) {

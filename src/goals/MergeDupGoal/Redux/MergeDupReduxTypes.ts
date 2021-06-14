@@ -1,10 +1,10 @@
+import { Word } from "api/models";
 import {
   MergeData,
   MergeTree,
   MergeTreeReference,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { Word } from "types/word";
 
 export enum MergeTreeActionTypes {
   CLEAR_TREE = "CLEAR_TREE",

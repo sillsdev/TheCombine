@@ -1,3 +1,4 @@
+import { MergeSourceWord, MergeWords, State, Word } from "api/models";
 import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -30,7 +31,6 @@ import { StoreState } from "types";
 import { GoalType } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { MergeSourceWord, MergeWords, State, Word } from "types/word";
 
 // Action Creators
 
@@ -109,10 +109,6 @@ export function setVern(
 
 // Dispatch Functions
 
-interface SenseWithState extends MergeTreeSense {
-  state: State;
-}
-
 // Given a wordId, constructs from the state the corresponing MergeWords.
 // Returns the MergeWords, or undefined if the parent and child are identical.
 function getMergeWords(
@@ -125,7 +121,7 @@ function getMergeWords(
     const data = mergeTree.data;
 
     // Create list of all senses and add merge type tags slit by src word.
-    const senses: Hash<SenseWithState[]> = {};
+    const senses: Hash<MergeTreeSense[]> = {};
 
     // Build senses array.
     for (const senseGuids of Object.values(word.sensesGuids)) {
@@ -143,7 +139,7 @@ function getMergeWords(
               ...sense,
               srcWordId: wordId,
               order: senses[wordId].length,
-              state: State.Separate,
+              accessibility: State.Separate,
             });
           }
         }
@@ -155,13 +151,13 @@ function getMergeWords(
       // Set the first sense to be merged as State.Sense.
       const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.order];
-      mainSense.state = State.Sense;
+      mainSense.accessibility = State.Sense;
 
       // Merge the rest as duplicates.
       const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
         const dupSense = senses[dup.srcWordId][dup.order];
-        dupSense.state = State.Duplicate;
+        dupSense.accessibility = State.Duplicate;
         // Put this sense's domains in the main sense's.
         for (const dom of dupSense.semanticDomains) {
           if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
@@ -184,7 +180,7 @@ function getMergeWords(
       if (
         onlyChild[0].srcWordId === wordId &&
         onlyChild.length === data.words[wordId].senses.length &&
-        !onlyChild.find((s) => s.state !== State.Sense)
+        !onlyChild.find((s) => s.accessibility !== State.Sense)
       ) {
         return undefined;
       }
@@ -197,17 +193,23 @@ function getMergeWords(
     }
     const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
       sList.forEach((sense) => {
-        if (sense.state === State.Sense || sense.state === State.Active) {
+        if (
+          sense.accessibility === State.Sense ||
+          sense.accessibility === State.Active
+        ) {
           parent.senses.push({
             guid: sense.guid,
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
+            accessibility: sense.accessibility,
           });
         }
       });
       return {
         srcWordId: sList[0].srcWordId,
-        getAudio: !sList.find((sense) => sense.state === State.Separate),
+        getAudio: !sList.find(
+          (sense) => sense.accessibility === State.Separate
+        ),
       };
     });
 

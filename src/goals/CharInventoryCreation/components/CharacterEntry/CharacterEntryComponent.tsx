@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";

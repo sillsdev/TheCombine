@@ -1,3 +1,4 @@
+import { Sense } from "api/models";
 import * as backend from "backend";
 import {
   ReviewClearReviewEntriesState,
@@ -11,7 +12,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { Note, Sense, State } from "types/word";
+import { newNote, newSense } from "types/word";
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -22,12 +23,12 @@ export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
 
 function updateWord(
   oldId: string,
-  newWord: ReviewEntriesWord
+  updatedWord: ReviewEntriesWord
 ): ReviewUpdateWord {
   return {
     type: ReviewEntriesActionTypes.UpdateWord,
     oldId,
-    newWord,
+    updatedWord,
   };
 }
 
@@ -136,7 +137,7 @@ export function updateFrontierWord(
     editWord.senses = editSource.senses.map((s) =>
       getSenseFromEditSense(s, editWord.senses)
     );
-    editWord.note = new Note(editSource.noteText, editWord.note?.language);
+    editWord.note = newNote(editSource.noteText, editWord.note?.language);
 
     // Update the word in the backend, and retrieve the id.
     editSource.id = (await backend.updateWord(editWord)).id;
@@ -146,22 +147,20 @@ export function updateFrontierWord(
   };
 }
 
-// Creates a new Sense from a cleaned ReviewEntriesSense and array of old senses.
+// Creates a Sense from a cleaned ReviewEntriesSense and array of old senses.
 export function getSenseFromEditSense(
   editSense: ReviewEntriesSense,
   oldSenses: Sense[]
 ): Sense {
   // If we match an old sense, copy it over.
   const oldSense = oldSenses.find((s) => s.guid === editSense.guid);
-  const newSense: Sense = oldSense
-    ? { ...oldSense }
-    : { ...new Sense(), accessibility: State.Active };
+  const sense = oldSense ?? newSense();
 
   // Use the edited, cleaned glosses and domains.
-  newSense.glosses = [...editSense.glosses];
-  newSense.semanticDomains = [...editSense.domains];
+  sense.glosses = [...editSense.glosses];
+  sense.semanticDomains = [...editSense.domains];
 
-  return newSense;
+  return sense;
 }
 
 // Performs specified backend Word-updating function, then makes state ReviewEntriesWord-updating dispatch
@@ -171,13 +170,11 @@ function refreshWord(
 ) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const newWordId = await wordUpdater(oldWordId);
-    const newWord = await backend.getWord(newWordId);
+    const word = await backend.getWord(newWordId);
 
     const analysisLang =
       getState().currentProject.analysisWritingSystems[0]?.bcp47 ?? "en";
-    dispatch(
-      updateWord(oldWordId, new ReviewEntriesWord(newWord, analysisLang))
-    );
+    dispatch(updateWord(oldWordId, new ReviewEntriesWord(word, analysisLang)));
   };
 }
 

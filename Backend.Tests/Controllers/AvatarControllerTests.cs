@@ -65,7 +65,7 @@ namespace Backend.Tests.Controllers
 
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
 
-            var action = _userController.Get(_jwtAuthenticatedUser.Id).Result;
+            var action = _userController.GetUser(_jwtAuthenticatedUser.Id).Result;
 
             var foundUser = (User)((ObjectResult)action).Value;
             Assert.IsNotNull(foundUser.Avatar);

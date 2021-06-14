@@ -65,7 +65,7 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(Util.RandomProject());
             _projRepo.Create(Util.RandomProject());
 
-            var action = _projController.Get(project!.Id).Result;
+            var action = _projController.GetProject(project!.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundProjects = ((ObjectResult)action).Value as Project;
@@ -76,9 +76,8 @@ namespace Backend.Tests.Controllers
         public void TestCreateProject()
         {
             var project = Util.RandomProject();
-            var projectUser = new ProjectWithUser(project);
-            var id = ((ProjectWithUser)((ObjectResult)_projController.Post(projectUser).Result).Value).Id;
-            project.Id = id;
+            var userProject = (UserCreatedProject)((ObjectResult)_projController.CreateProject(project).Result).Value;
+            project.Id = userProject.Project.Id;
             Assert.Contains(project, _projRepo.GetAllProjects().Result);
         }
 
@@ -89,7 +88,7 @@ namespace Backend.Tests.Controllers
             var modProject = origProject!.Clone();
             modProject.Name = "Mark";
 
-            _ = _projController.Put(modProject.Id, modProject);
+            _ = _projController.UpdateProject(modProject.Id, modProject);
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
             Assert.Contains(modProject, _projRepo.GetAllProjects().Result);
         }
@@ -100,7 +99,7 @@ namespace Backend.Tests.Controllers
             var origProject = _projRepo.Create(Util.RandomProject()).Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
 
-            _ = _projController.Delete(origProject!.Id).Result;
+            _ = _projController.DeleteProject(origProject!.Id).Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -112,7 +111,7 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(Util.RandomProject());
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(3));
 
-            _ = _projController.Delete().Result;
+            _ = _projController.DeleteAllProjects().Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -135,7 +134,7 @@ namespace Backend.Tests.Controllers
             _ = _projRepo.Create(Util.RandomProject()).Result;
             var modProject = project1!.Clone();
             modProject.Name = "Proj";
-            _ = _projController.Put(modProject.Id, modProject);
+            _ = _projController.UpdateProject(modProject.Id, modProject);
             var isOldProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value;
             Assert.IsTrue((bool)isOldProjDup);
             var isNewProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value;

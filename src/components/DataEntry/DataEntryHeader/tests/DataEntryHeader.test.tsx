@@ -1,4 +1,3 @@
-import React from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import renderer, { ReactTestInstance } from "react-test-renderer";
@@ -6,7 +5,7 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 import DataEntryHeader, {
   getQuestions,
 } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
-import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
@@ -16,10 +15,10 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe("Tests DataEntryHeader", () => {
+describe("DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", () => {
     const instance = createDataEntryHeaderInstance(
-      baseDomain,
+      new TreeSemanticDomain(),
       true,
       mockCallback
     );
@@ -31,7 +30,10 @@ describe("Tests DataEntryHeader", () => {
   });
 
   it("Questions Visible should show questions", () => {
-    const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
+    const newDomain = {
+      ...new TreeSemanticDomain(),
+      questions: ["Q1", "Q2", "Q3"],
+    };
 
     const instance = createDataEntryHeaderInstance(
       newDomain,
@@ -51,7 +53,7 @@ describe("Tests DataEntryHeader", () => {
   });
 
   it("Callback should be called on switch click", () => {
-    const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
+    const newDomain = { ...new TreeSemanticDomain(), questions: ["Q1", "Q2"] };
 
     const instance: ReactTestInstance = createDataEntryHeaderInstance(
       newDomain,
@@ -68,7 +70,7 @@ describe("Tests DataEntryHeader", () => {
 });
 
 function createDataEntryHeaderInstance(
-  _domain: SemanticDomainWithSubdomains,
+  _domain: TreeSemanticDomain,
   _questionsVisible: boolean,
   _mockCallback: jest.Mock
 ): ReactTestInstance {
