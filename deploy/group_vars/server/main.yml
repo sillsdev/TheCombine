@@ -16,9 +16,9 @@ config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
 image_tag: "${IMAGE_TAG}"
 ################################################
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 
 ################################################
 # SSL cert variables specific to Server targets
@@ -68,6 +68,7 @@ install_helm: yes
 pull_secrets_manager: registry_creds
 
 app_namespace: thecombine
+http_only: yes
 
 ################################################
 # WiFi access point settings

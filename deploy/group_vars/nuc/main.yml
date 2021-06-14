@@ -52,7 +52,7 @@ my_aws_profiles:
 ################################################
 install_microk8s: yes
 install_helm: yes
-pull_secrets_manager: registry_creds
+pull_secrets_manager: aws-ecr-credential
 
 app_namespace: thecombine
 

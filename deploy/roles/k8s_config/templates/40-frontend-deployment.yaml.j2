@@ -58,6 +58,12 @@ spec:
                 configMapKeyRef:
                   key: SERVER_NAME
                   name: env-frontend
+            - name: ENV_HTTP_ONLY
+              valueFrom:
+                configMapKeyRef:
+                  key: ENV_HTTP_ONLY
+                  name: env-frontend
+{% if http_only is not defined or not http_only %}
             - name: SSL_CERTIFICATE
               valueFrom:
                 configMapKeyRef:
@@ -68,6 +74,7 @@ spec:
                 configMapKeyRef:
                   key: SSL_PRIVATE_KEY
                   name: env-frontend
+{% endif %}
           image: '{{ combine_image_frontend }}'
           name: frontend
           ports:

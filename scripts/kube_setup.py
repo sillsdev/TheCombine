@@ -33,10 +33,7 @@ def parse_args() -> argparse.Namespace:
         description="Generate and apply Kubernetes configuration for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
-        "--repo",
-        help="Image repository to use instead of a local image"
-    )
+    parser.add_argument("--repo", help="Image repository to use instead of a local image")
     parser.add_argument(
         "--release",
         help="Pull image from image repo rather than use a local image.",

@@ -5,6 +5,7 @@
 import argparse
 import os
 from pathlib import Path
+
 from development_config import get_image_name
 
 project_dir = Path(__file__).resolve().parent.parent
@@ -28,12 +29,9 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_image(image_name: str, *, build_arg: str = "", push_image: bool = False) -> None:
+def build_image(image_name: str, *, push_image: bool = False) -> None:
     """Build the specified Docker image."""
-    arg_string = " "
-    if len(build_arg):
-        arg_string += f"--build-arg {build_arg} "
-    os.system(f"docker build{arg_string}-t {image_name} -f Dockerfile .")
+    os.system(f"docker build -t {image_name} -f Dockerfile .")
     if push_image:
         os.system(f"docker push {image_name}")
 
@@ -42,32 +40,20 @@ def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
 
-    # Build the frontend
-    os.chdir(project_dir)
-    if not args.compose:
-        template_arg = "NGINX_CONF_TEMPLATE=templates_kube"
-    else:
-        template_arg = ""
-    build_image(
-        get_image_name(args.repo, "frontend", args.tag),
-        build_arg=template_arg,
-        push_image=(args.repo is not None),
-    )
+    build_specs = [
+        {"dir": project_dir, "name": "frontend"},
+        {"dir": project_dir / "Backend", "name": "backend"},
+    ]
 
-    # Build the backend
-    os.chdir(project_dir / "Backend")
-    build_image(
-        get_image_name(args.repo, "backend", args.tag),
-        push_image=(args.repo is not None),
-    )
-
-    # Build the certmgr (if building for Docker Compose)
     if args.compose:
-        os.chdir(project_dir / "certmgr")
-        build_image(
-            get_image_name(args.repo, "certmgr", args.tag),
-            push_image=(args.repo is not None),
-        )
+        build_specs.append({"dir": project_dir / "certmgr", "name": "certmgr"})
+
+    for spec in build_specs:
+        os.chdir(str(spec["dir"]))
+        image_name = get_image_name(args.repo, str(spec["name"]), args.tag)
+        os.system(f"docker build -t {image_name} -f Dockerfile .")
+        if args.repo is not None:
+            os.system(f"docker push {image_name}")
 
 
 if __name__ == "__main__":
