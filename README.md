@@ -348,9 +348,14 @@ Installs the necessary packages and runs the app in the development mode.<br> Op
 
 Runs only the front end of the app in the development mode.
 
+> Note: The frontend automatically recompiles if your make frontend edits. You will also see any lint errors in the
+> console.
+
 #### `npm run backend`
 
 Runs only the backend.
+
+> Note: If you make backend edits, the backend will _not_ recompile--you need to rerun `npm start` or `npm run backend`.
 
 #### `npm run database`
 
@@ -377,7 +382,6 @@ Run after `npm run build` to analyze the contents build bundle chunks.
 You need to have run `npm start` or `npm run backend` first.
 
 To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).<br>
-The page will reload if you make edits.<br> You will also see any lint errors in the console.
 
 #### Regenerate OpenAPI bindings for frontend
 
