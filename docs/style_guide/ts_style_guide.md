@@ -18,6 +18,7 @@ Key Sections:
 - [`type` vs `interface`](#type-vs-interface)
 - [One-line `if` statements](#one-line-if-statements)
 - [imports](#imports)
+- [KeyBoardEvents](#keyboardevents)
 
 ## Variable and Function
 
@@ -262,20 +263,8 @@ if (error === null)
 if (error)
 ```
 
-- Use `== undefined` / `!= undefined` (not `===` / `!==`) to check for `null` / `undefined` on primitives as it works
-  for both `null`/`undefined` but not other falsy values (like `''`,`0`,`false`) e.g.
-
-**Bad**
-
-```ts
-if (error !== null)
-```
-
-**Good**
-
-```ts
-if (error != undefined)
-```
+> Remark: Use `===` / `!==` to check for `null` / `undefined` on **primitives** that might be other falsy values (like
+> `''`,`0`,`false`).
 
 ## Formatting
 
@@ -380,3 +369,25 @@ import { Project } from "../../../../types/project";
 
 > Reason: Provides consistency for imports across all files and shortens imports of commonly used top level modules.
 > Developers don't have to count `../` to know where a module is, they can simply start from the root of `src/`.
+
+## KeyboardEvents
+
+Use `ts-key-enum` when comparing to `React.KeyboardEvent`s.
+
+**Good**
+
+```ts
+import { Key } from "ts-key-enum";
+
+if (event.key === Key.Enter) {
+}
+```
+
+**Bad**
+
+```ts
+if (event.key === "Enter") {
+}
+```
+
+> Reason: Avoid typos and increase the number of mistakes that can be caught at compile time.
