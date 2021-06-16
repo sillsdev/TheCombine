@@ -72,11 +72,10 @@ export function asyncRegister(
     user.email = email;
     await backend
       .addUser(user)
-      .then((_res) => {
+      .then(() => {
         dispatch(registerSuccess(username));
         setTimeout(() => {
-          dispatch(reset());
-          history.push(Path.Login);
+          dispatch(asyncLogin(username, password));
         }, 1000);
       })
       .catch((err) => {
