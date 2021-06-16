@@ -35,7 +35,6 @@ export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
     senses: glosses.map((gloss) => ({
       ...newSense(gloss),
       guid: expect.any(String),
-      accessibility: State.Sense,
     })),
   };
 }
