@@ -102,7 +102,7 @@ const columns: Column<any>[] = [
     field: "senses",
     // Fix column to minimum width.
     width: 0,
-    render: (rowData: ReviewEntriesWord) => `${rowData.senses.length}:`,
+    render: (rowData: ReviewEntriesWord) => rowData.senses.length,
     filterPlaceholder: "#",
     customFilterAndSearch: (
       filter: string,

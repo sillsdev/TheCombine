@@ -79,7 +79,7 @@ const SORT_BY_DOMAINS = [WORD_2, WORD_0, WORD_3, WORD_1];
 describe("Tests cell column functions", () => {
   /* Vernacular column */
 
-  // Vernacular doesn't just returning another object, and thus is render tested here.
+  // Vernacular doesn't just return another object, and thus is render-tested here.
   it("Renders vernacular without crashing", () => {
     const div = document.createElement("div");
     if (columns[0].render) {
