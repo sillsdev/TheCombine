@@ -1,6 +1,5 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
-import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 

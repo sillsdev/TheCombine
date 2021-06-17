@@ -5,8 +5,8 @@ import { Translate } from "react-localize-redux";
 import { SemanticDomain } from "api/models";
 import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
-import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -15,11 +15,12 @@ import {
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
   // so there is currently no way to trigger their SortStyles.
-  VERNACULAR,
+  //VERNACULAR,
+  SENSE,
   GLOSS,
   DOMAIN,
-  PRONUNCIATIONS,
-  NOTETEXT,
+  PRONUNCIATION,
+  //NOTETEXT,
   NONE,
 }
 
@@ -95,13 +96,58 @@ const columns: Column<any>[] = [
     editComponent: (props: FieldParameterStandard) =>
       vernacularField(props, true),
   },
+  // Sense column
+  {
+    title: "Senses",
+    field: "senses",
+    // Fix column to minimum width.
+    width: 0,
+    render: (rowData: ReviewEntriesWord) => `${rowData.senses.length}:`,
+    filterPlaceholder: "#",
+    customFilterAndSearch: (
+      filter: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
+      return parseInt(filter) === rowData.senses.length;
+    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.SENSE) {
+        currentSort = SortStyle.SENSE;
+      }
+      return b.senses.length - a.senses.length;
+    },
+    editComponent: (props: FieldParameterStandard) => {
+      const deleteSense = (guid: string) => {
+        if (props.onRowDataChange)
+          props.onRowDataChange({
+            ...props.rowData,
+            senses: props.rowData.senses.map((sense) => {
+              if (sense.guid === guid)
+                return {
+                  ...sense,
+                  deleted: !sense.deleted,
+                };
+              else return sense;
+            }),
+          });
+      };
+      return (
+        <DeleteCell
+          rowData={props.rowData}
+          onRowDataChange={props.onRowDataChange}
+          delete={deleteSense}
+          value
+        />
+      );
+    },
+  },
   // Glosses column
   {
     title: "Glosses",
-    field: "senses",
+    field: "glosses",
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <SenseCell
+      <GlossCell
         value={rowData.senses}
         rowData={rowData}
         editable={false}
@@ -109,7 +155,7 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => (
-      <SenseCell
+      <GlossCell
         value={props.value}
         rowData={props.rowData}
         onRowDataChange={props.onRowDataChange}
@@ -152,31 +198,6 @@ const columns: Column<any>[] = [
         }
       }
       return a.senses.length - b.senses.length;
-    },
-  },
-  // Delete Sense column
-  {
-    title: "",
-    field: "id",
-    filtering: false,
-    sorting: false,
-    render: () => null,
-    editComponent: (props: FieldParameterStandard) => {
-      const deleteSense = (guid: string) => {
-        if (props.onRowDataChange)
-          props.onRowDataChange({
-            ...props.rowData,
-            senses: props.rowData.senses.map((sense) => {
-              if (sense.guid === guid)
-                return {
-                  ...sense,
-                  deleted: !sense.deleted,
-                };
-              else return sense;
-            }),
-          });
-      };
-      return <DeleteCell rowData={props.rowData} delete={deleteSense} />;
     },
   },
   // Semantic Domains column
@@ -324,8 +345,8 @@ const columns: Column<any>[] = [
       return parseInt(filter) === rowData.pronunciationFiles.length;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.PRONUNCIATIONS) {
-        currentSort = SortStyle.PRONUNCIATIONS;
+      if (currentSort !== SortStyle.PRONUNCIATION) {
+        currentSort = SortStyle.PRONUNCIATION;
       }
       return b.pronunciationFiles.length - a.pronunciationFiles.length;
     },
@@ -346,8 +367,10 @@ const columns: Column<any>[] = [
     filtering: false,
     sorting: false,
     editable: "never",
+    // Fix column to minimum width.
+    width: 0,
     render: (rowData: ReviewEntriesWord) => {
-      return <DeleteCell rowData={rowData} />;
+      return <DeleteCell rowData={rowData} value />;
     },
   },
 ];
