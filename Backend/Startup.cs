@@ -137,7 +137,6 @@ namespace BackendFramework
                 });
 
             services.AddControllersWithViews()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 // NewtonsoftJson needed when porting from .NET Core 2.2 to 3.0
                 // https://dev.to/wattengard/why-your-posted-models-may-stop-working-after-upgrading-to-asp-net-core-3-1-4ekp
                 // TODO: This may be able to be removed by reviewing the raw JSON from the frontend to see if there
