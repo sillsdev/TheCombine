@@ -20,7 +20,7 @@ enum SortStyle {
   GLOSS,
   DOMAIN,
   PRONUNCIATION,
-  //NOTETEXT,
+  //NOTE_TEXT,
   NONE,
 }
 
@@ -102,7 +102,9 @@ const columns: Column<any>[] = [
     field: "senses",
     // Fix column to minimum width.
     width: 0,
-    render: (rowData: ReviewEntriesWord) => rowData.senses.length,
+    render: (rowData: ReviewEntriesWord) => (
+      <Typography>{rowData.senses.length}</Typography>
+    ),
     filterPlaceholder: "#",
     customFilterAndSearch: (
       filter: string,

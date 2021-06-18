@@ -56,6 +56,7 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
               }),
           }}
           options={{
+            draggable: false,
             filtering: true,
             pageSize:
               words.length > 0
