@@ -77,7 +77,9 @@ const SORT_BY_GLOSSES = [WORD_3, WORD_1, WORD_2, WORD_0];
 const SORT_BY_DOMAINS = [WORD_2, WORD_0, WORD_3, WORD_1];
 
 describe("Tests cell column functions", () => {
-  // Vernacular is the only one which isn't just returning another object, and thus the only one tested here
+  /* Vernacular column */
+
+  // Vernacular doesn't just return another object, and thus is render-tested here.
   it("Renders vernacular without crashing", () => {
     const div = document.createElement("div");
     if (columns[0].render) {
@@ -85,90 +87,98 @@ describe("Tests cell column functions", () => {
       ReactDOM.unmountComponentAtNode(div);
     } else {
       fail(
-        "There is no render on column[0]: domains.\nDid the vernacular get moved to a different column?"
+        "There is no render on column[0].\nDid the vernacular get moved to a different column?"
       );
     }
   });
 
-  // Test searching senses
-  it("Returns true when searching a word for an extant gloss", () => {
-    if (columns[1].customFilterAndSearch) {
-      expect(columns[1].customFilterAndSearch(GLOSS.def, WORD)).toBeTruthy();
+  /* Sense column */
+
+  it("Properly sorts a list by sense count", () => {
+    if (columns[1].customSort) {
+      const firstWord = [...SORT_BY_GLOSSES, WORD].sort((a, b) =>
+        columns[1].customSort ? columns[1].customSort(a, b, "row") : 0
+      )[0];
+      // The one with two sense comes first, since the rest have only one.
+      expect(firstWord).toEqual(WORD);
     } else {
       fail(
-        "There is no customFilterAndSearch on column[1]: senses.\nDid the senses get moved to a different column?"
+        "There is no customSort on column[1].\nDid the senses get moved to a different column?"
+      );
+    }
+  });
+
+  /* Glosses column */
+
+  it("Returns true when searching a word for an extant gloss", () => {
+    if (columns[2].customFilterAndSearch) {
+      expect(columns[2].customFilterAndSearch(GLOSS.def, WORD)).toBeTruthy();
+    } else {
+      fail(
+        "There is no customFilterAndSearch on column[2].\nDid the glosses get moved to a different column?"
       );
     }
   });
 
   it("Returns false when searching a word for a nonexistent gloss", () => {
-    if (columns[1].customFilterAndSearch) {
+    if (columns[2].customFilterAndSearch) {
       expect(
-        columns[1].customFilterAndSearch(`${GLOSS.def}-NOT!`, WORD)
+        columns[2].customFilterAndSearch(`${GLOSS.def}-NOT!`, WORD)
       ).toBeFalsy();
     } else {
       fail(
-        "There is no customFilterAndSearch on column[1]: senses.\nDid the senses get moved to a different column?"
+        "There is no customFilterAndSearch on column[2].\nDid the glosses get moved to a different column?"
       );
     }
   });
 
-  // Test sorting senses
-  it("Properly sorts a list by senses", () => {
-    if (columns[1].customSort) {
+  it("Properly sorts a list by glosses", () => {
+    if (columns[2].customSort) {
       expect(
         [...SORT_BY_DOMAINS].sort((a, b) =>
-          columns[1].customSort ? columns[1].customSort(a, b, "row") : 0
+          columns[2].customSort ? columns[2].customSort(a, b, "row") : 0
         )
       ).toEqual(SORT_BY_GLOSSES);
     } else {
       fail(
-        "There is no customSort on column[1]: senses.\nDid the senses get moved to a different column?"
+        "There is no customSort on column[2].\nDid the glosses get moved to a different column?"
       );
     }
   });
 
-  // Test searching domains
+  /* Domains column */
+
   it("Returns true when searching a word for an extant domain", () => {
     if (columns[3].customFilterAndSearch) {
       expect(columns[3].customFilterAndSearch(DOMAIN.id, WORD)).toBeTruthy();
       expect(columns[3].customFilterAndSearch(DOMAIN.name, WORD)).toBeTruthy();
     } else {
       fail(
-        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3].\nDid the domains get moved to a different column?"
       );
     }
   });
 
   it("Returns true when searching a word for an extant domain id:name", () => {
     if (columns[3].customFilterAndSearch) {
-      expect(
-        columns[3].customFilterAndSearch(`${DOMAIN.id}:${DOMAIN.name}`, WORD)
-      ).toBeTruthy();
-      expect(
-        columns[3].customFilterAndSearch(
-          ` ${DOMAIN.id} : ${DOMAIN.name.toUpperCase()} `,
-          WORD
-        )
-      ).toBeTruthy();
+      const filter1 = `${DOMAIN.id}:${DOMAIN.name}`;
+      expect(columns[3].customFilterAndSearch(filter1, WORD)).toBeTruthy();
+      const filter2 = ` ${DOMAIN.id} : ${DOMAIN.name.toUpperCase()} `;
+      expect(columns[3].customFilterAndSearch(filter2, WORD)).toBeTruthy();
     } else {
       fail(
-        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3].\nDid the domains get moved to a different column?"
       );
     }
   });
 
   it("Handles extra whitespace and different capitalization", () => {
     if (columns[3].customFilterAndSearch) {
-      expect(
-        columns[3].customFilterAndSearch(
-          ` ${DOMAIN.id} : ${DOMAIN.name.toUpperCase()} `,
-          WORD
-        )
-      ).toBeTruthy();
+      const filter = ` ${DOMAIN.id} : ${DOMAIN.name.toUpperCase()} `;
+      expect(columns[3].customFilterAndSearch(filter, WORD)).toBeTruthy();
     } else {
       fail(
-        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3].\nDid the domains get moved to a different column?"
       );
     }
   });
@@ -178,24 +188,22 @@ describe("Tests cell column functions", () => {
       expect(columns[3].customFilterAndSearch("asdfghjkl", WORD)).toBeFalsy();
     } else {
       fail(
-        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3].\nDid the domains get moved to a different column?"
       );
     }
   });
 
   it("Returns false when searching for domain id:name that don't occur together", () => {
     if (columns[3].customFilterAndSearch) {
-      expect(
-        columns[3].customFilterAndSearch(`${DOMAIN.id}:${DOMAIN2.name}`, WORD)
-      ).toBeFalsy();
+      const filter = `${DOMAIN.id}:${DOMAIN2.name}`;
+      expect(columns[3].customFilterAndSearch(filter, WORD)).toBeFalsy();
     } else {
       fail(
-        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3].\nDid the domains get moved to a different column?"
       );
     }
   });
 
-  // Test sorting domains
   it("Properly sorts a list by domains", () => {
     if (columns[3].customSort) {
       expect(
@@ -205,7 +213,7 @@ describe("Tests cell column functions", () => {
       ).toEqual(SORT_BY_DOMAINS);
     } else {
       fail(
-        "There is no customSort on column[3]: domains.\nDid the domains get moved to a different column?"
+        "There is no customSort on column[3].\nDid the domains get moved to a different column?"
       );
     }
   });

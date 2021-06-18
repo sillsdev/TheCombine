@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 const state = {
@@ -11,12 +11,12 @@ const state = {
 const mockStore = configureMockStore([])(state);
 const mockWord = mockWords()[0];
 
-describe("SenseCell", () => {
+describe("GlossCell", () => {
   it("Renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <SenseCell
+          <GlossCell
             rowData={mockWord}
             value={mockWord.senses}
             editable={true}

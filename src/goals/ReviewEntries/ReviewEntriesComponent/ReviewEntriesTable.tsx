@@ -1,6 +1,5 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
-import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -57,6 +56,7 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
               }),
           }}
           options={{
+            draggable: false,
             filtering: true,
             pageSize:
               words.length > 0
