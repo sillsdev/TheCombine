@@ -47,6 +47,11 @@ namespace BackendFramework.Controllers
                 u.Email.ToLowerInvariant().Equals(emailOrUsername) ||
                 u.Username.ToLowerInvariant().Equals(emailOrUsername));
 
+            if (user is null)
+            {
+                return NotFound(emailOrUsername);
+            }
+
             // Create password reset.
             var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
 

@@ -63,7 +63,7 @@ namespace BackendFramework
         private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
         {
             var contents = Environment.GetEnvironmentVariable(name);
-            if (contents != null)
+            if (contents is not null)
             {
                 return contents;
             }
@@ -75,7 +75,7 @@ namespace BackendFramework
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
         private static bool IsInContainer()
         {
-            return Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") != null;
+            return Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is not null;
         }
 
         [Serializable]
@@ -279,7 +279,8 @@ namespace BackendFramework
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
-            if (CreateAdminUser(app.ApplicationServices.GetService<IUserRepository>()))
+            var userRepo = app.ApplicationServices.GetService<IUserRepository>();
+            if (userRepo is not null && CreateAdminUser(userRepo))
             {
                 _logger.LogInformation("Stopping application");
                 appLifetime.StopApplication();
@@ -327,7 +328,7 @@ namespace BackendFramework
             }
 
             var existingUser = userRepo.GetAllUsers().Result.Find(x => x.Username == username);
-            if (existingUser != null)
+            if (existingUser is not null)
             {
                 _logger.LogInformation($"User {username} already exists. Updating password and granting " +
                                        "admin permissions.");
