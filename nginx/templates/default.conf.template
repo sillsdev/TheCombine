@@ -13,7 +13,7 @@ server {
 }
 
 server {
-    listen              443 ssl;
+    listen              443 ssl http2;
     server_name         ${SERVER_NAME};
     ssl_certificate     ${SSL_CERTIFICATE};
     ssl_certificate_key ${SSL_PRIVATE_KEY};
@@ -77,17 +77,17 @@ server {
     # Websocket proxy.
     # https://nginx.org/en/docs/http/websocket.html
     location /hub {
-        proxy_pass http://backend:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
+        proxy_pass          http://backend:5000;
+        proxy_http_version  1.1;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    Connection "upgrade";
     }
 
     # User Guide static files.
     location /docs {
-        alias       /usr/share/nginx/user_guide;
+        alias      /usr/share/nginx/user_guide;
         index      index.html index.htm;
-        expires     12h;
+        expires    12h;
         add_header Cache-Control "public, no-transform";
     }
 
