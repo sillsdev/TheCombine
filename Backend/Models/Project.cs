@@ -313,7 +313,7 @@ namespace BackendFramework.Models
         [Required]
         public string Description { get; set; }
         [Required]
-        public List<SemanticDomainWithSubdomains> Subdomains  { get; set; }
+        public List<SemanticDomainWithSubdomains> Subdomains { get; set; }
 
         public SemanticDomainWithSubdomains(SemanticDomain sd)
         {
