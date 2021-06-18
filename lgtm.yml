@@ -1,3 +1,9 @@
+extraction:
+  csharp:
+    index:
+      build_command:
+        - dotnet clean BackendFramework.sln
+        - dotnet build --no-incremental BackendFramework.sln
 path_classifiers:
   # Classify our spelling dictionaries as library content
   library:
