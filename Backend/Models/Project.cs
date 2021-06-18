@@ -301,16 +301,19 @@ namespace BackendFramework.Models
         }
     }
 
+    /// <remarks>
+    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
+    /// </remarks>
     public class SemanticDomainWithSubdomains
     {
         [Required]
-        public string Name;
+        public string Name { get; set; }
         [Required]
-        public string Id;
+        public string Id { get; set; }
         [Required]
-        public string Description;
+        public string Description { get; set; }
         [Required]
-        public List<SemanticDomainWithSubdomains> Subdomains;
+        public List<SemanticDomainWithSubdomains> Subdomains  { get; set; }
 
         public SemanticDomainWithSubdomains(SemanticDomain sd)
         {

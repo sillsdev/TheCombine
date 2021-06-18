@@ -70,6 +70,14 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Authentication.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core common types used by the various authentication components.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.Core
 Version:2.2.0
 project URL:https://asp.net/
@@ -78,6 +86,14 @@ Description:ASP.NET Core common types used by the various authentication middlew
 This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authentication.Core
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core common types used by the various authentication middleware components.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.JwtBearer
@@ -103,6 +119,17 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Authorization
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core authorization classes.
+Commonly used types:
+Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute
+Microsoft.AspNetCore.Authorization.AuthorizeAttribute
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Authorization.Policy
 Version:2.2.0
 project URL:https://asp.net/
@@ -111,6 +138,14 @@ Description:ASP.NET Core authorization policy helper classes.
 This package was built from the source code at https://github.com/aspnet/Security/tree/93926543f8469614c2feb23de8a8c0561b8b2463
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Authorization.Policy
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core authorization policy helper classes.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Hosting.Abstractions
@@ -123,6 +158,14 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Hosting.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core hosting and startup abstractions for web applications.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Hosting.Server.Abstractions
 Version:2.2.0
 project URL:https://asp.net/
@@ -133,6 +176,14 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Hosting.Server.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core hosting server abstractions for web applications.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Http
 Version:2.2.0
 project URL:https://asp.net/
@@ -141,6 +192,14 @@ Description:ASP.NET Core default HTTP feature implementations.
 This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Http
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core default HTTP feature implementations.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Http.Abstractions
@@ -158,6 +217,19 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Http.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core HTTP object model for HTTP requests and responses and also common extension methods for registering middleware in an IApplicationBuilder.
+Commonly used types:
+Microsoft.AspNetCore.Builder.IApplicationBuilder
+Microsoft.AspNetCore.Http.HttpContext
+Microsoft.AspNetCore.Http.HttpRequest
+Microsoft.AspNetCore.Http.HttpResponse
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Http.Extensions
 Version:2.2.0
 project URL:https://asp.net/
@@ -166,6 +238,14 @@ Description:ASP.NET Core common extension methods for HTTP abstractions, HTTP he
 This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Http.Extensions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core common extension methods for HTTP abstractions, HTTP headers, HTTP request/response, and session state.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Http.Features
@@ -178,13 +258,11 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
-Package:Microsoft.AspNetCore.JsonPatch
-Version:3.1.10
+Package:Microsoft.AspNetCore.Http.Features
+Version:2.1.0
 project URL:https://asp.net/
-Description:ASP.NET Core support for JSON PATCH.
-
-This package was built from the source code at https://github.com/aspnet/AspNetCore/tree/e3187077455f953200e3c930430808a30f48b82e
-licenseUrl:https://licenses.nuget.org/Apache-2.0
+Description:ASP.NET Core HTTP feature interface definitions.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
 license Type:Apache-2.0
 
 ####################################################################################################
@@ -210,6 +288,24 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC abstractions and interfaces for action invocation and dispatching, authorization, action filters, formatters, model binding, routing, validation, and more.
+Commonly used types:
+Microsoft.AspNetCore.Mvc.IActionResult
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.ApiExplorer
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC API explorer functionality for discovering metadata such as the list of controllers and actions, and their URLs and allowed HTTP methods.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Mvc.Core
 Version:2.2.0
 project URL:https://asp.net/
@@ -228,6 +324,30 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.Core
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC core components. Contains common action result types, attribute routing, application model conventions, API explorer, application parts, filters, formatters, model binding, and more.
+Commonly used types:
+Microsoft.AspNetCore.Mvc.AreaAttribute
+Microsoft.AspNetCore.Mvc.BindAttribute
+Microsoft.AspNetCore.Mvc.ControllerBase
+Microsoft.AspNetCore.Mvc.FromBodyAttribute
+Microsoft.AspNetCore.Mvc.FromFormAttribute
+Microsoft.AspNetCore.Mvc.RequireHttpsAttribute
+Microsoft.AspNetCore.Mvc.RouteAttribute
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.DataAnnotations
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core MVC metadata and validation system using System.ComponentModel.DataAnnotations.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Mvc.Formatters.Json
 Version:2.2.0
 project URL:https://asp.net/
@@ -236,16 +356,6 @@ Description:ASP.NET Core MVC formatters for JSON input and output and for JSON P
 This package was built from the source code at https://github.com/aspnet/Mvc/tree/a6199bbfbab05583f987bae322fb04566841aaea
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
-
-####################################################################################################
-Package:Microsoft.AspNetCore.Mvc.NewtonsoftJson
-Version:3.1.10
-project URL:https://asp.net/
-Description:ASP.NET Core MVC features that use Newtonsoft.Json. Includes input and output formatters for JSON and JSON PATCH.
-
-This package was built from the source code at https://github.com/aspnet/AspNetCore/tree/e3187077455f953200e3c930430808a30f48b82e
-licenseUrl:https://licenses.nuget.org/Apache-2.0
-license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Mvc.WebApiCompatShim
@@ -270,6 +380,14 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.ResponseCaching.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core response caching middleware abstractions and feature interface definitions.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.Routing
 Version:2.2.0
 project URL:https://asp.net/
@@ -279,6 +397,17 @@ Microsoft.AspNetCore.Routing.Route
 Microsoft.AspNetCore.Routing.RouteCollection
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.Routing
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core middleware for routing requests to application logic and for generating links.
+Commonly used types:
+Microsoft.AspNetCore.Routing.Route
+Microsoft.AspNetCore.Routing.RouteCollection
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Routing.Abstractions
@@ -294,6 +423,25 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Routing.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core abstractions for routing requests to application logic and for generating links.
+Commonly used types:
+Microsoft.AspNetCore.Routing.IRouter
+Microsoft.AspNetCore.Routing.RouteData
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.AspNetCore.StaticFiles
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core static files middleware. Includes middleware for serving static files, directory browsing, and default files.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.AspNetCore.WebUtilities
 Version:2.2.0
 project URL:https://asp.net/
@@ -302,6 +450,29 @@ Description:ASP.NET Core utilities, such as for working with forms, multipart me
 This package was built from the source code at https://github.com/aspnet/HttpAbstractions/tree/91db78cf926939821bc96e8e60616cf5dde0b489
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.AspNetCore.WebUtilities
+Version:2.1.0
+project URL:https://asp.net/
+Description:ASP.NET Core utilities, such as for working with forms, multipart messages, and query strings.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.Bcl.AsyncInterfaces
+Version:1.0.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides the IAsyncEnumerable<T> and IAsyncDisposable interfaces and helper types for .NET Standard 2.0. This package is not required starting with .NET Standard 2.1 and .NET Core 3.0.
+
+Commonly Used Types:
+System.IAsyncDisposable
+System.Collections.Generic.IAsyncEnumerable
+System.Collections.Generic.IAsyncEnumerator
+
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.CSharp
@@ -315,27 +486,10 @@ Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
-
-####################################################################################################
-Package:Microsoft.CSharp
-Version:4.7.0
-project URL:https://github.com/dotnet/corefx
-Description:Provides support for compilation and code generation, including dynamic, using the C# language.
-
-Commonly Used Types:
-Microsoft.CSharp.RuntimeBinder.Binder
-Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
-Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
-Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
-Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.CSharp
@@ -349,7 +503,7 @@ Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -366,8 +520,8 @@ Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -389,6 +543,16 @@ licenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 license Type:
 
 ####################################################################################################
+Package:Microsoft.Extensions.ApiDescription.Server
+Version:3.0.0
+project URL:https://asp.net/
+Description:MSBuild tasks and targets for build-time Swagger and OpenApi document generation
+
+This package was built from the source code at https://github.com/aspnet/AspNetCore/tree/aee5e4080331553ea9dfb7fb388b6d72f715bf6a
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.Extensions.Configuration.Abstractions
 Version:2.2.0
 project URL:https://asp.net/
@@ -405,12 +569,34 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.Extensions.Configuration.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:Abstractions of key-value pair based configuration.
+Commonly used types:
+Microsoft.Extensions.Configuration.IConfiguration
+Microsoft.Extensions.Configuration.IConfigurationBuilder
+Microsoft.Extensions.Configuration.IConfigurationProvider
+Microsoft.Extensions.Configuration.IConfigurationRoot
+Microsoft.Extensions.Configuration.IConfigurationSection
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.Extensions.DependencyInjection
 Version:2.2.0
 project URL:https://asp.net/
 Description:Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.DependencyInjection
+Version:2.1.0
+project URL:https://asp.net/
+Description:Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.Extensions.DependencyInjection.Abstractions
@@ -423,6 +609,16 @@ Microsoft.Extensions.DependencyInjection.IServiceCollection
 This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.DependencyInjection.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:Abstractions for dependency injection.
+Commonly used types:
+Microsoft.Extensions.DependencyInjection.IServiceCollection
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.Extensions.DependencyModel
@@ -455,6 +651,26 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.Extensions.FileProviders.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:Abstractions of files and directories.
+Commonly used types:
+Microsoft.Extensions.FileProviders.IDirectoryContents
+Microsoft.Extensions.FileProviders.IFileInfo
+Microsoft.Extensions.FileProviders.IFileProvider
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.Extensions.FileProviders.Embedded
+Version:2.1.0
+project URL:https://asp.net/
+Description:File provider for files in embedded resources for Microsoft.Extensions.FileProviders.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.Extensions.Hosting.Abstractions
 Version:2.2.0
 project URL:https://asp.net/
@@ -463,6 +679,33 @@ Description:.NET Core hosting and startup abstractions for applications.
 This package was built from the source code at https://github.com/aspnet/Hosting/tree/0724e6cde1149ee1a19bfec9c13a2c9327b71213
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Hosting.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:.NET Core hosting and startup abstractions for applications.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.Extensions.Localization
+Version:2.1.0
+project URL:https://asp.net/
+Description:Application localization services and default implementation based on ResourceManager to load localized assembly resources.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.Extensions.Localization.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:Abstractions of application localization services.
+Commonly used types:
+Microsoft.Extensions.Localization.IStringLocalizer
+Microsoft.Extensions.Localization.IStringLocalizer<T>
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.Extensions.Logging.Abstractions
@@ -483,6 +726,22 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.Extensions.Logging.Abstractions
+Version:2.1.0
+project URL:https://asp.net/
+Description:Logging abstractions for Microsoft.Extensions.Logging.
+Commonly used types:
+Microsoft.Extensions.Logging.ILogger
+Microsoft.Extensions.Logging.ILoggerFactory
+Microsoft.Extensions.Logging.ILogger<TCategoryName>
+Microsoft.Extensions.Logging.LogLevel
+Microsoft.Extensions.Logging.Logger<T>
+Microsoft.Extensions.Logging.LoggerMessage
+Microsoft.Extensions.Logging.Abstractions.NullLogger
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.Extensions.ObjectPool
 Version:2.2.0
 project URL:https://asp.net/
@@ -493,6 +752,14 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.Extensions.ObjectPool
+Version:2.1.0
+project URL:https://asp.net/
+Description:A simple object pool implementation.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.Extensions.Options
 Version:2.2.0
 project URL:https://asp.net/
@@ -501,6 +768,14 @@ Description:Provides a strongly typed way of specifying and accessing settings u
 This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Options
+Version:2.1.0
+project URL:https://asp.net/
+Description:Provides a strongly typed way of specifying and accessing settings using dependency injection.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.Extensions.Primitives
@@ -514,6 +789,25 @@ Microsoft.Extensions.Primitives.StringSegment
 This package was built from the source code at https://github.com/aspnet/Extensions/tree/9bc79b2f25a3724376d7af19617c33749a30ea3a
 licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
+
+####################################################################################################
+Package:Microsoft.Extensions.Primitives
+Version:2.1.0
+project URL:https://asp.net/
+Description:Primitives shared by framework extensions. Commonly used types include:
+Microsoft.Extensions.Primitives.IChangeToken
+Microsoft.Extensions.Primitives.StringValues
+Microsoft.Extensions.Primitives.StringSegment
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
+Package:Microsoft.Extensions.WebEncoders
+Version:2.1.0
+project URL:https://asp.net/
+Description:Contains registration and configuration APIs to add the core framework encoders to a dependency injection container.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.JsonWebTokens
@@ -608,10 +902,18 @@ licenseUrl:https://raw.githubusercontent.com/aspnet/AspNetCore/2.0.0/LICENSE.txt
 license Type:
 
 ####################################################################################################
+Package:Microsoft.Net.Http.Headers
+Version:2.1.0
+project URL:https://asp.net/
+Description:HTTP header parser implementations.
+licenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+license Type:Apache-2.0
+
+####################################################################################################
 Package:Microsoft.NETCore.Platforms
 Version:1.1.0
 project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -620,8 +922,8 @@ license Type:MS-EULA
 Package:Microsoft.NETCore.Platforms
 Version:2.0.0
 project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
-8321c729934c0f8be754953439b88e6e1c120c24 
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
+8321c729934c0f8be754953439b88e6e1c120c24
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -630,7 +932,7 @@ license Type:MIT
 Package:Microsoft.NETCore.Platforms
 Version:1.0.1
 project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -639,8 +941,8 @@ license Type:MS-EULA
 Package:Microsoft.NETCore.Platforms
 Version:2.1.2
 project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
-6851cc781ad2ff33d4a0f429a6fc1ab85abaff86 
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
+6851cc781ad2ff33d4a0f429a6fc1ab85abaff86
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -649,7 +951,7 @@ license Type:MIT
 Package:Microsoft.NETCore.Platforms
 Version:1.1.1
 project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -658,7 +960,7 @@ license Type:MS-EULA
 Package:Microsoft.NETCore.Platforms
 Version:3.1.0
 project URL:https://github.com/dotnet/corefx
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -667,7 +969,7 @@ license Type:MIT
 Package:Microsoft.NETCore.Targets
 Version:1.1.0
 project URL:https://dot.net/
-Description:Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these. 
+Description:Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -676,10 +978,18 @@ license Type:MS-EULA
 Package:Microsoft.NETCore.Targets
 Version:1.0.1
 project URL:https://dot.net/
-Description:Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these. 
+Description:Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.OpenApi
+Version:1.2.3
+project URL:https://github.com/Microsoft/OpenAPI.NET
+Description:.NET models with JSON and YAML writers for OpenAPI specification
+licenseUrl:https://raw.githubusercontent.com/Microsoft/OpenAPI.NET/master/LICENSE
+license Type:
 
 ####################################################################################################
 Package:Microsoft.Win32.Primitives
@@ -689,7 +999,7 @@ Description:Provides common types for Win32-based libraries.
 
 Commonly Used Types:
 System.ComponentModel.Win32Exception
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -702,7 +1012,7 @@ Description:Provides common types for Win32-based libraries.
 
 Commonly Used Types:
 System.ComponentModel.Win32Exception
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -719,7 +1029,7 @@ Microsoft.Win32.Registry
 Microsoft.Win32.RegistryValueKind
 Microsoft.Win32.RegistryHive
 Microsoft.Win32.RegistryView
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -794,8 +1104,8 @@ license Type:
 Package:NETStandard.Library
 Version:2.0.3
 project URL:https://dot.net/
-Description:A set of standard .NET APIs that are prescribed to be used and supported together. 
-18a36291e48808fa7ef2d00a764ceb1ec95645a5 
+Description:A set of standard .NET APIs that are prescribed to be used and supported together.
+18a36291e48808fa7ef2d00a764ceb1ec95645a5
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/standard/blob/master/LICENSE.TXT
 license Type:
@@ -804,7 +1114,7 @@ license Type:
 Package:NETStandard.Library
 Version:1.6.1
 project URL:https://dot.net/
-Description:A set of standard .NET APIs that are prescribed to be used and supported together. This includes all of the APIs in the NETStandard.Platform package plus additional libraries that are core to .NET but built on top of NETStandard.Platform. 
+Description:A set of standard .NET APIs that are prescribed to be used and supported together. This includes all of the APIs in the NETStandard.Platform package plus additional libraries that are core to .NET but built on top of NETStandard.Platform.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -815,22 +1125,6 @@ Version:10.0.1
 project URL:http://www.newtonsoft.com/json
 Description:Json.NET is a popular high-performance JSON framework for .NET
 licenseUrl:https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
-license Type:MIT
-
-####################################################################################################
-Package:Newtonsoft.Json
-Version:12.0.2
-project URL:https://www.newtonsoft.com/json
-Description:Json.NET is a popular high-performance JSON framework for .NET
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:Newtonsoft.Json
-Version:12.0.1
-project URL:https://www.newtonsoft.com/json
-Description:Json.NET is a popular high-performance JSON framework for .NET
-licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
@@ -867,14 +1161,6 @@ license Type:MIT
 
 ####################################################################################################
 Package:Newtonsoft.Json.Bson
-Version:1.0.2
-project URL:http://www.newtonsoft.com/json
-Description:Json.NET BSON adds support for reading and writing BSON
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:Newtonsoft.Json.Bson
 Version:1.0.1
 project URL:http://www.newtonsoft.com/json
 Description:Json.NET BSON adds support for reading and writing BSON
@@ -904,7 +1190,7 @@ license Type:
 Package:runtime.native.System
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -913,7 +1199,7 @@ license Type:MS-EULA
 Package:runtime.native.System
 Version:4.0.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -922,7 +1208,7 @@ license Type:MS-EULA
 Package:runtime.native.System.IO.Compression
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -931,7 +1217,7 @@ license Type:MS-EULA
 Package:runtime.native.System.Net.Http
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -940,7 +1226,7 @@ license Type:MS-EULA
 Package:runtime.native.System.Net.Security
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -949,7 +1235,7 @@ license Type:MS-EULA
 Package:runtime.native.System.Security.Cryptography.Apple
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -958,7 +1244,7 @@ license Type:MS-EULA
 Package:runtime.native.System.Security.Cryptography.OpenSsl
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -967,7 +1253,7 @@ license Type:MS-EULA
 Package:runtime.native.System.Security.Cryptography.OpenSsl
 Version:4.3.2
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1029,6 +1315,38 @@ licenseUrl:https://opensource.org/licenses/Zlib
 license Type:
 
 ####################################################################################################
+Package:Swashbuckle.AspNetCore
+Version:6.1.4
+project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Description:Swagger tools for documenting APIs built on ASP.NET Core
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Swashbuckle.AspNetCore.Swagger
+Version:6.1.4
+project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Description:Middleware to expose Swagger JSON endpoints from APIs built on ASP.NET Core
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Swashbuckle.AspNetCore.SwaggerGen
+Version:6.1.4
+project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Description:Swagger Generator for APIs built on ASP.NET Core
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Swashbuckle.AspNetCore.SwaggerUI
+Version:6.1.4
+project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Description:Middleware to expose an embedded version of the swagger-ui from an ASP.NET Core application
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
 Package:System.AppContext
 Version:4.3.0
 project URL:https://dot.net/
@@ -1036,7 +1354,7 @@ Description:Provides the System.AppContext class, which allows access to the Bas
 
 Commonly Used Types:
 System.AppContext
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1049,7 +1367,7 @@ Description:Provides the System.AppContext class, which allows access to the Bas
 
 Commonly Used Types:
 System.AppContext
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1062,7 +1380,7 @@ Description:Provides resource pooling of any type for performance-critical appli
 
 Commonly Used Types:
 System.Buffers.ArrayPool<T>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1075,8 +1393,8 @@ Description:Provides resource pooling of any type for performance-critical appli
 
 Commonly Used Types:
 System.Buffers.ArrayPool<T>
- 
-8321c729934c0f8be754953439b88e6e1c120c24 
+
+8321c729934c0f8be754953439b88e6e1c120c24
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -1089,8 +1407,8 @@ Description:Provides resource pooling of any type for performance-critical appli
 
 Commonly Used Types:
 System.Buffers.ArrayPool<T>
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -1103,8 +1421,8 @@ Description:Provides resource pooling of any type for performance-critical appli
 
 Commonly Used Types:
 System.Buffers.ArrayPool<T>
- 
-7601f4f6225089ffb291dc7d58293c7bbf5c5d4f 
+
+7601f4f6225089ffb291dc7d58293c7bbf5c5d4f
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -1125,7 +1443,7 @@ System.Collections.Generic.LinkedList<T>
 System.Collections.Generic.EqualityComparer<T>
 System.Collections.Generic.Comparer<T>
 System.Collections.Generic.SortedDictionary<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1146,7 +1464,7 @@ System.Collections.Generic.LinkedList<T>
 System.Collections.Generic.EqualityComparer<T>
 System.Collections.Generic.Comparer<T>
 System.Collections.Generic.SortedDictionary<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1163,7 +1481,7 @@ System.Collections.Concurrent.ConcurrentQueue<T>
 System.Collections.Concurrent.ConcurrentBag<T>
 System.Collections.Concurrent.BlockingCollection<T>
 System.Collections.Concurrent.ConcurrentStack<T>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1185,7 +1503,7 @@ System.Collections.DictionaryBase
 System.Collections.Queue
 System.Collections.Comparer
 System.Collections.CaseInsensitiveComparer
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1207,7 +1525,7 @@ System.Collections.DictionaryBase
 System.Collections.Queue
 System.Collections.Comparer
 System.Collections.CaseInsensitiveComparer
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1228,7 +1546,7 @@ System.Collections.Specialized.OrderedDictionary
 System.Collections.Specialized.ListDictionary
 System.Collections.Specialized.StringDictionary
 System.Collections.Specialized.BitVector32
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1249,7 +1567,7 @@ System.Collections.Specialized.OrderedDictionary
 System.Collections.Specialized.ListDictionary
 System.Collections.Specialized.StringDictionary
 System.Collections.Specialized.BitVector32
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1266,7 +1584,7 @@ System.IServiceProvider
 System.ComponentModel.IEditableObject
 System.ComponentModel.IChangeTracking
 System.ComponentModel.IRevertibleChangeTracking
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1283,7 +1601,7 @@ System.IServiceProvider
 System.ComponentModel.IEditableObject
 System.ComponentModel.IChangeTracking
 System.ComponentModel.IRevertibleChangeTracking
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1305,8 +1623,8 @@ System.ComponentModel.DataAnnotations.RegularExpressionAttribute
 System.ComponentModel.DataAnnotations.DataTypeAttribute
 System.ComponentModel.DataAnnotations.RangeAttribute
 System.ComponentModel.DataAnnotations.KeyAttribute
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -1322,7 +1640,7 @@ System.ComponentModel.IComponent
 System.ComponentModel.IContainer
 System.ComponentModel.ISite
 System.ComponentModel.ComponentCollection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1338,7 +1656,7 @@ System.ComponentModel.IComponent
 System.ComponentModel.IContainer
 System.ComponentModel.ISite
 System.ComponentModel.ComponentCollection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1360,7 +1678,7 @@ System.ComponentModel.TypeDescriptor
 System.ComponentModel.Int32Converter
 System.ComponentModel.BooleanConverter
 System.ComponentModel.DoubleConverter
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1382,7 +1700,7 @@ System.ComponentModel.TypeDescriptor
 System.ComponentModel.Int32Converter
 System.ComponentModel.BooleanConverter
 System.ComponentModel.DoubleConverter
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1396,7 +1714,7 @@ Description:Provides the System.Console class, which represents the standard inp
 Commonly Used Types:
 System.Console
 System.ConsoleColor
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1416,8 +1734,8 @@ System.Data.EnumerableRowCollectionExtensions
 System.Data.OrderedEnumerableRowCollection
 System.Data.TypedTableBase
 System.Data.TypedTableBaseExtensions
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -1439,7 +1757,7 @@ System.Diagnostics.Contracts.PureAttribute
 System.Diagnostics.Contracts.ContractArgumentValidatorAttribute
 System.Diagnostics.Contracts.ContractVerificationAttribute
 System.Diagnostics.Contracts.ContractOptionAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1461,7 +1779,7 @@ System.Diagnostics.Contracts.PureAttribute
 System.Diagnostics.Contracts.ContractArgumentValidatorAttribute
 System.Diagnostics.Contracts.ContractVerificationAttribute
 System.Diagnostics.Contracts.ContractOptionAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1482,7 +1800,7 @@ System.Diagnostics.DebuggerBrowsableState
 System.Diagnostics.DebuggerHiddenAttribute
 System.Diagnostics.DebuggerNonUserCodeAttribute
 System.Diagnostics.DebuggerTypeProxyAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1503,7 +1821,7 @@ System.Diagnostics.DebuggerBrowsableState
 System.Diagnostics.DebuggerHiddenAttribute
 System.Diagnostics.DebuggerNonUserCodeAttribute
 System.Diagnostics.DebuggerTypeProxyAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1529,8 +1847,8 @@ Description:Provides Classes that allow you to decouple code logging rich (unser
 Commonly Used Types:
 System.Diagnostics.DiagnosticListener
 System.Diagnostics.DiagnosticSource
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -1546,7 +1864,7 @@ System.Diagnostics.Process
 System.Diagnostics.ProcessModule
 System.Diagnostics.ProcessStartInfo
 System.Diagnostics.ProcessThread
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1560,7 +1878,7 @@ Description:Provides trace listeners for directing tracing output to a text writ
 Commonly Used Types:
 System.Diagnostics.TextWriterTraceListener
 System.Diagnostics.DelimitedListTraceListener
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1574,7 +1892,7 @@ Description:Provides attributes, such as GeneratedCodeAttribute and SuppresMessa
 Commonly Used Types:
 System.CodeDom.Compiler.GeneratedCodeAttribute
 System.Diagnostics.CodeAnalysis.SuppressMessageAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1588,7 +1906,7 @@ Description:Provides attributes, such as GeneratedCodeAttribute and SuppresMessa
 Commonly Used Types:
 System.CodeDom.Compiler.GeneratedCodeAttribute
 System.Diagnostics.CodeAnalysis.SuppressMessageAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1606,7 +1924,7 @@ System.Diagnostics.TraceSource
 System.Diagnostics.TraceEventType
 System.Diagnostics.DefaultTraceListener
 System.Diagnostics.Trace
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1624,7 +1942,7 @@ System.Diagnostics.TraceSource
 System.Diagnostics.TraceEventType
 System.Diagnostics.DefaultTraceListener
 System.Diagnostics.Trace
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1644,7 +1962,7 @@ System.Diagnostics.Tracing.EventWrittenEventArgs
 System.Diagnostics.Tracing.EventAttribute
 System.Diagnostics.Tracing.EventSourceAttribute
 System.Diagnostics.Tracing.NonEventAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1666,7 +1984,7 @@ System.Dynamic.ExpandoObject
 System.Dynamic.DynamicObject
 System.Runtime.CompilerServices.CallSiteBinder
 System.Runtime.CompilerServices.ConditionalWeakTable<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1688,7 +2006,7 @@ System.Dynamic.ExpandoObject
 System.Dynamic.DynamicObject
 System.Runtime.CompilerServices.CallSiteBinder
 System.Runtime.CompilerServices.ConditionalWeakTable<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1709,7 +2027,7 @@ System.Globalization.Calendar
 System.Globalization.CompareInfo
 System.Globalization.CompareOptions
 System.Globalization.UnicodeCategory
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1730,7 +2048,7 @@ System.Globalization.Calendar
 System.Globalization.CompareInfo
 System.Globalization.CompareOptions
 System.Globalization.UnicodeCategory
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1752,7 +2070,7 @@ System.Globalization.JapaneseCalendar
 System.Globalization.GregorianCalendarTypes
 System.Globalization.PersianCalendar
 System.Globalization.UmAlQuraCalendar
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1767,7 +2085,7 @@ Commonly Used Types:
 System.StringNormalizationExtensions
 System.Text.NormalizationForm
 System.Globalization.IdnMapping
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1782,7 +2100,7 @@ Commonly Used Types:
 System.StringNormalizationExtensions
 System.Text.NormalizationForm
 System.Globalization.IdnMapping
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1818,7 +2136,7 @@ System.IO.StreamWriter
 System.IO.StringWriter
 System.IO.TextWriter
 System.IO.TextReader
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1838,7 +2156,7 @@ System.IO.StreamWriter
 System.IO.StringWriter
 System.IO.TextWriter
 System.IO.TextReader
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1857,7 +2175,7 @@ System.IO.Compression.CompressionLevel
 System.IO.Compression.ZipArchiveEntry
 System.IO.Compression.ZipArchive
 System.IO.Compression.ZipArchiveMode
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1870,7 +2188,7 @@ Description:Provides classes that support the compression and decompression of s
 
 Commonly Used Types:
 System.IO.Compression.ZipFile
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1890,7 +2208,7 @@ System.IO.File
 System.IO.Directory
 System.IO.SearchOption
 System.IO.FileOptions
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1910,7 +2228,7 @@ System.IO.File
 System.IO.Directory
 System.IO.SearchOption
 System.IO.FileOptions
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1929,7 +2247,7 @@ System.Security.AccessControl.FileSystemAccessRule
 System.Security.AccessControl.FileSystemAuditRule
 System.Security.AccessControl.FileSystemRights
 System.Security.AccessControl.FileSystemSecurity
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -1948,7 +2266,7 @@ System.IO.PathTooLongException
 System.IO.FileMode
 System.IO.FileShare
 System.IO.FileAttributes
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1967,7 +2285,7 @@ System.IO.PathTooLongException
 System.IO.FileMode
 System.IO.FileShare
 System.IO.FileAttributes
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -1984,7 +2302,7 @@ System.Linq.IGrouping<TKey, TElement>
 System.Linq.IOrderedEnumerable<TElement>
 System.Linq.ILookup<TKey, TElement>
 System.Linq.Lookup<TKey, TElement>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2001,7 +2319,7 @@ System.Linq.IGrouping<TKey, TElement>
 System.Linq.IOrderedEnumerable<TElement>
 System.Linq.ILookup<TKey, TElement>
 System.Linq.Lookup<TKey, TElement>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2018,7 +2336,7 @@ System.Linq.IQueryable
 System.Linq.Expressions.Expression<TDelegate>
 System.Linq.Expressions.Expression
 System.Linq.Expressions.ExpressionVisitor
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2040,7 +2358,7 @@ System.Linq.IQueryable
 System.Linq.Expressions.NewExpression
 System.Linq.Expressions.ParameterExpression
 System.Linq.Expressions.ConstantExpression
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2055,7 +2373,7 @@ Commonly Used Types:
 System.Linq.Queryable
 System.Linq.EnumerableQuery<T>
 System.Linq.EnumerableQuery
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2075,8 +2393,29 @@ System.Buffers.MemoryPool
 System.Buffers.ReadOnlySequence
 System.Buffers.Text.Utf8Parser
 System.Buffers.Text.Utf8Formatter
- 
-7ee84596d92e178bce54c986df31ccc52479e772 
+
+7ee84596d92e178bce54c986df31ccc52479e772
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Memory
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides types for efficient representation and pooling of managed, stack, and native memory segments and sequences of such segments, along with primitives to parse and format UTF-8 encoded text stored in those memory segments.
+
+Commonly Used Types:
+System.Span
+System.ReadOnlySpan
+System.Memory
+System.ReadOnlyMemory
+System.Buffers.MemoryPool
+System.Buffers.ReadOnlySequence
+System.Buffers.Text.Utf8Parser
+System.Buffers.Text.Utf8Formatter
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2096,8 +2435,8 @@ System.Buffers.MemoryPool
 System.Buffers.ReadOnlySequence
 System.Buffers.Text.Utf8Parser
 System.Buffers.Text.Utf8Formatter
- 
-c6cf790234e063b855fcdb50f3fb1b3cfac73275 
+
+c6cf790234e063b855fcdb50f3fb1b3cfac73275
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2119,7 +2458,7 @@ System.Net.Http.HttpClientHandler
 System.Net.Http.StreamContent
 System.Net.Http.FormUrlEncodedContent
 System.Net.Http.HttpMessageHandler
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2141,7 +2480,7 @@ System.Net.Http.HttpClientHandler
 System.Net.Http.StreamContent
 System.Net.Http.FormUrlEncodedContent
 System.Net.Http.HttpMessageHandler
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2163,7 +2502,7 @@ System.Net.Http.HttpClientHandler
 System.Net.Http.StreamContent
 System.Net.Http.FormUrlEncodedContent
 System.Net.Http.HttpMessageHandler
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2177,7 +2516,7 @@ Description:Provides the System.Net.Dns class, which enables developers to perfo
 Commonly Used Types:
 System.Net.Dns
 System.Net.IPHostEntry
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2199,7 +2538,7 @@ System.Net.NetworkInformation.UnicastIPAddressInformation
 System.Net.NetworkInformation.UnicastIPAddressInformationCollection
 System.Net.NetworkInformation.PhysicalAddress
 System.Net.NetworkInformation.TcpConnectionInformation
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2221,7 +2560,7 @@ System.Net.NetworkCredential
 System.Net.IPAddress
 System.Net.CookieCollection
 System.Net.CookieContainer
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2235,7 +2574,7 @@ Description:Provides types, such as System.Net.Security.SslStream, that uses SSL
 Commonly Used Types:
 System.Net.Security.SslStream
 System.Net.Security.ExtendedProtectionPolicy
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2257,7 +2596,7 @@ System.Net.Sockets.TcpClient
 System.Net.Sockets.SocketType
 System.Net.Sockets.UdpClient
 System.Net.Sockets.SocketShutdown
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2278,8 +2617,29 @@ System.Numerics.Vector3
 System.Numerics.Vector4
 System.Numerics.Vector
 System.Numerics.Vector<T>
- 
+
 8321c729934c0f8be754953439b88e6e1c120c24
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Numerics.Vectors
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides hardware-accelerated numeric types, suitable for high-performance processing and graphics applications.
+
+Commonly Used Types:
+System.Numerics.Matrix3x2
+System.Numerics.Matrix4x4
+System.Numerics.Plane
+System.Numerics.Quaternion
+System.Numerics.Vector2
+System.Numerics.Vector3
+System.Numerics.Vector4
+System.Numerics.Vector
+System.Numerics.Vector<T>
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
 
@@ -2300,7 +2660,7 @@ System.Collections.Specialized.NotifyCollectionChangedEventHandler
 System.Collections.ObjectModel.KeyedCollection<TKey, TItem>
 System.ComponentModel.PropertyChangedEventArgs
 System.Collections.ObjectModel.ReadOnlyDictionary<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2322,7 +2682,7 @@ System.Collections.Specialized.NotifyCollectionChangedEventHandler
 System.Collections.ObjectModel.KeyedCollection<TKey, TItem>
 System.ComponentModel.PropertyChangedEventArgs
 System.Collections.ObjectModel.ReadOnlyDictionary<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2331,7 +2691,7 @@ license Type:MS-EULA
 Package:System.Private.DataContractSerialization
 Version:4.3.0
 project URL:https://dot.net/
-Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.  Provides implementation of System.Runtime.Serialization packages. 
+Description:Internal implementation package not meant for direct consumption.  Please do not reference directly.  Provides implementation of System.Runtime.Serialization packages.
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2352,7 +2712,7 @@ System.Reflection.Assembly
 System.Reflection.MemberInfo
 System.Reflection.EventInfo
 System.Reflection.Module
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2373,7 +2733,7 @@ System.Reflection.Assembly
 System.Reflection.MemberInfo
 System.Reflection.EventInfo
 System.Reflection.Module
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2395,7 +2755,7 @@ System.Reflection.Emit.ModuleBuilder
 System.Reflection.Emit.PropertyBuilder
 System.Reflection.Emit.AssemblyBuilderAccess
 System.Reflection.Emit.EventBuilder
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2417,7 +2777,7 @@ System.Reflection.Emit.ModuleBuilder
 System.Reflection.Emit.PropertyBuilder
 System.Reflection.Emit.AssemblyBuilderAccess
 System.Reflection.Emit.EventBuilder
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2435,7 +2795,7 @@ System.Reflection.Emit.CustomAttributeBuilder
 System.Reflection.Emit.LocalBuilder
 System.Reflection.Emit.ParameterBuilder
 System.Reflection.Emit.SignatureHelper
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2453,7 +2813,7 @@ System.Reflection.Emit.CustomAttributeBuilder
 System.Reflection.Emit.LocalBuilder
 System.Reflection.Emit.ParameterBuilder
 System.Reflection.Emit.SignatureHelper
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2466,7 +2826,7 @@ Description:Provides the System.Reflection.Emit.DynamicMethod class, which repre
 
 Commonly Used Types:
 System.Reflection.Emit.DynamicMethod
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2479,7 +2839,7 @@ Description:Provides the System.Reflection.Emit.DynamicMethod class, which repre
 
 Commonly Used Types:
 System.Reflection.Emit.DynamicMethod
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2494,7 +2854,7 @@ Commonly Used Types:
 System.Reflection.InterfaceMapping
 System.Reflection.CustomAttributeExtensions
 System.Reflection.RuntimeReflectionExtensions
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2509,7 +2869,7 @@ Commonly Used Types:
 System.Reflection.InterfaceMapping
 System.Reflection.CustomAttributeExtensions
 System.Reflection.RuntimeReflectionExtensions
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2531,7 +2891,7 @@ System.Reflection.EventAttributes
 System.Reflection.ParameterAttributes
 System.Reflection.GenericParameterAttributes
 System.Reflection.MethodImplAttributes
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2553,7 +2913,7 @@ System.Reflection.EventAttributes
 System.Reflection.ParameterAttributes
 System.Reflection.GenericParameterAttributes
 System.Reflection.MethodImplAttributes
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2567,24 +2927,10 @@ Description:Provides extensions methods for System.Type that are designed to be 
 Commonly Used Types:
 System.Reflection.TypeExtensions
 System.Reflection.BindingFlags
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
-
-####################################################################################################
-Package:System.Reflection.TypeExtensions
-Version:4.7.0
-project URL:https://github.com/dotnet/corefx
-Description:Provides extensions methods for System.Type that are designed to be source-compatible with older framework reflection-based APIs.
-
-Commonly Used Types:
-System.Reflection.TypeExtensions
-System.Reflection.BindingFlags
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
 
 ####################################################################################################
 Package:System.Reflection.TypeExtensions
@@ -2595,7 +2941,7 @@ Description:Provides extensions methods for System.Type that are designed to be 
 Commonly Used Types:
 System.Reflection.TypeExtensions
 System.Reflection.BindingFlags
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2609,8 +2955,8 @@ Description:Provides extensions methods for System.Type that are designed to be 
 Commonly Used Types:
 System.Reflection.TypeExtensions
 System.Reflection.BindingFlags
- 
-8321c729934c0f8be754953439b88e6e1c120c24 
+
+8321c729934c0f8be754953439b88e6e1c120c24
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2626,7 +2972,7 @@ System.Resources.ResourceManager
 System.Resources.NeutralResourcesLanguageAttribute
 System.Resources.SatelliteContractVersionAttribute
 System.Resources.MissingManifestResourceException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2642,7 +2988,7 @@ System.Resources.ResourceManager
 System.Resources.NeutralResourcesLanguageAttribute
 System.Resources.SatelliteContractVersionAttribute
 System.Resources.MissingManifestResourceException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2674,7 +3020,7 @@ System.UInt32
 System.UInt64
 System.IDisposable
 System.Uri
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2706,7 +3052,7 @@ System.UInt32
 System.UInt64
 System.IDisposable
 System.Uri
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2719,8 +3065,8 @@ Description:Provides the System.Runtime.CompilerServices.Unsafe class, which pro
 
 Commonly Used Types:
 System.Runtime.CompilerServices.Unsafe
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2733,8 +3079,8 @@ Description:Provides the System.Runtime.CompilerServices.Unsafe class, which pro
 
 Commonly Used Types:
 System.Runtime.CompilerServices.Unsafe
- 
-7ee84596d92e178bce54c986df31ccc52479e772 
+
+7ee84596d92e178bce54c986df31ccc52479e772
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2747,8 +3093,21 @@ Description:Provides the System.Runtime.CompilerServices.Unsafe class, which pro
 
 Commonly Used Types:
 System.Runtime.CompilerServices.Unsafe
- 
-02b11eeee1fbc5f3ef43a1452fe07efd25fa1715 
+
+02b11eeee1fbc5f3ef43a1452fe07efd25fa1715
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Runtime.CompilerServices.Unsafe
+Version:4.6.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
+
+Commonly Used Types:
+System.Runtime.CompilerServices.Unsafe
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2769,7 +3128,7 @@ System.Diagnostics.Stopwatch
 System.Runtime.Versioning.FrameworkName
 System.StringComparer
 System.IO.Path
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2790,7 +3149,7 @@ System.Diagnostics.Stopwatch
 System.Runtime.Versioning.FrameworkName
 System.StringComparer
 System.IO.Path
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2807,7 +3166,7 @@ Microsoft.Win32.SafeHandles.SafeWaitHandle
 System.Runtime.InteropServices.CriticalHandle
 System.Threading.WaitHandleExtensions
 System.IO.HandleInheritability
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2824,7 +3183,7 @@ Microsoft.Win32.SafeHandles.SafeWaitHandle
 System.Runtime.InteropServices.CriticalHandle
 System.Threading.WaitHandleExtensions
 System.IO.HandleInheritability
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2841,7 +3200,7 @@ System.Runtime.InteropServices.GuidAttribute
 System.Runtime.InteropServices.COMException
 System.DllNotFoundException
 System.Runtime.InteropServices.DllImportAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2858,7 +3217,7 @@ System.Runtime.InteropServices.GuidAttribute
 System.Runtime.InteropServices.COMException
 System.DllNotFoundException
 System.Runtime.InteropServices.DllImportAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2872,7 +3231,7 @@ Description:Provides APIs to query about runtime and OS information.
 Commonly Used Types:
 System.Runtime.InteropServices.RuntimeInformation
 System.Runtime.InteropServices.OSPlatform
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2886,7 +3245,7 @@ Description:Provides APIs to query about runtime and OS information.
 Commonly Used Types:
 System.Runtime.InteropServices.RuntimeInformation
 System.Runtime.InteropServices.OSPlatform
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2902,7 +3261,7 @@ System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal
 System.Runtime.InteropServices.WindowsRuntime.ReadOnlyArrayAttribute
 System.Runtime.InteropServices.WindowsRuntime.WriteOnlyArrayAttribute
 System.Runtime.InteropServices.WindowsRuntime.ReturnValueNameAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2916,7 +3275,7 @@ Description:Provides the numeric types System.Numerics.BigInteger and System.Num
 Commonly Used Types:
 System.Numerics.BigInteger
 System.Numerics.Complex
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2930,7 +3289,7 @@ Description:Provides common types for libraries that support runtime serializati
 Commonly Used Types:
 System.SerializableAttribute
 System.Runtime.Serialization.ISerializable
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2952,7 +3311,7 @@ System.Runtime.Serialization.DataMemberAttribute
 System.Runtime.Serialization.DataContractAttribute
 System.Runtime.Serialization.IgnoreDataMemberAttribute
 System.Runtime.Serialization.SerializationException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2974,7 +3333,7 @@ System.Runtime.Serialization.DataMemberAttribute
 System.Runtime.Serialization.DataContractAttribute
 System.Runtime.Serialization.IgnoreDataMemberAttribute
 System.Runtime.Serialization.SerializationException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -2996,7 +3355,7 @@ System.Xml.UniqueId
 System.Xml.XmlDictionaryReaderQuotas
 System.Runtime.Serialization.DataContractResolver
 System.Xml.IXmlDictionary
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3013,7 +3372,7 @@ System.IO.WindowsRuntimeStorageExtensions
 System.IO.WindowsRuntimeStreamExtensions
 System.Runtime.InteropServices.WindowsRuntime.AsyncInfo
 System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeBuffer
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3030,7 +3389,7 @@ System.Security.AccessControl.AuditRule
 System.Security.AccessControl.ObjectAccessRule
 System.Security.AccessControl.ObjectAuditRule
 System.Security.AccessControl.ObjectSecurity
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -3047,7 +3406,7 @@ System.Security.Claims.Claim
 System.Security.Claims.ClaimsIdentity
 System.Security.Claims.ClaimsPrincipal
 System.Security.Principal.GenericPrincipal
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3071,7 +3430,7 @@ System.Security.Cryptography.HMACSHA256
 System.Security.Cryptography.MD5
 System.Security.Cryptography.HMACSHA384
 System.Security.Cryptography.HMACSHA512
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3086,7 +3445,7 @@ Commonly Used Types:
 System.Security.Cryptography.RSACng
 System.Security.Cryptography.ECDsaCng
 System.Security.Cryptography.CngKey
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3101,8 +3460,8 @@ Commonly Used Types:
 System.Security.Cryptography.RSACng
 System.Security.Cryptography.ECDsaCng
 System.Security.Cryptography.CngKey
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -3117,7 +3476,7 @@ Commonly Used Types:
 System.Security.Cryptography.RSACng
 System.Security.Cryptography.ECDsaCng
 System.Security.Cryptography.CngKey
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -3131,7 +3490,7 @@ Description:Provides cryptographic algorithm implementations and key management 
 Commonly Used Types:
 System.Security.Cryptography.RSACryptoServiceProvider
 System.Security.Cryptography.CspParameters
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3146,7 +3505,7 @@ Commonly Used Types:
 System.Security.Cryptography.AsnEncodedData
 System.Security.Cryptography.Oid
 System.Security.Cryptography.OidCollection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3159,7 +3518,7 @@ Description:Provides cryptographic algorithm implementations and key management 
 
 Commonly Used Types:
 System.Security.Cryptography.RSAOpenSsl
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3172,7 +3531,7 @@ Description:Provides support for PKCS and CMS algorithms.
 
 Commonly Used Types:
 System.Security.Cryptography.Pkcs.EnvelopedCms
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -3196,7 +3555,7 @@ System.Security.Cryptography.CipherMode
 System.Security.Cryptography.PaddingMode
 System.Security.Cryptography.CryptoStream
 System.Security.Cryptography.CryptoStreamMode
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3220,7 +3579,7 @@ System.Security.Cryptography.CipherMode
 System.Security.Cryptography.PaddingMode
 System.Security.Cryptography.CryptoStream
 System.Security.Cryptography.CryptoStreamMode
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3242,7 +3601,7 @@ System.Security.Cryptography.X509Certificates.X509ChainStatus
 System.Security.Cryptography.X509Certificates.X509Certificate2Collection
 System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension
 System.Security.Cryptography.X509Certificates.X509Chain
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3257,7 +3616,7 @@ Commonly Used Types:
 System.Security.Principal.IPrincipal
 System.Security.Principal.IIdentity
 System.Security.Principal.TokenImpersonationLevel
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3277,7 +3636,7 @@ System.Security.Principal.IdentityReference
 System.Security.Principal.IdentityNotMappedException
 System.Security.Principal.WindowsBuiltInRole
 System.Security.Principal.WellKnownSidType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3297,7 +3656,7 @@ System.Security.Principal.IdentityReference
 System.Security.Principal.IdentityNotMappedException
 System.Security.Principal.WindowsBuiltInRole
 System.Security.Principal.WellKnownSidType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -3311,7 +3670,7 @@ Description:Provides the System.Security.SecureString class, which represents te
 Commonly Used Types:
 System.Security.SecureString
 System.Security.SecureStringMarshal
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3333,7 +3692,7 @@ System.Text.EncoderFallbackBuffer
 System.Text.DecoderFallback
 System.Text.DecoderFallbackBuffer
 System.Text.DecoderExceptionFallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3355,7 +3714,7 @@ System.Text.EncoderFallbackBuffer
 System.Text.DecoderFallback
 System.Text.DecoderFallbackBuffer
 System.Text.DecoderExceptionFallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3368,8 +3727,8 @@ Description:Provides support for code-page based encodings, including Windows-12
 
 Commonly Used Types:
 System.Text.CodePagesEncodingProvider
- 
-99ce22c306b07f99ddae60f443d23a983ae78f7b 
+
+99ce22c306b07f99ddae60f443d23a983ae78f7b
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -3382,8 +3741,8 @@ Description:Provides support for code-page based encodings, including Windows-12
 
 Commonly Used Types:
 System.Text.CodePagesEncodingProvider
- 
-8321c729934c0f8be754953439b88e6e1c120c24 
+
+8321c729934c0f8be754953439b88e6e1c120c24
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -3400,7 +3759,7 @@ System.Text.UnicodeEncoding
 System.Text.ASCIIEncoding
 System.Text.UTF7Encoding
 System.Text.UTF32Encoding
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3417,7 +3776,7 @@ System.Text.UnicodeEncoding
 System.Text.ASCIIEncoding
 System.Text.UTF7Encoding
 System.Text.UTF32Encoding
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3432,8 +3791,40 @@ Commonly Used Types:
 System.Text.Encodings.Web.HtmlEncoder
 System.Text.Encodings.Web.UrlEncoder
 System.Text.Encodings.Web.JavaScriptEncoder
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Text.Encodings.Web
+Version:4.6.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides types for encoding and escaping strings for use in JavaScript, HyperText Markup Language (HTML), and uniform resource locators (URL).
+
+Commonly Used Types:
+System.Text.Encodings.Web.HtmlEncoder
+System.Text.Encodings.Web.UrlEncoder
+System.Text.Encodings.Web.JavaScriptEncoder
+
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Text.Json
+Version:4.6.0
+project URL:https://github.com/dotnet/corefx
+Description:Provides high-performance and low-allocating types that serialize objects to JavaScript Object Notation (JSON) text and deserialize JSON text to objects, with UTF-8 support built-in. Also provides types to read and write JSON text encoded as UTF-8, and to create an in-memory document object model (DOM), that is read-only, for random access of the JSON elements within a structured view of the data.
+
+Commonly Used Types:
+System.Text.Json.JsonSerializer
+System.Text.Json.JsonDocument
+System.Text.Json.JsonElement
+System.Text.Json.Utf8JsonWriter
+System.Text.Json.Utf8JsonReader
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -3451,7 +3842,7 @@ System.Text.RegularExpressions.Match
 System.Text.RegularExpressions.Group
 System.Text.RegularExpressions.Capture
 System.Text.RegularExpressions.MatchEvaluator
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3469,7 +3860,7 @@ System.Text.RegularExpressions.Match
 System.Text.RegularExpressions.Group
 System.Text.RegularExpressions.Capture
 System.Text.RegularExpressions.MatchEvaluator
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3489,7 +3880,7 @@ System.Threading.ThreadLocal<T>
 System.Threading.EventWaitHandle
 System.Threading.SemaphoreSlim
 System.Threading.Mutex
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3509,7 +3900,7 @@ System.Threading.ThreadLocal<T>
 System.Threading.EventWaitHandle
 System.Threading.SemaphoreSlim
 System.Threading.Mutex
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3524,7 +3915,7 @@ Commonly Used Types:
 System.Threading.NativeOverlapped
 System.Threading.Overlapped
 System.Threading.IOCompletionCallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3542,7 +3933,7 @@ System.Threading.Tasks.TaskCompletionSource<TResult>
 System.Threading.Tasks.Task
 System.OperationCanceledException
 System.AggregateException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3560,7 +3951,7 @@ System.Threading.Tasks.TaskCompletionSource<TResult>
 System.Threading.Tasks.Task
 System.OperationCanceledException
 System.AggregateException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3595,8 +3986,34 @@ Description:Provides additional types that simplify the work of writing concurre
 
 Commonly Used Types:
 System.Threading.Tasks.ValueTask<TResult>
- 
+
 7ee84596d92e178bce54c986df31ccc52479e772
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Threading.Tasks.Extensions
+Version:4.5.0
+project URL:https://dot.net/
+Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.ValueTask<TResult>
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.Threading.Tasks.Extensions
+Version:4.5.2
+project URL:https://dot.net/
+Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
+
+Commonly Used Types:
+System.Threading.Tasks.ValueTask<TResult>
+
+99ce22c306b07f99ddae60f443d23a983ae78f7b
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
 
@@ -3610,7 +4027,7 @@ Commonly Used Types:
 System.Threading.Thread
 System.Threading.ThreadStart
 System.Threading.ParameterizedThreadStart
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3625,7 +4042,7 @@ Commonly Used Types:
 System.Threading.Thread
 System.Threading.ThreadStart
 System.Threading.ParameterizedThreadStart
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3639,7 +4056,7 @@ Description:Provides the System.Threading.ThreadPool class, which contains a poo
 Commonly Used Types:
 System.Threading.ThreadPool
 System.Threading.WaitOrTimerCallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3653,7 +4070,7 @@ Description:Provides the System.Threading.ThreadPool class, which contains a poo
 Commonly Used Types:
 System.Threading.ThreadPool
 System.Threading.WaitOrTimerCallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3667,7 +4084,7 @@ Description:Provides the System.Threading.Timer class, which is a mechanism for 
 Commonly Used Types:
 System.Threading.Timer
 System.Threading.TimerCallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3688,8 +4105,8 @@ System.ValueTuple<T1, T2, T3, T4, T5>
 System.ValueTuple<T1, T2, T3, T4, T5, T6>
 System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>
 System.ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -3710,7 +4127,7 @@ System.Xml.XmlNameTable
 System.Xml.IXmlNamespaceResolver
 System.Xml.XmlNamespaceManager
 System.Xml.XmlQualifiedName
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3731,7 +4148,7 @@ System.Xml.XmlNameTable
 System.Xml.IXmlNamespaceResolver
 System.Xml.XmlNamespaceManager
 System.Xml.XmlQualifiedName
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3753,7 +4170,7 @@ System.Xml.Linq.XComment
 System.Xml.Linq.XObject
 System.Xml.Linq.XProcessingInstruction
 System.Xml.Linq.XDocumentType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3775,7 +4192,7 @@ System.Xml.Linq.XComment
 System.Xml.Linq.XObject
 System.Xml.Linq.XProcessingInstruction
 System.Xml.Linq.XDocumentType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3797,7 +4214,7 @@ System.Xml.XmlComment
 System.Xml.XmlNodeList
 System.Xml.XmlWhitespace
 System.Xml.XmlCDataSection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
@@ -3819,7 +4236,7 @@ System.Xml.Serialization.XmlRootAttribute
 System.Xml.Serialization.XmlArrayItemAttribute
 System.Xml.Serialization.XmlTypeAttribute
 System.Xml.Serialization.XmlEnumAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA

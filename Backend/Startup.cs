@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -10,13 +11,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Converters;
 
 namespace BackendFramework
 {
@@ -137,21 +136,17 @@ namespace BackendFramework
                 });
 
             services.AddControllersWithViews()
-                // NewtonsoftJson needed when porting from .NET Core 2.2 to 3.0
-                // https://dev.to/wattengard/why-your-posted-models-may-stop-working-after-upgrading-to-asp-net-core-3-1-4ekp
-                // TODO: This may be able to be removed by reviewing the raw JSON from the frontend to see if there
-                //    is malformed data, such as an integer sent as a string ("10"). .NET Core 3.0's JSON parser
-                //    no longer automatically tries to coerce these values.
-                .AddNewtonsoftJson(options =>
-                    // Required so that integer enum's can be passed in JSON as their descriptive string names, rather
-                    //  than by opaque integer values. This makes the OpenAPI schema much more expressive for
-                    //  integer enums. https://stackoverflow.com/a/55541764
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+                // Required so that integer enum's can be passed in JSON as their descriptive string names, rather
+                //  than by opaque integer values. This makes the OpenAPI schema much more expressive for
+                //  integer enums. https://stackoverflow.com/a/55541764
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSignalR();
+
+            // Configure Swashbuckle OpenAPI generation.
+            // https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.1
             services.AddSwaggerGen();
-            // TODO: Remove this when NewtonsoftJson support is removed.
-            services.AddSwaggerGenNewtonsoftSupport();
 
             services.Configure<Settings>(
                 options =>
