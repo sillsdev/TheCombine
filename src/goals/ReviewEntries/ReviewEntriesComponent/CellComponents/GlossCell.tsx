@@ -1,44 +1,29 @@
-import { Chip, Input, TextField } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
-import React, { ReactNode } from "react";
+import { Input, TextField } from "@material-ui/core";
+import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { Gloss } from "api/models";
-import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
+import AlignedList, {
+  SPACER,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newGloss } from "types/word";
 
-interface SenseCellProps {
+interface GlossCellProps {
   editable: boolean;
   sortingByGloss: boolean;
 }
 
-export default function SenseCell(
-  props: FieldParameterStandard & SenseCellProps
+export default function GlossCell(
+  props: FieldParameterStandard & GlossCellProps
 ) {
   const analysisLang = useSelector(
     (state: StoreState) => state.currentProject.analysisWritingSystems[0].bcp47
   );
-
-  function addSense(): ReactNode {
-    return (
-      <Chip
-        label={<Add />}
-        // Handles adding a new local sense
-        onClick={() =>
-          props.onRowDataChange &&
-          props.onRowDataChange({
-            ...props.rowData,
-            senses: [...props.rowData.senses, new ReviewEntriesSense()],
-          })
-        }
-      />
-    );
-  }
 
   return (
     <AlignedList
@@ -85,7 +70,7 @@ export default function SenseCell(
           </Translate>
         )
       )}
-      bottomCell={props.editable ? addSense() : null}
+      bottomCell={props.editable ? SPACER : null}
     />
   );
 }
