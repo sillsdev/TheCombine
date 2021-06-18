@@ -28,6 +28,13 @@ function domainNumberToArray(id: string) {
   return id.split(".").map((digit) => parseInt(digit, 10));
 }
 
+function cleanRegExp(input: string) {
+  const cleaned = input.trim().toLowerCase();
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+  const escaped = cleaned.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(escaped);
+}
+
 export interface FieldParameterStandard {
   rowData: ReviewEntriesWord;
   value: any;
@@ -169,7 +176,7 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      const regex = new RegExp(term.trim().toLowerCase());
+      const regex = cleanRegExp(term);
       for (const sense of rowData.senses) {
         const glossesString = ReviewEntriesSense.glossString(sense);
         if (regex.exec(glossesString.toLowerCase())) {
@@ -247,16 +254,16 @@ const columns: Column<any>[] = [
        * IGNORED: capitalization; whitespace around terms; 3+ terms
        *   e.g. " 2.1:BODY:zx:c  " and "2.1  : Body " are equivalent
        */
-      const terms = term.split(":").map((t) => t.trim().toLowerCase());
+      const terms = term.split(":");
       if (terms.length === 1) {
-        const regex: RegExp = new RegExp(terms[0]);
+        const regex = cleanRegExp(terms[0]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
             if (regex.exec(domain.id) || regex.exec(domain.name.toLowerCase()))
               return true;
       } else {
-        const regexNumber: RegExp = new RegExp(terms[0]);
-        const regexName: RegExp = new RegExp(terms[1]);
+        const regexNumber = cleanRegExp(terms[0]);
+        const regexName = cleanRegExp(terms[1]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
             if (
