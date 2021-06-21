@@ -74,6 +74,11 @@ export default class Register extends React.Component<
   }
 
   componentDidMount() {
+    const search = window.location.search;
+    const email = new URLSearchParams(search).get("email");
+    if (email !== null) {
+      this.setState({ email: email });
+    }
     this.props.reset();
   }
 
