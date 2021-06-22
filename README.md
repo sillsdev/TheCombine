@@ -674,14 +674,21 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 ## Learn More
 
-### Backend & Database (C# + ASP<area>.NET + MongoDB)
+### Development Tools
+
+- [Git branching tutorial](https://learngitbranching.js.org)
+
+### Database (MongoDB)
+
+- [MongoDB](https://docs.mongodb.com/manual/introduction)
+- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
+
+### Backend (C# + ASP<area>.NET)
 
 - [C#](https://www.w3schools.com/cs/default.asp)
 - [Our style guide](docs/style_guide/c_sharp_style_guide.md)
 - [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
 - [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
-- [MongoDB](https://docs.mongodb.com/manual/introduction/) (database)
-- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
 
 ### Frontend (Typescript + React + Redux)
 
