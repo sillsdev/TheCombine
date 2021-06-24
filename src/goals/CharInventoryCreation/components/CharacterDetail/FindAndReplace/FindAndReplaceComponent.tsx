@@ -2,7 +2,6 @@ import { Button, TextField, Typography } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import CharacterReplaceDialog from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
-import CharacterInfo from "goals/CharInventoryCreation/components/CharacterDetail/CharacterInfo";
 
 interface FindAndReplaceProps {
   initialFindValue: string;
