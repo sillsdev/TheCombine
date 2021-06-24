@@ -30,6 +30,13 @@
         name: registry_creds
       when: pull_secrets_manager == "registry_creds"
 
+    - name: Create Storage Class
+      import_role:
+        name: k8s_storage
+      when:
+        - k8s_storage_class is defined
+        - k8s_storage_class != "microk8s-hostpath"
+
     - name: Create Kubernetes Configuration Files
       import_role:
         name: k8s_config

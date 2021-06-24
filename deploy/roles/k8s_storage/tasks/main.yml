@@ -1,0 +1,15 @@
+---
+- name: Create directory for Storage configuration files
+  file:
+    path: "{{ k8s_storage_cfg }}"
+    state: directory
+    mode: 0700
+
+- name: Create Storage Class config
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_storage_cfg }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
+    mode: 0600
+  with_fileglob:
+    - "templates/*.yaml.j2"
+  notify: apply storage config

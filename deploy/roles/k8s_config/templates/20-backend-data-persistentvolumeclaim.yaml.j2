@@ -2,8 +2,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
-  labels:
-    io.kompose.service: backend-data
   name: backend-data
   namespace: {{ app_namespace }}
 spec:
@@ -12,4 +10,7 @@ spec:
   resources:
     requests:
       storage: {{ backend_data_size }}
+{% if k8s_storage_class is defined %}
+  storageClassName: {{ k8s_storage_class }}
+{% endif %}
 status: {}
