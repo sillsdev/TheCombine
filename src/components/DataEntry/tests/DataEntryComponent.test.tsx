@@ -1,10 +1,11 @@
+import { State, Word } from "api/models";
 import {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
-import SemanticDomainWithSubdomains, { baseDomain } from "types/SemanticDomain";
-import { DomainWord, Sense, simpleWord, State, Word } from "types/word";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import { DomainWord, newSense, simpleWord } from "types/word";
 
 const mockWord = simpleWord("", "");
 const mockDomainWord: DomainWord = {
@@ -14,66 +15,63 @@ const mockDomainWord: DomainWord = {
 
 describe("DataEntryComponent", () => {
   describe("filterWords", () => {
-    it("should return empty Word Array when given empty Word Array", () => {
+    it("returns empty Word Array when given empty Word Array.", () => {
       const words: Word[] = [];
       const expectedWords: Word[] = [];
       expect(filterWords(words)).toEqual(expectedWords);
     });
 
-    it("should filter out words that are inaccessible", () => {
+    it("filters out words that aren't Active.", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [new Sense()],
+          senses: [{ ...newSense(), accessibility: State.Deleted }],
+        },
+        {
+          ...mockWord,
+          senses: [{ ...newSense(), accessibility: State.Duplicate }],
         },
       ];
-      const expectedWords: Word[] = [];
-      expect(filterWords(words)).toEqual(expectedWords);
+      expect(filterWords(words)).toHaveLength(0);
     });
 
-    it("should not filter words that are accessible", () => {
+    it("doesn't filter words that are Active.", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [{ ...new Sense(), accessibility: State.Active }],
+          senses: [newSense()],
         },
       ];
-      const expectedWords: Word[] = [...words];
-      expect(filterWords(words)).toEqual(expectedWords);
+      expect(filterWords(words)).toHaveLength(1);
     });
   });
 
   it("filterWordsByDomain filters out words that do not match desired domain", () => {
-    const mockDomains: SemanticDomainWithSubdomains[] = [
-      { ...baseDomain },
-      { ...baseDomain },
+    const mockDomains = [
+      new TreeSemanticDomain("ID_one", "daily"),
+      new TreeSemanticDomain("ID_two, weather"),
     ];
 
-    mockDomains[0].name = "daily";
-    mockDomains[0].id = "ID_one";
-    mockDomains[1].name = "weather";
-    mockDomains[1].id = "ID_two";
-
-    const sense: Sense[] = [
-      { ...new Sense("", "", mockDomains[0]), accessibility: State.Active },
-      { ...new Sense("", "", mockDomains[1]), accessibility: State.Active },
+    const senses = [
+      newSense("", "", mockDomains[0]),
+      newSense("", "", mockDomains[1]),
     ];
 
     const unfilteredWords: Word[] = [
       {
         ...mockWord,
         vernacular: "one",
-        senses: [...mockWord.senses, sense[0]],
+        senses: [...mockWord.senses, senses[0]],
       },
       {
         ...mockWord,
         vernacular: "two",
-        senses: [...mockWord.senses, sense[1]],
+        senses: [...mockWord.senses, senses[1]],
       },
       {
         ...mockWord,
         vernacular: "three",
-        senses: [...mockWord.senses, sense[0]],
+        senses: [...mockWord.senses, senses[0]],
       },
     ];
 
@@ -89,8 +87,7 @@ describe("DataEntryComponent", () => {
   });
 
   it("sortDomainWordByVern sorts words alphabetically", () => {
-    const mockDomain = baseDomain;
-    mockDomain.name = "daily";
+    const mockDomain = new TreeSemanticDomain("ID_one", "daily");
     const unfilteredWords: Word[] = [
       { ...mockWord },
       { ...mockWord },

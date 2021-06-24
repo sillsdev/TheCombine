@@ -9,9 +9,9 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import validator from "validator";
 
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import * as Backend from "backend";
-import * as LocalStorage from "backend/localStorage";
+import { getProjectId } from "backend/localStorage";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
 interface InviteProps {
   close: () => void;
@@ -40,9 +40,8 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     this.setState({
       loading: true,
     });
-    var projectId = LocalStorage.getProjectId();
     await Backend.emailInviteToProject(
-      projectId,
+      getProjectId(),
       this.state.emailAddress,
       this.state.message
     );

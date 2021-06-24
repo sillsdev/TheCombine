@@ -119,20 +119,6 @@ describe("LoginReducer Tests", () => {
     );
   });
 
-  test("non-default state, expecting login reset", () => {
-    action.type = LoginActionTypes.LOGIN_RESET;
-    expect(LoginReducer.loginReducer({} as LoginState, action)).toEqual(
-      LoginReducer.defaultState
-    );
-  });
-
-  test("non-default state, expecting register reset", () => {
-    action.type = LoginActionTypes.REGISTER_RESET;
-    expect(LoginReducer.loginReducer({} as LoginState, action)).toEqual(
-      LoginReducer.defaultState
-    );
-  });
-
   test("non-default state, expecting reset", () => {
     const resetAction: StoreAction = {
       type: StoreActionTypes.RESET,

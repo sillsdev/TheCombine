@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -7,6 +6,8 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -33,74 +34,74 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="Project"/>s </summary>
-        /// <remarks> GET: v1/projects </remarks>
-        [HttpGet]
+        [HttpGet(Name = "GetAllProjects")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Project>))]
         public async Task<IActionResult> GetAllProjects()
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-            return new ObjectResult(await _projRepo.GetAllProjects());
+            return Ok(await _projRepo.GetAllProjects());
         }
 
         /// <summary> Get a list of <see cref="User"/>s of a specific project </summary>
-        /// <remarks> GET: v1/projects/{projectId}/users </remarks>
         /// <returns> A list of <see cref="User"/>s </returns>
-        [HttpGet("{projectId}/users")]
-        public async Task<IActionResult> GetAllUsers(string projectId)
+        [HttpGet("{projectId}/users", Name = "GetAllProjectUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
+        public async Task<IActionResult> GetAllProjectUsers(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             var allUsers = await _userRepo.GetAllUsers();
             var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
-            return new ObjectResult(projectUsers);
+            return Ok(projectUsers);
         }
 
         /// <summary> Deletes all <see cref="Project"/>s </summary>
-        /// <remarks> DELETE: v1/projects </remarks>
         /// <returns> true: if success, false: if there were no projects </returns>
-        [HttpDelete]
-        public async Task<IActionResult> Delete()
+        [HttpDelete(Name = "DeleteAllProjects")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> DeleteAllProjects()
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-            return new ObjectResult(await _projRepo.DeleteAllProjects());
+            return Ok(await _projRepo.DeleteAllProjects());
         }
 
         /// <summary> Returns <see cref="Project"/> with specified id </summary>
-        /// <remarks> GET: v1/projects/{projectId} </remarks>
-        [HttpGet("{projectId}")]
-        public async Task<IActionResult> Get(string projectId)
+        [HttpGet("{projectId}", Name = "GetProject")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
+        public async Task<IActionResult> GetProject(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return new NotFoundResult();
+                return NotFound(projectId);
             }
 
             // If there are fields we need to hide from lower users, check for Permission.DeleteEditSettingsAndUsers
             // and remove them.
 
-            return new ObjectResult(project);
+            return Ok(project);
         }
 
         /// <summary> Creates a <see cref="Project"/> </summary>
-        /// <remarks> POST: v1/projects </remarks>
         /// <returns> Id of created Project </returns>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Project project)
+        [HttpPost(Name = "CreateProject")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserCreatedProject))]
+        public async Task<IActionResult> CreateProject([FromBody, BindRequired] Project project)
         {
             await _projRepo.Create(project);
 
@@ -109,19 +110,19 @@ namespace BackendFramework.Controllers
             var currentUser = await _userRepo.GetUser(currentUserId);
             if (currentUser is null)
             {
-                return new NotFoundObjectResult(currentUserId);
+                return NotFound(currentUserId);
             }
 
             // Give Project admin privileges to user who creates a Project.
             var userRole = new UserRole
             {
-                Permissions = new List<int>
+                Permissions = new List<Permission>
                 {
-                    (int) Permission.DeleteEditSettingsAndUsers,
-                    (int) Permission.ImportExport,
-                    (int) Permission.MergeAndCharSet,
-                    (int) Permission.Unused,
-                    (int) Permission.WordEntry
+                    Permission.DeleteEditSettingsAndUsers,
+                    Permission.ImportExport,
+                    Permission.MergeAndCharSet,
+                    Permission.Unused,
+                    Permission.WordEntry
                 },
                 ProjectId = project.Id
             };
@@ -135,66 +136,65 @@ namespace BackendFramework.Controllers
             var currentUpdatedUser = await _permissionService.MakeJwt(currentUser);
             if (currentUpdatedUser is null)
             {
-                return new BadRequestObjectResult("Invalid JWT Token supplied.");
+                return BadRequest("Invalid JWT Token supplied.");
             }
 
             await _userRepo.Update(currentUserId, currentUpdatedUser);
 
-            var output = new ProjectWithUser(project) { UpdatedUser = currentUpdatedUser };
-            return new OkObjectResult(output);
+            return Ok(new UserCreatedProject { Project = project, User = currentUpdatedUser });
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
-        /// <remarks> PUT: v1/projects/{projectId} </remarks>
         /// <returns> Id of updated Project </returns>
-        [HttpPut("{projectId}")]
-        public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
+        [HttpPut("{projectId}", Name = "UpdateProject")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             var result = await _projRepo.Update(projectId, project);
             return result switch
             {
-                ResultOfUpdate.NotFound => new NotFoundObjectResult(projectId),
-                ResultOfUpdate.Updated => new OkObjectResult(projectId),
-                _ => new StatusCodeResult((int)HttpStatusCode.NotModified)
+                ResultOfUpdate.NotFound => NotFound(projectId),
+                ResultOfUpdate.Updated => Ok(projectId),
+                _ => StatusCode(StatusCodes.Status304NotModified, projectId)
             };
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
-        /// <remarks> PUT: v1/projects/{projectId} </remarks>
-        [HttpPut("{projectId}/characters")]
-        public async Task<IActionResult> PutChars(string projectId, [FromBody] Project project)
+        [HttpPut("{projectId}/characters", Name = "PutChars")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
+        public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             var currentProj = await _projRepo.GetProject(projectId);
             if (currentProj is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             currentProj.ValidCharacters = project.ValidCharacters;
             currentProj.RejectedCharacters = project.RejectedCharacters;
             await _projRepo.Update(projectId, currentProj);
 
-            return new OkObjectResult(currentProj);
+            return Ok(currentProj);
         }
 
         /// <summary> Deletes <see cref="Project"/> with specified id </summary>
-        /// <remarks> DELETE: v1/projects/{projectId} </remarks>
-        [HttpDelete("{projectId}")]
-        public async Task<IActionResult> Delete(string projectId)
+        [HttpDelete("{projectId}", Name = "DeleteProject")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteProject(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
 
             // Sanitize user input.
@@ -205,33 +205,34 @@ namespace BackendFramework.Controllers
 
             if (await _projRepo.Delete(projectId))
             {
-                return new OkResult();
+                return Ok();
             }
-            return new NotFoundResult();
+            return NotFound();
         }
 
         /// <summary>
         /// UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/>
         /// </summary>
-        /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
         [AllowAnonymous]
-        [HttpGet("{projectId}/semanticdomains")]
+        [HttpGet("{projectId}/semanticdomains", Name = "GetSemDoms")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainWithSubdomains>))]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return new NotFoundResult();
+                return NotFound(projectId);
             }
             var result = _semDomService.ParseSemanticDomains(proj);
-            return new OkObjectResult(result);
+            return Ok(result);
         }
 
-        [HttpGet("duplicate/{projectName}")]
+        [HttpGet("duplicate/{projectName}", Name = "ProjectDuplicateCheck")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
             var projectIdWithName = await _projRepo.GetProjectIdByName(projectName);
-            return new OkObjectResult(projectIdWithName != null);
+            return Ok(projectIdWithName != null);
         }
     }
 }

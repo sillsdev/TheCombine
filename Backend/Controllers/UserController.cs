@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Net;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MimeKit;
-using System.Web.Http;
 
 namespace BackendFramework.Controllers
 {
@@ -34,10 +36,10 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Sends a password reset request </summary>
-        /// <remarks> POST: v1/users/forgot </remarks>
         [AllowAnonymous]
-        [HttpPost("forgot")]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
+        [HttpPost("forgot", Name = "ResetPasswordRequest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
         {
             // Find user attached to email or username.
             var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
@@ -60,147 +62,115 @@ namespace BackendFramework.Controllers
             };
             if (await _emailService.SendEmail(message))
             {
-                return new OkResult();
+                return Ok();
             }
-
             return new InternalServerErrorResult();
         }
 
         /// <summary> Resets a password using a token </summary>
-        /// <remarks> POST: v1/users/reset </remarks>
         [AllowAnonymous]
-        [HttpPost("forgot/reset")]
-        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetData data)
+        [HttpPost("forgot/reset", Name = "ResetPassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
             if (result)
             {
-                return new OkResult();
+                return Ok();
             }
-
-            return new ForbidResult();
+            return Forbid();
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
-        /// <remarks> GET: v1/users </remarks>
-        [HttpGet]
+        [HttpGet(Name = "GetAllUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         public async Task<IActionResult> GetAllUsers()
         {
             if (string.IsNullOrEmpty(_permissionService.GetUserId(HttpContext)))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-            return new ObjectResult(await _userRepo.GetAllUsers());
-        }
-
-        /// <summary> Deletes all <see cref="User"/>s </summary>
-        /// <remarks> DELETE: v1/users </remarks>
-        /// <returns> true: if success, false: if there were no users </returns>
-        [HttpDelete]
-        public async Task<IActionResult> Delete()
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
-            {
-                return new ForbidResult();
-            }
-
-            return new OkObjectResult(await _userRepo.DeleteAllUsers());
+            return Ok(await _userRepo.GetAllUsers());
         }
 
         /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
-        /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] Credentials cred)
+        [HttpPost("authenticate", Name = "Authenticate")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
             try
             {
                 var user = await _permissionService.Authenticate(cred.Username, cred.Password);
                 if (user is null)
                 {
-                    return new UnauthorizedResult();
+                    return Unauthorized(cred.Username);
                 }
-
-                return new OkObjectResult(user);
+                return Ok(user);
             }
             catch (KeyNotFoundException)
             {
-                return new NotFoundResult();
+                return NotFound(cred.Username);
             }
         }
 
         /// <summary> Returns <see cref="User"/> with specified id </summary>
-        /// <remarks> GET: v1/users/{userId} </remarks>
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> Get(string userId)
+        [HttpGet("{userId}", Name = "GetUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        public async Task<IActionResult> GetUser(string userId)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-
             var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
-                return new NotFoundObjectResult(userId);
+                return NotFound(userId);
             }
-
-            return new ObjectResult(user);
+            return Ok(user);
         }
 
-        /// <summary> Creates a <see cref="User"/> </summary>
-        /// <remarks> POST: v1/users </remarks>
-        /// <returns> Id of created user </returns>
+        /// <summary> Creates specified <see cref="User"/>. </summary>
+        /// <returns> Id of created user. </returns>
         [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] User user)
+        [HttpPost(Name = "CreateUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
             var returnUser = await _userRepo.Create(user);
             if (returnUser is null)
             {
-                return BadRequest();
+                return BadRequest("User creation failed.");
             }
-
-            return new OkObjectResult(user.Id);
+            return Ok(user.Id);
         }
 
-        /// <summary> Checks whether a username is taken </summary>
-        /// <remarks> POST: v1/users/checkusername/ </remarks>
-        /// <returns> Bool </returns>
+        /// <summary> Checks whether specified username is taken. </summary>
         [AllowAnonymous]
-        [HttpPost("checkusername/{username}")]
+        [HttpGet("isusernametaken/{username}", Name = "CheckUsername")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CheckUsername(string username)
         {
             var isAvailable = (await _userRepo.GetUserByUsername(username)) is null;
-            if (!isAvailable)
-            {
-                return BadRequest();
-            }
-
-            return new OkResult();
+            return Ok(!isAvailable);
         }
 
-        /// <summary> Checks whether a email is taken </summary>
-        /// <remarks> POST: v1/users/checkemail/ </remarks>
-        /// <returns> Bool </returns>
+        /// <summary> Checks whether specified email address is taken. </summary>
         [AllowAnonymous]
-        [HttpPost("checkemail/{email}")]
+        [HttpGet("isemailtaken/{email}", Name = "CheckEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CheckEmail(string email)
         {
             var isAvailable = (await _userRepo.GetUserByEmail(email)) is null;
-            if (!isAvailable)
-            {
-                return BadRequest();
-            }
-
-            return new OkResult();
+            return Ok(!isAvailable);
         }
 
-        /// <summary> Updates <see cref="User"/> with specified id </summary>
-        /// <remarks> PUT: v1/users/{userId} </remarks>
-        /// <returns> Id of updated user </returns>
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> Put(string userId, [FromBody] User user)
+        /// <summary> Updates <see cref="User"/> with specified id. </summary>
+        /// <returns> Id of updated user. </returns>
+        [HttpPut("{userId}", Name = "UpdateUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
             // The model seems to have flaws, and this prevents an admin from editing a user's user edits
             // One solution is to change the updating user roles so that the backend updates a user's
@@ -210,33 +180,48 @@ namespace BackendFramework.Controllers
             //
             // if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             // {
-            //     return new ForbidResult();
+            //     return Forbid();
             // }
-
             var result = await _userRepo.Update(userId, user);
             return result switch
             {
-                ResultOfUpdate.NotFound => new NotFoundObjectResult(userId),
-                ResultOfUpdate.Updated => new OkObjectResult(userId),
-                _ => new StatusCodeResult((int)HttpStatusCode.NotModified)
+                ResultOfUpdate.NotFound => NotFound(userId),
+                ResultOfUpdate.Updated => Ok(userId),
+                _ => StatusCode(StatusCodes.Status304NotModified, userId)
             };
         }
 
-        /// <summary> Deletes <see cref="User"/> with specified id </summary>
-        /// <remarks> DELETE: v1/users/{userId} </remarks>
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> Delete(string userId)
+        /// <summary> Deletes <see cref="User"/> with specified id. </summary>
+        [HttpDelete("{userId}", Name = "DeleteUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> DeleteUser(string userId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
-                return new ForbidResult();
+                return Forbid();
             }
-
             if (await _userRepo.Delete(userId))
             {
-                return new OkResult();
+                return Ok(userId);
             }
-            return new NotFoundResult();
+            return NotFound(userId);
+        }
+
+        /// <remarks>
+        /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+        /// </remarks>
+        public class PasswordResetRequestData
+        {
+            [Required]
+            public string Domain { get; set; }
+            [Required]
+            public string EmailOrUsername { get; set; }
+
+            public PasswordResetRequestData()
+            {
+                Domain = "";
+                EmailOrUsername = "";
+            }
         }
 
         /// <remarks>
@@ -244,17 +229,15 @@ namespace BackendFramework.Controllers
         /// </remarks>
         public class PasswordResetData
         {
-            public string EmailOrUsername { get; set; }
-            public string Token { get; set; }
+            [Required]
             public string NewPassword { get; set; }
-            public string Domain { get; set; }
+            [Required]
+            public string Token { get; set; }
 
             public PasswordResetData()
             {
-                EmailOrUsername = "";
-                Token = "";
                 NewPassword = "";
-                Domain = "";
+                Token = "";
             }
         }
     }

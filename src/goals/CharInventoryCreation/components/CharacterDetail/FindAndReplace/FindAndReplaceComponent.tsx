@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@material-ui/core";
-import * as React from "react";
+import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 interface FindAndReplaceProps {

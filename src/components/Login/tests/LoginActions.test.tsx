@@ -1,6 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import { User } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import * as LoginAction from "components/Login/Redux/LoginActions";
 import * as LoginReducer from "components/Login/Redux/LoginReducer";
@@ -10,7 +11,7 @@ import {
   UserAction,
 } from "components/Login/Redux/LoginReduxTypes";
 import * as RootAction from "rootActions";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 jest.mock("backend", () => {
   return {
@@ -20,7 +21,7 @@ jest.mock("backend", () => {
   };
 });
 
-// mock the track and identify methods of segment analytics
+// Mock the track and identify methods of segment analytics.
 global.analytics = { identify: jest.fn(), track: jest.fn() } as any;
 
 const mockAddUser = jest.fn();
@@ -30,7 +31,7 @@ const createMockStore = configureMockStore([thunk]);
 const mockState = LoginReducer.defaultState;
 
 const mockUser = {
-  ...new User("testName", "testUsername", "testPass"),
+  ...newUser("testName", "testUsername", "testPass"),
   token: "testToken",
   email: "test@e.mail",
 };
@@ -44,10 +45,6 @@ const loginFailure: UserAction = {
 };
 const loginSuccess: UserAction = {
   type: LoginActionTypes.LOGIN_SUCCESS,
-  payload: { username: mockUser.username },
-};
-const logout: UserAction = {
-  type: LoginActionTypes.LOGOUT,
   payload: { username: mockUser.username },
 };
 const reset: RootAction.StoreAction = {
@@ -133,75 +130,55 @@ describe("LoginAction", () => {
     });
   });
 
-  test("loginAttempt returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.loginAttempt,
-      LoginActionTypes.LOGIN_ATTEMPT
-    );
-  });
-
-  test("loginFailure returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.loginFailure,
-      LoginActionTypes.LOGIN_FAILURE
-    );
-  });
-
-  test("loginSuccess returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.loginSuccess,
-      LoginActionTypes.LOGIN_SUCCESS
-    );
-  });
-
-  test("registerAttempt returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.registerAttempt,
-      LoginActionTypes.REGISTER_ATTEMPT
-    );
-  });
-
-  test("registerFailure returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.registerFailure,
-      LoginActionTypes.REGISTER_FAILURE
-    );
-  });
-
-  test("registerSuccess returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.registerSuccess,
-      LoginActionTypes.REGISTER_SUCCESS
-    );
-  });
-
-  test("loginReset returns correct value", () => {
-    expect(LoginAction.loginReset()).toEqual({
-      type: LoginActionTypes.LOGIN_RESET,
-      payload: { username: "" },
+  describe("Action creators return correct value.", () => {
+    test("loginAttempt", () => {
+      testActionCreatorAgainst(
+        LoginAction.loginAttempt,
+        LoginActionTypes.LOGIN_ATTEMPT
+      );
     });
-  });
 
-  test("registerReset returns correct value", () => {
-    expect(LoginAction.registerReset()).toEqual({
-      type: LoginActionTypes.REGISTER_RESET,
-      payload: { username: "" },
+    test("loginFailure", () => {
+      testActionCreatorAgainst(
+        LoginAction.loginFailure,
+        LoginActionTypes.LOGIN_FAILURE
+      );
     });
-  });
 
-  test("loginAttempt returns correct value", () => {
-    testActionCreatorAgainst(
-      LoginAction.loginAttempt,
-      LoginActionTypes.LOGIN_ATTEMPT
-    );
+    test("loginSuccess", () => {
+      testActionCreatorAgainst(
+        LoginAction.loginSuccess,
+        LoginActionTypes.LOGIN_SUCCESS
+      );
+    });
+
+    test("registerAttempt", () => {
+      testActionCreatorAgainst(
+        LoginAction.registerAttempt,
+        LoginActionTypes.REGISTER_ATTEMPT
+      );
+    });
+
+    test("registerFailure", () => {
+      testActionCreatorAgainst(
+        LoginAction.registerFailure,
+        LoginActionTypes.REGISTER_FAILURE
+      );
+    });
+
+    test("registerSuccess", () => {
+      testActionCreatorAgainst(
+        LoginAction.registerSuccess,
+        LoginActionTypes.REGISTER_SUCCESS
+      );
+    });
   });
 
   test("logout creates a proper action", () => {
     LocalStorage.setCurrentUser(mockUser);
     const mockStore = createMockStore(mockState);
     mockStore.dispatch<any>(LoginAction.logoutAndResetStore());
-    expect(mockStore.getActions()).toEqual([logout, reset]);
-    expect(LocalStorage.getUserId()).toEqual("");
+    expect(mockStore.getActions()).toEqual([reset]);
   });
 });
 

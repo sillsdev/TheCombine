@@ -93,7 +93,7 @@ namespace BackendFramework.Services
             {
                 if (projectEntry.ProjectId == projId)
                 {
-                    if (projectEntry.Permissions.Contains((int)permission))
+                    if (projectEntry.Permissions.Contains(permission))
                     {
                         return true;
                     }
@@ -213,13 +213,13 @@ namespace BackendFramework.Services
 
     public class ProjectPermissions
     {
-        public ProjectPermissions(string projectId, List<int> permissions)
+        public ProjectPermissions(string projectId, List<Permission> permissions)
         {
             ProjectId = projectId;
             Permissions = permissions;
         }
         public string ProjectId { get; }
-        public List<int> Permissions { get; }
+        public List<Permission> Permissions { get; }
     }
 }
 

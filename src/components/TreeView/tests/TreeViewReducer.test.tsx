@@ -1,14 +1,14 @@
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import {
+  TreeViewAction,
+  TreeActionType,
+} from "components/TreeView/TreeViewActions";
 import {
   treeViewReducer,
   defaultState,
   TreeViewState,
   createDomains,
 } from "components/TreeView/TreeViewReducer";
-import {
-  TreeViewAction,
-  TreeActionType,
-} from "components/TreeView/TreeViewActions";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
 describe("Test the TreeViewReducer", () => {
@@ -90,8 +90,8 @@ describe("Test the TreeViewReducer", () => {
   });
 
   it("Returns state with a new SemanticDomain when requested to change this value", () => {
-    let payload: SemanticDomainWithSubdomains = defaultState.currentDomain
-      .parentDomain as SemanticDomainWithSubdomains;
+    const payload: TreeSemanticDomain = defaultState.currentDomain
+      .parentDomain as TreeSemanticDomain;
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,

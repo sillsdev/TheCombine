@@ -136,8 +136,8 @@ namespace BackendFramework.Services
             var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
-                var newIds = new List<string>(entry.WordIds.Where(id => frontierWordIds.Contains(id)));
-                if (newIds.Count >= entry.WordIds.Count)
+                var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id)).ToList();
+                if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
                 }

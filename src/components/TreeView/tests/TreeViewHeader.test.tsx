@@ -10,7 +10,6 @@ import {
   TreeHeaderProps,
   useTreeViewNavigation,
 } from "components/TreeView/TreeViewHeader";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
@@ -134,7 +133,7 @@ describe("TreeViewHeader", () => {
     });
 
     it("switches on a length 5 number", () => {
-      const leafNode: SemanticDomainWithSubdomains =
+      const leafNode =
         MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
 
       const { result } = renderHook(() => useTreeViewNavigation(testProps));

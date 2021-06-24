@@ -6,14 +6,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { WritingSystem } from "api/models";
 import { projectDuplicateCheck } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { WritingSystem } from "types/project";
 import theme from "types/theme";
+import { newWritingSystem } from "types/project";
 
 interface CreateProjectProps {
   asyncCreateProject: (
@@ -47,8 +48,8 @@ export default class CreateProject extends React.Component<
     this.state = {
       name: "",
       error: { empty: false, nameTaken: false },
-      vernLanguage: { name: "", bcp47: "und", font: "" },
-      analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
+      vernLanguage: newWritingSystem("und"),
+      analysisLanguages: [newWritingSystem("und")],
     };
   }
 
@@ -86,8 +87,8 @@ export default class CreateProject extends React.Component<
           return { analysisLanguages: state.analysisLanguages };
         });
       } else {
-        let tempLang: WritingSystem[] = [{ name: "", bcp47: bcp47, font: "" }];
-        this.setState({ analysisLanguages: tempLang });
+        const analysisLanguages = [newWritingSystem(bcp47)];
+        this.setState({ analysisLanguages });
       }
     }
   };
@@ -99,8 +100,8 @@ export default class CreateProject extends React.Component<
         return { analysisLanguages: state.analysisLanguages };
       });
     } else {
-      let tempLang: WritingSystem[] = [{ name: name, bcp47: "", font: "" }];
-      this.setState({ analysisLanguages: tempLang });
+      const analysisLanguages = [newWritingSystem("", name)];
+      this.setState({ analysisLanguages });
     }
   };
 
@@ -111,8 +112,8 @@ export default class CreateProject extends React.Component<
         return { analysisLanguages: state.analysisLanguages };
       });
     } else {
-      let tempLang: WritingSystem[] = [{ name: "", bcp47: "", font: font }];
-      this.setState({ analysisLanguages: tempLang });
+      const analysisLanguages = [newWritingSystem("", "", font)];
+      this.setState({ analysisLanguages });
     }
   };
 

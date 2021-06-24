@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
@@ -74,6 +74,11 @@ export default class Register extends React.Component<
   }
 
   componentDidMount() {
+    const search = window.location.search;
+    const email = new URLSearchParams(search).get("email");
+    if (email) {
+      this.setState({ email });
+    }
     this.props.reset();
   }
 

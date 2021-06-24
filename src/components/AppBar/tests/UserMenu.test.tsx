@@ -1,10 +1,11 @@
 import { Button, MenuItem } from "@material-ui/core";
-import React from "react";
+import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
-import { User } from "types/user";
+import { newUser } from "types/user";
 
 jest.mock("backend", () => {
   return {
@@ -22,10 +23,11 @@ jest.mock("backend/localStorage", () => {
 
 let testRenderer: ReactTestRenderer;
 
+const mockStore = configureMockStore([])();
+
 const mockGetUser = jest.fn();
 const mockGetUserId = jest.fn();
-const mockOnSelect = jest.fn();
-const mockUser = new User("", "", "");
+const mockUser = newUser();
 const mockUserId = "mockUserId";
 
 function setMockFunctions() {
@@ -41,7 +43,11 @@ beforeEach(() => {
 describe("UserMenu", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
-      testRenderer = renderer.create(<UserMenu currentTab={Path.Root} />);
+      testRenderer = renderer.create(
+        <Provider store={mockStore}>
+          <UserMenu currentTab={Path.Root} />
+        </Provider>
+      );
     });
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
   });
@@ -59,18 +65,20 @@ describe("UserMenu", () => {
   });
 
   it("admin users see one more item: Site Settings", async () => {
-    renderer.act(() => {
-      testRenderer = renderer.create(
-        <UserMenuList isAdmin={false} onSelect={mockOnSelect} />
-      );
-    });
+    renderMenuList();
     const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
-    renderer.act(() => {
-      testRenderer = renderer.create(
-        <UserMenuList isAdmin={true} onSelect={mockOnSelect} />
-      );
-    });
+    renderMenuList(true);
     const adminMenuItems = testRenderer.root.findAllByType(MenuItem).length;
     expect(adminMenuItems).toBe(normalMenuItems + 1);
   });
 });
+
+function renderMenuList(isAdmin = false) {
+  renderer.act(() => {
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
+      </Provider>
+    );
+  });
+}

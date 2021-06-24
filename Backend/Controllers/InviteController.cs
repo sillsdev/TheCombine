@@ -1,10 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -26,32 +29,32 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
-        /// <remarks> PUT: v1/invite </remarks>
-        [HttpPut]
-        public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
+        [HttpPut(Name = "EmailInviteToProject")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
-            return new OkObjectResult(linkWithIdentifier);
+            return Ok(linkWithIdentifier);
         }
 
         /// <summary> Validates invite token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/invite/{projectId}/validate/{token} </remarks>
         [AllowAnonymous]
-        [HttpPut("{projectId}/validate/{token}")]
+        [HttpPut("{projectId}/validate/{token}", Name = "ValidateToken")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return new NotFoundObjectResult(projectId);
+                return NotFound(projectId);
             }
 
             var isTokenValid = false;
@@ -82,15 +85,15 @@ namespace BackendFramework.Controllers
             var status = new EmailInviteStatus(isTokenValid, isUserRegistered);
             if (isTokenValid && !isUserRegistered)
             {
-                return new OkObjectResult(status);
+                return Ok(status);
             }
             if (isTokenValid && isUserRegistered
                                   && !currentUser.ProjectRoles.ContainsKey(projectId)
                                   && await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
-                return new OkObjectResult(status);
+                return Ok(status);
             }
-            return new OkObjectResult(new EmailInviteStatus(false, false));
+            return Ok(new EmailInviteStatus(false, false));
         }
 
         /// <remarks>
@@ -98,9 +101,13 @@ namespace BackendFramework.Controllers
         /// </remarks>
         public class EmailInviteData
         {
+            [Required]
             public string EmailAddress { get; set; }
+            [Required]
             public string Message { get; set; }
+            [Required]
             public string ProjectId { get; set; }
+            [Required]
             public string Domain { get; set; }
 
             public EmailInviteData()
@@ -114,7 +121,9 @@ namespace BackendFramework.Controllers
 
         public class EmailInviteStatus
         {
+            [Required]
             public readonly bool IsTokenValid;
+            [Required]
             public readonly bool IsUserRegistered;
 
             public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)

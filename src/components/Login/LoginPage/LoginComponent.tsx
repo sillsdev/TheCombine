@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { openUserGuide, Path } from "browserHistory";

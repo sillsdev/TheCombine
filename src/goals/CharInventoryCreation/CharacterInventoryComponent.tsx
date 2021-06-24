@@ -7,9 +7,10 @@ import {
   DialogTitle,
   Grid,
 } from "@material-ui/core";
-import * as React from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { Project } from "api/models";
 import LoadingButton from "components/Buttons/LoadingButton";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
@@ -17,7 +18,6 @@ import CharacterList from "goals/CharInventoryCreation/components/CharacterList"
 import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { Goal } from "types/goals";
-import { Project } from "types/project";
 import theme from "types/theme";
 
 interface CharacterInventoryProps {

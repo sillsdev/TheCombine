@@ -6,13 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 
+import { Permission, Project, User } from "api/models";
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
-import { Project } from "types/project";
 import { RuntimeConfig } from "types/runtimeConfig";
-import { User } from "types/user";
 
 const customStyles = {
   content: {
@@ -99,7 +98,10 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     const currentUserId: string = getUserId();
     if (user.id !== currentUserId) {
       backend
-        .addUserRole([3, 2, 1], user)
+        .addUserRole(
+          [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
+          user.id
+        )
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);
           this.populateUsers();

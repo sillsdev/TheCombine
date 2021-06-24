@@ -4,7 +4,6 @@ import { getFrontierWords } from "backend";
 import Recorder from "components/Pronunciations/Recorder";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTable";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { Word } from "types/word";
 
 // Component state/props
 interface ReviewEntriesProps {
@@ -30,25 +29,12 @@ export default class ReviewEntriesComponent extends React.Component<
     super(props);
     this.state = { loaded: false };
     this.recorder = new Recorder();
-    getFrontierWords().then((frontier: Word[]) => {
-      this.updateLocalWords(frontier);
+    getFrontierWords().then((frontier) => {
+      this.props.updateAllWords(
+        frontier.map((w) => new ReviewEntriesWord(w, undefined, this.recorder))
+      );
       this.setState({ loaded: true });
     });
-  }
-
-  // Creates the local set of words from the frontier
-  private updateLocalWords(frontier: Word[]) {
-    let newWords: ReviewEntriesWord[] = [];
-    let currentWord: ReviewEntriesWord;
-
-    for (let word of frontier) {
-      // Create a new currentword
-      currentWord = new ReviewEntriesWord(word, undefined, this.recorder);
-
-      // Remove the trailing newlines + push to newWords
-      newWords.push(currentWord);
-    }
-    this.props.updateAllWords(newWords);
   }
 
   render() {

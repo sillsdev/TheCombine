@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -11,6 +12,7 @@ namespace BackendFramework.Models
 {
     public class Word
     {
+        [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -19,46 +21,60 @@ namespace BackendFramework.Models
         /// This Guid is important for Lift round-tripping with other applications and must remain stable through
         /// Word edits.
         /// </summary>
+        [Required]
         [BsonElement("guid")]
         public Guid Guid { get; set; }
 
+        [Required]
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("plural")]
         public string Plural { get; set; }
 
+        [Required]
         [BsonElement("senses")]
         public List<Sense> Senses { get; set; }
 
+        [Required]
         [BsonElement("audio")]
         public List<string> Audio { get; set; }
 
+        [Required]
         [BsonElement("created")]
         public string Created { get; set; }
 
+        [Required]
         [BsonElement("modified")]
         public string Modified { get; set; }
 
+        [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
 
+        [Required]
         [BsonElement("history")]
         public List<string> History { get; set; }
 
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("partOfSpeech")]
         public string PartOfSpeech { get; set; }
 
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
+        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("otherField")]
         public string OtherField { get; set; }
 
+        [Required]
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 
+        [Required]
         [BsonElement("note")]
         public Note Note { get; set; }
 
@@ -187,9 +203,11 @@ namespace BackendFramework.Models
     public class Note
     {
         /// <summary> The bcp-47 code for the language the note is written in. </summary>
+        [Required]
         public string Language { get; set; }
 
         /// <summary> The contents of the note. </summary>
+        [Required]
         public string Text { get; set; }
 
         public Note()
@@ -241,15 +259,19 @@ namespace BackendFramework.Models
         /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word
         /// edits.
         /// </summary>
+        [Required]
         [BsonElement("guid")]
         public Guid Guid { get; set; }
 
+        [Required]
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
+        [Required]
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
+        [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
@@ -311,9 +333,11 @@ namespace BackendFramework.Models
     public class Gloss
     {
         /// <summary> The bcp-47 code for the language the note is written in. </summary>
+        [Required]
         public string Language { get; set; }
 
         /// <summary> The gloss string. </summary>
+        [Required]
         public string Def { get; set; }
 
         public Gloss()
@@ -349,8 +373,11 @@ namespace BackendFramework.Models
 
     public class SemanticDomain
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Id { get; set; }
+        [Required]
         public string Description { get; set; }
 
         public SemanticDomain Clone()
@@ -389,8 +416,11 @@ namespace BackendFramework.Models
     /// <summary> Helper object that contains a file along with its name and path </summary>
     public class FileUpload
     {
+        [Required]
         public IFormFile? File { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string FilePath { get; set; }
 
         /// <summary> Models by ASP.NET Core POSTs must have a constructor with zero arguments. </summary>
@@ -408,7 +438,9 @@ namespace BackendFramework.Models
     /// </summary>
     public class MergeWords
     {
+        [Required]
         public Word Parent { get; set; }
+        [Required]
         public List<MergeSourceWord> Children { get; set; }
 
         public MergeWords()
@@ -421,7 +453,9 @@ namespace BackendFramework.Models
     /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
     public class MergeSourceWord
     {
+        [Required]
         public string SrcWordId;
+        [Required]
         public bool GetAudio;
 
         public MergeSourceWord()

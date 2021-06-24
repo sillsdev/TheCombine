@@ -1,5 +1,4 @@
 import { Button, Hidden } from "@material-ui/core";
-import React from "react";
 
 import history, { Path } from "browserHistory";
 import logo from "resources/CombineLogoV1White.png";

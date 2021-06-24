@@ -1,10 +1,9 @@
 import { Avatar, List, ListItem, ListItemText } from "@material-ui/core";
-import * as React from "react";
+import React from "react";
 
+import { Project, User } from "api/models";
 import { avatarSrc, getAllUsersInCurrentProject } from "backend";
-import { Project } from "types/project";
 import theme from "types/theme";
-import { User } from "types/user";
 
 interface UserProps {
   project: Project;

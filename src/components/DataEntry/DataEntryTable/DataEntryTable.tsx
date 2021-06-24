@@ -7,25 +7,22 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import * as Backend from "backend";
-import { AutoComplete } from "types/project";
-import DomainTree from "types/SemanticDomain";
-import theme from "types/theme";
 import {
+  AutocompleteSetting,
   Note,
   SemanticDomain,
   Sense,
-  simpleWord,
-  State,
   Word,
-} from "types/word";
+} from "api/models";
+import * as Backend from "backend";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
+import theme from "types/theme";
+import { newSense, simpleWord } from "types/word";
 
 interface DataEntryTableProps {
-  domain: DomainTree;
   semanticDomain: SemanticDomain;
   displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
   getWordsFromBackend: () => Promise<Word[]>;
@@ -78,12 +75,9 @@ export function addSenseToWord(
   gloss: string,
   language: string
 ): Word {
-  const updatedSenses: Sense[] = [...existingWord.senses];
-  const updatedWord: Word = { ...existingWord, senses: updatedSenses };
-  const newSense = new Sense(gloss, language, semanticDomain);
-  newSense.accessibility = State.Active;
-  updatedWord.senses.push(newSense);
-  return updatedWord;
+  const word: Word = { ...existingWord, senses: [...existingWord.senses] };
+  word.senses.push(newSense(gloss, language, semanticDomain));
+  return word;
 }
 
 /**
@@ -118,7 +112,7 @@ export class DataEntryTable extends React.Component<
 
   async getProjectSettings() {
     const proj = await Backend.getProject();
-    const suggestVerns = proj.autocompleteSetting === AutoComplete.On;
+    const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
     let analysisLang = "en";
     if (proj.analysisWritingSystems?.length > 0) {
       analysisLang = proj.analysisWritingSystems[0].bcp47;
@@ -146,21 +140,21 @@ export class DataEntryTable extends React.Component<
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
     wordToAdd.note.language = this.state.analysisLang;
-    const newWord = await Backend.createWord(wordToAdd);
-    if (newWord.id === "Duplicate") {
+    const addedWord = await Backend.createWord(wordToAdd);
+    if (addedWord.id === "Duplicate") {
       alert(
         this.props.translate("addWords.wordInDatabase") +
           `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
       );
       return;
     }
-    const wordId = await this.addAudiosToBackend(newWord.id, audioURLs);
-    const newWordWithAudio = await Backend.getWord(wordId);
+    const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
+    const wordWithAudio = await Backend.getWord(wordId);
     await this.updateExisting();
 
     const recentlyAddedWords = [...this.state.recentlyAddedWords];
     const newWordAccess: WordAccess = {
-      word: newWordWithAudio,
+      word: wordWithAudio,
       senseIndex: 0,
     };
     if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
@@ -282,8 +276,8 @@ export class DataEntryTable extends React.Component<
   async addAudioToRecentWord(oldWordId: string, audioFile: File) {
     this.defunctWord(oldWordId);
     await Backend.uploadAudio(oldWordId, audioFile).then(async (newWordId) => {
-      await Backend.getWord(newWordId).then(async (newWord) => {
-        this.replaceInDisplay(oldWordId, newWord);
+      await Backend.getWord(newWordId).then(async (w) => {
+        this.replaceInDisplay(oldWordId, w);
         await this.updateExisting();
       });
     });
@@ -292,8 +286,8 @@ export class DataEntryTable extends React.Component<
   async deleteAudioFromRecentWord(oldWordId: string, fileName: string) {
     this.defunctWord(oldWordId);
     await Backend.deleteAudio(oldWordId, fileName).then(async (newWordId) => {
-      await Backend.getWord(newWordId).then(async (newWord) => {
-        this.replaceInDisplay(oldWordId, newWord);
+      await Backend.getWord(newWordId).then(async (w) => {
+        this.replaceInDisplay(oldWordId, w);
         await this.updateExisting();
       });
     });
@@ -374,17 +368,15 @@ export class DataEntryTable extends React.Component<
       await this.updateVernacular(oldWord, newVern);
     } else {
       // This is a modification that has to be retracted and replaced with a new entry
-      const newWord: Word = {
-        ...simpleWord(newVern, oldSense.glosses[0].def),
-        id: "",
-      };
+      const word = simpleWord(newVern, oldSense.glosses[0].def);
+      word.id = "";
       await this.undoRecentEntry(entryIndex).then(async () => {
-        await this.addNewWord(newWord, [], entryIndex);
+        await this.addNewWord(word, [], entryIndex);
       });
     }
   }
 
-  async updateRecentEntryGloss(entryIndex: number, newGloss: string) {
+  async updateRecentEntryGloss(entryIndex: number, def: string) {
     const oldEntry = this.state.recentlyAddedWords[entryIndex];
     const oldWord = oldEntry.word;
     const senseIndex = oldEntry.senseIndex;
@@ -395,13 +387,13 @@ export class DataEntryTable extends React.Component<
       // The word can simply be updated as it stands
       const newSense: Sense = {
         ...oldSense,
-        glosses: [{ ...oldGloss, def: newGloss }],
+        glosses: [{ ...oldGloss, def }],
       };
       await this.updateSense(oldWord, senseIndex, newSense);
     } else {
       // This is a modification that has to be retracted and replaced with a new entry
       await this.undoRecentEntry(entryIndex).then(async (wordId) => {
-        await this.updateWordWithNewGloss(wordId, newGloss);
+        await this.updateWordWithNewGloss(wordId, def);
       });
     }
   }
@@ -411,9 +403,9 @@ export class DataEntryTable extends React.Component<
     const oldWord = oldEntry.word;
     const oldNote = oldWord.note;
     if (newText !== oldNote.text) {
-      const newNote: Note = { ...oldNote, text: newText };
-      const newWord: Word = { ...oldWord, note: newNote };
-      this.updateWordBackAndFrontSimple(newWord);
+      const updatedNote: Note = { ...oldNote, text: newText };
+      const updatedWord: Word = { ...oldWord, note: updatedNote };
+      this.updateWordBackAndFrontSimple(updatedWord);
     }
   }
 
@@ -426,8 +418,8 @@ export class DataEntryTable extends React.Component<
   // Update a vern in a word and replace every displayed instance of that word.
   async updateVernacular(word: Word, vernacular: string) {
     const updatedWord: Word = { ...word, vernacular };
-    await this.updateWordInBackend(updatedWord).then((newWord) =>
-      this.replaceInDisplay(word.id, newWord)
+    await this.updateWordInBackend(updatedWord).then((updatedWord) =>
+      this.replaceInDisplay(word.id, updatedWord)
     );
   }
 
@@ -440,9 +432,9 @@ export class DataEntryTable extends React.Component<
     const senses = [...word.senses];
     senses.splice(senseIndex, 1, updatedSense);
     const updatedWord: Word = { ...word, senses };
-    return await this.updateWordInBackend(updatedWord).then((newWord) => {
-      this.replaceInDisplay(word.id, newWord);
-      return newWord.id;
+    return await this.updateWordInBackend(updatedWord).then((w) => {
+      this.replaceInDisplay(word.id, w);
+      return w.id;
     });
   }
 
@@ -451,19 +443,15 @@ export class DataEntryTable extends React.Component<
     const senses = [...word.senses];
     senses.splice(senseIndex, 1);
     const updatedWord: Word = { ...word, senses };
-    return await this.updateWordInBackend(updatedWord).then((newWord) => {
-      this.replaceInDisplay(word.id, newWord, senseIndex);
-      return newWord.id;
+    return await this.updateWordInBackend(updatedWord).then((w) => {
+      this.replaceInDisplay(word.id, w, senseIndex);
+      return w.id;
     });
   }
 
   // Replace every displayed instance of a word.
   // If senseIndex is provided, that sense was removed.
-  replaceInDisplay(
-    oldWordId: string,
-    newWord: Word,
-    removedSenseIndex?: number
-  ) {
+  replaceInDisplay(oldWordId: string, word: Word, removedSenseIndex?: number) {
     const recentlyAddedWords = [...this.state.recentlyAddedWords];
     recentlyAddedWords.forEach((entry, index) => {
       if (entry.word.id === oldWordId) {
@@ -476,7 +464,7 @@ export class DataEntryTable extends React.Component<
         }
         const newEntry: WordAccess = {
           ...entry,
-          word: newWord,
+          word,
           senseIndex: newSenseIndex,
         };
         recentlyAddedWords.splice(index, 1, newEntry);
@@ -536,8 +524,8 @@ export class DataEntryTable extends React.Component<
                   key={wordAccess.word.id + "_" + wordAccess.senseIndex}
                   entry={wordAccess.word}
                   senseIndex={wordAccess.senseIndex}
-                  updateGloss={(newGloss: string) =>
-                    this.updateRecentEntryGloss(index, newGloss)
+                  updateGloss={(newDef: string) =>
+                    this.updateRecentEntryGloss(index, newDef)
                   }
                   updateNote={(newText: string) =>
                     this.updateRecentEntryNote(index, newText)

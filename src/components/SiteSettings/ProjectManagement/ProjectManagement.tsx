@@ -2,10 +2,10 @@ import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
+import { Project } from "api/models";
 import { getAllProjects } from "backend";
 import ExportProjectButton from "components/ProjectExport";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
-import { Project } from "types/project";
 import theme from "types/theme";
 
 interface ProjectManagementState {

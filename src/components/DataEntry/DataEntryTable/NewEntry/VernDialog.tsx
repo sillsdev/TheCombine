@@ -9,11 +9,11 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { Word } from "api/models";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
-import { Word } from "types/word";
 
 interface vernDialogProps {
   vernacularWords: Word[];
@@ -65,7 +65,7 @@ export function VernList(props: VernListProps) {
         <Translate id="addWords.selectEntry" />
       </Typography>
       <MenuList autoFocusItem>
-        {props.vernacularWords.map((word: Word) => (
+        {props.vernacularWords.map((word) => (
           <StyledMenuItem
             onClick={() => props.closeDialog(word.id)}
             key={word.id}
@@ -73,7 +73,7 @@ export function VernList(props: VernListProps) {
           >
             {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
             <div style={{ margin: theme.spacing(4) }}>
-              <SenseCell
+              <GlossCell
                 editable={false}
                 sortingByGloss={false}
                 value={new ReviewEntriesWord(word, props.analysisLang).senses}

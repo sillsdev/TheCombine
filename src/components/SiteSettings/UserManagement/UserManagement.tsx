@@ -6,8 +6,8 @@ import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 
+import { User } from "api/models";
 import { avatarSrc, deleteUser, getAllUsers } from "backend";
-import { User } from "types/user";
 import UserList from "components/SiteSettings/UserManagement/UserList";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 

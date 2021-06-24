@@ -49,11 +49,12 @@ A rapid word collection tool.
    2. [Configuring `aws-cli`](#configuring-aws-cli)
 5. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
-   2. [Running the Automated Tests](#running-the-automated-tests)
-   3. [Import Semantic Domains](#import-semantic-domains)
-   4. [Generate License Reports](#generate-license-reports)
-   5. [Set Project Version](#set-project-version)
-   6. [Inspect Database](#inspect-database)
+   2. [Using OpenAPI](#using-openapi)
+   3. [Running the Automated Tests](#running-the-automated-tests)
+   4. [Import Semantic Domains](#import-semantic-domains)
+   5. [Generate License Reports](#generate-license-reports)
+   6. [Set Project Version](#set-project-version)
+   7. [Inspect Database](#inspect-database)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Add a User to a Project](#add-a-user-to-a-project)
    2. [Backup _TheCombine_](#backup-thecombine)
@@ -132,6 +133,9 @@ A rapid word collection tool.
 
 8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
+
+Note, those starting development can skip the following sections related to production or deployment: 2. Docker, 4.
+Amazon Web Services.
 
 [chocolatey]: https://chocolatey.org/
 
@@ -300,9 +304,9 @@ scripts for _TheCombine_, you will need to install and configure the `aws-cli`, 
 
 To install `aws-cli` follow the instructions for your operating system:
 
+- [AWS CLI for Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
 - [AWS CLI for Linux](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
 - [AWS CLI for macOS](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html)
-- [AWS CLI for Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
 
 ### Configuring `aws-cli`
 
@@ -343,15 +347,18 @@ In the project directory, you can run:
 Installs the necessary packages and runs the app in the development mode.<br> Open
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br> You will also see any lint errors in the console.
-
 #### `npm run frontend`
 
 Runs only the front end of the app in the development mode.
 
+> Note: The frontend automatically recompiles if your make frontend edits. You will also see any lint errors in the
+> console.
+
 #### `npm run backend`
 
 Runs only the backend.
+
+> Note: If you make backend edits, the backend will _not_ recompile--you need to rerun `npm start` or `npm run backend`.
 
 #### `npm run database`
 
@@ -372,6 +379,27 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 #### `npm run analyze`
 
 Run after `npm run build` to analyze the contents build bundle chunks.
+
+### Using OpenAPI
+
+You need to have run `npm start` or `npm run backend` first.
+
+To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).<br>
+
+#### Regenerate OpenAPI bindings for frontend
+
+First, you must install the Java Runtime Environment (JRE) 8 or newer as mentioned in the
+[`openapi-generator` README](https://github.com/OpenAPITools/openapi-generator#13---download-jar).
+
+- For Windows: https://www.microsoft.com/openjdk
+- For Ubuntu: `sudo apt install default-jre`
+- For macOS: `brew install adoptopenjdk`
+
+After that, run the following script to regenerate the frontend OpenAPI bindings in place:
+
+```
+(venv) $ python scripts/generate_openapi.py
+```
 
 ### Running the Automated Tests
 
@@ -646,14 +674,21 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 ## Learn More
 
-### Backend & Database (C# + ASP<area>.NET + MongoDB)
+### Development Tools
+
+- [Git branching tutorial](https://learngitbranching.js.org)
+
+### Database (MongoDB)
+
+- [MongoDB](https://docs.mongodb.com/manual/introduction)
+- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
+
+### Backend (C# + ASP<area>.NET)
 
 - [C#](https://www.w3schools.com/cs/default.asp)
 - [Our style guide](docs/style_guide/c_sharp_style_guide.md)
 - [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
 - [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
-- [MongoDB](https://docs.mongodb.com/manual/introduction/) (database)
-- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
 
 ### Frontend (Typescript + React + Redux)
 

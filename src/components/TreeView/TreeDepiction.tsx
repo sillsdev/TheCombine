@@ -13,15 +13,15 @@ import {
   teeUpRight,
 } from "resources/tree";
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import SemanticDomainWithSubdomains from "types/SemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 
 const MAX_TILE_WIDTH = 150;
 const MIN_TILE_WIDTH = 75;
 
 interface TreeDepictionProps {
-  currentDomain: SemanticDomainWithSubdomains;
-  animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
+  currentDomain: TreeSemanticDomain;
+  animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
 interface TreeDepictionState {
@@ -77,8 +77,7 @@ export default class TreeDepiction extends React.Component<
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
-    let subdomains: SemanticDomainWithSubdomains[] = this.props.currentDomain
-      .subdomains;
+    let subdomains: TreeSemanticDomain[] = this.props.currentDomain.subdomains;
     if (subdomains.length > 1)
       return (
         <GridList

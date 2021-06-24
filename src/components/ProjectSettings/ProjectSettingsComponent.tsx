@@ -18,9 +18,8 @@ import {
   Language,
 } from "@material-ui/icons";
 
+import { AutocompleteSetting, Permission, Project } from "api/models";
 import * as backend from "backend";
-import { AutoComplete, Project } from "types/project";
-import { UserRole, Permission } from "types/userRole";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "components/ProjectExport";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
@@ -39,7 +38,7 @@ interface ProjectSettingsState {
   projectName?: string;
   imports?: boolean;
   editUsers?: boolean;
-  autocompleteSetting?: AutoComplete;
+  autocompleteSetting?: AutocompleteSetting;
   loading: boolean;
 }
 
@@ -57,14 +56,14 @@ export default class ProjectSettingsComponent extends React.Component<
   }
 
   private async getSettings() {
-    let allPermissions: UserRole[] = await backend.getUserRoles();
-    let currentRole: UserRole | undefined = allPermissions.find(
+    const allPermissions = await backend.getUserRoles();
+    const currentRole = allPermissions.find(
       (value) => value.projectId === this.props.project.id
     );
-    let settings: ProjectSettingsState = { ...this.state };
+    const settings: ProjectSettingsState = { ...this.state };
 
     if (currentRole !== undefined)
-      for (let role of currentRole.permissions) {
+      for (const role of currentRole.permissions) {
         if (role === Permission.ImportExport) {
           settings.projectName = this.props.project.name;
           settings.autocompleteSetting = this.props.project.autocompleteSetting;
@@ -153,9 +152,10 @@ export default class ProjectSettingsComponent extends React.Component<
                       }>
                     ) => {
                       this.props.project.autocompleteSetting = event.target
-                        .value as AutoComplete;
+                        .value as AutocompleteSetting;
                       this.setState({
-                        autocompleteSetting: event.target.value as AutoComplete,
+                        autocompleteSetting: event.target
+                          .value as AutocompleteSetting,
                       });
                       backend
                         .updateProject(this.props.project)

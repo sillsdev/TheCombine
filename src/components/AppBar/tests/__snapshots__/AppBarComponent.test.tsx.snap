@@ -20,7 +20,7 @@ Array [
     onTouchStart={[Function]}
     style={
       Object {
-        "background": "inherit",
+        "background": "#1976d2",
         "width": "min-content",
       }
     }
@@ -51,7 +51,7 @@ Array [
     onTouchStart={[Function]}
     style={
       Object {
-        "background": "#1976d2",
+        "background": "inherit",
         "width": "min-content",
       }
     }

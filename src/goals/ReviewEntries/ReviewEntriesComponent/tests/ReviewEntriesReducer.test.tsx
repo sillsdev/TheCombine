@@ -5,12 +5,13 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
+import { newSemanticDomain } from "types/word";
 
 const mockState = {
   ...defaultState,
   words: mockWords(),
 };
-const newWord: ReviewEntriesWord = {
+const reviewEntriesWord: ReviewEntriesWord = {
   ...new ReviewEntriesWord(),
   id: mockState.words[0].id,
   vernacular: "toadTOAD",
@@ -19,8 +20,8 @@ const newWord: ReviewEntriesWord = {
       guid: "1",
       glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
-        { name: "domain", id: "number" },
-        { name: "domain2", id: "number2" },
+        newSemanticDomain("number", "domain"),
+        newSemanticDomain("number2", "domain2"),
       ],
       deleted: false,
     },
@@ -35,8 +36,8 @@ const result: ReviewEntriesWord = {
       guid: "1",
       glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
-        { name: "domain", id: "number" },
-        { name: "domain2", id: "number2" },
+        newSemanticDomain("number", "domain"),
+        newSemanticDomain("number2", "domain2"),
       ],
       deleted: false,
     },
@@ -64,7 +65,7 @@ describe("ReviewEntriesReducer", () => {
       reviewEntriesReducer(mockState, {
         type: ReviewEntriesActionTypes.UpdateWord,
         oldId: mockWords()[0].id,
-        newWord: { ...newWord, id: result.id },
+        updatedWord: { ...reviewEntriesWord, id: result.id },
       })
     ).toEqual({ ...mockState, words: [result, mockWords()[1]] });
   });

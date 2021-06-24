@@ -69,7 +69,7 @@ namespace Backend.Tests.Controllers
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            var getResult = _userEditController.Get(_projId).Result;
+            var getResult = _userEditController.GetProjectUserEdits(_projId).Result;
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
             var edits = ((ObjectResult)getResult).Value as List<UserEdit>;
@@ -85,7 +85,7 @@ namespace Backend.Tests.Controllers
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            var action = _userEditController.Get(_projId, userEdit.Id).Result;
+            var action = _userEditController.GetUserEdit(_projId, userEdit.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUserEdit = ((ObjectResult)action).Value as UserEdit;
@@ -96,8 +96,8 @@ namespace Backend.Tests.Controllers
         public void TestCreateUserEdit()
         {
             var userEdit = new UserEdit { ProjectId = _projId };
-            var withUser = (WithUser)((ObjectResult)_userEditController.Post(_projId).Result).Value;
-            userEdit.Id = withUser.UpdatedUser.WorkedProjects[_projId];
+            var updatedUser = (User)((ObjectResult)_userEditController.CreateUserEdit(_projId).Result).Value;
+            userEdit.Id = updatedUser.WorkedProjects[_projId];
             Assert.Contains(userEdit, _userEditRepo.GetAllUserEdits(_projId).Result);
         }
 
@@ -111,7 +111,7 @@ namespace Backend.Tests.Controllers
             var updatedUserEdit = userEdit.Clone();
             updatedUserEdit.Edits.Add(newEdit);
 
-            _ = _userEditController.Post(_projId, userEdit.Id, newEdit).Result;
+            _ = _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, newEdit).Result;
 
             var allUserEdits = _userEditRepo.GetAllUserEdits(_projId).Result;
             Assert.Contains(updatedUserEdit, allUserEdits);
@@ -138,7 +138,7 @@ namespace Backend.Tests.Controllers
 
             // Create and put wrapper object.
             var stepWrapperObj = new UserEditStepWrapper(modGoalIndex, stringStep);
-            _ = _userEditController.Put(_projId, origUserEdit.Id, stepWrapperObj);
+            _ = _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should have increased by 1.
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
@@ -158,7 +158,7 @@ namespace Backend.Tests.Controllers
 
             // Create and put wrapper object.
             stepWrapperObj = new UserEditStepWrapper(modGoalIndex, modStringStep, modStepIndex);
-            _ = _userEditController.Put(_projId, origUserEdit.Id, stepWrapperObj);
+            _ = _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should not have further increased.
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
@@ -179,21 +179,7 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(1));
 
-            _ = _userEditController.Delete(_projId, origUserEdit.Id).Result;
-
-            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
-        }
-
-        [Test]
-        public void TestDeleteAllUserEdits()
-        {
-            _userEditRepo.Create(RandomUserEdit());
-            _userEditRepo.Create(RandomUserEdit());
-            _userEditRepo.Create(RandomUserEdit());
-
-            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(3));
-
-            _ = _userEditController.Delete(_projId).Result;
+            _ = _userEditController.DeleteUserEdit(_projId, origUserEdit.Id).Result;
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
         }
@@ -201,7 +187,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetMissingUserEdit()
         {
-            var action = _userEditController.Get(_projId, "INVALID_USER_EDIT_ID").Result;
+            var action = _userEditController.GetUserEdit(_projId, "INVALID_USER_EDIT_ID").Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(action);
         }
     }
