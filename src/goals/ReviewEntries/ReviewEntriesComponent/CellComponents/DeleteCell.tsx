@@ -1,23 +1,29 @@
-import { IconButton } from "@material-ui/core";
-import { Delete, RestoreFromTrash } from "@material-ui/icons";
+import { Chip, IconButton } from "@material-ui/core";
+import { Add, Delete, RestoreFromTrash } from "@material-ui/icons";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as backend from "backend";
 import DeleteDialog from "components/Buttons/DeleteDialog";
-import AlignedList, {
-  SPACER,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
+import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
+import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
+  // If delete is defined, this is being used for senses.
+  // Otherwise, it is for deleting a whole entry.
   delete?: (deleteIndex: string) => void;
 }
 
-export default function DeleteCell(props: DeleteCellProps) {
+export default function DeleteCell(
+  props: DeleteCellProps & FieldParameterStandard
+) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const words = useSelector(
     (state: StoreState) => state.reviewEntriesState.words
@@ -27,12 +33,7 @@ export default function DeleteCell(props: DeleteCellProps) {
   async function deleteFrontierWord() {
     const wordId = props.rowData.id;
     await backend.deleteFrontierWord(wordId);
-    const updatedWords: ReviewEntriesWord[] = [];
-    for (const word of words) {
-      if (word.id !== wordId) {
-        updatedWords.push(word);
-      }
-    }
+    const updatedWords = words.filter((w) => w.id !== wordId);
     dispatch(updateAllWords(updatedWords));
     handleClose();
   }
@@ -44,23 +45,31 @@ export default function DeleteCell(props: DeleteCellProps) {
     setDialogOpen(false);
   }
 
-  return props.delete !== undefined ? (
+  function addSense() {
+    const senses = [...props.rowData.senses, new ReviewEntriesSense()];
+    return (
+      <Chip
+        label={<Add />}
+        onClick={() =>
+          props.onRowDataChange &&
+          props.onRowDataChange({ ...props.rowData, senses })
+        }
+      />
+    );
+  }
+
+  return props.delete ? (
     <AlignedList
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
       contents={props.rowData.senses.map((value) => (
         <React.Fragment>
-          <IconButton
-            size="small"
-            onClick={() => {
-              props.delete!(value.guid);
-            }}
-          >
+          <IconButton size="small" onClick={() => props.delete!(value.guid)}>
             {value.deleted ? <RestoreFromTrash /> : <Delete />}
           </IconButton>
         </React.Fragment>
       ))}
-      bottomCell={SPACER}
+      bottomCell={addSense()}
     />
   ) : (
     <React.Fragment>

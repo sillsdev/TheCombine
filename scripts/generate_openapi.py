@@ -8,6 +8,7 @@ Requirements:
 """
 import os
 from pathlib import Path
+import shutil
 from typing import List
 
 EXIT_SUCCESS = 0
@@ -25,6 +26,8 @@ def main() -> None:
     project_dir = Path(__file__).resolve().parent.parent
     os.chdir(project_dir)
     output_dir = project_dir / "src" / "api"
+    print(f"Cleaning {output_dir}")
+    shutil.rmtree(output_dir, ignore_errors=True)
     execute(
         [
             "npx",

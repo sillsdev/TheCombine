@@ -1,6 +1,6 @@
 import { Chip, Grid } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 export const SPACER = "spacer";
 interface AlignedListProps {

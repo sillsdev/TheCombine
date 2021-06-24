@@ -1,5 +1,3 @@
-import React from "react";
-
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 
