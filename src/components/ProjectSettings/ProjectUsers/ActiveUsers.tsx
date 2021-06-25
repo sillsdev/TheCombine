@@ -15,7 +15,6 @@ import { avatarSrc, getAllUsersInCurrentProject } from "backend";
 import theme from "types/theme";
 
 enum UserOrder {
-  None,
   Username,
   Name,
   Email,
@@ -37,7 +36,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     this.state = {
       projUsers: [],
       userAvatar: {},
-      userOrder: UserOrder.None,
+      userOrder: UserOrder.Username,
     };
   }
 
@@ -70,19 +69,16 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   private getSortedUsers(): User[] {
     const users = this.state.projUsers as User[];
 
-    if (this.state.userOrder === UserOrder.None) {
-      return users;
-    }
-
-    // Need to make a copy of the users state because sort()
+    // Need to make a copy of the "projUser" field in the state because sort()
     // mutates
     return users.slice(0).sort((a: User, b: User) => {
-      if (this.state.userOrder === UserOrder.Email) {
-        return a.email.localeCompare(b.email);
-      } else if (this.state.userOrder === UserOrder.Name) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return a.username.localeCompare(b.username);
+      switch (this.state.userOrder) {
+        case UserOrder.Email:
+          return a.email.localeCompare(b.email);
+        case UserOrder.Name:
+          return a.name.localeCompare(b.name);
+        default:
+          return a.username.localeCompare(b.username);
       }
     });
   }
@@ -94,13 +90,13 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           <InputLabel id="sorting-order-select">Sort by:</InputLabel>
           <Select
             labelId="sorting-order-select"
+            defaultValue={UserOrder.Username}
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
               this.setState({
                 userOrder: event.target.value as UserOrder,
               });
             }}
           >
-            <MenuItem value={UserOrder.None}>Default</MenuItem>
             <MenuItem value={UserOrder.Email}>Email</MenuItem>
             <MenuItem value={UserOrder.Name}>Name</MenuItem>
             <MenuItem value={UserOrder.Username}>Username</MenuItem>
