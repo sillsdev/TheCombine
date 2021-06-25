@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import LoadingButton from "components/Buttons/LoadingButton";

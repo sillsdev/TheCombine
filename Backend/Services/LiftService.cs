@@ -32,7 +32,7 @@ namespace BackendFramework.Services
         protected override void InsertPronunciationIfNeeded(
             LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Any())
+            if (entry.Pronunciations.FirstOrDefault() is not null && entry.Pronunciations.First().Forms.Any())
             {
                 foreach (var phonetic in entry.Pronunciations)
                 {
@@ -143,7 +143,7 @@ namespace BackendFramework.Services
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.Remove(userId, out var filePath);
-            if (removeSuccessful)
+            if (removeSuccessful && filePath is not null)
             {
                 File.Delete(filePath);
             }
@@ -343,7 +343,12 @@ namespace BackendFramework.Services
             // Compress everything.
             var destinationFileName = Path.Combine(exportDir,
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
-            ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
+            var zipParentDir = Path.GetDirectoryName(zipDir);
+            if (zipParentDir is null)
+            {
+                throw new Exception($"Unable to find parent dir of: {zipDir}");
+            }
+            ZipFile.CreateFromDirectory(zipParentDir, destinationFileName);
 
             // Clean up the temporary folder structure that was compressed.
             Directory.Delete(liftExportDir, true);

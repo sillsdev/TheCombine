@@ -232,7 +232,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
             var projectIdWithName = await _projRepo.GetProjectIdByName(projectName);
-            return Ok(projectIdWithName != null);
+            return Ok(projectIdWithName is not null);
         }
     }
 }

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet: [3.1.x]
+        dotnet: ["5.0.x"]
     steps:
       - uses: actions/checkout@v2
       - name: Setup dotnet
@@ -36,3 +36,16 @@ jobs:
       # Fmt.
       - run: dotnet tool install -g dotnet-format
       - run: dotnet-format --check
+  CodeQL_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: csharp
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
