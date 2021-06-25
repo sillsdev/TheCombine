@@ -1,6 +1,5 @@
 import { Grid, Tooltip, Typography } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
-import React from "react";
 import { Translate } from "react-localize-redux";
 
 import theme from "types/theme";

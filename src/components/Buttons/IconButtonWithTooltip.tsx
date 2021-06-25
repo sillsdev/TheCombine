@@ -1,5 +1,4 @@
 import { Tooltip, IconButton } from "@material-ui/core";
-import React from "react";
 import { Translate } from "react-localize-redux";
 
 interface IconButtonWithTooltipProps {

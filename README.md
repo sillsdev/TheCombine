@@ -81,7 +81,7 @@ A rapid word collection tool.
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
        the appropriate Node.js version.
-   - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+   - [.NET Core SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
      - On Ubuntu 20.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
@@ -674,14 +674,21 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 ## Learn More
 
-### Backend & Database (C# + ASP<area>.NET + MongoDB)
+### Development Tools
+
+- [Git branching tutorial](https://learngitbranching.js.org)
+
+### Database (MongoDB)
+
+- [MongoDB](https://docs.mongodb.com/manual/introduction)
+- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
+
+### Backend (C# + ASP<area>.NET)
 
 - [C#](https://www.w3schools.com/cs/default.asp)
 - [Our style guide](docs/style_guide/c_sharp_style_guide.md)
-- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
+- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-5.0)
 - [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
-- [MongoDB](https://docs.mongodb.com/manual/introduction/) (database)
-- [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
 
 ### Frontend (Typescript + React + Redux)
 
