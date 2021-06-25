@@ -79,6 +79,8 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           return a.name.localeCompare(b.name);
         case UserOrder.Username:
           return a.username.localeCompare(b.username);
+        default:
+          throw new Error();
       }
     });
   }
