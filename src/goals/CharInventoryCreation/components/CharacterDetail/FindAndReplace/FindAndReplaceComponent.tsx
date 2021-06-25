@@ -103,7 +103,7 @@ export class FindAndReplace extends React.Component<
               this.state.replaceValue
             );
           }}
-        ></CharacterReplaceDialog>
+        />
       </React.Fragment>
     );
   }
