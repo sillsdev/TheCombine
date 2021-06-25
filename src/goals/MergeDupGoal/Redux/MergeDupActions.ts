@@ -148,10 +148,10 @@ function getMergeWords(
 
     // Set sense and duplicate senses.
     Object.values(word.sensesGuids).forEach((guids) => {
-      // Set the first sense to be merged as State.Sense.
+      // Set the first sense to be merged as State.Active.
       const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.order];
-      mainSense.accessibility = State.Sense;
+      mainSense.accessibility = State.Active;
 
       // Merge the rest as duplicates.
       const dups = guids.slice(1).map((guid) => data.senses[guid]);
@@ -174,13 +174,13 @@ function getMergeWords(
     });
 
     // Don't return empty merges: when the only child is the parent word
-    // and has the same number of senses as parent (all with State.Sense).
+    // and has the same number of senses as parent (all with State.Active).
     if (Object.values(senses).length === 1) {
       const onlyChild = Object.values(senses)[0];
       if (
         onlyChild[0].srcWordId === wordId &&
         onlyChild.length === data.words[wordId].senses.length &&
-        !onlyChild.find((s) => s.accessibility !== State.Sense)
+        !onlyChild.find((s) => s.accessibility !== State.Active)
       ) {
         return undefined;
       }
@@ -193,10 +193,7 @@ function getMergeWords(
     }
     const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
       sList.forEach((sense) => {
-        if (
-          sense.accessibility === State.Sense ||
-          sense.accessibility === State.Active
-        ) {
+        if (sense.accessibility === State.Active) {
           parent.senses.push({
             guid: sense.guid,
             glosses: sense.glosses,

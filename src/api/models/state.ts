@@ -20,7 +20,6 @@
 export enum State {
   Active = "Active",
   Deleted = "Deleted",
-  Sense = "Sense",
   Duplicate = "Duplicate",
   Separate = "Separate",
 }

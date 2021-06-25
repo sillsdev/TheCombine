@@ -40,7 +40,7 @@ namespace Backend.Tests.Mocks
         public Task<Project?> Create(Project project)
         {
             // Confirm that project name isn't empty or taken
-            if (string.IsNullOrEmpty(project.Name) || GetProjectIdByName(project.Name).Result != null)
+            if (string.IsNullOrEmpty(project.Name) || GetProjectIdByName(project.Name).Result is not null)
             {
                 return Task.FromResult<Project?>(null);
             }
