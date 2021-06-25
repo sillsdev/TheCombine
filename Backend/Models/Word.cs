@@ -451,12 +451,15 @@ namespace BackendFramework.Models
     }
 
     /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
+    /// <remarks>
+    /// This is used in a [FromBody] serializer, so its attributes must be defined as properties.
+    /// </remarks>
     public class MergeSourceWord
     {
         [Required]
-        public string SrcWordId;
+        public string SrcWordId { get; set; }
         [Required]
-        public bool GetAudio;
+        public bool GetAudio { get; set; }
 
         public MergeSourceWord()
         {

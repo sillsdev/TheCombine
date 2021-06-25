@@ -11,7 +11,7 @@ namespace Backend.Tests
     {
         /// <summary> Path to Assets directory from debugging folder </summary>
         public static readonly string AssetsDir = Path.Combine(Directory.GetParent(Directory.GetParent(
-            Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
+            Directory.GetParent(Environment.CurrentDirectory)!.ToString())!.ToString())!.ToString(), "Assets");
 
         public static string RandString(int length)
         {
