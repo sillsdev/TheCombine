@@ -1,11 +1,15 @@
 import {
   Avatar,
   Button,
+  FormControl,
   Grid,
   Input,
+  InputLabel,
   List,
   ListItem,
   ListItemText,
+  MenuItem,
+  Select,
   Typography,
 } from "@material-ui/core";
 import { DeleteForever, VpnKey } from "@material-ui/icons";
@@ -20,6 +24,13 @@ import { User } from "api/models";
 import { getUserId } from "backend/localStorage";
 import theme from "types/theme";
 
+enum UserOrder {
+  None,
+  Username,
+  Name,
+  Email,
+}
+
 interface UserListProps {
   allUsers: User[];
   userAvatar: { [key: string]: string };
@@ -31,6 +42,7 @@ interface UserListState {
   filterInput: string;
   filteredUsers: User[];
   prevFilterInput?: string;
+  userOrder: UserOrder;
 }
 
 class UserList extends React.Component<
@@ -44,6 +56,7 @@ class UserList extends React.Component<
       currentUserId: getUserId(),
       filterInput: "",
       filteredUsers: [],
+      userOrder: UserOrder.None,
     };
   }
   componentDidUpdate() {
@@ -77,6 +90,26 @@ class UserList extends React.Component<
     });
   }
 
+  private getSortedUsers(): User[] {
+    const users = this.state.filteredUsers as User[];
+
+    if (this.state.userOrder === UserOrder.None) {
+      return users;
+    }
+
+    // Need to make a copy of the users state because sort()
+    // mutates
+    return users.slice(0).sort((a: User, b: User) => {
+      if (this.state.userOrder === UserOrder.Email) {
+        return a.email.localeCompare(b.email);
+      } else if (this.state.userOrder === UserOrder.Name) {
+        return a.name.localeCompare(b.name);
+      } else {
+        return a.username.localeCompare(b.username);
+      }
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -84,14 +117,31 @@ class UserList extends React.Component<
           <Typography>
             <Translate id="projectSettings.invite.searchTitle" />
           </Typography>
-          <Input
-            type="text"
-            onChange={(e) => this.handleChange(e.target.value)}
-            placeholder="Search..."
-          />
-
+          <Grid container alignItems="flex-end">
+            <Input
+              type="text"
+              onChange={(e) => this.handleChange(e.target.value)}
+              placeholder="Search..."
+            />
+            <FormControl style={{ minWidth: 100 }}>
+              <InputLabel id="sorting-order-select">Sort by:</InputLabel>
+              <Select
+                labelId="sorting-order-select"
+                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                  this.setState({
+                    userOrder: event.target.value as UserOrder,
+                  });
+                }}
+              >
+                <MenuItem value={UserOrder.None}>Default</MenuItem>
+                <MenuItem value={UserOrder.Email}>Email</MenuItem>
+                <MenuItem value={UserOrder.Name}>Name</MenuItem>
+                <MenuItem value={UserOrder.Username}>Username</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
           <List>
-            {this.state.filteredUsers.map((user) => (
+            {this.getSortedUsers().map((user) => (
               <ListItem key={user.id}>
                 <Avatar
                   alt="User Avatar"
