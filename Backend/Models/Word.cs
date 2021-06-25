@@ -465,13 +465,12 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> Information about the state of the word in that database used for merging </summary>
+    /// <summary> Information about the state of the word or sense used for merging. </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum State
     {
         Active,
         Deleted,
-        Sense,
         Duplicate,
         Separate
     }
