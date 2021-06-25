@@ -134,7 +134,7 @@ namespace BackendFramework.Controllers
             }
 
             var newWord = await _wordService.Delete(projectId, wordId, fileName);
-            if (newWord != null)
+            if (newWord is not null)
             {
                 return Ok(newWord.Id);
             }
