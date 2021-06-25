@@ -100,7 +100,7 @@ class UserList extends React.Component<
           return a.email.localeCompare(b.email);
         case UserOrder.Name:
           return a.name.localeCompare(b.name);
-        default:
+        case UserOrder.Username:
           return a.username.localeCompare(b.username);
       }
     });
