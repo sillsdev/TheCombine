@@ -54,6 +54,7 @@ namespace BackendFramework.Services
         {
             var jsonToken = GetJwt(request);
             var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
+            // If unable to parse permissions, return empty permissions.
             if (userRoleInfo is null)
             {
                 return new List<ProjectPermissions>();
