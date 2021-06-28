@@ -10,7 +10,6 @@ import { Translate } from "react-localize-redux";
 
 interface ReplaceDialogProps {
   open: boolean;
-  textId?: string;
   dialogFindValue: string;
   dialogReplaceValue: string;
   handleAccept: () => void;
