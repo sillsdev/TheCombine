@@ -78,9 +78,7 @@ export class FindAndReplace extends React.Component<
         <Button
           color="primary"
           onClick={() => {
-            this.setState(() => ({
-              warningDialogOpen: true,
-            }));
+            this.setState({ warningDialogOpen: true });
           }}
         >
           {this.props.translate("charInventory.characterSet.apply")}
@@ -90,14 +88,10 @@ export class FindAndReplace extends React.Component<
           dialogFindValue={this.state.findValue}
           dialogReplaceValue={this.state.replaceValue}
           handleCancel={() => {
-            this.setState(() => ({
-              warningDialogOpen: false,
-            }));
+            this.setState({ warningDialogOpen: false });
           }}
           handleAccept={() => {
-            this.setState(() => ({
-              warningDialogOpen: false,
-            }));
+            this.setState({ warningDialogOpen: false });
             this.props.findAndReplace(
               this.state.findValue,
               this.state.replaceValue
