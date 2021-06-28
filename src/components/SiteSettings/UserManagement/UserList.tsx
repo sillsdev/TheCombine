@@ -124,7 +124,7 @@ class UserList extends React.Component<
             />
             <FormControl style={{ minWidth: 100 }}>
               <InputLabel id="sorting-order-select">
-                <Translate id="charInventory.sortBy"></Translate>
+                <Translate id="charInventory.sortBy" />
               </InputLabel>
               <Select
                 labelId="sorting-order-select"
