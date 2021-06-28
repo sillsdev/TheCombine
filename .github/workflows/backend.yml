@@ -36,6 +36,7 @@ jobs:
       # Fmt.
       - run: dotnet tool install -g dotnet-format
       - run: dotnet-format --check
+
   CodeQL_build:
     runs-on: ubuntu-latest
     steps:
@@ -49,3 +50,19 @@ jobs:
         uses: github/codeql-action/autobuild@v1
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+
+  docker_build:
+    runs-on: ubuntu-latest
+    steps:
+      # For subfolders, currently a full checkout is required.
+      # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: Backend
+          push: false
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
