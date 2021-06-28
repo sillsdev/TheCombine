@@ -8,6 +8,7 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
+import { Translate } from "react-localize-redux";
 import React from "react";
 
 import { Project, User } from "api/models";
@@ -89,7 +90,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     return (
       <React.Fragment>
         <FormControl style={{ minWidth: 100 }}>
-          <InputLabel id="sorting-order-select">Sort by:</InputLabel>
+          <InputLabel id="sorting-order-select">
+            <Translate id="charInventory.sortBy"></Translate>
+          </InputLabel>
           <Select
             labelId="sorting-order-select"
             defaultValue={UserOrder.Username}
@@ -99,9 +102,15 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               });
             }}
           >
-            <MenuItem value={UserOrder.Email}>Email</MenuItem>
-            <MenuItem value={UserOrder.Name}>Name</MenuItem>
-            <MenuItem value={UserOrder.Username}>Username</MenuItem>
+            <MenuItem value={UserOrder.Email}>
+              <Translate id="login.email" />
+            </MenuItem>
+            <MenuItem value={UserOrder.Name}>
+              <Translate id="projectSettings.language.name" />
+            </MenuItem>
+            <MenuItem value={UserOrder.Username}>
+              <Translate id="login.username" />
+            </MenuItem>
           </Select>
         </FormControl>
         <List>

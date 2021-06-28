@@ -119,10 +119,16 @@ class UserList extends React.Component<
             <Input
               type="text"
               onChange={(e) => this.handleChange(e.target.value)}
-              placeholder="Search..."
+              placeholder={
+                this.props.translate(
+                  "projectSettings.invite.searchPlaceholder"
+                ) as string
+              }
             />
             <FormControl style={{ minWidth: 100 }}>
-              <InputLabel id="sorting-order-select">Sort by:</InputLabel>
+              <InputLabel id="sorting-order-select">
+                <Translate id="charInventory.sortBy"></Translate>
+              </InputLabel>
               <Select
                 labelId="sorting-order-select"
                 defaultValue={UserOrder.Username}
@@ -132,9 +138,15 @@ class UserList extends React.Component<
                   });
                 }}
               >
-                <MenuItem value={UserOrder.Email}>Email</MenuItem>
-                <MenuItem value={UserOrder.Name}>Name</MenuItem>
-                <MenuItem value={UserOrder.Username}>Username</MenuItem>
+                <MenuItem value={UserOrder.Email}>
+                  <Translate id="login.email" />
+                </MenuItem>
+                <MenuItem value={UserOrder.Name}>
+                  <Translate id="projectSettings.language.name" />
+                </MenuItem>
+                <MenuItem value={UserOrder.Username}>
+                  <Translate id="login.username" />
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
