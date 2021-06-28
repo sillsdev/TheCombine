@@ -86,33 +86,6 @@ export function asyncRegister(
   };
 }
 
-export function asyncRegisterForEmailInvite(
-  name: string,
-  username: string,
-  email: string,
-  password: string
-) {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(registerAttempt(username));
-    // Create new user
-    const user = newUser(name, username, password);
-    user.email = email;
-    await backend
-      .addUser(user)
-      .then((_res) => {
-        dispatch(registerSuccess(username));
-        setTimeout(() => {
-          dispatch(reset());
-        }, 1000);
-      })
-      .catch((err) => {
-        dispatch(
-          registerFailure((err.response && err.response.status) || err.message)
-        );
-      });
-  };
-}
-
 export function registerAttempt(username: string): UserAction {
   return {
     type: LoginActionTypes.REGISTER_ATTEMPT,
