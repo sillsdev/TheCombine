@@ -18,7 +18,6 @@ import theme from "types/theme";
 enum UserOrder {
   Username,
   Name,
-  Email,
 }
 
 interface UserProps {
@@ -74,8 +73,6 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     // mutates
     return users.slice(0).sort((a: User, b: User) => {
       switch (this.state.userOrder) {
-        case UserOrder.Email:
-          return a.email.localeCompare(b.email);
         case UserOrder.Name:
           return a.name.localeCompare(b.name);
         case UserOrder.Username:
@@ -102,9 +99,6 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               });
             }}
           >
-            <MenuItem value={UserOrder.Email}>
-              <Translate id="login.email" />
-            </MenuItem>
             <MenuItem value={UserOrder.Name}>
               <Translate id="projectSettings.language.name" />
             </MenuItem>
