@@ -68,7 +68,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   }
 
   private getSortedUsers() {
-    const users = this.state.projUsers as User[];
+    const users = this.state.projUsers;
 
     // Need to make a copy of the "projUser" field in the state because sort()
     // mutates

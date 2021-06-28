@@ -90,7 +90,7 @@ class UserList extends React.Component<
   }
 
   private getSortedUsers() {
-    const users = this.state.filteredUsers as User[];
+    const users = this.state.filteredUsers;
 
     // Need to make a copy of the "users" field in the state because sort()
     // mutates
