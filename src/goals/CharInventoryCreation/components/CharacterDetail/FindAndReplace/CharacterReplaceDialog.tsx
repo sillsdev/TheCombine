@@ -33,8 +33,10 @@ export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Replace all occurrences of "<strong>{props.dialogFindValue}</strong>"
-          with "<strong>{props.dialogReplaceValue}</strong>" ?
+          <Translate id={"charInventory.characterSet.replaceAll"} />: "
+          <strong>{props.dialogFindValue}</strong>"<br />
+          <Translate id={"charInventory.characterSet.replaceWith"} />: "
+          <strong>{props.dialogReplaceValue}</strong>" ?
         </DialogContentText>
       </DialogContent>
       <DialogActions>

@@ -67,7 +67,7 @@ export class FindAndReplace extends React.Component<
           inputProps={{ maxLength: 100 }}
         />
         <TextField
-          label={this.props.translate("charInventory.characterSet.replace")}
+          label={this.props.translate("charInventory.characterSet.replaceWith")}
           value={this.state.replaceValue}
           onChange={(e) => this.updateField(e, "replaceValue")}
           variant="outlined"
