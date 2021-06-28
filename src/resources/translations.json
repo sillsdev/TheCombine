@@ -613,7 +613,13 @@
       "advanced": ["Advanced", "Avanzado", "Avancé"],
       "occurrences": ["occurrences", "ocurrencias", "occurrences"],
       "find": ["Find", "Encontrar", "Rechercher"],
-      "replace": ["Replace with", "Reemplazar con", "Remplacer avec"],
+      "replace": ["Replace", "Replace", "Replace"],
+      "replaceWith": ["Replace with", "Reemplazar con", "Remplacer avec"],
+      "replaceAll": [
+        "Replace all occurences of",
+        "Replace all occurences of",
+        "Replace all occurences of"
+      ],
       "findAndReplace": ["Find & Replace", "Find & Replace", "Find & Replace"],
       "apply": ["apply", "aplicar", "appliquer"],
       "charDetails": [
