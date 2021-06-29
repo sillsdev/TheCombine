@@ -1,6 +1,7 @@
 import { Button, TextField, Typography } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import CharacterReplaceDialog from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 
 interface FindAndReplaceProps {
   initialFindValue: string;
@@ -11,6 +12,7 @@ interface FindAndReplaceProps {
 interface FindAndReplaceState {
   findValue: string;
   replaceValue: string;
+  warningDialogOpen: boolean;
 }
 
 export class FindAndReplace extends React.Component<
@@ -20,6 +22,7 @@ export class FindAndReplace extends React.Component<
   constructor(props: FindAndReplaceProps & LocalizeContextProps) {
     super(props);
     this.state = {
+      warningDialogOpen: false,
       findValue: props.initialFindValue,
       replaceValue: "",
     };
@@ -64,7 +67,7 @@ export class FindAndReplace extends React.Component<
           inputProps={{ maxLength: 100 }}
         />
         <TextField
-          label={this.props.translate("charInventory.characterSet.replace")}
+          label={this.props.translate("charInventory.characterSet.replaceWith")}
           value={this.state.replaceValue}
           onChange={(e) => this.updateField(e, "replaceValue")}
           variant="outlined"
@@ -74,15 +77,27 @@ export class FindAndReplace extends React.Component<
         />
         <Button
           color="primary"
-          onClick={() =>
-            this.props.findAndReplace(
-              this.state.findValue,
-              this.state.replaceValue
-            )
-          }
+          onClick={() => {
+            this.setState({ warningDialogOpen: true });
+          }}
         >
           {this.props.translate("charInventory.characterSet.apply")}
         </Button>
+        <CharacterReplaceDialog
+          open={this.state.warningDialogOpen}
+          dialogFindValue={this.state.findValue}
+          dialogReplaceValue={this.state.replaceValue}
+          handleCancel={() => {
+            this.setState({ warningDialogOpen: false });
+          }}
+          handleAccept={() => {
+            this.setState({ warningDialogOpen: false });
+            this.props.findAndReplace(
+              this.state.findValue,
+              this.state.replaceValue
+            );
+          }}
+        />
       </React.Fragment>
     );
   }
