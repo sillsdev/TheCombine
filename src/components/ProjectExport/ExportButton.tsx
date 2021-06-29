@@ -9,13 +9,13 @@ import { asyncExportProject } from "components/ProjectExport/Redux/ExportProject
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
 
-interface ExportProjectProps {
+interface ExportButtonProps {
   projectId: string;
   buttonProps?: ButtonProps;
 }
 
 /** A button for exporting project to Lift file */
-export default function ExportProjectButton(props: ExportProjectProps) {
+export default function ExportButton(props: ExportButtonProps) {
   const dispatch = useDispatch();
   function exportProj() {
     dispatch(asyncExportProject(props.projectId));
