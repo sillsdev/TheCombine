@@ -9,7 +9,7 @@
 ##############################################################
 
 - name: Setup TheCombine to run under Kubernetes
-  hosts: server,qa
+  hosts: server,qa,nuc
   gather_facts: yes
   become_user: "{{ k8s_user }}"
 
