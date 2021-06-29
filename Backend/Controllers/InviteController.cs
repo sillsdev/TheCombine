@@ -119,12 +119,15 @@ namespace BackendFramework.Controllers
             }
         }
 
+        /// <remarks>
+        /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
+        /// </remarks>
         public class EmailInviteStatus
         {
             [Required]
-            public readonly bool IsTokenValid;
+            public bool IsTokenValid { get; set; }
             [Required]
-            public readonly bool IsUserRegistered;
+            public bool IsUserRegistered { get; set; }
 
             public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
             {

@@ -88,8 +88,8 @@ namespace BackendFramework.Repositories
         {
             // Confirm that email and username aren't empty and aren't taken
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username) ||
-                await GetUserByEmail(user.Email) != null ||
-                await GetUserByUsername(user.Username) != null)
+                await GetUserByEmail(user.Email) is not null ||
+                await GetUserByUsername(user.Username) is not null)
             {
                 return null;
             }
@@ -146,12 +146,12 @@ namespace BackendFramework.Repositories
                 return ResultOfUpdate.Failed;
             }
             if (user.Email.ToLowerInvariant() != oldUser.Email.ToLowerInvariant()
-                && await GetUserByEmail(user.Email) != null)
+                && await GetUserByEmail(user.Email) is not null)
             {
                 return ResultOfUpdate.Failed;
             }
             if (user.Username.ToLowerInvariant() != oldUser.Username.ToLowerInvariant()
-                && await GetUserByUsername(user.Username) != null)
+                && await GetUserByUsername(user.Username) is not null)
             {
                 return ResultOfUpdate.Failed;
             }

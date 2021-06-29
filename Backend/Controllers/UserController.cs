@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -47,6 +46,11 @@ namespace BackendFramework.Controllers
                 u.Email.ToLowerInvariant().Equals(emailOrUsername) ||
                 u.Username.ToLowerInvariant().Equals(emailOrUsername));
 
+            if (user is null)
+            {
+                return NotFound(emailOrUsername);
+            }
+
             // Create password reset.
             var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
 
@@ -64,7 +68,8 @@ namespace BackendFramework.Controllers
             {
                 return Ok();
             }
-            return new InternalServerErrorResult();
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         /// <summary> Resets a password using a token </summary>
