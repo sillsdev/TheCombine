@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { MergeWords, State, Word } from "api/models";
+import { MergeWords, Word } from "api/models";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   defaultTree,
@@ -35,7 +35,6 @@ export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
     senses: glosses.map((gloss) => ({
       ...newSense(gloss),
       guid: expect.any(String),
-      accessibility: State.Sense,
     })),
   };
 }

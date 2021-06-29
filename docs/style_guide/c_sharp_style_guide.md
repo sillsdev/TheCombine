@@ -50,7 +50,7 @@ foreach (var i in Range(0, 4))
 for (var i = 0; i < 4; i++)
 ```
 
-The signature of [`Range`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range?view=netcore-3.1)
+The signature of [`Range`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range?view=netcore-5.0)
 is:
 
 ```c#
