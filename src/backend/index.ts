@@ -330,7 +330,14 @@ export async function authenticateUser(
   const user = resp.data;
   LocalStorage.setCurrentUser(user);
   if (user.hasAvatar) {
-    LocalStorage.setAvatar(await avatarSrc(user.id));
+    // If the hasAvatar is incorrectly set to true or the avatar path is broken,
+    // prevent an unnecessary crash.
+    try {
+      LocalStorage.setAvatar(await avatarSrc(user.id));
+    } catch {
+      user.hasAvatar = false;
+      updateUser(user);
+    }
   }
   return user;
 }
