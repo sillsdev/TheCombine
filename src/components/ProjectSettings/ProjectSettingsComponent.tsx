@@ -21,7 +21,7 @@ import {
 import { AutocompleteSetting, Permission, Project } from "api/models";
 import * as backend from "backend";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
-import ExportProjectButton from "components/ProjectExport";
+import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
@@ -134,7 +134,7 @@ export default class ProjectSettingsComponent extends React.Component<
             <BaseSettingsComponent
               icon={<GetApp />}
               title={<Translate id="projectSettings.exportProject.label" />}
-              body={<ExportProjectButton projectId={this.props.project.id} />}
+              body={<ExportButton projectId={this.props.project.id} />}
             />
 
             {/* Autocomplete setting */}
