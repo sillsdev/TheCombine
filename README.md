@@ -545,7 +545,7 @@ in one of three environments:
    cd /opt/combine
    ```
 
-   Unless specified otherwise, each of the maintenance commands are to be run from `/opt/bin/combine`
+   Unless specified otherwise, each of the maintenance commands are to be run from `/opt/combine/bin`
 
 The descriptions of each of the maintenance tasks below provide instructions for completing the task in each of the
 environments. Any of the Python scripts can be run with the `--help` option to see more usage options.
