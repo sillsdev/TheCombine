@@ -25,10 +25,14 @@
     - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
-    # - name: Setup WiFi Access Point
-    #   import_role:
-    #     name: wifi_ap
-    #   when: has_wifi
+    - name: Setup WiFi Access Point
+      import_role:
+        name: wifi_ap
+      when: has_wifi
+
+    - name: Configure Network Interfaces
+      import_role:
+        name: network_config
 
     - name: Install Docker Subsystem
       import_role:

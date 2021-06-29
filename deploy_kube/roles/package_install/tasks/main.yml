@@ -1,0 +1,15 @@
+---
+###################################################
+# Role to update/upgrade all current packages and
+# install packages listed in "required_packages"
+###################################################
+
+- name: Upgrade all current packages
+  apt:
+    update_cache: "yes"
+    upgrade: "yes"
+
+- name: install required packages dependencies
+  apt:
+    name: "{{ required_packages }}"
+    state: present

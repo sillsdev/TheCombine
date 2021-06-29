@@ -1,0 +1,13 @@
+---
+- name: reboot target
+  reboot:
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted

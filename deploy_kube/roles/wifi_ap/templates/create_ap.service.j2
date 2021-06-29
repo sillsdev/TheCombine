@@ -1,0 +1,13 @@
+[Unit]
+Description=Create AP Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/create_ap --config {{ create_ap_config }} -e {{ ap_hosts_config }}
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

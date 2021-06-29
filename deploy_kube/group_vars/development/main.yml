@@ -2,36 +2,20 @@
 #################################################
 # Group specific configuration items
 #
-# Group: nuc
+# Group: development
 ################################################
 
 #################################################
 
 config_analytics_write_key: ""
 # TheCombine is installed using Ansible and the playbook_install.yml
-# playbook.  It will set the IMAGE_TAG environment variable to
-# value provided by the user and launch docker-compose
+# playbook.
 ################################################
-image_tag: "${IMAGE_TAG}"
+image_tag: "{{ combine_version }}"
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
-
-################################################
-# SSL cert variables specific to NUC targets
-################################################
-cert_mode: "cert-client"
-cert_email: ""
-cert_self_renewal: 60
-combine_alias_domain_list: []
-combine_cert_proxy_list: []
-
-################################################
-# setup variables for roles/aws_access
-################################################
-aws_user: "{{ combine_user }}"
-aws_group: "{{ combine_group }}"
+combine_image_backend: "combine_backend:{{ image_tag }}"
+combine_image_frontend: "combine_frontend:{{ image_tag }}"
+combine_image_certmgr: "combine_certmgr:{{ image_tag }}"
 
 ################################################
 # AWS S3 storage configuration
@@ -48,6 +32,15 @@ my_aws_profiles:
   - "{{ aws_ecr_profile }}"
 
 ################################################
+# Configure Kubernetes cluster
+################################################
+install_microk8s: yes
+install_helm: yes
+pull_secrets_manager: registry_creds
+
+app_namespace: thecombine
+
+################################################
 # The use model for the Combine when deployed on
 # a NUC is for workshops in areas with unreliable
 # or no internet connection.  As a result, the
@@ -61,14 +54,9 @@ config_email_enabled: "false"
 ################################################
 # Ethernet settings
 ################################################
-eth_optional: yes
+eth_optional: no
 
 ################################################
 # WiFi access point settings
 ################################################
-has_wifi: yes
-ap_domain: thecombine.app
-ap_ssid: "{{ansible_hostname}}_ap"
-# ap_passphrase is defined in ./vault.yml
-ap_gateway: "10.10.10.1"
-ap_hostname: "{{ansible_hostname}}"
+has_wifi: no
