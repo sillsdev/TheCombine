@@ -1,3 +1,4 @@
+import { Tooltip } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
@@ -30,19 +31,23 @@ export default function ExportButton(props: ExportButtonProps) {
 
   return (
     <React.Fragment>
-      <LoadingDoneButton
-        loading={loading}
-        done={done}
-        doneText={<Translate id="projectExport.downloadReady" />}
-        disabled={loading || done}
-        buttonProps={{
-          ...props.buttonProps,
-          onClick: exportProj,
-          color: "primary",
-        }}
+      <Tooltip
+        title={done ? <Translate id="projectExport.downloadHint" /> : ""}
       >
-        <Translate id={"buttons.export"} />
-      </LoadingDoneButton>
+        <LoadingDoneButton
+          loading={loading}
+          done={done}
+          doneText={<Translate id="projectExport.downloadReady" />}
+          disabled={loading || done}
+          buttonProps={{
+            ...props.buttonProps,
+            onClick: exportProj,
+            color: "primary",
+          }}
+        >
+          <Translate id={"buttons.export"} />
+        </LoadingDoneButton>
+      </Tooltip>
       {sameProject && <DownloadButton />}
     </React.Fragment>
   );

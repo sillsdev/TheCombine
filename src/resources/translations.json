@@ -319,6 +319,11 @@
       "Export in progress",
       "Export in progress",
       "Export in progress"
+    ],
+    "downloadHint": [
+      "Click on the download icon in the top bar to download the project you exported.",
+      "Click on the download icon in the top bar to download the project you exported.",
+      "Click on the download icon in the top bar to download the project you exported."
     ]
   },
   "projectSettings": {
