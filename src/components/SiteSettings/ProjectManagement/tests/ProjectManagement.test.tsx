@@ -1,12 +1,11 @@
 import { ListItem } from "@material-ui/core";
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { randomProject } from "types/project";
 import { defaultState } from "components/App/DefaultState";
-import ExportProjectButton from "components/ProjectExport/ExportProjectButton";
+import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
 
@@ -34,14 +33,14 @@ beforeAll(() => {
   });
 });
 
-describe("Testing ProjectManagement component", () => {
+describe("ProjectManagement", () => {
   it("Has the right number of projects listed", () => {
     let projectList = testRenderer.root.findAllByType(ListItem);
     expect(projectList.length).toEqual(mockProjects.length);
   });
 
   it("Has the right number of export buttons", () => {
-    let exportButtons = testRenderer.root.findAllByType(ExportProjectButton);
+    let exportButtons = testRenderer.root.findAllByType(ExportButton);
     expect(exportButtons.length).toEqual(mockProjects.length);
   });
 
