@@ -32,7 +32,13 @@ export default function ExportButton(props: ExportButtonProps) {
   return (
     <React.Fragment>
       <Tooltip
-        title={done ? <Translate id="projectExport.downloadHint" /> : ""}
+        title={
+          done && !sameProject ? (
+            <Translate id="projectExport.downloadHint" />
+          ) : (
+            ""
+          )
+        }
       >
         <LoadingDoneButton
           loading={loading}
