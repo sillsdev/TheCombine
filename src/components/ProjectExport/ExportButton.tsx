@@ -40,19 +40,21 @@ export default function ExportButton(props: ExportButtonProps) {
           )
         }
       >
-        <LoadingDoneButton
-          loading={loading}
-          done={done}
-          doneText={<Translate id="projectExport.downloadReady" />}
-          disabled={loading || done}
-          buttonProps={{
-            ...props.buttonProps,
-            onClick: exportProj,
-            color: "primary",
-          }}
-        >
-          <Translate id={"buttons.export"} />
-        </LoadingDoneButton>
+        <span>
+          <LoadingDoneButton
+            loading={loading}
+            done={done && sameProject}
+            doneText={<Translate id="projectExport.downloadReady" />}
+            disabled={loading || done}
+            buttonProps={{
+              ...props.buttonProps,
+              onClick: exportProj,
+              color: "primary",
+            }}
+          >
+            <Translate id={"buttons.export"} />
+          </LoadingDoneButton>
+        </span>
       </Tooltip>
       {sameProject && <DownloadButton />}
     </React.Fragment>
