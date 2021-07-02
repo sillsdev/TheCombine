@@ -129,9 +129,16 @@ A rapid word collection tool.
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-7. Run `npm start` from the project directory to install dependencies and start the project.
+7. (Optional) To opt in to segment.com analytics to test the analytics during development:
 
-8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
+    ```bash
+    # For Windows, use `copy`.
+    $ cp .env.local.template .env.local
+    ```
+
+8. Run `npm start` from the project directory to install dependencies and start the project.
+
+9. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
 
 Note, those starting development can skip the following sections related to production or deployment: 2. Docker, 4.
