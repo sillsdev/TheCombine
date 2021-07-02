@@ -1,9 +1,24 @@
-import { Avatar, List, ListItem, ListItemText } from "@material-ui/core";
+import {
+  Avatar,
+  FormControl,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
+import { Translate } from "react-localize-redux";
 import React from "react";
 
 import { Project, User } from "api/models";
 import { avatarSrc, getAllUsersInCurrentProject } from "backend";
 import theme from "types/theme";
+
+enum UserOrder {
+  Username,
+  Name,
+}
 
 interface UserProps {
   project: Project;
@@ -12,6 +27,7 @@ interface UserProps {
 interface UserState {
   projUsers: User[];
   userAvatar: { [key: string]: string };
+  userOrder: UserOrder;
 }
 
 export default class ActiveUsers extends React.Component<UserProps, UserState> {
@@ -20,6 +36,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     this.state = {
       projUsers: [],
       userAvatar: {},
+      userOrder: UserOrder.Username,
     };
   }
 
@@ -49,20 +66,60 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .catch((err) => console.error(err));
   }
 
+  private getSortedUsers() {
+    const users = this.state.projUsers;
+
+    // Need to make a copy of the "projUser" field in the state because sort()
+    // mutates
+    return users.slice(0).sort((a: User, b: User) => {
+      switch (this.state.userOrder) {
+        case UserOrder.Name:
+          return a.name.localeCompare(b.name);
+        case UserOrder.Username:
+          return a.username.localeCompare(b.username);
+        default:
+          throw new Error();
+      }
+    });
+  }
+
   render() {
     return (
-      <List>
-        {this.state.projUsers.map((user) => (
-          <ListItem key={user.id}>
-            <Avatar
-              alt="User Avatar"
-              src={this.state.userAvatar[user.id]}
-              style={{ marginRight: theme.spacing(1) }}
-            />
-            <ListItemText primary={`${user.name} (${user.username})`} />
-          </ListItem>
-        ))}
-      </List>
+      <React.Fragment>
+        <FormControl style={{ minWidth: 100 }}>
+          <InputLabel id="sorting-order-select">
+            <Translate id="charInventory.sortBy" />
+          </InputLabel>
+          <Select
+            labelId="sorting-order-select"
+            defaultValue={UserOrder.Username}
+            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+              this.setState({
+                userOrder: event.target.value as UserOrder,
+              });
+            }}
+          >
+            <MenuItem value={UserOrder.Name}>
+              <Translate id="projectSettings.language.name" />
+            </MenuItem>
+            <MenuItem value={UserOrder.Username}>
+              <Translate id="login.username" />
+            </MenuItem>
+          </Select>
+        </FormControl>
+        <List>
+          {this.getSortedUsers().map((user) => (
+            <ListItem key={user.id}>
+              <Avatar
+                alt="User Avatar"
+                src={this.state.userAvatar[user.id]}
+                style={{ marginRight: theme.spacing(1) }}
+              />
+              <ListItemText primary={`${user.name} (${user.username})`} />
+            </ListItem>
+          ))}
+        </List>
+      </React.Fragment>
     );
   }
 }

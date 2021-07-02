@@ -96,14 +96,24 @@ export async function uploadAvatar(userId: string, imgFile: File) {
 /** Returns the string to display the image inline in Base64 <img src= */
 export async function avatarSrc(userId: string): Promise<string> {
   const options = { headers: authHeader(), responseType: "arraybuffer" };
-  const resp = await avatarApi.downloadAvatar({ userId }, options);
-  const image = btoa(
-    new Uint8Array(resp.data).reduce(
-      (data, byte) => data + String.fromCharCode(byte),
-      ""
-    )
-  );
-  return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
+  try {
+    const resp = await avatarApi.downloadAvatar({ userId }, options);
+    const image = btoa(
+      new Uint8Array(resp.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ""
+      )
+    );
+    return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
+  } catch {
+    // Avatar fetching can fail if hasAvatar=True but the avater path is broken.
+    const user = await getUser(userId);
+    if (user.hasAvatar) {
+      user.hasAvatar = false;
+      await updateUser(user);
+    }
+    return "";
+  }
 }
 
 /* InviteController.cs */
