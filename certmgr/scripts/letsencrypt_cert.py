@@ -73,7 +73,7 @@ class LetsEncryptCert(BaseCert):
         is_letsencrypt_cert = False
         if self.nginx_cert_dir.is_symlink():
             link_target = os.readlink(self.nginx_cert_dir)
-            if link_target == self.cert_dir:
+            if link_target == str(self.cert_dir):
                 is_letsencrypt_cert = True
 
         # if we do not have a certificate from letsencrypt, then we:
