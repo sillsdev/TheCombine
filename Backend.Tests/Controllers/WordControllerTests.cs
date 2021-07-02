@@ -94,7 +94,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetMissingId()
         {
-            const string? missingId = "NEITHER_PROJ_NOR_WORD_ID";
+            const string missingId = "NEITHER_PROJ_NOR_WORD_ID";
 
             var wordProjResult = _wordController.GetProjectWords(missingId).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(wordProjResult);
