@@ -434,6 +434,18 @@ export async function addUserRole(
     .data;
 }
 
+export async function removeUserRole(
+  permission: Permission[],
+  userRoleId: string
+): Promise<void> {
+  const params = {
+    projectId: LocalStorage.getProjectId(),
+    userRoleId,
+    permission,
+  };
+  return (await userRoleApi.deleteUserRole(params, defaultOptions())).data;
+}
+
 /* WordController.cs */
 
 export async function createWord(word: Word): Promise<Word> {
