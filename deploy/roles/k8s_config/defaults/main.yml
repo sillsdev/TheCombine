@@ -1,6 +1,6 @@
 ---
 # Local Working directory
-k8s_working_dir: "{{ ansible_env.HOME }}/kube_files"
+k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}/"
 k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
 k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
 

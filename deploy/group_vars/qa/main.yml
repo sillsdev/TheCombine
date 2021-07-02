@@ -48,6 +48,15 @@ my_aws_profiles:
   - "{{ aws_ecr_profile }}"
 
 ################################################
+# Configure Kubernetes cluster
+################################################
+install_microk8s: yes
+install_helm: yes
+pull_secrets_manager: none
+
+app_namespace: thecombine
+
+################################################
 # WiFi access point settings
 ################################################
 has_wifi: no

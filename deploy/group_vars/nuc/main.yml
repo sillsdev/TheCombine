@@ -48,6 +48,15 @@ my_aws_profiles:
   - "{{ aws_ecr_profile }}"
 
 ################################################
+# Configure Kubernetes cluster
+################################################
+install_microk8s: yes
+install_helm: yes
+pull_secrets_manager: registry_creds
+
+app_namespace: thecombine
+
+################################################
 # The use model for the Combine when deployed on
 # a NUC is for workshops in areas with unreliable
 # or no internet connection.  As a result, the

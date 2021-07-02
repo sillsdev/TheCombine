@@ -1,3 +1,0 @@
----
-- name: apply storage config
-  include_tasks: tasks/apply_storage_config.yml

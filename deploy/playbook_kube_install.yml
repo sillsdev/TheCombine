@@ -1,14 +1,14 @@
 ---
 ##############################################################
-# Playbook: playbook_setup_target.yml
+# Playbook: playbook_install.yml
 #
-# playbook_setup_target.yml installs the packages and
+# playbook_install.yml installs the packages and
 # configuration files that are required to run TheCombine
 # as a collection of Docker containers.
 #
 ##############################################################
 
-- name: Setup TheCombine Using Docker
+- name: Configure hardware for The Combine
   hosts: server,qa,nuc
   gather_facts: yes
   become: yes

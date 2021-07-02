@@ -12,4 +12,17 @@
     mode: 0600
   with_fileglob:
     - "templates/*.yaml.j2"
-  notify: apply storage config
+
+- name: Lookup generated configuration files
+  find:
+    paths:
+      - "{{ k8s_storage_cfg }}"
+    file_type: file
+    patterns: "*.yaml"
+  register: kube_config
+
+- name: Apply Kubernetes configuration
+  command: kubectl apply -f {{ item.path }}
+  args:
+    chdir: "{{ k8s_working_dir }}"
+  with_items: "{{ kube_config.files | sort(attribute='path') }}"

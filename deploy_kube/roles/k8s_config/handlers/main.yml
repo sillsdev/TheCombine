@@ -1,3 +1,0 @@
----
-- name: update thecombine
-  include_tasks: tasks/apply_combine_config.yml
