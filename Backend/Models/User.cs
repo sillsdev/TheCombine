@@ -158,7 +158,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is User other) || GetType() != obj.GetType())
+            if (obj is not User other || GetType() != obj.GetType())
             {
                 return false;
             }

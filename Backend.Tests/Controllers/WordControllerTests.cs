@@ -35,10 +35,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteAllWords()
         {
-            var inWord1 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
-            var inWord2 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
-            var diffProjId = "OTHER_PROJECT";
-            var outWord = _wordRepo.Create(Util.RandomWord(diffProjId)).Result;
+            _ = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            _ = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            const string diffProjId = "OTHER_PROJECT";
+            _ = _wordRepo.Create(Util.RandomWord(diffProjId)).Result;
 
             _ = _wordController.DeleteProjectWords(_projId).Result;
             Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.Zero);
@@ -94,7 +94,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetMissingId()
         {
-            var missingId = "NEITHER_PROJ_NOR_WORD_ID";
+            const string? missingId = "NEITHER_PROJ_NOR_WORD_ID";
 
             var wordProjResult = _wordController.GetProjectWords(missingId).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(wordProjResult);

@@ -25,7 +25,7 @@ namespace Backend.Tests.Mocks
 
         public Task<PasswordReset?> FindByToken(string token)
         {
-            return Task.FromResult<PasswordReset?>(_resets.FindAll(x => x.Token == token).SingleOrDefault());
+            return Task.FromResult(_resets.FindAll(x => x.Token == token).SingleOrDefault());
         }
 
         public List<PasswordReset> GetResets()

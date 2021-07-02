@@ -18,7 +18,7 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> ResetPassword(string token, string password)
         {
-            // todo: More sophisticated mock
+            // TODO: More sophisticated mock
             return Task.FromResult(true);
         }
     }
