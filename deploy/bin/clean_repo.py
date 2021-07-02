@@ -11,6 +11,8 @@ Assumptions:
         aws configure
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re
@@ -56,7 +58,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess:
+def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess[str]:
     """Run an AWS command and print the command and results if verbose is set."""
     if verbose:
         print(aws_cmd)

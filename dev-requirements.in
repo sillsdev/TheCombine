@@ -2,6 +2,7 @@ tox
 
 # Type Checking.
 mypy
+types-requests
 
 # Linting.
 flake8
@@ -9,7 +10,8 @@ pep8-naming
 
 # Formatting.
 black
-isort
+# Pin until this issue is fixed: https://github.com/PyCQA/isort/issues/1762
+isort==5.8.0
 
 # Documentation.
 mkdocs-material
