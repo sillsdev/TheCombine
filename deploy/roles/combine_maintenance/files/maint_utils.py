@@ -7,7 +7,7 @@ import sys
 from typing import List
 
 
-def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess:
+def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     try:
         return subprocess.run(
