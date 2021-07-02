@@ -67,7 +67,7 @@ def update_link(src: Path, dest: Path) -> None:
     """
     if dest.is_symlink():
         link_target = os.readlink(dest)
-        if link_target != src:
+        if link_target != str(src):
             dest.unlink()
             dest.symlink_to(src)
     elif not dest.exists():
