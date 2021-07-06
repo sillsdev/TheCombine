@@ -31,7 +31,7 @@
 [github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
 [github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
 
-A rapid word collection tool.
+A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/TheCombine) for uses and features.
 
 ## Table of Contents
 
@@ -654,14 +654,16 @@ Notes:
 
 ## User Guide
 
-To build the user guide and serve it dynamically (automatically reloading on change), run the following from your Python
-virtual environment:
+The User Guide found at https://sillsdev.github.io/TheCombine is automatically built from the `master` branch.
+
+To locally build the user guide and serve it dynamically (automatically reloading on change), run the following from
+your Python virtual environment:
 
 ```bash
 (venv) $ tox -e user-guide-serve
 ```
 
-To build the user guide statically into `docs/user-guide/site`:
+To locally build the user guide statically into `docs/user-guide/site`:
 
 ```bash
 (venv) $ tox -e user-guide

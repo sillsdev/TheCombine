@@ -5,8 +5,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
 
 namespace BackendFramework.Models
 {
@@ -469,7 +467,6 @@ namespace BackendFramework.Models
     }
 
     /// <summary> Information about the state of the word or sense used for merging. </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum State
     {
         Active,

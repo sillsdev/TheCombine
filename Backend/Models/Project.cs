@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace BackendFramework.Models
 {
@@ -324,7 +322,6 @@ namespace BackendFramework.Models
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum AutocompleteSetting
     {
         Off,

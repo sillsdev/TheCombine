@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using MongoDB.Bson;
 
 namespace BackendFramework.Services
@@ -54,8 +54,14 @@ namespace BackendFramework.Services
         {
             var jsonToken = GetJwt(request);
             var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
-            var permissionsObj = JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
-            return permissionsObj;
+            // If unable to parse permissions, return empty permissions.
+            if (userRoleInfo is null)
+            {
+                return new List<ProjectPermissions>();
+            }
+
+            var permissions = JsonSerializer.Deserialize<List<ProjectPermissions>>(userRoleInfo);
+            return permissions ?? new List<ProjectPermissions>();
         }
 
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
