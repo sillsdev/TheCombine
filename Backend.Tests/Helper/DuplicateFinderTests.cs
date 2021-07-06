@@ -88,7 +88,7 @@ namespace Backend.Tests.Helper
         {
             _frontier = Util.RandomWordList(MaxInList + 1, ProjId);
             // Make sure the first set only is blacklisted, so all but the first word end up in a lone list.
-            _isInBlacklist = (wordList) => Task.FromResult(wordList.First() == _frontier.First().Vernacular);
+            _isInBlacklist = wordList => Task.FromResult(wordList.First() == _frontier.First().Vernacular);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
             var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist).Result;
             Assert.That(wordLists, Has.Count.EqualTo(1));
@@ -105,22 +105,22 @@ namespace Backend.Tests.Helper
             var glossYN = new Gloss { Def = def, Language = "NoLang" };
             var glossNY = new Gloss { Def = "NoGloss", Language = lang };
 
-            var senseEmpty = new Sense { Glosses = new List<Gloss> { new Gloss() } };
-            var senseEmptyGYY = new Sense { Glosses = new List<Gloss> { new Gloss(), glossYY } };
-            var senseEmptyGNYGYY = new Sense { Glosses = new List<Gloss> { new Gloss(), glossNY, glossYY } };
+            var senseEmpty = new Sense { Glosses = new List<Gloss> { new() } };
+            var senseEmptyGYY = new Sense { Glosses = new List<Gloss> { new(), glossYY } };
+            var senseEmptyGNYGYY = new Sense { Glosses = new List<Gloss> { new(), glossNY, glossYY } };
             var senseGYNGNY = new Sense { Glosses = new List<Gloss> { glossYN, glossNY } };
 
             var wordWithOnlyGYY = new Word
             {
-                Senses = new List<Sense> { new Sense(), senseEmpty, senseEmptyGYY }
+                Senses = new List<Sense> { new(), senseEmpty, senseEmptyGYY }
             };
             var wordAlsoWithGYY = new Word
             {
-                Senses = new List<Sense> { senseGYNGNY, new Sense(), senseEmptyGNYGYY, senseEmpty }
+                Senses = new List<Sense> { senseGYNGNY, new(), senseEmptyGNYGYY, senseEmpty }
             };
             var wordWithoutGYY = new Word
             {
-                Senses = new List<Sense> { senseEmpty, senseGYNGNY, new Sense() }
+                Senses = new List<Sense> { senseEmpty, senseGYNGNY, new() }
             };
 
             Assert.IsFalse(DuplicateFinder.HaveIdenticalGloss(new Word(), new Word()));

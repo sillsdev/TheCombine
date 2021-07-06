@@ -10,7 +10,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var user = new User { Name = Name };
             Assert.That(user.Equals(new User { Name = Name }));
         }

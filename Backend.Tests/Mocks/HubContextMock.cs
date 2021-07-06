@@ -67,7 +67,7 @@ namespace Backend.Tests.Mocks
 #pragma warning disable 1998
         public async Task SendCoreAsync(
 #pragma warning restore 1998
-            string method, object?[]? args, CancellationToken cancellationToken = new CancellationToken())
+            string method, object?[]? args, CancellationToken cancellationToken = new())
         {
         }
     }

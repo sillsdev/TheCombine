@@ -158,7 +158,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Word other) || GetType() != obj.GetType())
+            if (obj is not Word other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -222,7 +222,7 @@ namespace BackendFramework.Models
 
         public Note Clone()
         {
-            return new Note
+            return new()
             {
                 Language = (string)Language.Clone(),
                 Text = (string)Text.Clone()
@@ -237,7 +237,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Note other) || GetType() != obj.GetType())
+            if (obj is not Note other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -307,7 +307,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Sense other) || GetType() != obj.GetType())
+            if (obj is not Sense other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -346,7 +346,7 @@ namespace BackendFramework.Models
 
         public Gloss Clone()
         {
-            return new Gloss
+            return new()
             {
                 Language = (string)Language.Clone(),
                 Def = (string)Def.Clone()
@@ -355,7 +355,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Gloss other) || GetType() != obj.GetType())
+            if (obj is not Gloss other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -380,7 +380,7 @@ namespace BackendFramework.Models
 
         public SemanticDomain Clone()
         {
-            return new SemanticDomain
+            return new()
             {
                 Name = (string)Name.Clone(),
                 Id = (string)Id.Clone(),
@@ -397,7 +397,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is SemanticDomain other) || GetType() != obj.GetType())
+            if (obj is not SemanticDomain other || GetType() != obj.GetType())
             {
                 return false;
             }
