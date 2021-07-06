@@ -31,9 +31,11 @@ namespace Backend.Tests.Controllers
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
             _userController = new UserController(
-                _userRepo, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock());
+                _userRepo, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock())
+            {
+                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
+            };
 
-            _userController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _permissionService.Authenticate(

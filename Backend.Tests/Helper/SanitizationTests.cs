@@ -7,7 +7,7 @@ namespace Backend.Tests.Helper
 {
     public class SanitizationTests
     {
-        private static List<string> _validIds = new List<string>
+        private static List<string> _validIds = new()
         {
             "a",
             "1",
@@ -19,7 +19,7 @@ namespace Backend.Tests.Helper
             Assert.That(Sanitization.SanitizeId(id));
         }
 
-        private static List<string> _invalidIds = new List<string>
+        private static List<string> _invalidIds = new()
         {
             "_",
             "a_1",
@@ -52,7 +52,7 @@ namespace Backend.Tests.Helper
             Assert.False(Sanitization.SanitizeId(id));
         }
 
-        private static List<string> _validFileNames = new List<string>
+        private static List<string> _validFileNames = new()
         {
             "a",
             "1",
@@ -72,7 +72,7 @@ namespace Backend.Tests.Helper
             Assert.That(Sanitization.SanitizeFileName(fileName));
         }
 
-        private static List<string> _invalidFileNames = new List<string>
+        private static List<string> _invalidFileNames = new()
         {
             "/",
             "\\",
@@ -101,14 +101,14 @@ namespace Backend.Tests.Helper
             Assert.False(Sanitization.SanitizeFileName(fileName));
         }
 
-        private static List<List<string>> _namesUnfriendlyFriendly = new List<List<string>>
+        private static List<List<string>> _namesUnfriendlyFriendly = new()
         {
-            new List<string>{"A1phaNum3ricN0Change", "A1phaNum3ricN0Change"},
-            new List<string>{"RémöveOrRèpláceÄccênts", "RemoveOrReplaceAccents"},
-            new List<string>{"math+and=currency$to<dash", "math-and-currency-to-dash"},
-            new List<string>{"make spaces underscores", "make_spaces_underscores"},
-            new List<string>{"(){}[]", "()()()"},
-            new List<string>{"こんにちは", "-----"},
+            new List<string> { "A1phaNum3ricN0Change", "A1phaNum3ricN0Change" },
+            new List<string> { "RémöveOrRèpláceÄccênts", "RemoveOrReplaceAccents" },
+            new List<string> { "math+and=currency$to<dash", "math-and-currency-to-dash" },
+            new List<string> { "make spaces underscores", "make_spaces_underscores" },
+            new List<string> { "(){}[]", "()()()" },
+            new List<string> { "こんにちは", "-----" }
         };
         [TestCaseSource(nameof(_namesUnfriendlyFriendly))]
         public void TestMakeFriendlyForPath(List<string> nameName)

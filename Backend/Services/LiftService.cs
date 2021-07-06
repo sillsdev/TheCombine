@@ -281,7 +281,7 @@ namespace BackendFramework.Services
             }
             else // Make a new lift-ranges file
             {
-                using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
+                await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
                 {
                     Indent = true,
                     NewLineOnAttributes = true,
@@ -663,7 +663,7 @@ namespace BackendFramework.Services
             /// <summary> Creates the object to transfer all the data from a word </summary>
             public LiftEntry GetOrMakeEntry(Extensible info, int order)
             {
-                return new LiftEntry(info, info.Guid, order)
+                return new(info, info.Guid, order)
                 {
                     LexicalForm = new LiftMultiText(),
                     CitationForm = new LiftMultiText()
@@ -765,7 +765,7 @@ namespace BackendFramework.Services
             // They may be useful later if we need to add more complex attributes to words in The Combine
             public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
             {
-                return new LiftExample { Content = new LiftMultiText() };
+                return new() { Content = new LiftMultiText() };
             }
 
             public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
@@ -775,7 +775,7 @@ namespace BackendFramework.Services
 
             public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
             {
-                return new LiftSense(info, new Guid(), sense) { Gloss = new LiftMultiText() };
+                return new(info, new Guid(), sense) { Gloss = new LiftMultiText() };
             }
 
             public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
