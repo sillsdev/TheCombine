@@ -616,12 +616,9 @@ namespace BackendFramework.Services
                     };
 
                     // Add definitions
-                    if (sense.Definition is not null)
+                    foreach (var (key, value) in sense.Definition)
                     {
-                        foreach (var (key, value) in sense.Definition)
-                        {
-                            newSense.Definitions.Add(new Definition { Language = key, Text = value.Text });
-                        }
+                        newSense.Definitions.Add(new Definition { Language = key, Text = value.Text });
                     }
 
                     // Add glosses
@@ -698,7 +695,11 @@ namespace BackendFramework.Services
             /// <summary> Creates an empty sense object and adds it to the entry </summary>
             public LiftSense GetOrMakeSense(LiftEntry entry, Extensible info, string rawXml)
             {
-                var sense = new LiftSense(info, info.Guid, entry) { Gloss = new LiftMultiText() };
+                var sense = new LiftSense(info, info.Guid, entry)
+                {
+                    Definition = new LiftMultiText(),
+                    Gloss = new LiftMultiText()
+                };
                 entry.Senses.Add(sense);
                 return sense;
             }
@@ -722,7 +723,16 @@ namespace BackendFramework.Services
                 extensible.Fields.Add(fieldEntry);
             }
 
-            /// <summary> Adds senses to the entry </summary>
+            /// <summary> Adds sense's definitions to the entry. </summary>
+            public void MergeInDefinition(LiftSense sense, LiftMultiText multiText)
+            {
+                foreach (var (key, value) in multiText)
+                {
+                    sense.Definition.Add(key, value.Text);
+                }
+            }
+
+            /// <summary> Adds sense's glosses to the entry. </summary>
             public void MergeInGloss(LiftSense sense, LiftMultiText multiText)
             {
                 foreach (var (key, value) in multiText)
@@ -800,7 +810,11 @@ namespace BackendFramework.Services
 
             public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
             {
-                return new(info, new Guid(), sense) { Gloss = new LiftMultiText() };
+                return new(info, new Guid(), sense)
+                {
+                    Definition = new LiftMultiText(),
+                    Gloss = new LiftMultiText()
+                };
             }
 
             public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
@@ -821,7 +835,6 @@ namespace BackendFramework.Services
             }
 
             public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
-            public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
             public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
 
