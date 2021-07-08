@@ -1,4 +1,11 @@
-import { MergeSourceWord, MergeWords, State, Word } from "api/models";
+import {
+  Definition,
+  MergeSourceWord,
+  MergeWords,
+  SemanticDomain,
+  State,
+  Word,
+} from "api/models";
 import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -158,11 +165,13 @@ function getMergeWords(
       dups.forEach((dup) => {
         const dupSense = senses[dup.srcWordId][dup.order];
         dupSense.accessibility = State.Duplicate;
-        // Put this sense's domains in the main sense's.
+        // Put the duplicate's definitions in the main sense.
+        for (const def of dupSense.definitions) {
+          mergeDefinitionIntoSense(mainSense, def);
+        }
+        // Put the duplicate's domains in the main sense.
         for (const dom of dupSense.semanticDomains) {
-          if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
-            mainSense.semanticDomains.push(dom);
-          }
+          mergeDomainIntoSense(mainSense, dom);
         }
       });
     });
@@ -276,7 +285,7 @@ export function dispatchMergeStepData(goal: MergeDups) {
   };
 }
 
-// Modifies the mutable input.
+/** Modifies the mutable input goal. */
 export async function loadMergeDupsData(goal: MergeDups) {
   const newGroups = await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 
@@ -287,4 +296,36 @@ export async function loadMergeDupsData(goal: MergeDups) {
   // Reset goal steps.
   goal.currentStep = 0;
   goal.steps = [];
+}
+
+/** Modifies the mutable input sense. */
+export function mergeDefinitionIntoSense(
+  sense: MergeTreeSense,
+  def: Definition,
+  sep = ";"
+): void {
+  if (!def.text.length) {
+    return;
+  }
+  const defIndex = sense.definitions.findIndex(
+    (d) => d.language === def.language
+  );
+  if (defIndex === -1) {
+    sense.definitions.push({ ...def });
+  } else {
+    const oldText = sense.definitions[defIndex].text;
+    if (!oldText.split(sep).includes(def.text)) {
+      const newText = `${oldText}${sep}${def.text}`;
+      sense.definitions[defIndex].text = newText;
+    }
+  }
+}
+/** Modifies the mutable input sense. */
+export function mergeDomainIntoSense(
+  sense: MergeTreeSense,
+  dom: SemanticDomain
+): void {
+  if (!sense.semanticDomains.find((d) => d.id === dom.id)) {
+    sense.semanticDomains.push({ ...dom });
+  }
 }

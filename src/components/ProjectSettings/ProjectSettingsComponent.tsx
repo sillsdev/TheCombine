@@ -62,7 +62,7 @@ export default class ProjectSettingsComponent extends React.Component<
     );
     const settings: ProjectSettingsState = { ...this.state };
 
-    if (currentRole !== undefined)
+    if (currentRole) {
       for (const role of currentRole.permissions) {
         if (role === Permission.ImportExport) {
           settings.projectName = this.props.project.name;
@@ -73,6 +73,7 @@ export default class ProjectSettingsComponent extends React.Component<
           settings.editUsers = true;
         }
       }
+    }
     settings.loading = false;
     this.setState(settings);
   }

@@ -1,16 +1,25 @@
 import { v4 } from "uuid";
 
-import { Gloss, Note, SemanticDomain, Sense, State, Word } from "api/models";
+import {
+  Definition,
+  Gloss,
+  Note,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "api/models";
 import { randomIntString } from "utilities";
 
-export function newGloss(def: string = "", language: string = ""): Gloss {
+export function newDefinition(text = "", language = ""): Definition {
+  return { text, language };
+}
+
+export function newGloss(def = "", language = ""): Gloss {
   return { def, language };
 }
 
-export function newSemanticDomain(
-  id: string = "",
-  name: string = ""
-): SemanticDomain {
+export function newSemanticDomain(id = "", name = ""): SemanticDomain {
   return { id, name, description: "" };
 }
 
@@ -35,11 +44,11 @@ export function newSense(
   return sense;
 }
 
-export function newNote(text: string = "", language: string = ""): Note {
+export function newNote(text = "", language = ""): Note {
   return { text, language };
 }
 
-export function newWord(vernacular: string = ""): Word {
+export function newWord(vernacular = ""): Word {
   return {
     id: "",
     guid: v4(),

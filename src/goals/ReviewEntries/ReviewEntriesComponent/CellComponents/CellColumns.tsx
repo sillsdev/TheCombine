@@ -127,18 +127,14 @@ const columns: Column<any>[] = [
     },
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (guid: string) => {
-        if (props.onRowDataChange)
+        if (props.onRowDataChange) {
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map((sense) => {
-              if (sense.guid === guid)
-                return {
-                  ...sense,
-                  deleted: !sense.deleted,
-                };
-              else return sense;
-            }),
+            senses: props.rowData.senses.map((s) =>
+              s.guid === guid ? { ...s, deleted: !s.deleted } : s
+            ),
           });
+        }
       };
       return (
         <DeleteCell
@@ -221,18 +217,14 @@ const columns: Column<any>[] = [
     ),
     editComponent: (props: FieldParameterStandard) => {
       const editDomains = (guid: string, domains: SemanticDomain[]) => {
-        if (props.onRowDataChange)
+        if (props.onRowDataChange) {
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map((sense) => {
-              if (sense.guid === guid)
-                return {
-                  ...sense,
-                  domains,
-                };
-              else return sense;
-            }),
+            senses: props.rowData.senses.map((s) =>
+              s.guid === guid ? { ...s, domains } : s
+            ),
           });
+        }
       };
       return (
         <DomainCell

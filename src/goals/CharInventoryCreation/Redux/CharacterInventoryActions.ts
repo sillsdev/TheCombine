@@ -89,24 +89,28 @@ export function resetInState(): CharacterInventoryAction {
 
 export function setCharacterStatus(character: string, status: CharacterStatus) {
   return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    if (status === CharacterStatus.Accepted)
-      dispatch(addToValidCharacters([character]));
-    else if (status === CharacterStatus.Rejected)
-      dispatch(addToRejectedCharacters([character]));
-    else if (status === CharacterStatus.Undecided) {
-      const state = getState().characterInventoryState;
-      const valid = state.validCharacters.filter(
-        (c: string) => c !== character
-      );
-      if (valid.length < state.validCharacters.length) {
-        dispatch(setValidCharacters(valid));
-      }
-      const rejected = state.rejectedCharacters.filter(
-        (c: string) => c !== character
-      );
-      if (rejected.length < state.rejectedCharacters.length) {
-        dispatch(setRejectedCharacters(rejected));
-      }
+    switch (status) {
+      case CharacterStatus.Accepted:
+        dispatch(addToValidCharacters([character]));
+        break;
+      case CharacterStatus.Rejected:
+        dispatch(addToRejectedCharacters([character]));
+        break;
+      case CharacterStatus.Undecided:
+        const state = getState().characterInventoryState;
+        const valid = state.validCharacters.filter(
+          (c: string) => c !== character
+        );
+        if (valid.length < state.validCharacters.length) {
+          dispatch(setValidCharacters(valid));
+        }
+        const rejected = state.rejectedCharacters.filter(
+          (c: string) => c !== character
+        );
+        if (rejected.length < state.rejectedCharacters.length) {
+          dispatch(setRejectedCharacters(rejected));
+        }
+        break;
     }
   };
 }
