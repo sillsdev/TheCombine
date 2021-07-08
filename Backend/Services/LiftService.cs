@@ -616,9 +616,12 @@ namespace BackendFramework.Services
                     };
 
                     // Add definitions
-                    foreach (var (key, value) in sense.Definition)
+                    if (sense.Definition is not null)
                     {
-                        newSense.Definitions.Add(new Definition { Language = key, Text = value.Text });
+                        foreach (var (key, value) in sense.Definition)
+                        {
+                            newSense.Definitions.Add(new Definition { Language = key, Text = value.Text });
+                        }
                     }
 
                     // Add glosses
