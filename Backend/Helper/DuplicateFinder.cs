@@ -212,7 +212,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
-        /// Check if two <see cref="Word"/>s have <see cref="Defintion"/>s with identical Language and nonempty Text.
+        /// Check if two <see cref="Word"/>s have <see cref="Definition"/>s with identical Language and nonempty Text.
         /// </summary>
         public static bool HaveIdenticalDefinition(Word wordA, Word wordB)
         {
