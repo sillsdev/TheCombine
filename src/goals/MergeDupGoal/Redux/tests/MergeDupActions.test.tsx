@@ -324,14 +324,16 @@ describe("MergeDupActions", () => {
     const defAEn = newDefinition("a", "en");
     const defAFr = newDefinition("a", "fr");
     const defBEn = newDefinition("b", "en");
-    const defEmpty = newDefinition();
-    const defEmptyEn = newDefinition("", "en");
-    const sense = newSense() as MergeTreeSense;
+    let sense: MergeTreeSense;
+
+    beforeEach(() => {
+      sense = newSense() as MergeTreeSense;
+    });
 
     it("ignores definitions with empty text.", () => {
-      mergeDefinitionIntoSense(sense, defEmpty);
+      mergeDefinitionIntoSense(sense, newDefinition());
       expect(sense.definitions).toHaveLength(0);
-      mergeDefinitionIntoSense(sense, defEmptyEn);
+      mergeDefinitionIntoSense(sense, newDefinition("", "en"));
       expect(sense.definitions).toHaveLength(0);
     });
 
@@ -343,6 +345,8 @@ describe("MergeDupActions", () => {
     });
 
     it("only adds definitions with new text", () => {
+      sense.definitions.push({ ...defAEn }, { ...defAFr });
+
       mergeDefinitionIntoSense(sense, defAFr);
       expect(sense.definitions).toHaveLength(2);
       expect(sense.definitions.find((d) => d.language === "fr")!.text).toEqual(
