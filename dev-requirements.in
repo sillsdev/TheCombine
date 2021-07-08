@@ -10,8 +10,7 @@ pep8-naming
 
 # Formatting.
 black
-# Pin until this issue is fixed: https://github.com/PyCQA/isort/issues/1762
-isort==5.8.0
+isort
 
 # Documentation.
 mkdocs-material
