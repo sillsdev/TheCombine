@@ -389,23 +389,39 @@ namespace BackendFramework.Services
             foreach (var currentSense in activeSenses)
             {
                 // Merge in senses
-                var dict = new Dictionary<string, string>();
-                foreach (var gloss in currentSense.Glosses)
+                const string sep = ";";
+                var defDict = new Dictionary<string, string>();
+                foreach (var def in currentSense.Definitions)
                 {
-                    if (dict.ContainsKey(gloss.Language))
+                    if (defDict.ContainsKey(def.Language))
                     {
                         // This is an unexpected situation but rather than crashing or losing data we
-                        // will just append extra definitions for the language with a semicolon separator
-                        dict[gloss.Language] = $"{dict[gloss.Language]};{gloss.Def}";
+                        // will just append extra definitions for the language with a separator.
+                        defDict[def.Language] = $"{defDict[def.Language]}{sep}{def.Text}";
                     }
                     else
                     {
-                        dict.Add(gloss.Language, gloss.Def);
+                        defDict.Add(def.Language, def.Text);
+                    }
+                }
+                var glossDict = new Dictionary<string, string>();
+                foreach (var gloss in currentSense.Glosses)
+                {
+                    if (glossDict.ContainsKey(gloss.Language))
+                    {
+                        // This is an unexpected situation but rather than crashing or losing data we
+                        // will just append extra definitions for the language with a separator.
+                        glossDict[gloss.Language] = $"{glossDict[gloss.Language]}{sep}{gloss.Def}";
+                    }
+                    else
+                    {
+                        glossDict.Add(gloss.Language, gloss.Def);
                     }
                 }
 
                 var lexSense = new LexSense();
-                lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
+                lexSense.Definition.MergeIn(MultiTextBase.Create(defDict));
+                lexSense.Gloss.MergeIn(MultiTextBase.Create(glossDict));
                 lexSense.Id = currentSense.Guid.ToString();
                 entry.Senses.Add(lexSense);
 
@@ -598,6 +614,12 @@ namespace BackendFramework.Services
                         // so follow this convention.
                         Guid = new Guid(sense.Id)
                     };
+
+                    // Add definitions
+                    foreach (var (key, value) in sense.Definition)
+                    {
+                        newSense.Definitions.Add(new Definition { Language = key, Text = value.Text });
+                    }
 
                     // Add glosses
                     foreach (var (key, value) in sense.Gloss)
