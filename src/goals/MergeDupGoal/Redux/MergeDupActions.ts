@@ -166,13 +166,13 @@ function getMergeWords(
         const dupSense = senses[dup.srcWordId][dup.order];
         dupSense.accessibility = State.Duplicate;
         // Put the duplicate's definitions in the main sense.
-        for (const def of dupSense.definitions) {
-          mergeDefinitionIntoSense(mainSense, def);
-        }
+        dupSense.definitions.forEach((def) =>
+          mergeDefinitionIntoSense(mainSense, def)
+        );
         // Put the duplicate's domains in the main sense.
-        for (const dom of dupSense.semanticDomains) {
-          mergeDomainIntoSense(mainSense, dom);
-        }
+        dupSense.semanticDomains.forEach((dom) =>
+          mergeDomainIntoSense(mainSense, dom)
+        );
       });
     });
 

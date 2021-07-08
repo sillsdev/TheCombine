@@ -205,8 +205,8 @@ export function getChanges(
     ...new Set([...oldAcc, ...newAcc, ...oldRej, ...newRej]),
   ];
   const changes: CharacterChange[] = [];
-  allCharacters.forEach((c) => {
-    const change = getChange(c, oldAcc, newAcc, oldRej, newRej);
+  allCharacters.forEach((char) => {
+    const change = getChange(char, oldAcc, newAcc, oldRej, newRej);
     if (change) {
       changes.push(change);
     }

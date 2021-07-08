@@ -345,19 +345,19 @@ describe("MergeDupActions", () => {
     it("only adds definitions with new text", () => {
       mergeDefinitionIntoSense(sense, defAFr);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language == "fr")!.text).toEqual(
+      expect(sense.definitions.find((d) => d.language === "fr")!.text).toEqual(
         defAFr.text
       );
 
       const twoEnTexts = `${defAEn.text};${defBEn.text}`;
       mergeDefinitionIntoSense(sense, defBEn);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language == "en")!.text).toEqual(
+      expect(sense.definitions.find((d) => d.language === "en")!.text).toEqual(
         twoEnTexts
       );
       mergeDefinitionIntoSense(sense, defAEn);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language == "en")!.text).toEqual(
+      expect(sense.definitions.find((d) => d.language === "en")!.text).toEqual(
         twoEnTexts
       );
     });
