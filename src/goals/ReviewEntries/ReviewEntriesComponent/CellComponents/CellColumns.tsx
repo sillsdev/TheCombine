@@ -259,8 +259,12 @@ const columns: Column<any>[] = [
         const regex = cleanRegExp(terms[0]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
-            if (regex.exec(domain.id) || regex.exec(domain.name.toLowerCase()))
+            if (
+              regex.exec(domain.id) ||
+              regex.exec(domain.name.toLowerCase())
+            ) {
               return true;
+            }
       } else {
         const regexNumber = cleanRegExp(terms[0]);
         const regexName = cleanRegExp(terms[1]);
@@ -269,8 +273,9 @@ const columns: Column<any>[] = [
             if (
               regexNumber.exec(domain.id) &&
               regexName.exec(domain.name.toLowerCase())
-            )
+            ) {
               return true;
+            }
       }
       return false;
     },

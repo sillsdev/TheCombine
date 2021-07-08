@@ -21,6 +21,7 @@ export function newSense(
 ): Sense {
   const sense: Sense = {
     guid: v4(),
+    definitions: [],
     glosses: [],
     semanticDomains: [],
     accessibility: State.Active,
@@ -58,15 +59,6 @@ export function newWord(vernacular: string = ""): Word {
 export interface DomainWord {
   word: Word;
   gloss: Gloss;
-}
-
-export function hasSenses(word: Word): boolean {
-  return (
-    word.senses &&
-    word.senses.length > 0 &&
-    word.senses[0].glosses &&
-    word.senses[0].glosses.length > 0
-  );
 }
 
 export function simpleWord(vern: string, gloss: string): Word {
@@ -132,7 +124,7 @@ export function cleanGlosses(glosses: Gloss[]): Gloss[] {
   );
 }
 
-export function getGlossLangsFromWords(words: Word[]) {
+export function getAnalysisLangsFromWords(words: Word[]) {
   return reduceMultiType<Word, string[]>(words, [], wordReducer);
 }
 function reduceMultiType<A, B>(
@@ -145,6 +137,8 @@ function reduceMultiType<A, B>(
   return accumulated;
 }
 function wordReducer(accumulator: string[], word: Word) {
-  const newLangs = word.senses.flatMap((s) => s.glosses).map((g) => g.language);
+  const newLangs = word.senses
+    .flatMap((s) => [...s.definitions, ...s.glosses])
+    .map((dg) => dg.language);
   return [...new Set([...accumulator, ...newLangs])];
 }

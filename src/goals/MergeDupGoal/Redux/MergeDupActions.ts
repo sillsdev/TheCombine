@@ -196,6 +196,7 @@ function getMergeWords(
         if (sense.accessibility === State.Active) {
           parent.senses.push({
             guid: sense.guid,
+            definitions: sense.definitions,
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
             accessibility: sense.accessibility,
