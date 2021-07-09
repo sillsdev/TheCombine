@@ -195,7 +195,7 @@ namespace BackendFramework.Helper
         /// <param name="wordB"> The second of two Words to compare. </param>
         /// <param name="checkGlossThreshold">
         /// A double (optional): If the Words' vernaculars have a score between this threshold and the _maxScore,
-        /// and if the Words share a common gloss, then we override the score with this threshold.</param>
+        /// and if the Words share a common definition/gloss, then we override the score with this threshold.</param>
         /// <returns> A double: the adjusted distance between the words. </returns>
         public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1.0)
         {
@@ -204,11 +204,44 @@ namespace BackendFramework.Helper
             {
                 return vernScore;
             }
-            if (HaveIdenticalGloss(wordA, wordB))
+            if (HaveIdenticalDefinition(wordA, wordB) || HaveIdenticalGloss(wordA, wordB))
             {
                 return (double)checkGlossThreshold;
             }
             return vernScore;
+        }
+
+        /// <summary>
+        /// Check if two <see cref="Word"/>s have <see cref="Definition"/>s with identical Language and nonempty Text.
+        /// </summary>
+        public static bool HaveIdenticalDefinition(Word wordA, Word wordB)
+        {
+            var definitionsA = wordA.Senses.SelectMany(s => s.Definitions).ToList();
+            if (definitionsA.Count == 0)
+            {
+                return false;
+            }
+            var definitionsB = wordB.Senses.SelectMany(s => s.Definitions).ToList();
+            if (definitionsB.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (var a in definitionsA)
+            {
+                if (a.Text.Length == 0)
+                {
+                    continue;
+                }
+                foreach (var b in definitionsB)
+                {
+                    if (a.Language == b.Language && a.Text == b.Text)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

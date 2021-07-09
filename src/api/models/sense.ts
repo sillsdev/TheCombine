@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Definition } from "./definition";
 import { Gloss } from "./gloss";
 import { SemanticDomain } from "./semantic-domain";
 import { State } from "./state";
@@ -28,6 +29,12 @@ export interface Sense {
    * @memberof Sense
    */
   guid: string;
+  /**
+   *
+   * @type {Array<Definition>}
+   * @memberof Sense
+   */
+  definitions: Array<Definition>;
   /**
    *
    * @type {Array<Gloss>}

@@ -19,6 +19,7 @@ git_push.sh
 index.ts
 models/autocomplete-setting.ts
 models/credentials.ts
+models/definition.ts
 models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts

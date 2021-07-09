@@ -129,17 +129,16 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
   // Navigate tree via arrow keys
   const navigateDomainArrowKeys = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === Key.ArrowLeft) {
-        const domain = getBrotherDomain(-1, props);
-        if (domain && domain.id !== props.currentDomain.id)
-          props.animate(domain);
-      } else if (event.key === Key.ArrowRight) {
-        const domain = getBrotherDomain(1, props);
-        if (domain && domain.id !== props.currentDomain.id)
-          props.animate(domain);
-      } else if (event.key === Key.ArrowUp) {
-        if (props.currentDomain.parentDomain)
-          props.animate(props.currentDomain.parentDomain);
+      const domain =
+        event.key === Key.ArrowLeft
+          ? getBrotherDomain(-1, props)
+          : event.key === Key.ArrowRight
+          ? getBrotherDomain(1, props)
+          : event.key === Key.ArrowUp
+          ? props.currentDomain.parentDomain
+          : undefined;
+      if (domain && domain.id !== props.currentDomain.id) {
+        props.animate(domain);
       }
     },
     [props]
