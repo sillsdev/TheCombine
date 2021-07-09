@@ -58,84 +58,75 @@ export default class TreeDepiction extends React.Component<
   }
 
   // Computes a new width for each tile
-  updateTileWidth(event?: UIEvent) {
-    let tileWidth: number;
+  updateTileWidth() {
+    const length = this.props.currentDomain.subdomains.length;
+    let tileWidth =
+      length > 0
+        ? Math.floor(document.documentElement.clientWidth / (length * 2 - 1))
+        : MAX_TILE_WIDTH;
 
-    if (this.props.currentDomain.subdomains.length > 0)
-      tileWidth = Math.floor(
-        document.documentElement.clientWidth /
-          (this.props.currentDomain.subdomains.length * 2 - 1)
-      );
-    else tileWidth = MAX_TILE_WIDTH;
+    if (tileWidth < MIN_TILE_WIDTH) {
+      tileWidth = MIN_TILE_WIDTH;
+    } else if (tileWidth > MAX_TILE_WIDTH) {
+      tileWidth = MAX_TILE_WIDTH;
+    }
 
-    if (tileWidth < MIN_TILE_WIDTH) tileWidth = MIN_TILE_WIDTH;
-    else if (tileWidth > MAX_TILE_WIDTH) tileWidth = MAX_TILE_WIDTH;
-
-    if (Math.floor(this.state.tileWidth) !== Math.floor(tileWidth))
+    if (Math.floor(this.state.tileWidth) !== Math.floor(tileWidth)) {
       this.setState({ tileWidth });
+    }
   }
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
-    let subdomains: TreeSemanticDomain[] = this.props.currentDomain.subdomains;
-    if (subdomains.length > 1)
-      return (
-        <GridList
-          cols={subdomains.length * 2 - 1} // # of cells across the joist is
-          cellHeight={"auto"}
-          spacing={0}
-          style={{
-            width: (subdomains.length * 2 - 1) * this.state.tileWidth,
-          }}
-        >
-          {/* Left endcap */}
-          {this.treeTile(endcapLeft)}
+    const subdomains = this.props.currentDomain.subdomains;
+    return subdomains.length > 1 ? (
+      <GridList
+        cols={subdomains.length * 2 - 1} // # of cells across the joist is
+        cellHeight={"auto"}
+        spacing={0}
+        style={{ width: (subdomains.length * 2 - 1) * this.state.tileWidth }}
+      >
+        {/* Left endcap */}
+        {this.treeTile(endcapLeft)}
 
-          {/* Add tree branch */}
-          {this.joistRow()}
+        {/* Add tree branch */}
+        {this.joistRow()}
 
-          {/* Right endcap */}
-          {this.treeTile(endcapRight)}
+        {/* Right endcap */}
+        {this.treeTile(endcapRight)}
 
-          {/* Content */}
-          {this.domainRow()}
-        </GridList>
-      );
-    else
-      return (
-        <GridList
-          cols={1}
-          spacing={0}
-          cellHeight={"auto"}
-          style={{
-            width: this.state.tileWidth,
-          }}
-        >
-          {this.treeTile(pillar)}
-          <GridListTile>
-            <DomainTile
-              domain={subdomains[0]}
-              onClick={(e) => {
-                this.props.animate(e);
-                this.setState({ bounce: Math.random() });
-              }}
-              direction={Direction.Down}
-            />
-          </GridListTile>
-        </GridList>
-      );
+        {/* Content */}
+        {this.domainRow()}
+      </GridList>
+    ) : (
+      <GridList
+        cols={1}
+        spacing={0}
+        cellHeight={"auto"}
+        style={{ width: this.state.tileWidth }}
+      >
+        {this.treeTile(pillar)}
+        <GridListTile>
+          <DomainTile
+            domain={subdomains[0]}
+            onClick={(e) => {
+              this.props.animate(e);
+              this.setState({ bounce: Math.random() });
+            }}
+            direction={Direction.Down}
+          />
+        </GridListTile>
+      </GridList>
+    );
   }
 
   // Creates the joist connecting current domain with subdomains
   joistRow(): ReactNode[] {
-    let row: ReactNode[] = [];
-    let middleElement: string;
-    let half: number = this.props.currentDomain.subdomains.length - 2;
+    const row: ReactNode[] = [];
+    const half = this.props.currentDomain.subdomains.length - 2;
 
     // Determine the kind of middle element needed
-    if (this.props.currentDomain.subdomains.length % 2 === 0)
-      middleElement = teeDown;
-    else middleElement = intersect;
+    const middleElement = half % 2 === 0 ? teeDown : intersect;
 
     // Add elements on left, then the center, then the right
     this.halfJoist(half, row, true, true);
@@ -152,11 +143,11 @@ export default class TreeDepiction extends React.Component<
     startWithSpan: boolean,
     right: boolean
   ) {
-    let valForSpan: number = startWithSpan ? 0 : 1;
-    for (let count: number = 0; count < half; count++) {
-      if (count % 2 !== valForSpan)
-        row.push(this.treeTile(right ? teeUpRight : teeUpLeft));
-      else row.push(this.treeTile(span));
+    const valForSpan = startWithSpan ? 0 : 1;
+    for (let count = 0; count < half; count++) {
+      const tileToPush =
+        count % 2 === valForSpan ? span : right ? teeUpRight : teeUpLeft;
+      row.push(this.treeTile(tileToPush));
     }
   }
 
