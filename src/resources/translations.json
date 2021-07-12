@@ -430,6 +430,9 @@
       "off": ["Off", "Apagado", "Éteint"],
       "on": ["On", "Encendido", "Allumé"]
     },
+    "definitions": {
+      "label": ["Definitions", "Definitions", "Definitions"]
+    },
     "invite": {
       "inviteByEmailLabel": [
         "Invite by Email",
