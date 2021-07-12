@@ -56,7 +56,7 @@ namespace Backend.Tests.Controllers
             _projRepo.Delete(_projId);
         }
 
-        public string RandomLiftFile(string path)
+        public static string RandomLiftFile(string path)
         {
             var name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
             name = Path.Combine(path, name);
@@ -228,17 +228,17 @@ namespace Backend.Tests.Controllers
 
         private static RoundTripObj[] _roundTripCases =
         {
-            new RoundTripObj("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
-            new RoundTripObj("Lotud.zip", "dtr", new List<string>(), 5400),
-            new RoundTripObj("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570),
-            new RoundTripObj("Resembli.zip", "ags", new List<string>(), 255),
-            new RoundTripObj("RWC.zip", "es", new List<string>(), 132),
-            new RoundTripObj("Sena.zip", "seh", new List<string>(), 1462),
-            new RoundTripObj(
+            new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
+            new("Lotud.zip", "dtr", new List<string>(), 5400),
+            new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570),
+            new("Resembli.zip", "ags", new List<string>(), 255),
+            new("RWC.zip", "es", new List<string>(), 132),
+            new("Sena.zip", "seh", new List<string>(), 1462),
+            new(
                 "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
-            new RoundTripObj(
+            new(
                 "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)

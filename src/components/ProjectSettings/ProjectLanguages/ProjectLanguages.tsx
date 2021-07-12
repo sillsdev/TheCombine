@@ -15,7 +15,7 @@ import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import theme from "types/theme";
-import { getGlossLangsFromWords } from "types/word";
+import { getAnalysisLangsFromWords } from "types/word";
 
 interface LanguageProps {
   project: Project;
@@ -111,8 +111,8 @@ export default class ProjectLanguages extends React.Component<
     );
   }
 
-  async getAllGlossLangs() {
-    const langCodes = getGlossLangsFromWords(await getFrontierWords());
+  async getActiveAnalysisLangs() {
+    const langCodes = getAnalysisLangsFromWords(await getFrontierWords());
     langCodes.sort();
     const langsInProject = langCodes.join(", ");
     this.setState({ langsInProject });
@@ -184,7 +184,7 @@ export default class ProjectLanguages extends React.Component<
             <IconButtonWithTooltip
               icon={<Search />}
               textId="projectSettings.language.getGlossLanguages"
-              onClick={() => this.getAllGlossLangs()}
+              onClick={() => this.getActiveAnalysisLangs()}
             />
             {this.state.langsInProject}
           </React.Fragment>

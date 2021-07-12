@@ -1,16 +1,25 @@
 import { v4 } from "uuid";
 
-import { Gloss, Note, SemanticDomain, Sense, State, Word } from "api/models";
+import {
+  Definition,
+  Gloss,
+  Note,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "api/models";
 import { randomIntString } from "utilities";
 
-export function newGloss(def: string = "", language: string = ""): Gloss {
+export function newDefinition(text = "", language = ""): Definition {
+  return { text, language };
+}
+
+export function newGloss(def = "", language = ""): Gloss {
   return { def, language };
 }
 
-export function newSemanticDomain(
-  id: string = "",
-  name: string = ""
-): SemanticDomain {
+export function newSemanticDomain(id = "", name = ""): SemanticDomain {
   return { id, name, description: "" };
 }
 
@@ -21,6 +30,7 @@ export function newSense(
 ): Sense {
   const sense: Sense = {
     guid: v4(),
+    definitions: [],
     glosses: [],
     semanticDomains: [],
     accessibility: State.Active,
@@ -34,11 +44,11 @@ export function newSense(
   return sense;
 }
 
-export function newNote(text: string = "", language: string = ""): Note {
+export function newNote(text = "", language = ""): Note {
   return { text, language };
 }
 
-export function newWord(vernacular: string = ""): Word {
+export function newWord(vernacular = ""): Word {
   return {
     id: "",
     guid: v4(),
@@ -58,15 +68,6 @@ export function newWord(vernacular: string = ""): Word {
 export interface DomainWord {
   word: Word;
   gloss: Gloss;
-}
-
-export function hasSenses(word: Word): boolean {
-  return (
-    word.senses &&
-    word.senses.length > 0 &&
-    word.senses[0].glosses &&
-    word.senses[0].glosses.length > 0
-  );
 }
 
 export function simpleWord(vern: string, gloss: string): Word {
@@ -132,7 +133,7 @@ export function cleanGlosses(glosses: Gloss[]): Gloss[] {
   );
 }
 
-export function getGlossLangsFromWords(words: Word[]) {
+export function getAnalysisLangsFromWords(words: Word[]) {
   return reduceMultiType<Word, string[]>(words, [], wordReducer);
 }
 function reduceMultiType<A, B>(
@@ -145,6 +146,8 @@ function reduceMultiType<A, B>(
   return accumulated;
 }
 function wordReducer(accumulator: string[], word: Word) {
-  const newLangs = word.senses.flatMap((s) => s.glosses).map((g) => g.language);
+  const newLangs = word.senses
+    .flatMap((s) => [...s.definitions, ...s.glosses])
+    .map((dg) => dg.language);
   return [...new Set([...accumulator, ...newLangs])];
 }

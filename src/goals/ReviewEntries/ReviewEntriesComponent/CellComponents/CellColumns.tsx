@@ -127,18 +127,14 @@ const columns: Column<any>[] = [
     },
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (guid: string) => {
-        if (props.onRowDataChange)
+        if (props.onRowDataChange) {
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map((sense) => {
-              if (sense.guid === guid)
-                return {
-                  ...sense,
-                  deleted: !sense.deleted,
-                };
-              else return sense;
-            }),
+            senses: props.rowData.senses.map((s) =>
+              s.guid === guid ? { ...s, deleted: !s.deleted } : s
+            ),
           });
+        }
       };
       return (
         <DeleteCell
@@ -221,18 +217,14 @@ const columns: Column<any>[] = [
     ),
     editComponent: (props: FieldParameterStandard) => {
       const editDomains = (guid: string, domains: SemanticDomain[]) => {
-        if (props.onRowDataChange)
+        if (props.onRowDataChange) {
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map((sense) => {
-              if (sense.guid === guid)
-                return {
-                  ...sense,
-                  domains,
-                };
-              else return sense;
-            }),
+            senses: props.rowData.senses.map((s) =>
+              s.guid === guid ? { ...s, domains } : s
+            ),
           });
+        }
       };
       return (
         <DomainCell
@@ -259,8 +251,12 @@ const columns: Column<any>[] = [
         const regex = cleanRegExp(terms[0]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
-            if (regex.exec(domain.id) || regex.exec(domain.name.toLowerCase()))
+            if (
+              regex.exec(domain.id) ||
+              regex.exec(domain.name.toLowerCase())
+            ) {
               return true;
+            }
       } else {
         const regexNumber = cleanRegExp(terms[0]);
         const regexName = cleanRegExp(terms[1]);
@@ -269,8 +265,9 @@ const columns: Column<any>[] = [
             if (
               regexNumber.exec(domain.id) &&
               regexName.exec(domain.name.toLowerCase())
-            )
+            ) {
               return true;
+            }
       }
       return false;
     },

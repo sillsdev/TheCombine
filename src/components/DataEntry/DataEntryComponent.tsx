@@ -35,8 +35,8 @@ const paperStyle = {
 
 /** Filter out words that do not have at least 1 active sense */
 export function filterWords(words: Word[]): Word[] {
-  return words.filter(
-    (w) => w.senses.findIndex((s) => s.accessibility === State.Active) !== -1
+  return words.filter((w) =>
+    w.senses.find((s) => s.accessibility === State.Active)
   );
 }
 

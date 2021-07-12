@@ -20,7 +20,7 @@ namespace Backend.Tests.Mocks
         public Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
         {
             var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
-            var enumerable = (userId is null) ?
+            var enumerable = userId is null ?
                 cloneList.Where(e => e.ProjectId == projectId) :
                 cloneList.Where(e => e.ProjectId == projectId && e.UserId == userId);
             return Task.FromResult(enumerable.ToList());

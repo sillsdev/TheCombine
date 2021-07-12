@@ -9,8 +9,8 @@ namespace Backend.Tests.Models
         private const string EntryId = "MergeBlacklistEntryTestId";
         private const string ProjId = "MergeBlacklistEntryTestProjectId";
         private const string UserId = "MergeBlacklistEntryTestUserId";
-        private readonly List<string> wordIds = new List<string> { "word1", "word2" };
-        private readonly List<string> idsRevd = new List<string> { "word2", "word1" };
+        private readonly List<string> _wordIds = new() { "word1", "word2" };
+        private readonly List<string> _idsRevd = new() { "word2", "word1" };
 
         [Test]
         public void TestClone()
@@ -20,7 +20,7 @@ namespace Backend.Tests.Models
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = wordIds
+                WordIds = _wordIds
             };
             var entryB = entryA.Clone();
             Assert.That(entryA.Equals(entryB));
@@ -34,14 +34,14 @@ namespace Backend.Tests.Models
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = wordIds
+                WordIds = _wordIds
             };
             var entryB = new MergeBlacklistEntry
             {
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = idsRevd
+                WordIds = _idsRevd
             };
             Assert.That(entryA.Equals(entryB));
         }
@@ -63,7 +63,7 @@ namespace Backend.Tests.Models
             Assert.IsFalse(entryA.Equals(entryB));
 
             entryB = entryA.Clone();
-            entryA.WordIds = wordIds;
+            entryA.WordIds = _wordIds;
             Assert.IsFalse(entryA.Equals(entryB));
         }
 

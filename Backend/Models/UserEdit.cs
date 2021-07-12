@@ -57,7 +57,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is UserEdit other) || GetType() != obj.GetType())
+            if (obj is not UserEdit other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -95,7 +95,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is UserEditStepWrapper other) || GetType() != obj.GetType())
+            if (obj is not UserEditStepWrapper other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -157,7 +157,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Edit other) || GetType() != obj.GetType())
+            if (obj is not Edit other || GetType() != obj.GetType())
             {
                 return false;
             }

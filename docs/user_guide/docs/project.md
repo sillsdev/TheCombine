@@ -23,18 +23,25 @@ the data into your project.
 
 ## Manage a Project
 
-When a project has been created or selected, it becomes the active project, and the project name appears in the middle
-of the App Bar at the top of The Combine. Clicking on the project name brings up Project Settings for managing the
-project. The following settings are available for project users with sufficient permissions.
+When a project has been created or selected, it becomes the active project—you should see a gear icon and/or the project
+name in the middle of the App Bar at the top of The Combine. Clicking on the gear icon or project name brings up Project
+Settings for managing the project. The following settings are available for project users with sufficient permissions.
 
 ### Project Name
+
+A distinguishing and descriptive name is recommended. The project name is part of the filename when you
+[export](#import-and-export) your project.
 
 ### Vernacular and Analysis Languages
 
 The vernacular language specified at project creation is fixed.
 
-There may be multiple analysis languages associated with the project, but only the top one on the list here is active
-and associated with new data entries.
+There may be multiple analysis languages associated with the project, but only the top one on the list here is
+associated with new data entries.
+
+!!! note
+
+    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up in [data cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
 
 ### Import and Export
 
@@ -47,7 +54,8 @@ and associated with new data entries.
     Currently, only one LIFT file can be imported per project.
 
 After clicking the Export button, you can navigate to other parts of the website. A download icon will appear in the App
-Bar when the export is ready for download.
+Bar when the export is ready for download. The default filename is the [project name](#project-name) with a timestamp
+affixed.
 
 !!! important
 
