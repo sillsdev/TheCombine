@@ -27,6 +27,10 @@ namespace BackendFramework.Models
         public bool LiftImported { get; set; }
 
         [Required]
+        [BsonElement("definitionsEnabled")]
+        public bool DefinitionsEnabled { get; set; }
+
+        [Required]
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
@@ -73,6 +77,7 @@ namespace BackendFramework.Models
             Name = "";
             IsActive = true;
             LiftImported = false;
+            DefinitionsEnabled = false;
             AutocompleteSetting = AutocompleteSetting.On;
             VernacularWritingSystem = new WritingSystem();
             AnalysisWritingSystems = new List<WritingSystem>();
@@ -93,6 +98,7 @@ namespace BackendFramework.Models
                 Name = (string)Name.Clone(),
                 IsActive = IsActive,
                 LiftImported = LiftImported,
+                DefinitionsEnabled = DefinitionsEnabled,
                 AutocompleteSetting = AutocompleteSetting,
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 AnalysisWritingSystems = new List<WritingSystem>(),
@@ -147,6 +153,7 @@ namespace BackendFramework.Models
                 other.Name.Equals(Name) &&
                 other.IsActive.Equals(IsActive) &&
                 other.LiftImported.Equals(LiftImported) &&
+                other.DefinitionsEnabled.Equals(DefinitionsEnabled) &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
@@ -191,6 +198,7 @@ namespace BackendFramework.Models
             hash.Add(Id);
             hash.Add(Name);
             hash.Add(LiftImported);
+            hash.Add(DefinitionsEnabled);
             hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
             hash.Add(VernacularWritingSystem);
