@@ -47,6 +47,17 @@ function MergesMade(changes: MergesCompleted) {
   );
 }
 
+export function MergesCount(changes: MergesCompleted) {
+  return (
+    <div>
+      <Typography>
+        <Translate id="mergeDups.completed.number" />
+        {changes.merges?.length ?? 0}
+      </Typography>
+    </div>
+  );
+}
+
 function MergeChange(change: CompletedMerge) {
   return (
     <div key={change.parentIds[0]}>
