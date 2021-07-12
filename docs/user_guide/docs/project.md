@@ -23,10 +23,9 @@ the data into your project.
 
 ## Manage a Project
 
-When a project has been created or selected, it becomes the active project--you should see a gear icon and/or the
-project name in the middle of the App Bar at the top of The Combine. Clicking on the gear icon or project name brings up
-Project Settings for managing the project. The following settings are available for project users with sufficient
-permissions.
+When a project has been created or selected, it becomes the active project—you should see a gear icon and/or the project
+name in the middle of the App Bar at the top of The Combine. Clicking on the gear icon or project name brings up Project
+Settings for managing the project. The following settings are available for project users with sufficient permissions.
 
 ### Project Name
 

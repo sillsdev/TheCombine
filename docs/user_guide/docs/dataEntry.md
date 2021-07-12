@@ -8,7 +8,7 @@ Browse or search for the domain of interest.
 
 ### Vernacular
 
-A word as found in the vernacular language, usually typed either phonetically or with the local orthography.
+A word as found in the vernacular language, usually spelled either phonetically or with the local orthography.
 
 ### Gloss
 

@@ -96,6 +96,43 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
+        public void HaveIdenticalDefinitionTest()
+        {
+            const string text = "YesDef";
+            const string lang = "YesLang";
+
+            var defYY = new Definition { Text = text, Language = lang };
+            var defYN = new Definition { Text = text, Language = "NoLang" };
+            var defNY = new Definition { Text = "NoDef", Language = lang };
+
+            var senseEmpty = new Sense { Definitions = new List<Definition> { new() } };
+            var senseEmptyDYY = new Sense { Definitions = new List<Definition> { new(), defYY } };
+            var senseEmptyDNYDYY = new Sense { Definitions = new List<Definition> { new(), defNY, defYY } };
+            var senseDYNDNY = new Sense { Definitions = new List<Definition> { defYN, defNY } };
+
+            var wordWithOnlyDYY = new Word
+            {
+                Senses = new List<Sense> { new(), senseEmpty, senseEmptyDYY }
+            };
+            var wordAlsoWithDYY = new Word
+            {
+                Senses = new List<Sense> { senseDYNDNY, new(), senseEmptyDNYDYY, senseEmpty }
+            };
+            var wordWithoutDYY = new Word
+            {
+                Senses = new List<Sense> { senseEmpty, senseDYNDNY, new() }
+            };
+
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalDefinition(new Word(), new Word()));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalDefinition(new Word(), wordWithOnlyDYY));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalDefinition(wordWithoutDYY, new Word()));
+            Assert.IsFalse(DuplicateFinder.HaveIdenticalDefinition(wordWithOnlyDYY, wordWithoutDYY));
+
+            Assert.IsTrue(DuplicateFinder.HaveIdenticalDefinition(wordWithOnlyDYY, wordAlsoWithDYY));
+            Assert.IsTrue(DuplicateFinder.HaveIdenticalDefinition(wordAlsoWithDYY, wordWithOnlyDYY));
+        }
+
+        [Test]
         public void HaveIdenticalGlossTest()
         {
             const string def = "YesGloss";
