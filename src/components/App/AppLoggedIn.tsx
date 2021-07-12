@@ -7,7 +7,7 @@ import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
 import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
-import ProjectSettings from "components/ProjectSettings";
+import ProjectSettings from "components/ProjectSettings/ProjectSettingsComponent";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
 import UserSettings from "components/UserSettings/UserSettings";
 

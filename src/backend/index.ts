@@ -435,6 +435,11 @@ export async function getUserRoles(): Promise<UserRole[]> {
   return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
+export async function getUserRole(userRoleId: string): Promise<UserRole> {
+  const params = { projectId: LocalStorage.getProjectId(), userRoleId };
+  return (await userRoleApi.getUserRole(params, defaultOptions())).data;
+}
+
 export async function addUserRole(
   permission: Permission[],
   userId: string
