@@ -209,7 +209,7 @@ export default class Login extends React.Component<
                       type: "submit",
                       color: "primary",
                     }}
-                    //disabled={!this.state.isVerified}
+                    disabled={!this.state.isVerified}
                     loading={this.props.loginAttempt}
                   >
                     <Translate id="login.login" />
