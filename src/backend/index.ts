@@ -436,13 +436,11 @@ export async function addUserRole(
 
 export async function removeUserRole(
   permission: Permission[],
-  userRoleId: string,
   userId: string
 ): Promise<void> {
-  console.log(userRoleId);
+  console.log(userId);
   const params = {
     projectId: LocalStorage.getProjectId(),
-    userRoleId,
     userId,
     permission,
   };
