@@ -19,8 +19,8 @@ describe("GlossCell", () => {
           <GlossCell
             rowData={mockWord}
             value={mockWord.senses}
-            editable={true}
-            sortingByGloss={true}
+            editable
+            sortingByThis
           />
         </Provider>
       );

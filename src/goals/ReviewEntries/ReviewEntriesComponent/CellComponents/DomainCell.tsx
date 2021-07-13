@@ -19,7 +19,7 @@ import { newSemanticDomain } from "types/word";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;
-  sortingByDomains: boolean;
+  sortingByThis?: boolean;
   editDomains?: (guid: string, newDomains: SemanticDomain[]) => void;
 }
 
@@ -62,7 +62,7 @@ export default function DomainCell(props: DomainCellProps) {
   }
 
   function getChipStyle(senseIndex: number, domainIndex: number) {
-    return props.sortingByDomains && senseIndex === 0 && domainIndex === 0
+    return props.sortingByThis && senseIndex === 0 && domainIndex === 0
       ? { backgroundColor: themeColors.highlight }
       : {};
   }
@@ -96,7 +96,7 @@ export default function DomainCell(props: DomainCellProps) {
               <Grid item xs key={`noDomain${sense.guid}`}>
                 <Chip
                   label={<Translate id="reviewEntries.noDomain" />}
-                  color={props.sortingByDomains ? "default" : "secondary"}
+                  color={props.sortingByThis ? "default" : "secondary"}
                   style={getChipStyle(senseIndex, 0)}
                 />
               </Grid>

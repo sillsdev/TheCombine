@@ -1,13 +1,13 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import { Word } from "api/models";
 import {
   StyledMenuItem,
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
-import { simpleWord, testWordList, Word } from "types/word";
+import { simpleWord, testWordList } from "types/word";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({

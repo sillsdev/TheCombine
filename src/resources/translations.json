@@ -521,6 +521,11 @@
       "¡No tenemos un vernáculo!",
       "Pas d'entrée vernaculaire !"
     ],
+    "noDefinition": [
+      "No definitions input",
+      "No hay entrada de definiciones",
+      "Pas d'entrée de définitions"
+    ],
     "noGloss": [
       "No glosses input",
       "No hay entrada de glosas",

@@ -3,7 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import { Gloss } from "api/models";
+import { Definition } from "api/models";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
@@ -11,15 +11,15 @@ import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesCompone
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
-import { newGloss } from "types/word";
+import { newDefinition } from "types/word";
 
-interface GlossCellProps {
+interface DefinitionCellProps {
   editable?: boolean;
   sortingByThis?: boolean;
 }
 
-export default function GlossCell(
-  props: FieldParameterStandard & GlossCellProps
+export default function DefinitionCell(
+  props: FieldParameterStandard & DefinitionCellProps
 ) {
   const analysisLang = useSelector(
     (state: StoreState) => state.currentProject.analysisWritingSystems[0].bcp47
@@ -30,11 +30,11 @@ export default function GlossCell(
       listId={`senses${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, index) =>
         props.editable ? (
-          <GlossList
-            glosses={sense.glosses}
+          <DefinitionList
+            definitions={sense.definitions}
             defaultLang={analysisLang}
-            keyPrefix={`glosses${props.rowData.id}`}
-            onChange={(glosses) =>
+            keyPrefix={`definitions${props.rowData.id}`}
+            onChange={(definitions) =>
               props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
@@ -42,7 +42,7 @@ export default function GlossCell(
                   ...props.rowData.senses.slice(0, index),
                   {
                     ...sense,
-                    glosses,
+                    definitions,
                   },
                   ...props.rowData.senses.slice(index + 1),
                 ],
@@ -54,9 +54,9 @@ export default function GlossCell(
             {({ translate }) => (
               <Input
                 fullWidth
-                key={`glosses${props.rowData.id}`}
-                value={ReviewEntriesSense.glossString(props.value[index])}
-                placeholder={translate("reviewEntries.noGloss").toString()}
+                key={`definitions${props.rowData.id}`}
+                value={ReviewEntriesSense.definitionString(props.value[index])}
+                placeholder={translate("reviewEntries.noDefinition").toString()}
                 disabled={sense.deleted}
                 readOnly
                 disableUnderline
@@ -76,29 +76,32 @@ export default function GlossCell(
   );
 }
 
-interface GlossListProps {
-  glosses: Gloss[];
+interface DefinitionListProps {
+  definitions: Definition[];
   defaultLang: string;
   keyPrefix: string;
-  onChange: (glosses: Gloss[]) => void;
+  onChange: (definitions: Definition[]) => void;
 }
 
-function GlossList(props: GlossListProps) {
-  const langs = props.glosses.map((g) => g.language);
+function DefinitionList(props: DefinitionListProps) {
+  const langs = props.definitions.map((g) => g.language);
   if (!langs.includes(props.defaultLang)) {
-    props.onChange([...props.glosses, newGloss("", props.defaultLang)]);
+    props.onChange([
+      ...props.definitions,
+      newDefinition("", props.defaultLang),
+    ]);
   }
 
   return (
     <React.Fragment>
-      {props.glosses.map((g, i) => (
-        <GlossField
-          gloss={g}
-          key={`${props.keyPrefix}-gloss${i}`}
-          onChange={(gloss: Gloss) => {
-            const updatedGlosses = [...props.glosses];
-            updatedGlosses.splice(i, 1, gloss);
-            props.onChange(updatedGlosses);
+      {props.definitions.map((g, i) => (
+        <DefinitionField
+          definition={g}
+          key={`${props.keyPrefix}-definition${i}`}
+          onChange={(definition: Definition) => {
+            const updatedDefinitions = [...props.definitions];
+            updatedDefinitions.splice(i, 1, definition);
+            props.onChange(updatedDefinitions);
           }}
         />
       ))}
@@ -106,24 +109,24 @@ function GlossList(props: GlossListProps) {
   );
 }
 
-interface GlossFieldProps {
-  gloss: Gloss;
-  onChange: (gloss: Gloss) => void;
+interface DefinitionFieldProps {
+  definition: Definition;
+  onChange: (definition: Definition) => void;
 }
 
-function GlossField(props: GlossFieldProps) {
+function DefinitionField(props: DefinitionFieldProps) {
   return (
     <TextField
-      label={`${props.gloss.language}:`}
+      label={`${props.definition.language}:`}
       variant="outlined"
       margin="dense"
       multiline
-      value={props.gloss.def}
-      error={props.gloss.def.length === 0}
+      value={props.definition.text}
+      error={props.definition.text.length === 0}
       onChange={(event) =>
         props.onChange({
-          language: props.gloss.language,
-          def: event.target.value,
+          language: props.definition.language,
+          text: event.target.value,
         })
       }
     />

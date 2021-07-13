@@ -14,12 +14,7 @@ export default function ProjectDefinitions() {
     <FormControl>
       <Select
         value={project.definitionsEnabled}
-        onChange={(
-          event: React.ChangeEvent<{
-            name?: string;
-            value: unknown;
-          }>
-        ) =>
+        onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
           saveChangesToProject(
             {
               ...project,

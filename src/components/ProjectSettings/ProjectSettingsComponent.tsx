@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import {
+  Assignment,
   CloudUpload,
   Edit,
   GetApp,
@@ -19,6 +20,7 @@ import { getCurrentUser } from "backend/localStorage";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
+import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
@@ -108,6 +110,15 @@ export default function ProjectSettingsComponent() {
         title={<Translate id="projectSettings.autocomplete.label" />}
         body={<ProjectAutocomplete />}
       />
+
+      {/* Autocomplete setting */}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Assignment />}
+          title={<Translate id="projectSettings.definitions.label" />}
+          body={<ProjectDefinitions />}
+        />
+      )}
 
       {/* See current users in project */}
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (

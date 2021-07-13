@@ -1,8 +1,9 @@
-import { TextField, Typography } from "@material-ui/core";
+import { Input, TextField, Typography } from "@material-ui/core";
 import { Column } from "@material-table/core";
 import { Translate } from "react-localize-redux";
 
 import { SemanticDomain } from "api/models";
+import DefinitionCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DefinitionCell";
 import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
@@ -17,6 +18,7 @@ enum SortStyle {
   // so there is currently no way to trigger their SortStyles.
   //VERNACULAR,
   SENSE,
+  DEFINITION,
   GLOSS,
   DOMAIN,
   PRONUNCIATION,
@@ -48,6 +50,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
       {({ translate }) => (
         <TextField
           key={`vernacular${props.rowData.id}`}
+          multiline
           value={props.value}
           error={props.value.length === 0}
           placeholder={translate("reviewEntries.noVernacular").toString()}
@@ -76,6 +79,7 @@ function noteField(props: FieldParameterStandard) {
       {({ translate }) => (
         <TextField
           key={`vernacular${props.rowData.id}`}
+          multiline
           value={props.value}
           placeholder={translate("reviewEntries.noNote").toString()}
           // Handles editing local word
@@ -146,6 +150,63 @@ const columns: Column<any>[] = [
       );
     },
   },
+  // Definitions column
+  {
+    title: "Definitions",
+    field: "definitions",
+    disableClick: true,
+    render: (rowData: ReviewEntriesWord) => (
+      <DefinitionCell
+        value={rowData.senses}
+        rowData={rowData}
+        sortingByThis={currentSort === SortStyle.DEFINITION}
+      />
+    ),
+    editComponent: (props: FieldParameterStandard) => (
+      <DefinitionCell
+        value={props.value}
+        rowData={props.rowData}
+        onRowDataChange={props.onRowDataChange}
+        editable
+      />
+    ),
+    customFilterAndSearch: (
+      term: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
+      const regex = cleanRegExp(term);
+      for (const sense of rowData.senses) {
+        const definitionsString = ReviewEntriesSense.definitionString(sense);
+        if (regex.exec(definitionsString.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.DEFINITION) {
+        currentSort = SortStyle.DEFINITION;
+      }
+
+      for (
+        let count = 0;
+        count < a.senses.length && count < b.senses.length;
+        count++
+      ) {
+        const stringA = ReviewEntriesSense.definitionString(a.senses[count]);
+        const stringB = ReviewEntriesSense.definitionString(b.senses[count]);
+        if (stringA !== stringB) {
+          const stringsAB = [stringA, stringB];
+          stringsAB.sort();
+          if (stringA === stringsAB[0]) {
+            return -1;
+          }
+          return 1;
+        }
+      }
+      return a.senses.length - b.senses.length;
+    },
+  },
   // Glosses column
   {
     title: "Glosses",
@@ -155,8 +216,7 @@ const columns: Column<any>[] = [
       <GlossCell
         value={rowData.senses}
         rowData={rowData}
-        editable={false}
-        sortingByGloss={currentSort === SortStyle.GLOSS}
+        sortingByThis={currentSort === SortStyle.GLOSS}
       />
     ),
     editComponent: (props: FieldParameterStandard) => (
@@ -164,8 +224,7 @@ const columns: Column<any>[] = [
         value={props.value}
         rowData={props.rowData}
         onRowDataChange={props.onRowDataChange}
-        editable={true}
-        sortingByGloss={false}
+        editable
       />
     ),
     customFilterAndSearch: (
@@ -212,7 +271,7 @@ const columns: Column<any>[] = [
     render: (rowData: ReviewEntriesWord) => (
       <DomainCell
         rowData={rowData}
-        sortingByDomains={currentSort === SortStyle.DOMAIN}
+        sortingByThis={currentSort === SortStyle.DOMAIN}
       />
     ),
     editComponent: (props: FieldParameterStandard) => {
@@ -226,13 +285,7 @@ const columns: Column<any>[] = [
           });
         }
       };
-      return (
-        <DomainCell
-          rowData={props.rowData}
-          editDomains={editDomains}
-          sortingByDomains={false}
-        />
-      );
+      return <DomainCell rowData={props.rowData} editDomains={editDomains} />;
     },
     customFilterAndSearch: (
       term: string,
@@ -362,7 +415,14 @@ const columns: Column<any>[] = [
     title: "Note",
     field: "noteText",
     render: (rowData: ReviewEntriesWord) => (
-      <Typography>{rowData.noteText}</Typography>
+      <Input
+        fullWidth
+        key={`note${rowData.id}`}
+        value={rowData.noteText}
+        readOnly
+        disableUnderline
+        multiline
+      />
     ),
     editComponent: (props: FieldParameterStandard) => noteField(props),
   },
