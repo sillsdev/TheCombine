@@ -34,11 +34,17 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
-install_microk8s: yes
-install_helm: yes
+k8s_components:
+  - microk8s
+
 pull_secrets_manager: registry_creds
+image_pull_secrets:
+  - awsecr-cred
 
 app_namespace: thecombine
+
+k8s_user: sillsdev
+k8s_group: sillsdev
 
 ################################################
 # The use model for the Combine when deployed on

@@ -1,6 +1,3 @@
-minikube_pkg_file: /tmp/minikube_latest_amd64.deb
-minikube_url: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
-
 k8s_required_pkgs:
   - apt-transport-https
   - ca-certificates
@@ -10,3 +7,4 @@ microk8s_addons:
   - storage
   - dns
   - ingress
+  - helm3

@@ -31,28 +31,6 @@
   tasks:
     - name: Create The Combine Kubernetes cluster
       delegate_to: localhost
-      block:
-        - name: Setup container registry credentials
-          include_role:
-            name: "{{ pull_secrets_manager }}"
-          when:
-            - pull_secrets_manager is defined
-
-        - name: Create Storage Class
-          import_role:
-            name: k8s_storage
-          when:
-            - k8s_storage_class is defined
-            - k8s_storage_class != "microk8s-hostpath"
-
-        - name: Install cert-manager
-          include_role:
-            name: k8s_cert_manager
-            apply:
-              tags:
-                - config
-          when: '"cert_manager" in k8s_components'
-
-        - name: Create Kubernetes Configuration Files
-          import_role:
-            name: k8s_config
+      import_role:
+        name: k8s_config
+        tasks_from: patch

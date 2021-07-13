@@ -12,11 +12,11 @@ config_analytics_write_key: ""
 # playbook.  It will set the IMAGE_TAG environment variable to
 # value provided by the user and launch docker-compose
 ################################################
-image_tag: "${IMAGE_TAG}"
+image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 
 ################################################
 # SSL cert variables specific to NUC targets
@@ -50,11 +50,18 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
-install_microk8s: yes
-install_helm: yes
+k8s_components:
+  - microk8s
+  - cert_manager
+
 pull_secrets_manager: registry_creds
+image_pull_secrets:
+  - awsecr-cred
 
 app_namespace: thecombine
+
+k8s_user: sillsdev
+k8s_group: sillsdev
 
 ################################################
 # The use model for the Combine when deployed on

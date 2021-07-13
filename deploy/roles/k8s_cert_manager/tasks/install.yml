@@ -1,0 +1,5 @@
+---
+- name: Install cert-manager and CustomResourceDefinitions
+  command: kubectl --kubeconfig=kubeconfig apply -f https://github.com/jetstack/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
+  args:
+    chdir: "{{ k8s_working_dir }}"

@@ -27,6 +27,11 @@ spec:
     spec:
       containers:
         - image: mongo:4.4
+{% if image_tag == "latest "%}
+          imagePullPolicy: Always
+{% else %}
+          imagePullPolicy: IfNotPresent
+{% endif %}
           name: database
           ports:
             - containerPort: 27017

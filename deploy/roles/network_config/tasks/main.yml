@@ -37,5 +37,5 @@
     - netdev
     - network
   when:
-    - install_microk8s
+    - '"microk8s" in k8s_components'
   notify: Restart networkd

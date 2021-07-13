@@ -29,27 +29,53 @@
     - name: Enable selected microk8s addons
       command: microk8s enable {{ microk8s_addons | join(' ') }}
 
-    - name: Get kubeconfig for microk8s
-      command: microk8s config
-      register: kubeconfig
+    - name: Add DNS name to microk8s config template
+      lineinfile:
+        path: /var/snap/microk8s/current/certs/csr.conf.template
+        insertafter: "^DNS\\.5"
+        line: DNS.6 = {{ combine_server_name }}
 
-    - name: Create directory for kubectl config file
+    - name: Get home directory for {{ k8s_user }}
+      shell: >
+        getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
+      register: k8s_user_home
+      changed_when: false
+
+    - name: Create .kube directory
       file:
-        path: "{{ ansible_env.HOME }}/.kube"
+        path: "{{ k8s_user_home.stdout }}/.kube"
         state: directory
         owner: "{{ k8s_user }}"
         group: "{{ k8s_group }}"
         mode: 0700
 
-    - name: Save kubectl configuration for {{ k8s_user }} on {{ ansible_hostname }}
-      copy:
-        content: "{{ kubeconfig.stdout }}"
-        dest: "{{ ansible_env.HOME }}/.kube/config"
+    - name: Save kubectl configuration in {{ k8s_user_home.stdout }}/.kube/config
+      shell: microk8s config > {{ k8s_user_home.stdout }}/.kube/config
+
+    - name: Set permissions on .kube/config
+      file:
+        path: "{{ k8s_user_home.stdout }}/.kube/config"
+        state: file
         owner: "{{ k8s_user }}"
         group: "{{ k8s_group }}"
         mode: 0600
-  when:
-    - install_microk8s
+
+    - name: Save kubectl configuration in site_files on host
+      fetch:
+        src: "{{ k8s_user_home.stdout }}/.kube/config"
+        dest: "{{ k8s_working_dir }}/kubeconfig"
+        flat: yes
+
+    - name: Replace server IP with DNS name in site_files copy
+      delegate_to: localhost
+      become: no
+      lineinfile:
+        state: present
+        path: "{{ k8s_working_dir }}/kubeconfig"
+        regexp: '^(\s+server: https:\/\/)[.0-9]+:16443'
+        backrefs: yes
+        line: '\1{{ combine_server_name}}:16443'
+  when: '"microk8s" in k8s_components'
 
 - name: Download the Google Cloud public signing key
   get_url:

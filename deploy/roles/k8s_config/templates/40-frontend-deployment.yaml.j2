@@ -76,6 +76,11 @@ spec:
                   name: env-frontend
 {% endif %}
           image: '{{ combine_image_frontend }}'
+{% if image_tag == "latest "%}
+          imagePullPolicy: Always
+{% else %}
+          imagePullPolicy: IfNotPresent
+{% endif %}
           name: frontend
           ports:
             - containerPort: 80

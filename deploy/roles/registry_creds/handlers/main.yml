@@ -1,3 +1,0 @@
----
-- name: update registry_creds
-  include_tasks: tasks/apply_registry_config.yml

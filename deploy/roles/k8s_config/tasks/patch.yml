@@ -11,14 +11,14 @@
     dest: "{{ k8s_combine_cfg }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
     mode: 0600
   with_fileglob:
-    - "templates/*.yaml.j2"
+    - "templates/40-*.yaml.j2"
 
 - name: Lookup generated configuration files
   find:
     paths:
       - "{{ k8s_combine_cfg }}"
     file_type: file
-    patterns: "*.yaml"
+    patterns: "40-*.yaml"
   register: kube_config
 
 - name: Apply Kubernetes configuration

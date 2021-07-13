@@ -1,10 +1,10 @@
 ---
 ##############################################################
-# Playbook: playbook_install.yml
+# Playbook: playbook_kube_install.yml
 #
-# playbook_install.yml installs the packages and
+# playbook_kube_install.yml installs the packages and
 # configuration files that are required to run TheCombine
-# as a collection of Docker containers.
+# as Docker containers managed by a Kubernetes cluster.
 #
 ##############################################################
 
@@ -42,15 +42,7 @@
       import_role:
         name: k8s_install
 
-    - name: Install Helm
-      import_role:
-        name: install_helm
-      when:
-        - install_helm
-        - not install_microk8s
-
-    - name: Enable Helm plugin
-      shell: microk8s enable helm3
-      when:
-        - install_helm
-        - install_microk8s
+    - name: Install cert-manager and CustomResourceDefinitions
+      become_user: "{{ k8s_user }}"
+      command: kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
+      when: '"cert_manager" in k8s_components'

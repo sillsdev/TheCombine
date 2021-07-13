@@ -4,22 +4,15 @@ k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}/"
 k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
 k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
 
-# User configuration
-k8s_user: sillsdev
-k8s_group: sillsdev
-
-# AWS configuration
-aws_ecr_profile: ecr_read_only
-aws_s3_profile: s3_read_write
-
+# # AWS configuration
+# aws_ecr_profile: ecr_read_only
+# aws_s3_profile: s3_read_write
+#
 image_pull_secrets:
   - awsecr-cred
 
 # secret name in the Rancher POC
 # - name: us-east-1-ecr-thecombine-token
-
-# Combine configuration
-combine_version: 0.6.9
 
 # Persistent storage size configurations
 backend_data_size: 4Gi
@@ -54,5 +47,4 @@ combine_image_certmgr: combine/certmgr
 #######################################
 # Environment variable defaults for the
 # certmgr
-cert_is_staging: 0
-cert_max_connect_tries: 15
+cert_issuer: letsencrypt-prod

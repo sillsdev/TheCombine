@@ -70,6 +70,11 @@ spec:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
           image: '{{ combine_image_backend }}'
+{% if image_tag == "latest "%}
+          imagePullPolicy: Always
+{% else %}
+          imagePullPolicy: IfNotPresent
+{% endif %}
           name: backend
           ports:
             - containerPort: 5000
