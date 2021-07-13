@@ -36,7 +36,7 @@ export default function ProjectSettingsComponent() {
 
   useEffect(() => {
     const roleId = currentRoles[projectId];
-    if (currentRoles[projectId]) {
+    if (roleId) {
       backend
         .getUserRole(roleId)
         .then((role) => setPermissions(role.permissions));

@@ -14,12 +14,7 @@ export default function ProjectAutocomplete() {
     <FormControl>
       <Select
         value={project.autocompleteSetting}
-        onChange={(
-          event: React.ChangeEvent<{
-            name?: string;
-            value: unknown;
-          }>
-        ) =>
+        onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
           saveChangesToProject(
             {
               ...project,
@@ -29,10 +24,10 @@ export default function ProjectAutocomplete() {
           )
         }
       >
-        <MenuItem value="Off">
+        <MenuItem value={AutocompleteSetting.Off}>
           <Translate id="projectSettings.autocomplete.off" />
         </MenuItem>
-        <MenuItem value="On">
+        <MenuItem value={AutocompleteSetting.On}>
           <Translate id="projectSettings.autocomplete.on" />
         </MenuItem>
       </Select>
