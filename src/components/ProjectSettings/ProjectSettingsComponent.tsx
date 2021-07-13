@@ -1,12 +1,4 @@
-import React from "react";
-import { Translate } from "react-localize-redux";
-import {
-  FormControl,
-  Grid,
-  MenuItem,
-  Select,
-  Typography,
-} from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import {
   CloudUpload,
   Edit,
@@ -17,11 +9,16 @@ import {
   Sms,
   Language,
 } from "@material-ui/icons";
+import { useEffect, useMemo, useState } from "react";
+import { Translate } from "react-localize-redux";
+import { useSelector } from "react-redux";
 
-import { AutocompleteSetting, Permission, Project } from "api/models";
+import { Permission } from "api/models";
 import * as backend from "backend";
+import { getCurrentUser } from "backend/localStorage";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportButton from "components/ProjectExport/ExportButton";
+import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
@@ -29,175 +26,106 @@ import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ProjectUsers, {
   ActiveUsers,
 } from "components/ProjectSettings/ProjectUsers";
+import { StoreState } from "types";
 
-interface ProjectSettingsProps {
-  project: Project;
-}
+export default function ProjectSettingsComponent() {
+  const projectId = useSelector((state: StoreState) => state.currentProject.id);
+  const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [imports, setImports] = useState<boolean>(false);
 
-interface ProjectSettingsState {
-  projectName?: string;
-  imports?: boolean;
-  editUsers?: boolean;
-  autocompleteSetting?: AutocompleteSetting;
-  loading: boolean;
-}
-
-export default class ProjectSettingsComponent extends React.Component<
-  ProjectSettingsProps,
-  ProjectSettingsState
-> {
-  constructor(props: ProjectSettingsProps) {
-    super(props);
-    this.state = { loading: true };
-  }
-
-  async componentDidMount() {
-    await this.getSettings();
-  }
-
-  private async getSettings() {
-    const allPermissions = await backend.getUserRoles();
-    const currentRole = allPermissions.find(
-      (value) => value.projectId === this.props.project.id
-    );
-    const settings: ProjectSettingsState = { ...this.state };
-
-    if (currentRole) {
-      for (const role of currentRole.permissions) {
-        if (role === Permission.ImportExport) {
-          settings.projectName = this.props.project.name;
-          settings.autocompleteSetting = this.props.project.autocompleteSetting;
-          settings.imports = await backend.canUploadLift();
-        }
-        if (role === Permission.DeleteEditSettingsAndUsers) {
-          settings.editUsers = true;
-        }
-      }
+  useEffect(() => {
+    const roleId = currentRoles[projectId];
+    if (roleId) {
+      backend
+        .getUserRole(roleId)
+        .then((role) => setPermissions(role.permissions));
     }
-    settings.loading = false;
-    this.setState(settings);
-  }
+  }, [currentRoles, projectId]);
 
-  async componentDidUpdate(prevProps: ProjectSettingsProps) {
-    if (prevProps.project.id !== this.props.project.id) {
-      await this.getSettings();
+  useEffect(() => {
+    if (permissions.includes(Permission.ImportExport)) {
+      backend.canUploadLift().then(setImports);
     }
-  }
+  }, [permissions, setImports]);
 
-  render() {
-    return (
-      <React.Fragment>
-        {!this.state.loading && (
-          <Grid container justify="center" spacing={6}>
-            {/* Project List */}
-            <BaseSettingsComponent
-              icon={<List />}
-              title={<Translate id="projectSettings.projectList" />}
-              body={<ProjectSwitch />}
-            />
+  return (
+    <Grid container justify="center" spacing={6}>
+      {/* Project List */}
+      <BaseSettingsComponent
+        icon={<List />}
+        title={<Translate id="projectSettings.projectList" />}
+        body={<ProjectSwitch />}
+      />
 
-            {/* Project name */}
-            {this.props.project.name && (
-              <BaseSettingsComponent
-                icon={<Edit />}
-                title={<Translate id="projectSettings.name" />}
-                body={<ProjectName />}
-              />
-            )}
+      {/* Project name */}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Edit />}
+          title={<Translate id="projectSettings.name" />}
+          body={<ProjectName />}
+        />
+      )}
 
-            {/*Project Vernacular and Analysis Languages*/}
-            {this.props.project.name && (
-              <BaseSettingsComponent
-                icon={<Language />}
-                title={
-                  <Translate id="projectSettings.language.interfaceLanguage" />
-                }
-                body={<ProjectLanguages />}
-              />
-            )}
+      {/*Project Vernacular and Analysis Languages*/}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Language />}
+          title={<Translate id="projectSettings.language.interfaceLanguage" />}
+          body={<ProjectLanguages />}
+        />
+      )}
 
-            {/* Import Lift file */}
-            <BaseSettingsComponent
-              icon={<CloudUpload />}
-              title={<Translate id="projectSettings.import.header" />}
-              body={
-                this.state.imports ? (
-                  <ProjectImport />
-                ) : (
-                  <Typography variant="caption">
-                    <Translate id="projectSettings.import.notAllowed" />
-                  </Typography>
-                )
-              }
-            />
+      {/* Import Lift file */}
+      {permissions.includes(Permission.ImportExport) && (
+        <BaseSettingsComponent
+          icon={<CloudUpload />}
+          title={<Translate id="projectSettings.import.header" />}
+          body={
+            imports ? (
+              <ProjectImport />
+            ) : (
+              <Typography variant="caption">
+                <Translate id="projectSettings.import.notAllowed" />
+              </Typography>
+            )
+          }
+        />
+      )}
 
-            {/* Export Lift file */}
-            <BaseSettingsComponent
-              icon={<GetApp />}
-              title={<Translate id="projectSettings.exportProject.label" />}
-              body={<ExportButton projectId={this.props.project.id} />}
-            />
+      {/* Export Lift file */}
+      {permissions.includes(Permission.ImportExport) && (
+        <BaseSettingsComponent
+          icon={<GetApp />}
+          title={<Translate id="projectSettings.exportProject.label" />}
+          body={<ExportButton projectId={projectId} />}
+        />
+      )}
 
-            {/* Autocomplete setting */}
-            <BaseSettingsComponent
-              icon={<Sms />}
-              title={<Translate id="projectSettings.autocomplete.label" />}
-              body={
-                <FormControl>
-                  <Select
-                    value={this.props.project.autocompleteSetting}
-                    onChange={(
-                      event: React.ChangeEvent<{
-                        name?: string;
-                        value: unknown;
-                      }>
-                    ) => {
-                      this.props.project.autocompleteSetting = event.target
-                        .value as AutocompleteSetting;
-                      this.setState({
-                        autocompleteSetting: event.target
-                          .value as AutocompleteSetting,
-                      });
-                      backend
-                        .updateProject(this.props.project)
-                        .catch(() =>
-                          console.log(
-                            "failed: " + this.props.project.autocompleteSetting
-                          )
-                        );
-                    }}
-                  >
-                    <MenuItem value="Off">
-                      <Translate id="projectSettings.autocomplete.off" />
-                    </MenuItem>
-                    <MenuItem value="On">
-                      <Translate id="projectSettings.autocomplete.on" />
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              }
-            />
+      {/* Autocomplete setting */}
+      <BaseSettingsComponent
+        icon={<Sms />}
+        title={<Translate id="projectSettings.autocomplete.label" />}
+        body={<ProjectAutocomplete />}
+      />
 
-            {/* See current users in project */}
-            {this.state.projectName && (
-              <BaseSettingsComponent
-                icon={<People />}
-                title={<Translate id="projectSettings.user.currentUsers" />}
-                body={<ActiveUsers />}
-              />
-            )}
+      {/* See current users in project */}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<People />}
+          title={<Translate id="projectSettings.user.currentUsers" />}
+          body={<ActiveUsers />}
+        />
+      )}
 
-            {/* Add users to project */}
-            {this.state.projectName && (
-              <BaseSettingsComponent
-                icon={<PersonAdd />}
-                title={<Translate id="projectSettings.user.addUser" />}
-                body={<ProjectUsers />}
-              />
-            )}
-          </Grid>
-        )}
-      </React.Fragment>
-    );
-  }
+      {/* Add users to project */}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<PersonAdd />}
+          title={<Translate id="projectSettings.user.addUser" />}
+          body={<ProjectUsers />}
+        />
+      )}
+    </Grid>
+  );
 }
