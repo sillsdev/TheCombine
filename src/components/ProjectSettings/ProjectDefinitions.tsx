@@ -13,12 +13,12 @@ export default function ProjectDefinitions() {
   return (
     <FormControl>
       <Select
-        value={project.definitionsEnabled}
+        value={project.definitionsEnabled ? 1 : 0}
         onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
           saveChangesToProject(
             {
               ...project,
-              definitionsEnabled: event.target.value as boolean,
+              definitionsEnabled: !!event.target.value,
             },
             dispatch
           )

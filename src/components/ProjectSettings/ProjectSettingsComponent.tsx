@@ -104,14 +104,14 @@ export default function ProjectSettingsComponent() {
         />
       )}
 
-      {/* Autocomplete setting */}
+      {/* Autocomplete toggle */}
       <BaseSettingsComponent
         icon={<Sms />}
         title={<Translate id="projectSettings.autocomplete.label" />}
         body={<ProjectAutocomplete />}
       />
 
-      {/* Autocomplete setting */}
+      {/* Definitions toggle */}
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<Assignment />}
