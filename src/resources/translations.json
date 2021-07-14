@@ -371,19 +371,19 @@
     "userList": ["Users", "Usarios", "Utilisateurs"],
     "userManagement": {
       "makeAdminWarning": [
-        "Give this user admin privileges",
-        "Give this user admin privileges",
-        "Give this user admin privileges"
+        "Give this user admin privileges?",
+        "Give this user admin privileges?",
+        "Give this user admin privileges?"
       ],
       "removeAdminWarning": [
-        "Remove admin privileges from this user",
-        "Remove admin privileges from this user",
-        "Remove admin privileges from this user"
+        "Remove admin privileges from this user?",
+        "Remove admin privileges from this user?",
+        "Remove admin privileges from this user?"
       ],
       "removeUserWarning": [
-        "Remove this user from the project",
-        "Remove this user from the project",
-        "Remove this user from the project"
+        "Remove this user from the project?",
+        "Remove this user from the project?",
+        "Remove this user from the project?"
       ],
       "userRemovedToastSuccess": [
         "User Removed!",
@@ -784,8 +784,8 @@
     "rejected": ["Rejected", "Rechazado", "Rejeté"],
     "removeAdmin": [
       "Remove Admin Permissions",
-      "Remove Project Permissions",
-      "Remove Project Permissions"
+      "Remove Admin Permissions",
+      "Remove Admin Permissions"
     ],
     "removeFromProject": [
       "Remove From Project",
