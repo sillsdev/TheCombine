@@ -196,12 +196,7 @@ const columns: Column<any>[] = [
         const stringA = ReviewEntriesSense.definitionString(a.senses[count]);
         const stringB = ReviewEntriesSense.definitionString(b.senses[count]);
         if (stringA !== stringB) {
-          const stringsAB = [stringA, stringB];
-          stringsAB.sort();
-          if (stringA === stringsAB[0]) {
-            return -1;
-          }
-          return 1;
+          return stringA.localeCompare(stringB);
         }
       }
       return a.senses.length - b.senses.length;
@@ -250,15 +245,10 @@ const columns: Column<any>[] = [
         count < a.senses.length && count < b.senses.length;
         count++
       ) {
-        const glossStringA = ReviewEntriesSense.glossString(a.senses[count]);
-        const glossStringB = ReviewEntriesSense.glossString(b.senses[count]);
-        if (glossStringA !== glossStringB) {
-          const glossStrings = [glossStringA, glossStringB];
-          glossStrings.sort();
-          if (glossStringA === glossStrings[0]) {
-            return -1;
-          }
-          return 1;
+        const stringA = ReviewEntriesSense.glossString(a.senses[count]);
+        const stringB = ReviewEntriesSense.glossString(b.senses[count]);
+        if (stringA !== stringB) {
+          return stringA.localeCompare(stringB);
         }
       }
       return a.senses.length - b.senses.length;
