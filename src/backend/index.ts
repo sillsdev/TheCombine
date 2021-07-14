@@ -425,7 +425,7 @@ export async function getUserRoles(): Promise<UserRole[]> {
   return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
-export async function addUserRole(
+export async function addOrUpdateUserRole(
   permission: Permission[],
   userId: string
 ): Promise<string> {
