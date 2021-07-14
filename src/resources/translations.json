@@ -369,6 +369,43 @@
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],
     "userList": ["Users", "Usarios", "Utilisateurs"],
+    "userManagement": {
+      "makeAdminWarning": [
+        "Give this user admin privileges",
+        "Give this user admin privileges",
+        "Give this user admin privileges"
+      ],
+      "removeAdminWarning": [
+        "Remove admin privileges from this user",
+        "Remove admin privileges from this user",
+        "Remove admin privileges from this user"
+      ],
+      "removeUserWarning": [
+        "Remove this user from the project",
+        "Remove this user from the project",
+        "Remove this user from the project"
+      ],
+      "userRemovedToastSuccess": [
+        "User Removed!",
+        "User Removed!",
+        "User Removed!"
+      ],
+      "userRemovedToastFailure": [
+        "Failed to remove user",
+        "Failed to remove user",
+        "Failed to remove user"
+      ],
+      "makeAdminToastSuccess": [
+        "User Given Admin!",
+        "User Given Admin!",
+        "User Given Admin!"
+      ],
+      "makeAdminToastFailure": [
+        "Failed to give admin to user",
+        "Failed to give admin to user",
+        "Failed to give admin to user"
+      ]
+    },
     "import": {
       "header": ["Import Data", "Importar información", "Importer des données"],
       "body": [
@@ -737,6 +774,7 @@
     "done": ["Done", "Hecho", "Achevé"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
+    "makeAdmin": ["Make Admin", "Make Admin", "Make Admin"],
     "proceedWithCaution": [
       "Proceed with Caution!",
       "¡Proceder con precaución!",
@@ -744,6 +782,16 @@
     ],
     "reject": ["Reject", "Rechazar", "Rejeter"],
     "rejected": ["Rejected", "Rechazado", "Rejeté"],
+    "removeAdmin": [
+      "Remove Admin Permissions",
+      "Remove Project Permissions",
+      "Remove Project Permissions"
+    ],
+    "removeFromProject": [
+      "Remove From Project",
+      "Remove From Project",
+      "Remove From Project"
+    ],
     "restore": ["Restore", "Restaurar", "Restaurer"],
     "save": ["Save", "Guardar", "Enregistrer"],
     "saveAndContinue": [
