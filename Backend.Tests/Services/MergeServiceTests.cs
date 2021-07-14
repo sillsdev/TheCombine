@@ -36,7 +36,7 @@ namespace Backend.Tests.Services
                 Parent = thisWord,
                 Children = new List<MergeSourceWord>
                 {
-                    new MergeSourceWord { SrcWordId = thisWord.Id }
+                    new() { SrcWordId = thisWord.Id }
                 }
             };
 
@@ -176,9 +176,9 @@ namespace Backend.Tests.Services
             // Make sure all wordIds are in the frontier EXCEPT 1.
             var frontier = new List<Word>
             {
-                new Word {Id = "2", ProjectId = ProjId},
-                new Word {Id = "3", ProjectId = ProjId},
-                new Word {Id = "4", ProjectId = ProjId}
+                new() {Id = "2", ProjectId = ProjId},
+                new() {Id = "3", ProjectId = ProjId},
+                new() {Id = "4", ProjectId = ProjId}
             };
             _ = _wordRepo.AddFrontier(frontier).Result;
 

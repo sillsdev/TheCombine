@@ -14,6 +14,5 @@ namespace Backend.Tests
             Assert.That(char.IsLower(randomString[3]));
             Assert.That(char.IsUpper(randomString[4]));
         }
-
     }
 }

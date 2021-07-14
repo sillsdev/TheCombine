@@ -103,8 +103,7 @@ function cleanWord(
   word: ReviewEntriesWord,
   oldWord: ReviewEntriesWord
 ): ReviewEntriesWord | string {
-  const activeSenseIndex = word.senses.findIndex((s) => !s.deleted);
-  if (activeSenseIndex === -1) {
+  if (!word.senses.find((s) => !s.deleted)) {
     return "reviewEntries.error.senses";
   }
   const vernacular = word.vernacular.length

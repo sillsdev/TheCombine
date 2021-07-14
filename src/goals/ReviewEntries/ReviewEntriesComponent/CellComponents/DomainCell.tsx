@@ -40,10 +40,11 @@ export default function DomainCell(props: DomainCellProps) {
   function addDomain() {
     setAddingDomains(false);
     if (props.editDomains && senseToChange) {
-      if (!selectedDomain)
+      if (!selectedDomain) {
         throw new Error(
           "Cannot add domain without the selectedDomain property."
         );
+      }
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
         newSemanticDomain(selectedDomain.id, selectedDomain.name),
@@ -52,11 +53,12 @@ export default function DomainCell(props: DomainCellProps) {
   }
 
   function deleteDomain(toDelete: SemanticDomain, sense: ReviewEntriesSense) {
-    if (props.editDomains)
+    if (props.editDomains) {
       props.editDomains(
         sense.guid,
         sense.domains.filter((domain) => domain.id !== toDelete.id)
       );
+    }
   }
 
   function getChipStyle(senseIndex: number, domainIndex: number) {
