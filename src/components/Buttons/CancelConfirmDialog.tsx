@@ -8,17 +8,17 @@ import {
 } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
-interface MakeAdminDialogProps {
+interface CancelConfirmDialogProps {
   open: boolean;
-  textId?: string;
+  textId: string | undefined;
   handleAccept: () => void;
   handleCancel: () => void;
 }
 
 /**
- * Dialog to confirm making a user an admin
+ * Dialog to confirm deletion
  */
-export default function MakeAdminDialog(props: MakeAdminDialogProps) {
+export default function CancelConfirmDialog(props: CancelConfirmDialogProps) {
   return (
     <Dialog
       open={props.open}
@@ -31,7 +31,9 @@ export default function MakeAdminDialog(props: MakeAdminDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate id={props.textId ? props.textId : "buttons.removeAdmin"} />
+          <Translate
+            id={props.textId ? props.textId : "buttons.deletePermanently"}
+          />
         </DialogContentText>
       </DialogContent>
       <DialogActions>

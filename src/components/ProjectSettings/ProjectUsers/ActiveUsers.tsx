@@ -13,9 +13,7 @@ import {
   Select,
   Tooltip,
 } from "@material-ui/core";
-import DeleteDialog from "components/Buttons/DeleteDialog";
-import MakeAdminDialog from "components/Buttons/MakeAdminDialog";
-import RemoveAdminDialog from "components/Buttons/RemoveAdminDialog";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import { toast } from "react-toastify";
@@ -252,19 +250,19 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         }
         manageUser = (
           <div>
-            <DeleteDialog
+            <CancelConfirmDialog
               open={this.state.removeUserDialogOpen}
               textId={"projectSettings.userManagement.removeUserWarning"}
               handleCancel={this.handleRemoveUserDialogClose.bind(this)}
               handleAccept={this.removeUser.bind(this, [user.id])}
             />
-            <MakeAdminDialog
+            <CancelConfirmDialog
               open={this.state.makeAdminDialogOpen}
               textId={"projectSettings.userManagement.makeAdminWarning"}
               handleCancel={this.handleMakeAdminDialogClose.bind(this)}
               handleAccept={this.makeAdmin.bind(this, [user.id])}
             />
-            <RemoveAdminDialog
+            <CancelConfirmDialog
               open={this.state.removeAdminDialogOpen}
               textId={"projectSettings.userManagement.removeAdminWarning"}
               handleCancel={this.handleRemoveAdminDialogClose.bind(this)}
