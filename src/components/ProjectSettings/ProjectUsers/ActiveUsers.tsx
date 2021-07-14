@@ -17,7 +17,6 @@ import DeleteDialog from "components/Buttons/DeleteDialog";
 import MakeAdminDialog from "components/Buttons/MakeAdminDialog";
 import RemoveAdminDialog from "components/Buttons/RemoveAdminDialog";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import { toast } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
