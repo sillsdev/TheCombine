@@ -1,73 +1,61 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
 } from "react-test-renderer";
 
 import ContextMenu, {
-  ContextMenu as ContextMenuClass,
   MenuType,
+  RIGHT_CLICK,
 } from "components/ContextMenu/ContextMenu";
 
 // Mock DOM
 jest.autoMockOn();
 
 // Mocking document's search function
-document.getElementsByClassName = jest.fn((name: string) => {
+document.getElementsByClassName = jest.fn((className: string) => {
   return ({
-    item: (index: number) => {
-      let tmp: HTMLElement = documentHandle as any;
-      return {
-        ...tmp,
-        addEventListener: MOCK_ADD,
-        removeEventListener: MOCK_REM,
-        className: name,
-      };
-    },
+    item: () => ({
+      ...documentHandle,
+      addEventListener: MOCK_ADD,
+      className,
+    }),
     namedItem: jest.fn(),
   } as any) as HTMLCollectionOf<Element>;
 });
 
 // Mocking setState to listen for the call
 const MOCK_SET = jest.fn();
-ContextMenuClass.prototype.setState = MOCK_SET;
+ContextMenu.prototype.setState = MOCK_SET;
 
 // Constants used in testing
 const MOCK_ADD = jest.fn((name: string, callback: (event: any) => void) => {
-  if (name === "contextmenu") documentRightClick = callback;
-});
-const MOCK_REM = jest.fn((_) => {
-  // TODO: Should this lint be disabled?
-  // eslint-disable-next-line no-restricted-globals
-  if (name === "contextmenu") documentRightClick = jest.fn;
+  if (name === RIGHT_CLICK) {
+    documentRightClick = callback;
+  }
 });
 const MOCK_EVENT = {
   preventDefault: jest.fn(),
   stopPropagation: jest.fn(),
-} as any;
+};
 
-const CLASS_WITH_DROPDOWN: string = "dropdown";
-const CLASS_WITHOUT_DROPDOWN: string = "noDropdown";
+const CLASS_WITH_DROPDOWN = "dropdown";
+const CLASS_WITHOUT_DROPDOWN = "noDropdown";
 const TEST_OPTIONS: MenuType[] = [
   ["option0", jest.fn()],
-  ["options1", jest.fn()],
+  ["option1", jest.fn()],
 ];
 
 // Variables used in testing
-var documentHandle: ReactElement;
-var documentRightClick: (event: any) => void;
+let documentHandle: ReactElement;
+let documentRightClick: (event: any) => void;
 
-var contextMaster: ReactTestRenderer;
-var contextHandle: ReactTestInstance;
+let contextMaster: ReactTestRenderer;
+let contextHandle: ReactTestInstance;
 
 beforeAll(() => {
   documentHandle = (
-    <div
-      className={CLASS_WITH_DROPDOWN}
-      onContextMenu={(e) => {
-        documentRightClick(e);
-      }}
-    />
+    <div className={CLASS_WITH_DROPDOWN} onContextMenu={documentRightClick} />
   );
   renderer.act(() => {
     contextMaster = renderer.create(
@@ -77,15 +65,7 @@ beforeAll(() => {
       </div>
     );
   });
-  contextHandle = contextMaster.root.findByType(ContextMenuClass);
-});
-afterAll(() => {
-  // Clear calls to mock set
-  MOCK_SET.mockClear();
-  MOCK_EVENT.preventDefault.mockClear();
-  MOCK_EVENT.stopPropagation.mockClear();
-  for (let i: number = 0; i < TEST_OPTIONS.length; i++)
-    (TEST_OPTIONS[i][1] as any).mockClear();
+  contextHandle = contextMaster.root.findByType(ContextMenu);
 });
 
 describe("Testing the ContextMenu via a mock component", () => {
@@ -117,7 +97,7 @@ describe("Testing the ContextMenu via a mock component", () => {
   });
 
   it("Calls the function passed in upon having a click to the menu item", () => {
-    let subCard: ReactElement = contextHandle.instance.mapItems(
+    const subCard: ReactElement = contextHandle.instance.mapItems(
       TEST_OPTIONS[0],
       0
     );

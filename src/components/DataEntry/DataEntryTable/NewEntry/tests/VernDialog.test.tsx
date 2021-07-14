@@ -9,6 +9,11 @@ import {
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import { simpleWord, testWordList } from "types/word";
 
+jest.mock(
+  "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell",
+  () => "div"
+);
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({
   currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },

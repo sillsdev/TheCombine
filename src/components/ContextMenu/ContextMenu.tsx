@@ -1,10 +1,6 @@
 import { Menu, MenuItem } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 export type MenuType = [string, () => void];
 
@@ -16,15 +12,15 @@ interface ContextMenuState {
   isOpen: boolean;
 }
 
-const RIGHT_CLICK: string = "contextmenu";
+export const RIGHT_CLICK: string = "contextmenu";
 
-export class ContextMenu extends React.Component<
-  ContextMenuProps & LocalizeContextProps,
+export default class ContextMenu extends React.Component<
+  ContextMenuProps,
   ContextMenuState
 > {
   anchor: Element | null;
 
-  constructor(props: ContextMenuProps & LocalizeContextProps) {
+  constructor(props: ContextMenuProps) {
     super(props);
     this.state = { isOpen: false };
     this.anchor = null;
@@ -87,5 +83,3 @@ export class ContextMenu extends React.Component<
     );
   }
 }
-
-export default withLocalize(ContextMenu);
