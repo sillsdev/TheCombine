@@ -31,7 +31,7 @@
 [github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
 [github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
 
-A rapid word collection tool.
+A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/TheCombine) for uses and features.
 
 ## Table of Contents
 
@@ -358,7 +358,7 @@ Runs only the front end of the app in the development mode.
 
 Runs only the backend.
 
-> Note: If you make backend edits, the backend will _not_ recompile--you need to rerun `npm start` or `npm run backend`.
+> Note: If you make backend edits, the backend will _not_ recompile—you need to rerun `npm start` or `npm run backend`.
 
 #### `npm run database`
 
@@ -545,7 +545,7 @@ in one of three environments:
    cd /opt/combine
    ```
 
-   Unless specified otherwise, each of the maintenance commands are to be run from `/opt/bin/combine`
+   Unless specified otherwise, each of the maintenance commands are to be run from `/opt/combine/bin`
 
 The descriptions of each of the maintenance tasks below provide instructions for completing the task in each of the
 environments. Any of the Python scripts can be run with the `--help` option to see more usage options.
@@ -654,14 +654,16 @@ Notes:
 
 ## User Guide
 
-To build the user guide and serve it dynamically (automatically reloading on change), run the following from your Python
-virtual environment:
+The User Guide found at https://sillsdev.github.io/TheCombine is automatically built from the `master` branch.
+
+To locally build the user guide and serve it dynamically (automatically reloading on change), run the following from
+your Python virtual environment:
 
 ```bash
 (venv) $ tox -e user-guide-serve
 ```
 
-To build the user guide statically into `docs/user-guide/site`:
+To locally build the user guide statically into `docs/user-guide/site`:
 
 ```bash
 (venv) $ tox -e user-guide

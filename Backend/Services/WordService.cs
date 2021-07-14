@@ -150,7 +150,10 @@ namespace BackendFramework.Services
                     foreach (var oldSense in matchingVern.Senses)
                     {
                         // If the new sense is a strict subset of the old one, then merge it in
-                        if (newSense.Glosses.All(oldSense.Glosses.Contains))
+                        if (
+                            newSense.Glosses.All(oldSense.Glosses.Contains) &&
+                            newSense.Definitions.All(oldSense.Definitions.Contains)
+                        )
                         {
                             foundDuplicateSense = true;
 

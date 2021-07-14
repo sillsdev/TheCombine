@@ -8,7 +8,7 @@ namespace BackendFramework.Models
 {
     public class PasswordReset
     {
-        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider Rng = new();
         private const int TokenSize = 8;
 
         [BsonId]
@@ -26,10 +26,9 @@ namespace BackendFramework.Models
 
         public PasswordReset(int expireTime)
         {
-            var expireTimeDifference = expireTime;
             Id = "";
             Email = "";
-            ExpireTime = DateTime.Now.AddMinutes(expireTimeDifference);
+            ExpireTime = DateTime.Now.AddMinutes(expireTime);
 
             var byteToken = new byte[TokenSize];
             Rng.GetBytes(byteToken);

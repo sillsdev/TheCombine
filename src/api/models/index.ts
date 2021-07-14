@@ -1,5 +1,6 @@
 export * from "./autocomplete-setting";
 export * from "./credentials";
+export * from "./definition";
 export * from "./edit";
 export * from "./email-invite";
 export * from "./email-invite-data";

@@ -10,7 +10,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var role = new UserRole { ProjectId = ProjectId };
             Assert.That(role.Equals(new UserRole { ProjectId = ProjectId }));
         }

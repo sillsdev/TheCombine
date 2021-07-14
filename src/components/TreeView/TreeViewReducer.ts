@@ -25,11 +25,12 @@ export function createDomains(data: TreeSemanticDomain[]): TreeViewState {
 
 // Adds the parent domains to the information sent by the backend
 function addParentDomains(parent: TreeSemanticDomain) {
-  if (parent.subdomains)
-    for (let domain of parent.subdomains) {
+  if (parent.subdomains) {
+    for (const domain of parent.subdomains) {
       domain.parentDomain = parent;
       addParentDomains(domain);
     }
+  }
   //else parent.subDomains = [];
 }
 
