@@ -211,15 +211,15 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   }
 
   render() {
-    var userList: React.ReactElement<ListItemProps>[] = [];
-    var manageUser: React.ReactElement<ElementType>;
-    var adminOption: React.ReactElement<MenuItemProps>;
+    let manageUser: React.ReactElement<ElementType>;
+    let adminOption: React.ReactElement<MenuItemProps>;
+    const userList: React.ReactElement<ListItemProps>[] = [];
     const currentUser = localStorage.getItem("user");
     const currentProjectId = localStorage.getItem("projectId");
     const sortedUserList = this.getSortedUsers();
 
-    for (var i = 0; i < sortedUserList.length; i++) {
-      var user = sortedUserList[i];
+    for (let i = 0; i < sortedUserList.length; i++) {
+      const user = sortedUserList[i];
       if (
         currentUser &&
         JSON.parse(currentUser).isAdmin &&
