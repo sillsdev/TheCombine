@@ -459,7 +459,7 @@ export async function removeUserRole(
     userId,
     permission,
   };
-  return (await userRoleApi.deleteUserRole(params, defaultOptions())).data;
+  await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 
 /* WordController.cs */

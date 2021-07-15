@@ -77,16 +77,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     }
   }
 
-  // TODO: Add the correct text for toast
-  private removeUser() {
-    removeUserRole(
-      [Permission.DeleteEditSettingsAndUsers],
-      arguments[0] as string
-    )
+  private removeUser(userId: string) {
+    removeUserRole([Permission.DeleteEditSettingsAndUsers], userId)
       .then(() => this.handleRemoveUserDialogClose())
-      .then(() => {
-        this.setState({ anchorEl: undefined });
-      })
       .then(() => {
         toast(
           <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
@@ -100,7 +93,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       });
   }
 
-  private makeAdmin() {
+  private makeAdmin(userId: string) {
     addOrUpdateUserRole(
       [
         Permission.WordEntry,
@@ -109,12 +102,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         Permission.ImportExport,
         Permission.DeleteEditSettingsAndUsers,
       ],
-      arguments[0] as string
+      userId
     )
       .then(() => this.handleMakeAdminDialogClose())
-      .then(() => {
-        this.setState({ anchorEl: undefined });
-      })
       .then(() => {
         toast(
           <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
@@ -128,15 +118,12 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       });
   }
 
-  private removeAdmin() {
+  private removeAdmin(userId: string) {
     addOrUpdateUserRole(
       [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
-      arguments[0] as string
+      userId
     )
       .then(() => this.handleRemoveAdminDialogClose())
-      .then(() => {
-        this.setState({ anchorEl: undefined });
-      })
       .then(() => {
         toast(
           <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
@@ -200,7 +187,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   }
 
   private handleRemoveUserDialogOpen() {
-    this.setState({ removeUserDialogOpen: true });
+    this.setState({ anchorEl: undefined, removeUserDialogOpen: true });
   }
 
   private handleRemoveUserDialogClose() {
@@ -208,7 +195,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   }
 
   private handleMakeAdminDialogOpen() {
-    this.setState({ makeAdminDialogOpen: true });
+    this.setState({ anchorEl: undefined, makeAdminDialogOpen: true });
   }
 
   private handleMakeAdminDialogClose() {
@@ -216,7 +203,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   }
 
   private handleRemoveAdminDialogOpen() {
-    this.setState({ removeAdminDialogOpen: true });
+    this.setState({ anchorEl: undefined, removeAdminDialogOpen: true });
   }
 
   private handleRemoveAdminDialogClose() {
@@ -259,19 +246,19 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               open={this.state.removeUserDialogOpen}
               textId={"projectSettings.userManagement.removeUserWarning"}
               handleCancel={() => this.handleRemoveUserDialogClose()}
-              handleAccept={this.removeUser.bind(this, [user.id])}
+              handleAccept={() => this.removeUser(user.id)}
             />
             <CancelConfirmDialog
               open={this.state.makeAdminDialogOpen}
               textId={"projectSettings.userManagement.makeAdminWarning"}
               handleCancel={() => this.handleMakeAdminDialogClose()}
-              handleAccept={this.makeAdmin.bind(this, [user.id])}
+              handleAccept={() => this.makeAdmin(user.id)}
             />
             <CancelConfirmDialog
               open={this.state.removeAdminDialogOpen}
               textId={"projectSettings.userManagement.removeAdminWarning"}
               handleCancel={() => this.handleRemoveAdminDialogClose()}
-              handleAccept={this.removeAdmin.bind(this, [user.id])}
+              handleAccept={() => this.removeAdmin(user.id)}
             />
             <Tooltip title="Manage User" placement="right">
               <IconButton
@@ -290,9 +277,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               anchorEl={this.state.anchorEl}
               keepMounted
               open={Boolean(this.state.anchorEl)}
-              onClose={() => {
-                this.setState({ anchorEl: undefined });
-              }}
+              onClose={() => this.setState({ anchorEl: undefined })}
             >
               <MenuItem onClick={() => this.handleRemoveUserDialogOpen()}>
                 <Translate id="buttons.removeFromProject" />
