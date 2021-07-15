@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.22.0 (955b78124)
-    kompose.volume.size: 4Gi
   creationTimestamp: null
   labels:
     io.kompose.service: backend
@@ -19,10 +15,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.22.0 (955b78124)
-        kompose.volume.size: 4Gi
       creationTimestamp: null
       labels:
         io.kompose.service: backend

@@ -1,4 +1,9 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: env-frontend
+  namespace: {{ app_namespace }}
 data:
   CERT_ADDL_DOMAINS: ""
   CERT_PROXY_DOMAINS: ""
@@ -13,10 +18,3 @@ data:
   SSL_CERTIFICATE: "{{ ssl_certificate }}"
   SSL_PRIVATE_KEY: "{{ ssl_private_key }}"
 {% endif %}
-kind: ConfigMap
-metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: frontend-env-frontend
-  name: env-frontend
-  namespace: {{ app_namespace }}
