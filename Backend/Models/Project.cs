@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace BackendFramework.Models
 {
@@ -179,7 +177,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Project other) || GetType() != obj.GetType())
+            if (obj is not Project other || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -223,7 +221,7 @@ namespace BackendFramework.Models
 
         public CustomField Clone()
         {
-            return new CustomField
+            return new()
             {
                 Name = (string)Name.Clone(),
                 Type = (string)Type.Clone()
@@ -249,7 +247,7 @@ namespace BackendFramework.Models
 
         public WritingSystem Clone()
         {
-            return new WritingSystem
+            return new()
             {
                 Name = (string)Name.Clone(),
                 Bcp47 = (string)Bcp47.Clone(),
@@ -293,7 +291,7 @@ namespace BackendFramework.Models
 
         public UserCreatedProject Clone()
         {
-            return new UserCreatedProject
+            return new()
             {
                 Project = Project.Clone(),
                 User = User.Clone()
@@ -324,7 +322,6 @@ namespace BackendFramework.Models
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum AutocompleteSetting
     {
         Off,

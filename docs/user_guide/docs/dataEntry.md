@@ -8,6 +8,8 @@ Browse or search for the domain of interest.
 
 ### Vernacular
 
+A word as found in the vernacular language, usually spelled either phonetically or with the local orthography.
+
 ### Gloss
 
 An entry can have multiple senses/glosses, though only one can be added when the entry is first created.

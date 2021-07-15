@@ -29,14 +29,15 @@ namespace Backend.Tests.Helper
             Assert.That(_levDist.GetDistance("", BaseWord), Is.EqualTo(InsCost * BaseWord.Length));
         }
 
-        private static readonly List<Tuple<string, int>> WordScorePairs = new List<Tuple<string, int>> {
+        private static readonly List<Tuple<string, int>> WordScorePairs = new()
+        {
             Tuple.Create(BaseWord, 0),
             Tuple.Create("EdiDistanceTest", DelCost),
             Tuple.Create("EditDistancQeTest", InsCost),
             Tuple.Create("EditDist@nceTest", SubCost),
-            Tuple.Create("itDistanceTest", 2*DelCost),
-            Tuple.Create("$EditDistanceTTest", 2*InsCost),
-            Tuple.Create("EditDistanceTe&&", 2*SubCost),
+            Tuple.Create("itDistanceTest", 2 * DelCost),
+            Tuple.Create("$EditDistanceTTest", 2 * InsCost),
+            Tuple.Create("EditDistanceTe&&", 2 * SubCost),
             Tuple.Create("EditistanceTest4", DelCost + InsCost),
             Tuple.Create("EditDi6stanceT3st", InsCost + SubCost),
             Tuple.Create("7ditDistanceTes", SubCost + DelCost)

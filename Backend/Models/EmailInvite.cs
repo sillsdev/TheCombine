@@ -16,7 +16,7 @@ namespace BackendFramework.Models
         [Required]
         public DateTime ExpireTime { get; set; }
 
-        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider Rng = new();
         private const int TokenSize = 8;
 
         public EmailInvite()
@@ -44,7 +44,7 @@ namespace BackendFramework.Models
 
         public EmailInvite Clone()
         {
-            return new EmailInvite
+            return new()
             {
                 Id = (string)Id.Clone(),
                 Email = (string)Email.Clone(),

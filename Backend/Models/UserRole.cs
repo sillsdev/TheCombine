@@ -58,7 +58,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is UserRole other) || GetType() != obj.GetType())
+            if (obj is not UserRole other || GetType() != obj.GetType())
             {
                 return false;
             }

@@ -1,4 +1,3 @@
-site_name: The Combine
 strict: true
 theme:
   name: material
@@ -11,6 +10,9 @@ theme:
   language: en
   # Disable pulling Google fonts from the Internet, to support offline networks.
   font: false
+site_name: The Combine
+site_url: ""
+use_directory_urls: false
 repo_url: https://github.com/sillsdev/TheCombine
 repo_name: sillsdev/TheCombine
 copyright: © 2019-2021 SIL International

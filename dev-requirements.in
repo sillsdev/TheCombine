@@ -2,6 +2,7 @@ tox
 
 # Type Checking.
 mypy
+types-requests
 
 # Linting.
 flake8

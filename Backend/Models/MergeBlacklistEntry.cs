@@ -57,7 +57,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is MergeBlacklistEntry other) || GetType() != obj.GetType())
+            if (obj is not MergeBlacklistEntry other || GetType() != obj.GetType())
             {
                 return false;
             }
