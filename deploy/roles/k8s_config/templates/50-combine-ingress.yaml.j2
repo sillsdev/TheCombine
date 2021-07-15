@@ -3,9 +3,10 @@ kind: Ingress
 metadata:
   name: http-ingress
   namespace: {{ app_namespace }}
-{% if "cert_manager" in k8s_components %}
   annotations:
     kubernetes.io/ingress.class: public
+    nginx.ingress.kubernetes.io/proxy-body-size: "250m"
+{% if "cert_manager" in k8s_components %}
     cert-manager.io/cluster-issuer: {{ cert_issuer }}
 {% endif %}
 spec:
