@@ -181,11 +181,14 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteUserRole()
         {
-            var origUserRole = _userRoleRepo.Create(RandomUserRole()).Result;
+            var userRole = RandomUserRole();
+            _userRoleRepo.Create(userRole);
+            var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
+            var userId = _userRepo.Create(user).Result!.Id;
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(1));
 
-            _ = _userRoleController.DeleteUserRole(_projId, origUserRole.Id).Result;
+            _ = _userRoleController.DeleteUserRole(_projId, userId).Result;
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(0));
         }
