@@ -122,7 +122,7 @@ namespace BackendFramework.Controllers
             return Ok(userRole.Id);
         }
 
-        /// <summary> Deletes <see cref="UserRole"/> with specified id </summary>
+        /// <summary> Deletes the <see cref="UserRole"/> for the specified projectId and userId </summary>
         [HttpDelete("{userId}", Name = "DeleteUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteUserRole(string projectId, string userId)
