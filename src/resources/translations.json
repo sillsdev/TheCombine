@@ -396,19 +396,19 @@
         "User Removed!"
       ],
       "userRemovedToastFailure": [
-        "Failed to remove user",
-        "Failed to remove user",
-        "Failed to remove user"
+        "Failed to remove user.",
+        "Failed to remove user.",
+        "Failed to remove user."
       ],
       "makeAdminToastSuccess": [
-        "User Given Admin!",
-        "User Given Admin!",
-        "User Given Admin!"
+        "User Given Admin Privileges!",
+        "User Given Admin Privileges!",
+        "User Given Admin Privileges!"
       ],
       "makeAdminToastFailure": [
-        "Failed to give admin to user",
-        "Failed to give admin to user",
-        "Failed to give admin to user"
+        "Failed to give admin privileges to user.",
+        "Failed to give admin privileges to user.",
+        "Failed to give admin privileges to user."
       ]
     },
     "import": {
@@ -793,9 +793,9 @@
       "Remove Admin Permissions"
     ],
     "removeFromProject": [
-      "Remove From Project",
-      "Remove From Project",
-      "Remove From Project"
+      "Remove from Project",
+      "Remove from Project",
+      "Remove from Project"
     ],
     "restore": ["Restore", "Restaurar", "Restaurer"],
     "save": ["Save", "Guardar", "Enregistrer"],
