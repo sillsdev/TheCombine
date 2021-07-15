@@ -83,20 +83,23 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       [Permission.DeleteEditSettingsAndUsers],
       arguments[0] as string
     )
-      .then(this.handleRemoveUserDialogClose.bind(this))
+      .then(() => this.handleRemoveUserDialogClose())
       .then(() => {
         this.setState({ anchorEl: undefined });
       })
       .then(() => {
-        toast(<Translate id="projectSettings.invite.toastSuccess" />);
+        toast(
+          <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
+        );
       })
       .catch((err: string) => {
-        console.log(err);
-        toast(<Translate id="projectSettings.invite.toastFail" />);
+        console.error(err);
+        toast(
+          <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
+        );
       });
   }
 
-  // TODO: Add the correct text for toast
   private makeAdmin() {
     addOrUpdateUserRole(
       [
@@ -108,40 +111,46 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       ],
       arguments[0] as string
     )
-      .then(this.handleMakeAdminDialogClose.bind(this))
+      .then(() => this.handleMakeAdminDialogClose())
       .then(() => {
         this.setState({ anchorEl: undefined });
       })
       .then(() => {
-        toast(<Translate id="projectSettings.invite.toastSuccess" />);
+        toast(
+          <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
+        );
       })
       .catch((err: string) => {
-        console.log(err);
-        toast(<Translate id="projectSettings.invite.toastFail" />);
+        console.error(err);
+        toast(
+          <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
+        );
       });
   }
 
-  // TODO: Add the correct text for toast
   private removeAdmin() {
     addOrUpdateUserRole(
       [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
       arguments[0] as string
     )
-      .then(this.handleRemoveAdminDialogClose.bind(this))
+      .then(() => this.handleRemoveAdminDialogClose())
       .then(() => {
         this.setState({ anchorEl: undefined });
       })
       .then(() => {
-        toast(<Translate id="projectSettings.invite.toastSuccess" />);
+        toast(
+          <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
+        );
       })
       .catch((err: string) => {
-        console.log(err);
-        toast(<Translate id="projectSettings.invite.toastFail" />);
+        console.error(err);
+        toast(
+          <Translate id="projectSettings.userManagement.removeAdminToastFailure" />
+        );
       });
   }
 
   private async populateUsers() {
-    console.log("populated users");
     getAllUsersInCurrentProject()
       .then(async (projUsers) => {
         this.setState({ projUsers });
@@ -178,8 +187,6 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
   }
 
   private isProjectAdmin(userRoleId: string): boolean {
-    console.log(this.state.projUserRoles);
-    console.log(userRoleId);
     const userRole = this.state.projUserRoles.find(
       (role) => role.id === userRoleId
     );
@@ -233,17 +240,15 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         user.id !== JSON.parse(currentUser).id &&
         !user.isAdmin
       ) {
-        var hi = this.isProjectAdmin(user.projectRoles[currentProjectId]);
-        console.log(hi);
-        if (hi) {
+        if (this.isProjectAdmin(user.projectRoles[currentProjectId])) {
           adminOption = (
-            <MenuItem onClick={this.handleRemoveAdminDialogOpen.bind(this)}>
+            <MenuItem onClick={() => this.handleRemoveAdminDialogOpen()}>
               <Translate id="buttons.removeAdmin" />
             </MenuItem>
           );
         } else {
           adminOption = (
-            <MenuItem onClick={this.handleMakeAdminDialogOpen.bind(this)}>
+            <MenuItem onClick={() => this.handleMakeAdminDialogOpen()}>
               <Translate id="buttons.makeAdmin" />
             </MenuItem>
           );
@@ -253,19 +258,19 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             <CancelConfirmDialog
               open={this.state.removeUserDialogOpen}
               textId={"projectSettings.userManagement.removeUserWarning"}
-              handleCancel={this.handleRemoveUserDialogClose.bind(this)}
+              handleCancel={() => this.handleRemoveUserDialogClose()}
               handleAccept={this.removeUser.bind(this, [user.id])}
             />
             <CancelConfirmDialog
               open={this.state.makeAdminDialogOpen}
               textId={"projectSettings.userManagement.makeAdminWarning"}
-              handleCancel={this.handleMakeAdminDialogClose.bind(this)}
+              handleCancel={() => this.handleMakeAdminDialogClose()}
               handleAccept={this.makeAdmin.bind(this, [user.id])}
             />
             <CancelConfirmDialog
               open={this.state.removeAdminDialogOpen}
               textId={"projectSettings.userManagement.removeAdminWarning"}
-              handleCancel={this.handleRemoveAdminDialogClose.bind(this)}
+              handleCancel={() => this.handleRemoveAdminDialogClose()}
               handleAccept={this.removeAdmin.bind(this, [user.id])}
             />
             <Tooltip title="Manage User" placement="right">
@@ -286,12 +291,10 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               keepMounted
               open={Boolean(this.state.anchorEl)}
               onClose={() => {
-                this.setState({
-                  anchorEl: undefined,
-                });
+                this.setState({ anchorEl: undefined });
               }}
             >
-              <MenuItem onClick={this.handleRemoveUserDialogOpen.bind(this)}>
+              <MenuItem onClick={() => this.handleRemoveUserDialogOpen()}>
                 <Translate id="buttons.removeFromProject" />
               </MenuItem>
               {adminOption}

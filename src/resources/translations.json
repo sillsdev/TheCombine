@@ -409,6 +409,16 @@
         "Failed to give admin privileges to user.",
         "Failed to give admin privileges to user.",
         "Failed to give admin privileges to user."
+      ],
+      "removeAdminToastSuccess": [
+        "Removed Admin Privileges from User!",
+        "Removed Admin Privileges from User!",
+        "Removed Admin Privileges from User!"
+      ],
+      "removeAdminToastFailure": [
+        "Failed to remove admin privileges from user.",
+        "Failed to remove admin privileges from user.",
+        "Failed to remove admin privileges from user."
       ]
     },
     "import": {
