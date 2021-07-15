@@ -36,7 +36,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
       </Tooltip>
       <CancelConfirmDialog
         open={open}
-        textId={props.confirmId}
+        textId={props.confirmId ?? "buttons.deletePermanently"}
         handleCancel={() => setOpen(false)}
         handleAccept={() => {
           setOpen(false);

@@ -10,13 +10,13 @@ import { Translate } from "react-localize-redux";
 
 interface CancelConfirmDialogProps {
   open: boolean;
-  textId: string | undefined;
+  textId: string;
   handleAccept: () => void;
   handleCancel: () => void;
 }
 
 /**
- * Dialog to confirm deletion
+ * Dialog to cancel or confirm an action
  */
 export default function CancelConfirmDialog(props: CancelConfirmDialogProps) {
   return (
@@ -31,9 +31,7 @@ export default function CancelConfirmDialog(props: CancelConfirmDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate
-            id={props.textId ? props.textId : "buttons.deletePermanently"}
-          />
+          <Translate id={props.textId} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
