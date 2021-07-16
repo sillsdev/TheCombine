@@ -195,8 +195,8 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(0));
             fetchedUser = _userRepo.GetUser(userId).Result ?? throw new System.Exception();
-            Assert.That(!fetchedUser.ProjectRoles.ContainsKey(_projId));
-            Assert.That(!fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
+            Assert.False(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            Assert.False(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
         }
 
         [Test]
