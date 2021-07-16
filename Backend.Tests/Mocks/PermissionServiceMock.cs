@@ -29,7 +29,7 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> IsSiteAdmin(HttpContext request)
         {
-            return Task.FromResult(true);
+            return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
         }
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
