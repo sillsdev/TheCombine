@@ -32,6 +32,8 @@ import {
 } from "backend";
 import theme from "types/theme";
 
+const projectSettingsTranslation = "projectSettings.userManagement.";
+
 enum UserOrder {
   Username,
   Name,
@@ -227,6 +229,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         !user.isAdmin
       ) {
         if (this.isProjectAdmin(user.projectRoles[currentProjectId])) {
+          console.log(user.username + " is admin");
           adminOption = (
             <MenuItem onClick={() => this.handleRemoveAdminDialogOpen()}>
               <Translate id="buttons.removeAdmin" />
@@ -243,19 +246,19 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           <div>
             <CancelConfirmDialog
               open={this.state.removeUserDialogOpen}
-              textId={"projectSettings.userManagement.removeUserWarning"}
+              textId={projectSettingsTranslation + "removeUserWarning"}
               handleCancel={() => this.handleRemoveUserDialogClose()}
               handleAccept={() => this.removeUser(user.id)}
             />
             <CancelConfirmDialog
               open={this.state.makeAdminDialogOpen}
-              textId={"projectSettings.userManagement.makeAdminWarning"}
+              textId={projectSettingsTranslation + "makeAdminWarning"}
               handleCancel={() => this.handleMakeAdminDialogClose()}
               handleAccept={() => this.makeAdmin(user.id)}
             />
             <CancelConfirmDialog
               open={this.state.removeAdminDialogOpen}
-              textId={"projectSettings.userManagement.removeAdminWarning"}
+              textId={projectSettingsTranslation + "removeAdminWarning"}
               handleCancel={() => this.handleRemoveAdminDialogClose()}
               handleAccept={() => this.removeAdmin(user.id)}
             />
