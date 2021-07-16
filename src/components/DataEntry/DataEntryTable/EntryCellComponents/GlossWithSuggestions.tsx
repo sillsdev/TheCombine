@@ -66,8 +66,9 @@ export class GlossWithSuggestions extends React.Component<
           />
         )}
         onKeyPress={(e: React.KeyboardEvent) => {
-          if (e.key === Key.Enter || e.key === Key.Tab)
+          if (e.key === Key.Enter || e.key === Key.Tab) {
             this.props.handleEnterAndTab(e);
+          }
         }}
       />
     );

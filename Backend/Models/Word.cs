@@ -262,6 +262,10 @@ namespace BackendFramework.Models
         public Guid Guid { get; set; }
 
         [Required]
+        [BsonElement("Definitions")]
+        public List<Definition> Definitions { get; set; }
+
+        [Required]
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
@@ -279,6 +283,7 @@ namespace BackendFramework.Models
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
             Accessibility = State.Active;
+            Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
         }
@@ -289,10 +294,15 @@ namespace BackendFramework.Models
             {
                 Guid = Guid,
                 Accessibility = Accessibility,
+                Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
 
+            foreach (var definition in Definitions)
+            {
+                clone.Definitions.Add(definition.Clone());
+            }
             foreach (var gloss in Glosses)
             {
                 clone.Glosses.Add(gloss.Clone());
@@ -315,22 +325,64 @@ namespace BackendFramework.Models
             return
                 other.Guid == Guid &&
                 other.Accessibility == Accessibility &&
+                other.Definitions.Count == Definitions.Count &&
+                other.Definitions.All(Definitions.Contains) &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
-
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Accessibility, Glosses, SemanticDomains);
+            return HashCode.Combine(Guid, Accessibility, Definitions, Glosses, SemanticDomains);
+        }
+    }
+
+    public class Definition
+    {
+        /// <summary> The bcp-47 code for the language the definition is written in. </summary>
+        [Required]
+        public string Language { get; set; }
+
+        /// <summary> The definition string. </summary>
+        [Required]
+        public string Text { get; set; }
+
+        public Definition()
+        {
+            Language = "";
+            Text = "";
+        }
+
+        public Definition Clone()
+        {
+            return new()
+            {
+                Language = (string)Language.Clone(),
+                Text = (string)Text.Clone()
+            };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Definition other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return Language.Equals(other.Language) && Text.Equals(other.Text);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Language, Text);
         }
     }
 
     public class Gloss
     {
-        /// <summary> The bcp-47 code for the language the note is written in. </summary>
+        /// <summary> The bcp-47 code for the language the gloss is written in. </summary>
         [Required]
         public string Language { get; set; }
 

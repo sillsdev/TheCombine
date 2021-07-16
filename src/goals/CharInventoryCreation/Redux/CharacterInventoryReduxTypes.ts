@@ -6,7 +6,7 @@ export enum CharacterInventoryType {
   SET_ALL_WORDS = "SET_ALL_WORDS",
   SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
   SET_CHARACTER_SET = "SET_CHARACTER_SET",
-  RESET = "RESET",
+  RESET = "CHARINV_RESET",
 }
 
 export enum CharacterStatus {

@@ -1,6 +1,6 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { Project } from "api/models";
 
@@ -13,11 +13,8 @@ interface NameState {
   projectName: string;
 }
 
-class ProjectName extends React.Component<
-  NameProps & LocalizeContextProps,
-  NameState
-> {
-  constructor(props: NameProps & LocalizeContextProps) {
+export default class ProjectName extends React.Component<NameProps, NameState> {
+  constructor(props: NameProps) {
     super(props);
     this.state = {
       projectName: props.project.name,
@@ -49,20 +46,18 @@ class ProjectName extends React.Component<
         </Grid>
         <Grid item>
           <Button
+            // No onClick necessary, as name updates on blur away from TextField.
             variant="contained"
             color={
               this.state.projectName !== this.props.project.name
                 ? "primary"
                 : "default"
             }
-            onClick={() => this.updateName(this.state.projectName)}
           >
-            {this.props.translate("buttons.save")}
+            <Translate id="buttons.save" />
           </Button>
         </Grid>
       </Grid>
     );
   }
 }
-
-export default withLocalize(ProjectName);

@@ -287,8 +287,9 @@ export default class NewEntry extends React.Component<
           sortedVerns.length
         ) {
           candidate = sortedVerns.shift()!;
-          if (!suggestedVerns.includes(candidate))
+          if (!suggestedVerns.includes(candidate)) {
             suggestedVerns.push(candidate);
+          }
         }
       }
     }

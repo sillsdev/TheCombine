@@ -365,7 +365,7 @@ Runs only the front end of the app in the development mode.
 
 Runs only the backend.
 
-> Note: If you make backend edits, the backend will _not_ recompile--you need to rerun `npm start` or `npm run backend`.
+> Note: If you make backend edits, the backend will _not_ recompile—you need to rerun `npm start` or `npm run backend`.
 
 #### `npm run database`
 
