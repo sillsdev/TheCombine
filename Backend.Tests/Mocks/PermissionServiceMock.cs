@@ -27,6 +27,11 @@ namespace Backend.Tests.Mocks
             return httpContext;
         }
 
+        public Task<bool> IsSiteAdmin(HttpContext request)
+        {
+            return Task.FromResult(true);
+        }
+
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
             return true;
