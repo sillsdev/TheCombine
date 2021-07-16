@@ -84,13 +84,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(() => this.handleRemoveUserDialogClose())
       .then(() => {
         toast(
-          <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
+          <Translate
+            id={projectSettingsTranslation + "userRemovedToastSuccess"}
+          />
         );
       })
       .catch((err: string) => {
         console.error(err);
         toast(
-          <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
+          <Translate
+            id={projectSettingsTranslation + "userRemovedToastFailure"}
+          />
         );
       });
   }
@@ -109,13 +113,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(() => this.handleMakeAdminDialogClose())
       .then(() => {
         toast(
-          <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
+          <Translate
+            id={projectSettingsTranslation + "makeAdminToastSuccess"}
+          />
         );
       })
       .catch((err: string) => {
         console.error(err);
         toast(
-          <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
+          <Translate
+            id={projectSettingsTranslation + "makeAdminToastFailure"}
+          />
         );
       });
   }
@@ -128,13 +136,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(() => this.handleRemoveAdminDialogClose())
       .then(() => {
         toast(
-          <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
+          <Translate
+            id={projectSettingsTranslation + "removeAdminToastSuccess"}
+          />
         );
       })
       .catch((err: string) => {
         console.error(err);
         toast(
-          <Translate id="projectSettings.userManagement.removeAdminToastFailure" />
+          <Translate
+            id={projectSettingsTranslation + "removeAdminToastFailure"}
+          />
         );
       });
   }
