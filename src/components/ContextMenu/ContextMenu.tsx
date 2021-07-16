@@ -12,7 +12,7 @@ interface ContextMenuState {
   isOpen: boolean;
 }
 
-export const RIGHT_CLICK: string = "contextmenu";
+export const RIGHT_CLICK = "contextmenu";
 
 export default class ContextMenu extends React.Component<
   ContextMenuProps,
