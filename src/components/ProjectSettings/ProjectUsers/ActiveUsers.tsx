@@ -85,7 +85,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(() => {
         toast(
           <Translate
-            id={projectSettingsTranslation + "userRemovedToastSuccess"}
+            id={`${projectSettingsTranslation}userRemovedToastSuccess`}
           />
         );
       })
@@ -93,7 +93,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         console.error(err);
         toast(
           <Translate
-            id={projectSettingsTranslation + "userRemovedToastFailure"}
+            id={`${projectSettingsTranslation}userRemovedToastFailure`}
           />
         );
       });
@@ -114,7 +114,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(() => {
         toast(
           <Translate
-            id={projectSettingsTranslation + "makeAdminToastSuccess"}
+            id={`${projectSettingsTranslation}makeAdminToastSuccess`}
           />
         );
       })
@@ -122,7 +122,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         console.error(err);
         toast(
           <Translate
-            id={projectSettingsTranslation + "makeAdminToastFailure"}
+            id={`${projectSettingsTranslation}makeAdminToastFailure`}
           />
         );
       });
@@ -137,7 +137,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(() => {
         toast(
           <Translate
-            id={projectSettingsTranslation + "removeAdminToastSuccess"}
+            id={`${projectSettingsTranslation}removeAdminToastSuccess`}
           />
         );
       })
@@ -145,7 +145,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         console.error(err);
         toast(
           <Translate
-            id={projectSettingsTranslation + "removeAdminToastFailure"}
+            id={`${projectSettingsTranslation}removeAdminToastFailure`}
           />
         );
       });
@@ -241,7 +241,6 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         !user.isAdmin
       ) {
         if (this.isProjectAdmin(user.projectRoles[currentProjectId])) {
-          console.log(user.username + " is admin");
           adminOption = (
             <MenuItem onClick={() => this.handleRemoveAdminDialogOpen()}>
               <Translate id="buttons.removeAdmin" />
@@ -258,19 +257,19 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           <div>
             <CancelConfirmDialog
               open={this.state.removeUserDialogOpen}
-              textId={projectSettingsTranslation + "removeUserWarning"}
+              textId={`${projectSettingsTranslation}removeUserWarning`}
               handleCancel={() => this.handleRemoveUserDialogClose()}
               handleAccept={() => this.removeUser(user.id)}
             />
             <CancelConfirmDialog
               open={this.state.makeAdminDialogOpen}
-              textId={projectSettingsTranslation + "makeAdminWarning"}
+              textId={`${projectSettingsTranslation}makeAdminWarning`}
               handleCancel={() => this.handleMakeAdminDialogClose()}
               handleAccept={() => this.makeAdmin(user.id)}
             />
             <CancelConfirmDialog
               open={this.state.removeAdminDialogOpen}
-              textId={projectSettingsTranslation + "removeAdminWarning"}
+              textId={`${projectSettingsTranslation}removeAdminWarning`}
               handleCancel={() => this.handleRemoveAdminDialogClose()}
               handleAccept={() => this.removeAdmin(user.id)}
             />
