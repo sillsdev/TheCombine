@@ -5,9 +5,9 @@
 # Group: nuc
 ################################################
 
-#################################################
-
 config_analytics_write_key: ""
+
+#################################################
 # TheCombine is installed using Ansible and the playbook_install.yml
 # playbook.  It will set the IMAGE_TAG environment variable to
 # value provided by the user and launch docker-compose
