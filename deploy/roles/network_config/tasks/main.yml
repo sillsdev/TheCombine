@@ -36,6 +36,5 @@
   with_items:
     - netdev
     - network
-  when:
-    - '"microk8s" in k8s_components'
+  when: '"microk8s" in k8s_components'
   notify: Restart networkd
