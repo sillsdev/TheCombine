@@ -11,9 +11,6 @@ k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
 image_pull_secrets:
   - awsecr-cred
 
-# secret name in the Rancher POC
-# - name: us-east-1-ecr-thecombine-token
-
 # Persistent storage size configurations
 backend_data_size: 4Gi
 database_data_size: 2Gi

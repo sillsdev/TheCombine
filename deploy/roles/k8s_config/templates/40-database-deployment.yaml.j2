@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - image: mongo:4.4
-{% if image_tag == "latest "%}
+{% if image_tag == "latest" %}
           imagePullPolicy: Always
 {% else %}
           imagePullPolicy: IfNotPresent

@@ -62,7 +62,7 @@ spec:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
           image: '{{ combine_image_backend }}'
-{% if image_tag == "latest "%}
+{% if image_tag == "latest" %}
           imagePullPolicy: Always
 {% else %}
           imagePullPolicy: IfNotPresent
