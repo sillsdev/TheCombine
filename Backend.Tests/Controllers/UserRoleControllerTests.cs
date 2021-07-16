@@ -185,7 +185,6 @@ namespace Backend.Tests.Controllers
             _userRoleRepo.Create(userRole);
             var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
             var userId = _userRepo.Create(user).Result!.Id;
-            KeyValuePair<string, string> projectRole = new KeyValuePair<string, string>(_projId, userRole.Id);
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(1));
             var fetchedUser = _userRepo.GetUser(userId).Result ?? throw new System.Exception();

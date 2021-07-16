@@ -218,8 +218,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     const currentProjectId = localStorage.getItem("projectId");
     const sortedUserList = this.getSortedUsers();
 
-    for (let i = 0; i < sortedUserList.length; i++) {
-      const user = sortedUserList[i];
+    sortedUserList.forEach((user) => {
       if (
         currentUser &&
         JSON.parse(currentUser).isAdmin &&
@@ -306,7 +305,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           {manageUser}
         </ListItem>
       );
-    }
+    });
 
     return (
       <React.Fragment>

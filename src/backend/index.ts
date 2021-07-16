@@ -453,7 +453,6 @@ export async function removeUserRole(
   permission: Permission[],
   userId: string
 ): Promise<void> {
-  console.log(userId);
   const params = {
     projectId: LocalStorage.getProjectId(),
     userId,

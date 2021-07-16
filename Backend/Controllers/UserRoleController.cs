@@ -124,7 +124,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes the <see cref="UserRole"/> for the specified projectId and userId </summary>
         [HttpDelete("{userId}", Name = "DeleteUserRole")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> DeleteUserRole(string projectId, string userId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
@@ -145,14 +145,11 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(userId);
             }
-            else
-            {
-                var userRoleId = changeUser.ProjectRoles[projectId];
-                changeUser.ProjectRoles.Remove(projectId);
-                await _userRepo.Update(changeUser.Id, changeUser);
-                var userRoleRepoResult = await _userRoleRepo.Delete(projectId, userRoleId);
-                return Ok(userRoleRepoResult);
-            }
+            var userRoleId = changeUser.ProjectRoles[projectId];
+            changeUser.ProjectRoles.Remove(projectId);
+            await _userRepo.Update(changeUser.Id, changeUser);
+            var userRoleRepoResult = await _userRoleRepo.Delete(projectId, userRoleId);
+            return Ok(userRoleRepoResult);
         }
 
         /// <summary>
