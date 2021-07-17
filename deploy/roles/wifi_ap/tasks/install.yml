@@ -1,17 +1,21 @@
 ---
 - name: Install packages to create the Access Point
-  apt: name=hostapd,dnsmasq
-    update_cache=yes
-    cache_valid_time=3600
-    state=present
+  apt:
+    name:
+      - hostapd
+      - dnsmasq
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
   notify: Start create_ap
 
 - name: populate service facts
   service_facts:
 
 - name: Stop service
-  service: name=create_ap
-    state=stopped
+  service:
+    name: create_ap
+    state: stopped
   when: "'create_ap' in services"
   notify: Restart create_ap
 

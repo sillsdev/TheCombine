@@ -10,3 +10,9 @@ combine_use_syslog: true
 ssl_dir: "/etc/cert_store/nginx/{{ combine_server_name }}"
 ssl_certificate: "{{ ssl_dir }}/fullchain.pem"
 ssl_private_key: "{{ ssl_dir }}/privkey.pem"
+
+# Kubernetes local Working directories
+k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}/"
+k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
+k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
+k8s_cert_mgr_cfg: "{{ k8s_working_dir }}/cert_manager"
