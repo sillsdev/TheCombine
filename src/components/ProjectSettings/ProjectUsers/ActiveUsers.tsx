@@ -224,15 +224,25 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     this.setState({ removeAdminDialogOpen: false });
   }
 
+  private menuItemRemoveAdmin = () => (
+    <MenuItem onClick={() => this.handleRemoveAdminDialogOpen()}>
+      <Translate id="buttons.removeAdmin" />
+    </MenuItem>
+  );
+  private menuItemMakeAdmin = () => (
+    <MenuItem onClick={() => this.handleMakeAdminDialogOpen()}>
+      <Translate id="buttons.makeAdmin" />
+    </MenuItem>
+  );
+
   render() {
-    let manageUser: React.ReactElement<ElementType>;
-    let adminOption: React.ReactElement<MenuItemProps>;
     const userList: React.ReactElement<ListItemProps>[] = [];
     const currentUser = localStorage.getItem("user");
     const currentProjectId = localStorage.getItem("projectId");
     const sortedUserList = this.getSortedUsers();
 
     sortedUserList.forEach((user) => {
+      let manageUser: React.ReactElement<ElementType>;
       if (
         currentUser &&
         JSON.parse(currentUser).isAdmin &&
@@ -240,19 +250,11 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         user.id !== JSON.parse(currentUser).id &&
         !user.isAdmin
       ) {
-        if (this.isProjectAdmin(user.projectRoles[currentProjectId])) {
-          adminOption = (
-            <MenuItem onClick={() => this.handleRemoveAdminDialogOpen()}>
-              <Translate id="buttons.removeAdmin" />
-            </MenuItem>
-          );
-        } else {
-          adminOption = (
-            <MenuItem onClick={() => this.handleMakeAdminDialogOpen()}>
-              <Translate id="buttons.makeAdmin" />
-            </MenuItem>
-          );
-        }
+        const adminOption = this.isProjectAdmin(
+          user.projectRoles[currentProjectId]
+        )
+          ? this.menuItemRemoveAdmin()
+          : this.menuItemMakeAdmin();
         manageUser = (
           <div>
             <CancelConfirmDialog
