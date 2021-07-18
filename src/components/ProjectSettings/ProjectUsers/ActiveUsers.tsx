@@ -9,7 +9,6 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  MenuItemProps,
   Select,
   Tooltip,
 } from "@material-ui/core";
