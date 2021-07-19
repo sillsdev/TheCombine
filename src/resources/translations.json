@@ -419,7 +419,8 @@
         "Failed to remove admin privileges from user.",
         "Failed to remove admin privileges from user.",
         "Failed to remove admin privileges from user."
-      ]
+      ],
+      "manageUser": ["Manage User", "Manage User", "Manage User"]
     },
     "import": {
       "header": ["Import Data", "Importar información", "Importer des données"],

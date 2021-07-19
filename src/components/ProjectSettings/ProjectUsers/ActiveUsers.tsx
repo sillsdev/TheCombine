@@ -274,7 +274,12 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               handleCancel={() => this.handleRemoveAdminDialogClose()}
               handleAccept={() => this.removeAdmin(user.id)}
             />
-            <Tooltip title="Manage User" placement="right">
+            <Tooltip
+              title={
+                <Translate id={`${projectSettingsTranslation}manageUser`} />
+              }
+              placement="right"
+            >
               <IconButton
                 id="user-options"
                 onClick={(event) => {
@@ -302,11 +307,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         );
       } else {
         manageUser = (
-          <Tooltip title="You cannot edit this user">
-            <IconButton disabled>
-              <MoreVertIcon />
-            </IconButton>
-          </Tooltip>
+          <IconButton disabled>
+            <MoreVertIcon />
+          </IconButton>
         );
       }
       userList.push(
