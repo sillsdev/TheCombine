@@ -7,10 +7,8 @@ import {
   ListItem,
   ListItemProps,
   ListItemText,
-  Menu,
   MenuItem,
   Select,
-  Tooltip,
 } from "@material-ui/core";
 import CancelConfirmDialogCollection from "./CancelConfirmDialogCollection";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -21,8 +19,6 @@ import React, { ElementType } from "react";
 import { Permission, Project, User, UserRole } from "api/models";
 import { avatarSrc, getAllUsersInCurrentProject, getUserRoles } from "backend";
 import theme from "types/theme";
-
-const projectSettingsTranslation = "projectSettings.userManagement.";
 
 enum UserOrder {
   Username,
