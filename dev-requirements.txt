@@ -10,7 +10,7 @@ backports.entry-points-selectable==1.1.0
     # via virtualenv
 beautifulsoup4==4.9.3
     # via mkdocs-htmlproofer-plugin
-black==21.6b0
+black==21.7b0
     # via -r dev-requirements.in
 certifi==2021.5.30
     # via requests
@@ -20,10 +20,6 @@ click==8.0.1
     # via
     #   black
     #   mkdocs
-colorama==0.4.4
-    # via
-    #   click
-    #   tox
 distlib==0.3.2
     # via virtualenv
 filelock==3.0.12
@@ -65,13 +61,13 @@ mccabe==0.6.1
     # via flake8
 mergedeep==1.3.4
     # via mkdocs
-mkdocs==1.2.1
+mkdocs==1.2.2
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.4.0
     # via -r dev-requirements.in
-mkdocs-material==7.1.10
+mkdocs-material==7.1.11
     # via
     #   -r dev-requirements.in
     #   mkdocs-material-extensions
@@ -87,7 +83,7 @@ packaging==21.0
     # via
     #   mkdocs
     #   tox
-pathspec==0.8.1
+pathspec==0.9.0
     # via black
 pep8-naming==0.12.0
     # via -r dev-requirements.in
@@ -107,8 +103,6 @@ pymdown-extensions==8.2
     # via mkdocs-material
 pyparsing==2.4.7
     # via packaging
-pyreadline==2.1
-    # via humanfriendly
 python-dateutil==2.8.2
     # via ghp-import
 pyyaml==5.4.1
@@ -130,9 +124,10 @@ soupsieve==2.2.1
     # via beautifulsoup4
 toml==0.10.2
     # via
-    #   black
     #   mypy
     #   tox
+tomli==1.0.4
+    # via black
 tox==3.24.0
     # via -r dev-requirements.in
 types-requests==2.25.0
