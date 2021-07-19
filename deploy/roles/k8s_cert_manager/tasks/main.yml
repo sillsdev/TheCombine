@@ -1,0 +1,23 @@
+---
+- name: Create directory for cert-manager configuration files
+  file:
+    path: "{{ k8s_cert_mgr_cfg }}"
+    state: directory
+    mode: 0700
+
+- name: Create Issuer configuration file
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ k8s_cert_mgr_cfg }}/{{ item }}"
+    mode: 0600
+  with_items:
+    - letsencrypt_prod.yaml
+    - letsencrypt_staging.yaml
+
+- name: Apply Issuer configuration file
+  command: kubectl --kubeconfig=kubeconfig apply -f {{ k8s_cert_mgr_cfg }}/{{ item }}
+  args:
+    chdir: "{{ k8s_working_dir }}"
+  with_items:
+    - letsencrypt_prod.yaml
+    - letsencrypt_staging.yaml
