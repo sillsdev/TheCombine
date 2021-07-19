@@ -1,0 +1,92 @@
+---
+- name: Install pre-requisite packages
+  apt:
+    name: "{{ k8s_required_pkgs }}"
+
+# configure kubernetes user
+- name: adding existing user '{{ k8s_user }}' to group docker
+  user:
+    name: "{{ k8s_user }}"
+    groups: docker
+    append: yes
+
+- name: Install and Configure Microk8s
+  block:
+    - name: Install microk8s snap
+      snap:
+        name: microk8s
+        classic: yes
+
+    - name: Start microk8s
+      command: microk8s start
+
+    - name: Add user to microk8s group
+      user:
+        name: "{{ k8s_user }}"
+        groups: microk8s
+        append: yes
+
+    - name: Enable selected microk8s addons
+      command: microk8s enable {{ microk8s_addons | join(' ') }}
+
+    - name: Add DNS name to microk8s config template
+      lineinfile:
+        path: /var/snap/microk8s/current/certs/csr.conf.template
+        insertafter: "^DNS\\.5"
+        line: DNS.6 = {{ combine_server_name }}
+
+    - name: Get home directory for {{ k8s_user }}
+      shell: >
+        getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
+      register: k8s_user_home
+      changed_when: false
+
+    - name: Create .kube directory
+      file:
+        path: "{{ k8s_user_home.stdout }}/.kube"
+        state: directory
+        owner: "{{ k8s_user }}"
+        group: "{{ k8s_group }}"
+        mode: 0700
+
+    - name: Save kubectl configuration in {{ k8s_user_home.stdout }}/.kube/config
+      shell: microk8s config > {{ k8s_user_home.stdout }}/.kube/config
+
+    - name: Set permissions on .kube/config
+      file:
+        path: "{{ k8s_user_home.stdout }}/.kube/config"
+        state: file
+        owner: "{{ k8s_user }}"
+        group: "{{ k8s_group }}"
+        mode: 0600
+
+    - name: Save kubectl configuration in site_files on host
+      fetch:
+        src: "{{ k8s_user_home.stdout }}/.kube/config"
+        dest: "{{ k8s_working_dir }}/kubeconfig"
+        flat: yes
+
+    - name: Replace server IP with DNS name in site_files copy
+      delegate_to: localhost
+      become: no
+      lineinfile:
+        state: present
+        path: "{{ k8s_working_dir }}/kubeconfig"
+        regexp: '^(\s+server: https:\/\/)[.0-9]+:16443'
+        backrefs: yes
+        line: '\1{{ combine_server_name}}:16443'
+  when: '"microk8s" in k8s_components'
+
+- name: Download the Google Cloud public signing key
+  get_url:
+    dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- name: Add repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+    filename: kubernetes
+
+- name: Install kubectl
+  apt:
+    name: kubectl

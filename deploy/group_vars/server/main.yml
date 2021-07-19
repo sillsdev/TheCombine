@@ -1,32 +1,42 @@
 ---
-#################################################
+################################################
 # Group specific configuration items
 #
 # Group: server
-#################################################
+################################################
 
 # Frontend configuration items:
 config_show_cert_expiration: false
 config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
+
+#################################################
 # TheCombine is installed on the Live Server by TeamCity.  It will set the
 # IMAGE_TAG environment variable to major.minor.build_no and launch
 # Docker compose
-image_tag: "${IMAGE_TAG}"
+image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
+################################################
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 
+################################################
 # SSL cert variables specific to Server targets
+################################################
 cert_mode: "letsencrypt"
 combine_cert_proxy_list:
   - nuc2.thecombine.app
   - nuc1.thecombine.app
 
+################################################
+# setup variables for roles/aws_access
+################################################
 aws_user: "{{ combine_user }}"
 aws_group: "{{ combine_group }}"
 
+################################################
 # AWS S3 storage configuration
+################################################
 aws_s3_loc: thecombine.app
 aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
@@ -49,6 +59,22 @@ backup_hour: "10"
 backup_minute: "15"
 # Maximum number of backups to keep on AWS S3 service
 max_backups: "3"
+
+################################################
+# Configure Kubernetes cluster
+################################################
+k8s_components:
+  - cert_manager
+
+pull_secrets_manager: registry_creds
+image_pull_secrets:
+  - awsecr-cred
+
+app_namespace: thecombine
+http_only: yes
+
+k8s_user: sillsdev
+k8s_group: sillsdev
 
 ################################################
 # WiFi access point settings

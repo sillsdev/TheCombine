@@ -1,0 +1,14 @@
+---
+eth_optional: no
+
+###############################
+# virtual_if device
+# This is needed when microk8s is running on a target that
+# does not have an ethernet connection plugged-in.
+###############################
+
+virtual_if: vip
+virtual_if_addr: 172.16.1.23
+virtual_if_mask: 255.255.255.255
+virtual_if_broadcast: 172.16.1.255
+virtual_if_metric: 200
