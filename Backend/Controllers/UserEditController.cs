@@ -224,7 +224,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }

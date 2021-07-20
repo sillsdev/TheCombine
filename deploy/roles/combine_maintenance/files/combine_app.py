@@ -22,6 +22,7 @@ class Permission(enum.Enum):
     MergeAndCharSet = 3
     ImportExport = 4
     DeleteEditSettingsAndUsers = 5
+    Owner = 6
 
 
 class CombineApp:
