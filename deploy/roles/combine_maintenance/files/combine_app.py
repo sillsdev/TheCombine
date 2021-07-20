@@ -110,7 +110,9 @@ class CombineApp:
             return result_dict
         return None
 
-    def db_query(self, collection: str, query: str, projection: str = "{}") -> List[Dict[str, Any]]:
+    def db_query(
+        self, collection: str, query: str, projection: str = "{}"
+    ) -> List[Dict[str, Any]]:
         """Run the supplied database query returning an Array."""
         cmd = f"db.{collection}.find({query}, {projection}).toArray()"
         db_results = self.exec(
