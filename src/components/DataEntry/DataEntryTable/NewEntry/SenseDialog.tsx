@@ -84,7 +84,6 @@ export function SenseList(props: SenseListProps) {
                     props.analysisLang
                   )
                 }
-                sortingByDomains={false}
               />
             </div>
           </StyledMenuItem>
