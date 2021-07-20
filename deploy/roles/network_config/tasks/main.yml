@@ -1,0 +1,40 @@
+---
+##################################
+# Update the netplan configuration files
+# for the ethernet interface to mark it
+# as optional
+##################################
+
+- name: List netplan configuration files
+  find:
+    paths: /etc/netplan
+    patterns: "*.yaml"
+  when: eth_optional
+  register: net_config
+
+- name: Set Ethernet I/F as optional
+  lineinfile:
+    path: "{{ item.path }}"
+    state: present
+    insertafter: "^    en[a-z]\\d"
+    line: "      optional: true"
+  when: eth_optional
+  with_items: "{{ net_config.files }}"
+  notify: Apply netplan
+
+###
+# Create a virtual network interface so that microk8s can run
+# when no ethernet connection is attached.
+###
+- name: Create virtual network I/F
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/systemd/network/{{ virtual_if }}.{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - netdev
+    - network
+  when: '"microk8s" in k8s_components'
+  notify: Restart networkd

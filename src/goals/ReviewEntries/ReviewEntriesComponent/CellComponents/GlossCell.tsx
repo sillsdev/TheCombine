@@ -14,8 +14,8 @@ import { themeColors } from "types/theme";
 import { newGloss } from "types/word";
 
 interface GlossCellProps {
-  editable: boolean;
-  sortingByGloss: boolean;
+  editable?: boolean;
+  sortingByThis?: boolean;
 }
 
 export default function GlossCell(
@@ -60,8 +60,9 @@ export default function GlossCell(
                 disabled={sense.deleted}
                 readOnly
                 disableUnderline
+                multiline
                 style={
-                  props.sortingByGloss && index === 0
+                  props.sortingByThis && index === 0
                     ? { backgroundColor: themeColors.highlight }
                     : {}
                 }
@@ -116,6 +117,7 @@ function GlossField(props: GlossFieldProps) {
       label={`${props.gloss.language}:`}
       variant="outlined"
       margin="dense"
+      multiline
       value={props.gloss.def}
       error={props.gloss.def.length === 0}
       onChange={(event) =>

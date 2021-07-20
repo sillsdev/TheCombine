@@ -430,6 +430,9 @@
       "off": ["Off", "Apagado", "Éteint"],
       "on": ["On", "Encendido", "Allumé"]
     },
+    "definitions": {
+      "label": ["Definitions", "Definiciones", "Définitions"]
+    },
     "invite": {
       "inviteByEmailLabel": [
         "Invite by Email",
@@ -517,6 +520,11 @@
       "No vernacular input!",
       "¡No tenemos un vernáculo!",
       "Pas d'entrée vernaculaire !"
+    ],
+    "noDefinition": [
+      "No definitions input",
+      "No hay entrada de definiciones",
+      "Pas d'entrée de définitions"
     ],
     "noGloss": [
       "No glosses input",

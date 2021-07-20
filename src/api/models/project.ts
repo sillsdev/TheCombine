@@ -49,6 +49,12 @@ export interface Project {
   liftImported: boolean;
   /**
    *
+   * @type {boolean}
+   * @memberof Project
+   */
+  definitionsEnabled: boolean;
+  /**
+   *
    * @type {Array<SemanticDomain>}
    * @memberof Project
    */
