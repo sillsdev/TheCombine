@@ -110,6 +110,20 @@ class CombineApp:
             return result_dict
         return None
 
+    def db_query(
+        self, collection: str, query: str, projection: str = "{}"
+    ) -> List[Dict[str, Any]]:
+        """Run the supplied database query returning an Array."""
+        cmd = f"db.{collection}.find({query}, {projection}).toArray()"
+        db_results = self.exec(
+            "database", ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd]
+        )
+        result_str = self.object_id_to_str(db_results.stdout)
+        if result_str != "":
+            result_array: List[Dict[str, Any]] = json.loads(result_str)
+            return result_array
+        return []
+
     def start(self, services: List[str]) -> subprocess.CompletedProcess[str]:
         """Start the specified combine service(s)."""
         return run_cmd(["docker-compose"] + self.compose_opts + ["start"] + services)
@@ -149,3 +163,9 @@ class CombineApp:
         if results is not None:
             return results["_id"]  # type: ignore
         return None
+
+    def get_project_roles(self, proj_id: str, perm: Permission) -> List[Dict[str, Any]]:
+        """Get the list of all user roles for a project that have the requested permission set."""
+        query = f"{{projectId: '{proj_id}', permissions: {{ $all: [{perm.value}]}}}}"
+        result_fields = "{projectId: 1, permissions: 1}"
+        return self.db_query("UserRolesCollection", query, result_fields)

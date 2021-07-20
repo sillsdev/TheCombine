@@ -5,16 +5,16 @@ Add user to a project.
 This script will add a user to a Combine project in the database
 
 To add the user to the project, we need to:
- 1. Look up the user id - check the "user" info against the username and
+ 1. If the --admin argument is used, set the requested permissions to [5,4,3,2,1];
+    otherwise, set them to [3,2,1]
+ 2. Look up the user id - check the "user" info against the username and
     email fields in the UsersCollection.
- 2. Check to see if the user is already in the project.  If he/she is
-    already a member and the --admin argument is used, set the permissions to
-    [5,4,3,2,1], otherwise do nothing.
- 3. If the user is not in the project:
+ 3. Check to see if the user is already in the project.  If he/she is
+    already a member merge the requested permissions with the current permissions.
+ 4. If the user is not in the project:
      a. create a document in the UserRolesCollection,
-     b. add the new role to the user's document in the UsersCollection
-     c. set the permissions field in the user role to [5,4,3,2,1] if the
-        --admin argument is used, [3,2,1] otherwise.
+     b. set the permissions field in the user role to the requested permissions.
+     c. add the new role to the user's document in the UsersCollection
 """
 
 import argparse
@@ -56,9 +56,9 @@ def main() -> None:
     config: Dict[str, str] = json.loads(Path(args.config).read_text())
     combine = CombineApp(Path(config["docker_compose_file"]))
 
-    # 0. Define user permission sets
+    # 1. Define user permission sets
     if args.admin:
-        user_permissions = [
+        req_permissions = [
             Permission.DeleteEditSettingsAndUsers.value,
             Permission.ImportExport.value,
             Permission.MergeAndCharSet.value,
@@ -66,13 +66,13 @@ def main() -> None:
             Permission.WordEntry.value,
         ]
     else:
-        user_permissions = [
+        req_permissions = [
             Permission.MergeAndCharSet.value,
             Permission.Unused.value,
             Permission.WordEntry.value,
         ]
 
-    # 1. Lookup the user id
+    # 2. Lookup the user id
     user_id = combine.get_user_id(args.user)
     if user_id is None:
         print(f"Cannot find user {args.user}")
@@ -88,46 +88,41 @@ def main() -> None:
     if args.verbose:
         print(f"Project ID: {proj_id}")
 
-    # 2. Check to see if the user is already in the project.
+    # 3. Check to see if the user is already in the project.
     # define the query selection and projection arguments separately to
     # improve readability
     select_crit = f'{{ _id: ObjectId("{user_id}"), "projectRoles.{proj_id}": {{ $exists: true}} }}'
     projection = f'{{ "projectRoles.{proj_id}" : 1}}'
-    result = combine.db_cmd(f"db.UsersCollection.find({select_crit}, {projection})")
-    if result is not None:
+    result = combine.db_query("UsersCollection", select_crit, projection)
+    if len(result) == 1:
         # The user is in the project
-        if not args.admin:
-            print(f"{args.user} is already a member of {args.project}")
-            sys.exit(0)
-        user_role_id = result["projectRoles"][proj_id]
-        if args.verbose:
-            print(f"UserRole ID: {user_role_id}")
+        user_role_id = result[0]["projectRoles"][proj_id]
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
-        update_role = f'{{ $set: {{"permissions" : {user_permissions}}} }}'
-        combine.db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
-        if args.verbose:
-            print(f"Updated Role {user_role_id} with permissions {user_permissions}")
-    else:
-        #  3. The user is not in the project:
-        #      a. create a document in the UserRolesCollection,
-        if args.admin:
-            user_permissions = [
-                Permission.DeleteEditSettingsAndUsers.value,
-                Permission.ImportExport.value,
-                Permission.MergeAndCharSet.value,
-                Permission.Unused.value,
-                Permission.WordEntry.value,
-            ]
-        else:
-            user_permissions = [
-                Permission.MergeAndCharSet.value,
-                Permission.Unused.value,
-                Permission.WordEntry.value,
-            ]
-        insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
+        # Look up the current permissions
+        user_role = combine.db_query("UserRolesCollection", select_role)
+        # Merge current permissions with the requested permissions
+        curr_permissions = user_role[0]["permissions"]
+        if not (set(req_permissions)).issubset(set(curr_permissions)):
+            new_permissions = list(set(curr_permissions + req_permissions))
+            update_role = f'{{ $set: {{"permissions" : {new_permissions}}} }}'
+            upd_result = combine.db_cmd(
+                f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
+            )
+            if upd_result is None:
+                print(f"Could not update role for {args.user}.", file=sys.stderr)
+                sys.exit(1)
+            if args.verbose:
+                print(f"Updated Role {user_role_id} with permissions {req_permissions}")
+        elif args.verbose:
+            print(f"No update required.  Current permissions are {curr_permissions}")
+    elif len(result) == 0:
+        #  4. The user is not in the project
+        #    a. create a document in the UserRolesCollection,
+        #    b. set the permissions field in the user role to the requested permissions.
+        insert_doc = f'{{ "permissions" : {req_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
-            #      b. add the new role to the user's document in the UsersCollection
+            # c. add the new role to the user's document in the UsersCollection
             user_role_id = insert_result["insertedId"]
             select_user = f'{{ _id: ObjectId("{user_id}")}}'
             update_user = f'{{ $set : {{"projectRoles.{proj_id}" : "{user_role_id}" }}}}'
@@ -137,11 +132,16 @@ def main() -> None:
             if add_role_result is None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
                 sys.exit(1)
-            elif args.verbose:
-                print(f"{args.user} added to {args.project} with permissions {user_permissions}")
+            if args.verbose:
+                print(f"{args.user} added to {args.project} with permissions {req_permissions}")
         else:
             print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)
             sys.exit(1)
+    else:
+        print(
+            f"Too many documents in UserRolesCollection for User {args.user}"
+            f" in Project {args.project}"
+        )
 
 
 if __name__ == "__main__":
