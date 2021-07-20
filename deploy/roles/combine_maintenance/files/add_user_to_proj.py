@@ -100,16 +100,17 @@ def main() -> None:
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
         # Look up the current permissions
         user_role = combine.db_query("UserRolesCollection", select_role)
-        if args.verbose:
-            print(f"UserRole ID: {user_role_id}")
         # Merge current permissions with the requested permissions
         curr_permissions = user_role[0]["permissions"]
         if not (set(req_permissions)).issubset(set(curr_permissions)):
             new_permissions = list(set(curr_permissions + req_permissions))
             update_role = f'{{ $set: {{"permissions" : {new_permissions}}} }}'
-            combine.db_cmd(
+            upd_result = combine.db_cmd(
                 f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
             )
+            if upd_result is None:
+                print(f"Could not update role for {args.user}.", file=sys.stderr)
+                sys.exit(1)
             if args.verbose:
                 print(f"Updated Role {user_role_id} with permissions {req_permissions}")
         elif args.verbose:
@@ -130,7 +131,7 @@ def main() -> None:
             if add_role_result is None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
                 sys.exit(1)
-            elif args.verbose:
+            if args.verbose:
                 print(f"{args.user} added to {args.project} with permissions {req_permissions}")
         else:
             print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)

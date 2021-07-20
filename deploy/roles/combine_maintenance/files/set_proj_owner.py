@@ -50,10 +50,10 @@ def main() -> None:
 
     # Iterate over each project
     for proj in proj_list:
-        if args.verbose:
-            print(f"Checking project: {proj['name']} ({proj['_id']})")
-        # get the admin user roles (roles that have Permission.DeleteEditSettingsAndUsers set)
         proj_id = proj["_id"]
+        if args.verbose:
+            print(f"Checking project: {proj['name']} ({proj_id})")
+        # get the admin user roles (roles that have Permission.DeleteEditSettingsAndUsers set)
         if len(combine.get_project_roles(proj_id, Permission.ProjectOwner)) > 0:
             continue
         admin_roles = combine.get_project_roles(proj_id, Permission.DeleteEditSettingsAndUsers)
