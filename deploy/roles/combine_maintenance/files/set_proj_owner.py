@@ -74,12 +74,14 @@ def main() -> None:
             print(f"Current administrators for {proj['name']}")
             for i, user in enumerate(admin_users):
                 print(f"{i+1}: {user['name']} ({user['username']})")
+            # Prompt for project owner selection
             num_proj_owner = (
                 int(input("Enter the number of the user to be project owner (0 = None):")) - 1
             )
-            # Prompt for project owner selection
-            print(f"Selected {admin_users[num_proj_owner]['name']}")
-            update_role = admin_users[num_proj_owner]["projectRoles"][proj_id]
+            if num_proj_owner >= 0:
+                if args.verbose:
+                    print(f"Selected {admin_users[num_proj_owner]['name']}")
+                update_role = admin_users[num_proj_owner]["projectRoles"][proj_id]
         # Set "Project Owner" permission in selected user role
         combine.db_cmd(
             "db.UserRolesCollection.updateOne("
