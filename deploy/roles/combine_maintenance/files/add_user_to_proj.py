@@ -58,7 +58,7 @@ def main() -> None:
 
     # 0. Define user permission sets
     if args.admin:
-        user_permissions = [
+        req_permissions = [
             Permission.DeleteEditSettingsAndUsers.value,
             Permission.ImportExport.value,
             Permission.MergeAndCharSet.value,
@@ -66,7 +66,7 @@ def main() -> None:
             Permission.WordEntry.value,
         ]
     else:
-        user_permissions = [
+        req_permissions = [
             Permission.MergeAndCharSet.value,
             Permission.Unused.value,
             Permission.WordEntry.value,
@@ -93,38 +93,31 @@ def main() -> None:
     # improve readability
     select_crit = f'{{ _id: ObjectId("{user_id}"), "projectRoles.{proj_id}": {{ $exists: true}} }}'
     projection = f'{{ "projectRoles.{proj_id}" : 1}}'
-    result = combine.db_cmd(f"db.UsersCollection.find({select_crit}, {projection})")
-    if result is not None:
+    result = combine.db_query("UsersCollection", select_crit, projection)
+    if len(result) == 1:
         # The user is in the project
-        if not args.admin:
-            print(f"{args.user} is already a member of {args.project}")
-            sys.exit(0)
-        user_role_id = result["projectRoles"][proj_id]
+        user_role_id = result[0]["projectRoles"][proj_id]
+        select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
+        # Look up the current permissions
+        user_role = combine.db_query("UserRolesCollection", select_role)
         if args.verbose:
             print(f"UserRole ID: {user_role_id}")
-        select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
-        update_role = f'{{ $set: {{"permissions" : {user_permissions}}} }}'
-        combine.db_cmd(f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})")
-        if args.verbose:
-            print(f"Updated Role {user_role_id} with permissions {user_permissions}")
-    else:
+        # Merge current permissions with the requested permissions
+        curr_permissions = user_role[0]["permissions"]
+        if not (set(req_permissions)).issubset(set(curr_permissions)):
+            new_permissions = list(set(curr_permissions + req_permissions))
+            update_role = f'{{ $set: {{"permissions" : {new_permissions}}} }}'
+            combine.db_cmd(
+                f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
+            )
+            if args.verbose:
+                print(f"Updated Role {user_role_id} with permissions {req_permissions}")
+        elif args.verbose:
+            print(f"No update required.  Current permissions are {curr_permissions}")
+    elif len(result) == 0:
         #  3. The user is not in the project:
         #      a. create a document in the UserRolesCollection,
-        if args.admin:
-            user_permissions = [
-                Permission.DeleteEditSettingsAndUsers.value,
-                Permission.ImportExport.value,
-                Permission.MergeAndCharSet.value,
-                Permission.Unused.value,
-                Permission.WordEntry.value,
-            ]
-        else:
-            user_permissions = [
-                Permission.MergeAndCharSet.value,
-                Permission.Unused.value,
-                Permission.WordEntry.value,
-            ]
-        insert_doc = f'{{ "permissions" : {user_permissions}, "projectId" : "{proj_id}" }}'
+        insert_doc = f'{{ "permissions" : {req_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
             #      b. add the new role to the user's document in the UsersCollection
@@ -138,10 +131,15 @@ def main() -> None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
                 sys.exit(1)
             elif args.verbose:
-                print(f"{args.user} added to {args.project} with permissions {user_permissions}")
+                print(f"{args.user} added to {args.project} with permissions {req_permissions}")
         else:
             print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)
             sys.exit(1)
+    else:
+        print(
+            f"Too many documents in UserRolesCollection for User {args.user}"
+            f" in Project {args.project}"
+        )
 
 
 if __name__ == "__main__":
