@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
 """
-Add user to a project.
+Set the project Owner for all projects.
 
-This script will add a user to a Combine project in the database
+This script will set a user as Owner for all existing Combine projects
+in the database
 
-To add the user to the project, we need to:
- 1. Look up the user id - check the "user" info against the username and
-    email fields in the UsersCollection.
- 2. Check to see if the user is already in the project.  If he/she is
-    already a member and the --admin argument is used, set the permissions to
-    [5,4,3,2,1], otherwise do nothing.
- 3. If the user is not in the project:
-     a. create a document in the UserRolesCollection,
-     b. add the new role to the user's document in the UsersCollection
-     c. set the permissions field in the user role to [5,4,3,2,1] if the
-        --admin argument is used, [3,2,1] otherwise.
+For each project, it will check to see if it already has an owner.
+If not, it will list the current administrators.  If there is only one administrator,
+it will make it the owner.
+If there are multiple administrators, it will prompt the user for which user should
+be the owner.
 """
 
 import argparse
@@ -53,13 +48,13 @@ def main() -> None:
         proj_id = proj["_id"]
         if args.verbose:
             print(f"Checking project: {proj['name']} ({proj_id})")
-        # get the admin user roles (roles that have Permission.DeleteEditSettingsAndUsers set)
-        if len(combine.get_project_roles(proj_id, Permission.ProjectOwner)) > 0:
+        # Get the admin user roles (roles that have Permission.DeleteEditSettingsAndUsers set)
+        if len(combine.get_project_roles(proj_id, Permission.Owner)) > 0:
             continue
         admin_roles = combine.get_project_roles(proj_id, Permission.DeleteEditSettingsAndUsers)
         update_role = None
         if len(admin_roles) == 1:
-            # there is only one admin role, set as selected user role
+            # There is only one admin role, set as selected user role
             update_role = admin_roles[0]["_id"]
         elif len(admin_roles) > 1:
             # Create list of admin users
@@ -86,7 +81,7 @@ def main() -> None:
         combine.db_cmd(
             "db.UserRolesCollection.updateOne("
             f"{{ '_id': ObjectId('{update_role}') }}, "
-            f"{{ $addToSet: {{ 'permissions': { Permission.ProjectOwner.value} }} }})"
+            f"{{ $addToSet: {{ 'permissions': { Permission.Owner.value} }} }})"
         )
 
 
