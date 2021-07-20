@@ -50,7 +50,8 @@ def main() -> None:
 
     # Iterate over each project
     for proj in proj_list:
-        print(f"Project: {proj['name']} ({proj['_id']})")
+        if args.verbose:
+            print(f"Checking project: {proj['name']} ({proj['_id']})")
         # get the admin user roles (roles that have Permission.DeleteEditSettingsAndUsers set)
         proj_id = proj["_id"]
         if len(combine.get_project_roles(proj_id, Permission.ProjectOwner)) > 0:
@@ -65,7 +66,8 @@ def main() -> None:
             role_id_list = []
             for admin_role in admin_roles:
                 role_id_list.append(admin_role["_id"])
-            print(f"Admin roles for project: {role_id_list}")
+            if args.verbose:
+                print(f"Admin roles for project: {role_id_list}")
             admin_users = combine.db_query(
                 "UsersCollection", f"{{'projectRoles.{proj_id}': {{ $in: {role_id_list} }} }}"
             )
@@ -79,7 +81,6 @@ def main() -> None:
             print(f"Selected {admin_users[num_proj_owner]['name']}")
             update_role = admin_users[num_proj_owner]["projectRoles"][proj_id]
         # Set "Project Owner" permission in selected user role
-        print(f"Update role: {update_role}")
         combine.db_cmd(
             "db.UserRolesCollection.updateOne("
             f"{{ '_id': ObjectId('{update_role}') }}, "
