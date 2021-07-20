@@ -5,16 +5,16 @@ Add user to a project.
 This script will add a user to a Combine project in the database
 
 To add the user to the project, we need to:
- 1. Look up the user id - check the "user" info against the username and
-    email fields in the UsersCollection.
- 2. If the --admin argument is used, set the requested permissions to [5,4,3,2,1];
+ 1. If the --admin argument is used, set the requested permissions to [5,4,3,2,1];
     otherwise, set them to [3,2,1]
- 2. Check to see if the user is already in the project.  If he/she is
+ 2. Look up the user id - check the "user" info against the username and
+    email fields in the UsersCollection.
+ 3. Check to see if the user is already in the project.  If he/she is
     already a member merge the requested permissions with the current permissions.
- 3. If the user is not in the project:
+ 4. If the user is not in the project:
      a. create a document in the UserRolesCollection,
-     b. add the new role to the user's document in the UsersCollection
-     c. set the permissions field in the user role to the requested permissions.
+     b. set the permissions field in the user role to the requested permissions.
+     c. add the new role to the user's document in the UsersCollection
 """
 
 import argparse
@@ -56,7 +56,7 @@ def main() -> None:
     config: Dict[str, str] = json.loads(Path(args.config).read_text())
     combine = CombineApp(Path(config["docker_compose_file"]))
 
-    # 0. Define user permission sets
+    # 1. Define user permission sets
     if args.admin:
         req_permissions = [
             Permission.DeleteEditSettingsAndUsers.value,
@@ -72,7 +72,7 @@ def main() -> None:
             Permission.WordEntry.value,
         ]
 
-    # 1. Lookup the user id
+    # 2. Lookup the user id
     user_id = combine.get_user_id(args.user)
     if user_id is None:
         print(f"Cannot find user {args.user}")
@@ -88,7 +88,7 @@ def main() -> None:
     if args.verbose:
         print(f"Project ID: {proj_id}")
 
-    # 2. Check to see if the user is already in the project.
+    # 3. Check to see if the user is already in the project.
     # define the query selection and projection arguments separately to
     # improve readability
     select_crit = f'{{ _id: ObjectId("{user_id}"), "projectRoles.{proj_id}": {{ $exists: true}} }}'
@@ -116,12 +116,13 @@ def main() -> None:
         elif args.verbose:
             print(f"No update required.  Current permissions are {curr_permissions}")
     elif len(result) == 0:
-        #  3. The user is not in the project:
-        #      a. create a document in the UserRolesCollection,
+        #  4. The user is not in the project
+        #    a. create a document in the UserRolesCollection,
+        #    b. set the permissions field in the user role to the requested permissions.
         insert_doc = f'{{ "permissions" : {req_permissions}, "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
-            #      b. add the new role to the user's document in the UsersCollection
+            # c. add the new role to the user's document in the UsersCollection
             user_role_id = insert_result["insertedId"]
             select_user = f'{{ _id: ObjectId("{user_id}")}}'
             update_user = f'{{ $set : {{"projectRoles.{proj_id}" : "{user_role_id}" }}}}'
