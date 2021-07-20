@@ -74,10 +74,8 @@ namespace BackendFramework.Models
 
     public enum Permission
     {
-        /// <summary> Database Admin, has no limitations </summary>
-        // TODO: This "permission" is redundant with User.IsAdmin() and feels out of place because it isn't a
-        //    "Project-specific" permission like the others in this enum.
-        DatabaseAdmin = 6,
+        /// <summary> Project Owner by default should be given to the user who created the project </summary>
+        Owner = 6,
 
         /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
         DeleteEditSettingsAndUsers = 5,
