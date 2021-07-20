@@ -1,17 +1,17 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "components/App/DefaultState";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import { newSemanticDomain } from "types/word";
 
 jest.mock("components/Pronunciations/Recorder");
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 const mockStore = createMockStore(defaultState);
 
-describe("Tests NewEntry", () => {
+describe("NewEntry", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
@@ -22,7 +22,7 @@ describe("Tests NewEntry", () => {
             defunctWordIds={[]}
             updateWordWithNewGloss={jest.fn()}
             addNewWord={jest.fn()}
-            semanticDomain={{ name: "", id: "" }}
+            semanticDomain={newSemanticDomain()}
             setIsReadyState={jest.fn()}
             analysisLang={""}
           />

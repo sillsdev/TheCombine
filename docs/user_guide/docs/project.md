@@ -70,6 +70,12 @@ a new sense to that entry, rather than creating a (mostly) duplicate to somethin
 (This does not effect the [gloss](dataEntry.md#gloss) spelling suggestions, which are based on a dictionary independent
 of existing project data.)
 
+### Definitions
+
+Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine supports glosses instead of
+definitions. However, if you have imported a project in which senses also have definitions, this setting can enable
+definition support in [Data Cleanup](goals.md).
+
 ### Project Users
 
 List of users on the project.
