@@ -38,7 +38,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Project>))]
         public async Task<IActionResult> GetAllProjects()
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
@@ -68,7 +68,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> DeleteAllProjects()
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
@@ -113,11 +113,12 @@ namespace BackendFramework.Controllers
                 return NotFound(currentUserId);
             }
 
-            // Give Project admin privileges to user who creates a Project.
+            // Give Project owner privileges to user who creates a Project.
             var userRole = new UserRole
             {
                 Permissions = new List<Permission>
                 {
+                    Permission.Owner,
                     Permission.DeleteEditSettingsAndUsers,
                     Permission.ImportExport,
                     Permission.MergeAndCharSet,
@@ -192,7 +193,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }
