@@ -1,13 +1,14 @@
 import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
-import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Permission } from "api/models";
-import { addOrUpdateUserRole, removeUserRole } from "backend";
 import { toast } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
+
+import { Permission } from "api/models";
+import { addOrUpdateUserRole, removeUserRole } from "backend";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 
 interface CancelConfirmDialogCollectionProps {
   userId: string;
@@ -28,9 +29,9 @@ export default function CancelConfirmDialogCollection(
 
   function removeUser(userId: string) {
     removeUserRole([Permission.DeleteEditSettingsAndUsers], userId)
-      .then(() => setRemoveUser(false))
-      .then(() => setAnchorEl(undefined))
       .then(() => {
+        setRemoveUser(false);
+        setAnchorEl(undefined);
         toast(
           <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
         );
@@ -54,9 +55,9 @@ export default function CancelConfirmDialogCollection(
       ],
       userId
     )
-      .then(() => setMakeAdmin(false))
-      .then(() => setAnchorEl(undefined))
       .then(() => {
+        setMakeAdmin(false);
+        setAnchorEl(undefined);
         toast(
           <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
         );
@@ -74,9 +75,9 @@ export default function CancelConfirmDialogCollection(
       [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
       userId
     )
-      .then(() => setRemoveAdmin(false))
-      .then(() => setAnchorEl(undefined))
       .then(() => {
+        setRemoveAdmin(false);
+        setAnchorEl(undefined);
         toast(
           <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
         );
@@ -125,9 +126,7 @@ export default function CancelConfirmDialogCollection(
       >
         <IconButton
           id="user-options"
-          onClick={(event) => {
-            setAnchorEl(event.currentTarget);
-          }}
+          onClick={(event) => setAnchorEl(event.currentTarget)}
         >
           <MoreVertIcon />
         </IconButton>

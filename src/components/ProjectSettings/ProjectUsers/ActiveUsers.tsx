@@ -10,14 +10,14 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
-import CancelConfirmDialogCollection from "./CancelConfirmDialogCollection";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-
-import { Translate } from "react-localize-redux";
 import React, { ElementType } from "react";
+import { Translate } from "react-localize-redux";
 
 import { Permission, Project, User, UserRole } from "api/models";
 import { avatarSrc, getAllUsersInCurrentProject, getUserRoles } from "backend";
+import { getCurrentUser, getProjectId } from "backend/localStorage";
+import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
 import theme from "types/theme";
 
 enum UserOrder {
@@ -59,7 +59,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
 
   private async populateUsers() {
     getAllUsersInCurrentProject()
-      .then(async (projUsers) => {
+      .then((projUsers) => {
         this.setState({ projUsers });
         const userAvatar = this.state.userAvatar;
         const promises = projUsers.map(async (u) => {
@@ -67,7 +67,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             userAvatar[u.id] = await avatarSrc(u.id);
           }
         });
-        await Promise.all(promises);
+        Promise.all(promises);
         this.setState({ userAvatar });
       })
       .catch((err) => console.error(err));
@@ -98,9 +98,8 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       (role) => role.id === userRoleId
     );
     if (userRole) {
-      return (
-        userRole.permissions.includes(Permission.DeleteEditSettingsAndUsers) &&
-        userRole.permissions.includes(Permission.ImportExport)
+      return userRole.permissions.includes(
+        Permission.DeleteEditSettingsAndUsers
       );
     }
     return false;
@@ -108,18 +107,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
 
   render() {
     const userList: React.ReactElement<ListItemProps>[] = [];
-    const currentUser = localStorage.getItem("user");
-    const currentProjectId = localStorage.getItem("projectId");
+    const currentUser = getCurrentUser();
+    const currentProjectId = getProjectId();
     const sortedUserList = this.getSortedUsers();
 
     sortedUserList.forEach((user) => {
       let manageUser: React.ReactElement<ElementType>;
       if (
         currentUser &&
-        JSON.parse(currentUser).isAdmin &&
+        currentUser.isAdmin &&
         currentProjectId &&
-        user.id !== JSON.parse(currentUser).id &&
-        !user.isAdmin
+        user.id !== currentUser.id
       ) {
         manageUser = (
           <CancelConfirmDialogCollection
