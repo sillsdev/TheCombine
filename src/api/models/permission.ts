@@ -23,5 +23,5 @@ export enum Permission {
   MergeAndCharSet = "MergeAndCharSet",
   ImportExport = "ImportExport",
   DeleteEditSettingsAndUsers = "DeleteEditSettingsAndUsers",
-  DatabaseAdmin = "DatabaseAdmin",
+  Owner = "Owner",
 }

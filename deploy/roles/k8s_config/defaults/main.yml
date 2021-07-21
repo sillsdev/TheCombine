@@ -1,0 +1,43 @@
+---
+# Local Working directory
+k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}/"
+k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
+k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
+
+# # AWS configuration
+# aws_ecr_profile: ecr_read_only
+# aws_s3_profile: s3_read_write
+#
+image_pull_secrets:
+  - awsecr-cred
+
+# Persistent storage size configurations
+backend_data_size: 4Gi
+database_data_size: 2Gi
+
+# Backend configuration
+combine_password_reset_time: 15
+combine_smtp_address: no-reply@thecombine.app
+combine_smtp_from: "The Combine"
+combine_smtp_port: 587
+combine_smtp_server: "email-smtp.us-east-1.amazonaws.com"
+
+#######################################
+# Default configs for development
+config_captcha_required: true
+config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+
+#######################################
+# environment variable overrides
+# for non-development deployments
+combine_backend_env_vars:
+
+combine_pull_images: true
+combine_image_backend: combine/backend
+combine_image_frontend: combine/frontend
+combine_image_certmgr: combine/certmgr
+
+#######################################
+# Environment variable defaults for the
+# certmgr
+cert_issuer: letsencrypt-prod

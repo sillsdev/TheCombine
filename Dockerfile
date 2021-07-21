@@ -1,4 +1,5 @@
-﻿# User guide build environment.
+
+# User guide build environment.
 FROM python:3.8 AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1

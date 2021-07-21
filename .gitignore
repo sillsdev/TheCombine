@@ -71,8 +71,11 @@ __pycache__
 *.pyc
 venv
 
+# Kubernetes Configuration files
+**/site_files/
+
 # Host file to be used for ad hoc testing/development
-deploy/*.hosts.yml
+*.hosts.yml
 
 # YAML files for ad hoc testing/development
 _*.yml

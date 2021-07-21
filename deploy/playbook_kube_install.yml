@@ -1,0 +1,48 @@
+---
+##############################################################
+# Playbook: playbook_kube_install.yml
+#
+# playbook_kube_install.yml installs the packages and
+# configuration files that are required to run TheCombine
+# as Docker containers managed by a Kubernetes cluster.
+#
+##############################################################
+
+- name: Configure hardware for The Combine
+  hosts: server,qa,nuc
+  gather_facts: yes
+  become: yes
+
+  vars_files:
+    - "vars/config_common.yml"
+    - "vars/packages.yml"
+    - "vars/vault_config.yml"
+    # The aws_credentials allows us to use a different vault file to specify the
+    # AWS credentials while testing.  By default, vars/aws.yml is used.  To
+    # use a different file, such as _test_aws.yml, add the following to your
+    # ansible-playbook command:
+    #   -e "aws_credentials=_test_aws.yml"
+    - "vars/{{ aws_credentials | default('aws.yml',true) }}"
+
+  tasks:
+    - name: Setup WiFi Access Point
+      import_role:
+        name: wifi_ap
+      when: has_wifi
+
+    - name: Configure Network Interfaces
+      import_role:
+        name: network_config
+
+    - name: Install Docker Subsystem
+      import_role:
+        name: docker_install
+
+    - name: Install Kubernetes Tools
+      import_role:
+        name: k8s_install
+
+    - name: Install cert-manager and CustomResourceDefinitions
+      become_user: "{{ k8s_user }}"
+      command: kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
+      when: '"cert_manager" in k8s_components'

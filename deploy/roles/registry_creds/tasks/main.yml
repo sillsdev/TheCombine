@@ -1,0 +1,28 @@
+---
+- name: Create directory for registry cred configuration files
+  file:
+    path: "{{ k8s_image_pull_cfg }}"
+    state: directory
+    mode: 0700
+
+- name: Create registry-creds yaml files
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_image_pull_cfg }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
+    mode: 0600
+  with_fileglob:
+    - "templates/*.yaml.j2"
+
+- name: Lookup generated configuration files
+  find:
+    paths:
+      - "{{ k8s_image_pull_cfg }}"
+    file_type: file
+    patterns: "*.yaml"
+  register: kube_config
+
+- name: Apply Kubernetes configuration
+  command: kubectl --kubeconfig=kubeconfig apply -f {{ item.path }}
+  args:
+    chdir: "{{ k8s_working_dir }}"
+  with_items: "{{ kube_config.files | sort(attribute='path') }}"

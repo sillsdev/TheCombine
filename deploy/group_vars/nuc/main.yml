@@ -3,30 +3,39 @@
 # Group specific configuration items
 #
 # Group: nuc
-#################################################
+################################################
 
 config_analytics_write_key: ""
+
+#################################################
 # TheCombine is installed using Ansible and the playbook_install.yml
 # playbook.  It will set the IMAGE_TAG environment variable to
 # value provided by the user and launch docker-compose
-image_tag: "${IMAGE_TAG}"
+################################################
+image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
 
-combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
+combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
+combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 
+################################################
 # SSL cert variables specific to NUC targets
+################################################
 cert_mode: "cert-client"
 cert_email: ""
 cert_self_renewal: 60
 combine_alias_domain_list: []
 combine_cert_proxy_list: []
 
+################################################
 # setup variables for roles/aws_access
+################################################
 aws_user: "{{ combine_user }}"
 aws_group: "{{ combine_group }}"
 
+################################################
 # AWS S3 storage configuration
+################################################
 aws_s3_loc: thecombine.app
 aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
@@ -37,6 +46,22 @@ aws_ecr_profile: ecr_read_only
 my_aws_profiles:
   - "{{ aws_s3_profile }}"
   - "{{ aws_ecr_profile }}"
+
+################################################
+# Configure Kubernetes cluster
+################################################
+k8s_components:
+  - microk8s
+  - cert_manager
+
+pull_secrets_manager: registry_creds
+image_pull_secrets:
+  - awsecr-cred
+
+app_namespace: thecombine
+
+k8s_user: sillsdev
+k8s_group: sillsdev
 
 ################################################
 # The use model for the Combine when deployed on
