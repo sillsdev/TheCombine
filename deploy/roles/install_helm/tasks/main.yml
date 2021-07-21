@@ -1,0 +1,41 @@
+---
+- name: Check for Helm Version
+  command: helm version
+  register: curr_helm_version
+  changed_when: false
+  failed_when: false
+
+- name: Create Helm install directory
+  file:
+    name: /opt/helm
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Get Helm
+  get_url:
+    url: "https://get.helm.sh/helm-{{ helm_release_version }}-linux-amd64.tar.gz"
+    dest: "/opt/helm.tar.gz"
+  when: curr_helm_version.rc != 0 or helm_release_version not in curr_helm_version.stdout
+
+- name: Unpack Helm
+  unarchive:
+    src: "/opt/helm.tar.gz"
+    dest: /opt/helm
+    remote_src: yes
+  when: curr_helm_version.rc != 0 or helm_release_version not in curr_helm_version.stdout
+
+- name: clean-up installation package
+  file:
+    name: /opt/helm.tar.gz
+    state: absent
+
+- name: Create link for /usr/local/bin/helm
+  file:
+    src: "/opt/helm/linux-amd64/helm"
+    dest: "/usr/local/bin/helm"
+    state: link
+    owner: root
+    group: root
+    mode: 0777

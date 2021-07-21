@@ -1,7 +1,7 @@
-# How To Deploy _TheCombine_
+# How To Deploy _The Combine_
 
-This document describes how to install the framework that is needed to deploy _TheCombine_ to a target machine in Docker
-containers.
+This document describes how to install the framework that is needed to deploy _The Combine_ to a target machine in
+Docker containers.
 
 <table>
 <tr>
@@ -14,9 +14,9 @@ containers.
 
 ## Conventions
 
-- most of the commands described in this document are to be run from within the <tt>git</tt> repository for _TheCombine_
-  that has been cloned on the host machine. This directory shall referred to as \<COMBINE\>.
-- the target machine where _TheCombine_ is being installed will be referred to as _\<target\>_
+- most of the commands described in this document are to be run from within the <tt>git</tt> repository for _The
+  Combine_ that has been cloned on the host machine. This directory is referred to as \<COMBINE\>.
+- the target machine where _The Combine_ is being installed will be referred to as _\<target\>_
 - the user on the target machine that will be used for installing docker, etc. will be referred to as _\<target_user\>_.
   You must be able to login to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
 
@@ -26,7 +26,7 @@ containers.
    1. [Prepare your host system](#prepare-your-host-system)
       1. [Linux Host](#linux-host)
       2. [Windows Host](#windows-host)
-   2. [Installing and Running _TheCombine_](#installing-and-running-thecombine)
+   2. [Installing and Running _The Combine_](#installing-and-running-the-combine)
       1. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
 2. [Backups](#backups)
    1. [Automated Backups](#automated-backups)
@@ -50,7 +50,7 @@ accessible via `ssh`.
 
 Install the following components:
 
-- Ubuntu 18.04 (Desktop or Server), 64-bit
+- Ubuntu 20.04 (Desktop or Server), 64-bit
 - Git
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
 - clone the project repo:
@@ -68,7 +68,7 @@ Install the following components:
 
 ### Windows host
 
-The scripts for installing TheCombine use _Ansible_ to manage an installation of _TheCombine_. _Ansible_ is not
+The scripts for installing _The Combine_ use _Ansible_ to manage an installation of _The Combine_. _Ansible_ is not
 available for Windows but will run in the Windows Subsystem for Linux (WSL). Microsoft has instructions for installing
 WSL on Windows 10 at
 [Windows Subsystem for Linux Installation Guide for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
@@ -76,9 +76,9 @@ At the end of the instructions there are instructions for installing various Lin
 
 Once Ubuntu is installed, run the Ubuntu subsystem and follow the instructions for the [Linux Host](#linux-host)
 
-## Installing and Running _TheCombine_
+## Installing and Running _The Combine_
 
-To install and start up _TheCombine_ you will need to run the following Ansible playbooks. Each time you will be
+To install and start up _The Combine_ you will need to run the following Ansible playbooks. Each time you will be
 prompted for passwords:
 
 - `BECOME password` - enter your `sudo` password for the _\<target_user\>_ on the _\<target\>_ machine.
@@ -87,18 +87,18 @@ prompted for passwords:
 
 ### Minimum System Requirements
 
-The minimum system requirements for installing _TheCombine_ on a target are:
+The minimum system requirements for installing _The Combine_ on a target are:
 
-- Ubuntu 18.04 Server operating system (see [Install Ubuntu Bionic Server](#install-ubuntu-bionic-server))
+- Ubuntu 20.04 Server operating system (see [Install Ubuntu Focal Server](#install-ubuntu-focal-server))
 - 2 GB RAM
 - 15 GB Storage
 
 ### Install Combine Pre-requisites
 
-Run the first playbook to install all the packages that are needed by _TheCombine_ and to setup the Docker configuration
-files:
+Run the first playbook to install all the packages that are needed by _The Combine_ and to setup the Docker
+configuration files:
 
-```
+```bash
 cd <COMBINE>/deploy
 ansible-playbook playbook_target_setup.yml --limit <target> -u <target_user> -K --ask-vault-pass
 ```
@@ -110,9 +110,9 @@ Notes:
   your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
   group in the inventory file, e.g. `qa`.
 
-### Install TheCombine
+### Install The Combine
 
-To install _TheCombine_ run the following command:
+To install _The Combine_ run the following command:
 
 ```
 cd <COMBINE>/deploy
@@ -121,16 +121,49 @@ ansible-playbook playbook_install.yml --limit <target> -u <target_user> -K --ask
 
 Notes:
 
-- This is not needed for the Production server or for the QA server. _TheCombine_ is installed on these systems using
+- This is not needed for the Production server or for the QA server. _The Combine_ is installed on these systems using
   the CI/CD tools.
-- You will be prompted for the version of _TheCombine_ to install. The version is the Docker image tag in the AWS ECR
+- You will be prompted for the version of _The Combine_ to install. The version is the Docker image tag in the AWS ECR
   image repository. The standard releases are tagged with the version number, e.g. _0.6.5_.
 
-### Running the _TheCombine_ Docker Containers
+### Running _The Combine_ Docker Containers
 
-_TheCombine_'s docker containers are built by SIL's _TeamCity_ server. Once they are built successfully, they are pushed
-to Amazon's Elastic Container Registry (AWS ECR). The production `docker-compose.yml` files will pull the images from
-AWS_ECR.
+_The Combine_'s docker containers are built by SIL's _TeamCity_ server. Once they are built successfully, they are
+pushed to Amazon's Elastic Container Registry (AWS ECR). The production `docker-compose.yml` files will pull the images
+from AWS_ECR.
+
+### Running _The Combine_ in a Kubernetes Cluster
+
+Note that this functionality is under development and is not complete.
+
+#### Additional Host Requirements
+
+In addition to the software listed in the section [Prepare your host system](#prepare-your-host-system) you will need to
+install the [kubectl](https://kubernetes.io/docs/tasks/tools/) tool.
+
+#### Installing the Kubernetes Cluster
+
+The kubernetes cluster running _The Combine_ is installed with two _Ansible_ scripts:
+
+```bash
+cd <COMBINE>/deploy
+ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
+ansible-playbook playbook_kube_config.yml --limit <target> -u <target_user> -K --ask-vault-pass
+```
+
+Notes:
+
+- The playbooks to install the Kubernetes cluster assume that either:
+  - `microk8s` is included as an element of the `k8s_components` list for the target; or
+  - Kubernetes is already installed on the target, for example, a _Rancher_ environment that is managed by another
+    group.
+- Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
+- The `playbook_kube_config.yml` playbook will prompt you for the version of _The Combine_ to install. The version is
+  the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version number, e.g.
+  _0.6.5_.
+- The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
+  your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
+  group in the inventory file, e.g. `qa`.
 
 ### Creating Your Own Inventory File
 
@@ -166,7 +199,7 @@ information on inventory files.
 ## Automated Backups
 
 If the ansible variables `backup_hours` and `backup_minutes` are defined for a target, then `cron` will be setup to
-create a backup of _TheCombine_ database and backend files every day at the specified times. The hours/minutes can be
+create a backup of _The Combine_ database and backend files every day at the specified times. The hours/minutes can be
 set to any string that is recognized by `cron`. The backups are stored in an Amazon S3 bucket.
 
 ## Running a Backup Manually
@@ -183,7 +216,7 @@ following steps:
 
 ## Restoring Database and Backend From a Previous Backup
 
-_TheCombine_ database and backend files can be restored from a previous backup by performing the following steps:
+_The Combine_ database and backend files can be restored from a previous backup by performing the following steps:
 
 1. `ssh` to the target using your account.
 2. Switch user to `combine`, e.g. `sudo su -l combine`. Make sure you use the `-l` option.
@@ -197,8 +230,8 @@ You may provide the backup to restore as an argument to `bin/combine-restore`; i
 
 # Design
 
-_TheCombine_ is deployed to target systems using Ansible. When deploying in Docker containers, `docker-compose` is used
-to manage the containers that make up _TheCombine_. The following files are used to define the containers and their
+_The Combine_ is deployed to target systems using Ansible. When deploying in Docker containers, `docker-compose` is used
+to manage the containers that make up _The Combine_. The following files are used to define the containers and their
 dependencies:
 
 - ./docker-compose.yml
@@ -209,7 +242,7 @@ dependencies:
 - ./certmgr/Dockerfile
 - ./.env.certmgr
 
-With these files, we can use `docker-compose` to startup _TheCombine_ in the development environment (see the project
+With these files, we can use `docker-compose` to startup _The Combine_ in the development environment (see the project
 top-level README.md).
 
 `playbook_target_setup.yml` is an Ansible playbook that is used to install docker, docker-compose, and the files to
@@ -225,14 +258,14 @@ playbook or its roles change.
    2. setup docker package repository
    3. install Docker Engine
    4. install Docker Compose (including a link from `/usr/bin` to the executable)
-3. Create a combine user - the combine user will be used for installing, building and running _TheCombine_. The default
+3. Create a combine user - the combine user will be used for installing, building and running _The Combine_. The default
    user name is `combine`.
    1. Create the primary group for `combine`
    2. Create the `combine` user:
       1. primary group is the group created above
       2. `combine` user is also added to the `docker` group
       3. ssh key is generated
-4. Install TheCombine configuration files
+4. Install _The Combine_ configuration files
    1. Create folders for the docker installation:
       - combine app dir (`/opt/combine`)
       - Nginx script dir (`/opt/combine/nginx/scripts`)
@@ -250,12 +283,12 @@ playbook or its roles change.
 
 # Additional Details
 
-## Install Ubuntu Bionic Server
+## Install Ubuntu Focal Server
 
 To install the OS on a new target machine, such as, a new NUC, follow these steps:
 
-1. Download the ISO image for Ubuntu Server from Ubuntu (currently at
-   http://cdimage.ubuntu.com/releases/18.04.4/release/ubuntu-18.04.4-server-amd64.iso)
+1. Download the ISO image for Ubuntu Server from Ubuntu (currently at https://ubuntu.com/download/server#downloads;
+   click on _Download Ubuntu Server 20.04.2 LTS_)
 
 1. copy the .iso file to a bootable USB stick:
 
@@ -267,8 +300,12 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 
    1. You will want the installer to format the entire \[virtual\] disk. Using LVM is not recommended.
 
-   1. _Make sure that you select the OpenSSH server when prompted to select the software for your server:_
+   1. Make sure that you install the OpenSSH server when prompted:
       ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
+
+      In addition, you may have your SSH keys from _Github_ or _Launchpad_ preinstalled as authorized keys.
+
+   1. You do not need to install any additional snaps; the _Ansible_ playbooks will install any needed software
 
 1. Update all packages:
    ```
