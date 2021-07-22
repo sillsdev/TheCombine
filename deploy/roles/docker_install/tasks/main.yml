@@ -46,6 +46,7 @@
     group: root
     mode: 0644
   with_items: "{{ docker_pinned_pkgs }}"
+  notify: update packages
 
 - name: Install Docker Engine
   apt:
