@@ -3,6 +3,7 @@
   "editor.formatOnSaveMode": "file",
   "[csharp]": {
     "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.insertSpaces": true,
     "editor.tabSize": 4
   },
   "[javascript]": {
