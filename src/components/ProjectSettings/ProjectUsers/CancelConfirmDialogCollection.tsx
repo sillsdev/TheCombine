@@ -18,7 +18,6 @@ import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 
 interface CancelConfirmDialogCollectionProps {
   userId: string;
-  isProjectAdmin: boolean;
   isProjectOwner: boolean;
   userIsProjectAdmin: boolean;
 }

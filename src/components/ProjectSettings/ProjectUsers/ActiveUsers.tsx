@@ -146,7 +146,6 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         manageUser = (
           <CancelConfirmDialogCollection
             userId={user.id}
-            isProjectAdmin={currentUserIsProjectAdmin}
             isProjectOwner={currentUserIsProjectOwner}
             userIsProjectAdmin={userIsProjectAdmin}
           />
