@@ -141,9 +141,9 @@ export default function DragSense(props: DragSenseProps) {
             </div>
             {/* Display of sense details. */}
             <div>
-              {/* List glosses */}
+              {/* List glosses and (if enabled) definitions. */}
               {analysisLangs.map((lang) => (
-                <div key={`gloss-${lang}`}>
+                <div key={lang}>
                   <Typography variant="caption">{`${lang}: `}</Typography>
                   <Typography display="inline" variant="h5">
                     {props.senses[0].glosses
@@ -151,6 +151,21 @@ export default function DragSense(props: DragSenseProps) {
                       .map((g) => g.def)
                       .join(sep)}
                   </Typography>
+                  {showDefinitions && (
+                    <div
+                      style={{
+                        background: "lightyellow",
+                        marginTop: theme.spacing(2),
+                      }}
+                    >
+                      <Typography variant="h6">
+                        {props.senses[0].definitions
+                          .filter((d) => d.language === lang)
+                          .map((d) => d.text)
+                          .join(sep)}
+                      </Typography>
+                    </div>
+                  )}
                 </div>
               ))}
               {/* List semantic domains */}
@@ -161,27 +176,6 @@ export default function DragSense(props: DragSenseProps) {
                   </Grid>
                 ))}
               </Grid>
-              {/* List definitions */}
-              {showDefinitions && (
-                <div
-                  style={{
-                    background: "lightyellow",
-                    marginTop: theme.spacing(2),
-                  }}
-                >
-                  {analysisLangs.map((lang) => (
-                    <div key={`definition-${lang}`}>
-                      <Typography variant="caption">{`${lang}: `}</Typography>
-                      <Typography display="inline" variant="h6">
-                        {props.senses[0].definitions
-                          .filter((d) => d.language === lang)
-                          .map((d) => d.text)
-                          .join(sep)}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
