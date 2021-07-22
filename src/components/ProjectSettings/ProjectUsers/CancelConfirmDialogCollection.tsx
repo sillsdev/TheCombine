@@ -97,7 +97,7 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  let managementOptions: React.ReactElement<MenuItemProps>[] = [
+  const managementOptions: React.ReactElement<MenuItemProps>[] = [
     <MenuItem onClick={() => setRemoveUser(true)}>
       <Translate id="buttons.removeFromProject" />
     </MenuItem>,
