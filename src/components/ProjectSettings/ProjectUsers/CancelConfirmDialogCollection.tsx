@@ -97,12 +97,11 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  let managementOptions: React.ReactElement<MenuItemProps>[] = [];
-  managementOptions.push(
+  let managementOptions: React.ReactElement<MenuItemProps>[] = [
     <MenuItem onClick={() => setRemoveUser(true)}>
       <Translate id="buttons.removeFromProject" />
-    </MenuItem>
-  );
+    </MenuItem>,
+  ];
   if (props.isProjectOwner) {
     const adminOption = props.userIsProjectAdmin ? (
       <MenuItem onClick={() => setRemoveAdmin(true)}>
