@@ -57,9 +57,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     }
   }
 
-  private async populateUsers() {
+  private populateUsers() {
     getAllUsersInCurrentProject()
-      .then((projUsers) => {
+      .then(async (projUsers) => {
         this.setState({ projUsers });
         const userAvatar = this.state.userAvatar;
         const promises = projUsers.map(async (u) => {
@@ -67,7 +67,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             userAvatar[u.id] = await avatarSrc(u.id);
           }
         });
-        Promise.all(promises);
+        await Promise.all(promises);
         this.setState({ userAvatar });
       })
       .catch((err) => console.error(err));
@@ -105,26 +105,50 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     return false;
   }
 
+  private isProjectOwner(userRoleId: string): boolean {
+    const userRole = this.state.projUserRoles.find(
+      (role) => role.id === userRoleId
+    );
+    if (userRole) {
+      return userRole.permissions.includes(Permission.Owner);
+    }
+    return false;
+  }
+
   render() {
     const userList: React.ReactElement<ListItemProps>[] = [];
     const currentUser = getCurrentUser();
     const currentProjectId = getProjectId();
     const sortedUserList = this.getSortedUsers();
+    const currentUserIsProjectAdmin = currentUser
+      ? this.isProjectAdmin(currentUser.projectRoles[currentProjectId])
+      : false;
+    const currentUserIsProjectOwner = currentUser
+      ? this.isProjectOwner(currentUser.projectRoles[currentProjectId])
+      : false;
 
     sortedUserList.forEach((user) => {
       let manageUser: React.ReactElement<ElementType>;
+      let userIsProjectAdmin = this.isProjectAdmin(
+        user.projectRoles[currentProjectId]
+      );
+      let userIsProjectOwner = this.isProjectOwner(
+        user.projectRoles[currentProjectId]
+      );
       if (
         currentUser &&
-        currentUser.isAdmin &&
         currentProjectId &&
-        user.id !== currentUser.id
+        currentUserIsProjectAdmin &&
+        user.id !== currentUser.id &&
+        !userIsProjectOwner &&
+        (!userIsProjectAdmin || currentUserIsProjectOwner)
       ) {
         manageUser = (
           <CancelConfirmDialogCollection
             userId={user.id}
-            isProjectAdmin={this.isProjectAdmin(
-              user.projectRoles[currentProjectId]
-            )}
+            isProjectAdmin={currentUserIsProjectAdmin}
+            isProjectOwner={currentUserIsProjectOwner}
+            userIsProjectAdmin={userIsProjectAdmin}
           />
         );
       } else {

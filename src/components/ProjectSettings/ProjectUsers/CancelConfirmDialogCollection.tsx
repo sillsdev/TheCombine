@@ -1,4 +1,10 @@
-import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  MenuItemProps,
+  Tooltip,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
@@ -13,6 +19,8 @@ import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 interface CancelConfirmDialogCollectionProps {
   userId: string;
   isProjectAdmin: boolean;
+  isProjectOwner: boolean;
+  userIsProjectAdmin: boolean;
 }
 
 /**
@@ -90,15 +98,24 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  const adminOption = props.isProjectAdmin ? (
-    <MenuItem onClick={() => setRemoveAdmin(true)}>
-      <Translate id="buttons.removeAdmin" />
-    </MenuItem>
-  ) : (
-    <MenuItem onClick={() => setMakeAdmin(true)}>
-      <Translate id="buttons.makeAdmin" />
+  let managementOptions: React.ReactElement<MenuItemProps>[] = [];
+  managementOptions.push(
+    <MenuItem onClick={() => setRemoveUser(true)}>
+      <Translate id="buttons.removeFromProject" />
     </MenuItem>
   );
+  if (props.isProjectOwner) {
+    const adminOption = props.userIsProjectAdmin ? (
+      <MenuItem onClick={() => setRemoveAdmin(true)}>
+        <Translate id="buttons.removeAdmin" />
+      </MenuItem>
+    ) : (
+      <MenuItem onClick={() => setMakeAdmin(true)}>
+        <Translate id="buttons.makeAdmin" />
+      </MenuItem>
+    );
+    managementOptions.push(adminOption);
+  }
 
   return (
     <React.Fragment>
@@ -138,10 +155,7 @@ export default function CancelConfirmDialogCollection(
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(undefined)}
       >
-        <MenuItem onClick={() => setRemoveUser(true)}>
-          <Translate id="buttons.removeFromProject" />
-        </MenuItem>
-        {adminOption}
+        {managementOptions}
       </Menu>
     </React.Fragment>
   );
