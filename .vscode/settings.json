@@ -2,7 +2,8 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "[csharp]": {
-    "editor.defaultFormatter": "ms-dotnettools.csharp"
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.tabSize": 4
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
