@@ -120,24 +120,25 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     const currentUser = getCurrentUser();
     const currentProjectId = getProjectId();
     const sortedUserList = this.getSortedUsers();
-    const currentUserIsProjectAdmin = currentUser
-      ? this.isProjectAdmin(currentUser.projectRoles[currentProjectId])
-      : false;
-    const currentUserIsProjectOwner = currentUser
-      ? this.isProjectOwner(currentUser.projectRoles[currentProjectId])
-      : false;
+    if (!currentUser || !currentProjectId) {
+      return <div />;
+    }
+    const currentUserIsProjectAdmin = this.isProjectAdmin(
+      currentUser.projectRoles[currentProjectId]
+    );
+    const currentUserIsProjectOwner = this.isProjectOwner(
+      currentUser.projectRoles[currentProjectId]
+    );
 
     sortedUserList.forEach((user) => {
       let manageUser: React.ReactElement<ElementType>;
-      let userIsProjectAdmin = this.isProjectAdmin(
+      const userIsProjectAdmin = this.isProjectAdmin(
         user.projectRoles[currentProjectId]
       );
-      let userIsProjectOwner = this.isProjectOwner(
+      const userIsProjectOwner = this.isProjectOwner(
         user.projectRoles[currentProjectId]
       );
       if (
-        currentUser &&
-        currentProjectId &&
         currentUserIsProjectAdmin &&
         user.id !== currentUser.id &&
         !userIsProjectOwner &&
