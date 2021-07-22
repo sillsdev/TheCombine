@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Gloss } from "api/models";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
@@ -22,10 +21,6 @@ interface DragSenseProps {
   wordId: string;
   mergeSenseId: string;
   senses: MergeTreeSense[];
-}
-
-interface MergeGloss extends Gloss {
-  senseGuid: string;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]) {
@@ -49,6 +44,9 @@ export default function DragSense(props: DragSenseProps) {
     sidebar.wordId === props.wordId &&
     sidebar.mergeSenseId === props.mergeSenseId &&
     sidebar.senses.length > 1;
+  const showDefinitions = useSelector(
+    (state: StoreState) => state.currentProject.definitionsEnabled
+  );
 
   const updateSidebar = useCallback(() => {
     dispatch(
@@ -89,17 +87,7 @@ export default function DragSense(props: DragSenseProps) {
 
   // Only display the first sense; others will be deleted as duplicates.
   // User can select a different one by reordering in the sidebar.
-  const firstSense = props.senses[0];
-  let glosses: MergeGloss[] = firstSense.glosses.map((g) => ({
-    ...g,
-    senseGuid: firstSense.guid,
-  }));
-  // Filter out duplicates.
-  glosses = glosses.filter(
-    (v, i, a) =>
-      a.findIndex((o) => o.def === v.def && o.language === v.language) === i
-  );
-
+  const sep = "; ";
   const semDoms = [
     ...new Set(
       props.senses.flatMap((sense) =>
@@ -155,13 +143,13 @@ export default function DragSense(props: DragSenseProps) {
             <div>
               {/* List glosses */}
               {analysisLangs.map((lang) => (
-                <div key={lang}>
+                <div key={`gloss-${lang}`}>
                   <Typography variant="caption">{`${lang}: `}</Typography>
                   <Typography display="inline" variant="h5">
-                    {glosses
+                    {props.senses[0].glosses
                       .filter((g) => g.language === lang)
                       .map((g) => g.def)
-                      .join(", ")}
+                      .join(sep)}
                   </Typography>
                 </div>
               ))}
@@ -173,6 +161,27 @@ export default function DragSense(props: DragSenseProps) {
                   </Grid>
                 ))}
               </Grid>
+              {/* List definitions */}
+              {showDefinitions && (
+                <div
+                  style={{
+                    background: "lightyellow",
+                    marginTop: theme.spacing(2),
+                  }}
+                >
+                  {analysisLangs.map((lang) => (
+                    <div key={`definition-${lang}`}>
+                      <Typography variant="caption">{`${lang}: `}</Typography>
+                      <Typography display="inline" variant="h6">
+                        {props.senses[0].definitions
+                          .filter((d) => d.language === lang)
+                          .map((d) => d.text)
+                          .join(sep)}
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

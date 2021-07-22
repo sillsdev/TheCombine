@@ -1,11 +1,13 @@
 import { CardContent, Typography, Grid, Chip, Card } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
 
 import {
   MergeTreeReference,
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { StoreState } from "types";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {
@@ -20,6 +22,10 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
     mergeSenseId: props.sidebar.mergeSenseId,
     order: props.index,
   };
+  const showDefinitions = useSelector(
+    (state: StoreState) => state.currentProject.definitionsEnabled
+  );
+
   return (
     <Draggable
       key={props.sense.guid}
@@ -43,7 +49,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
                 : "lightgrey",
             }}
           >
-            {senseCardContent(props.sense)}
+            {senseCardContent(props.sense, showDefinitions)}
           </Card>
         </div>
       )}
@@ -51,11 +57,12 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
   );
 }
 
-function senseCardContent(sense: MergeTreeSense) {
+function senseCardContent(sense: MergeTreeSense, showDefinitions: boolean) {
+  const sep = "; ";
   return (
     <CardContent>
       <Typography variant={"h5"}>
-        {sense.glosses.map((g) => g.def).join(", ")}
+        {sense.glosses.map((g) => g.def).join(sep)}
       </Typography>
       <Grid container spacing={2}>
         {sense.semanticDomains.map((dom) => (
@@ -64,6 +71,13 @@ function senseCardContent(sense: MergeTreeSense) {
           </Grid>
         ))}
       </Grid>
+      {showDefinitions && (
+        <div style={{ background: "lightyellow", marginTop: theme.spacing(2) }}>
+          <Typography variant={"h6"}>
+            {sense.definitions.map((g) => g.text).join(sep)}
+          </Typography>
+        </div>
+      )}
     </CardContent>
   );
 }
