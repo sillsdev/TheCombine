@@ -73,8 +73,8 @@ namespace Backend.Tests.Models
         [Test]
         public void TestNotEquals()
         {
-            var note = new Note { Language = Language, Text = Text};
-            Assert.IsFalse(note.Equals( new Note { Language = "Different language", Text = Text}));
+            var note = new Note { Language = Language, Text = Text };
+            Assert.IsFalse(note.Equals(new Note { Language = "Different language", Text = Text }));
         }
 
         [Test]
