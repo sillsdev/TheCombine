@@ -16,7 +16,7 @@ namespace Backend.Tests.Models
             var orig = new EmailInvite(daysUntilExpire, email);
             var clone = orig.Clone();
 
-            var invites = new[] {orig, clone};
+            var invites = new[] { orig, clone };
             foreach (var invite in invites)
             {
                 Assert.That(invite.Id, Is.EqualTo(""));
