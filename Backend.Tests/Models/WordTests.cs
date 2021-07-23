@@ -124,6 +124,42 @@ namespace Backend.Tests.Models
         }
     }
 
+    public class DefinitionTests
+    {
+        private const string Language = "fr";
+        private const string Text = "Test definition text";
+
+        [Test]
+        public void TestEquals()
+        {
+            var definition = new Definition { Language = Language, Text = Text };
+            Assert.That(definition.Equals(new Definition { Language = Language, Text = Text }));
+        }
+
+        [Test]
+        public void TestNotEquals()
+        {
+            var definition = new Definition { Language = Language, Text = Text };
+            Assert.IsFalse(definition.Equals(new Definition { Language = Language, Text = "Different text" }));
+            Assert.IsFalse(definition.Equals(new Definition { Language = "Different language", Text = Text }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var definition = new Definition { Language = Language, Text = Text };
+            Assert.IsFalse(definition.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Definition { Language = Language, Text = Text }.GetHashCode(),
+                new Definition { Language = Language, Text = "Different text" }.GetHashCode());
+        }
+    }
+
     public class GlossTests
     {
         private const string Language = "fr";
