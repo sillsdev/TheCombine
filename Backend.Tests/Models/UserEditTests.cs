@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BackendFramework.Models;
+using Icu;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -36,6 +37,29 @@ namespace Backend.Tests.Models
             Assert.AreNotEqual(
                 new UserEdit { ProjectId = ProjectId }.GetHashCode(),
                 new UserEdit { ProjectId = "Different Id" });
+        }
+    }
+
+    public class UserEditStepWrapperTests
+    {
+        private const int GoalIndex = 1;
+        private const string StepString = "step";
+        private const int StepIndex = 1;
+
+        [Test]
+        public void TestEquals()
+        {
+            var wrapper = new UserEditStepWrapper(GoalIndex, StepString, StepIndex);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, StepIndex)));
+            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(99, StepString, StepIndex)));
+            Assert.IsFalse(wrapper.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(new UserEditStepWrapper(GoalIndex, StepString, StepIndex).GetHashCode(),
+                new UserEditStepWrapper(99, StepString, StepIndex).GetHashCode());
         }
     }
 
