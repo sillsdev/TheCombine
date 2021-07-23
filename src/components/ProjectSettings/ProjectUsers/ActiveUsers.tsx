@@ -23,6 +23,7 @@ import theme from "types/theme";
 enum UserOrder {
   Username,
   Name,
+  Email,
 }
 
 interface UserProps {
@@ -34,6 +35,7 @@ interface UserState {
   projUserRoles: UserRole[];
   userAvatar: { [key: string]: string };
   userOrder: UserOrder;
+  alphabeticalUserOrder: boolean;
 }
 
 export default class ActiveUsers extends React.Component<UserProps, UserState> {
@@ -44,6 +46,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       projUserRoles: [],
       userAvatar: {},
       userOrder: UserOrder.Username,
+      alphabeticalUserOrder: true,
     };
   }
 
@@ -84,9 +87,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     return users.slice(0).sort((a: User, b: User) => {
       switch (this.state.userOrder) {
         case UserOrder.Name:
-          return a.name.localeCompare(b.name);
+          return this.state.alphabeticalUserOrder
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
         case UserOrder.Username:
-          return a.username.localeCompare(b.username);
+          return this.state.alphabeticalUserOrder
+            ? a.username.localeCompare(b.username)
+            : b.username.localeCompare(a.username);
+        case UserOrder.Email:
+          return this.state.alphabeticalUserOrder
+            ? a.email.localeCompare(b.email)
+            : b.email.localeCompare(a.email);
         default:
           throw new Error();
       }
@@ -171,6 +182,22 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       );
     });
 
+    const sortOptions = [
+      <MenuItem value={UserOrder.Name}>
+        <Translate id="projectSettings.language.name" />
+      </MenuItem>,
+      <MenuItem value={UserOrder.Username}>
+        <Translate id="login.username" />
+      </MenuItem>,
+    ];
+    if (currentUserIsProjectOwner || currentUser.isAdmin) {
+      sortOptions.push(
+        <MenuItem value={UserOrder.Email}>
+          <Translate id="login.email" />
+        </MenuItem>
+      );
+    }
+
     return (
       <React.Fragment>
         <FormControl style={{ minWidth: 100 }}>
@@ -183,15 +210,11 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
               this.setState({
                 userOrder: event.target.value as UserOrder,
+                alphabeticalUserOrder: true,
               });
             }}
           >
-            <MenuItem value={UserOrder.Name}>
-              <Translate id="projectSettings.language.name" />
-            </MenuItem>
-            <MenuItem value={UserOrder.Username}>
-              <Translate id="login.username" />
-            </MenuItem>
+            {sortOptions}
           </Select>
         </FormControl>
         <List>{userList}</List>
