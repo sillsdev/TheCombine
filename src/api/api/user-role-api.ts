@@ -152,22 +152,22 @@ export const UserRoleApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} userRoleId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteUserRole: async (
       projectId: string,
-      userRoleId: string,
+      userId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteUserRole", "projectId", projectId);
-      // verify required parameter 'userRoleId' is not null or undefined
-      assertParamExists("deleteUserRole", "userRoleId", userRoleId);
-      const localVarPath = `/v1/projects/{projectId}/userroles/{userRoleId}`
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists("deleteUserRole", "userId", userId);
+      const localVarPath = `/v1/projects/{projectId}/userroles/{userId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"userRoleId"}}`, encodeURIComponent(String(userRoleId)));
+        .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -411,20 +411,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {string} userRoleId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async deleteUserRole(
       projectId: string,
-      userRoleId: string,
+      userId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserRole(
         projectId,
-        userRoleId,
+        userId,
         options
       );
       return createRequestFunction(
@@ -562,17 +562,17 @@ export const UserRoleApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} userRoleId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteUserRole(
       projectId: string,
-      userRoleId: string,
+      userId: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .deleteUserRole(projectId, userRoleId, options)
+        .deleteUserRole(projectId, userId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -679,7 +679,7 @@ export interface UserRoleApiDeleteUserRoleRequest {
    * @type {string}
    * @memberof UserRoleApiDeleteUserRole
    */
-  readonly userRoleId: string;
+  readonly userId: string;
 }
 
 /**
@@ -802,7 +802,7 @@ export class UserRoleApi extends BaseAPI {
     return UserRoleApiFp(this.configuration)
       .deleteUserRole(
         requestParameters.projectId,
-        requestParameters.userRoleId,
+        requestParameters.userId,
         options
       )
       .then((request) => request(this.axios, this.basePath));

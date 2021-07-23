@@ -1,18 +1,23 @@
 import {
   Avatar,
   FormControl,
+  IconButton,
   InputLabel,
   List,
   ListItem,
+  ListItemProps,
   ListItemText,
   MenuItem,
   Select,
 } from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import React, { ElementType } from "react";
 import { Translate } from "react-localize-redux";
-import React from "react";
 
-import { Project, User } from "api/models";
-import { avatarSrc, getAllUsersInCurrentProject } from "backend";
+import { Permission, Project, User, UserRole } from "api/models";
+import { avatarSrc, getAllUsersInCurrentProject, getUserRoles } from "backend";
+import { getCurrentUser, getProjectId } from "backend/localStorage";
+import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
 import theme from "types/theme";
 
 enum UserOrder {
@@ -26,6 +31,7 @@ interface UserProps {
 
 interface UserState {
   projUsers: User[];
+  projUserRoles: UserRole[];
   userAvatar: { [key: string]: string };
   userOrder: UserOrder;
 }
@@ -35,6 +41,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     super(props);
     this.state = {
       projUsers: [],
+      projUserRoles: [],
       userAvatar: {},
       userOrder: UserOrder.Username,
     };
@@ -64,6 +71,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         this.setState({ userAvatar });
       })
       .catch((err) => console.error(err));
+    getUserRoles()
+      .then((projUserRoles) => this.setState({ projUserRoles }))
+      .catch((err) => console.error(err));
   }
 
   private getSortedUsers() {
@@ -83,7 +93,84 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     });
   }
 
+  private isProjectAdmin(userRoleId: string): boolean {
+    const userRole = this.state.projUserRoles.find(
+      (role) => role.id === userRoleId
+    );
+    if (userRole) {
+      return userRole.permissions.includes(
+        Permission.DeleteEditSettingsAndUsers
+      );
+    }
+    return false;
+  }
+
+  private isProjectOwner(userRoleId: string): boolean {
+    const userRole = this.state.projUserRoles.find(
+      (role) => role.id === userRoleId
+    );
+    if (userRole) {
+      return userRole.permissions.includes(Permission.Owner);
+    }
+    return false;
+  }
+
   render() {
+    const userList: React.ReactElement<ListItemProps>[] = [];
+    const currentUser = getCurrentUser();
+    const currentProjectId = getProjectId();
+    const sortedUserList = this.getSortedUsers();
+    if (!currentUser || !currentProjectId) {
+      return <div />;
+    }
+    const currentUserIsProjectAdmin = this.isProjectAdmin(
+      currentUser.projectRoles[currentProjectId]
+    );
+    const currentUserIsProjectOwner = this.isProjectOwner(
+      currentUser.projectRoles[currentProjectId]
+    );
+
+    sortedUserList.forEach((user) => {
+      let manageUser: React.ReactElement<ElementType>;
+      const userIsProjectAdmin = this.isProjectAdmin(
+        user.projectRoles[currentProjectId]
+      );
+      const userIsProjectOwner = this.isProjectOwner(
+        user.projectRoles[currentProjectId]
+      );
+      if (
+        currentUserIsProjectAdmin &&
+        user.id !== currentUser.id &&
+        !userIsProjectOwner &&
+        (!userIsProjectAdmin || currentUserIsProjectOwner)
+      ) {
+        manageUser = (
+          <CancelConfirmDialogCollection
+            userId={user.id}
+            isProjectOwner={currentUserIsProjectOwner}
+            userIsProjectAdmin={userIsProjectAdmin}
+          />
+        );
+      } else {
+        manageUser = (
+          <IconButton disabled>
+            <MoreVertIcon />
+          </IconButton>
+        );
+      }
+      userList.push(
+        <ListItem key={user.id}>
+          <Avatar
+            alt="User Avatar"
+            src={this.state.userAvatar[user.id]}
+            style={{ marginRight: theme.spacing(1) }}
+          />
+          <ListItemText primary={`${user.name} (${user.username})`} />
+          {manageUser}
+        </ListItem>
+      );
+    });
+
     return (
       <React.Fragment>
         <FormControl style={{ minWidth: 100 }}>
@@ -107,18 +194,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             </MenuItem>
           </Select>
         </FormControl>
-        <List>
-          {this.getSortedUsers().map((user) => (
-            <ListItem key={user.id}>
-              <Avatar
-                alt="User Avatar"
-                src={this.state.userAvatar[user.id]}
-                style={{ marginRight: theme.spacing(1) }}
-              />
-              <ListItemText primary={`${user.name} (${user.username})`} />
-            </ListItem>
-          ))}
-        </List>
+        <List>{userList}</List>
       </React.Fragment>
     );
   }

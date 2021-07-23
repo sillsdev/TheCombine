@@ -64,6 +64,17 @@ namespace BackendFramework.Services
             return permissions ?? new List<ProjectPermissions>();
         }
 
+        public async Task<bool> IsSiteAdmin(HttpContext request)
+        {
+            var userId = GetUserId(request);
+            var user = await _userRepo.GetUser(userId);
+            if (user is null)
+            {
+                return false;
+            }
+            return user.IsAdmin;
+        }
+
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);

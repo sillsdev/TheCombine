@@ -11,3 +11,8 @@
   service:
     name: rsyslog
     state: restarted
+
+- name: update packages
+  apt:
+    update_cache: yes
+    upgrade: "yes"

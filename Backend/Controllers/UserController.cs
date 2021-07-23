@@ -214,7 +214,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> DeleteUser(string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }

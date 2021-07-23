@@ -118,16 +118,31 @@ export function testWordList(): Word[] {
   ];
 }
 
+const sep = "; ";
+// Removes glosses with empty def and combine glosses with same lang
+export function cleanDefinitions(defs: Definition[]): Definition[] {
+  const nonempty = defs.filter((d) => d.text.length);
+  const langs = [...new Set(nonempty.map((d) => d.language))];
+  return langs.map((language) =>
+    newDefinition(
+      nonempty
+        .filter((d) => d.language === language)
+        .map((d) => d.text)
+        .join(sep),
+      language
+    )
+  );
+}
 // Removes glosses with empty def and combine glosses with same lang
 export function cleanGlosses(glosses: Gloss[]): Gloss[] {
-  const nonemptyGlosses = glosses.filter((g) => g.def.length);
-  const langs = [...new Set(nonemptyGlosses.map((g) => g.language))];
+  const nonempty = glosses.filter((g) => g.def.length);
+  const langs = [...new Set(nonempty.map((g) => g.language))];
   return langs.map((language) =>
     newGloss(
-      nonemptyGlosses
+      nonempty
         .filter((g) => g.language === language)
         .map((g) => g.def)
-        .join(", "),
+        .join(sep),
       language
     )
   );

@@ -98,7 +98,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     const currentUserId: string = getUserId();
     if (user.id !== currentUserId) {
       backend
-        .addUserRole(
+        .addOrUpdateUserRole(
           [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
           user.id
         )

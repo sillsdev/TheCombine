@@ -74,8 +74,6 @@ export function VernList(props: VernListProps) {
             {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
             <div style={{ margin: theme.spacing(4) }}>
               <GlossCell
-                editable={false}
-                sortingByGloss={false}
                 value={new ReviewEntriesWord(word, props.analysisLang).senses}
                 rowData={new ReviewEntriesWord(word, props.analysisLang)}
               />
@@ -83,7 +81,6 @@ export function VernList(props: VernListProps) {
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
                 rowData={new ReviewEntriesWord(word, props.analysisLang)}
-                sortingByDomains={false}
               />
             </div>
           </StyledMenuItem>
