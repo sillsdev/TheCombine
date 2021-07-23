@@ -49,7 +49,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var edit = new Edit { Guid = Guid };
             Assert.That(edit.Equals(new Edit { Guid = Guid }));
             edit.GoalType = GoalType;
@@ -74,6 +73,14 @@ namespace Backend.Tests.Models
             Assert.IsFalse(edit.Equals(null));
             edit = new Edit { Changes = Changes };
             Assert.IsFalse(edit.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Edit { Guid = Guid, GoalType = GoalType }.GetHashCode(),
+                new Edit { Guid = Guid, GoalType = 5 }.GetHashCode());
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void TestInvalidFileTypeExtension()
         {
-            Assert.Throws<NotImplementedException>(() => { FileStorage.FileTypeExtension((FileStorage.FileType) 99); });
+            Assert.Throws<NotImplementedException>(() => { FileStorage.FileTypeExtension((FileStorage.FileType)99); });
         }
     }
 }
