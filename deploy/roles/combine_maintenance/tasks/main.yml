@@ -68,6 +68,8 @@
       mode: "0755"
     - name: script_step.py
       mode: "0644"
+    - name: set_proj_owner.py
+      mode: "0755"
 
 - name: set environment variables for backup job
   cron:

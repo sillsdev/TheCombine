@@ -3,7 +3,7 @@ import { Delete } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import DeleteDialog from "components/Buttons/DeleteDialog";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 
 interface DeleteEntryProps {
   removeEntry: () => void;
@@ -34,9 +34,9 @@ export default function DeleteEntry(props: DeleteEntryProps) {
           <Delete />
         </IconButton>
       </Tooltip>
-      <DeleteDialog
+      <CancelConfirmDialog
         open={open}
-        textId={props.confirmId}
+        textId={props.confirmId ?? "buttons.deletePermanently"}
         handleCancel={() => setOpen(false)}
         handleAccept={() => {
           setOpen(false);
