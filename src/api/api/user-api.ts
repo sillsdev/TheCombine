@@ -365,6 +365,51 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} email
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserByEmail: async (
+      email: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'email' is not null or undefined
+      assertParamExists("getUserByEmail", "email", email);
+      const localVarPath = `/v1/users/getemail/{email}`.replace(
+        `{${"email"}}`,
+        encodeURIComponent(String(email))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -695,6 +740,29 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} email
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getUserByEmail(
+      email: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByEmail(
+        email,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -857,6 +925,17 @@ export const UserApiFactory = function (
     },
     /**
      *
+     * @param {string} email
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserByEmail(email: string, options?: any): AxiosPromise<User> {
+      return localVarFp
+        .getUserByEmail(email, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {PasswordResetData} passwordResetData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -984,6 +1063,20 @@ export interface UserApiGetUserRequest {
    * @memberof UserApiGetUser
    */
   readonly userId: string;
+}
+
+/**
+ * Request parameters for getUserByEmail operation in UserApi.
+ * @export
+ * @interface UserApiGetUserByEmailRequest
+ */
+export interface UserApiGetUserByEmailRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiGetUserByEmail
+   */
+  readonly email: string;
 }
 
 /**
@@ -1144,6 +1237,22 @@ export class UserApi extends BaseAPI {
   public getUser(requestParameters: UserApiGetUserRequest, options?: any) {
     return UserApiFp(this.configuration)
       .getUser(requestParameters.userId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiGetUserByEmailRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUserByEmail(
+    requestParameters: UserApiGetUserByEmailRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .getUserByEmail(requestParameters.email, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
