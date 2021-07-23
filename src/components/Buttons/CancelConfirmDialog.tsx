@@ -8,17 +8,17 @@ import {
 } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
-interface DeleteDialogProps {
+interface CancelConfirmDialogProps {
   open: boolean;
-  textId?: string;
+  textId: string;
   handleAccept: () => void;
   handleCancel: () => void;
 }
 
 /**
- * Dialog to confirm deletion
+ * Dialog to cancel or confirm an action
  */
-export default function DeleteDialog(props: DeleteDialogProps) {
+export default function CancelConfirmDialog(props: CancelConfirmDialogProps) {
   return (
     <Dialog
       open={props.open}
@@ -31,9 +31,7 @@ export default function DeleteDialog(props: DeleteDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate
-            id={props.textId ? props.textId : "buttons.deletePermanently"}
-          />
+          <Translate id={props.textId} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
