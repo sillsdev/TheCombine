@@ -17,10 +17,25 @@ namespace Backend.Tests.Models
         }
 
         [Test]
+        public void TestNotEquals()
+        {
+            var edit = new UserEdit { ProjectId = ProjectId };
+            Assert.IsFalse(edit.Equals(new UserEdit { ProjectId = "Different Id" }));
+        }
+
+        [Test]
         public void TestEqualsNull()
         {
             var edit = new UserEdit { ProjectId = ProjectId };
             Assert.IsFalse(edit.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new UserEdit { ProjectId = ProjectId }.GetHashCode(),
+                new UserEdit { ProjectId = "Different Id" });
         }
     }
 
