@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -9,6 +10,7 @@ using MongoDB.Driver;
 namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Project"/>s </summary>
+    [ExcludeFromCodeCoverage]
     public class ProjectRepository : IProjectRepository
     {
         private readonly IProjectContext _projectDatabase;
