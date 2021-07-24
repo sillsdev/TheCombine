@@ -7,8 +7,10 @@ namespace Backend.Tests.Helper
     public class FileStorageTests
     {
         [Test]
-        public void TestInvalidFileTypeExtension()
+        public void TestFileTypeExtension()
         {
+            Assert.AreEqual(FileStorage.FileTypeExtension(FileStorage.FileType.Audio), ".webm");
+            Assert.AreEqual(FileStorage.FileTypeExtension(FileStorage.FileType.Avatar), ".jpg");
             Assert.Throws<NotImplementedException>(() => { FileStorage.FileTypeExtension((FileStorage.FileType)99); });
         }
     }
