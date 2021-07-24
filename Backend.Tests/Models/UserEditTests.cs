@@ -52,6 +52,8 @@ namespace Backend.Tests.Models
             var wrapper = new UserEditStepWrapper(GoalIndex, StepString, StepIndex);
             Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, StepIndex)));
             Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(99, StepString, StepIndex)));
+            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(GoalIndex, "Different step", StepIndex)));
+            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, 99)));
             Assert.IsFalse(wrapper.Equals(null));
         }
 
