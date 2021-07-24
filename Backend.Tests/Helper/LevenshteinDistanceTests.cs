@@ -60,7 +60,7 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void TestNegativeInputs()
+        public void TestConstructorNegativeInputs()
         {
             Assert.Throws<ArgumentException>(() =>
             {
@@ -69,7 +69,7 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void TestSmallSubstitute()
+        public void TestConstructorSmallSubstitute()
         {
             Assert.Throws<ArgumentException>(() =>
             {
