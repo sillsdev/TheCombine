@@ -171,7 +171,6 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Generate an appropriate file extension for a given type. </summary>
-        /// <remarks> Exclude from coverage due to unreachable default switch arm. </remarks>
         public static string FileTypeExtension(FileType type)
         {
             return type switch
