@@ -95,7 +95,10 @@ export default function AddProjectUsers() {
           shouldCloseOnOverlayClick={true}
           onRequestClose={() => setShowModal(false)}
         >
-          <EmailInvite close={() => setShowModal(false)} />
+          <EmailInvite
+            addToProject={addToProject}
+            close={() => setShowModal(false)}
+          />
         </Modal>
       )}
     </React.Fragment>
