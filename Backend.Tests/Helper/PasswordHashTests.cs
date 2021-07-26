@@ -11,6 +11,7 @@ namespace Backend.Tests.Helper
         public void HashPasswordValidRoundtrip()
         {
             var hash = PasswordHash.HashPassword(Password);
+            Assert.AreNotEqual(Password, hash);
             Assert.That(PasswordHash.ValidatePassword(hash, Password));
         }
 
