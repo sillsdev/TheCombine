@@ -42,7 +42,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     this.setState({
       loading: true,
     });
-    let user = await Backend.getUserByEmail(this.state.emailAddress);
+    const user = await Backend.getUserByEmail(this.state.emailAddress);
     if (user) {
       this.props.addToProject(user);
     } else {
