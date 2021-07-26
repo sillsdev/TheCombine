@@ -9,8 +9,10 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  Tooltip,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
 import React, { ElementType } from "react";
 import { Translate } from "react-localize-redux";
 
@@ -217,6 +219,20 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             {sortOptions}
           </Select>
         </FormControl>
+        <Tooltip
+          title={<Translate id="projectSettings.userManagement.reverseOrder" />}
+          placement="right"
+        >
+          <IconButton
+            onClick={() =>
+              this.setState({
+                alphabeticalUserOrder: !this.state.alphabeticalUserOrder,
+              })
+            }
+          >
+            <SortByAlphaIcon />
+          </IconButton>
+        </Tooltip>
         <List>{userList}</List>
       </React.Fragment>
     );
