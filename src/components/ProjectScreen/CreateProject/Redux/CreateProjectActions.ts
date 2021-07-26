@@ -2,7 +2,7 @@ import { WritingSystem } from "api/models";
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
-import { setCurrentProject } from "components/Project/ProjectActions";
+import { asyncSetCurrentProject } from "components/Project/ProjectActions";
 import {
   CreateProjectAction,
   CreateProjectActionTypes,
@@ -27,7 +27,7 @@ export function asyncCreateProject(
     backend
       .createProject(project)
       .then((createdProject) => {
-        dispatch(setCurrentProject(createdProject));
+        dispatch(asyncSetCurrentProject(createdProject));
 
         // Upload words
         if (languageData) {
@@ -35,7 +35,7 @@ export function asyncCreateProject(
             backend
               .getProject(createdProject.id)
               .then((res) => {
-                dispatch(setCurrentProject(res));
+                dispatch(asyncSetCurrentProject(res));
                 dispatch(success(name, vernacularLanguage, analysisLanguages));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {

@@ -2,14 +2,14 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import Modal from "react-modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 
 import { Permission, User } from "api/models";
 import * as backend from "backend";
-import { getUserId } from "backend/localStorage";
+import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -26,46 +26,19 @@ const customStyles = {
   },
 };
 
-export default function ProjectUsers() {
-  const projectId = useSelector((state: StoreState) => state.currentProject.id);
-  const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [projUsers, setProjUsers] = useState<User[]>([]);
-  const [userAvatar, setUserAvatar] = useState<{ [key: string]: string }>({});
+export default function AddProjectUsers() {
+  const projectUsers = useSelector(
+    (state: StoreState) => state.currentProjectState.users
+  );
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     Modal.setAppElement("body");
-    populateUsers();
-  }, [projectId, setProjUsers]);
-
-  useEffect(() => {
-    backend
-      .getAllUsers()
-      .then((returnedUsers) =>
-        setAllUsers(
-          returnedUsers.filter(
-            (user) => !projUsers.find((u) => u.id === user.id)
-          )
-        )
-      );
-  }, [projUsers, setAllUsers]);
-
-  useEffect(() => {
-    const tempUserAvatar = { ...userAvatar };
-    const promises = projUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        tempUserAvatar[u.id] = await backend.avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => setUserAvatar(tempUserAvatar));
-  }, [allUsers, setUserAvatar]);
-
-  const populateUsers = () =>
-    backend.getAllUsersInCurrentProject().then(setProjUsers);
+  }, [projectUsers]);
 
   function addToProject(user: User) {
-    const currentUserId: string = getUserId();
-    if (user.id !== currentUserId) {
+    if (!projectUsers.map((u) => u.id).includes(user.id)) {
       backend
         .addOrUpdateUserRole(
           [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
@@ -73,7 +46,7 @@ export default function ProjectUsers() {
         )
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);
-          populateUsers();
+          dispatch(asyncRefreshCurrentProjectUsers());
         })
         .catch((err: string) => {
           console.log(err);
@@ -85,12 +58,7 @@ export default function ProjectUsers() {
   return (
     <React.Fragment>
       <Grid container spacing={1}>
-        <UserList
-          allUsers={allUsers}
-          projUsers={projUsers}
-          userAvatar={userAvatar}
-          addToProject={addToProject}
-        />
+        <UserList projectUsers={projectUsers} addToProject={addToProject} />
         <ToastContainer
           position="top-right"
           autoClose={5000}

@@ -10,7 +10,7 @@ import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectC
 
 const createMockStore = configureMockStore([]);
 const mockState = {
-  currentProject: {},
+  currentProjectState: { project: {} },
   createProjectState: {
     name: "",
     inProgress: false,

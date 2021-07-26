@@ -22,7 +22,8 @@ export default function GlossCell(
   props: FieldParameterStandard & GlossCellProps
 ) {
   const analysisLang = useSelector(
-    (state: StoreState) => state.currentProject.analysisWritingSystems[0].bcp47
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems[0].bcp47
   );
 
   return (

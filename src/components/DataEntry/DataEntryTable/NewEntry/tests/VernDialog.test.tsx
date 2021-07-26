@@ -16,7 +16,9 @@ jest.mock(
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({
-  currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },
+  currentProjectState: {
+    project: { analysisWritingSystems: [{ bcp47: "en" }] },
+  },
 });
 
 describe("VernList ", () => {

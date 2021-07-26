@@ -39,7 +39,9 @@ function arraysEqual<T>(arr1: T[], arr2: T[]) {
 export default function DragSense(props: DragSenseProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
   const analysisLangs = useSelector((state: StoreState) =>
-    state.currentProject.analysisWritingSystems.map((ws) => ws.bcp47)
+    state.currentProjectState.project.analysisWritingSystems.map(
+      (ws) => ws.bcp47
+    )
   );
   const dispatch = useDispatch();
   const sidebar = useSelector(

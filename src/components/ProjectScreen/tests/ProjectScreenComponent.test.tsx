@@ -1,4 +1,3 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -9,7 +8,7 @@ jest.mock("components/AppBar/AppBarComponent", () => "div");
 
 const createMockStore = configureMockStore([]);
 const state = {
-  currentProject: {},
+  currentProjectState: { project: {} },
   createProjectState: {
     name: "",
     inProgress: false,
