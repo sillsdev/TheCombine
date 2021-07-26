@@ -225,9 +225,9 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         >
           <IconButton
             onClick={() =>
-              this.setState({
-                reverseSorting: !this.state.reverseSorting,
-              })
+              this.setState((prevState) => ({
+                reverseSorting: !prevState.reverseSorting,
+              }))
             }
           >
             <SortByAlphaIcon />
