@@ -37,7 +37,7 @@ interface UserState {
   projUserRoles: UserRole[];
   userAvatar: { [key: string]: string };
   userOrder: UserOrder;
-  alphabeticalUserOrder: boolean;
+  reverseSorting: boolean;
 }
 
 export default class ActiveUsers extends React.Component<UserProps, UserState> {
@@ -48,7 +48,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       projUserRoles: [],
       userAvatar: {},
       userOrder: UserOrder.Username,
-      alphabeticalUserOrder: true,
+      reverseSorting: false,
     };
   }
 
@@ -89,17 +89,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     return users.slice(0).sort((a: User, b: User) => {
       switch (this.state.userOrder) {
         case UserOrder.Name:
-          return this.state.alphabeticalUserOrder
-            ? a.name.localeCompare(b.name)
-            : b.name.localeCompare(a.name);
+          return this.state.reverseSorting
+            ? b.name.localeCompare(a.name)
+            : a.name.localeCompare(b.name);
         case UserOrder.Username:
-          return this.state.alphabeticalUserOrder
-            ? a.username.localeCompare(b.username)
-            : b.username.localeCompare(a.username);
+          return this.state.reverseSorting
+            ? b.username.localeCompare(a.username)
+            : a.username.localeCompare(b.username);
         case UserOrder.Email:
-          return this.state.alphabeticalUserOrder
-            ? a.email.localeCompare(b.email)
-            : b.email.localeCompare(a.email);
+          return this.state.reverseSorting
+            ? b.email.localeCompare(a.email)
+            : a.email.localeCompare(b.email);
         default:
           throw new Error();
       }
@@ -212,7 +212,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
               this.setState({
                 userOrder: event.target.value as UserOrder,
-                alphabeticalUserOrder: true,
+                reverseSorting: false,
               });
             }}
           >
@@ -226,7 +226,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           <IconButton
             onClick={() =>
               this.setState({
-                alphabeticalUserOrder: !this.state.alphabeticalUserOrder,
+                reverseSorting: !this.state.reverseSorting,
               })
             }
           >
