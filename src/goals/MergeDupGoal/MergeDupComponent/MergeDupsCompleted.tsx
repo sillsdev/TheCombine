@@ -35,7 +35,7 @@ export default function MergeDupsCompleted() {
   );
 }
 
-function MergesMade(changes: MergesCompleted) {
+function MergesMade(changes: MergesCompleted): JSX.Element {
   return (
     <div>
       <Typography>
@@ -47,7 +47,7 @@ function MergesMade(changes: MergesCompleted) {
   );
 }
 
-function MergeChange(change: CompletedMerge) {
+function MergeChange(change: CompletedMerge): JSX.Element {
   return (
     <div key={change.parentIds[0]}>
       <Grid
@@ -87,16 +87,15 @@ function MergeChange(change: CompletedMerge) {
 interface WordPaperProps {
   wordId: string;
 }
+
 function WordPaper(props: WordPaperProps) {
   const [word, setWord] = useState<Word | undefined>();
+  const showDefinitions = useSelector(
+    (state: StoreState) => state.currentProject.definitionsEnabled
+  );
   useEffect(() => {
-    async function fetchWord() {
-      const fetchedWord = await getWord(props.wordId);
-      setWord(fetchedWord);
-    }
-    fetchWord();
-    // eslint-disable-next-line
-  }, []);
+    getWord(props.wordId).then(setWord);
+  }, [props.wordId, setWord]);
 
   return (
     <Grid
@@ -118,14 +117,14 @@ function WordPaper(props: WordPaperProps) {
           <Typography variant="h5">{word?.vernacular}</Typography>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-          {word?.senses.map(SenseCard)}
+          {word?.senses.map((s) => SenseCard(s, showDefinitions))}
         </div>
       </Paper>
     </Grid>
   );
 }
 
-function SenseCard(sense: Sense) {
+function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
   const semDoms = [
     ...new Set(sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)),
   ];
@@ -142,14 +141,29 @@ function SenseCard(sense: Sense) {
     >
       <CardContent style={{ position: "relative", paddingRight: 40 }}>
         {/* List glosses */}
-        {sense.glosses.map((g, index) => (
-          <div key={index}>
-            <Typography variant="caption">{`${g.language}: `}</Typography>
-            <Typography display="inline" variant="h5">
-              {g.def}
-            </Typography>
-          </div>
-        ))}
+        {sense.glosses.map((g, index) => {
+          const defText = sense.definitions.find(
+            (d) => d.language === g.language
+          )?.text;
+          return (
+            <div key={index}>
+              <Typography variant="caption">{`${g.language}: `}</Typography>
+              <Typography display="inline" variant="h5">
+                {g.def}
+              </Typography>
+              {showDefinitions && !!defText && (
+                <div
+                  style={{
+                    background: "lightyellow",
+                    marginTop: theme.spacing(2),
+                  }}
+                >
+                  <Typography variant="h6">{defText}</Typography>
+                </div>
+              )}
+            </div>
+          );
+        })}
         {/* List semantic domains */}
         <Grid container spacing={2}>
           {semDoms.map((dom) => (

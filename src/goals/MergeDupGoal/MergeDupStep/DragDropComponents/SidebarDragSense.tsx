@@ -57,7 +57,10 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
   );
 }
 
-function senseCardContent(sense: MergeTreeSense, showDefinitions: boolean) {
+function senseCardContent(
+  sense: MergeTreeSense,
+  showDefinitions: boolean
+): JSX.Element {
   const sep = "; ";
   return (
     <CardContent>
