@@ -13,12 +13,8 @@ import { defaultState as analyticsState } from "types/Redux/analyticsReduxTypes"
 
 export const defaultState = {
   //login
-  loginState: {
-    ...loginState,
-  },
-  passwordResetState: {
-    ...passwordResetState,
-  },
+  loginState: { ...loginState },
+  passwordResetState: { ...passwordResetState },
 
   //project
   createProjectState: {
@@ -27,38 +23,22 @@ export const defaultState = {
     success: true,
   },
   currentProjectState: { ...currentProjectState },
-  exportProjectState: {
-    ...exportProjectState,
-  },
+  exportProjectState: { ...exportProjectState },
 
   //data entry and review entries
-  treeViewState: {
-    ...treeViewState,
-  },
-  reviewEntriesState: {
-    ...reviewEntriesState,
-  },
-  pronunciationsState: {
-    ...pronunciationsState,
-  },
+  treeViewState: { ...treeViewState },
+  reviewEntriesState: { ...reviewEntriesState },
+  pronunciationsState: { ...pronunciationsState },
 
   //goal timeline and current goal
-  goalsState: {
-    ...goalTimelineState,
-  },
+  goalsState: { ...goalTimelineState },
 
   //merge duplicates goal
-  mergeDuplicateGoal: {
-    ...mergeDuplicateGoal,
-  },
+  mergeDuplicateGoal: { ...mergeDuplicateGoal },
 
   //character inventory goal
-  characterInventoryState: {
-    ...characterInventoryState,
-  },
+  characterInventoryState: { ...characterInventoryState },
 
   //analytics state
-  analyticsState: {
-    ...analyticsState,
-  },
+  analyticsState: { ...analyticsState },
 };
