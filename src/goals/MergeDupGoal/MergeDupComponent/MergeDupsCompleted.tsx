@@ -35,13 +35,10 @@ export default function MergeDupsCompleted() {
   );
 }
 
-function MergesMade(changes: MergesCompleted) {
+function MergesMade(changes: MergesCompleted): JSX.Element {
   return (
     <div>
-      <Typography>
-        <Translate id="mergeDups.completed.number" />
-        {changes.merges?.length ?? 0}
-      </Typography>
+      {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
     </div>
   );
@@ -49,16 +46,14 @@ function MergesMade(changes: MergesCompleted) {
 
 export function MergesCount(changes: MergesCompleted) {
   return (
-    <div>
-      <Typography>
-        <Translate id="mergeDups.completed.number" />
-        {changes.merges?.length ?? 0}
-      </Typography>
-    </div>
+    <Typography>
+      <Translate id="mergeDups.completed.number" />
+      {changes.merges?.length ?? 0}
+    </Typography>
   );
 }
 
-function MergeChange(change: CompletedMerge) {
+function MergeChange(change: CompletedMerge): JSX.Element {
   return (
     <div key={change.parentIds[0]}>
       <Grid

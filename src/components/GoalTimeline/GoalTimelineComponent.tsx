@@ -49,7 +49,7 @@ export default class GoalTimeline extends React.Component<
   constructor(props: GoalTimelineProps & GoalsState) {
     super(props);
     this.state = {
-      portrait: window.innerWidth < window.innerHeight,
+      portrait: window.innerWidth - 40 < window.innerHeight,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -61,7 +61,7 @@ export default class GoalTimeline extends React.Component<
 
   handleWindowSizeChange = () => {
     this.setState({
-      portrait: window.innerWidth < window.innerHeight,
+      portrait: window.innerWidth - 40 < window.innerHeight,
     });
   };
 
@@ -123,24 +123,32 @@ export default class GoalTimeline extends React.Component<
             data={this.createSuggestionData()}
             handleChange={this.handleChange}
             size={100}
-            numPanes={3}
+            numPanes={2}
+            scrollable={false}
           />
         </div>
 
         {/* Recommendation */}
-        <div style={timelineStyle.paneStyling as any}>
-          <Typography variant="h5">
+        <div style={{ ...(timelineStyle.paneStyling as any), width: "60%" }}>
+          <Typography variant="h6">
             <Translate id={"goal.selector.present"} />
           </Typography>
-          <div
-            style={{
-              ...(timelineStyle.paneStyling as any),
-              width: "80%",
-              height: 50,
-            }}
-          >
-            {this.goalButton()}
-          </div>
+          {this.goalButton()}
+        </div>
+
+        {/* History */}
+        <div style={timelineStyle.paneStyling as any}>
+          <Typography variant="h6">
+            <Translate id={"goal.selector.past"} />
+          </Typography>
+          <GoalList
+            orientation="horizontal"
+            data={[...this.props.history].reverse()}
+            handleChange={this.handleChange}
+            size={100}
+            numPanes={3}
+            scrollable={true}
+          />
         </div>
       </React.Fragment>
     );
@@ -150,8 +158,8 @@ export default class GoalTimeline extends React.Component<
     return (
       <GridList cols={13} cellHeight="auto">
         {/* Alternatives */}
-        <GridListTile cols={4}>
-          <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
+        <GridListTile cols={5}>
+          <div style={{ ...timelineStyle.paneStyling } as any}>
             <Typography variant="h6">
               <Translate id={"goal.selector.other"} />
             </Typography>
@@ -161,20 +169,21 @@ export default class GoalTimeline extends React.Component<
               handleChange={this.handleChange}
               size={35}
               numPanes={3}
+              scrollable={false}
             />
           </div>
         </GridListTile>
 
         {/* Recommendation */}
         <GridListTile cols={3} style={timelineStyle.paneStyling as any}>
-          <Typography variant="h5">
+          <Typography variant="h6">
             <Translate id={"goal.selector.present"} />
           </Typography>
           {this.goalButton()}
         </GridListTile>
 
         {/* History */}
-        <GridListTile cols={4}>
+        <GridListTile cols={5}>
           <div style={timelineStyle.paneStyling as any}>
             <Typography variant="h6">
               <Translate id={"goal.selector.past"} />
@@ -185,6 +194,7 @@ export default class GoalTimeline extends React.Component<
               handleChange={this.handleChange}
               size={35}
               numPanes={3}
+              scrollable={true}
             />
           </div>
         </GridListTile>

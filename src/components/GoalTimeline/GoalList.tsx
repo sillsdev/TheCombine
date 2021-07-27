@@ -45,11 +45,12 @@ interface GoalListProps {
   data: Goal[];
   size: number;
   numPanes: number;
+  scrollable: boolean;
   scrollToEnd?: boolean;
   handleChange: (goal: Goal) => void;
 }
 
-export default function GoalList(props: GoalListProps) {
+export default function GoalList(props: GoalListProps): JSX.Element {
   const [scrollVisible, setScrollVisible] = useState<boolean>(false);
   const tileSize = props.size / 3 - 1.25;
 
@@ -57,7 +58,11 @@ export default function GoalList(props: GoalListProps) {
     <GridList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
       cols={props.orientation === "horizontal" ? props.numPanes : 1}
-      onMouseOver={() => setScrollVisible(true)}
+      onMouseOver={
+        props.scrollable
+          ? () => setScrollVisible(true)
+          : () => setScrollVisible(false)
+      }
       onMouseLeave={() => setScrollVisible(false)}
     >
       {props.data.length > 0
@@ -86,7 +91,7 @@ function buttonStyle(orientation: Orientation, size: number): CSSProperties {
       };
     case "vertical":
       return {
-        height: size + "vw",
+        height: "95%",
         padding: "1vw",
         width: "100%",
       };
@@ -115,13 +120,6 @@ export function makeGoalTile(
         }
       >
         <Grid container direction="column">
-          <Grid item>
-            <Typography variant={"h6"}>
-              <Translate
-                id={goal ? goal.name + ".title" : "goal.selector.noHistory"}
-              />
-            </Typography>
-          </Grid>
           <Grid item>{goal ? GoalInfo(goal) : null}</Grid>
         </Grid>
       </Button>
@@ -129,15 +127,32 @@ export function makeGoalTile(
   );
 }
 
-function GoalInfo(goal: Goal) {
+function GoalInfo(goal: Goal): JSX.Element {
   if (goal.status === GoalStatus.Completed) {
+    let goalType;
     switch (goal.goalType) {
       case GoalType.CreateCharInv:
-        return CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
+        goalType = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
+        break;
       case GoalType.MergeDups:
-        return MergesCount(goal.changes as MergesCompleted);
+        goalType = MergesCount(goal.changes as MergesCompleted);
+        break;
       default:
-        return "nothing";
+        goalType = null;
+        break;
     }
+    return (
+      <Typography variant="h6">
+        <Translate
+          id={goal ? goal.name + ".title" : "goal.selector.noHistory"}
+        />
+        {goalType}
+      </Typography>
+    );
   }
+  return (
+    <Typography variant="h4">
+      <Translate id={goal ? goal.name + ".title" : "goal.selector.noHistory"} />
+    </Typography>
+  );
 }
