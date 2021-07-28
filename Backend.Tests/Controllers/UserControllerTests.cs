@@ -65,6 +65,37 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGetUserByEmail()
+        {
+            var email = "example@gmail.com";
+            var user = _userRepo.Create(new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }).Result ?? throw new Exception();
+
+            var action = _userController.GetUserByEmail(email).Result;
+            Assert.IsInstanceOf<ObjectResult>(action);
+
+            var foundUser = (User)((ObjectResult)action).Value;
+            Assert.That(foundUser, Is.EqualTo(user));
+        }
+
+        [Test]
+        public void TestGetMissingEmail()
+        {
+            var action = _userController.GetUserByEmail("INVALID_EMAIL@gmail.com").Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
+        }
+
+        [Test]
+        public void TestGetUserByEmailNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var email = "example@gmail.com";
+            var user = _userRepo.Create(new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }).Result ?? throw new Exception();
+
+            var action = _userController.GetUserByEmail(email).Result;
+            Assert.IsInstanceOf<ForbidResult>(action);
+        }
+
+        [Test]
         public void TestCreateUser()
         {
             var user = RandomUser();

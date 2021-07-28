@@ -5,13 +5,13 @@ import {
   InputLabel,
   List,
   ListItem,
-  ListItemProps,
   ListItemText,
   MenuItem,
   Select,
+  Tooltip,
 } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { ElementType, useEffect, useState } from "react";
+import { MoreVert, SortByAlpha } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -25,6 +25,7 @@ import theme from "types/theme";
 enum UserOrder {
   Username,
   Name,
+  Email,
 }
 
 export default function ActiveUsers() {
@@ -34,6 +35,7 @@ export default function ActiveUsers() {
   const [projUserRoles, setProjUserRoles] = useState<UserRole[]>([]);
   const [userAvatar, setUserAvatar] = useState<{ [key: string]: string }>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
+  const [reverseSorting, setReverseSorting] = useState<boolean>(false);
 
   useEffect(() => {
     getUserRoles().then(setProjUserRoles);
@@ -52,91 +54,109 @@ export default function ActiveUsers() {
   }, [projectUsers, setUserAvatar]);
 
   function getSortedUsers() {
-    // Copy the "projectUser" array because sort() mutates.
-    return [...projectUsers].sort((a: User, b: User) => {
+    // Copy the "projectUser" array because reverst(), sort() mutate.
+    const users = [...projectUsers];
+    if (reverseSorting) {
+      users.reverse();
+    }
+    return users.sort((a: User, b: User) => {
       switch (userOrder) {
         case UserOrder.Name:
           return a.name.localeCompare(b.name);
         case UserOrder.Username:
           return a.username.localeCompare(b.username);
+        case UserOrder.Email:
+          return a.email.localeCompare(b.email);
         default:
           throw new Error();
       }
     });
   }
 
-  function isProjectAdmin(userRoleId: string): boolean {
+  function hasProjectPermission(
+    userRoleId: string,
+    permission: Permission
+  ): boolean {
     const userRole = projUserRoles.find((role) => role.id === userRoleId);
     if (userRole) {
-      return userRole.permissions.includes(
-        Permission.DeleteEditSettingsAndUsers
-      );
+      return userRole.permissions.includes(permission);
     }
     return false;
   }
 
-  function isProjectOwner(userRoleId: string): boolean {
-    const userRole = projUserRoles.find((role) => role.id === userRoleId);
-    if (userRole) {
-      return userRole.permissions.includes(Permission.Owner);
-    }
-    return false;
-  }
-
-  const userList: React.ReactElement<ListItemProps>[] = [];
   const currentUser = getCurrentUser();
   const currentProjectId = getProjectId();
-  const sortedUserList = getSortedUsers();
   if (!currentUser || !currentProjectId) {
     return <div />;
   }
-  const currentUserIsProjectAdmin = isProjectAdmin(
-    currentUser.projectRoles[currentProjectId]
+  const currentUserIsProjectAdmin = hasProjectPermission(
+    currentUser.projectRoles[currentProjectId],
+    Permission.DeleteEditSettingsAndUsers
   );
-  const currentUserIsProjectOwner = isProjectOwner(
-    currentUser.projectRoles[currentProjectId]
+  const currentUserIsProjectOwner = hasProjectPermission(
+    currentUser.projectRoles[currentProjectId],
+    Permission.Owner
   );
 
-  sortedUserList.forEach((user) => {
-    let manageUser: React.ReactElement<ElementType>;
-    const userIsProjectAdmin = isProjectAdmin(
-      user.projectRoles[currentProjectId]
+  const userList = getSortedUsers().map((user) => {
+    const userIsProjectAdmin = hasProjectPermission(
+      user.projectRoles[currentProjectId],
+      Permission.DeleteEditSettingsAndUsers
     );
-    const userIsProjectOwner = isProjectOwner(
-      user.projectRoles[currentProjectId]
+    const userIsProjectOwner = hasProjectPermission(
+      user.projectRoles[currentProjectId],
+      Permission.Owner
     );
-    if (
+
+    const manageUser =
       currentUserIsProjectAdmin &&
       user.id !== currentUser.id &&
       !userIsProjectOwner &&
-      (!userIsProjectAdmin || currentUserIsProjectOwner)
-    ) {
-      manageUser = (
+      (!userIsProjectAdmin || currentUserIsProjectOwner) ? (
         <CancelConfirmDialogCollection
           userId={user.id}
           isProjectOwner={currentUserIsProjectOwner}
           userIsProjectAdmin={userIsProjectAdmin}
         />
-      );
-    } else {
-      manageUser = (
+      ) : (
         <IconButton disabled>
-          <MoreVertIcon />
+          <MoreVert />
         </IconButton>
       );
-    }
-    userList.push(
+
+    const displayString =
+      currentUserIsProjectOwner || currentUser.isAdmin
+        ? `${user.name} (${user.username} | ${user.email})`
+        : `${user.name} (${user.username})`;
+
+    return (
       <ListItem key={user.id}>
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
           style={{ marginRight: theme.spacing(1) }}
         />
-        <ListItemText primary={`${user.name} (${user.username})`} />
+        <ListItemText primary={displayString} />
         {manageUser}
       </ListItem>
     );
   });
+
+  const sortOptions = [
+    <MenuItem value={UserOrder.Name}>
+      <Translate id="projectSettings.language.name" />
+    </MenuItem>,
+    <MenuItem value={UserOrder.Username}>
+      <Translate id="login.username" />
+    </MenuItem>,
+  ];
+  if (currentUserIsProjectOwner || currentUser.isAdmin) {
+    sortOptions.push(
+      <MenuItem value={UserOrder.Email}>
+        <Translate id="login.email" />
+      </MenuItem>
+    );
+  }
 
   return (
     <React.Fragment>
@@ -148,17 +168,21 @@ export default function ActiveUsers() {
           labelId="sorting-order-select"
           defaultValue={UserOrder.Username}
           onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+            setReverseSorting(false);
             setUserOrder(event.target.value as UserOrder);
           }}
         >
-          <MenuItem value={UserOrder.Name}>
-            <Translate id="projectSettings.language.name" />
-          </MenuItem>
-          <MenuItem value={UserOrder.Username}>
-            <Translate id="login.username" />
-          </MenuItem>
+          {sortOptions}
         </Select>
       </FormControl>
+      <Tooltip
+        title={<Translate id="projectSettings.userManagement.reverseOrder" />}
+        placement="right"
+      >
+        <IconButton onClick={() => setReverseSorting(!reverseSorting)}>
+          <SortByAlpha />
+        </IconButton>
+      </Tooltip>
       <List>{userList}</List>
     </React.Fragment>
   );

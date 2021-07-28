@@ -141,6 +141,10 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            {
+                return Forbid();
+            }
             var user = await _userRepo.GetUserByEmail(email);
             if (user is null)
             {
