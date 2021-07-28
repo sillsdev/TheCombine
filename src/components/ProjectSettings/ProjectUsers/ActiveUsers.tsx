@@ -11,8 +11,7 @@ import {
   Select,
   Tooltip,
 } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
+import { MoreVert, SortByAlpha } from "@material-ui/icons";
 import React, { ElementType } from "react";
 import { Translate } from "react-localize-redux";
 
@@ -167,7 +166,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       } else {
         manageUser = (
           <IconButton disabled>
-            <MoreVertIcon />
+            <MoreVert />
           </IconButton>
         );
       }
@@ -230,7 +229,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
               }))
             }
           >
-            <SortByAlphaIcon />
+            <SortByAlpha />
           </IconButton>
         </Tooltip>
         <List>{userList}</List>
