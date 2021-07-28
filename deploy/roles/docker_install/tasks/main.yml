@@ -38,9 +38,20 @@
     state: present
     filename: docker
 
+- name: Pin Docker to validated version
+  template:
+    src: apt-preferences.j2
+    dest: "/etc/apt/preferences.d/{{ item.pkg }}-pin"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ docker_pinned_pkgs }}"
+  notify: update packages
+
 - name: Install Docker Engine
   apt:
     name: "{{ docker_packages }}"
+    update_cache: yes
   notify: reboot target
 
 - name: Enable Docker service
@@ -116,3 +127,9 @@
     owner: root
     group: root
     mode: 0777
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: yes

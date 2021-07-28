@@ -98,7 +98,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     const currentUserId: string = getUserId();
     if (user.id !== currentUserId) {
       backend
-        .addUserRole(
+        .addOrUpdateUserRole(
           [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
           user.id
         )
@@ -159,7 +159,10 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
             shouldCloseOnOverlayClick={true}
             onRequestClose={this.handleCloseModal}
           >
-            <EmailInvite close={this.handleCloseModal} />
+            <EmailInvite
+              addToProject={(user: User) => this.addToProject(user)}
+              close={this.handleCloseModal}
+            />
           </Modal>
         )}
       </React.Fragment>

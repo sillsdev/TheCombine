@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: env-backend
+  namespace: {{ app_namespace }}
+data:
+  COMBINE_PASSWORD_RESET_EXPIRE_TIME: "{{ combine_password_reset_time }}"
+  COMBINE_SMTP_ADDRESS: {{ combine_smtp_address }}
+  COMBINE_SMTP_FROM: {{ combine_smtp_from }}
+  COMBINE_SMTP_PORT: "{{ combine_smtp_port }}"
+  COMBINE_SMTP_SERVER: {{ combine_smtp_server }}

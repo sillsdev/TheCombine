@@ -27,6 +27,9 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
   const words = useSelector(
     (state: StoreState) => state.reviewEntriesState.words
   );
+  const showDefinitions = useSelector(
+    (state: StoreState) => state.currentProject.definitionsEnabled
+  );
 
   return (
     <Translate>
@@ -38,7 +41,11 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
               {translate("reviewEntries.title")}
             </Typography>
           }
-          columns={columns}
+          columns={
+            showDefinitions
+              ? columns
+              : columns.filter((c) => c.field !== "definitions")
+          }
           data={words}
           editable={{
             onRowUpdate: (

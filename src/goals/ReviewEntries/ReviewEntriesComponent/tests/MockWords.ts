@@ -14,6 +14,7 @@ export default function mockWords(): ReviewEntriesWord[] {
       senses: [
         {
           guid: "1",
+          definitions: [],
           glosses: [
             { def: "bup", language: "en" },
             { def: "AHHHHHH", language: "es" },
@@ -30,6 +31,7 @@ export default function mockWords(): ReviewEntriesWord[] {
       senses: [
         {
           guid: "2",
+          definitions: [],
           glosses: [{ def: "gloss", language: "en" }],
           domains: [newSemanticDomain("number", "domain")],
           deleted: false,
@@ -52,6 +54,7 @@ function createMockSense(sense: ReviewEntriesSense): Sense {
   return {
     ...newSense(),
     guid: sense.guid,
+    definitions: [...sense.definitions],
     glosses: [...sense.glosses],
     semanticDomains: [...sense.domains],
   };
