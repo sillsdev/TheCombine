@@ -9,8 +9,9 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  Tooltip,
 } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { MoreVert, SortByAlpha } from "@material-ui/icons";
 import React, { ElementType } from "react";
 import { Translate } from "react-localize-redux";
 
@@ -23,6 +24,7 @@ import theme from "types/theme";
 enum UserOrder {
   Username,
   Name,
+  Email,
 }
 
 interface UserProps {
@@ -34,6 +36,7 @@ interface UserState {
   projUserRoles: UserRole[];
   userAvatar: { [key: string]: string };
   userOrder: UserOrder;
+  reverseSorting: boolean;
 }
 
 export default class ActiveUsers extends React.Component<UserProps, UserState> {
@@ -44,6 +47,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       projUserRoles: [],
       userAvatar: {},
       userOrder: UserOrder.Username,
+      reverseSorting: false,
     };
   }
 
@@ -84,9 +88,17 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
     return users.slice(0).sort((a: User, b: User) => {
       switch (this.state.userOrder) {
         case UserOrder.Name:
-          return a.name.localeCompare(b.name);
+          return this.state.reverseSorting
+            ? b.name.localeCompare(a.name)
+            : a.name.localeCompare(b.name);
         case UserOrder.Username:
-          return a.username.localeCompare(b.username);
+          return this.state.reverseSorting
+            ? b.username.localeCompare(a.username)
+            : a.username.localeCompare(b.username);
+        case UserOrder.Email:
+          return this.state.reverseSorting
+            ? b.email.localeCompare(a.email)
+            : a.email.localeCompare(b.email);
         default:
           throw new Error();
       }
@@ -154,10 +166,14 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       } else {
         manageUser = (
           <IconButton disabled>
-            <MoreVertIcon />
+            <MoreVert />
           </IconButton>
         );
       }
+      const displayString =
+        currentUserIsProjectOwner || currentUser.isAdmin
+          ? `${user.name} (${user.username} | ${user.email})`
+          : `${user.name} (${user.username})`;
       userList.push(
         <ListItem key={user.id}>
           <Avatar
@@ -165,11 +181,27 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             src={this.state.userAvatar[user.id]}
             style={{ marginRight: theme.spacing(1) }}
           />
-          <ListItemText primary={`${user.name} (${user.username})`} />
+          <ListItemText primary={displayString} />
           {manageUser}
         </ListItem>
       );
     });
+
+    const sortOptions = [
+      <MenuItem value={UserOrder.Name}>
+        <Translate id="projectSettings.language.name" />
+      </MenuItem>,
+      <MenuItem value={UserOrder.Username}>
+        <Translate id="login.username" />
+      </MenuItem>,
+    ];
+    if (currentUserIsProjectOwner || currentUser.isAdmin) {
+      sortOptions.push(
+        <MenuItem value={UserOrder.Email}>
+          <Translate id="login.email" />
+        </MenuItem>
+      );
+    }
 
     return (
       <React.Fragment>
@@ -183,17 +215,27 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
               this.setState({
                 userOrder: event.target.value as UserOrder,
+                reverseSorting: false,
               });
             }}
           >
-            <MenuItem value={UserOrder.Name}>
-              <Translate id="projectSettings.language.name" />
-            </MenuItem>
-            <MenuItem value={UserOrder.Username}>
-              <Translate id="login.username" />
-            </MenuItem>
+            {sortOptions}
           </Select>
         </FormControl>
+        <Tooltip
+          title={<Translate id="projectSettings.userManagement.reverseOrder" />}
+          placement="right"
+        >
+          <IconButton
+            onClick={() =>
+              this.setState((prevState) => ({
+                reverseSorting: !prevState.reverseSorting,
+              }))
+            }
+          >
+            <SortByAlpha />
+          </IconButton>
+        </Tooltip>
         <List>{userList}</List>
       </React.Fragment>
     );
