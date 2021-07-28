@@ -158,7 +158,9 @@ class UserList extends React.Component<
                   src={this.props.userAvatar[user.id]}
                   style={{ marginRight: theme.spacing(1) }}
                 />
-                <ListItemText primary={`${user.name} (${user.username})`} />
+                <ListItemText
+                  primary={`${user.name} (${user.username}) | ${user.email})`}
+                />
                 {user.id !== this.state.currentUserId &&
                   (user.isAdmin ? (
                     <Button disabled>

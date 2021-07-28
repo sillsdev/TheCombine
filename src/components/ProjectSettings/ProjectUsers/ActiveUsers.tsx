@@ -170,6 +170,10 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
           </IconButton>
         );
       }
+      const displayString =
+        currentUserIsProjectOwner || currentUser.isAdmin
+          ? `${user.name} (${user.username} | ${user.email})`
+          : `${user.name} (${user.username})`;
       userList.push(
         <ListItem key={user.id}>
           <Avatar
@@ -177,7 +181,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
             src={this.state.userAvatar[user.id]}
             style={{ marginRight: theme.spacing(1) }}
           />
-          <ListItemText primary={`${user.name} (${user.username})`} />
+          <ListItemText primary={displayString} />
           {manageUser}
         </ListItem>
       );
