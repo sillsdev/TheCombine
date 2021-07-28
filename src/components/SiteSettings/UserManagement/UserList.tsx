@@ -159,7 +159,7 @@ class UserList extends React.Component<
                   style={{ marginRight: theme.spacing(1) }}
                 />
                 <ListItemText
-                  primary={`${user.name} (${user.username}) | ${user.email})`}
+                  primary={`${user.name} (${user.username} | ${user.email})`}
                 />
                 {user.id !== this.state.currentUserId &&
                   (user.isAdmin ? (
