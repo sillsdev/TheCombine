@@ -36,6 +36,7 @@ export default function ActiveUsers() {
   const [userAvatar, setUserAvatar] = useState<{ [key: string]: string }>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
+  const [sortedUsers, setSortedUsers] = useState<User[]>([]);
 
   useEffect(() => {
     getUserRoles().then(setProjUserRoles);
@@ -53,13 +54,14 @@ export default function ActiveUsers() {
     // eslint-disable-next-line
   }, [projectUsers, setUserAvatar]);
 
+  useEffect(() => {
+    setSortedUsers(getSortedUsers());
+    // eslint-disable-next-line
+  }, [projectUsers, userOrder, reverseSorting, setSortedUsers]);
+
   function getSortedUsers() {
-    // Copy the "projectUser" array because reverst(), sort() mutate.
-    const users = [...projectUsers];
-    if (reverseSorting) {
-      users.reverse();
-    }
-    return users.sort((a: User, b: User) => {
+    // Copy the "projectUser" array because reverse(), sort() mutate.
+    const users = [...projectUsers].sort((a: User, b: User) => {
       switch (userOrder) {
         case UserOrder.Name:
           return a.name.localeCompare(b.name);
@@ -71,6 +73,7 @@ export default function ActiveUsers() {
           throw new Error();
       }
     });
+    return reverseSorting ? users.reverse() : users;
   }
 
   function hasProjectPermission(
@@ -98,7 +101,7 @@ export default function ActiveUsers() {
     Permission.Owner
   );
 
-  const userList = getSortedUsers().map((user) => {
+  const userList = sortedUsers.map((user) => {
     const userIsProjectAdmin = hasProjectPermission(
       user.projectRoles[currentProjectId],
       Permission.DeleteEditSettingsAndUsers
@@ -143,16 +146,16 @@ export default function ActiveUsers() {
   });
 
   const sortOptions = [
-    <MenuItem value={UserOrder.Name}>
+    <MenuItem key="sortByName" value={UserOrder.Name}>
       <Translate id="projectSettings.language.name" />
     </MenuItem>,
-    <MenuItem value={UserOrder.Username}>
+    <MenuItem key="sortByUsername" value={UserOrder.Username}>
       <Translate id="login.username" />
     </MenuItem>,
   ];
   if (currentUserIsProjectOwner || currentUser.isAdmin) {
     sortOptions.push(
-      <MenuItem value={UserOrder.Email}>
+      <MenuItem key="sortByEmail" value={UserOrder.Email}>
         <Translate id="login.email" />
       </MenuItem>
     );
@@ -168,8 +171,8 @@ export default function ActiveUsers() {
           labelId="sorting-order-select"
           defaultValue={UserOrder.Username}
           onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-            setReverseSorting(false);
             setUserOrder(event.target.value as UserOrder);
+            setReverseSorting(false);
           }}
         >
           {sortOptions}
