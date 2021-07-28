@@ -141,7 +141,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            if (!await _permissionService.IsSiteAdmin(HttpContext) || !await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }
