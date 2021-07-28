@@ -1,0 +1,7 @@
+---
+aws_ecr_login:
+  # Specify how you want the job to run, either "on_demand" or "cron"
+  # schedule is ignored if job_type is 'on_demand'
+  job_type: on_demand
+  schedule: "*/15 * * * *"
+  secret_name: "{{ image_pull_secrets[0] }}"

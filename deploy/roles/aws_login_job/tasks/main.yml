@@ -1,0 +1,36 @@
+---
+- name: Create directory for the AWS Login cron job files
+  file:
+    path: "{{ k8s_aws_login_cfg }}"
+    state: directory
+    mode: 0700
+  tags:
+    - pull_secrets
+
+- name: Create AWS Login cron job
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_aws_login_cfg }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
+    mode: 0600
+  with_fileglob:
+    - "templates/*.yaml.j2"
+  tags:
+    - pull_secrets
+
+- name: Lookup generated configuration files
+  find:
+    paths:
+      - "{{ k8s_aws_login_cfg }}"
+    file_type: file
+    patterns: "*.yaml"
+  register: kube_aws_login
+  tags:
+    - pull_secrets
+
+- name: Apply Kubernetes configuration
+  command: kubectl --kubeconfig=kubeconfig apply -f {{ item.path }}
+  args:
+    chdir: "{{ k8s_working_dir }}"
+  with_items: "{{ kube_aws_login.files | sort(attribute='path') }}"
+  tags:
+    - pull_secrets
