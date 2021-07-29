@@ -53,7 +53,7 @@ my_aws_profiles:
 k8s_components: []
 
 pull_secrets_manager: aws_login_job
-image_pull_secret: awsecr-cred
+image_pull_secret: aws-ecr-cred
 
 app_namespace: thecombine
 

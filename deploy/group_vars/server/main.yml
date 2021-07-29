@@ -67,10 +67,9 @@ max_backups: "3"
 k8s_components: []
 
 pull_secrets_manager: aws_login_job
-image_pull_secret: awsecr-cred
+image_pull_secret: aws-ecr-cred
 
 app_namespace: thecombine
-http_only: yes
 
 k8s_user: sillsdev
 k8s_group: sillsdev
