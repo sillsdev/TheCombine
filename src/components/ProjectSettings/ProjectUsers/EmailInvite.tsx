@@ -9,11 +9,13 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import validator from "validator";
 
+import { User } from "api/models";
 import * as Backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
 interface InviteProps {
+  addToProject: (user: User) => void;
   close: () => void;
 }
 
@@ -40,11 +42,16 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     this.setState({
       loading: true,
     });
-    await Backend.emailInviteToProject(
-      getProjectId(),
-      this.state.emailAddress,
-      this.state.message
-    );
+    const user = await Backend.getUserByEmail(this.state.emailAddress);
+    if (user) {
+      this.props.addToProject(user);
+    } else {
+      await Backend.emailInviteToProject(
+        getProjectId(),
+        this.state.emailAddress,
+        this.state.message
+      );
+    }
     this.setState({
       loading: false,
       done: true,
