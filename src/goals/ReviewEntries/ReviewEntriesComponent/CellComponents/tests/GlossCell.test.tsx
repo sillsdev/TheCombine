@@ -14,7 +14,7 @@ const state = {
     project: { analysisWritingSystems: [{ bcp47: "en" }] },
   },
 };
-const mockStore = configureMockStore([])(state);
+const mockStore = configureMockStore()(state);
 const mockWord = mockWords()[0];
 
 describe("GlossCell", () => {

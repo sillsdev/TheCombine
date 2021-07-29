@@ -6,7 +6,6 @@ import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 
 jest.mock("components/AppBar/AppBarComponent", () => "div");
 
-const createMockStore = configureMockStore([]);
 const state = {
   currentProjectState: { project: {} },
   createProjectState: {
@@ -16,7 +15,7 @@ const state = {
     errorMsg: "",
   },
 };
-const mockStore = createMockStore(state);
+const mockStore = configureMockStore()(state);
 
 it("renders without crashing", () => {
   renderer.act(() => {

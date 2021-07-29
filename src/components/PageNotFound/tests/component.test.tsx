@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 
 import PageNotFound from "components/PageNotFound/component";
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 
 it("renders without crashing", () => {
   const mockStore = createMockStore();

@@ -50,7 +50,7 @@ export default function SignalRHub() {
       connection
         .start()
         .then(() => connection.on(methodName, method))
-        .catch((err) => console.error(err));
+        .catch(console.error);
     }
     // We reference dispatch and exportState, but they're not dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps

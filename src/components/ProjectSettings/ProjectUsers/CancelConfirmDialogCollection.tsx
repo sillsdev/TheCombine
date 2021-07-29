@@ -47,7 +47,7 @@ export default function CancelConfirmDialogCollection(
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
-      .catch((err: string) => {
+      .catch((err) => {
         console.error(err);
         toast(
           <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
@@ -74,7 +74,7 @@ export default function CancelConfirmDialogCollection(
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
-      .catch((err: string) => {
+      .catch((err) => {
         console.error(err);
         toast(
           <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
@@ -95,7 +95,7 @@ export default function CancelConfirmDialogCollection(
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
-      .catch((err: string) => {
+      .catch((err) => {
         console.error(err);
         toast(
           <Translate id="projectSettings.userManagement.removeAdminToastFailure" />

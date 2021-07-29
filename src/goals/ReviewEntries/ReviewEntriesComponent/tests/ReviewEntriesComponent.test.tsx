@@ -60,7 +60,7 @@ const state = {
     },
   },
 };
-const mockStore = configureMockStore([])(state);
+const mockStore = configureMockStore()(state);
 
 function setMockFunctions() {
   mockGetFrontierWords.mockResolvedValue(

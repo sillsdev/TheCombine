@@ -60,7 +60,7 @@ export default function ActiveUsers() {
   }, [projectUsers, userOrder, reverseSorting, setSortedUsers]);
 
   function getSortedUsers() {
-    // Copy the "projectUser" array because reverse(), sort() mutate.
+    // Copy the "projectUsers" array because reverse(), sort() mutate.
     const users = [...projectUsers].sort((a: User, b: User) => {
       switch (userOrder) {
         case UserOrder.Name:

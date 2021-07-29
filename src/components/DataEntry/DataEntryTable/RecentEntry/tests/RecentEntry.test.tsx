@@ -19,8 +19,7 @@ import { simpleWord } from "types/word";
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+const mockStore = configureMockStore()(defaultState);
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
 const mockWord = simpleWord(mockVern, mockGloss);
