@@ -1,6 +1,6 @@
 ---
 - name: Test if aws-ecr-credential manager is installed
-  command: kubectl --kubeconfig=kubeconfig -n {{ app_namespace }} get secrets aws-registry
+  command: kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} get secrets aws-registry
   args:
     chdir: "{{ k8s_working_dir }}"
   register: aws_mgr_installed

@@ -1,21 +1,66 @@
 ---
+- name: Print config
+  debug:
+    var: aws_ecr_login
+
 - name: Create directory for the AWS Login cron job files
   file:
     path: "{{ k8s_aws_login_cfg }}"
     state: directory
     mode: 0700
-  tags:
-    - pull_secrets
 
-- name: Create AWS Login cron job
+- name: List kubeconfig secret
+  command: >
+    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} get secret
+    {{ k8s_config_secret }}
+  register: get_secret
+  changed_when: false
+  failed_when: false
+
+- name: Create kubeconfig secret
+  command: >
+    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
+    create secret generic
+    {{ k8s_config_secret }}
+    --from-file={{ kubecfg }}
+  when: get_secret.rc > 0
+
+- name: Create AWS credentials secret
   template:
-    src: "{{ item }}"
-    dest: "{{ k8s_aws_login_cfg }}/{{ item | basename | regex_replace('^(.*\\.yaml)\\.j2', '\\1') }}"
+    src: 10-aws-access-secrets.yaml.j2
+    dest: "{{ k8s_aws_login_cfg }}/10-aws-access-secrets.yaml"
     mode: 0600
-  with_fileglob:
-    - "templates/*.yaml.j2"
-  tags:
-    - pull_secrets
+
+##############################################################
+# We always run a oneshot job to get AWS login credentials
+# promptly without having to wait for the cron job to trigger
+# But first we need to delete any previous oneshot jobs.
+##############################################################
+- name: Delete residual oneshot job
+  command: >
+    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
+    delete job --ignore-not-found {{ aws_ecr_login.job_name }}
+
+- name: Setup oneshot job to get AWS Login credentials
+  template:
+    src: 20-aws-ecr-login-oneshot.yaml.j2
+    dest: "{{ k8s_aws_login_cfg }}/20-aws-ecr-login-oneshot.yaml"
+    mode: 0600
+
+- name: Delete residual cronjob spec
+  file:
+    path: "{{ k8s_aws_login_cfg }}/20-aws-ecr-login-cronjob.yaml"
+    state: absent
+  when: not aws_ecr_login.cron
+
+- name: Setup cron job to get AWS Login credentials
+  block:
+    - name: Create cron job specification
+      template:
+        src: 20-aws-ecr-login-cronjob.yaml.j2
+        dest: "{{ k8s_aws_login_cfg }}/20-aws-ecr-login-cronjob.yaml"
+        mode: 0600
+  when: aws_ecr_login.cron
 
 - name: Lookup generated configuration files
   find:
@@ -28,7 +73,7 @@
     - pull_secrets
 
 - name: Apply Kubernetes configuration
-  command: kubectl --kubeconfig=kubeconfig apply -f {{ item.path }}
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item.path }}
   args:
     chdir: "{{ k8s_working_dir }}"
   with_items: "{{ kube_aws_login.files | sort(attribute='path') }}"

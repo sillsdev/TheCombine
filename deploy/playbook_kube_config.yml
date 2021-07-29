@@ -10,6 +10,7 @@
 - name: Setup TheCombine to run under Kubernetes
   hosts: server,qa,nuc
   become: no
+  gather_facts: no
 
   vars_prompt:
     - name: combine_version
@@ -34,6 +35,10 @@
     - name: Create The Combine Kubernetes cluster
       delegate_to: localhost
       block:
+        - name: print $HOME
+          debug:
+            msg: "$HOME == {{ lookup('env', 'HOME') }}"
+
         - name: Create Application Namespace
           include_role:
             name: k8s_namespace

@@ -80,11 +80,9 @@ spec:
             - containerPort: 443
           resources: {}
       restartPolicy: Always
-{% if image_pull_secrets is defined and image_pull_secrets | length %}
+{% if image_pull_secret is defined and image_pull_secret | length %}
       imagePullSecrets:
-{% for secret in image_pull_secrets %}
-         - name: {{ secret }}
-{% endfor %}
+         - name: {{ image_pull_secret }}
 {% endif %}
 {% if node_site is defined and node_site | length %}
       nodeSelector:

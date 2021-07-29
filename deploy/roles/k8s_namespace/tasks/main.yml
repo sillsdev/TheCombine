@@ -12,6 +12,6 @@
     mode: 0600
 
 - name: Create the namespace
-  command: kubectl --kubeconfig=kubeconfig apply -f {{ k8s_namespace_cfg }}/10-combine-namespace.yaml
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ k8s_namespace_cfg }}/10-combine-namespace.yaml
   args:
     chdir: "{{ k8s_working_dir }}"

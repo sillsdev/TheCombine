@@ -22,7 +22,7 @@
   register: kube_config
 
 - name: Apply Kubernetes configuration
-  command: kubectl --kubeconfig=kubeconfig apply -f {{ item.path }}
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item.path }}
   args:
     chdir: "{{ k8s_working_dir }}"
   with_items: "{{ kube_config.files | sort(attribute='path') }}"

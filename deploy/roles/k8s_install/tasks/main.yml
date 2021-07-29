@@ -63,14 +63,14 @@
     - name: Save kubectl configuration in site_files on host
       fetch:
         src: "{{ k8s_user_home.stdout }}/.kube/config"
-        dest: "{{ k8s_working_dir }}/kubeconfig"
+        dest: "{{ kubecfg }}"
         flat: yes
 
     - name: Restrict permissions to kubeconfig to owner
       delegate_to: localhost
       become: no
       file:
-        path: "{{ k8s_working_dir }}/kubeconfig"
+        path: "{{ kubecfg }}"
         state: file
         mode: 0600
 
@@ -79,7 +79,7 @@
       become: no
       lineinfile:
         state: present
-        path: "{{ k8s_working_dir }}/kubeconfig"
+        path: "{{ kubecfg }}"
         regexp: '^(\s+server: https:\/\/)[.0-9]+:16443'
         backrefs: yes
         line: '\1{{ combine_server_name}}:16443'
