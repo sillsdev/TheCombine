@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { Project } from "api/models";
-import { asyncSetCurrentProject } from "components/Project/ProjectActions";
+import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch/ProjectSwitch";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -13,7 +13,7 @@ function mapStateToProps(state: StoreState) {
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     setCurrentProject: (project: Project) => {
-      dispatch(asyncSetCurrentProject(project));
+      dispatch(asyncSetNewCurrentProject(project));
     },
   };
 }

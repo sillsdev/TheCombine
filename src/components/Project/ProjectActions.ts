@@ -40,7 +40,7 @@ export function asyncRefreshCurrentProjectUsers() {
   };
 }
 
-export function asyncSetCurrentProject(project?: Project) {
+export function asyncSetNewCurrentProject(project?: Project) {
   return async (dispatch: StoreStateDispatch) => {
     setProjectId(project?.id);
     dispatch(setCurrentProject(project));
