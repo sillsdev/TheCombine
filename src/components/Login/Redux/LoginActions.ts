@@ -26,9 +26,7 @@ export function asyncLogin(username: string, password: string) {
         analytics.identify(analyticsId);
         history.push(Path.ProjScreen);
       })
-      .catch(() => {
-        dispatch(loginFailure(username));
-      });
+      .catch(() => dispatch(loginFailure(username)));
   };
 }
 
@@ -78,11 +76,9 @@ export function asyncRegister(
           dispatch(asyncLogin(username, password));
         }, 1000);
       })
-      .catch((err) => {
-        dispatch(
-          registerFailure((err.response && err.response.status) || err.message)
-        );
-      });
+      .catch((err) =>
+        dispatch(registerFailure(err.response?.status ?? err.message))
+      );
   };
 }
 

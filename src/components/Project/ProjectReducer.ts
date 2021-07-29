@@ -1,20 +1,26 @@
-import { Project } from "api/models";
 import {
+  CurrentProjectState,
+  defaultState,
   ProjectAction,
-  SET_CURRENT_PROJECT,
+  ProjectActionType,
 } from "components/Project/ProjectReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { newProject } from "types/project";
 
 export const projectReducer = (
-  state = newProject(),
+  state = defaultState,
   action: ProjectAction | StoreAction
-): Project => {
+): CurrentProjectState => {
   switch (action.type) {
-    case SET_CURRENT_PROJECT:
-      return action.payload ?? newProject();
+    case ProjectActionType.SET_CURRENT_PROJECT:
+      if (action.payload?.id === state.project.id) {
+        return { ...state, project: action.payload };
+      }
+      return { project: action.payload ?? newProject(), users: [] };
+    case ProjectActionType.SET_CURRENT_PROJECT_USERS:
+      return { ...state, users: action.payload ?? [] };
     case StoreActionTypes.RESET:
-      return newProject();
+      return defaultState;
     default:
       return state;
   }

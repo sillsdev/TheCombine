@@ -22,7 +22,8 @@ export default function DefinitionCell(
   props: FieldParameterStandard & DefinitionCellProps
 ) {
   const analysisLang = useSelector(
-    (state: StoreState) => state.currentProject.analysisWritingSystems[0].bcp47
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems[0].bcp47
   );
 
   return (

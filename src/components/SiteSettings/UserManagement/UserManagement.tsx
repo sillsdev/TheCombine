@@ -77,7 +77,7 @@ class UserManagement extends React.Component<UserProps, UserState> {
           this.setState({ userAvatar });
         });
       })
-      .catch((err) => console.log(err));
+      .catch(console.error);
   }
 
   deleteUser(userId: string) {
@@ -86,8 +86,8 @@ class UserManagement extends React.Component<UserProps, UserState> {
         toast(<Translate id="siteSettings.deleteUser.toastSuccess" />);
         this.populateUsers();
       })
-      .catch((err: string) => {
-        console.log(err);
+      .catch((err) => {
+        console.error(err);
         toast(<Translate id="siteSettings.deleteUser.toastFailure" />);
       });
     this.handleCloseModal();

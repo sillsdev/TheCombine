@@ -10,7 +10,7 @@ const projects = [randomProject(), randomProject(), randomProject()];
 var switchMaster: ReactTestRenderer;
 var switchHandle: ProjectSwitch;
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 
 describe("ProjectSwitch", () => {
   beforeAll(() => {

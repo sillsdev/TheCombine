@@ -8,6 +8,7 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
@@ -15,6 +16,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 
 interface CancelConfirmDialogCollectionProps {
   userId: string;
@@ -29,6 +31,7 @@ interface CancelConfirmDialogCollectionProps {
 export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
 ) {
+  const dispatch = useDispatch();
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
   const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
   const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
@@ -42,8 +45,9 @@ export default function CancelConfirmDialogCollection(
         toast(
           <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
         );
+        dispatch(asyncRefreshCurrentProjectUsers());
       })
-      .catch((err: string) => {
+      .catch((err) => {
         console.error(err);
         toast(
           <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
@@ -68,8 +72,9 @@ export default function CancelConfirmDialogCollection(
         toast(
           <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
         );
+        dispatch(asyncRefreshCurrentProjectUsers());
       })
-      .catch((err: string) => {
+      .catch((err) => {
         console.error(err);
         toast(
           <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
@@ -88,8 +93,9 @@ export default function CancelConfirmDialogCollection(
         toast(
           <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
         );
+        dispatch(asyncRefreshCurrentProjectUsers());
       })
-      .catch((err: string) => {
+      .catch((err) => {
         console.error(err);
         toast(
           <Translate id="projectSettings.userManagement.removeAdminToastFailure" />
@@ -98,17 +104,17 @@ export default function CancelConfirmDialogCollection(
   }
 
   const managementOptions: React.ReactElement<MenuItemProps>[] = [
-    <MenuItem onClick={() => setRemoveUser(true)}>
+    <MenuItem key="removeUser" onClick={() => setRemoveUser(true)}>
       <Translate id="buttons.removeFromProject" />
     </MenuItem>,
   ];
   if (props.isProjectOwner) {
     const adminOption = props.userIsProjectAdmin ? (
-      <MenuItem onClick={() => setRemoveAdmin(true)}>
+      <MenuItem key="removeAdmin" onClick={() => setRemoveAdmin(true)}>
         <Translate id="buttons.removeAdmin" />
       </MenuItem>
     ) : (
-      <MenuItem onClick={() => setMakeAdmin(true)}>
+      <MenuItem key="addAdmin" onClick={() => setMakeAdmin(true)}>
         <Translate id="buttons.makeAdmin" />
       </MenuItem>
     );

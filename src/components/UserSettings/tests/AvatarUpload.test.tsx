@@ -5,7 +5,7 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
 // This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore([])({});
+const mockStore = configureMockStore()();
 
 let testRenderer: ReactTestRenderer;
 

@@ -1,26 +1,25 @@
-import React from "react";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { simpleWord, Word } from "types/word";
+import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import EditTextDialog from "components/Buttons/EditTextDialog";
-import AudioPlayer from "components/Pronunciations/AudioPlayer";
-import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import Recorder from "components/Pronunciations/Recorder";
 import {
   EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
+import AudioPlayer from "components/Pronunciations/AudioPlayer";
+import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import Recorder from "components/Pronunciations/Recorder";
+import { simpleWord } from "types/word";
 
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+const mockStore = configureMockStore()(defaultState);
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
 const mockWord = simpleWord(mockVern, mockGloss);

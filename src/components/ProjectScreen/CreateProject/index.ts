@@ -11,7 +11,7 @@ import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {
-    project: state.currentProject,
+    project: state.currentProjectState.project,
     inProgress: state.createProjectState.inProgress,
     success: state.createProjectState.success,
     errorMsg: state.createProjectState.errorMsg,

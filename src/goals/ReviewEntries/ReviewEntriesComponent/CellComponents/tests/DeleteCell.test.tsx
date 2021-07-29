@@ -6,7 +6,7 @@ import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import { defaultState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 const mockWord = mockWords()[0];
 
 describe("DeleteCell", () => {
@@ -17,7 +17,7 @@ describe("DeleteCell", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <DeleteCell rowData={mockWord} delete={jest.fn()} />
+        <DeleteCell rowData={mockWord} delete={jest.fn()} value={""} />
       </Provider>,
       div
     );

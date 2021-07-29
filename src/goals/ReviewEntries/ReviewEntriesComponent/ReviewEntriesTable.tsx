@@ -28,7 +28,7 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
     (state: StoreState) => state.reviewEntriesState.words
   );
   const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProject.definitionsEnabled
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
 
   return (

@@ -172,7 +172,8 @@ function refreshWord(
     const word = await backend.getWord(newWordId);
 
     const analysisLang =
-      getState().currentProject.analysisWritingSystems[0]?.bcp47 ?? "en";
+      getState().currentProjectState.project.analysisWritingSystems[0]?.bcp47 ??
+      "en";
     dispatch(updateWord(oldWordId, new ReviewEntriesWord(word, analysisLang)));
   };
 }

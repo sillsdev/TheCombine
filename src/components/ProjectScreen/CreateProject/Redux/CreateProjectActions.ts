@@ -2,7 +2,10 @@ import { WritingSystem } from "api/models";
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
-import { setCurrentProject } from "components/Project/ProjectActions";
+import {
+  asyncSetNewCurrentProject,
+  setCurrentProject,
+} from "components/Project/ProjectActions";
 import {
   CreateProjectAction,
   CreateProjectActionTypes,
@@ -24,36 +27,35 @@ export function asyncCreateProject(
     project.vernacularWritingSystem = vernacularLanguage;
     project.analysisWritingSystems = analysisLanguages;
 
-    backend
+    await backend
       .createProject(project)
-      .then((createdProject) => {
-        dispatch(setCurrentProject(createdProject));
+      .then(async (createdProject) => {
+        dispatch(asyncSetNewCurrentProject(createdProject));
 
         // Upload words
         if (languageData) {
-          backend.uploadLift(createdProject.id, languageData).then((res) => {
-            backend
-              .getProject(createdProject.id)
-              .then((res) => {
-                dispatch(setCurrentProject(res));
-                dispatch(success(name, vernacularLanguage, analysisLanguages));
-                // we manually pause so they have a chance to see the success message
-                setTimeout(() => {
-                  dispatch(asyncCreateUserEdits());
-                  history.push(Path.ProjSettings);
-                }, 1000);
-              })
-              .catch((err) => {
-                dispatch(
-                  failure(
-                    name,
-                    vernacularLanguage,
-                    analysisLanguages,
-                    err.response.statusText
-                  )
-                );
-              });
-          });
+          await backend.uploadLift(createdProject.id, languageData);
+          await backend
+            .getProject(createdProject.id)
+            .then((updatedProject) => {
+              dispatch(setCurrentProject(updatedProject));
+              dispatch(success(name, vernacularLanguage, analysisLanguages));
+              // Manually pause so they have a chance to see the success message.
+              setTimeout(() => {
+                dispatch(asyncCreateUserEdits());
+                history.push(Path.ProjSettings);
+              }, 1000);
+            })
+            .catch((err) => {
+              dispatch(
+                failure(
+                  name,
+                  vernacularLanguage,
+                  analysisLanguages,
+                  err.response?.statusText
+                )
+              );
+            });
         } else {
           dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
@@ -63,12 +65,7 @@ export function asyncCreateProject(
         }
       })
       .catch((err) => {
-        let errorMessage: string;
-        if (err.response === undefined) {
-          errorMessage = err.response;
-        } else {
-          errorMessage = err.response.statusText;
-        }
+        const errorMessage = err.response?.statusText;
         dispatch(
           failure(name, vernacularLanguage, analysisLanguages, errorMessage)
         );
