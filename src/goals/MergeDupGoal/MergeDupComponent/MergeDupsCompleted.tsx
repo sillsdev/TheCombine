@@ -14,6 +14,10 @@ import { useSelector } from "react-redux";
 import { Sense, Word } from "api/models";
 import { getWord } from "backend";
 import {
+  getSenseInLanguages,
+  senseText,
+} from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
+import {
   CompletedMerge,
   MergesCompleted,
 } from "goals/MergeDupGoal/MergeDupsTypes";
@@ -125,6 +129,7 @@ function WordPaper(props: WordPaperProps) {
 }
 
 function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
+  const senseInLangs = getSenseInLanguages(sense, showDefinitions);
   const semDoms = [
     ...new Set(sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)),
   ];
@@ -140,30 +145,8 @@ function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
       }}
     >
       <CardContent style={{ position: "relative", paddingRight: 40 }}>
-        {/* List glosses */}
-        {sense.glosses.map((g, index) => {
-          const defText = sense.definitions.find(
-            (d) => d.language === g.language
-          )?.text;
-          return (
-            <div key={index}>
-              <Typography variant="caption">{`${g.language}: `}</Typography>
-              <Typography display="inline" variant="h5">
-                {g.def}
-              </Typography>
-              {showDefinitions && !!defText && (
-                <div
-                  style={{
-                    background: "lightyellow",
-                    marginTop: theme.spacing(2),
-                  }}
-                >
-                  <Typography variant="h6">{defText}</Typography>
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {/* List glosses and (if enabled) definitions. */}
+        {senseText(senseInLangs)}
         {/* List semantic domains */}
         <Grid container spacing={2}>
           {semDoms.map((dom) => (

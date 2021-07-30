@@ -7,10 +7,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Sense } from "api/models";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
@@ -30,6 +31,8 @@ function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
   }
   return true;
 }
+
+const displaySep = "; ";
 
 export default function DragSense(props: DragSenseProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
@@ -89,7 +92,11 @@ export default function DragSense(props: DragSenseProps) {
 
   // Only display the first sense; others will be deleted as duplicates.
   // User can select a different one by reordering in the sidebar.
-  const sep = "; ";
+  const senseTextInLangs = getSenseInLanguages(
+    props.senses[0],
+    showDefinitions,
+    analysisLangs
+  );
   const semDoms = [
     ...new Set(
       props.senses.flatMap((sense) =>
@@ -144,32 +151,7 @@ export default function DragSense(props: DragSenseProps) {
             {/* Display of sense details. */}
             <div>
               {/* List glosses and (if enabled) definitions. */}
-              {analysisLangs.map((lang) => (
-                <div key={lang}>
-                  <Typography variant="caption">{`${lang}: `}</Typography>
-                  <Typography display="inline" variant="h5">
-                    {props.senses[0].glosses
-                      .filter((g) => g.language === lang)
-                      .map((g) => g.def)
-                      .join(sep)}
-                  </Typography>
-                  {showDefinitions && (
-                    <div
-                      style={{
-                        background: "lightyellow",
-                        marginTop: theme.spacing(2),
-                      }}
-                    >
-                      <Typography variant="h6">
-                        {props.senses[0].definitions
-                          .filter((d) => d.language === lang)
-                          .map((d) => d.text)
-                          .join(sep)}
-                      </Typography>
-                    </div>
-                  )}
-                </div>
-              ))}
+              {senseText(senseTextInLangs)}
               {/* List semantic domains */}
               <Grid container spacing={2}>
                 {semDoms.map((dom) => (
@@ -183,5 +165,79 @@ export default function DragSense(props: DragSenseProps) {
         </Card>
       )}
     </Draggable>
+  );
+}
+
+interface senseInLanguage {
+  language: string; // bcp-47 code
+  glossText: string;
+  definitionText?: string;
+}
+
+function getSenseInLanguage(
+  sense: Sense,
+  includeDefinitions: boolean,
+  language: string
+): senseInLanguage {
+  return {
+    language,
+    glossText: sense.glosses
+      .filter((g) => g.language === language)
+      .map((g) => g.def)
+      .join(displaySep),
+    definitionText: includeDefinitions
+      ? sense.definitions
+          .filter((d) => d.language === language)
+          .map((d) => d.text)
+          .join(displaySep)
+      : undefined,
+  };
+}
+
+export function getSenseInLanguages(
+  sense: Sense,
+  includeDefinitions: boolean,
+  languages?: string[]
+): senseInLanguage[] {
+  if (!languages) {
+    languages = sense.glosses.map((g) => g.language);
+    if (includeDefinitions) {
+      languages.push(...sense.definitions.map((d) => d.language));
+    }
+    languages = [...new Set(languages)];
+  }
+  return languages.map((l) => getSenseInLanguage(sense, includeDefinitions, l));
+}
+
+export function senseText(senseInLangs: senseInLanguage[]): JSX.Element {
+  return (
+    <React.Fragment>
+      {senseInLangs.map((sInLang) => (
+        <div key={sInLang.language}>
+          <Typography variant="caption">{`${sInLang.language}: `}</Typography>
+          <Typography
+            display="inline"
+            variant="h5"
+            style={{ marginBottom: theme.spacing(1) }}
+          >
+            {sInLang.glossText}
+          </Typography>
+          {!!sInLang.definitionText && (
+            <div
+              style={{
+                //background: "lightyellow",
+                marginBottom: theme.spacing(1),
+                paddingLeft: theme.spacing(1),
+                borderLeft: "1px solid black",
+              }}
+            >
+              <Typography variant="h6" color="textSecondary">
+                {sInLang.definitionText}
+              </Typography>
+            </div>
+          )}
+        </div>
+      ))}
+    </React.Fragment>
   );
 }
