@@ -23,7 +23,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
     order: props.index,
   };
   const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProject.definitionsEnabled
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
 
   return (

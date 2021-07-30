@@ -47,7 +47,7 @@ export default function DragSense(props: DragSenseProps) {
     sidebar.mergeSenseId === props.mergeSenseId &&
     sidebar.senses.length > 1;
   const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProject.definitionsEnabled
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
 
   const updateSidebar = useCallback(() => {

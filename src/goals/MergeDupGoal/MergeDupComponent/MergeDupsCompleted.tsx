@@ -91,7 +91,7 @@ interface WordPaperProps {
 function WordPaper(props: WordPaperProps) {
   const [word, setWord] = useState<Word | undefined>();
   const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProject.definitionsEnabled
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
   useEffect(() => {
     getWord(props.wordId).then(setWord);
