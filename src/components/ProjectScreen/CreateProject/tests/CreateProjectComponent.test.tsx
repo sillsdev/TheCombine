@@ -8,9 +8,9 @@ import renderer, {
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 const mockState = {
-  currentProject: {},
+  currentProjectState: { project: {} },
   createProjectState: {
     name: "",
     inProgress: false,
@@ -51,7 +51,7 @@ it("errors on empty name", () => {
   });
 
   projectHandle = projectMaster.root.findByType(CreateProject);
-  let testComponent = projectHandle.instance;
+  const testComponent = projectHandle.instance;
 
   expect(testComponent.state.error.empty).toBe(false);
   testComponent.setState({ name: "" });

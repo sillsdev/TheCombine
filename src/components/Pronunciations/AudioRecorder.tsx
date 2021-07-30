@@ -37,7 +37,7 @@ export default function AudioRecorder(props: RecorderProps) {
         }
       })
       .catch(() => {
-        console.log("Error recording, probably no mic access");
+        console.error("Error recording, probably no mic access");
         // <Translate id="pronunciations.noMicAccess" />;
         // TODO: Show alert dialog here
       });

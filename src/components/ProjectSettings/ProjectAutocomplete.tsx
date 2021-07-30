@@ -8,7 +8,9 @@ import { saveChangesToProject } from "components/Project/ProjectActions";
 import { StoreState } from "types";
 
 export default function ProjectAutocomplete() {
-  const project = useSelector((state: StoreState) => state.currentProject);
+  const project = useSelector(
+    (state: StoreState) => state.currentProjectState.project
+  );
   const dispatch = useDispatch();
   return (
     <FormControl>
