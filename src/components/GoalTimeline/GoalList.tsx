@@ -13,7 +13,6 @@ import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/Cha
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
 import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
-import { FreeBreakfastOutlined } from "@material-ui/icons";
 
 export type Orientation = "horizontal" | "vertical";
 
