@@ -16,7 +16,7 @@ jest.mock("components/Pronunciations/Recorder");
 // Variables
 var testRenderer: ReactTestRenderer;
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 const mockStore = createMockStore(defaultState);
 function mockRecordingState(wordId: string) {
   return {

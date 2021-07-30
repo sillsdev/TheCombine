@@ -160,8 +160,8 @@ export function getAllCharacters() {
         ),
         status: getCharacterStatus(
           letter,
-          state.currentProject.validCharacters,
-          state.currentProject.rejectedCharacters
+          state.currentProjectState.project.validCharacters,
+          state.currentProjectState.project.rejectedCharacters
         ),
       });
     });
@@ -188,7 +188,7 @@ function countCharacterOccurences(char: string, words: string[]) {
 }
 
 function getChangesFromState(state: StoreState): CharacterChange[] {
-  const proj = state.currentProject;
+  const proj = state.currentProjectState.project;
   const charInvState = state.characterInventoryState;
   return getChanges(proj, charInvState);
 }
@@ -250,7 +250,7 @@ function getChange(
 }
 
 function updateCurrentProject(state: StoreState): Project {
-  const project = state.currentProject;
+  const project = state.currentProjectState.project;
   project.validCharacters = state.characterInventoryState.validCharacters;
   project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;

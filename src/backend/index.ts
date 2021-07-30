@@ -353,6 +353,10 @@ export async function getUser(userId: string): Promise<User> {
   return (await userApi.getUser({ userId }, defaultOptions())).data;
 }
 
+export async function getUserByEmail(email: string): Promise<User> {
+  return (await userApi.getUserByEmail({ email }, defaultOptions())).data;
+}
+
 export async function updateUser(user: User): Promise<User> {
   const resp = await userApi.updateUser(
     { userId: user.id, user },
@@ -440,13 +444,25 @@ export async function getUserRole(userRoleId: string): Promise<UserRole> {
   return (await userRoleApi.getUserRole(params, defaultOptions())).data;
 }
 
-export async function addUserRole(
+export async function addOrUpdateUserRole(
   permission: Permission[],
   userId: string
 ): Promise<string> {
   const params = { projectId: LocalStorage.getProjectId(), userId, permission };
   return (await userRoleApi.updateUserRolePermissions(params, defaultOptions()))
     .data;
+}
+
+export async function removeUserRole(
+  permission: Permission[],
+  userId: string
+): Promise<void> {
+  const params = {
+    projectId: LocalStorage.getProjectId(),
+    userId,
+    permission,
+  };
+  await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 
 /* WordController.cs */

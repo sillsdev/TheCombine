@@ -56,7 +56,7 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }
 
   deleteAnalysisWritingSystem(index: number) {
@@ -64,7 +64,7 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }
 
   addAnalysisWritingSystem() {
@@ -77,12 +77,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }
 
-  isNewWritingSystem() {
+  isNewWritingSystem(): boolean {
     return (
-      this.state.bcp47 &&
+      !!this.state.bcp47 &&
       !this.props.project.analysisWritingSystems
         .map((ws) => ws.bcp47)
         .includes(this.state.bcp47)

@@ -14,10 +14,12 @@ jest.mock(
   () => "div"
 );
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore({
-  currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },
-});
+const mockState = {
+  currentProjectState: {
+    project: { analysisWritingSystems: [{ bcp47: "en" }] },
+  },
+};
+const mockStore = configureMockStore()(mockState);
 
 describe("VernList ", () => {
   it("renders without crashing", () => {

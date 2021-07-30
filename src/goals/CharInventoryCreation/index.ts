@@ -8,7 +8,7 @@ import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {
-    currentProject: state.currentProject,
+    currentProject: state.currentProjectState.project,
     selectedCharacter: state.characterInventoryState.selectedCharacter,
     allCharacters: state.characterInventoryState.characterSet,
     goal: state.goalsState.currentGoal,

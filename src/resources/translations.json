@@ -19,9 +19,9 @@
   },
   "landingPage": {
     "subtitle": [
-      "A Word-Harvesting Web App",
-      "A Word-Harvesting Web App",
-      "A Word-Harvesting Web App"
+      "A Web App for Harvesting Words Together",
+      "A Web App for Harvesting Words Together",
+      "A Web App for Harvesting Words Together"
     ],
     "privacyPolicy": ["Privacy Policy", "Privacy Policy", "Privacy Policy"],
     "descriptionP1": [
@@ -374,6 +374,55 @@
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],
     "userList": ["Users", "Usarios", "Utilisateurs"],
+    "userManagement": {
+      "makeAdminWarning": [
+        "Make this user a project admin?",
+        "Make this user a project admin?",
+        "Make this user a project admin?"
+      ],
+      "removeAdminWarning": [
+        "Remove project admin from this user?",
+        "Remove project admin from this user?",
+        "Remove project admin from this user?"
+      ],
+      "removeUserWarning": [
+        "Remove this user from the project?",
+        "Remove this user from the project?",
+        "Remove this user from the project?"
+      ],
+      "userRemovedToastSuccess": [
+        "User Removed!",
+        "User Removed!",
+        "User Removed!"
+      ],
+      "userRemovedToastFailure": [
+        "Failed to remove user.",
+        "Failed to remove user.",
+        "Failed to remove user."
+      ],
+      "makeAdminToastSuccess": [
+        "User Given Project Admin!",
+        "User Given Project Admin!",
+        "User Given Project Admin!"
+      ],
+      "makeAdminToastFailure": [
+        "Failed to give project admin to user.",
+        "Failed to give project admin to user.",
+        "Failed to give project admin to user."
+      ],
+      "removeAdminToastSuccess": [
+        "Removed Project Admin from User!",
+        "Removed Project Admin from User!",
+        "Removed Project Admin from User!"
+      ],
+      "removeAdminToastFailure": [
+        "Failed to remove project admin from user.",
+        "Failed to remove project admin from user.",
+        "Failed to remove project admin from user."
+      ],
+      "manageUser": ["Manage User", "Manage User", "Manage User"],
+      "reverseOrder": ["Reverse Order", "Reverse Order", "Reverse Order"]
+    },
     "import": {
       "header": ["Import Data", "Importar información", "Importer des données"],
       "body": [
@@ -750,6 +799,7 @@
     "done": ["Done", "Hecho", "Achevé"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
+    "makeAdmin": ["Make Admin", "Make Admin", "Make Admin"],
     "proceedWithCaution": [
       "Proceed with Caution!",
       "¡Proceder con precaución!",
@@ -757,6 +807,16 @@
     ],
     "reject": ["Reject", "Rechazar", "Rejeter"],
     "rejected": ["Rejected", "Rechazado", "Rejeté"],
+    "removeAdmin": [
+      "Remove Project Admin",
+      "Remove Project Admin",
+      "Remove Project Admin"
+    ],
+    "removeFromProject": [
+      "Remove from Project",
+      "Remove from Project",
+      "Remove from Project"
+    ],
     "restore": ["Restore", "Restaurar", "Restaurer"],
     "save": ["Save", "Guardar", "Enregistrer"],
     "saveAndContinue": [

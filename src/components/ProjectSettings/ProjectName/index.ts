@@ -7,7 +7,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
-  return { project: state.currentProject };
+  return { project: state.currentProjectState.project };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

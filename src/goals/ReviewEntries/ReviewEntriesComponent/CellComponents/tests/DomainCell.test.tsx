@@ -6,7 +6,7 @@ import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 // This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore([])({});
+const mockStore = configureMockStore()();
 const mockWord = mockWords()[0];
 
 describe("DomainCell", () => {
@@ -14,7 +14,7 @@ describe("DomainCell", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <DomainCell rowData={mockWord} sortingByDomains={true} />
+        <DomainCell rowData={mockWord} sortingByThis />
       </Provider>,
       div
     );

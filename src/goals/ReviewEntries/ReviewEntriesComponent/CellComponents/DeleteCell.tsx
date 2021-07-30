@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as backend from "backend";
-import DeleteDialog from "components/Buttons/DeleteDialog";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
@@ -76,7 +76,7 @@ export default function DeleteCell(
       <IconButton onClick={handleOpen}>
         <Delete />
       </IconButton>
-      <DeleteDialog
+      <CancelConfirmDialog
         open={dialogOpen}
         textId={"reviewEntries.deleteWordWarning"}
         handleCancel={handleClose}

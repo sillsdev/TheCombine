@@ -50,7 +50,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
           reset();
         }
       })
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }
 
   function reset() {

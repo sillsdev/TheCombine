@@ -181,13 +181,22 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteUserRole()
         {
-            var origUserRole = _userRoleRepo.Create(RandomUserRole()).Result;
+            var userRole = RandomUserRole();
+            _userRoleRepo.Create(userRole);
+            var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
+            var userId = _userRepo.Create(user).Result!.Id;
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(1));
+            var fetchedUser = _userRepo.GetUser(userId).Result ?? throw new System.Exception();
+            Assert.That(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            Assert.That(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
 
-            _ = _userRoleController.DeleteUserRole(_projId, origUserRole.Id).Result;
+            _ = _userRoleController.DeleteUserRole(_projId, userId).Result;
 
             Assert.That(_userRoleRepo.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(0));
+            fetchedUser = _userRepo.GetUser(userId).Result ?? throw new System.Exception();
+            Assert.False(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            Assert.False(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
         }
 
         [Test]
