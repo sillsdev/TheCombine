@@ -13,6 +13,7 @@ import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/Cha
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
 import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
+import { FreeBreakfastOutlined } from "@material-ui/icons";
 
 export type Orientation = "horizontal" | "vertical";
 
@@ -58,11 +59,7 @@ export default function GoalList(props: GoalListProps): JSX.Element {
     <GridList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
       cols={props.orientation === "horizontal" ? props.numPanes : 1}
-      onMouseOver={
-        props.scrollable
-          ? () => setScrollVisible(true)
-          : () => setScrollVisible(false)
-      }
+      onMouseOver={() => setScrollVisible(props.scrollable)}
       onMouseLeave={() => setScrollVisible(false)}
     >
       {props.data.length > 0
@@ -120,7 +117,15 @@ export function makeGoalTile(
         }
       >
         <Grid container direction="column">
-          <Grid item>{goal ? GoalInfo(goal) : null}</Grid>
+          <Grid item>
+            {goal ? (
+              GoalInfo(goal)
+            ) : (
+              <Typography variant="h6">
+                <Translate id={"goal.selector.noHistory"} />
+              </Typography>
+            )}
+          </Grid>
         </Grid>
       </Button>
     </GridListTile>
@@ -129,30 +134,31 @@ export function makeGoalTile(
 
 function GoalInfo(goal: Goal): JSX.Element {
   if (goal.status === GoalStatus.Completed) {
-    let goalType;
+    let goalInfo;
     switch (goal.goalType) {
       case GoalType.CreateCharInv:
-        goalType = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
+        goalInfo = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
         break;
       case GoalType.MergeDups:
-        goalType = MergesCount(goal.changes as MergesCompleted);
+        goalInfo = MergesCount(goal.changes as MergesCompleted);
+        break;
+      case GoalType.ReviewEntries:
+        goalInfo = null;
         break;
       default:
-        goalType = null;
+        goalInfo = null;
         break;
     }
     return (
       <Typography variant="h6">
-        <Translate
-          id={goal ? goal.name + ".title" : "goal.selector.noHistory"}
-        />
-        {goalType}
+        <Translate id={goal.name + ".title"} />
+        {goalInfo}
       </Typography>
     );
   }
   return (
     <Typography variant="h4">
-      <Translate id={goal ? goal.name + ".title" : "goal.selector.noHistory"} />
+      <Translate id={goal.name + ".title"} />
     </Typography>
   );
 }

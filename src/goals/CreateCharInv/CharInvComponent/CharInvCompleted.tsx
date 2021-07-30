@@ -47,8 +47,7 @@ export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
     return (
       <Typography>
         {changes.charChanges.slice(0, changelimit - 1).map(CharInvChange)}
-        {"+"}
-        {changes.charChanges.length - 3}{" "}
+        {`+${changes.charChanges.length - 3} `}
         <Translate id="charInventory.changes.more" />
       </Typography>
     );

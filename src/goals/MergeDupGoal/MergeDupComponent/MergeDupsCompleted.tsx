@@ -44,7 +44,7 @@ function MergesMade(changes: MergesCompleted): JSX.Element {
   );
 }
 
-export function MergesCount(changes: MergesCompleted) {
+export function MergesCount(changes: MergesCompleted): JSX.Element {
   return (
     <Typography>
       <Translate id="mergeDups.completed.number" />
