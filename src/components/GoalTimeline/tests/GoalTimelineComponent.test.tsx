@@ -29,7 +29,7 @@ const STATE = {
     history: [...goals],
   },
 };
-const mockStore = configureMockStore([])(STATE);
+const mockStore = configureMockStore()(STATE);
 
 // Handles
 let timeMaster: ReactTestRenderer;

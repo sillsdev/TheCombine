@@ -28,14 +28,14 @@ jest.mock("backend", () => {
     updateWord: (word: Word) => mockUpdateWord(word),
   };
 });
-jest.mock("../../../Pronunciations/Recorder");
-jest.mock("../RecentEntry/RecentEntry");
+jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
+jest.mock("components/Pronunciations/Recorder");
 jest.spyOn(window, "alert").mockImplementation(() => {});
 
 let testRenderer: ReactTestRenderer;
 let testHandle: ReactTestInstance;
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore();
 const mockStore = createMockStore(defaultState);
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);

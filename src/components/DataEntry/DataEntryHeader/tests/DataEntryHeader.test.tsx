@@ -7,8 +7,7 @@ import DataEntryHeader, {
 } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore({});
+const mockStore = configureMockStore()();
 const mockCallback = jest.fn();
 
 beforeEach(() => {

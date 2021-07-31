@@ -11,7 +11,7 @@ import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/Projec
 import { newProject } from "types/project";
 
 // This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore([])({});
+const mockStore = configureMockStore()();
 const mockAnalysisWritingSystems: WritingSystem[] = [
   { name: "a", bcp47: "a", font: "" },
   { name: "b", bcp47: "b", font: "" },

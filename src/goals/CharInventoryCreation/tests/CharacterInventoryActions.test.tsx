@@ -5,7 +5,7 @@ import thunk from "redux-thunk";
 import { User } from "api/models";
 import { updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { SET_CURRENT_PROJECT } from "components/Project/ProjectReduxTypes";
+import { ProjectActionType } from "components/Project/ProjectReduxTypes";
 import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import {
   CharacterInventoryState,
@@ -50,10 +50,12 @@ const CHARACTER_SET_DATA: CharacterSetEntry[] = [
   },
 ];
 const MOCK_STATE = {
-  currentProject: {
-    characterSet: [],
-    rejectedCharacters: [],
-    validCharacters: [],
+  currentProjectState: {
+    project: {
+      characterSet: [],
+      rejectedCharacters: [],
+      validCharacters: [],
+    },
   },
   characterInventoryState: {
     characterSet: CHARACTER_SET_DATA,
@@ -122,7 +124,7 @@ describe("CharacterInventoryActions", () => {
     );
     expect(updateProject).toHaveBeenCalledTimes(1);
     expect(mockStore.getActions()).toContainEqual({
-      type: SET_CURRENT_PROJECT,
+      type: ProjectActionType.SET_CURRENT_PROJECT,
       payload: {
         characterSet: [],
         rejectedCharacters: REJECT_DATA,

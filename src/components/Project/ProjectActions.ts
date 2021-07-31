@@ -1,22 +1,29 @@
-import { Project } from "api/models";
-import { updateProject } from "backend";
+import { Project, User } from "api/models";
+import { getAllUsersInCurrentProject, updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
 import {
   ProjectAction,
-  SET_CURRENT_PROJECT,
+  ProjectActionType,
 } from "components/Project/ProjectReduxTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 export function setCurrentProject(payload?: Project): ProjectAction {
-  setProjectId(payload?.id);
   return {
-    type: SET_CURRENT_PROJECT,
+    type: ProjectActionType.SET_CURRENT_PROJECT,
+    payload,
+  };
+}
+
+function setCurrentProjectUsers(payload?: User[]): ProjectAction {
+  return {
+    type: ProjectActionType.SET_CURRENT_PROJECT_USERS,
     payload,
   };
 }
 
 export function clearCurrentProject(dispatch: StoreStateDispatch) {
   dispatch(setCurrentProject());
+  dispatch(setCurrentProjectUsers());
 }
 
 export async function saveChangesToProject(
@@ -25,4 +32,18 @@ export async function saveChangesToProject(
 ) {
   dispatch(setCurrentProject(project));
   await updateProject(project);
+}
+
+export function asyncRefreshCurrentProjectUsers() {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(setCurrentProjectUsers(await getAllUsersInCurrentProject()));
+  };
+}
+
+export function asyncSetNewCurrentProject(project?: Project) {
+  return async (dispatch: StoreStateDispatch) => {
+    setProjectId(project?.id);
+    dispatch(setCurrentProject(project));
+    dispatch(asyncRefreshCurrentProjectUsers());
+  };
 }

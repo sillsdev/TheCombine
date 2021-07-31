@@ -10,9 +10,11 @@ jest.mock("@material-ui/core/Input", () => "div");
 jest.mock("@material-ui/core/TextField", () => "div");
 
 const state = {
-  currentProject: { analysisWritingSystems: [{ bcp47: "en" }] },
+  currentProjectState: {
+    project: { analysisWritingSystems: [{ bcp47: "en" }] },
+  },
 };
-const mockStore = configureMockStore([])(state);
+const mockStore = configureMockStore()(state);
 const mockWord = mockWords()[0];
 
 describe("GlossCell", () => {

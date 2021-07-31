@@ -23,7 +23,7 @@ jest.mock("backend/localStorage", () => {
 
 let testRenderer: ReactTestRenderer;
 
-const mockStore = configureMockStore([])();
+const mockStore = configureMockStore()();
 
 const mockGetUser = jest.fn();
 const mockGetUserId = jest.fn();
