@@ -163,6 +163,9 @@ namespace Backend.Tests.Models
         {
             Assert.AreNotEqual(
                 new Definition { Language = Language, Text = Text }.GetHashCode(),
+                new Definition { Language = "Different Language", Text = Text }.GetHashCode());
+            Assert.AreNotEqual(
+                new Definition { Language = Language, Text = Text }.GetHashCode(),
                 new Definition { Language = Language, Text = "Different text" }.GetHashCode());
         }
     }
