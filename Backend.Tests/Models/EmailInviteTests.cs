@@ -7,7 +7,6 @@ namespace Backend.Tests.Models
 {
     public class EmailInviteTests
     {
-
         [Test]
         public void TestClone()
         {
