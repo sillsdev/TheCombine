@@ -4,10 +4,10 @@ import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import theme from "types/theme";
-import SenseCardContent from "../SenseCardContent";
 
 interface DragSenseProps {
   index: number;

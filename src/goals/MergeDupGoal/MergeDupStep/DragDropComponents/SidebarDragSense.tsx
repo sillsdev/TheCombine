@@ -38,6 +38,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
             style={{
               marginBottom: theme.spacing(1),
               marginTop: theme.spacing(1),
+              maxWidth: 300,
               background: snapshot.isDragging
                 ? "lightgreen"
                 : props.index === 0
