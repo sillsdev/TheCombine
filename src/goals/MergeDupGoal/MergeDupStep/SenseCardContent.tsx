@@ -114,21 +114,21 @@ export default function SenseCardContent(props: SenseCardContentProps) {
   ];
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
-      {/* Button for showing the sidebar. */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          right: 0,
-          transform: "translateY(-50%)",
-        }}
-      >
-        {props.senses.length > 1 && props.toggleFunction && (
+      {/* Optional button for showing the sidebar. */}
+      {props.senses.length > 1 && props.toggleFunction && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: 0,
+            transform: "translateY(-50%)",
+          }}
+        >
           <IconButton onClick={props.toggleFunction}>
             <ArrowForwardIos />
           </IconButton>
-        )}
-      </div>
+        </div>
+      )}
       {/* List glosses and (if enabled) definitions. */}
       {senseText(senseTextInLangs)}
       {/* List semantic domains */}
