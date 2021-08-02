@@ -55,7 +55,7 @@
             - k8s_storage_class != "microk8s-hostpath"
 
         - name: Install cert-manager
-          import_role:
+          include_role:
             name: k8s_cert_manager
             apply:
               tags:
