@@ -10,7 +10,7 @@
 - name: Setup TheCombine to run under Kubernetes
   hosts: server,qa,nuc
   become: no
-  #  gather_facts: yes
+  gather_facts: no
 
   vars_prompt:
     - name: combine_version

@@ -43,27 +43,37 @@
 ##############################################################
 - name: Create AWS login resource specifications
   template:
-    src: "{{ item.name }}.j2"
-    dest: "{{ k8s_aws_login_cfg }}/{{ item.name }}"
+    src: "{{ item }}.j2"
+    dest: "{{ k8s_aws_login_cfg }}/{{ item }}"
     mode: 0600
-  when: item.include
   with_items:
-    - name: aws-access-secrets.yaml
-      include: yes
-    - name: aws-ecr-login-oneshot.yaml
-      include: yes
-    - name: aws-ecr-login-cronjob.yaml
-      include: aws_ecr_login.cron
+    - aws-access-secrets.yaml
+    - aws-ecr-login-oneshot.yaml
+    - aws-ecr-login-cronjob.yaml
 
 - name: Apply AWS login resource specifications
   command: >
     kubectl --kubeconfig={{ kubecfg }}
-    apply -f {{ k8s_aws_login_cfg }}/aws-access-secrets.yaml
-  when: item.include
+    apply -f {{ k8s_aws_login_cfg }}/{{ item }}
   with_items:
-    - name: aws-access-secrets.yaml
-      include: yes
-    - name: aws-ecr-login-oneshot.yaml
-      include: yes
-    - name: aws-ecr-login-cronjob.yaml
-      include: aws_ecr_login.cron
+    - aws-access-secrets.yaml
+    - aws-ecr-login-oneshot.yaml
+    - aws-ecr-login-cronjob.yaml
+
+##############################################################
+# Create cron job to refresh AWS login credentials if
+# specified, that is, aws_ecr_login.cron is true
+##############################################################
+- name: Create cron job to refresh AWS login credentials
+  block:
+    - name: Create AWS login resource specifications
+      template:
+        src: aws-ecr-login-cronjob.yaml.j2
+        dest: "{{ k8s_aws_login_cfg }}/aws-ecr-login-cronjob.yaml"
+        mode: 0600
+
+    - name: Apply AWS login resource specifications
+      command: >
+        kubectl --kubeconfig={{ kubecfg }}
+        apply -f {{ k8s_aws_login_cfg }}/aws-ecr-login-cronjob.yaml
+  when: aws_ecr_login.cron
