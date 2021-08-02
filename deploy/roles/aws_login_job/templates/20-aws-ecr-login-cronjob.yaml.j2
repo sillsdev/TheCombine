@@ -22,7 +22,7 @@ spec:
             name: "{{ aws_ecr_login.cron_job_name }}"
             volumeMounts:
               - name: cluster-kubeconfig
-                mountPath: /root/.kube
+                mountPath: /home/user/.kube
             command:
             - /bin/sh
             - -c
