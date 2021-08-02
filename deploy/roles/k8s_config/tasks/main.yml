@@ -11,25 +11,18 @@
     dest: "{{ k8s_combine_cfg }}/{{ item }}"
     mode: 0600
   with_items:
-    - 20-backend-data-persistentvolumeclaim.yaml
-    - 20-database-data-persistentvolumeclaim.yaml
-    - 30-env-backend-configmap.yaml
-    - 30-env-backend-secrets.yaml
-    - 30-env-frontend-configmap.yaml
-    - 40-backend-deployment.yaml
-    - 40-database-deployment.yaml
-    - 40-frontend-deployment.yaml
-    - 50-combine-ingress.yaml
-    - 60-backend-service.yaml
-    - 60-database-service.yaml
-    - 60-frontend-service.yaml
-
-- name: Configure NGINX ingress controller
-  template:
-    src: 60-nginx-ingress-service.yaml.j2
-    dest: "{{ k8s_combine_cfg }}/60-nginx-ingress-service.yaml"
-    mode: 0600
-  when: '"ingress_controller" in k8s_components'
+    - persistentvolumeclaim-backend-data.yaml
+    - persistentvolumeclaim-database-data.yaml
+    - env-backend-configmap.yaml
+    - env-backend-secrets.yaml
+    - env-frontend-configmap.yaml
+    - deployment-backend.yaml
+    - deployment-database.yaml
+    - deployment-frontend.yaml
+    - ingress-combine.yaml
+    - service-backend.yaml
+    - service-database.yaml
+    - service-frontend.yaml
 
 - name: Remove leftover ingress controller configuration
   file:
@@ -37,16 +30,20 @@
     state: absent
   when: '"ingress_controller" not in k8s_components'
 
-- name: Lookup generated configuration files
-  find:
-    paths:
-      - "{{ k8s_combine_cfg }}"
-    file_type: file
-    patterns: "*.yaml"
-  register: kube_config
-
 - name: Apply Kubernetes configuration
-  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item.path }}
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item }}
   args:
-    chdir: "{{ k8s_working_dir }}"
-  with_items: "{{ kube_config.files | sort(attribute='path') }}"
+    chdir: "{{ k8s_combine_cfg }}"
+  with_items:
+    - persistentvolumeclaim-backend-data.yaml
+    - persistentvolumeclaim-database-data.yaml
+    - env-backend-configmap.yaml
+    - env-backend-secrets.yaml
+    - env-frontend-configmap.yaml
+    - deployment-backend.yaml
+    - deployment-database.yaml
+    - deployment-frontend.yaml
+    - ingress-combine.yaml
+    - service-backend.yaml
+    - service-database.yaml
+    - service-frontend.yaml

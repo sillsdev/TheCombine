@@ -103,3 +103,25 @@
   import_role:
     name: install_helm
   when: '"microk8s" not in k8s_components'
+
+- name: Configure NGINX ingress service
+  delegate_to: localhost
+  become: no
+  block:
+    - name: Create directory for The Combine configuration files
+      file:
+        path: "{{ k8s_combine_cfg }}"
+        state: directory
+        mode: 0700
+
+    - name: Create configuration file
+      template:
+        src: nginx-ingress-service.yaml.j2
+        dest: "{{ k8s_combine_cfg }}/nginx-ingress-service.yaml"
+        mode: 0600
+
+    - name: Apply configuration file
+      command: kubectl --kubeconfig={{ kubecfg }} apply -f nginx-ingress-service.yaml
+      args:
+        chdir: "{{ k8s_combine_cfg }}"
+  when: '"ingress_controller" in k8s_components'
