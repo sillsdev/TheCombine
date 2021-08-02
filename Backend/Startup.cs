@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 using BackendFramework.Contexts;
@@ -19,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BackendFramework
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         private const string AllowedOrigins = "AllowAll";

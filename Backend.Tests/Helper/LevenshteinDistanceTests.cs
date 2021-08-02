@@ -58,5 +58,23 @@ namespace Backend.Tests.Helper
             Assert.That(_levDist.GetDistance(diffWord, BaseWord),
                 Is.EqualTo(SubCost * diffWord.Length + InsCost * (BaseWord.Length - diffWord.Length)));
         }
+
+        [Test]
+        public void TestConstructorNegativeInputs()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var _ = new LevenshteinDistance(-1);
+            });
+        }
+
+        [Test]
+        public void TestConstructorSmallSubstitute()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var _ = new LevenshteinDistance(1, 1, 99);
+            });
+        }
     }
 }

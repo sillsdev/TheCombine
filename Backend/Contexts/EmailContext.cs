@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
-using static BackendFramework.Startup;
 using Microsoft.Extensions.Options;
+using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
+    [ExcludeFromCodeCoverage]
     public class EmailContext : IEmailContext
     {
         public string? SmtpServer { get; }
