@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BackendFramework.Models;
+using Icu;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -17,10 +18,50 @@ namespace Backend.Tests.Models
         }
 
         [Test]
+        public void TestNotEquals()
+        {
+            var edit = new UserEdit { ProjectId = ProjectId };
+            Assert.IsFalse(edit.Equals(new UserEdit { ProjectId = "Different Id" }));
+        }
+
+        [Test]
         public void TestEqualsNull()
         {
             var edit = new UserEdit { ProjectId = ProjectId };
             Assert.IsFalse(edit.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new UserEdit { ProjectId = ProjectId }.GetHashCode(),
+                new UserEdit { ProjectId = "Different Id" });
+        }
+    }
+
+    public class UserEditStepWrapperTests
+    {
+        private const int GoalIndex = 1;
+        private const string StepString = "step";
+        private const int StepIndex = 1;
+
+        [Test]
+        public void TestEquals()
+        {
+            var wrapper = new UserEditStepWrapper(GoalIndex, StepString, StepIndex);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, StepIndex)));
+            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(99, StepString, StepIndex)));
+            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(GoalIndex, "Different step", StepIndex)));
+            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, 99)));
+            Assert.IsFalse(wrapper.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(new UserEditStepWrapper(GoalIndex, StepString, StepIndex).GetHashCode(),
+                new UserEditStepWrapper(99, StepString, StepIndex).GetHashCode());
         }
     }
 
@@ -34,7 +75,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var edit = new Edit { Guid = Guid };
             Assert.That(edit.Equals(new Edit { Guid = Guid }));
             edit.GoalType = GoalType;
@@ -59,6 +99,14 @@ namespace Backend.Tests.Models
             Assert.IsFalse(edit.Equals(null));
             edit = new Edit { Changes = Changes };
             Assert.IsFalse(edit.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Edit { Guid = Guid, GoalType = GoalType }.GetHashCode(),
+                new Edit { Guid = Guid, GoalType = 5 }.GetHashCode());
         }
     }
 }
