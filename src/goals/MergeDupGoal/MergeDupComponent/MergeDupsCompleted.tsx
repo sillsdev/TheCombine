@@ -84,9 +84,6 @@ interface WordPaperProps {
 
 function WordPaper(props: WordPaperProps) {
   const [word, setWord] = useState<Word | undefined>();
-  const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
   useEffect(() => {
     getWord(props.wordId).then(setWord);
   }, [props.wordId, setWord]);
@@ -111,14 +108,14 @@ function WordPaper(props: WordPaperProps) {
           <Typography variant="h5">{word?.vernacular}</Typography>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-          {word?.senses.map((s) => SenseCard(s, showDefinitions))}
+          {word?.senses.map(SenseCard)}
         </div>
       </Paper>
     </Grid>
   );
 }
 
-function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
+function SenseCard(sense: Sense): JSX.Element {
   return (
     <Card
       key={sense.guid}
@@ -130,7 +127,7 @@ function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
         background: "white",
       }}
     >
-      <SenseCardContent senses={[sense]} includeDefinitions={showDefinitions} />
+      <SenseCardContent senses={[sense]} />
     </Card>
   );
 }

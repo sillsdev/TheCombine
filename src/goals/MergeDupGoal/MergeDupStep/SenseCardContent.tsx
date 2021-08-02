@@ -7,8 +7,10 @@ import {
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { Sense } from "api/models";
+import { StoreState } from "types";
 import theme from "types/theme";
 
 interface senseInLanguage {
@@ -87,7 +89,6 @@ function senseText(senseInLangs: senseInLanguage[]): JSX.Element {
 
 interface SenseCardContentProps {
   senses: Sense[];
-  includeDefinitions: boolean;
   languages?: string[];
   toggleFunction?: () => void;
 }
@@ -96,9 +97,12 @@ interface SenseCardContentProps {
 // Show semantic domains from all seneses.
 // In merging, user can select a different one by reordering in the sidebar.
 export default function SenseCardContent(props: SenseCardContentProps) {
+  const showDefinitions = useSelector(
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
+  );
   const senseTextInLangs = getSenseInLanguages(
     props.senses[0],
-    props.includeDefinitions,
+    showDefinitions,
     props.languages
   );
   const semDoms = [

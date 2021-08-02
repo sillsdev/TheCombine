@@ -39,9 +39,6 @@ export default function DragSense(props: DragSenseProps) {
     sidebar.wordId === props.wordId &&
     sidebar.mergeSenseId === props.mergeSenseId &&
     sidebar.senses.length > 1;
-  const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
 
   const updateSidebar = useCallback(() => {
     dispatch(
@@ -109,7 +106,6 @@ export default function DragSense(props: DragSenseProps) {
         >
           <SenseCardContent
             senses={props.senses}
-            includeDefinitions={showDefinitions}
             languages={analysisLangs}
             toggleFunction={toggleSidebar}
           />

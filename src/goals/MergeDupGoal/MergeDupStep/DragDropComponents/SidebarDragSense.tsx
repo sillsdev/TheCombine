@@ -1,6 +1,5 @@
 import { Card } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
 
 import {
   MergeTreeReference,
@@ -8,7 +7,6 @@ import {
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
-import { StoreState } from "types";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {
@@ -23,9 +21,6 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
     mergeSenseId: props.sidebar.mergeSenseId,
     order: props.index,
   };
-  const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
 
   return (
     <Draggable
@@ -50,10 +45,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
                 : "lightgrey",
             }}
           >
-            <SenseCardContent
-              senses={[props.sense]}
-              includeDefinitions={showDefinitions}
-            />
+            <SenseCardContent senses={[props.sense]} />
           </Card>
         </div>
       )}
