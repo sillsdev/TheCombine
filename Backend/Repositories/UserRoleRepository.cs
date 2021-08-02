@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -9,6 +10,7 @@ using MongoDB.Driver;
 namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="UserRole"/>s </summary>
+    [ExcludeFromCodeCoverage]
     public class UserRoleRepository : IUserRoleRepository
     {
         private readonly IUserRoleContext _userRoleDatabase;
