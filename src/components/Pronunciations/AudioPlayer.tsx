@@ -67,6 +67,8 @@ export default function AudioPlayer(props: PlayerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pronunciationsState]);
 
+  const dispatchReset = () => dispatch(reset());
+
   function deleteAudio() {
     if (props.deleteAudio) {
       props.deleteAudio(props.wordId, props.fileName);
@@ -80,22 +82,18 @@ export default function AudioPlayer(props: PlayerProps) {
   }
 
   function play() {
-    audio.addEventListener("ended", () => dispatch(reset()));
+    audio.addEventListener("ended", dispatchReset);
     audio
       .play()
-      .then(() => {
-        setIsPlaying(true);
-      })
-      .catch(() => {
-        dispatch(reset());
-      });
+      .then(() => setIsPlaying(true))
+      .catch(dispatchReset);
   }
 
   function togglePlay() {
     if (!isPlaying) {
       dispatch(playing(props.fileName));
     } else {
-      dispatch(reset());
+      dispatchReset();
     }
   }
 

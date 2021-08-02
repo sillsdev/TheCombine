@@ -44,8 +44,10 @@ jest.mock("@material-table/core", () => {
 // Mock store + axios
 const mockReviewEntryWords = mockWords();
 const state = {
-  currentProject: {
-    definitionsEnabled: true,
+  currentProjectState: {
+    project: {
+      definitionsEnabled: true,
+    },
   },
   reviewEntriesState: {
     words: mockReviewEntryWords,
@@ -58,7 +60,7 @@ const state = {
     },
   },
 };
-const mockStore = configureMockStore([])(state);
+const mockStore = configureMockStore()(state);
 
 function setMockFunctions() {
   mockGetFrontierWords.mockResolvedValue(

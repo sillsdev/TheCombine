@@ -27,6 +27,7 @@ import theme from "types/theme";
 enum UserOrder {
   Username,
   Name,
+  Email,
 }
 
 interface UserListProps {
@@ -99,6 +100,8 @@ class UserList extends React.Component<
           return a.name.localeCompare(b.name);
         case UserOrder.Username:
           return a.username.localeCompare(b.username);
+        case UserOrder.Email:
+          return a.email.localeCompare(b.email);
         default:
           throw new Error();
       }
@@ -141,6 +144,9 @@ class UserList extends React.Component<
                 <MenuItem value={UserOrder.Username}>
                   <Translate id="login.username" />
                 </MenuItem>
+                <MenuItem value={UserOrder.Email}>
+                  <Translate id="login.email" />
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -152,7 +158,9 @@ class UserList extends React.Component<
                   src={this.props.userAvatar[user.id]}
                   style={{ marginRight: theme.spacing(1) }}
                 />
-                <ListItemText primary={`${user.name} (${user.username})`} />
+                <ListItemText
+                  primary={`${user.name} (${user.username} | ${user.email})`}
+                />
                 {user.id !== this.state.currentUserId &&
                   (user.isAdmin ? (
                     <Button disabled>

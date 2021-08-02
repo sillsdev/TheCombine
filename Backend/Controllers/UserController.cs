@@ -136,6 +136,23 @@ namespace BackendFramework.Controllers
             return Ok(user);
         }
 
+        /// <summary> Returns <see cref="User"/> with the specified email address. </summary>
+        [HttpGet("getemail/{email}", Name = "GetUserByEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            {
+                return Forbid();
+            }
+            var user = await _userRepo.GetUserByEmail(email);
+            if (user is null)
+            {
+                return NotFound(email);
+            }
+            return Ok(user);
+        }
+
         /// <summary> Creates specified <see cref="User"/>. </summary>
         /// <returns> Id of created user. </returns>
         [AllowAnonymous]

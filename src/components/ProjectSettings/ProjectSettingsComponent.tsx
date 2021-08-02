@@ -25,13 +25,14 @@ import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
-import ProjectUsers, {
-  ActiveUsers,
-} from "components/ProjectSettings/ProjectUsers";
+import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
+import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
 import { StoreState } from "types";
 
 export default function ProjectSettingsComponent() {
-  const projectId = useSelector((state: StoreState) => state.currentProject.id);
+  const projectId = useSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
@@ -134,7 +135,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<PersonAdd />}
           title={<Translate id="projectSettings.user.addUser" />}
-          body={<ProjectUsers />}
+          body={<AddProjectUsers />}
         />
       )}
     </Grid>

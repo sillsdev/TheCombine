@@ -19,9 +19,9 @@
   },
   "landingPage": {
     "subtitle": [
-      "A Word-Harvesting Web App",
-      "A Word-Harvesting Web App",
-      "A Word-Harvesting Web App"
+      "A Web App for Harvesting Words Together",
+      "A Web App for Harvesting Words Together",
+      "A Web App for Harvesting Words Together"
     ],
     "privacyPolicy": ["Privacy Policy", "Privacy Policy", "Privacy Policy"],
     "descriptionP1": [
@@ -420,7 +420,8 @@
         "Failed to remove project admin from user.",
         "Failed to remove project admin from user."
       ],
-      "manageUser": ["Manage User", "Manage User", "Manage User"]
+      "manageUser": ["Manage User", "Manage User", "Manage User"],
+      "reverseOrder": ["Reverse Order", "Reverse Order", "Reverse Order"]
     },
     "import": {
       "header": ["Import Data", "Importar información", "Importer des données"],

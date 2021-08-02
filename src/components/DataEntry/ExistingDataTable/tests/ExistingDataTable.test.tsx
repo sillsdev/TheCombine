@@ -8,7 +8,7 @@ import { newSemanticDomain } from "types/word";
 jest.mock("components/DataEntry/ExistingDataTable/ImmutableExistingData");
 
 // This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore([])({});
+const mockStore = configureMockStore()();
 
 describe("ExistingData", () => {
   it("renders on side without crashing", () => {

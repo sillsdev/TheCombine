@@ -25,7 +25,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
 
   //project
   createProjectState: createProjectReducer,
-  currentProject: projectReducer,
+  currentProjectState: projectReducer,
   exportProjectState: exportProjectReducer,
 
   //data entry and review entries

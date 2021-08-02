@@ -13,8 +13,7 @@ jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: mockPath() }),
 }));
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+const mockStore = configureMockStore()(defaultState);
 
 let testRenderer: ReactTestRenderer;
 
