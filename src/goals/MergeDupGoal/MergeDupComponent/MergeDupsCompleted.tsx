@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Card, Grid, Paper, Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
@@ -13,10 +6,7 @@ import { useSelector } from "react-redux";
 
 import { Sense, Word } from "api/models";
 import { getWord } from "backend";
-import {
-  getSenseInLanguages,
-  senseText,
-} from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
+import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import {
   CompletedMerge,
   MergesCompleted,
@@ -129,10 +119,6 @@ function WordPaper(props: WordPaperProps) {
 }
 
 function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
-  const senseInLangs = getSenseInLanguages(sense, showDefinitions);
-  const semDoms = [
-    ...new Set(sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)),
-  ];
   return (
     <Card
       key={sense.guid}
@@ -144,18 +130,7 @@ function SenseCard(sense: Sense, showDefinitions: boolean): JSX.Element {
         background: "white",
       }}
     >
-      <CardContent style={{ position: "relative", paddingRight: 40 }}>
-        {/* List glosses and (if enabled) definitions. */}
-        {senseText(senseInLangs)}
-        {/* List semantic domains */}
-        <Grid container spacing={2}>
-          {semDoms.map((dom) => (
-            <Grid item key={dom}>
-              <Chip label={dom} />
-            </Grid>
-          ))}
-        </Grid>
-      </CardContent>
+      <SenseCardContent senses={[sense]} includeDefinitions={showDefinitions} />
     </Card>
   );
 }

@@ -1,21 +1,13 @@
-import {
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
-import { ArrowForwardIos } from "@material-ui/icons";
-import React, { useCallback, useEffect, useState } from "react";
+import { Card } from "@material-ui/core";
+import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Sense } from "api/models";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import theme from "types/theme";
+import SenseCardContent from "../SenseCardContent";
 
 interface DragSenseProps {
   index: number;
@@ -31,8 +23,6 @@ function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
   }
   return true;
 }
-
-const displaySep = "; ";
 
 export default function DragSense(props: DragSenseProps) {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
@@ -90,21 +80,6 @@ export default function DragSense(props: DragSenseProps) {
     updateSidebar();
   }
 
-  // Only display the first sense; others will be deleted as duplicates.
-  // User can select a different one by reordering in the sidebar.
-  const senseTextInLangs = getSenseInLanguages(
-    props.senses[0],
-    showDefinitions,
-    analysisLangs
-  );
-  const semDoms = [
-    ...new Set(
-      props.senses.flatMap((sense) =>
-        sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)
-      )
-    ),
-  ];
-
   return (
     <Draggable
       key={props.mergeSenseId}
@@ -132,112 +107,14 @@ export default function DragSense(props: DragSenseProps) {
               : "white",
           }}
         >
-          <CardContent style={{ position: "relative", paddingRight: 40 }}>
-            {/* Button for showing the sidebar. */}
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: 0,
-                transform: "translateY(-50%)",
-              }}
-            >
-              {props.senses.length > 1 && (
-                <IconButton onClick={toggleSidebar}>
-                  <ArrowForwardIos />
-                </IconButton>
-              )}
-            </div>
-            {/* Display of sense details. */}
-            <div>
-              {/* List glosses and (if enabled) definitions. */}
-              {senseText(senseTextInLangs)}
-              {/* List semantic domains */}
-              <Grid container spacing={2}>
-                {semDoms.map((dom) => (
-                  <Grid item key={dom}>
-                    <Chip label={dom} />
-                  </Grid>
-                ))}
-              </Grid>
-            </div>
-          </CardContent>
+          <SenseCardContent
+            senses={props.senses}
+            includeDefinitions={showDefinitions}
+            languages={analysisLangs}
+            toggleFunction={toggleSidebar}
+          />
         </Card>
       )}
     </Draggable>
-  );
-}
-
-interface senseInLanguage {
-  language: string; // bcp-47 code
-  glossText: string;
-  definitionText?: string;
-}
-
-function getSenseInLanguage(
-  sense: Sense,
-  includeDefinitions: boolean,
-  language: string
-): senseInLanguage {
-  return {
-    language,
-    glossText: sense.glosses
-      .filter((g) => g.language === language)
-      .map((g) => g.def)
-      .join(displaySep),
-    definitionText: includeDefinitions
-      ? sense.definitions
-          .filter((d) => d.language === language)
-          .map((d) => d.text)
-          .join(displaySep)
-      : undefined,
-  };
-}
-
-export function getSenseInLanguages(
-  sense: Sense,
-  includeDefinitions: boolean,
-  languages?: string[]
-): senseInLanguage[] {
-  if (!languages) {
-    languages = sense.glosses.map((g) => g.language);
-    if (includeDefinitions) {
-      languages.push(...sense.definitions.map((d) => d.language));
-    }
-    languages = [...new Set(languages)];
-  }
-  return languages.map((l) => getSenseInLanguage(sense, includeDefinitions, l));
-}
-
-export function senseText(senseInLangs: senseInLanguage[]): JSX.Element {
-  return (
-    <React.Fragment>
-      {senseInLangs.map((sInLang) => (
-        <div key={sInLang.language}>
-          <Typography variant="caption">{`${sInLang.language}: `}</Typography>
-          <Typography
-            display="inline"
-            variant="h5"
-            style={{ marginBottom: theme.spacing(1) }}
-          >
-            {sInLang.glossText}
-          </Typography>
-          {!!sInLang.definitionText && (
-            <div
-              style={{
-                //background: "lightyellow",
-                marginBottom: theme.spacing(1),
-                paddingLeft: theme.spacing(1),
-                borderLeft: "1px solid black",
-              }}
-            >
-              <Typography variant="h6" color="textSecondary">
-                {sInLang.definitionText}
-              </Typography>
-            </div>
-          )}
-        </div>
-      ))}
-    </React.Fragment>
   );
 }
