@@ -7,7 +7,7 @@
 
 # Frontend configuration items:
 config_show_cert_expiration: false
-config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
+config_analytics_write_key: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
 
 #################################################
 # TheCombine is installed on the QA Server by TeamCity.  It will set the
