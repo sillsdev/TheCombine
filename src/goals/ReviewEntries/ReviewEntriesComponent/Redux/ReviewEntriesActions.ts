@@ -65,7 +65,8 @@ function cleanSenses(
   let error: string | undefined;
 
   for (const newSense of senses) {
-    // Remove empty glosses and duplicate domains.
+    // Remove empty definitions, empty glosses, and duplicate domains.
+    newSense.definitions = newSense.definitions.filter((d) => d.text.length);
     newSense.glosses = newSense.glosses.filter((g) => g.def.length);
     const domainIds = [...new Set(newSense.domains.map((dom) => dom.id))];
     domainIds.sort();
@@ -76,7 +77,9 @@ function cleanSenses(
     // Skip senses which are deleted or empty.
     if (
       newSense.deleted ||
-      (newSense.glosses.length === 0 && newSense.domains.length === 0)
+      (newSense.definitions.length === 0 &&
+        newSense.glosses.length === 0 &&
+        newSense.domains.length === 0)
     ) {
       continue;
     }
@@ -155,7 +158,8 @@ export function getSenseFromEditSense(
   const oldSense = oldSenses.find((s) => s.guid === editSense.guid);
   const sense = oldSense ?? newSense();
 
-  // Use the edited, cleaned glosses and domains.
+  // Use the cleaned definitions, glosses, and domains.
+  sense.definitions = [...editSense.definitions];
   sense.glosses = [...editSense.glosses];
   sense.semanticDomains = [...editSense.domains];
 
