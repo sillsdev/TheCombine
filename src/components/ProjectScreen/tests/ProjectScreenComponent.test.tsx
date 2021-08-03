@@ -16,6 +16,7 @@ const state = {
   },
 };
 const mockStore = configureMockStore()(state);
+mockStore.dispatch = jest.fn();
 
 it("renders without crashing", () => {
   renderer.act(() => {
