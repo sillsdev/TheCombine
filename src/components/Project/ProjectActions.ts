@@ -21,9 +21,12 @@ function setCurrentProjectUsers(payload?: User[]): ProjectAction {
   };
 }
 
-export function clearCurrentProject(dispatch: StoreStateDispatch) {
-  dispatch(setCurrentProject());
-  dispatch(setCurrentProjectUsers());
+export function clearCurrentProject() {
+  return (dispatch: StoreStateDispatch) => {
+    setProjectId();
+    dispatch(setCurrentProject());
+    dispatch(setCurrentProjectUsers());
+  };
 }
 
 export async function saveChangesToProject(

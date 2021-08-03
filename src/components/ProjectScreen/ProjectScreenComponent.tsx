@@ -10,7 +10,9 @@ import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 export default function ProjectScreen() {
   const dispatch = useDispatch();
   /* Disable Data Entry, Data Cleanup, Project Settings until a project is selected or created. */
-  useEffect(() => clearCurrentProject(dispatch));
+  useEffect(() => {
+    dispatch(clearCurrentProject());
+  });
 
   return (
     <Grid container justify="center" spacing={2}>
