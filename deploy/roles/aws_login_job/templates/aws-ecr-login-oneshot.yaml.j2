@@ -1,7 +1,6 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  annotations:
   name: "{{ aws_ecr_login.job_name }}"
   namespace: {{ app_namespace }}
 spec:

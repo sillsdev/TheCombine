@@ -1,7 +1,6 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  annotations:
   name: "{{ aws_ecr_login.cron_job_name }}"
   namespace: {{ app_namespace }}
 spec:

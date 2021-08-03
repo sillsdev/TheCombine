@@ -33,5 +33,3 @@ cert_issuer: letsencrypt-prod
 #######################################
 # Ingress configuration
 ingress_class: nginx
-
-test_var: overridden
