@@ -3,6 +3,9 @@ import {
   Chip,
   Grid,
   IconButton,
+  Table,
+  TableCell,
+  TableRow,
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
@@ -57,33 +60,44 @@ function getSenseInLanguages(
 
 function senseText(senseInLangs: senseInLanguage[]): JSX.Element {
   return (
-    <React.Fragment>
+    <Table padding="none">
       {senseInLangs.map((sInLang) => (
-        <div key={sInLang.language}>
-          <Typography variant="caption">{`${sInLang.language}: `}</Typography>
-          <Typography
-            display="inline"
-            variant="h5"
-            style={{ marginBottom: theme.spacing(1) }}
-          >
-            {sInLang.glossText}
-          </Typography>
-          {!!sInLang.definitionText && (
-            <div
-              style={{
-                marginBottom: theme.spacing(1),
-                paddingLeft: theme.spacing(1),
-                borderLeft: "1px solid black",
-              }}
-            >
-              <Typography variant="h6" color="textSecondary">
-                {sInLang.definitionText}
+        <React.Fragment>
+          <TableRow key={sInLang.language}>
+            <TableCell style={{ borderBottom: "none" }}>
+              <Typography variant="caption">{`${sInLang.language}: `}</Typography>
+            </TableCell>
+            <TableCell style={{ borderBottom: "none" }}>
+              <Typography
+                //display="inline"
+                variant="h5"
+                style={{ marginBottom: theme.spacing(1) }}
+              >
+                {sInLang.glossText}
               </Typography>
-            </div>
+            </TableCell>
+          </TableRow>
+          {!!sInLang.definitionText && (
+            <TableRow key={sInLang.language + "def"}>
+              <TableCell style={{ borderBottom: "none" }}></TableCell>
+              <TableCell style={{ borderBottom: "none" }}>
+                <div
+                  style={{
+                    marginBottom: theme.spacing(1),
+                    paddingLeft: theme.spacing(1),
+                    borderLeft: "1px solid black",
+                  }}
+                >
+                  <Typography variant="h6" color="textSecondary">
+                    {sInLang.definitionText}
+                  </Typography>
+                </div>
+              </TableCell>
+            </TableRow>
           )}
-        </div>
+        </React.Fragment>
       ))}
-    </React.Fragment>
+    </Table>
   );
 }
 
