@@ -23,12 +23,6 @@ export interface EmailInvite {
    * @type {string}
    * @memberof EmailInvite
    */
-  id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInvite
-   */
   email: string;
   /**
    *
