@@ -24,12 +24,6 @@
     - service-database.yaml
     - service-frontend.yaml
 
-- name: Remove leftover ingress controller configuration
-  file:
-    path: "{{ k8s_combine_cfg }}/60-nginx-ingress-service.yaml"
-    state: absent
-  when: '"ingress_controller" not in k8s_components'
-
 - name: Apply Kubernetes configuration
   command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item }}
   args:
