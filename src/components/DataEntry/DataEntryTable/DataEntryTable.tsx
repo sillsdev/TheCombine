@@ -578,14 +578,14 @@ export class DataEntryTable extends React.Component<
           </Grid>
         </Grid>
 
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             {this.props.isSmallScreen ? (
               <Button
                 style={{ marginTop: theme.spacing(2) }}
                 onClick={this.props.showExistingData}
               >
-                <ListIcon fontSize={"default"} color={"inherit"} />
+                <ListIcon fontSize={"medium"} color={"inherit"} />
               </Button>
             ) : null}
           </Grid>

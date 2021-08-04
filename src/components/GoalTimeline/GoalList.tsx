@@ -1,4 +1,9 @@
-import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
+import {
+  Button,
+  ImageList,
+  ImageListItem,
+  Typography,
+} from "@material-ui/core";
 import { CSSProperties, useState } from "react";
 import { Translate } from "react-localize-redux";
 
@@ -44,7 +49,7 @@ export default function GoalList(props: GoalListProps) {
   const tileSize = props.size / 3 - 1.25;
 
   return (
-    <GridList
+    <ImageList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
       cols={props.orientation === "horizontal" ? props.numPanes : 1}
       onMouseOver={() => setScrollVisible(true)}
@@ -62,7 +67,7 @@ export default function GoalList(props: GoalListProps) {
           if (props.scrollToEnd && element) element.scrollIntoView(true);
         }}
       />
-    </GridList>
+    </ImageList>
   );
 }
 
@@ -90,7 +95,7 @@ export function makeGoalTile(
   onClick?: () => void
 ) {
   return (
-    <GridListTile key={goal?.guid + orientation} cols={1}>
+    <ImageListItem key={goal?.guid + orientation} cols={1}>
       <Button
         color="primary"
         variant={goal ? "outlined" : "contained"}
@@ -110,6 +115,6 @@ export function makeGoalTile(
           />
         </Typography>
       </Button>
-    </GridListTile>
+    </ImageListItem>
   );
 }
