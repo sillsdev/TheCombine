@@ -48,7 +48,6 @@
   with_items:
     - aws-access-secrets.yaml
     - aws-ecr-login-oneshot.yaml
-    - aws-ecr-login-cronjob.yaml
 
 - name: Apply AWS login resource specifications
   command: >
@@ -57,7 +56,6 @@
   with_items:
     - aws-access-secrets.yaml
     - aws-ecr-login-oneshot.yaml
-    - aws-ecr-login-cronjob.yaml
 
 ##############################################################
 # Create cron job to refresh AWS login credentials if
