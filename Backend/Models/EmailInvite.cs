@@ -8,8 +8,6 @@ namespace BackendFramework.Models
     public class EmailInvite
     {
         [Required]
-        public string Id { get; set; }
-        [Required]
         public string Email { get; set; }
         [Required]
         public string Token { get; set; }
@@ -21,14 +19,12 @@ namespace BackendFramework.Models
 
         public EmailInvite()
         {
-            Id = "";
             Email = "";
             Token = "";
         }
 
         public EmailInvite(int daysUntilExpires)
         {
-            Id = "";
             Email = "";
             ExpireTime = DateTime.Now.AddDays(daysUntilExpires);
 
@@ -46,7 +42,6 @@ namespace BackendFramework.Models
         {
             return new()
             {
-                Id = (string)Id.Clone(),
                 Email = (string)Email.Clone(),
                 Token = (string)Token.Clone(),
                 ExpireTime = ExpireTime
