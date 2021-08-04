@@ -39,23 +39,18 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   }
 
   async onSubmit() {
-    this.setState({
-      loading: true,
-    });
-    const user = await Backend.getUserByEmail(this.state.emailAddress);
-    if (user) {
-      this.props.addToProject(user);
-    } else {
-      await Backend.emailInviteToProject(
-        getProjectId(),
-        this.state.emailAddress,
-        this.state.message
+    this.setState({ loading: true });
+    await Backend.getUserByEmail(this.state.emailAddress)
+      .then((u) => this.props.addToProject(u))
+      .catch(
+        async () =>
+          await Backend.emailInviteToProject(
+            getProjectId(),
+            this.state.emailAddress,
+            this.state.message
+          )
       );
-    }
-    this.setState({
-      loading: false,
-      done: true,
-    });
+    this.setState({ loading: false, done: true });
     this.props.close();
   }
 
