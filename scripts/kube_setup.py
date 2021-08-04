@@ -99,7 +99,7 @@ def main() -> None:
         os.system("microk8s config > kubeconfig")
     for k8s_cfg_file in sorted(kube_files_dir.glob("*.yaml")):
         print(f"Applying {k8s_cfg_file}")
-        os.system(f"kubectl --kubeconfig=kubeconfig apply -f {k8s_cfg_file}")
+        os.system(f"kubectl --kubeconfig={{ kubecfg }} apply -f {k8s_cfg_file}")
 
 
 if __name__ == "__main__":

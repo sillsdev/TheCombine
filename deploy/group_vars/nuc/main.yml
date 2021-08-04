@@ -22,7 +22,7 @@ combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 # SSL cert variables specific to NUC targets
 ################################################
 cert_mode: "cert-client"
-cert_email: ""
+cert_email: "cert@thecombine.app"
 cert_self_renewal: 60
 combine_alias_domain_list: []
 combine_cert_proxy_list: []
@@ -53,15 +53,33 @@ my_aws_profiles:
 k8s_components:
   - microk8s
   - cert_manager
+  - ingress_controller
 
-pull_secrets_manager: registry_creds
-image_pull_secrets:
-  - awsecr-cred
+image_pull_secret: aws-ecr-cred
+
+aws_ecr_login:
+  # Specify how you want the job to run, either "on_demand" or "cron"
+  # schedule is ignored if job_type is 'on_demand'
+  cron: no
+  job_name: ecr-cred-helper
+  cron_job_name: ecr-cred-helper-cron
+  schedule: "* */8 * * *"
 
 app_namespace: thecombine
 
 k8s_user: sillsdev
 k8s_group: sillsdev
+
+#######################################
+# Ingress configuration (microk8s ingress addon)
+ingress_class: public
+
+# For the NUCs we want to use the ansible host name
+# since that is how we can connect on the local network
+# The server name will direct traffic to the production
+# server since it is used to get the certificates for the
+# NUC.
+k8s_dns_name: "{{ ansible_hostname }}"
 
 ################################################
 # The use model for the Combine when deployed on

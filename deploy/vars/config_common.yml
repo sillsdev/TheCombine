@@ -2,6 +2,7 @@
 combine_user: combine
 combine_group: app
 combine_app_dir: /opt/combine
+combine_admin_email: admin@thecombine.app
 
 # Configure logging
 combine_use_syslog: true
@@ -12,7 +13,11 @@ ssl_certificate: "{{ ssl_dir }}/fullchain.pem"
 ssl_private_key: "{{ ssl_dir }}/privkey.pem"
 
 # Kubernetes local Working directories
-k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}/"
+k8s_working_dir: "{{ lookup('env', 'HOME') }}/.kube/{{ kubecfgdir }}"
+k8s_aws_login_cfg: "{{ k8s_working_dir }}/aws_login"
+k8s_cert_mgr_cfg: "{{ k8s_working_dir }}/cert_manager"
 k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
 k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
-k8s_cert_mgr_cfg: "{{ k8s_working_dir }}/cert_manager"
+k8s_namespace_cfg: "{{k8s_working_dir}}/namespace"
+
+kubecfg: "{{ k8s_working_dir }}/config"
