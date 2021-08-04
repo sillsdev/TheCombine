@@ -16,7 +16,7 @@ spec:
           creationTimestamp: null
         spec:
           containers:
-          - image: odaniait/aws-kubectl:latest   # the base iamge to be used to run our shell script
+          - image: odaniait/aws-kubectl:latest   # the base image to be used to run our shell script
             imagePullPolicy: IfNotPresent
             name: "{{ aws_ecr_login.cron_job_name }}"
             volumeMounts:
