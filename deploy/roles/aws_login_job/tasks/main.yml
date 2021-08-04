@@ -39,7 +39,6 @@
 # AWS login resources:
 # - AWS credentials secret
 # - One-shot job to get AWS Login
-# - Cron job iff aws_ecr_login.cron is true
 ##############################################################
 - name: Create AWS login resource specifications
   template:
