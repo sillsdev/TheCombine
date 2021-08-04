@@ -31,8 +31,6 @@ spec:
           --docker-email="{{ combine_admin_email }}"
           echo "Secret created by name. $SECRET_NAME"
           kubectl -n {{ app_namespace }} patch serviceaccount default -p '{"imagePullSecrets":[{"name":"'$SECRET_NAME'"}]}'   # custom script | update the default service account
-          echo "Current user: "`whoami`
-          echo "Home Directory: ${HOME}"
           echo "All done."
         env:
         - name: AWS_DEFAULT_REGION
