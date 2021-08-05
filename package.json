@@ -47,7 +47,7 @@
     "axios": "^0.21.1",
     "http-status-codes": "^2.1.4",
     "make-dir": "^3.1.0",
-    "mui-language-picker": "^1.1.14",
+    "mui-language-picker": "^1.1.15",
     "nspell": "^2.1.5",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
