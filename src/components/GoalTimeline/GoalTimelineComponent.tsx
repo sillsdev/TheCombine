@@ -14,7 +14,7 @@ const timelineStyle = {
   },
   centerButton: {
     padding: "70px 0",
-    textAlign: "center",
+    textAlign: "center" as const,
     width: "100%",
     height: "80%",
   },
@@ -23,7 +23,7 @@ const timelineStyle = {
     marginLeft: "auto",
     marginRight: "auto",
     justifyContent: "center",
-    textAlign: "center",
+    textAlign: "center" as const,
   },
 };
 
@@ -98,7 +98,7 @@ export default class GoalTimeline extends React.Component<
     const goal = goalTypeToGoal(this.props.goalTypeSuggestions[0]);
     return (
       <Button
-        style={timelineStyle.centerButton as any}
+        style={timelineStyle.centerButton}
         color={"primary"}
         variant={"contained"}
         disabled={done}
@@ -117,7 +117,7 @@ export default class GoalTimeline extends React.Component<
     return (
       <React.Fragment>
         {/* Alternatives */}
-        <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
+        <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
           <GoalList
             orientation="horizontal"
             data={this.createSuggestionData()}
@@ -129,7 +129,7 @@ export default class GoalTimeline extends React.Component<
         </div>
 
         {/* Recommendation */}
-        <div style={{ ...(timelineStyle.paneStyling as any), width: "60%" }}>
+        <div style={{ ...timelineStyle.paneStyling, width: "60%" }}>
           <Typography variant="h6">
             <Translate id={"goal.selector.present"} />
           </Typography>
@@ -137,7 +137,7 @@ export default class GoalTimeline extends React.Component<
         </div>
 
         {/* History */}
-        <div style={timelineStyle.paneStyling as any}>
+        <div style={timelineStyle.paneStyling}>
           <Typography variant="h6">
             <Translate id={"goal.selector.past"} />
           </Typography>
@@ -159,7 +159,7 @@ export default class GoalTimeline extends React.Component<
       <GridList cols={13} cellHeight="auto">
         {/* Alternatives */}
         <GridListTile cols={5}>
-          <div style={{ ...timelineStyle.paneStyling } as any}>
+          <div style={{ ...timelineStyle.paneStyling }}>
             <Typography variant="h6">
               <Translate id={"goal.selector.other"} />
             </Typography>
@@ -175,7 +175,7 @@ export default class GoalTimeline extends React.Component<
         </GridListTile>
 
         {/* Recommendation */}
-        <GridListTile cols={3} style={timelineStyle.paneStyling as any}>
+        <GridListTile cols={3} style={timelineStyle.paneStyling}>
           <Typography variant="h6">
             <Translate id={"goal.selector.present"} />
           </Typography>
@@ -184,7 +184,7 @@ export default class GoalTimeline extends React.Component<
 
         {/* History */}
         <GridListTile cols={5}>
-          <div style={timelineStyle.paneStyling as any}>
+          <div style={timelineStyle.paneStyling}>
             <Typography variant="h6">
               <Translate id={"goal.selector.past"} />
             </Typography>
