@@ -24,6 +24,7 @@ combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 # SSL cert variables specific to Server targets
 ################################################
 cert_mode: "letsencrypt"
+cert_email: "cert@thecombine.app"
 combine_cert_proxy_list:
   - nuc2.thecombine.app
   - nuc1.thecombine.app
@@ -63,18 +64,18 @@ max_backups: "3"
 ################################################
 # Configure Kubernetes cluster
 ################################################
-k8s_components:
-  - cert_manager
+k8s_components: []
 
-pull_secrets_manager: registry_creds
-image_pull_secrets:
-  - awsecr-cred
+image_pull_secret: aws-ecr-cred
 
 app_namespace: thecombine
-http_only: yes
 
 k8s_user: sillsdev
 k8s_group: sillsdev
+
+#######################################
+# Ingress configuration
+ingress_class: nginx
 
 ################################################
 # WiFi access point settings

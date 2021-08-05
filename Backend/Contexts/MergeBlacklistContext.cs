@@ -1,4 +1,5 @@
-﻿using BackendFramework.Interfaces;
+﻿using System.Diagnostics.CodeAnalysis;
+using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -6,6 +7,7 @@ using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
+    [ExcludeFromCodeCoverage]
     public class MergeBlacklistContext : IMergeBlacklistContext
     {
         private readonly IMongoDatabase _db;

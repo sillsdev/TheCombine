@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -8,6 +9,7 @@ using MongoDB.Driver;
 namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="UserEdit"/>s </summary>
+    [ExcludeFromCodeCoverage]
     public class UserEditRepository : IUserEditRepository
     {
         private readonly IUserEditContext _userEditDatabase;

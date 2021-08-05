@@ -24,7 +24,7 @@ combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
 # SSL cert variables specific to QA targets
 ################################################
 cert_mode: "self-signed"
-cert_email: ""
+cert_email: "cert@thecombine.app"
 combine_cert_proxy_list: []
 
 ################################################
@@ -50,17 +50,18 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
-k8s_components:
-  - microk8s
+k8s_components: []
 
-pull_secrets_manager: registry_creds
-image_pull_secrets:
-  - awsecr-cred
+image_pull_secret: aws-ecr-cred
 
 app_namespace: thecombine
 
 k8s_user: sillsdev
 k8s_group: sillsdev
+
+#######################################
+# Ingress configuration
+ingress_class: nginx
 
 ################################################
 # WiFi access point settings

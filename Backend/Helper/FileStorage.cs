@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace BackendFramework.Helper
@@ -16,7 +17,7 @@ namespace BackendFramework.Helper
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
 
-        private enum FileType
+        public enum FileType
         {
             Audio,
             Avatar
@@ -96,6 +97,11 @@ namespace BackendFramework.Helper
         /// <exception cref="HomeFolderNotFoundException">
         /// Throws when no home path found in local environment variables.
         /// </exception>
+        /// <remarks>
+        /// Exclude this function from coverage because it interacts with environment variables that are onerous
+        /// to mock.
+        /// </remarks>
+        [ExcludeFromCodeCoverage]
         private static string GetHomePath()
         {
             // Generate path to home on Linux or Windows.
@@ -165,7 +171,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Generate an appropriate file extension for a given type. </summary>
-        private static string FileTypeExtension(FileType type)
+        public static string FileTypeExtension(FileType type)
         {
             return type switch
             {

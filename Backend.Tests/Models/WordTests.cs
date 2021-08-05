@@ -71,6 +71,13 @@ namespace Backend.Tests.Models
         }
 
         [Test]
+        public void TestNotEquals()
+        {
+            var note = new Note { Language = Language, Text = Text };
+            Assert.IsFalse(note.Equals(new Note { Language = "Different language", Text = Text }));
+        }
+
+        [Test]
         public void TestHashCode()
         {
             Assert.AreNotEqual(
@@ -121,6 +128,45 @@ namespace Backend.Tests.Models
             Assert.AreNotEqual(
                 new Sense { Guid = _commonGuid, Accessibility = State.Active }.GetHashCode(),
                 new Sense { Guid = _commonGuid, Accessibility = State.Deleted }.GetHashCode());
+        }
+    }
+
+    public class DefinitionTests
+    {
+        private const string Language = "fr";
+        private const string Text = "Test definition text";
+
+        [Test]
+        public void TestEquals()
+        {
+            var definition = new Definition { Language = Language, Text = Text };
+            Assert.That(definition.Equals(new Definition { Language = Language, Text = Text }));
+        }
+
+        [Test]
+        public void TestNotEquals()
+        {
+            var definition = new Definition { Language = Language, Text = Text };
+            Assert.IsFalse(definition.Equals(new Definition { Language = Language, Text = "Different text" }));
+            Assert.IsFalse(definition.Equals(new Definition { Language = "Different language", Text = Text }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var definition = new Definition { Language = Language, Text = Text };
+            Assert.IsFalse(definition.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Definition { Language = Language, Text = Text }.GetHashCode(),
+                new Definition { Language = "Different Language", Text = Text }.GetHashCode());
+            Assert.AreNotEqual(
+                new Definition { Language = Language, Text = Text }.GetHashCode(),
+                new Definition { Language = Language, Text = "Different text" }.GetHashCode());
         }
     }
 

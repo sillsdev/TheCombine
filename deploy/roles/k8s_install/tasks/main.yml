@@ -33,7 +33,7 @@
       lineinfile:
         path: /var/snap/microk8s/current/certs/csr.conf.template
         insertafter: "^DNS\\.5"
-        line: DNS.6 = {{ combine_server_name }}
+        line: DNS.6 = {{ k8s_dns_name }}
 
     - name: Get home directory for {{ k8s_user }}
       shell: >
@@ -63,15 +63,23 @@
     - name: Save kubectl configuration in site_files on host
       fetch:
         src: "{{ k8s_user_home.stdout }}/.kube/config"
-        dest: "{{ k8s_working_dir }}/kubeconfig"
+        dest: "{{ kubecfg }}"
         flat: yes
+
+    - name: Restrict permissions to kubeconfig to owner
+      delegate_to: localhost
+      become: no
+      file:
+        path: "{{ kubecfg }}"
+        state: file
+        mode: 0600
 
     - name: Replace server IP with DNS name in site_files copy
       delegate_to: localhost
       become: no
       lineinfile:
         state: present
-        path: "{{ k8s_working_dir }}/kubeconfig"
+        path: "{{ kubecfg }}"
         regexp: '^(\s+server: https:\/\/)[.0-9]+:16443'
         backrefs: yes
         line: '\1{{ combine_server_name}}:16443'
@@ -90,3 +98,30 @@
 - name: Install kubectl
   apt:
     name: kubectl
+
+- name: Install Helm v3
+  import_role:
+    name: install_helm
+  when: '"microk8s" not in k8s_components'
+
+- name: Configure NGINX ingress service
+  delegate_to: localhost
+  become: no
+  block:
+    - name: Create directory for The Combine configuration files
+      file:
+        path: "{{ k8s_combine_cfg }}"
+        state: directory
+        mode: 0700
+
+    - name: Create configuration file
+      template:
+        src: nginx-ingress-service.yaml.j2
+        dest: "{{ k8s_combine_cfg }}/nginx-ingress-service.yaml"
+        mode: 0600
+
+    - name: Apply configuration file
+      command: kubectl --kubeconfig={{ kubecfg }} apply -f nginx-ingress-service.yaml
+      args:
+        chdir: "{{ k8s_combine_cfg }}"
+  when: '"ingress_controller" in k8s_components'

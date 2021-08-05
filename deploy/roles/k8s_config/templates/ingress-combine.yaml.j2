@@ -4,7 +4,7 @@ metadata:
   name: http-ingress
   namespace: {{ app_namespace }}
   annotations:
-    kubernetes.io/ingress.class: public
+    kubernetes.io/ingress.class: {{ ingress_class }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
 {% if "cert_manager" in k8s_components %}
     cert-manager.io/cluster-issuer: {{ cert_issuer }}
