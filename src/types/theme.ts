@@ -1,5 +1,5 @@
 import { blue, green, grey, red, yellow } from "@material-ui/core/colors";
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import { createTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
 import { Path } from "browserHistory";
@@ -49,7 +49,7 @@ const typography = {
 const dynamicFontParams = { factor: 2 };
 
 // Theme for the entire project
-const baseTheme = createMuiTheme({
+const baseTheme = createTheme({
   typography: { ...typography },
   palette: { ...palette } as PaletteOptions,
   spacing: 8,

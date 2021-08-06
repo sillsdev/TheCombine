@@ -367,10 +367,8 @@ export const LiftApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadLiftFile(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.downloadLiftFile(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

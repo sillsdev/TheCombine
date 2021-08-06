@@ -253,7 +253,7 @@ export default class CreateProject extends React.Component<
               </Typography>
             )}
             {/* Form submission button */}
-            <Grid container justify="flex-end">
+            <Grid container justifyContent="flex-end">
               <LoadingDoneButton
                 loading={this.props.inProgress}
                 done={this.props.success}

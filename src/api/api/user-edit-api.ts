@@ -434,10 +434,8 @@ export const UserEditApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<Array<UserEdit>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectUserEdits(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getProjectUserEdits(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -487,12 +485,13 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserEditGoal(
-        projectId,
-        userEditId,
-        edit,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateUserEditGoal(
+          projectId,
+          userEditId,
+          edit,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -516,12 +515,13 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserEditStep(
-        projectId,
-        userEditId,
-        userEditStepWrapper,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateUserEditStep(
+          projectId,
+          userEditId,
+          userEditStepWrapper,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

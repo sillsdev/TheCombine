@@ -84,13 +84,13 @@ export default class CharacterInventory extends React.Component<
   render() {
     return (
       <div>
-        <Grid container justify="center" spacing={2}>
+        <Grid container justifyContent="center" spacing={2}>
           <Grid item xl={10} lg={9} md={8} xs={12}>
             <Grid
               container
               spacing={2}
               direction="row"
-              justify="flex-start"
+              justifyContent="flex-start"
               alignItems="center"
             >
               <CharacterSetHeader />
@@ -112,7 +112,7 @@ export default class CharacterInventory extends React.Component<
 
           <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <LoadingButton
                 loading={this.state.saveInProgress}
                 buttonProps={{

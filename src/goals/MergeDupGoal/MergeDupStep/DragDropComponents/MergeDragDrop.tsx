@@ -1,4 +1,4 @@
-import { Drawer, GridListTile } from "@material-ui/core";
+import { Drawer, ImageListItem } from "@material-ui/core";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
@@ -81,7 +81,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
   return (
     <DragDropContext onDragEnd={handleDrop}>
       {Object.keys(treeWords).map((key) => (
-        <GridListTile
+        <ImageListItem
           key={key}
           style={{ height: "70vh", margin: theme.spacing(1) }}
         >
@@ -90,15 +90,15 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
             portrait={props.portrait}
             wordId={key}
           />
-        </GridListTile>
+        </ImageListItem>
       ))}
-      <GridListTile key={newId} style={{ margin: theme.spacing(1) }}>
+      <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
         <DropWord
           mergeState={mergeState}
           portrait={props.portrait}
           wordId={newId}
         />
-      </GridListTile>
+      </ImageListItem>
       {renderSidebar()}
     </DragDropContext>
   );

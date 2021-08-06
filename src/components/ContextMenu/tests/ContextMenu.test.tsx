@@ -14,14 +14,14 @@ jest.autoMockOn();
 
 // Mocking document's search function
 document.getElementsByClassName = jest.fn((className: string) => {
-  return ({
+  return {
     item: () => ({
       ...documentHandle,
       addEventListener: MOCK_ADD,
       className,
     }),
     namedItem: jest.fn(),
-  } as any) as HTMLCollectionOf<Element>;
+  } as any as HTMLCollectionOf<Element>;
 });
 
 // Mocking setState to listen for the call

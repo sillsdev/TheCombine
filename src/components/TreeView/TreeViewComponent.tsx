@@ -92,7 +92,7 @@ export class TreeView extends React.Component<
           <Grid
             container
             direction="column"
-            justify="center"
+            justifyContent="center"
             alignItems="center"
           >
             <TreeDepiction
