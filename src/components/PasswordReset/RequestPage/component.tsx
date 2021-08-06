@@ -56,7 +56,7 @@ export default class ResetRequest extends React.Component<
   render() {
     return (
       <div>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ padding: 10, width: 450 }}>
             <Typography variant="h5" align="center">
               <Translate id="passwordReset.resetRequestTitle" />

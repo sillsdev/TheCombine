@@ -26,8 +26,11 @@ export default function VernDialog(props: vernDialogProps) {
   return (
     <Dialog
       open={props.open}
-      onClose={() => props.handleClose()}
-      disableBackdropClick
+      onClose={(_, reason) => {
+        if (reason !== "backdropClick") {
+          props.handleClose();
+        }
+      }}
     >
       <DialogContent>
         <VernList

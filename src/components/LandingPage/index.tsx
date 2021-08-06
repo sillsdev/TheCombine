@@ -17,7 +17,7 @@ export default function LandingPage() {
   return (
     <React.Fragment>
       <TopBar />
-      <Grid container alignItems="flex-start" justify="space-around">
+      <Grid container alignItems="flex-start" justifyContent="space-around">
         <Hidden xsDown>
           <Grid item sm md xl>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>

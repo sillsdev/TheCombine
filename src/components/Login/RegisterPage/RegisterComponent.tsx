@@ -155,7 +155,7 @@ export default class Register extends React.Component<
     }
 
     return (
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>
           <form onSubmit={(e) => this.register(e)}>
             <CardContent>
@@ -279,7 +279,7 @@ export default class Register extends React.Component<
               )}
 
               {/* Register and Login buttons */}
-              <Grid container justify="flex-end" spacing={2}>
+              <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <Button
                     type="button"

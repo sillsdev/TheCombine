@@ -1,4 +1,4 @@
-import { Grid, GridList, GridListTile } from "@material-ui/core";
+import { Grid, ImageList, ImageListItem } from "@material-ui/core";
 import React, { ReactNode } from "react";
 
 import {
@@ -80,10 +80,10 @@ export default class TreeDepiction extends React.Component<
   subDomains(): ReactNode {
     const subdomains = this.props.currentDomain.subdomains;
     return subdomains.length > 1 ? (
-      <GridList
+      <ImageList
         cols={subdomains.length * 2 - 1} // # of cells across the joist is
-        cellHeight={"auto"}
-        spacing={0}
+        rowHeight={"auto"}
+        gap={0}
         style={{ width: (subdomains.length * 2 - 1) * this.state.tileWidth }}
       >
         {/* Left endcap */}
@@ -97,16 +97,16 @@ export default class TreeDepiction extends React.Component<
 
         {/* Content */}
         {this.domainRow()}
-      </GridList>
+      </ImageList>
     ) : (
-      <GridList
+      <ImageList
         cols={1}
-        spacing={0}
-        cellHeight={"auto"}
+        gap={0}
+        rowHeight={"auto"}
         style={{ width: this.state.tileWidth }}
       >
         {this.treeTile(pillar)}
-        <GridListTile>
+        <ImageListItem>
           <DomainTile
             domain={subdomains[0]}
             onClick={(e) => {
@@ -115,8 +115,8 @@ export default class TreeDepiction extends React.Component<
             }}
             direction={Direction.Down}
           />
-        </GridListTile>
-      </GridList>
+        </ImageListItem>
+      </ImageList>
     );
   }
 
@@ -163,7 +163,7 @@ export default class TreeDepiction extends React.Component<
     ) {
       if (i % 2 === 0) {
         subDomains.push(
-          <GridListTile key={domainIndex + "DomainTile"}>
+          <ImageListItem key={domainIndex + "DomainTile"}>
             <DomainTile
               domain={this.props.currentDomain.subdomains[domainIndex]}
               onClick={(e) => {
@@ -172,10 +172,10 @@ export default class TreeDepiction extends React.Component<
               }}
               direction={Direction.Down}
             />
-          </GridListTile>
+          </ImageListItem>
         );
         domainIndex++;
-      } else subDomains.push(<GridListTile key={domainIndex + "DummyTile"} />);
+      } else subDomains.push(<ImageListItem key={domainIndex + "DummyTile"} />);
     }
     return subDomains;
   }
@@ -183,7 +183,7 @@ export default class TreeDepiction extends React.Component<
   // Creates a section of the tree diagram (one of the branches) set to proper dimensions
   treeTile(name: string): ReactNode {
     return (
-      <GridListTile
+      <ImageListItem
         key={name + Math.random() * 1000}
         style={{ transform: "scaleY(-1)" }}
       >
@@ -193,7 +193,7 @@ export default class TreeDepiction extends React.Component<
           width={this.state.tileWidth}
           height={"100%"}
         />
-      </GridListTile>
+      </ImageListItem>
     );
   }
 
@@ -203,13 +203,13 @@ export default class TreeDepiction extends React.Component<
         {/* Label parent domain, if available */}
         <Grid item>
           {this.props.currentDomain.parentDomain && (
-            <GridList
+            <ImageList
               cols={1}
-              spacing={0}
+              gap={0}
               style={{ width: this.state.tileWidth }}
-              cellHeight="auto"
+              rowHeight="auto"
             >
-              <GridListTile>
+              <ImageListItem>
                 <DomainTile
                   domain={this.props.currentDomain.parentDomain}
                   onClick={(e) => {
@@ -218,9 +218,9 @@ export default class TreeDepiction extends React.Component<
                   }}
                   direction={Direction.Up}
                 />
-              </GridListTile>
+              </ImageListItem>
               {this.treeTile(parent)}
-            </GridList>
+            </ImageList>
           )}
         </Grid>
 
