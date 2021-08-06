@@ -23,11 +23,13 @@ export default function CharacterStatusText(props: CharacterStatusTextProps) {
   );
 }
 
-function CharacterStatusStyle(status: CharacterStatus) {
+function CharacterStatusStyle(status: CharacterStatus): { color: string } {
   switch (status) {
     case CharacterStatus.Accepted:
       return { color: themeColors.success };
     case CharacterStatus.Rejected:
       return { color: themeColors.error };
+    case CharacterStatus.Undecided:
+      return { color: themeColors.primary };
   }
 }
