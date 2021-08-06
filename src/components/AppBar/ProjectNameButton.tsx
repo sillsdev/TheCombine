@@ -14,7 +14,7 @@ interface ProjectNameButtonProps {
 /** A button that redirects to the project settings */
 export default function ProjectNameButton(props: ProjectNameButtonProps) {
   const projectName = useSelector(
-    (state: StoreState) => state.currentProject.name
+    (state: StoreState) => state.currentProjectState.project.name
   );
   const background = tabColor(props.currentTab, Path.ProjSettings);
   return (

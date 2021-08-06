@@ -1,16 +1,4 @@
 ---
-# Local Working directory
-k8s_working_dir: "{{ playbook_dir }}/site_files/{{ ansible_hostname }}/"
-k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
-k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
-
-# # AWS configuration
-# aws_ecr_profile: ecr_read_only
-# aws_s3_profile: s3_read_write
-#
-image_pull_secrets:
-  - awsecr-cred
-
 # Persistent storage size configurations
 backend_data_size: 4Gi
 database_data_size: 2Gi
@@ -41,3 +29,7 @@ combine_image_certmgr: combine/certmgr
 # Environment variable defaults for the
 # certmgr
 cert_issuer: letsencrypt-prod
+
+#######################################
+# Ingress configuration
+ingress_class: nginx

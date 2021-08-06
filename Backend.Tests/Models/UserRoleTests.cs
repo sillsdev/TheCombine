@@ -15,10 +15,25 @@ namespace Backend.Tests.Models
         }
 
         [Test]
+        public void TestNotEquals()
+        {
+            var role = new UserRole { ProjectId = ProjectId };
+            Assert.IsFalse(role.Equals(new UserRole { ProjectId = "Different ID" }));
+        }
+
+        [Test]
         public void TestEqualsNull()
         {
             var role = new UserRole { ProjectId = ProjectId };
             Assert.IsFalse(role.Equals(null));
+        }
+
+        [Test]
+        public void TestGetHashCode()
+        {
+            Assert.AreNotEqual(
+                new UserRole { ProjectId = ProjectId }.GetHashCode(),
+                new UserRole { ProjectId = "Different ID" }.GetHashCode());
         }
     }
 }

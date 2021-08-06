@@ -20,8 +20,7 @@ jest.mock("backend", () => {
 });
 
 var testRenderer: ReactTestRenderer;
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
+const mockStore = configureMockStore()(defaultState);
 
 beforeAll(() => {
   renderer.act(() => {

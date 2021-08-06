@@ -19,7 +19,7 @@ Combine_ (next step). ![alt text](images/01_PowerOn.jpg "Power Up the NUC")
 
 Note that while the NUC is running, the yellow "disk activity light" will flash. This is normal.
 
-## 3. Connect to WiFi Access Point
+## 2. Connect to WiFi Access Point
 
 When the NUC powers up, it creates a WiFi access point. The name of the access point is labeled "WiFi" on the top of the
 NUC. Setup the WiFi network for your PC/Phone/Tablet to connect to this wireless network:
@@ -29,7 +29,7 @@ When prompted, enter the WiFi Passphrase, `Combine2020`:
 
 ![alt text](images/03_Enter_WiFi_Passphrase.png "Enter Passphrase")
 
-## 4. Open _The Combine_
+## 3. Open _The Combine_
 
 Open a web browser and navigate to the URL printed on the label on the top of the NUC:
 
@@ -38,7 +38,7 @@ Open a web browser and navigate to the URL printed on the label on the top of th
 The opening page for _The Combine_ will be displayed with a link to the _User Guide_ which explains how to use _The
 Combine_ ![alt text](images/05_Combine_Landing_Page.png "The Combine Landing Page")
 
-## 5. Power Off
+## 4. Power Off
 
 When all the users are done using _The Combine_, power off the NUC by pressing the power button once. **_When the power
 button is pressed, the NUC will start to shutdown immediately. There will be no request for confirmation._** When the

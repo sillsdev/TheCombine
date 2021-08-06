@@ -112,7 +112,7 @@ export function UserMenuList(props: UserMenuListProps) {
       {props.isAdmin && (
         <MenuItem
           onClick={() => {
-            clearCurrentProject(dispatch);
+            dispatch(clearCurrentProject());
             history.push(Path.SiteSettings);
             props.onSelect();
           }}

@@ -73,5 +73,25 @@ namespace Backend.Tests.Models
             var edit = new MergeBlacklistEntry { ProjectId = ProjId };
             Assert.IsFalse(edit.Equals(null));
         }
+
+        [Test]
+        public void TestHashCode()
+        {
+            var entryA = new MergeBlacklistEntry
+            {
+                Id = EntryId,
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = _idsRevd
+            };
+            var entryB = new MergeBlacklistEntry
+            {
+                Id = "DifferentTestId",
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = _idsRevd
+            };
+            Assert.AreNotEqual(entryA.GetHashCode(), entryB.GetHashCode());
+        }
     }
 }

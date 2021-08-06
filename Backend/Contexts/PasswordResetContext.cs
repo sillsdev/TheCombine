@@ -1,12 +1,14 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using static BackendFramework.Startup;
-using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Contexts
 {
+    [ExcludeFromCodeCoverage]
     public class PasswordResetContext : IPasswordResetContext
     {
         private readonly IMongoDatabase _db;

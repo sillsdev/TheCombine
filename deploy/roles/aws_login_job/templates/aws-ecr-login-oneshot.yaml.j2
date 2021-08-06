@@ -1,0 +1,69 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ aws_ecr_login.job_name }}"
+  namespace: {{ app_namespace }}
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      containers:
+      - image: odaniait/aws-kubectl:latest   # the base image to be used to run our shell script
+        imagePullPolicy: IfNotPresent
+        name: "{{ aws_ecr_login.job_name }}"
+        volumeMounts:
+          - name: cluster-kubeconfig
+            mountPath: /home/user/.kube
+        command:
+        - /bin/sh
+        - -c
+        - |-
+          SECRET_NAME={{ image_pull_secret }}
+          TOKEN=`aws ecr get-login --region ${AWS_DEFAULT_REGION} --registry-ids ${AWS_ACCOUNT} | cut -d' ' -f6`
+          echo "ENV variables setup done."
+          kubectl -n {{ app_namespace }} delete secret --ignore-not-found ${SECRET_NAME}
+          kubectl -n {{ app_namespace }} create secret docker-registry ${SECRET_NAME} \
+          --docker-server=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com \
+          --docker-username=AWS \
+          --docker-password="${TOKEN}" \
+          --docker-email="{{ combine_admin_email }}"
+          echo "Secret created by name. $SECRET_NAME"
+          kubectl -n {{ app_namespace }} patch serviceaccount default -p '{"imagePullSecrets":[{"name":"'$SECRET_NAME'"}]}'   # custom script | update the default service account
+          echo "All done."
+        env:
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              key: AWS_REGION
+              name: aws-credential-secret
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: aws-credential-secret
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: aws-credential-secret
+        - name: AWS_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCOUNT
+              name: aws-credential-secret
+
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: Default
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: cluster-kubeconfig
+          secret:
+            secretName: "{{ k8s_config_secret }}"

@@ -7,7 +7,7 @@ export default class Recorder {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((audioStream) => this.onMicrophoneAvailable(audioStream))
-      .catch((error) => Recorder.onError(error));
+      .catch(Recorder.onError);
   }
 
   startRecording() {

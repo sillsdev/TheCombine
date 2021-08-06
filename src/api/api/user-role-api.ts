@@ -420,7 +420,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserRole(
         projectId,
@@ -570,7 +570,7 @@ export const UserRoleApiFactory = function (
       projectId: string,
       userId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<boolean> {
       return localVarFp
         .deleteUserRole(projectId, userId, options)
         .then((request) => request(axios, basePath));

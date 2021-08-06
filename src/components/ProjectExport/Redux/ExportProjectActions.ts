@@ -8,16 +8,12 @@ import { StoreStateDispatch } from "types/Redux/actions";
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress(projectId));
-    exportLift(projectId).catch(() => {
-      dispatch(failure(projectId));
-    });
+    exportLift(projectId).catch(() => dispatch(failure(projectId)));
   };
 }
 
 export function downloadIsReady(projectId: string) {
-  return (dispatch: StoreStateDispatch) => {
-    dispatch(success(projectId));
-  };
+  return (dispatch: StoreStateDispatch) => dispatch(success(projectId));
 }
 
 export function asyncDownloadExport(projectId: string) {

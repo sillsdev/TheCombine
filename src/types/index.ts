@@ -1,8 +1,8 @@
 import { LocalizeState } from "react-localize-redux";
 
-import { Project } from "api/models";
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
 import { PasswordResetState } from "components/PasswordReset/Redux/ResetReduxTypes";
+import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
@@ -24,7 +24,7 @@ export interface StoreState {
 
   //project
   createProjectState: CreateProjectState;
-  currentProject: Project;
+  currentProjectState: CurrentProjectState;
   exportProjectState: ExportProjectState;
 
   //data entry and review entries

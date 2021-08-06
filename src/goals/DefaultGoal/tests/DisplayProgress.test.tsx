@@ -8,7 +8,7 @@ import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { Goal } from "types/goals";
 
 const createMockStore = configureMockStore([thunk]);
-let mockStore = createMockStore({});
+let mockStore = createMockStore();
 function createMockStoreWithGoal(goal: Goal) {
   const mockStoreState = { goalsState: { currentGoal: goal } };
   mockStore = createMockStore(mockStoreState);
