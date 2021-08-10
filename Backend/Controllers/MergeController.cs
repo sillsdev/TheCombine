@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -47,6 +48,32 @@ namespace BackendFramework.Controllers
             {
                 return BadRequest("Merge failed.");
             }
+        }
+
+        /// <summary> Undo merge </summary>
+        /// <returns> True if merge was successfully undone </returns>
+        [HttpPut("undo", Name = "UndoMerges")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> UndoMerges(string projectId, [FromBody, BindRequired] Dictionary<string, List<string>> ids)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            {
+                return Forbid();
+            }
+
+            try
+            {
+                foreach (var merge in ids)
+                {
+                    await _mergeService.UndoMerge(projectId, merge);
+                }
+                return Ok(true);
+            }
+            catch
+            {
+                return BadRequest("Undo failed.");
+            }
+
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>
