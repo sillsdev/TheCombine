@@ -19,7 +19,7 @@ const timelineStyle = {
   },
   centerButton: {
     padding: "70px 0",
-    textAlign: "center",
+    textAlign: "center" as const,
     width: "100%",
     height: "80%",
   },
@@ -28,7 +28,7 @@ const timelineStyle = {
     marginLeft: "auto",
     marginRight: "auto",
     justifyContent: "center",
-    textAlign: "center",
+    textAlign: "center" as const,
   },
 };
 
@@ -54,7 +54,7 @@ export default class GoalTimeline extends React.Component<
   constructor(props: GoalTimelineProps & GoalsState) {
     super(props);
     this.state = {
-      portrait: window.innerWidth < window.innerHeight,
+      portrait: window.innerWidth - 40 < window.innerHeight,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -66,7 +66,7 @@ export default class GoalTimeline extends React.Component<
 
   handleWindowSizeChange = () => {
     this.setState({
-      portrait: window.innerWidth < window.innerHeight,
+      portrait: window.innerWidth - 40 < window.innerHeight,
     });
   };
 
@@ -103,7 +103,7 @@ export default class GoalTimeline extends React.Component<
     const goal = goalTypeToGoal(this.props.goalTypeSuggestions[0]);
     return (
       <Button
-        style={timelineStyle.centerButton as any}
+        style={timelineStyle.centerButton}
         color={"primary"}
         variant={"contained"}
         disabled={done}
@@ -122,30 +122,38 @@ export default class GoalTimeline extends React.Component<
     return (
       <React.Fragment>
         {/* Alternatives */}
-        <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
+        <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
           <GoalList
             orientation="horizontal"
             data={this.createSuggestionData()}
             handleChange={this.handleChange}
             size={100}
-            numPanes={3}
+            numPanes={2}
+            scrollable={false}
           />
         </div>
 
         {/* Recommendation */}
-        <div style={timelineStyle.paneStyling as any}>
-          <Typography variant="h5">
+        <div style={{ ...timelineStyle.paneStyling, width: "60%" }}>
+          <Typography variant="h6">
             <Translate id={"goal.selector.present"} />
           </Typography>
-          <div
-            style={{
-              ...(timelineStyle.paneStyling as any),
-              width: "80%",
-              height: 50,
-            }}
-          >
-            {this.goalButton()}
-          </div>
+          {this.goalButton()}
+        </div>
+
+        {/* History */}
+        <div style={timelineStyle.paneStyling}>
+          <Typography variant="h6">
+            <Translate id={"goal.selector.past"} />
+          </Typography>
+          <GoalList
+            orientation="horizontal"
+            data={[...this.props.history].reverse()}
+            handleChange={this.handleChange}
+            size={100}
+            numPanes={3}
+            scrollable={true}
+          />
         </div>
       </React.Fragment>
     );
@@ -166,11 +174,13 @@ export default class GoalTimeline extends React.Component<
               handleChange={this.handleChange}
               size={35}
               numPanes={3}
+              scrollable={false}
             />
           </div>
         </ImageListItem>
 
         {/* Recommendation */}
+
         <ImageListItem cols={3} style={timelineStyle.paneStyling as any}>
           <Typography variant="h5">
             <Translate id={"goal.selector.present"} />
@@ -190,6 +200,7 @@ export default class GoalTimeline extends React.Component<
               handleChange={this.handleChange}
               size={35}
               numPanes={3}
+              scrollable={true}
             />
           </div>
         </ImageListItem>

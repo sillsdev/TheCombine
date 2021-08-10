@@ -727,7 +727,8 @@
         "No changes made in this goal.",
         "No changes made in this goal.",
         "No changes made in this goal."
-      ]
+      ],
+      "more": ["more", "more", "more"]
     }
   },
   "mergeDups": {
