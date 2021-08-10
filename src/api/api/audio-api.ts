@@ -64,10 +64,11 @@ export const AudioApiAxiosParamCreator = function (
       assertParamExists("deleteAudioFile", "wordId", wordId);
       // verify required parameter 'fileName' is not null or undefined
       assertParamExists("deleteAudioFile", "fileName", fileName);
-      const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
-        .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
+      const localVarPath =
+        `/v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
+          .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -117,10 +118,11 @@ export const AudioApiAxiosParamCreator = function (
       assertParamExists("downloadAudioFile", "wordId", wordId);
       // verify required parameter 'fileName' is not null or undefined
       assertParamExists("downloadAudioFile", "fileName", fileName);
-      const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/download/{fileName}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
-        .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
+      const localVarPath =
+        `/v1/projects/{projectId}/words/{wordId}/audio/download/{fileName}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
+          .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -178,9 +180,10 @@ export const AudioApiAxiosParamCreator = function (
       assertParamExists("uploadAudioFile", "name", name);
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists("uploadAudioFile", "filePath", filePath);
-      const localVarPath = `/v1/projects/{projectId}/words/{wordId}/audio/upload`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
+      const localVarPath =
+        `/v1/projects/{projectId}/words/{wordId}/audio/upload`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -283,12 +286,13 @@ export const AudioApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAudioFile(
-        projectId,
-        wordId,
-        fileName,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.downloadAudioFile(
+          projectId,
+          wordId,
+          fileName,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

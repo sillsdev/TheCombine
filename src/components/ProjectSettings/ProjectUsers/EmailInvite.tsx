@@ -78,7 +78,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   render() {
     return (
       <React.Fragment>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ width: 450 }}>
             <CardContent>
               <Typography variant="h5" align="center" gutterBottom>
@@ -101,7 +101,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                 style={{ width: "100%" }}
                 margin="normal"
               ></TextField>
-              <Grid container justify="flex-end" spacing={2}>
+              <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <LoadingDoneButton
                     disabled={!this.state.isValid}

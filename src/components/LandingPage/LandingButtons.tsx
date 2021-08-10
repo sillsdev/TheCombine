@@ -27,7 +27,7 @@ export default function LandingButtons(props: LandingButtonsProps) {
     >
       <Grid
         container
-        justify="space-around"
+        justifyContent="space-around"
         alignItems="center"
         style={{ height: "100%" }}
       >

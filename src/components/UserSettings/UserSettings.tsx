@@ -149,7 +149,7 @@ class UserSettings extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ width: 450 }}>
             <form onSubmit={(e) => this.onSubmit(e)}>
               <CardContent>
@@ -231,7 +231,7 @@ class UserSettings extends React.Component<
                     </Grid>
                   </Grid>
 
-                  <Grid item container justify="flex-end">
+                  <Grid item container justifyContent="flex-end">
                     <Button type="submit" variant="contained">
                       <Translate id="buttons.save" />
                     </Button>

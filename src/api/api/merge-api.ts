@@ -64,10 +64,11 @@ export const MergeApiAxiosParamCreator = function (
       assertParamExists("blacklistAdd", "projectId", projectId);
       // verify required parameter 'requestBody' is not null or undefined
       assertParamExists("blacklistAdd", "requestBody", requestBody);
-      const localVarPath = `/v1/projects/{projectId}/merge/blacklist/add`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
+      const localVarPath =
+        `/v1/projects/{projectId}/merge/blacklist/add`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -128,11 +129,12 @@ export const MergeApiAxiosParamCreator = function (
       assertParamExists("getPotentialDuplicates", "maxLists", maxLists);
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("getPotentialDuplicates", "userId", userId);
-      const localVarPath = `/v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userId}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"maxInList"}}`, encodeURIComponent(String(maxInList)))
-        .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
-        .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+      const localVarPath =
+        `/v1/projects/{projectId}/merge/dups/{maxInList}/{maxLists}/{userId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"maxInList"}}`, encodeURIComponent(String(maxInList)))
+          .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
+          .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -331,13 +333,14 @@ export const MergeApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<Array<Array<Word>>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getPotentialDuplicates(
-        projectId,
-        maxInList,
-        maxLists,
-        userId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getPotentialDuplicates(
+          projectId,
+          maxInList,
+          maxLists,
+          userId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

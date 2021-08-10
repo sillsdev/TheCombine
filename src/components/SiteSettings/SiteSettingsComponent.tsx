@@ -9,7 +9,7 @@ import UserManagement from "components/SiteSettings//UserManagement/UserManageme
 
 export default function SiteSettingsComponent() {
   return (
-    <Grid container justify="center" spacing={6}>
+    <Grid container justifyContent="center" spacing={6}>
       {/* Project List */}
       <BaseSettingsComponent
         icon={<List />}

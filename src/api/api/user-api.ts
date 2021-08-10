@@ -796,10 +796,11 @@ export const UserApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.resetPasswordRequest(
-        passwordResetRequestData,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.resetPasswordRequest(
+          passwordResetRequestData,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

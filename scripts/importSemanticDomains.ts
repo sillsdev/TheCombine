@@ -65,10 +65,8 @@ export function generateCleanJSON(
 
     newEnglishEntry.name = subDomain.Name[0].AUni[0]._;
     newEnglishEntry.id = subDomain.Abbreviation[0].AUni[0]._;
-    newEnglishEntry.description = subDomain.Description[0].AStr[0].Run[0]._.replace(
-      /\s+/g,
-      " "
-    );
+    newEnglishEntry.description =
+      subDomain.Description[0].AStr[0].Run[0]._.replace(/\s+/g, " ");
     newEnglishEntry.questions = [];
     newEnglishEntry.subdomains = [];
 
@@ -77,11 +75,10 @@ export function generateCleanJSON(
       ? subDomain.Name[0].AUni[1]._
       : newEnglishEntry.name;
     newForiegnEntry.id = subDomain.Abbreviation[0].AUni[0]._;
-    newForiegnEntry.description = subDomain.Description[0].AStr[1].Run[0].hasOwnProperty(
-      "_"
-    )
-      ? subDomain.Description[0].AStr[1].Run[0]._.replace(/\s+/g, " ")
-      : newEnglishEntry.description;
+    newForiegnEntry.description =
+      subDomain.Description[0].AStr[1].Run[0].hasOwnProperty("_")
+        ? subDomain.Description[0].AStr[1].Run[0]._.replace(/\s+/g, " ")
+        : newEnglishEntry.description;
     newForiegnEntry.questions = [];
     newForiegnEntry.subdomains = [];
 
