@@ -149,26 +149,26 @@ export function asyncUpdateGoal(goal: Goal) {
 // Returns true if input goal updated.
 export async function loadGoalData(goal: Goal): Promise<boolean> {
   switch (goal.goalType) {
-    case GoalType.MergeDups: {
+    case GoalType.MergeDups:
       await loadMergeDupsData(goal);
       return true;
-    }
+    default:
+      return false;
   }
-  return false;
 }
 
 // Returns true if input goal updated.
 export function updateStepFromData(goal: Goal): boolean {
   switch (goal.goalType) {
-    case GoalType.MergeDups: {
+    case GoalType.MergeDups:
       const currentGoalData = goal.data as MergeDupData;
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep],
       };
       return true;
-    }
+    default:
+      return false;
   }
-  return false;
 }
 
 export function getUserEditId(): string | undefined {

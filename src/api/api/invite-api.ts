@@ -171,10 +171,11 @@ export const InviteApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.emailInviteToProject(
-        emailInviteData,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.emailInviteToProject(
+          emailInviteData,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

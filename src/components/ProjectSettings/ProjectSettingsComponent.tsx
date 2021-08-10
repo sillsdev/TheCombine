@@ -53,7 +53,7 @@ export default function ProjectSettingsComponent() {
   }, [permissions, setImports]);
 
   return (
-    <Grid container justify="center" spacing={6}>
+    <Grid container justifyContent="center" spacing={6}>
       {/* Project List */}
       <BaseSettingsComponent
         icon={<List />}

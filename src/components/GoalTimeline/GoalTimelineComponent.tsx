@@ -1,4 +1,9 @@
-import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
+import {
+  Button,
+  ImageList,
+  ImageListItem,
+  Typography,
+} from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
@@ -156,10 +161,10 @@ export default class GoalTimeline extends React.Component<
 
   renderLandscape() {
     return (
-      <GridList cols={13} cellHeight="auto">
+      <ImageList cols={13} rowHeight="auto">
         {/* Alternatives */}
-        <GridListTile cols={5}>
-          <div style={{ ...timelineStyle.paneStyling }}>
+        <ImageListItem cols={4}>
+          <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
             <Typography variant="h6">
               <Translate id={"goal.selector.other"} />
             </Typography>
@@ -172,19 +177,20 @@ export default class GoalTimeline extends React.Component<
               scrollable={false}
             />
           </div>
-        </GridListTile>
+        </ImageListItem>
 
         {/* Recommendation */}
-        <GridListTile cols={3} style={timelineStyle.paneStyling}>
-          <Typography variant="h6">
+
+        <ImageListItem cols={3} style={timelineStyle.paneStyling as any}>
+          <Typography variant="h5">
             <Translate id={"goal.selector.present"} />
           </Typography>
           {this.goalButton()}
-        </GridListTile>
+        </ImageListItem>
 
         {/* History */}
-        <GridListTile cols={5}>
-          <div style={timelineStyle.paneStyling}>
+        <ImageListItem cols={4}>
+          <div style={timelineStyle.paneStyling as any}>
             <Typography variant="h6">
               <Translate id={"goal.selector.past"} />
             </Typography>
@@ -197,8 +203,8 @@ export default class GoalTimeline extends React.Component<
               scrollable={true}
             />
           </div>
-        </GridListTile>
-      </GridList>
+        </ImageListItem>
+      </ImageList>
     );
   }
 

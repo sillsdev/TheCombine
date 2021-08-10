@@ -12,7 +12,7 @@ interface ImmutableExistingDataProps {
 export class ImmutableExistingData extends React.Component<ImmutableExistingDataProps> {
   render() {
     return (
-      <Grid container wrap="nowrap" justify="space-around">
+      <Grid container wrap="nowrap" justifyContent="space-around">
         <Grid
           item
           xs={5}

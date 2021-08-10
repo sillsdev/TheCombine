@@ -84,7 +84,7 @@ describe("Test the TreeViewReducer", () => {
     expect(
       treeViewReducer(
         { currentDomain: defaultState.currentDomain.subdomains[0] },
-        ({ type: "Nothing" } as any) as TreeViewAction
+        { type: "Nothing" } as any as TreeViewAction
       )
     ).toEqual({ currentDomain: defaultState.currentDomain.subdomains[0] });
   });

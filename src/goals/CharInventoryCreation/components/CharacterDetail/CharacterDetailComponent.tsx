@@ -19,7 +19,7 @@ export default function CharacterDetail(props: CharacterDetailProps) {
       container
       spacing={2}
       direction="row"
-      justify="flex-start"
+      justifyContent="flex-start"
       alignItems="center"
       style={{ padding: theme.spacing(1) }}
     >

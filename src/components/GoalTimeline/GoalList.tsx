@@ -1,8 +1,7 @@
 import {
   Button,
-  Grid,
-  GridList,
-  GridListTile,
+  ImageList,
+  ImageListItem,
   Typography,
 } from "@material-ui/core";
 import { CSSProperties, useState } from "react";
@@ -55,7 +54,7 @@ export default function GoalList(props: GoalListProps): JSX.Element {
   const tileSize = props.size / 3 - 1.25;
 
   return (
-    <GridList
+    <ImageList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
       cols={props.orientation === "horizontal" ? props.numPanes : 1}
       onMouseOver={() => setScrollVisible(props.scrollable)}
@@ -73,7 +72,7 @@ export default function GoalList(props: GoalListProps): JSX.Element {
           if (props.scrollToEnd && element) element.scrollIntoView(true);
         }}
       />
-    </GridList>
+    </ImageList>
   );
 }
 
@@ -101,7 +100,7 @@ export function makeGoalTile(
   onClick?: () => void
 ) {
   return (
-    <GridListTile key={goal?.guid + orientation} cols={1}>
+    <ImageListItem key={goal?.guid + orientation} cols={1}>
       <Button
         color="primary"
         variant={goal ? "outlined" : "contained"}
@@ -115,19 +114,15 @@ export function makeGoalTile(
             goal.goalType !== GoalType.MergeDups)
         }
       >
-        <Grid container direction="column">
-          <Grid item>
-            {goal ? (
-              GoalInfo(goal)
-            ) : (
-              <Typography variant="h6">
-                <Translate id={"goal.selector.noHistory"} />
-              </Typography>
-            )}
-          </Grid>
-        </Grid>
+        {goal ? (
+          GoalInfo(goal)
+        ) : (
+          <Typography variant="h6">
+            <Translate id={"goal.selector.noHistory"} />
+          </Typography>
+        )}
       </Button>
-    </GridListTile>
+    </ImageListItem>
   );
 }
 

@@ -68,7 +68,7 @@ export default class PasswordReset extends React.Component<
   render() {
     return (
       <div>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ padding: 10, width: 450 }}>
             <form onSubmit={this.onSubmit}>
               <Typography variant="h5" align="center" gutterBottom>
@@ -126,7 +126,7 @@ export default class PasswordReset extends React.Component<
                   )}
               </Grid>
 
-              <Grid container justify="flex-end" spacing={2}>
+              <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   {this.props.resetState === RequestState.Fail &&
                   this.state.sentAttempt ? (

@@ -33,7 +33,7 @@ exports[`Tests DomainTile Tile with direction matches the latest snapshot 1`] = 
     className="MuiButton-label"
   >
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
+      className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-space-around"
     >
       <div
         className="MuiGrid-root MuiGrid-item"
