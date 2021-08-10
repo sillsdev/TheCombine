@@ -12,6 +12,7 @@ namespace Backend.Tests.Controllers
     {
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IWordRepository _wordRepo = null!;
+        private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
         private IPermissionService _permissionService = null!;
         private MergeController _mergeController = null!;
@@ -24,7 +25,8 @@ namespace Backend.Tests.Controllers
         {
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo);
+            _wordService = new WordService(_wordRepo);
+            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo, _wordService);
             _permissionService = new PermissionServiceMock();
             _mergeController = new MergeController(_mergeService, _permissionService);
         }

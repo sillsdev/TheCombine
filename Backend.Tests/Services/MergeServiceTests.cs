@@ -12,6 +12,7 @@ namespace Backend.Tests.Services
     {
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IWordRepository _wordRepo = null!;
+        private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
@@ -22,7 +23,8 @@ namespace Backend.Tests.Services
         {
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo);
+            _wordService = new WordService(_wordRepo);
+            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo, _wordService);
         }
 
         [Test]
