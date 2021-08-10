@@ -36,14 +36,15 @@ function CharInvChangesMade(changes: CreateCharInvChanges) {
 }
 
 export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
-  const changelimit = 4;
+  const changelimit = 3;
   if (!changes.charChanges?.length) {
     return (
       <Typography>
         <Translate id="charInventory.changes.noChanges" />
       </Typography>
     );
-  } else if (changes.charChanges?.length > changelimit) {
+  }
+  if (changes.charChanges.length > changelimit) {
     return (
       <Typography>
         {changes.charChanges.slice(0, changelimit - 1).map(CharInvChange)}

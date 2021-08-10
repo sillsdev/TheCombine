@@ -7,11 +7,11 @@ import {
 import { CSSProperties, useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import { Goal, GoalStatus, GoalType } from "types/goals";
 import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
 import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
+import { Goal, GoalStatus, GoalType } from "types/goals";
 
 export type Orientation = "horizontal" | "vertical";
 
