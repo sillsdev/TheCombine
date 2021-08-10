@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   Chip,
@@ -12,7 +13,7 @@ import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { Sense, Word } from "api/models";
-import { getWord } from "backend";
+import { getFrontierWords, getWord, undoMerge } from "backend";
 import {
   CompletedMerge,
   MergesCompleted,
@@ -43,6 +44,7 @@ function MergesMade(changes: MergesCompleted) {
         {changes.merges?.length ?? 0}
       </Typography>
       {changes.merges?.map(MergeChange)}
+      <UndoButton merges={changes.merges} />
     </div>
   );
 }
@@ -81,6 +83,50 @@ function MergeChange(change: CompletedMerge) {
         ))}
       </Grid>
     </div>
+  );
+}
+
+interface UndoButtonProps {
+  merges: CompletedMerge[];
+}
+
+function UndoButton(props: UndoButtonProps) {
+  const [active, setActive] = useState<boolean>(false);
+
+  let params: { [key: string]: Array<string> } = {};
+
+  useEffect(() => {
+    async function checkFrontier() {
+      await getFrontierWords().then((words) => {
+        const frontierIds = words.map((word) => word.id);
+        let activateBtn = true;
+        props.merges.forEach((merge) => {
+          merge.parentIds.forEach((id) => {
+            params[id] = merge.childrenIds;
+            if (!frontierIds.includes(id)) {
+              activateBtn = false;
+            }
+          });
+        });
+        setActive(activateBtn);
+      });
+    }
+    checkFrontier();
+  });
+
+  return (
+    <Button
+      disabled={!active}
+      onClick={async () => {
+        if (await undoMerge(params)) {
+          console.log("undo merge!");
+        } else {
+          console.log("undo failed");
+        }
+      }}
+    >
+      undo
+    </Button>
   );
 }
 
