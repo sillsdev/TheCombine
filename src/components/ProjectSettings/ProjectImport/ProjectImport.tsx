@@ -55,8 +55,9 @@ export default class ProjectImport extends React.Component<
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="caption">
+              <Translate id="projectSettings.import.body" />{" "}
               <Translate
-                id="projectSettings.import.body"
+                id="createProject.uploadFormat"
                 options={{ renderInnerHtml: true, renderToStaticMarkup }}
               />
             </Typography>
