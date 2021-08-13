@@ -14,8 +14,8 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-            var field = new EmailInvite { Email = Email, Token = Token, ExpireTime = _expireTime};
-            Assert.That(field.Equals(new EmailInvite { Email = Email, Token = Token, ExpireTime = _expireTime}));
+            var field = new EmailInvite { Email = Email, Token = Token, ExpireTime = _expireTime };
+            Assert.That(field.Equals(new EmailInvite { Email = Email, Token = Token, ExpireTime = _expireTime }));
         }
 
         [Test]

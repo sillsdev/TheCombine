@@ -311,15 +311,6 @@ namespace BackendFramework.Models
             Project = new Project();
             User = new User();
         }
-
-        public UserCreatedProject Clone()
-        {
-            return new()
-            {
-                Project = Project.Clone(),
-                User = User.Clone()
-            };
-        }
     }
 
     /// <remarks>
