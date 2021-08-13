@@ -87,8 +87,13 @@ namespace Backend.Tests.Models
             var project = new Project { Name = Name, VernacularWritingSystem = system };
             var domain = new SemanticDomain { Name = Name, Id = "1", Description = "text" };
             project.SemanticDomains.Add(domain);
+
             var customField = new CustomField { Name = Name, Type = "type" };
             project.CustomFields.Add(customField);
+
+            var emailInvite = new EmailInvite(10, "user@combine.org");
+            project.InviteTokens.Add(emailInvite);
+
             var project2 = project.Clone();
             Assert.AreEqual(project, project2);
         }
