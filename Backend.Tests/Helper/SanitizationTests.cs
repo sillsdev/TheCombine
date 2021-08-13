@@ -109,7 +109,7 @@ namespace Backend.Tests.Helper
             new List<string> { "make spaces underscores", "make_spaces_underscores" },
             new List<string> { "(){}[]", "()()()" },
             new List<string> { "こんにちは", "-----" },
-            new List<string> { "⁇⸘¡", ",,,"}
+            new List<string> { "⁇⸘¡", ",,," }
         };
         [TestCaseSource(nameof(_namesUnfriendlyFriendly))]
         public void TestMakeFriendlyForPath(List<string> nameName)
