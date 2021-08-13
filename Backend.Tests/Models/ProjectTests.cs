@@ -1,4 +1,5 @@
-﻿using BackendFramework.Models;
+﻿using System.Linq;
+using BackendFramework.Models;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -10,7 +11,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var project = new Project { Name = Name };
             Assert.That(project.Equals(new Project { Name = Name }));
         }
@@ -87,8 +87,64 @@ namespace Backend.Tests.Models
             var project = new Project { Name = Name, VernacularWritingSystem = system };
             var domain = new SemanticDomain { Name = Name, Id = "1", Description = "text" };
             project.SemanticDomains.Add(domain);
+            var customField = new CustomField { Name = Name, Type = "type" };
+            project.CustomFields.Add(customField);
             var project2 = project.Clone();
             Assert.AreEqual(project, project2);
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Project { Name = Name }.GetHashCode(),
+                new Project { Name = "Different Name" }.GetHashCode()
+            );
+        }
+    }
+
+    public class CustomFieldTests
+    {
+        private const string Name = "Name";
+        private const string Type = "Type";
+
+        [Test]
+        public void TestEquals()
+        {
+            var system = new CustomField { Name = Name, Type = Type };
+            Assert.That(system.Equals(new CustomField { Name = Name, Type = Type }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var system = new CustomField { Name = Name };
+            Assert.IsFalse(system.Equals(null));
+        }
+
+        [Test]
+        public void TestNotEquals()
+        {
+            var system = new CustomField { Name = Name, Type = Type };
+            Assert.IsFalse(system.Equals(new CustomField { Name = Name, Type = "Other Type" }));
+            Assert.IsFalse(system.Equals(new CustomField { Name = "Other Name", Type = Type }));
+        }
+
+        [Test]
+        public void TestClone()
+        {
+            var system = new CustomField { Name = Name, Type = Type };
+            var clonedSystem = system.Clone();
+            Assert.AreEqual(system, clonedSystem);
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new CustomField { Name = Name }.GetHashCode(),
+                new CustomField { Name = "Different Name" }.GetHashCode()
+            );
         }
     }
 
