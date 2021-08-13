@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 
 import { Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import {
   CompletedMerge,
   MergesCompleted,
@@ -97,7 +98,8 @@ interface UndoButtonProps {
 }
 
 function UndoButton(props: UndoButtonProps) {
-  const [active, setActive] = useState<boolean>(false);
+  const [undoBtn, setUndoBtn] = useState<boolean>(false);
+  const [undoDialogOpen, setUndo] = useState<boolean>(false);
 
   let params: { [key: string]: Array<string> } = {};
 
@@ -114,26 +116,29 @@ function UndoButton(props: UndoButtonProps) {
             }
           });
         });
-        setActive(activateBtn);
+        setUndoBtn(activateBtn);
       });
     }
     checkFrontier();
   });
 
-  return (
-    <Button
-      disabled={!active}
-      onClick={async () => {
-        if (await undoMerge(params)) {
-          console.log("undo merge!");
-        } else {
-          console.log("undo failed");
-        }
-      }}
-    >
-      undo
-    </Button>
-  );
+  if (undoBtn) {
+    console.log("can undo");
+    return (
+      <div>
+        <Button onClick={() => setUndo(true)}>undo</Button>
+        <CancelConfirmDialog
+          open={undoDialogOpen}
+          textId={"undo merges"} // update translations.json!-----------------------------
+          handleCancel={() => setUndo(false)}
+          handleAccept={async () =>
+            await undoMerge(params).then(() => setUndo(false))
+          }
+        />
+      </div>
+    );
+  }
+  return <Button disabled>undo</Button>;
 }
 
 interface WordPaperProps {
