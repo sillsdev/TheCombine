@@ -111,31 +111,30 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-            var system = new CustomField { Name = Name, Type = Type };
-            Assert.That(system.Equals(new CustomField { Name = Name, Type = Type }));
+            var field = new CustomField { Name = Name, Type = Type };
+            Assert.That(field.Equals(new CustomField { Name = Name, Type = Type }));
         }
 
         [Test]
         public void TestEqualsNull()
         {
-            var system = new CustomField { Name = Name };
-            Assert.IsFalse(system.Equals(null));
+            var field = new CustomField { Name = Name };
+            Assert.IsFalse(field.Equals(null));
         }
 
         [Test]
         public void TestNotEquals()
         {
-            var system = new CustomField { Name = Name, Type = Type };
-            Assert.IsFalse(system.Equals(new CustomField { Name = Name, Type = "Other Type" }));
-            Assert.IsFalse(system.Equals(new CustomField { Name = "Other Name", Type = Type }));
+            var field = new CustomField { Name = Name, Type = Type };
+            Assert.IsFalse(field.Equals(new CustomField { Name = Name, Type = "Other Type" }));
+            Assert.IsFalse(field.Equals(new CustomField { Name = "Other Name", Type = Type }));
         }
 
         [Test]
         public void TestClone()
         {
-            var system = new CustomField { Name = Name, Type = Type };
-            var clonedSystem = system.Clone();
-            Assert.AreEqual(system, clonedSystem);
+            var field = new CustomField { Name = Name, Type = Type };
+            Assert.AreEqual(field, field.Clone());
         }
 
         [Test]
