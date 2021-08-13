@@ -94,7 +94,7 @@ export default class Login extends React.Component<
 
   render() {
     return (
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>
           <form onSubmit={(e) => this.login(e)}>
             <CardContent>
@@ -186,7 +186,7 @@ export default class Login extends React.Component<
               )}
 
               {/* Register and Login buttons */}
-              <Grid container justify="flex-end" spacing={2}>
+              <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
                   <Button onClick={openUserGuide}>
                     <Help />

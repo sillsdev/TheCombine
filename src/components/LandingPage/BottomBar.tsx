@@ -18,7 +18,7 @@ export default function BottomBar() {
         <Toolbar variant="dense">
           <Grid
             container
-            justify="space-between"
+            justifyContent="space-between"
             spacing={2}
             alignItems="center"
           >

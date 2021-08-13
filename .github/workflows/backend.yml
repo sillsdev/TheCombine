@@ -48,6 +48,12 @@ jobs:
           languages: csharp
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
+      - name: Upload artifacts if build failed
+        uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
+        with:
+          name: tracer-logs
+          path: ${{ runner.temp }}/*.log
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
 

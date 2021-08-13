@@ -31,9 +31,8 @@ describe("Tests spell checker", () => {
 
   it("returns an array", () => {
     let spellChecker: SpellChecker = new SpellChecker();
-    let spellingSuggestions: string[] = spellChecker.getSpellingSuggestions(
-      "abjkdsjf"
-    );
+    let spellingSuggestions: string[] =
+      spellChecker.getSpellingSuggestions("abjkdsjf");
     expect(spellingSuggestions.length).toBeGreaterThanOrEqual(0);
   });
 });

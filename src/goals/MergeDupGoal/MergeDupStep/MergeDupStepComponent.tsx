@@ -1,4 +1,4 @@
-import { Button, Grid, GridList } from "@material-ui/core";
+import { Button, Grid, ImageList } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
@@ -50,18 +50,18 @@ class MergeDupStep extends React.Component<
             padding: theme.spacing(1),
           }}
         >
-          <GridList
-            cellHeight="auto"
+          <ImageList
+            rowHeight="auto"
             style={{
               flexWrap: "nowrap",
               overflow: "auto",
             }}
           >
             <MergeDragDrop portrait={this.state.portrait} />
-          </GridList>
+          </ImageList>
         </div>
         {/* Merge button */}
-        <Grid container justify="flex-start">
+        <Grid container justifyContent="flex-start">
           <Grid item>
             <Button
               color="primary"

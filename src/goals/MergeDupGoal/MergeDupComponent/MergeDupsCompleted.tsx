@@ -32,12 +32,18 @@ export default function MergeDupsCompleted() {
 function MergesMade(changes: MergesCompleted): JSX.Element {
   return (
     <div>
-      <Typography>
-        <Translate id="mergeDups.completed.number" />
-        {changes.merges?.length ?? 0}
-      </Typography>
+      {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
     </div>
+  );
+}
+
+export function MergesCount(changes: MergesCompleted): JSX.Element {
+  return (
+    <Typography>
+      <Translate id="mergeDups.completed.number" />
+      {changes.merges?.length ?? 0}
+    </Typography>
   );
 }
 

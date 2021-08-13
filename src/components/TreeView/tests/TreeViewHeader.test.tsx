@@ -67,9 +67,8 @@ describe("TreeViewHeader", () => {
       const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
       // Simulate the user typing
-      const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
-        TEST
-      );
+      const { simulatedInput, simulatedEnterKey } =
+        setupSimulatedInputTest(TEST);
 
       // When testing hooks any call that results in a state change needs to be wrapped in
       // an act call to avoid warnings and make sure the state change is complete before we test
@@ -92,9 +91,8 @@ describe("TreeViewHeader", () => {
       const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
       // Simulate the user typing
-      const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
-        TEST
-      );
+      const { simulatedInput, simulatedEnterKey } =
+        setupSimulatedInputTest(TEST);
 
       // When testing hooks any call that results in a state change needs to be wrapped in
       // an act call to avoid warnings and make sure the state change is complete before we test
@@ -115,9 +113,8 @@ describe("TreeViewHeader", () => {
       const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
       // Simulate the user typing
-      const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
-        TEST
-      );
+      const { simulatedInput, simulatedEnterKey } =
+        setupSimulatedInputTest(TEST);
 
       // When testing hooks any call that results in a state change needs to be wrapped in
       // an act call to avoid warnings and make sure the state change is complete before we test
@@ -179,9 +176,8 @@ describe("TreeViewHeader", () => {
     it("does not switch semantic domain if given name not found", () => {
       const TEST: string = "itsatrap";
       const { result } = renderHook(() => useTreeViewNavigation(testProps));
-      const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
-        TEST
-      );
+      const { simulatedInput, simulatedEnterKey } =
+        setupSimulatedInputTest(TEST);
       // When testing hooks any call that results in a state change needs to be wrapped in
       // an act call to avoid warnings and make sure the state change is complete before we test
       // for the results

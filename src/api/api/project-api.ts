@@ -556,9 +556,8 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAllProjects(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.deleteAllProjects(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -601,10 +600,8 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProjectUsers(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getAllProjectUsers(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -693,10 +690,11 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.projectDuplicateCheck(
-        projectName,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.projectDuplicateCheck(
+          projectName,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
