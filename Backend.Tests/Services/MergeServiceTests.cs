@@ -104,6 +104,71 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void UndoMergeOneChildTest()
+        {
+            var thisWord = Util.RandomWord(ProjId);
+            thisWord = _wordRepo.Create(thisWord).Result;
+
+            var mergeObject = new MergeWords
+            {
+                Parent = thisWord,
+                Children = new List<MergeSourceWord>
+                {
+                    new() { SrcWordId = thisWord.Id }
+                }
+            };
+
+            var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
+
+            // There should only be 1 word added and it should be identical to what we passed in
+            Assert.That(newWords, Has.Count.EqualTo(1));
+            Assert.That(newWords.First().ContentEquals(thisWord));
+
+            var childIds = mergeObject.Children.ConvertAll<string>(word => word.SrcWordId);
+            var mergedWord = new KeyValuePair<string, List<string>>(newWords[0].Id, childIds);
+            var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
+
+            var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
+            var frontierWordIds = frontierWords.ConvertAll<string>(word => word.Id);
+
+            Assert.That(frontierWords, Has.Count.EqualTo(1));
+            Assert.Contains(childIds[0], frontierWordIds);
+        }
+
+        [Test]
+        public void UndoMergeMultiChildTest()
+        {
+            // Build a mergeWords with a parent with 3 children.
+            var mergeWords = new MergeWords { Parent = Util.RandomWord(ProjId) };
+            const int numberOfChildren = 3;
+            foreach (var _ in Enumerable.Range(0, numberOfChildren))
+            {
+                var child = Util.RandomWord(ProjId);
+                var id = _wordRepo.Create(child).Result.Id;
+                Assert.IsNotNull(_wordRepo.GetWord(ProjId, id).Result);
+                mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
+            }
+            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
+
+            var mergeWordsList = new List<MergeWords> { mergeWords };
+            var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
+
+            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
+
+            var childIds = mergeWords.Children.ConvertAll<string>(word => word.SrcWordId);
+            var mergedWord = new KeyValuePair<string, List<string>>(newWords[0].Id, childIds);
+            var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
+
+            var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
+            var frontierWordIds = frontierWords.ConvertAll<string>(word => word.Id);
+
+            Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
+            Assert.Contains(childIds[0], frontierWordIds);
+            Assert.Contains(childIds[1], frontierWordIds);
+            Assert.Contains(childIds[2], frontierWordIds);
+        }
+
+        [Test]
         public void AddMergeToBlacklistTest()
         {
             _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
