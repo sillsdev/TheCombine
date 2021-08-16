@@ -35,6 +35,27 @@ function CharInvChangesMade(changes: CreateCharInvChanges) {
   return changes.charChanges.map(CharInvChange);
 }
 
+export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
+  const changelimit = 3;
+  if (!changes.charChanges?.length) {
+    return (
+      <Typography>
+        <Translate id="charInventory.changes.noChanges" />
+      </Typography>
+    );
+  }
+  if (changes.charChanges.length > changelimit) {
+    return (
+      <Typography>
+        {changes.charChanges.slice(0, changelimit - 1).map(CharInvChange)}
+        {`+${changes.charChanges.length - 3} `}
+        <Translate id="charInventory.changes.more" />
+      </Typography>
+    );
+  }
+  return <Typography>{changes.charChanges.map(CharInvChange)}</Typography>;
+}
+
 function CharInvChange(change: CharacterChange) {
   return (
     <React.Fragment key={change[0]}>

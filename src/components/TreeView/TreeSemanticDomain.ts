@@ -1,7 +1,8 @@
 import { SemanticDomainWithSubdomains } from "api/models";
 
 export default class TreeSemanticDomain
-  implements SemanticDomainWithSubdomains {
+  implements SemanticDomainWithSubdomains
+{
   id: string;
   name: string;
   description: string = "";

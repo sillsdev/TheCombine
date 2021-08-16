@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core";
-import { Cached, Error, GetApp } from "@material-ui/icons";
+import { Cached, Error as ErrorIcon, GetApp } from "@material-ui/icons";
 import React, { createRef, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,24 +40,25 @@ export default function DownloadButton(props: DownloadButtonProps) {
     return `${projectName}_${getNowDateTimeString()}.zip`;
   }
 
-  async function download() {
-    const projectName = await getProjectName(exportState.projectId);
-    setFileName(makeExportName(projectName));
-    asyncDownloadExport(exportState.projectId)(dispatch)
-      .then((url) => {
-        if (url) {
-          setFileUrl(url);
-          reset();
-        }
-      })
-      .catch(console.error);
+  function download() {
+    getProjectName(exportState.projectId).then((projectName) => {
+      setFileName(makeExportName(projectName));
+      asyncDownloadExport(exportState.projectId)(dispatch)
+        .then((url) => {
+          if (url) {
+            setFileUrl(url);
+            reset();
+          }
+        })
+        .catch(console.error);
+    });
   }
 
   function reset() {
     resetExport(exportState.projectId)(dispatch);
   }
 
-  function textId() {
+  function textId(): string {
     switch (exportState.status) {
       case ExportStatus.InProgress:
         return "projectExport.exportInProgress";
@@ -65,17 +66,21 @@ export default function DownloadButton(props: DownloadButtonProps) {
         return "projectExport.downloadReady";
       case ExportStatus.Failure:
         return "projectExport.exportFailed";
+      default:
+        throw new Error("Not implemented");
     }
   }
 
-  function icon() {
+  function icon(): JSX.Element {
     switch (exportState.status) {
       case ExportStatus.InProgress:
         return <Cached />;
       case ExportStatus.Success:
         return <GetApp />;
       case ExportStatus.Failure:
-        return <Error />;
+        return <ErrorIcon />;
+      default:
+        return <div />;
     }
   }
 
@@ -87,12 +92,14 @@ export default function DownloadButton(props: DownloadButtonProps) {
       : themeColors.primary;
   }
 
-  function iconFunction() {
+  function iconFunction(): () => void {
     switch (exportState.status) {
       case ExportStatus.Success:
         return download;
       case ExportStatus.Failure:
         return reset;
+      default:
+        return () => {};
     }
   }
 

@@ -7,7 +7,7 @@
 
 # Frontend configuration items:
 config_show_cert_expiration: false
-config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
+config_analytics_write_key: "j9EeK4oURluRSIKbaXCBKBxGCnT2WahB"
 
 #################################################
 # TheCombine is installed on the Live Server by TeamCity.  It will set the

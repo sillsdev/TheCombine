@@ -46,7 +46,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
           <Translate id="createProject.fileSelected" />: {filename}
         </Typography>
       )}
-      <Grid container spacing={1} justify="flex-start">
+      <Grid container spacing={1} justifyContent="flex-start">
         <Grid item>
           <FileInputButton
             updateFile={(file) => updateFile(file)}

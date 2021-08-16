@@ -442,11 +442,12 @@ export const WordApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFrontierWord(
-        projectId,
-        wordId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.deleteFrontierWord(
+          projectId,
+          wordId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -466,10 +467,8 @@ export const WordApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProjectWords(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.deleteProjectWords(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -489,10 +488,11 @@ export const WordApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectFrontierWords(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getProjectFrontierWords(
+          projectId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
