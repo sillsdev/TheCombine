@@ -21,3 +21,7 @@ k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
 k8s_namespace_cfg: "{{k8s_working_dir}}/namespace"
 
 kubecfg: "{{ k8s_working_dir }}/config"
+
+# Configure backups
+db_files_subdir: dump
+backend_files_subdir: .CombineFiles
