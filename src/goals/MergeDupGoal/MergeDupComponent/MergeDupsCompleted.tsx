@@ -123,7 +123,6 @@ function UndoButton(props: UndoButtonProps) {
   });
 
   if (undoBtn) {
-    console.log("can undo");
     return (
       <div>
         <Button onClick={() => setUndo(true)}>undo</Button>
