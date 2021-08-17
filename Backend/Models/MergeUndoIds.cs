@@ -25,6 +25,12 @@ namespace BackendFramework.Models
             ChildIds = new List<string>();
         }
 
+        public MergeUndoIds(List<string> ParentIds, List<string> ChildIds)
+        {
+            this.ParentIds = ParentIds;
+            this.ChildIds = ChildIds;
+        }
+
         public MergeUndoIds Clone()
         {
             var clone = new MergeUndoIds
