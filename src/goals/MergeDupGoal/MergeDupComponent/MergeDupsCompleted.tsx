@@ -119,10 +119,12 @@ function UndoButton(props: UndoButtonProps) {
   if (undoBtn) {
     return (
       <div>
-        <Button onClick={() => setUndo(true)}>undo</Button>
+        <Button onClick={() => setUndo(true)}>
+          <Translate id="mergeDups.undo.undoMerges" />
+        </Button>
         <CancelConfirmDialog
           open={undoDialogOpen}
-          textId={"undo merges"} // update translations.json!-----------------------------
+          textId={"mergeDups.undo.undoMerges"}
           handleCancel={() => setUndo(false)}
           handleAccept={async () =>
             await undoMerges(props.merges).then(() => setUndo(false))
@@ -131,7 +133,11 @@ function UndoButton(props: UndoButtonProps) {
       </div>
     );
   }
-  return <Button disabled>undo</Button>;
+  return (
+    <Button disabled>
+      <Translate id="mergeDups.undo.undoDisabled" />
+    </Button>
+  );
 }
 
 interface WordPaperProps {
