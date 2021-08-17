@@ -124,6 +124,8 @@ export default class Register extends React.Component<
 
     // Error checking.
     const error = { ...this.state.error };
+    this.checkEmail(this.state.email);
+    this.checkUsername(this.state.username);
     error.name = name === "";
     error.username = !usernameRequirements(username);
     error.email = email === "";
@@ -191,7 +193,13 @@ export default class Register extends React.Component<
                 label={<Translate id="login.username" />}
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
-                onBlur={() => this.checkUsername(this.state.username)}
+                onBlur={() =>
+                  this.state.username.length > 2
+                    ? this.checkUsername(this.state.username)
+                    : this.setState((prevState) => ({
+                        error: { ...prevState.error, username: true },
+                      }))
+                }
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (
@@ -214,7 +222,11 @@ export default class Register extends React.Component<
                 label={<Translate id="login.email" />}
                 value={this.state.email}
                 onChange={(e) => this.updateField(e, "email")}
-                onBlur={() => this.checkEmail(this.state.email)}
+                onBlur={() =>
+                  this.state.email.length > 0
+                    ? this.checkEmail(this.state.email)
+                    : null
+                }
                 error={this.state.error["email"]}
                 helperText={
                   this.state.error["email"] ? (
