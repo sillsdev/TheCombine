@@ -8,6 +8,7 @@ import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
+import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -141,7 +142,7 @@ const columns: Column<any>[] = [
         }
       };
       return (
-        <DeleteCell
+        <SenseCell
           rowData={props.rowData}
           onRowDataChange={props.onRowDataChange}
           delete={deleteSense}

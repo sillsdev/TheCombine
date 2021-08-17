@@ -37,6 +37,9 @@ export default function EntryNote(props: EntryNoteProps) {
         titleId={"addWords.addNote"}
         close={() => setNoteOpen(false)}
         updateText={props.updateNote}
+        buttonIdCancel="note-edit-cancel"
+        buttonIdConfirm="note-edit-confirm"
+        textFieldId="note-text-field"
       />
     </React.Fragment>
   );

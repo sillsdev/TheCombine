@@ -190,6 +190,7 @@ export default class RecentEntry extends React.Component<
               <DeleteEntry
                 removeEntry={() => this.props.removeEntry()}
                 confirmId={"addWords.deleteRowWarning"}
+                wordId={this.props.entry.id}
               />
             )}
           </Grid>
