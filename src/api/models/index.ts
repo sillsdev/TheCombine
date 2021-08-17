@@ -7,6 +7,7 @@ export * from "./email-invite-data";
 export * from "./email-invite-status";
 export * from "./gloss";
 export * from "./merge-source-word";
+export * from "./merge-undo-ids";
 export * from "./merge-words";
 export * from "./note";
 export * from "./password-reset-data";

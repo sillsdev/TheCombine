@@ -1,6 +1,7 @@
 import {
   Definition,
   MergeSourceWord,
+  MergeUndoIds,
   MergeWords,
   SemanticDomain,
   State,
@@ -10,7 +11,6 @@ import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
-  CompletedMerge,
   MergesCompleted,
   MergeStepData,
 } from "goals/MergeDupGoal/MergeDupsTypes";
@@ -242,12 +242,12 @@ export function mergeAll() {
     });
     if (mergeWordsArray.length) {
       const parentIds = await backend.mergeWords(mergeWordsArray);
-      const childrenIds = [
+      const childIds = [
         ...new Set(
           mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
         ),
       ];
-      const completedMerge = { childrenIds, parentIds };
+      const completedMerge = { childIds, parentIds };
       const goal = getState().goalsState.currentGoal;
       if (goal) {
         await dispatch(addCompletedMergeToGoal(goal, completedMerge));
@@ -258,7 +258,7 @@ export function mergeAll() {
 
 function addCompletedMergeToGoal(
   goal: MergeDups,
-  completedMerge: CompletedMerge
+  completedMerge: MergeUndoIds
 ) {
   return async (dispatch: StoreStateDispatch) => {
     if (goal.goalType === GoalType.MergeDups) {

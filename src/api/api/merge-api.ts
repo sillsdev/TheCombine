@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { MergeUndoIds } from "../models";
+// @ts-ignore
 import { MergeWords } from "../models";
 // @ts-ignore
 import { Word } from "../models";
@@ -223,19 +225,19 @@ export const MergeApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {Array<MergeUndoIds>} mergeUndoIds
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     undoMerges: async (
       projectId: string,
-      requestBody: { [key: string]: Array<string> },
+      mergeUndoIds: Array<MergeUndoIds>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("undoMerges", "projectId", projectId);
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists("undoMerges", "requestBody", requestBody);
+      // verify required parameter 'mergeUndoIds' is not null or undefined
+      assertParamExists("undoMerges", "mergeUndoIds", mergeUndoIds);
       const localVarPath = `/v1/projects/{projectId}/merge/undo`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -266,7 +268,7 @@ export const MergeApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
+        mergeUndoIds,
         localVarRequestOptions,
         configuration
       );
@@ -377,20 +379,20 @@ export const MergeApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {Array<MergeUndoIds>} mergeUndoIds
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async undoMerges(
       projectId: string,
-      requestBody: { [key: string]: Array<string> },
+      mergeUndoIds: Array<MergeUndoIds>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.undoMerges(
         projectId,
-        requestBody,
+        mergeUndoIds,
         options
       );
       return createRequestFunction(
@@ -469,17 +471,17 @@ export const MergeApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {{ [key: string]: Array<string>; }} requestBody
+     * @param {Array<MergeUndoIds>} mergeUndoIds
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     undoMerges(
       projectId: string,
-      requestBody: { [key: string]: Array<string> },
+      mergeUndoIds: Array<MergeUndoIds>,
       options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
-        .undoMerges(projectId, requestBody, options)
+        .undoMerges(projectId, mergeUndoIds, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -577,10 +579,10 @@ export interface MergeApiUndoMergesRequest {
 
   /**
    *
-   * @type {{ [key: string]: Array<string>; }}
+   * @type {Array<MergeUndoIds>}
    * @memberof MergeApiUndoMerges
    */
-  readonly requestBody: { [key: string]: Array<string> };
+  readonly mergeUndoIds: Array<MergeUndoIds>;
 }
 
 /**
@@ -666,7 +668,7 @@ export class MergeApi extends BaseAPI {
     return MergeApiFp(this.configuration)
       .undoMerges(
         requestParameters.projectId,
-        requestParameters.requestBody,
+        requestParameters.mergeUndoIds,
         options
       )
       .then((request) => request(this.axios, this.basePath));

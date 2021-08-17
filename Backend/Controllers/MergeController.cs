@@ -54,7 +54,7 @@ namespace BackendFramework.Controllers
         /// <returns> True if merge was successfully undone </returns>
         [HttpPut("undo", Name = "UndoMerges")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> UndoMerges(string projectId, [FromBody, BindRequired] Dictionary<string, List<string>> ids)
+        public async Task<IActionResult> UndoMerges(string projectId, [FromBody, BindRequired] MergeUndoIds[] ids)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {

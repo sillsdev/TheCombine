@@ -80,16 +80,20 @@ namespace BackendFramework.Services
 
         /// <summary> Undo merge </summary>
         /// <returns> True if merge was successfully undone </returns>
-        public async Task<bool> UndoMerge(string projectId, KeyValuePair<string, List<string>> ids)
+        public async Task<bool> UndoMerge(string projectId, MergeUndoIds ids)
         {
-            var parentWord = (await _wordRepo.GetWord(projectId, ids.Key))?.Clone();
-            if (parentWord is null)
+            foreach (var parentId in ids.ParentIds)
             {
-                return false;
+                var parentWord = (await _wordRepo.GetWord(projectId, parentId))?.Clone();
+                if (parentWord is null)
+                {
+                    return false;
+                }
+                await _wordService.DeleteFrontierWord(projectId, parentId);
             }
-            await _wordService.DeleteFrontierWord(projectId, parentWord.Id);
+
             List<Word> childWords = new List<Word>();
-            foreach (var childId in ids.Value)
+            foreach (var childId in ids.ChildIds)
             {
                 var childWord = await _wordRepo.GetWord(projectId, childId);
                 if (childWord is null)

@@ -12,13 +12,10 @@ import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import { Sense, Word } from "api/models";
-import { getFrontierWords, getWord, undoMerge } from "backend";
+import { MergeUndoIds, Sense, Word } from "api/models";
+import { getFrontierWords, getWord, undoMerges } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import {
-  CompletedMerge,
-  MergesCompleted,
-} from "goals/MergeDupGoal/MergeDupsTypes";
+import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -56,7 +53,7 @@ export function MergesCount(changes: MergesCompleted): JSX.Element {
   );
 }
 
-function MergeChange(change: CompletedMerge): JSX.Element {
+function MergeChange(change: MergeUndoIds): JSX.Element {
   return (
     <div key={change.parentIds[0]}>
       <Grid
@@ -66,7 +63,7 @@ function MergeChange(change: CompletedMerge): JSX.Element {
           overflow: "auto",
         }}
       >
-        {change.childrenIds.map((id) => (
+        {change.childIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
         <Grid
@@ -94,14 +91,12 @@ function MergeChange(change: CompletedMerge): JSX.Element {
 }
 
 interface UndoButtonProps {
-  merges: CompletedMerge[];
+  merges: MergeUndoIds[];
 }
 
 function UndoButton(props: UndoButtonProps) {
   const [undoBtn, setUndoBtn] = useState<boolean>(false);
   const [undoDialogOpen, setUndo] = useState<boolean>(false);
-
-  let params: { [key: string]: Array<string> } = {};
 
   useEffect(() => {
     async function checkFrontier() {
@@ -110,7 +105,6 @@ function UndoButton(props: UndoButtonProps) {
         let activateBtn = true;
         props.merges.forEach((merge) => {
           merge.parentIds.forEach((id) => {
-            params[id] = merge.childrenIds;
             if (!frontierIds.includes(id)) {
               activateBtn = false;
             }
@@ -131,7 +125,7 @@ function UndoButton(props: UndoButtonProps) {
           textId={"undo merges"} // update translations.json!-----------------------------
           handleCancel={() => setUndo(false)}
           handleAccept={async () =>
-            await undoMerge(params).then(() => setUndo(false))
+            await undoMerges(props.merges).then(() => setUndo(false))
           }
         />
       </div>

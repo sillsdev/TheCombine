@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import * as Api from "api";
 import {
   EmailInviteStatus,
+  MergeUndoIds,
   MergeWords,
   Permission,
   Project,
@@ -190,10 +191,10 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
   return (await mergeApi.mergeWords(params, defaultOptions())).data;
 }
 
-export async function undoMerge(wordIds: { [key: string]: Array<string> }) {
+export async function undoMerges(wordIds: MergeUndoIds[]) {
   const params = {
     projectId: LocalStorage.getProjectId(),
-    requestBody: wordIds,
+    mergeUndoIds: wordIds,
   };
   return (await mergeApi.undoMerges(params, defaultOptions())).data;
 }
