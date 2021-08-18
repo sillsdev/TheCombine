@@ -11,6 +11,7 @@ if __name__ == "__main__":
     proj_id = combine.get_project_id("Deutsch")
     print(f"Project ID: {proj_id}")
     user_id = combine.get_user_id("jmg227")
-    print(f'User Id: {user_id}')
-    proj_roles = combine.get_project_roles(proj_id, Permission.Owner)
-    print(f"Project Roles:\n{proj_roles}")
+    print(f"User Id: {user_id}")
+    if proj_id is not None:
+        proj_roles = combine.get_project_roles(proj_id, Permission.Owner)
+        print(f"Project Roles:\n{proj_roles}")

@@ -1,4 +1,24 @@
 ---
+#######################################
+# Kubernetes resource templates
+k8s_resource_templates:
+  - persistentvolumeclaim-backend-data.yaml
+  - persistentvolumeclaim-database-data.yaml
+  - env-backend-configmap.yaml
+  - env-backend-secrets.yaml
+  - env-frontend-configmap.yaml
+  - env-maintenance-configmap.yaml
+  - aws-s3-credentials.yaml
+  - deployment-backend.yaml
+  - deployment-database.yaml
+  - deployment-frontend.yaml
+  - deployment-maintenance.yaml
+  - ingress-combine.yaml
+  - service-backend.yaml
+  - service-database.yaml
+  - service-frontend.yaml
+
+#######################################
 # Persistent storage size configurations
 backend_data_size: 4Gi
 database_data_size: 2Gi

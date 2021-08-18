@@ -10,7 +10,7 @@ spec:
       creationTimestamp: null
     spec:
       containers:
-      - image: {{ aws_ecr_login.image }}   # the base image to be used to run our shell script
+      - image: {{ aws_ecr_login.image }}
         imagePullPolicy: IfNotPresent
         name: "{{ aws_ecr_login.job_name }}"
         volumeMounts:
@@ -19,10 +19,10 @@ spec:
         command:
           - ecr-get-login.sh
         env:
-        - name: AWS_REGION
+        - name: AWS_DEFAULT_REGION
           valueFrom:
             secretKeyRef:
-              key: AWS_REGION
+              key: AWS_DEFAULT_REGION
               name: "{{ aws_ecr_login.secrets_name }}"
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
@@ -44,10 +44,10 @@ spec:
             configMapKeyRef:
               key: NAMESPACES
               name: "{{ aws_ecr_login.config_name }}"
-        - name: SECRET_NAME
+        - name: PULL_SECRET_NAME
           valueFrom:
             configMapKeyRef:
-              key: SECRET_NAME
+              key: PULL_SECRET_NAME
               name: "{{ aws_ecr_login.config_name }}"
         - name: DOCKER_EMAIL
           valueFrom:

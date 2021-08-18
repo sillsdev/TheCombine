@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 import sys
-from typing import List, Dict
+from typing import List
 
 
 def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess[str]:

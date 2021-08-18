@@ -6,5 +6,5 @@ metadata:
   namespace: {{ app_namespace }}
 data:
   NAMESPACES: {{ app_namespace }}
-  SECRET_NAME: "{{ aws_ecr_login.secrets_name }}"
+  PULL_SECRET_NAME: "{{ aws_ecr_login.pull_secret_name }}"
   DOCKER_EMAIL: {{ combine_admin_email }}

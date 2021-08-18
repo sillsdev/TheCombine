@@ -39,10 +39,10 @@ spec:
                 secretKeyRef:
                   key: AWS_ACCOUNT
                   name: aws-s3-credentials
-            - name: AWS_REGION
+            - name: AWS_DEFAULT_REGION
               valueFrom:
                 secretKeyRef:
-                  key: AWS_REGION
+                  key: AWS_DEFAULT_REGION
                   name: aws-s3-credentials
             - name: aws_bucket
               valueFrom:

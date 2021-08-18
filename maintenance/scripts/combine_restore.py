@@ -11,7 +11,7 @@ be set:
                             are stored
   AWS_SECRET_ACCESS_KEY:    The Secret Key (password) for the Access Key above
   AWS_ACCOUNT:              The 12-digit AWS Account number for the S3 bucket
-  AWS_REGION:               The AWS region for the S3 bucket
+  AWS_DEFAULT_REGION:       The AWS region for the S3 bucket
   backend_files_subdir      sub-directory where The Combine backend stores its local
                             files (relative to the home directory of the user)
   db_files_subdir           sub-directory where the database dump is stored
@@ -170,7 +170,9 @@ def main() -> None:
                 ],
             )
 
-        combine.kubectl(["cp", os.environ["backend_files_subdir"], f"{backend_pod}:/home/app", "--no-preserve"])
+        combine.kubectl(
+            ["cp", os.environ["backend_files_subdir"], f"{backend_pod}:/home/app", "--no-preserve"]
+        )
         # step.print("Restart the containers.")
         # combine.start(["certmgr", "frontend"])
 
