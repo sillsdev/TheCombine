@@ -194,7 +194,7 @@ export default class Register extends React.Component<
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
                 onBlur={() =>
-                  this.state.username.length > 2
+                  usernameRequirements(this.state.username)
                     ? this.checkUsername(this.state.username)
                     : this.setState((prevState) => ({
                         error: { ...prevState.error, username: true },
@@ -223,9 +223,7 @@ export default class Register extends React.Component<
                 value={this.state.email}
                 onChange={(e) => this.updateField(e, "email")}
                 onBlur={() =>
-                  this.state.email.length > 0
-                    ? this.checkEmail(this.state.email)
-                    : null
+                  this.state.email ? this.checkEmail(this.state.email) : null
                 }
                 error={this.state.error["email"]}
                 helperText={
