@@ -35,7 +35,7 @@ export default function MergeDupsCompleted() {
 }
 
 function MergesMade(changes: MergesCompleted): JSX.Element {
-  return (
+  return changes.merges.length > 1 ? (
     <div>
       {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
@@ -45,6 +45,11 @@ function MergesMade(changes: MergesCompleted): JSX.Element {
         dialogId="mergeDups.undo.undoAllDialog"
         disabledId="mergeDups.undo.undoAllDisabled"
       />
+    </div>
+  ) : (
+    <div>
+      {MergesCount(changes)}
+      {changes.merges?.map(MergeChange)}
     </div>
   );
 }
