@@ -117,8 +117,8 @@ function UndoButton(props: UndoButtonProps) {
           open={undoDialogOpen}
           textId={"mergeDups.undo.undoMerges"}
           handleCancel={() => setUndoDialogOpen(false)}
-          handleAccept={async () =>
-            await undoMerges(props.merges).then(() => setUndoDialogOpen(false))
+          handleAccept={() =>
+            undoMerges(props.merges).then(() => setUndoDialogOpen(false))
           }
         />
       </div>
