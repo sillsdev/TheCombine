@@ -133,19 +133,14 @@ function UndoButton(props: UndoButtonProps) {
 
 function doWordsIncludeMerges(words: Word[], merges: MergeUndoIds[]): boolean {
   const frontierIds = words.map((word) => word.id);
-  let activateBtn = true;
-  merges.forEach((merge) => {
-    if (!activateBtn) {
-      return activateBtn;
-    }
-    merge.parentIds.forEach((id) => {
+  for (const merge of merges) {
+    for (const id of merge.parentIds) {
       if (!frontierIds.includes(id)) {
-        activateBtn = false;
-        return;
+        return false;
       }
-    });
-  });
-  return activateBtn;
+    }
+  }
+  return true;
 }
 
 interface WordPaperProps {
