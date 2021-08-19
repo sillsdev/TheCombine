@@ -99,10 +99,10 @@ function UndoButton(props: UndoButtonProps) {
   const [undoDialogOpen, setUndo] = useState<boolean>(false);
 
   useEffect(() => {
-    async function checkFrontier() {
-      await getFrontierWords().then((words) => {
-        setUndoBtn(doWordsIncludeMerges(words, props.merges));
-      });
+    function checkFrontier() {
+      getFrontierWords().then((words) =>
+        setUndoBtn(doWordsIncludeMerges(words, props.merges))
+      );
     }
     checkFrontier();
   });
