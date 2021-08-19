@@ -12,6 +12,7 @@ import tempfile
 
 from aws_backup import AwsBackup
 from combine_app import CombineApp
+from maint_utils import wait_for_dependents
 from script_step import ScriptStep
 
 
@@ -24,8 +25,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
-    default_config = Path(__file__).resolve().parent / "script_conf.json"
-    parser.add_argument("--config", help="backup configuration file.", default=default_config)
     return parser.parse_args()
 
 
@@ -39,6 +38,12 @@ def main() -> None:
     combine = CombineApp()
     aws = AwsBackup(bucket=os.environ["aws_bucket"])
     step = ScriptStep()
+
+    step.print("Make sure backend and database are available")
+    wait_time = int(os.getenv("wait_time", 60))
+    if not wait_for_dependents(["database", "backend"], timeout=wait_time):
+        print("Database or Backend are not available")
+        sys.exit(1)
 
     step.print("Prepare the backup directory.")
     with tempfile.TemporaryDirectory() as backup_dir:
@@ -71,7 +76,7 @@ def main() -> None:
         if check_backup_results.returncode != 0:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
-        db_subdir = os.environ['db_files_subdir']
+        db_subdir = os.environ["db_files_subdir"]
         combine.kubectl(
             [
                 "cp",
@@ -85,7 +90,7 @@ def main() -> None:
         if not backend_pod:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)
-        backend_subdir = os.environ['backend_files_subdir']
+        backend_subdir = os.environ["backend_files_subdir"]
         combine.kubectl(
             [
                 "cp",

@@ -130,17 +130,6 @@ class CombineApp:
             return result_array
         return []
 
-    # def start(self, services: List[str]) -> subprocess.CompletedProcess[str]:
-    #     """Start the specified combine service(s)."""
-    #     return run_cmd(["docker-compose"] + self.kubectl_opts + ["start"] + services)
-    #
-    # def stop(self, services: List[str]) -> subprocess.CompletedProcess[str]:
-    #     """Stop the specified combine service(s)."""
-    #     return run_cmd(
-    #         ["docker-compose"] + self.kubectl_opts +
-    #         ["stop", "--timeout", "0"] + services
-    #     )
-
     def get_project_id(self, project_name: str) -> Optional[str]:
         """Look up the MongoDB ObjectId for the project from the Project Name."""
         results: Optional[List[Dict[str, Any]]] = self.db_cmd(  # type: ignore
