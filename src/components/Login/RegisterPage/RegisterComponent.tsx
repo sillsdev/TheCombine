@@ -97,8 +97,14 @@ export default class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    const usernameTaken: boolean = await isUsernameTaken(username);
-    if (usernameTaken) {
+    if (usernameRequirements(this.state.username)) {
+      const usernameTaken: boolean = await isUsernameTaken(username);
+      if (usernameTaken) {
+        this.setState((prevState) => ({
+          error: { ...prevState.error, username: true },
+        }));
+      }
+    } else {
       this.setState((prevState) => ({
         error: { ...prevState.error, username: true },
       }));
@@ -124,11 +130,10 @@ export default class Register extends React.Component<
 
     // Error checking.
     const error = { ...this.state.error };
-    this.checkEmail(this.state.email);
-    this.checkUsername(this.state.username);
     error.name = name === "";
-    error.username = !usernameRequirements(username);
-    error.email = email === "";
+    error.username =
+      !usernameRequirements(username) || (await isUsernameTaken(username));
+    error.email = email === "" || (await isEmailTaken(email));
     error.password = !passwordRequirements(password);
     error.confirmPassword = password !== confirmPassword;
 
@@ -193,13 +198,7 @@ export default class Register extends React.Component<
                 label={<Translate id="login.username" />}
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
-                onBlur={() =>
-                  usernameRequirements(this.state.username)
-                    ? this.checkUsername(this.state.username)
-                    : this.setState((prevState) => ({
-                        error: { ...prevState.error, username: true },
-                      }))
-                }
+                onBlur={() => this.checkUsername(this.state.username)}
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (
