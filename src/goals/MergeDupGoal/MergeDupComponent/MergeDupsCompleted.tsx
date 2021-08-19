@@ -39,7 +39,12 @@ function MergesMade(changes: MergesCompleted): JSX.Element {
     <div>
       {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
-      <UndoButton merges={changes.merges} />
+      <UndoButton
+        merges={changes.merges}
+        textId="mergeDups.undo.undoAll"
+        dialogId="mergeDups.undo.undoAllDialog"
+        disabledId="mergeDups.undo.undoAllDisabled"
+      />
     </div>
   );
 }
@@ -85,6 +90,12 @@ function MergeChange(change: MergeUndoIds): JSX.Element {
         {change.parentIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
+        <UndoButton
+          merges={[change]}
+          textId="mergeDups.undo.undo"
+          dialogId="mergeDups.undo.undoDialog"
+          disabledId="mergeDups.undo.undoDisabled"
+        />
       </Grid>
     </div>
   );
@@ -92,6 +103,9 @@ function MergeChange(change: MergeUndoIds): JSX.Element {
 
 interface UndoButtonProps {
   merges: MergeUndoIds[];
+  textId: string;
+  dialogId: string;
+  disabledId: string;
 }
 
 function UndoButton(props: UndoButtonProps) {
@@ -111,11 +125,11 @@ function UndoButton(props: UndoButtonProps) {
     return (
       <div>
         <Button onClick={() => setUndoDialogOpen(true)}>
-          <Translate id="mergeDups.undo.undoMerges" />
+          <Translate id={props.textId} />
         </Button>
         <CancelConfirmDialog
           open={undoDialogOpen}
-          textId={"mergeDups.undo.undoMerges"}
+          textId={props.dialogId}
           handleCancel={() => setUndoDialogOpen(false)}
           handleAccept={() =>
             undoMerges(props.merges).then(() => setUndoDialogOpen(false))
@@ -126,21 +140,16 @@ function UndoButton(props: UndoButtonProps) {
   }
   return (
     <Button disabled>
-      <Translate id="mergeDups.undo.undoDisabled" />
+      <Translate id={props.disabledId} />
     </Button>
   );
 }
 
 function doWordsIncludeMerges(words: Word[], merges: MergeUndoIds[]): boolean {
-  const frontierIds = words.map((word) => word.id);
-  for (const merge of merges) {
-    for (const id of merge.parentIds) {
-      if (!frontierIds.includes(id)) {
-        return false;
-      }
-    }
-  }
-  return true;
+  const wordIds = words.map((word) => word.id);
+  return merges.every((merge) =>
+    merge.parentIds.every((id) => wordIds.includes(id))
+  );
 }
 
 interface WordPaperProps {

@@ -782,12 +782,28 @@
       ]
     },
     "undo": {
+      "undo": ["Undo Merge", "Undo Merge", "Undo Merge"],
+      "undoDialog": [
+        "Undo this merge?",
+        "Undo this merge?",
+        "Undo this merge?"
+      ],
+      "undoAll": ["Undo All Merges", "Undo All Merges", "Undo All Merges"],
+      "undoAllDialog": [
+        "Undo all merges from in this session?",
+        "Undo all merges from in this session?",
+        "Undo all merges from in this session?"
+      ],
+      "undoAllDisabled": [
+        "Undo All Unavailable",
+        "Undo All Unavailable",
+        "Undo All Unavailable"
+      ],
       "undoDisabled": [
         "Undo Unavailable",
         "Undo Unavailable",
         "Undo Unavailable"
-      ],
-      "undoMerges": ["Undo Merges", "Undo Merges", "Undo Merges"]
+      ]
     }
   },
   "buttons": {
