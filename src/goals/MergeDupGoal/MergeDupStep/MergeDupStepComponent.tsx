@@ -1,6 +1,10 @@
-import { Button, Grid, ImageList } from "@material-ui/core";
+import { Button, Grid, ImageList, Typography } from "@material-ui/core";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
@@ -90,7 +94,9 @@ class MergeDupStep extends React.Component<
       </React.Fragment>
     ) : (
       // ToDo: create component with translated text and button back to goals.
-      "Nothing to merge."
+      <Typography>
+        <Translate id="mergeDups.helpText.noDups" />
+      </Typography>
     );
   }
 }

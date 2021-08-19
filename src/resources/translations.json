@@ -772,7 +772,8 @@
         "Drag this word to the right to start merging it with other words",
         "Arrastra esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
         "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots"
-      ]
+      ],
+      "noDups": ["Nothing to merge", "Nothing to merge", "Nothing to merge"]
     },
     "completed": {
       "number": [
