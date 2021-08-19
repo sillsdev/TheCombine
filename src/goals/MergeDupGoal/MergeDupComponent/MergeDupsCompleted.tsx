@@ -96,7 +96,7 @@ interface UndoButtonProps {
 
 function UndoButton(props: UndoButtonProps) {
   const [undoBtn, setUndoBtn] = useState<boolean>(false);
-  const [undoDialogOpen, setUndo] = useState<boolean>(false);
+  const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     function checkFrontier() {
@@ -110,15 +110,15 @@ function UndoButton(props: UndoButtonProps) {
   if (undoBtn) {
     return (
       <div>
-        <Button onClick={() => setUndo(true)}>
+        <Button onClick={() => setUndoDialogOpen(true)}>
           <Translate id="mergeDups.undo.undoMerges" />
         </Button>
         <CancelConfirmDialog
           open={undoDialogOpen}
           textId={"mergeDups.undo.undoMerges"}
-          handleCancel={() => setUndo(false)}
+          handleCancel={() => setUndoDialogOpen(false)}
           handleAccept={async () =>
-            await undoMerges(props.merges).then(() => setUndo(false))
+            await undoMerges(props.merges).then(() => setUndoDialogOpen(false))
           }
         />
       </div>
