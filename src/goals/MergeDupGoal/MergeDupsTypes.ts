@@ -1,10 +1,5 @@
 import { MergeUndoIds, Word } from "api/models";
 
-// export interface CompletedMerge {
-//   childrenIds: string[];
-//   parentIds: string[];
-// }
-
 export interface MergeDupData {
   plannedWords: Word[][];
 }
