@@ -101,18 +101,7 @@ function UndoButton(props: UndoButtonProps) {
   useEffect(() => {
     async function checkFrontier() {
       await getFrontierWords().then((words) => {
-        // const frontierIds = words.map((word) => word.id);
-        // let activateBtn = true;
-        // props.merges.forEach((merge) => {
-        //   merge.parentIds.forEach((id) => {
-        //     if (!frontierIds.includes(id)) {
-        //       activateBtn = false;
-        //     }
-        //   });
-        // });
-        let activateBtn = doWordsIncludeMerges(words, props.merges);
-        console.log(activateBtn);
-        setUndoBtn(activateBtn);
+        setUndoBtn(doWordsIncludeMerges(words, props.merges));
       });
     }
     checkFrontier();
