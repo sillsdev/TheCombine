@@ -25,23 +25,23 @@ ENV APP_FILES=${HOME}/.CombineFiles
 
 # Install system dependencies.
 RUN apt-get update \
-    && apt-get install -y \
-        # icu.net dependency: libdl.so
-        libc6-dev \
-     && rm -rf /var/lib/apt/lists/*
+  && apt-get install -y \
+  # icu.net dependency: libdl.so
+  libc6-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 # Create the home directory for the new app user.
 RUN mkdir -p $HOME
 
 # Create an app user so the program doesn't run as root.
 RUN groupadd -r app && \
-    useradd -r -g app -d $HOME -s /sbin/nologin -c "Docker image user" app
+  useradd -r -g app -d $HOME -s /sbin/nologin -c "Docker image user" app
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \
-    mkdir $APP_FILES && \
-    # Give access to the entire home folder so the backend can create files and folders there.
-    chown -R app:app $HOME
+  mkdir $APP_FILES && \
+  # Give access to the entire home folder so the backend can create files and folders there.
+  chown -R app:app $HOME
 WORKDIR $APP_HOME
 
 # Copy in the build application.
