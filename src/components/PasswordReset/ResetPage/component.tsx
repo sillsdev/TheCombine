@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router";
 
 import history, { Path } from "browserHistory";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
-import { passwordRequirements } from "utilities";
+import { meetsPasswordRequirements } from "utilities";
 
 interface MatchParams {
   token: string;
@@ -58,7 +58,7 @@ export default class PasswordReset extends React.Component<
 
   onChangePassword = (password: string, confirmPassword: string) => {
     this.setState({
-      passwordFitsRequirements: passwordRequirements(password),
+      passwordFitsRequirements: meetsPasswordRequirements(password),
       isPasswordConfirmed: password === confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
