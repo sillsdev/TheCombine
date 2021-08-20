@@ -42,9 +42,6 @@ namespace Backend.Tests.Models
 
     public class CredentialsTest
     {
-        private const string Username = "Henry";
-        private const string Password = "Password";
-
         [Test]
         public void TestConstructor()
         {
