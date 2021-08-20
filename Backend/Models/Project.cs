@@ -217,9 +217,9 @@ namespace BackendFramework.Models
     public class CustomField
     {
         [Required]
-        private string Name { get; set; }
+        public string Name { get; set; }
         [Required]
-        private string Type { get; set; }
+        public string Type { get; set; }
 
         public CustomField()
         {
@@ -234,6 +234,21 @@ namespace BackendFramework.Models
                 Name = (string)Name.Clone(),
                 Type = (string)Type.Clone()
             };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not CustomField customField || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return Name == customField.Name && Type == customField.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Type);
         }
     }
 
@@ -265,7 +280,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is WritingSystem ws) || GetType() != obj.GetType())
+            if (obj is not WritingSystem ws || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -295,15 +310,6 @@ namespace BackendFramework.Models
         {
             Project = new Project();
             User = new User();
-        }
-
-        public UserCreatedProject Clone()
-        {
-            return new()
-            {
-                Project = Project.Clone(),
-                User = User.Clone()
-            };
         }
     }
 
