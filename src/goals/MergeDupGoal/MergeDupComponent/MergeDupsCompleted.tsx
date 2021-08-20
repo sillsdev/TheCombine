@@ -114,19 +114,19 @@ interface UndoButtonProps {
 }
 
 function UndoButton(props: UndoButtonProps) {
-  const [undoBtn, setUndoBtn] = useState<boolean>(false);
+  const [isUndoBtnEnabled, setUndoBtnEnabled] = useState<boolean>(false);
   const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     function checkFrontier() {
       getFrontierWords().then((words) =>
-        setUndoBtn(doWordsIncludeMerges(words, props.merges))
+        setUndoBtnEnabled(doWordsIncludeMerges(words, props.merges))
       );
     }
     checkFrontier();
   });
 
-  if (undoBtn) {
+  if (isUndoBtnEnabled) {
     return (
       <div>
         <Button onClick={() => setUndoDialogOpen(true)}>

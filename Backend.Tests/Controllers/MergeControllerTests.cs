@@ -18,7 +18,6 @@ namespace Backend.Tests.Controllers
         private MergeController _mergeController = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
-        private const string UserId = "MergeServiceTestUserId";
 
         [SetUp]
         public void Setup()

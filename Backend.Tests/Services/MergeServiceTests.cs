@@ -124,14 +124,13 @@ namespace Backend.Tests.Services
             Assert.That(newWords, Has.Count.EqualTo(1));
             Assert.That(newWords.First().ContentEquals(thisWord));
 
-            var childIds = mergeObject.Children.ConvertAll<string>(word => word.SrcWordId);
-            var parentIds = new List<string>();
-            parentIds.Add(newWords[0].Id);
+            var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
+            var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
             var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
 
             var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
-            var frontierWordIds = frontierWords.ConvertAll<string>(word => word.Id);
+            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
 
             Assert.That(frontierWords, Has.Count.EqualTo(1));
             Assert.Contains(childIds[0], frontierWordIds);
@@ -157,14 +156,13 @@ namespace Backend.Tests.Services
 
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
-            var childIds = mergeWords.Children.ConvertAll<string>(word => word.SrcWordId);
-            var parentIds = new List<string>();
-            parentIds.Add(newWords[0].Id);
+            var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
+            var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
             var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
 
             var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
-            var frontierWordIds = frontierWords.ConvertAll<string>(word => word.Id);
+            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
 
             Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
             Assert.Contains(childIds[0], frontierWordIds);

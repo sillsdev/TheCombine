@@ -15,7 +15,8 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
 
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IWordRepository wordRepo, IWordService wordService)
+        public MergeService(
+            IMergeBlacklistRepository mergeBlacklistRepo, IWordRepository wordRepo, IWordService wordService)
         {
             _mergeBlacklistRepo = mergeBlacklistRepo;
             _wordRepo = wordRepo;
@@ -92,7 +93,7 @@ namespace BackendFramework.Services
                 await _wordService.DeleteFrontierWord(projectId, parentId);
             }
 
-            List<Word> childWords = new List<Word>();
+            var childWords = new List<Word>();
             foreach (var childId in ids.ChildIds)
             {
                 var childWord = await _wordRepo.GetWord(projectId, childId);

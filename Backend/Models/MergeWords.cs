@@ -44,7 +44,7 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> The parent and children ids of each <see cref="Word"> involved in a merge </summary>
+    /// <summary> The parent and children ids of each <see cref="Word"/> involved in a merge </summary>
     public class MergeUndoIds
     {
         [Required]
@@ -61,10 +61,10 @@ namespace BackendFramework.Models
             ChildIds = new List<string>();
         }
 
-        public MergeUndoIds(List<string> ParentIds, List<string> ChildIds)
+        public MergeUndoIds(List<string> parentIds, List<string> childIds)
         {
-            this.ParentIds = ParentIds;
-            this.ChildIds = ChildIds;
+            ParentIds = parentIds;
+            ChildIds = childIds;
         }
 
         public MergeUndoIds Clone()
