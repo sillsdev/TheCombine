@@ -24,4 +24,4 @@ RUN mkdir -p .local/bin
 
 ENV PATH ${PATH}:/home/user/.local/bin
 
-COPY scripts/*.py ./.local/bin/
+COPY scripts/*.py scripts/*.sh ./.local/bin/

@@ -74,6 +74,16 @@ spec:
                   configMapKeyRef:
                     key: wait_time
                     name: env-maintenance
+              - name: max_backups
+                valueFrom:
+                  configMapKeyRef:
+                    key: max_backups
+                    name: env-maintenance
+              - name: clean_files_select
+                valueFrom:
+                  configMapKeyRef:
+                    key: clean_files_select
+                    name: env-maintenance
             resources: {}
             securityContext:
               capabilities: {}
