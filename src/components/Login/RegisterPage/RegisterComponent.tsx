@@ -12,7 +12,10 @@ import { Translate } from "react-localize-redux";
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { passwordRequirements, usernameRequirements } from "utilities";
+import {
+  meetsPasswordRequirements,
+  meetsUsernameRequirements,
+} from "utilities";
 
 interface RegisterDispatchProps {
   register?: (
@@ -97,8 +100,8 @@ export default class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    if (usernameRequirements(this.state.username)) {
-      const usernameTaken: boolean = await isUsernameTaken(username);
+    if (meetsUsernameRequirements(this.state.username)) {
+      const usernameTaken = await isUsernameTaken(username);
       if (usernameTaken) {
         this.setState((prevState) => ({
           error: { ...prevState.error, username: true },
@@ -112,7 +115,7 @@ export default class Register extends React.Component<
   }
 
   async checkEmail(username: string) {
-    const emailTaken: boolean = await isEmailTaken(username);
+    const emailTaken = await isEmailTaken(username);
     if (emailTaken) {
       this.setState((prevState) => ({
         error: { ...prevState.error, email: true },
@@ -132,9 +135,9 @@ export default class Register extends React.Component<
     const error = { ...this.state.error };
     error.name = name === "";
     error.username =
-      !usernameRequirements(username) || (await isUsernameTaken(username));
+      !meetsUsernameRequirements(username) || (await isUsernameTaken(username));
     error.email = email === "" || (await isEmailTaken(email));
-    error.password = !passwordRequirements(password);
+    error.password = !meetsPasswordRequirements(password);
     error.confirmPassword = password !== confirmPassword;
 
     if (Object.values(error).some((e) => e)) {

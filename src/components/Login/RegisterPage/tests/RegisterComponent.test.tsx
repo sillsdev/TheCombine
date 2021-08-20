@@ -11,6 +11,13 @@ jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
 ));
 
+jest.mock("backend", () => {
+  return {
+    isEmailTaken: () => false,
+    isUsernameTaken: () => false,
+  };
+});
+
 const REGISTER = jest.fn();
 var registerMaster: ReactTestRenderer;
 var registerHandle: ReactTestInstance;
