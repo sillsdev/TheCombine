@@ -83,12 +83,12 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem { Name = Name, Bcp47 = "en", Font = "calibri" };
-            var project = new Project { Name = Name, VernacularWritingSystem = system };
-            var domain = new SemanticDomain { Name = Name, Id = "1", Description = "text" };
+            var system = new WritingSystem { Name = "WritingSystemName", Bcp47 = "en", Font = "calibri" };
+            var project = new Project { Name = "ProjectName", VernacularWritingSystem = system };
+            var domain = new SemanticDomain { Name = "SemanticDomainName", Id = "1", Description = "text" };
             project.SemanticDomains.Add(domain);
 
-            var customField = new CustomField { Name = Name, Type = "type" };
+            var customField = new CustomField { Name = "CustomFieldName", Type = "type" };
             project.CustomFields.Add(customField);
 
             var emailInvite = new EmailInvite(10, "user@combine.org");
