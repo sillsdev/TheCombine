@@ -21,7 +21,7 @@ namespace Backend.Tests.Helper
             var time = Time.UtcNowIso8601();
             Assert.That(time.Contains("T"));
             Assert.That(time.EndsWith("Z"));
-            Assert.That(DateTime.Now, Is.EqualTo(DateTime.Parse(time)).Within(TimeSpan.FromMinutes(5)));
+            Assert.That(DateTime.Now, Is.EqualTo(DateTime.Parse(time)).Within(TimeSpan.FromSeconds(10)));
         }
     }
 }
