@@ -35,10 +35,6 @@
     - name: Create The Combine Kubernetes cluster
       delegate_to: localhost
       block:
-        - name: print $HOME
-          debug:
-            msg: "$HOME == {{ lookup('env', 'HOME') }}"
-
         - name: Create Application Namespace
           import_role:
             name: k8s_namespace
@@ -46,6 +42,8 @@
         - name: Setup container registry credentials
           import_role:
             name: aws_login_job
+          tags:
+            - aws_login
 
         - name: Create Storage Class
           import_role:

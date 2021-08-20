@@ -12,9 +12,9 @@ config_show_cert_expiration: true
 combine_backend_env_vars:
 
 combine_pull_images: true
-combine_image_backend: combine/backend
-combine_image_frontend: combine/frontend
-combine_image_certmgr: combine/certmgr
+combine_image_backend: combine_backend
+combine_image_frontend: combine_frontend
+combine_image_certmgr: combine_certmgr
 
 #######################################
 # Environment variable defaults for the

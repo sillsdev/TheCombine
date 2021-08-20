@@ -36,7 +36,7 @@ namespace Backend.Tests.Models
         {
             Assert.AreNotEqual(
                 new UserEdit { ProjectId = ProjectId }.GetHashCode(),
-                new UserEdit { ProjectId = "Different Id" });
+                new UserEdit { ProjectId = "Different Id" }.GetHashCode());
         }
     }
 
