@@ -33,7 +33,7 @@ jobs:
           flags: frontend
 
       # Release build.
-      - run: npm build
+      - run: npm run build
 
   docker_build:
     runs-on: ubuntu-latest
