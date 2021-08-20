@@ -19,6 +19,7 @@ image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
 combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
 combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
+combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 
 ################################################
 # SSL cert variables specific to Server targets
@@ -66,7 +67,7 @@ max_backups: "3"
 ################################################
 k8s_components: []
 
-image_pull_secret: aws-ecr-cred
+image_pull_secret: aws-login-credentials
 
 app_namespace: thecombine
 

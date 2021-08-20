@@ -47,6 +47,8 @@ def main() -> None:
 
     if args.compose:
         build_specs.append({"dir": project_dir / "certmgr", "name": "certmgr"})
+    else:
+        build_specs.append({"dir": project_dir / "maintenance", "name": "maint"})
 
     for spec in build_specs:
         os.chdir(str(spec["dir"]))

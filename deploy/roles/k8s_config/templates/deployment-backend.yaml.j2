@@ -3,22 +3,33 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: backend
+    combine-component: backend
   name: backend
   namespace: {{ app_namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: backend
+      combine-component: backend
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
   template:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: backend
+        combine-component: backend
     spec:
+      initContainers:
+        - name: chwonit
+          image: busybox:stable
+          command: ["sh","-c","chown -R 999:999 /myvol"]
+          volumeMounts:
+          - name: backend-data
+            mountPath: /myvol/combine-files
+          imagePullPolicy: IfNotPresent
       containers:
         - env:
             - name: COMBINE_JWT_SECRET_KEY
