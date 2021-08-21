@@ -30,14 +30,16 @@ def wait_for_dependents(
     """
     Wait until dependent deployments get to specified condition.
 
-    deployments -- list of the deployments to wait for.  The function will
-                   wait for all deployments to reach the desired condition
-                   or the for the specified timeout time.
-    condition -- wait until each deployment reaches the specified condition.
-    timeout -- time to wait for the deployments in seconds.
+    Args:
+        deployments: list of the deployments to wait for.  The function will
+                     wait for all deployments to reach the desired condition
+                     or the for the specified timeout time.
+        condition: wait until each deployment reaches the specified condition.
+        timeout: time to wait for the deployments in seconds.
 
-    returns -- true if all deployments reach the condition within the specified time;
-               false otherwise.
+    Returns:
+        true if all deployments reach the condition within the specified time;
+        false otherwise.
     """
     deployment_args = []
     for deploy in deployments:

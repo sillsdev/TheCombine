@@ -113,9 +113,6 @@ def main() -> None:
 
         aws.pull(backup, Path(restore_dir) / restore_file)
 
-        # step.print("Stop the frontend and certmgr containers.")
-        # combine.stop(["frontend", "certmgr"])
-        #
         step.print("Unpack the backup.")
         os.chdir(restore_dir)
         with tarfile.open(restore_file, "r:gz") as tar:
@@ -173,8 +170,6 @@ def main() -> None:
         combine.kubectl(
             ["cp", os.environ["backend_files_subdir"], f"{backend_pod}:/home/app", "--no-preserve"]
         )
-        # step.print("Restart the containers.")
-        # combine.start(["certmgr", "frontend"])
 
 
 if __name__ == "__main__":

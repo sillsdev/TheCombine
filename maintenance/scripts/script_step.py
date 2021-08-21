@@ -1,14 +1,14 @@
 """Manage the step number for steps that are printed while running a script."""
 
+from dataclasses import dataclass
 import logging
 
 
+@dataclass
 class ScriptStep:
     """Manage the step number for steps that are printed while running a script."""
 
-    def __init__(self) -> None:
-        """Initialize the step number to 1."""
-        self.step_num = 1
+    step_num: int = 1
 
     def print(self, descr: str) -> None:
         """Print the step number with its description and bump the step number."""

@@ -18,10 +18,12 @@ RUN apt-get update && \
 USER user
 WORKDIR /home/user
 
-RUN pip3 install humanfriendly
+ENV PATH ${PATH}:/home/user/.local/bin
+
+COPY requirements.txt .
+
+RUN pip3 install -r requirements.txt
 
 RUN mkdir -p .local/bin
 
-ENV PATH ${PATH}:/home/user/.local/bin
-
-COPY scripts/*.py scripts/*.sh ./.local/bin/
+COPY scripts/*.py ./.local/bin/

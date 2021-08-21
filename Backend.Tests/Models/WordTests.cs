@@ -192,7 +192,10 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(new Gloss { Language = "1" }.GetHashCode(), new Gloss { Language = "2" });
+            Assert.AreNotEqual(
+                new Gloss { Language = "1" }.GetHashCode(),
+                new Gloss { Language = "2" }.GetHashCode()
+            );
         }
     }
 

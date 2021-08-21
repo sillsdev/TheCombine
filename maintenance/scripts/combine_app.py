@@ -165,6 +165,3 @@ class CombineApp:
         query = f"{{projectId: '{proj_id}', permissions: {{ $all: [{perm.value}]}}}}"
         result_fields = "{projectId: 1, permissions: 1}"
         return self.db_query("UserRolesCollection", query, result_fields)
-        result_fields = "{projectId: 1, permissions: 1}"
-        return self.db_query("UserRolesCollection", query, result_fields)
-        return self.db_query("UserRolesCollection", query, result_fields)
