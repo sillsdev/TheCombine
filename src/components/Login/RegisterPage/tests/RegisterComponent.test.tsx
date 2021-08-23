@@ -108,7 +108,7 @@ describe("Testing register component", () => {
   });
 });
 
-function testRegister(
+async function testRegister(
   name: string,
   username: string,
   email: string,
@@ -127,7 +127,7 @@ function testRegister(
     password,
     confirmPassword,
   });
-  registerHandle.instance.register(MOCK_EVENT);
+  await registerHandle.instance.register(MOCK_EVENT);
   expect(registerHandle.instance.state.error).toEqual({
     name: error_name,
     username: error_username,
