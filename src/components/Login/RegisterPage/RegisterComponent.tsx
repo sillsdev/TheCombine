@@ -100,14 +100,10 @@ export default class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    if (meetsUsernameRequirements(this.state.username)) {
-      const usernameTaken = await isUsernameTaken(username);
-      if (usernameTaken) {
-        this.setState((prevState) => ({
-          error: { ...prevState.error, username: true },
-        }));
-      }
-    } else {
+    if (
+      !meetsUsernameRequirements(this.state.username) ||
+      (await isUsernameTaken(username))
+    ) {
       this.setState((prevState) => ({
         error: { ...prevState.error, username: true },
       }));
