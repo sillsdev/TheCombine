@@ -92,6 +92,7 @@ export default class ResetRequest extends React.Component<
                     onClick: () => this.onSubmit,
                     variant: "contained",
                     color: "primary",
+                    id: "password-reset-request",
                   }}
                 >
                   <Translate id="passwordReset.submit" />

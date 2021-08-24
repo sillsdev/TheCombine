@@ -73,6 +73,7 @@ class MergeDupStep extends React.Component<
                   "mergeDups.helpText.saveAndContinue"
                 ) as string
               }
+              id="merge-save"
             >
               {this.props.translate("buttons.saveAndContinue")}
             </Button>
@@ -82,6 +83,7 @@ class MergeDupStep extends React.Component<
               style={{ marginRight: theme.spacing(3) }}
               onClick={() => this.next()}
               title={this.props.translate("mergeDups.helpText.skip") as string}
+              id="merge-skip"
             >
               {this.props.translate("buttons.skip")}
             </Button>

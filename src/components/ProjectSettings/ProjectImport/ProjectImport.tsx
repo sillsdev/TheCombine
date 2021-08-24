@@ -69,6 +69,7 @@ export default class ProjectImport extends React.Component<
               accept=".zip"
               buttonProps={{
                 disabled: this.state.uploadState === UploadState.Done,
+                id: "project-import-select-file",
               }}
             >
               <Translate id="projectSettings.import.chooseFile" />
@@ -85,6 +86,7 @@ export default class ProjectImport extends React.Component<
                 this.state.uploadState === UploadState.InProgress
               }
               onClick={() => this.uploadWords()}
+              id="project-import-submit"
             >
               <Translate
                 id={`buttons.${

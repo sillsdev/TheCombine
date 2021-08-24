@@ -34,6 +34,7 @@ export default function BottomBar() {
                     "https://software.sil.org/language-software-privacy-policy/"
                   )
                 }
+                id="privacy-policy"
               >
                 <Typography variant="caption">
                   <Translate id="landingPage.privacyPolicy" />

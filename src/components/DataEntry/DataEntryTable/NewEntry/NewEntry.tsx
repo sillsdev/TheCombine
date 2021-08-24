@@ -393,6 +393,7 @@ export default class NewEntry extends React.Component<
               <EntryNote
                 noteText={this.state.newEntry.note.text}
                 updateNote={(text: string) => this.updateNote(text)}
+                buttonId="note-entry-new"
               />
             )}
           </Grid>

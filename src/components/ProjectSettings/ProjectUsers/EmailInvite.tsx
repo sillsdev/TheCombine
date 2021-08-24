@@ -111,6 +111,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                       onClick: () => this.onSubmit(),
                       variant: "contained",
                       color: "primary",
+                      id: "project-user-invite-submit",
                     }}
                   >
                     <Translate id="buttons.invite" />

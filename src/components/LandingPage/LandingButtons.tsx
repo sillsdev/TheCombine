@@ -34,12 +34,18 @@ export default function LandingButtons(props: LandingButtonsProps) {
         <LandingButton
           onClick={() => history.push(Path.Register)}
           textId="login.register"
+          buttonId="landing-register"
         />
         <LandingButton
           onClick={() => history.push(Path.Login)}
           textId="login.login"
+          buttonId="landing-login"
         />
-        <LandingButton onClick={openUserGuide} textId="userMenu.userGuide" />
+        <LandingButton
+          onClick={openUserGuide}
+          textId="userMenu.userGuide"
+          buttonId="landing-guide"
+        />
       </Grid>
     </Card>
   );
@@ -48,6 +54,7 @@ export default function LandingButtons(props: LandingButtonsProps) {
 interface LandingButtonProps {
   onClick: () => void;
   textId: string;
+  buttonId: string;
 }
 function LandingButton(props: LandingButtonProps) {
   return (
@@ -62,6 +69,7 @@ function LandingButton(props: LandingButtonProps) {
         color="primary"
         onClick={props.onClick}
         style={{ height: buttonHeight, width: buttonWidth }}
+        id={props.buttonId}
       >
         <Typography variant="subtitle1">
           <Translate id={props.textId} />

@@ -232,7 +232,11 @@ class UserSettings extends React.Component<
                   </Grid>
 
                   <Grid item container justifyContent="flex-end">
-                    <Button type="submit" variant="contained">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      id="user-settings-save"
+                    >
                       <Translate id="buttons.save" />
                     </Button>
                   </Grid>

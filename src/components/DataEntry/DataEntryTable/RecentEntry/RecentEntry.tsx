@@ -154,6 +154,7 @@ export default class RecentEntry extends React.Component<
             <EntryNote
               noteText={this.props.entry.note.text}
               updateNote={this.props.updateNote}
+              buttonId={`note-entry-${this.props.entry.id}-sense-${this.props.senseIndex}`}
             />
           </Grid>
           <Grid

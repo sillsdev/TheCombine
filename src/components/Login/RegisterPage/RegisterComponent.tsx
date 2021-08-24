@@ -286,6 +286,7 @@ export default class Register extends React.Component<
                     onClick={() => {
                       history.push(Path.Login);
                     }}
+                    id="register-login"
                   >
                     <Translate id="login.backToLogin" />
                   </Button>
@@ -295,7 +296,7 @@ export default class Register extends React.Component<
                     loading={this.props.inProgress}
                     done={this.props.success}
                     doneText={<Translate id="login.registerSuccess" />}
-                    buttonProps={{ color: "primary" }}
+                    buttonProps={{ color: "primary", id: "register-register" }}
                   >
                     <Translate id="login.register" />
                   </LoadingDoneButton>

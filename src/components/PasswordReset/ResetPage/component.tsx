@@ -138,7 +138,7 @@ export default class PasswordReset extends React.Component<
                         <Translate id="passwordReset.resetFail" />
                       </Typography>
                       <Button
-                        id="submit_button"
+                        id="password-reset-submit"
                         variant="contained"
                         color="primary"
                         onClick={this.backToLogin}
@@ -150,7 +150,7 @@ export default class PasswordReset extends React.Component<
                     </React.Fragment>
                   ) : (
                     <Button
-                      id="submit_button"
+                      id="password-reset-submit"
                       variant="contained"
                       color="primary"
                       disabled={

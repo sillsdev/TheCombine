@@ -53,6 +53,7 @@ export default class ProjectName extends React.Component<NameProps, NameState> {
                 ? "primary"
                 : "default"
             }
+            id="project-name-save"
           >
             <Translate id="buttons.save" />
           </Button>
