@@ -27,7 +27,7 @@ spec:
               - name: cluster-kubeconfig
                 mountPath: /home/user/.kube
             command:
-              - combine_backup.py
+              - combine-backup-job.sh
             env:
               - name: AWS_ACCESS_KEY_ID
                 valueFrom:
