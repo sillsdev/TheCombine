@@ -5,7 +5,7 @@
 #
 # The scripts are written in Python.
 
-FROM sillsdev/aws-kubectl:0.1.8
+FROM sillsdev/aws-kubectl:0.1.9
 
 USER root
 
