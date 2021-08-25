@@ -3,7 +3,7 @@
 set -e
 
 if [ -n "$clean_files_select" ]; then
-  echo "kubectl exec deployment/backend -- find /home/app/${backend_files_subdir} ${clean_files_select} -delete"
+  "kubectl exec deployment/backend -- find /home/app/${backend_files_subdir} ${clean_files_select} -delete"
 fi
 
 # Backup the CombineDatabase and the .CombineFiles in the backend
