@@ -5,7 +5,7 @@
 #
 # The scripts are written in Python.
 
-FROM sillsdev/aws-kubectl:0.1.6
+FROM sillsdev/aws-kubectl:0.1.8
 
 USER root
 
@@ -27,3 +27,4 @@ RUN pip3 install -r requirements.txt
 RUN mkdir -p .local/bin
 
 COPY scripts/*.py ./.local/bin/
+COPY scripts/*.sh ./.local/bin/
