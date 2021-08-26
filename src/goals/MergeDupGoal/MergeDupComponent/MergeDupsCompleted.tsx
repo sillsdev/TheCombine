@@ -144,13 +144,18 @@ function UndoButton(props: UndoButtonProps) {
     );
   }
   return (
-    <Button disabled>
-      <Translate id={props.disabledId} />
-    </Button>
+    <div>
+      <Button disabled>
+        <Translate id={props.disabledId} />
+      </Button>
+    </div>
   );
 }
 
-function doWordsIncludeMerges(words: Word[], merges: MergeUndoIds[]): boolean {
+export function doWordsIncludeMerges(
+  words: Word[],
+  merges: MergeUndoIds[]
+): boolean {
   const wordIds = words.map((word) => word.id);
   return merges.every((merge) =>
     merge.parentIds.every((id) => wordIds.includes(id))
