@@ -488,6 +488,11 @@ export async function getAllWords(): Promise<Word[]> {
   return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;
 }
 
+export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
+  return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
+}
+
 export async function getFrontierWords(): Promise<Word[]> {
   const params = { projectId: LocalStorage.getProjectId() };
   return (await wordApi.getProjectFrontierWords(params, defaultOptions())).data;

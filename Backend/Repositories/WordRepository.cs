@@ -120,6 +120,13 @@ namespace BackendFramework.Repositories
             return word;
         }
 
+        /// <summary> Checks if Frontier is nonempty for specified <see cref="Project"/> </summary>
+        public async Task<bool> IsFrontierNonempty(string projectId)
+        {
+            var word = await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).FirstOrDefaultAsync();
+            return (word is not null);
+        }
+
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {

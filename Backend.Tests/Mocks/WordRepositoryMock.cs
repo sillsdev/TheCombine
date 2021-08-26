@@ -60,6 +60,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
+        public Task<bool> IsFrontierNonempty(string projectId)
+        {
+            return Task.FromResult(_frontier.Find(w => w.ProjectId == projectId) is not null);
+        }
+
         public Task<List<Word>> GetFrontier(string projectId)
         {
             return Task.FromResult(_frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());
