@@ -61,18 +61,16 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            try
+
+            foreach (var merge in mergeIds)
             {
-                foreach (var merge in mergeIds)
+                var undo = await _mergeService.UndoMerge(projectId, merge);
+                if (!undo)
                 {
-                    await _mergeService.UndoMerge(projectId, merge);
+                    return Ok(false);
                 }
-                return Ok(true);
             }
-            catch
-            {
-                return BadRequest("Undo failed.");
-            }
+            return Ok(true);
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>
