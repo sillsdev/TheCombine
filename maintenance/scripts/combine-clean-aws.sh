@@ -68,7 +68,7 @@ done
 
 max_backups=${max_backups:=3}
 
-AWS_BACKUPS=($(/usr/local/bin/aws s3 ls s3://${aws_bucket} --recursive | grep --fixed-strings "${combine_host}" | sed "s/[^\/]*\/\(.*\)/\1/"|sort))
+AWS_BACKUPS=($(/usr/local/bin/aws s3 ls s3://${aws_bucket} --recursive | grep --fixed-strings "${combine_host}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
 NUM_BACKUPS=${#AWS_BACKUPS[@]}
 
 if [[ $VERBOSE -eq 1 ]] ; then
