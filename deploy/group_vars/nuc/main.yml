@@ -17,6 +17,7 @@ image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
 combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
 combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
+combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 
 ################################################
 # SSL cert variables specific to NUC targets
@@ -55,15 +56,15 @@ k8s_components:
   - cert_manager
   - ingress_controller
 
-image_pull_secret: aws-ecr-cred
+image_pull_secret: aws-login-credentials
 
 aws_ecr_login:
-  # Specify how you want the job to run, either "on_demand" or "cron"
-  # schedule is ignored if job_type is 'on_demand'
   cron: no
+  image: sillsdev/aws-kubectl:0.1.9
+  secrets_name: aws-ecr-credentials
+  config_name: aws-ecr-config
+  pull_secret_name: aws-login-credentials
   job_name: ecr-cred-helper
-  cron_job_name: ecr-cred-helper-cron
-  schedule: "* */8 * * *"
 
 app_namespace: thecombine
 

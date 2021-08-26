@@ -10,34 +10,12 @@
     src: "{{ item }}.j2"
     dest: "{{ k8s_combine_cfg }}/{{ item }}"
     mode: 0600
-  with_items:
-    - persistentvolumeclaim-backend-data.yaml
-    - persistentvolumeclaim-database-data.yaml
-    - env-backend-configmap.yaml
-    - env-backend-secrets.yaml
-    - env-frontend-configmap.yaml
-    - deployment-backend.yaml
-    - deployment-database.yaml
-    - deployment-frontend.yaml
-    - ingress-combine.yaml
-    - service-backend.yaml
-    - service-database.yaml
-    - service-frontend.yaml
+  loop: "{{ k8s_resource_templates}}"
+  tags:
+    - config_only
 
 - name: Apply Kubernetes configuration
   command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item }}
   args:
     chdir: "{{ k8s_combine_cfg }}"
-  with_items:
-    - persistentvolumeclaim-backend-data.yaml
-    - persistentvolumeclaim-database-data.yaml
-    - env-backend-configmap.yaml
-    - env-backend-secrets.yaml
-    - env-frontend-configmap.yaml
-    - deployment-backend.yaml
-    - deployment-database.yaml
-    - deployment-frontend.yaml
-    - ingress-combine.yaml
-    - service-backend.yaml
-    - service-database.yaml
-    - service-frontend.yaml
+  loop: "{{ k8s_resource_templates}}"

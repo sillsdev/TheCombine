@@ -1,4 +1,24 @@
 ---
+#######################################
+# Kubernetes resource templates
+k8s_resource_templates:
+  - persistentvolumeclaim-backend-data.yaml
+  - persistentvolumeclaim-database-data.yaml
+  - env-backend-configmap.yaml
+  - env-backend-secrets.yaml
+  - env-frontend-configmap.yaml
+  - env-maintenance-configmap.yaml
+  - aws-s3-credentials.yaml
+  - deployment-backend.yaml
+  - deployment-database.yaml
+  - deployment-frontend.yaml
+  - cronjob-daily-backup.yaml
+  - ingress-combine.yaml
+  - service-backend.yaml
+  - service-database.yaml
+  - service-frontend.yaml
+
+#######################################
 # Persistent storage size configurations
 backend_data_size: 4Gi
 database_data_size: 2Gi
@@ -21,9 +41,9 @@ config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
 combine_backend_env_vars:
 
 combine_pull_images: true
-combine_image_backend: combine/backend
-combine_image_frontend: combine/frontend
-combine_image_certmgr: combine/certmgr
+combine_image_backend: combine_backend
+combine_image_frontend: combine_frontend
+combine_image_maintenance: combine_maint
 
 #######################################
 # Environment variable defaults for the
@@ -33,3 +53,8 @@ cert_issuer: letsencrypt-prod
 #######################################
 # Ingress configuration
 ingress_class: nginx
+
+#######################################
+# Default Backup Schedule
+# Run every day at 10:15 UTC
+combine_backup_schedule: "15 10 * * *"
