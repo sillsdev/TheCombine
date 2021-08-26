@@ -11,16 +11,3 @@ data:
   combine_host: "{{ combine_server_name | replace('.', '-') }}"
   wait_time: "120"
   max_backups: "3"
-  # Selection criteria for files to be removed from the .CombineFiles directory
-  # in the backend before a backup is performed.  The selection criteria are
-  # options to be passed to the Unix "find" command.
-  # If "clean_files_select" is empty, no files will be removed.
-  clean_files_select:  '\\( -name "Compressed-Upload*.zip" -o -name "LiftExport*.zip" \\) -atime +1'
-  ###############################################################
-  # Note to Maintainers:
-  # '-atime' must be set to +1 or greater.
-  # This is so that exported/import files are not deleted while
-  # the user is using them - TheCombine frontend is active during
-  # this step of the process.
-  # See the man page for 'find' for the behavior of -atime.
-  ###############################################################
