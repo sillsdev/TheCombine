@@ -26,19 +26,24 @@
   when: get_secret.rc > 0
 
 ##############################################################
-# We always run a oneshot job to get AWS login credentials
-# promptly without having to wait for the cron job to trigger
-# But first we need to delete any previous oneshot jobs.
+# Delete any immutable objects leftover from previous runs
 ##############################################################
-- name: Delete residual oneshot job
+- name: Delete residual resources
   command: >
     kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
-    delete job --ignore-not-found {{ aws_ecr_login.job_name }}
+    delete {{ item.resource }} --ignore-not-found {{ item.name }}
+  with_items:
+    - name: "{{ aws_ecr_login.job_name }}"
+      resource: job
+    - name: "{{ aws_ecr_login.secrets_name }}"
+      resource: secret
 
 ##############################################################
-# AWS login resources:
+# AWS login resources as specified in aws_ecr_login.config_files
+# May include
 # - AWS credentials secret
 # - One-shot job to get AWS Login
+# - cron job to keep login fresh
 ##############################################################
 - name: Create AWS login resource specifications
   template:
@@ -46,6 +51,7 @@
     dest: "{{ k8s_aws_login_cfg }}/{{ item }}"
     mode: 0600
   with_items:
+    - aws-login-config.yaml
     - aws-access-secrets.yaml
     - aws-ecr-login-oneshot.yaml
 
@@ -54,6 +60,7 @@
     kubectl --kubeconfig={{ kubecfg }}
     apply -f {{ k8s_aws_login_cfg }}/{{ item }}
   with_items:
+    - aws-login-config.yaml
     - aws-access-secrets.yaml
     - aws-ecr-login-oneshot.yaml
 
@@ -63,13 +70,13 @@
 ##############################################################
 - name: Create cron job to refresh AWS login credentials
   block:
-    - name: Create AWS login resource specifications
+    - name: Create cron job specifications
       template:
         src: aws-ecr-login-cronjob.yaml.j2
         dest: "{{ k8s_aws_login_cfg }}/aws-ecr-login-cronjob.yaml"
         mode: 0600
 
-    - name: Apply AWS login resource specifications
+    - name: Apply cron job specifications
       command: >
         kubectl --kubeconfig={{ kubecfg }}
         apply -f {{ k8s_aws_login_cfg }}/aws-ecr-login-cronjob.yaml

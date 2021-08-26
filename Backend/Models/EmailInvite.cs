@@ -47,5 +47,22 @@ namespace BackendFramework.Models
                 ExpireTime = ExpireTime
             };
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not EmailInvite emailInvite || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return Email == emailInvite.Email
+                   && Token == emailInvite.Token
+                   && ExpireTime == emailInvite.ExpireTime;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Email, Token, ExpireTime);
+        }
     }
 }

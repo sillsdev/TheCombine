@@ -426,9 +426,9 @@
     "import": {
       "header": ["Import Data", "Importar información", "Importer des données"],
       "body": [
-        "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync.",
-        "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar.",
-        "Les données importées seront ajoutées à ce projet. Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser."
+        "Imported data will be added to this project. The Combine will make no attempt to deduplicate, overwrite, or sync.",
+        "Los datos importados se agregarán a este proyecto. The Combine no intentará deduplicar, sobrescribir ni sincronizar.",
+        "Les données importées seront ajoutées à ce projet. The Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser."
       ],
       "chooseFile": ["Choose File", "Escoger Archivo", "Choisissez Fichier"],
       "done": ["Done!", "¡Hecho!", "Achevé !"],

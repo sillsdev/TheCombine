@@ -16,50 +16,50 @@ spec:
           creationTimestamp: null
         spec:
           containers:
-          - image: odaniait/aws-kubectl:latest   # the base image to be used to run our shell script
+          - image: {{ aws_ecr_login.image }}
             imagePullPolicy: IfNotPresent
             name: "{{ aws_ecr_login.cron_job_name }}"
             volumeMounts:
               - name: cluster-kubeconfig
                 mountPath: /home/user/.kube
             command:
-            - /bin/sh
-            - -c
-            - |-
-              SECRET_NAME={{ image_pull_secret }}
-              TOKEN=`aws ecr get-login --region ${AWS_DEFAULT_REGION} --registry-ids ${AWS_ACCOUNT} | cut -d' ' -f6`
-              echo "ENV variables setup done."
-              kubectl -n {{ app_namespace }} delete secret --ignore-not-found ${SECRET_NAME}
-              kubectl -n {{ app_namespace }} create secret docker-registry ${SECRET_NAME} \
-              --docker-server=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com \
-              --docker-username=AWS \
-              --docker-password="${TOKEN}" \
-              --docker-email="{{ combine_admin_email }}"
-              echo "Secret created by name. $SECRET_NAME"
-              kubectl -n {{ app_namespace}} patch serviceaccount default -p '{"imagePullSecrets":[{"name":"'$SECRET_NAME'"}]}'   # custom script | update the default service account
-              echo "All done."
+              - ecr-get-login.sh
             env:
             - name: AWS_DEFAULT_REGION
               valueFrom:
                 secretKeyRef:
-                  key: AWS_REGION
-                  name: aws-credential-secret
+                  key: AWS_DEFAULT_REGION
+                  name: "{{ aws_ecr_login.secrets_name }}"
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: AWS_SECRET_ACCESS_KEY
-                  name: aws-credential-secret
+                  name: "{{ aws_ecr_login.secrets_name }}"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCESS_KEY_ID
-                  name: aws-credential-secret
+                  name: "{{ aws_ecr_login.secrets_name }}"
             - name: AWS_ACCOUNT
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCOUNT
-                  name: aws-credential-secret
-
+                  name: "{{ aws_ecr_login.secrets_name }}"
+            - name: NAMESPACES
+              valueFrom:
+                configMapKeyRef:
+                  key: NAMESPACES
+                  name: "{{ aws_ecr_login.config_name }}"
+            - name: PULL_SECRET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: PULL_SECRET_NAME
+                  name: "{{ aws_ecr_login.config_name }}"
+            - name: DOCKER_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_EMAIL
+                  name: "{{ aws_ecr_login.config_name }}"
             resources: {}
             securityContext:
               capabilities: {}
