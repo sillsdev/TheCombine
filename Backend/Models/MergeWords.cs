@@ -90,6 +90,10 @@ namespace BackendFramework.Models
 
         public bool ContentEquals(MergeUndoIds other)
         {
+            if (other.ParentIds.Count != ParentIds.Count || other.ChildIds.Count != ChildIds.Count)
+            {
+                return false;
+            }
             return
                 other.ParentIds.All(ParentIds.Contains) &&
                 other.ChildIds.All(ChildIds.Contains);
