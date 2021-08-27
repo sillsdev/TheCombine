@@ -90,6 +90,11 @@ namespace BackendFramework.Services
                 {
                     return false;
                 }
+            }
+
+            // Separate foreach loop for deletion to prevent partial undos
+            foreach (var parentId in ids.ParentIds)
+            {
                 await _wordService.DeleteFrontierWord(projectId, parentId);
             }
 
