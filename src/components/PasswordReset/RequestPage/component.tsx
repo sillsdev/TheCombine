@@ -67,6 +67,7 @@ export default class ResetRequest extends React.Component<
             <form onSubmit={this.onSubmit}>
               <Grid item>
                 <TextField
+                  id="password-reset-request-text"
                   required
                   type="text"
                   variant="outlined"

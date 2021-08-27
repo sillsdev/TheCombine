@@ -115,6 +115,7 @@ export default class RecentEntry extends React.Component<
                   this.focusOnNewEntry();
                 }
               }}
+              textFieldId={`recent-entry-${this.props.entry.id}-sense-${this.props.senseIndex}-vernacular`}
             />
           </Grid>
           <Grid
@@ -140,6 +141,7 @@ export default class RecentEntry extends React.Component<
                 }
               }}
               analysisLang={this.props.analysisLang}
+              textFieldId={`recent-entry-${this.props.entry.id}-sense-${this.props.senseIndex}-gloss`}
             />
           </Grid>
           <Grid

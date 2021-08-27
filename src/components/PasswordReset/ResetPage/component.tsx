@@ -76,6 +76,7 @@ export default class PasswordReset extends React.Component<
               </Typography>
               <Grid item>
                 <TextField
+                  id="password-reset-password1"
                   variant="outlined"
                   label={<Translate id="login.password" />}
                   type="password"
@@ -101,6 +102,7 @@ export default class PasswordReset extends React.Component<
               </Grid>
               <Grid item>
                 <TextField
+                  id="password-reset-password2"
                   variant="outlined"
                   label={<Translate id="login.confirmPassword" />}
                   type="password"

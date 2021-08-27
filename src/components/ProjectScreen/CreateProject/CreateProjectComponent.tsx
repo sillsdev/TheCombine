@@ -183,6 +183,7 @@ export default class CreateProject extends React.Component<
             </Typography>
             {/* Project name field */}
             <TextField
+              id="create-project-name"
               label={<Translate id="createProject.name" />}
               value={this.state.name}
               onChange={(e) => this.updateName(e)}

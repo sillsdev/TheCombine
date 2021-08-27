@@ -105,6 +105,7 @@ export default class Login extends React.Component<
 
               {/* Username field */}
               <TextField
+                id="login-username"
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
@@ -125,6 +126,7 @@ export default class Login extends React.Component<
 
               {/* Password field */}
               <TextField
+                id="login-password"
                 required
                 autoComplete="current-password"
                 label={<Translate id="login.password" />}

@@ -50,7 +50,8 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
     <Translate>
       {({ translate }) => (
         <TextField
-          key={`vernacular${props.rowData.id}`}
+          key={`row-${props.rowData.id}-vernacular`}
+          id={`row-${props.rowData.id}-vernacular-text`}
           multiline
           value={props.value}
           error={props.value.length === 0}
@@ -79,7 +80,8 @@ function noteField(props: FieldParameterStandard) {
     <Translate>
       {({ translate }) => (
         <TextField
-          key={`vernacular${props.rowData.id}`}
+          key={`row-${props.rowData.id}-note`}
+          id={`row-${props.rowData.id}-note-text`}
           multiline
           value={props.value}
           placeholder={translate("reviewEntries.noNote").toString()}

@@ -165,6 +165,7 @@ class UserSettings extends React.Component<
                     </Grid>
                     <Grid item xs>
                       <TextField
+                        id="user-name"
                         fullWidth
                         variant="outlined"
                         value={this.state.name}
@@ -195,6 +196,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
+                          id="user-phone"
                           fullWidth
                           variant="outlined"
                           value={this.state.phone}
@@ -211,6 +213,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
+                          id="user-email"
                           fullWidth
                           variant="outlined"
                           value={this.state.email}
