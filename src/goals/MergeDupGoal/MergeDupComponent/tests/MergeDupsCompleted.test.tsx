@@ -12,7 +12,7 @@ describe("doWordsIncludeMerges", () => {
       parentIds: ["merge2PId", "merge2PId2"],
       childIds: ["merge2CId1"],
     };
-    const merges: MergeUndoIds[] = [merge1, merge2];
+    const merges = [merge1, merge2];
 
     const words: Word[] = [newWord(), newWord(), newWord()];
     words[0].id = "merge1PId";
@@ -31,7 +31,7 @@ describe("doWordsIncludeMerges", () => {
       parentIds: ["merge2PId", "merge2PId2"],
       childIds: ["merge2CId1"],
     };
-    const merges: MergeUndoIds[] = [merge1, merge2];
+    const merges = [merge1, merge2];
 
     const words: Word[] = [newWord(), newWord(), newWord(), newWord()];
     words[0].id = "merge1PId";
@@ -61,7 +61,7 @@ describe("doWordsIncludeMerges", () => {
       parentIds: ["merge2PId", "merge2PId2"],
       childIds: ["merge2CId1"],
     };
-    const merges: MergeUndoIds[] = [merge1, merge2];
+    const merges = [merge1, merge2];
 
     expect(doWordsIncludeMerges([], merges)).toBe(false);
   });
