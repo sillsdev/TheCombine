@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: {{ aws_ecr_login.config_name }}
+  namespace: {{ app_namespace }}
+data:
+  NAMESPACES: {{ app_namespace }}
+  PULL_SECRET_NAME: "{{ aws_ecr_login.pull_secret_name }}"
+  DOCKER_EMAIL: {{ combine_admin_email }}

@@ -39,7 +39,7 @@ humanfriendly==9.2
     # via -r dev-requirements.in
 idna==3.2
     # via requests
-importlib-metadata==4.6.3
+importlib-metadata==4.7.1
     # via mkdocs
 isort==5.9.3
     # via -r dev-requirements.in
@@ -66,9 +66,9 @@ mkdocs==1.2.2
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
-mkdocs-htmlproofer-plugin==0.5.0
+mkdocs-htmlproofer-plugin==0.6.0
     # via -r dev-requirements.in
-mkdocs-material==7.2.2
+mkdocs-material==7.2.5
     # via
     #   -r dev-requirements.in
     #   mkdocs-material-extensions
@@ -86,11 +86,11 @@ packaging==21.0
     #   tox
 pathspec==0.9.0
     # via black
-pep8-naming==0.12.0
+pep8-naming==0.12.1
     # via -r dev-requirements.in
 platformdirs==2.2.0
     # via virtualenv
-pluggy==0.13.1
+pluggy==1.0.0
     # via tox
 py==1.10.0
     # via tox
@@ -98,7 +98,7 @@ pycodestyle==2.7.0
     # via flake8
 pyflakes==2.3.1
     # via flake8
-pygments==2.9.0
+pygments==2.10.0
     # via mkdocs-material
 pymdown-extensions==8.2
     # via mkdocs-material
@@ -112,7 +112,7 @@ pyyaml==5.4.1
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2021.7.6
+regex==2021.8.27
     # via black
 requests==2.26.0
     # via mkdocs-htmlproofer-plugin
@@ -127,19 +127,19 @@ toml==0.10.2
     # via
     #   mypy
     #   tox
-tomli==1.2.0
+tomli==1.2.1
     # via black
-tox==3.24.1
+tox==3.24.3
     # via -r dev-requirements.in
-types-requests==2.25.1
+types-requests==2.25.6
     # via -r dev-requirements.in
 typing-extensions==3.10.0.0
     # via mypy
 urllib3==1.26.6
     # via requests
-virtualenv==20.7.0
+virtualenv==20.7.2
     # via tox
-watchdog==2.1.3
+watchdog==2.1.5
     # via mkdocs
 zipp==3.5.0
     # via importlib-metadata

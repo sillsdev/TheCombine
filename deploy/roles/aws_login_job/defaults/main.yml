@@ -1,9 +1,12 @@
 ---
 aws_ecr_login:
-  # Specify how you want the job to run, either "on_demand" or "cron"
-  # schedule is ignored if job_type is 'on_demand'
   cron: yes
+  image: sillsdev/aws-kubectl:0.1.9
+  secrets_name: aws-ecr-credentials
+  config_name: aws-ecr-config
+  pull_secret_name: "{{ image_pull_secret | default('aws-login-credentials') }}"
   job_name: ecr-cred-helper
   cron_job_name: ecr-cred-helper-cron
   schedule: "0 */8 * * *"
+
 k8s_config_secret: tc-thecombine-kubeconfig

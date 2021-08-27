@@ -12,7 +12,10 @@ import { Translate } from "react-localize-redux";
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { passwordRequirements, usernameRequirements } from "utilities";
+import {
+  meetsPasswordRequirements,
+  meetsUsernameRequirements,
+} from "utilities";
 
 interface RegisterDispatchProps {
   register?: (
@@ -97,8 +100,10 @@ export default class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    const usernameTaken: boolean = await isUsernameTaken(username);
-    if (usernameTaken) {
+    if (
+      !meetsUsernameRequirements(this.state.username) ||
+      (await isUsernameTaken(username))
+    ) {
       this.setState((prevState) => ({
         error: { ...prevState.error, username: true },
       }));
@@ -106,7 +111,7 @@ export default class Register extends React.Component<
   }
 
   async checkEmail(username: string) {
-    const emailTaken: boolean = await isEmailTaken(username);
+    const emailTaken = await isEmailTaken(username);
     if (emailTaken) {
       this.setState((prevState) => ({
         error: { ...prevState.error, email: true },
@@ -125,9 +130,10 @@ export default class Register extends React.Component<
     // Error checking.
     const error = { ...this.state.error };
     error.name = name === "";
-    error.username = !usernameRequirements(username);
-    error.email = email === "";
-    error.password = !passwordRequirements(password);
+    error.username =
+      !meetsUsernameRequirements(username) || (await isUsernameTaken(username));
+    error.email = email === "" || (await isEmailTaken(email));
+    error.password = !meetsPasswordRequirements(password);
     error.confirmPassword = password !== confirmPassword;
 
     if (Object.values(error).some((e) => e)) {
@@ -214,7 +220,9 @@ export default class Register extends React.Component<
                 label={<Translate id="login.email" />}
                 value={this.state.email}
                 onChange={(e) => this.updateField(e, "email")}
-                onBlur={() => this.checkEmail(this.state.email)}
+                onBlur={() =>
+                  this.state.email ? this.checkEmail(this.state.email) : null
+                }
                 error={this.state.error["email"]}
                 helperText={
                   this.state.error["email"] ? (

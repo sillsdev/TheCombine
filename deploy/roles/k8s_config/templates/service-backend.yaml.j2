@@ -3,7 +3,7 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: backend
+    combine-component: backend
   name: backend
   namespace: {{ app_namespace }}
 spec:
@@ -12,6 +12,6 @@ spec:
       port: 5000
       targetPort: 5000
   selector:
-    io.kompose.service: backend
+    combine-component: backend
 status:
   loadBalancer: {}
