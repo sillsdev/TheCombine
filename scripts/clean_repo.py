@@ -151,11 +151,10 @@ def main() -> None:
         print("for usage instructions.")
         exit(0)
 
+    rm_pattern: Optional[str] = None
     if args.rm_pattern is not None:
         # Join patterns of tags to keep to a single regular expression
         rm_pattern = "^(?:% s)$" % "|".join(args.rm_pattern)
-    else:
-        rm_pattern = None
 
     # Iterate over the list of repos
     for repo in args.repo:
