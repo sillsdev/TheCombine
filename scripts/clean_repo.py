@@ -66,7 +66,13 @@ def parse_args() -> Namespace:
     )
     parser.add_argument("--profile", help="AWS user profile to use to connect to AWS ECR")
     parser.add_argument("--untagged", action="store_true", help="Delete untagged images.")
-    parser.add_argument("repo", nargs="+", help="List of Docker image repositories to be cleaned.")
+    # Although the "repo" positional argument returns a list if repositories, the argument
+    # name in singular so that the usage message is more readable.
+    parser.add_argument(
+        "repo",
+        nargs="+",
+        help="Docker image repository to be cleaned. (Multiple repos may be listed.)",
+    )
     parser.add_argument(
         "--keep",
         nargs="+",
@@ -137,13 +143,19 @@ def main() -> None:
     """Clean out old images in the AWS ECR repository."""
     args = parse_args()
 
-    # Verify that either '--untagged' or '--rm-pattern' are specified
+    # Verify that either '--untagged' or '--remove' are specified
     if not args.untagged and (args.rm_pattern is None or len(args.rm_pattern) == 0):
         print("Nothing to do.  Run:")
         prog_name = os.path.basename(__file__)
         print(f"   {prog_name} --help")
         print("for usage instructions.")
         exit(0)
+
+    if args.rm_pattern is not None:
+        # Join patterns of tags to keep to a single regular expression
+        rm_pattern = "^(?:% s)$" % "|".join(args.rm_pattern)
+    else:
+        rm_pattern = None
 
     # Iterate over the list of repos
     for repo in args.repo:
@@ -157,11 +169,6 @@ def main() -> None:
         # dictionary
         repo_images: AwsJsonResult = json.loads(aws_result.stdout)
 
-        # Join patterns of tags to keep to a single regular expression
-        rm_pattern: str = ""
-        if args.rm_pattern is not None:
-            rm_pattern = "^(?:% s)$" % "|".join(args.rm_pattern)
-
         # Create a list of image ids (tags or digest) to be deleted.
         image_ids: List[str] = []
 
@@ -172,17 +179,16 @@ def main() -> None:
             if "imageTags" in image_struct:
                 for tag in image_struct["imageTags"]:
                     # check to see if there are patterns to test
-                    if rm_pattern and re.match(rm_pattern, tag):
+                    if tag == "latest":
+                        if args.untagged:
+                            image_ids.append(f"imageDigest={image_struct['imageDigest']}")
+                    elif rm_pattern is not None and re.match(rm_pattern, tag):
                         # now check to see if it matches any exact tags specified
                         if not args.keep or tag not in args.keep:
                             # 'latest' is a special tag - always points to most recent
                             # untagged image.  Delete this image by digest name but only
                             # if untagged images are to be deleted
-                            if tag == "latest":
-                                if args.untagged:
-                                    image_ids.append(f"imageDigest={image_struct['imageDigest']}")
-                            else:
-                                image_ids.append(f"imageTag={tag}")
+                            image_ids.append(f"imageTag={tag}")
             else:
                 # No tags exist for this image
                 if args.untagged:
