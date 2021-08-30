@@ -177,16 +177,16 @@ def main() -> None:
             # untagged images are left alone.
             if "imageTags" in image_struct:
                 for tag in image_struct["imageTags"]:
-                    # check to see if there are patterns to test
+                    # 'latest' is a special tag - always points to most recent
+                    # untagged image.  Delete this image by digest name but only
+                    # if untagged images are to be deleted
                     if tag == "latest":
                         if args.untagged:
                             image_ids.append(f"imageDigest={image_struct['imageDigest']}")
+                    # if not "latest", check to see if there are patterns to test
                     elif rm_pattern is not None and re.match(rm_pattern, tag):
                         # now check to see if it matches any exact tags specified
                         if not args.keep or tag not in args.keep:
-                            # 'latest' is a special tag - always points to most recent
-                            # untagged image.  Delete this image by digest name but only
-                            # if untagged images are to be deleted
                             image_ids.append(f"imageTag={tag}")
             else:
                 # No tags exist for this image
