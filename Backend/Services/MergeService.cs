@@ -92,12 +92,6 @@ namespace BackendFramework.Services
                 }
             }
 
-            // Separate foreach loop for deletion to prevent partial undos
-            foreach (var parentId in ids.ParentIds)
-            {
-                await _wordService.DeleteFrontierWord(projectId, parentId);
-            }
-
             var childWords = new List<Word>();
             foreach (var childId in ids.ChildIds)
             {
@@ -108,6 +102,14 @@ namespace BackendFramework.Services
                 }
                 childWords.Add(childWord);
             }
+
+
+            // Separate foreach loop for deletion to prevent partial undos
+            foreach (var parentId in ids.ParentIds)
+            {
+                await _wordService.DeleteFrontierWord(projectId, parentId);
+            }
+
             await _wordRepo.AddFrontier(childWords);
             return true;
         }
