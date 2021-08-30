@@ -19,24 +19,3 @@ aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 
 backend_files_subdir: ".CombineFiles"
 mongo_files_subdir: "dump"
-
-# Set clean_files to True to enable removing files from the backend before doing
-# the backup
-clean_files: True
-# List of options for the find command to select backend files that are to be
-# deleted before the backup
-clean_files_select:
-  - '\('
-  - '-name "Compressed-Upload*.zip"'
-  - "-o"
-  - '-name "LiftExport*.zip"'
-  - '\)'
-  - "-atime +1"
-###############################################################
-# Note to Maintainers:
-# '-atime' must be set to +1 or greater.
-# This is so that exported/import files are not deleted while
-# the user is using them - TheCombine frontend is active during
-# this step of the process.
-# See the man page for 'find' for the behavior of -atime.
-###############################################################

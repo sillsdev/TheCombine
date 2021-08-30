@@ -69,11 +69,11 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.JwtBearer
-Version:5.0.7
+Version:5.0.9
 project URL:https://asp.net/
 Description:ASP.NET Core middleware that enables an application to receive an OpenID Connect bearer token.
 
-This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/67acc3d331454956fc06d6de2218a625e3e596f8
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/c663adee8e64ba5d379fa0edfb8201984a7df7d0
 licenseUrl:https://licenses.nuget.org/Apache-2.0
 license Type:Apache-2.0
 

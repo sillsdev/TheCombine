@@ -75,7 +75,7 @@ while [[ $# -gt 0 ]] ; do
 done
 
 DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
-BACKUP_FILTER=${BACKUP_FILTER:="{{ combine_server_name | replace('.', '-') }}"}
+BACKUP_FILTER=${BACKUP_FILTER:="/{{ combine_server_name | replace('.', '-') }}-"}
 AWS_BUCKET="s3://{{ aws_s3_backup_loc }}"
 MAX_BACKUPS=${MAX_BACKUPS:={{ max_backups }}}
 
@@ -85,7 +85,7 @@ if [ "${LIST_ONLY}" = "1" ] ; then
   exit 0
 fi
 
-AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep --fixed-strings "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
+AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
 NUM_BACKUPS={{ '${#AWS_BACKUPS[@]}' }}
 
 if [[ ${NUM_BACKUPS} -gt ${MAX_BACKUPS} ]] ; then
