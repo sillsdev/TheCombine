@@ -124,27 +124,31 @@ function UndoButton(props: UndoButtonProps) {
 
   if (isUndoBtnEnabled) {
     return (
-      <div>
-        <Button onClick={() => setUndoDialogOpen(true)}>
-          <Translate id={props.textId} />
-        </Button>
-        <CancelConfirmDialog
-          open={undoDialogOpen}
-          textId={props.dialogId}
-          handleCancel={() => setUndoDialogOpen(false)}
-          handleAccept={() =>
-            undoMerge(props.merge).then(() => setUndoDialogOpen(false))
-          }
-        />
-      </div>
+      <Grid container direction="column" justify="center">
+        <div>
+          <Button onClick={() => setUndoDialogOpen(true)}>
+            <Translate id={props.textId} />
+          </Button>
+          <CancelConfirmDialog
+            open={undoDialogOpen}
+            textId={props.dialogId}
+            handleCancel={() => setUndoDialogOpen(false)}
+            handleAccept={() =>
+              undoMerge(props.merge).then(() => setUndoDialogOpen(false))
+            }
+          />
+        </div>
+      </Grid>
     );
   }
   return (
-    <div>
-      <Button disabled>
-        <Translate id={props.disabledId} />
-      </Button>
-    </div>
+    <Grid container direction="column" justify="center">
+      <div>
+        <Button disabled>
+          <Translate id={props.disabledId} />
+        </Button>
+      </div>
+    </Grid>
   );
 }
 
