@@ -1,10 +1,6 @@
 import { Button, Grid, ImageList, Typography } from "@material-ui/core";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
