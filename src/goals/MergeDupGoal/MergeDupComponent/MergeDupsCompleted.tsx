@@ -124,11 +124,11 @@ function UndoButton(props: UndoButtonProps) {
 
   if (isUndoBtnEnabled) {
     return (
-      <Grid container direction="column" justify="center">
+      <Grid container direction="column" justifyContent="center">
         <div>
           <Button
             variant="outlined"
-            id={`merge-undo-${"-" + props.merge.parentIds}`}
+            id={`merge-undo-${props.merge.parentIds.join("-")}`}
             onClick={() => setUndoDialogOpen(true)}
           >
             <Translate id={props.textId} />
@@ -146,7 +146,7 @@ function UndoButton(props: UndoButtonProps) {
     );
   }
   return (
-    <Grid container direction="column" justify="center">
+    <Grid container direction="column" justifyContent="center">
       <div>
         <Button disabled>
           <Translate id={props.disabledId} />
