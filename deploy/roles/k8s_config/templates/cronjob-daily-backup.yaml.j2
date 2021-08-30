@@ -79,6 +79,12 @@ spec:
                   configMapKeyRef:
                     key: max_backups
                     name: env-maintenance
+              - name: backup_filter
+                valueFrom:
+                  configMapKeyRef:
+                    key: backup_filter
+                    name: env-maintenance
+
             resources: {}
             securityContext:
               capabilities: {}
