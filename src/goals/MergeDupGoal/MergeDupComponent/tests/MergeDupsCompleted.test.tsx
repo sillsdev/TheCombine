@@ -3,68 +3,57 @@ import { doWordsIncludeMerges } from "goals/MergeDupGoal/MergeDupComponent/Merge
 import { newWord } from "types/word";
 
 describe("doWordsIncludeMerges", () => {
-  it("should return false since words don't contain each of the parentIds in merges", () => {
-    const merge1: MergeUndoIds = {
-      parentIds: ["merge1PId", "merge1PId2"],
-      childIds: ["merge1CId1"],
+  it("should return false since words doesn't contain all of the parentIds in merge", () => {
+    const merge: MergeUndoIds = {
+      parentIds: ["mergePId", "mergePId2"],
+      childIds: ["mergeCId1"],
     };
-    const merge2: MergeUndoIds = {
-      parentIds: ["merge2PId", "merge2PId2"],
-      childIds: ["merge2CId1"],
-    };
-    const merges = [merge1, merge2];
 
-    const words: Word[] = [newWord(), newWord(), newWord()];
-    words[0].id = merge1.parentIds[0];
-    words[1].id = merge1.parentIds[1];
-    words[2].id = merge2.parentIds[0];
+    const words: Word[] = [newWord()];
+    words[0].id = merge.parentIds[0];
 
-    expect(doWordsIncludeMerges(words, merges)).toBe(false);
+    expect(doWordsIncludeMerges(words, merge)).toBe(false);
   });
 
-  it("should return true since words contain each of the parentIds in merges", () => {
-    const merge1: MergeUndoIds = {
-      parentIds: ["merge1PId", "merge1PId2"],
-      childIds: ["merge1CId1"],
+  it("should return true since words contains all the parentIds in merge", () => {
+    const merge: MergeUndoIds = {
+      parentIds: ["mergePId", "mergePId2"],
+      childIds: ["mergeCId1"],
     };
-    const merge2: MergeUndoIds = {
-      parentIds: ["merge2PId", "merge2PId2"],
-      childIds: ["merge2CId1"],
-    };
-    const merges = [merge1, merge2];
 
-    const words: Word[] = [newWord(), newWord(), newWord(), newWord()];
-    words[0].id = merge1.parentIds[0];
-    words[1].id = merge1.parentIds[1];
-    words[2].id = merge2.parentIds[0];
-    words[3].id = merge2.parentIds[1];
-
-    expect(doWordsIncludeMerges(words, merges)).toBe(true);
-  });
-
-  it("should return true if merges is empty and words is non-empty", () => {
     const words: Word[] = [newWord(), newWord()];
-    words[0].id = "merge1PId";
-    words[1].id = "merge1PId2";
+    words[0].id = merge.parentIds[0];
+    words[1].id = merge.parentIds[1];
 
-    expect(doWordsIncludeMerges(words, [])).toBe(true);
+    expect(doWordsIncludeMerges(words, merge)).toBe(true);
   });
 
-  it("should return false if words is empty and merges is non-empty", () => {
-    const merge1: MergeUndoIds = {
-      parentIds: ["merge1PId", "merge1PId2"],
-      childIds: ["merge1CId1"],
+  it("should return true if merge is empty and words is non-empty", () => {
+    const merge: MergeUndoIds = {
+      parentIds: [],
+      childIds: [],
     };
-    const merge2: MergeUndoIds = {
-      parentIds: ["merge2PId", "merge2PId2"],
-      childIds: ["merge2CId1"],
-    };
-    const merges = [merge1, merge2];
+    const words: Word[] = [newWord(), newWord()];
+    words[0].id = "mergePId";
+    words[1].id = "mergePId2";
 
-    expect(doWordsIncludeMerges([], merges)).toBe(false);
+    expect(doWordsIncludeMerges(words, merge)).toBe(true);
   });
 
-  it("should return true if both words and merges are empty", () => {
-    expect(doWordsIncludeMerges([], [])).toBe(true);
+  it("should return false if words is empty and merge is non-empty", () => {
+    const merge: MergeUndoIds = {
+      parentIds: ["mergePId", "merge1PId2"],
+      childIds: ["mergeCId1"],
+    };
+
+    expect(doWordsIncludeMerges([], merge)).toBe(false);
+  });
+
+  it("should return true if both words and merge are empty", () => {
+    const merge: MergeUndoIds = {
+      parentIds: [],
+      childIds: [],
+    };
+    expect(doWordsIncludeMerges([], merge)).toBe(true);
   });
 });

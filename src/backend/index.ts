@@ -191,12 +191,12 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
   return (await mergeApi.mergeWords(params, defaultOptions())).data;
 }
 
-export async function undoMerges(wordIds: MergeUndoIds[]) {
+export async function undoMerge(wordIds: MergeUndoIds) {
   const params = {
     projectId: LocalStorage.getProjectId(),
     mergeUndoIds: wordIds,
   };
-  return (await mergeApi.undoMerges(params, defaultOptions())).data;
+  return (await mergeApi.undoMerge(params, defaultOptions())).data;
 }
 
 /** Adds a list of wordIds to current project's merge blacklist. */

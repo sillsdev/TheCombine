@@ -225,19 +225,19 @@ export const MergeApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<MergeUndoIds>} mergeUndoIds
+     * @param {MergeUndoIds} mergeUndoIds
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    undoMerges: async (
+    undoMerge: async (
       projectId: string,
-      mergeUndoIds: Array<MergeUndoIds>,
+      mergeUndoIds: MergeUndoIds,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("undoMerges", "projectId", projectId);
+      assertParamExists("undoMerge", "projectId", projectId);
       // verify required parameter 'mergeUndoIds' is not null or undefined
-      assertParamExists("undoMerges", "mergeUndoIds", mergeUndoIds);
+      assertParamExists("undoMerge", "mergeUndoIds", mergeUndoIds);
       const localVarPath = `/v1/projects/{projectId}/merge/undo`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -379,18 +379,18 @@ export const MergeApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Array<MergeUndoIds>} mergeUndoIds
+     * @param {MergeUndoIds} mergeUndoIds
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async undoMerges(
+    async undoMerge(
       projectId: string,
-      mergeUndoIds: Array<MergeUndoIds>,
+      mergeUndoIds: MergeUndoIds,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.undoMerges(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.undoMerge(
         projectId,
         mergeUndoIds,
         options
@@ -471,17 +471,17 @@ export const MergeApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<MergeUndoIds>} mergeUndoIds
+     * @param {MergeUndoIds} mergeUndoIds
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    undoMerges(
+    undoMerge(
       projectId: string,
-      mergeUndoIds: Array<MergeUndoIds>,
+      mergeUndoIds: MergeUndoIds,
       options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
-        .undoMerges(projectId, mergeUndoIds, options)
+        .undoMerge(projectId, mergeUndoIds, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -565,24 +565,24 @@ export interface MergeApiMergeWordsRequest {
 }
 
 /**
- * Request parameters for undoMerges operation in MergeApi.
+ * Request parameters for undoMerge operation in MergeApi.
  * @export
- * @interface MergeApiUndoMergesRequest
+ * @interface MergeApiUndoMergeRequest
  */
-export interface MergeApiUndoMergesRequest {
+export interface MergeApiUndoMergeRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiUndoMerges
+   * @memberof MergeApiUndoMerge
    */
   readonly projectId: string;
 
   /**
    *
-   * @type {Array<MergeUndoIds>}
-   * @memberof MergeApiUndoMerges
+   * @type {MergeUndoIds}
+   * @memberof MergeApiUndoMerge
    */
-  readonly mergeUndoIds: Array<MergeUndoIds>;
+  readonly mergeUndoIds: MergeUndoIds;
 }
 
 /**
@@ -656,17 +656,14 @@ export class MergeApi extends BaseAPI {
 
   /**
    *
-   * @param {MergeApiUndoMergesRequest} requestParameters Request parameters.
+   * @param {MergeApiUndoMergeRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public undoMerges(
-    requestParameters: MergeApiUndoMergesRequest,
-    options?: any
-  ) {
+  public undoMerge(requestParameters: MergeApiUndoMergeRequest, options?: any) {
     return MergeApiFp(this.configuration)
-      .undoMerges(
+      .undoMerge(
         requestParameters.projectId,
         requestParameters.mergeUndoIds,
         options

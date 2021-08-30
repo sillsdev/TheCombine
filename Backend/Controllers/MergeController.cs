@@ -50,27 +50,19 @@ namespace BackendFramework.Controllers
             }
         }
 
-        /// <summary> Undo merges </summary>
-        /// <returns> True if merges were successfully undone </returns>
-        [HttpPut("undo", Name = "UndoMerges")]
+        /// <summary> Undo merge </summary>
+        /// <returns> True if merge was successfully undone </returns>
+        [HttpPut("undo", Name = "UndoMerge")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> UndoMerges(string projectId, [FromBody, BindRequired] MergeUndoIds[] mergeIds)
+        public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
                 return Forbid();
             }
 
-
-            foreach (var merge in mergeIds)
-            {
-                var undo = await _mergeService.UndoMerge(projectId, merge);
-                if (!undo)
-                {
-                    return Ok(false);
-                }
-            }
-            return Ok(true);
+            var undo = await _mergeService.UndoMerge(projectId, merge);
+            return Ok(undo);
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>

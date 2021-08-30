@@ -13,7 +13,7 @@ import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { MergeUndoIds, Sense, Word } from "api/models";
-import { getFrontierWords, getWord, undoMerges } from "backend";
+import { getFrontierWords, getWord, undoMerge } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
@@ -90,7 +90,7 @@ function MergeChange(change: MergeUndoIds): JSX.Element {
           <WordPaper key={id} wordId={id} />
         ))}
         <UndoButton
-          merges={[change]}
+          merge={change}
           textId="mergeDups.undo.undo"
           dialogId="mergeDups.undo.undoDialog"
           disabledId="mergeDups.undo.undoDisabled"
@@ -101,7 +101,7 @@ function MergeChange(change: MergeUndoIds): JSX.Element {
 }
 
 interface UndoButtonProps {
-  merges: MergeUndoIds[];
+  merge: MergeUndoIds;
   textId: string;
   dialogId: string;
   disabledId: string;
@@ -114,7 +114,9 @@ function UndoButton(props: UndoButtonProps) {
   useEffect(() => {
     function checkFrontier() {
       getFrontierWords().then((words) =>
-        setUndoBtnEnabled(doWordsIncludeMerges(words, props.merges ?? []))
+        setUndoBtnEnabled(
+          props.merge ? doWordsIncludeMerges(words, props.merge) : false
+        )
       );
     }
     checkFrontier();
@@ -131,7 +133,7 @@ function UndoButton(props: UndoButtonProps) {
           textId={props.dialogId}
           handleCancel={() => setUndoDialogOpen(false)}
           handleAccept={() =>
-            undoMerges(props.merges).then(() => setUndoDialogOpen(false))
+            undoMerge(props.merge).then(() => setUndoDialogOpen(false))
           }
         />
       </div>
@@ -148,12 +150,10 @@ function UndoButton(props: UndoButtonProps) {
 
 export function doWordsIncludeMerges(
   words: Word[],
-  merges: MergeUndoIds[]
+  merge: MergeUndoIds
 ): boolean {
   const wordIds = words.map((word) => word.id);
-  return merges.every((merge) =>
-    merge.parentIds.every((id) => wordIds.includes(id))
-  );
+  return merge.parentIds.every((id) => wordIds.includes(id));
 }
 
 interface WordPaperProps {
