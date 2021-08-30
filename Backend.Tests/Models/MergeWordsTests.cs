@@ -35,9 +35,6 @@ namespace Backend.Tests.Models
             Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty2));
             Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty3));
             Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty4));
-            Assert.IsFalse(mergeNonEmpty2.Equals(mergeNonEmpty3));
-            Assert.IsFalse(mergeNonEmpty2.Equals(mergeNonEmpty4));
-            Assert.IsFalse(mergeNonEmpty3.Equals(mergeNonEmpty4));
         }
 
         [Test]
