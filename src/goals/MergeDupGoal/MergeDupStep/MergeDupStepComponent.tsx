@@ -95,7 +95,7 @@ class MergeDupStep extends React.Component<
     ) : (
       // ToDo: create component with translated text and button back to goals.
       <Typography>
-        <Translate id="mergeDups.helpText.noDups" />
+        {this.props.translate("mergeDups.helpText.noDups")}
       </Typography>
     );
   }
