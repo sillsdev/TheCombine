@@ -1,8 +1,8 @@
-export function passwordRequirements(password: string): boolean {
+export function meetsPasswordRequirements(password: string): boolean {
   return password.length >= 8;
 }
 
-export function usernameRequirements(username: string): boolean {
+export function meetsUsernameRequirements(username: string): boolean {
   return username.length >= 3;
 }
 
