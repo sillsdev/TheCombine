@@ -788,17 +788,6 @@
         "Undo this merge?",
         "Undo this merge?"
       ],
-      "undoAll": ["Undo All Merges", "Undo All Merges", "Undo All Merges"],
-      "undoAllDialog": [
-        "Undo all merges from in this session?",
-        "Undo all merges from in this session?",
-        "Undo all merges from in this session?"
-      ],
-      "undoAllDisabled": [
-        "Undo All Unavailable",
-        "Undo All Unavailable",
-        "Undo All Unavailable"
-      ],
       "undoDisabled": [
         "Undo Unavailable",
         "Undo Unavailable",

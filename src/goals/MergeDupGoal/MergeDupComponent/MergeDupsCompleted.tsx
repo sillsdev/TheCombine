@@ -39,12 +39,6 @@ function MergesMade(changes: MergesCompleted): JSX.Element {
     <div>
       {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
-      <UndoButton
-        merges={changes.merges}
-        textId="mergeDups.undo.undoAll"
-        dialogId="mergeDups.undo.undoAllDialog"
-        disabledId="mergeDups.undo.undoAllDisabled"
-      />
     </div>
   ) : (
     <div>
