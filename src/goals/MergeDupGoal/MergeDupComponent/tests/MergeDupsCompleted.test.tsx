@@ -3,7 +3,7 @@ import { doWordsIncludeMerges } from "goals/MergeDupGoal/MergeDupComponent/Merge
 import { newWord } from "types/word";
 
 describe("doWordsIncludeMerges", () => {
-  it("should return false since words doesn't contain all of the parentIds in merge", () => {
+  it("should return false if words doesn't contain all of the parentIds in merge", () => {
     const merge: MergeUndoIds = {
       parentIds: ["mergePId", "mergePId2"],
       childIds: ["mergeCId1"],
@@ -15,7 +15,7 @@ describe("doWordsIncludeMerges", () => {
     expect(doWordsIncludeMerges(words, merge)).toBe(false);
   });
 
-  it("should return true since words contains all the parentIds in merge", () => {
+  it("should return true if words contains all the parentIds in merge", () => {
     const merge: MergeUndoIds = {
       parentIds: ["mergePId", "mergePId2"],
       childIds: ["mergeCId1"],
