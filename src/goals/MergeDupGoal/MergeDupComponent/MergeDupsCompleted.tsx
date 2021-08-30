@@ -126,7 +126,11 @@ function UndoButton(props: UndoButtonProps) {
     return (
       <Grid container direction="column" justify="center">
         <div>
-          <Button onClick={() => setUndoDialogOpen(true)}>
+          <Button
+            variant="outlined"
+            id={`merge-undo-${"-" + props.merge.parentIds}`}
+            onClick={() => setUndoDialogOpen(true)}
+          >
             <Translate id={props.textId} />
           </Button>
           <CancelConfirmDialog
