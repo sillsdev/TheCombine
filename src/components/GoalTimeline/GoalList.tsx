@@ -113,6 +113,7 @@ export function makeGoalTile(
             goal.goalType !== GoalType.CreateCharInv &&
             goal.goalType !== GoalType.MergeDups)
         }
+        id={`goal-${goal?.guid}`}
       >
         {goal ? (
           GoalInfo(goal)

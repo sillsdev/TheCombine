@@ -593,6 +593,7 @@ export class DataEntryTable extends React.Component<
           <Grid item>
             {this.props.isSmallScreen ? (
               <Button
+                id="toggle-existing-data"
                 style={{ marginTop: theme.spacing(2) }}
                 onClick={this.props.showExistingData}
               >

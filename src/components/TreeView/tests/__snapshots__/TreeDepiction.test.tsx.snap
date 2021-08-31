@@ -57,6 +57,7 @@ Array [
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
                 disabled={true}
+                id="current-domain"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onDragLeave={[Function]}
@@ -794,6 +795,7 @@ Array [
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
                 disabled={false}
+                id="current-domain"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onDragLeave={[Function]}
@@ -1179,6 +1181,7 @@ Array [
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
                 disabled={false}
+                id="current-domain"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onDragLeave={[Function]}
@@ -2058,6 +2061,7 @@ Array [
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
                 disabled={false}
+                id="current-domain"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onDragLeave={[Function]}
@@ -2520,6 +2524,7 @@ Array [
               <button
                 className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
                 disabled={false}
+                id="current-domain"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onDragLeave={[Function]}

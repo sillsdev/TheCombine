@@ -11,6 +11,7 @@ export default function Logo() {
       onClick={() => {
         history.push(Path.ProjScreen);
       }}
+      id="logo-button"
     >
       <Hidden xsDown>
         <img src={logo} height="50" alt="Logo" />

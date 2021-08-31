@@ -115,6 +115,7 @@ export default class RecentEntry extends React.Component<
                   this.focusOnNewEntry();
                 }
               }}
+              textFieldId={`recent-entry-${this.props.entry.id}-sense-${this.props.senseIndex}-vernacular`}
             />
           </Grid>
           <Grid
@@ -140,6 +141,7 @@ export default class RecentEntry extends React.Component<
                 }
               }}
               analysisLang={this.props.analysisLang}
+              textFieldId={`recent-entry-${this.props.entry.id}-sense-${this.props.senseIndex}-gloss`}
             />
           </Grid>
           <Grid
@@ -154,6 +156,7 @@ export default class RecentEntry extends React.Component<
             <EntryNote
               noteText={this.props.entry.note.text}
               updateNote={this.props.updateNote}
+              buttonId={`note-entry-${this.props.entry.id}-sense-${this.props.senseIndex}`}
             />
           </Grid>
           <Grid
@@ -190,6 +193,7 @@ export default class RecentEntry extends React.Component<
               <DeleteEntry
                 removeEntry={() => this.props.removeEntry()}
                 confirmId={"addWords.deleteRowWarning"}
+                wordId={this.props.entry.id}
               />
             )}
           </Grid>

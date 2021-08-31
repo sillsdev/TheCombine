@@ -172,6 +172,7 @@ export default class Register extends React.Component<
 
               {/* Name field */}
               <TextField
+                id="register-name"
                 required
                 autoFocus
                 autoComplete="name"
@@ -192,6 +193,7 @@ export default class Register extends React.Component<
 
               {/* Username field */}
               <TextField
+                id="register-username"
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
@@ -214,6 +216,7 @@ export default class Register extends React.Component<
 
               {/* email field */}
               <TextField
+                id="register-email"
                 required
                 type="email"
                 autoComplete="email"
@@ -237,6 +240,7 @@ export default class Register extends React.Component<
 
               {/* Password field */}
               <TextField
+                id="register-password1"
                 required
                 autoComplete="new-password"
                 label={<Translate id="login.password" />}
@@ -259,6 +263,7 @@ export default class Register extends React.Component<
 
               {/* Confirm Password field */}
               <TextField
+                id="register-password2"
                 autoComplete="new-password"
                 label={<Translate id="login.confirmPassword" />}
                 type="password"
@@ -294,6 +299,7 @@ export default class Register extends React.Component<
                     onClick={() => {
                       history.push(Path.Login);
                     }}
+                    id="register-login"
                   >
                     <Translate id="login.backToLogin" />
                   </Button>
@@ -303,7 +309,7 @@ export default class Register extends React.Component<
                     loading={this.props.inProgress}
                     done={this.props.success}
                     doneText={<Translate id="login.registerSuccess" />}
-                    buttonProps={{ color: "primary" }}
+                    buttonProps={{ color: "primary", id: "register-register" }}
                   >
                     <Translate id="login.register" />
                   </LoadingDoneButton>

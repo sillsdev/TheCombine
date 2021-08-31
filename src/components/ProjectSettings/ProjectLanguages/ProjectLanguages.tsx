@@ -100,12 +100,14 @@ export default class ProjectLanguages extends React.Component<
           textId="projectSettings.language.makeDefaultAnalysisLanguage"
           small
           onClick={() => this.setNewAnalysisDefault(index)}
+          buttonId={`analysis-language-${index}-bump`}
         />
         <IconButtonWithTooltip
           icon={<Delete fontSize="inherit" />}
           textId="projectSettings.language.deleteAnalysisLanguage"
           small
           onClick={() => this.deleteAnalysisWritingSystem(index)}
+          buttonId={`analysis-language-${index}-delete`}
         />
       </React.Fragment>
     );
@@ -161,15 +163,18 @@ export default class ProjectLanguages extends React.Component<
             </Grid>{" "}
             <Grid item>
               <IconButton
-                id="submitNewLang"
                 disabled={!this.isNewWritingSystem()}
                 onClick={() => this.addAnalysisWritingSystem()}
+                id="analysis-language-new-confirm"
               >
                 <Done />
               </IconButton>
             </Grid>{" "}
             <Grid item>
-              <IconButton onClick={() => this.resetState()}>
+              <IconButton
+                onClick={() => this.resetState()}
+                id="analysis-language-new-clear"
+              >
                 <Clear />
               </IconButton>
             </Grid>
@@ -180,11 +185,13 @@ export default class ProjectLanguages extends React.Component<
               icon={<Add />}
               textId="projectSettings.language.addAnalysisLanguage"
               onClick={() => this.setState({ add: true })}
+              buttonId={`analysis-language-new`}
             />
             <IconButtonWithTooltip
               icon={<Search />}
               textId="projectSettings.language.getGlossLanguages"
               onClick={() => this.getActiveAnalysisLangs()}
+              buttonId={`analysis-language-get`}
             />
             {this.state.langsInProject}
           </React.Fragment>

@@ -14,6 +14,7 @@ interface GlossWithSuggestionsProps {
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   onBlur?: () => void;
   analysisLang: string;
+  textFieldId: string;
 }
 
 /**
@@ -57,6 +58,7 @@ export class GlossWithSuggestions extends React.Component<
         renderInput={(params) => (
           <TextField
             {...params}
+            id={this.props.textFieldId}
             fullWidth
             inputRef={this.props.glossInput}
             label={
