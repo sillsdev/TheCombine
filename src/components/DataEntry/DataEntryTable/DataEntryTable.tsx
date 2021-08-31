@@ -1,4 +1,4 @@
-import { Button, Grid, Icon, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import { List as ListIcon, ExitToApp } from "@material-ui/icons";
 import React from "react";
 import {
