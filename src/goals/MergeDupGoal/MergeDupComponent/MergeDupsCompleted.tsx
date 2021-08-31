@@ -135,6 +135,8 @@ function UndoButton(props: UndoButtonProps) {
             handleConfirm={() =>
               undoMerge(props.merge).then(() => setUndoDialogOpen(false))
             }
+            buttonIdCancel="merge-undo-cancel"
+            buttonIdConfirm="merge-undo-confirm"
           />
         </div>
       </Grid>
