@@ -50,6 +50,7 @@ export default function ExportButton(props: ExportButtonProps) {
               ...props.buttonProps,
               onClick: exportProj,
               color: "primary",
+              id: `project-${props.projectId}-export`,
             }}
           >
             <Translate id={"buttons.export"} />

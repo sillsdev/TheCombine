@@ -17,7 +17,7 @@ describe("DeleteCell", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <DeleteCell rowData={mockWord} delete={jest.fn()} value={""} />
+        <DeleteCell rowData={mockWord} value={""} />
       </Provider>,
       div
     );

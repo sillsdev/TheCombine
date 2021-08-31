@@ -34,7 +34,7 @@ export default function DefinitionCell(
           <DefinitionList
             definitions={sense.definitions}
             defaultLang={analysisLang}
-            keyPrefix={`definitions${props.rowData.id}`}
+            keyPrefix={`row-${props.rowData.id}-definition`}
             onChange={(definitions) =>
               props.onRowDataChange &&
               props.onRowDataChange({
@@ -98,7 +98,8 @@ function DefinitionList(props: DefinitionListProps) {
       {props.definitions.map((g, i) => (
         <DefinitionField
           definition={g}
-          key={`${props.keyPrefix}-definition${i}`}
+          key={`${props.keyPrefix}-${i}`}
+          textFieldId={`${props.keyPrefix}-${i}-text`}
           onChange={(definition: Definition) => {
             const updatedDefinitions = [...props.definitions];
             updatedDefinitions.splice(i, 1, definition);
@@ -112,12 +113,14 @@ function DefinitionList(props: DefinitionListProps) {
 
 interface DefinitionFieldProps {
   definition: Definition;
+  textFieldId: string;
   onChange: (definition: Definition) => void;
 }
 
 function DefinitionField(props: DefinitionFieldProps) {
   return (
     <TextField
+      id={props.textFieldId}
       label={`${props.definition.language}:`}
       variant="outlined"
       margin="dense"

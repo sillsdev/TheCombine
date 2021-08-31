@@ -67,6 +67,7 @@ export default class ResetRequest extends React.Component<
             <form onSubmit={this.onSubmit}>
               <Grid item>
                 <TextField
+                  id="password-reset-request-text"
                   required
                   type="text"
                   variant="outlined"
@@ -92,6 +93,7 @@ export default class ResetRequest extends React.Component<
                     onClick: () => this.onSubmit,
                     variant: "contained",
                     color: "primary",
+                    id: "password-reset-request",
                   }}
                 >
                   <Translate id="passwordReset.submit" />

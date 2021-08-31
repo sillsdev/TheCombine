@@ -52,6 +52,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
               variant="contained"
               disabled={!props.currentDomain.parentDomain}
               onClick={() => props.animate(props.currentDomain)}
+              id="current-domain"
             >
               <div style={{ textTransform: "capitalize" }}>
                 <Typography variant="overline">

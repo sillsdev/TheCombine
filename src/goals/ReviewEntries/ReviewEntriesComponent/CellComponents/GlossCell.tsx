@@ -34,7 +34,7 @@ export default function GlossCell(
           <GlossList
             glosses={sense.glosses}
             defaultLang={analysisLang}
-            keyPrefix={`glosses${props.rowData.id}`}
+            keyPrefix={`row-${props.rowData.id}-gloss`}
             onChange={(glosses) =>
               props.onRowDataChange &&
               props.onRowDataChange({
@@ -95,7 +95,8 @@ function GlossList(props: GlossListProps) {
       {props.glosses.map((g, i) => (
         <GlossField
           gloss={g}
-          key={`${props.keyPrefix}-gloss${i}`}
+          key={`${props.keyPrefix}-${i}`}
+          textFieldId={`${props.keyPrefix}-${i}-text`}
           onChange={(gloss: Gloss) => {
             const updatedGlosses = [...props.glosses];
             updatedGlosses.splice(i, 1, gloss);
@@ -109,12 +110,14 @@ function GlossList(props: GlossListProps) {
 
 interface GlossFieldProps {
   gloss: Gloss;
+  textFieldId: string;
   onChange: (gloss: Gloss) => void;
 }
 
 function GlossField(props: GlossFieldProps) {
   return (
     <TextField
+      id={props.textFieldId}
       label={`${props.gloss.language}:`}
       variant="outlined"
       margin="dense"

@@ -13,6 +13,7 @@ describe("Tests GlossWithSuggestions", () => {
           updateGlossField={() => null}
           handleEnterAndTab={() => null}
           analysisLang={""}
+          textFieldId={""}
         />
       );
     });
