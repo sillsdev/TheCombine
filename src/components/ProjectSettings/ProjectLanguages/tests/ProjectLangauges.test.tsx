@@ -59,7 +59,9 @@ describe("ProjectLanguages", () => {
     pickerHandle = projectMaster.root.findByType(LanguagePicker);
     pickerHandle.props.setCode("z");
     pickerHandle.props.setName("z");
-    projectMaster.root.findByProps({ id: "submitNewLang" }).props.onClick();
+    projectMaster.root
+      .findByProps({ id: "analysis-language-new-confirm" })
+      .props.onClick();
     expect(mockUpdateProject).toBeCalledWith(
       mockProject([
         ...mockAnalysisWritingSystems,
@@ -71,7 +73,9 @@ describe("ProjectLanguages", () => {
   it("can only submit when new language selected", () => {
     renderAndClickAdd();
     pickerHandle = projectMaster.root.findByType(LanguagePicker);
-    buttonHandle = projectMaster.root.findByProps({ id: "submitNewLang" });
+    buttonHandle = projectMaster.root.findByProps({
+      id: "analysis-language-new-confirm",
+    });
     expect(buttonHandle.props.disabled).toBe(true);
     pickerHandle.props.setCode(mockAnalysisWritingSystems[0].bcp47);
     expect(buttonHandle.props.disabled).toBe(true);

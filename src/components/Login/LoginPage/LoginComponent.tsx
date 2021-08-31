@@ -105,6 +105,7 @@ export default class Login extends React.Component<
 
               {/* Username field */}
               <TextField
+                id="login-username"
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
@@ -125,6 +126,7 @@ export default class Login extends React.Component<
 
               {/* Password field */}
               <TextField
+                id="login-password"
                 required
                 autoComplete="current-password"
                 label={<Translate id="login.password" />}
@@ -188,7 +190,7 @@ export default class Login extends React.Component<
               {/* Register and Login buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
-                  <Button onClick={openUserGuide}>
+                  <Button onClick={openUserGuide} id="login-guide">
                     <Help />
                   </Button>
                 </Grid>
@@ -198,6 +200,7 @@ export default class Login extends React.Component<
                     onClick={() => {
                       history.push(Path.Register);
                     }}
+                    id="login-register"
                   >
                     <Translate id="login.register" />
                   </Button>
@@ -208,6 +211,7 @@ export default class Login extends React.Component<
                     buttonProps={{
                       type: "submit",
                       color: "primary",
+                      id: "login-login",
                     }}
                     disabled={!this.state.isVerified}
                     loading={this.props.loginAttempt}

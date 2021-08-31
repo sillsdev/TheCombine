@@ -60,6 +60,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
             <button
               className="MuiButtonBase-root MuiButton-root MuiButton-text"
               disabled={false}
+              id="character-entry-submit"
               onBlur={[Function]}
               onClick={[Function]}
               onDragLeave={[Function]}

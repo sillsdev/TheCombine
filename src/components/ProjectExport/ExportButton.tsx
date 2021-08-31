@@ -55,6 +55,7 @@ export function ExportButton(props: ExportButtonProps & LocalizeContextProps) {
               ...props.buttonProps,
               onClick: exportProj,
               color: "primary",
+              id: `project-${props.projectId}-export`,
             }}
           >
             {props.translate("buttons.export")}

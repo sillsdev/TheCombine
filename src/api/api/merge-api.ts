@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { MergeUndoIds } from "../models";
+// @ts-ignore
 import { MergeWords } from "../models";
 // @ts-ignore
 import { Word } from "../models";
@@ -220,6 +222,62 @@ export const MergeApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} projectId
+     * @param {MergeUndoIds} mergeUndoIds
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    undoMerge: async (
+      projectId: string,
+      mergeUndoIds: MergeUndoIds,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("undoMerge", "projectId", projectId);
+      // verify required parameter 'mergeUndoIds' is not null or undefined
+      assertParamExists("undoMerge", "mergeUndoIds", mergeUndoIds);
+      const localVarPath = `/v1/projects/{projectId}/merge/undo`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        mergeUndoIds,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -318,6 +376,32 @@ export const MergeApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} projectId
+     * @param {MergeUndoIds} mergeUndoIds
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async undoMerge(
+      projectId: string,
+      mergeUndoIds: MergeUndoIds,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.undoMerge(
+        projectId,
+        mergeUndoIds,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -382,6 +466,22 @@ export const MergeApiFactory = function (
     ): AxiosPromise<Array<string>> {
       return localVarFp
         .mergeWords(projectId, mergeWords, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {MergeUndoIds} mergeUndoIds
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    undoMerge(
+      projectId: string,
+      mergeUndoIds: MergeUndoIds,
+      options?: any
+    ): AxiosPromise<boolean> {
+      return localVarFp
+        .undoMerge(projectId, mergeUndoIds, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -465,6 +565,27 @@ export interface MergeApiMergeWordsRequest {
 }
 
 /**
+ * Request parameters for undoMerge operation in MergeApi.
+ * @export
+ * @interface MergeApiUndoMergeRequest
+ */
+export interface MergeApiUndoMergeRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof MergeApiUndoMerge
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {MergeUndoIds}
+   * @memberof MergeApiUndoMerge
+   */
+  readonly mergeUndoIds: MergeUndoIds;
+}
+
+/**
  * MergeApi - object-oriented interface
  * @export
  * @class MergeApi
@@ -528,6 +649,23 @@ export class MergeApi extends BaseAPI {
       .mergeWords(
         requestParameters.projectId,
         requestParameters.mergeWords,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {MergeApiUndoMergeRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MergeApi
+   */
+  public undoMerge(requestParameters: MergeApiUndoMergeRequest, options?: any) {
+    return MergeApiFp(this.configuration)
+      .undoMerge(
+        requestParameters.projectId,
+        requestParameters.mergeUndoIds,
         options
       )
       .then((request) => request(this.axios, this.basePath));

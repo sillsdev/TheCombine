@@ -786,6 +786,19 @@
         "Number of merges completed: ",
         "Number of merges completed: "
       ]
+    },
+    "undo": {
+      "undo": ["Undo Merge", "Undo Merge", "Undo Merge"],
+      "undoDialog": [
+        "Undo this merge?",
+        "Undo this merge?",
+        "Undo this merge?"
+      ],
+      "undoDisabled": [
+        "Undo Unavailable",
+        "Undo Unavailable",
+        "Undo Unavailable"
+      ]
     }
   },
   "buttons": {
