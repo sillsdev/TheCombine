@@ -12,6 +12,7 @@ namespace Backend.Tests.Services
     {
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IWordRepository _wordRepo = null!;
+        private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
@@ -22,7 +23,8 @@ namespace Backend.Tests.Services
         {
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo);
+            _wordService = new WordService(_wordRepo);
+            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo, _wordService);
         }
 
         [Test]
@@ -99,6 +101,75 @@ namespace Backend.Tests.Services
             Assert.AreNotEqual(frontier.First().Id, frontier.Last().Id);
             Assert.Contains(frontier.First(), newWords);
             Assert.Contains(frontier.Last(), newWords);
+        }
+
+        [Test]
+        public void UndoMergeOneChildTest()
+        {
+            var thisWord = Util.RandomWord(ProjId);
+            thisWord = _wordRepo.Create(thisWord).Result;
+
+            var mergeObject = new MergeWords
+            {
+                Parent = thisWord,
+                Children = new List<MergeSourceWord>
+                {
+                    new() { SrcWordId = thisWord.Id }
+                }
+            };
+
+            var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
+
+            // There should only be 1 word added and it should be identical to what we passed in
+            Assert.That(newWords, Has.Count.EqualTo(1));
+            Assert.That(newWords.First().ContentEquals(thisWord));
+
+            var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
+            var parentIds = new List<string> { newWords[0].Id };
+            var mergedWord = new MergeUndoIds(parentIds, childIds);
+            var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
+            Assert.IsTrue(undo);
+
+            var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
+            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
+
+            Assert.That(frontierWords, Has.Count.EqualTo(1));
+            Assert.Contains(childIds[0], frontierWordIds);
+        }
+
+        [Test]
+        public void UndoMergeMultiChildTest()
+        {
+            // Build a mergeWords with a parent with 3 children.
+            var mergeWords = new MergeWords { Parent = Util.RandomWord(ProjId) };
+            const int numberOfChildren = 3;
+            foreach (var _ in Enumerable.Range(0, numberOfChildren))
+            {
+                var child = Util.RandomWord(ProjId);
+                var id = _wordRepo.Create(child).Result.Id;
+                Assert.IsNotNull(_wordRepo.GetWord(ProjId, id).Result);
+                mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
+            }
+            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
+
+            var mergeWordsList = new List<MergeWords> { mergeWords };
+            var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
+
+            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
+
+            var childIds = mergeWords.Children.Select(word => word.SrcWordId).ToList();
+            var parentIds = new List<string> { newWords[0].Id };
+            var mergedWord = new MergeUndoIds(parentIds, childIds);
+            var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
+            Assert.IsTrue(undo);
+
+            var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
+            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
+
+            Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
+            Assert.Contains(childIds[0], frontierWordIds);
+            Assert.Contains(childIds[1], frontierWordIds);
+            Assert.Contains(childIds[2], frontierWordIds);
         }
 
         [Test]
