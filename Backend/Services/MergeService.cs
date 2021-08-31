@@ -13,11 +13,14 @@ namespace BackendFramework.Services
     {
         private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
         private readonly IWordRepository _wordRepo;
+        private readonly IWordService _wordService;
 
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IWordRepository wordRepo)
+        public MergeService(
+            IMergeBlacklistRepository mergeBlacklistRepo, IWordRepository wordRepo, IWordService wordService)
         {
             _mergeBlacklistRepo = mergeBlacklistRepo;
             _wordRepo = wordRepo;
+            _wordService = wordService;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
@@ -74,6 +77,41 @@ namespace BackendFramework.Services
                                              .ContinueWith(task => newWords.Add(task.Result))));
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
             return await _wordRepo.Create(newWords);
+        }
+
+        /// <summary> Undo merge </summary>
+        /// <returns> True if merge was successfully undone </returns>
+        public async Task<bool> UndoMerge(string projectId, MergeUndoIds ids)
+        {
+            foreach (var parentId in ids.ParentIds)
+            {
+                var parentWord = (await _wordRepo.GetWord(projectId, parentId))?.Clone();
+                if (parentWord is null)
+                {
+                    return false;
+                }
+            }
+
+            var childWords = new List<Word>();
+            foreach (var childId in ids.ChildIds)
+            {
+                var childWord = await _wordRepo.GetWord(projectId, childId);
+                if (childWord is null)
+                {
+                    return false;
+                }
+                childWords.Add(childWord);
+            }
+
+
+            // Separate foreach loop for deletion to prevent partial undos
+            foreach (var parentId in ids.ParentIds)
+            {
+                await _wordService.DeleteFrontierWord(projectId, parentId);
+            }
+
+            await _wordRepo.AddFrontier(childWords);
+            return true;
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>

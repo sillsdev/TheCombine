@@ -183,6 +183,7 @@ export default class CreateProject extends React.Component<
             </Typography>
             {/* Project name field */}
             <TextField
+              id="create-project-name"
               label={<Translate id="createProject.name" />}
               value={this.state.name}
               onChange={(e) => this.updateName(e)}
@@ -242,7 +243,12 @@ export default class CreateProject extends React.Component<
               <FileInputButton
                 updateFile={(file: File) => this.updateLanguageData(file)}
                 accept=".zip"
-                buttonProps={{ style: { margin: theme.spacing(1) } }}
+                buttonProps={{
+                  style: {
+                    margin: theme.spacing(1),
+                    id: "create-project-select-file",
+                  },
+                }}
               >
                 <Translate id="buttons.browse" />
               </FileInputButton>
@@ -270,7 +276,7 @@ export default class CreateProject extends React.Component<
                 loading={this.props.inProgress}
                 done={this.props.success}
                 doneText={<Translate id="createProject.success" />}
-                buttonProps={{ color: "primary" }}
+                buttonProps={{ color: "primary", id: "create-project-submit" }}
               >
                 <Translate id="createProject.create" />
               </LoadingDoneButton>

@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   Chip,
@@ -11,12 +12,10 @@ import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import { Sense, Word } from "api/models";
-import { getWord } from "backend";
-import {
-  CompletedMerge,
-  MergesCompleted,
-} from "goals/MergeDupGoal/MergeDupsTypes";
+import { MergeUndoIds, Sense, Word } from "api/models";
+import { getFrontierWords, getWord, undoMerge } from "backend";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -53,7 +52,7 @@ export function MergesCount(changes: MergesCompleted): JSX.Element {
   );
 }
 
-function MergeChange(change: CompletedMerge): JSX.Element {
+function MergeChange(change: MergeUndoIds): JSX.Element {
   return (
     <div key={change.parentIds[0]}>
       <Grid
@@ -63,7 +62,7 @@ function MergeChange(change: CompletedMerge): JSX.Element {
           overflow: "auto",
         }}
       >
-        {change.childrenIds.map((id) => (
+        {change.childIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
         <Grid
@@ -85,9 +84,81 @@ function MergeChange(change: CompletedMerge): JSX.Element {
         {change.parentIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
+        <UndoButton
+          merge={change}
+          textId="mergeDups.undo.undo"
+          dialogId="mergeDups.undo.undoDialog"
+          disabledId="mergeDups.undo.undoDisabled"
+        />
       </Grid>
     </div>
   );
+}
+
+interface UndoButtonProps {
+  merge: MergeUndoIds;
+  textId: string;
+  dialogId: string;
+  disabledId: string;
+}
+
+function UndoButton(props: UndoButtonProps) {
+  const [isUndoBtnEnabled, setUndoBtnEnabled] = useState<boolean>(false);
+  const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    function checkFrontier() {
+      getFrontierWords().then((words) =>
+        setUndoBtnEnabled(
+          props.merge ? doWordsIncludeMerges(words, props.merge) : false
+        )
+      );
+    }
+    checkFrontier();
+  });
+
+  if (isUndoBtnEnabled) {
+    return (
+      <Grid container direction="column" justifyContent="center">
+        <div>
+          <Button
+            variant="outlined"
+            id={`merge-undo-${props.merge.parentIds.join("-")}`}
+            onClick={() => setUndoDialogOpen(true)}
+          >
+            <Translate id={props.textId} />
+          </Button>
+          <CancelConfirmDialog
+            open={undoDialogOpen}
+            textId={props.dialogId}
+            handleCancel={() => setUndoDialogOpen(false)}
+            handleConfirm={() =>
+              undoMerge(props.merge).then(() => setUndoDialogOpen(false))
+            }
+            buttonIdCancel="merge-undo-cancel"
+            buttonIdConfirm="merge-undo-confirm"
+          />
+        </div>
+      </Grid>
+    );
+  }
+  return (
+    <Grid container direction="column" justifyContent="center">
+      <div>
+        <Button disabled>
+          <Translate id={props.disabledId} />
+        </Button>
+      </div>
+    </Grid>
+  );
+}
+
+export function doWordsIncludeMerges(
+  words: Word[],
+  merge: MergeUndoIds
+): boolean {
+  const wordIds = words.map((word) => word.id);
+  return merge.parentIds.every((id) => wordIds.includes(id));
 }
 
 interface WordPaperProps {

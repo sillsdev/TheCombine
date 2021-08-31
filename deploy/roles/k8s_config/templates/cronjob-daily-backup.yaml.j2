@@ -27,7 +27,7 @@ spec:
               - name: cluster-kubeconfig
                 mountPath: /home/user/.kube
             command:
-              - combine_backup.py
+              - combine-backup-job.sh
             env:
               - name: AWS_ACCESS_KEY_ID
                 valueFrom:
@@ -74,6 +74,17 @@ spec:
                   configMapKeyRef:
                     key: wait_time
                     name: env-maintenance
+              - name: max_backups
+                valueFrom:
+                  configMapKeyRef:
+                    key: max_backups
+                    name: env-maintenance
+              - name: backup_filter
+                valueFrom:
+                  configMapKeyRef:
+                    key: backup_filter
+                    name: env-maintenance
+
             resources: {}
             securityContext:
               capabilities: {}

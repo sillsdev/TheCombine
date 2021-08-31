@@ -46,6 +46,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       if (props.user) props.deleteUser(props.user.id);
                     }}
                     color="secondary"
+                    id="user-delete-confirm"
                   >
                     <Typography
                       align="center"
@@ -61,6 +62,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                     variant="contained"
                     onClick={() => props.handleCloseModal()}
                     color="secondary"
+                    id="user-delete-cancel"
                   >
                     <Typography
                       align="center"

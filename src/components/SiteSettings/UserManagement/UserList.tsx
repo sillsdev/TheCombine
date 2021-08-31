@@ -167,7 +167,10 @@ class UserList extends React.Component<
                       <VpnKey />
                     </Button>
                   ) : (
-                    <Button onClick={() => this.props.handleOpenModal(user)}>
+                    <Button
+                      onClick={() => this.props.handleOpenModal(user)}
+                      id={`user-delete-${user.username}`}
+                    >
                       <DeleteForever />
                     </Button>
                   ))}

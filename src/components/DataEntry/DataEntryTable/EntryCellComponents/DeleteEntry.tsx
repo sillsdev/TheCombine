@@ -11,6 +11,7 @@ interface DeleteEntryProps {
   // if no confirmId is specified, then there is no popup
   // and deletion will happen when the button is pressed
   confirmId?: string;
+  wordId?: string;
 }
 
 /**
@@ -30,7 +31,12 @@ export default function DeleteEntry(props: DeleteEntryProps) {
   return (
     <React.Fragment>
       <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
-        <IconButton tabIndex={-1} size="small" onClick={handleClick}>
+        <IconButton
+          tabIndex={-1}
+          size="small"
+          onClick={handleClick}
+          id={`word-delete-${props.wordId}`}
+        >
           <Delete />
         </IconButton>
       </Tooltip>
@@ -38,10 +44,12 @@ export default function DeleteEntry(props: DeleteEntryProps) {
         open={open}
         textId={props.confirmId ?? "buttons.deletePermanently"}
         handleCancel={() => setOpen(false)}
-        handleAccept={() => {
+        handleConfirm={() => {
           setOpen(false);
           props.removeEntry();
         }}
+        buttonIdCancel="delete-word-cancel"
+        buttonIdConfirm="delete-word-confirm"
       />
     </React.Fragment>
   );

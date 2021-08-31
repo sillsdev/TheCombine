@@ -182,7 +182,10 @@ export default function ActiveUsers() {
         title={<Translate id="projectSettings.userManagement.reverseOrder" />}
         placement="right"
       >
-        <IconButton onClick={() => setReverseSorting(!reverseSorting)}>
+        <IconButton
+          onClick={() => setReverseSorting(!reverseSorting)}
+          id="sorting-order-reverse"
+        >
           <SortByAlpha />
         </IconButton>
       </Tooltip>

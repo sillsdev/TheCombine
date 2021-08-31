@@ -49,6 +49,7 @@ export default class CharacterEntry extends React.Component<
               onClick={() =>
                 this.setState((prevState) => ({ checked: !prevState.checked }))
               }
+              id="character-entry-submit"
             >
               <Translate id="charInventory.characterSet.advanced" />{" "}
               <KeyboardArrowDown

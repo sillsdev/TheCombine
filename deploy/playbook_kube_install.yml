@@ -44,5 +44,5 @@
 
     - name: Install cert-manager and CustomResourceDefinitions
       become_user: "{{ k8s_user }}"
-      command: kubectl --kubeconfig={{ kubecfg }} apply -f https://github.com/jetstack/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
+      command: kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
       when: '"cert_manager" in k8s_components'

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd {{ combine_app_dir }}
+set -e
 
 # Backup the CombineDatabase and the .CombineFiles in the backend
-bin/combine_backup.py {{ combine_backup_args | default('') }}
+combine_backup.py
 # Cleanup the old backups stored in AWS S3 service
-bin/combine-clean-aws
+combine-clean-aws.sh

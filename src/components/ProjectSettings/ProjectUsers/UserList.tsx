@@ -114,7 +114,10 @@ export default function UserList(props: UserListProps) {
           >
             <ListItemText primary={`${user.name} (${user.username})`} />
             {hoverUserId === user.id && (
-              <Button onClick={() => props.addToProject(user)}>
+              <Button
+                onClick={() => props.addToProject(user)}
+                id={`project-user-add-${user.username}`}
+              >
                 <Translate id="buttons.add" />
               </Button>
             )}

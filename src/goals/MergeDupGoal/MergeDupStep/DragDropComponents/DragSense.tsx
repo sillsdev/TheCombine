@@ -148,7 +148,10 @@ export default function DragSense(props: DragSenseProps) {
               }}
             >
               {props.senses.length > 1 && (
-                <IconButton onClick={toggleSidebar}>
+                <IconButton
+                  onClick={toggleSidebar}
+                  id={`sidebar-open-sense-${props.mergeSenseId}`}
+                >
                   <ArrowForwardIos />
                 </IconButton>
               )}
