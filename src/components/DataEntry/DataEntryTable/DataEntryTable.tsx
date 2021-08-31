@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@material-ui/core";
-import { List as ListIcon } from "@material-ui/icons";
+import { Button, Grid, Icon, Typography } from "@material-ui/core";
+import { List as ListIcon, ExitToApp } from "@material-ui/icons";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -138,7 +138,12 @@ export class DataEntryTable extends React.Component<
     }
   }
 
-  async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
+  async addNewWord(
+    wordToAdd: Word,
+    audioURLs: string[],
+    insertIndex?: number,
+    ignoreRecent?: boolean
+  ) {
     wordToAdd.note.language = this.state.analysisLang;
     const addedWord = await Backend.createWord(wordToAdd);
     if (addedWord.id === "Duplicate") {
@@ -152,17 +157,22 @@ export class DataEntryTable extends React.Component<
     const wordWithAudio = await Backend.getWord(wordId);
     await this.updateExisting();
 
-    const recentlyAddedWords = [...this.state.recentlyAddedWords];
-    const newWordAccess: WordAccess = {
-      word: wordWithAudio,
-      senseIndex: 0,
-    };
-    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
-      recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
-    } else {
-      recentlyAddedWords.push(newWordAccess);
+    if (!ignoreRecent) {
+      const recentlyAddedWords = [...this.state.recentlyAddedWords];
+      const newWordAccess: WordAccess = {
+        word: wordWithAudio,
+        senseIndex: 0,
+      };
+      if (
+        insertIndex !== undefined &&
+        insertIndex < recentlyAddedWords.length
+      ) {
+        recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
+      } else {
+        recentlyAddedWords.push(newWordAccess);
+      }
+      this.setState({ recentlyAddedWords });
     }
-    this.setState({ recentlyAddedWords });
   }
 
   /** Update the word in the backend and the frontend */
@@ -597,15 +607,21 @@ export class DataEntryTable extends React.Component<
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
+              endIcon={<ExitToApp />}
               tabIndex={-1}
               onClick={() => {
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
+                  if (!newEntry.senses.length) {
+                    newEntry.senses.push(
+                      newSense(undefined, undefined, this.props.semanticDomain)
+                    );
+                  }
                   let newEntryAudio =
                     this.refNewEntry.current.state.audioFileURLs;
                   if (newEntry && newEntry.vernacular) {
-                    this.addNewWord(newEntry, newEntryAudio);
+                    this.addNewWord(newEntry, newEntryAudio, undefined, true);
                     this.refNewEntry.current.resetState();
                   }
                 }
