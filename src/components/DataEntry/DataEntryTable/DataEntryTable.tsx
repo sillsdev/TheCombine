@@ -157,22 +157,21 @@ export class DataEntryTable extends React.Component<
     const wordWithAudio = await Backend.getWord(wordId);
     await this.updateExisting();
 
-    if (!ignoreRecent) {
-      const recentlyAddedWords = [...this.state.recentlyAddedWords];
-      const newWordAccess: WordAccess = {
-        word: wordWithAudio,
-        senseIndex: 0,
-      };
-      if (
-        insertIndex !== undefined &&
-        insertIndex < recentlyAddedWords.length
-      ) {
-        recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
-      } else {
-        recentlyAddedWords.push(newWordAccess);
-      }
-      this.setState({ recentlyAddedWords });
+    if (ignoreRecent) {
+      return;
     }
+
+    const recentlyAddedWords = [...this.state.recentlyAddedWords];
+    const newWordAccess: WordAccess = {
+      word: wordWithAudio,
+      senseIndex: 0,
+    };
+    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
+      recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
+    } else {
+      recentlyAddedWords.push(newWordAccess);
+    }
+    this.setState({ recentlyAddedWords });
   }
 
   /** Update the word in the backend and the frontend */
@@ -612,13 +611,13 @@ export class DataEntryTable extends React.Component<
               onClick={() => {
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
-                  let newEntry = this.refNewEntry.current.state.newEntry;
+                  const newEntry = this.refNewEntry.current.state.newEntry;
                   if (!newEntry.senses.length) {
                     newEntry.senses.push(
                       newSense(undefined, undefined, this.props.semanticDomain)
                     );
                   }
-                  let newEntryAudio =
+                  const newEntryAudio =
                     this.refNewEntry.current.state.audioFileURLs;
                   if (newEntry && newEntry.vernacular) {
                     this.addNewWord(newEntry, newEntryAudio, undefined, true);
