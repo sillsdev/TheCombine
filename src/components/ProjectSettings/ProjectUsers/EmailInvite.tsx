@@ -39,23 +39,18 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   }
 
   async onSubmit() {
-    this.setState({
-      loading: true,
-    });
-    const user = await Backend.getUserByEmail(this.state.emailAddress);
-    if (user) {
-      this.props.addToProject(user);
-    } else {
-      await Backend.emailInviteToProject(
-        getProjectId(),
-        this.state.emailAddress,
-        this.state.message
+    this.setState({ loading: true });
+    await Backend.getUserByEmail(this.state.emailAddress)
+      .then((u) => this.props.addToProject(u))
+      .catch(
+        async () =>
+          await Backend.emailInviteToProject(
+            getProjectId(),
+            this.state.emailAddress,
+            this.state.message
+          )
       );
-    }
-    this.setState({
-      loading: false,
-      done: true,
-    });
+    this.setState({ loading: false, done: true });
     this.props.close();
   }
 
@@ -83,13 +78,14 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   render() {
     return (
       <React.Fragment>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ width: 450 }}>
             <CardContent>
               <Typography variant="h5" align="center" gutterBottom>
                 <Translate id="projectSettings.invite.inviteByEmailLabel" />
               </Typography>
               <TextField
+                id="project-user-invite-email"
                 required
                 label={<Translate id="projectSettings.invite.emailLabel" />}
                 onChange={(e) => this.updateEmailField(e)}
@@ -100,19 +96,21 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                 inputProps={{ maxLength: 100 }}
               />
               <TextField
+                id="project-user-invite-message"
                 label="Message"
                 onChange={(e) => this.updateMessageField(e)}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
-              ></TextField>
-              <Grid container justify="flex-end" spacing={2}>
+              />
+              <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <LoadingDoneButton
                     disabled={!this.state.isValid}
                     loading={this.state.loading}
                     done={this.state.done}
                     buttonProps={{
+                      id: "project-user-invite-submit",
                       onClick: () => this.onSubmit(),
                       variant: "contained",
                       color: "primary",

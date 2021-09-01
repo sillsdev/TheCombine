@@ -1,8 +1,8 @@
 import {
   Button,
   Card,
-  GridList,
-  GridListTile,
+  ImageList,
+  ImageListItem,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -29,8 +29,8 @@ export function TreeViewHeader(props: TreeHeaderProps) {
   } = useTreeViewNavigation(props);
 
   return (
-    <GridList cols={9} spacing={20} cellHeight={"auto"}>
-      <GridListTile cols={2}>
+    <ImageList cols={9} gap={20} rowHeight={"auto"}>
+      <ImageListItem cols={2}>
         {getLeftBrother(props) ? (
           <DomainTile
             domain={getLeftBrother(props)!}
@@ -41,8 +41,8 @@ export function TreeViewHeader(props: TreeHeaderProps) {
             direction={Direction.Left}
           />
         ) : null}
-      </GridListTile>
-      <GridListTile cols={5}>
+      </ImageListItem>
+      <ImageListItem cols={5}>
         <Card>
           <Bounce spy={props.bounceState} duration={2000}>
             <Button
@@ -52,6 +52,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
               variant="contained"
               disabled={!props.currentDomain.parentDomain}
               onClick={() => props.animate(props.currentDomain)}
+              id="current-domain"
             >
               <div style={{ textTransform: "capitalize" }}>
                 <Typography variant="overline">
@@ -74,8 +75,8 @@ export function TreeViewHeader(props: TreeHeaderProps) {
             }}
           />
         </Card>
-      </GridListTile>
-      <GridListTile cols={2}>
+      </ImageListItem>
+      <ImageListItem cols={2}>
         {getRightBrother(props) ? (
           <DomainTile
             domain={getRightBrother(props)!}
@@ -86,8 +87,8 @@ export function TreeViewHeader(props: TreeHeaderProps) {
             direction={Direction.Right}
           />
         ) : null}
-      </GridListTile>
-    </GridList>
+      </ImageListItem>
+    </ImageList>
   );
 }
 

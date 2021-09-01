@@ -39,6 +39,7 @@ export default class ProjectName extends React.Component<NameProps, NameState> {
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <TextField
+            id="project-name"
             value={this.state.projectName}
             onChange={(e) => this.setState({ projectName: e.target.value })}
             onBlur={(e) => this.updateName(e.target.value)}
@@ -53,6 +54,7 @@ export default class ProjectName extends React.Component<NameProps, NameState> {
                 ? "primary"
                 : "default"
             }
+            id="project-name-save"
           >
             <Translate id="buttons.save" />
           </Button>

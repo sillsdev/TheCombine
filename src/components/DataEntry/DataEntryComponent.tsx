@@ -147,7 +147,7 @@ export class DataEntryComponent extends React.Component<
     );
 
     return (
-      <Grid container justify="center" spacing={3} wrap={"nowrap"}>
+      <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
         <Grid item>
           <Paper style={paperStyle}>
             <DataEntryHeader

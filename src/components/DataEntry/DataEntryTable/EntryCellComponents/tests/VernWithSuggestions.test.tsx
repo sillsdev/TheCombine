@@ -13,6 +13,7 @@ describe("Tests VernWithSuggestions", () => {
           updateVernField={jest.fn()}
           handleEnterAndTab={jest.fn()}
           onBlur={jest.fn()}
+          textFieldId={""}
         />
       );
     });

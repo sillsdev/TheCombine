@@ -1,0 +1,17 @@
+---
+- name: Create directory for the namespace configuration file
+  file:
+    path: "{{ k8s_namespace_cfg }}"
+    state: directory
+    mode: 0700
+
+- name: Create application namespace configuration files
+  template:
+    src: namespace-combine.yaml.j2
+    dest: "{{ k8s_namespace_cfg }}/namespace-combine.yaml"
+    mode: 0600
+
+- name: Create the namespace
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ k8s_namespace_cfg }}/namespace-combine.yaml
+  args:
+    chdir: "{{ k8s_working_dir }}"

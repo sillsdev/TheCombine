@@ -15,7 +15,7 @@
     - letsencrypt_staging.yaml
 
 - name: Apply Issuer configuration file
-  command: kubectl --kubeconfig=kubeconfig apply -f {{ k8s_cert_mgr_cfg }}/{{ item }}
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ k8s_cert_mgr_cfg }}/{{ item }}
   args:
     chdir: "{{ k8s_working_dir }}"
   with_items:

@@ -1,5 +1,6 @@
 export * from "./autocomplete-setting";
 export * from "./credentials";
+export * from "./custom-field";
 export * from "./definition";
 export * from "./edit";
 export * from "./email-invite";
@@ -7,6 +8,7 @@ export * from "./email-invite-data";
 export * from "./email-invite-status";
 export * from "./gloss";
 export * from "./merge-source-word";
+export * from "./merge-undo-ids";
 export * from "./merge-words";
 export * from "./note";
 export * from "./password-reset-data";

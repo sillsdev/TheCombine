@@ -55,8 +55,9 @@ export default class ProjectImport extends React.Component<
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="caption">
+              <Translate id="projectSettings.import.body" />{" "}
               <Translate
-                id="projectSettings.import.body"
+                id="createProject.uploadFormat"
                 options={{ renderInnerHtml: true, renderToStaticMarkup }}
               />
             </Typography>
@@ -68,6 +69,7 @@ export default class ProjectImport extends React.Component<
               accept=".zip"
               buttonProps={{
                 disabled: this.state.uploadState === UploadState.Done,
+                id: "project-import-select-file",
               }}
             >
               <Translate id="projectSettings.import.chooseFile" />
@@ -84,6 +86,7 @@ export default class ProjectImport extends React.Component<
                 this.state.uploadState === UploadState.InProgress
               }
               onClick={() => this.uploadWords()}
+              id="project-import-submit"
             >
               <Translate
                 id={`buttons.${

@@ -143,15 +143,32 @@ install the [kubectl](https://kubernetes.io/docs/tasks/tools/) tool.
 
 #### Installing the Kubernetes Cluster
 
-The kubernetes cluster running _The Combine_ is installed with two _Ansible_ scripts:
+The method for installing _The Combine_ running in a kubernetes cluster varies depending on the type of target system.
+
+##### Production or QA Server
+
+1. Login to the Kubernetes Dashboard for the Production (or QA) server. You need to have an account on the server that
+   was created by the operations group.
+2. Copy your `kubectl` configuration to the clipboard and paste it into a file named `~/.kube/prod/config`
+   (`~/.kube/qa/config` for the QA server).
+3. Run the command:
+
+   ```bash
+   cd <COMBINE>/deploy
+   ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
+   ```
+
+##### NUC
+
+Run the following _Ansible_ playbooks to install Kubernetes and setup _The Combine_:
 
 ```bash
 cd <COMBINE>/deploy
 ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
-ansible-playbook playbook_kube_config.yml --limit <target> -u <target_user> -K --ask-vault-pass
+ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
 ```
 
-Notes:
+##### Installation Notes
 
 - The playbooks to install the Kubernetes cluster assume that either:
   - `microk8s` is included as an element of the `k8s_components` list for the target; or

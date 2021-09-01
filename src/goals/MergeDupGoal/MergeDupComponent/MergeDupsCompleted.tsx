@@ -1,16 +1,14 @@
-import { Card, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Card, Grid, Paper, Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import { Sense, Word } from "api/models";
-import { getWord } from "backend";
+import { MergeUndoIds, Sense, Word } from "api/models";
+import { getFrontierWords, getWord, undoMerge } from "backend";
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
-import {
-  CompletedMerge,
-  MergesCompleted,
-} from "goals/MergeDupGoal/MergeDupsTypes";
+import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -32,16 +30,22 @@ export default function MergeDupsCompleted() {
 function MergesMade(changes: MergesCompleted): JSX.Element {
   return (
     <div>
-      <Typography>
-        <Translate id="mergeDups.completed.number" />
-        {changes.merges?.length ?? 0}
-      </Typography>
+      {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
     </div>
   );
 }
 
-function MergeChange(change: CompletedMerge): JSX.Element {
+export function MergesCount(changes: MergesCompleted): JSX.Element {
+  return (
+    <Typography>
+      <Translate id="mergeDups.completed.number" />
+      {changes.merges?.length ?? 0}
+    </Typography>
+  );
+}
+
+function MergeChange(change: MergeUndoIds): JSX.Element {
   return (
     <div key={change.parentIds[0]}>
       <Grid
@@ -51,15 +55,10 @@ function MergeChange(change: CompletedMerge): JSX.Element {
           overflow: "auto",
         }}
       >
-        {change.childrenIds.map((id) => (
+        {change.childIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
-        <Grid
-          key={"arrow"}
-          style={{
-            margin: theme.spacing(1),
-          }}
-        >
+        <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
           <ArrowRightAlt
             fontSize="large"
             style={{
@@ -73,9 +72,81 @@ function MergeChange(change: CompletedMerge): JSX.Element {
         {change.parentIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
+        <UndoButton
+          merge={change}
+          textId="mergeDups.undo.undo"
+          dialogId="mergeDups.undo.undoDialog"
+          disabledId="mergeDups.undo.undoDisabled"
+        />
       </Grid>
     </div>
   );
+}
+
+interface UndoButtonProps {
+  merge: MergeUndoIds;
+  textId: string;
+  dialogId: string;
+  disabledId: string;
+}
+
+function UndoButton(props: UndoButtonProps) {
+  const [isUndoBtnEnabled, setUndoBtnEnabled] = useState<boolean>(false);
+  const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    function checkFrontier() {
+      getFrontierWords().then((words) =>
+        setUndoBtnEnabled(
+          props.merge ? doWordsIncludeMerges(words, props.merge) : false
+        )
+      );
+    }
+    checkFrontier();
+  });
+
+  if (isUndoBtnEnabled) {
+    return (
+      <Grid container direction="column" justifyContent="center">
+        <div>
+          <Button
+            variant="outlined"
+            id={`merge-undo-${props.merge.parentIds.join("-")}`}
+            onClick={() => setUndoDialogOpen(true)}
+          >
+            <Translate id={props.textId} />
+          </Button>
+          <CancelConfirmDialog
+            open={undoDialogOpen}
+            textId={props.dialogId}
+            handleCancel={() => setUndoDialogOpen(false)}
+            handleConfirm={() =>
+              undoMerge(props.merge).then(() => setUndoDialogOpen(false))
+            }
+            buttonIdCancel="merge-undo-cancel"
+            buttonIdConfirm="merge-undo-confirm"
+          />
+        </div>
+      </Grid>
+    );
+  }
+  return (
+    <Grid container direction="column" justifyContent="center">
+      <div>
+        <Button disabled>
+          <Translate id={props.disabledId} />
+        </Button>
+      </div>
+    </Grid>
+  );
+}
+
+export function doWordsIncludeMerges(
+  words: Word[],
+  merge: MergeUndoIds
+): boolean {
+  const wordIds = words.map((word) => word.id);
+  return merge.parentIds.every((id) => wordIds.includes(id));
 }
 
 interface WordPaperProps {
@@ -89,12 +160,7 @@ function WordPaper(props: WordPaperProps) {
   }, [props.wordId, setWord]);
 
   return (
-    <Grid
-      key={props.wordId}
-      style={{
-        margin: theme.spacing(1),
-      }}
-    >
+    <Grid key={props.wordId} style={{ margin: theme.spacing(1) }}>
       <Paper
         style={{
           backgroundColor: "lightgrey",

@@ -397,10 +397,11 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProjectUserRoles(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.deleteProjectUserRoles(
+          projectId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -449,10 +450,8 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<Array<UserRole>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectUserRoles(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getProjectUserRoles(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -502,12 +501,13 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserRolePermissions(
-        projectId,
-        userId,
-        permission,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateUserRolePermissions(
+          projectId,
+          userId,
+          permission,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

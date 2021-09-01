@@ -18,7 +18,7 @@ export default function BottomBar() {
         <Toolbar variant="dense">
           <Grid
             container
-            justify="space-between"
+            justifyContent="space-between"
             spacing={2}
             alignItems="center"
           >
@@ -34,6 +34,7 @@ export default function BottomBar() {
                     "https://software.sil.org/language-software-privacy-policy/"
                   )
                 }
+                id="privacy-policy"
               >
                 <Typography variant="caption">
                   <Translate id="landingPage.privacyPolicy" />

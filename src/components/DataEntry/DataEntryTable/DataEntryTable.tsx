@@ -330,9 +330,10 @@ export class DataEntryTable extends React.Component<
 
     if (recentSense.semanticDomains.length > 1) {
       // If there is more than one semantic domain in this sense, only remove the domain
-      const updatedSemanticDomains: SemanticDomain[] = recentSense.semanticDomains.filter(
-        (semDom) => semDom.id !== this.props.semanticDomain.id
-      );
+      const updatedSemanticDomains: SemanticDomain[] =
+        recentSense.semanticDomains.filter(
+          (semDom) => semDom.id !== this.props.semanticDomain.id
+        );
       const updatedSense: Sense = {
         ...recentSense,
         semanticDomains: updatedSemanticDomains,
@@ -578,14 +579,15 @@ export class DataEntryTable extends React.Component<
           </Grid>
         </Grid>
 
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             {this.props.isSmallScreen ? (
               <Button
+                id="toggle-existing-data"
                 style={{ marginTop: theme.spacing(2) }}
                 onClick={this.props.showExistingData}
               >
-                <ListIcon fontSize={"default"} color={"inherit"} />
+                <ListIcon fontSize={"medium"} color={"inherit"} />
               </Button>
             ) : null}
           </Grid>
@@ -601,8 +603,8 @@ export class DataEntryTable extends React.Component<
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
-                  let newEntryAudio = this.refNewEntry.current.state
-                    .audioFileURLs;
+                  let newEntryAudio =
+                    this.refNewEntry.current.state.audioFileURLs;
                   if (newEntry && newEntry.vernacular) {
                     this.addNewWord(newEntry, newEntryAudio);
                     this.refNewEntry.current.resetState();

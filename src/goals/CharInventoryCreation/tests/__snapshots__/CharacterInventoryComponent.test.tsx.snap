@@ -3,7 +3,7 @@
 exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
 <div>
   <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-justify-xs-center"
+    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-justify-content-xs-center"
   >
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 MuiGrid-grid-lg-9 MuiGrid-grid-xl-10"
@@ -60,6 +60,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
             <button
               className="MuiButtonBase-root MuiButton-root MuiButton-text"
               disabled={false}
+              id="character-entry-submit"
               onBlur={[Function]}
               onClick={[Function]}
               onDragLeave={[Function]}
@@ -102,7 +103,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               />
             </button>
             <div
-              className="MuiCollapse-container MuiCollapse-hidden"
+              className="MuiCollapse-root MuiCollapse-hidden"
               style={
                 Object {
                   "minHeight": "0px",
@@ -319,7 +320,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
       }
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
+        className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
       >
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

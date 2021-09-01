@@ -1,7 +1,16 @@
-import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
+import {
+  Button,
+  ImageList,
+  ImageListItem,
+  Typography,
+} from "@material-ui/core";
 import { CSSProperties, useState } from "react";
 import { Translate } from "react-localize-redux";
 
+import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
+import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
+import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
+import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 
 export type Orientation = "horizontal" | "vertical";
@@ -35,19 +44,20 @@ interface GoalListProps {
   data: Goal[];
   size: number;
   numPanes: number;
+  scrollable: boolean;
   scrollToEnd?: boolean;
   handleChange: (goal: Goal) => void;
 }
 
-export default function GoalList(props: GoalListProps) {
+export default function GoalList(props: GoalListProps): JSX.Element {
   const [scrollVisible, setScrollVisible] = useState<boolean>(false);
   const tileSize = props.size / 3 - 1.25;
 
   return (
-    <GridList
+    <ImageList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
       cols={props.orientation === "horizontal" ? props.numPanes : 1}
-      onMouseOver={() => setScrollVisible(true)}
+      onMouseOver={() => setScrollVisible(props.scrollable)}
       onMouseLeave={() => setScrollVisible(false)}
     >
       {props.data.length > 0
@@ -62,7 +72,7 @@ export default function GoalList(props: GoalListProps) {
           if (props.scrollToEnd && element) element.scrollIntoView(true);
         }}
       />
-    </GridList>
+    </ImageList>
   );
 }
 
@@ -76,7 +86,7 @@ function buttonStyle(orientation: Orientation, size: number): CSSProperties {
       };
     case "vertical":
       return {
-        height: size + "vw",
+        height: "95%",
         padding: "1vw",
         width: "100%",
       };
@@ -90,7 +100,7 @@ export function makeGoalTile(
   onClick?: () => void
 ) {
   return (
-    <GridListTile key={goal?.guid + orientation} cols={1}>
+    <ImageListItem key={goal?.guid + orientation} cols={1}>
       <Button
         color="primary"
         variant={goal ? "outlined" : "contained"}
@@ -103,13 +113,47 @@ export function makeGoalTile(
             goal.goalType !== GoalType.CreateCharInv &&
             goal.goalType !== GoalType.MergeDups)
         }
+        id={`goal-${goal?.guid}`}
       >
-        <Typography variant={"h6"}>
-          <Translate
-            id={goal ? goal.name + ".title" : "goal.selector.noHistory"}
-          />
-        </Typography>
+        {goal ? (
+          GoalInfo(goal)
+        ) : (
+          <Typography variant="h6">
+            <Translate id={"goal.selector.noHistory"} />
+          </Typography>
+        )}
       </Button>
-    </GridListTile>
+    </ImageListItem>
+  );
+}
+
+function GoalInfo(goal: Goal): JSX.Element {
+  if (goal.status === GoalStatus.Completed) {
+    let goalInfo;
+    switch (goal.goalType) {
+      case GoalType.CreateCharInv:
+        goalInfo = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
+        break;
+      case GoalType.MergeDups:
+        goalInfo = MergesCount(goal.changes as MergesCompleted);
+        break;
+      case GoalType.ReviewEntries:
+        goalInfo = null;
+        break;
+      default:
+        goalInfo = null;
+        break;
+    }
+    return (
+      <Typography variant="h6">
+        <Translate id={goal.name + ".title"} />
+        {goalInfo}
+      </Typography>
+    );
+  }
+  return (
+    <Typography variant="h4">
+      <Translate id={goal.name + ".title"} />
+    </Typography>
   );
 }

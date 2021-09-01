@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { Translate } from "react-localize-redux";
 
 import { WritingSystem } from "api/models";
@@ -55,27 +56,25 @@ export default class CreateProject extends React.Component<
 
   setVernBcp47 = (bcp47: string) => {
     if (bcp47) {
-      this.setState((state) => {
-        state.vernLanguage.bcp47 = bcp47;
-        return { vernLanguage: state.vernLanguage };
-      });
+      this.setState((state) => ({
+        vernLanguage: { ...state.vernLanguage, bcp47 },
+      }));
     }
   };
 
   setVernLangName = (name: string) => {
     if (name) {
-      this.setState((state) => {
-        state.vernLanguage.name = name;
-        return { vernLanguage: state.vernLanguage };
-      });
+      this.setState((state) => ({
+        vernLanguage: { ...state.vernLanguage, name },
+      }));
     }
   };
+
   setVernFont = (font: string) => {
     if (font) {
-      this.setState((state) => {
-        state.vernLanguage.font = font;
-        return { vernLanguage: state.vernLanguage };
-      });
+      this.setState((state) => ({
+        vernLanguage: { ...state.vernLanguage, font },
+      }));
     }
   };
 
@@ -184,6 +183,7 @@ export default class CreateProject extends React.Component<
             </Typography>
             {/* Project name field */}
             <TextField
+              id="create-project-name"
               label={<Translate id="createProject.name" />}
               value={this.state.name}
               onChange={(e) => this.updateName(e)}
@@ -214,7 +214,7 @@ export default class CreateProject extends React.Component<
               t={languagePickerStrings_en}
             />
             {/*Analysis language picker */}
-            <Typography style={{ marginTop: theme.spacing(2) }}>
+            <Typography style={{ marginTop: theme.spacing(1) }}>
               <Translate id="projectSettings.language.analysisLanguage" />
             </Typography>
             <LanguagePicker
@@ -227,43 +227,56 @@ export default class CreateProject extends React.Component<
               t={languagePickerStrings_en}
             />
             {/* File upload */}
-            <Typography
-              variant="body1"
-              style={{ marginRight: theme.spacing(2) }}
-              display="inline"
+            <div
+              style={{
+                marginBottom: theme.spacing(1),
+                marginTop: theme.spacing(1),
+              }}
             >
-              <Translate id="createProject.upload?" />
-            </Typography>
-            <FileInputButton
-              updateFile={(file: File) => this.updateLanguageData(file)}
-              accept=".zip"
-              buttonProps={{ style: { marginTop: theme.spacing(2) } }}
-            >
-              <Translate id="buttons.browse" />
-            </FileInputButton>
-            {/* Displays the name of the selected file */}
-            {this.state.fileName && (
               <Typography
                 variant="body1"
-                noWrap
-                style={{ marginTop: theme.spacing(1) }}
+                style={{ marginTop: theme.spacing(2) }}
+                display="inline"
               >
-                <Translate id="createProject.fileSelected" />:{" "}
-                {this.state.fileName}
+                <Translate id="createProject.upload?" />
               </Typography>
-            )}
+              <FileInputButton
+                updateFile={(file: File) => this.updateLanguageData(file)}
+                accept=".zip"
+                buttonProps={{
+                  style: {
+                    margin: theme.spacing(1),
+                    id: "create-project-select-file",
+                  },
+                }}
+              >
+                <Translate id="buttons.browse" />
+              </FileInputButton>
+              <Typography variant="caption" display="block">
+                <Translate
+                  id="createProject.uploadFormat"
+                  options={{ renderInnerHtml: true, renderToStaticMarkup }}
+                />
+              </Typography>
+              {/* Displays the name of the selected file */}
+              {this.state.fileName && (
+                <Typography
+                  variant="body1"
+                  noWrap
+                  style={{ marginTop: theme.spacing(1) }}
+                >
+                  <Translate id="createProject.fileSelected" />:{" "}
+                  {this.state.fileName}
+                </Typography>
+              )}
+            </div>
             {/* Form submission button */}
-            <Grid container justify="flex-end">
+            <Grid container justifyContent="flex-end">
               <LoadingDoneButton
                 loading={this.props.inProgress}
                 done={this.props.success}
                 doneText={<Translate id="createProject.success" />}
-                buttonProps={{
-                  color: "primary",
-                  style: {
-                    marginTop: theme.spacing(1),
-                  },
-                }}
+                buttonProps={{ color: "primary", id: "create-project-submit" }}
               >
                 <Translate id="createProject.create" />
               </LoadingDoneButton>

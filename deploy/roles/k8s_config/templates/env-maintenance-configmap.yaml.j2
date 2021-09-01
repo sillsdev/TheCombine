@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: env-maintenance
+  namespace: {{ app_namespace }}
+data:
+  aws_bucket: "{{ aws_s3_backup_loc }}"
+  db_files_subdir: "{{ db_files_subdir }}"
+  backend_files_subdir: "{{ backend_files_subdir }}"
+  combine_host: "{{ combine_server_name | replace('.', '-') }}"
+  # The 'backup_filter' is only slightly different than the 'combine_host' environment
+  # variables in that it adds the delimiters to be able to reliably select backups
+  # for this host from the list of backups.  This is done as an environment variable
+  # to provide flexibility for future clean schemes while minimizing the need to
+  # rebuild the container image.
+  backup_filter: "/{{ combine_server_name | replace('.', '-') }}-"
+  wait_time: "120"
+  max_backups: "3"

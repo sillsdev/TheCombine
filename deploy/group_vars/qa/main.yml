@@ -7,7 +7,7 @@
 
 # Frontend configuration items:
 config_show_cert_expiration: false
-config_analytics_write_key: "WoE6Qf2AeEUdQMQZBd0PpqSztHQYWRxj"
+config_analytics_write_key: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
 
 #################################################
 # TheCombine is installed on the QA Server by TeamCity.  It will set the
@@ -19,12 +19,13 @@ image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
 combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
 combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
+combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 
 ################################################
 # SSL cert variables specific to QA targets
 ################################################
 cert_mode: "self-signed"
-cert_email: ""
+cert_email: "cert@thecombine.app"
 combine_cert_proxy_list: []
 
 ################################################
@@ -50,17 +51,18 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
-k8s_components:
-  - microk8s
+k8s_components: []
 
-pull_secrets_manager: registry_creds
-image_pull_secrets:
-  - awsecr-cred
+image_pull_secret: aws-login-credentials
 
 app_namespace: thecombine
 
 k8s_user: sillsdev
 k8s_group: sillsdev
+
+#######################################
+# Ingress configuration
+ingress_class: nginx
 
 ################################################
 # WiFi access point settings

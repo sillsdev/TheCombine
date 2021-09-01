@@ -50,7 +50,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
           <Grid
             container
             alignItems="center"
-            justify="space-around"
+            justifyContent="space-around"
             wrap="nowrap"
           >
             <Grid item>
@@ -64,7 +64,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
           <Grid
             container
             alignItems="center"
-            justify="space-around"
+            justifyContent="space-around"
             wrap="nowrap"
           >
             <Grid item>{this.domainText(domain)}</Grid>

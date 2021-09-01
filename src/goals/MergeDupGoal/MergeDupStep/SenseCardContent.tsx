@@ -79,7 +79,7 @@ function senseText(senseInLangs: senseInLanguage[]): JSX.Element {
           </TableRow>
           {!!sInLang.definitionText && (
             <TableRow key={sInLang.language + "def"}>
-              <TableCell style={{ borderBottom: "none" }}></TableCell>
+              <TableCell style={{ borderBottom: "none" }} />
               <TableCell style={{ borderBottom: "none" }}>
                 <div
                   style={{
@@ -129,20 +129,23 @@ export default function SenseCardContent(props: SenseCardContentProps) {
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
       {/* Optional button for showing the sidebar. */}
-      {props.senses.length > 1 && props.toggleFunction && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            right: 0,
-            transform: "translateY(-50%)",
-          }}
-        >
-          <IconButton onClick={props.toggleFunction}>
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          right: 0,
+          transform: "translateY(-50%)",
+        }}
+      >
+        {props.senses.length > 1 && (
+          <IconButton
+            onClick={props.toggleFunction}
+            id={`sidebar-open-sense-${props.senses[0].guid}`}
+          >
             <ArrowForwardIos />
           </IconButton>
-        </div>
-      )}
+        )}
+      </div>
       {/* List glosses and (if enabled) definitions. */}
       {senseText(senseTextInLangs)}
       {/* List semantic domains */}

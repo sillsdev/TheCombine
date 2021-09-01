@@ -56,7 +56,7 @@ export default class ResetRequest extends React.Component<
   render() {
     return (
       <div>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ padding: 10, width: 450 }}>
             <Typography variant="h5" align="center">
               <Translate id="passwordReset.resetRequestTitle" />
@@ -67,6 +67,7 @@ export default class ResetRequest extends React.Component<
             <form onSubmit={this.onSubmit}>
               <Grid item>
                 <TextField
+                  id="password-reset-request-text"
                   required
                   type="text"
                   variant="outlined"
@@ -92,6 +93,7 @@ export default class ResetRequest extends React.Component<
                     onClick: () => this.onSubmit,
                     variant: "contained",
                     color: "primary",
+                    id: "password-reset-request",
                   }}
                 >
                   <Translate id="passwordReset.submit" />

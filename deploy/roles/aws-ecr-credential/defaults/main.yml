@@ -1,3 +1,0 @@
----
-# Local Working directory
-k8s_working_dir: "{{ ansible_env.HOME }}/kube_files"

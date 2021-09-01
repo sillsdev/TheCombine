@@ -1,0 +1,83 @@
+---
+- name: Print config
+  debug:
+    var: aws_ecr_login
+
+- name: Create directory for the AWS Login cron job files
+  file:
+    path: "{{ k8s_aws_login_cfg }}"
+    state: directory
+    mode: 0700
+
+- name: List kubeconfig secret
+  command: >
+    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} get secret
+    {{ k8s_config_secret }}
+  register: get_secret
+  changed_when: false
+  failed_when: false
+
+- name: Create kubeconfig secret
+  command: >
+    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
+    create secret generic
+    {{ k8s_config_secret }}
+    --from-file={{ kubecfg }}
+  when: get_secret.rc > 0
+
+##############################################################
+# Delete any immutable objects leftover from previous runs
+##############################################################
+- name: Delete residual resources
+  command: >
+    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
+    delete {{ item.resource }} --ignore-not-found {{ item.name }}
+  with_items:
+    - name: "{{ aws_ecr_login.job_name }}"
+      resource: job
+    - name: "{{ aws_ecr_login.secrets_name }}"
+      resource: secret
+
+##############################################################
+# AWS login resources as specified in aws_ecr_login.config_files
+# May include
+# - AWS credentials secret
+# - One-shot job to get AWS Login
+# - cron job to keep login fresh
+##############################################################
+- name: Create AWS login resource specifications
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ k8s_aws_login_cfg }}/{{ item }}"
+    mode: 0600
+  with_items:
+    - aws-login-config.yaml
+    - aws-access-secrets.yaml
+    - aws-ecr-login-oneshot.yaml
+
+- name: Apply AWS login resource specifications
+  command: >
+    kubectl --kubeconfig={{ kubecfg }}
+    apply -f {{ k8s_aws_login_cfg }}/{{ item }}
+  with_items:
+    - aws-login-config.yaml
+    - aws-access-secrets.yaml
+    - aws-ecr-login-oneshot.yaml
+
+##############################################################
+# Create cron job to refresh AWS login credentials if
+# specified, that is, aws_ecr_login.cron is true
+##############################################################
+- name: Create cron job to refresh AWS login credentials
+  block:
+    - name: Create cron job specifications
+      template:
+        src: aws-ecr-login-cronjob.yaml.j2
+        dest: "{{ k8s_aws_login_cfg }}/aws-ecr-login-cronjob.yaml"
+        mode: 0600
+
+    - name: Apply cron job specifications
+      command: >
+        kubectl --kubeconfig={{ kubecfg }}
+        apply -f {{ k8s_aws_login_cfg }}/aws-ecr-login-cronjob.yaml
+  when: aws_ecr_login.cron

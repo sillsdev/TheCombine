@@ -149,7 +149,7 @@ class UserSettings extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Card style={{ width: 450 }}>
             <form onSubmit={(e) => this.onSubmit(e)}>
               <CardContent>
@@ -165,6 +165,7 @@ class UserSettings extends React.Component<
                     </Grid>
                     <Grid item xs>
                       <TextField
+                        id="user-name"
                         fullWidth
                         variant="outlined"
                         value={this.state.name}
@@ -195,6 +196,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
+                          id="user-phone"
                           fullWidth
                           variant="outlined"
                           value={this.state.phone}
@@ -211,6 +213,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
+                          id="user-email"
                           fullWidth
                           variant="outlined"
                           value={this.state.email}
@@ -231,8 +234,12 @@ class UserSettings extends React.Component<
                     </Grid>
                   </Grid>
 
-                  <Grid item container justify="flex-end">
-                    <Button type="submit" variant="contained">
+                  <Grid item container justifyContent="flex-end">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      id="user-settings-save"
+                    >
                       <Translate id="buttons.save" />
                     </Button>
                   </Grid>
