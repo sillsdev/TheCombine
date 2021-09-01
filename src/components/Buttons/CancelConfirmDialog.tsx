@@ -11,8 +11,10 @@ import { Translate } from "react-localize-redux";
 interface CancelConfirmDialogProps {
   open: boolean;
   textId: string;
-  handleAccept: () => void;
   handleCancel: () => void;
+  handleConfirm: () => void;
+  buttonIdCancel?: string;
+  buttonIdConfirm?: string;
 }
 
 /**
@@ -35,13 +37,19 @@ export default function CancelConfirmDialog(props: CancelConfirmDialogProps) {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.handleCancel} variant="outlined" color="primary">
+        <Button
+          onClick={props.handleCancel}
+          variant="outlined"
+          color="primary"
+          id={props.buttonIdCancel}
+        >
           <Translate id="buttons.cancel" />
         </Button>
         <Button
-          onClick={props.handleAccept}
+          onClick={props.handleConfirm}
           variant="contained"
           color="primary"
+          id={props.buttonIdConfirm}
         >
           <Translate id="buttons.confirm" />
         </Button>

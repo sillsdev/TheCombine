@@ -35,12 +35,7 @@ export default function MergeDupsCompleted() {
 }
 
 function MergesMade(changes: MergesCompleted): JSX.Element {
-  return changes.merges && changes.merges.length > 1 ? (
-    <div>
-      {MergesCount(changes)}
-      {changes.merges?.map(MergeChange)}
-    </div>
-  ) : (
+  return (
     <div>
       {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
@@ -137,9 +132,11 @@ function UndoButton(props: UndoButtonProps) {
             open={undoDialogOpen}
             textId={props.dialogId}
             handleCancel={() => setUndoDialogOpen(false)}
-            handleAccept={() =>
+            handleConfirm={() =>
               undoMerge(props.merge).then(() => setUndoDialogOpen(false))
             }
+            buttonIdCancel="merge-undo-cancel"
+            buttonIdConfirm="merge-undo-confirm"
           />
         </div>
       </Grid>

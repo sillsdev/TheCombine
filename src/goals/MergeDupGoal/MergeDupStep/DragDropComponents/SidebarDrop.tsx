@@ -35,7 +35,7 @@ export default function SidebarDrop(props: SidebarDropProps) {
             paddingTop: 64 + 30,
           }}
         >
-          <IconButton onClick={() => dispatch(setSidebar())}>
+          <IconButton onClick={() => dispatch(setSidebar())} id="sidebar-close">
             <ArrowForwardIos />
           </IconButton>
           <Typography variant="h5">{props.vernacular}</Typography>

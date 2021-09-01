@@ -1,9 +1,10 @@
 import { Tooltip } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
+import { isFrontierNonempty } from "backend";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import DownloadButton from "components/ProjectExport/DownloadButton";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
@@ -16,10 +17,16 @@ interface ExportButtonProps {
 }
 
 /** A button for exporting project to Lift file */
-export default function ExportButton(props: ExportButtonProps) {
+export function ExportButton(props: ExportButtonProps & LocalizeContextProps) {
   const dispatch = useDispatch();
   function exportProj() {
-    dispatch(asyncExportProject(props.projectId));
+    isFrontierNonempty(props.projectId).then((isNonempty) => {
+      if (isNonempty) {
+        dispatch(asyncExportProject(props.projectId));
+      } else {
+        alert(props.translate("projectExport.cannotExportEmpty"));
+      }
+    });
   }
 
   const exportResult = useSelector(
@@ -33,26 +40,25 @@ export default function ExportButton(props: ExportButtonProps) {
     <React.Fragment>
       <Tooltip
         title={
-          done && !sameProject ? (
-            <Translate id="projectExport.downloadHint" />
-          ) : (
-            ""
-          )
+          done && !sameProject
+            ? props.translate("projectExport.downloadHint")
+            : ""
         }
       >
         <span>
           <LoadingDoneButton
             loading={loading}
             done={done && sameProject}
-            doneText={<Translate id="projectExport.downloadReady" />}
+            doneText={props.translate("projectExport.downloadReady")}
             disabled={loading || done}
             buttonProps={{
               ...props.buttonProps,
               onClick: exportProj,
               color: "primary",
+              id: `project-${props.projectId}-export`,
             }}
           >
-            <Translate id={"buttons.export"} />
+            {props.translate("buttons.export")}
           </LoadingDoneButton>
         </span>
       </Tooltip>
@@ -60,3 +66,5 @@ export default function ExportButton(props: ExportButtonProps) {
     </React.Fragment>
   );
 }
+
+export default withLocalize(ExportButton);

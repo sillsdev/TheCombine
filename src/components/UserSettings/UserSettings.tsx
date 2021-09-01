@@ -165,6 +165,7 @@ class UserSettings extends React.Component<
                     </Grid>
                     <Grid item xs>
                       <TextField
+                        id="user-name"
                         fullWidth
                         variant="outlined"
                         value={this.state.name}
@@ -195,6 +196,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
+                          id="user-phone"
                           fullWidth
                           variant="outlined"
                           value={this.state.phone}
@@ -211,6 +213,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
+                          id="user-email"
                           fullWidth
                           variant="outlined"
                           value={this.state.email}
@@ -232,7 +235,11 @@ class UserSettings extends React.Component<
                   </Grid>
 
                   <Grid item container justifyContent="flex-end">
-                    <Button type="submit" variant="contained">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      id="user-settings-save"
+                    >
                       <Translate id="buttons.save" />
                     </Button>
                   </Grid>

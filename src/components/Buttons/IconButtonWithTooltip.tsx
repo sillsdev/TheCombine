@@ -6,6 +6,7 @@ interface IconButtonWithTooltipProps {
   textId: string;
   small?: boolean;
   onClick?: () => void;
+  buttonId?: string;
 }
 
 export default function IconButtonWithTooltip(
@@ -16,6 +17,7 @@ export default function IconButtonWithTooltip(
       <IconButton
         onClick={props.onClick}
         size={props.small ? "small" : "medium"}
+        id={props.buttonId}
       >
         {props.icon}
       </IconButton>
