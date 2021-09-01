@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@material-ui/core";
-import { List as ListIcon, ExitToApp } from "@material-ui/icons";
+import { ExitToApp, List as ListIcon } from "@material-ui/icons";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -15,10 +15,10 @@ import {
   Word,
 } from "api/models";
 import * as Backend from "backend";
-import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
-import Recorder from "components/Pronunciations/Recorder";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
+import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
+import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
 
