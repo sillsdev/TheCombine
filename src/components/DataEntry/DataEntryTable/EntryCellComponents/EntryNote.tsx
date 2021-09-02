@@ -42,6 +42,7 @@ export default function EntryNote(props: EntryNoteProps) {
         buttonIdCancel="note-edit-cancel"
         buttonIdConfirm="note-edit-confirm"
         textFieldId="note-text-field"
+        autoFocus={true}
       />
     </React.Fragment>
   );
