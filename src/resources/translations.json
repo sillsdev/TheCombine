@@ -822,7 +822,7 @@
     "archive": ["Archive", "Archivar", "Archiver"],
     "browse": ["Browse", "Navegar", "Parcourir"],
     "cancel": ["Cancel", "Cancelar", "Annuler"],
-    "complete": ["Complete", "Completo", "Complète"],
+    "complete": ["Exit", "Exit", "Exit"],
     "confirm": ["Confirm", "Confirmar", "Confirmer"],
     "delete": ["Delete", "Eliminar", "Effacer"],
     "deletePermanently": [
