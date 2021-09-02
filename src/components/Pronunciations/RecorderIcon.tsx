@@ -66,7 +66,10 @@ export default function RecorderIcon(props: RecorderIconProps) {
   }
 
   return (
-    <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
+    <Tooltip
+      title={<Translate id="pronunciations.recordTooltip" />}
+      placement="top"
+    >
       <IconButton
         tabIndex={-1}
         onMouseDown={toggleIsRecordingToTrue}
