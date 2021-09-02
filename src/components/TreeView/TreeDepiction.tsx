@@ -26,7 +26,6 @@ interface TreeDepictionProps {
 
 interface TreeDepictionState {
   tileWidth: number;
-  bounce: number;
 }
 
 export default class TreeDepiction extends React.Component<
@@ -35,7 +34,7 @@ export default class TreeDepiction extends React.Component<
 > {
   constructor(props: TreeDepictionProps) {
     super(props);
-    this.state = { tileWidth: 0, bounce: 0 };
+    this.state = { tileWidth: 0 };
 
     // Bind functions
     this.updateTileWidth = this.updateTileWidth.bind(this);
@@ -109,10 +108,7 @@ export default class TreeDepiction extends React.Component<
         <ImageListItem>
           <DomainTile
             domain={subdomains[0]}
-            onClick={(e) => {
-              this.props.animate(e);
-              this.setState({ bounce: Math.random() });
-            }}
+            onClick={this.props.animate}
             direction={Direction.Down}
           />
         </ImageListItem>
@@ -166,10 +162,7 @@ export default class TreeDepiction extends React.Component<
           <ImageListItem key={domainIndex + "DomainTile"}>
             <DomainTile
               domain={this.props.currentDomain.subdomains[domainIndex]}
-              onClick={(e) => {
-                this.props.animate(e);
-                this.setState({ bounce: Math.random() });
-              }}
+              onClick={this.props.animate}
               direction={Direction.Down}
             />
           </ImageListItem>
@@ -212,10 +205,7 @@ export default class TreeDepiction extends React.Component<
               <ImageListItem>
                 <DomainTile
                   domain={this.props.currentDomain.parentDomain}
-                  onClick={(e) => {
-                    this.props.animate(e);
-                    this.setState({ bounce: Math.random() });
-                  }}
+                  onClick={this.props.animate}
                   direction={Direction.Up}
                 />
               </ImageListItem>
@@ -229,10 +219,6 @@ export default class TreeDepiction extends React.Component<
           <TreeViewHeader
             currentDomain={this.props.currentDomain}
             animate={this.props.animate}
-            bounceState={this.state.bounce}
-            bounce={() => {
-              this.setState({ bounce: Math.random() });
-            }}
           />
         </Grid>
 

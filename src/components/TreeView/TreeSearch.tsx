@@ -7,7 +7,6 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 export interface TreeSearchProps {
   currentDomain: TreeSemanticDomain;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
-  bounce: () => void;
 }
 
 export const testId = "testSearch";
@@ -95,7 +94,6 @@ export function useTreeSearch(props: TreeSearchProps) {
           parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
           if (parent && parent.id === input) {
             props.animate(parent);
-            props.bounce();
             setInput("");
             (event.target as any).value = "";
             break;
@@ -108,7 +106,6 @@ export function useTreeSearch(props: TreeSearchProps) {
         parent = searchDomainByName(parent, input);
         if (parent) {
           props.animate(parent);
-          props.bounce();
           setInput("");
           (event.target as any).value = "";
         }

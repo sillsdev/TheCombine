@@ -11,19 +11,14 @@ import {
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
-const MOCK_BOUNCE = jest.fn();
 const testProps: TreeHeaderProps = {
   animate: MOCK_ANIMATE,
   currentDomain: MockDomain,
-  bounceState: 0,
-  bounce: MOCK_BOUNCE,
 };
 // These props have a currentDomain with a parent and two brothers
 const upOneWithBrothersProps: TreeHeaderProps = {
   animate: MOCK_ANIMATE,
   currentDomain: MockDomain.subdomains[1],
-  bounceState: 0,
-  bounce: MOCK_BOUNCE,
 };
 const eventListeners: Map<string, EventListener> = new Map<
   string,

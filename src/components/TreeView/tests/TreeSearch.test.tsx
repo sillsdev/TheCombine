@@ -13,12 +13,10 @@ import TreeSearch, {
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
-const MOCK_BOUNCE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
   animate: MOCK_ANIMATE,
   currentDomain: MockDomain,
-  bounce: MOCK_BOUNCE,
 };
 
 beforeEach(() => {
@@ -58,7 +56,6 @@ describe("TreeSearch", () => {
     it("switches semantic domain if given number found", () => {
       simulateTypeAndEnter("1.0");
       expect(MOCK_STOP_PROP).toHaveBeenCalled();
-      expect(MOCK_BOUNCE).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
     });
 

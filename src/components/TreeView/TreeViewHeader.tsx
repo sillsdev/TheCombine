@@ -5,7 +5,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useCallback, useEffect } from "react";
-import Bounce from "react-reveal/Bounce";
 import { Key } from "ts-key-enum";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
@@ -14,8 +13,6 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 export interface TreeHeaderProps {
   currentDomain: TreeSemanticDomain;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
-  bounceState: number;
-  bounce: () => void;
 }
 
 export function TreeViewHeader(props: TreeHeaderProps) {
@@ -29,31 +26,26 @@ export function TreeViewHeader(props: TreeHeaderProps) {
             domain={getLeftBrother(props)!}
             onClick={(e) => {
               props.animate(e);
-              props.bounce();
             }}
             direction={Direction.Left}
           />
         ) : null}
       </ImageListItem>
       <ImageListItem cols={5}>
-        <Bounce spy={props.bounceState} duration={2000}>
-          <Button
-            fullWidth
-            size="large"
-            color="primary"
-            variant="contained"
-            disabled={!props.currentDomain.parentDomain}
-            onClick={() => props.animate(props.currentDomain)}
-            id="current-domain"
-          >
-            <div style={{ textTransform: "capitalize" }}>
-              <Typography variant="overline">
-                {props.currentDomain.id}
-              </Typography>
-              <Typography variant="h6">{props.currentDomain.name}</Typography>
-            </div>
-          </Button>
-        </Bounce>
+        <Button
+          fullWidth
+          size="large"
+          color="primary"
+          variant="contained"
+          disabled={!props.currentDomain.parentDomain}
+          onClick={() => props.animate(props.currentDomain)}
+          id="current-domain"
+        >
+          <div style={{ textTransform: "capitalize" }}>
+            <Typography variant="overline">{props.currentDomain.id}</Typography>
+            <Typography variant="h6">{props.currentDomain.name}</Typography>
+          </div>
+        </Button>
       </ImageListItem>
       <ImageListItem cols={2}>
         {getRightBrother(props) ? (
@@ -61,7 +53,6 @@ export function TreeViewHeader(props: TreeHeaderProps) {
             domain={getRightBrother(props)!}
             onClick={(e) => {
               props.animate(e);
-              props.bounce();
             }}
             direction={Direction.Right}
           />

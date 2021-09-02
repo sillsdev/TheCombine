@@ -99,9 +99,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
           height: "95%",
           margin: "2.5%",
         }}
-        onClick={() => {
-          this.props.onClick(domain);
-        }}
+        onClick={() => this.props.onClick(domain)}
       >
         {this.textWithArrow(domain, this.props.direction)}
       </Button>

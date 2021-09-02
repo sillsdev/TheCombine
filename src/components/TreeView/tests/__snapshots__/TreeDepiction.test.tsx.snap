@@ -43,94 +43,48 @@ Array [
         <div
           className="MuiImageListItem-item"
         >
-          <div
-            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
+            disabled={true}
+            id="current-domain"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+            type="button"
           >
-            <div
-              className="react-reveal"
-              style={
-                Object {
-                  "opacity": undefined,
-                }
-              }
+            <span
+              className="MuiButton-label"
             >
-              <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
-                disabled={true}
-                id="current-domain"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={-1}
-                type="button"
+              <div
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
               >
                 <span
-                  className="MuiButton-label"
+                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1
-                    </span>
-                    <h6
-                      className="MuiTypography-root MuiTypography-h6"
-                    >
-                      parent
-                    </h6>
-                  </div>
+                  1
                 </span>
-              </button>
-            </div>
-            <div
-              className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyDown={[Function]}
-            >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="name"
-                id="name-label"
-              >
-                Find a domain
-              </label>
-              <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
-              >
-                <input
-                  aria-invalid={false}
-                  autoComplete="off"
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  data-testid="testSearch"
-                  disabled={false}
-                  id="name"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="text"
-                />
+                <h6
+                  className="MuiTypography-root MuiTypography-h6"
+                >
+                  parent
+                </h6>
               </div>
-            </div>
-          </div>
+            </span>
+          </button>
         </div>
       </li>
       <li
@@ -781,97 +735,51 @@ Array [
         <div
           className="MuiImageListItem-item"
         >
-          <div
-            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
+            disabled={false}
+            id="current-domain"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
           >
-            <div
-              className="react-reveal"
-              style={
-                Object {
-                  "opacity": undefined,
-                }
-              }
+            <span
+              className="MuiButton-label"
             >
-              <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
-                disabled={false}
-                id="current-domain"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={0}
-                type="button"
-              >
-                <span
-                  className="MuiButton-label"
-                >
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.2
-                    </span>
-                    <h6
-                      className="MuiTypography-root MuiTypography-h6"
-                    >
-                      kid2
-                    </h6>
-                  </div>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-            <div
-              className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyDown={[Function]}
-            >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="name"
-                id="name-label"
-              >
-                Find a domain
-              </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
               >
-                <input
-                  aria-invalid={false}
-                  autoComplete="off"
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  data-testid="testSearch"
-                  disabled={false}
-                  id="name"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="text"
-                />
+                <span
+                  className="MuiTypography-root MuiTypography-overline"
+                >
+                  1.2
+                </span>
+                <h6
+                  className="MuiTypography-root MuiTypography-h6"
+                >
+                  kid2
+                </h6>
               </div>
-            </div>
-          </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -1167,97 +1075,51 @@ Array [
         <div
           className="MuiImageListItem-item"
         >
-          <div
-            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
+            disabled={false}
+            id="current-domain"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
           >
-            <div
-              className="react-reveal"
-              style={
-                Object {
-                  "opacity": undefined,
-                }
-              }
+            <span
+              className="MuiButton-label"
             >
-              <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
-                disabled={false}
-                id="current-domain"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={0}
-                type="button"
-              >
-                <span
-                  className="MuiButton-label"
-                >
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.0
-                    </span>
-                    <h6
-                      className="MuiTypography-root MuiTypography-h6"
-                    >
-                      kid0
-                    </h6>
-                  </div>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-            <div
-              className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyDown={[Function]}
-            >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="name"
-                id="name-label"
-              >
-                Find a domain
-              </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
               >
-                <input
-                  aria-invalid={false}
-                  autoComplete="off"
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  data-testid="testSearch"
-                  disabled={false}
-                  id="name"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="text"
-                />
+                <span
+                  className="MuiTypography-root MuiTypography-overline"
+                >
+                  1.0
+                </span>
+                <h6
+                  className="MuiTypography-root MuiTypography-h6"
+                >
+                  kid0
+                </h6>
               </div>
-            </div>
-          </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -2047,97 +1909,51 @@ Array [
         <div
           className="MuiImageListItem-item"
         >
-          <div
-            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
+            disabled={false}
+            id="current-domain"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
           >
-            <div
-              className="react-reveal"
-              style={
-                Object {
-                  "opacity": undefined,
-                }
-              }
+            <span
+              className="MuiButton-label"
             >
-              <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
-                disabled={false}
-                id="current-domain"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={0}
-                type="button"
-              >
-                <span
-                  className="MuiButton-label"
-                >
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.2.1
-                    </span>
-                    <h6
-                      className="MuiTypography-root MuiTypography-h6"
-                    >
-                      soloData
-                    </h6>
-                  </div>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-            <div
-              className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyDown={[Function]}
-            >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="name"
-                id="name-label"
-              >
-                Find a domain
-              </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
               >
-                <input
-                  aria-invalid={false}
-                  autoComplete="off"
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  data-testid="testSearch"
-                  disabled={false}
-                  id="name"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="text"
-                />
+                <span
+                  className="MuiTypography-root MuiTypography-overline"
+                >
+                  1.2.1
+                </span>
+                <h6
+                  className="MuiTypography-root MuiTypography-h6"
+                >
+                  soloData
+                </h6>
               </div>
-            </div>
-          </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -2510,97 +2326,51 @@ Array [
         <div
           className="MuiImageListItem-item"
         >
-          <div
-            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
+            disabled={false}
+            id="current-domain"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
           >
-            <div
-              className="react-reveal"
-              style={
-                Object {
-                  "opacity": undefined,
-                }
-              }
+            <span
+              className="MuiButton-label"
             >
-              <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
-                disabled={false}
-                id="current-domain"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={0}
-                type="button"
-              >
-                <span
-                  className="MuiButton-label"
-                >
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.1
-                    </span>
-                    <h6
-                      className="MuiTypography-root MuiTypography-h6"
-                    >
-                      kid1
-                    </h6>
-                  </div>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-            <div
-              className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyDown={[Function]}
-            >
-              <label
-                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                data-shrink={false}
-                htmlFor="name"
-                id="name-label"
-              >
-                Find a domain
-              </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                onClick={[Function]}
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
               >
-                <input
-                  aria-invalid={false}
-                  autoComplete="off"
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input"
-                  data-testid="testSearch"
-                  disabled={false}
-                  id="name"
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="text"
-                />
+                <span
+                  className="MuiTypography-root MuiTypography-overline"
+                >
+                  1.1
+                </span>
+                <h6
+                  className="MuiTypography-root MuiTypography-h6"
+                >
+                  kid1
+                </h6>
               </div>
-            </div>
-          </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
       <li

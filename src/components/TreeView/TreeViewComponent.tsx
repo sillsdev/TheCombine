@@ -93,9 +93,6 @@ export class TreeView extends React.Component<
         <TreeSearch
           currentDomain={this.props.currentDomain}
           animate={this.animate}
-          bounce={() => {
-            //this.setState({ bounce: Math.random() });
-          }}
         />
         <Zoom in={this.state.visible}>
           <Grid
