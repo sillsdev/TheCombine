@@ -69,7 +69,6 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
             </TableCell>
             <TableCell style={{ borderBottom: "none" }}>
               <Typography
-                //display="inline"
                 variant="h5"
                 style={{ marginBottom: theme.spacing(1) }}
               >
@@ -130,7 +129,7 @@ export default function SenseCardContent(
   ];
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
-      {/* Optional button for showing the sidebar. */}
+      {/* Button for showing the sidebar, when sense card has multiple senses. */}
       <div
         style={{
           position: "absolute",
