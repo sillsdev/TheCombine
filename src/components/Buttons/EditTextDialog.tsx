@@ -24,7 +24,6 @@ interface EditTextDialogProps {
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
   textFieldId?: string;
-  autoFocus?: boolean;
 }
 
 /**
@@ -80,7 +79,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
-          autoFocus={props.autoFocus}
+          autoFocus
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
