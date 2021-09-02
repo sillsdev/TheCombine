@@ -25,8 +25,11 @@ export default function SenseDialog(props: SenseDialogProps) {
   return (
     <Dialog
       open={props.open}
-      disableBackdropClick
-      onClose={() => props.handleClose()}
+      onClose={(_, reason) => {
+        if (reason !== "backdropClick") {
+          props.handleClose();
+        }
+      }}
     >
       <DialogContent>
         <SenseList

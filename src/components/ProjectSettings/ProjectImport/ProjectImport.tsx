@@ -54,7 +54,7 @@ export default class ProjectImport extends React.Component<
       <React.Fragment>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <Typography variant="caption">
+            <Typography variant="body2">
               <Translate id="projectSettings.import.body" />{" "}
               <Translate
                 id="createProject.uploadFormat"
