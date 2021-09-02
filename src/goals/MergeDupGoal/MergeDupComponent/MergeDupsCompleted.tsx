@@ -1,6 +1,6 @@
 import { Button, Card, Grid, Paper, Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -12,7 +12,7 @@ import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 
-export default function MergeDupsCompleted() {
+export default function MergeDupsCompleted(): ReactElement {
   const changes = useSelector(
     (state: StoreState) =>
       state.goalsState.currentGoal.changes as MergesCompleted
@@ -27,7 +27,7 @@ export default function MergeDupsCompleted() {
   );
 }
 
-function MergesMade(changes: MergesCompleted): JSX.Element {
+function MergesMade(changes: MergesCompleted): ReactElement {
   return (
     <div>
       {MergesCount(changes)}
@@ -36,7 +36,7 @@ function MergesMade(changes: MergesCompleted): JSX.Element {
   );
 }
 
-export function MergesCount(changes: MergesCompleted): JSX.Element {
+export function MergesCount(changes: MergesCompleted): ReactElement {
   return (
     <Typography>
       <Translate id="mergeDups.completed.number" />
@@ -45,7 +45,7 @@ export function MergesCount(changes: MergesCompleted): JSX.Element {
   );
 }
 
-function MergeChange(change: MergeUndoIds): JSX.Element {
+function MergeChange(change: MergeUndoIds): ReactElement {
   return (
     <div key={change.parentIds[0]}>
       <Grid
@@ -90,7 +90,7 @@ interface UndoButtonProps {
   disabledId: string;
 }
 
-function UndoButton(props: UndoButtonProps) {
+function UndoButton(props: UndoButtonProps): ReactElement {
   const [isUndoBtnEnabled, setUndoBtnEnabled] = useState<boolean>(false);
   const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
 
@@ -153,7 +153,7 @@ interface WordPaperProps {
   wordId: string;
 }
 
-function WordPaper(props: WordPaperProps) {
+function WordPaper(props: WordPaperProps): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
   useEffect(() => {
     getWord(props.wordId).then(setWord);
@@ -181,7 +181,7 @@ function WordPaper(props: WordPaperProps) {
   );
 }
 
-function SenseCard(sense: Sense): JSX.Element {
+function SenseCard(sense: Sense): ReactElement {
   return (
     <Card
       key={sense.guid}

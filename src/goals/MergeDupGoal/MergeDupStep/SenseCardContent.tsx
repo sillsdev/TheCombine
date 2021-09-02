@@ -9,14 +9,14 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
-import React from "react";
+import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
 
 import { Sense } from "api/models";
 import { StoreState } from "types";
 import theme from "types/theme";
 
-interface senseInLanguage {
+interface SenseInLanguage {
   language: string; // bcp-47 code
   glossText: string;
   definitionText?: string;
@@ -27,7 +27,7 @@ function getSenseInLanguage(
   includeDefinitions: boolean,
   language: string,
   displaySep = "; "
-): senseInLanguage {
+): SenseInLanguage {
   return {
     language,
     glossText: sense.glosses
@@ -47,7 +47,7 @@ function getSenseInLanguages(
   sense: Sense,
   includeDefinitions: boolean,
   languages?: string[]
-): senseInLanguage[] {
+): SenseInLanguage[] {
   if (!languages) {
     languages = sense.glosses.map((g) => g.language);
     if (includeDefinitions) {
@@ -58,7 +58,7 @@ function getSenseInLanguages(
   return languages.map((l) => getSenseInLanguage(sense, includeDefinitions, l));
 }
 
-function senseText(senseInLangs: senseInLanguage[]): JSX.Element {
+function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
   return (
     <Table padding="none">
       {senseInLangs.map((sInLang) => (
@@ -108,9 +108,11 @@ interface SenseCardContentProps {
 }
 
 // Only show first sense's glosses/definitions; in merging, others deleted as duplicates.
-// Show semantic domains from all seneses.
+// Show semantic domains from all senses.
 // In merging, user can select a different one by reordering in the sidebar.
-export default function SenseCardContent(props: SenseCardContentProps) {
+export default function SenseCardContent(
+  props: SenseCardContentProps
+): ReactElement {
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
