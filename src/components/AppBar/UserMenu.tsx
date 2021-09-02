@@ -60,7 +60,7 @@ export default function UserMenu(props: UserMenuProps) {
       >
         <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
         {avatar ? (
-          <Avatar alt="User avatar" src={avatar} />
+          <Avatar alt="User avatar" src={avatar} style={{ marginLeft: 5 }} />
         ) : (
           <Person style={{ fontSize: 40 }} />
         )}
