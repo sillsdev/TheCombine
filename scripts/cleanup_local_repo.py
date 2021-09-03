@@ -8,8 +8,8 @@ the event their repository state does not match other developers or CI.
 Requirements: Python 3.8+
 """
 
-import shutil
 from pathlib import Path
+import shutil
 
 
 def main() -> None:
