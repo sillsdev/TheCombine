@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -34,14 +35,16 @@ namespace BackendFramework.Controllers
 
         /// <summary> Updates <see cref="Banner"/> singleton. </summary>
         [HttpPut("", Name = "UpdateBanner")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> UpdateBanner([FromBody, BindRequired] SiteBanner banner)
         {
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
-            return Ok(await _bannerRepo.Update(banner));
+
+            var result = await _bannerRepo.Update(banner);
+            return Ok(result == ResultOfUpdate.Updated);
         }
     }
 }

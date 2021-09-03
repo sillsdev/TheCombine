@@ -171,7 +171,7 @@ export const BannerApiFp = function (configuration?: Configuration) {
       siteBanner: SiteBanner,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateBanner(
         siteBanner,
@@ -214,7 +214,7 @@ export const BannerApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateBanner(siteBanner: SiteBanner, options?: any): AxiosPromise<string> {
+    updateBanner(siteBanner: SiteBanner, options?: any): AxiosPromise<boolean> {
       return localVarFp
         .updateBanner(siteBanner, options)
         .then((request) => request(axios, basePath));
