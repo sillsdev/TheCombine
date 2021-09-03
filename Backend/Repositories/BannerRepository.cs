@@ -28,7 +28,7 @@ namespace BackendFramework.Repositories
 
         public async Task<Banner> Get()
         {
-            var bannerList = await _bannerDatabase.Banners.FindAsync(b => true);
+            var bannerList = await _bannerDatabase.Banners.FindAsync(x => true);
             try
             {
                 return await bannerList.FirstAsync();
@@ -42,8 +42,10 @@ namespace BackendFramework.Repositories
         public async Task<ResultOfUpdate> Update(SiteBanner banner)
         {
             var existingBanner = await Get();
-            var filter = Builders<Banner>.Filter.Eq(b => b.Id, existingBanner.Id);
-            var updateDef = Builders<Banner>.Update.Set(b => banner, banner);
+            var filter = Builders<Banner>.Filter.Eq(x => x.Id, existingBanner.Id);
+            var updateDef = Builders<Banner>.Update
+                .Set(x => x.Announcement, banner.Announcement)
+                .Set(x => x.Login, banner.Login);
             var updateResult = await _bannerDatabase.Banners.UpdateOneAsync(filter, updateDef);
 
             // The Banner singleton should always exist, so this case should never happen.
