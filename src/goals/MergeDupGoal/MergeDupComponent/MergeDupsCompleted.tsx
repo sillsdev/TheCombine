@@ -1,25 +1,18 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Button, Card, Grid, Paper, Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { MergeUndoIds, Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 
-export default function MergeDupsCompleted() {
+export default function MergeDupsCompleted(): ReactElement {
   const changes = useSelector(
     (state: StoreState) =>
       state.goalsState.currentGoal.changes as MergesCompleted
@@ -34,7 +27,7 @@ export default function MergeDupsCompleted() {
   );
 }
 
-function MergesMade(changes: MergesCompleted): JSX.Element {
+function MergesMade(changes: MergesCompleted): ReactElement {
   return (
     <div>
       {MergesCount(changes)}
@@ -43,7 +36,7 @@ function MergesMade(changes: MergesCompleted): JSX.Element {
   );
 }
 
-export function MergesCount(changes: MergesCompleted): JSX.Element {
+export function MergesCount(changes: MergesCompleted): ReactElement {
   return (
     <Typography>
       <Translate id="mergeDups.completed.number" />
@@ -52,7 +45,7 @@ export function MergesCount(changes: MergesCompleted): JSX.Element {
   );
 }
 
-function MergeChange(change: MergeUndoIds): JSX.Element {
+function MergeChange(change: MergeUndoIds): ReactElement {
   return (
     <div key={change.parentIds[0]}>
       <Grid
@@ -65,12 +58,7 @@ function MergeChange(change: MergeUndoIds): JSX.Element {
         {change.childIds.map((id) => (
           <WordPaper key={id} wordId={id} />
         ))}
-        <Grid
-          key={"arrow"}
-          style={{
-            margin: theme.spacing(1),
-          }}
-        >
+        <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
           <ArrowRightAlt
             fontSize="large"
             style={{
@@ -102,7 +90,7 @@ interface UndoButtonProps {
   disabledId: string;
 }
 
-function UndoButton(props: UndoButtonProps) {
+function UndoButton(props: UndoButtonProps): ReactElement {
   const [isUndoBtnEnabled, setUndoBtnEnabled] = useState<boolean>(false);
   const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
 
@@ -164,24 +152,15 @@ export function doWordsIncludeMerges(
 interface WordPaperProps {
   wordId: string;
 }
-function WordPaper(props: WordPaperProps) {
+
+function WordPaper(props: WordPaperProps): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
   useEffect(() => {
-    async function fetchWord() {
-      const fetchedWord = await getWord(props.wordId);
-      setWord(fetchedWord);
-    }
-    fetchWord();
-    // eslint-disable-next-line
-  }, []);
+    getWord(props.wordId).then(setWord);
+  }, [props.wordId, setWord]);
 
   return (
-    <Grid
-      key={props.wordId}
-      style={{
-        margin: theme.spacing(1),
-      }}
-    >
+    <Grid key={props.wordId} style={{ margin: theme.spacing(1) }}>
       <Paper
         style={{
           backgroundColor: "lightgrey",
@@ -202,10 +181,7 @@ function WordPaper(props: WordPaperProps) {
   );
 }
 
-function SenseCard(sense: Sense) {
-  const semDoms = [
-    ...new Set(sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)),
-  ];
+function SenseCard(sense: Sense): ReactElement {
   return (
     <Card
       key={sense.guid}
@@ -217,25 +193,7 @@ function SenseCard(sense: Sense) {
         background: "white",
       }}
     >
-      <CardContent style={{ position: "relative", paddingRight: 40 }}>
-        {/* List glosses */}
-        {sense.glosses.map((g, index) => (
-          <div key={index}>
-            <Typography variant="caption">{`${g.language}: `}</Typography>
-            <Typography display="inline" variant="h5">
-              {g.def}
-            </Typography>
-          </div>
-        ))}
-        {/* List semantic domains */}
-        <Grid container spacing={2}>
-          {semDoms.map((dom) => (
-            <Grid item key={dom}>
-              <Chip label={dom} />
-            </Grid>
-          ))}
-        </Grid>
-      </CardContent>
+      <SenseCardContent senses={[sense]} />
     </Card>
   );
 }

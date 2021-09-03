@@ -8,7 +8,7 @@ import {
   Search,
 } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import { Project, WritingSystem } from "api/models";
@@ -89,7 +89,7 @@ export default class ProjectLanguages extends React.Component<
     );
   }
 
-  writingSystemButtons(index: number) {
+  writingSystemButtons(index: number): ReactElement | undefined {
     if (index === 0) {
       return;
     }
@@ -204,10 +204,12 @@ export default class ProjectLanguages extends React.Component<
 interface ImmutableWritingSystemProps {
   ws: WritingSystem;
   index?: number;
-  buttons?: JSX.Element;
+  buttons?: ReactElement;
 }
 
-function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
+function ImmutableWritingSystem(
+  props: ImmutableWritingSystemProps
+): ReactElement {
   return (
     <Grid container spacing={1}>
       {props.index !== undefined && (
