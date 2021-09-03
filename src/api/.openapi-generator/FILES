@@ -19,6 +19,7 @@ git_push.sh
 index.ts
 models/autocomplete-setting.ts
 models/credentials.ts
+models/custom-field.ts
 models/definition.ts
 models/edit.ts
 models/email-invite-data.ts
@@ -27,6 +28,7 @@ models/email-invite.ts
 models/gloss.ts
 models/index.ts
 models/merge-source-word.ts
+models/merge-undo-ids.ts
 models/merge-words.ts
 models/note.ts
 models/password-reset-data.ts

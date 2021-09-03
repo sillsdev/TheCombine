@@ -127,7 +127,10 @@ export default function AudioPlayer(props: PlayerProps) {
 
   return (
     <React.Fragment>
-      <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
+      <Tooltip
+        title={<Translate id="pronunciations.playTooltip" />}
+        placement="top"
+      >
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
@@ -135,6 +138,7 @@ export default function AudioPlayer(props: PlayerProps) {
           onTouchEnd={enableContextMenu}
           className={classes.button}
           aria-label="play"
+          id={`audio-${props.fileName}`}
         >
           {isPlaying ? (
             <Stop className={classes.icon} />
@@ -160,6 +164,7 @@ export default function AudioPlayer(props: PlayerProps) {
         }}
       >
         <MenuItem
+          id={`audio-${isPlaying ? "stop" : "play"}`}
           onClick={() => {
             togglePlay();
             handleClose();
@@ -172,6 +177,7 @@ export default function AudioPlayer(props: PlayerProps) {
           )}
         </MenuItem>
         <MenuItem
+          id="audio-delete"
           onClick={() => {
             setDeleteConf(true);
             handleClose();
@@ -186,6 +192,8 @@ export default function AudioPlayer(props: PlayerProps) {
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
         onConfirm={deleteAudio}
+        buttonIdClose="audio-delete-cancel"
+        buttonIdConfirm="audio-delete-confirm"
       />
     </React.Fragment>
   );

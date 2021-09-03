@@ -1,24 +1,17 @@
-import { Chip, IconButton } from "@material-ui/core";
-import { Add, Delete, RestoreFromTrash } from "@material-ui/icons";
+import { IconButton } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as backend from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
-import {
-  ReviewEntriesSense,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
-  // If delete is defined, this is being used for senses.
-  // Otherwise, it is for deleting a whole entry.
-  delete?: (deleteIndex: string) => void;
 }
 
 export default function DeleteCell(
@@ -45,42 +38,18 @@ export default function DeleteCell(
     setDialogOpen(false);
   }
 
-  function addSense() {
-    const senses = [...props.rowData.senses, new ReviewEntriesSense()];
-    return (
-      <Chip
-        label={<Add />}
-        onClick={() =>
-          props.onRowDataChange &&
-          props.onRowDataChange({ ...props.rowData, senses })
-        }
-      />
-    );
-  }
-
-  return props.delete ? (
-    <AlignedList
-      key={`delete:${props.rowData.id}`}
-      listId={`delete${props.rowData.id}`}
-      contents={props.rowData.senses.map((value) => (
-        <React.Fragment>
-          <IconButton size="small" onClick={() => props.delete!(value.guid)}>
-            {value.deleted ? <RestoreFromTrash /> : <Delete />}
-          </IconButton>
-        </React.Fragment>
-      ))}
-      bottomCell={addSense()}
-    />
-  ) : (
+  return (
     <React.Fragment>
-      <IconButton onClick={handleOpen}>
+      <IconButton onClick={handleOpen} id={`row-${props.rowData.id}-delete`}>
         <Delete />
       </IconButton>
       <CancelConfirmDialog
         open={dialogOpen}
         textId={"reviewEntries.deleteWordWarning"}
         handleCancel={handleClose}
-        handleAccept={deleteFrontierWord}
+        handleConfirm={deleteFrontierWord}
+        buttonIdCancel="row-delete-cancel"
+        buttonIdConfirm="row-delete-confirm"
       />
     </React.Fragment>
   );

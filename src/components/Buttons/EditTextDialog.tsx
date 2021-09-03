@@ -21,6 +21,9 @@ interface EditTextDialogProps {
   titleId: string;
   close: () => void;
   updateText: (newText: string) => void | Promise<void>;
+  buttonIdCancel?: string;
+  buttonIdConfirm?: string;
+  textFieldId?: string;
 }
 
 /**
@@ -76,14 +79,21 @@ export default function EditTextDialog(props: EditTextDialogProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
+          autoFocus
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
           InputProps={{ endAdornment }}
+          id={props.textFieldId}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} variant="outlined" color="primary">
+        <Button
+          onClick={onCancel}
+          variant="outlined"
+          color="primary"
+          id={props.buttonIdCancel}
+        >
           <Translate id="buttons.cancel" />
         </Button>
         <LoadingButton
@@ -92,6 +102,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
             onClick: onConfirm,
             color: "primary",
             variant: "contained",
+            id: props.buttonIdConfirm,
           }}
         >
           <Translate id="buttons.confirm" />

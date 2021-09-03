@@ -48,7 +48,7 @@ describe("PasswordReset", () => {
           id: "login.confirmPasswordError",
         }).length;
         var submitButton = testRenderer.root.findByProps({
-          id: "submit_button",
+          id: "password-reset-submit",
         });
         var resetFailErrors = testRenderer.root.findAllByProps({
           id: "passwordReset.resetFail",
@@ -90,7 +90,7 @@ describe("PasswordReset", () => {
           id: "login.confirmPasswordError",
         }).length;
         var submitButton = testRenderer.root.findByProps({
-          id: "submit_button",
+          id: "password-reset-submit",
         });
 
         expect(lengthErrors).toBeGreaterThan(0);
@@ -128,7 +128,7 @@ describe("PasswordReset", () => {
           id: "login.confirmPasswordError",
         }).length;
         var submitButton = testRenderer.root.findByProps({
-          id: "submit_button",
+          id: "password-reset-submit",
         });
 
         expect(lengthErrors).toBe(0);

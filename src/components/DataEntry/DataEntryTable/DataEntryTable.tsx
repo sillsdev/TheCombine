@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@material-ui/core";
-import { List as ListIcon } from "@material-ui/icons";
+import { ExitToApp, List as ListIcon } from "@material-ui/icons";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -15,10 +15,10 @@ import {
   Word,
 } from "api/models";
 import * as Backend from "backend";
-import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
-import Recorder from "components/Pronunciations/Recorder";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
+import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
+import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
 
@@ -138,7 +138,12 @@ export class DataEntryTable extends React.Component<
     }
   }
 
-  async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
+  async addNewWord(
+    wordToAdd: Word,
+    audioURLs: string[],
+    insertIndex?: number,
+    ignoreRecent?: boolean
+  ) {
     wordToAdd.note.language = this.state.analysisLang;
     const addedWord = await Backend.createWord(wordToAdd);
     if (addedWord.id === "Duplicate") {
@@ -151,6 +156,10 @@ export class DataEntryTable extends React.Component<
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
     const wordWithAudio = await Backend.getWord(wordId);
     await this.updateExisting();
+
+    if (ignoreRecent) {
+      return;
+    }
 
     const recentlyAddedWords = [...this.state.recentlyAddedWords];
     const newWordAccess: WordAccess = {
@@ -583,6 +592,7 @@ export class DataEntryTable extends React.Component<
           <Grid item>
             {this.props.isSmallScreen ? (
               <Button
+                id="toggle-existing-data"
                 style={{ marginTop: theme.spacing(2) }}
                 onClick={this.props.showExistingData}
               >
@@ -597,15 +607,21 @@ export class DataEntryTable extends React.Component<
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
+              endIcon={<ExitToApp />}
               tabIndex={-1}
               onClick={() => {
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
-                  let newEntry = this.refNewEntry.current.state.newEntry;
-                  let newEntryAudio =
+                  const newEntry = this.refNewEntry.current.state.newEntry;
+                  if (!newEntry.senses.length) {
+                    newEntry.senses.push(
+                      newSense(undefined, undefined, this.props.semanticDomain)
+                    );
+                  }
+                  const newEntryAudio =
                     this.refNewEntry.current.state.audioFileURLs;
                   if (newEntry && newEntry.vernacular) {
-                    this.addNewWord(newEntry, newEntryAudio);
+                    this.addNewWord(newEntry, newEntryAudio, undefined, true);
                     this.refNewEntry.current.resetState();
                   }
                 }

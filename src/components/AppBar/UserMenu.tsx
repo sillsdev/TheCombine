@@ -56,10 +56,11 @@ export default function UserMenu(props: UserMenuProps) {
         style={{
           background: tabColor(props.currentTab, Path.UserSettings),
         }}
+        id="avatar-user-menu"
       >
         <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
         {avatar ? (
-          <Avatar alt="User avatar" src={avatar} />
+          <Avatar alt="User avatar" src={avatar} style={{ marginLeft: 5 }} />
         ) : (
           <Person style={{ fontSize: 40 }} />
         )}

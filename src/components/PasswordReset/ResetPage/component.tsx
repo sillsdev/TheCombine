@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router";
 
 import history, { Path } from "browserHistory";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
-import { passwordRequirements } from "utilities";
+import { meetsPasswordRequirements } from "utilities";
 
 interface MatchParams {
   token: string;
@@ -58,7 +58,7 @@ export default class PasswordReset extends React.Component<
 
   onChangePassword = (password: string, confirmPassword: string) => {
     this.setState({
-      passwordFitsRequirements: passwordRequirements(password),
+      passwordFitsRequirements: meetsPasswordRequirements(password),
       isPasswordConfirmed: password === confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
@@ -76,6 +76,7 @@ export default class PasswordReset extends React.Component<
               </Typography>
               <Grid item>
                 <TextField
+                  id="password-reset-password1"
                   variant="outlined"
                   label={<Translate id="login.password" />}
                   type="password"
@@ -101,6 +102,7 @@ export default class PasswordReset extends React.Component<
               </Grid>
               <Grid item>
                 <TextField
+                  id="password-reset-password2"
                   variant="outlined"
                   label={<Translate id="login.confirmPassword" />}
                   type="password"
@@ -138,7 +140,7 @@ export default class PasswordReset extends React.Component<
                         <Translate id="passwordReset.resetFail" />
                       </Typography>
                       <Button
-                        id="submit_button"
+                        id="password-reset-submit"
                         variant="contained"
                         color="primary"
                         onClick={this.backToLogin}
@@ -150,7 +152,7 @@ export default class PasswordReset extends React.Component<
                     </React.Fragment>
                   ) : (
                     <Button
-                      id="submit_button"
+                      id="password-reset-submit"
                       variant="contained"
                       color="primary"
                       disabled={

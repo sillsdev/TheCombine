@@ -81,7 +81,11 @@ export default function AddProjectUsers() {
           </Grid>
 
           <Grid item xs={12}>
-            <Button variant="contained" onClick={() => setShowModal(true)}>
+            <Button
+              variant="contained"
+              onClick={() => setShowModal(true)}
+              id="project-user-invite"
+            >
               <Translate id="projectSettings.invite.inviteByEmailLabel" />
             </Button>
           </Grid>

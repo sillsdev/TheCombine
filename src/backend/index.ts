@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import * as Api from "api";
 import {
   EmailInviteStatus,
+  MergeUndoIds,
   MergeWords,
   Permission,
   Project,
@@ -188,6 +189,14 @@ export async function canUploadLift(): Promise<boolean> {
 export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
   const params = { projectId: LocalStorage.getProjectId(), mergeWords };
   return (await mergeApi.mergeWords(params, defaultOptions())).data;
+}
+
+export async function undoMerge(wordIds: MergeUndoIds) {
+  const params = {
+    projectId: LocalStorage.getProjectId(),
+    mergeUndoIds: wordIds,
+  };
+  return (await mergeApi.undoMerge(params, defaultOptions())).data;
 }
 
 /** Adds a list of wordIds to current project's merge blacklist. */
@@ -486,6 +495,11 @@ export async function getWord(wordId: string): Promise<Word> {
 export async function getAllWords(): Promise<Word[]> {
   const projectId = LocalStorage.getProjectId();
   return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;
+}
+
+export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
+  return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
 }
 
 export async function getFrontierWords(): Promise<Word[]> {

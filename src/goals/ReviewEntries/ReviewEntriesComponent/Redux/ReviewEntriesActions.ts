@@ -10,7 +10,6 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { newNote, newSense } from "types/word";
 
@@ -171,14 +170,10 @@ function refreshWord(
   oldWordId: string,
   wordUpdater: (wordId: string) => Promise<string>
 ) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (dispatch: StoreStateDispatch) => {
     const newWordId = await wordUpdater(oldWordId);
     const word = await backend.getWord(newWordId);
-
-    const analysisLang =
-      getState().currentProjectState.project.analysisWritingSystems[0]?.bcp47 ??
-      "en";
-    dispatch(updateWord(oldWordId, new ReviewEntriesWord(word, analysisLang)));
+    dispatch(updateWord(oldWordId, new ReviewEntriesWord(word)));
   };
 }
 

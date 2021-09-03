@@ -13,6 +13,7 @@
  */
 
 import { AutocompleteSetting } from "./autocomplete-setting";
+import { CustomField } from "./custom-field";
 import { EmailInvite } from "./email-invite";
 import { SemanticDomain } from "./semantic-domain";
 import { WritingSystem } from "./writing-system";
@@ -91,10 +92,10 @@ export interface Project {
   autocompleteSetting: AutocompleteSetting;
   /**
    *
-   * @type {Array<object>}
+   * @type {Array<CustomField>}
    * @memberof Project
    */
-  customFields?: Array<object> | null;
+  customFields?: Array<CustomField> | null;
   /**
    *
    * @type {Array<string>}

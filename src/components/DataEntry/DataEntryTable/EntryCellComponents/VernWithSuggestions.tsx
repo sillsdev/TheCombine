@@ -13,6 +13,7 @@ interface VernWithSuggestionsProps {
   onBlur: () => void;
   suggestedVerns?: string[];
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  textFieldId: string;
 }
 
 /**
@@ -49,6 +50,7 @@ export class VernWithSuggestions extends React.Component<
           renderInput={(params) => (
             <TextField
               {...params}
+              id={this.props.textFieldId}
               fullWidth
               inputRef={this.props.vernInput}
               label={

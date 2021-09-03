@@ -1,4 +1,4 @@
-import { Button, Grid, ImageList } from "@material-ui/core";
+import { Button, Grid, ImageList, Typography } from "@material-ui/core";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
@@ -73,6 +73,7 @@ class MergeDupStep extends React.Component<
                   "mergeDups.helpText.saveAndContinue"
                 ) as string
               }
+              id="merge-save"
             >
               {this.props.translate("buttons.saveAndContinue")}
             </Button>
@@ -82,6 +83,7 @@ class MergeDupStep extends React.Component<
               style={{ marginRight: theme.spacing(3) }}
               onClick={() => this.next()}
               title={this.props.translate("mergeDups.helpText.skip") as string}
+              id="merge-skip"
             >
               {this.props.translate("buttons.skip")}
             </Button>
@@ -90,7 +92,9 @@ class MergeDupStep extends React.Component<
       </React.Fragment>
     ) : (
       // ToDo: create component with translated text and button back to goals.
-      "Nothing to merge."
+      <Typography>
+        {this.props.translate("mergeDups.helpText.noDups")}
+      </Typography>
     );
   }
 }

@@ -110,6 +110,7 @@ export default class GoalTimeline extends React.Component<
         onClick={() => {
           this.props.chooseGoal(goal);
         }}
+        id="goal-recommended"
       >
         <Typography variant={"h4"}>
           <Translate id={done ? "goal.selector.done" : goal.name + ".title"} />

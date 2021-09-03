@@ -8,6 +8,7 @@ import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
+import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -49,7 +50,8 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
     <Translate>
       {({ translate }) => (
         <TextField
-          key={`vernacular${props.rowData.id}`}
+          key={`row-${props.rowData.id}-vernacular`}
+          id={`row-${props.rowData.id}-vernacular-text`}
           multiline
           value={props.value}
           error={props.value.length === 0}
@@ -78,7 +80,8 @@ function noteField(props: FieldParameterStandard) {
     <Translate>
       {({ translate }) => (
         <TextField
-          key={`vernacular${props.rowData.id}`}
+          key={`row-${props.rowData.id}-note`}
+          id={`row-${props.rowData.id}-note-text`}
           multiline
           value={props.value}
           placeholder={translate("reviewEntries.noNote").toString()}
@@ -141,7 +144,7 @@ const columns: Column<any>[] = [
         }
       };
       return (
-        <DeleteCell
+        <SenseCell
           rowData={props.rowData}
           onRowDataChange={props.onRowDataChange}
           delete={deleteSense}
