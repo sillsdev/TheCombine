@@ -4,6 +4,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -13,18 +14,34 @@ namespace BackendFramework.Controllers
     public class BannerController : Controller
     {
         private readonly IBannerRepository _bannerRepo;
+        private readonly IPermissionService _permissionService;
 
-        public BannerController(IBannerRepository bannerRepo)
+        public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService)
         {
             _bannerRepo = bannerRepo;
+            _permissionService = permissionService;
         }
 
         /// <summary> Returns the <see cref="Banner"/> for the site. </summary>
+        [AllowAnonymous]
         [HttpGet("", Name = "GetBanner")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Banner))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SiteBanner))]
         public async Task<IActionResult> GetBanner()
         {
-            return Ok(await _bannerRepo.Get());
+            var banner = await _bannerRepo.Get();
+            return Ok(new SiteBanner { Announcement = banner.Announcement, Login = banner.Login });
+        }
+
+        /// <summary> Updates <see cref="Banner"/> singleton. </summary>
+        [HttpPut("", Name = "UpdateBanner")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UpdateBanner([FromBody, BindRequired] SiteBanner banner)
+        {
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
+            {
+                return Forbid();
+            }
+            return Ok(await _bannerRepo.Update(banner));
         }
     }
 }

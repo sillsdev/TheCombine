@@ -39,7 +39,7 @@ namespace BackendFramework.Repositories
             }
         }
 
-        public async Task<ResultOfUpdate> Update(Banner banner)
+        public async Task<ResultOfUpdate> Update(SiteBanner banner)
         {
             var existingBanner = await Get();
             var filter = Builders<Banner>.Filter.Eq(b => b.Id, existingBanner.Id);
