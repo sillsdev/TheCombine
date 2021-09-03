@@ -1,4 +1,4 @@
-import { CardContent, Typography, Grid, Chip, Card } from "@material-ui/core";
+import { Card } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
 
 import {
@@ -6,6 +6,7 @@ import {
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {
@@ -20,6 +21,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
     mergeSenseId: props.sidebar.mergeSenseId,
     order: props.index,
   };
+
   return (
     <Draggable
       key={props.sense.guid}
@@ -36,6 +38,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
             style={{
               marginBottom: theme.spacing(1),
               marginTop: theme.spacing(1),
+              maxWidth: 300,
               background: snapshot.isDragging
                 ? "lightgreen"
                 : props.index === 0
@@ -43,27 +46,10 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
                 : "lightgrey",
             }}
           >
-            {senseCardContent(props.sense)}
+            <SenseCardContent senses={[props.sense]} />
           </Card>
         </div>
       )}
     </Draggable>
-  );
-}
-
-function senseCardContent(sense: MergeTreeSense) {
-  return (
-    <CardContent>
-      <Typography variant={"h5"}>
-        {sense.glosses.map((g) => g.def).join(", ")}
-      </Typography>
-      <Grid container spacing={2}>
-        {sense.semanticDomains.map((dom) => (
-          <Grid item xs key={dom.name}>
-            <Chip label={`${dom.name} ${dom.id}`} />
-          </Grid>
-        ))}
-      </Grid>
-    </CardContent>
   );
 }

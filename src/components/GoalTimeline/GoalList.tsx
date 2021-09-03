@@ -4,7 +4,7 @@ import {
   ImageListItem,
   Typography,
 } from "@material-ui/core";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
@@ -49,7 +49,7 @@ interface GoalListProps {
   handleChange: (goal: Goal) => void;
 }
 
-export default function GoalList(props: GoalListProps): JSX.Element {
+export default function GoalList(props: GoalListProps): ReactElement {
   const [scrollVisible, setScrollVisible] = useState<boolean>(false);
   const tileSize = props.size / 3 - 1.25;
 
@@ -98,7 +98,7 @@ export function makeGoalTile(
   orientation: Orientation,
   goal?: Goal,
   onClick?: () => void
-) {
+): ReactElement {
   return (
     <ImageListItem key={goal?.guid + orientation} cols={1}>
       <Button
@@ -127,7 +127,7 @@ export function makeGoalTile(
   );
 }
 
-function GoalInfo(goal: Goal): JSX.Element {
+function GoalInfo(goal: Goal): ReactElement {
   if (goal.status === GoalStatus.Completed) {
     let goalInfo;
     switch (goal.goalType) {
