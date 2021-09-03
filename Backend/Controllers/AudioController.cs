@@ -51,7 +51,7 @@ namespace BackendFramework.Controllers
             }
 
             var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
-            if (!System.IO.File.Exists(fileName))
+            if (!System.IO.File.Exists(filePath))
             {
                 return BadRequest("Audio file does not exist.");
             }
