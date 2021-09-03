@@ -10,7 +10,7 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Banner"/> singleton. </summary>
     [ExcludeFromCodeCoverage]
-    public class BannerRepository
+    public class BannerRepository : IBannerRepository
     {
         private readonly IBannerContext _bannerDatabase;
 
