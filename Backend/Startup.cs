@@ -233,6 +233,10 @@ namespace BackendFramework
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
+
+            // Banner types
+            services.AddTransient<IBannerContext, BannerContext>();
+            services.AddTransient<IBannerRepository, BannerRepository>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
