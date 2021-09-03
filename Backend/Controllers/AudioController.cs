@@ -51,12 +51,12 @@ namespace BackendFramework.Controllers
             }
 
             var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
-            var file = System.IO.File.OpenRead(filePath);
-            if (file is null)
+            if (!System.IO.File.Exists(filePath))
             {
-                return BadRequest("The file does not exist.");
+                return BadRequest("Audio file does not exist.");
             }
 
+            var file = System.IO.File.OpenRead(filePath);
             return File(file, "application/octet-stream");
         }
 
