@@ -23,7 +23,7 @@ namespace BackendFramework
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private const string AllowedOrigins = "AllowAll";
+        private const string LocalhostCorsPolicy = "LocalhostCorsPolicy";
 
         private readonly ILogger<Startup> _logger;
 
@@ -95,7 +95,7 @@ namespace BackendFramework
             {
                 services.AddCors(options =>
                 {
-                    options.AddPolicy(AllowedOrigins,
+                    options.AddPolicy(LocalhostCorsPolicy,
                         builder => builder
                             .AllowAnyHeader()
                             .AllowAnyMethod()
@@ -251,7 +251,8 @@ namespace BackendFramework
             }
 
             app.UseRouting();
-            app.UseCors(AllowedOrigins);
+            // Apply CORS policy to all requests.
+            app.UseCors(LocalhostCorsPolicy);
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
