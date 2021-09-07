@@ -22,7 +22,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -36,7 +36,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "55.55555555555556%",
+            "width": "42.85714285714286%",
           }
         }
       >
@@ -59,6 +59,11 @@ Array [
             onTouchEnd={[Function]}
             onTouchMove={[Function]}
             onTouchStart={[Function]}
+            style={
+              Object {
+                "height": "95%",
+              }
+            }
             tabIndex={-1}
             type="button"
           >
@@ -68,6 +73,7 @@ Array [
               <div
                 style={
                   Object {
+                    "minWidth": 200,
                     "textTransform": "capitalize",
                   }
                 }
@@ -93,7 +99,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -111,7 +117,7 @@ Array [
       style={
         Object {
           "margin": -0,
-          "width": 375,
+          "width": 275,
         }
       }
     >
@@ -121,8 +127,22 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -131,9 +151,9 @@ Array [
         >
           <img
             alt="leftEndcap.svg"
-            height="100%"
+            height={60}
             src="leftEndcap.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -144,7 +164,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -153,9 +173,9 @@ Array [
         >
           <img
             alt="span.svg"
-            height="100%"
+            height={60}
             src="span.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -166,7 +186,51 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -175,9 +239,9 @@ Array [
         >
           <img
             alt="intersect.svg"
-            height="100%"
+            height={60}
             src="intersect.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -188,7 +252,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -197,9 +261,9 @@ Array [
         >
           <img
             alt="span.svg"
-            height="100%"
+            height={60}
             src="span.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -210,7 +274,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -218,10 +282,10 @@ Array [
           className="MuiImageListItem-item"
         >
           <img
-            alt="rightEndcap.svg"
-            height="100%"
-            src="rightEndcap.svg"
-            width={75}
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
           />
         </div>
       </li>
@@ -231,7 +295,65 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="rightEndcap.svg"
+            height={60}
+            src="rightEndcap.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "27.272727272727273%",
           }
         }
       >
@@ -312,7 +434,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -326,7 +448,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "27.272727272727273%",
           }
         }
       >
@@ -407,7 +529,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -421,7 +543,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "27.272727272727273%",
           }
         }
       >
@@ -612,9 +734,9 @@ Array [
         >
           <img
             alt="parent.svg"
-            height="100%"
+            height={60}
             src="parent.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -637,7 +759,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -728,7 +850,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "55.55555555555556%",
+            "width": "42.85714285714286%",
           }
         }
       >
@@ -751,6 +873,11 @@ Array [
             onTouchEnd={[Function]}
             onTouchMove={[Function]}
             onTouchStart={[Function]}
+            style={
+              Object {
+                "height": "95%",
+              }
+            }
             tabIndex={0}
             type="button"
           >
@@ -760,6 +887,7 @@ Array [
               <div
                 style={
                   Object {
+                    "minWidth": 200,
                     "textTransform": "capitalize",
                   }
                 }
@@ -788,7 +916,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -816,8 +944,22 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
+            "width": "33.333333333333336%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "100%",
+            "width": "33.333333333333336%",
           }
         }
       >
@@ -826,11 +968,25 @@ Array [
         >
           <img
             alt="pillar.svg"
-            height="100%"
+            height={60}
             src="pillar.svg"
-            width={75}
+            width={26}
           />
         </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "33.333333333333336%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
       </li>
       <li
         className="MuiImageListItem-root"
@@ -1029,9 +1185,9 @@ Array [
         >
           <img
             alt="parent.svg"
-            height="100%"
+            height={60}
             src="parent.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -1054,7 +1210,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -1068,7 +1224,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "55.55555555555556%",
+            "width": "42.85714285714286%",
           }
         }
       >
@@ -1091,6 +1247,11 @@ Array [
             onTouchEnd={[Function]}
             onTouchMove={[Function]}
             onTouchStart={[Function]}
+            style={
+              Object {
+                "height": "95%",
+              }
+            }
             tabIndex={0}
             type="button"
           >
@@ -1100,6 +1261,7 @@ Array [
               <div
                 style={
                   Object {
+                    "minWidth": 200,
                     "textTransform": "capitalize",
                   }
                 }
@@ -1128,7 +1290,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -1223,7 +1385,7 @@ Array [
       style={
         Object {
           "margin": -0,
-          "width": 525,
+          "width": 375,
         }
       }
     >
@@ -1233,8 +1395,22 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1243,9 +1419,9 @@ Array [
         >
           <img
             alt="leftEndcap.svg"
-            height="100%"
+            height={60}
             src="leftEndcap.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -1256,7 +1432,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1265,9 +1441,9 @@ Array [
         >
           <img
             alt="span.svg"
-            height="100%"
+            height={60}
             src="span.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -1278,7 +1454,51 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1287,9 +1507,9 @@ Array [
         >
           <img
             alt="teeUpRight.svg"
-            height="100%"
+            height={60}
             src="teeUpRight.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -1300,51 +1520,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
-          }
-        }
-      >
-        <div
-          className="MuiImageListItem-item"
-        >
-          <img
-            alt="teeDown.svg"
-            height="100%"
-            src="teeDown.svg"
-            width={75}
-          />
-        </div>
-      </li>
-      <li
-        className="MuiImageListItem-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
-          }
-        }
-      >
-        <div
-          className="MuiImageListItem-item"
-        >
-          <img
-            alt="teeUpLeft.svg"
-            height="100%"
-            src="teeUpLeft.svg"
-            width={75}
-          />
-        </div>
-      </li>
-      <li
-        className="MuiImageListItem-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1353,9 +1529,9 @@ Array [
         >
           <img
             alt="span.svg"
-            height="100%"
+            height={60}
             src="span.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -1366,7 +1542,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1374,10 +1550,10 @@ Array [
           className="MuiImageListItem-item"
         >
           <img
-            alt="rightEndcap.svg"
-            height="100%"
-            src="rightEndcap.svg"
-            width={75}
+            alt="teeDown.svg"
+            height={60}
+            src="teeDown.svg"
+            width={26}
           />
         </div>
       </li>
@@ -1387,7 +1563,153 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="teeUpLeft.svg"
+            height={60}
+            src="teeUpLeft.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="rightEndcap.svg"
+            height={60}
+            src="rightEndcap.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "6.666666666666667%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "20%",
           }
         }
       >
@@ -1468,7 +1790,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1482,7 +1804,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "width": "20%",
           }
         }
       >
@@ -1563,7 +1885,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1577,7 +1899,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "width": "20%",
           }
         }
       >
@@ -1658,7 +1980,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "width": "6.666666666666667%",
           }
         }
       >
@@ -1672,7 +1994,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "14.285714285714286%",
+            "width": "20%",
           }
         }
       >
@@ -1863,9 +2185,9 @@ Array [
         >
           <img
             alt="parent.svg"
-            height="100%"
+            height={60}
             src="parent.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -1888,7 +2210,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -1902,7 +2224,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "55.55555555555556%",
+            "width": "42.85714285714286%",
           }
         }
       >
@@ -1925,6 +2247,11 @@ Array [
             onTouchEnd={[Function]}
             onTouchMove={[Function]}
             onTouchStart={[Function]}
+            style={
+              Object {
+                "height": "95%",
+              }
+            }
             tabIndex={0}
             type="button"
           >
@@ -1934,6 +2261,7 @@ Array [
               <div
                 style={
                   Object {
+                    "minWidth": 200,
                     "textTransform": "capitalize",
                   }
                 }
@@ -1962,7 +2290,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -1990,8 +2318,22 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
+            "width": "33.333333333333336%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "100%",
+            "width": "33.333333333333336%",
           }
         }
       >
@@ -2000,11 +2342,25 @@ Array [
         >
           <img
             alt="pillar.svg"
-            height="100%"
+            height={60}
             src="pillar.svg"
-            width={75}
+            width={26}
           />
         </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "33.333333333333336%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
       </li>
       <li
         className="MuiImageListItem-root"
@@ -2203,9 +2559,9 @@ Array [
         >
           <img
             alt="parent.svg"
-            height="100%"
+            height={60}
             src="parent.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -2228,7 +2584,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -2319,7 +2675,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "55.55555555555556%",
+            "width": "42.85714285714286%",
           }
         }
       >
@@ -2342,6 +2698,11 @@ Array [
             onTouchEnd={[Function]}
             onTouchMove={[Function]}
             onTouchStart={[Function]}
+            style={
+              Object {
+                "height": "95%",
+              }
+            }
             tabIndex={0}
             type="button"
           >
@@ -2351,6 +2712,7 @@ Array [
               <div
                 style={
                   Object {
+                    "minWidth": 200,
                     "textTransform": "capitalize",
                   }
                 }
@@ -2379,7 +2741,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 10,
-            "width": "22.22222222222222%",
+            "width": "28.571428571428573%",
           }
         }
       >
@@ -2474,7 +2836,7 @@ Array [
       style={
         Object {
           "margin": -0,
-          "width": 375,
+          "width": 275,
         }
       }
     >
@@ -2484,8 +2846,22 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2494,9 +2870,9 @@ Array [
         >
           <img
             alt="leftEndcap.svg"
-            height="100%"
+            height={60}
             src="leftEndcap.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -2507,7 +2883,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2516,9 +2892,9 @@ Array [
         >
           <img
             alt="span.svg"
-            height="100%"
+            height={60}
             src="span.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -2529,7 +2905,51 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2538,9 +2958,9 @@ Array [
         >
           <img
             alt="intersect.svg"
-            height="100%"
+            height={60}
             src="intersect.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -2551,7 +2971,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2560,9 +2980,9 @@ Array [
         >
           <img
             alt="span.svg"
-            height="100%"
+            height={60}
             src="span.svg"
-            width={75}
+            width={26}
           />
         </div>
       </li>
@@ -2573,7 +2993,7 @@ Array [
             "height": "auto",
             "padding": 0,
             "transform": "scaleY(-1)",
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2581,10 +3001,10 @@ Array [
           className="MuiImageListItem-item"
         >
           <img
-            alt="rightEndcap.svg"
-            height="100%"
-            src="rightEndcap.svg"
-            width={75}
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
           />
         </div>
       </li>
@@ -2594,7 +3014,65 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="span.svg"
+            height={60}
+            src="span.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "transform": "scaleY(-1)",
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        >
+          <img
+            alt="rightEndcap.svg"
+            height={60}
+            src="rightEndcap.svg"
+            width={26}
+          />
+        </div>
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "9.090909090909092%",
+          }
+        }
+      >
+        <div
+          className="MuiImageListItem-item"
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "27.272727272727273%",
           }
         }
       >
@@ -2675,7 +3153,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2689,7 +3167,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "27.272727272727273%",
           }
         }
       >
@@ -2770,7 +3248,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "9.090909090909092%",
           }
         }
       >
@@ -2784,7 +3262,7 @@ Array [
           Object {
             "height": "auto",
             "padding": 0,
-            "width": "20%",
+            "width": "27.272727272727273%",
           }
         }
       >
