@@ -4,13 +4,11 @@
 #
 #    pip-compile dev-requirements.in
 #
-appdirs==1.4.4
-    # via black
 backports.entry-points-selectable==1.1.0
     # via virtualenv
 beautifulsoup4==4.9.3
     # via mkdocs-htmlproofer-plugin
-black==21.7b0
+black==21.8b0
     # via -r dev-requirements.in
 certifi==2021.5.30
     # via requests
@@ -20,6 +18,10 @@ click==8.0.1
     # via
     #   black
     #   mkdocs
+colorama==0.4.4
+    # via
+    #   click
+    #   tox
 distlib==0.3.2
     # via virtualenv
 filelock==3.0.12
@@ -39,7 +41,7 @@ humanfriendly==9.2
     # via -r dev-requirements.in
 idna==3.2
     # via requests
-importlib-metadata==4.7.1
+importlib-metadata==4.8.1
     # via mkdocs
 isort==5.9.3
     # via -r dev-requirements.in
@@ -68,7 +70,7 @@ mkdocs==1.2.2
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.6.0
     # via -r dev-requirements.in
-mkdocs-material==7.2.5
+mkdocs-material==7.2.6
     # via
     #   -r dev-requirements.in
     #   mkdocs-material-extensions
@@ -88,8 +90,10 @@ pathspec==0.9.0
     # via black
 pep8-naming==0.12.1
     # via -r dev-requirements.in
-platformdirs==2.2.0
-    # via virtualenv
+platformdirs==2.3.0
+    # via
+    #   black
+    #   virtualenv
 pluggy==1.0.0
     # via tox
 py==1.10.0
@@ -104,6 +108,8 @@ pymdown-extensions==8.2
     # via mkdocs-material
 pyparsing==2.4.7
     # via packaging
+pyreadline==2.1
+    # via humanfriendly
 python-dateutil==2.8.2
     # via ghp-import
 pyyaml==5.4.1
@@ -112,7 +118,7 @@ pyyaml==5.4.1
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2021.8.27
+regex==2021.8.28
     # via black
 requests==2.26.0
     # via mkdocs-htmlproofer-plugin
@@ -133,8 +139,10 @@ tox==3.24.3
     # via -r dev-requirements.in
 types-requests==2.25.6
     # via -r dev-requirements.in
-typing-extensions==3.10.0.0
-    # via mypy
+typing-extensions==3.10.0.2
+    # via
+    #   black
+    #   mypy
 urllib3==1.26.6
     # via requests
 virtualenv==20.7.2

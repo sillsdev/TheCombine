@@ -1,18 +1,10 @@
-import {
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
-import { ArrowForwardIos } from "@material-ui/icons";
+import { Card } from "@material-ui/core";
 import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Gloss } from "api/models";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import theme from "types/theme";
@@ -24,11 +16,7 @@ interface DragSenseProps {
   senses: MergeTreeSense[];
 }
 
-interface MergeGloss extends Gloss {
-  senseGuid: string;
-}
-
-function arraysEqual<T>(arr1: T[], arr2: T[]) {
+function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
   if (arr1.length !== arr2.length) return false;
   for (let i = 0; i < arr1.length; i++) {
     if (arr1[i] !== arr2[i]) return false;
@@ -89,27 +77,6 @@ export default function DragSense(props: DragSenseProps) {
     updateSidebar();
   }
 
-  // Only display the first sense; others will be deleted as duplicates.
-  // User can select a different one by reordering in the sidebar.
-  const firstSense = props.senses[0];
-  let glosses: MergeGloss[] = firstSense.glosses.map((g) => ({
-    ...g,
-    senseGuid: firstSense.guid,
-  }));
-  // Filter out duplicates.
-  glosses = glosses.filter(
-    (v, i, a) =>
-      a.findIndex((o) => o.def === v.def && o.language === v.language) === i
-  );
-
-  const semDoms = [
-    ...new Set(
-      props.senses.flatMap((sense) =>
-        sense.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)
-      )
-    ),
-  ];
-
   return (
     <Draggable
       key={props.mergeSenseId}
@@ -137,49 +104,11 @@ export default function DragSense(props: DragSenseProps) {
               : "white",
           }}
         >
-          <CardContent style={{ position: "relative", paddingRight: 40 }}>
-            {/* Button for showing the sidebar. */}
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: 0,
-                transform: "translateY(-50%)",
-              }}
-            >
-              {props.senses.length > 1 && (
-                <IconButton
-                  onClick={toggleSidebar}
-                  id={`sidebar-open-sense-${props.mergeSenseId}`}
-                >
-                  <ArrowForwardIos />
-                </IconButton>
-              )}
-            </div>
-            {/* Display of sense details. */}
-            <div>
-              {/* List glosses */}
-              {analysisLangs.map((lang) => (
-                <div key={lang}>
-                  <Typography variant="caption">{`${lang}: `}</Typography>
-                  <Typography display="inline" variant="h5">
-                    {glosses
-                      .filter((g) => g.language === lang)
-                      .map((g) => g.def)
-                      .join(", ")}
-                  </Typography>
-                </div>
-              ))}
-              {/* List semantic domains */}
-              <Grid container spacing={2}>
-                {semDoms.map((dom) => (
-                  <Grid item key={dom}>
-                    <Chip label={dom} />
-                  </Grid>
-                ))}
-              </Grid>
-            </div>
-          </CardContent>
+          <SenseCardContent
+            senses={props.senses}
+            languages={analysisLangs}
+            toggleFunction={toggleSidebar}
+          />
         </Card>
       )}
     </Draggable>

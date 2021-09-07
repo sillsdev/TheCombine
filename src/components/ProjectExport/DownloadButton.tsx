@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Cached, Error as ErrorIcon, GetApp } from "@material-ui/icons";
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, ReactElement, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -71,7 +71,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
     }
   }
 
-  function icon(): JSX.Element {
+  function icon(): ReactElement {
     switch (exportState.status) {
       case ExportStatus.InProgress:
         return <Cached />;

@@ -79,6 +79,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
+          autoFocus
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
