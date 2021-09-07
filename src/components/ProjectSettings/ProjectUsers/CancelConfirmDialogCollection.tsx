@@ -14,12 +14,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import { Permission } from "api/models";
-import { addOrUpdateUserRole, removeUserRole } from "backend";
+import { addOrUpdateUserRole, getProject, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import { getCurrentUser } from "backend/localStorage";
 
 interface CancelConfirmDialogCollectionProps {
   userId: string;
+  currentUserId: string;
   isProjectOwner: boolean;
   userIsProjectAdmin: boolean;
 }
@@ -35,6 +37,7 @@ export default function CancelConfirmDialogCollection(
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
   const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
   const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
+  const [makeOwnerDialogOpen, setMakeOwner] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
 
   function removeUser(userId: string) {
@@ -103,7 +106,47 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  const managementOptions: React.ReactElement<MenuItemProps>[] = [
+  function makeOwner(userId: string) {
+    addOrUpdateUserRole(
+      [
+        Permission.WordEntry,
+        Permission.Unused,
+        Permission.MergeAndCharSet,
+        Permission.ImportExport,
+        Permission.DeleteEditSettingsAndUsers,
+        Permission.Owner,
+      ],
+      userId
+    )
+      .then(() => {
+        addOrUpdateUserRole(
+          [
+            Permission.WordEntry,
+            Permission.Unused,
+            Permission.MergeAndCharSet,
+            Permission.ImportExport,
+            Permission.DeleteEditSettingsAndUsers,
+          ],
+          props.currentUserId
+        );
+      })
+      .then(() => {
+        setMakeOwner(false);
+        setAnchorEl(undefined);
+        toast(
+          <Translate id="projectSettings.userManagement.makeOwnerToastSuccess" />
+        );
+        dispatch(asyncRefreshCurrentProjectUsers());
+      })
+      .catch((err) => {
+        console.error(err);
+        toast(
+          <Translate id="projectSettings.userManagement.makeOwnerToastFailure" />
+        );
+      });
+  }
+
+  const managementOptions = [
     <MenuItem
       key="removeUser"
       onClick={() => setRemoveUser(true)}
@@ -131,6 +174,18 @@ export default function CancelConfirmDialogCollection(
       </MenuItem>
     );
     managementOptions.push(adminOption);
+
+    if (props.userIsProjectAdmin) {
+      managementOptions.push(
+        <MenuItem
+          key="makeOwner"
+          onClick={() => setMakeOwner(true)}
+          id="user-make-owner"
+        >
+          <Translate id="buttons.makeOwner" />
+        </MenuItem>
+      );
+    }
   }
 
   return (
@@ -158,6 +213,14 @@ export default function CancelConfirmDialogCollection(
         handleConfirm={() => removeAdmin(props.userId)}
         buttonIdCancel="user-admin-remove-cancel"
         buttonIdConfirm="user-admin-remove-confirm"
+      />
+      <CancelConfirmDialog
+        open={makeOwnerDialogOpen}
+        textId="projectSettings.userManagement.makeOwnerWarning"
+        handleCancel={() => setMakeOwner(false)}
+        handleConfirm={() => makeOwner(props.userId)}
+        buttonIdCancel="user-make-owner-cancel"
+        buttonIdConfirm="user-make-owner-confirm"
       />
       <Tooltip
         title={<Translate id="projectSettings.userManagement.manageUser" />}
