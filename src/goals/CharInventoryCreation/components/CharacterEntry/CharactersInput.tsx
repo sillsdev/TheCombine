@@ -1,15 +1,18 @@
 import { TextField } from "@material-ui/core";
+import { ReactElement } from "react";
 
 import theme from "types/theme";
 
 interface CharactersInputProps {
   setCharacters: (characters: string[]) => void;
   characters: string[];
-  label: JSX.Element;
+  label: ReactElement;
   id?: string;
 }
 
-export default function CharactersInput(props: CharactersInputProps) {
+export default function CharactersInput(
+  props: CharactersInputProps
+): ReactElement {
   return (
     <TextField
       value={props.characters.join("")}

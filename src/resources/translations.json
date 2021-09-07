@@ -497,10 +497,24 @@
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
       "off": ["Off", "Apagado", "Éteint"],
-      "on": ["On", "Encendido", "Allumé"]
+      "on": ["On", "Encendido", "Allumé"],
+      "hint": [
+        "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed.",
+        "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed.",
+        "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
+      ]
     },
     "definitions": {
-      "label": ["Definitions", "Definiciones", "Définitions"]
+      "label": [
+        "Display Definitions",
+        "Display Definitions",
+        "Display Definitions"
+      ],
+      "hint": [
+        "In Review Entries, show a Definitions column; in Merge Duplicates, show the Definition below the Gloss.",
+        "In Review Entries, show a Definitions column; in Merge Duplicates, show the Definition below the Gloss.",
+        "In Review Entries, show a Definitions column; in Merge Duplicates, show the Definition below the Gloss."
+      ]
     },
     "invite": {
       "inviteByEmailLabel": [

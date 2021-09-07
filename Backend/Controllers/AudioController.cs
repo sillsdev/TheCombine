@@ -4,18 +4,14 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackendFramework.Controllers
 {
-
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words/{wordId}/audio")]
-    [EnableCors("AllowAll")]
-
     public class AudioController : Controller
     {
         private readonly IWordRepository _wordRepo;
@@ -51,12 +47,12 @@ namespace BackendFramework.Controllers
             }
 
             var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
-            var file = System.IO.File.OpenRead(filePath);
-            if (file is null)
+            if (!System.IO.File.Exists(filePath))
             {
-                return BadRequest("The file does not exist.");
+                return BadRequest("Audio file does not exist.");
             }
 
+            var file = System.IO.File.OpenRead(filePath);
             return File(file, "application/octet-stream");
         }
 
