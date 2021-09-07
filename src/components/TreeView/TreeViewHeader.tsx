@@ -19,7 +19,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
   const { getLeftBrother, getRightBrother } = useTreeNavigation(props);
 
   return (
-    <ImageList cols={9} gap={20} rowHeight={"auto"}>
+    <ImageList cols={7} gap={20} rowHeight={"auto"}>
       <ImageListItem cols={2}>
         {getLeftBrother(props) ? (
           <DomainTile
@@ -31,7 +31,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           />
         ) : null}
       </ImageListItem>
-      <ImageListItem cols={5}>
+      <ImageListItem cols={3}>
         <Button
           fullWidth
           size="large"
@@ -40,8 +40,9 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           disabled={!props.currentDomain.parentDomain}
           onClick={() => props.animate(props.currentDomain)}
           id="current-domain"
+          style={{ height: "95%" }}
         >
-          <div style={{ textTransform: "capitalize" }}>
+          <div style={{ textTransform: "capitalize", minWidth: 200 }}>
             <Typography variant="overline">{props.currentDomain.id}</Typography>
             <Typography variant="h6">{props.currentDomain.name}</Typography>
           </div>

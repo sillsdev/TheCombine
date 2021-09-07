@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactElement } from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
 import {
   ChevronLeft,
@@ -24,7 +24,7 @@ interface DomainTileProps {
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default class DomainTile extends React.Component<DomainTileProps> {
-  domainText(domain: TreeSemanticDomain): ReactNode {
+  domainText(domain: TreeSemanticDomain): ReactElement {
     return (
       <div style={{ textTransform: "capitalize" }}>
         <Typography variant={"overline"}>{domain.id}</Typography>
@@ -36,7 +36,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
   textWithArrow(
     domain: TreeSemanticDomain,
     direction: Direction | undefined
-  ): ReactNode {
+  ): ReactElement {
     switch (direction) {
       case Direction.Down:
         return (

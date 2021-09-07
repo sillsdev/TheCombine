@@ -1,4 +1,4 @@
-import { TextField } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import { Key } from "ts-key-enum";
 
@@ -15,16 +15,18 @@ export default function TreeSearch(props: TreeSearchProps) {
   const { searchAndSelectDomain, handleChange } = useTreeSearch(props);
 
   return (
-    <TextField
-      fullWidth
-      id="name"
-      label="Find a domain"
-      onKeyDown={searchAndSelectDomain}
-      onChange={handleChange}
-      margin="normal"
-      autoComplete="off"
-      inputProps={{ "data-testid": testId }}
-    />
+    <Grid style={{ maxWidth: 200 }}>
+      <TextField
+        fullWidth
+        id="name"
+        label="Find a domain"
+        onKeyDown={searchAndSelectDomain}
+        onChange={handleChange}
+        margin="normal"
+        autoComplete="off"
+        inputProps={{ "data-testid": testId }}
+      />
+    </Grid>
   );
 }
 

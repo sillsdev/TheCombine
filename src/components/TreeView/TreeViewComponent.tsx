@@ -90,10 +90,13 @@ export class TreeView extends React.Component<
     return (
       <React.Fragment>
         {/* Domain search */}
-        <TreeSearch
-          currentDomain={this.props.currentDomain}
-          animate={this.animate}
-        />
+        <Grid container justifyContent="center">
+          <TreeSearch
+            currentDomain={this.props.currentDomain}
+            animate={this.animate}
+          />
+        </Grid>
+        {/* Domain tree */}
         <Zoom in={this.state.visible}>
           <Grid
             container
