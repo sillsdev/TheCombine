@@ -1,10 +1,4 @@
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  MenuItemProps,
-  Tooltip,
-} from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
@@ -14,10 +8,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import { Permission } from "api/models";
-import { addOrUpdateUserRole, getProject, removeUserRole } from "backend";
+import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
-import { getCurrentUser } from "backend/localStorage";
 
 interface CancelConfirmDialogCollectionProps {
   userId: string;
