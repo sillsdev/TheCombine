@@ -97,7 +97,7 @@ export default function ProjectSettingsComponent() {
             imports ? (
               <ProjectImport />
             ) : (
-              <Typography variant="caption">
+              <Typography variant="body2">
                 <Translate id="projectSettings.import.notAllowed" />
               </Typography>
             )
