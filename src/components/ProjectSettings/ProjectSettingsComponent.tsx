@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import {
+  Archive,
   Assignment,
   CloudUpload,
   Edit,
@@ -13,11 +14,13 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { Permission } from "api/models";
 import * as backend from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
@@ -30,27 +33,33 @@ import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectU
 import { StoreState } from "types";
 
 export default function ProjectSettingsComponent() {
-  const projectId = useSelector(
-    (state: StoreState) => state.currentProjectState.project.id
+  const project = useSelector(
+    (state: StoreState) => state.currentProjectState.project
   );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
 
   useEffect(() => {
-    const roleId = currentRoles[projectId];
+    const roleId = currentRoles[project.id];
     if (roleId) {
       backend
         .getUserRole(roleId)
         .then((role) => setPermissions(role.permissions));
     }
-  }, [currentRoles, projectId]);
+  }, [currentRoles, project.id]);
 
   useEffect(() => {
     if (permissions.includes(Permission.ImportExport)) {
       backend.canUploadLift().then(setImports);
     }
   }, [permissions, setImports]);
+
+  // TODO: Switch to homepage after archiving since it doesn't make sense
+  // to stay in an archived project
+  function archiveUpdate() {
+    toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
+  }
 
   return (
     <Grid container justifyContent="center" spacing={6}>
@@ -101,7 +110,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<GetApp />}
           title={<Translate id="projectSettings.exportProject.label" />}
-          body={<ExportButton projectId={projectId} />}
+          body={<ExportButton projectId={project.id} />}
         />
       )}
 
@@ -136,6 +145,21 @@ export default function ProjectSettingsComponent() {
           icon={<PersonAdd />}
           title={<Translate id="projectSettings.user.addUser" />}
           body={<AddProjectUsers />}
+        />
+      )}
+
+      {/* Archive/restore project */}
+      {permissions.includes(Permission.Owner) && (
+        <BaseSettingsComponent
+          icon={<Archive />}
+          title={<Translate id="projectSettings.user.archive" />}
+          body={
+            <ProjectButtonWithConfirmation
+              archive={project.isActive}
+              projectId={project.id}
+              updateParent={archiveUpdate}
+            />
+          }
         />
       )}
     </Grid>

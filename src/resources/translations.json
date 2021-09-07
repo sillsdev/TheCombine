@@ -489,7 +489,13 @@
         "typist": ["Typist", "Mecanógrafo", "Dactylographe"],
         "cleaner": ["Cleaner", "Limpiador", "Nettoyant"],
         "admin": ["Admin", "Administrador", "Admin"]
-      }
+      },
+      "archive": ["Archive Project", "Archive Project", "Archive Project"],
+      "archiveToastSuccess": [
+        "Project Archived!",
+        "Project Archived!",
+        "Project Archived!"
+      ]
     },
     "exportProject": {
       "label": ["Export Project", "Exportar el proyecto", "Exporter le projet"]
