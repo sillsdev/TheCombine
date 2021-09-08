@@ -34,21 +34,21 @@ import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManage
 import { StoreState } from "types";
 
 export default function ProjectSettingsComponent() {
-  const project = useSelector(
-    (state: StoreState) => state.currentProjectState.project
+  const projectId = useSelector(
+    (state: StoreState) => state.currentProjectState.project.id
   );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
 
   useEffect(() => {
-    const roleId = currentRoles[project.id];
+    const roleId = currentRoles[projectId];
     if (roleId) {
       backend
         .getUserRole(roleId)
         .then((role) => setPermissions(role.permissions));
     }
-  }, [currentRoles, project.id]);
+  }, [currentRoles, projectId]);
 
   useEffect(() => {
     if (permissions.includes(Permission.ImportExport)) {
@@ -112,7 +112,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<GetApp />}
           title={<Translate id="projectSettings.exportProject.label" />}
-          body={<ExportButton projectId={project.id} />}
+          body={<ExportButton projectId={projectId} />}
         />
       )}
 
@@ -157,8 +157,8 @@ export default function ProjectSettingsComponent() {
           title={<Translate id="projectSettings.user.archive" />}
           body={
             <ProjectButtonWithConfirmation
-              archive={project.isActive}
-              projectId={project.id}
+              archive={true} // Project Settings are only available for active projects
+              projectId={projectId}
               updateParent={archiveUpdate}
             />
           }
