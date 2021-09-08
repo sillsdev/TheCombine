@@ -435,7 +435,7 @@
         "Transferred Project Ownership!",
         "Transferred Project Ownership!"
       ],
-      "makeOwnerToastFaillure": [
+      "makeOwnerToastFailure": [
         "Failed to transfer project ownership.",
         "Failed to transfer project ownership.",
         "Failed to transfer project ownership."

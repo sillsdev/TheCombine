@@ -20,7 +20,6 @@ import { Permission } from "api/models";
 import * as backend from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
-import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
@@ -30,6 +29,7 @@ import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
+import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
 
 export default function ProjectSettingsComponent() {
