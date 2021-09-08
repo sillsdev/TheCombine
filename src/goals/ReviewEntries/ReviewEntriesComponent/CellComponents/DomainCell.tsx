@@ -89,6 +89,7 @@ export default function DomainCell(props: DomainCellProps) {
                         ? () => deleteDomain(domain, sense)
                         : undefined
                     }
+                    id={`sense-${sense.guid}-domain-${domainIndex}`}
                   />
                 </Grid>
               ))
@@ -105,6 +106,7 @@ export default function DomainCell(props: DomainCellProps) {
               <IconButton
                 key={`buttonFor${sense.guid}`}
                 onClick={() => prepAddDomain(sense)}
+                id={`sense-${sense.guid}-domain-add`}
               >
                 <Add />
               </IconButton>

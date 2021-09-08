@@ -104,17 +104,29 @@ export default function CancelConfirmDialogCollection(
   }
 
   const managementOptions: React.ReactElement<MenuItemProps>[] = [
-    <MenuItem key="removeUser" onClick={() => setRemoveUser(true)}>
+    <MenuItem
+      key="removeUser"
+      onClick={() => setRemoveUser(true)}
+      id="user-remove"
+    >
       <Translate id="buttons.removeFromProject" />
     </MenuItem>,
   ];
   if (props.isProjectOwner) {
     const adminOption = props.userIsProjectAdmin ? (
-      <MenuItem key="removeAdmin" onClick={() => setRemoveAdmin(true)}>
+      <MenuItem
+        key="removeAdmin"
+        onClick={() => setRemoveAdmin(true)}
+        id="user-admin-remove"
+      >
         <Translate id="buttons.removeAdmin" />
       </MenuItem>
     ) : (
-      <MenuItem key="addAdmin" onClick={() => setMakeAdmin(true)}>
+      <MenuItem
+        key="addAdmin"
+        onClick={() => setMakeAdmin(true)}
+        id="user-admin-add"
+      >
         <Translate id="buttons.makeAdmin" />
       </MenuItem>
     );
@@ -127,19 +139,25 @@ export default function CancelConfirmDialogCollection(
         open={removeUserDialogOpen}
         textId="projectSettings.userManagement.removeUserWarning"
         handleCancel={() => setRemoveUser(false)}
-        handleAccept={() => removeUser(props.userId)}
+        handleConfirm={() => removeUser(props.userId)}
+        buttonIdCancel="user-remove-cancel"
+        buttonIdConfirm="user-remove-confirm"
       />
       <CancelConfirmDialog
         open={makeAdminDialogOpen}
         textId="projectSettings.userManagement.makeAdminWarning"
         handleCancel={() => setMakeAdmin(false)}
-        handleAccept={() => makeAdmin(props.userId)}
+        handleConfirm={() => makeAdmin(props.userId)}
+        buttonIdCancel="user-admin-add-cancel"
+        buttonIdConfirm="user-admin-add-confirm"
       />
       <CancelConfirmDialog
         open={removeAdminDialogOpen}
         textId="projectSettings.userManagement.removeAdminWarning"
         handleCancel={() => setRemoveAdmin(false)}
-        handleAccept={() => removeAdmin(props.userId)}
+        handleConfirm={() => removeAdmin(props.userId)}
+        buttonIdCancel="user-admin-remove-cancel"
+        buttonIdConfirm="user-admin-remove-confirm"
       />
       <Tooltip
         title={<Translate id="projectSettings.userManagement.manageUser" />}
@@ -153,7 +171,7 @@ export default function CancelConfirmDialogCollection(
         </IconButton>
       </Tooltip>
       <Menu
-        id="simple-menu"
+        id="user-options-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}

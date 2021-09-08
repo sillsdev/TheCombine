@@ -17,6 +17,8 @@ interface ButtonConfirmationProps {
   titleId: string;
   onClose: () => void;
   onConfirm: () => void | Promise<void>;
+  buttonIdClose?: string;
+  buttonIdConfirm?: string;
 }
 
 /**
@@ -48,7 +50,12 @@ export default function ButtonConfirmation(props: ButtonConfirmationProps) {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose} variant="outlined" color="primary">
+        <Button
+          onClick={props.onClose}
+          variant="outlined"
+          color="primary"
+          id={props.buttonIdClose}
+        >
           <Translate id="buttons.cancel" />
         </Button>
         <LoadingButton
@@ -57,6 +64,7 @@ export default function ButtonConfirmation(props: ButtonConfirmationProps) {
             onClick: onConfirm,
             color: "primary",
             variant: "contained",
+            id: props.buttonIdConfirm,
           }}
         >
           <Translate id="buttons.confirm" />

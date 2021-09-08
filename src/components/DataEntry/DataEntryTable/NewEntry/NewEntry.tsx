@@ -328,6 +328,7 @@ export default class NewEntry extends React.Component<
                   // check whether gloss is empty
                   this.handleEnter(e, true)
                 }
+                textFieldId="new-entry-vernacular"
               />
               <VernDialog
                 open={this.state.vernOpen}
@@ -377,6 +378,7 @@ export default class NewEntry extends React.Component<
                 this.handleEnter(e, false)
               }
               analysisLang={this.props.analysisLang}
+              textFieldId={"new-entry-gloss"}
             />
           </Grid>
           <Grid
@@ -393,6 +395,7 @@ export default class NewEntry extends React.Component<
               <EntryNote
                 noteText={this.state.newEntry.note.text}
                 updateNote={(text: string) => this.updateNote(text)}
+                buttonId="note-entry-new"
               />
             )}
           </Grid>

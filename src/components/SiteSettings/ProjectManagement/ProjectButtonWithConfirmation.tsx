@@ -39,7 +39,12 @@ export default function ProjectButtonWithConfirmation(
 
   return (
     <React.Fragment>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpen}
+        id={`proj-${props.projectId}-${props.archive ? "archive" : "restore"}`}
+      >
         <Translate id={`buttons.${props.archive ? "archive" : "restore"}`} />
       </Button>
       <ButtonConfirmation
@@ -50,7 +55,13 @@ export default function ProjectButtonWithConfirmation(
         titleId="buttons.proceedWithCaution"
         onClose={handleClose}
         onConfirm={updateProj}
-      ></ButtonConfirmation>
+        buttonIdClose={`proj-${props.projectId}-${
+          props.archive ? "archive" : "restore"
+        }-cancel`}
+        buttonIdConfirm={`proj-${props.projectId}-${
+          props.archive ? "archive" : "restore"
+        }-confirm`}
+      />
     </React.Fragment>
   );
 }

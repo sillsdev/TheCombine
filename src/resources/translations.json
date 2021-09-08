@@ -313,6 +313,11 @@
     ]
   },
   "projectExport": {
+    "cannotExportEmpty": [
+      "Project is empty. You cannot export a project with no words.",
+      "Project is empty. You cannot export a project with no words.",
+      "Project is empty. You cannot export a project with no words."
+    ],
     "downloadReady": ["Download ready", "Download ready", "Download ready"],
     "exportFailed": ["Export failed", "Export failed", "Export failed"],
     "exportInProgress": [

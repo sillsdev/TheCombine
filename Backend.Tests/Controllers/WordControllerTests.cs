@@ -79,6 +79,17 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestIsFrontierNonempty()
+        {
+            _ = _wordRepo.Create(Util.RandomWord("OTHER_PROJECT")).Result;
+            var shouldBeFalse = (bool)((ObjectResult)_wordController.IsFrontierNonempty(_projId).Result).Value;
+            Assert.False(shouldBeFalse);
+            _ = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var shouldBeTrue = (bool)((ObjectResult)_wordController.IsFrontierNonempty(_projId).Result).Value;
+            Assert.True(shouldBeTrue);
+        }
+
+        [Test]
         public void TestGetFrontier()
         {
             var inWord1 = _wordRepo.Create(Util.RandomWord(_projId)).Result;

@@ -8,6 +8,7 @@ import EditTextDialog from "components/Buttons/EditTextDialog";
 interface EntryNoteProps {
   noteText: string;
   updateNote: (newText: string) => void;
+  buttonId: string;
 }
 
 /**
@@ -18,25 +19,29 @@ export default function EntryNote(props: EntryNoteProps) {
 
   return (
     <React.Fragment>
-      {props.noteText ? (
-        <Tooltip title={props.noteText} placement="top">
-          <IconButton size="small" onClick={() => setNoteOpen(true)}>
-            <Comment />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title={<Translate id="addWords.addNote" />} placement="top">
-          <IconButton size="small" onClick={() => setNoteOpen(true)}>
-            <AddComment />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Tooltip
+        title={
+          props.noteText ? props.noteText : <Translate id="addWords.addNote" />
+        }
+        placement="top"
+      >
+        <IconButton
+          size="small"
+          onClick={() => setNoteOpen(true)}
+          id={props.buttonId}
+        >
+          {props.noteText ? <Comment /> : <AddComment />}
+        </IconButton>
+      </Tooltip>
       <EditTextDialog
         open={noteOpen}
         text={props.noteText}
         titleId={"addWords.addNote"}
         close={() => setNoteOpen(false)}
         updateText={props.updateNote}
+        buttonIdCancel="note-edit-cancel"
+        buttonIdConfirm="note-edit-confirm"
+        textFieldId="note-text-field"
       />
     </React.Fragment>
   );
