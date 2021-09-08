@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { Permission } from "api/models";
 import * as backend from "backend";
 import { getCurrentUser } from "backend/localStorage";
+import history, { Path } from "browserHistory";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
@@ -55,10 +56,11 @@ export default function ProjectSettingsComponent() {
     }
   }, [permissions, setImports]);
 
-  // TODO: Switch to homepage after archiving since it doesn't make sense
-  // to stay in an archived project
   function archiveUpdate() {
     toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
+    setTimeout(() => {
+      history.push(Path.ProjScreen);
+    }, 1500);
   }
 
   return (
@@ -148,7 +150,7 @@ export default function ProjectSettingsComponent() {
         />
       )}
 
-      {/* Archive/restore project */}
+      {/* Archive project */}
       {permissions.includes(Permission.Owner) && (
         <BaseSettingsComponent
           icon={<Archive />}
