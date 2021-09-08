@@ -60,7 +60,7 @@ export default function ProjectSettingsComponent() {
     toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
     setTimeout(() => {
       history.push(Path.ProjScreen);
-    }, 1500);
+    }, 2000);
   }
 
   return (
