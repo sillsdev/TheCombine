@@ -6,8 +6,11 @@ metadata:
   namespace: {{ app_namespace }}
 rules:
   - apiGroups: [""]
-    resources: ["pods"]
+    resources: ["pods", "pods/exec"]
     verbs: ["list", "get", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["list", "get", "watch", "update"]
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["list", "get", "watch"]
