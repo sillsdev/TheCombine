@@ -177,10 +177,44 @@ ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
 - The `playbook_kube_config.yml` playbook will prompt you for the version of _The Combine_ to install. The version is
   the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version number, e.g.
-  _0.6.5_.
+  _0.7.5_.
 - The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
   your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
   group in the inventory file, e.g. `qa`.
+
+#### Maintenance Scripts for Kubernetes
+
+There is a set of maintenance scripts that can be run in the kubernetes cluster:
+
+- `combine-backup-job.sh` - performs a backup of _The Combine_ database and backend files, pushes the backup to AWS S3
+  storage and then removes old backups keeping the latest 3 backups.
+- `combine_backup.py` - just performs the backup and pushes the result to AWS S3 storage.
+- `combine-clean-aws.py` - removes the oldest backups, keeping up to `max_backups`. The default for `max_backups` is 3.
+- `combine_restore.py` - restores _The Combine_ database and backend files from one of the backups in AWS S3 storage.
+
+The `combine-backup-job.sh` is currently being run daily on _The Combine_ as a Kubernetes CronJob.
+
+In addition to the daily backup, any of the scripts can be run on-demand using the `kubectl` command. Using the
+`kubectl` command takes the form:
+
+```
+kubectl [--kubeconfig=<path-to-kubernetes-file] [-n thecombine] exec -it deployment/maintenance -- <maintenance script> <script options>
+```
+
+Notes:
+
+1. The `--kubeconfig` option is not required if a. the `KUBECONFIG` environment variable is set to the path of your
+   kubeconfig file, or b. if your kubeconfig file is located in `${HOME}/.kube/config`
+2. You can see the script options for a script by running:
+   ```
+   kubectl [--kubeconfig=<path-to-kubernetes-file] -n thecombine exec -it deployment/maintenance -- <maintenance scripts> --help
+   ```
+   The only exception is `combine-backup-job.sh` which does not have any script options.
+3. The `-n thecombine` option is not required if you set `thecombine` as the default namespace for your kubeconfig file
+   by running:
+   ```
+   kubectl config set-context --current --namespace=thecombine
+   ```
 
 ### Creating Your Own Inventory File
 
