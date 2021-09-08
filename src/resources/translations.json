@@ -546,7 +546,8 @@
       "done": ["All done", "Esta listo", "Tout est fait"]
     },
     "progress": {
-      "step": ["Merge set", "Merge set", "Merge set"],
+      "step": ["Step", "Paso", "Étape"],
+      "stepMerge": ["Merge set", "Merge set", "Merge set"],
       "of": ["of", "de", "sur"]
     }
   },

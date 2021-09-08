@@ -3,25 +3,30 @@ import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { StoreState } from "types";
+import { GoalType } from "types/goals";
 
 /**
  * Displays how much progress has been made in a goal
  */
 export default function DisplayProgress() {
-  const currentStep = useSelector(
-    (state: StoreState) => state.goalsState.currentGoal.currentStep
+  const currentGoal = useSelector(
+    (state: StoreState) => state.goalsState.currentGoal
   );
-  const numSteps = useSelector(
-    (state: StoreState) => state.goalsState.currentGoal.numSteps
-  );
+  const currentStep = currentGoal.currentStep;
+  const numSteps = currentGoal.numSteps;
   const percentComplete = (currentStep / numSteps) * 100;
+
+  const stepTranslateId =
+    currentGoal.goalType === GoalType.MergeDups
+      ? "goal.progress.stepMerge"
+      : "goal.progress.step";
 
   return numSteps > 1 ? (
     <Paper key={currentStep}>
       <Grid container direction="column">
         <Grid item xs>
           <Typography variant={"h4"}>
-            <Translate id="goal.progress.step" />
+            <Translate id={stepTranslateId} />
             {` ${currentStep + 1} `}
             <Translate id="goal.progress.of" />
             {` ${numSteps}`}
