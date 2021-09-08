@@ -127,7 +127,10 @@ export default function AudioPlayer(props: PlayerProps) {
 
   return (
     <React.Fragment>
-      <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
+      <Tooltip
+        title={<Translate id="pronunciations.playTooltip" />}
+        placement="top"
+      >
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}

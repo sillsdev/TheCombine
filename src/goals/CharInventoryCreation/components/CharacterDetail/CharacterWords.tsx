@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -11,7 +11,9 @@ interface CharacterWordsProps {
 }
 
 /** Displays words that contain a character */
-export default function CharacterWords(props: CharacterWordsProps) {
+export default function CharacterWords(
+  props: CharacterWordsProps
+): ReactElement {
   const allWords = useSelector(
     (state: StoreState) => state.characterInventoryState.allWords
   );
@@ -47,8 +49,11 @@ function getWordsContainingChar(
   return wordsWithChar;
 }
 
-function highlightCharacterInWord(character: string, word: string) {
-  const highlightedWord: (JSX.Element | string)[] = [];
+function highlightCharacterInWord(
+  character: string,
+  word: string
+): ReactElement[] {
+  const highlightedWord: ReactElement[] = [];
   for (let i = 0; i < word.length; i++) {
     const letter = word[i];
     const key = `${character}_${word}_${i}`;
@@ -57,7 +62,7 @@ function highlightCharacterInWord(character: string, word: string) {
   return highlightedWord;
 }
 
-function wordSpan(word: string, key: string, highlight: boolean) {
+function wordSpan(word: string, key: string, highlight: boolean): ReactElement {
   return (
     <span
       key={key}

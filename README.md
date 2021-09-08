@@ -55,6 +55,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    5. [Generate License Reports](#generate-license-reports)
    6. [Set Project Version](#set-project-version)
    7. [Inspect Database](#inspect-database)
+   8. [Cleanup Local Repo](#cleanup-local-repository)
 6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Add a User to a Project](#add-a-user-to-a-project)
    2. [Backup _TheCombine_](#backup-thecombine)
@@ -532,6 +533,17 @@ To browse the database locally during development, open MongoDB Compass Communit
 
 1. Under New Connection, enter `mongodb://localhost:27017`
 2. Under Databases, select CombineDatabase
+
+### Cleanup Local Repository
+
+It's sometimes possible for a developer's local temporary state to get out of sync with other developers or CI.
+This script removes temporary files and packages while leaving database data intact. This can help troubleshoot
+certain types of development setup errors.
+
+```bash
+# On Windows, use `py` instead of `python3`.
+$ python3 scripts/cleanup_local_repo.py
+```
 
 ## Maintenance Scripts for TheCombine
 
