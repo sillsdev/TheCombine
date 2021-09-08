@@ -12,6 +12,7 @@ k8s_resource_templates:
   - deployment-backend.yaml
   - deployment-database.yaml
   - deployment-frontend.yaml
+  - deployment-maintenance.yaml
   - cronjob-daily-backup.yaml
   - ingress-combine.yaml
   - service-backend.yaml
@@ -57,4 +58,4 @@ ingress_class: nginx
 #######################################
 # Default Backup Schedule
 # Run every day at 10:15 UTC
-combine_backup_schedule: "15 10 * * *"
+combine_backup_schedule: "15 03 * * *"
