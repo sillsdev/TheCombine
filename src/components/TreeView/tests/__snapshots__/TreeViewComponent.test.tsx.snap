@@ -170,7 +170,7 @@ Array [
           style={
             Object {
               "margin": -0,
-              "width": 275,
+              "width": 330,
             }
           }
         >
@@ -206,7 +206,7 @@ Array [
                 alt="leftEndcap.svg"
                 height={60}
                 src="leftEndcap.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -228,7 +228,7 @@ Array [
                 alt="span.svg"
                 height={60}
                 src="span.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -250,7 +250,7 @@ Array [
                 alt="span.svg"
                 height={60}
                 src="span.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -272,7 +272,7 @@ Array [
                 alt="span.svg"
                 height={60}
                 src="span.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -294,7 +294,7 @@ Array [
                 alt="intersect.svg"
                 height={60}
                 src="intersect.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -316,7 +316,7 @@ Array [
                 alt="span.svg"
                 height={60}
                 src="span.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -338,7 +338,7 @@ Array [
                 alt="span.svg"
                 height={60}
                 src="span.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -360,7 +360,7 @@ Array [
                 alt="span.svg"
                 height={60}
                 src="span.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
@@ -382,7 +382,7 @@ Array [
                 alt="rightEndcap.svg"
                 height={60}
                 src="rightEndcap.svg"
-                width={26}
+                width={31}
               />
             </div>
           </li>
