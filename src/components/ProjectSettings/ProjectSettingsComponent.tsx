@@ -160,7 +160,7 @@ export default function ProjectSettingsComponent() {
               archive={true} // Project Settings are only available for active projects
               projectId={projectId}
               updateParent={archiveUpdate}
-              warn={true}
+              warn
             />
           }
         />
