@@ -9,15 +9,21 @@ import { GoalType } from "types/goals";
  * Displays how much progress has been made in a goal
  */
 export default function DisplayProgress() {
-  const currentGoal = useSelector(
-    (state: StoreState) => state.goalsState.currentGoal
+  /* We cannot use a single selector for state.goalsState.currentGoal and define everything on that;
+ currentStep needs its own targeted selector for it to re-render as the user progresses. */
+  const currentStep = useSelector(
+    (state: StoreState) => state.goalsState.currentGoal.currentStep
   );
-  const currentStep = currentGoal.currentStep;
-  const numSteps = currentGoal.numSteps;
+  const numSteps = useSelector(
+    (state: StoreState) => state.goalsState.currentGoal.numSteps
+  );
+  const goalType = useSelector(
+    (state: StoreState) => state.goalsState.currentGoal.goalType
+  );
   const percentComplete = (currentStep / numSteps) * 100;
 
   const stepTranslateId =
-    currentGoal.goalType === GoalType.MergeDups
+    goalType === GoalType.MergeDups
       ? "goal.progress.stepMerge"
       : "goal.progress.step";
 

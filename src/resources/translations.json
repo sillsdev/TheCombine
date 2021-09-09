@@ -547,7 +547,7 @@
     },
     "progress": {
       "step": ["Step", "Paso", "Étape"],
-      "stepMerge": ["Merge set", "Merge set", "Merge set"],
+      "stepMerge": ["Merge Set", "Merge Set", "Merge Set"],
       "of": ["of", "de", "sur"]
     }
   },
