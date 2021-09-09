@@ -16,10 +16,10 @@ import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 
-const MAX_COL_WIDTH = 50;
-const MIN_COL_WIDTH = 25;
+const MAX_COL_WIDTH = 50; // Max gap.
+const MIN_COL_WIDTH = 30; // Multiply this by RATIO_TILE_TO_GAP for min tile width.
 const RATIO_TILE_TO_GAP = 3; // Must be odd.
-const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2;
+const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded down.
 
 interface TreeDepictionProps {
   currentDomain: TreeSemanticDomain;
