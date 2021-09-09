@@ -9,13 +9,13 @@ spec:
     metadata:
       creationTimestamp: null
     spec:
+{% if k8s_service_accounts is defined %}
+      serviceAccountName: {{ k8s_service_accounts.ecr_login }}
+{% endif %}
       containers:
       - image: {{ aws_ecr_login.image }}
         imagePullPolicy: IfNotPresent
         name: "{{ aws_ecr_login.job_name }}"
-        volumeMounts:
-          - name: cluster-kubeconfig
-            mountPath: /home/user/.kube
         command:
           - ecr-get-login.sh
         env:
@@ -63,7 +63,3 @@ spec:
       restartPolicy: Never
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
-      volumes:
-        - name: cluster-kubeconfig
-          secret:
-            secretName: "{{ k8s_config_secret }}"
