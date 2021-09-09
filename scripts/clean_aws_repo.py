@@ -59,19 +59,18 @@ def parse_args() -> Namespace:
         Notes:
 
          - The repo names must be specified BEFORE the --remove or --keep options.
-         - You must specify either --untagged or --remove (or both).
+         - You must specify --untagged and/or --remove options.
 
         """,
         formatter_class=RawFormatter,
     )
     parser.add_argument("--profile", help="AWS user profile to use to connect to AWS ECR")
     parser.add_argument("--untagged", action="store_true", help="Delete untagged images.")
-    # Although the "repo" positional argument returns a list if repositories, the argument
-    # name in singular so that the usage message is more readable.
     parser.add_argument(
-        "repo",
+        "repo_list",
         nargs="+",
         help="Docker image repository to be cleaned. (Multiple repos may be listed.)",
+        metavar="repo",
     )
     parser.add_argument(
         "--keep",
@@ -157,7 +156,7 @@ def main() -> None:
         rm_pattern = "^(?:% s)$" % "|".join(args.rm_pattern)
 
     # Iterate over the list of repos
-    for repo in args.repo:
+    for repo in args.repo_list:
         if args.verbose:
             print(f"Cleaning repo {repo}")
         # Get a list of the current image tags for the specified repo
