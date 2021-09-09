@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: "{{ aws_ecr_login.cron_job_name }}"
+  name: {{ aws_ecr_login.cron_job_name }}
   namespace: {{ app_namespace }}
 spec:
   concurrencyPolicy: Allow
@@ -15,13 +15,13 @@ spec:
         metadata:
           creationTimestamp: null
         spec:
+{% if k8s_service_accounts is defined %}
+          serviceAccountName: {{ k8s_service_accounts.ecr_login }}
+{% endif %}
           containers:
           - image: {{ aws_ecr_login.image }}
             imagePullPolicy: IfNotPresent
-            name: "{{ aws_ecr_login.cron_job_name }}"
-            volumeMounts:
-              - name: cluster-kubeconfig
-                mountPath: /home/user/.kube
+            name: {{ aws_ecr_login.cron_job_name }}
             command:
               - ecr-get-login.sh
             env:
@@ -29,37 +29,37 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: AWS_DEFAULT_REGION
-                  name: "{{ aws_ecr_login.secrets_name }}"
+                  name: {{ aws_ecr_login.secrets_name }}
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: AWS_SECRET_ACCESS_KEY
-                  name: "{{ aws_ecr_login.secrets_name }}"
+                  name: {{ aws_ecr_login.secrets_name }}
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCESS_KEY_ID
-                  name: "{{ aws_ecr_login.secrets_name }}"
+                  name: {{ aws_ecr_login.secrets_name }}
             - name: AWS_ACCOUNT
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCOUNT
-                  name: "{{ aws_ecr_login.secrets_name }}"
+                  name: {{ aws_ecr_login.secrets_name }}
             - name: NAMESPACES
               valueFrom:
                 configMapKeyRef:
                   key: NAMESPACES
-                  name: "{{ aws_ecr_login.config_name }}"
+                  name: {{ aws_ecr_login.config_name }}
             - name: PULL_SECRET_NAME
               valueFrom:
                 configMapKeyRef:
                   key: PULL_SECRET_NAME
-                  name: "{{ aws_ecr_login.config_name }}"
+                  name: {{ aws_ecr_login.config_name }}
             - name: DOCKER_EMAIL
               valueFrom:
                 configMapKeyRef:
                   key: DOCKER_EMAIL
-                  name: "{{ aws_ecr_login.config_name }}"
+                  name: {{ aws_ecr_login.config_name }}
             resources: {}
             securityContext:
               capabilities: {}
@@ -69,10 +69,6 @@ spec:
           restartPolicy: Never
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30
-          volumes:
-            - name: cluster-kubeconfig
-              secret:
-                secretName: "{{ k8s_config_secret }}"
-  schedule: "{{ aws_ecr_login.schedule }}"
+  schedule: {{ aws_ecr_login.schedule }}
   successfulJobsHistoryLimit: 1
   suspend: false
