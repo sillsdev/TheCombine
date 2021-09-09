@@ -207,7 +207,7 @@ Notes:
    kubeconfig file, or b. if your kubeconfig file is located in `${HOME}/.kube/config`
 2. You can see the script options for a script by running:
    ```
-   kubectl [--kubeconfig=<path-to-kubernetes-file] -n thecombine exec -it deployment/maintenance -- <maintenance scripts> --help
+   kubectl [--kubeconfig=<path-to-kubernetes-file] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
    ```
    The only exception is `combine-backup-job.sh` which does not have any script options.
 3. The `-n thecombine` option is not required if you set `thecombine` as the default namespace for your kubeconfig file

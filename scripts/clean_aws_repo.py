@@ -66,8 +66,6 @@ def parse_args() -> Namespace:
     )
     parser.add_argument("--profile", help="AWS user profile to use to connect to AWS ECR")
     parser.add_argument("--untagged", action="store_true", help="Delete untagged images.")
-    # Although the "repo" positional argument returns a list if repositories, the argument
-    # name in singular so that the usage message is more readable.
     parser.add_argument(
         "repo_list",
         nargs="+",
