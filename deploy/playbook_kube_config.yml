@@ -39,6 +39,12 @@
           import_role:
             name: k8s_namespace
 
+        - name: Setup Service Accounts
+          import_role:
+            name: k8s_accounts
+          tags:
+            - k8s_accounts
+
         - name: Setup container registry credentials
           import_role:
             name: aws_login_job
