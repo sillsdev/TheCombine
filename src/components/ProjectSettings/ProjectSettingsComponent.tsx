@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import {
+  Archive,
   Assignment,
   CloudUpload,
   Edit,
@@ -13,10 +14,12 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { Permission } from "api/models";
 import * as backend from "backend";
 import { getCurrentUser } from "backend/localStorage";
+import history, { Path } from "browserHistory";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
@@ -27,6 +30,7 @@ import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
+import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
 
 export default function ProjectSettingsComponent() {
@@ -51,6 +55,13 @@ export default function ProjectSettingsComponent() {
       backend.canUploadLift().then(setImports);
     }
   }, [permissions, setImports]);
+
+  function archiveUpdate() {
+    toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
+    setTimeout(() => {
+      history.push(Path.ProjScreen);
+    }, 2000);
+  }
 
   return (
     <Grid container justifyContent="center" spacing={6}>
@@ -136,6 +147,22 @@ export default function ProjectSettingsComponent() {
           icon={<PersonAdd />}
           title={<Translate id="projectSettings.user.addUser" />}
           body={<AddProjectUsers />}
+        />
+      )}
+
+      {/* Archive project */}
+      {permissions.includes(Permission.Owner) && (
+        <BaseSettingsComponent
+          icon={<Archive />}
+          title={<Translate id="projectSettings.user.archive" />}
+          body={
+            <ProjectButtonWithConfirmation
+              archive={true} // Project Settings are only available for active projects
+              projectId={projectId}
+              updateParent={archiveUpdate}
+              warn
+            />
+          }
         />
       )}
     </Grid>
