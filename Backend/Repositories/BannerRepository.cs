@@ -49,7 +49,7 @@ namespace BackendFramework.Repositories
             var updateResult = await _bannerDatabase.Banners.UpdateOneAsync(filter, updateDef);
 
             // The Banner singleton should always exist, so this case should never happen.
-            if (!updateResult.IsAcknowledged || updateResult.ModifiedCount != 1)
+            if (!updateResult.IsAcknowledged)
             {
                 throw new BannerSingletonNotFound();
             }

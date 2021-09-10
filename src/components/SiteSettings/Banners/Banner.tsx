@@ -3,6 +3,7 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import { AddAlert, ExitToApp } from "@material-ui/icons";
 
 import { SiteBanner } from "api";
+import * as backend from "backend";
 import { Translate } from "react-localize-redux";
 
 export default function Banner(): ReactElement {
@@ -21,6 +22,10 @@ export default function Banner(): ReactElement {
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     setBanner({ ...banner, announcement: e.target.value });
+  };
+
+  const handleSaveClick = async () => {
+    await backend.updateBanner(banner);
   };
 
   return (
@@ -61,6 +66,7 @@ export default function Banner(): ReactElement {
           type="submit"
           variant="contained"
           id="site-settings-banner-save"
+          onClick={handleSaveClick}
         >
           <Translate id="buttons.save" />
         </Button>
