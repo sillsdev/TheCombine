@@ -13,6 +13,7 @@ import { User } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { toast } from "react-toastify";
 
 interface InviteProps {
   addToProject: (user: User) => void;
@@ -42,7 +43,10 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     this.setState({ loading: true });
     await backend
       .getUserByEmail(this.state.emailAddress)
-      .then((u) => this.props.addToProject(u))
+      .then((u) => {
+        this.props.addToProject(u);
+        toast(<Translate id="projectSettings.invite.userExists" />);
+      })
       .catch(
         async () =>
           await backend.emailInviteToProject(
