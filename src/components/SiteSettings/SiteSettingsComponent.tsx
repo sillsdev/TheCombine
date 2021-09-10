@@ -4,6 +4,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import Banner from "components/SiteSettings/Banners/Banner";
 import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
 import UserManagement from "components/SiteSettings//UserManagement/UserManagement";
 
@@ -28,7 +29,7 @@ export default function SiteSettingsComponent() {
       <BaseSettingsComponent
         icon={<Announcement />}
         title={<Translate id="projectSettings.banners" />}
-        body={<div />}
+        body={<Banner />}
       />
     </Grid>
   );
