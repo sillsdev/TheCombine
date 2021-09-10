@@ -28,7 +28,7 @@ export default function SiteSettingsComponent() {
       {/* Banners */}
       <BaseSettingsComponent
         icon={<Announcement />}
-        title={<Translate id="projectSettings.banners" />}
+        title={<Translate id="siteSettings.banners.title" />}
         body={<Banner />}
       />
     </Grid>
