@@ -13,9 +13,9 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private BannerController _bannerController = null!;
 
-        private const string Announcement = "Announcement";
         private const string Login = "Login";
-        private readonly SiteBanner _siteBanner = new() { Announcement = Announcement, Login = Login };
+        private const string Announcement = "Announcement";
+        private readonly SiteBanner _siteBanner = new() { Login = Login, Announcement = Announcement };
 
         [SetUp]
         public void Setup()
