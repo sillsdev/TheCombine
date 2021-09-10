@@ -121,8 +121,21 @@ export async function avatarSrc(userId: string): Promise<string> {
 
 /* BannerController.cs */
 
+/**
+ * Get the Banners from the backend.
+ *
+ * Note: This function does not require authentication. Anonymous users can
+ * pull the banners since their purpose is to help give more context about
+ * server.
+ */
 export async function getBanner(): Promise<SiteBanner> {
   return (await bannerApi.getBanner()).data;
+}
+
+export async function updateBanner(banner: SiteBanner): Promise<boolean> {
+  return (
+    await bannerApi.updateBanner({ siteBanner: banner }, defaultOptions())
+  ).data;
 }
 
 /* InviteController.cs */
