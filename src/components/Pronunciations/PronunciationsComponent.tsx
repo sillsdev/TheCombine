@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Backend from "backend";
+import * as backend from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
@@ -25,7 +25,7 @@ export function Pronunciations(props: PronunciationProps) {
         pronunciationUrl={
           props.getAudioUrl
             ? props.getAudioUrl(props.wordId, fileName)
-            : Backend.getAudioUrl(props.wordId, fileName)
+            : backend.getAudioUrl(props.wordId, fileName)
         }
         deleteAudio={props.deleteAudio}
       />
