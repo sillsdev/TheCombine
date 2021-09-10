@@ -229,7 +229,7 @@ export default class Login extends React.Component<
                   </LoadingButton>
                 </Grid>
               </Grid>
-              {this.state.loginBanner != "" && (
+              {this.state.loginBanner !== "" && (
                 <Grid>
                   <TextField
                     id="login.banner"
