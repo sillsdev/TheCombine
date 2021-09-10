@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ k8s_service_accounts.maintenance }}"
+  namespace: {{ app_namespace }}
+imagePullSecrets:
+  - name: {{ image_pull_secret }}
+secrets:
+  - name: aws_s3_credentials

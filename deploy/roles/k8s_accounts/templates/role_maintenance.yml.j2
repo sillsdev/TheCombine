@@ -1,0 +1,32 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ k8s_roles.maintenance.name }}
+  namespace: {{ app_namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec"]
+    verbs: ["list", "get", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["list", "get", "watch", "update"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["list", "get", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ k8s_roles.maintenance.name + '-binding' }}
+  namespace: {{ app_namespace }}
+subjects:
+{% for acct in k8s_roles.maintenance.accounts %}
+  - kind: ServiceAccount
+    name: {{ acct }}
+    apiGroup: ""
+{% endfor %}
+roleRef:
+  kind: Role
+  name: {{ k8s_roles.maintenance.name }}
+  apiGroup: ""
