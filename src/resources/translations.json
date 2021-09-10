@@ -379,6 +379,7 @@
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],
     "userList": ["Users", "Usarios", "Utilisateurs"],
+    "banners": ["Banners", "Banners", "Banners"],
     "userManagement": {
       "makeAdminWarning": [
         "Make this user a project admin?",
