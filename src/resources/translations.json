@@ -304,14 +304,14 @@
         "Failed to delete user"
       ]
     },
-    "banners" : {
-      "title": [
-        "Banners",
-        "Banners",
-        "Banners"
-      ],
+    "banners": {
+      "title": ["Banners", "Banners", "Banners"],
       "loginBanner": ["Login Banner", "Login Banner", "Login Banner"],
-      "announcementBanner": ["Announcement Banner", "Announcement Banner", "Announcement Banner"]
+      "announcementBanner": [
+        "Announcement Banner",
+        "Announcement Banner",
+        "Announcement Banner"
+      ]
     }
   },
   "userSettings": {
