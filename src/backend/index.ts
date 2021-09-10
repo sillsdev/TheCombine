@@ -20,6 +20,7 @@ import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { SiteBanner } from "api";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -38,6 +39,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 // Configured OpenAPI interfaces.
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
+const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
@@ -115,6 +117,12 @@ export async function avatarSrc(userId: string): Promise<string> {
     }
     return "";
   }
+}
+
+/* BannerController.cs */
+
+export async function getBanner(): Promise<SiteBanner> {
+  return (await bannerApi.getBanner()).data;
 }
 
 /* InviteController.cs */
