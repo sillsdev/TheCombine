@@ -7,6 +7,7 @@ import * as backend from "backend";
 import { Translate } from "react-localize-redux";
 
 export default function Banner(): ReactElement {
+  // TODO: Fetch these values from the backend, and store them in Redux.
   const [banner, setBanner] = useState<SiteBanner>({
     login: "Login",
     announcement: "Announcement",
