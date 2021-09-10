@@ -40,9 +40,6 @@ export default function Banner(): ReactElement {
   return (
     <React.Fragment>
       <Grid item container spacing={1} alignItems="center">
-        <Grid item>
-          <ExitToApp />
-        </Grid>
         <Grid item xs>
           <TextField
             id="site-settings-banner-login"
@@ -56,9 +53,6 @@ export default function Banner(): ReactElement {
       </Grid>
 
       <Grid item container spacing={1} alignItems="center">
-        <Grid item>
-          <AddAlert />
-        </Grid>
         <Grid item xs>
           <TextField
             id="site-settings-banner-announcement"
