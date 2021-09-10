@@ -222,7 +222,7 @@ namespace BackendFramework.Models
 
         public Note Clone()
         {
-            return new()
+            return new Note
             {
                 Language = (string)Language.Clone(),
                 Text = (string)Text.Clone()
@@ -357,7 +357,7 @@ namespace BackendFramework.Models
 
         public Definition Clone()
         {
-            return new()
+            return new Definition
             {
                 Language = (string)Language.Clone(),
                 Text = (string)Text.Clone()
@@ -398,7 +398,7 @@ namespace BackendFramework.Models
 
         public Gloss Clone()
         {
-            return new()
+            return new Gloss
             {
                 Language = (string)Language.Clone(),
                 Def = (string)Def.Clone()
@@ -432,7 +432,7 @@ namespace BackendFramework.Models
 
         public SemanticDomain Clone()
         {
-            return new()
+            return new SemanticDomain
             {
                 Name = (string)Name.Clone(),
                 Id = (string)Id.Clone(),

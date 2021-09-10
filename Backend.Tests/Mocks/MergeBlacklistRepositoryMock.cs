@@ -62,12 +62,13 @@ namespace Backend.Tests.Mocks
         {
             var foundEntry = _mergeBlacklist.Single(e => e.ProjectId == entry.ProjectId && e.Id == entry.Id);
             var success = _mergeBlacklist.Remove(foundEntry);
-            if (success)
+            if (!success)
             {
-                _mergeBlacklist.Add(entry.Clone());
-                return Task.FromResult(ResultOfUpdate.Updated);
+                return Task.FromResult(ResultOfUpdate.NotFound);
             }
-            return Task.FromResult(ResultOfUpdate.NotFound);
+
+            _mergeBlacklist.Add(entry.Clone());
+            return Task.FromResult(ResultOfUpdate.Updated);
         }
     }
 }

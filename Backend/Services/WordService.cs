@@ -23,26 +23,28 @@ namespace BackendFramework.Services
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to add the deleted word if the word started in the frontier.
-            if (wordIsInFrontier)
+            if (!wordIsInFrontier)
             {
-                var wordToDelete = await _wordRepo.GetWord(projectId, wordId);
-                if (wordToDelete is null)
-                {
-                    return false;
-                }
-
-                wordToDelete.Id = "";
-                wordToDelete.Modified = "";
-                wordToDelete.History = new List<string> { wordId };
-                wordToDelete.Accessibility = State.Deleted;
-
-                foreach (var senseAcc in wordToDelete.Senses)
-                {
-                    senseAcc.Accessibility = State.Deleted;
-                }
-
-                await _wordRepo.Create(wordToDelete);
+                return wordIsInFrontier;
             }
+
+            var wordToDelete = await _wordRepo.GetWord(projectId, wordId);
+            if (wordToDelete is null)
+            {
+                return false;
+            }
+
+            wordToDelete.Id = "";
+            wordToDelete.Modified = "";
+            wordToDelete.History = new List<string> { wordId };
+            wordToDelete.Accessibility = State.Deleted;
+
+            foreach (var senseAcc in wordToDelete.Senses)
+            {
+                senseAcc.Accessibility = State.Deleted;
+            }
+
+            await _wordRepo.Create(wordToDelete);
 
             return wordIsInFrontier;
         }
@@ -60,18 +62,20 @@ namespace BackendFramework.Services
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to update words that are in the frontier
-            if (wordIsInFrontier)
+            if (!wordIsInFrontier)
             {
-                wordWithAudioToDelete.Audio.Remove(fileName);
-                wordWithAudioToDelete.Id = "";
-                wordWithAudioToDelete.Modified = "";
-                wordWithAudioToDelete.ProjectId = projectId;
-
-                // Keep track of the old word, adding it to the history.
-                wordWithAudioToDelete.History.Add(wordId);
-
-                wordWithAudioToDelete = await _wordRepo.Create(wordWithAudioToDelete);
+                return wordWithAudioToDelete;
             }
+
+            wordWithAudioToDelete.Audio.Remove(fileName);
+            wordWithAudioToDelete.Id = "";
+            wordWithAudioToDelete.Modified = "";
+            wordWithAudioToDelete.ProjectId = projectId;
+
+            // Keep track of the old word, adding it to the history.
+            wordWithAudioToDelete.History.Add(wordId);
+
+            wordWithAudioToDelete = await _wordRepo.Create(wordWithAudioToDelete);
 
             return wordWithAudioToDelete;
         }
@@ -111,17 +115,19 @@ namespace BackendFramework.Services
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to update words that are in the frontier
-            if (wordIsInFrontier)
+            if (!wordIsInFrontier)
             {
-                word.Id = "";
-                word.ProjectId = projectId;
-                word.Modified = "";
-
-                // Keep track of the old word, adding it to the history.
-                word.History.Add(wordId);
-
-                await _wordRepo.Create(word);
+                return wordIsInFrontier;
             }
+
+            word.Id = "";
+            word.ProjectId = projectId;
+            word.Modified = "";
+
+            // Keep track of the old word, adding it to the history.
+            word.History.Add(wordId);
+
+            await _wordRepo.Create(word);
 
             return wordIsInFrontier;
         }
