@@ -12,6 +12,7 @@ import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import * as backend from "backend";
 import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -32,6 +33,7 @@ interface LoginState {
   password: string;
   isVerified: boolean;
   error: LoginError;
+  loginBanner: string;
 }
 
 interface LoginError {
@@ -52,6 +54,7 @@ export default class Login extends React.Component<
       password: "",
       isVerified: !RuntimeConfig.getInstance().captchaRequired(),
       error: { username: false, password: false },
+      loginBanner: "",
     };
   }
 
@@ -61,6 +64,12 @@ export default class Login extends React.Component<
 
   componentDidMount() {
     this.props.reset();
+
+    const getBanner = async () => {
+      const banner = await backend.getBanner();
+      this.setState({ loginBanner: banner.login });
+    };
+    getBanner();
   }
 
   /** Updates the state to match the value in a textbox */
@@ -220,6 +229,18 @@ export default class Login extends React.Component<
                   </LoadingButton>
                 </Grid>
               </Grid>
+              {this.state.loginBanner != "" && (
+                <Grid>
+                  <TextField
+                    id="login.banner"
+                    variant="outlined"
+                    multiline
+                    disabled
+                    style={{ width: "100%" }}
+                    value={this.state.loginBanner}
+                  />
+                </Grid>
+              )}
             </CardContent>
           </form>
         </Card>
