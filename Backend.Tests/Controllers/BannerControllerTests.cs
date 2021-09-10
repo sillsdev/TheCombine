@@ -15,6 +15,7 @@ namespace Backend.Tests.Controllers
 
         private const string Announcement = "Announcement";
         private const string Login = "Login";
+        private readonly SiteBanner _siteBanner = new() { Announcement = Announcement, Login = Login };
 
         [SetUp]
         public void Setup()
@@ -27,11 +28,28 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateBanner()
         {
-            var siteBanner = new SiteBanner { Announcement = Announcement, Login = Login };
-            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(siteBanner).Result).Value;
+            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
             Assert.IsTrue(result);
-            var banner = (SiteBanner)((ObjectResult)(_bannerController.GetBanner().Result)).Value;
-            Assert.AreEqual(banner, siteBanner);
+            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner().Result).Value;
+            Assert.AreEqual(banner, _siteBanner);
+        }
+
+        [Test]
+        public void TestUpdateBannerNoPermission()
+        {
+            _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _bannerController.UpdateBanner(_siteBanner).Result;
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
+        public void TestGetNoPermission()
+        {
+            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
+            Assert.IsTrue(result);
+            _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner().Result).Value;
+            Assert.AreEqual(banner, _siteBanner);
         }
     }
 }
