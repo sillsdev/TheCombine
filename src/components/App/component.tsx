@@ -3,6 +3,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
+import AnnouncementBanner from "components/AnnouncementBanner/AnnouncementBanner";
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/LoginPage";
 import Register from "components/Login/RegisterPage";
@@ -21,6 +22,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <AnnouncementBanner />
         <Switch>
           <Route exact path={Path.Root} component={LandingPage} />
           <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
