@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -39,11 +38,6 @@ namespace Backend.Tests.Controllers
         public void TearDown()
         {
             _projRepo.Delete(_projId);
-        }
-
-        private static string RandomString(int length = 16)
-        {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray())[..length];
         }
 
         [Test]

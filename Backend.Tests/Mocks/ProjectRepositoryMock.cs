@@ -77,12 +77,13 @@ namespace Backend.Tests.Mocks
         {
             var foundProject = _projects.Single(u => u.Id == id);
             var success = _projects.Remove(foundProject);
-            if (success)
+            if (!success)
             {
-                _projects.Add(project.Clone());
-                return Task.FromResult(ResultOfUpdate.Updated);
+                return Task.FromResult(ResultOfUpdate.NotFound);
             }
-            return Task.FromResult(ResultOfUpdate.NotFound);
+
+            _projects.Add(project.Clone());
+            return Task.FromResult(ResultOfUpdate.Updated);
         }
 
         public Task<string?> GetProjectIdByName(string projectName)
