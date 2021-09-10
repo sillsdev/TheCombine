@@ -44,8 +44,8 @@ namespace BackendFramework.Repositories
             var existingBanner = await Get();
             var filter = Builders<Banner>.Filter.Eq(x => x.Id, existingBanner.Id);
             var updateDef = Builders<Banner>.Update
-                .Set(x => x.Announcement, banner.Announcement)
-                .Set(x => x.Login, banner.Login);
+                .Set(x => x.Login, banner.Login)
+                .Set(x => x.Announcement, banner.Announcement);
             var updateResult = await _bannerDatabase.Banners.UpdateOneAsync(filter, updateDef);
 
             // The Banner singleton should always exist, so this case should never happen.

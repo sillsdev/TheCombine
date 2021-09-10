@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -48,6 +49,21 @@ namespace BackendFramework.Models
         {
             Login = "";
             Announcement = "";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not SiteBanner other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return Login.Equals(other.Login) && Announcement.Equals(other.Announcement);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Login, Announcement);
         }
     }
 }
