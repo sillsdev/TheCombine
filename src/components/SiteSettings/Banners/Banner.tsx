@@ -31,7 +31,7 @@ export default function Banner(): ReactElement {
         </Grid>
         <Grid item xs>
           <TextField
-            id="banner-login"
+            id="site-settings-banner-login"
             variant="outlined"
             label={<Translate id="siteSettings.banners.loginBanner" />}
             onChange={handleLoginOnChange}
@@ -47,7 +47,7 @@ export default function Banner(): ReactElement {
         </Grid>
         <Grid item xs>
           <TextField
-            id="banner-announcement"
+            id="site-settings-banner-announcement"
             variant="outlined"
             label={<Translate id="siteSettings.banners.announcementBanner" />}
             onChange={handleAnnouncementOnChange}
