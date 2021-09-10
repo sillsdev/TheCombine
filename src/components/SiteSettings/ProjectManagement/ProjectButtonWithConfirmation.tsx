@@ -5,11 +5,13 @@ import { Translate } from "react-localize-redux";
 
 import { archiveProject, restoreProject } from "backend";
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
+import { themeColors } from "types/theme";
 
 interface ProjectButtonWithConfirmationProps {
   archive: boolean;
   projectId: string;
   updateParent: () => void;
+  warn?: boolean;
 }
 
 /**
@@ -41,9 +43,10 @@ export default function ProjectButtonWithConfirmation(
     <React.Fragment>
       <Button
         variant="contained"
-        color="primary"
+        color={props.warn ? "secondary" : "primary"}
         onClick={handleOpen}
         id={`proj-${props.projectId}-${props.archive ? "archive" : "restore"}`}
+        style={props.warn ? { color: themeColors.error } : {}}
       >
         <Translate id={`buttons.${props.archive ? "archive" : "restore"}`} />
       </Button>

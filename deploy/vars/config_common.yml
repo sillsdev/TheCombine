@@ -19,6 +19,21 @@ k8s_cert_mgr_cfg: "{{ k8s_working_dir }}/cert_manager"
 k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
 k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
 k8s_namespace_cfg: "{{k8s_working_dir}}/namespace"
+k8s_account_cfg: "{{k8s_working_dir}}/accounts"
+
+k8s_service_accounts:
+  ecr_login: account-ecr-login
+  maintenance: account-maintenance
+
+k8s_roles:
+  ecr_login:
+    name: role-ecr-login
+    accounts:
+      - account-ecr-login
+  maintenance:
+    name: role-maintenance
+    accounts:
+      - account-maintenance
 
 kubecfg: "{{ k8s_working_dir }}/config"
 

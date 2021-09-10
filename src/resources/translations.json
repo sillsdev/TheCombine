@@ -385,6 +385,11 @@
         "Make this user a project admin?",
         "Make this user a project admin?"
       ],
+      "makeOwnerWarning": [
+        "Transfer project ownership to this user?",
+        "Transfer project ownership to this user?",
+        "Transfer project ownership to this user?"
+      ],
       "removeAdminWarning": [
         "Remove project admin from this user?",
         "Remove project admin from this user?",
@@ -401,9 +406,9 @@
         "User Removed!"
       ],
       "userRemovedToastFailure": [
-        "Failed to remove user.",
-        "Failed to remove user.",
-        "Failed to remove user."
+        "Failed to Remove User.",
+        "Failed to Remove User.",
+        "Failed to Remove User."
       ],
       "makeAdminToastSuccess": [
         "User Given Project Admin!",
@@ -424,6 +429,16 @@
         "Failed to remove project admin from user.",
         "Failed to remove project admin from user.",
         "Failed to remove project admin from user."
+      ],
+      "makeOwnerToastSuccess": [
+        "Transferred Project Ownership!",
+        "Transferred Project Ownership!",
+        "Transferred Project Ownership!"
+      ],
+      "makeOwnerToastFailure": [
+        "Failed to transfer project ownership.",
+        "Failed to transfer project ownership.",
+        "Failed to transfer project ownership."
       ],
       "manageUser": ["Manage User", "Manage User", "Manage User"],
       "reverseOrder": ["Reverse Order", "Reverse Order", "Reverse Order"]
@@ -474,7 +489,13 @@
         "typist": ["Typist", "Mecanógrafo", "Dactylographe"],
         "cleaner": ["Cleaner", "Limpiador", "Nettoyant"],
         "admin": ["Admin", "Administrador", "Admin"]
-      }
+      },
+      "archive": ["Archive Project", "Archive Project", "Archive Project"],
+      "archiveToastSuccess": [
+        "Project Archived!",
+        "Project Archived!",
+        "Project Archived!"
+      ]
     },
     "exportProject": {
       "label": ["Export Project", "Exportar el proyecto", "Exporter le projet"]
@@ -547,6 +568,7 @@
     },
     "progress": {
       "step": ["Step", "Paso", "Étape"],
+      "stepMerge": ["Merge Set", "Merge Set", "Merge Set"],
       "of": ["of", "de", "sur"]
     }
   },
@@ -834,6 +856,7 @@
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
     "makeAdmin": ["Make Admin", "Make Admin", "Make Admin"],
+    "makeOwner": ["Make Owner", "Make Owner", "Make Owner"],
     "proceedWithCaution": [
       "Proceed with Caution!",
       "¡Proceder con precaución!",

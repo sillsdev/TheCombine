@@ -118,6 +118,7 @@ export default function ActiveUsers() {
       (!userIsProjectAdmin || currentUserIsProjectOwner) ? (
         <CancelConfirmDialogCollection
           userId={user.id}
+          currentUserId={currentUser.id}
           isProjectOwner={currentUserIsProjectOwner}
           userIsProjectAdmin={userIsProjectAdmin}
         />
