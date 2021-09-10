@@ -67,8 +67,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetUserByEmail()
         {
-            var email = "example@gmail.com";
-            var user = _userRepo.Create(new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }).Result ?? throw new Exception();
+            const string email = "example@gmail.com";
+            var user = _userRepo.Create(
+                new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
+            ).Result ?? throw new Exception();
 
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
@@ -88,8 +90,10 @@ namespace Backend.Tests.Controllers
         public void TestGetUserByEmailNoPermission()
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var email = "example@gmail.com";
-            var user = _userRepo.Create(new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }).Result ?? throw new Exception();
+            const string email = "example@gmail.com";
+            var _ = _userRepo.Create(new User
+            { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
+            ).Result ?? throw new Exception();
 
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ForbidResult>(action);

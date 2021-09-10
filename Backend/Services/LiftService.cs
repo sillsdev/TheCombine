@@ -534,7 +534,7 @@ namespace BackendFramework.Services
         {
             private readonly string _projectId;
             private readonly IWordRepository _wordRepo;
-            private readonly List<Word> _importEntries = new List<Word>();
+            private readonly List<Word> _importEntries = new();
 
             public LiftMerger(string projectId, IWordRepository wordRepo)
             {
@@ -685,7 +685,7 @@ namespace BackendFramework.Services
             /// <summary> Creates the object to transfer all the data from a word </summary>
             public LiftEntry GetOrMakeEntry(Extensible info, int order)
             {
-                return new(info, info.Guid, order)
+                return new LiftEntry(info, info.Guid, order)
                 {
                     LexicalForm = new LiftMultiText(),
                     CitationForm = new LiftMultiText()
@@ -800,7 +800,7 @@ namespace BackendFramework.Services
             // They may be useful later if we need to add more complex attributes to words in The Combine
             public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
             {
-                return new() { Content = new LiftMultiText() };
+                return new LiftExample { Content = new LiftMultiText() };
             }
 
             public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
@@ -810,7 +810,7 @@ namespace BackendFramework.Services
 
             public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
             {
-                return new(info, new Guid(), sense)
+                return new LiftSense(info, new Guid(), sense)
                 {
                     Definition = new LiftMultiText(),
                     Gloss = new LiftMultiText()
