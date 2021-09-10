@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 
-import * as Backend from "backend";
+import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import Register from "components/Login/RegisterPage/RegisterComponent";
 
@@ -62,7 +62,7 @@ export default class ProjectInvite extends React.Component<
     pathname = this.removeLastURLParam(pathname);
     const projectId = this.getLastURLParam(pathname);
 
-    const status = await Backend.validateLink(projectId, token);
+    const status = await backend.validateLink(projectId, token);
     if (status.isTokenValid) {
       this.setState({
         isValidLink: true,
