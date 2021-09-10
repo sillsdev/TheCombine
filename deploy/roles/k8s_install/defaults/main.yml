@@ -13,3 +13,4 @@ microk8s_addons:
   - dns
   - ingress
   - helm3
+  - rbac

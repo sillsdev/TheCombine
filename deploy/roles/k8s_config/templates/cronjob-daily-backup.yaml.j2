@@ -15,76 +15,20 @@ spec:
         metadata:
           creationTimestamp: null
         spec:
+          serviceAccountName: {{ k8s_service_accounts.maintenance }}
           containers:
-          - image: '{{ combine_image_maintenance }}'
-{% if image_tag == "latest" %}
+          - image: sillsdev/aws-kubectl:0.1.9
             imagePullPolicy: Always
-{% else %}
-            imagePullPolicy: IfNotPresent
-{% endif %}
             name: daily-backup
-            volumeMounts:
-              - name: cluster-kubeconfig
-                mountPath: /home/user/.kube
             command:
+              - kubectl
+            args:
+              - -n
+              - thecombine
+              - exec
+              - deployment/maintenance
+              - --
               - combine-backup-job.sh
-            env:
-              - name: AWS_ACCESS_KEY_ID
-                valueFrom:
-                  secretKeyRef:
-                    key: AWS_ACCESS_KEY_ID
-                    name: aws-s3-credentials
-              - name: AWS_SECRET_ACCESS_KEY
-                valueFrom:
-                  secretKeyRef:
-                    key: AWS_SECRET_ACCESS_KEY
-                    name: aws-s3-credentials
-              - name: AWS_ACCOUNT
-                valueFrom:
-                  secretKeyRef:
-                    key: AWS_ACCOUNT
-                    name: aws-s3-credentials
-              - name: AWS_DEFAULT_REGION
-                valueFrom:
-                  secretKeyRef:
-                    key: AWS_DEFAULT_REGION
-                    name: aws-s3-credentials
-              - name: aws_bucket
-                valueFrom:
-                  configMapKeyRef:
-                    key: aws_bucket
-                    name: env-maintenance
-              - name: db_files_subdir
-                valueFrom:
-                  configMapKeyRef:
-                    key: db_files_subdir
-                    name: env-maintenance
-              - name: backend_files_subdir
-                valueFrom:
-                  configMapKeyRef:
-                    key: backend_files_subdir
-                    name: env-maintenance
-              - name: combine_host
-                valueFrom:
-                  configMapKeyRef:
-                    key: combine_host
-                    name: env-maintenance
-              - name: wait_time
-                valueFrom:
-                  configMapKeyRef:
-                    key: wait_time
-                    name: env-maintenance
-              - name: max_backups
-                valueFrom:
-                  configMapKeyRef:
-                    key: max_backups
-                    name: env-maintenance
-              - name: backup_filter
-                valueFrom:
-                  configMapKeyRef:
-                    key: backup_filter
-                    name: env-maintenance
-
             resources: {}
             securityContext:
               capabilities: {}
@@ -98,10 +42,6 @@ spec:
           restartPolicy: Never
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30
-          volumes:
-            - name: cluster-kubeconfig
-              secret:
-                secretName: "{{ k8s_config_secret }}"
   schedule: "{{ combine_backup_schedule }}"
   successfulJobsHistoryLimit: 1
   suspend: false
