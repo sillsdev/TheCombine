@@ -27,7 +27,15 @@ namespace Backend.Tests.Mocks
             return httpContext;
         }
 
-        public Task<bool> IsSiteAdmin(HttpContext request)
+        /// <summary>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        ///
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
+        /// </summary>
+        public Task<bool> IsSiteAdmin(HttpContext? request)
         {
             return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
         }

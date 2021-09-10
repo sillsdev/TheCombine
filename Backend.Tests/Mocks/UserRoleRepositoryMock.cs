@@ -59,12 +59,13 @@ namespace Backend.Tests.Mocks
         {
             var foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
             var success = _userRoles.Remove(foundUserRole);
-            if (success)
+            if (!success)
             {
-                _userRoles.Add(userRole.Clone());
-                return Task.FromResult(ResultOfUpdate.Updated);
+                return Task.FromResult(ResultOfUpdate.NotFound);
             }
-            return Task.FromResult(ResultOfUpdate.NotFound);
+
+            _userRoles.Add(userRole.Clone());
+            return Task.FromResult(ResultOfUpdate.Updated);
         }
     }
 }

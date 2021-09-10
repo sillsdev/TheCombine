@@ -10,7 +10,7 @@ import { Translate } from "react-localize-redux";
 import validator from "validator";
 
 import { User } from "api/models";
-import * as Backend from "backend";
+import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { toast } from "react-toastify";
@@ -41,14 +41,14 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
 
   async onSubmit() {
     this.setState({ loading: true });
-    await Backend.getUserByEmail(this.state.emailAddress)
+    await backend.getUserByEmail(this.state.emailAddress)
       .then((u) => {
         this.props.addToProject(u);
         toast(<Translate id="projectSettings.invite.userExists" />);
       })
       .catch(
         async () =>
-          await Backend.emailInviteToProject(
+          await backend.emailInviteToProject(
             getProjectId(),
             this.state.emailAddress,
             this.state.message

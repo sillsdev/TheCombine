@@ -14,7 +14,7 @@ import {
   Sense,
   Word,
 } from "api/models";
-import * as Backend from "backend";
+import * as backend from "backend";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
@@ -111,7 +111,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async getProjectSettings() {
-    const proj = await Backend.getProject();
+    const proj = await backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
     let analysisLang = "en";
     if (proj.analysisWritingSystems?.length > 0) {
@@ -145,7 +145,7 @@ export class DataEntryTable extends React.Component<
     ignoreRecent?: boolean
   ) {
     wordToAdd.note.language = this.state.analysisLang;
-    const addedWord = await Backend.createWord(wordToAdd);
+    const addedWord = await backend.createWord(wordToAdd);
     if (addedWord.id === "Duplicate") {
       alert(
         this.props.translate("addWords.wordInDatabase") +
@@ -154,7 +154,7 @@ export class DataEntryTable extends React.Component<
       return;
     }
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
-    const wordWithAudio = await Backend.getWord(wordId);
+    const wordWithAudio = await backend.getWord(wordId);
     await this.updateExisting();
 
     if (ignoreRecent) {
@@ -183,7 +183,7 @@ export class DataEntryTable extends React.Component<
     let updatedWord = await this.updateWordInBackend(wordToUpdate);
     if (audioURLs && audioURLs.length) {
       const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
-      updatedWord = await Backend.getWord(wordId);
+      updatedWord = await backend.getWord(wordId);
     }
 
     const recentlyAddedWords = [...this.state.recentlyAddedWords];
@@ -276,7 +276,7 @@ export class DataEntryTable extends React.Component<
         lastModified: Date.now(),
       });
       this.defunctWord(updatedWordId);
-      updatedWordId = await Backend.uploadAudio(updatedWordId, audioFile);
+      updatedWordId = await backend.uploadAudio(updatedWordId, audioFile);
       URL.revokeObjectURL(audioURL);
     }
     return updatedWordId;
@@ -284,8 +284,8 @@ export class DataEntryTable extends React.Component<
 
   async addAudioToRecentWord(oldWordId: string, audioFile: File) {
     this.defunctWord(oldWordId);
-    await Backend.uploadAudio(oldWordId, audioFile).then(async (newWordId) => {
-      await Backend.getWord(newWordId).then(async (w) => {
+    await backend.uploadAudio(oldWordId, audioFile).then(async (newWordId) => {
+      await backend.getWord(newWordId).then(async (w) => {
         this.replaceInDisplay(oldWordId, w);
         await this.updateExisting();
       });
@@ -294,8 +294,8 @@ export class DataEntryTable extends React.Component<
 
   async deleteAudioFromRecentWord(oldWordId: string, fileName: string) {
     this.defunctWord(oldWordId);
-    await Backend.deleteAudio(oldWordId, fileName).then(async (newWordId) => {
-      await Backend.getWord(newWordId).then(async (w) => {
+    await backend.deleteAudio(oldWordId, fileName).then(async (newWordId) => {
+      await backend.getWord(newWordId).then(async (w) => {
         this.replaceInDisplay(oldWordId, w);
         await this.updateExisting();
       });
@@ -304,7 +304,7 @@ export class DataEntryTable extends React.Component<
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     this.defunctWord(wordToUpdate.id);
-    let updatedWord = await Backend.updateWord(wordToUpdate);
+    let updatedWord = await backend.updateWord(wordToUpdate);
     await this.updateExisting();
     return updatedWord;
   }
@@ -485,9 +485,9 @@ export class DataEntryTable extends React.Component<
 
   async deleteWord(word: Word) {
     this.defunctWord(word.id);
-    await Backend.deleteFrontierWord(word.id).then(
-      async () => await this.updateExisting()
-    );
+    await backend
+      .deleteFrontierWord(word.id)
+      .then(async () => await this.updateExisting());
   }
 
   render() {

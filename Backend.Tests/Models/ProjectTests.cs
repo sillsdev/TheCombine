@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using BackendFramework.Models;
+﻿using BackendFramework.Models;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
