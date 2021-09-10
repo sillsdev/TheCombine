@@ -77,12 +77,13 @@ namespace Backend.Tests.Mocks
             }
 
             var success = _users.Remove(foundUser);
-            if (success)
+            if (!success)
             {
-                _users.Add(user.Clone());
-                return Task.FromResult(ResultOfUpdate.Updated);
+                return Task.FromResult(ResultOfUpdate.NotFound);
             }
-            return Task.FromResult(ResultOfUpdate.NotFound);
+
+            _users.Add(user.Clone());
+            return Task.FromResult(ResultOfUpdate.Updated);
         }
 
         public Task<ResultOfUpdate> ChangePassword(string userId, string password)

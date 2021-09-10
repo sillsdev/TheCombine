@@ -40,7 +40,7 @@ namespace BackendFramework.Models
 
         public EmailInvite Clone()
         {
-            return new()
+            return new EmailInvite
             {
                 Email = (string)Email.Clone(),
                 Token = (string)Token.Clone(),
