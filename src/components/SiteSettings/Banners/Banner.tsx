@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { Button, Grid, TextField } from "@material-ui/core";
 import { AddAlert, ExitToApp } from "@material-ui/icons";
 
@@ -7,11 +7,19 @@ import * as backend from "backend";
 import { Translate } from "react-localize-redux";
 
 export default function Banner(): ReactElement {
-  // TODO: Fetch these values from the backend, and store them in Redux.
   const [banner, setBanner] = useState<SiteBanner>({
-    login: "Login",
-    announcement: "Announcement",
+    login: "",
+    announcement: "",
   });
+
+  useEffect(() => {
+    const getBanner = async () => {
+      const banner = await backend.getBanner();
+      setBanner(banner);
+    };
+
+    getBanner();
+  }, []);
 
   const handleLoginOnChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
