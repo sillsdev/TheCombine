@@ -11,6 +11,7 @@ import { defaultState } from "components/App/DefaultState";
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
 ));
+jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "div");
 
 const createMockStore = configureMockStore([thunk]);
 const mockStore = createMockStore(defaultState);

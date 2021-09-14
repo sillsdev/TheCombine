@@ -11,13 +11,9 @@ import ProjectManagement from "components/SiteSettings/ProjectManagement/Project
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
-jest.mock("backend", () => {
-  return {
-    getAllProjects: jest.fn(() => {
-      return Promise.resolve(mockProjects);
-    }),
-  };
-});
+jest.mock("backend", () => ({
+  getAllProjects: jest.fn(() => Promise.resolve(mockProjects)),
+}));
 
 var testRenderer: ReactTestRenderer;
 const mockStore = configureMockStore()(defaultState);

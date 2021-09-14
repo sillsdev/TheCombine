@@ -1,6 +1,5 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { Button, Grid, TextField } from "@material-ui/core";
-import { AddAlert, ExitToApp } from "@material-ui/icons";
 
 import { SiteBanner } from "api";
 import * as backend from "backend";

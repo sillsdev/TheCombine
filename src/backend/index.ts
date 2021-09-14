@@ -132,10 +132,8 @@ export async function getBanner(): Promise<SiteBanner> {
   return (await bannerApi.getBanner()).data;
 }
 
-export async function updateBanner(banner: SiteBanner): Promise<boolean> {
-  return (
-    await bannerApi.updateBanner({ siteBanner: banner }, defaultOptions())
-  ).data;
+export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
+  return (await bannerApi.updateBanner({ siteBanner }, defaultOptions())).data;
 }
 
 /* InviteController.cs */

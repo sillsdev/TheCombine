@@ -16,7 +16,7 @@ export default function AnnouncementBanner() {
   }, []);
 
   return (
-    <div>
+    <React.Fragment>
       {banner !== "" && (
         <div style={{ marginTop: topBarHeight }}>
           <Toolbar style={{ background: "#ffc046" }}>
@@ -31,6 +31,6 @@ export default function AnnouncementBanner() {
           </Toolbar>
         </div>
       )}
-    </div>
+    </React.Fragment>
   );
 }
