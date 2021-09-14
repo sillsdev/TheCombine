@@ -537,6 +537,11 @@
         "Invitar por correo electrónico",
         "Inviter par email"
       ],
+      "userExists": [
+        "This user is already registered!",
+        "This user is already registered!",
+        "This user is already registered!"
+      ],
       "or": ["OR", "O", "OU"],
       "searchPlaceholder": ["Search...", "Buscar...", "Chercher..."],
       "searchTitle": [

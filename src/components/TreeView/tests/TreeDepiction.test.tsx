@@ -1,4 +1,3 @@
-import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import MockDomain from "components/TreeView/tests/MockSemanticDomain";
