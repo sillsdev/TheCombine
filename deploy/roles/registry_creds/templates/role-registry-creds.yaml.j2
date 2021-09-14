@@ -1,0 +1,23 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: role-registry-creds
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "pods", "pods/attach", "pods/log", "namespaces", "deployments"]
+    verbs: ["list", "get", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: role-registry-creds-global
+subjects:
+  - kind: ServiceAccount
+    name: account-registry-creds
+    namespace: kube-system
+    apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: role-registry-creds
+  apiGroup: "rbac.authorization.k8s.io"

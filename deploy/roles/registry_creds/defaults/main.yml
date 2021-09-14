@@ -1,0 +1,6 @@
+---
+registry_creds_templates:
+  # - service-acct-registry-creds.yaml
+  # - role-registry-creds.yaml
+  - registry-secrets.yaml
+  - registry-creds-deployment.yaml

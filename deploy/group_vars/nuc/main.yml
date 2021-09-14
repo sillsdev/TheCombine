@@ -56,11 +56,12 @@ k8s_components:
   - cert_manager
   - ingress_controller
 
-image_pull_secret: aws-login-credentials
+pull_secrets_manager: registry_creds
+image_pull_secret: awsecr-cred
 
 aws_ecr_login:
   cron: no
-  image: sillsdev/aws-kubectl:0.1.9
+  image: sillsdev/aws-kubectl:latest
   secrets_name: aws-ecr-credentials
   config_name: aws-ecr-config
   pull_secret_name: aws-login-credentials

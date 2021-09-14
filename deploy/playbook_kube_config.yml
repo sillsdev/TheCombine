@@ -46,10 +46,10 @@
             - k8s_accounts
 
         - name: Setup container registry credentials
-          import_role:
-            name: aws_login_job
-          tags:
-            - aws_login
+          include_role:
+            name: "{{ pull_secrets_manager }}"
+          when:
+            - pull_secrets_manager is defined
 
         - name: Create Storage Class
           import_role:
