@@ -139,7 +139,12 @@ Note that this functionality is under development and is not complete.
 #### Additional Host Requirements
 
 In addition to the software listed in the section [Prepare your host system](#prepare-your-host-system) you will need to
-install the [kubectl](https://kubernetes.io/docs/tasks/tools/) tool.
+install:
+
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) for examining and modifying your Kubernetes cluster; and
+- [Helm](https://helm.sh/docs/intro/install/) for installing Helm Charts (Kubernetes Packages).
+
+Both of these tools are used by the Ansible playbooks that setup the Kubernetes cluster for running _The Combine_.
 
 #### Installing the Kubernetes Cluster
 
