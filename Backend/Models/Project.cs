@@ -229,7 +229,7 @@ namespace BackendFramework.Models
 
         public CustomField Clone()
         {
-            return new()
+            return new CustomField
             {
                 Name = (string)Name.Clone(),
                 Type = (string)Type.Clone()
@@ -270,7 +270,7 @@ namespace BackendFramework.Models
 
         public WritingSystem Clone()
         {
-            return new()
+            return new WritingSystem
             {
                 Name = (string)Name.Clone(),
                 Bcp47 = (string)Bcp47.Clone(),

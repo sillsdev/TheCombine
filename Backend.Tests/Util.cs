@@ -44,7 +44,7 @@ namespace Backend.Tests
 
         public static Word RandomWord(string? projId = null)
         {
-            return new()
+            return new Word
             {
                 Created = RandString(),
                 Vernacular = RandString(),
@@ -62,7 +62,7 @@ namespace Backend.Tests
 
         public static Sense RandomSense()
         {
-            return new()
+            return new Sense
             {
                 Accessibility = State.Active,
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
@@ -77,7 +77,7 @@ namespace Backend.Tests
 
         public static Gloss RandomGloss()
         {
-            return new()
+            return new Gloss
             {
                 Def = RandString(),
                 Language = RandString(3)
@@ -86,7 +86,7 @@ namespace Backend.Tests
 
         public static SemanticDomain RandomSemanticDomain(string? id = null)
         {
-            return new()
+            return new SemanticDomain
             {
                 Name = RandString(),
                 Id = id ?? RandString(),
@@ -122,7 +122,7 @@ namespace Backend.Tests
 
         public static WritingSystem RandomWritingSystem()
         {
-            return new()
+            return new WritingSystem
             {
                 Name = RandString(),
                 Bcp47 = RandString(),

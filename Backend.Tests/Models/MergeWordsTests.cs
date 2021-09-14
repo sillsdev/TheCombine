@@ -1,4 +1,3 @@
-using System;
 using BackendFramework.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -7,10 +6,10 @@ namespace Backend.Tests.Models
 {
     public class MergeUndoIdsTests
     {
-        List<string> parentIds1 = new List<string> { "parent1", "parent2" };
-        List<string> parentIds2 = new List<string> { "parent1", "parent2", "parent3" };
-        List<string> childIds1 = new List<string> { "child1", "child2" };
-        List<string> childIds2 = new List<string> { "child1", "child2", "child3" };
+        readonly List<string> parentIds1 = new() { "parent1", "parent2" };
+        readonly List<string> parentIds2 = new() { "parent1", "parent2", "parent3" };
+        readonly List<string> childIds1 = new() { "child1", "child2" };
+        readonly List<string> childIds2 = new() { "child1", "child2", "child3" };
 
         [Test]
         public void TestEquals()
