@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Tests DomainTile Tile with direction matches the latest snapshot 1`] = `
+exports[`DomainTile Tile with direction matches the latest snapshot 1`] = `
 <button
   className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
   disabled={false}

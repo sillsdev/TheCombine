@@ -3,6 +3,7 @@ import { Grid, Zoom } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
+import TreeSearch from "components/TreeView/TreeSearch";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { createDomains } from "components/TreeView/TreeViewReducer";
 
@@ -88,6 +89,14 @@ export class TreeView extends React.Component<
   render() {
     return (
       <React.Fragment>
+        {/* Domain search */}
+        <Grid container justifyContent="center">
+          <TreeSearch
+            currentDomain={this.props.currentDomain}
+            animate={this.animate}
+          />
+        </Grid>
+        {/* Domain tree */}
         <Zoom in={this.state.visible}>
           <Grid
             container

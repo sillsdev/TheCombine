@@ -1,5 +1,5 @@
 import { Grid, ImageList, ImageListItem } from "@material-ui/core";
-import React, { ReactNode } from "react";
+import React, { ReactElement } from "react";
 
 import {
   endcapLeft,
@@ -16,8 +16,10 @@ import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 
-const MAX_TILE_WIDTH = 150;
-const MIN_TILE_WIDTH = 75;
+const MAX_COL_WIDTH = 50; // Max gap.
+const MIN_COL_WIDTH = 30; // Multiply this by RATIO_TILE_TO_GAP for min tile width.
+const RATIO_TILE_TO_GAP = 3; // Must be odd.
+const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded down.
 
 interface TreeDepictionProps {
   currentDomain: TreeSemanticDomain;
@@ -25,8 +27,7 @@ interface TreeDepictionProps {
 }
 
 interface TreeDepictionState {
-  tileWidth: number;
-  bounce: number;
+  colWidth: number;
 }
 
 export default class TreeDepiction extends React.Component<
@@ -35,84 +36,77 @@ export default class TreeDepiction extends React.Component<
 > {
   constructor(props: TreeDepictionProps) {
     super(props);
-    this.state = { tileWidth: 0, bounce: 0 };
-
-    // Bind functions
-    this.updateTileWidth = this.updateTileWidth.bind(this);
+    this.state = { colWidth: 0 };
   }
 
   // Updates the tile width and adds the resize listener
   componentDidMount() {
-    this.updateTileWidth();
-    window.addEventListener("resize", this.updateTileWidth);
+    this.updateColWidth();
+    window.addEventListener("resize", () => this.updateColWidth());
   }
 
   // Updates tile width on component update
   componentDidUpdate() {
-    this.updateTileWidth();
+    this.updateColWidth();
   }
 
   // Removes the resize listener
   componentWillUnmount() {
-    window.removeEventListener("resize", this.updateTileWidth);
+    window.removeEventListener("resize", () => this.updateColWidth());
   }
 
   // Computes a new width for each tile
-  updateTileWidth() {
+  updateColWidth() {
     const length = this.props.currentDomain.subdomains.length;
-    let tileWidth =
-      length > 0
-        ? Math.floor(document.documentElement.clientWidth / (length * 2 - 1))
-        : MAX_TILE_WIDTH;
+    let colWidth = length
+      ? Math.floor(
+          document.documentElement.clientWidth /
+            (length * (RATIO_TILE_TO_GAP + 1) - 1)
+        )
+      : MAX_COL_WIDTH;
 
-    if (tileWidth < MIN_TILE_WIDTH) {
-      tileWidth = MIN_TILE_WIDTH;
-    } else if (tileWidth > MAX_TILE_WIDTH) {
-      tileWidth = MAX_TILE_WIDTH;
+    if (colWidth < MIN_COL_WIDTH) {
+      colWidth = MIN_COL_WIDTH;
+    } else if (colWidth > MAX_COL_WIDTH) {
+      colWidth = MAX_COL_WIDTH;
     }
 
-    if (Math.floor(this.state.tileWidth) !== Math.floor(tileWidth)) {
-      this.setState({ tileWidth });
+    if (this.state.colWidth !== colWidth) {
+      this.setState({ colWidth });
     }
   }
 
   // Renders the subdomains + their connectors to the current domain
-  subDomains(): ReactNode {
+  subDomains(): ReactElement {
     const subdomains = this.props.currentDomain.subdomains;
+    const cols = subdomains.length * (RATIO_TILE_TO_GAP + 1) - 1;
     return subdomains.length > 1 ? (
       <ImageList
-        cols={subdomains.length * 2 - 1} // # of cells across the joist is
+        cols={cols}
         rowHeight={"auto"}
         gap={0}
-        style={{ width: (subdomains.length * 2 - 1) * this.state.tileWidth }}
+        style={{ width: cols * this.state.colWidth }}
       >
-        {/* Left endcap */}
-        {this.treeTile(endcapLeft)}
-
-        {/* Add tree branch */}
+        {/* Tree branches */}
         {this.joistRow()}
-
-        {/* Right endcap */}
-        {this.treeTile(endcapRight)}
 
         {/* Content */}
         {this.domainRow()}
       </ImageList>
     ) : (
       <ImageList
-        cols={1}
+        cols={RATIO_TILE_TO_GAP}
         gap={0}
         rowHeight={"auto"}
-        style={{ width: this.state.tileWidth }}
+        style={{ width: this.state.colWidth * RATIO_TILE_TO_GAP }}
       >
+        {this.halfTileGap()}
         {this.treeTile(pillar)}
-        <ImageListItem>
+        {this.halfTileGap()}
+        <ImageListItem cols={RATIO_TILE_TO_GAP}>
           <DomainTile
             domain={subdomains[0]}
-            onClick={(e) => {
-              this.props.animate(e);
-              this.setState({ bounce: Math.random() });
-            }}
+            onClick={this.props.animate}
             direction={Direction.Down}
           />
         </ImageListItem>
@@ -121,77 +115,101 @@ export default class TreeDepiction extends React.Component<
   }
 
   // Creates the joist connecting current domain with subdomains
-  joistRow(): ReactNode[] {
-    const row: ReactNode[] = [];
-    const half = this.props.currentDomain.subdomains.length - 2;
+  joistRow(): ReactElement[] {
+    const row: ReactElement[] = [];
+    const teeCount = this.props.currentDomain.subdomains.length - 2;
+    const middleTeeCount = teeCount % 2;
+    const halfTeeCount = (teeCount - middleTeeCount) / 2;
 
-    // Determine the kind of middle element needed
-    const middleElement = half % 2 === 0 ? teeDown : intersect;
+    /* Left endcap */
+    row.push(...this.halfTileGap());
+    row.push(this.treeTile(endcapLeft));
 
-    // Add elements on left, then the center, then the right
-    this.halfJoist(half, row, true, true);
-    row[half] = this.treeTile(middleElement);
-    this.halfJoist(half, row, middleElement === intersect, false);
+    /* Left */
+    for (let i = 0; i < halfTeeCount; i++) {
+      row.push(...this.multiSpan(RATIO_TILE_TO_GAP));
+      row.push(this.treeTile(teeUpRight));
+    }
+
+    /* Middle */
+    if (middleTeeCount) {
+      row.push(...this.multiSpan(RATIO_TILE_TO_GAP));
+      row.push(this.treeTile(intersect));
+      row.push(...this.multiSpan(RATIO_TILE_TO_GAP));
+    } else {
+      row.push(...this.multiSpan(HALF_TILE));
+      row.push(this.treeTile(teeDown));
+      row.push(...this.multiSpan(HALF_TILE));
+    }
+
+    /* Right */
+    for (let i = 0; i < halfTeeCount; i++) {
+      row.push(this.treeTile(teeUpLeft));
+      row.push(...this.multiSpan(RATIO_TILE_TO_GAP));
+    }
+
+    /* Right endcap */
+    row.push(this.treeTile(endcapRight));
+    row.push(...this.halfTileGap());
 
     return row;
   }
 
-  // Helper function for joistRow: creates an alternating pattern of tees and spans, based on an initial starting type
-  halfJoist(
-    half: number,
-    row: ReactNode[],
-    startWithSpan: boolean,
-    right: boolean
-  ) {
-    const valForSpan = startWithSpan ? 0 : 1;
-    for (let count = 0; count < half; count++) {
-      const tileToPush =
-        count % 2 === valForSpan ? span : right ? teeUpRight : teeUpLeft;
-      row.push(this.treeTile(tileToPush));
-    }
-  }
-
   // Places the actual sub domain tiles
-  domainRow(): ReactNode[] {
-    let subDomains: ReactNode[] = [];
-    let domainIndex: number = 0;
+  domainRow(): ReactElement[] {
+    let subDomains: ReactElement[] = [];
+    let domainIndex = 0;
 
     for (
-      let i: number = 0;
+      let i = 0;
       i < this.props.currentDomain.subdomains.length * 2 - 1;
       i++
     ) {
       if (i % 2 === 0) {
         subDomains.push(
-          <ImageListItem key={domainIndex + "DomainTile"}>
+          <ImageListItem
+            key={domainIndex + "DomainTile"}
+            cols={RATIO_TILE_TO_GAP}
+          >
             <DomainTile
               domain={this.props.currentDomain.subdomains[domainIndex]}
-              onClick={(e) => {
-                this.props.animate(e);
-                this.setState({ bounce: Math.random() });
-              }}
+              onClick={this.props.animate}
               direction={Direction.Down}
             />
           </ImageListItem>
         );
         domainIndex++;
-      } else subDomains.push(<ImageListItem key={domainIndex + "DummyTile"} />);
+      } else {
+        subDomains.push(<ImageListItem key={domainIndex + "DummyTile"} />);
+      }
     }
     return subDomains;
   }
 
+  // Creates a span across multiple columns
+  multiSpan(cols: number): ReactElement[] {
+    return Array.from({ length: cols }, () => this.treeTile(span));
+  }
+
+  // Creates empty items, half (rounded down) as many as there are columns in a tile
+  halfTileGap(): ReactElement[] {
+    return Array.from({ length: HALF_TILE }, () => (
+      <ImageListItem key={"gap" + Math.random()} />
+    ));
+  }
+
   // Creates a section of the tree diagram (one of the branches) set to proper dimensions
-  treeTile(name: string): ReactNode {
+  treeTile(name: string): ReactElement {
     return (
       <ImageListItem
-        key={name + Math.random() * 1000}
+        key={name + Math.random()}
         style={{ transform: "scaleY(-1)" }}
       >
         <img
           src={name}
           alt={name}
-          width={this.state.tileWidth}
-          height={"100%"}
+          width={this.state.colWidth + 1} // The +1 is to avoid visual gaps from rounding errors
+          height={60}
         />
       </ImageListItem>
     );
@@ -206,16 +224,13 @@ export default class TreeDepiction extends React.Component<
             <ImageList
               cols={1}
               gap={0}
-              style={{ width: this.state.tileWidth }}
+              style={{ width: this.state.colWidth * RATIO_TILE_TO_GAP }}
               rowHeight="auto"
             >
               <ImageListItem>
                 <DomainTile
                   domain={this.props.currentDomain.parentDomain}
-                  onClick={(e) => {
-                    this.props.animate(e);
-                    this.setState({ bounce: Math.random() });
-                  }}
+                  onClick={this.props.animate}
                   direction={Direction.Up}
                 />
               </ImageListItem>
@@ -224,15 +239,11 @@ export default class TreeDepiction extends React.Component<
           )}
         </Grid>
 
-        {/* Label current domain */}
+        {/* Label current domain, and left and right brothers, if available */}
         <Grid item>
           <TreeViewHeader
             currentDomain={this.props.currentDomain}
             animate={this.props.animate}
-            bounceState={this.state.bounce}
-            bounce={() => {
-              this.setState({ bounce: Math.random() });
-            }}
           />
         </Grid>
 
