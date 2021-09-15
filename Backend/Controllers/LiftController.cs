@@ -246,13 +246,13 @@ namespace BackendFramework.Controllers
                 _liftService.SetExportInProgress(userId, false);
                 return BadRequest("No words to export.");
             }
-            Thread exportThread = new Thread(() => CreateLiftExportThenSignal(projectId, userId));
+            Thread exportThread = new Thread(async () => await CreateLiftExportThenSignal(projectId, userId));
             exportThread.Start();
 
             return Ok(projectId);
         }
 
-        internal async void CreateLiftExportThenSignal(string projectId, string userId)
+        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
         {
             // Export the data to a zip, read into memory, and delete zip
             var exportedFilepath = await CreateLiftExport(projectId);
@@ -260,12 +260,12 @@ namespace BackendFramework.Controllers
             // Store the temporary path to the exported file for user to download later.
             _liftService.StoreExport(userId, exportedFilepath);
             await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
+            return true;
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
-            return exportedFilepath;
+            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
         }
 
         /// <summary> Downloads project data in zip file </summary>
