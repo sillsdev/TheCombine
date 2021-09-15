@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -238,29 +239,27 @@ namespace BackendFramework.Controllers
             // Store in-progress status for the export
             _liftService.SetExportInProgress(userId, true);
 
-            try
-            {
-                // Ensure project has words
-                var words = await _wordRepo.GetAllWords(projectId);
-                if (words.Count == 0)
-                {
-                    _liftService.SetExportInProgress(userId, false);
-                    return BadRequest("No words to export.");
-                }
-
-                // Export the data to a zip, read into memory, and delete zip
-                var exportedFilepath = await CreateLiftExport(projectId);
-
-                // Store the temporary path to the exported file for user to download later.
-                _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
-                return Ok(projectId);
-            }
-            catch
+            // Ensure project has words
+            var words = await _wordRepo.GetAllWords(projectId);
+            if (words.Count == 0)
             {
                 _liftService.SetExportInProgress(userId, false);
-                throw;
+                return BadRequest("No words to export.");
             }
+            Thread exportThread = new Thread(() => CreateLiftExportThenSignal(projectId, userId));
+            exportThread.Start();
+
+            return Ok(projectId);
+        }
+
+        internal async void CreateLiftExportThenSignal(string projectId, string userId)
+        {
+            // Export the data to a zip, read into memory, and delete zip
+            var exportedFilepath = await CreateLiftExport(projectId);
+
+            // Store the temporary path to the exported file for user to download later.
+            _liftService.StoreExport(userId, exportedFilepath);
+            await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
