@@ -298,7 +298,7 @@ export default class NewEntry extends React.Component<
 
   render() {
     return (
-      <Grid container id={`new-entry`} alignItems="center">
+      <Grid container id="new-entry" alignItems="center">
         <Grid
           container
           item
