@@ -36,7 +36,9 @@ export function ExportButton(props: ExportButtonProps & LocalizeContextProps) {
   const loading =
     exportResult.status === ExportStatus.Exporting ||
     exportResult.status === ExportStatus.Downloading;
-  const done = exportResult.status === ExportStatus.Success;
+  const done =
+    exportResult.status === ExportStatus.Success ||
+    exportResult.status === ExportStatus.Downloading;
 
   return (
     <React.Fragment>
