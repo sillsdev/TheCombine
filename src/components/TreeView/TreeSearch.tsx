@@ -18,7 +18,7 @@ export default function TreeSearch(props: TreeSearchProps) {
     <Grid style={{ maxWidth: 200 }}>
       <TextField
         fullWidth
-        id="name"
+        id="domain-tree-search-field"
         label="Find a domain"
         onKeyDown={searchAndSelectDomain}
         onChange={handleChange}

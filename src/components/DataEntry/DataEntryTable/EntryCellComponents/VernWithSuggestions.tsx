@@ -26,6 +26,7 @@ export class VernWithSuggestions extends React.Component<
     return (
       <React.Fragment>
         <Autocomplete
+          id={this.props.textFieldId}
           freeSolo
           disabled={this.props.isDisabled}
           value={this.props.vernacular}
@@ -50,7 +51,6 @@ export class VernWithSuggestions extends React.Component<
           renderInput={(params) => (
             <TextField
               {...params}
-              id={this.props.textFieldId}
               fullWidth
               inputRef={this.props.vernInput}
               label={

@@ -532,6 +532,7 @@ export class DataEntryTable extends React.Component<
               ) ? null /*Word not shows because it's being edited*/ : (
                 <RecentEntry
                   key={wordAccess.word.id + "_" + wordAccess.senseIndex}
+                  rowIndex={index}
                   entry={wordAccess.word}
                   senseIndex={wordAccess.senseIndex}
                   updateGloss={(newDef: string) =>
@@ -602,7 +603,7 @@ export class DataEntryTable extends React.Component<
           </Grid>
           <Grid item>
             <Button
-              id="complete"
+              id="exit-to-domain-tree"
               type="submit"
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}
