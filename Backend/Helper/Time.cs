@@ -26,6 +26,14 @@ namespace BackendFramework.Helper
         {
             return dateTime.ToString(RoundTripIso8601Format);
         }
+
+        /// <summary>
+        /// Construct a string for the current DateTime in a filepath-safe format.
+        /// </summary>
+        public static string UtcNowFilesafe()
+        {
+            return Sanitization.MakeFriendlyForPath(UtcNowIso8601());
+        }
     }
 }
 

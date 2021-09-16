@@ -181,7 +181,7 @@ namespace BackendFramework.Services
 
             // Generate the zip dir.
             var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
-            var liftExportDir = Path.Combine(exportDir, "LiftExport-" + Time.UtcNowIso8601());
+            var liftExportDir = Path.Combine(exportDir, "LiftExport-" + Time.UtcNowFilesafe());
 
             var projNameAsPath = Sanitization.MakeFriendlyForPath(proj.Name, "Lift");
             var zipDir = Path.Combine(liftExportDir, projNameAsPath);

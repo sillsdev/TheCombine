@@ -16,12 +16,20 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void UtcNowIso8601()
+        public void TestUtcNowIso8601()
         {
             var time = Time.UtcNowIso8601();
             Assert.That(time.Contains("T"));
             Assert.That(time.EndsWith("Z"));
             Assert.That(DateTime.Now, Is.EqualTo(DateTime.Parse(time)).Within(TimeSpan.FromSeconds(10)));
+        }
+
+        [Test]
+        public void TestUtcNowFilesafe()
+        {
+            var time = Time.UtcNowFilesafe();
+            Assert.False(time.Contains(":"));
+            Assert.False(time.Contains("/"));
         }
     }
 }
