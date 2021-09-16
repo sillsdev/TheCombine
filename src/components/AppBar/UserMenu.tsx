@@ -112,6 +112,7 @@ export function UserMenuList(props: UserMenuListProps) {
       {/* Only show Site Settings link to Admin users. */}
       {props.isAdmin && (
         <MenuItem
+          id="user-menu-admin"
           onClick={() => {
             dispatch(clearCurrentProject());
             history.push(Path.SiteSettings);
@@ -124,6 +125,7 @@ export function UserMenuList(props: UserMenuListProps) {
       )}
 
       <MenuItem
+        id="user-menu-user"
         onClick={() => {
           history.push(Path.UserSettings);
           props.onSelect();
@@ -134,6 +136,7 @@ export function UserMenuList(props: UserMenuListProps) {
       </MenuItem>
 
       <MenuItem
+        id="user-menu-guide"
         onClick={() => {
           openUserGuide();
           props.onSelect();
@@ -144,6 +147,7 @@ export function UserMenuList(props: UserMenuListProps) {
       </MenuItem>
 
       <MenuItem
+        id="user-menu-logout"
         onClick={() => {
           history.push(Path.Login);
           props.onSelect();
@@ -153,7 +157,11 @@ export function UserMenuList(props: UserMenuListProps) {
         <Translate id="userMenu.logout" />
       </MenuItem>
 
-      <MenuItem disabled style={{ justifyContent: "center" }}>
+      <MenuItem
+        id="user-menu-version"
+        disabled
+        style={{ justifyContent: "center" }}
+      >
         v{REACT_APP_VERSION}
       </MenuItem>
     </div>
