@@ -21,7 +21,7 @@ export default function SignalRHub() {
       connection.stop();
     }
     setConnection(null);
-    if (exportState.status === ExportStatus.InProgress) {
+    if (exportState.status === ExportStatus.Exporting) {
       const newConnection = new HubConnectionBuilder()
         .withUrl(`${baseURL}/hub`)
         .withAutomaticReconnect()

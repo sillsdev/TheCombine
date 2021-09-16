@@ -60,8 +60,10 @@ export default function DownloadButton(props: DownloadButtonProps) {
 
   function textId(): string {
     switch (exportState.status) {
-      case ExportStatus.InProgress:
+      case ExportStatus.Exporting:
         return "projectExport.exportInProgress";
+      case ExportStatus.Downloading:
+        return "projectExport.downloadInProgress";
       case ExportStatus.Success:
         return "projectExport.downloadReady";
       case ExportStatus.Failure:
@@ -73,7 +75,8 @@ export default function DownloadButton(props: DownloadButtonProps) {
 
   function icon(): ReactElement {
     switch (exportState.status) {
-      case ExportStatus.InProgress:
+      case ExportStatus.Exporting:
+      case ExportStatus.Downloading:
         return <Cached />;
       case ExportStatus.Success:
         return <GetApp />;

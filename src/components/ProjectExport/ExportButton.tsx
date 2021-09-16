@@ -33,7 +33,9 @@ export function ExportButton(props: ExportButtonProps & LocalizeContextProps) {
     (state: StoreState) => state.exportProjectState
   );
   const sameProject = props.projectId === exportResult.projectId;
-  const loading = exportResult.status === ExportStatus.InProgress;
+  const loading =
+    exportResult.status === ExportStatus.Exporting ||
+    exportResult.status === ExportStatus.Downloading;
   const done = exportResult.status === ExportStatus.Success;
 
   return (
