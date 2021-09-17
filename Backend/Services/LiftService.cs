@@ -181,10 +181,10 @@ namespace BackendFramework.Services
 
             // Generate the zip dir.
             var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
-            var liftExportDir = Path.Combine(exportDir, "LiftExport-" + Time.UtcNowFilesafe());
+            var tempExportDir = FileOperations.GetRandomTempDir();
 
             var projNameAsPath = Sanitization.MakeFriendlyForPath(proj.Name, "Lift");
-            var zipDir = Path.Combine(liftExportDir, projNameAsPath);
+            var zipDir = Path.Combine(tempExportDir, projNameAsPath);
             Directory.CreateDirectory(zipDir);
 
             // Add audio dir inside zip dir.
@@ -347,7 +347,7 @@ namespace BackendFramework.Services
             ZipFile.CreateFromDirectory(zipParentDir, destinationFileName);
 
             // Clean up the temporary folder structure that was compressed.
-            Directory.Delete(liftExportDir, true);
+            Directory.Delete(tempExportDir, true);
 
             return destinationFileName;
         }

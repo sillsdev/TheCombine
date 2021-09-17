@@ -23,13 +23,5 @@ namespace Backend.Tests.Helper
             Assert.That(time.EndsWith("Z"));
             Assert.That(DateTime.Now, Is.EqualTo(DateTime.Parse(time)).Within(TimeSpan.FromSeconds(10)));
         }
-
-        [Test]
-        public void TestUtcNowFilesafe()
-        {
-            var time = Time.UtcNowFilesafe();
-            Assert.False(time.Contains(":"));
-            Assert.False(time.Contains("/"));
-        }
     }
 }
