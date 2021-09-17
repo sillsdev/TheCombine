@@ -18,6 +18,8 @@ import theme from "types/theme";
 import { newSense, newWord } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
+const idAffix = "new-entry";
+
 interface NewEntryProps {
   allVerns: string[];
   allWords: Word[];
@@ -298,7 +300,7 @@ export default class NewEntry extends React.Component<
 
   render() {
     return (
-      <Grid container id="new-entry" alignItems="center">
+      <Grid container id={idAffix} alignItems="center">
         <Grid
           container
           item
@@ -327,7 +329,7 @@ export default class NewEntry extends React.Component<
                 // check whether gloss is empty
                 this.handleEnter(e, true)
               }
-              textFieldId="new-entry-vernacular"
+              textFieldId={`${idAffix}-vernacular`}
             />
             <VernDialog
               open={this.state.vernOpen}
@@ -372,7 +374,7 @@ export default class NewEntry extends React.Component<
               this.handleEnter(e, false)
             }
             analysisLang={this.props.analysisLang}
-            textFieldId={"new-entry-gloss"}
+            textFieldId={`${idAffix}-gloss`}
           />
         </Grid>
         <Grid
@@ -426,7 +428,7 @@ export default class NewEntry extends React.Component<
         >
           <DeleteEntry
             removeEntry={() => this.resetState()}
-            buttonId="new-entry-delete"
+            buttonId={`${idAffix}-delete`}
           />
         </Grid>
         <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>

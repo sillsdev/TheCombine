@@ -13,6 +13,8 @@ import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newGloss } from "types/word";
 
+const idAffix = "recent-entry";
+
 interface RecentEntryProps {
   rowIndex: number;
   entry: Word;
@@ -87,7 +89,7 @@ export default class RecentEntry extends React.Component<
   render() {
     return (
       <Grid
-        id={`recent-entry-${this.props.rowIndex}`}
+        id={`${idAffix}-${this.props.rowIndex}`}
         container
         onMouseEnter={() => this.setState({ hovering: true })}
         onMouseLeave={() => this.setState({ hovering: false })}
@@ -116,7 +118,7 @@ export default class RecentEntry extends React.Component<
                 this.focusOnNewEntry();
               }
             }}
-            textFieldId={`recent-entry-${this.props.rowIndex}-vernacular`}
+            textFieldId={`${idAffix}-${this.props.rowIndex}-vernacular`}
           />
         </Grid>
         <Grid
@@ -142,7 +144,7 @@ export default class RecentEntry extends React.Component<
               }
             }}
             analysisLang={this.props.analysisLang}
-            textFieldId={`recent-entry-${this.props.rowIndex}-gloss`}
+            textFieldId={`${idAffix}-${this.props.rowIndex}-gloss`}
           />
         </Grid>
         <Grid
@@ -157,7 +159,7 @@ export default class RecentEntry extends React.Component<
           <EntryNote
             noteText={this.props.entry.note.text}
             updateNote={this.props.updateNote}
-            buttonId={`recent-entry-${this.props.rowIndex}-note`}
+            buttonId={`${idAffix}-${this.props.rowIndex}-note`}
           />
         </Grid>
         <Grid
@@ -193,7 +195,7 @@ export default class RecentEntry extends React.Component<
           {this.state.hovering && (
             <DeleteEntry
               removeEntry={() => this.props.removeEntry()}
-              buttonId={`recent-entry-${this.props.rowIndex}-delete`}
+              buttonId={`${idAffix}-${this.props.rowIndex}-delete`}
               confirmId={"addWords.deleteRowWarning"}
               wordId={this.props.entry.id}
             />

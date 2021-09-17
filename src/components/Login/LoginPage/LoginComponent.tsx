@@ -16,6 +16,8 @@ import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
 
+const idAffix = "login";
+
 export interface LoginDispatchProps {
   login?: (username: string, password: string) => void;
   logout: () => void;
@@ -105,7 +107,7 @@ export default class Login extends React.Component<
 
               {/* Username field */}
               <TextField
-                id="login-username"
+                id={`${idAffix}-username`}
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
@@ -126,7 +128,7 @@ export default class Login extends React.Component<
 
               {/* Password field */}
               <TextField
-                id="login-password"
+                id={`${idAffix}-password`}
                 required
                 autoComplete="current-password"
                 label={<Translate id="login.password" />}
@@ -171,14 +173,14 @@ export default class Login extends React.Component<
               {RuntimeConfig.getInstance().captchaRequired() && (
                 <div
                   className="form-group"
-                  id="captcha-holder"
+                  id={`${idAffix}-captcha`}
                   style={this.captchaStyle}
                 >
                   <ReCaptcha
                     siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
                     theme="light"
                     size="normal"
-                    onSuccess={(captcha) => this.setState({ isVerified: true })}
+                    onSuccess={() => this.setState({ isVerified: true })}
                     onExpire={() => this.setState({ isVerified: false })}
                     onError={() =>
                       console.log("Something went wrong, check your conenction")
@@ -190,17 +192,17 @@ export default class Login extends React.Component<
               {/* Register and Login buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
-                  <Button onClick={openUserGuide} id="login-guide">
+                  <Button id={`${idAffix}-guide`} onClick={openUserGuide}>
                     <Help />
                   </Button>
                 </Grid>
 
                 <Grid item xs={4} sm={3}>
                   <Button
+                    id={`${idAffix}-register`}
                     onClick={() => {
                       history.push(Path.Register);
                     }}
-                    id="login-register"
                   >
                     <Translate id="login.register" />
                   </Button>
@@ -209,9 +211,9 @@ export default class Login extends React.Component<
                 <Grid item xs={4} sm={3}>
                   <LoadingButton
                     buttonProps={{
+                      id: `${idAffix}-login`,
                       type: "submit",
                       color: "primary",
-                      id: "login-login",
                     }}
                     disabled={!this.state.isVerified}
                     loading={this.props.loginAttempt}
