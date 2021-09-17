@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -208,8 +209,7 @@ namespace BackendFramework.Controllers
             return await ExportLiftFile(projectId, userId);
         }
 
-        // These internal methods are extracted for unit testing
-        internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        private async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -238,35 +238,36 @@ namespace BackendFramework.Controllers
             // Store in-progress status for the export
             _liftService.SetExportInProgress(userId, true);
 
-            try
-            {
-                // Ensure project has words
-                var words = await _wordRepo.GetAllWords(projectId);
-                if (words.Count == 0)
-                {
-                    _liftService.SetExportInProgress(userId, false);
-                    return BadRequest("No words to export.");
-                }
-
-                // Export the data to a zip, read into memory, and delete zip
-                var exportedFilepath = await CreateLiftExport(projectId);
-
-                // Store the temporary path to the exported file for user to download later.
-                _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
-                return Ok(projectId);
-            }
-            catch
+            // Ensure project has words
+            var words = await _wordRepo.GetAllWords(projectId);
+            if (words.Count == 0)
             {
                 _liftService.SetExportInProgress(userId, false);
-                throw;
+                return BadRequest("No words to export.");
             }
+
+            // Run the task without waiting for completion.
+            // This Task will be scheduled within the exiting Async executor thread pool efficiently.
+            // See: https://stackoverflow.com/a/64614779/1398841
+            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
+            return Ok(projectId);
+        }
+
+        // These internal methods are extracted for unit testing.
+        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
+        {
+            // Export the data to a zip, read into memory, and delete zip.
+            var exportedFilepath = await CreateLiftExport(projectId);
+
+            // Store the temporary path to the exported file for user to download later.
+            _liftService.StoreExport(userId, exportedFilepath);
+            await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+            return true;
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            var exportedFilepath = await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
-            return exportedFilepath;
+            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
         }
 
         /// <summary> Downloads project data in zip file </summary>

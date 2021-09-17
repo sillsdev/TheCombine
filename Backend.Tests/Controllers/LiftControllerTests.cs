@@ -196,7 +196,7 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, wordToDelete.Id);
 
-            _liftController.ExportLiftFile(_projId, UserId).Wait();
+            _liftController.CreateLiftExportThenSignal(_projId, UserId).Wait();
             var result = (FileStreamResult)_liftController.DownloadLiftFile(_projId, UserId).Result;
             Assert.NotNull(result);
 
