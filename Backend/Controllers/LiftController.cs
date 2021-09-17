@@ -246,7 +246,9 @@ namespace BackendFramework.Controllers
                 _liftService.SetExportInProgress(userId, false);
                 return BadRequest("No words to export.");
             }
-            var exportThread = new Thread(async () => await CreateLiftExportThenSignal(projectId, userId));
+
+            async void StartExport() => await CreateLiftExportThenSignal(projectId, userId);
+            var exportThread = new Thread(StartExport);
             exportThread.Start();
 
             return Ok(projectId);
