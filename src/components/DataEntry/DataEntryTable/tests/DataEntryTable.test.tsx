@@ -10,6 +10,7 @@ import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   addSemanticDomainToSense,
   addSenseToWord,
+  exitButtonId,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
@@ -87,9 +88,7 @@ describe("DataEntryTable", () => {
       },
       () => {
         // Get exit button and push it
-        testRenderer.root
-          .findByProps({ id: "exit-to-domain-tree" })
-          .props.onClick();
+        testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
         // Assert that the backend function for adding the word was called
         expect(mockCreateWord).toBeCalled();
         done();
@@ -110,9 +109,7 @@ describe("DataEntryTable", () => {
       },
       () => {
         // Get button for exit and push it
-        testRenderer.root
-          .findByProps({ id: "exit-to-domain-tree" })
-          .props.onClick();
+        testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
         // Assert that the backend function for adding the word was NOT called
         expect(mockCreateWord).not.toBeCalled();
         done();
@@ -121,9 +118,7 @@ describe("DataEntryTable", () => {
   });
 
   it("calls hideQuestions when exit is clicked", () => {
-    testRenderer.root
-      .findByProps({ id: "exit-to-domain-tree" })
-      .props.onClick();
+    testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
     expect(hideQuestionsMock).toBeCalledTimes(1);
   });
 
