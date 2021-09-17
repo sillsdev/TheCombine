@@ -12,6 +12,12 @@ import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 
+const idAffix = "user-options";
+const idRemoveUser = `${idAffix}-remove`;
+const idAddAdmin = `${idAffix}-admin-add`;
+const idRemoveAdmin = `${idAffix}-admin-remove`;
+const idMakeOwner = `${idAffix}-owner-make`;
+
 interface CancelConfirmDialogCollectionProps {
   userId: string;
   currentUserId: string;
@@ -141,9 +147,9 @@ export default function CancelConfirmDialogCollection(
 
   const managementOptions = [
     <MenuItem
-      key="removeUser"
+      key={idRemoveUser}
+      id={idRemoveUser}
       onClick={() => setRemoveUser(true)}
-      id="user-remove"
     >
       <Translate id="buttons.removeFromProject" />
     </MenuItem>,
@@ -151,17 +157,17 @@ export default function CancelConfirmDialogCollection(
   if (props.isProjectOwner) {
     const adminOption = props.userIsProjectAdmin ? (
       <MenuItem
-        key="removeAdmin"
+        key={idRemoveAdmin}
+        id={idRemoveAdmin}
         onClick={() => setRemoveAdmin(true)}
-        id="user-admin-remove"
       >
         <Translate id="buttons.removeAdmin" />
       </MenuItem>
     ) : (
       <MenuItem
-        key="addAdmin"
+        key={idAddAdmin}
+        id={idAddAdmin}
         onClick={() => setMakeAdmin(true)}
-        id="user-admin-add"
       >
         <Translate id="buttons.makeAdmin" />
       </MenuItem>
@@ -171,9 +177,9 @@ export default function CancelConfirmDialogCollection(
     if (props.userIsProjectAdmin) {
       managementOptions.push(
         <MenuItem
-          key="makeOwner"
+          key={idMakeOwner}
+          id={idMakeOwner}
           onClick={() => setMakeOwner(true)}
-          id="user-make-owner"
         >
           <Translate id="buttons.makeOwner" />
         </MenuItem>
@@ -188,46 +194,46 @@ export default function CancelConfirmDialogCollection(
         textId="projectSettings.userManagement.removeUserWarning"
         handleCancel={() => setRemoveUser(false)}
         handleConfirm={() => removeUser(props.userId)}
-        buttonIdCancel="user-remove-cancel"
-        buttonIdConfirm="user-remove-confirm"
+        buttonIdCancel={`${idRemoveUser}-cancel`}
+        buttonIdConfirm={`${idRemoveUser}-confirm`}
       />
       <CancelConfirmDialog
         open={makeAdminDialogOpen}
         textId="projectSettings.userManagement.makeAdminWarning"
         handleCancel={() => setMakeAdmin(false)}
         handleConfirm={() => makeAdmin(props.userId)}
-        buttonIdCancel="user-admin-add-cancel"
-        buttonIdConfirm="user-admin-add-confirm"
+        buttonIdCancel={`${idAddAdmin}-cancel`}
+        buttonIdConfirm={`${idAddAdmin}-confirm`}
       />
       <CancelConfirmDialog
         open={removeAdminDialogOpen}
         textId="projectSettings.userManagement.removeAdminWarning"
         handleCancel={() => setRemoveAdmin(false)}
         handleConfirm={() => removeAdmin(props.userId)}
-        buttonIdCancel="user-admin-remove-cancel"
-        buttonIdConfirm="user-admin-remove-confirm"
+        buttonIdCancel={`${idRemoveAdmin}-cancel`}
+        buttonIdConfirm={`${idRemoveAdmin}-confirm`}
       />
       <CancelConfirmDialog
         open={makeOwnerDialogOpen}
         textId="projectSettings.userManagement.makeOwnerWarning"
         handleCancel={() => setMakeOwner(false)}
         handleConfirm={() => makeOwner(props.userId)}
-        buttonIdCancel="user-make-owner-cancel"
-        buttonIdConfirm="user-make-owner-confirm"
+        buttonIdCancel={`${idMakeOwner}-cancel`}
+        buttonIdConfirm={`${idMakeOwner}-confirm`}
       />
       <Tooltip
         title={<Translate id="projectSettings.userManagement.manageUser" />}
         placement="right"
       >
         <IconButton
-          id="user-options"
+          id={idAffix}
           onClick={(event) => setAnchorEl(event.currentTarget)}
         >
           <MoreVertIcon />
         </IconButton>
       </Tooltip>
       <Menu
-        id="user-options-menu"
+        id={`${idAffix}-menu`}
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}

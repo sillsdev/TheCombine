@@ -15,6 +15,8 @@ import history, { openUserGuide, Path } from "browserHistory";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import theme, { tabColor } from "types/theme";
 
+const idAffix = "user-menu";
+
 export async function getIsAdmin(): Promise<boolean> {
   const userId = LocalStorage.getUserId();
   const user = await getUser(userId);
@@ -56,7 +58,7 @@ export default function UserMenu(props: UserMenuProps) {
         style={{
           background: tabColor(props.currentTab, Path.UserSettings),
         }}
-        id="avatar-user-menu"
+        id={`avatar-${idAffix}`}
       >
         <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
         {avatar ? (
@@ -67,7 +69,7 @@ export default function UserMenu(props: UserMenuProps) {
       </Button>
       <Menu
         getContentAnchorEl={null}
-        id="user-menu"
+        id={idAffix}
         anchorEl={anchorElement}
         open={Boolean(anchorElement)}
         onClose={handleClose}
@@ -112,6 +114,7 @@ export function UserMenuList(props: UserMenuListProps) {
       {/* Only show Site Settings link to Admin users. */}
       {props.isAdmin && (
         <MenuItem
+          id={`${idAffix}-admin`}
           onClick={() => {
             dispatch(clearCurrentProject());
             history.push(Path.SiteSettings);
@@ -124,6 +127,7 @@ export function UserMenuList(props: UserMenuListProps) {
       )}
 
       <MenuItem
+        id={`${idAffix}-user`}
         onClick={() => {
           history.push(Path.UserSettings);
           props.onSelect();
@@ -134,6 +138,7 @@ export function UserMenuList(props: UserMenuListProps) {
       </MenuItem>
 
       <MenuItem
+        id={`${idAffix}-guide`}
         onClick={() => {
           openUserGuide();
           props.onSelect();
@@ -144,6 +149,7 @@ export function UserMenuList(props: UserMenuListProps) {
       </MenuItem>
 
       <MenuItem
+        id={`${idAffix}-logout`}
         onClick={() => {
           history.push(Path.Login);
           props.onSelect();
@@ -153,7 +159,11 @@ export function UserMenuList(props: UserMenuListProps) {
         <Translate id="userMenu.logout" />
       </MenuItem>
 
-      <MenuItem disabled style={{ justifyContent: "center" }}>
+      <MenuItem
+        id={`${idAffix}-version`}
+        disabled
+        style={{ justifyContent: "center" }}
+      >
         v{REACT_APP_VERSION}
       </MenuItem>
     </div>

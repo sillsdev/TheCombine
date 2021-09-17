@@ -35,6 +35,7 @@ export class GlossWithSuggestions extends React.Component<
   render() {
     return (
       <Autocomplete
+        id={this.props.textFieldId}
         filterOptions={(options: unknown[]) =>
           options.length <= this.maxSuggestions
             ? options
@@ -58,7 +59,6 @@ export class GlossWithSuggestions extends React.Component<
         renderInput={(params) => (
           <TextField
             {...params}
-            id={this.props.textFieldId}
             fullWidth
             inputRef={this.props.glossInput}
             label={

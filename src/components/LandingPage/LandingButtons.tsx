@@ -4,6 +4,8 @@ import { Translate } from "react-localize-redux";
 import history, { openUserGuide, Path } from "browserHistory";
 import theme from "types/theme";
 
+const idAffix = "landing";
+
 const buttonHeight = 50;
 const buttonWidth = 145;
 
@@ -34,17 +36,17 @@ export default function LandingButtons(props: LandingButtonsProps) {
         <LandingButton
           onClick={() => history.push(Path.Register)}
           textId="login.register"
-          buttonId="landing-register"
+          buttonId={`${idAffix}-register`}
         />
         <LandingButton
           onClick={() => history.push(Path.Login)}
           textId="login.login"
-          buttonId="landing-login"
+          buttonId={`${idAffix}-login`}
         />
         <LandingButton
           onClick={openUserGuide}
           textId="userMenu.userGuide"
-          buttonId="landing-guide"
+          buttonId={`${idAffix}-guide`}
         />
       </Grid>
     </Card>

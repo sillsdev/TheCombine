@@ -20,8 +20,8 @@ Array [
         <label
           className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
           data-shrink={false}
-          htmlFor="name"
-          id="name-label"
+          htmlFor="domain-tree-search-field"
+          id="domain-tree-search-field-label"
         >
           Find a domain
         </label>
@@ -36,7 +36,7 @@ Array [
             className="MuiInputBase-input MuiInput-input"
             data-testid="testSearch"
             disabled={false}
-            id="name"
+            id="domain-tree-search-field"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
