@@ -110,7 +110,7 @@ export default class GoalTimeline extends React.Component<
         onClick={() => {
           this.props.chooseGoal(goal);
         }}
-        id="goal-recommended"
+        id={`new-goal-${goal.name}`}
       >
         <Typography variant={"h4"}>
           <Translate id={done ? "goal.selector.done" : goal.name + ".title"} />
@@ -148,6 +148,7 @@ export default class GoalTimeline extends React.Component<
             <Translate id={"goal.selector.past"} />
           </Typography>
           <GoalList
+            completed
             orientation="horizontal"
             data={[...this.props.history].reverse()}
             handleChange={this.handleChange}
@@ -196,6 +197,7 @@ export default class GoalTimeline extends React.Component<
               <Translate id={"goal.selector.past"} />
             </Typography>
             <GoalList
+              completed
               orientation="vertical"
               data={[...this.props.history].reverse()}
               handleChange={this.handleChange}

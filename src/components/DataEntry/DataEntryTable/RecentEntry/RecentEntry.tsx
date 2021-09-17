@@ -13,7 +13,10 @@ import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newGloss } from "types/word";
 
+const idAffix = "recent-entry";
+
 interface RecentEntryProps {
+  rowIndex: number;
   entry: Word;
   senseIndex: number;
   updateGloss: (gloss: string) => void;
@@ -85,120 +88,120 @@ export default class RecentEntry extends React.Component<
 
   render() {
     return (
-      <React.Fragment>
+      <Grid
+        id={`${idAffix}-${this.props.rowIndex}`}
+        container
+        onMouseEnter={() => this.setState({ hovering: true })}
+        onMouseLeave={() => this.setState({ hovering: false })}
+        alignItems="center"
+      >
         <Grid
-          container
-          onMouseEnter={() => this.setState({ hovering: true })}
-          onMouseLeave={() => this.setState({ hovering: false })}
-          alignItems="center"
+          item
+          xs={4}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            position: "relative",
+          }}
         >
-          <Grid
-            item
-            xs={4}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
+          <VernWithSuggestions
+            vernacular={this.state.vernacular}
+            isDisabled={this.props.entry.senses.length > 1}
+            updateVernField={(newValue: string) =>
+              this.updateVernField(newValue)
+            }
+            onBlur={() => {
+              this.conditionallyUpdateVern();
             }}
-          >
-            <VernWithSuggestions
-              vernacular={this.state.vernacular}
-              isDisabled={this.props.entry.senses.length > 1}
-              updateVernField={(newValue: string) =>
-                this.updateVernField(newValue)
+            handleEnterAndTab={() => {
+              if (this.state.vernacular) {
+                this.focusOnNewEntry();
               }
-              onBlur={() => {
-                this.conditionallyUpdateVern();
-              }}
-              handleEnterAndTab={() => {
-                if (this.state.vernacular) {
-                  this.focusOnNewEntry();
-                }
-              }}
-              textFieldId={`recent-entry-${this.props.entry.id}-sense-${this.props.senseIndex}-vernacular`}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
             }}
-          >
-            <GlossWithSuggestions
-              gloss={this.state.gloss}
-              updateGlossField={(newValue: string) =>
-                this.updateGlossField(newValue)
-              }
-              onBlur={() => {
-                this.conditionallyUpdateGloss();
-              }}
-              handleEnterAndTab={() => {
-                if (this.state.gloss) {
-                  this.focusOnNewEntry();
-                }
-              }}
-              analysisLang={this.props.analysisLang}
-              textFieldId={`recent-entry-${this.props.entry.id}-sense-${this.props.senseIndex}-gloss`}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            <EntryNote
-              noteText={this.props.entry.note.text}
-              updateNote={this.props.updateNote}
-              buttonId={`note-entry-${this.props.entry.id}-sense-${this.props.senseIndex}`}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            <Pronunciations
-              wordId={this.props.entry.id}
-              pronunciationFiles={this.props.entry.audio}
-              recorder={this.props.recorder}
-              deleteAudio={(wordId: string, fileName: string) => {
-                this.props.deleteAudioFromWord(wordId, fileName);
-              }}
-              uploadAudio={(wordId: string, audioFile: File) => {
-                this.props.addAudioToWord(wordId, audioFile);
-              }}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            {this.state.hovering && (
-              <DeleteEntry
-                removeEntry={() => this.props.removeEntry()}
-                confirmId={"addWords.deleteRowWarning"}
-                wordId={this.props.entry.id}
-              />
-            )}
-          </Grid>
+            textFieldId={`${idAffix}-${this.props.rowIndex}-vernacular`}
+          />
         </Grid>
-      </React.Fragment>
+        <Grid
+          item
+          xs={4}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            position: "relative",
+          }}
+        >
+          <GlossWithSuggestions
+            gloss={this.state.gloss}
+            updateGlossField={(newValue: string) =>
+              this.updateGlossField(newValue)
+            }
+            onBlur={() => {
+              this.conditionallyUpdateGloss();
+            }}
+            handleEnterAndTab={() => {
+              if (this.state.gloss) {
+                this.focusOnNewEntry();
+              }
+            }}
+            analysisLang={this.props.analysisLang}
+            textFieldId={`${idAffix}-${this.props.rowIndex}-gloss`}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          style={{
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            position: "relative",
+          }}
+        >
+          <EntryNote
+            noteText={this.props.entry.note.text}
+            updateNote={this.props.updateNote}
+            buttonId={`${idAffix}-${this.props.rowIndex}-note`}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          style={{
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            position: "relative",
+          }}
+        >
+          <Pronunciations
+            wordId={this.props.entry.id}
+            pronunciationFiles={this.props.entry.audio}
+            recorder={this.props.recorder}
+            deleteAudio={(wordId: string, fileName: string) => {
+              this.props.deleteAudioFromWord(wordId, fileName);
+            }}
+            uploadAudio={(wordId: string, audioFile: File) => {
+              this.props.addAudioToWord(wordId, audioFile);
+            }}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          style={{
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            position: "relative",
+          }}
+        >
+          {this.state.hovering && (
+            <DeleteEntry
+              removeEntry={() => this.props.removeEntry()}
+              buttonId={`${idAffix}-${this.props.rowIndex}-delete`}
+              confirmId={"addWords.deleteRowWarning"}
+              wordId={this.props.entry.id}
+            />
+          )}
+        </Grid>
+      </Grid>
     );
   }
 }

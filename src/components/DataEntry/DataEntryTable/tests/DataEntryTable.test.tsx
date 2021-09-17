@@ -10,6 +10,7 @@ import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   addSemanticDomainToSense,
   addSenseToWord,
+  exitButtonId,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
@@ -73,7 +74,7 @@ beforeEach(() => {
 });
 
 describe("DataEntryTable", () => {
-  it("should call add word on backend when new entry has data and complete is clicked", (done) => {
+  it("should call add word on backend when new entry has data and exit is clicked", (done) => {
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
@@ -84,8 +85,8 @@ describe("DataEntryTable", () => {
         newEntry: newEntryWord,
       },
       () => {
-        // Get button for complete and push it
-        testRenderer.root.findByProps({ id: "complete" }).props.onClick();
+        // Get exit button and push it
+        testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
         // Assert that the backend function for adding the word was called
         expect(mockCreateWord).toBeCalled();
         done();
@@ -93,7 +94,7 @@ describe("DataEntryTable", () => {
     );
   });
 
-  it("should NOT call add word on backend when new entry has no vernacular and complete is clicked", (done) => {
+  it("should NOT call add word on backend when new entry has no vernacular and exit is clicked", (done) => {
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
@@ -105,8 +106,8 @@ describe("DataEntryTable", () => {
         newEntry: newEntryWord,
       },
       () => {
-        // Get button for complete and push it
-        testRenderer.root.findByProps({ id: "complete" }).props.onClick();
+        // Get button for exit and push it
+        testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
         // Assert that the backend function for adding the word was NOT called
         expect(mockCreateWord).not.toBeCalled();
         done();
@@ -114,8 +115,8 @@ describe("DataEntryTable", () => {
     );
   });
 
-  it("calls hideQuestions when complete is clicked", () => {
-    testRenderer.root.findByProps({ id: "complete" }).props.onClick();
+  it("calls hideQuestions when exit is clicked", () => {
+    testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
     expect(hideQuestionsMock).toBeCalledTimes(1);
   });
 

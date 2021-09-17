@@ -26,6 +26,8 @@ import AvatarUpload from "components/UserSettings/AvatarUpload";
 import theme from "types/theme";
 import { newUser } from "types/user";
 
+const idAffix = "user-settings";
+
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
     <Dialog onClose={props.onClose} open={props.open}>
@@ -165,7 +167,7 @@ class UserSettings extends React.Component<
                     </Grid>
                     <Grid item xs>
                       <TextField
-                        id="user-name"
+                        id={`${idAffix}-name`}
                         fullWidth
                         variant="outlined"
                         value={this.state.name}
@@ -196,7 +198,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
-                          id="user-phone"
+                          id={`${idAffix}-phone`}
                           fullWidth
                           variant="outlined"
                           value={this.state.phone}
@@ -213,7 +215,7 @@ class UserSettings extends React.Component<
                       </Grid>
                       <Grid item xs>
                         <TextField
-                          id="user-email"
+                          id={`${idAffix}-email`}
                           fullWidth
                           variant="outlined"
                           value={this.state.email}
@@ -238,7 +240,7 @@ class UserSettings extends React.Component<
                     <Button
                       type="submit"
                       variant="contained"
-                      id="user-settings-save"
+                      id={`${idAffix}-save`}
                     >
                       <Translate id="buttons.save" />
                     </Button>

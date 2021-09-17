@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonProps,
   ImageList,
   ImageListItem,
   Typography,
@@ -40,6 +41,7 @@ function gridStyle(
 }
 
 interface GoalListProps {
+  completed?: boolean;
   orientation: Orientation;
   data: Goal[];
   size: number;
@@ -61,11 +63,15 @@ export default function GoalList(props: GoalListProps): ReactElement {
       onMouseLeave={() => setScrollVisible(false)}
     >
       {props.data.length > 0
-        ? props.data.map((g) =>
-            makeGoalTile(tileSize, props.orientation, g, () =>
-              props.handleChange(g)
-            )
-          )
+        ? props.data.map((g, i) => {
+            const buttonProps = {
+              id: props.completed
+                ? `completed-goal-${i}`
+                : `new-goal-${g.name}`,
+              onClick: () => props.handleChange(g),
+            };
+            return makeGoalTile(tileSize, props.orientation, g, buttonProps);
+          })
         : makeGoalTile(tileSize, props.orientation)}
       <div
         ref={(element: HTMLDivElement) => {
@@ -97,15 +103,15 @@ export function makeGoalTile(
   size: number,
   orientation: Orientation,
   goal?: Goal,
-  onClick?: () => void
+  buttonProps?: ButtonProps
 ): ReactElement {
   return (
     <ImageListItem key={goal?.guid + orientation} cols={1}>
       <Button
+        {...buttonProps}
         color="primary"
         variant={goal ? "outlined" : "contained"}
         style={buttonStyle(orientation, size)}
-        onClick={onClick}
         disabled={
           /* Hide completed, except goaltypes for which the completed view is implemented. */
           !goal ||
@@ -113,7 +119,6 @@ export function makeGoalTile(
             goal.goalType !== GoalType.CreateCharInv &&
             goal.goalType !== GoalType.MergeDups)
         }
-        id={`goal-${goal?.guid}`}
       >
         {goal ? (
           GoalInfo(goal)

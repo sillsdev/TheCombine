@@ -52,9 +52,10 @@ export default class ChooseProject extends React.Component<
 
           {/* List of projects */}
           <List>
-            {this.state.projectList.map((project) => (
+            {this.state.projectList.map((project, index) => (
               <ListItem
                 key={project.id}
+                id={`choose-project-${index}`}
                 button
                 onClick={() => this.selectProject(project)}
               >
