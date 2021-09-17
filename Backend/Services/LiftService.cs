@@ -180,7 +180,6 @@ namespace BackendFramework.Services
             var vernacularBcp47 = proj.VernacularWritingSystem.Bcp47;
 
             // Generate the zip dir.
-            var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
             var tempExportDir = FileOperations.GetRandomTempDir();
 
             var projNameAsPath = Sanitization.MakeFriendlyForPath(proj.Name, "Lift");
@@ -337,7 +336,7 @@ namespace BackendFramework.Services
             }
 
             // Compress everything.
-            var destinationFileName = Path.Combine(exportDir,
+            var destinationFileName = Path.Combine(FileOperations.GetRandomTempDir(),
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             var zipParentDir = Path.GetDirectoryName(zipDir);
             if (zipParentDir is null)

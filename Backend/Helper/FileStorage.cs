@@ -98,20 +98,6 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
-        /// Generate a path to the temporary Lift Export folder used during export.
-        /// </summary>
-        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
-        /// <remarks> This function may be removed in the future and replaced by temporary directory use. </remarks>
-        public static string GenerateLiftExportDirPath(string projectId, bool createDir = true)
-        {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateProjectDirPath(projectId, ExportDir, createDir);
-        }
-
-        /// <summary>
         /// Generate the path to where Avatar images are stored.
         /// </summary>
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
