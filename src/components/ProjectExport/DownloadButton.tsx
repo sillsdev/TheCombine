@@ -42,7 +42,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   useEffect(() => {
     if (exportState.status === ExportStatus.Success) {
       download();
-    } // eslint-disable-next-line
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportState.status]);
 
   function makeExportName(projectName: string) {

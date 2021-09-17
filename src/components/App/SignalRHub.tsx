@@ -34,7 +34,7 @@ export default function SignalRHub() {
 
   useEffect(() => {
     if (connection) {
-      // The methodName must match what is in Backend/Helper/CombineHub.
+      // The methodName must match what is in Backend/Helper/CombineHub.cs.
       const methodName = "DownloadReady";
       // The method is what the frontend does upon message receipt.
       const method = (userId: string) => {
