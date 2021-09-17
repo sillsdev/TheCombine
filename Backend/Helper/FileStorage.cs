@@ -27,69 +27,99 @@ namespace BackendFramework.Helper
         [Serializable]
         public class HomeFolderNotFoundException : Exception { }
 
+        /// <summary> Indicates an invalid input id. </summary>
+        [Serializable]
+        public class InvalidIdException : Exception { }
+
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project based on the Word ID.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFilePathForWord(string projectId, string wordId)
         {
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateProjectFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
         }
 
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFilePath(string projectId, string fileName)
         {
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
         }
 
         /// <summary>
         /// Generate a path to the directory where audio files are stored for the Project.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFileDirPath(string projectId, bool createDir = true)
         {
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateProjectDirPath(projectId, AudioPathSuffix, createDir);
         }
 
         /// <summary>
         /// Generate a path to the parent directory where Lift exports are stored.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         /// <remarks> This function is not expected to be used often. </remarks>
         public static string GenerateImportExtractedLocationDirPath(string projectId, bool createDir = true)
         {
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateProjectDirPath(projectId, ImportExtractedLocation, createDir);
         }
 
         /// <summary>
         /// Generate a path to the Lift import folder. This also stores audio files within it.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateLiftImportDirPath(string projectId, bool createDir = true)
         {
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateProjectDirPath(projectId, LiftImportSuffix, createDir);
-        }
-
-        /// <summary>
-        /// Generate a path to the temporary Lift Export folder used during export.
-        /// </summary>
-        /// <remarks> This function may be removed in the future and replaced by temporary directory use. </remarks>
-        public static string GenerateLiftExportDirPath(string projectId, bool createDir = true)
-        {
-            return GenerateProjectDirPath(projectId, ExportDir, createDir);
         }
 
         /// <summary>
         /// Generate the path to where Avatar images are stored.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAvatarFilePath(string userId)
         {
+            if (!Sanitization.SanitizeId(userId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
         }
 
         /// <summary>
         /// Get the top-level path to where all files are stored for the project.
         /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GetProjectDir(string projectId)
         {
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                throw new InvalidIdException();
+            }
             return GenerateProjectDirPath(projectId, "", false);
         }
 
