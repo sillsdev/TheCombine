@@ -327,17 +327,16 @@
       "Project is empty. You cannot export a project with no words.",
       "Project is empty. You cannot export a project with no words."
     ],
-    "downloadReady": ["Download ready", "Download ready", "Download ready"],
+    "downloadInProgress": [
+      "Download in progress",
+      "Download in progress",
+      "Download in progress"
+    ],
     "exportFailed": ["Export failed", "Export failed", "Export failed"],
     "exportInProgress": [
       "Export in progress",
       "Export in progress",
       "Export in progress"
-    ],
-    "downloadHint": [
-      "Another project finished exporting. Click on the download icon in the top bar to download it.",
-      "Another project finished exporting. Click on the download icon in the top bar to download it.",
-      "Another project finished exporting. Click on the download icon in the top bar to download it."
     ]
   },
   "projectSettings": {

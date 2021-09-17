@@ -49,7 +49,7 @@ export default function UserList(props: UserListProps) {
       }
     });
     Promise.all(promises).then(() => setUserAvatar(tempUserAvatar));
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.projectUsers, setUserAvatar]);
 
   function clearFilter() {

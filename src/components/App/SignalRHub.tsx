@@ -21,7 +21,7 @@ export default function SignalRHub() {
       connection.stop();
     }
     setConnection(null);
-    if (exportState.status === ExportStatus.InProgress) {
+    if (exportState.status === ExportStatus.Exporting) {
       const newConnection = new HubConnectionBuilder()
         .withUrl(`${baseURL}/hub`)
         .withAutomaticReconnect()
@@ -34,8 +34,7 @@ export default function SignalRHub() {
 
   useEffect(() => {
     if (connection) {
-      // The methodName must match what is used by the Backend in, e.g.,
-      // `_notifyService.Clients.All.SendAsync("DownloadReady", userId);`.
+      // The methodName must match what is in Backend/Helper/CombineHub.cs.
       const methodName = "DownloadReady";
       // The method is what the frontend does upon message receipt.
       const method = (userId: string) => {
