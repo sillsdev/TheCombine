@@ -40,7 +40,7 @@ export default function ActiveUsers() {
 
   useEffect(() => {
     getUserRoles().then(setProjUserRoles);
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectUsers, setProjUserRoles]);
 
   useEffect(() => {
@@ -51,12 +51,12 @@ export default function ActiveUsers() {
       }
     });
     Promise.all(promises).then(() => setUserAvatar(tempUserAvatar));
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectUsers, setUserAvatar]);
 
   useEffect(() => {
     setSortedUsers(getSortedUsers());
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectUsers, userOrder, reverseSorting, setSortedUsers]);
 
   function getSortedUsers() {
