@@ -209,8 +209,7 @@ namespace BackendFramework.Controllers
             return await ExportLiftFile(projectId, userId);
         }
 
-        // These internal methods are extracted for unit testing
-        internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        private async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -254,9 +253,10 @@ namespace BackendFramework.Controllers
             return Ok(projectId);
         }
 
+        // These internal methods are extracted for unit testing.
         internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
         {
-            // Export the data to a zip, read into memory, and delete zip
+            // Export the data to a zip, read into memory, and delete zip.
             var exportedFilepath = await CreateLiftExport(projectId);
 
             // Store the temporary path to the exported file for user to download later.
