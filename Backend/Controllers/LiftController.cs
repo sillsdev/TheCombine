@@ -261,7 +261,7 @@ namespace BackendFramework.Controllers
 
             // Store the temporary path to the exported file for user to download later.
             _liftService.StoreExport(userId, exportedFilepath);
-            await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
+            await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
             return true;
         }
 

@@ -34,8 +34,7 @@ export default function SignalRHub() {
 
   useEffect(() => {
     if (connection) {
-      // The methodName must match what is used by the Backend in, e.g.,
-      // `_notifyService.Clients.All.SendAsync("DownloadReady", userId);`.
+      // The methodName must match what is in Backend/Helper/CombineHub.
       const methodName = "DownloadReady";
       // The method is what the frontend does upon message receipt.
       const method = (userId: string) => {
