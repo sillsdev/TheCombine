@@ -247,10 +247,10 @@ namespace BackendFramework.Controllers
                 return BadRequest("No words to export.");
             }
 
-            async void StartExport() => await CreateLiftExportThenSignal(projectId, userId);
-            var exportThread = new Thread(StartExport);
-            exportThread.Start();
-
+            // Run the task without waiting for completion.
+            // This Task will be scheduled within the exiting Async executor thread pool efficiently.
+            // See: https://stackoverflow.com/a/64614779/1398841
+            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
             return Ok(projectId);
         }
 
