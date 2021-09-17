@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core";
-import { Cached, Error as ErrorIcon, GetApp } from "@material-ui/icons";
+import { Cached, Error as ErrorIcon } from "@material-ui/icons";
 import React, { createRef, ReactElement, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,10 @@ interface DownloadButtonProps {
   colorSecondary?: boolean;
 }
 
-/** A button to show export status */
+/**
+ * A button to show export status. This automatically initiates a download
+ * when a user's export is done, so there should be exactly one copy of this
+ * component rendered at any given time in the logged-in app. */
 export default function DownloadButton(props: DownloadButtonProps) {
   const exportState = useSelector(
     (state: StoreState) => state.exportProjectState
@@ -35,6 +38,12 @@ export default function DownloadButton(props: DownloadButtonProps) {
       setFileUrl(undefined);
     }
   }, [downloadLink, fileUrl]);
+
+  useEffect(() => {
+    if (exportState.status === ExportStatus.Success) {
+      download();
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exportState.status]);
 
   function makeExportName(projectName: string) {
     return `${projectName}_${getNowDateTimeString()}.zip`;
@@ -60,10 +69,11 @@ export default function DownloadButton(props: DownloadButtonProps) {
 
   function textId(): string {
     switch (exportState.status) {
-      case ExportStatus.InProgress:
+      case ExportStatus.Exporting:
         return "projectExport.exportInProgress";
       case ExportStatus.Success:
-        return "projectExport.downloadReady";
+      case ExportStatus.Downloading:
+        return "projectExport.downloadInProgress";
       case ExportStatus.Failure:
         return "projectExport.exportFailed";
       default:
@@ -73,10 +83,10 @@ export default function DownloadButton(props: DownloadButtonProps) {
 
   function icon(): ReactElement {
     switch (exportState.status) {
-      case ExportStatus.InProgress:
-        return <Cached />;
+      case ExportStatus.Exporting:
+      case ExportStatus.Downloading:
       case ExportStatus.Success:
-        return <GetApp />;
+        return <Cached />;
       case ExportStatus.Failure:
         return <ErrorIcon />;
       default:
@@ -94,8 +104,6 @@ export default function DownloadButton(props: DownloadButtonProps) {
 
   function iconFunction(): () => void {
     switch (exportState.status) {
-      case ExportStatus.Success:
-        return download;
       case ExportStatus.Failure:
         return reset;
       default:
