@@ -3,7 +3,7 @@ import { Cancel } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
-import * as backend from "backend";
+import { getBanner } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
 import { Path } from "browserHistory";
 import { topBarHeight } from "components/LandingPage/TopBar";
@@ -13,13 +13,12 @@ export default function AnnouncementBanner() {
   const [banner, setBanner] = useState<string>("");
 
   useEffect(() => {
-    const getBanner = async () => {
-      const text = (await backend.getBanner()).announcement;
+    getBanner().then((banner) => {
+      const text = banner.announcement;
       if (text && text !== getClosedBanner()) {
         setBanner(text);
       }
-    };
-    getBanner();
+    });
   }, []);
 
   function closeBanner() {
