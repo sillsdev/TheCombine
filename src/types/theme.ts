@@ -16,7 +16,7 @@ export const themeColors = {
   primary: blue[600],
   secondary: grey[200],
   error: red[600],
-  warn: orange[400],
+  warn: orange[300],
   success: green[600],
   highlight: yellow[200],
   shade: blue[700], // tabColor()

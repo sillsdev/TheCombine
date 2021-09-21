@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { IconButton, TextField, Toolbar } from "@material-ui/core";
+import { Box, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Cancel } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 import * as backend from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
+import { Path } from "browserHistory";
 import { topBarHeight } from "components/LandingPage/TopBar";
-import { themeColors } from "types/theme";
+import theme, { themeColors } from "types/theme";
 
 export default function AnnouncementBanner() {
   const [banner, setBanner] = useState<string>("");
@@ -25,24 +27,23 @@ export default function AnnouncementBanner() {
     setBanner("");
   }
 
+  // Adust the margins depending on whether there is an AppBar.
+  const loc = useLocation().pathname;
+  const isBelowAppBar = loc === Path.Root || loc.startsWith(Path.ProjScreen);
+  const margins = isBelowAppBar
+    ? { marginTop: topBarHeight, marginBottom: -topBarHeight }
+    : {};
+
   return (
     <React.Fragment>
-      {banner !== "" && (
-        <div style={{ marginTop: topBarHeight }}>
-          <Toolbar>
-            <IconButton onClick={closeBanner}>
-              <Cancel />
-            </IconButton>
-            <TextField
-              id="login.banner"
-              variant="outlined"
-              multiline
-              disabled
-              style={{ width: "100%", backgroundColor: themeColors.warn }}
-              value={banner}
-            />
-          </Toolbar>
-        </div>
+      {!!banner && (
+        <Toolbar style={{ ...margins, backgroundColor: themeColors.warn }}>
+          <IconButton onClick={closeBanner}>
+            <Cancel />
+          </IconButton>
+          <Box sx={{ width: theme.spacing(2) }} />
+          <Typography>{banner}</Typography>
+        </Toolbar>
       )}
     </React.Fragment>
   );

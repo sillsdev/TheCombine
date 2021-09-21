@@ -16,6 +16,7 @@ import { getBanner } from "backend";
 import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
+import theme, { themeColors } from "types/theme";
 
 const idAffix = "login";
 
@@ -66,12 +67,7 @@ export default class Login extends React.Component<
 
   componentDidMount() {
     this.props.reset();
-
-    const getAndSetBanner = async () => {
-      const banner = await getBanner();
-      this.setState({ loginBanner: banner.login });
-    };
-    getAndSetBanner();
+    getBanner().then((banner) => this.setState({ loginBanner: banner.login }));
   }
 
   /** Updates the state to match the value in a textbox */
@@ -198,7 +194,7 @@ export default class Login extends React.Component<
                 </div>
               )}
 
-              {/* Register and Login buttons */}
+              {/* User Guide, Register, and Login buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
                   <Button id={`${idAffix}-guide`} onClick={openUserGuide}>
@@ -231,17 +227,18 @@ export default class Login extends React.Component<
                   </LoadingButton>
                 </Grid>
               </Grid>
-              {this.state.loginBanner !== "" && (
-                <Grid>
-                  <TextField
-                    id="login.banner"
-                    variant="outlined"
-                    multiline
-                    disabled
-                    style={{ width: "100%" }}
-                    value={this.state.loginBanner}
-                  />
-                </Grid>
+
+              {/* Login announcement banner */}
+              {!!this.state.loginBanner && (
+                <Typography
+                  style={{
+                    marginTop: theme.spacing(2),
+                    padding: theme.spacing(1),
+                    backgroundColor: themeColors.warn,
+                  }}
+                >
+                  {this.state.loginBanner}
+                </Typography>
               )}
             </CardContent>
           </form>

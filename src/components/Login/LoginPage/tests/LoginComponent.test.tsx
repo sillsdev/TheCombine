@@ -9,7 +9,7 @@ jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
 ));
 jest.mock("backend", () => ({
-  getBanner: () => ({ login: "" }),
+  getBanner: () => Promise.resolve({ login: "" }),
 }));
 
 const LOGOUT = jest.fn();
