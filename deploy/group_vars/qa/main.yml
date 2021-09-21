@@ -51,6 +51,10 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
+
+# Specify which Kubernetes engine to install -
+# one of k3s, microk8s, or none.
+k8s_engine: none
 k8s_components: []
 
 pull_secrets_manager: aws_login_job
@@ -64,6 +68,7 @@ k8s_group: sillsdev
 #######################################
 # Ingress configuration
 ingress_class: nginx
+ingress_namespace: ingress-nginx
 
 ################################################
 # WiFi access point settings

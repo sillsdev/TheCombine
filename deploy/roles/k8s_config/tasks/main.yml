@@ -5,14 +5,12 @@
     state: directory
     mode: 0700
 
-- name: Create Kubernetes configuration files
+- name: Create Kubernetes configuration files for The Combine
   template:
     src: "{{ item }}.j2"
     dest: "{{ k8s_combine_cfg }}/{{ item }}"
     mode: 0600
   loop: "{{ k8s_resource_templates}}"
-  tags:
-    - config_only
 
 - name: Apply Kubernetes configuration
   command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item }}

@@ -1,0 +1,6 @@
+---
+k3s_options:
+  - --write-kubeconfig-mode
+  - 644
+  - --disable
+  - traefik
