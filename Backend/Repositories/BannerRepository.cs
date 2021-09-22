@@ -58,8 +58,6 @@ namespace BackendFramework.Repositories
         }
 
         [Serializable]
-        private class BannerSingletonNotFound : Exception
-        {
-        }
+        private class BannerSingletonNotFound : Exception { }
     }
 }

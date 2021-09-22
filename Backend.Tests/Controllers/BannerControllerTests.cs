@@ -43,7 +43,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetNoPermission()
+        public void TestGetBannerNoPermission()
         {
             var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
             Assert.IsTrue(result);
