@@ -29,7 +29,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-            var user = await _userRepo.GetUser(userId, false);
+            var user = await _userRepo.GetUser(userId);
             var avatar = string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
 
             if (avatar is null)
