@@ -4,12 +4,12 @@ import { useLocation } from "react-router-dom";
 
 import { getProjectId } from "backend/localStorage";
 import { getBasePath, Path } from "browserHistory";
-import { topBarHeight } from "components/LandingPage/TopBar";
-import DownloadButton from "components/ProjectExport/DownloadButton";
 import Logo from "components/AppBar/Logo";
 import NavigationButtons from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
 import UserMenu from "components/AppBar/UserMenu";
+import { topBarHeight } from "components/LandingPage/TopBar";
+import DownloadButton from "components/ProjectExport/DownloadButton";
 import theme from "types/theme";
 
 /** An app bar shown at the top of all logged in pages */

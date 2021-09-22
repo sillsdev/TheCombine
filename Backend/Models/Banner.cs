@@ -13,7 +13,7 @@ namespace BackendFramework.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// Banner shown in the initial landing page of the app long-term to personalize the deployment.
+        /// Banner shown in the login page of the app long-term to personalize the deployment.
         /// </summary>
         [Required]
         [BsonElement("login")]

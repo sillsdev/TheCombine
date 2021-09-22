@@ -8,6 +8,7 @@ import {
   MergeWords,
   Permission,
   Project,
+  SiteBanner,
   User,
   UserEdit,
   UserRole,
@@ -20,7 +21,6 @@ import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { RuntimeConfig } from "types/runtimeConfig";
-import { SiteBanner } from "api";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -126,7 +126,7 @@ export async function avatarSrc(userId: string): Promise<string> {
  *
  * Note: This function does not require authentication. Anonymous users can
  * pull the banners since their purpose is to help give more context about
- * server.
+ * the server.
  */
 export async function getBanner(): Promise<SiteBanner> {
   return (await bannerApi.getBanner()).data;

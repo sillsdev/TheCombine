@@ -24,7 +24,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns the <see cref="Banner"/> for the site. </summary>
-        /// <remarks> Banners are readable by any request and do no require permissions. </remarks>
+        /// <remarks> Banners are readable by any request and do not require permissions. </remarks>
         [AllowAnonymous]
         [HttpGet("", Name = "GetBanner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SiteBanner))]
