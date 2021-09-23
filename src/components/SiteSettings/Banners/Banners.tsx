@@ -39,8 +39,8 @@ function Banner(props: BannerProps): ReactElement {
   };
 
   const handleResetClick = async () => {
+    await updateBanner({ type: props.type, text: "" });
     setText("");
-    await handleSaveClick();
   };
 
   const labelId = (type: BannerType) => {
