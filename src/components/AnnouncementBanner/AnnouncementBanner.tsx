@@ -26,7 +26,7 @@ export default function AnnouncementBanner() {
       if (text !== banner && (!text || text !== getClosedBanner())) {
         setBanner(text);
       }
-    });
+    }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loc]);
 
   function closeBanner() {
