@@ -22,6 +22,8 @@ import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
 
+export const exitButtonId = "exit-to-domain-tree";
+
 interface DataEntryTableProps {
   semanticDomain: SemanticDomain;
   displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
@@ -532,6 +534,7 @@ export class DataEntryTable extends React.Component<
               ) ? null /*Word not shows because it's being edited*/ : (
                 <RecentEntry
                   key={wordAccess.word.id + "_" + wordAccess.senseIndex}
+                  rowIndex={index}
                   entry={wordAccess.word}
                   senseIndex={wordAccess.senseIndex}
                   updateGloss={(newDef: string) =>
@@ -602,7 +605,7 @@ export class DataEntryTable extends React.Component<
           </Grid>
           <Grid item>
             <Button
-              id="complete"
+              id={exitButtonId}
               type="submit"
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}

@@ -17,6 +17,8 @@ import {
   meetsUsernameRequirements,
 } from "utilities";
 
+const idAffix = "register";
+
 interface RegisterDispatchProps {
   register?: (
     name: string,
@@ -172,7 +174,7 @@ export default class Register extends React.Component<
 
               {/* Name field */}
               <TextField
-                id="register-name"
+                id={`${idAffix}-name`}
                 required
                 autoFocus
                 autoComplete="name"
@@ -193,7 +195,7 @@ export default class Register extends React.Component<
 
               {/* Username field */}
               <TextField
-                id="register-username"
+                id={`${idAffix}-username`}
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
@@ -216,7 +218,7 @@ export default class Register extends React.Component<
 
               {/* email field */}
               <TextField
-                id="register-email"
+                id={`${idAffix}-email`}
                 required
                 type="email"
                 autoComplete="email"
@@ -240,7 +242,7 @@ export default class Register extends React.Component<
 
               {/* Password field */}
               <TextField
-                id="register-password1"
+                id={`${idAffix}-password1`}
                 required
                 autoComplete="new-password"
                 label={<Translate id="login.password" />}
@@ -263,7 +265,7 @@ export default class Register extends React.Component<
 
               {/* Confirm Password field */}
               <TextField
-                id="register-password2"
+                id={`${idAffix}-password2`}
                 autoComplete="new-password"
                 label={<Translate id="login.confirmPassword" />}
                 type="password"
@@ -295,11 +297,11 @@ export default class Register extends React.Component<
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <Button
+                    id={`${idAffix}-login`}
                     type="button"
                     onClick={() => {
                       history.push(Path.Login);
                     }}
-                    id="register-login"
                   >
                     <Translate id="login.backToLogin" />
                   </Button>
@@ -309,7 +311,10 @@ export default class Register extends React.Component<
                     loading={this.props.inProgress}
                     done={this.props.success}
                     doneText={<Translate id="login.registerSuccess" />}
-                    buttonProps={{ color: "primary", id: "register-register" }}
+                    buttonProps={{
+                      id: `${idAffix}-register`,
+                      color: "primary",
+                    }}
                   >
                     <Translate id="login.register" />
                   </LoadingDoneButton>

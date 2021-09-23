@@ -18,6 +18,8 @@ import theme from "types/theme";
 import { newSense, newWord } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
+const idAffix = "new-entry";
+
 interface NewEntryProps {
   allVerns: string[];
   allWords: Word[];
@@ -298,140 +300,141 @@ export default class NewEntry extends React.Component<
 
   render() {
     return (
-      <Grid item xs={12}>
-        <Grid container>
-          <Grid
-            container
-            item
-            xs={4}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
-            }}
-          >
-            <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
-              <VernWithSuggestions
-                isNew={true}
-                vernacular={this.state.newEntry.vernacular}
-                vernInput={this.vernInput}
-                updateVernField={(newValue: string, openDialog?: boolean) => {
-                  this.updateVernField(newValue, openDialog);
-                }}
-                onBlur={() => {
-                  this.updateVernField(this.state.newEntry.vernacular, true);
-                }}
-                suggestedVerns={this.state.suggestedVerns}
-                handleEnterAndTab={(e: React.KeyboardEvent) =>
-                  // To prevent unintentional no-gloss submissions:
-                  // If enter pressed from the vern field,
-                  // check whether gloss is empty
-                  this.handleEnter(e, true)
-                }
-                textFieldId="new-entry-vernacular"
-              />
-              <VernDialog
-                open={this.state.vernOpen}
-                handleClose={(selectedWordId?: string) =>
-                  this.handleCloseVernDialog(selectedWordId)
-                }
-                vernacularWords={this.state.dupVernWords}
-                analysisLang={this.props.analysisLang}
-              />
-              {this.state.selectedWord && (
-                <SenseDialog
-                  selectedWord={this.state.selectedWord}
-                  open={this.state.senseOpen}
-                  handleClose={(senseIndex?: number) =>
-                    this.handleCloseSenseDialog(senseIndex)
-                  }
-                  analysisLang={this.props.analysisLang}
-                />
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="caption">
-                <Translate id="addWords.pressEnter" />
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
-            }}
-          >
-            <GlossWithSuggestions
+      <Grid container id={idAffix} alignItems="center">
+        <Grid
+          container
+          item
+          xs={4}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            position: "relative",
+          }}
+        >
+          <Grid item xs={12}>
+            <VernWithSuggestions
               isNew={true}
-              gloss={this.state.activeGloss}
-              glossInput={this.glossInput}
-              updateGlossField={(newValue: string) =>
-                this.updateGlossField(newValue)
-              }
+              vernacular={this.state.newEntry.vernacular}
+              vernInput={this.vernInput}
+              updateVernField={(newValue: string, openDialog?: boolean) => {
+                this.updateVernField(newValue, openDialog);
+              }}
+              onBlur={() => {
+                this.updateVernField(this.state.newEntry.vernacular, true);
+              }}
+              suggestedVerns={this.state.suggestedVerns}
               handleEnterAndTab={(e: React.KeyboardEvent) =>
-                // To allow intentional no-gloss submissions:
-                // If enter pressed from the gloss field,
-                // don't check whether gloss is empty
-                this.handleEnter(e, false)
+                // To prevent unintentional no-gloss submissions:
+                // If enter pressed from the vern field,
+                // check whether gloss is empty
+                this.handleEnter(e, true)
               }
-              analysisLang={this.props.analysisLang}
-              textFieldId={"new-entry-gloss"}
+              textFieldId={`${idAffix}-vernacular`}
             />
-          </Grid>
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            {!this.state.selectedWord && (
-              // note is not available if user selected to modify an exiting entry
-              <EntryNote
-                noteText={this.state.newEntry.note.text}
-                updateNote={(text: string) => this.updateNote(text)}
-                buttonId="note-entry-new"
+            <VernDialog
+              open={this.state.vernOpen}
+              handleClose={(selectedWordId?: string) =>
+                this.handleCloseVernDialog(selectedWordId)
+              }
+              vernacularWords={this.state.dupVernWords}
+              analysisLang={this.props.analysisLang}
+            />
+            {this.state.selectedWord && (
+              <SenseDialog
+                selectedWord={this.state.selectedWord}
+                open={this.state.senseOpen}
+                handleClose={(senseIndex?: number) =>
+                  this.handleCloseSenseDialog(senseIndex)
+                }
+                analysisLang={this.props.analysisLang}
               />
             )}
           </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            <Pronunciations
-              wordId={""}
-              pronunciationFiles={this.state.audioFileURLs}
-              recorder={this.props.recorder}
-              deleteAudio={(_, fileName: string) => {
-                this.removeAudio(fileName);
-              }}
-              uploadAudio={(_, audioFile: File) => {
-                this.addAudio(audioFile);
-              }}
-              getAudioUrl={(_, fileName: string) => fileName}
+        </Grid>
+        <Grid
+          item
+          xs={4}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            position: "relative",
+          }}
+        >
+          <GlossWithSuggestions
+            isNew={true}
+            gloss={this.state.activeGloss}
+            glossInput={this.glossInput}
+            updateGlossField={(newValue: string) =>
+              this.updateGlossField(newValue)
+            }
+            handleEnterAndTab={(e: React.KeyboardEvent) =>
+              // To allow intentional no-gloss submissions:
+              // If enter pressed from the gloss field,
+              // don't check whether gloss is empty
+              this.handleEnter(e, false)
+            }
+            analysisLang={this.props.analysisLang}
+            textFieldId={`${idAffix}-gloss`}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          style={{
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            position: "relative",
+          }}
+        >
+          {!this.state.selectedWord && (
+            // note is not available if user selected to modify an exiting entry
+            <EntryNote
+              noteText={this.state.newEntry.note.text}
+              updateNote={(text: string) => this.updateNote(text)}
+              buttonId="note-entry-new"
             />
-          </Grid>
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
+          )}
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          style={{
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            position: "relative",
+          }}
+        >
+          <Pronunciations
+            wordId={""}
+            pronunciationFiles={this.state.audioFileURLs}
+            recorder={this.props.recorder}
+            deleteAudio={(_, fileName: string) => {
+              this.removeAudio(fileName);
             }}
-          >
-            <DeleteEntry removeEntry={() => this.resetState()} />
-          </Grid>
+            uploadAudio={(_, audioFile: File) => {
+              this.addAudio(audioFile);
+            }}
+            getAudioUrl={(_, fileName: string) => fileName}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          style={{
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            position: "relative",
+          }}
+        >
+          <DeleteEntry
+            removeEntry={() => this.resetState()}
+            buttonId={`${idAffix}-delete`}
+          />
+        </Grid>
+        <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
+          <Typography variant="caption">
+            <Translate id="addWords.pressEnter" />
+          </Typography>
         </Grid>
       </Grid>
     );

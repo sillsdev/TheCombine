@@ -7,6 +7,7 @@ import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 
 interface DeleteEntryProps {
   removeEntry: () => void;
+  buttonId: string;
   // confirmId is the translation id for the text of the delete confirmation popup;
   // if no confirmId is specified, then there is no popup
   // and deletion will happen when the button is pressed
@@ -35,7 +36,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
           tabIndex={-1}
           size="small"
           onClick={handleClick}
-          id={`word-delete-${props.wordId}`}
+          id={props.buttonId}
         >
           <Delete />
         </IconButton>

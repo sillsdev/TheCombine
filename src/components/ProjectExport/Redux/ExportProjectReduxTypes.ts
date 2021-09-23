@@ -1,6 +1,7 @@
 export enum ExportStatus {
   Default = "DEFAULT",
-  InProgress = "IN_PROGRESS",
+  Exporting = "EXPORTING",
+  Downloading = "DOWNLOADING",
   Success = "SUCCESS",
   Failure = "FAILURE",
 }

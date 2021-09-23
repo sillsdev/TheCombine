@@ -16,7 +16,7 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void UtcNowIso8601()
+        public void TestUtcNowIso8601()
         {
             var time = Time.UtcNowIso8601();
             Assert.That(time.Contains("T"));
