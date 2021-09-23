@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
 import { BannerType } from "api/models";
-import { getBanner } from "backend";
+import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
 import { Path } from "browserHistory";
 import { topBarHeight } from "components/LandingPage/TopBar";
@@ -20,11 +20,11 @@ export default function AnnouncementBanner() {
     ? { marginTop: topBarHeight, marginBottom: -topBarHeight }
     : {};
 
-  // Check for banner on (re)load or navigation to a new page.
+  // Check for announcement banner on (re)load or navigation to a new page.
   useEffect(() => {
-    getBanner(BannerType.Announcement).then((banner) => {
-      if (banner.text && banner.text !== getClosedBanner()) {
-        setBanner(banner.text);
+    getBannerText(BannerType.Announcement).then((text) => {
+      if (text !== banner && (!text || text !== getClosedBanner())) {
+        setBanner(text);
       }
     });
   }, [loc]);

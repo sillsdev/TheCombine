@@ -13,7 +13,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import { BannerType } from "api/models";
-import { getBanner } from "backend";
+import { getBannerText } from "backend";
 import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -68,8 +68,8 @@ export default class Login extends React.Component<
 
   componentDidMount() {
     this.props.reset();
-    getBanner(BannerType.Login).then((banner) =>
-      this.setState({ loginBanner: banner.text })
+    getBannerText(BannerType.Login).then((loginBanner) =>
+      this.setState({ loginBanner })
     );
   }
 

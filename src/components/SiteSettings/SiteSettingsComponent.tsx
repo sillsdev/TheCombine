@@ -1,10 +1,9 @@
 import { Grid } from "@material-ui/core";
 import { Announcement, List, People } from "@material-ui/icons";
-import React from "react";
 import { Translate } from "react-localize-redux";
 
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
-import Banner from "components/SiteSettings/Banners/Banner";
+import Banners from "components/SiteSettings/Banners/Banners";
 import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
 import UserManagement from "components/SiteSettings//UserManagement/UserManagement";
 
@@ -29,7 +28,7 @@ export default function SiteSettingsComponent() {
       <BaseSettingsComponent
         icon={<Announcement />}
         title={<Translate id="siteSettings.banners.title" />}
-        body={<Banner />}
+        body={<Banners />}
       />
     </Grid>
   );
