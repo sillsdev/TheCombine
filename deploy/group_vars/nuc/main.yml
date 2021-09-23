@@ -58,7 +58,6 @@ k8s_engine: k3s
 k8s_components:
   - ingress_controller
 
-pull_secrets_manager: aws_login_job
 image_pull_secret: aws-login-credentials
 
 app_namespace: thecombine
