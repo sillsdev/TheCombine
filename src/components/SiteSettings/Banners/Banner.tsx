@@ -2,40 +2,45 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import { SiteBanner } from "api";
-import * as backend from "backend";
+import { BannerType } from "api/models";
+import { getBanner, updateBanner } from "backend";
 import theme from "types/theme";
 
 const idAffix = "site-settings-banner";
 
-const defaultBanner = () => ({ login: "", announcement: "" });
-
 export default function Banner(): ReactElement {
-  const [banner, setBanner] = useState<SiteBanner>(defaultBanner());
+  const [announcement, setAnnouncement] = useState<string>("");
+  const [login, setLogin] = useState<string>("");
 
   useEffect(() => {
-    backend.getBanner().then(setBanner);
+    getBanner(BannerType.Announcement).then((banner) =>
+      setAnnouncement(banner.text)
+    );
+    getBanner(BannerType.Login).then((banner) => setLogin(banner.text));
   }, []);
 
   const handleLoginOnChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    setBanner({ ...banner, login: e.target.value });
+    setLogin(e.target.value);
   };
 
   const handleAnnouncementOnChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    setBanner({ ...banner, announcement: e.target.value });
+    setAnnouncement(e.target.value);
   };
 
   const handleSaveClick = async () => {
-    await backend.updateBanner(banner);
+    await updateBanner({ type: BannerType.Announcement, text: announcement });
+    await updateBanner({ type: BannerType.Login, text: login });
   };
 
   const handleResetClick = async () => {
-    setBanner(defaultBanner());
-    await backend.updateBanner(banner);
+    await updateBanner({ type: BannerType.Announcement, text: "" });
+    setAnnouncement("");
+    await updateBanner({ type: BannerType.Login, text: "" });
+    setLogin("");
   };
 
   return (
@@ -48,7 +53,7 @@ export default function Banner(): ReactElement {
             fullWidth
             multiline
             label={<Translate id="siteSettings.banners.loginBanner" />}
-            value={banner.login}
+            value={login}
             onChange={handleLoginOnChange}
           />
         </Grid>
@@ -60,7 +65,7 @@ export default function Banner(): ReactElement {
             fullWidth
             multiline
             label={<Translate id="siteSettings.banners.announcementBanner" />}
-            value={banner.announcement}
+            value={announcement}
             onChange={handleAnnouncementOnChange}
           />
         </Grid>

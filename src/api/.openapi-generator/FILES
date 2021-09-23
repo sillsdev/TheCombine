@@ -19,6 +19,7 @@ configuration.ts
 git_push.sh
 index.ts
 models/autocomplete-setting.ts
+models/banner-type.ts
 models/credentials.ts
 models/custom-field.ts
 models/definition.ts

@@ -19,45 +19,45 @@ namespace BackendFramework.Repositories
             _bannerDatabase = collectionSettings;
         }
 
-        private async Task<Banner> CreateEmptyBanner()
+        private async Task<Banner> CreateEmptyBanner(BannerType type)
         {
-            var emptyBanner = new Banner();
+            var emptyBanner = new Banner { Type = type };
             await _bannerDatabase.Banners.InsertOneAsync(emptyBanner);
             return emptyBanner;
         }
 
-        public async Task<Banner> Get()
+        public async Task<Banner> Get(BannerType type)
         {
-            var bannerList = await _bannerDatabase.Banners.FindAsync(x => true);
+            var bannerList = await _bannerDatabase.Banners.FindAsync(x => x.Type == type);
             try
             {
                 return await bannerList.FirstAsync();
             }
             catch (InvalidOperationException)
             {
-                return await CreateEmptyBanner();
+                return await CreateEmptyBanner(type);
             }
         }
 
         public async Task<ResultOfUpdate> Update(SiteBanner banner)
         {
-            var existingBanner = await Get();
+            var existingBanner = await Get(banner.Type);
             var filter = Builders<Banner>.Filter.Eq(x => x.Id, existingBanner.Id);
             var updateDef = Builders<Banner>.Update
-                .Set(x => x.Login, banner.Login)
-                .Set(x => x.Announcement, banner.Announcement);
+                .Set(x => x.Type, banner.Type)
+                .Set(x => x.Text, banner.Text);
             var updateResult = await _bannerDatabase.Banners.UpdateOneAsync(filter, updateDef);
 
-            // The Banner singleton should always exist, so this case should never happen.
+            // The singleton for each banner type should always exist, so this case should never happen.
             if (!updateResult.IsAcknowledged)
             {
-                throw new BannerSingletonNotFound();
+                throw new BannerNotFound();
             }
 
             return ResultOfUpdate.Updated;
         }
 
         [Serializable]
-        private class BannerSingletonNotFound : Exception { }
+        private class BannerNotFound : Exception { }
     }
 }

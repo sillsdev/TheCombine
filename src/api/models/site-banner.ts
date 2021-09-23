@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { BannerType } from "./banner-type";
+
 /**
  *
  * @export
@@ -20,14 +22,14 @@
 export interface SiteBanner {
   /**
    *
-   * @type {string}
+   * @type {BannerType}
    * @memberof SiteBanner
    */
-  login: string;
+  type: BannerType;
   /**
    *
    * @type {string}
    * @memberof SiteBanner
    */
-  announcement: string;
+  text: string;
 }

@@ -13,9 +13,9 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private BannerController _bannerController = null!;
 
-        private const string Login = "Login";
-        private const string Announcement = "Announcement";
-        private readonly SiteBanner _siteBanner = new() { Login = Login, Announcement = Announcement };
+        private const BannerType Type = BannerType.Login;
+        private const string Text = "Login Banner Text";
+        private readonly SiteBanner _siteBanner = new() { Type = Type, Text = Text };
 
         [SetUp]
         public void Setup()
@@ -30,7 +30,7 @@ namespace Backend.Tests.Controllers
         {
             var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
             Assert.IsTrue(result);
-            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner().Result).Value;
+            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value;
             Assert.AreEqual(banner, _siteBanner);
         }
 
@@ -48,7 +48,7 @@ namespace Backend.Tests.Controllers
             var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
             Assert.IsTrue(result);
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner().Result).Value;
+            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value;
             Assert.AreEqual(banner, _siteBanner);
         }
     }

@@ -12,6 +12,7 @@ import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import { BannerType } from "api/models";
 import { getBanner } from "backend";
 import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -67,7 +68,9 @@ export default class Login extends React.Component<
 
   componentDidMount() {
     this.props.reset();
-    getBanner().then((banner) => this.setState({ loginBanner: banner.login }));
+    getBanner(BannerType.Login).then((banner) =>
+      this.setState({ loginBanner: banner.text })
+    );
   }
 
   /** Updates the state to match the value in a textbox */

@@ -5,23 +5,23 @@ namespace Backend.Tests.Models
 {
     public class SiteBannerTests
     {
-        private const string Login = "Login";
-        private const string Announcement = "Announcement";
-        private readonly SiteBanner _siteBanner = new() { Login = Login, Announcement = Announcement };
+        private const BannerType Type = BannerType.Login;
+        private const string Text = "Login Banner Text";
+        private readonly SiteBanner _siteBanner = new() { Type = Type, Text = Text };
 
         [Test]
         public void TestEquals()
         {
-            Assert.That(_siteBanner.Equals(new SiteBanner { Login = Login, Announcement = Announcement }));
+            Assert.That(_siteBanner.Equals(new SiteBanner { Type = Type, Text = Text }));
         }
 
         [Test]
         public void TestNotEquals()
         {
             Assert.IsFalse(_siteBanner.Equals(
-                new SiteBanner { Login = "Different Login", Announcement = Announcement }));
+                new SiteBanner { Type = BannerType.Announcement, Text = Text }));
             Assert.IsFalse(_siteBanner.Equals(
-                new SiteBanner { Login = Login, Announcement = "Different Announcement" }));
+                new SiteBanner { Type = Type, Text = "Different Text" }));
         }
 
         [Test]
@@ -35,10 +35,10 @@ namespace Backend.Tests.Models
         {
             Assert.AreNotEqual(
                 _siteBanner.GetHashCode(),
-                new SiteBanner { Login = "Different Login", Announcement = Announcement }.GetHashCode());
+                new SiteBanner { Type = BannerType.Announcement, Text = Text }.GetHashCode());
             Assert.AreNotEqual(
                 _siteBanner.GetHashCode(),
-                new SiteBanner { Login = Login, Announcement = "Different Announcement" }.GetHashCode());
+                new SiteBanner { Type = Type, Text = "Different Text" }.GetHashCode());
         }
     }
 }

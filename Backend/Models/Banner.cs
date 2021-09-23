@@ -12,25 +12,19 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        /// <summary>
-        /// Banner shown in the login page of the app long-term to personalize the deployment.
-        /// </summary>
         [Required]
-        [BsonElement("login")]
-        public string Login { get; set; }
+        [BsonElement("type")]
+        public BannerType Type { get; set; }
 
-        /// <summary>
-        /// Banner used for short-term announcements related to the specific deployment.
-        /// </summary>
         [Required]
-        [BsonElement("announcement")]
-        public string Announcement { get; set; }
+        [BsonElement("text")]
+        public string Text { get; set; }
 
         public Banner()
         {
             Id = "";
-            Login = "";
-            Announcement = "";
+            Type = BannerType.None;
+            Text = "";
         }
     }
 
@@ -41,14 +35,14 @@ namespace BackendFramework.Models
     public class SiteBanner
     {
         [Required]
-        public string Login { get; set; }
+        public BannerType Type { get; set; }
         [Required]
-        public string Announcement { get; set; }
+        public string Text { get; set; }
 
         public SiteBanner()
         {
-            Login = "";
-            Announcement = "";
+            Type = BannerType.None;
+            Text = "";
         }
 
         public override bool Equals(object? obj)
@@ -58,12 +52,24 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Login.Equals(other.Login) && Announcement.Equals(other.Announcement);
+            return Type.Equals(other.Type) && Text.Equals(other.Text);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Login, Announcement);
+            return HashCode.Combine(Type, Text);
         }
+    }
+
+    public enum BannerType
+    {
+        /// <summary> Used for empty/test banners. </summary>
+        None,
+
+        /// <summary> Shown in the login page of the app long-term to personalize the deployment. </summary>
+        Login,
+
+        /// <summary> Used for short-term announcements related to the specific deployment. </summary>
+        Announcement,
     }
 }

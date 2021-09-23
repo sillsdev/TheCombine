@@ -1,4 +1,5 @@
 export * from "./autocomplete-setting";
+export * from "./banner-type";
 export * from "./credentials";
 export * from "./custom-field";
 export * from "./definition";

@@ -6,7 +6,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IBannerRepository
     {
-        Task<Banner> Get();
+        Task<Banner> Get(BannerType type);
         Task<ResultOfUpdate> Update(SiteBanner banner);
     }
 }

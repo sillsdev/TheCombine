@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 
 import * as Api from "api";
 import {
+  BannerType,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
@@ -128,8 +129,8 @@ export async function avatarSrc(userId: string): Promise<string> {
  * pull the banners since their purpose is to help give more context about
  * the server.
  */
-export async function getBanner(): Promise<SiteBanner> {
-  return (await bannerApi.getBanner()).data;
+export async function getBanner(type: BannerType): Promise<SiteBanner> {
+  return (await bannerApi.getBanner({ type })).data;
 }
 
 export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {

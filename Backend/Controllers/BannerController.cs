@@ -23,18 +23,20 @@ namespace BackendFramework.Controllers
             _permissionService = permissionService;
         }
 
-        /// <summary> Returns the <see cref="Banner"/> for the site. </summary>
+        /// <summary> Returns the <see cref="Banner"/> for the specified <see cref="BannerType"/>. </summary>
         /// <remarks> Banners are readable by any request and do not require permissions. </remarks>
         [AllowAnonymous]
         [HttpGet("", Name = "GetBanner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SiteBanner))]
-        public async Task<IActionResult> GetBanner()
+        public async Task<IActionResult> GetBanner(BannerType type)
         {
-            var banner = await _bannerRepo.Get();
-            return Ok(new SiteBanner { Announcement = banner.Announcement, Login = banner.Login });
+            var banner = await _bannerRepo.Get(type);
+            return Ok(new SiteBanner { Type = type, Text = banner.Text });
         }
 
-        /// <summary> Updates <see cref="Banner"/> singleton. </summary>
+        /// <summary>
+        /// Update the <see cref="Banner"/> with same <see cref="BannerType"/> as the given <see cref="SiteBanner"/>.
+        /// </summary>
         [HttpPut("", Name = "UpdateBanner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> UpdateBanner([FromBody, BindRequired] SiteBanner banner)

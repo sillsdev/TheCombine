@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { BannerType } from "../models";
+// @ts-ignore
 import { SiteBanner } from "../models";
 /**
  * BannerApi - axios parameter creator
@@ -48,10 +50,14 @@ export const BannerApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @param {BannerType} [type]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getBanner: async (options: any = {}): Promise<RequestArgs> => {
+    getBanner: async (
+      type?: BannerType,
+      options: any = {}
+    ): Promise<RequestArgs> => {
       const localVarPath = `/v1/banner`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -67,6 +73,10 @@ export const BannerApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      if (type !== undefined) {
+        localVarQueryParameter["type"] = type;
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -143,15 +153,18 @@ export const BannerApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @param {BannerType} [type]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getBanner(
+      type?: BannerType,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SiteBanner>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getBanner(
+        type,
         options
       );
       return createRequestFunction(
@@ -200,12 +213,13 @@ export const BannerApiFactory = function (
   return {
     /**
      *
+     * @param {BannerType} [type]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getBanner(options?: any): AxiosPromise<SiteBanner> {
+    getBanner(type?: BannerType, options?: any): AxiosPromise<SiteBanner> {
       return localVarFp
-        .getBanner(options)
+        .getBanner(type, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -221,6 +235,20 @@ export const BannerApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for getBanner operation in BannerApi.
+ * @export
+ * @interface BannerApiGetBannerRequest
+ */
+export interface BannerApiGetBannerRequest {
+  /**
+   *
+   * @type {BannerType}
+   * @memberof BannerApiGetBanner
+   */
+  readonly type?: BannerType;
+}
 
 /**
  * Request parameters for updateBanner operation in BannerApi.
@@ -245,13 +273,17 @@ export interface BannerApiUpdateBannerRequest {
 export class BannerApi extends BaseAPI {
   /**
    *
+   * @param {BannerApiGetBannerRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof BannerApi
    */
-  public getBanner(options?: any) {
+  public getBanner(
+    requestParameters: BannerApiGetBannerRequest = {},
+    options?: any
+  ) {
     return BannerApiFp(this.configuration)
-      .getBanner(options)
+      .getBanner(requestParameters.type, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

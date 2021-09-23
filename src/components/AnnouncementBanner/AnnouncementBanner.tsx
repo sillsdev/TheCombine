@@ -3,6 +3,7 @@ import { Cancel } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
+import { BannerType } from "api/models";
 import { getBanner } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
 import { Path } from "browserHistory";
@@ -21,10 +22,9 @@ export default function AnnouncementBanner() {
 
   // Check for banner on (re)load or navigation to a new page.
   useEffect(() => {
-    getBanner().then((banner) => {
-      const text = banner.announcement;
-      if (text && text !== getClosedBanner()) {
-        setBanner(text);
+    getBanner(BannerType.Announcement).then((banner) => {
+      if (banner.text && banner.text !== getClosedBanner()) {
+        setBanner(banner.text);
       }
     });
   }, [loc]);
