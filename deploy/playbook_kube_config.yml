@@ -54,7 +54,6 @@
             name: k8s_storage
           when:
             - k8s_storage_class is defined
-            - k8s_storage_class != "microk8s-hostpath"
 
         - name: Install cert-manager
           include_role:

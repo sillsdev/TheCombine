@@ -67,7 +67,7 @@ max_backups: "3"
 ################################################
 
 # Specify which Kubernetes engine to install -
-# one of k3s, microk8s, or none.
+# one of k3s, or none.
 k8s_engine: none
 k8s_components: []
 
