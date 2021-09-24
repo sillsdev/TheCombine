@@ -4,6 +4,7 @@
 api.ts
 api/audio-api.ts
 api/avatar-api.ts
+api/banner-api.ts
 api/invite-api.ts
 api/lift-api.ts
 api/merge-api.ts
@@ -18,6 +19,7 @@ configuration.ts
 git_push.sh
 index.ts
 models/autocomplete-setting.ts
+models/banner-type.ts
 models/credentials.ts
 models/custom-field.ts
 models/definition.ts
@@ -38,6 +40,7 @@ models/project.ts
 models/semantic-domain-with-subdomains.ts
 models/semantic-domain.ts
 models/sense.ts
+models/site-banner.ts
 models/state.ts
 models/user-created-project.ts
 models/user-edit-step-wrapper.ts

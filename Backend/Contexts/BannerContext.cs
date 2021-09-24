@@ -7,16 +7,16 @@ using MongoDB.Driver;
 namespace BackendFramework.Contexts
 {
     [ExcludeFromCodeCoverage]
-    public class UserRoleContext : IUserRoleContext
+    public class BannerContext : IBannerContext
     {
         private readonly IMongoDatabase _db;
 
-        public UserRoleContext(IOptions<Startup.Settings> options)
+        public BannerContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<UserRole> UserRoles => _db.GetCollection<UserRole>("UserRolesCollection");
+        public IMongoCollection<Banner> Banners => _db.GetCollection<Banner>("BannerCollection");
     }
 }

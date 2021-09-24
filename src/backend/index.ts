@@ -3,11 +3,13 @@ import { StatusCodes } from "http-status-codes";
 
 import * as Api from "api";
 import {
+  BannerType,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
   Permission,
   Project,
+  SiteBanner,
   User,
   UserEdit,
   UserRole,
@@ -38,6 +40,7 @@ axiosInstance.interceptors.response.use(undefined, (err) => {
 // Configured OpenAPI interfaces.
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
+const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
@@ -115,6 +118,23 @@ export async function avatarSrc(userId: string): Promise<string> {
     }
     return "";
   }
+}
+
+/* BannerController.cs */
+
+/**
+ * Get the Banners from the backend.
+ *
+ * Note: This function does not require authentication. Anonymous users can
+ * pull the banners since their purpose is to help give more context about
+ * the server.
+ */
+export async function getBannerText(type: BannerType): Promise<string> {
+  return (await bannerApi.getBanner({ type })).data.text;
+}
+
+export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
+  return (await bannerApi.updateBanner({ siteBanner }, defaultOptions())).data;
 }
 
 /* InviteController.cs */

@@ -4,7 +4,7 @@ A project is for a single vernacular language.
 
 ## Create a Project
 
-![Create Project - Yiddish](images/projectCreateTzotzil.png)
+![Create Project - Yiddish](images/projectCreateTzotzil.png){ .center }
 
 ### Vernacular and Analysis Languages
 

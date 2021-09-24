@@ -303,6 +303,15 @@
         "Failed to delete user",
         "Failed to delete user"
       ]
+    },
+    "banners": {
+      "title": ["Banners", "Banners", "Banners"],
+      "loginBanner": ["Login Banner", "Login Banner", "Login Banner"],
+      "announcementBanner": [
+        "Announcement Banner",
+        "Announcement Banner",
+        "Announcement Banner"
+      ]
     }
   },
   "userSettings": {
@@ -878,6 +887,7 @@
       "Remove from Project",
       "Remove from Project"
     ],
+    "reset": ["Reset", "Reset", "Reset"],
     "restore": ["Restore", "Restaurar", "Restaurer"],
     "save": ["Save", "Guardar", "Enregistrer"],
     "saveAndContinue": [

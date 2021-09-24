@@ -2,6 +2,7 @@ import { User } from "api/models";
 
 export enum LocalStorageKey {
   Avatar = "avatar",
+  ClosedBanner = "closedBanner",
   ProjectId = "projectId",
   User = "user",
 }
@@ -19,6 +20,13 @@ export function getAvatar(): string {
 }
 export function setAvatar(src: string) {
   localStorage.setItem(LocalStorageKey.Avatar, src);
+}
+
+export function getClosedBanner(): string {
+  return localStorage.getItem(LocalStorageKey.ClosedBanner) || "";
+}
+export function setClosedBanner(src: string) {
+  localStorage.setItem(LocalStorageKey.ClosedBanner, src);
 }
 
 export function getCurrentUser(): User | undefined {

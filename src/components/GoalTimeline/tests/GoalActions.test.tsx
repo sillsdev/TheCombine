@@ -31,23 +31,21 @@ jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {
   };
 });
 
-jest.mock("backend", () => {
-  return {
-    addGoalToUserEdit: (id: string, goal: Goal) =>
-      mockAddGoalToUserEdit(id, goal),
-    addStepToGoal: (
-      id: string,
-      goalIndex: number,
-      step: string,
-      stepIndex?: number
-    ) => mockAddStepToGoal(id, goalIndex, step, stepIndex),
-    createUserEdit: () => mockCreateUserEdit(),
-    getUser: (id: string) => mockGetUser(id),
-    getUserEditById: (id: string, index: string) =>
-      mockGetUserEditById(id, index),
-    updateUser: (user: User) => mockUpdateUser(user),
-  };
-});
+jest.mock("backend", () => ({
+  addGoalToUserEdit: (id: string, goal: Goal) =>
+    mockAddGoalToUserEdit(id, goal),
+  addStepToGoal: (
+    id: string,
+    goalIndex: number,
+    step: string,
+    stepIndex?: number
+  ) => mockAddStepToGoal(id, goalIndex, step, stepIndex),
+  createUserEdit: () => mockCreateUserEdit(),
+  getUser: (id: string) => mockGetUser(id),
+  getUserEditById: (id: string, index: string) =>
+    mockGetUserEditById(id, index),
+  updateUser: (user: User) => mockUpdateUser(user),
+}));
 
 // mock the track method of segment analytics
 global.analytics = { track: jest.fn() } as any;

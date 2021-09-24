@@ -284,7 +284,7 @@ export default class Register extends React.Component<
               />
 
               {/* "Failed to register" */}
-              {this.props.failureMessage !== "" && (
+              {!!this.props.failureMessage && (
                 <Typography
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}

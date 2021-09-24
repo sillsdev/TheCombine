@@ -136,14 +136,12 @@ function setMockFunctions() {
   });
 }
 
-jest.mock("backend", () => {
-  return {
-    blacklistAdd: jest.fn(),
-    getWord: (id: mockWordListIndex) => mockGetWords(id),
-    mergeWords: (mergeWordsArray: MergeWords[]) =>
-      mockMergeWords(mergeWordsArray),
-  };
-});
+jest.mock("backend", () => ({
+  blacklistAdd: jest.fn(),
+  getWord: (id: mockWordListIndex) => mockGetWords(id),
+  mergeWords: (mergeWordsArray: MergeWords[]) =>
+    mockMergeWords(mergeWordsArray),
+}));
 
 const mockGoal = new MergeDups();
 mockGoal.data = goalDataMock;

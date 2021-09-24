@@ -13,13 +13,11 @@ import {
 import * as RootAction from "rootActions";
 import { newUser } from "types/user";
 
-jest.mock("backend", () => {
-  return {
-    addUser: (user: User) => mockAddUser(user),
-    authenticateUser: (username: string, password: string) =>
-      mockAuthenticateUser(username, password),
-  };
-});
+jest.mock("backend", () => ({
+  addUser: (user: User) => mockAddUser(user),
+  authenticateUser: (username: string, password: string) =>
+    mockAuthenticateUser(username, password),
+}));
 
 // Mock the track and identify methods of segment analytics.
 global.analytics = { identify: jest.fn(), track: jest.fn() } as any;

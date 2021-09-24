@@ -1,4 +1,11 @@
-import { blue, green, grey, red, yellow } from "@material-ui/core/colors";
+import {
+  blue,
+  green,
+  grey,
+  orange,
+  red,
+  yellow,
+} from "@material-ui/core/colors";
 import { createTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
@@ -9,6 +16,7 @@ export const themeColors = {
   primary: blue[600],
   secondary: grey[200],
   error: red[600],
+  warn: orange[300],
   success: green[600],
   highlight: yellow[200],
   shade: blue[700], // tabColor()

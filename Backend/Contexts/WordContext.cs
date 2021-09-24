@@ -3,7 +3,6 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
@@ -12,7 +11,7 @@ namespace BackendFramework.Contexts
     {
         private readonly IMongoDatabase _db;
 
-        public WordContext(IOptions<Settings> options)
+        public WordContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);

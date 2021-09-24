@@ -21,14 +21,12 @@ import {
   simpleWord,
 } from "types/word";
 
-jest.mock("backend", () => {
-  return {
-    createWord: (word: Word) => mockCreateWord(word),
-    getProject: (id: string) => mockGetProject(id),
-    getWord: (id: string) => mockGetWord(id),
-    updateWord: (word: Word) => mockUpdateWord(word),
-  };
-});
+jest.mock("backend", () => ({
+  createWord: (word: Word) => mockCreateWord(word),
+  getProject: (id: string) => mockGetProject(id),
+  getWord: (id: string) => mockGetWord(id),
+  updateWord: (word: Word) => mockUpdateWord(word),
+}));
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/Recorder");
 jest.spyOn(window, "alert").mockImplementation(() => {});

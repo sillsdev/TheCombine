@@ -21,37 +21,25 @@ jest.mock("@material-ui/core", () => {
     Dialog: material.Container,
   };
 });
-jest.mock("backend", () => {
-  return {
-    getFrontierWords: () => mockGetFrontierWords(),
-  };
-});
+jest.mock("backend", () => ({
+  getFrontierWords: () => mockGetFrontierWords(),
+}));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
-jest.mock("uuid", () => {
-  return {
-    v4: () => mockUuid(),
-  };
-});
+jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 // To deal with the table not wanting to behave in testing.
-jest.mock("@material-table/core", () => {
-  return {
-    __esModule: true,
-    default: () => mockMaterialTable(),
-  };
-});
+jest.mock("@material-table/core", () => ({
+  __esModule: true,
+  default: () => mockMaterialTable(),
+}));
 
 // Mock store + axios
 const mockReviewEntryWords = mockWords();
 const state = {
   currentProjectState: {
-    project: {
-      definitionsEnabled: true,
-    },
+    project: { definitionsEnabled: true },
   },
-  reviewEntriesState: {
-    words: mockReviewEntryWords,
-  },
+  reviewEntriesState: { words: mockReviewEntryWords },
   treeViewState: {
     currentDomain: {
       name: "domain",
@@ -73,8 +61,9 @@ beforeEach(() => {
   // Prep for component creation
   setMockFunctions();
   for (const word of mockReviewEntryWords) {
-    for (const sense of word.senses)
+    for (const sense of word.senses) {
       mockUuid.mockImplementationOnce(() => sense.guid);
+    }
   }
 
   renderer.act(() => {

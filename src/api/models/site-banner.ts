@@ -12,14 +12,24 @@
  * Do not edit the class manually.
  */
 
-export * from "./api/audio-api";
-export * from "./api/avatar-api";
-export * from "./api/banner-api";
-export * from "./api/invite-api";
-export * from "./api/lift-api";
-export * from "./api/merge-api";
-export * from "./api/project-api";
-export * from "./api/user-api";
-export * from "./api/user-edit-api";
-export * from "./api/user-role-api";
-export * from "./api/word-api";
+import { BannerType } from "./banner-type";
+
+/**
+ *
+ * @export
+ * @interface SiteBanner
+ */
+export interface SiteBanner {
+  /**
+   *
+   * @type {BannerType}
+   * @memberof SiteBanner
+   */
+  type: BannerType;
+  /**
+   *
+   * @type {string}
+   * @memberof SiteBanner
+   */
+  text: string;
+}
