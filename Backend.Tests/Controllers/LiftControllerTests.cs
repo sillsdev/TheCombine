@@ -293,7 +293,7 @@ namespace Backend.Tests.Controllers
 
             // Export.
             var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
-            var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
+            var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
             // Assert the file was created with desired hierarchy.
             Assert.That(Directory.Exists(exportedDirectory));
