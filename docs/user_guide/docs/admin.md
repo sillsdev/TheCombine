@@ -24,6 +24,8 @@ The announcement banner places a bright banner across the top of the page when u
 are intended for displaying important, short term messages to users related to the instance of The Combine. Uses could include
 scheduled upgrades, planned down time, or upcoming server changes. 
 
+![Announcement Banner](images/announcementBanner.png)
+
 ### Login Banner
 
 The login banner places a highlighted message on the login page of users visiting the The Combine. This banner is intended
