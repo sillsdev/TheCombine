@@ -154,7 +154,7 @@ export function getAllCharacters() {
     characters.forEach((letter) => {
       characterSet.push({
         character: letter,
-        occurrences: countCharacterOccurences(
+        occurrences: countCharacterOccurrences(
           letter,
           words.map((word) => word.vernacular)
         ),
@@ -175,7 +175,7 @@ export function exit() {
   history.push(Path.Goals);
 }
 
-function countCharacterOccurences(char: string, words: string[]) {
+function countCharacterOccurrences(char: string, words: string[]) {
   let count = 0;
   for (let word of words) {
     for (let letter of word) {

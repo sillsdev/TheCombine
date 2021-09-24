@@ -191,7 +191,7 @@ export default class Login extends React.Component<
                     onSuccess={() => this.setState({ isVerified: true })}
                     onExpire={() => this.setState({ isVerified: false })}
                     onError={() =>
-                      console.log("Something went wrong, check your conenction")
+                      console.log("Something went wrong, check your connection")
                     }
                   />
                 </div>

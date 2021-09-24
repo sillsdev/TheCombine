@@ -154,7 +154,7 @@ export default class Register extends React.Component<
   render() {
     // Determine error message
     let failureMessage;
-    // Intentional weak comparision. props.failureMessage may evaluate to number
+    // Intentional weak comparison. props.failureMessage may evaluate to number
     // eslint-disable-next-line eqeqeq
     if (this.props.failureMessage == "400") {
       failureMessage = <Translate id="login.registerFailed" />;
