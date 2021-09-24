@@ -2,7 +2,7 @@
 - name: Apply netplan
   command: /usr/sbin/netplan apply
 
-- name: Restart networkd
+- name: Restart resolved
   service:
-    name: systemd-networkd
+    name: systemd-resolved
     state: restarted

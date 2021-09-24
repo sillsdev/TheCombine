@@ -176,7 +176,7 @@ ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
 ##### Installation Notes
 
 - The playbooks to install the Kubernetes cluster assume that either:
-  - `microk8s` is included as an element of the `k8s_components` list for the target; or
+  - `k8s_engine` is set to a value other than `none`; or
   - Kubernetes is already installed on the target, for example, a _Rancher_ environment that is managed by another
     group.
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.

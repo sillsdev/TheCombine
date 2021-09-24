@@ -1,13 +1,13 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: http-ingress
+  name: ingress-thecombine
   namespace: {{ app_namespace }}
   annotations:
     kubernetes.io/ingress.class: {{ ingress_class }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
 {% if "cert_manager" in k8s_components %}
-    cert-manager.io/cluster-issuer: {{ cert_issuer }}
+    cert-manager.io/issuer: {{ cert_issuer }}
 {% endif %}
 spec:
 {% if "cert_manager" in k8s_components %}
