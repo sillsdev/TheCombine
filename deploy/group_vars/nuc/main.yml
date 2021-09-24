@@ -51,29 +51,32 @@ my_aws_profiles:
 ################################################
 # Configure Kubernetes cluster
 ################################################
+
+# Specify which Kubernetes engine to install -
+# one of k3s or none.
+k8s_engine: k3s
 k8s_components:
-  - microk8s
-  - cert_manager
   - ingress_controller
 
 image_pull_secret: aws-login-credentials
+
+app_namespace: thecombine
 
 aws_ecr_login:
   cron: no
   image: sillsdev/aws-kubectl:0.1.9
   secrets_name: aws-ecr-credentials
   config_name: aws-ecr-config
-  pull_secret_name: aws-login-credentials
+  pull_secret_name: "{{ image_pull_secret | default('aws-login-credentials') }}"
   job_name: ecr-cred-helper
-
-app_namespace: thecombine
 
 k8s_user: sillsdev
 k8s_group: sillsdev
 
 #######################################
-# Ingress configuration (microk8s ingress addon)
-ingress_class: public
+# Ingress configuration
+ingress_class: nginx
+ingress_namespace: ingress-nginx
 
 # For the NUCs we want to use the ansible host name
 # since that is how we can connect on the local network

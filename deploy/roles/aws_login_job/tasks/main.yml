@@ -1,29 +1,9 @@
 ---
-- name: Print config
-  debug:
-    var: aws_ecr_login
-
 - name: Create directory for the AWS Login cron job files
   file:
     path: "{{ k8s_aws_login_cfg }}"
     state: directory
     mode: 0700
-
-- name: List kubeconfig secret
-  command: >
-    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} get secret
-    {{ k8s_config_secret }}
-  register: get_secret
-  changed_when: false
-  failed_when: false
-
-- name: Create kubeconfig secret
-  command: >
-    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
-    create secret generic
-    {{ k8s_config_secret }}
-    --from-file={{ kubecfg }}
-  when: get_secret.rc > 0
 
 ##############################################################
 # Delete any immutable objects leftover from previous runs

@@ -22,19 +22,12 @@
   with_items: "{{ net_config.files }}"
   notify: Apply netplan
 
-###
-# Create a virtual network interface so that microk8s can run
-# when no ethernet connection is attached.
-###
-- name: Create virtual network I/F
+- name: Configure resolv.conf to use {{ ap_gateway }} as DNS nameserver
   template:
-    src: "{{ item }}.j2"
-    dest: /etc/systemd/network/{{ virtual_if }}.{{ item }}
+    src: resolved.conf.j2
+    dest: /etc/systemd/resolved.conf
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - netdev
-    - network
-  when: '"microk8s" in k8s_components'
-  notify: Restart networkd
+  notify: Restart resolved
+  when: has_wifi

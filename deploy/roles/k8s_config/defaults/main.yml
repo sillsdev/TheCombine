@@ -54,6 +54,7 @@ cert_issuer: letsencrypt-prod
 #######################################
 # Ingress configuration
 ingress_class: nginx
+ingress_namespace: ingress-nginx
 
 #######################################
 # Default Backup Schedule
