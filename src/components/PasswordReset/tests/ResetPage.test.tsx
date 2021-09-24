@@ -40,7 +40,7 @@ describe("PasswordReset", () => {
         isPasswordConfirmed: true,
       },
       () => {
-        // check no errors showup
+        // check no errors show up
         var lengthErrors = testRenderer.root.findAllByProps({
           id: "login.passwordRequirements",
         }).length;
@@ -82,7 +82,7 @@ describe("PasswordReset", () => {
         isPasswordConfirmed: true,
       },
       () => {
-        // check errors showup
+        // check errors show up
         var lengthErrors = testRenderer.root.findAllByProps({
           id: "login.passwordRequirements",
         }).length;
@@ -120,7 +120,7 @@ describe("PasswordReset", () => {
         isPasswordConfirmed: false,
       },
       () => {
-        // check errors showup
+        // check errors show up
         var lengthErrors = testRenderer.root.findAllByProps({
           id: "login.passwordRequirements",
         }).length;
@@ -172,7 +172,7 @@ describe("PasswordReset", () => {
         isPasswordConfirmed: true,
       },
       () => {
-        // check errors showup
+        // check errors show up
         var resetFailErrors = testRenderer.root.findAllByProps({
           id: "passwordReset.resetFail",
         }).length;

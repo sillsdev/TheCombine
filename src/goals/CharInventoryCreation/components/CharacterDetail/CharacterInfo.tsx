@@ -21,7 +21,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
         <Translate id="charInventory.characterSet.charDetails" />
       </Typography>
       <Typography variant="body1">
-        {countCharacterOccurences(props.character, allWords)}{" "}
+        {countCharacterOccurrences(props.character, allWords)}{" "}
         <Translate id="charInventory.characterSet.occurrences" />
       </Typography>
     </React.Fragment>
@@ -36,7 +36,7 @@ function charToHexValue(char: string) {
   return "U+" + hex;
 }
 
-function countCharacterOccurences(char: string, words: string[]) {
+function countCharacterOccurrences(char: string, words: string[]) {
   let count = 0;
   for (let word of words) {
     for (let letter of word) {
