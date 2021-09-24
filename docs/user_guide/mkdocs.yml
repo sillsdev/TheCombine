@@ -30,6 +30,9 @@ plugins:
 #      raise_error: True
 markdown_extensions:
   - admonition
+  - attr_list
+extra_css:
+  - static/stylesheets/extra.css
 extra:
   social:
     - icon: fontawesome/solid/globe

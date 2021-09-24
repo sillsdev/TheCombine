@@ -1,5 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
@@ -10,6 +8,9 @@ import Login from "components/Login/LoginPage/LoginComponent";
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
 ));
+jest.mock("backend", () => ({
+  getBannerText: () => Promise.resolve(""),
+}));
 
 const LOGOUT = jest.fn();
 var loginMaster: ReactTestRenderer;
@@ -18,9 +19,7 @@ var loginHandle: ReactTestInstance;
 const DATA = "stuff";
 const MOCK_EVENT = {
   preventDefault: jest.fn(),
-  target: {
-    value: DATA,
-  },
+  target: { value: DATA },
 };
 
 describe("Testing login component", () => {
@@ -40,17 +39,16 @@ describe("Testing login component", () => {
   });
 
   it("Renders properly", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <Login
-        logout={LOGOUT}
-        loginAttempt={false}
-        loginFailure={false}
-        reset={LOGOUT}
-      />,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
+    renderer.act(() => {
+      renderer.create(
+        <Login
+          logout={LOGOUT}
+          loginAttempt={false}
+          loginFailure={false}
+          reset={LOGOUT}
+        />
+      );
+    });
   });
 
   // These test whether logging in with a username and password (the strings) should result in errors with the username or password (the booleans)

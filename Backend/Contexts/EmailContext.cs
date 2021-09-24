@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Options;
-using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
@@ -15,7 +14,7 @@ namespace BackendFramework.Contexts
         public string? SmtpAddress { get; }
         public string? SmtpFrom { get; }
 
-        public EmailContext(IOptions<Settings> options)
+        public EmailContext(IOptions<Startup.Settings> options)
         {
             SmtpServer = options.Value.SmtpServer;
             SmtpPort = options.Value.SmtpPort ?? IEmailContext.InvalidPort;

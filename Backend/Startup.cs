@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Text.Json.Serialization;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
@@ -17,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using static System.Text.Encoding;
 
 namespace BackendFramework
 {
@@ -58,9 +58,7 @@ namespace BackendFramework
         }
 
         [Serializable]
-        private class EnvironmentNotConfiguredException : Exception
-        {
-        }
+        private class EnvironmentNotConfiguredException : Exception { }
 
         private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
         {
@@ -81,9 +79,7 @@ namespace BackendFramework
         }
 
         [Serializable]
-        private class AdminUserCreationException : Exception
-        {
-        }
+        private class AdminUserCreationException : Exception { }
 
         /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
         /// </summary>
@@ -118,7 +114,7 @@ namespace BackendFramework
                 throw new EnvironmentNotConfiguredException();
             }
 
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = ASCII.GetBytes(secretKey);
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -233,6 +229,10 @@ namespace BackendFramework
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
+
+            // Banner types
+            services.AddTransient<IBannerContext, BannerContext>();
+            services.AddTransient<IBannerRepository, BannerRepository>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

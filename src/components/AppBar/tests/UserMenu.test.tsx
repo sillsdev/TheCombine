@@ -7,19 +7,15 @@ import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 import { newUser } from "types/user";
 
-jest.mock("backend", () => {
-  return {
-    getUser: () => mockGetUser(),
-  };
-});
+jest.mock("backend", () => ({
+  getUser: () => mockGetUser(),
+}));
 
-jest.mock("backend/localStorage", () => {
-  return {
-    getAvatar: jest.fn(),
-    getCurrentUser: jest.fn(),
-    getUserId: () => mockGetUserId(),
-  };
-});
+jest.mock("backend/localStorage", () => ({
+  getAvatar: jest.fn(),
+  getCurrentUser: jest.fn(),
+  getUserId: () => mockGetUserId(),
+}));
 
 let testRenderer: ReactTestRenderer;
 
