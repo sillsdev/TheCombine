@@ -25,8 +25,8 @@ export function setAvatar(src: string) {
 export function getClosedBanner(): string {
   return localStorage.getItem(LocalStorageKey.ClosedBanner) || "";
 }
-export function setClosedBanner(src?: string) {
-  localStorage.setItem(LocalStorageKey.ClosedBanner, src ?? "");
+export function setClosedBanner(src: string) {
+  localStorage.setItem(LocalStorageKey.ClosedBanner, src);
 }
 
 export function getCurrentUser(): User | undefined {
