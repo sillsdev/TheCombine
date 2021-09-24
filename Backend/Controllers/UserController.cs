@@ -173,7 +173,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> CheckUsername(string username)
         {
             var isAvailable = await _userRepo.GetUserByUsername(username) is null;
-            return Ok(!isAvailable);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         /// <summary> Checks whether specified email address is taken. </summary>

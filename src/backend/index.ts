@@ -19,6 +19,7 @@ import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
+import Swal from "sweetalert2";
 import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -33,8 +34,19 @@ const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
-  const response = err.response;
   const url = err.config.url;
+  const errorToast = Swal.mixin({
+    toast: true,
+    position: "bottom",
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    icon: "error",
+    showCancelButton: true,
+    cancelButtonText: "Dismiss",
+  });
+
+  const response = err.response;
   if (response) {
     const status = response.status;
     if (status === StatusCodes.UNAUTHORIZED) {
@@ -46,13 +58,17 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       status >= StatusCodes.BAD_REQUEST &&
       status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
     ) {
-      const error = `${status} ${response.statusText}: ${url}`;
-      alert(error);
+      errorToast.fire({
+        title: `${status} ${response.statusText}`,
+        text: `${err.config.url}`,
+      });
     }
   } else {
     // Handle if backend is not reachable.
-    const error = `${err.message}: ${url}`;
-    alert(error);
+    errorToast.fire({
+      title: `${err.message}`,
+      text: `Unable to connect to server. Check your network settings.\n${url}`,
+    });
   }
 
   return Promise.reject(err);
