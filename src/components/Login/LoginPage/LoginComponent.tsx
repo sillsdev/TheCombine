@@ -17,7 +17,7 @@ import { getBannerText } from "backend";
 import history, { openUserGuide, Path } from "browserHistory";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme, { themeColors } from "types/theme";
+import theme from "types/theme";
 
 const idAffix = "login";
 
