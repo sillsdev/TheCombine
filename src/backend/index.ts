@@ -47,12 +47,12 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
     ) {
       const error = `${status} ${response.statusText}: ${url}`;
-      console.log(error);
+      alert(error);
     }
   } else {
     // Handle if backend is not reachable.
     const error = `${err.message}: ${url}`;
-    console.log(error);
+    alert(error);
   }
 
   return Promise.reject(err);
