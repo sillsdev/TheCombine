@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
 
 import * as Api from "api";
@@ -30,10 +30,31 @@ const config = new Api.Configuration(config_parameters);
 
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
-axiosInstance.interceptors.response.use(undefined, (err) => {
-  if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
-    history.push(Path.Login);
+axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
+  // Any status codes that falls outside the range of 2xx cause this function to
+  // trigger.
+  const response = err.response;
+  const url = err.config.url;
+  if (response) {
+    const status = response.status;
+    if (status === StatusCodes.UNAUTHORIZED) {
+      history.push(Path.Login);
+    }
+
+    // Check for fatal errors (4xx-5xx).
+    if (
+      status >= StatusCodes.BAD_REQUEST &&
+      status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
+    ) {
+      const error = `${status} ${response.statusText}: ${url}`;
+      console.log(error);
+    }
+  } else {
+    // Handle if backend is not reachable.
+    const error = `${err.message}: ${url}`;
+    console.log(error);
   }
+
   return Promise.reject(err);
 });
 
