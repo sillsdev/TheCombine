@@ -28,8 +28,8 @@ include scheduled upgrades, planned down time, or upcoming server changes.
 
 ### Login Banner
 
-The login banner places a highlighted message on the login page of users visiting the The Combine. This banner is
-intended for including specific information about an instance of The Combine that users may need to know, such as who to
-contact regarding support, version upgrades, or database backup policies.
+The login banner places a message at the bottom of the login page. This banner is intended for including specific
+information about an instance of The Combine that users may need to know, such as who to contact regarding support,
+version upgrades, or database backup policies.
 
 ![Login Banner](images/loginBanner.png){ width=400 .center }
