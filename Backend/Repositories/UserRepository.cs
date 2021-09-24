@@ -15,7 +15,7 @@ namespace BackendFramework.Repositories
     {
         private readonly IUserContext _userDatabase;
 
-        public UserRepository(IUserContext collectionSettings, IUserRoleRepository userRoleRepo)
+        public UserRepository(IUserContext collectionSettings)
         {
             _userDatabase = collectionSettings;
         }
