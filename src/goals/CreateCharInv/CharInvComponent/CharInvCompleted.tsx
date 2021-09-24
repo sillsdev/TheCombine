@@ -36,7 +36,7 @@ function CharInvChangesMade(changes: CreateCharInvChanges) {
 }
 
 export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
-  const changelimit = 3;
+  const changeLimit = 3;
   if (!changes.charChanges?.length) {
     return (
       <Typography>
@@ -44,10 +44,10 @@ export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
       </Typography>
     );
   }
-  if (changes.charChanges.length > changelimit) {
+  if (changes.charChanges.length > changeLimit) {
     return (
       <Typography>
-        {changes.charChanges.slice(0, changelimit - 1).map(CharInvChange)}
+        {changes.charChanges.slice(0, changeLimit - 1).map(CharInvChange)}
         {`+${changes.charChanges.length - 3} `}
         <Translate id="charInventory.changes.more" />
       </Typography>

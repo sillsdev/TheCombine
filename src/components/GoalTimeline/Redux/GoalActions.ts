@@ -144,7 +144,7 @@ export function asyncUpdateGoal(goal: Goal) {
   };
 }
 
-// Helper Funtions
+// Helper Functions
 
 // Returns true if input goal updated.
 export async function loadGoalData(goal: Goal): Promise<boolean> {

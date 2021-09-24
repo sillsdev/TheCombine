@@ -84,7 +84,7 @@ describe("Pronunciations", () => {
     expect(iconRelease).toBeTruthy();
   });
 
-  it("style depends on pronunciationsAtate", () => {
+  it("style depends on pronunciations state", () => {
     const wordId = "1";
     const mockStore2 = createMockStore(mockRecordingState(wordId));
     renderer.act(() => {
