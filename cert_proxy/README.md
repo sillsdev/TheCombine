@@ -13,7 +13,7 @@ will fetch its updated certificate from the AWS S3 bucket.
 
 ## Container Images
 
-THere are two specialized container images that are used to manage the _Let's Encrypt_ certificates for the NUCs.
+There are two specialized container images that are used to manage the _Let's Encrypt_ certificates for the NUCs.
 
 ### `combine_cert_proxy`
 
