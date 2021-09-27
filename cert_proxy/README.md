@@ -61,24 +61,27 @@ The `combine_cert_server` serves two purposes:
 
 The production cluster has the following Kubernetes resources:
 
-| Resource Kind | Resource Name                                             | Description                                                                                                             |
-| ------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Deployment    | `cert-monitor`                                            | based on the `combine_cert_proxy` image and calls the `monitor.py` entrypoint                                           |
-| Deployment    | `nuc-web-server`                                          | based on `combine_cert_server`                                                                                          |
-| ConfigMap     | `cert-config`                                             | defines the `NUC_CERTIFICATES` and `AWS_S3_BUCKET` environment variables                                                |
-| Secret        | `aws-s3-cert-access`                                      | defines the `AWS_ACCOUNT`, `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
-| Secret        | `nuc1-thecombine-app-tls`, `nuc2-thecombine-app-tls`, ... | Secrets created by `cert-manager.io` that contain the certificates returned by _Let's Encrypt_.                         |
+| Resource Kind | Resource Name                                             | Description                                                                                                                                                                          |
+| ------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Deployment    | `cert-monitor`                                            | based on the `combine_cert_proxy` image and calls the `monitor.py` entrypoint                                                                                                        |
+| Service       | `nuc-web-server`                                          | based on `combine_cert_server`                                                                                                                                                       |
+| ConfigMap     | `cert-config`                                             | defines the `NUC_CERTIFICATES` and `AWS_S3_BUCKET` environment variables                                                                                                             |
+| Secret        | `aws-s3-cert-access`                                      | defines the `AWS_ACCOUNT`, `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.                                                              |
+| Secret        | `nuc1-thecombine-app-tls`, `nuc2-thecombine-app-tls`, ... | Secrets created by `cert-manager.io` that contain the certificates returned by _Let's Encrypt_.                                                                                      |
+| Issuer        | `letsencrypt-prod`, `letsencrypt-staging`                 | Certificate issuer used by `cert-manager.io` to know how to issue the certificates. `letsencrypt-prod` is for the production environment while `letsencrypt-staging` is for testing. |
+| Ingress       | `ingress-nuc1`, `ingress-nuc2`, ...                       | The Ingress is used to route traffic to the `nuc-web-server` and specifies the TLS secret (SSL Certificate) to use to terminate the SSL.                                             |
 
 ## Resources on the NUC
 
 The NUCs has the following Kubernetes resources:
 
-| Resource Kind | Resource Name             | Description                                                                                                             |
-| ------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| CronJob       | `check-cert-cron`         | based on the `combine_cert_proxy` image and calls the `check_cert.py` entrypoint as scheduled in the crontab            |
-| ConfigMap     | `cert-config`             | defines the `NUC_CERTIFICATES` and `AWS_S3_BUCKET` environment                                                          |
-| Secret        | `aws-s3-cert-access`      | defines the `AWS_ACCOUNT`, `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
-| Secret        | `nucX-thecombine-app-tls` | Secret to be downloaded/updated from the `$AWS_S3_BUCKET`. `nucX` is the name of the NUC where the cluster is running.  |
+| Resource Kind | Resource Name             | Description                                                                                                                              |
+| ------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| CronJob       | `check-cert-cron`         | based on the `combine_cert_proxy` image and calls the `check_cert.py` entrypoint as scheduled in the crontab                             |
+| ConfigMap     | `cert-config`             | defines the `NUC_CERTIFICATES` and `AWS_S3_BUCKET` environment                                                                           |
+| Secret        | `aws-s3-cert-access`      | defines the `AWS_ACCOUNT`, `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.                  |
+| Secret        | `nucX-thecombine-app-tls` | Secret to be downloaded/updated from the `$AWS_S3_BUCKET`. `nucX` is the name of the NUC where the cluster is running.                   |
+| Ingress       | `ingress-nucX`            | The Ingress is used to route traffic to the `nuc-web-server` and specifies the TLS secret (SSL Certificate) to use to terminate the SSL. |
 
 In addition, outside of Kubernetes, the NUC will be configured so that when an Ethernet cable is plugged-in and the
 network is _routable_, a `Job` will be created that performs the same task as `check-cert-cron`.
