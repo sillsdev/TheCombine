@@ -15,28 +15,20 @@ will fetch its updated certificate from the AWS S3 bucket.
 
 There are two specialized container images that are used to manage the _Let's Encrypt_ certificates for the NUCs.
 
-### `combine_cert_proxy`
+### `combine_maint`
 
-The `combine_cert_proxy` operates in one of two modes:
+The `combine_maint` is the current maintenance container for the combine. It provides for restore and backup
+capabilities. It is being extended to support the management of the NUC certificates by adding the following _Python_
+scripts:
 
-- _server_ mode monitors the NUC certificates on the current cluster for changes. When the certificate is updated, the
-  new certificate is pushed to the AWS S3 bucket.
-- _client_ mode updates the certificate for the current cluster from the AWS S3 storage when the certificate has changed
-  and the cluster is connected to the internet.
+- `monitor.py` monitors the NUC certificates on the current cluster for changes. When the certificate is updated, the
+  new certificate is pushed to the AWS S3 bucket. `monitor.py` will monitor for changes until it is killed.
+- `check_cert.py` updates the certificate for the current cluster from the AWS S3 storage when the certificate has
+  changed and the cluster is connected to the internet. `check_cert.py` will exit once the check (and update) have been
+  performed.
+- adds an additional dependency Python library, `kubernetes`
 
-_Server_ mode is invoked by calling the image's `monitor.py` entrypoint. The entry point does not exit under normal
-circumstances.
-
-_Client_ mode is invoked by calling the `check_cert.py` entrypoint to check for an updated NUC certificate. The
-entrypoint exits once it has completed the check and update for the NUC's certificate.
-
-`combine_cert_proxy` is based on the `sillsdev/aws-kubectl` image and installs the following software:
-
-- `python3`, `pip3`
-- kubernetes-client module for Python3
-- entrypoint scripts
-
-`combine_cert_proxy` uses the following environment variables:
+The additional python scripts use the following environment variables:
 
 - `NUC_CERTIFICATES` - a space-separated list of names of Kubernetes secrets that contain the NUC SSL certificates. Only
   one certificate is valid for _client_ mode;
@@ -73,11 +65,6 @@ The production cluster has the following Kubernetes resources:
 | ServiceAccount | service-acct-nuc-cert                                     | Service Account for managing NUC certificates                                                                                                                                        |
 | Role           | role-nuc-cert                                             | Role for managing NUC certificates                                                                                                                                                   |
 
-The role for managing the NUC certificates (on both the Production and NUC clusters) will need the following
-permissions: | Resource | Permissions | | --------------- | ----------------------------------------------- | | pods,
-pods/exec | list, get, watch, create, update, patch, delete | | secrets | list, get, watch, create, update, patch,
-delete | | deployments | list, get, watch, update |
-
 ## Resources on the NUC Cluster
 
 The NUCs has the following Kubernetes resources:
@@ -98,6 +85,10 @@ network is _routable_, a `Job` will be created that performs the same task as `c
 ## Role Permissions
 
 The role for managing the NUC certificates (on both the Production and NUC clusters) will need the following
-permissions: | Resource | Permissions | | --------------- | ----------------------------------------------- | | pods,
-pods/exec | list, get, watch, create, update, patch, delete | | secrets | list, get, watch, create, update, patch,
-delete | | deployments | list, get, watch, update |
+permissions:
+
+| Resource        | Permissions                                     |
+| --------------- | ----------------------------------------------- |
+| pods, pods/exec | list, get, watch, create, update, patch, delete |
+| secrets         | list, get, watch, create, update, patch, delete |
+| deployments     | list, get, watch, update                        |
