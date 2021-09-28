@@ -4,6 +4,10 @@ combine_group: app
 combine_app_dir: /opt/combine
 combine_admin_email: admin@thecombine.app
 
+# k8s namespaces
+app_namespace: thecombine
+cert_proxy_namespace: combine-cert-proxy
+
 # Configure logging
 combine_use_syslog: true
 # common configuration items that are shared between the certmgr and frontend
@@ -20,7 +24,8 @@ k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"
 k8s_image_pull_cfg: "{{k8s_working_dir}}/image_pull"
 k8s_namespace_cfg: "{{k8s_working_dir}}/namespace"
 k8s_account_cfg: "{{k8s_working_dir}}/accounts"
-
+k8s_storage_cfg: "{{ k8s_working_dir}}/storage"
+k8s_cert_proxy_cfg: "{{ k8s_working_dir }}/cert_proxy"
 k8s_service_accounts:
   ecr_login: account-ecr-login
   maintenance: account-maintenance

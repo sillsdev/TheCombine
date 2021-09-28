@@ -60,7 +60,8 @@ k8s_components:
 
 image_pull_secret: aws-login-credentials
 
-app_namespace: thecombine
+create_namespaces:
+  - "{{ app_namespace }}"
 
 aws_ecr_login:
   cron: no

@@ -1,19 +1,23 @@
 ---
-- name: Create directory for The Combine configuration files
-  file:
-    path: "{{ k8s_combine_cfg }}"
-    state: directory
-    mode: 0700
-
-- name: Create Kubernetes configuration files for The Combine
-  template:
-    src: "{{ item }}.j2"
-    dest: "{{ k8s_combine_cfg }}/{{ item }}"
-    mode: 0600
-  loop: "{{ k8s_resource_templates}}"
-
-- name: Apply Kubernetes configuration
-  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item }}
-  args:
-    chdir: "{{ k8s_combine_cfg }}"
-  loop: "{{ k8s_resource_templates}}"
+- name: Configure TheCombine Cluster
+  import_role:
+    name: k8s_make_resources
+  vars:
+    k8s_config_dir: "{{ k8s_combine_cfg }}"
+    k8s_templates:
+      - persistentvolumeclaim-backend-data.yaml
+      - persistentvolumeclaim-database-data.yaml
+      - env-backend-configmap.yaml
+      - env-backend-secrets.yaml
+      - env-frontend-configmap.yaml
+      - env-maintenance-configmap.yaml
+      - aws-s3-credentials.yaml
+      - deployment-backend.yaml
+      - deployment-database.yaml
+      - deployment-frontend.yaml
+      - deployment-maintenance.yaml
+      - cronjob-daily-backup.yaml
+      - ingress-combine.yaml
+      - service-backend.yaml
+      - service-database.yaml
+      - service-frontend.yaml
