@@ -1,10 +1,4 @@
 ---
-k8s_account_templates:
-  - service_acct_ecr_login.yml
-  - service_acct_maint.yml
-  - role_ecr_login.yml
-  - role_maintenance.yml
-
 k8s_service_accounts:
   ecr_login: account-ecr-login
   maintenance: account-maintenance

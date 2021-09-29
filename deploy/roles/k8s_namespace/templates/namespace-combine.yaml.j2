@@ -1,4 +1,7 @@
+{% for namespace in create_namespaces %}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ app_namespace }}
+  name: {{ namespace }}
+{% endfor %}

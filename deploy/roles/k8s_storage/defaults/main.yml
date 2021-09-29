@@ -1,6 +1,2 @@
 ---
 k8s_storage_dir: "{{ combine_app_dir }}/volumes"
-
-# Local Working directory
-k8s_working_dir: "{{ ansible_env.HOME }}/kube_files"
-k8s_storage_cfg: "{{ k8s_working_dir }}/storage"
