@@ -35,9 +35,14 @@
     - name: Create The Combine Kubernetes cluster
       delegate_to: localhost
       block:
+        # Normally, the list of "combine_namespaces" is only used for the
+        # "app_namespace" on the NUC.  It is implemented as a list so that the
+        # "combine-cert-proxy" namespace can be created on development servers.
+        # (Namespaces are controlled by another group on the production cluster.)
         - name: Create Application Namespace
           import_role:
             name: k8s_namespace
+          when: (create_namespaces | default([])) | length
 
         - name: Setup Service Accounts
           import_role:

@@ -73,7 +73,7 @@ k8s_components: []
 
 image_pull_secret: aws-login-credentials
 
-app_namespace: thecombine
+create_namespaces: []
 
 k8s_user: sillsdev
 k8s_group: sillsdev
