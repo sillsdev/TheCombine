@@ -46,6 +46,15 @@ namespace Backend.Tests.Mocks
         }
 
         /// <summary>
+        /// Checks whether the current user is authorized.
+        /// </summary>
+        public bool IsCurrentUserAuthorized(HttpContext request)
+        {
+            var userId = GetUserId(request);
+            return IsUserIdAuthorized(request, userId);
+        }
+
+        /// <summary>
         /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
         ///
         /// <param name="request">
