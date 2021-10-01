@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
     ) {
       errorToast.fire({
         title: `${status} ${response.statusText}`,
-        text: `${err.config.url}`,
+        text: `${response.data}\n${err.config.url}`,
       });
     }
   } else {
