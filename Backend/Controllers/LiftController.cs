@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -38,6 +39,14 @@ namespace BackendFramework.Controllers
             _notifyService = notifyService;
             _permissionService = permissionService;
             _logger = logger;
+        }
+
+        /// <summary>
+        /// Find any .list files within a directory.
+        /// </summary>
+        private static List<string> FindLiftFiles(string dir)
+        {
+            return Directory.GetFiles(dir).Where(x => x.EndsWith(".lift")).ToList();
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -98,59 +107,37 @@ namespace BackendFramework.Controllers
             // Extract the zip to new created directory.
             FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
 
-            // Check number of directories extracted
-            var directoriesExtracted = Directory.GetDirectories(extractDir);
-            var extractedDirPath = "";
-
-            const int expectedNumDirs = 1;
-            string invalidNumDirectoriesErrorMessage =
-                $"{invalidLiftFileMessagePrefix}Zip file does not have {expectedNumDirs} directory.";
-            switch (directoriesExtracted.Length)
+            // Search for .lift files to determine the root of the Lift project.
+            string extractedLiftRootPath;
+            // Handle this structuring case:
+            // flex.zip
+            //    | audio
+            //    | WritingSystems
+            //    | project_name.lift
+            //    | project_name.lift-ranges
+            if (FindLiftFiles(extractDir).Count > 0)
             {
-                // If there was one directory, we're good
-                case expectedNumDirs:
-                    {
-                        extractedDirPath = directoriesExtracted.First();
-                        break;
-                    }
-                // If there were two, and there was a __MACOSX directory, ignore it
-                case 2:
-                    {
-                        var numDirs = 0;
-                        foreach (var dir in directoriesExtracted)
-                        {
-                            if (dir.EndsWith("__MACOSX"))
-                            {
-                                Directory.Delete(dir, true);
-                            }
-                            else // This directory probably matters
-                            {
-                                extractedDirPath = dir;
-                                numDirs++;
-                            }
-                        }
-                        // Both directories seemed important
-                        if (numDirs == 2)
-                        {
-                            return BadRequest(invalidNumDirectoriesErrorMessage);
-                        }
-                        break;
-                    }
-                // There were 0 or more than 2 directories
-                default:
-                    {
-                        return BadRequest(invalidNumDirectoriesErrorMessage);
-                    }
+                extractedLiftRootPath = extractDir;
+            }
+            // Handle the typical structuring case:
+            //  flex.zip
+            //    | project_name
+            //      | audio
+            //      | WritingSystems
+            //      | project_name.lift
+            //      | project_name.lift-ranges
+            else
+            {
+                extractedLiftRootPath = Directory.GetDirectories(extractDir).First();
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            FileOperations.CopyDirectory(extractedDirPath, liftStoragePath);
+            FileOperations.CopyDirectory(extractedLiftRootPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
-            // Search for the lift file within the extracted files
-            var extractedLiftNameArr = Directory.GetFiles(liftStoragePath);
-            var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
-            switch (extractedLiftPath.Length)
+            // Validate that only one .lift file is included.
+            var extractedLiftFiles = FindLiftFiles(liftStoragePath);
+            switch (extractedLiftFiles.Count)
             {
                 case 0:
                     return BadRequest($"{invalidLiftFileMessagePrefix}No .lift files detected.");
@@ -176,8 +163,8 @@ namespace BackendFramework.Controllers
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
-                // Import words from lift file
-                liftParseResult = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                // Import words from .lift file
+                liftParseResult = parser.ReadLiftFile(extractedLiftFiles.First());
                 await liftMerger.SaveImportEntries();
             }
             catch (Exception e)
