@@ -46,7 +46,7 @@ namespace BackendFramework.Controllers
         /// </summary>
         private static List<string> FindLiftFiles(string dir)
         {
-            return Directory.GetFiles(dir).Where(x => x.EndsWith(".lift")).ToList();
+            return Directory.GetFiles(dir, "*.lift").ToList();
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
