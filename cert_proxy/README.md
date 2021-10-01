@@ -4,8 +4,8 @@ This document describes the design for managing the _Let's Encrypt_ certificates
 Amazon Web Services (AWS) S3 bucket.
 
 The goal of the design is to have the DNS records point to the production cluster for all of the DNS names for each NUC
-that is deployed. The production cluster is responsible to generate and renew the certificates for the NUCs and to push
-any updated certificates to the AWS S3 bucket.
+that is deployed. The production cluster is responsible for generating and renewing the certificates for the NUCs and to
+push any updated certificates to the AWS S3 bucket.
 
 The NUC will have a single deployment to monitor the state of its _Let's Encrypt_ secret. When the certificate is due to
 expire within `$CERT_RENEWAL` days (default is 60 days) _and_ the NUC is connected to the internet, then the deployment
@@ -28,7 +28,7 @@ scripts:
   performed.
 - adds an additional dependency Python library, `kubernetes`
 
-The additional python scripts use the following environment variables:
+The additional Python scripts use the following environment variables:
 
 - `NUC_CERTIFICATES` - a space-separated list of names of Kubernetes secrets that contain the NUC SSL certificates. Only
   one certificate is valid for _client_ mode;
@@ -56,14 +56,14 @@ The production cluster has the following Kubernetes resources:
 | Resource Kind  | Resource Name                                             | Description                                                                                                                                                                          |
 | -------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Deployment     | `cert-monitor`                                            | based on the `combine_cert_proxy` image and calls the `monitor.py` entrypoint                                                                                                        |
-| Service        | `nuc-web-server`                                          | based on `combine_cert_server`                                                                                                                                                       |
-| ConfigMap      | `cert-config`                                             | defines the `NUC_CERTIFICATES` and `AWS_S3_BUCKET` environment variables                                                                                                             |
+| Service        | `nuc-proxy-server`                                        | based on `combine_cert_server`                                                                                                                                                       |
+| ConfigMap      | `env-cert-proxy`                                          | defines the `NUC_CERTIFICATES` and `AWS_S3_BUCKET` environment variables                                                                                                             |
 | Secret         | `aws-s3-cert-access`                                      | defines the `AWS_ACCOUNT`, `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.                                                              |
 | Secret         | `nuc1-thecombine-app-tls`, `nuc2-thecombine-app-tls`, ... | Secrets created by `cert-manager.io` that contain the certificates returned by _Let's Encrypt_.                                                                                      |
 | Issuer         | `letsencrypt-prod`, `letsencrypt-staging`                 | Certificate issuer used by `cert-manager.io` to know how to issue the certificates. `letsencrypt-prod` is for the production environment while `letsencrypt-staging` is for testing. |
 | Ingress        | `ingress-nuc1`, `ingress-nuc2`, ...                       | The Ingress is used to route traffic to the `nuc-web-server` and specifies the TLS secret (SSL Certificate) to use to terminate the SSL.                                             |
-| ServiceAccount | service-acct-nuc-cert                                     | Service Account for managing NUC certificates                                                                                                                                        |
-| Role           | role-nuc-cert                                             | Role for managing NUC certificates                                                                                                                                                   |
+| ServiceAccount | service-acct-cert-proxy                                   | Service Account for managing NUC certificates                                                                                                                                        |
+| Role           | role-cert-proxy                                           | Role for managing NUC certificates                                                                                                                                                   |
 
 ## Resources on the NUC Cluster
 
