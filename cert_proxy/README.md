@@ -30,8 +30,8 @@ scripts:
 
 The additional Python scripts use the following environment variables:
 
-- `NUC_CERTIFICATES` - a space-separated list of names of Kubernetes secrets that contain the NUC SSL certificates. Only
-  one certificate is valid for _client_ mode;
+- `CERT_PROXY_CERTIFICATES` - a space-separated list of names of Kubernetes secrets that contain the NUC SSL
+  certificates. Only one certificate is valid for _client_ mode;
 - `AWS_ACCOUNT` - the 12-digit AWS Account Number for accessing the AWS S3 bucket;
 - `AWS_DEFAULT_REGION` - the default region for the AWS S3 bucket;
 - `AWS_ACCESS_KEY_ID` - the access key to read/write to AWS S3 bucket (similar to a userid);
