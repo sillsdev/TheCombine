@@ -68,6 +68,7 @@ namespace BackendFramework.Controllers
             }
 
             var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+            const string invalidLiftFileMessagePrefix = "Malformed Lift file: ";
 
             // Clear out any files left by a failed import
             RobustIO.DeleteDirectoryAndContents(liftStoragePath);
@@ -75,13 +76,13 @@ namespace BackendFramework.Controllers
             var file = fileUpload.File;
             if (file is null)
             {
-                return BadRequest("Null File");
+                return BadRequest($"${invalidLiftFileMessagePrefix}Null File");
             }
 
             // Ensure file is not empty
             if (file.Length == 0)
             {
-                return BadRequest("Empty File");
+                return BadRequest($"{invalidLiftFileMessagePrefix}Empty File");
             }
 
             // Copy zip file data to a new temporary file
@@ -101,10 +102,13 @@ namespace BackendFramework.Controllers
             var directoriesExtracted = Directory.GetDirectories(extractDir);
             var extractedDirPath = "";
 
+            const int expectedNumDirs = 1;
+            string invalidNumDirectoriesErrorMessage =
+                $"{invalidLiftFileMessagePrefix}Zip file does not have {expectedNumDirs} directory.";
             switch (directoriesExtracted.Length)
             {
                 // If there was one directory, we're good
-                case 1:
+                case expectedNumDirs:
                     {
                         extractedDirPath = directoriesExtracted.First();
                         break;
@@ -128,15 +132,14 @@ namespace BackendFramework.Controllers
                         // Both directories seemed important
                         if (numDirs == 2)
                         {
-                            return BadRequest("Your zip file should have one directory.");
+                            return BadRequest(invalidNumDirectoriesErrorMessage);
                         }
                         break;
                     }
                 // There were 0 or more than 2 directories
                 default:
                     {
-                        return BadRequest(
-                            "Your zip file structure has the wrong number of directories.");
+                        return BadRequest(invalidNumDirectoriesErrorMessage);
                     }
             }
 
@@ -147,13 +150,12 @@ namespace BackendFramework.Controllers
             // Search for the lift file within the extracted files
             var extractedLiftNameArr = Directory.GetFiles(liftStoragePath);
             var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
-            if (extractedLiftPath.Length > 1)
+            switch (extractedLiftPath.Length)
             {
-                return BadRequest("More than one .lift file detected.");
-            }
-            if (extractedLiftPath.Length == 0)
-            {
-                return BadRequest("No lift files detected.");
+                case 0:
+                    return BadRequest($"{invalidLiftFileMessagePrefix}No .lift files detected.");
+                case > 1:
+                    return BadRequest($"{invalidLiftFileMessagePrefix}More than one .lift file detected.");
             }
 
             int liftParseResult;
