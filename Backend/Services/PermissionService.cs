@@ -83,6 +83,10 @@ namespace BackendFramework.Services
             return user.IsAdmin;
         }
 
+        /// <remarks>
+        /// This method magically looks up the Project ID by introspecting the route.
+        /// It is not suitable for any routes that do not contain ...projects/PROJECT_ID... in the route.
+        /// </remarks>
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
