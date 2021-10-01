@@ -1,0 +1,19 @@
+---
+- name: Create directory for The Combine configuration files
+  file:
+    path: "{{ k8s_config_dir }}"
+    state: directory
+    mode: 0700
+
+- name: Create Kubernetes configuration files for The Combine
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ k8s_config_dir }}/{{ item }}"
+    mode: 0600
+  loop: "{{ k8s_templates}}"
+
+- name: Apply Kubernetes configuration
+  command: kubectl --kubeconfig={{ kubecfg }} apply -f {{ item }}
+  args:
+    chdir: "{{ k8s_config_dir }}"
+  loop: "{{ k8s_templates}}"
