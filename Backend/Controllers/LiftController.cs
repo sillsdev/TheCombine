@@ -102,10 +102,13 @@ namespace BackendFramework.Controllers
             var directoriesExtracted = Directory.GetDirectories(extractDir);
             var extractedDirPath = "";
 
+            const int expectedNumDirs = 1;
+            string invalidNumDirectoriesErrorMessage =
+                $"{invalidLiftFileMessagePrefix}Zip file does not have {expectedNumDirs} directory.";
             switch (directoriesExtracted.Length)
             {
                 // If there was one directory, we're good
-                case 1:
+                case expectedNumDirs:
                     {
                         extractedDirPath = directoriesExtracted.First();
                         break;
@@ -129,16 +132,14 @@ namespace BackendFramework.Controllers
                         // Both directories seemed important
                         if (numDirs == 2)
                         {
-                            return BadRequest($"{invalidLiftFileMessagePrefix}Zip file does not have one directory.");
+                            return BadRequest(invalidNumDirectoriesErrorMessage);
                         }
                         break;
                     }
                 // There were 0 or more than 2 directories
                 default:
                     {
-                        return BadRequest(
-                            $"{invalidLiftFileMessagePrefix}Your zip file structure has the wrong number of directories."
-                            );
+                        return BadRequest(invalidNumDirectoriesErrorMessage);
                     }
             }
 
