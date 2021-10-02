@@ -14,11 +14,7 @@ spec:
   tls:
   - hosts:
     - {{ combine_server_name }}
-    secretName: {{ combine_server_name | regex_replace('[\._-]+','-')}}-tls
-  ##################
-  # TO DO:
-  #   Add secrets for NUC certificates
-  ##################
+    secretName: {{ combine_server_name | regex_replace('[\\._-]+','-')}}-tls
 {% endif %}
   rules:
   - host: {{ combine_server_name }}
@@ -31,7 +27,3 @@ spec:
               number: 80
         path: /
         pathType: Prefix
-  ##################
-  # TO DO:
-  #   Add host specs for NUC URLs
-  ##################

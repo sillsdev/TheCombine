@@ -8,3 +8,5 @@ aws_ecr_login:
   job_name: ecr-cred-helper
   cron_job_name: ecr-cred-helper-cron
   schedule: "0 */8 * * *"
+
+aws_namespaces: []

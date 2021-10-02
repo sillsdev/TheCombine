@@ -1,0 +1,10 @@
+---
+proxy_server_attr:
+  namespace: combine-cert-proxy
+  parent_name: role-cert-proxy
+  aws_s3_access: aws-s3-cert-access
+  env_name: env-cert-proxy
+  nginx_pages: init-nginx-pages
+
+cert_proxy_hostname: cert-proxy.thecombine.app
+cert_issuer: letsencrypt-prod

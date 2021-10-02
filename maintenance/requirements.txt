@@ -1,1 +1,2 @@
-humanfriendly==9.2
+humanfriendly==10.0
+kubernetes==18.20.0

@@ -22,3 +22,4 @@ mkdocs-htmlproofer-plugin
 Jinja2 < 3
 jinja2-base64-filters
 humanfriendly
+kubernetes

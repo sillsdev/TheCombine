@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ k8s_roles.maintenance.name }}
-  namespace: {{ app_namespace }}
+  namespace: {{ acct_namespace }}
 rules:
   - apiGroups: [""]
     resources: ["pods", "pods/exec"]
@@ -19,7 +19,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ k8s_roles.maintenance.name + '-binding' }}
-  namespace: {{ app_namespace }}
+  namespace: {{ acct_namespace }}
 subjects:
 {% for acct in k8s_roles.maintenance.accounts %}
   - kind: ServiceAccount
