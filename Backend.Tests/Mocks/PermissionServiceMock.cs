@@ -75,6 +75,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(request is null || IsAuthorizedHttpContext(request));
         }
 
+        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
+        {
+            return HasProjectPermission(request, permission).Result;
+        }
+
         public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             return Task.FromResult(false);

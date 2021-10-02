@@ -18,12 +18,16 @@ namespace BackendFramework.Controllers
         private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
         private readonly IInviteService _inviteService;
+        private readonly IPermissionService _permissionService;
 
-        public InviteController(IInviteService inviteService, IProjectRepository projRepo, IUserRepository userRepo)
+        public InviteController(
+            IInviteService inviteService, IProjectRepository projRepo, IUserRepository userRepo,
+            IPermissionService permissionService)
         {
             _projRepo = projRepo;
             _userRepo = userRepo;
             _inviteService = inviteService;
+            _permissionService = permissionService;
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
@@ -32,6 +36,11 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.Owner, projectId))
+            {
+                return Forbid();
+            }
+
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
