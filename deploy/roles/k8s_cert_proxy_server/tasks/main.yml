@@ -31,6 +31,7 @@
       - deployment-nuc-proxy.yaml
       - service-nuc-proxy.yaml
       - ingress-nuc.yaml
+      - deployment-cert-proxy-server.yaml
 
 # aws_login_job requires a namespace,
 # aws_namespace, that will contain containers whose images

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    combine-component: maintenance
+  name: maintenance
+  namespace: {{ app_namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      combine-component: maintenance
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        combine-component: maintenance
+    spec:
+      serviceAccountName: {{ k8s_service_accounts.maintenance }}
+      containers:
+        - command: [ "/home/user/.local/bin/monitor.py" ]
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: aws-s3-cert-access
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: aws-s3-cert-access
+            - name: AWS_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCOUNT
+                  name: aws-s3-cert-access
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_DEFAULT_REGION
+                  name: aws-s3-cert-access
+            - name: AWS_S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  key: AWS_S3_BUCKET
+                  name: env-cert-proxy
+            - name: CERT_PROXY_CERTIFICATES
+              valueFrom:
+                configMapKeyRef:
+                  key: CERT_PROXY_CERTIFICATES
+                  name: env-cert-proxy
+          image: '{{ combine_image_maintenance }}'
+{% if image_tag == "latest" %}
+          imagePullPolicy: Always
+{% else %}
+          imagePullPolicy: IfNotPresent
+{% endif %}
+          name: maintenance
+          resources: {}
+      restartPolicy: Always
+{% if image_pull_secret is defined and image_pull_secret | length %}
+      imagePullSecrets:
+         - name: {{ image_pull_secret }}
+{% endif %}
+status: {}
