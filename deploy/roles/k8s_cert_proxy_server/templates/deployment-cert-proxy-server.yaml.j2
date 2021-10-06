@@ -3,14 +3,14 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    combine-component: maintenance
-  name: maintenance
-  namespace: {{ app_namespace }}
+    combine-component: combine-cert-proxy
+  name: combine-cert-proxy
+  namespace: {{ cert_proxy_namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      combine-component: maintenance
+      combine-component: combine-cert-proxy
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,7 +20,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        combine-component: maintenance
+        combine-component: combine-cert-proxy
     spec:
       serviceAccountName: {{ k8s_service_accounts.maintenance }}
       containers:
@@ -56,13 +56,15 @@ spec:
                 configMapKeyRef:
                   key: CERT_PROXY_CERTIFICATES
                   name: env-cert-proxy
+            - name: CERT_PROXY_NAMESPACE
+              value: combine-cert-proxy
           image: '{{ combine_image_maintenance }}'
 {% if image_tag == "latest" %}
           imagePullPolicy: Always
 {% else %}
           imagePullPolicy: IfNotPresent
 {% endif %}
-          name: maintenance
+          name: combine-cert-proxy
           resources: {}
       restartPolicy: Always
 {% if image_pull_secret is defined and image_pull_secret | length %}

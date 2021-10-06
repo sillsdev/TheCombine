@@ -7,29 +7,78 @@ environment variable.  When a secret is updated, the updated secret is pushed
 to the AWS_S3_BUCKET.
 """
 
-from kubernetes import client, config, watch
+import base64
+import os
+from pathlib import Path
+import tempfile
 from typing import List
 
+from aws_backup import AwsBackup
+from kubernetes import client, config, watch
 
-def get_secret_names() -> List[str]:
-    """
-    Create the list of secrets to monitor.
 
-    Create the list of secrets to monitor from the CERT_PROXY_CERTIFICATES
-    environment variable.  This function assumes that the secret name is '-tls'
-    appened to the dns name of the server (with '.' converted to '-').
-    """
+class CertMonitor:
+    """Monitor SSL certificate secrets and push a copy to the cloud on change."""
+
+    def __init__(self) -> None:
+        self.secrets_list = self.get_secrets_list()
+        self.k8s_namespace = os.environ["CERT_PROXY_NAMESPACE"]
+        self.trigger_events = ("ADDED", "MODIFIED")
+        self.aws = AwsBackup(bucket=os.environ["AWS_S3_BUCKET"])
+
+    def get_secrets_list(self) -> List[str]:
+        """
+        Create the list of secrets to monitor.
+
+        Create the list of secrets to monitor from the CERT_PROXY_CERTIFICATES
+        environment variable.  This function assumes that the secret name is '-tls'
+        appened to the dns name of the server (with '.' converted to '-').
+        """
+        if "CERT_PROXY_CERTIFICATES" in os.environ:
+            domain_list = os.environ["CERT_PROXY_CERTIFICATES"].replace(".", "-").split()
+            for index, item in enumerate(domain_list):
+                domain_list[index] = item + "-tls"
+            return domain_list
+        return []
+
+    def push_secret_file(self, *, secret_name: str, data: bytes, filename: str) -> None:
+        """Push the specified secret to AWS S3 storage."""
+        print(f"Push {secret_name}/{filename} to AWS S3", flush=True)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            secret_dir = Path(temp_dir) / secret_name
+            secret_dir.mkdir(parents=True, exist_ok=True)
+            secret_filename = secret_dir / filename
+            with open(secret_filename, "wb") as output_file:
+                output_file.write(data)
+            self.aws.push(secret_filename, f"{secret_name}/{filename}")
+
+    def monitor(self) -> None:
+        """Monitor for updates to the secrets."""
+        # setup watch on Kubernetes secrets
+        config.load_incluster_config()
+        v1 = client.CoreV1Api()
+        w = watch.Watch()
+        # Wait for events
+        for event in w.stream(v1.list_namespaced_secret, namespace=self.k8s_namespace):
+            secret_name = event["object"].metadata.name
+            event_type = event["type"]
+            print(f"Event: {event_type} {secret_name}", flush=True)
+            if (event_type in self.trigger_events) and (secret_name in self.secrets_list):
+                self.push_secret_file(
+                    secret_name=secret_name,
+                    data=base64.b64decode(event["object"].data["tls.key"]),
+                    filename="key.pem",
+                )
+                self.push_secret_file(
+                    secret_name=secret_name,
+                    data=base64.b64decode(event["object"].data["tls.crt"]),
+                    filename="cert.pem",
+                )
 
 
 def main() -> None:
-    config.load_incluster_config()
-    secrets_list = get_secret_names()
-    v1 = client.CoreV1Api()
-    print("Listing all configmaps in the default namespace:")
-    w = watch.Watch()
-    for event in w.stream(v1.list_namespaced_secret, namespace="default"):
-        print("Event: %s %s" % (event["type"], event["object"].metadata.name))
-    print("Ended.")
+    cert_monitor = CertMonitor()
+    cert_monitor.monitor()
 
 
 if __name__ == "__main__":
