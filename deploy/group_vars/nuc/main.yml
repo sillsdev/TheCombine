@@ -25,7 +25,6 @@ combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 cert_mode: "cert-client"
 cert_email: "cert@thecombine.app"
 cert_self_renewal: 60
-combine_alias_domain_list: []
 combine_cert_proxy_list: []
 
 ################################################
