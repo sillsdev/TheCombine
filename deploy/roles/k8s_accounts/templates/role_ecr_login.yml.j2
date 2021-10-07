@@ -6,8 +6,16 @@ metadata:
   namespace: {{ acct_namespace }}
 rules:
   - apiGroups: [""]
-    resources: ["secrets", "pods", "pods/attach", "pods/log", "namespaces"]
+    resources: ["pods", "pods/attach"]
+    verbs: ["list", "get", "watch", "create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
     verbs: ["list", "get", "watch", "create", "update", "patch", "delete"]
+{% if create_namespaces is defined and create_namespaces | length %}
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["list", "get", "watch", "create", "update", "patch", "delete"]
+{% endif %}
   - apiGroups: [""]
     resources: ["serviceaccounts"]
     verbs: ["list", "get", "update", "patch"]
