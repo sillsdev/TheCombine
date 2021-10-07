@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -40,6 +41,14 @@ namespace BackendFramework.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Find any .list files within a directory.
+        /// </summary>
+        private static List<string> FindLiftFiles(string dir)
+        {
+            return Directory.GetFiles(dir, "*.lift").ToList();
+        }
+
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
         /// <returns> Number of words added </returns>
         [HttpPost("upload", Name = "UploadLiftFile")]
@@ -68,6 +77,7 @@ namespace BackendFramework.Controllers
             }
 
             var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+            const string invalidLiftFileMessagePrefix = "Malformed Lift file: ";
 
             // Clear out any files left by a failed import
             RobustIO.DeleteDirectoryAndContents(liftStoragePath);
@@ -75,13 +85,13 @@ namespace BackendFramework.Controllers
             var file = fileUpload.File;
             if (file is null)
             {
-                return BadRequest("Null File");
+                return BadRequest($"${invalidLiftFileMessagePrefix}Null File");
             }
 
             // Ensure file is not empty
             if (file.Length == 0)
             {
-                return BadRequest("Empty File");
+                return BadRequest($"{invalidLiftFileMessagePrefix}Empty File");
             }
 
             // Copy zip file data to a new temporary file
@@ -97,63 +107,42 @@ namespace BackendFramework.Controllers
             // Extract the zip to new created directory.
             FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
 
-            // Check number of directories extracted
-            var directoriesExtracted = Directory.GetDirectories(extractDir);
-            var extractedDirPath = "";
-
-            switch (directoriesExtracted.Length)
+            // Search for .lift files to determine the root of the Lift project.
+            string extractedLiftRootPath;
+            // Handle this structuring case:
+            // flex.zip
+            //    | audio
+            //    | WritingSystems
+            //    | project_name.lift
+            //    | project_name.lift-ranges
+            if (FindLiftFiles(extractDir).Count > 0)
             {
-                // If there was one directory, we're good
-                case 1:
-                    {
-                        extractedDirPath = directoriesExtracted.First();
-                        break;
-                    }
-                // If there were two, and there was a __MACOSX directory, ignore it
-                case 2:
-                    {
-                        var numDirs = 0;
-                        foreach (var dir in directoriesExtracted)
-                        {
-                            if (dir.EndsWith("__MACOSX"))
-                            {
-                                Directory.Delete(dir, true);
-                            }
-                            else // This directory probably matters
-                            {
-                                extractedDirPath = dir;
-                                numDirs++;
-                            }
-                        }
-                        // Both directories seemed important
-                        if (numDirs == 2)
-                        {
-                            return BadRequest("Your zip file should have one directory.");
-                        }
-                        break;
-                    }
-                // There were 0 or more than 2 directories
-                default:
-                    {
-                        return BadRequest(
-                            "Your zip file structure has the wrong number of directories.");
-                    }
+                extractedLiftRootPath = extractDir;
+            }
+            // Handle the typical structuring case:
+            //  flex.zip
+            //    | project_name
+            //      | audio
+            //      | WritingSystems
+            //      | project_name.lift
+            //      | project_name.lift-ranges
+            else
+            {
+                extractedLiftRootPath = Directory.GetDirectories(extractDir).First();
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            FileOperations.CopyDirectory(extractedDirPath, liftStoragePath);
+            FileOperations.CopyDirectory(extractedLiftRootPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
-            // Search for the lift file within the extracted files
-            var extractedLiftNameArr = Directory.GetFiles(liftStoragePath);
-            var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
-            if (extractedLiftPath.Length > 1)
+            // Validate that only one .lift file is included.
+            var extractedLiftFiles = FindLiftFiles(liftStoragePath);
+            switch (extractedLiftFiles.Count)
             {
-                return BadRequest("More than one .lift file detected.");
-            }
-            if (extractedLiftPath.Length == 0)
-            {
-                return BadRequest("No lift files detected.");
+                case 0:
+                    return BadRequest($"{invalidLiftFileMessagePrefix}No .lift files detected.");
+                case > 1:
+                    return BadRequest($"{invalidLiftFileMessagePrefix}More than one .lift file detected.");
             }
 
             int liftParseResult;
@@ -174,8 +163,8 @@ namespace BackendFramework.Controllers
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
-                // Import words from lift file
-                liftParseResult = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                // Import words from .lift file
+                liftParseResult = parser.ReadLiftFile(extractedLiftFiles.First());
                 await liftMerger.SaveImportEntries();
             }
             catch (Exception e)
