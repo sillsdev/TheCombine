@@ -18,7 +18,21 @@ from kubernetes import client, config, watch
 
 
 class CertMonitor:
-    """Monitor SSL certificate secrets and push a copy to the cloud on change."""
+    """
+    Monitor SSL certificate secrets and push a copy to the cloud on change.
+
+    Attributes:
+        secrets_list: A list of kubenetes secrets that to be monitored for
+            changes.
+
+        k8s_namespace: Kubernetes namespace where the secrets are located.
+
+        trigger_events: A tuple of events that are returned by the watch that will
+            trigger an update of the certificate in AWS S3.
+
+        aws: An instance of AwsBackup to push any updated certificates to AWS S3
+            storage.
+    """
 
     def __init__(self) -> None:
         self.secrets_list = self.get_secrets_list()
@@ -42,7 +56,24 @@ class CertMonitor:
         return []
 
     def push_secret_file(self, *, secret_name: str, data: bytes, filename: str) -> None:
-        """Push the specified secret to AWS S3 storage."""
+        """
+        Push single file associated with the TLS secret to AWS S3 storage.
+
+        Args:
+            secret_name: name of the secret that is being pushed to AWS S3.
+
+            data: contents of the file to be pushed.
+
+            filename: name of the file.
+
+        Example:
+            push_secret_file(
+                secret_name="my-cert-tls",
+                data=b'<my cert data>',
+                filename="cert.pem")
+            will create a file that contains the data received in the AWS
+            S3 bucket under my-cert-tls/cert.pem.
+        """
         print(f"Push {secret_name}/{filename} to AWS S3", flush=True)
         with tempfile.TemporaryDirectory() as temp_dir:
             secret_dir = Path(temp_dir) / secret_name
@@ -54,12 +85,15 @@ class CertMonitor:
 
     def monitor(self) -> None:
         """Monitor for updates to the secrets."""
-        # setup watch on Kubernetes secrets
+        # Setup watch on Kubernetes secrets
         config.load_incluster_config()
-        v1 = client.CoreV1Api()
-        w = watch.Watch()
+        core_api = client.CoreV1Api()
+        # Create watch object
+        watch_obj = watch.Watch()
         # Wait for events
-        for event in w.stream(v1.list_namespaced_secret, namespace=self.k8s_namespace):
+        for event in watch_obj.stream(
+            core_api.list_namespaced_secret, namespace=self.k8s_namespace
+        ):
             secret_name = event["object"].metadata.name
             event_type = event["type"]
             print(f"Event: {event_type} {secret_name}", flush=True)

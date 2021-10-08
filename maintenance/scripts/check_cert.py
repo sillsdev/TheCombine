@@ -12,7 +12,7 @@ conditions:
 
 
 def main() -> None:
-    print("Ta-da!")
+    print("TO DO: create tls secret for NUC")
 
 
 if __name__ == "__main__":
