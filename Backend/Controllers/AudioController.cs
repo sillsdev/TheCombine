@@ -32,12 +32,11 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
         {
-            // if we require authorization and authentication for audio files, the frontend cannot just use the api
-            // endpoint as the src
-            //if (!_permissionService.IsProjectAuthorized("1", HttpContext))
-            //{
-            //    return Forbid();
-            //}
+            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
+            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            // {
+            //     return Forbid();
+            // }
 
             // Sanitize user input
             if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId) ||

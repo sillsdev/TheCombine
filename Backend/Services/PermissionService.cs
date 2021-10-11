@@ -45,9 +45,17 @@ namespace BackendFramework.Services
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            var jsonToken = GetJwt(request);
-            var foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-            return userId == foundUserId;
+            var currentUserId = GetUserId(request);
+            return userId == currentUserId;
+        }
+
+        /// <summary>
+        /// Checks whether the current user is authorized.
+        /// </summary>
+        public bool IsCurrentUserAuthorized(HttpContext request)
+        {
+            var userId = GetUserId(request);
+            return IsUserIdAuthorized(request, userId);
         }
 
         private static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
@@ -75,6 +83,10 @@ namespace BackendFramework.Services
             return user.IsAdmin;
         }
 
+        /// <remarks>
+        /// This method magically looks up the Project ID by inspecting the route.
+        /// It is not suitable for any routes that do not contain ...projects/PROJECT_ID... in the route.
+        /// </remarks>
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
