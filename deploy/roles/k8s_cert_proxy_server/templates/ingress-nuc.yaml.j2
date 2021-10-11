@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
     cert-manager.io/issuer: {{ cert_issuer }}
     cert-manager.io/duration: 2160h
-    cert-manager.io/renew-before: 720h
+    cert-manager.io/renew-before: {{ (cert_renew_before * 24) }}h
 spec:
   tls:
   - hosts:
