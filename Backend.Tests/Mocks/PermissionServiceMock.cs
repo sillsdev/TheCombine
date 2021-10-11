@@ -27,9 +27,9 @@ namespace Backend.Tests.Mocks
             return httpContext;
         }
 
-        private static bool IsAuthorizedHttpContext(HttpContext request)
+        private static bool IsAuthorizedHttpContext(HttpContext? request)
         {
-            return request.Request.Headers["Authorization"] != UnauthorizedHeader;
+            return request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> IsSiteAdmin(HttpContext? request)
         {
-            return Task.FromResult(request is null || IsAuthorizedHttpContext(request));
+            return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
@@ -59,7 +59,7 @@ namespace Backend.Tests.Mocks
         /// </param>
         public bool IsCurrentUserAuthorized(HttpContext? request)
         {
-            return request is null || IsAuthorizedHttpContext(request);
+            return IsAuthorizedHttpContext(request);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> HasProjectPermission(HttpContext? request, Permission permission)
         {
-            return Task.FromResult(request is null || IsAuthorizedHttpContext(request));
+            return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
         public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
