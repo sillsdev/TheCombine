@@ -10,7 +10,7 @@ namespace Backend.Tests.Models
         private const string ProjId = "MergeBlacklistEntryTestProjectId";
         private const string UserId = "MergeBlacklistEntryTestUserId";
         private readonly List<string> _wordIds = new() { "word1", "word2" };
-        private readonly List<string> _idsRevd = new() { "word2", "word1" };
+        private readonly List<string> _wordIdsReversed = new() { "word2", "word1" };
 
         [Test]
         public void TestClone()
@@ -41,7 +41,7 @@ namespace Backend.Tests.Models
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = _idsRevd
+                WordIds = _wordIdsReversed
             };
             Assert.That(entryA.Equals(entryB));
         }
@@ -82,14 +82,14 @@ namespace Backend.Tests.Models
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = _idsRevd
+                WordIds = _wordIdsReversed
             };
             var entryB = new MergeBlacklistEntry
             {
                 Id = "DifferentTestId",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = _idsRevd
+                WordIds = _wordIdsReversed
             };
             Assert.AreNotEqual(entryA.GetHashCode(), entryB.GetHashCode());
         }

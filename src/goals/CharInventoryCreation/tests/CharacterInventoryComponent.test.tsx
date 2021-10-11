@@ -1,13 +1,13 @@
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import { Project } from "api/models";
 import CharacterInventory, {
   CANCEL,
   SAVE,
 } from "goals/CharInventoryCreation/CharacterInventoryComponent";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { store } from "store";
-import { Project } from "types/project";
 
 // Constants
 const SET_INV = jest.fn();

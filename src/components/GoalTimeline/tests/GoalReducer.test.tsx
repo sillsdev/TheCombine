@@ -1,6 +1,6 @@
 import {
   defaultState,
-  emtpyGoalState,
+  emptyGoalState,
 } from "components/GoalTimeline/DefaultState";
 import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import {
@@ -36,7 +36,7 @@ describe("GoalReducer", () => {
       const history = [goal, goal2];
 
       const state: GoalsState = {
-        ...emtpyGoalState(),
+        ...emptyGoalState(),
         goalTypeSuggestions,
         history,
       };
@@ -80,7 +80,7 @@ describe("GoalReducer", () => {
 
   describe("StoreActionTypes.RESET", () => {
     it("Should return the default state", () => {
-      const state = emtpyGoalState();
+      const state = emptyGoalState();
 
       const action: StoreAction = {
         type: StoreActionTypes.RESET,

@@ -13,7 +13,7 @@ export const defaultState: GoalsState = {
   history: [],
 };
 
-export function emtpyGoalState(): GoalsState {
+export function emptyGoalState(): GoalsState {
   return {
     allGoalTypes: [],
     currentGoal: { ...new Goal(), guid: expect.any(String) },

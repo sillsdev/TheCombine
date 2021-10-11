@@ -27,7 +27,7 @@ export default function SidebarDrop(props: SidebarDropProps) {
         <div
           ref={providedDroppable.innerRef}
           {...providedDroppable.droppableProps}
-          /* Add the height of the appbar (64) to the top padding. */
+          /* Add the height of the app bar (64) to the top padding. */
           style={{
             backgroundColor: "lightblue",
             height: "100%",
