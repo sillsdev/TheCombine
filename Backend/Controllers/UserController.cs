@@ -172,7 +172,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CheckUsername(string username)
         {
-            var isUnavailable = username == "" || await _userRepo.GetUserByUsername(username) is not null;
+            var isUnavailable = string.IsNullOrWhiteSpace(username)
+                || await _userRepo.GetUserByUsername(username) is not null;
             return Ok(isUnavailable);
         }
 
@@ -182,7 +183,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            var isUnavailable = email == "" || await _userRepo.GetUserByEmail(email) is not null;
+            var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
             return Ok(isUnavailable);
         }
 
