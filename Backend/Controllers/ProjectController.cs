@@ -217,6 +217,11 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainWithSubdomains>))]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
@@ -230,6 +235,11 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
+            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            {
+                return Forbid();
+            }
+
             var projectIdWithName = await _projRepo.GetProjectIdByName(projectName);
             return Ok(projectIdWithName is not null);
         }
