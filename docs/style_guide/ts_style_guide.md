@@ -18,7 +18,7 @@ Key Sections:
 - [`type` vs `interface`](#type-vs-interface)
 - [One-line `if` statements](#one-line-if-statements)
 - [imports](#imports)
-- [KeyBoardEvents](#keyboardevents)
+- [KeyboardEvents](#keyboardevents)
 
 ## Variable and Function
 
@@ -298,7 +298,7 @@ Use [Prettier](https://prettier.io/) to format TypeScript code as described in t
 
 ## Filename
 
-Name files with `camelCase`. E.g. `accordian.tsx`, `myControl.tsx`, `utils.ts`, `map.ts` etc.
+Name files with `camelCase`. E.g. `accordion.tsx`, `myControl.tsx`, `utils.ts`, `map.ts` etc.
 
 > Reason: Conventional across many JS teams.
 

@@ -23,7 +23,7 @@ class SpellChecker {
     return this.spell.correct(word);
   }
 
-  // If the word string is multiple words (seperated by spaces)
+  // If the word string is multiple words (separated by spaces)
   // find spelling suggestions for the last word.
   getSpellingSuggestions(word: string): string[] {
     // Remove excess whitespace

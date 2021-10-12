@@ -1,5 +1,4 @@
 import { AddComment, Comment } from "@material-ui/icons";
-import React from "react";
 import renderer from "react-test-renderer";
 
 import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
@@ -12,7 +11,7 @@ let testHandle: renderer.ReactTestInstance;
 function renderWithText(text: string) {
   renderer.act(() => {
     testMaster = renderer.create(
-      <EntryNote noteText={text} updateNote={jest.fn()} />
+      <EntryNote noteText={text} updateNote={jest.fn()} buttonId="" />
     );
   });
   testHandle = testMaster.root;

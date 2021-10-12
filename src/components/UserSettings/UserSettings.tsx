@@ -216,6 +216,7 @@ class UserSettings extends React.Component<
                       <Grid item xs>
                         <TextField
                           id={`${idAffix}-email`}
+                          required
                           fullWidth
                           variant="outlined"
                           value={this.state.email}

@@ -167,6 +167,9 @@ namespace Backend.Tests.Controllers
 
             var result4 = (ObjectResult)_userController.CheckUsername("NewUsername").Result;
             Assert.IsFalse((bool)result4.Value);
+
+            var result5 = (ObjectResult)_userController.CheckUsername("").Result;
+            Assert.IsTrue((bool)result5.Value);
         }
 
         [Test]
@@ -190,6 +193,9 @@ namespace Backend.Tests.Controllers
 
             var result4 = (ObjectResult)_userController.CheckEmail("NewEmail").Result;
             Assert.IsFalse((bool)result4.Value);
+
+            var result5 = (ObjectResult)_userController.CheckEmail("").Result;
+            Assert.IsTrue((bool)result5.Value);
         }
     }
 }

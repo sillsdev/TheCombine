@@ -37,6 +37,7 @@ function renderWithWord(word: Word) {
       <Provider store={mockStore}>
         <RecentEntry
           entry={word}
+          rowIndex={0}
           senseIndex={0}
           updateGloss={mockUpdateGloss}
           updateNote={mockUpdateNote}
