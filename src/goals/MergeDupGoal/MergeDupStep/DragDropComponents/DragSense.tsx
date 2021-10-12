@@ -99,6 +99,8 @@ export default function DragSense(props: DragSenseProps) {
             maxWidth: 300,
             background: snapshot.isDragging
               ? "lightgreen"
+              : snapshot.combineTargetFor
+              ? "lightyellow"
               : isInSidebar
               ? "lightblue"
               : "white",
