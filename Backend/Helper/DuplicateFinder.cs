@@ -279,7 +279,7 @@ namespace BackendFramework.Helper
 
         /// <summary>
         /// Get the edit distance between two strings; adjust the result depending on length of the first.
-        /// Weights in the function are heristically adjusted to improve duplicate finding.
+        /// Weights in the function are heuristically adjusted to improve duplicate finding.
         /// </summary>
         private double GetScaledDistance(string stringA, string stringB)
         {

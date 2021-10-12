@@ -1,4 +1,3 @@
-import React from "react";
 import renderer from "react-test-renderer";
 
 import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
@@ -6,7 +5,7 @@ import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents
 describe("DeleteEntry", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
-      renderer.create(<DeleteEntry removeEntry={jest.fn()} />);
+      renderer.create(<DeleteEntry removeEntry={jest.fn()} buttonId="" />);
     });
   });
 });

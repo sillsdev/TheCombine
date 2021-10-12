@@ -4,20 +4,20 @@ const fs = require("fs"),
 const args = process.argv.slice(2);
 if (args.length > 0) {
   const parser = new xml2js.Parser();
-  const xmlLocataion = path.normalize(args[0]);
-  fs.readFile(xmlLocataion, function (err: Error, data: string) {
+  const xmlLocation = path.normalize(args[0]);
+  fs.readFile(xmlLocation, function (err: Error, data: string) {
     if (err) throw err;
     parser.parseString(data, function (err: Error, result: any) {
       if (err) throw err;
-      const foriegnLanguage: string = result.List.Name[0].AUni[1].$.ws;
+      const foreignLanguage: string = result.List.Name[0].AUni[1].$.ws;
       const parsedDomain = result.List.Possibilities[0].CmSemanticDomain;
       let cleanedEnglishDomain: SemanticDomainWithSubdomains[] = [],
-        cleanedForiegnDomain: SemanticDomainWithSubdomains[] = [];
+        cleanedForeignDomain: SemanticDomainWithSubdomains[] = [];
 
       generateCleanJSON(
         parsedDomain,
         cleanedEnglishDomain,
-        cleanedForiegnDomain
+        cleanedForeignDomain
       );
 
       fs.writeFile(
@@ -30,9 +30,9 @@ if (args.length > 0) {
 
       fs.writeFile(
         path.normalize(
-          `./src/resources/semantic-domains/${foriegnLanguage}.json`
+          `./src/resources/semantic-domains/${foreignLanguage}.json`
         ),
-        JSON.stringify(cleanedForiegnDomain, null, "  "),
+        JSON.stringify(cleanedForeignDomain, null, "  "),
         (err: Error) => {
           if (err) throw err;
         }
@@ -61,7 +61,7 @@ export function generateCleanJSON(
 ) {
   domain.forEach(function (subDomain) {
     const newEnglishEntry = new SemanticDomainWithSubdomains();
-    const newForiegnEntry = new SemanticDomainWithSubdomains();
+    const newForeignEntry = new SemanticDomainWithSubdomains();
 
     newEnglishEntry.name = subDomain.Name[0].AUni[0]._;
     newEnglishEntry.id = subDomain.Abbreviation[0].AUni[0]._;
@@ -70,17 +70,17 @@ export function generateCleanJSON(
     newEnglishEntry.questions = [];
     newEnglishEntry.subdomains = [];
 
-    //If there is no foriegn entry for name or description, use the English as default
-    newForiegnEntry.name = subDomain.Name[0].AUni[1].hasOwnProperty("_")
+    //If there is no foreign entry for name or description, use the English as default
+    newForeignEntry.name = subDomain.Name[0].AUni[1].hasOwnProperty("_")
       ? subDomain.Name[0].AUni[1]._
       : newEnglishEntry.name;
-    newForiegnEntry.id = subDomain.Abbreviation[0].AUni[0]._;
-    newForiegnEntry.description =
+    newForeignEntry.id = subDomain.Abbreviation[0].AUni[0]._;
+    newForeignEntry.description =
       subDomain.Description[0].AStr[1].Run[0].hasOwnProperty("_")
         ? subDomain.Description[0].AStr[1].Run[0]._.replace(/\s+/g, " ")
         : newEnglishEntry.description;
-    newForiegnEntry.questions = [];
-    newForiegnEntry.subdomains = [];
+    newForeignEntry.questions = [];
+    newForeignEntry.subdomains = [];
 
     if (subDomain.hasOwnProperty("Questions")) {
       //Iterate through the questions and add them to the new entries
@@ -103,7 +103,7 @@ export function generateCleanJSON(
             i
           ].Question[0].AUni[1].hasOwnProperty("_")
         ) {
-          newForiegnEntry.questions.push(
+          newForeignEntry.questions.push(
             subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1]._
           );
         }
@@ -114,11 +114,11 @@ export function generateCleanJSON(
       generateCleanJSON(
         subDomain.SubPossibilities[0].CmSemanticDomain,
         newEnglishEntry.subdomains,
-        newForiegnEntry.subdomains
+        newForeignEntry.subdomains
       );
     }
 
     enDom.push(newEnglishEntry);
-    fnDom.push(newForiegnEntry);
+    fnDom.push(newForeignEntry);
   });
 }
