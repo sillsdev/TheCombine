@@ -9,7 +9,7 @@ A project is for a single vernacular language.
 ### Vernacular and Analysis Languages
 
 The _vernacular language_ is the language for which words are being collected. This is usually a local, indigenous,
-minority, autochthonous, heritage, or endangered langauge or dialect.
+minority, autochthonous, heritage, or endangered language or dialect.
 
 The _analysis language_ is the language into which the vernacular language is being translated. This is usually a
 regional, national, official, or majority language of the location where the vernacular is used.

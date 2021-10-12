@@ -45,9 +45,17 @@ namespace BackendFramework.Services
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            var jsonToken = GetJwt(request);
-            var foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-            return userId == foundUserId;
+            var currentUserId = GetUserId(request);
+            return userId == currentUserId;
+        }
+
+        /// <summary>
+        /// Checks whether the current user is authorized.
+        /// </summary>
+        public bool IsCurrentUserAuthorized(HttpContext request)
+        {
+            var userId = GetUserId(request);
+            return IsUserIdAuthorized(request, userId);
         }
 
         private static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
@@ -75,6 +83,10 @@ namespace BackendFramework.Services
             return user.IsAdmin;
         }
 
+        /// <remarks>
+        /// This method magically looks up the Project ID by inspecting the route.
+        /// It is not suitable for any routes that do not contain ...projects/PROJECT_ID... in the route.
+        /// </remarks>
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
@@ -90,30 +102,36 @@ namespace BackendFramework.Services
                 return true;
             }
 
-            // Retrieve JWT token from HTTP request and convert to object
-            var permissionsObj = GetProjectPermissions(request);
-
             // Retrieve project ID from HTTP request
             // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
             const string projectPath = "projects/";
             var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
             if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
-                // If there is no project ID and they are not admin, do not allow changes
-                return user.IsAdmin;
+                // If there is no project ID, do not allow changes
+                return false;
             }
 
-            var projId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
+            var projectId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
+            return HasProjectPermission(request, permission, projectId);
+        }
+
+        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
+        {
+            // Retrieve JWT token from HTTP request and convert to object
+            var projectPermissionsList = GetProjectPermissions(request);
 
             // Assert that the user has permission for this function
-            foreach (var projectEntry in permissionsObj)
+            foreach (var projectPermissions in projectPermissionsList)
             {
-                if (projectEntry.ProjectId == projId)
+                if (projectPermissions.ProjectId != projectId)
                 {
-                    if (projectEntry.Permissions.Contains(permission))
-                    {
-                        return true;
-                    }
+                    continue;
+                }
+
+                if (projectPermissions.Permissions.Contains(permission))
+                {
+                    return true;
                 }
             }
             return false;

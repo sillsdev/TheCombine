@@ -27,6 +27,11 @@ namespace Backend.Tests.Mocks
             return httpContext;
         }
 
+        private static bool IsAuthorizedHttpContext(HttpContext? request)
+        {
+            return request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader;
+        }
+
         /// <summary>
         /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
         ///
@@ -37,12 +42,24 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> IsSiteAdmin(HttpContext? request)
         {
-            return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
+            return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
             return true;
+        }
+
+        /// <summary>
+        /// Checks whether the current user is authorized.
+        /// </summary>
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
+        public bool IsCurrentUserAuthorized(HttpContext? request)
+        {
+            return IsAuthorizedHttpContext(request);
         }
 
         /// <summary>
@@ -55,7 +72,12 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> HasProjectPermission(HttpContext? request, Permission permission)
         {
-            return Task.FromResult(request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader);
+            return Task.FromResult(IsAuthorizedHttpContext(request));
+        }
+
+        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
+        {
+            return HasProjectPermission(request, permission).Result;
         }
 
         public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)

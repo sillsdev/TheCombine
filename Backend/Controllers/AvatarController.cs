@@ -29,6 +29,12 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
+            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
+            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            // {
+            //     return Forbid();
+            // }
+
             var user = await _userRepo.GetUser(userId);
             var avatar = string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
 

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
 
 import * as Api from "api";
@@ -19,6 +19,7 @@ import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
+import Swal from "sweetalert2";
 import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -30,10 +31,46 @@ const config = new Api.Configuration(config_parameters);
 
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
-axiosInstance.interceptors.response.use(undefined, (err) => {
-  if (err.response && err.response.status === StatusCodes.UNAUTHORIZED) {
-    history.push(Path.Login);
+axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
+  // Any status codes that falls outside the range of 2xx cause this function to
+  // trigger.
+  const url = err.config.url;
+  const errorToast = Swal.mixin({
+    toast: true,
+    position: "bottom",
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    icon: "error",
+    showCancelButton: true,
+    cancelButtonText: "Dismiss",
+  });
+
+  const response = err.response;
+  if (response) {
+    const status = response.status;
+    if (status === StatusCodes.UNAUTHORIZED) {
+      history.push(Path.Login);
+    }
+
+    // Check for fatal errors (4xx-5xx).
+    if (
+      status >= StatusCodes.BAD_REQUEST &&
+      status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
+    ) {
+      errorToast.fire({
+        title: `${status} ${response.statusText}`,
+        text: `${response.data}\n${err.config.url}`,
+      });
+    }
+  } else {
+    // Handle if backend is not reachable.
+    errorToast.fire({
+      title: `${err.message}`,
+      text: `Unable to connect to server. Check your network settings.\n${url}`,
+    });
   }
+
   return Promise.reject(err);
 });
 

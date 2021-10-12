@@ -68,7 +68,7 @@ def get_image_tag() -> str:
     its value.  If IMAGE_TAG is not defined, return "latest".
     """
     if "IMAGE_TAG" in os.environ:
-        return os.environ["IMAGE_TAGE"]
+        return os.environ["IMAGE_TAG"]
     return "latest"
 
 
@@ -137,10 +137,10 @@ def main() -> None:
         lstrip_blocks=True,
     )
 
-    for templ_name, templ_path in template_map.items():
-        template = jinja_env.get_template(templ_name)
-        print(f"Writing: {templ_path}")
-        templ_path.write_text(template.render(dev_config))
+    for template_name, template_path in template_map.items():
+        template = jinja_env.get_template(template_name)
+        print(f"Writing: {template_path}")
+        template_path.write_text(template.render(dev_config))
 
     # Restrict permissions for the environment files
     for env_file in [
@@ -160,13 +160,13 @@ def main() -> None:
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    templ_name = "script_conf.json.j2"
-    templ_path = (
+    template_name = "script_conf.json.j2"
+    template_path = (
         project_dir / "deploy" / "roles" / "combine_maintenance" / "files" / "script_conf.json"
     )
-    template = jinja_env.get_template(templ_name)
-    print(f"Writing: {templ_path}")
-    templ_path.write_text(template.render(dev_config))
+    template = jinja_env.get_template(template_name)
+    print(f"Writing: {template_path}")
+    template_path.write_text(template.render(dev_config))
 
 
 if __name__ == "__main__":

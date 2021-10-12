@@ -31,7 +31,7 @@ interface UserMenuProps {
 }
 
 /**
- * Avatar in appbar with dropdown UserMenu
+ * Avatar in AppBar with dropdown UserMenu
  */
 export default function UserMenu(props: UserMenuProps) {
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);

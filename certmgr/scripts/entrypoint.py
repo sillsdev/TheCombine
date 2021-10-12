@@ -20,7 +20,7 @@ def handle_user_sig1(signum: int, frame: types.FrameType) -> None:
     """
     Handle the SIGUSR1 signal.
 
-    This function is a no-op since the purpose of the signal is to allow asynchronouse
+    This function is a no-op since the purpose of the signal is to allow asynchronous
     checking of the certificate(s) for renewal.  This handler is used to replace
     the default handler.
     """
