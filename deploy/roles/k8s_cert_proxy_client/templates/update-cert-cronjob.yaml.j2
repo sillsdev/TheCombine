@@ -20,11 +20,11 @@ spec:
           serviceAccountName: {{ aws_service_account }}
 {% endif %}
           containers:
-          - image: {{ aws_ecr_login.image }}
+          - image: {{ combine_image_maintenance }}
             imagePullPolicy: IfNotPresent
             name: {{ aws_ecr_login.cron_job_name }}
             command:
-              - ecr-get-login.sh
+              - update_cert.py
             env:
             - name: AWS_DEFAULT_REGION
               valueFrom:

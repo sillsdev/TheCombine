@@ -98,7 +98,7 @@ class CertUpdater:
             return True
         return False
 
-    def update_cert(self) -> None:
+    def pull_cert(self) -> None:
         self.log(f"Updating {self.cert_secret} from AWS.")
         with tempfile.TemporaryDirectory() as temp_dir:
             for filename in ("cert.pem", "key.pem"):
@@ -141,4 +141,4 @@ class CertUpdater:
 if __name__ == "__main__":
     updater = CertUpdater()
     if updater.needs_renewal() and updater.is_reachable():
-        updater.update_cert()
+        updater.pull_cert()

@@ -17,7 +17,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: check-cert-oneshot
         command:
-          - check_cert.py
+          - update_cert.py
         env:
         - name: AWS_DEFAULT_REGION
           valueFrom:
