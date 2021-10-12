@@ -62,7 +62,7 @@ export default function ProjectSettingsComponent() {
     if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
       dispatch(asyncRefreshCurrentProjectUsers());
     }
-  }, [permissions, dispatch, asyncRefreshCurrentProjectUsers]);
+  }, [permissions, dispatch]);
 
   function archiveUpdate() {
     toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
