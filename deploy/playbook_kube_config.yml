@@ -85,5 +85,3 @@
           import_role:
             name: k8s_cert_proxy_server
           when: '"cert_proxy_server" in k8s_components'
-          tags:
-            - cert-proxy-server
