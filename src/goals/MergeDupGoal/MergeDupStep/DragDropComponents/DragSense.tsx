@@ -97,13 +97,12 @@ export default function DragSense(props: DragSenseProps) {
             userSelect: "none",
             minWidth: 150,
             maxWidth: 300,
-            background: snapshot.isDragging
-              ? "lightgreen"
-              : snapshot.combineTargetFor
-              ? "lightyellow"
-              : isInSidebar
-              ? "lightblue"
-              : "white",
+            background:
+              snapshot.isDragging || snapshot.combineTargetFor
+                ? "lightgreen"
+                : isInSidebar
+                ? "lightblue"
+                : "white",
           }}
         >
           <SenseCardContent
