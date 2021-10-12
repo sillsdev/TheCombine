@@ -13,7 +13,7 @@ import {
 } from "@material-ui/icons";
 import { useEffect, useMemo, useState } from "react";
 import { Translate } from "react-localize-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { Permission } from "api/models";
@@ -21,6 +21,7 @@ import * as backend from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
@@ -40,6 +41,7 @@ export default function ProjectSettingsComponent() {
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const roleId = currentRoles[projectId];
@@ -55,6 +57,12 @@ export default function ProjectSettingsComponent() {
       backend.canUploadLift().then(setImports);
     }
   }, [permissions, setImports]);
+
+  useEffect(() => {
+    if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
+      dispatch(asyncRefreshCurrentProjectUsers());
+    }
+  }, [permissions, dispatch]);
 
   function archiveUpdate() {
     toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
