@@ -18,6 +18,7 @@ const reviewEntriesWord: ReviewEntriesWord = {
   senses: [
     {
       guid: "1",
+      definitions: [],
       glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
         newSemanticDomain("number", "domain"),
@@ -34,6 +35,7 @@ const result: ReviewEntriesWord = {
   senses: [
     {
       guid: "1",
+      definitions: [],
       glosses: [{ def: "bupBUP", language: "en" }],
       domains: [
         newSemanticDomain("number", "domain"),

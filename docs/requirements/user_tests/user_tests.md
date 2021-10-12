@@ -39,7 +39,7 @@ We found 7 improvements:
 
   - Remove Refresh and Clear Database Buttons and Associated Functions
 
-- Fix Word Card Dissappearing when Dropped on Possible Duplicate List
+- Fix Word Card Disappearing when Dropped on Possible Duplicate List
 
 # Tuesday, June 18
 
@@ -108,7 +108,7 @@ The tester also requested an undo button. We determined this was unnecessary.
 
 - Add Register Dialog
 
-  - User was expecting register to be a seperate dialog
+  - User was expecting register to be a separate dialog
 
 - Add way to Explicitly Return to Goal Navigation
 

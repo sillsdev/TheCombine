@@ -116,7 +116,7 @@ export function setVern(
 
 // Dispatch Functions
 
-// Given a wordId, constructs from the state the corresponing MergeWords.
+// Given a wordId, constructs from the state the corresponding MergeWords.
 // Returns the MergeWords, or undefined if the parent and child are identical.
 function getMergeWords(
   wordId: string,

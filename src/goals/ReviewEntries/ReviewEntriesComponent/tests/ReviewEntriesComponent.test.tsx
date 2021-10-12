@@ -13,7 +13,7 @@ const mockMaterialTable = jest.fn();
 const mockUpdateAllWords = jest.fn();
 const mockUuid = jest.fn();
 
-// Standard dialog mockout.
+// Standard dialog mock-out.
 jest.mock("@material-ui/core", () => {
   const material = jest.requireActual("@material-ui/core");
   return {

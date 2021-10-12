@@ -113,7 +113,7 @@ export function makeGoalTile(
         variant={goal ? "outlined" : "contained"}
         style={buttonStyle(orientation, size)}
         disabled={
-          /* Hide completed, except goaltypes for which the completed view is implemented. */
+          /* Hide completed, except goalTypes for which the completed view is implemented. */
           !goal ||
           (goal.status === GoalStatus.Completed &&
             goal.goalType !== GoalType.CreateCharInv &&

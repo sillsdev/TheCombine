@@ -51,7 +51,7 @@ export function filterWordsByDomain(
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses.filter(
       (s) =>
-        // This is for States created before .accessiblity was required in the frontend.
+        // This is for States created before .accessibility was required in the frontend.
         s.accessibility === State.Active || s.accessibility === undefined
     )) {
       domainMatched = false;
@@ -160,9 +160,9 @@ export class DataEntryComponent extends React.Component<
             <Divider />
             <DataEntryTable
               semanticDomain={semanticDomain}
-              displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
+              displaySemanticDomainView={(isGettingSemanticDomain: boolean) => {
                 this.setState({
-                  displaySemanticDomain: isGettingSemanticdomain,
+                  displaySemanticDomain: isGettingSemanticDomain,
                 });
               }}
               getWordsFromBackend={() => this.getWordsFromBackend()}
