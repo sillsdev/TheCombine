@@ -311,7 +311,7 @@ export async function getAllActiveProjectsByUser(
     } catch (err) {
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
-      console.log(err);
+      console.error(err);
     }
   }
   return projects;
