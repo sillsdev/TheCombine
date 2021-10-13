@@ -193,16 +193,12 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
-            // The model seems to have flaws, and this prevents an admin from editing a user's user edits
-            // One solution is to change the updating user roles so that the backend updates a user's
-            // worked projects when it updates their user roles
-            //
-            // For the record, commenting this out was Mark's idea, not Micah's
-            //
-            // if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
-            // {
-            //     return Forbid();
-            // }
+            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId)
+                && !await _permissionService.IsSiteAdmin(HttpContext))
+            {
+                return Forbid();
+            }
+
             var result = await _userRepo.Update(userId, user);
             return result switch
             {
