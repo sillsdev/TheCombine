@@ -78,6 +78,27 @@ definition support in [Data Cleanup](goals.md).
 
 ### Project Users
 
-List of users on the project.
+#### Current Users
 
-Tool to add users to the project.
+Beside each project user is an icon with three vertical dots. If you are the project owner, you can click this to open a
+user management menu with the following options:
+
+- Remove from Project;
+- Make/Remove Admin;
+- Make Owner (if they are a project admin).
+
+!!! important
+
+    There is only one Owner per project. If you "Make Owner" another user, you will move from Owner to Admin for the project and no longer be able to make/remove Admin on other users or archive the project.
+
+#### Add Users
+
+Either search existing users (shows all users with the search term in their name, username, or email address), or invite
+new users by email address (they will be automatically added to the project when they make an account via the
+invitation).
+
+### Archive Project
+
+This is only available to the project Owner. Archiving a project makes it inaccessible to all users. This can only be
+undone by a site administrator. Please contact a site administrator if you wish for the project to be entirely deleted
+from the servers.
