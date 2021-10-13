@@ -45,13 +45,14 @@ interface LoginError {
   password: boolean;
 }
 
+/** The login page (also doubles as a logout page) */
 export default class Login extends React.Component<
   LoginDispatchProps & LoginStateProps,
   LoginState
 > {
   constructor(props: LoginDispatchProps & LoginStateProps) {
     super(props);
-    this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
+    this.props.logout(); // Loading this page will reset the app, both store and localStorage
 
     this.state = {
       username: "",
