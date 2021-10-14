@@ -281,7 +281,7 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip install --upgrade pip pip-tools
+(venv) $ python -m pip install --upgrade pip==21.2 pip-tools
 (venv) $ python -m piptools sync dev-requirements.txt
 ```
 
