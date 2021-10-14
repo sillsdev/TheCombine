@@ -36,7 +36,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.Owner, projectId))
+            if (!_permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
