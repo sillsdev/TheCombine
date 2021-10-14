@@ -27,6 +27,7 @@ interface InviteState {
   loading: boolean;
   done: boolean;
 }
+
 class EmailInvite extends React.Component<InviteProps, InviteState> {
   constructor(props: InviteProps) {
     super(props);
@@ -41,20 +42,19 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
 
   async onSubmit() {
     this.setState({ loading: true });
-    await backend
-      .getUserByEmail(this.state.emailAddress)
-      .then((u) => {
+    const email = this.state.emailAddress;
+    if (await backend.isEmailTaken(email)) {
+      await backend.getUserByEmail(email).then((u) => {
         this.props.addToProject(u);
         toast(<Translate id="projectSettings.invite.userExists" />);
-      })
-      .catch(
-        async () =>
-          await backend.emailInviteToProject(
-            getProjectId(),
-            this.state.emailAddress,
-            this.state.message
-          )
+      });
+    } else {
+      await backend.emailInviteToProject(
+        getProjectId(),
+        email,
+        this.state.message
       );
+    }
     this.setState({ loading: false, done: true });
     this.props.close();
   }
