@@ -2,8 +2,8 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ aws_ecr_login.cron_job_name }}
-  namespace: {{ aws_namespace }}
+  name: update-cert-cronjob
+  namespace: {{ cert_proxy_namespace }}
 spec:
   concurrencyPolicy: Allow
   failedJobsHistoryLimit: 1
@@ -16,13 +16,13 @@ spec:
         metadata:
           creationTimestamp: null
         spec:
-{% if aws_service_account is defined %}
-          serviceAccountName: {{ aws_service_account }}
+{% if k8s_service_accounts.maintenance is defined %}
+          serviceAccountName: {{ k8s_service_accounts.tls_secret }}
 {% endif %}
           containers:
           - image: {{ combine_image_maintenance }}
             imagePullPolicy: IfNotPresent
-            name: {{ aws_ecr_login.cron_job_name }}
+            name: update-cert-cronjob
             command:
               - update_cert.py
             env:
@@ -30,37 +30,52 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: AWS_DEFAULT_REGION
-                  name: {{ aws_ecr_login.secrets_name }}
+                  name: "{{ proxy_client_attr.aws_s3_access }}"
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: AWS_SECRET_ACCESS_KEY
-                  name: {{ aws_ecr_login.secrets_name }}
+                  name: "{{ proxy_client_attr.aws_s3_access }}"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCESS_KEY_ID
-                  name: {{ aws_ecr_login.secrets_name }}
+                  name: "{{ proxy_client_attr.aws_s3_access }}"
             - name: AWS_ACCOUNT
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCOUNT
-                  name: {{ aws_ecr_login.secrets_name }}
-            - name: NAMESPACES
+                  name: "{{ proxy_client_attr.aws_s3_access }}"
+            - name: AWS_S3_BUCKET
               valueFrom:
                 configMapKeyRef:
-                  key: NAMESPACES
-                  name: {{ aws_ecr_login.config_name }}
-            - name: PULL_SECRET_NAME
+                  key: AWS_S3_BUCKET
+                  name: "{{ proxy_client_attr.env_name }}"
+            - name: CERT_SECRET
               valueFrom:
                 configMapKeyRef:
-                  key: PULL_SECRET_NAME
-                  name: {{ aws_ecr_login.config_name }}
-            - name: DOCKER_EMAIL
+                  key: CERT_SECRET
+                  name: "{{ proxy_client_attr.env_name }}"
+            - name: CERT_NAMESPACE
               valueFrom:
                 configMapKeyRef:
-                  key: DOCKER_EMAIL
-                  name: {{ aws_ecr_login.config_name }}
+                  key: CERT_NAMESPACE
+                  name: "{{ proxy_client_attr.env_name }}"
+            - name: CERT_RENEW_BEFORE
+              valueFrom:
+                configMapKeyRef:
+                  key: CERT_RENEW_BEFORE
+                  name: "{{ proxy_client_attr.env_name }}"
+            - name: TEST_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: TEST_URL
+                  name: "{{ proxy_client_attr.env_name }}"
+            - name: VERBOSE
+              valueFrom:
+                configMapKeyRef:
+                  key: VERBOSE
+                  name: "{{ proxy_client_attr.env_name }}"
             resources: {}
             securityContext:
               capabilities: {}
@@ -70,6 +85,6 @@ spec:
           restartPolicy: Never
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30
-  schedule: {{ aws_ecr_login.schedule }}
+  schedule: "{{ proxy_client_attr.schedule }}"
   successfulJobsHistoryLimit: 1
   suspend: false

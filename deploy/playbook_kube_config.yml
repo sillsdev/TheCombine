@@ -49,8 +49,9 @@
             name: k8s_accounts
           vars:
             acct_namespace: "{{ app_namespace }}"
-          tags:
-            - k8s_accounts
+            acct_list:
+              - ecr_login
+              - maintenance
 
         # aws_login_job requires a namespace,
         # aws_namespace, that will contain containers whose images
@@ -81,7 +82,21 @@
           import_role:
             name: k8s_config
 
-        - name: Create cert proxy for the NUCs
+        - name: Create cert proxy server
           import_role:
             name: k8s_cert_proxy_server
           when: '"cert_proxy_server" in k8s_components'
+
+        - name: Create cert proxy client
+          block:
+            - name: Create TLS secret service account
+              import_role:
+                name: k8s_accounts
+              vars:
+                acct_namespace: "{{ app_namespace }}"
+                acct_list:
+                  - tls_secret
+            - name: Create cert proxy jobs
+              import_role:
+                name: k8s_cert_proxy_client
+          when: '"cert_proxy_client" in k8s_components'

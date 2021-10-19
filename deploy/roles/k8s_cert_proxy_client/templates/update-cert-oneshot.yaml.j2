@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: check-cert-oneshot
+  name: update-cert-oneshot
   namespace: {{ cert_proxy_namespace }}
 spec:
   ttlSecondsAfterFinished: 300
@@ -9,13 +9,13 @@ spec:
     metadata:
       creationTimestamp: null
     spec:
-{% if aws_service_account is defined %}
-      serviceAccountName: {{ aws_service_account }}
+{% if k8s_service_accounts.maintenance is defined %}
+      serviceAccountName: {{ k8s_service_accounts.tls_secret }}
 {% endif %}
       containers:
       - image: {{ combine_image_maintenance }}
         imagePullPolicy: IfNotPresent
-        name: check-cert-oneshot
+        name: update-cert-oneshot
         command:
           - update_cert.py
         env:
@@ -23,47 +23,52 @@ spec:
           valueFrom:
             secretKeyRef:
               key: AWS_DEFAULT_REGION
-              name: "{{ cert_proxy_attr.aws_s3_access }}"
+              name: "{{ proxy_client_attr.aws_s3_access }}"
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
               key: AWS_SECRET_ACCESS_KEY
-              name: "{{ cert_proxy_attr.aws_s3_access }}"
+              name: "{{ proxy_client_attr.aws_s3_access }}"
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
               key: AWS_ACCESS_KEY_ID
-              name: "{{ cert_proxy_attr.aws_s3_access }}"
+              name: "{{ proxy_client_attr.aws_s3_access }}"
         - name: AWS_ACCOUNT
           valueFrom:
             secretKeyRef:
               key: AWS_ACCOUNT
-              name: "{{ cert_proxy_attr.aws_s3_access }}"
+              name: "{{ proxy_client_attr.aws_s3_access }}"
         - name: AWS_S3_BUCKET
           valueFrom:
             configMapKeyRef:
               key: AWS_S3_BUCKET
-              name: "{{ cert_proxy_attr.env_name }}"
+              name: "{{ proxy_client_attr.env_name }}"
+        - name: CERT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_SECRET
+              name: "{{ proxy_client_attr.env_name }}"
         - name: CERT_NAMESPACE
           valueFrom:
             configMapKeyRef:
               key: CERT_NAMESPACE
-              name: "{{ cert_proxy_attr.env_name }}"
+              name: "{{ proxy_client_attr.env_name }}"
         - name: CERT_RENEW_BEFORE
           valueFrom:
             configMapKeyRef:
               key: CERT_RENEW_BEFORE
-              name: "{{ cert_proxy_attr.env_name }}"
+              name: "{{ proxy_client_attr.env_name }}"
         - name: TEST_URL
           valueFrom:
             configMapKeyRef:
               key: TEST_URL
-              name: "{{ cert_proxy_attr.env_name }}"
+              name: "{{ proxy_client_attr.env_name }}"
         - name: VERBOSE
           valueFrom:
             configMapKeyRef:
               key: VERBOSE
-              name: "{{ cert_proxy_attr.env_name }}"
+              name: "{{ proxy_client_attr.env_name }}"
         resources: {}
         securityContext:
           capabilities: {}

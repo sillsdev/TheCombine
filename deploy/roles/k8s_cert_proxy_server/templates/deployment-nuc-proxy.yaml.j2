@@ -41,7 +41,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: SERVER_NAME
-                  name: {{ proxy_server_attr.env_name }}
+                  name: {{ proxy_server_attr.env_nginx_proxy }}
           image: nginx:1.21
           imagePullPolicy: IfNotPresent
           ports:

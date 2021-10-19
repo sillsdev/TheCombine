@@ -30,34 +30,34 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCESS_KEY_ID
-                  name: aws-s3-cert-access
+                  name: {{ proxy_server_attr.aws_s3_access }}
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: AWS_SECRET_ACCESS_KEY
-                  name: aws-s3-cert-access
+                  name: {{ proxy_server_attr.aws_s3_access }}
             - name: AWS_ACCOUNT
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCOUNT
-                  name: aws-s3-cert-access
+                  name: {{ proxy_server_attr.aws_s3_access }}
             - name: AWS_DEFAULT_REGION
               valueFrom:
                 secretKeyRef:
                   key: AWS_DEFAULT_REGION
-                  name: aws-s3-cert-access
+                  name: {{ proxy_server_attr.aws_s3_access }}
             - name: AWS_S3_BUCKET
               valueFrom:
                 configMapKeyRef:
                   key: AWS_S3_BUCKET
-                  name: env-cert-proxy
+                  name: {{ proxy_server_attr.env_cert_proxy }}
             - name: CERT_PROXY_CERTIFICATES
               valueFrom:
                 configMapKeyRef:
                   key: CERT_PROXY_CERTIFICATES
-                  name: env-cert-proxy
+                  name: {{ proxy_server_attr.env_cert_proxy }}
             - name: CERT_PROXY_NAMESPACE
-              value: combine-cert-proxy
+              value: {{ cert_proxy_namespace }}
           image: '{{ combine_image_maintenance }}'
 {% if image_tag == "latest" %}
           imagePullPolicy: Always

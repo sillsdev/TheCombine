@@ -10,7 +10,7 @@ metadata:
     cert-manager.io/issuer: {{ cert_issuer }}
 {% endif %}
 spec:
-{% if "cert_manager" in k8s_components %}
+{% if "cert_manager" in k8s_components or "cert_proxy_client" in k8s_components %}
   tls:
   - hosts:
     - {{ combine_server_name }}
