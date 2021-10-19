@@ -100,11 +100,10 @@ export class TreeView extends React.Component<
           in={this.state.visible}
           onEntered={() => {
             if (this.props.currentDomain.id) {
-              const nil = "none";
               animate(
                 "#current-domain",
-                { transform: [nil, "scale(.8)", nil, "scale(.9)", nil] },
-                { delay: 0.5, duration: 1 }
+                { transform: ["none", "scale(.9)", "none"] },
+                { delay: 0.25, duration: 1 }
               );
             }
           }}
