@@ -139,20 +139,11 @@ export async function avatarSrc(userId: string): Promise<string> {
   const options = { headers: authHeader(), responseType: "arraybuffer" };
   try {
     const resp = await avatarApi.downloadAvatar({ userId }, options);
-    const image = btoa(
-      new Uint8Array(resp.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ""
-      )
-    );
+    const image = Buffer.from(resp.data, "base64").toString("base64");
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
-  } catch {
+  } catch (e) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
-    const user = await getUser(userId);
-    if (user.hasAvatar) {
-      user.hasAvatar = false;
-      await updateUser(user);
-    }
+    console.error(e);
     return "";
   }
 }
@@ -311,7 +302,7 @@ export async function getAllActiveProjectsByUser(
     } catch (err) {
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
-      console.log(err);
+      console.error(err);
     }
   }
   return projects;
