@@ -46,14 +46,22 @@ export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
   }
   if (changes.charChanges.length > changeLimit) {
     return (
-      <Typography>
+      <React.Fragment>
+        <Typography />
         {changes.charChanges.slice(0, changeLimit - 1).map(CharInvChange)}
-        {`+${changes.charChanges.length - 3} `}
-        <Translate id="charInventory.changes.more" />
-      </Typography>
+        <Typography>
+          {`+${changes.charChanges.length - 3} `}
+          <Translate id="charInventory.changes.more" />
+        </Typography>
+      </React.Fragment>
     );
   }
-  return <Typography>{changes.charChanges.map(CharInvChange)}</Typography>;
+  return (
+    <React.Fragment>
+      <Typography />
+      {changes.charChanges.map(CharInvChange)}
+    </React.Fragment>
+  );
 }
 
 function CharInvChange(change: CharacterChange) {
