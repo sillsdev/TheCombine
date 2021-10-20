@@ -12,11 +12,6 @@ import { Goal, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "types/goalUtilities";
 
 const timelineStyle = {
-  centerDisplays: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   centerButton: {
     padding: "70px 0",
     textAlign: "center" as const,
@@ -104,15 +99,15 @@ export default class GoalTimeline extends React.Component<
     return (
       <Button
         style={timelineStyle.centerButton}
-        color={"primary"}
-        variant={"contained"}
+        color="primary"
+        variant="contained"
         disabled={done}
         onClick={() => {
           this.props.chooseGoal(goal);
         }}
         id={`new-goal-${goal.name}`}
       >
-        <Typography variant={"h4"}>
+        <Typography variant="h4">
           <Translate id={done ? "goal.selector.done" : goal.name + ".title"} />
         </Typography>
       </Button>
@@ -137,7 +132,7 @@ export default class GoalTimeline extends React.Component<
         {/* Recommendation */}
         <div style={{ ...timelineStyle.paneStyling, width: "60%" }}>
           <Typography variant="h6">
-            <Translate id={"goal.selector.present"} />
+            <Translate id="goal.selector.present" />
           </Typography>
           {this.goalButton()}
         </div>
@@ -145,7 +140,7 @@ export default class GoalTimeline extends React.Component<
         {/* History */}
         <div style={timelineStyle.paneStyling}>
           <Typography variant="h6">
-            <Translate id={"goal.selector.past"} />
+            <Translate id="goal.selector.past" />
           </Typography>
           <GoalList
             completed
@@ -165,47 +160,45 @@ export default class GoalTimeline extends React.Component<
     return (
       <ImageList cols={13} rowHeight="auto">
         {/* Alternatives */}
-        <ImageListItem cols={4}>
-          <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
-            <Typography variant="h6">
-              <Translate id={"goal.selector.other"} />
-            </Typography>
-            <GoalList
-              orientation="vertical"
-              data={this.createSuggestionData()}
-              handleChange={this.handleChange}
-              size={35}
-              numPanes={3}
-              scrollable={false}
-            />
-          </div>
+        <ImageListItem
+          cols={5}
+          style={{ ...timelineStyle.paneStyling, float: "right" }}
+        >
+          <Typography variant="h6">
+            <Translate id="goal.selector.other" />
+          </Typography>
+          <GoalList
+            orientation="vertical"
+            data={this.createSuggestionData()}
+            handleChange={this.handleChange}
+            size={35}
+            numPanes={3}
+            scrollable={false}
+          />
         </ImageListItem>
 
         {/* Recommendation */}
-
-        <ImageListItem cols={3} style={timelineStyle.paneStyling as any}>
+        <ImageListItem cols={3} style={timelineStyle.paneStyling}>
           <Typography variant="h5">
-            <Translate id={"goal.selector.present"} />
+            <Translate id="goal.selector.present" />
           </Typography>
           {this.goalButton()}
         </ImageListItem>
 
         {/* History */}
-        <ImageListItem cols={4}>
-          <div style={timelineStyle.paneStyling as any}>
-            <Typography variant="h6">
-              <Translate id={"goal.selector.past"} />
-            </Typography>
-            <GoalList
-              completed
-              orientation="vertical"
-              data={[...this.props.history].reverse()}
-              handleChange={this.handleChange}
-              size={35}
-              numPanes={3}
-              scrollable={true}
-            />
-          </div>
+        <ImageListItem cols={5} style={timelineStyle.paneStyling}>
+          <Typography variant="h6">
+            <Translate id="goal.selector.past" />
+          </Typography>
+          <GoalList
+            completed
+            orientation="vertical"
+            data={[...this.props.history].reverse()}
+            handleChange={this.handleChange}
+            size={35}
+            numPanes={3}
+            scrollable={true}
+          />
         </ImageListItem>
       </ImageList>
     );
