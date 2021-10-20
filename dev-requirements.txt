@@ -18,10 +18,6 @@ click==8.0.1
     # via
     #   black
     #   mkdocs
-colorama==0.4.4
-    # via
-    #   click
-    #   tox
 distlib==0.3.2
     # via virtualenv
 filelock==3.0.12
@@ -64,7 +60,7 @@ mccabe==0.6.1
     # via flake8
 mergedeep==1.3.4
     # via mkdocs
-mkdocs==1.2.2
+mkdocs==1.2.3
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
@@ -108,8 +104,6 @@ pymdown-extensions==8.2
     # via mkdocs-material
 pyparsing==2.4.7
     # via packaging
-pyreadline==2.1
-    # via humanfriendly
 python-dateutil==2.8.2
     # via ghp-import
 pyyaml==5.4.1
