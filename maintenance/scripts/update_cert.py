@@ -41,7 +41,7 @@ class CertUpdater:
     def __init__(self) -> None:
         self.cert_secret = os.environ["CERT_SECRET"]
         self.namespace = os.environ["CERT_NAMESPACE"]
-        self.renew_before: timedelta = timedelta(days=int(os.environ["CERT_RENEW_BEFORE"]))
+        self.renew_before = timedelta(days=int(os.environ["CERT_RENEW_BEFORE"]))
         self.test_url = os.environ["TEST_URL"]
         self.aws = AwsBackup(bucket=os.environ["AWS_S3_BUCKET"])
         if "KUBECONFIG" in os.environ:
