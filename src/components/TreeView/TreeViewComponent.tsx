@@ -1,5 +1,6 @@
-import React from "react";
 import { Grid, Zoom } from "@material-ui/core";
+import { animate } from "motion";
+import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
@@ -22,9 +23,7 @@ interface TreeViewComponentState {
   visible: boolean;
 }
 
-/**
- * Lets users navigate around a semantic domain hierarchy
- */
+/** Lets users navigate around a semantic domain hierarchy */
 export class TreeView extends React.Component<
   TreeViewProps & LocalizeContextProps,
   TreeViewComponentState
@@ -97,7 +96,18 @@ export class TreeView extends React.Component<
           />
         </Grid>
         {/* Domain tree */}
-        <Zoom in={this.state.visible}>
+        <Zoom
+          in={this.state.visible}
+          onEntered={() => {
+            if (this.props.currentDomain.id) {
+              animate(
+                "#current-domain",
+                { transform: ["none", "scale(.9)", "none"] },
+                { delay: 0.25, duration: 1 }
+              );
+            }
+          }}
+        >
           <Grid
             container
             direction="column"
