@@ -124,7 +124,7 @@ export function makeGoalTile(
           GoalInfo(goal)
         ) : (
           <Typography variant="h6">
-            <Translate id={"goal.selector.noHistory"} />
+            <Translate id="goal.selector.noHistory" />
           </Typography>
         )}
       </Button>
