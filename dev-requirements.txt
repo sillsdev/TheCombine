@@ -6,40 +6,36 @@
 #
 backports.entry-points-selectable==1.1.0
     # via virtualenv
-beautifulsoup4==4.9.3
+beautifulsoup4==4.10.0
     # via mkdocs-htmlproofer-plugin
-black==21.8b0
+black==21.9b0
     # via -r dev-requirements.in
-certifi==2021.5.30
+certifi==2021.10.8
     # via requests
-charset-normalizer==2.0.4
+charset-normalizer==2.0.7
     # via requests
-click==8.0.1
+click==8.0.3
     # via
     #   black
     #   mkdocs
-colorama==0.4.4
-    # via
-    #   click
-    #   tox
-distlib==0.3.2
+distlib==0.3.3
     # via virtualenv
-filelock==3.0.12
+filelock==3.3.1
     # via
     #   tox
     #   virtualenv
-flake8==3.9.2
+flake8==4.0.1
     # via
     #   -r dev-requirements.in
     #   flake8-polyfill
     #   pep8-naming
 flake8-polyfill==1.0.2
     # via pep8-naming
-ghp-import==2.0.1
+ghp-import==2.0.2
     # via mkdocs
-humanfriendly==9.2
+humanfriendly==10.0
     # via -r dev-requirements.in
-idna==3.2
+idna==3.3
     # via requests
 importlib-metadata==4.8.1
     # via mkdocs
@@ -50,8 +46,11 @@ jinja2==2.11.3
     #   -r dev-requirements.in
     #   jinja2-base64-filters
     #   mkdocs
+    #   mkdocs-material
 jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
+lxml==4.6.3
+    # via mkdocs-htmlproofer-plugin
 markdown==3.3.4
     # via
     #   mkdocs
@@ -64,17 +63,15 @@ mccabe==0.6.1
     # via flake8
 mergedeep==1.3.4
     # via mkdocs
-mkdocs==1.2.2
+mkdocs==1.2.3
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
-mkdocs-htmlproofer-plugin==0.6.0
+mkdocs-htmlproofer-plugin==0.7.0
     # via -r dev-requirements.in
-mkdocs-material==7.2.6
-    # via
-    #   -r dev-requirements.in
-    #   mkdocs-material-extensions
-mkdocs-material-extensions==1.0.1
+mkdocs-material==7.3.4
+    # via -r dev-requirements.in
+mkdocs-material-extensions==1.0.3
     # via mkdocs-material
 mypy==0.910
     # via -r dev-requirements.in
@@ -90,7 +87,7 @@ pathspec==0.9.0
     # via black
 pep8-naming==0.12.1
     # via -r dev-requirements.in
-platformdirs==2.3.0
+platformdirs==2.4.0
     # via
     #   black
     #   virtualenv
@@ -98,27 +95,25 @@ pluggy==1.0.0
     # via tox
 py==1.10.0
     # via tox
-pycodestyle==2.7.0
+pycodestyle==2.8.0
     # via flake8
-pyflakes==2.3.1
+pyflakes==2.4.0
     # via flake8
 pygments==2.10.0
     # via mkdocs-material
-pymdown-extensions==8.2
+pymdown-extensions==9.0
     # via mkdocs-material
 pyparsing==2.4.7
     # via packaging
-pyreadline==2.1
-    # via humanfriendly
 python-dateutil==2.8.2
     # via ghp-import
-pyyaml==5.4.1
+pyyaml==6.0
     # via
     #   mkdocs
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2021.8.28
+regex==2021.10.21
     # via black
 requests==2.26.0
     # via mkdocs-htmlproofer-plugin
@@ -135,19 +130,19 @@ toml==0.10.2
     #   tox
 tomli==1.2.1
     # via black
-tox==3.24.3
+tox==3.24.4
     # via -r dev-requirements.in
-types-requests==2.25.6
+types-requests==2.25.11
     # via -r dev-requirements.in
 typing-extensions==3.10.0.2
     # via
     #   black
     #   mypy
-urllib3==1.26.6
+urllib3==1.26.7
     # via requests
-virtualenv==20.7.2
+virtualenv==20.8.1
     # via tox
-watchdog==2.1.5
+watchdog==2.1.6
     # via mkdocs
-zipp==3.5.0
+zipp==3.6.0
     # via importlib-metadata
