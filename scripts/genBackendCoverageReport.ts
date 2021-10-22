@@ -1,4 +1,4 @@
-﻿// Generate an HTML coverage report for the backend.
+// Generate an HTML coverage report for the backend.
 //
 // Pre-requisites:
 //  dotnet-reportgenerator-globaltool

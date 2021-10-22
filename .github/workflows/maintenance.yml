@@ -1,4 +1,4 @@
-﻿name: maintenance
+name: maintenance
 
 on:
   push:
