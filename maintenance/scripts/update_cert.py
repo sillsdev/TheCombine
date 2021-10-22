@@ -63,7 +63,7 @@ class CertUpdater:
         Test if a web site is reachable.
 
         Args:
-            redirects: a boolean value that specifies if redirects are allowed.
+            redirects: specifies if redirects are allowed.
 
         """
         try:

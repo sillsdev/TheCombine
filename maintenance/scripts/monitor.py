@@ -22,7 +22,7 @@ class CertMonitor:
     Monitor SSL certificate secrets and push a copy to the cloud on change.
 
     Attributes:
-        secrets_list: A list of kubenetes secrets that to be monitored for
+        secrets_list: A list of Kubenetes secrets that to be monitored for
             changes.
 
         k8s_namespace: Kubernetes namespace where the secrets are located.
@@ -34,24 +34,26 @@ class CertMonitor:
             storage.
     """
 
+    trigger_events = ("ADDED", "MODIFIED")
+
     def __init__(self) -> None:
-        self.secrets_list = self.get_secrets_list()
+        self.secrets_list = CertMonitor.get_secrets_list()
         self.k8s_namespace = os.environ["CERT_PROXY_NAMESPACE"]
-        self.trigger_events = ("ADDED", "MODIFIED")
         self.aws = AwsBackup(bucket=os.environ["AWS_S3_BUCKET"])
 
-    def get_secrets_list(self) -> List[str]:
+    @staticmethod
+    def get_secrets_list() -> List[str]:
         """
         Create the list of secrets to monitor.
 
         Create the list of secrets to monitor from the CERT_PROXY_CERTIFICATES
         environment variable.  This function assumes that the secret name is '-tls'
-        appened to the dns name of the server (with '.' converted to '-').
+        appended to the dns name of the server (with '.' converted to '-').
         """
         if "CERT_PROXY_CERTIFICATES" in os.environ:
             domain_list = os.environ["CERT_PROXY_CERTIFICATES"].replace(".", "-").split()
             for index, item in enumerate(domain_list):
-                domain_list[index] = item + "-tls"
+                domain_list[index] = f"{item}-tls"
             return domain_list
         return []
 
@@ -74,14 +76,14 @@ class CertMonitor:
             will create a file that contains the data received in the AWS
             S3 bucket under my-cert-tls/cert.pem.
         """
-        print(f"Push {secret_name}/{filename} to AWS S3", flush=True)
+        secret_dest = f"{secret_name}/{filename}"
+        print(f"Push {secret_dest} to AWS S3", flush=True)
         with tempfile.TemporaryDirectory() as temp_dir:
             secret_dir = Path(temp_dir) / secret_name
             secret_dir.mkdir(parents=True, exist_ok=True)
             secret_filename = secret_dir / filename
-            with open(secret_filename, "wb") as output_file:
-                output_file.write(data)
-            self.aws.push(secret_filename, f"{secret_name}/{filename}")
+            secret_filename.write_bytes(data)
+            self.aws.push(secret_filename, f"{secret_dest}")
 
     def monitor(self) -> None:
         """Monitor for updates to the secrets."""
@@ -97,7 +99,7 @@ class CertMonitor:
             secret_name = event["object"].metadata.name
             event_type = event["type"]
             print(f"Event: {event_type} {secret_name}", flush=True)
-            if (event_type in self.trigger_events) and (secret_name in self.secrets_list):
+            if (event_type in CertMonitor.trigger_events) and (secret_name in self.secrets_list):
                 self.push_secret_file(
                     secret_name=secret_name,
                     data=base64.b64decode(event["object"].data["tls.key"]),
