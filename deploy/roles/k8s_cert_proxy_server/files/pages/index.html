@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <title>Remote Combine Server Public Page</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Noto+Sans&family=Roboto:wght@300;400;500;700&display=swap"
+    />
+  </head>
+  <body>
+    <div>
+      <table style="width: 100%">
+        <tr>
+          <td style="width: 15%" />
+          <td style="width:70%, text-align:center">
+            <h3>
+              <i>I'm not the web page you're looking for.</i>
+            </h3>
+          </td>
+          <td style="width: 15%" />
+        </tr>
+        <tr>
+          <td />
+          <td style="text-align: left">
+            <h4>
+              To reach <i>TheCombine</i> on a NUC, you need to:
+              <ol>
+                <li>
+                  <span id="pre_ap_name">
+                    Connect to the NUC's access point,
+                  </span>
+                  <span id="ap_name"></span>
+                  <span id="post_ap_name">; and</span>
+                </li>
+                <li>
+                  reload this page.
+                  <button type="button" onclick="window.location.reload(true)">
+                    Reload &#x21bb;
+                  </button>
+                </li>
+              </ol>
+            </h4>
+          </td>
+          <td />
+        </tr>
+        <tr>
+          <td />
+          <td>
+            <img src="./tractor.png" alt="TheCombine" style="width: 70%" />
+          </td>
+          <td />
+        </tr>
+      </table>
+    </div>
+    <script>
+      var pattern = new RegExp("^([^/.]+)[/.]");
+      var match;
+      var ap_name_str;
+      if ((match = pattern.exec(window.location.hostname))) {
+        ap_name_str = match[1] + "_ap";
+      } else {
+        ap_name_str = "<i>Unknown</i>";
+      }
+      document.getElementById("ap_name").innerHTML = ap_name_str;
+    </script>
+  </body>
+</html>

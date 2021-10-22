@@ -1,11 +1,11 @@
 ---
-- name: Configure TheCombine Cluster
-  import_role:
+- name: Create service accounts
+  include_role:
     name: k8s_make_resources
   vars:
+    parent_name: k8s_accounts/Create service accounts
     k8s_config_dir: "{{ k8s_account_cfg }}"
-    k8s_templates:
-      - service_acct_ecr_login.yml
-      - service_acct_maint.yml
-      - role_ecr_login.yml
-      - role_maintenance.yml
+    k8s_templates: "{{ k8s_roles[account_item].templates }}"
+  loop: "{{ acct_list }}"
+  loop_control:
+    loop_var: account_item

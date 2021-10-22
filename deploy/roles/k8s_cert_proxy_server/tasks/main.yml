@@ -1,0 +1,58 @@
+---
+- name: Delete any previous nginx web pages
+  command: >
+    kubectl --kubeconfig={{ kubecfg }}
+    -n {{ cert_proxy_namespace }}
+    delete configmap {{ proxy_server_attr.nginx_pages }}
+    --ignore-not-found
+
+- name: Create ConfigMap for nginx web pages
+  command: >
+    kubectl --kubeconfig={{ kubecfg }}
+    -n {{ cert_proxy_namespace }}
+    create configmap {{ proxy_server_attr.nginx_pages }}
+    --from-file=roles/{{ role_name }}/files/pages
+
+- name: Create service accounts for cert proxy
+  import_role:
+    name: k8s_accounts
+  vars:
+    acct_namespace: "{{ cert_proxy_namespace }}"
+    acct_list:
+      - ecr_login
+      - maintenance
+      - tls_secret
+
+- name: Setup AWS S3 Credentials
+  import_role:
+    name: k8s_aws_s3_credentials
+  vars:
+    k8s_namespace: "{{ cert_proxy_namespace }}"
+    k8s_aws_s3_dir: "{{ k8s_cert_proxy_cfg }}"
+
+- name: Create Cert Proxy Server
+  import_role:
+    name: k8s_make_resources
+  vars:
+    parent_name: k8s_cert_proxy_server/Create Cert Proxy Server
+    k8s_config_dir: "{{ k8s_cert_proxy_cfg }}"
+    k8s_templates:
+      - env-cert-proxy-configmap.yaml
+      - env-nginx-configmap.yaml
+      - letsencrypt-staging.yaml
+      - letsencrypt-prod.yaml
+      - deployment-nuc-proxy.yaml
+      - service-nuc-proxy.yaml
+      - ingress-nuc.yaml
+      - deployment-cert-proxy-server.yaml
+
+# aws_login_job requires a namespace,
+# aws_namespace, that will contain containers whose images
+# are pulled from AWS ECR. It also needs a service_account
+# that will be used by the jobs to get the AWS credentials
+- name: Setup container registry credentials
+  import_role:
+    name: aws_login_job
+  vars:
+    aws_namespace: "{{ cert_proxy_namespace }}"
+    aws_service_account: "{{ k8s_service_accounts.ecr_login }}"

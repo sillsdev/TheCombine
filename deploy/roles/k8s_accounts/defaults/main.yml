@@ -2,13 +2,27 @@
 k8s_service_accounts:
   ecr_login: account-ecr-login
   maintenance: account-maintenance
+  tls_secret: account-tls-secret
 
 k8s_roles:
   ecr_login:
     name: role-ecr-login
     accounts:
       - account-ecr-login
+    templates:
+      - service_acct_ecr_login.yml
+      - role_ecr_login.yml
   maintenance:
     name: role-maintenance
     accounts:
       - account-maintenance
+    templates:
+      - service_acct_maint.yml
+      - role_maintenance.yml
+  tls_secret:
+    name: role-tls-secret
+    accounts:
+      - account-tls-secret
+    templates:
+      - service_acct_tls_secret.yml
+      - role_tls_secret.yml

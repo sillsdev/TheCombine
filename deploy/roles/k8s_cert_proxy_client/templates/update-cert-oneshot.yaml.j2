@@ -1,0 +1,80 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: update-cert-oneshot
+  namespace: {{ cert_proxy_namespace }}
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+{% if k8s_service_accounts.maintenance is defined %}
+      serviceAccountName: {{ k8s_service_accounts.tls_secret }}
+{% endif %}
+      containers:
+      - image: {{ combine_image_maintenance }}
+        imagePullPolicy: IfNotPresent
+        name: update-cert-oneshot
+        command:
+          - update_cert.py
+        env:
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              key: AWS_DEFAULT_REGION
+              name: "{{ proxy_client_attr.aws_s3_access }}"
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: "{{ proxy_client_attr.aws_s3_access }}"
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: "{{ proxy_client_attr.aws_s3_access }}"
+        - name: AWS_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCOUNT
+              name: "{{ proxy_client_attr.aws_s3_access }}"
+        - name: AWS_S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              key: AWS_S3_BUCKET
+              name: "{{ proxy_client_attr.env_name }}"
+        - name: CERT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_SECRET
+              name: "{{ proxy_client_attr.env_name }}"
+        - name: CERT_NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_NAMESPACE
+              name: "{{ proxy_client_attr.env_name }}"
+        - name: CERT_RENEW_BEFORE
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_RENEW_BEFORE
+              name: "{{ proxy_client_attr.env_name }}"
+        - name: TEST_URL
+          valueFrom:
+            configMapKeyRef:
+              key: TEST_URL
+              name: "{{ proxy_client_attr.env_name }}"
+        - name: VERBOSE
+          valueFrom:
+            configMapKeyRef:
+              key: VERBOSE
+              name: "{{ proxy_client_attr.env_name }}"
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: Default
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30

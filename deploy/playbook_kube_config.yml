@@ -47,12 +47,22 @@
         - name: Setup Service Accounts
           import_role:
             name: k8s_accounts
-          tags:
-            - k8s_accounts
+          vars:
+            acct_namespace: "{{ app_namespace }}"
+            acct_list:
+              - ecr_login
+              - maintenance
 
+        # aws_login_job requires a namespace,
+        # aws_namespace, that will contain containers whose images
+        # are pulled from AWS ECR. It also needs a service_account
+        # that will be used by the jobs to get the AWS credentials
         - name: Setup container registry credentials
           import_role:
             name: aws_login_job
+          vars:
+            aws_namespace: "{{ app_namespace }}"
+            aws_service_account: "{{ k8s_service_accounts.ecr_login }}"
 
         - name: Create Storage Class
           import_role:
@@ -71,3 +81,22 @@
         - name: Create Kubernetes Configuration Files
           import_role:
             name: k8s_config
+
+        - name: Create cert proxy server
+          import_role:
+            name: k8s_cert_proxy_server
+          when: '"cert_proxy_server" in k8s_components'
+
+        - name: Create cert proxy client
+          block:
+            - name: Create TLS secret service account
+              import_role:
+                name: k8s_accounts
+              vars:
+                acct_namespace: "{{ app_namespace }}"
+                acct_list:
+                  - tls_secret
+            - name: Create cert proxy jobs
+              import_role:
+                name: k8s_cert_proxy_client
+          when: '"cert_proxy_client" in k8s_components'

@@ -1,8 +1,9 @@
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ aws_ecr_login.cron_job_name }}
-  namespace: {{ app_namespace }}
+  namespace: {{ aws_namespace }}
 spec:
   concurrencyPolicy: Allow
   failedJobsHistoryLimit: 1
@@ -15,8 +16,8 @@ spec:
         metadata:
           creationTimestamp: null
         spec:
-{% if k8s_service_accounts is defined %}
-          serviceAccountName: {{ k8s_service_accounts.ecr_login }}
+{% if aws_service_account is defined %}
+          serviceAccountName: {{ aws_service_account }}
 {% endif %}
           containers:
           - image: {{ aws_ecr_login.image }}

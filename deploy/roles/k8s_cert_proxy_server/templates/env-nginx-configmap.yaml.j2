@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: {{ proxy_server_attr.env_nginx_proxy }}
+  namespace: {{ cert_proxy_namespace }}
+data:
+  SERVER_NAME: {{ cert_proxy_hostname }}

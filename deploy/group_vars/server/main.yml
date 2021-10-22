@@ -24,11 +24,12 @@ combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 ################################################
 # SSL cert variables specific to Server targets
 ################################################
-cert_mode: "letsencrypt"
+cert_mode: "cert-server"
 cert_email: "cert@thecombine.app"
 combine_cert_proxy_list:
   - nuc2.thecombine.app
   - nuc1.thecombine.app
+cert_proxy_hostname: cert-proxy.thecombine.app
 
 ################################################
 # setup variables for roles/aws_access
@@ -74,9 +75,9 @@ k8s_components: []
 image_pull_secret: aws-login-credentials
 
 create_namespaces: []
-
-k8s_user: sillsdev
-k8s_group: sillsdev
+# k8s namespaces
+app_namespace: thecombine
+cert_proxy_namespace: combine-cert-proxy
 
 #######################################
 # Ingress configuration
