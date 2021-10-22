@@ -132,10 +132,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 7. (Optional) To opt in to segment.com analytics to test the analytics during development:
 
-    ```bash
-    # For Windows, use `copy`.
-    $ cp .env.local.template .env.local
-    ```
+   ```bash
+   # For Windows, use `copy`.
+   $ cp .env.local.template .env.local
+   ```
 
 8. Run `npm start` from the project directory to install dependencies and start the project.
 
@@ -185,6 +185,9 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
 ```bash
 $ docker-compose build --parallel
 ```
+
+> Note: If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the
+> above build again.
 
 4. Start the containers
 
@@ -281,7 +284,7 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip install --upgrade pip==21.2 pip-tools
+(venv) $ python -m pip install --upgrade pip pip-tools
 (venv) $ python -m piptools sync dev-requirements.txt
 ```
 
@@ -536,9 +539,9 @@ To browse the database locally during development, open MongoDB Compass Communit
 
 ### Cleanup Local Repository
 
-It's sometimes possible for a developer's local temporary state to get out of sync with other developers or CI.
-This script removes temporary files and packages while leaving database data intact. This can help troubleshoot
-certain types of development setup errors.
+It's sometimes possible for a developer's local temporary state to get out of sync with other developers or CI. This
+script removes temporary files and packages while leaving database data intact. This can help troubleshoot certain types
+of development setup errors.
 
 ```bash
 # On Windows, use `py` instead of `python3`.

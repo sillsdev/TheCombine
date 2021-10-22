@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "child_process";
+import { spawnSync } from "child_process";
 
 const cmd = spawnSync("mongo", [
   "-eval",

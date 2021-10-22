@@ -1,4 +1,4 @@
-﻿# C# Style Guide and Coding Conventions
+# C# Style Guide and Coding Conventions
 
 ## Overview
 

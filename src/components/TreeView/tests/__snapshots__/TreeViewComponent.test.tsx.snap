@@ -51,6 +51,7 @@ Array [
   <div
     className="MuiContainer-root MuiContainer-maxWidthLg"
     in={true}
+    onEntered={[Function]}
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center"
