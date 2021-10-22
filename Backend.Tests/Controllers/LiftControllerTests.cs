@@ -173,31 +173,9 @@ namespace Backend.Tests.Controllers
             return ms.ToArray();
         }
 
-        /// <summary>
-        /// Create three words and delete one. Ensure that the deleted word is still exported to Lift format and marked
-        /// as deleted.
-        /// </summary>
-        [Test]
-        public async Task TestDeletedWordsExportToLift()
+        private static async Task<string> DownloadAndReadLift(LiftController liftController, string projId)
         {
-            var word = Util.RandomWord(_projId);
-            var secondWord = Util.RandomWord(_projId);
-            var wordToDelete = Util.RandomWord(_projId);
-
-            var wordToUpdate = _wordRepo.Create(word).Result;
-            wordToDelete = _wordRepo.Create(wordToDelete).Result;
-
-            // Create untouched word.
-            _ = _wordRepo.Create(secondWord).Result;
-
-            word.Id = "";
-            word.Vernacular = "updated";
-
-            await _wordService.Update(_projId, wordToUpdate.Id, word);
-            await _wordService.DeleteFrontierWord(_projId, wordToDelete.Id);
-
-            _liftController.CreateLiftExportThenSignal(_projId, UserId).Wait();
-            var result = (FileStreamResult)_liftController.DownloadLiftFile(_projId, UserId).Result;
+            var result = (FileStreamResult)liftController.DownloadLiftFile(projId, UserId).Result;
             Assert.NotNull(result);
 
             // Read contents.
@@ -212,7 +190,52 @@ namespace Backend.Tests.Controllers
             var sanitizedProjName = Sanitization.MakeFriendlyForPath(ProjName, "Lift");
             var exportPath = Path.Combine(
                 extractedExportDir, sanitizedProjName, sanitizedProjName + ".lift");
-            var text = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
+            var liftText = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
+
+            // Clean up temporary directory.
+            Directory.Delete(extractedExportDir, true);
+            return liftText;
+        }
+
+        [Test]
+        public async Task TestModifiedTimeExportsToLift()
+        {
+            var word = Util.RandomWord(_projId);
+            word.Created = Time.ToUtcIso8601(new DateTime(1000, 1, 1));
+            word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
+            await _wordRepo.Create(word);
+
+            _liftController.CreateLiftExportThenSignal(_projId, UserId).Wait();
+            var liftContents = await DownloadAndReadLift(_liftController, _projId);
+            Assert.That(liftContents, Contains.Substring("dateCreated=\"1000-01-01T00:00:00Z\""));
+            Assert.That(liftContents, Contains.Substring("dateModified=\"2000-01-01T00:00:00Z\""));
+        }
+
+        /// <summary>
+        /// Create three words and delete one. Ensure that the deleted word is still exported to Lift format and marked
+        /// as deleted.
+        /// </summary>
+        [Test]
+        public async Task TestDeletedWordsExportToLift()
+        {
+            var word = Util.RandomWord(_projId);
+            var secondWord = Util.RandomWord(_projId);
+            var wordToDelete = Util.RandomWord(_projId);
+
+            var wordToUpdate = await _wordRepo.Create(word);
+            wordToDelete = await _wordRepo.Create(wordToDelete);
+
+            // Create untouched word.
+            await _wordRepo.Create(secondWord);
+
+            word.Id = "";
+            word.Vernacular = "updated";
+
+            await _wordService.Update(_projId, wordToUpdate.Id, word);
+            await _wordService.DeleteFrontierWord(_projId, wordToDelete.Id);
+
+            _liftController.CreateLiftExportThenSignal(_projId, UserId).Wait();
+            var text = await DownloadAndReadLift(_liftController, _projId);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
             //      kept vs deleted
             // Make sure we exported 2 live and one dead entry
@@ -222,7 +245,7 @@ namespace Backend.Tests.Controllers
 
             // Delete the export
             await _liftController.DeleteLiftFile(UserId);
-            var notFoundResult = _liftController.DownloadLiftFile(_projId, UserId).Result;
+            var notFoundResult = await _liftController.DownloadLiftFile(_projId, UserId);
             Assert.That(notFoundResult is NotFoundObjectResult);
         }
 
