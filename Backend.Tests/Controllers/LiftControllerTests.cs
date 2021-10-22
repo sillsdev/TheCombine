@@ -134,15 +134,6 @@ namespace Backend.Tests.Controllers
             return fileUpload;
         }
 
-        /// <summary> Extract the binary contents of a zip file to a temporary directory. </summary>
-        private static string ExtractZipFileContents(byte[] fileContents)
-        {
-            var zipFile = Path.GetTempFileName();
-            File.WriteAllBytes(zipFile, fileContents);
-            var extractionPath = FileOperations.ExtractZipFile(zipFile, null, true);
-            return extractionPath;
-        }
-
         public class RoundTripObj
         {
             public string Filename { get; }
@@ -184,16 +175,8 @@ namespace Backend.Tests.Controllers
                 contents = ReadAllBytes(fileStream);
             }
 
-            // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(contents);
-            var sanitizedProjName = Sanitization.MakeFriendlyForPath(ProjName, "Lift");
-            var exportPath = Path.Combine(
-                extractedExportDir, sanitizedProjName, sanitizedProjName + ".lift");
-            var liftText = await File.ReadAllTextAsync(exportPath, Encoding.UTF8);
-
-            // Clean up temporary directory.
-            Directory.Delete(extractedExportDir, true);
-            return liftText;
+            // Convert to UTF8 string.
+            return System.Text.Encoding.UTF8.GetString(contents);
         }
 
         [Test]
