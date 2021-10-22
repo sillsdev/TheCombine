@@ -1,4 +1,4 @@
-﻿// Set the isAdmin flag to true on an existing database user.
+// Set the isAdmin flag to true on an existing database user.
 //
 // Usage: npm run set-admin-user -- myUserName
 import { spawnSync } from "child_process";
