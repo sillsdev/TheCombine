@@ -175,7 +175,7 @@ namespace Backend.Tests.Controllers
 
         private static async Task<string> DownloadAndReadLift(LiftController liftController, string projId)
         {
-            var liftFile = (FileStreamResult) await liftController.DownloadLiftFile(projId, UserId);
+            var liftFile = (FileStreamResult)await liftController.DownloadLiftFile(projId, UserId);
 
             // Read contents.
             byte[] contents;
