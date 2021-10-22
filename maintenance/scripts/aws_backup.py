@@ -13,7 +13,10 @@ class AwsBackup:
 
     def __init__(self, *, bucket: str) -> None:
         """Initialize backup object."""
-        self.bucket = f"s3://{bucket}"
+        if bucket.find("s3://") == 0:
+            self.bucket = bucket
+        else:
+            self.bucket = f"s3://{bucket}"
 
     def push(self, src: Path, dest: str) -> subprocess.CompletedProcess[str]:
         """Push a file to the AWS S3 bucket."""

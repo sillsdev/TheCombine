@@ -1,8 +1,16 @@
 ---
+- name: Setup AWS S3 Credentials
+  import_role:
+    name: k8s_aws_s3_credentials
+  vars:
+    k8s_namespace: "{{ app_namespace }}"
+    k8s_aws_s3_dir: "{{ k8s_combine_cfg }}"
+
 - name: Configure TheCombine Cluster
   import_role:
     name: k8s_make_resources
   vars:
+    parent_name: k8s_config/Configure TheCombine Cluster
     k8s_config_dir: "{{ k8s_combine_cfg }}"
     k8s_templates:
       - persistentvolumeclaim-backend-data.yaml
@@ -11,7 +19,6 @@
       - env-backend-secrets.yaml
       - env-frontend-configmap.yaml
       - env-maintenance-configmap.yaml
-      - aws-s3-credentials.yaml
       - deployment-backend.yaml
       - deployment-database.yaml
       - deployment-frontend.yaml

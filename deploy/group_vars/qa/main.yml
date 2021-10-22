@@ -60,6 +60,9 @@ k8s_components: []
 image_pull_secret: aws-login-credentials
 
 create_namespaces: []
+# k8s namespaces
+app_namespace: thecombine
+cert_proxy_namespace: combine-cert-proxy
 
 k8s_user: sillsdev
 k8s_group: sillsdev

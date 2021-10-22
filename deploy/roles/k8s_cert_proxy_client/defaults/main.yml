@@ -1,0 +1,7 @@
+---
+proxy_client_attr:
+  env_name: env-cert-proxy
+  aws_s3_access: aws-s3-credentials
+  schedule: "*/30 * * * *"
+
+cert_renew_before: 60

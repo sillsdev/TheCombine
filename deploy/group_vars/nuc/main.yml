@@ -25,7 +25,6 @@ combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 cert_mode: "cert-client"
 cert_email: "cert@thecombine.app"
 cert_self_renewal: 60
-combine_alias_domain_list: []
 combine_cert_proxy_list: []
 
 ################################################
@@ -57,8 +56,13 @@ my_aws_profiles:
 k8s_engine: k3s
 k8s_components:
   - ingress_controller
+  - cert_proxy_client
 
 image_pull_secret: aws-login-credentials
+
+# k8s namespaces
+app_namespace: thecombine
+cert_proxy_namespace: "{{ app_namespace }}"
 
 create_namespaces:
   - "{{ app_namespace }}"

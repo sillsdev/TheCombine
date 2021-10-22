@@ -79,6 +79,8 @@ venv
 
 # YAML files for ad hoc testing/development
 _*.yml
+_*.yaml
+_*.j2
 
 # Emacs backup files (this is Jim's fault)
 *~

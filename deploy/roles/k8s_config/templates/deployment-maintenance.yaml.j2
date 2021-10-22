@@ -95,8 +95,4 @@ spec:
       imagePullSecrets:
          - name: {{ image_pull_secret }}
 {% endif %}
-{% if node_site is defined and node_site | length %}
-      nodeSelector:
-        site: {{ node_site }}
-{% endif %}
 status: {}

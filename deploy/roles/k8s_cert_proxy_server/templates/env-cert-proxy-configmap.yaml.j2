@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: {{ proxy_server_attr.env_cert_proxy }}
+  namespace: {{ cert_proxy_namespace }}
+data:
+  AWS_S3_BUCKET: s3://{{ aws_s3_loc }}/certs
+  CERT_PROXY_CERTIFICATES: {{ combine_cert_proxy_list | default([]) | join(" ") }}
