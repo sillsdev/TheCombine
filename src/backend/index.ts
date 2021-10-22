@@ -29,6 +29,10 @@ const apiBaseURL = `${baseURL}/v1`;
 const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
 const config = new Api.Configuration(config_parameters);
 
+/** A list of URL suffixes for which the frontend explicitly handles errors
+ * and the blanket error pop ups should be suppressed.*/
+const whiteListedErrorUrls = ["users/authenticate"];
+
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
@@ -58,6 +62,17 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       status >= StatusCodes.BAD_REQUEST &&
       status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
     ) {
+      // Suppress error pop-ups for URLs the frontend already explicitly
+      // handles.
+      if (
+        url !== undefined &&
+        whiteListedErrorUrls.some((whiteListedUrl) =>
+          url.endsWith(whiteListedUrl)
+        )
+      ) {
+        return Promise.reject(err);
+      }
+
       errorToast.fire({
         title: `${status} ${response.statusText}`,
         text: `${response.data}\n${err.config.url}`,
