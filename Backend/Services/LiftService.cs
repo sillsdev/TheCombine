@@ -234,6 +234,11 @@ namespace BackendFramework.Services
                     entry.ModificationTime = modifiedTime;
                 }
 
+                // It is VERY IMPORTANT that the LexEntry's ModificationTime be locked, otherwise anytime the entry
+                // is modified later (e.g. adding Senses) the ModificationTime of the object will be overwritten with
+                // the current time, rather than the modified time stored in the database.
+                entry.ModifiedTimeIsLocked = true;
+
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
