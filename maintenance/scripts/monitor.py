@@ -22,7 +22,7 @@ class CertMonitor:
     Monitor SSL certificate secrets and push a copy to the cloud on change.
 
     Attributes:
-        secrets_list: A list of Kubenetes secrets that to be monitored for
+        secrets_list: A list of Kubernetes secrets that to be monitored for
             changes.
 
         k8s_namespace: Kubernetes namespace where the secrets are located.
