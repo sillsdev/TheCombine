@@ -10,9 +10,9 @@
 ##############################################################
 - name: Delete residual resources
   command: >
-    kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }}
+    kubectl --kubeconfig={{ kubecfg }} -n {{ aws_namespace }}
     delete {{ item.resource }} --ignore-not-found {{ item.name }}
-  with_items:
+  loop:
     - name: "{{ aws_ecr_login.job_name }}"
       resource: job
     - name: "{{ aws_ecr_login.secrets_name }}"
@@ -25,10 +25,11 @@
 # - One-shot job to get AWS Login
 # - cron job to keep login fresh
 ##############################################################
-- name: Create AWS login resource specifications
+- name: Create AWS login resources
   import_role:
     name: k8s_make_resources
   vars:
+    parent_name: aws_login_job/Create AWS login resources
     k8s_config_dir: "{{ k8s_aws_login_cfg }}"
     k8s_templates:
       - aws-login-config.yaml
@@ -39,10 +40,11 @@
 # Create cron job to refresh AWS login credentials if
 # specified, that is, aws_ecr_login.cron is true
 ##############################################################
-- name: Create cron job to refresh AWS login credentials
+- name: Create AWS login cron job
   import_role:
     name: k8s_make_resources
   vars:
+    parent_name: aws_login_job/Create AWS login cron job
     k8s_config_dir: "{{ k8s_aws_login_cfg }}"
     k8s_templates:
       - aws-ecr-login-cronjob.yaml

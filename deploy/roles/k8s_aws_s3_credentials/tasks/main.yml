@@ -1,0 +1,9 @@
+---
+- name: Install AWS S3 Credentials Secret
+  import_role:
+    name: k8s_make_resources
+  vars:
+    parent_name: Configure AWS S3 Access for {{ k8s_namespace }}
+    k8s_config_dir: "{{ k8s_aws_s3_dir }}"
+    k8s_templates:
+      - aws-s3-credentials.yaml

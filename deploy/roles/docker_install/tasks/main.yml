@@ -13,7 +13,9 @@
 # from GitHub and extracting it to /usr/local/bin
 ##############################################################
 - name: Update apt cache.
-  apt: update_cache=true cache_valid_time=600
+  apt:
+    update_cache: true
+    cache_valid_time: 600
   changed_when: false
 
 - name: Install docker pre-requisites
@@ -131,5 +133,6 @@
 - name: Add user to docker group
   user:
     name: "{{ ansible_user_id }}"
-    groups: docker
+    groups:
+      - docker
     append: yes
