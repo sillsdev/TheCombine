@@ -7,7 +7,7 @@ specified on the command line or the latest release will be used.
 
 This script makes the following assumptions:
  - The releases are tagged with the release number only, e.g. '0.7.8',
-   not 'v0.7.8'
+   not 'v0.7.8'.
  - The release numbers are of the form: major.minor.patch levels.
  - The release numbers are monotonic increasing.
 """
@@ -160,9 +160,9 @@ def main() -> None:
     if tag not in releases:
         print(f"Cannot find release {tag}", file=sys.stderr)
         sys.exit(1)
-    commit = releases[tag]
-    print(f"Commit for tag {tag} is {commit}")
-    list_commits(commit)
+    release_commit = releases[tag]
+    # Now print all commits since the specified release
+    list_commits(release_commit)
 
 
 if __name__ == "__main__":
