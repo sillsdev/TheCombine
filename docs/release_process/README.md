@@ -28,15 +28,15 @@ Once the PR has been approved and merged into `master`, you can create the relea
 
 1. Click on the _Releases_ link on the project home page. The link is in the right side-pane:
 
-   ![alt text](images/click_releases.png "Show 'Releases' Link on Home Page")
+   !['Releases' Link on Home Page](images/click_releases.png "'Releases' Link on Home Page")
 
 2. Click the _Draft a new release_ button at the top right of the _Releases_ page:
 
-   ![alt text](images/draft_new_release.png "Show 'Draft a New Release' Button")
+   !['Draft a New Release' Button](images/draft_new_release.png "'Draft a New Release' Button")
 
 3. Fill out the form for the new release:
 
-   ![alt text](images/new_release_form.png "New Release Form")
+   ![New Release Form](images/new_release_form.png "New Release Form")
 
    1. Click the _Choose a tag_ dropdown menu; select _Find or create a new tag_; and enter the new release version, e.g.
       `0.7.9`
@@ -55,7 +55,7 @@ Once the PR has been approved and merged into `master`, you can create the relea
 
 4. Press the _Publish Release_ button at the bottom of the page:
 
-   ![alt text](images/publish_release.png "Show 'Publish release' button")
+   !['Publish release' button](images/publish_release.png "'Publish release' button")
 
 ### 3. Merge the Release into `live`
 
