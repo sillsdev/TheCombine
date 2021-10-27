@@ -1,2 +1,3 @@
 ---
 eth_optional: no
+eth_if_pattern: "en[a-z][0-9]"
