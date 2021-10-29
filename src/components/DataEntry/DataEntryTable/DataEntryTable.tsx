@@ -20,7 +20,7 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentE
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { newSense, simpleWord } from "types/word";
+import { firstGlossText, newSense, simpleWord } from "types/word";
 
 export const exitButtonId = "exit-to-domain-tree";
 
@@ -151,7 +151,7 @@ export class DataEntryTable extends React.Component<
     if (addedWord.id === "Duplicate") {
       alert(
         this.props.translate("addWords.wordInDatabase") +
-          `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
+          `: ${wordToAdd.vernacular}, ${firstGlossText(wordToAdd.senses[0])}`
       );
       return;
     }
@@ -380,7 +380,7 @@ export class DataEntryTable extends React.Component<
       await this.updateVernacular(oldWord, newVern);
     } else {
       // This is a modification that has to be retracted and replaced with a new entry
-      const word = simpleWord(newVern, oldSense.glosses[0].def);
+      const word = simpleWord(newVern, firstGlossText(oldSense));
       word.id = "";
       await this.undoRecentEntry(entryIndex).then(async () => {
         await this.addNewWord(word, [], entryIndex);

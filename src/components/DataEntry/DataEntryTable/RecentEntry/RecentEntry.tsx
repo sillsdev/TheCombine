@@ -11,7 +11,7 @@ import {
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { newGloss } from "types/word";
+import { firstGlossText, newGloss } from "types/word";
 
 const idAffix = "recent-entry";
 
@@ -53,7 +53,7 @@ export default class RecentEntry extends React.Component<
 
     this.state = {
       vernacular: props.entry.vernacular,
-      gloss: sense.glosses.length > 0 ? sense.glosses[0].def : "",
+      gloss: firstGlossText(sense),
       hovering: false,
     };
   }
@@ -69,7 +69,7 @@ export default class RecentEntry extends React.Component<
 
   conditionallyUpdateGloss() {
     if (
-      this.props.entry.senses[this.props.senseIndex].glosses[0].def !==
+      firstGlossText(this.props.entry.senses[this.props.senseIndex]) !==
       this.state.gloss
     ) {
       this.props.updateGloss(this.state.gloss);

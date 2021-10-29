@@ -15,7 +15,7 @@ import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog"
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { newSense, newWord } from "types/word";
+import { firstGlossText, newSense, newWord } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
 const idAffix = "new-entry";
@@ -180,15 +180,6 @@ export default class NewEntry extends React.Component<
     this.resetState();
   }
 
-  updateWordAndReset() {
-    this.props.updateWordWithNewGloss(
-      this.state.selectedWord!.id,
-      this.state.activeGloss,
-      this.state.audioFileURLs
-    );
-    this.resetState();
-  }
-
   addOrUpdateWord() {
     if (this.state.dupVernWords.length) {
       // Duplicate vern ...
@@ -197,7 +188,12 @@ export default class NewEntry extends React.Component<
         this.setState({ vernOpen: true });
       } else if (this.state.selectedWord.id) {
         // ... and user has selected an entry to modify
-        this.updateWordAndReset();
+        this.props.updateWordWithNewGloss(
+          this.state.selectedWord.id,
+          this.state.activeGloss,
+          this.state.audioFileURLs
+        );
+        this.resetState();
       } else {
         // ... and user has selected new entry
         this.addNewWordAndReset();
@@ -243,9 +239,10 @@ export default class NewEntry extends React.Component<
     if (senseIndex === undefined) {
       this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
-      const gloss = this.state.selectedWord!.senses[senseIndex].glosses[0].def;
+      // SenseDialog can only be open when this.state.selectedWord is defined.
+      const gloss = firstGlossText(this.state.selectedWord!.senses[senseIndex]);
       this.updateGlossField(gloss);
-    } // Otherwise, senseIndex===-1, which indicates new sense for the selectedWord
+    } // The remaining case, senseIndex===-1, indicates new sense for the selectedWord.
     this.setState({ senseOpen: false });
   }
 
