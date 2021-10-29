@@ -10,8 +10,8 @@ import { TreeViewState } from "components/TreeView/TreeViewReducer";
 import { CharacterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
-import { GoalsState } from "types/goals";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
+import { GoalsState } from "types/goals";
 
 //root store structure
 export interface StoreState {

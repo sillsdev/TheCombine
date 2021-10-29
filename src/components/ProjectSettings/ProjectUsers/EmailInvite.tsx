@@ -7,8 +7,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
-import validator from "validator";
 import { toast } from "react-toastify";
+import validator from "validator";
 
 import { User } from "api/models";
 import * as backend from "backend";

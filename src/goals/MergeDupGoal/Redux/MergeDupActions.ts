@@ -9,11 +9,6 @@ import {
 } from "api/models";
 import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
-import {
-  MergesCompleted,
-  MergeStepData,
-} from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   defaultSidebar,
   Hash,
@@ -21,6 +16,11 @@ import {
   MergeTreeSense,
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import {
+  MergesCompleted,
+  MergeStepData,
+} from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
@@ -35,9 +35,9 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreState } from "types";
-import { GoalType } from "types/goals";
-import { maxNumSteps } from "types/goalUtilities";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { maxNumSteps } from "types/goalUtilities";
+import { GoalType } from "types/goals";
 
 // Action Creators
 

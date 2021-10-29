@@ -1,4 +1,3 @@
-import { StoreAction, StoreActionTypes } from "rootActions";
 import * as reducer from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import {
   CreateProjectAction,
@@ -6,6 +5,7 @@ import {
   CreateProjectState,
   defaultState,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { StoreAction, StoreActionTypes } from "rootActions";
 
 const emptyWritingSystem = {
   name: "",

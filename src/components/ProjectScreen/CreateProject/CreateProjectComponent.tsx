@@ -14,8 +14,8 @@ import { WritingSystem } from "api/models";
 import { projectDuplicateCheck } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import theme from "types/theme";
 import { newWritingSystem } from "types/project";
+import theme from "types/theme";
 
 interface CreateProjectProps {
   asyncCreateProject: (

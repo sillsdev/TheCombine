@@ -2,12 +2,12 @@ import { render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { Key } from "ts-key-enum";
 
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 import {
   TreeViewHeader,
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();

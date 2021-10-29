@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import Swal from "sweetalert2";
 
 import * as Api from "api";
+import { BASE_PATH } from "api/base";
 import {
   BannerType,
   EmailInviteStatus,
@@ -16,12 +17,11 @@ import {
   UserRole,
   Word,
 } from "api/models";
-import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
-import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
+import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;

@@ -136,6 +136,9 @@
               "type"
             ]
           ],
+          "alphabetize": {
+            "order": "asc"
+          },
           "newlines-between": "always"
         }
       ]

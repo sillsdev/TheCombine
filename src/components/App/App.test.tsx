@@ -1,12 +1,12 @@
 import "jest-canvas-mock";
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import renderer from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import App from "components/App/component";
 import { defaultState } from "components/App/DefaultState";
+import App from "components/App/component";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>

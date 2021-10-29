@@ -7,6 +7,7 @@ import { updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { ProjectActionType } from "components/Project/ProjectReduxTypes";
 import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
+import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import {
   CharacterInventoryState,
   CharacterSetEntry,
@@ -14,7 +15,6 @@ import {
   CharacterInventoryType,
   CharacterChange,
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
-import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { StoreState } from "types";
 import { Goal } from "types/goals";
 import { newProject } from "types/project";

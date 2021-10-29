@@ -1,9 +1,3 @@
-import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
 import {
   Avatar,
   Button,
@@ -18,6 +12,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
+import React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";

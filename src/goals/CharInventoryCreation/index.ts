@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import CharacterInventory from "goals/CharInventoryCreation/CharacterInventoryComponent";
 import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import { StoreState } from "types";
-import { Goal } from "types/goals";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Goal } from "types/goals";
 
 function mapStateToProps(state: StoreState) {
   return {

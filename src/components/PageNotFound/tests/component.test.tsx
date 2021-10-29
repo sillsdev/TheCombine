@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
+import configureMockStore from "redux-mock-store";
 
 import PageNotFound from "components/PageNotFound/component";
 
