@@ -13,8 +13,8 @@ import {
   Translate,
 } from "react-localize-redux";
 
-import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
 
 interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;

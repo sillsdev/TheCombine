@@ -7,13 +7,13 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { toast } from "react-toastify";
 import validator from "validator";
 
 import { User } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { toast } from "react-toastify";
 
 interface InviteProps {
   addToProject: (user: User) => void;

@@ -1,6 +1,6 @@
-import React from "react";
 import { Switch, Typography } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
+import React from "react";
 import {
   Translate,
   withLocalize,

@@ -2,7 +2,6 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import { MergeWords, Word } from "api/models";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   defaultTree,
   Hash,
@@ -11,6 +10,7 @@ import {
   MergeTreeReference,
   MergeTreeSense,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   dispatchMergeStepData,
   mergeAll,

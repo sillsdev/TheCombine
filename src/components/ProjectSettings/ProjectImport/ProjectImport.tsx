@@ -1,7 +1,7 @@
-import React from "react";
-import { Translate } from "react-localize-redux";
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
+import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { Translate } from "react-localize-redux";
 
 import { Project } from "api/models";
 import * as backend from "backend";

@@ -7,8 +7,8 @@ import {
   loadUserEdits,
 } from "components/GoalTimeline/Redux/GoalActions";
 import { StoreState } from "types";
-import { Goal } from "types/goals";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Goal } from "types/goals";
 
 function mapStateToProps(state: StoreState) {
   return { ...state.goalsState };

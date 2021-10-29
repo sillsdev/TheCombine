@@ -10,8 +10,8 @@ import {
   CreateProjectAction,
   CreateProjectActionTypes,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
-import { newProject } from "types/project";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { newProject } from "types/project";
 
 //thunk action creator
 export function asyncCreateProject(

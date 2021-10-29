@@ -486,6 +486,11 @@ Automatically format the C# source files in the backend.
 
 Runs ESLint on the codebase to detect code problems that should be fixed.
 
+### `npm run lint:fix-layout`
+
+Run ESLint and apply `suggestion` and `layout` fixes automatically. This will
+sort and group imports.
+
 #### `npm run fmt-frontend`
 
 Auto-format frontend code in the `src` folder.

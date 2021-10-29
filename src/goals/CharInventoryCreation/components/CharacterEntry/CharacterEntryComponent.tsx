@@ -1,7 +1,7 @@
-import React from "react";
-import { Translate } from "react-localize-redux";
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import React from "react";
+import { Translate } from "react-localize-redux";
 
 import CharactersInput from "goals/CharInventoryCreation/components/CharacterEntry/CharactersInput";
 import theme from "types/theme";

@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
-import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry/CharacterEntryComponent";
 import {
   setRejectedCharacters,
   setValidCharacters,
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
+import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry/CharacterEntryComponent";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 

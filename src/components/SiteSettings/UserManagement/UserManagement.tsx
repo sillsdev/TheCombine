@@ -8,8 +8,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import { User } from "api/models";
 import { avatarSrc, deleteUser, getAllUsers } from "backend";
-import UserList from "components/SiteSettings/UserManagement/UserList";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
+import UserList from "components/SiteSettings/UserManagement/UserList";
 
 const customStyles = {
   content: {

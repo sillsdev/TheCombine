@@ -12,8 +12,8 @@ import * as backend from "backend";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
-import { RuntimeConfig } from "types/runtimeConfig";
 import { StoreState } from "types";
+import { RuntimeConfig } from "types/runtimeConfig";
 
 const customStyles = {
   content: {

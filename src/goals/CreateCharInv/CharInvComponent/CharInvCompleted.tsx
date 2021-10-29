@@ -4,8 +4,8 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import { CharacterChange } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
 import { StoreState } from "types";
 

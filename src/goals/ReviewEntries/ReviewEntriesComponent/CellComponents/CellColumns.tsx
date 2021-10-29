@@ -1,5 +1,5 @@
-import { Input, TextField, Typography } from "@material-ui/core";
 import { Column } from "@material-table/core";
+import { Input, TextField, Typography } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
 import { SemanticDomain } from "api/models";

@@ -8,8 +8,8 @@ import LandingPage from "components/LandingPage";
 import Login from "components/Login/LoginPage";
 import Register from "components/Login/RegisterPage";
 import PageNotFound from "components/PageNotFound/component";
-import PasswordReset from "components/PasswordReset/ResetPage";
 import ResetRequest from "components/PasswordReset/RequestPage";
+import PasswordReset from "components/PasswordReset/ResetPage";
 import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite";
 
