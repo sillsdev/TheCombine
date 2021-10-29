@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
+import Swal from "sweetalert2";
 
 import * as Api from "api";
 import {
@@ -19,7 +20,6 @@ import { BASE_PATH } from "api/base";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
-import Swal from "sweetalert2";
 import { Goal, GoalStep } from "types/goals";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { RuntimeConfig } from "types/runtimeConfig";
