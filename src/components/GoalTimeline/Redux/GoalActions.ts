@@ -12,9 +12,9 @@ import {
   loadMergeDupsData,
 } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
-import { Goal, GoalStatus, GoalType } from "types/goals";
-import { convertEditToGoal } from "types/goalUtilities";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { convertEditToGoal } from "types/goalUtilities";
+import { Goal, GoalStatus, GoalType } from "types/goals";
 
 // Action Creators
 

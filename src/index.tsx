@@ -1,10 +1,10 @@
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import { renderToStaticMarkup } from "react-dom/server";
 import { LocalizeProvider } from "react-localize-redux";
+import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 import history from "browserHistory";
 import App from "components/App/component";

@@ -1,9 +1,9 @@
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
 } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";

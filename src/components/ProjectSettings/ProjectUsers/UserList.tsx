@@ -13,8 +13,8 @@ import { Done } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 
-import { avatarSrc, getAllUsers } from "backend";
 import { User } from "api/models";
+import { avatarSrc, getAllUsers } from "backend";
 import theme from "types/theme";
 
 interface UserListProps {

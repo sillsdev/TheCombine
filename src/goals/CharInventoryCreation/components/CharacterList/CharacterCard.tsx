@@ -7,8 +7,8 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
 import theme from "types/theme";
 
 interface CharacterCardProps {

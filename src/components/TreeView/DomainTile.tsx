@@ -1,4 +1,3 @@
-import React, { ReactElement } from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
 import {
   ChevronLeft,
@@ -6,6 +5,7 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
+import React, { ReactElement } from "react";
 
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 

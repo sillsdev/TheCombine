@@ -1,11 +1,11 @@
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import TreeViewComponent, {
   TreeView,
 } from "components/TreeView/TreeViewComponent";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 import { store } from "store";
 
 var treeMaster: ReactTestRenderer;

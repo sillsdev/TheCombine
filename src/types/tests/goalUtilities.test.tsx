@@ -1,11 +1,11 @@
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
-import { Goal } from "types/goals";
 import {
   convertEditToGoal,
   convertGoalToEdit,
   maxNumSteps,
 } from "types/goalUtilities";
+import { Goal } from "types/goals";
 
 describe("goalUtilities", () => {
   describe("convertGoalToEdit, convertEditToGoal", () => {

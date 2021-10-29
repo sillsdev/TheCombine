@@ -1,8 +1,8 @@
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import {
   TraverseTreeAction,
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 describe("TraverseTreeAction", () => {
   it("Creates the right action", () => {
