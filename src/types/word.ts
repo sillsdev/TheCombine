@@ -44,7 +44,10 @@ export function newSense(
   return sense;
 }
 
-// Returns the text of the first gloss of a sense, considering the case of no glosses.
+/**
+ * Returns the text of the first gloss of a sense.
+ * In the case that the array of glosses is empty, returns an empty string.
+ */
 export function firstGlossText(sense: Sense): string {
   return sense.glosses[0]?.def ?? "";
 }
@@ -69,7 +72,7 @@ export function newWord(vernacular = ""): Word {
   };
 }
 
-// Used in DataEntry
+/** A simplified word used in DataEntry. */
 export interface DomainWord {
   word: Word;
   gloss: Gloss;
@@ -91,7 +94,7 @@ export function multiSenseWord(vern: string, glosses: string[]): Word {
   };
 }
 
-// Used for unit testing, as the expected result, when the guids don't matter.
+/** Used for unit testing, as the expected result, when the guids don't matter. */
 export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
   return {
     ...newWord(vern),
@@ -124,7 +127,7 @@ export function testWordList(): Word[] {
 }
 
 const sep = "; ";
-// Removes glosses with empty def and combine glosses with same lang
+/** Removes definitions with empty def and combine glosses with same lang. */
 export function cleanDefinitions(defs: Definition[]): Definition[] {
   const nonempty = defs.filter((d) => d.text.length);
   const langs = [...new Set(nonempty.map((d) => d.language))];
@@ -138,7 +141,7 @@ export function cleanDefinitions(defs: Definition[]): Definition[] {
     )
   );
 }
-// Removes glosses with empty def and combine glosses with same lang
+/** Removes glosses with empty def and combine glosses with same lang. */
 export function cleanGlosses(glosses: Gloss[]): Gloss[] {
   const nonempty = glosses.filter((g) => g.def.length);
   const langs = [...new Set(nonempty.map((g) => g.language))];
