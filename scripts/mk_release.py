@@ -11,15 +11,23 @@ This script makes the following assumptions:
  - The release numbers are of the form: major.minor.patch levels.
  - The release numbers are monotonic increasing.
 """
-from __future__ import annotations
 
 import argparse
-
-# from pathlib import Path
+from dataclasses import dataclass
 import re
 import subprocess
 import sys
 from typing import Dict, List
+
+
+@dataclass
+class SemVersion:
+    major: int = -1
+    minor: int = -1
+    patch: int = -1
+
+    def to_tag(self) -> str:
+        return f"{self.major}.{self.minor}.{self.patch}"
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,26 +44,26 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def latest_release(release_list: List[str]) -> str:
+def latest_release(release_list: List[str]) -> SemVersion:
     """Find the latest release for the current repository."""
-    latest = {"major": -1, "minor": -1, "patch": -1}
+    latest = SemVersion()
+    current = SemVersion()
     rls_pattern = re.compile(r"(\d+)\.(\d+)\.(\d+)")
     for release in release_list:
         match = rls_pattern.match(release)
         if match is not None:
-            current = {
-                "major": int(match.group(1)),
-                "minor": int(match.group(2)),
-                "patch": int(match.group(3)),
-            }
-            if current["major"] > latest["major"]:
+            current.major = int(match.group(1))
+            current.minor = int(match.group(2))
+            current.patch = int(match.group(3))
+
+            if current.major > latest.major:
                 latest = current
-            elif current["major"] == latest["major"]:
-                if current["minor"] > latest["minor"]:
+            elif current.major == latest.major:
+                if current.minor > latest.minor:
                     latest = current
-                elif current["minor"] == latest["minor"] and current["patch"] > latest["patch"]:
+                elif current.minor == latest.minor and current.patch > latest.patch:
                     latest = current
-    return f"{latest['major']}.{latest['minor']}.{latest['patch']}"
+    return latest
 
 
 def build_release_list() -> Dict[str, str]:
@@ -108,12 +116,13 @@ def list_commits(end_commit: str) -> None:
     """
     try:
         log_results = subprocess.run(
-            ["git", "log"],
+            ["git", "log", "--no-color"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
             check=True,
             text=True,
+            encoding="utf-8",
         )
     except subprocess.CalledProcessError as err:
         print(f"CalledProcessError returned {err.returncode}")
@@ -149,9 +158,9 @@ def main() -> None:
     """List commits since the latest or a specified release."""
     args = parse_args()
     releases = build_release_list()
-    tag = ""
     if args.since_release == "latest":
-        tag = latest_release(list(releases.keys()))
+        tag = latest_release(list(releases.keys())).to_tag()
+        print(tag)
     else:
         tag = args.since_release
     if not re.match(r"^\d+\.\d+\.\d+$", tag):
