@@ -6,8 +6,9 @@ This document defines the process for releasing a new software version of _The C
 
 The release process has the following assumptions:
 
-- release versions have the form major.minor.patch version numbers where `major`, `minor`, and `patch` are all integer
-  values.
+- release versions follow [semantic versioning](https://semver.org/); that is, they have the form major.minor.patch
+  version numbers where `major`, `minor`, and `patch` are all integer values. See the page on semantic versioning for
+  instructions on when the major, minor, and patch version number should be incremented when a new version is released.
 - the user has setup his/her Python environment according to the directions in the project
   [README](https://github.com/sillsdev/TheCombine/blob/master/README.md#python) file.
 - the user has write permissions for _The Combine_ project on _GitHub_.
@@ -62,8 +63,8 @@ Once the PR has been approved and merged into `master`, you can create the relea
 When the release has been tagged:
 
 1. checkout the `live` branch;
-2. merge the release into the `live` branch - you may merge from the tagged version or the `master` branch if no new PRs
-   have been merged since the release was created;
+2. merge the release into the `live` branch - merge from the tagged version instead of the `master` branch to avoid
+   including PRs that have been merged since the release was created;
 3. commit the merge; and
 4. push the changes to _GitHub_.
 
