@@ -102,7 +102,11 @@
     "typescript": "4.2.4"
   },
   "eslintConfig": {
-    "extends": ["react-app", "plugin:import/recommended", "plugin:import/typescript"],
+    "extends": [
+      "react-app",
+      "plugin:import/recommended",
+      "plugin:import/typescript"
+    ],
     "env": {
       "jest": true
     },
