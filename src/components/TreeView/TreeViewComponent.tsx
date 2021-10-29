@@ -7,7 +7,8 @@ import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { createDomains } from "components/TreeView/TreeViewReducer";
-import en from "resources/semantic-domains/en.json"; // Domain data
+// Domain data
+import en from "resources/semantic-domains/en.json";
 import es from "resources/semantic-domains/es.json";
 import fr from "resources/semantic-domains/fr.json";
 
