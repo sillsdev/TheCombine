@@ -26,6 +26,9 @@ class SemVersion:
     minor: int = -1
     patch: int = -1
 
+    def to_tag(self) -> str:
+        return f"{self.major}.{self.minor}.{self.patch}"
+
 
 def parse_args() -> argparse.Namespace:
     """Parse user command line arguments."""
@@ -41,7 +44,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def latest_release(release_list: List[str]) -> str:
+def latest_release(release_list: List[str]) -> SemVersion:
     """Find the latest release for the current repository."""
     latest = SemVersion()
     current = SemVersion()
@@ -60,7 +63,7 @@ def latest_release(release_list: List[str]) -> str:
                     latest = current
                 elif current.minor == latest.minor and current.patch > latest.patch:
                     latest = current
-    return f"{latest.major}.{latest.minor}.{latest.patch}"
+    return latest
 
 
 def build_release_list() -> Dict[str, str]:
@@ -155,7 +158,8 @@ def main() -> None:
     args = parse_args()
     releases = build_release_list()
     if args.since_release == "latest":
-        tag = latest_release(list(releases.keys()))
+        tag = latest_release(list(releases.keys())).to_tag()
+        print(tag)
     else:
         tag = args.since_release
     if not re.match(r"^\d+\.\d+\.\d+$", tag):
