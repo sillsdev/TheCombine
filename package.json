@@ -89,6 +89,8 @@
     "@types/segment-analytics": "0.0.34",
     "@types/uuid": "^8.3.1",
     "@types/validator": "^13.6.3",
+    "@typescript-eslint/parser": "^5.2.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.2",
     "jest-canvas-mock": "^2.3.0",
     "jest-teamcity-reporter": "^0.9.0",
@@ -112,7 +114,9 @@
     },
     "rules": {
       "no-undef": "off",
-      "@typescript-eslint/switch-exhaustiveness-check": "warn"
+      "@typescript-eslint/switch-exhaustiveness-check": "warn",
+      "import/no-named-as-default": "off",
+      "import/no-named-as-default-member": "off"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -124,7 +128,15 @@
         ".jsx",
         ".ts",
         ".tsx"
-      ]
+      ],
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx"]
+      },
+      "import/resolver": {
+        "typescript": {
+          "alwaysTryTypes": true
+        }
+      }
     }
   },
   "prettier": {
