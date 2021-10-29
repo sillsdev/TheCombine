@@ -44,6 +44,11 @@ export function newSense(
   return sense;
 }
 
+// Returns the text of the first gloss of a sense, considering the case of no glosses.
+export function firstGlossText(sense: Sense): string {
+  return sense.glosses[0]?.def ?? "";
+}
+
 export function newNote(text = "", language = ""): Note {
   return { text, language };
 }

@@ -15,6 +15,7 @@ import DataEntryTable, {
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
 import {
+  firstGlossText,
   multiSenseWord,
   newSemanticDomain,
   newSense,
@@ -198,7 +199,7 @@ describe("DataEntryTable", () => {
           .findByType(NewEntry)
           .props.updateWordWithNewGloss(
             mockMultiWord.id,
-            mockMultiWord.senses[0].glosses[0].def,
+            firstGlossText(mockMultiWord.senses[0]),
             []
           )
           .then(() => {
@@ -226,7 +227,7 @@ describe("DataEntryTable", () => {
           .findByType(NewEntry)
           .props.updateWordWithNewGloss(
             mockMultiWord.id,
-            mockMultiWord.senses[0].glosses[0].def,
+            firstGlossText(mockMultiWord.senses[0]),
             []
           )
           .then(() => {

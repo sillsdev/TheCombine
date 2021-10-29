@@ -15,7 +15,7 @@ import {
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import theme from "types/theme";
-import { newSense, newWord } from "types/word";
+import { firstGlossText, newSense, newWord } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
 const idAffix = "new-entry";
@@ -243,7 +243,7 @@ export default class NewEntry extends React.Component<
     if (senseIndex === undefined) {
       this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
-      const gloss = this.state.selectedWord!.senses[senseIndex].glosses[0].def;
+      const gloss = firstGlossText(this.state.selectedWord!.senses[senseIndex]);
       this.updateGlossField(gloss);
     } // Otherwise, senseIndex===-1, which indicates new sense for the selectedWord
     this.setState({ senseOpen: false });

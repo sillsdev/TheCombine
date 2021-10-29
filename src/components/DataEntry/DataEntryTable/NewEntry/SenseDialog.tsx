@@ -13,6 +13,7 @@ import { Word } from "api/models";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
+import { firstGlossText } from "types/word";
 
 interface SenseDialogProps {
   selectedWord: Word;
@@ -70,11 +71,11 @@ export function SenseList(props: SenseListProps) {
         {props.selectedWord.senses.map((sense, index) => (
           <StyledMenuItem
             onClick={() => props.closeDialog(index)}
-            key={sense.glosses[0].def}
-            id={sense.glosses[0].def}
+            key={firstGlossText(sense)}
+            id={firstGlossText(sense)}
           >
             <div style={{ margin: theme.spacing(4) }}>
-              <h3>{sense.glosses[0].def}</h3>
+              <h3>{firstGlossText(sense)}</h3>
             </div>
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
