@@ -116,12 +116,13 @@ def list_commits(end_commit: str) -> None:
     """
     try:
         log_results = subprocess.run(
-            ["git", "log"],
+            ["git", "log", "--no-color"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
             check=True,
             text=True,
+            encoding="utf-8",
         )
     except subprocess.CalledProcessError as err:
         print(f"CalledProcessError returned {err.returncode}")
