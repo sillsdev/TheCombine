@@ -1,8 +1,9 @@
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Key } from "ts-key-enum";
+
+import { WritingSystem } from "api";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -13,15 +14,14 @@ interface VernWithSuggestionsProps {
   onBlur: () => void;
   suggestedVerns?: string[];
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  vernacularLang: WritingSystem;
   textFieldId: string;
 }
 
 /**
- * An editable vernacular field for new words
+ * An editable vernacular field for new words, that suggests words already in database.
  */
-export class VernWithSuggestions extends React.Component<
-  LocalizeContextProps & VernWithSuggestionsProps
-> {
+export default class VernWithSuggestions extends React.Component<VernWithSuggestionsProps> {
   render() {
     return (
       <React.Fragment>
@@ -53,11 +53,7 @@ export class VernWithSuggestions extends React.Component<
               {...params}
               fullWidth
               inputRef={this.props.vernInput}
-              label={
-                this.props.isNew
-                  ? this.props.translate("addWords.vernacular")
-                  : ""
-              }
+              label={this.props.isNew ? this.props.vernacularLang.name : ""}
               variant={this.props.isNew ? "outlined" : "standard"}
             />
           )}
@@ -66,5 +62,3 @@ export class VernWithSuggestions extends React.Component<
     );
   }
 }
-
-export default withLocalize(VernWithSuggestions);

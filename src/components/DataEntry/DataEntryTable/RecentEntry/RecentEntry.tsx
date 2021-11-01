@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 
-import { Sense, Word } from "api/models";
+import { Sense, Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -27,7 +27,8 @@ interface RecentEntryProps {
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
   recorder: Recorder;
   focusNewEntry: () => void;
-  analysisLang: string;
+  analysisLang: WritingSystem;
+  vernacularLang: WritingSystem;
 }
 
 interface RecentEntryState {
@@ -48,7 +49,7 @@ export default class RecentEntry extends React.Component<
 
     const sense: Sense = { ...props.entry.senses[props.senseIndex] };
     if (sense.glosses.length < 1) {
-      sense.glosses.push(newGloss("", this.props.analysisLang));
+      sense.glosses.push(newGloss("", this.props.analysisLang.bcp47));
     }
 
     this.state = {
@@ -118,6 +119,7 @@ export default class RecentEntry extends React.Component<
                 this.focusOnNewEntry();
               }
             }}
+            vernacularLang={this.props.vernacularLang}
             textFieldId={`${idAffix}-${this.props.rowIndex}-vernacular`}
           />
         </Grid>

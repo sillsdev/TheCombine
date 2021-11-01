@@ -14,6 +14,7 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentE
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
+import { newWritingSystem } from "types/project";
 import { simpleWord } from "types/word";
 
 jest.mock("backend");
@@ -47,7 +48,8 @@ function renderWithWord(word: Word) {
           deleteAudioFromWord={jest.fn()}
           recorder={new Recorder()}
           focusNewEntry={jest.fn()}
-          analysisLang={"en"}
+          analysisLang={newWritingSystem()}
+          vernacularLang={newWritingSystem()}
         />
       </Provider>
     );
