@@ -13,12 +13,14 @@ import {
   SemanticDomain,
   Sense,
   Word,
+  WritingSystem,
 } from "api/models";
 import * as backend from "backend";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
+import { newWritingSystem } from "types/project";
 import theme from "types/theme";
 import { firstGlossText, newSense, simpleWord } from "types/word";
 
@@ -44,7 +46,8 @@ interface DataEntryTableState {
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
   suggestVerns: boolean;
-  analysisLang: string;
+  analysisLang: WritingSystem;
+  vernacularLang: WritingSystem;
   defunctWordIds: string[];
   isFetchingFrontier: boolean;
 }
@@ -97,7 +100,8 @@ export class DataEntryTable extends React.Component<
       recentlyAddedWords: [],
       isReady: false,
       suggestVerns: true,
-      analysisLang: "en",
+      analysisLang: newWritingSystem("en", "English"),
+      vernacularLang: newWritingSystem("qaa", "Unknown"),
       defunctWordIds: [],
       isFetchingFrontier: false,
     };
@@ -115,11 +119,12 @@ export class DataEntryTable extends React.Component<
   async getProjectSettings() {
     const proj = await backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
-    let analysisLang = "en";
+    let vernacularLang = proj.vernacularWritingSystem;
+    let analysisLang = newWritingSystem("en", "English");
     if (proj.analysisWritingSystems?.length > 0) {
-      analysisLang = proj.analysisWritingSystems[0].bcp47;
+      analysisLang = proj.analysisWritingSystems[0];
     }
-    this.setState({ analysisLang, suggestVerns });
+    this.setState({ analysisLang, vernacularLang, suggestVerns });
   }
 
   /** Finished with this page of words, select new semantic domain */
@@ -146,7 +151,7 @@ export class DataEntryTable extends React.Component<
     insertIndex?: number,
     ignoreRecent?: boolean
   ) {
-    wordToAdd.note.language = this.state.analysisLang;
+    wordToAdd.note.language = this.state.analysisLang.bcp47;
     const addedWord = await backend.createWord(wordToAdd);
     if (addedWord.id === "Duplicate") {
       alert(
@@ -255,7 +260,7 @@ export class DataEntryTable extends React.Component<
       this.props.semanticDomain,
       existingWord,
       gloss,
-      this.state.analysisLang
+      this.state.analysisLang.bcp47
     );
     await this.updateWordBackAndFront(
       updatedWord,
@@ -564,6 +569,7 @@ export class DataEntryTable extends React.Component<
                     }
                   }}
                   analysisLang={this.state.analysisLang}
+                  vernacularLang={this.state.vernacularLang}
                 />
               )}
             </Grid>
@@ -587,6 +593,7 @@ export class DataEntryTable extends React.Component<
               setIsReadyState={(isReady: boolean) => this.setState({ isReady })}
               recorder={this.recorder}
               analysisLang={this.state.analysisLang}
+              vernacularLang={this.state.vernacularLang}
             />
           </Grid>
         </Grid>

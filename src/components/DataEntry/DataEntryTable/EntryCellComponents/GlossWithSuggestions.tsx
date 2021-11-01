@@ -1,9 +1,9 @@
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
+import { WritingSystem } from "api";
 import SpellChecker from "components/DataEntry/spellChecker";
 
 interface GlossWithSuggestionsProps {
@@ -13,22 +13,20 @@ interface GlossWithSuggestionsProps {
   updateGlossField: (newValue: string) => void;
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   onBlur?: () => void;
-  analysisLang: string;
+  analysisLang: WritingSystem;
   textFieldId: string;
 }
 
 /**
  * An editable gloss field that suggests spellings when current word isn't recognized.
  */
-export class GlossWithSuggestions extends React.Component<
-  GlossWithSuggestionsProps & LocalizeContextProps
-> {
+export default class GlossWithSuggestions extends React.Component<GlossWithSuggestionsProps> {
   readonly maxSuggestions = 5;
-  spellChecker = new SpellChecker(this.props.analysisLang);
+  spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
 
   componentDidUpdate(prevProps: GlossWithSuggestionsProps) {
-    if (prevProps.analysisLang !== this.props.analysisLang) {
-      this.spellChecker = new SpellChecker(this.props.analysisLang);
+    if (prevProps.analysisLang.bcp47 !== this.props.analysisLang.bcp47) {
+      this.spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
     }
   }
 
@@ -61,9 +59,7 @@ export class GlossWithSuggestions extends React.Component<
             {...params}
             fullWidth
             inputRef={this.props.glossInput}
-            label={
-              this.props.isNew ? this.props.translate("addWords.gloss") : ""
-            }
+            label={this.props.isNew ? this.props.analysisLang.name : ""}
             variant={this.props.isNew ? "outlined" : "standard"}
           />
         )}
@@ -76,5 +72,3 @@ export class GlossWithSuggestions extends React.Component<
     );
   }
 }
-
-export default withLocalize(GlossWithSuggestions);

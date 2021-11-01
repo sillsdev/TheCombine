@@ -4,6 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "components/App/DefaultState";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import { newWritingSystem } from "types/project";
 import { newSemanticDomain } from "types/word";
 
 jest.mock("components/Pronunciations/Recorder");
@@ -24,7 +25,8 @@ describe("NewEntry", () => {
             addNewWord={jest.fn()}
             semanticDomain={newSemanticDomain()}
             setIsReadyState={jest.fn()}
-            analysisLang={""}
+            analysisLang={newWritingSystem()}
+            vernacularLang={newWritingSystem()}
           />
         </Provider>
       );

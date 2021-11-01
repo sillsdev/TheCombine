@@ -3,7 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, Word } from "api/models";
+import { SemanticDomain, Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -33,7 +33,8 @@ interface NewEntryProps {
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
-  analysisLang: string;
+  analysisLang: WritingSystem;
+  vernacularLang: WritingSystem;
 }
 
 interface NewEntryState {
@@ -102,7 +103,9 @@ export default class NewEntry extends React.Component<
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
-        senses: [newSense(newValue, props.analysisLang, props.semanticDomain)],
+        senses: [
+          newSense(newValue, props.analysisLang.bcp47, props.semanticDomain),
+        ],
       },
       activeGloss: newValue,
     }));
@@ -140,7 +143,7 @@ export default class NewEntry extends React.Component<
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
-        note: { text, language: props.analysisLang },
+        note: { text, language: props.analysisLang.bcp47 },
       },
     }));
   }
@@ -173,7 +176,11 @@ export default class NewEntry extends React.Component<
       : {
           ...this.state.newEntry,
           senses: [
-            newSense("", this.props.analysisLang, this.props.semanticDomain),
+            newSense(
+              "",
+              this.props.analysisLang.bcp47,
+              this.props.semanticDomain
+            ),
           ],
         };
     this.props.addNewWord(newEntry, this.state.audioFileURLs);
@@ -326,6 +333,7 @@ export default class NewEntry extends React.Component<
                 // check whether gloss is empty
                 this.handleEnter(e, true)
               }
+              vernacularLang={this.props.vernacularLang}
               textFieldId={`${idAffix}-vernacular`}
             />
             <VernDialog
@@ -334,7 +342,7 @@ export default class NewEntry extends React.Component<
                 this.handleCloseVernDialog(selectedWordId)
               }
               vernacularWords={this.state.dupVernWords}
-              analysisLang={this.props.analysisLang}
+              analysisLang={this.props.analysisLang.bcp47}
             />
             {this.state.selectedWord && (
               <SenseDialog
@@ -343,7 +351,7 @@ export default class NewEntry extends React.Component<
                 handleClose={(senseIndex?: number) =>
                   this.handleCloseSenseDialog(senseIndex)
                 }
-                analysisLang={this.props.analysisLang}
+                analysisLang={this.props.analysisLang.bcp47}
               />
             )}
           </Grid>
