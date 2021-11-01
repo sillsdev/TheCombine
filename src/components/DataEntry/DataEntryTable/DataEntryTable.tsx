@@ -119,11 +119,9 @@ export class DataEntryTable extends React.Component<
   async getProjectSettings() {
     const proj = await backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
-    let vernacularLang = proj.vernacularWritingSystem;
-    let analysisLang = newWritingSystem("en", "English");
-    if (proj.analysisWritingSystems?.length > 0) {
-      analysisLang = proj.analysisWritingSystems[0];
-    }
+    const analysisLang =
+      proj.analysisWritingSystems[0] ?? newWritingSystem("en", "English");
+    const vernacularLang = proj.vernacularWritingSystem;
     this.setState({ analysisLang, vernacularLang, suggestVerns });
   }
 
