@@ -31,3 +31,20 @@
     mode: 0644
   notify: Restart resolved
   when: has_wifi
+
+###
+# Create a virtual network interface so that microk8s/k3s can run
+# when no ethernet connection is attached.
+###
+- name: Create virtual network I/F
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/systemd/network/{{ virtual_if }}.{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - netdev
+    - network
+  when: k8s_engine != "none"
+  notify: Restart networkd

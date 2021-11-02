@@ -1,0 +1,11 @@
+[Match]
+Name={{ virtual_if }}
+
+[Network]
+Address={{ virtual_if_addr }}
+Mask={{ virtual_if_mask }}
+Broadcast={{ virtual_if_broadcast }}
+
+[Route]
+Gateway={{ virtual_if_addr }}
+Metric={{ virtual_if_metric }}
