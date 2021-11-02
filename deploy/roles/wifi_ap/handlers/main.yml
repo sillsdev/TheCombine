@@ -7,5 +7,6 @@
     state: started
 
 - name: Restart create_ap
-  service: name=create_ap
-    state=restarted
+  service:
+    name: create_ap
+    state: restarted

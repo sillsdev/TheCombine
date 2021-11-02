@@ -9,10 +9,17 @@
   delay: 5
 
 - name: Wait for access point
-  setup:
-  until: ansible_facts.ap0 is defined
-  retries: 5
+  command: ip link show ap0
+  register: ap_status
+  until:
+    - ap_status.rc == 0
+    - '"state UP" in ap_status.stdout'
+  retries: 10
   delay: 5
+
+- name: Update network facts
+  setup:
+    gather_subset: network
 
 - name: Test AP installation
   assert:
