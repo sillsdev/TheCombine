@@ -24,3 +24,4 @@ required_packages:
   - apt-transport-https
   - aptitude
   - software-properties-common
+  - net-tools
