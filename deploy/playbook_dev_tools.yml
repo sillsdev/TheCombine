@@ -1,0 +1,32 @@
+---
+##############################################################
+# playbook_dev_tools.yml installs some packages that may be
+# useful for developers.  In addition, the apt cache is
+# updated and existing packages are upgraded.
+##############################################################
+
+- name: Install development tools
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  vars:
+    developer: "{{ k8s_user | default('none') }}"
+  tasks:
+    - name: Update cache and upgrade existing packages
+      apt:
+        update_cache: yes
+        upgrade: "yes"
+
+    - name: Install packages for development
+      apt:
+        name:
+          - emacs-nox
+          - yaml-mode
+          - net-tools
+
+    - name: Skip sudo password for {{ developer }}
+      lineinfile:
+        line: "{{ developer }}  ALL=(ALL) NOPASSWD:ALL"
+        path: /etc/sudoers
+      when: developer != 'none'
