@@ -1,5 +1,5 @@
-import { Goal } from "types/goals";
 import { ActionWithPayload } from "types/Redux/actions";
+import { Goal } from "types/goals";
 
 export enum GoalActionTypes {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",

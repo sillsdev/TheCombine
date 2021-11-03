@@ -13,8 +13,8 @@ import {
   getCharacterStatus,
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
-import { Goal } from "types/goals";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Goal } from "types/goals";
 
 // Action Creators
 

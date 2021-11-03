@@ -4,12 +4,12 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
 
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 import TreeSearch, {
   testId,
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
+import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();

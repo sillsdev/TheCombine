@@ -1,6 +1,6 @@
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 

@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
-import configureMockStore from "redux-mock-store";
 import renderer, { ReactTestInstance } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import DataEntryHeader, {
   getQuestions,

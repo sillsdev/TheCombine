@@ -8,8 +8,8 @@ import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import GoalList from "components/GoalTimeline/GoalList";
-import { Goal, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "types/goalUtilities";
+import { Goal, GoalsState } from "types/goals";
 
 const timelineStyle = {
   centerButton: {

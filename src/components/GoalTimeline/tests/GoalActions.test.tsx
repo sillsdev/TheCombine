@@ -16,8 +16,8 @@ import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
-import { Goal, GoalsState } from "types/goals";
 import { maxNumSteps } from "types/goalUtilities";
+import { Goal, GoalsState } from "types/goals";
 import { newUser } from "types/user";
 
 jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {

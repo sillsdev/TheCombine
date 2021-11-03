@@ -5,7 +5,7 @@ import { Translate } from "react-localize-redux";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import Banners from "components/SiteSettings/Banners/Banners";
 import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
-import UserManagement from "components/SiteSettings//UserManagement/UserManagement";
+import UserManagement from "components/SiteSettings/UserManagement/UserManagement";
 
 export default function SiteSettingsComponent() {
   return (

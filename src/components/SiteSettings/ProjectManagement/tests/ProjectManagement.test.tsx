@@ -3,11 +3,11 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { randomProject } from "types/project";
 import { defaultState } from "components/App/DefaultState";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import ProjectManagement from "components/SiteSettings/ProjectManagement/ProjectManagement";
+import { randomProject } from "types/project";
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 

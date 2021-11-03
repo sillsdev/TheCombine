@@ -13,14 +13,16 @@ import {
   SemanticDomain,
   Sense,
   Word,
+  WritingSystem,
 } from "api/models";
 import * as backend from "backend";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
+import { newWritingSystem } from "types/project";
 import theme from "types/theme";
-import { newSense, simpleWord } from "types/word";
+import { firstGlossText, newSense, simpleWord } from "types/word";
 
 export const exitButtonId = "exit-to-domain-tree";
 
@@ -44,7 +46,8 @@ interface DataEntryTableState {
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
   suggestVerns: boolean;
-  analysisLang: string;
+  analysisLang: WritingSystem;
+  vernacularLang: WritingSystem;
   defunctWordIds: string[];
   isFetchingFrontier: boolean;
 }
@@ -97,7 +100,8 @@ export class DataEntryTable extends React.Component<
       recentlyAddedWords: [],
       isReady: false,
       suggestVerns: true,
-      analysisLang: "en",
+      analysisLang: newWritingSystem("en", "English"),
+      vernacularLang: newWritingSystem("qaa", "Unknown"),
       defunctWordIds: [],
       isFetchingFrontier: false,
     };
@@ -115,11 +119,10 @@ export class DataEntryTable extends React.Component<
   async getProjectSettings() {
     const proj = await backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
-    let analysisLang = "en";
-    if (proj.analysisWritingSystems?.length > 0) {
-      analysisLang = proj.analysisWritingSystems[0].bcp47;
-    }
-    this.setState({ analysisLang, suggestVerns });
+    const analysisLang =
+      proj.analysisWritingSystems[0] ?? newWritingSystem("en", "English");
+    const vernacularLang = proj.vernacularWritingSystem;
+    this.setState({ analysisLang, vernacularLang, suggestVerns });
   }
 
   /** Finished with this page of words, select new semantic domain */
@@ -146,12 +149,12 @@ export class DataEntryTable extends React.Component<
     insertIndex?: number,
     ignoreRecent?: boolean
   ) {
-    wordToAdd.note.language = this.state.analysisLang;
+    wordToAdd.note.language = this.state.analysisLang.bcp47;
     const addedWord = await backend.createWord(wordToAdd);
     if (addedWord.id === "Duplicate") {
       alert(
         this.props.translate("addWords.wordInDatabase") +
-          `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
+          `: ${wordToAdd.vernacular}, ${firstGlossText(wordToAdd.senses[0])}`
       );
       return;
     }
@@ -255,7 +258,7 @@ export class DataEntryTable extends React.Component<
       this.props.semanticDomain,
       existingWord,
       gloss,
-      this.state.analysisLang
+      this.state.analysisLang.bcp47
     );
     await this.updateWordBackAndFront(
       updatedWord,
@@ -380,7 +383,7 @@ export class DataEntryTable extends React.Component<
       await this.updateVernacular(oldWord, newVern);
     } else {
       // This is a modification that has to be retracted and replaced with a new entry
-      const word = simpleWord(newVern, oldSense.glosses[0].def);
+      const word = simpleWord(newVern, firstGlossText(oldSense));
       word.id = "";
       await this.undoRecentEntry(entryIndex).then(async () => {
         await this.addNewWord(word, [], entryIndex);
@@ -564,6 +567,7 @@ export class DataEntryTable extends React.Component<
                     }
                   }}
                   analysisLang={this.state.analysisLang}
+                  vernacularLang={this.state.vernacularLang}
                 />
               )}
             </Grid>
@@ -587,6 +591,7 @@ export class DataEntryTable extends React.Component<
               setIsReadyState={(isReady: boolean) => this.setState({ isReady })}
               recorder={this.recorder}
               analysisLang={this.state.analysisLang}
+              vernacularLang={this.state.vernacularLang}
             />
           </Grid>
         </Grid>

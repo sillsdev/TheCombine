@@ -3,9 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, Word } from "api/models";
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
-import Recorder from "components/Pronunciations/Recorder";
+import { SemanticDomain, Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -14,8 +12,10 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { newSense, newWord } from "types/word";
+import { firstGlossText, newSense, newWord } from "types/word";
 import { LevenshteinDistance } from "utilities";
 
 const idAffix = "new-entry";
@@ -33,7 +33,8 @@ interface NewEntryProps {
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
-  analysisLang: string;
+  analysisLang: WritingSystem;
+  vernacularLang: WritingSystem;
 }
 
 interface NewEntryState {
@@ -102,7 +103,9 @@ export default class NewEntry extends React.Component<
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
-        senses: [newSense(newValue, props.analysisLang, props.semanticDomain)],
+        senses: [
+          newSense(newValue, props.analysisLang.bcp47, props.semanticDomain),
+        ],
       },
       activeGloss: newValue,
     }));
@@ -140,7 +143,7 @@ export default class NewEntry extends React.Component<
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
-        note: { text, language: props.analysisLang },
+        note: { text, language: props.analysisLang.bcp47 },
       },
     }));
   }
@@ -173,19 +176,14 @@ export default class NewEntry extends React.Component<
       : {
           ...this.state.newEntry,
           senses: [
-            newSense("", this.props.analysisLang, this.props.semanticDomain),
+            newSense(
+              "",
+              this.props.analysisLang.bcp47,
+              this.props.semanticDomain
+            ),
           ],
         };
     this.props.addNewWord(newEntry, this.state.audioFileURLs);
-    this.resetState();
-  }
-
-  updateWordAndReset() {
-    this.props.updateWordWithNewGloss(
-      this.state.selectedWord!.id,
-      this.state.activeGloss,
-      this.state.audioFileURLs
-    );
     this.resetState();
   }
 
@@ -197,7 +195,12 @@ export default class NewEntry extends React.Component<
         this.setState({ vernOpen: true });
       } else if (this.state.selectedWord.id) {
         // ... and user has selected an entry to modify
-        this.updateWordAndReset();
+        this.props.updateWordWithNewGloss(
+          this.state.selectedWord.id,
+          this.state.activeGloss,
+          this.state.audioFileURLs
+        );
+        this.resetState();
       } else {
         // ... and user has selected new entry
         this.addNewWordAndReset();
@@ -243,9 +246,10 @@ export default class NewEntry extends React.Component<
     if (senseIndex === undefined) {
       this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
-      const gloss = this.state.selectedWord!.senses[senseIndex].glosses[0].def;
+      // SenseDialog can only be open when this.state.selectedWord is defined.
+      const gloss = firstGlossText(this.state.selectedWord!.senses[senseIndex]);
       this.updateGlossField(gloss);
-    } // Otherwise, senseIndex===-1, which indicates new sense for the selectedWord
+    } // The remaining case, senseIndex===-1, indicates new sense for the selectedWord.
     this.setState({ senseOpen: false });
   }
 
@@ -329,6 +333,7 @@ export default class NewEntry extends React.Component<
                 // check whether gloss is empty
                 this.handleEnter(e, true)
               }
+              vernacularLang={this.props.vernacularLang}
               textFieldId={`${idAffix}-vernacular`}
             />
             <VernDialog
@@ -337,7 +342,7 @@ export default class NewEntry extends React.Component<
                 this.handleCloseVernDialog(selectedWordId)
               }
               vernacularWords={this.state.dupVernWords}
-              analysisLang={this.props.analysisLang}
+              analysisLang={this.props.analysisLang.bcp47}
             />
             {this.state.selectedWord && (
               <SenseDialog
@@ -346,7 +351,7 @@ export default class NewEntry extends React.Component<
                 handleClose={(senseIndex?: number) =>
                   this.handleCloseSenseDialog(senseIndex)
                 }
-                analysisLang={this.props.analysisLang}
+                analysisLang={this.props.analysisLang.bcp47}
               />
             )}
           </Grid>
