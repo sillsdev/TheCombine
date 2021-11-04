@@ -11,8 +11,8 @@
     append: yes
 
 - name: Install Kubernetes Engine
-  include_role:
-    name: "{{ k8s_engine }}"
+  include_tasks:
+    file: "{{ k8s_engine }}.yml"
   when: k8s_engine != "none"
 
 - name: Download the Google Cloud public signing key

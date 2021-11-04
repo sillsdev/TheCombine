@@ -6,3 +6,8 @@
   service:
     name: systemd-resolved
     state: restarted
+
+- name: Restart networkd
+  service:
+    name: systemd-networkd
+    state: restarted
