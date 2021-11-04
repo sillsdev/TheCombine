@@ -25,6 +25,11 @@
     - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
+    - name: Update packages
+      apt:
+        update_cache: yes
+        upgrade: "yes"
+
     - name: Setup WiFi Access Point
       import_role:
         name: wifi_ap

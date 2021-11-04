@@ -7,3 +7,19 @@ k8s_required_pkgs:
   - apt-transport-https
   - ca-certificates
   - curl
+
+# Options for installing the k3s engine
+k3s_options:
+  - --write-kubeconfig-mode
+  - 644
+  - --disable
+  - traefik
+
+# Options for installing the microk8s engine
+microk8s_options:
+  addons:
+    - storage
+    - dns
+    - ingress
+    - helm3
+    - rbac
