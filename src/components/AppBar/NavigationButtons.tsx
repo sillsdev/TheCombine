@@ -1,8 +1,10 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { useDispatch } from "react-redux";
 
 import history, { Path } from "browserHistory";
+import { OpenTreeAction } from "components/TreeView/TreeViewActions";
 import { tabColor } from "types/theme";
 
 interface NavigationButtonsProps {
@@ -11,11 +13,14 @@ interface NavigationButtonsProps {
 
 /** A button that redirects to the home page */
 export default function NavigationButtons(props: NavigationButtonsProps) {
+  const dispatch = useDispatch();
+
   return (
     <React.Fragment>
       <Button
         id="data-entry"
         onClick={() => {
+          dispatch(OpenTreeAction());
           history.push(Path.DataEntry);
         }}
         color="inherit"

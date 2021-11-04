@@ -41,6 +41,7 @@ const state = {
   },
   reviewEntriesState: { words: mockReviewEntryWords },
   treeViewState: {
+    open: false,
     currentDomain: {
       name: "domain",
       id: "number",

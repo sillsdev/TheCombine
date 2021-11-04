@@ -54,14 +54,12 @@ export class TreeView extends React.Component<
     if (this.props.currentDomain.name) {
       this.props.navigateTree(props.currentDomain);
     } else {
-      let newDomain = createDomains(domains);
+      const newDomain = createDomains(domains);
       // If the current domain is the default then set the name to the translation of "Semantic Domain"
-      if (newDomain.currentDomain.name === "") {
-        newDomain.currentDomain.name = this.props.translate(
-          "addWords.domain"
-        ) as string;
+      if (!newDomain.name) {
+        newDomain.name = this.props.translate("addWords.domain") as string;
       }
-      this.props.navigateTree(newDomain.currentDomain);
+      this.props.navigateTree(newDomain);
     }
   }
 
