@@ -15,6 +15,7 @@ k3s_options:
   - --disable
   - traefik
 
+# Options for installing the microk8s engine
 microk8s_options:
   addons:
     - storage
