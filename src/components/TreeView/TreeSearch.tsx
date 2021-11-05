@@ -33,13 +33,9 @@ export default function TreeSearch(props: TreeSearchProps) {
 
 /** Automatically convert a string of form 123 to 1.2.3. */
 export function insertDecimalPoints(value: string): string {
-  // Test if input is strictly of the form: 1.2.3
-  if (!/^[.\d]+$/.test(value)) {
-    return value;
-  }
-
-  // Automatically insert decimal points between two numbers.
-  if (!value.endsWith(".")) {
+  // Test if input is strictly of the form: 1.2.3 or 123
+  if (/^[.\d]+$/.test(value) && !value.endsWith(".")) {
+    // Automatically insert decimal points between two numbers.
     value = value.replace(/\./g, "");
     value = value
       .split("")
@@ -47,6 +43,7 @@ export function insertDecimalPoints(value: string): string {
       .join("")
       .slice(0, -1);
   }
+
   return value;
 }
 
