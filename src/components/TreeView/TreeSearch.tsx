@@ -49,7 +49,7 @@ export function insertDecimalPoints(value: string): string {
 
 // exported for unit testing only
 export function useTreeSearch(props: TreeSearchProps) {
-  const [input, setInput] = useState(props.currentDomain.id);
+  const [input, setInput] = useState("");
 
   // Search for a semantic domain by number
   function searchDomainByNumber(
