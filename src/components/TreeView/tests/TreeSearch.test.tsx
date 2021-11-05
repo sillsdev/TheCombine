@@ -5,6 +5,7 @@ import React from "react";
 import { Key } from "ts-key-enum";
 
 import TreeSearch, {
+  insertDecimalPoints,
   testId,
   TreeSearchProps,
   useTreeSearch,
@@ -116,4 +117,17 @@ describe("TreeSearch", () => {
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
     });
   });
+});
+
+test.each([
+  ["a", "a"],
+  ["1a", "1a"],
+  ["1", "1"],
+  ["1.", "1."],
+  ["1.0", "1.0"],
+  ["10", "1.0"],
+  ["123", "1.2.3"],
+  ["1.2.3.", "1.2.3."],
+])("insertDecimalPoints", (input, output) => {
+  expect(insertDecimalPoints(input)).toBe(output);
 });

@@ -40,7 +40,7 @@ export function insertDecimalPoints(value: string): string {
 
   // Automatically insert decimal points between two numbers.
   if (!value.endsWith(".")) {
-    value = value.replaceAll(".", "");
+    value = value.replace(/\./g, "");
     value = value
       .split("")
       .map((char) => `${char}.`)
