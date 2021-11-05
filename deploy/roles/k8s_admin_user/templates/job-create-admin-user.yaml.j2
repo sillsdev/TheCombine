@@ -42,41 +42,6 @@ spec:
                 secretKeyRef:
                   key: COMBINE_ADMIN_EMAIL
                   name: {{ admin_user_secrets_name }}
-            - name: COMBINE_PASSWORD_RESET_EXPIRE_TIME
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_PASSWORD_RESET_EXPIRE_TIME
-                  name: env-backend
-            - name: COMBINE_SMTP_ADDRESS
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_SMTP_ADDRESS
-                  name: env-backend
-            - name: COMBINE_SMTP_FROM
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_SMTP_FROM
-                  name: env-backend
-            - name: COMBINE_SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: COMBINE_SMTP_PASSWORD
-                  name: env-backend-secrets
-            - name: COMBINE_SMTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_SMTP_PORT
-                  name: env-backend
-            - name: COMBINE_SMTP_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_SMTP_SERVER
-                  name: env-backend
-            - name: COMBINE_SMTP_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: COMBINE_SMTP_USERNAME
-                  name: env-backend-secrets
           image: '{{ combine_image_backend }}'
           name: {{ admin_user_job_name }}
 {% if image_tag == "latest" %}
