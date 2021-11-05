@@ -31,6 +31,25 @@ export default function TreeSearch(props: TreeSearchProps) {
   );
 }
 
+/** Automatically convert a string of form 123 to 1.2.3. */
+export function insertDecimalPoints(value: string): string {
+  // Test if input is strictly of the form: 1.2.3
+  if (!/^[.\d]+$/.test(value)) {
+    return value;
+  }
+
+  // Automatically insert decimal points between two numbers.
+  if (!value.endsWith(".")) {
+    value = value.replaceAll(".", "");
+    value = value
+      .split("")
+      .map((char) => `${char}.`)
+      .join("")
+      .slice(0, -1);
+  }
+  return value;
+}
+
 // exported for unit testing only
 export function useTreeSearch(props: TreeSearchProps) {
   const [input, setInput] = useState(props.currentDomain.id);
@@ -118,21 +137,7 @@ export function useTreeSearch(props: TreeSearchProps) {
 
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    let value = event.target.value;
-
-    // Test if input is strictly of the form: 1.2.3
-    const isNumeric = /^[.\d]+$/.test(value);
-
-    // Automatically insert decimal points between two numbers.
-    if (isNumeric && !value.endsWith(".")) {
-      value = value.replaceAll(".", "");
-      value = value
-        .split("")
-        .map((char) => `${char}.`)
-        .join("")
-        .slice(0, -1);
-    }
-    setInput(value);
+    setInput(insertDecimalPoints(event.target.value));
   }
 
   return {
