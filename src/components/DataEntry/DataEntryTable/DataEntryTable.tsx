@@ -503,7 +503,7 @@ export class DataEntryTable extends React.Component<
   }
 
   exitGracefully() {
-    // Check if there is a new word, but the user clicked complete instead of pressing enter
+    // Check if there is a new word, but user exited without pressing enter
     if (this.refNewEntry.current) {
       const newEntry = this.refNewEntry.current.state.newEntry;
       if (!newEntry.senses.length) {

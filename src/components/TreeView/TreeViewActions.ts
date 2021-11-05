@@ -1,9 +1,9 @@
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 export enum TreeActionType {
-  CLOSE_TREE = "closeTree",
-  OPEN_TREE = "openTree",
-  TRAVERSE_TREE = "traverseTree",
+  CLOSE_TREE = "CLOSE_TREE",
+  OPEN_TREE = "OPEN_TREE",
+  TRAVERSE_TREE = "TRAVERSE_TREE",
 }
 
 export interface TreeViewAction {
