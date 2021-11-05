@@ -27,8 +27,8 @@
       - job-create-admin-user.yaml
 
 - name: Wait for job to complete
-  command: kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} wait --for=condition=Completed job/{{ admin_user_job_name }}
+  command: kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} wait --for=condition=complete job/{{ admin_user_job_name }}
   register: results_create_admin
-#
-# - name: Delete admin login secret
-#   command: kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} delete secret admin-user-secrets
+
+- name: Delete admin login secret
+  command: kubectl --kubeconfig={{ kubecfg }} -n {{ app_namespace }} delete secret admin-user-secrets
