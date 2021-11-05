@@ -119,7 +119,17 @@ export function useTreeSearch(props: TreeSearchProps) {
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     // Only allow user to type in digits or decimal places.
-    const numericInput = event.target.value.replace(/[^.0-9]/g, "");
+    let numericInput = event.target.value.replace(/[^.0-9]/g, "");
+
+    // Automatically insert decimal points between two numbers.
+    if (!numericInput.endsWith(".")) {
+      numericInput = numericInput.replaceAll(".", "");
+      numericInput = numericInput
+        .split("")
+        .map((char) => `${char}.`)
+        .join("")
+        .slice(0, -1);
+    }
     setInput(numericInput);
   }
 
