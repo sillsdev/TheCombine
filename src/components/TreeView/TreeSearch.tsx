@@ -12,7 +12,7 @@ export interface TreeSearchProps {
 export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps) {
-  const { searchAndSelectDomain, handleChange } = useTreeSearch(props);
+  const { searchAndSelectDomain, input, handleChange } = useTreeSearch(props);
 
   return (
     <Grid style={{ maxWidth: 200 }}>
@@ -25,14 +25,31 @@ export default function TreeSearch(props: TreeSearchProps) {
         margin="normal"
         autoComplete="off"
         inputProps={{ "data-testid": testId }}
+        value={input}
       />
     </Grid>
   );
 }
 
+/** Automatically convert a string of form 123 to 1.2.3. */
+export function insertDecimalPoints(value: string): string {
+  // Test if input is strictly of the form: 1.2.3 or 123
+  if (/^[.\d]+$/.test(value) && !value.endsWith(".")) {
+    // Automatically insert decimal points between two numbers.
+    value = value
+      .replace(/\./g, "")
+      .split("")
+      .map((char) => `${char}.`)
+      .join("")
+      .slice(0, -1);
+  }
+
+  return value;
+}
+
 // exported for unit testing only
 export function useTreeSearch(props: TreeSearchProps) {
-  const [input, setInput] = useState(props.currentDomain.id);
+  const [input, setInput] = useState("");
 
   // Search for a semantic domain by number
   function searchDomainByNumber(
@@ -117,11 +134,12 @@ export function useTreeSearch(props: TreeSearchProps) {
 
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setInput(event.target.value);
+    setInput(insertDecimalPoints(event.target.value));
   }
 
   return {
     searchAndSelectDomain,
+    input,
     handleChange,
   };
 }

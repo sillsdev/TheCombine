@@ -5,6 +5,7 @@ import React from "react";
 import { Key } from "ts-key-enum";
 
 import TreeSearch, {
+  insertDecimalPoints,
   testId,
   TreeSearchProps,
   useTreeSearch,
@@ -60,7 +61,7 @@ describe("TreeSearch", () => {
     });
 
     it("does not switch semantic domain if given number not found", () => {
-      simulateTypeAndEnter("10");
+      simulateTypeAndEnter("99");
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
@@ -116,4 +117,20 @@ describe("TreeSearch", () => {
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
     });
   });
+});
+
+test.each([
+  ["a", "a"],
+  ["1a", "1a"],
+  ["1", "1"],
+  ["1.", "1."],
+  ["1.0", "1.0"],
+  ["10", "1.0"],
+  ["12", "1.2"],
+  ["123", "1.2.3"],
+  ["1.2.3.", "1.2.3."],
+  ["..1", "1"],
+  ["1..2", "1.2"],
+])("insertDecimalPoints", (input, output) => {
+  expect(insertDecimalPoints(input)).toBe(output);
 });
