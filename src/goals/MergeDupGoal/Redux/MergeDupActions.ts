@@ -25,6 +25,7 @@ import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
   MergeTreeActionTypes,
+  MergeTreeState,
   MoveDuplicateMergeAction,
   MoveSenseMergeAction,
   OrderDuplicateMergeAction,
@@ -32,7 +33,6 @@ import {
   SetDataMergeAction,
   SetSidebarMergeAction,
   SetVernacularMergeAction,
-  MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -315,8 +315,7 @@ export function mergeDefinitionIntoSense(
   } else {
     const oldText = sense.definitions[defIndex].text;
     if (!oldText.split(sep).includes(def.text)) {
-      const newText = `${oldText}${sep}${def.text}`;
-      sense.definitions[defIndex].text = newText;
+      sense.definitions[defIndex].text = `${oldText}${sep}${def.text}`;
     }
   }
 }
