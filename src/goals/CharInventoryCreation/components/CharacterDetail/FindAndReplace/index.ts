@@ -13,8 +13,8 @@ function mapStateToProps(state: StoreState) {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    findAndReplace: (findValue: string, replaceValue: string) => {
-      dispatch(findAndReplace(findValue, replaceValue));
+    findAndReplace: async (findValue: string, replaceValue: string) => {
+      await dispatch(findAndReplace(findValue, replaceValue));
     },
   };
 }
