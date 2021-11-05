@@ -37,8 +37,8 @@ namespace Backend.Tests.Models
             var mergeNonEmpty3 = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds2 };
             var mergeNonEmpty4 = new MergeUndoIds { ParentIds = _parentIds2, ChildIds = _childIds1 };
             // Test same number of parents/children, but different values.
-            var mergeNonEmpty5 = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = {"different", "children"} };
-            var mergeNonEmpty6 = new MergeUndoIds { ParentIds = {"different", "parents"}, ChildIds = _childIds1 };
+            var mergeNonEmpty5 = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = { "different", "children" } };
+            var mergeNonEmpty6 = new MergeUndoIds { ParentIds = { "different", "parents" }, ChildIds = _childIds1 };
 
             Assert.IsFalse(mergeEmpty.Equals(mergeNonEmpty1));
             Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty2));
