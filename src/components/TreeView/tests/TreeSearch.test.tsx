@@ -61,7 +61,7 @@ describe("TreeSearch", () => {
     });
 
     it("does not switch semantic domain if given number not found", () => {
-      simulateTypeAndEnter("10");
+      simulateTypeAndEnter("99");
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
