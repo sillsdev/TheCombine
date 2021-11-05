@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -48,6 +49,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestDeleteAllWordsNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.DeleteProjectWords(_projId);
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestDeleteFrontierWord()
         {
             var wordToDelete = _wordRepo.Create(Util.RandomWord(_projId)).Result;
@@ -66,6 +75,15 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestDeleteFrontierWordNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var wordToDelete = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var result = await _wordController.DeleteFrontierWord(_projId, wordToDelete.Id);
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestGetAllWords()
         {
             _wordRepo.Create(Util.RandomWord(_projId));
@@ -76,6 +94,14 @@ namespace Backend.Tests.Controllers
             var words = (List<Word>)((ObjectResult)_wordController.GetProjectWords(_projId).Result).Value;
             Assert.That(words, Has.Count.EqualTo(3));
             _wordRepo.GetAllWords(_projId).Result.ForEach(word => Assert.Contains(word, words));
+        }
+
+        [Test]
+        public async Task TestGetAllWordsNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.GetProjectWords(_projId);
+            Assert.IsInstanceOf<ForbidResult>(result);
         }
 
         [Test]
@@ -90,6 +116,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestIsFrontierNonemptyNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.IsFrontierNonempty(_projId);
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestGetFrontier()
         {
             var inWord1 = _wordRepo.Create(Util.RandomWord(_projId)).Result;
@@ -100,6 +134,14 @@ namespace Backend.Tests.Controllers
             Assert.That(frontier, Has.Count.EqualTo(2));
             Assert.Contains(inWord1, frontier);
             Assert.Contains(inWord2, frontier);
+        }
+
+        [Test]
+        public async Task TestGetFrontierNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.GetProjectFrontierWords(_projId);
+            Assert.IsInstanceOf<ForbidResult>(result);
         }
 
         [Test]
@@ -133,7 +175,17 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestAddWord()
+        public async Task TestGetWordNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var word = await _wordRepo.Create(Util.RandomWord(_projId));
+            var result = await _wordController.GetWord(_projId, word.Id);
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
+        public void TestCreateWord()
         {
             var word = Util.RandomWord(_projId);
 
@@ -160,6 +212,16 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestCreateWordNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var word = Util.RandomWord(_projId);
+            var result = await _wordController.CreateWord(_projId, word);
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestUpdateWord()
         {
             var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
@@ -178,6 +240,18 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
             Assert.Contains(finalWord, _wordRepo.GetFrontier(_projId).Result);
+        }
+
+        [Test]
+        public async Task TestUpdateWordNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
+            var modWord = origWord.Clone();
+            modWord.Vernacular = "NewVernacular";
+            var result = await _wordController.UpdateWord(_projId, modWord.Id, modWord);
+            Assert.IsInstanceOf<ForbidResult>(result);
         }
     }
 }
