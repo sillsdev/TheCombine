@@ -20,7 +20,7 @@ interface EditTextDialogProps {
   text: string;
   titleId: string;
   close: () => void;
-  updateText: (newText: string) => void | Promise<void>;
+  updateText: (newText: string) => Promise<void>;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
   textFieldId?: string;

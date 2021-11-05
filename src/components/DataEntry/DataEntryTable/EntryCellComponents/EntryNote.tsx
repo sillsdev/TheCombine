@@ -7,7 +7,7 @@ import EditTextDialog from "components/Buttons/EditTextDialog";
 
 interface EntryNoteProps {
   noteText: string;
-  updateNote: (newText: string) => void;
+  updateNote: (newText: string) => Promise<void>;
   buttonId: string;
 }
 

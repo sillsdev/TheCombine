@@ -3,8 +3,8 @@ import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import {
-  asyncSetNewCurrentProject,
   setCurrentProject,
+  setNewCurrentProject,
 } from "components/Project/ProjectActions";
 import {
   CreateProjectAction,
@@ -30,7 +30,7 @@ export function asyncCreateProject(
     await backend
       .createProject(project)
       .then(async (createdProject) => {
-        await dispatch(asyncSetNewCurrentProject(createdProject));
+        dispatch(setNewCurrentProject(createdProject));
 
         // Upload words
         if (languageData) {
