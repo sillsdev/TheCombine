@@ -129,6 +129,8 @@ test.each([
   ["12", "1.2"],
   ["123", "1.2.3"],
   ["1.2.3.", "1.2.3."],
+  ["..1", "1"],
+  ["1..2", "1.2"],
 ])("insertDecimalPoints", (input, output) => {
   expect(insertDecimalPoints(input)).toBe(output);
 });
