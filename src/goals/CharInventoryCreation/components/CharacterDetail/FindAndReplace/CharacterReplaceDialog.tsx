@@ -6,13 +6,16 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { useState } from "react";
 import { Translate } from "react-localize-redux";
+
+import LoadingButton from "components/Buttons/LoadingButton";
 
 interface ReplaceDialogProps {
   open: boolean;
   dialogFindValue: string;
   dialogReplaceValue: string;
-  handleAccept: () => void;
+  handleAccept: () => Promise<void>;
   handleCancel: () => void;
 }
 
@@ -20,6 +23,14 @@ interface ReplaceDialogProps {
  * Dialog to confirm replacement
  */
 export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
+  const [loading, setLoading] = useState(false);
+
+  async function submitFindAndReplace() {
+    setLoading(true);
+    await props.handleAccept();
+    setLoading(false);
+  }
+
   return (
     <Dialog
       open={props.open}
@@ -42,13 +53,12 @@ export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
         <Button onClick={props.handleCancel} variant="outlined" color="primary">
           <Translate id="buttons.cancel" />
         </Button>
-        <Button
-          onClick={props.handleAccept}
-          variant="contained"
-          color="primary"
+        <LoadingButton
+          loading={loading}
+          buttonProps={{ onClick: submitFindAndReplace, color: "primary" }}
         >
           <Translate id="buttons.confirm" />
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

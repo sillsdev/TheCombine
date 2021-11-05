@@ -68,7 +68,7 @@ export class TreeView extends React.Component<
       this.setState({ visible: false });
       return new Promise((resolve) =>
         setTimeout(() => {
-          if (domain && this.state.visible === false) {
+          if (domain && !this.state.visible) {
             if (domain.id !== this.props.currentDomain.id) {
               this.props.navigateTree(domain);
               this.setState({ visible: true });

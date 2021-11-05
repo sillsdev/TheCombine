@@ -70,8 +70,7 @@ export function addSemanticDomainToSense(
     };
     const updatedSenses = [...existingWord.senses];
     updatedSenses.splice(senseIndex, 1, updatedSense);
-    const updatedWord: Word = { ...existingWord, senses: updatedSenses };
-    return updatedWord;
+    return { ...existingWord, senses: updatedSenses };
   }
 }
 
@@ -427,7 +426,7 @@ export class DataEntryTable extends React.Component<
     if (newText !== oldNote.text) {
       const updatedNote: Note = { ...oldNote, text: newText };
       const updatedWord: Word = { ...oldWord, note: updatedNote };
-      this.updateWordBackAndFrontSimple(updatedWord);
+      await this.updateWordBackAndFrontSimple(updatedWord);
     }
   }
 
