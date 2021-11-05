@@ -12,7 +12,7 @@ export interface TreeSearchProps {
 export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps) {
-  const { searchAndSelectDomain, handleChange } = useTreeSearch(props);
+  const { searchAndSelectDomain, input, handleChange } = useTreeSearch(props);
 
   return (
     <Grid style={{ maxWidth: 200 }}>
@@ -25,6 +25,7 @@ export default function TreeSearch(props: TreeSearchProps) {
         margin="normal"
         autoComplete="off"
         inputProps={{ "data-testid": testId }}
+        value={input}
       />
     </Grid>
   );
@@ -117,11 +118,13 @@ export function useTreeSearch(props: TreeSearchProps) {
 
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setInput(event.target.value);
+    const numericInput = event.target.value.replace(/[^.0-9]/g, "");
+    setInput(numericInput);
   }
 
   return {
     searchAndSelectDomain,
+    input,
     handleChange,
   };
 }
