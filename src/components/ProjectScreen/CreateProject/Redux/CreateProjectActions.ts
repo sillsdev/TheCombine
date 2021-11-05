@@ -30,7 +30,7 @@ export function asyncCreateProject(
     await backend
       .createProject(project)
       .then(async (createdProject) => {
-        dispatch(asyncSetNewCurrentProject(createdProject));
+        await dispatch(asyncSetNewCurrentProject(createdProject));
 
         // Upload words
         if (languageData) {

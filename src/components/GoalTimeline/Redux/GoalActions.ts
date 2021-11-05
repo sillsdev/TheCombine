@@ -77,7 +77,7 @@ export function asyncAddGoal(goal: Goal) {
         goal.index = await Backend.addGoalToUserEdit(userEditId, goal);
 
         // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal(goal, userEditId));
+        await dispatch(asyncLoadNewGoal(goal, userEditId));
       }
 
       // Serve goal.
