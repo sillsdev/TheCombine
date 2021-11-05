@@ -118,6 +118,7 @@ export function useTreeSearch(props: TreeSearchProps) {
 
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    // Only allow user to type in digits or decimal places.
     const numericInput = event.target.value.replace(/[^.0-9]/g, "");
     setInput(numericInput);
   }
