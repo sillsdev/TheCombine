@@ -36,8 +36,8 @@ export function insertDecimalPoints(value: string): string {
   // Test if input is strictly of the form: 1.2.3 or 123
   if (/^[.\d]+$/.test(value) && !value.endsWith(".")) {
     // Automatically insert decimal points between two numbers.
-    value = value.replace(/\./g, "");
     value = value
+      .replace(/\./g, "")
       .split("")
       .map((char) => `${char}.`)
       .join("")
