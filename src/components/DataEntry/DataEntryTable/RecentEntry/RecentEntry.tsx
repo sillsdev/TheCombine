@@ -20,7 +20,7 @@ interface RecentEntryProps {
   entry: Word;
   senseIndex: number;
   updateGloss: (gloss: string) => void;
-  updateNote: (newText: string) => void;
+  updateNote: (newText: string) => Promise<void>;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;

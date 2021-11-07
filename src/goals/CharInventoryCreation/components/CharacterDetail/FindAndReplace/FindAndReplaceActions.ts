@@ -20,8 +20,8 @@ export function findAndReplace(findValue: string, replaceValue: string) {
         word.vernacular = word.vernacular.replace(findRegExp, replaceValue);
         await backend.updateWord(word);
       }
-      dispatch(fetchWords());
-      dispatch(getAllCharacters());
+      await dispatch(fetchWords());
+      await dispatch(getAllCharacters());
     } catch (err) {
       console.error(err);
     }
