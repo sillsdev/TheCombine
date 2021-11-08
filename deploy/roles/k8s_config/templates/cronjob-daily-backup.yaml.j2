@@ -38,7 +38,7 @@ spec:
           imagePullSecrets:
              - name: {{ image_pull_secret }}
 {% endif %}
-          dnsPolicy: Default
+          dnsPolicy: ClusterFirst
           restartPolicy: Never
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30

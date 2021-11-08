@@ -82,6 +82,10 @@
           import_role:
             name: k8s_config
 
+        - name: Create admin site user
+          import_role:
+            name: k8s_admin_user
+
         - name: Create cert proxy server
           import_role:
             name: k8s_cert_proxy_server
