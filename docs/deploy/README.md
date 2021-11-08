@@ -27,12 +27,22 @@ Docker containers.
       1. [Linux Host](#linux-host)
       2. [Windows Host](#windows-host)
    2. [Installing and Running _The Combine_](#installing-and-running-the-combine)
-      1. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
+      1. [Minimum System Requirements](#minimum-system-requirements)
+      2. [Install Combine Pre-requisites](#install-combine-pre-requisites)
+      3. [Install The Combine](#install-the-combine)
+      4. [Running _The Combine_ Docker Containers](#running-the-combine-docker-containers)
+      5. [Running _The Combine_ in a Kubernetes Cluster](#running-the-combine-in-a-kubernetes-cluster)
+         1. [Additional Host Requirements](#additional-host-requirements)
+         2. [Installing the Kubernetes Cluster](#installing-the-kubernetes-cluster)
+         3. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
+      6. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
 2. [Backups](#backups)
    1. [Automated Backups](#automated-backups)
    2. [Running a Backup Manually](#running-a-backup-manually)
    3. [Restoring Database and Backend From a Previous Backup](#restoring-database-and-backend-from-a-previous-backup)
 3. [Design](#design)
+   1. [Docker Compose Implementation](#docker-compose-implementation)
+   2. [Kubernetes Implementation](./kubernetes_design/README.md)
 4. [Additional Details](#additional-details)
    1. [Install Ubuntu Bionic Server](#install-ubuntu-bionic-server)
    2. [Vault Password](#vault-password)
@@ -156,7 +166,9 @@ The method for installing _The Combine_ running in a kubernetes cluster varies d
    was created by the operations group.
 2. Copy your `kubectl` configuration to the clipboard and paste it into a file named `~/.kube/prod/config`
    (`~/.kube/qa/config` for the QA server).
-3. Run the command:
+3. Setup _The Combine_ in the Kubernetes cluster
+
+   Run the commands:
 
    ```bash
    cd <COMBINE>/deploy
@@ -180,12 +192,13 @@ ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
   - Kubernetes is already installed on the target, for example, a _Rancher_ environment that is managed by another
     group.
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
+  The `-K` should only be used for the `playbook_kube_install.yml` playbook.
 - The `playbook_kube_config.yml` playbook will prompt you for the version of _The Combine_ to install. The version is
   the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version number, e.g.
   _0.7.5_.
 - The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
   your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
-  group in the inventory file, e.g. `qa`.
+  group, such as, `qa`, in the inventory file.
 
 #### Maintenance Scripts for Kubernetes
 
@@ -286,6 +299,8 @@ You may provide the backup to restore as an argument to `bin/combine-restore`; i
 
 # Design
 
+## Docker Compose Implementation
+
 _The Combine_ is deployed to target systems using Ansible. When deploying in Docker containers, `docker-compose` is used
 to manage the containers that make up _The Combine_. The following files are used to define the containers and their
 dependencies:
@@ -336,6 +351,10 @@ playbook or its roles change.
    1. Create folders for the backups and for the scripts
    2. Install the backup and the restore script
    3. Schedule daily backups if configured
+
+## Kubernetes Implementation
+
+Please see the Kubernetes Design document at [./kubernetes_design/README.md](./kubernetes_design/README.md)
 
 # Additional Details
 

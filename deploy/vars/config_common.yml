@@ -14,6 +14,7 @@ ssl_private_key: "{{ ssl_dir }}/privkey.pem"
 
 # Kubernetes local Working directories
 k8s_working_dir: "{{ lookup('env', 'HOME') }}/.kube/{{ kubecfgdir }}"
+k8s_admin_cfg: "{{ k8s_working_dir }}/admin_user"
 k8s_aws_login_cfg: "{{ k8s_working_dir }}/aws_login"
 k8s_cert_mgr_cfg: "{{ k8s_working_dir }}/cert_manager"
 k8s_combine_cfg: "{{ k8s_working_dir }}/thecombine"

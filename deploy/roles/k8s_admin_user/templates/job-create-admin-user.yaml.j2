@@ -1,0 +1,62 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ admin_user_job_name }}
+  namespace: {{ app_namespace }}
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+{% if image_pull_secret is defined and image_pull_secret | length %}
+      imagePullSecrets:
+        - name: {{ image_pull_secret }}
+{% endif %}
+      containers:
+        - env:
+            - name: COMBINE_JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_JWT_SECRET_KEY
+                  name: env-backend-secrets
+            - name: ASPNETCORE_URLS
+              value: http://+:5050
+            - name: COMBINE_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_ADMIN_USERNAME
+                  name: {{ admin_user_secrets_name }}
+            - name: COMBINE_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_ADMIN_PASSWORD
+                  name: {{ admin_user_secrets_name }}
+            - name: COMBINE_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_ADMIN_EMAIL
+                  name: {{ admin_user_secrets_name }}
+          image: {{ combine_image_backend }}
+          name: {{ admin_user_job_name }}
+{% if image_tag == "latest" %}
+          imagePullPolicy: Always
+{% else %}
+          imagePullPolicy: IfNotPresent
+{% endif %}
+          resources: {}
+          volumeMounts:
+            - mountPath: /home/app/.CombineFiles
+              name: backend-data
+          securityContext:
+            capabilities: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      volumes:
+        - name: backend-data
+          emptyDir: {}
