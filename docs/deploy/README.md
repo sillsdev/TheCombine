@@ -173,7 +173,6 @@ The method for installing _The Combine_ running in a kubernetes cluster varies d
    ```bash
    cd <COMBINE>/deploy
    ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
-   ansible-playbook playbook_kube_admin_user.yml --limit <target> --ask-vault-pass
    ```
 
 ##### NUC
@@ -184,7 +183,6 @@ Run the following _Ansible_ playbooks to install Kubernetes and setup _The Combi
 cd <COMBINE>/deploy
 ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
 ansible-playbook playbook_kube_config.yml --limit <target> --ask-vault-pass
-ansible-playbook playbook_kube_admin_user.yml --limit <target> --ask-vault-pass
 ```
 
 ##### Installation Notes
@@ -195,9 +193,9 @@ ansible-playbook playbook_kube_admin_user.yml --limit <target> --ask-vault-pass
     group.
 - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
   The `-K` should only be used for the `playbook_kube_install.yml` playbook.
-- The `playbook_kube_config.yml` and `playbook_kube_admin_user.yml` playbooks will prompt you for the version of _The
-  Combine_ to install. The version is the Docker image tag in the AWS ECR image repository. The standard releases are
-  tagged with the version number, e.g. _0.7.5_.
+- The `playbook_kube_config.yml` playbook will prompt you for the version of _The Combine_ to install. The version is
+  the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version number, e.g.
+  _0.7.5_.
 - The _\<target\>_ must be listed in the hosts.yml file (in \<COMBINE\>/deploy). If it is not, then you need to create
   your own inventory file (see [below](#creating-your-own-inventory-file)). The _\<target\>_ can be a hostname or a
   group, such as, `qa`, in the inventory file.
