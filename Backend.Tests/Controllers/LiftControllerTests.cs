@@ -210,6 +210,14 @@ namespace Backend.Tests.Controllers
             Assert.That(liftContents, Contains.Substring("dateModified=\"2000-01-01T00:00:00Z\""));
         }
 
+        [Test]
+        public void TestExportInvalidProjectId()
+        {
+            const string invalidProjectId = "INVALID_ID";
+            Assert.ThrowsAsync<MissingProjectException>(
+                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId));
+        }
+
         /// <summary>
         /// Create three words and delete one. Ensure that the deleted word is still exported to Lift format and marked
         /// as deleted.
