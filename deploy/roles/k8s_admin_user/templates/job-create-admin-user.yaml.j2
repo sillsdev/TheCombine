@@ -16,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 30
 {% if image_pull_secret is defined and image_pull_secret | length %}
       imagePullSecrets:
-         - name: {{ image_pull_secret }}
+        - name: {{ image_pull_secret }}
 {% endif %}
       containers:
         - env:
