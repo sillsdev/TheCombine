@@ -1,11 +1,14 @@
 ---
 ##############################################################
+#
 # This role creates a job to setup the site admin user
 # for the Combine.  It assumes that the Combine's services
 # have been installed and are running, specifically:
-#  - database service, deployment, and pod
-#  - env-backend configmap
-#  - env-backend-secrets
+#  - deployment/database
+#  - service/database
+#  - configmap/env-backend
+#  - secret/env-backend-secrets
+#
 ##############################################################
 
 ##############################################################
