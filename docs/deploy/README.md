@@ -33,7 +33,7 @@ Docker containers.
       4. [Running _The Combine_ Docker Containers](#running-the-combine-docker-containers)
       5. [Running _The Combine_ in a Kubernetes Cluster](#running-the-combine-in-a-kubernetes-cluster)
          1. [Additional Host Requirements](#additional-host-requirements)
-         2. [Installing the Kubernetes Cluster](installing-the-kubernetes-cluster)
+         2. [Installing the Kubernetes Cluster](#installing-the-kubernetes-cluster)
          3. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
       6. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
 2. [Backups](#backups)
