@@ -87,35 +87,38 @@ function exitToTree() {
 }
 
 describe("DataEntryTable", () => {
-  it("hide questions when exiting to tree", () => {
-    expect(mockHideQuestions).not.toBeCalled();
-    exitToTree();
-    expect(mockHideQuestions).toBeCalled();
-  });
+  describe("exiting--i.e., props updated to open tree", () => {
+    it("hides questions", () => {
+      expect(mockHideQuestions).not.toBeCalled();
+      exitToTree();
+      expect(mockHideQuestions).toBeCalled();
+    });
 
-  it("should call add word on backend when new entry has data and exit is clicked", () => {
-    // Verify that NewEntry is present
-    const newEntryItems = testRenderer.root.findAllByType(NewEntry);
-    expect(newEntryItems.length).toBe(1);
-    // Set the new entry to have useful content
-    const newEntry = simpleWord("hasVern", "");
-    newEntryItems[0].instance.setState({ newEntry });
-    exitToTree();
-    expect(mockCreateWord).toBeCalled();
-  });
+    it("creates word when new entry has vernacular", () => {
+      // Verify that NewEntry is present
+      const newEntryItems = testRenderer.root.findAllByType(NewEntry);
+      expect(newEntryItems.length).toBe(1);
+      // Set the new entry to have useful content
+      const newEntry = simpleWord("hasVern", "");
+      newEntryItems[0].instance.setState({ newEntry });
+      exitToTree();
+      expect(mockCreateWord).toBeCalled();
+    });
 
-  it("should NOT call add word on backend when new entry has no vernacular and exit is clicked", () => {
-    // Verify that NewEntry is present
-    let newEntryItems = testRenderer.root.findAllByType(NewEntry);
-    expect(newEntryItems.length).toBe(1);
-    // Set the new entry to have no useful content
-    const newEntry = simpleWord("", "hasGloss");
-    newEntryItems[0].instance.setState({ newEntry });
-    exitToTree();
-    expect(mockCreateWord).not.toBeCalled();
+    it("doesn't create word when new entry has no vernacular", () => {
+      // Verify that NewEntry is present
+      let newEntryItems = testRenderer.root.findAllByType(NewEntry);
+      expect(newEntryItems.length).toBe(1);
+      // Set the new entry to have no useful content
+      const newEntry = simpleWord("", "hasGloss");
+      newEntryItems[0].instance.setState({ newEntry });
+      exitToTree();
+      expect(mockCreateWord).not.toBeCalled();
+    });
   });
 
   it("open the domain tree when exit is clicked", () => {
+    expect(mockOpenTree).not.toBeCalled();
     testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
     expect(mockOpenTree).toBeCalledTimes(1);
   });
