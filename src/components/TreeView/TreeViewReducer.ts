@@ -7,20 +7,17 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export interface TreeViewState {
   currentDomain: TreeSemanticDomain;
+  open: boolean;
 }
 
 // Parses a list of semantic domains (to be received from backend)
-export function createDomains(data: TreeSemanticDomain[]): TreeViewState {
-  let state: TreeViewState = {
-    currentDomain: {
-      ...defaultState.currentDomain,
-      subdomains: data,
-    },
+export function createDomains(data: TreeSemanticDomain[]): TreeSemanticDomain {
+  const domains: TreeSemanticDomain = {
+    ...defaultState.currentDomain,
+    subdomains: data,
   };
-  addParentDomains(state.currentDomain);
-  // while (state.currentDomain.subDomains.length > 0)
-  //   state.currentDomain = state.currentDomain.subDomains[0];
-  return state;
+  addParentDomains(domains);
+  return domains;
 }
 
 // Adds the parent domains to the information sent by the backend
@@ -31,11 +28,11 @@ function addParentDomains(parent: TreeSemanticDomain) {
       addParentDomains(domain);
     }
   }
-  //else parent.subDomains = [];
 }
 
 // Creates a dummy default state
 export const defaultState: TreeViewState = {
+  open: false,
   currentDomain: new TreeSemanticDomain(),
 };
 
@@ -44,7 +41,14 @@ export const treeViewReducer = (
   action: StoreAction | TreeViewAction
 ): TreeViewState => {
   switch (action.type) {
+    case TreeActionType.CLOSE_TREE:
+      return { ...state, open: false };
+    case TreeActionType.OPEN_TREE:
+      return { ...state, open: true };
     case TreeActionType.TRAVERSE_TREE:
+      if (!action.payload) {
+        throw new Error("Cannot traverse tree without specifying domain.");
+      }
       return { ...state, currentDomain: action.payload };
     case StoreActionTypes.RESET:
       return defaultState;

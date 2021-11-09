@@ -41,29 +41,23 @@ describe("Test the TreeViewReducer", () => {
         subdomains: subdomains,
       },
     ];
-    let expected = {
-      currentDomain: {
-        name: "",
-        id: "",
-        description: "",
-        subdomains: [
-          {
-            ...parent,
-            parentDomain: {},
-            subdomains: [...subdomains],
-          },
-        ],
-        questions: [],
-      },
+    let expectedDomain = {
+      name: "",
+      id: "",
+      description: "",
+      subdomains: [
+        { ...parent, parentDomain: {}, subdomains: [...subdomains] },
+      ],
+      questions: [],
     };
-    expected.currentDomain.subdomains[0].subdomains.map((value) => {
+    expectedDomain.subdomains[0].subdomains.map((value) => {
       return {
         ...value,
-        parentDomains: expected.currentDomain.subdomains[0],
+        parentDomains: expectedDomain.subdomains[0],
       };
     });
-    expected.currentDomain.subdomains[0].parentDomain = expected.currentDomain;
-    expect(createDomains(initialJson)).toEqual(expected);
+    expectedDomain.subdomains[0].parentDomain = expectedDomain;
+    expect(createDomains(initialJson)).toEqual(expectedDomain);
   });
 
   it("Returns defaultState when passed undefined", () => {
@@ -83,20 +77,43 @@ describe("Test the TreeViewReducer", () => {
   it("Returns state passed in when passed an invalid action", () => {
     expect(
       treeViewReducer(
-        { currentDomain: defaultState.currentDomain.subdomains[0] },
+        {
+          ...defaultState,
+          currentDomain: defaultState.currentDomain.subdomains[0],
+        },
         { type: "Nothing" } as any as TreeViewAction
       )
-    ).toEqual({ currentDomain: defaultState.currentDomain.subdomains[0] });
+    ).toEqual({
+      ...defaultState,
+      currentDomain: defaultState.currentDomain.subdomains[0],
+    });
+  });
+
+  it("Closes the tree when requested", () => {
+    expect(
+      treeViewReducer(
+        { ...defaultState, open: true },
+        { type: TreeActionType.CLOSE_TREE }
+      )
+    ).toEqual({ ...defaultState, open: false });
+  });
+
+  it("Opens the tree when requested", () => {
+    expect(
+      treeViewReducer(
+        { ...defaultState, open: false },
+        { type: TreeActionType.OPEN_TREE }
+      )
+    ).toEqual({ ...defaultState, open: true });
   });
 
   it("Returns state with a new SemanticDomain when requested to change this value", () => {
-    const payload: TreeSemanticDomain = defaultState.currentDomain
-      .parentDomain as TreeSemanticDomain;
+    const payload = new TreeSemanticDomain("testId", "testName");
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,
-        payload: payload,
+        payload,
       })
-    );
+    ).toEqual({ ...defaultState, currentDomain: payload });
   });
 });

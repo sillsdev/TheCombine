@@ -1,6 +1,5 @@
 import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { SemanticDomain, State, Word } from "api/models";
 import { getFrontierWords } from "backend";
@@ -15,10 +14,12 @@ import { DomainWord, newSemanticDomain } from "types/word";
 
 interface DataEntryProps {
   domain: TreeSemanticDomain;
+  treeIsOpen: boolean;
+  closeTree: () => void;
+  openTree: () => void;
 }
 
 interface DataEntryState {
-  displaySemanticDomain: boolean;
   existingWords: Word[];
   domainWords: DomainWord[];
   isSmallScreen: boolean;
@@ -44,9 +45,9 @@ export function filterWordsByDomain(
   words: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  let domainWords: DomainWord[] = [];
-  let domainName: String = domain.name;
-  let domainMatched: Boolean = false;
+  const domainWords: DomainWord[] = [];
+  const domainName = domain.name;
+  let domainMatched = false;
 
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses.filter(
@@ -92,14 +93,13 @@ export function sortDomainWordByVern(
  * Allows users to add words to a project, add senses to an existing word,
  * and add the current semantic domain to a sense
  */
-export class DataEntryComponent extends React.Component<
-  DataEntryProps & LocalizeContextProps,
+export default class DataEntryComponent extends React.Component<
+  DataEntryProps,
   DataEntryState
 > {
-  constructor(props: DataEntryProps & LocalizeContextProps) {
+  constructor(props: DataEntryProps) {
     super(props);
     this.state = {
-      displaySemanticDomain: true,
       existingWords: [],
       domainWords: [],
       isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
@@ -160,11 +160,8 @@ export class DataEntryComponent extends React.Component<
             <Divider />
             <DataEntryTable
               semanticDomain={semanticDomain}
-              displaySemanticDomainView={(isGettingSemanticDomain: boolean) => {
-                this.setState({
-                  displaySemanticDomain: isGettingSemanticDomain,
-                });
-              }}
+              treeIsOpen={this.props.treeIsOpen}
+              openTree={this.props.openTree}
               getWordsFromBackend={() => this.getWordsFromBackend()}
               showExistingData={() => this.toggleDrawer(true)}
               isSmallScreen={this.state.isSmallScreen}
@@ -182,7 +179,7 @@ export class DataEntryComponent extends React.Component<
           toggleDrawer={this.toggleDrawer}
         />
 
-        <Dialog fullScreen open={this.state.displaySemanticDomain}>
+        <Dialog fullScreen open={this.props.treeIsOpen}>
           <AppBar />
           <TreeViewComponent
             returnControlToCaller={() =>
@@ -192,8 +189,8 @@ export class DataEntryComponent extends React.Component<
                     prevState.existingWords,
                     this.props.domain
                   ),
-                  displaySemanticDomain: false,
                 }));
+                this.props.closeTree();
               })
             }
           />
@@ -202,5 +199,3 @@ export class DataEntryComponent extends React.Component<
     );
   }
 }
-
-export default withLocalize(DataEntryComponent);

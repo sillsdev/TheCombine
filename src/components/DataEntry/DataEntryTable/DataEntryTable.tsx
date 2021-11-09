@@ -28,7 +28,8 @@ export const exitButtonId = "exit-to-domain-tree";
 
 interface DataEntryTableProps {
   semanticDomain: SemanticDomain;
-  displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
+  treeIsOpen: boolean;
+  openTree: () => void;
   getWordsFromBackend: () => Promise<Word[]>;
   showExistingData: () => void;
   isSmallScreen: boolean;
@@ -113,6 +114,12 @@ export class DataEntryTable extends React.Component<
   async componentDidMount() {
     await this.updateExisting();
     await this.getProjectSettings();
+  }
+
+  componentDidUpdate(prevProps: DataEntryTableProps) {
+    if (this.props.treeIsOpen && !prevProps.treeIsOpen) {
+      this.exitGracefully();
+    }
   }
 
   async getProjectSettings() {
@@ -494,6 +501,27 @@ export class DataEntryTable extends React.Component<
       .then(async () => await this.updateExisting());
   }
 
+  exitGracefully() {
+    // Check if there is a new word, but user exited without pressing enter
+    if (this.refNewEntry.current) {
+      const newEntry = this.refNewEntry.current.state.newEntry;
+      if (!newEntry.senses.length) {
+        newEntry.senses.push(
+          newSense(undefined, undefined, this.props.semanticDomain)
+        );
+      }
+      const newEntryAudio = this.refNewEntry.current.state.audioFileURLs;
+      if (newEntry?.vernacular) {
+        this.addNewWord(newEntry, newEntryAudio, undefined, true);
+        this.refNewEntry.current.resetState();
+      }
+    }
+
+    // Reset everything
+    this.props.hideQuestions();
+    this.setState({ defunctWordIds: [], recentlyAddedWords: [] });
+  }
+
   render() {
     return (
       <form
@@ -616,30 +644,7 @@ export class DataEntryTable extends React.Component<
               style={{ marginTop: theme.spacing(2) }}
               endIcon={<ExitToApp />}
               tabIndex={-1}
-              onClick={() => {
-                // Check if there is a new word, but the user clicked complete instead of pressing enter
-                if (this.refNewEntry.current) {
-                  const newEntry = this.refNewEntry.current.state.newEntry;
-                  if (!newEntry.senses.length) {
-                    newEntry.senses.push(
-                      newSense(undefined, undefined, this.props.semanticDomain)
-                    );
-                  }
-                  const newEntryAudio =
-                    this.refNewEntry.current.state.audioFileURLs;
-                  if (newEntry && newEntry.vernacular) {
-                    this.addNewWord(newEntry, newEntryAudio, undefined, true);
-                    this.refNewEntry.current.resetState();
-                  }
-                }
-
-                // Reset everything
-                this.props.hideQuestions();
-                this.setState({ defunctWordIds: [], recentlyAddedWords: [] });
-
-                // Reveal the TreeView, hiding DataEntry
-                this.props.displaySemanticDomainView(true);
-              }}
+              onClick={this.props.openTree}
             >
               <Translate id="buttons.complete" />
             </Button>

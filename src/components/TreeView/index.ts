@@ -9,6 +9,7 @@ import { StoreStateDispatch } from "types/Redux/actions";
 function mapStateToProps(state: StoreState) {
   return {
     currentDomain: state.treeViewState.currentDomain,
+    treeOpen: state.treeViewState.open,
   };
 }
 
