@@ -114,13 +114,12 @@
       "jest": true
     },
     "rules": {
-      "no-undef": "off",
       "@typescript-eslint/switch-exhaustiveness-check": "warn",
+      "import/first": "warn",
+      "import/newline-after-import": "warn",
+      "import/no-duplicates": "warn",
       "import/no-named-as-default": "off",
       "import/no-named-as-default-member": "off",
-      "import/first": "warn",
-      "import/no-duplicates": "warn",
-      "import/newline-after-import": "warn",
       "import/order": [
         "warn",
         {
@@ -141,7 +140,9 @@
           },
           "newlines-between": "always"
         }
-      ]
+      ],
+      "no-undef": "off",
+      "react/jsx-boolean-value": "warn"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
