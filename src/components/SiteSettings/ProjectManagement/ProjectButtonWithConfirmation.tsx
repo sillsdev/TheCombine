@@ -8,7 +8,7 @@ import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
 import { themeColors } from "types/theme";
 
 interface ProjectButtonWithConfirmationProps {
-  archive: boolean;
+  archive?: boolean;
   projectId: string;
   updateParent: () => void;
   warn?: boolean;

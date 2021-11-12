@@ -317,7 +317,7 @@ export default class NewEntry extends React.Component<
         >
           <Grid item xs={12}>
             <VernWithSuggestions
-              isNew={true}
+              isNew
               vernacular={this.state.newEntry.vernacular}
               vernInput={this.vernInput}
               updateVernField={(newValue: string, openDialog?: boolean) => {
@@ -366,7 +366,7 @@ export default class NewEntry extends React.Component<
           }}
         >
           <GlossWithSuggestions
-            isNew={true}
+            isNew
             gloss={this.state.activeGloss}
             glossInput={this.glossInput}
             updateGlossField={(newValue: string) =>

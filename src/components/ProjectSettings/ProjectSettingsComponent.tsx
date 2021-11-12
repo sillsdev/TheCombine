@@ -165,7 +165,7 @@ export default function ProjectSettingsComponent() {
           title={<Translate id="projectSettings.user.archive" />}
           body={
             <ProjectButtonWithConfirmation
-              archive={true} // Project Settings are only available for active projects
+              archive // Project Settings are only available for active projects
               projectId={projectId}
               updateParent={archiveUpdate}
               warn

@@ -25,14 +25,7 @@ const MOCK_EVENT = {
 describe("Testing login component", () => {
   beforeEach(() => {
     renderer.act(() => {
-      loginMaster = renderer.create(
-        <Login
-          logout={LOGOUT}
-          loginAttempt={false}
-          loginFailure={false}
-          reset={LOGOUT}
-        />
-      );
+      loginMaster = renderer.create(<Login logout={LOGOUT} reset={LOGOUT} />);
     });
     loginHandle = loginMaster.root.findByType(Login);
     LOGOUT.mockClear();
@@ -40,14 +33,7 @@ describe("Testing login component", () => {
 
   it("Renders properly", () => {
     renderer.act(() => {
-      renderer.create(
-        <Login
-          logout={LOGOUT}
-          loginAttempt={false}
-          loginFailure={false}
-          reset={LOGOUT}
-        />
-      );
+      renderer.create(<Login logout={LOGOUT} reset={LOGOUT} />);
     });
   });
 

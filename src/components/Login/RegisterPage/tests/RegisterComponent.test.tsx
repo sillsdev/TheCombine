@@ -32,12 +32,7 @@ describe("Testing register component", () => {
   beforeEach(() => {
     renderer.act(() => {
       registerMaster = renderer.create(
-        <Register
-          inProgress={false}
-          success={false}
-          failureMessage=""
-          reset={REGISTER}
-        />
+        <Register failureMessage="" reset={REGISTER} />
       );
     });
     registerHandle = registerMaster.root.findByType(Register);
@@ -46,15 +41,7 @@ describe("Testing register component", () => {
 
   it("Renders properly", () => {
     const div = document.createElement("div");
-    ReactDOM.render(
-      <Register
-        inProgress={false}
-        success={false}
-        failureMessage=""
-        reset={REGISTER}
-      />,
-      div
-    );
+    ReactDOM.render(<Register failureMessage="" reset={REGISTER} />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 

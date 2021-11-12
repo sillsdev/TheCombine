@@ -39,11 +39,7 @@ export default function DropWord(props: DropWordProps) {
   }
 
   return (
-    <Droppable
-      key={props.wordId}
-      droppableId={props.wordId}
-      isCombineEnabled={true}
-    >
+    <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>
       {(provided) => (
         <Paper
           ref={provided.innerRef}
