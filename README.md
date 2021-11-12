@@ -77,7 +77,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    ```
 
 2. Install:
-   - [Node.js 14 (LTS)](https://nodejs.org/en/download/)
+   - [Node.js 16 (LTS)](https://nodejs.org/en/download/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
@@ -489,8 +489,7 @@ Runs ESLint on the codebase to detect code problems that should be fixed.
 
 ### `npm run lint:fix-layout`
 
-Run ESLint and apply `suggestion` and `layout` fixes automatically. This will
-sort and group imports.
+Run ESLint and apply `suggestion` and `layout` fixes automatically. This will sort and group imports.
 
 #### `npm run fmt-frontend`
 
