@@ -17,7 +17,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:14 AS frontend_builder
+FROM node:16 AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
