@@ -106,9 +106,7 @@ class UserManagement extends React.Component<UserProps, UserState> {
             position="top-right"
             autoClose={5000}
             hideProgressBar
-            newestOnTop={false}
             closeOnClick
-            rtl={false}
             pauseOnFocusLoss
             draggable
             pauseOnHover
@@ -118,7 +116,7 @@ class UserManagement extends React.Component<UserProps, UserState> {
         <Modal
           isOpen={this.state.showModal}
           style={customStyles}
-          shouldCloseOnOverlayClick={true}
+          shouldCloseOnOverlayClick
           onRequestClose={this.handleCloseModal}
         >
           <ConfirmDeletion

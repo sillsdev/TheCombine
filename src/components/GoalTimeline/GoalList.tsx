@@ -19,7 +19,7 @@ export type Orientation = "horizontal" | "vertical";
 function gridStyle(
   orientation: Orientation,
   size: number,
-  scrollVisible: boolean
+  scrollVisible?: boolean
 ): CSSProperties {
   switch (orientation) {
     case "horizontal":
@@ -46,13 +46,13 @@ interface GoalListProps {
   data: Goal[];
   size: number;
   numPanes: number;
-  scrollable: boolean;
+  scrollable?: boolean;
   scrollToEnd?: boolean;
   handleChange: (goal: Goal) => void;
 }
 
 export default function GoalList(props: GoalListProps): ReactElement {
-  const [scrollVisible, setScrollVisible] = useState<boolean>(false);
+  const [scrollVisible, setScrollVisible] = useState<boolean | undefined>();
   const tileSize = props.size / 3 - 1.25;
 
   return (

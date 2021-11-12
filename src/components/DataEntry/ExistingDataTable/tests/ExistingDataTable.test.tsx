@@ -17,9 +17,7 @@ describe("ExistingData", () => {
         <Provider store={mockStore}>
           <ExistingDataTable
             domain={newSemanticDomain()}
-            typeDrawer={false}
             domainWords={[]}
-            drawerOpen={false}
             toggleDrawer={jest.fn()}
           />
         </Provider>
@@ -32,9 +30,9 @@ describe("ExistingData", () => {
         <Provider store={mockStore}>
           <ExistingDataTable
             domain={newSemanticDomain()}
-            typeDrawer={true}
             domainWords={[]}
-            drawerOpen={true}
+            typeDrawer
+            drawerOpen
             toggleDrawer={jest.fn()}
           />
         </Provider>
