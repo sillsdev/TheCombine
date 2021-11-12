@@ -28,7 +28,7 @@
     "start": "npm install && npm-run-all --parallel backend database frontend",
     "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "dotnet test Backend.Tests/Backend.Tests.csproj",
-    "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov",
+    "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=75",
     "test-frontend": "react-scripts test",
     "test-frontend:coverage": "react-scripts test --coverage --watchAll=false",
     "test-frontend:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
