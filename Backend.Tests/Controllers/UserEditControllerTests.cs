@@ -80,7 +80,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetAllUserRolesNoPermission()
+        public async Task TestGetAllUserEditsNoPermission()
         {
             _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
@@ -176,8 +176,7 @@ namespace Backend.Tests.Controllers
 
             var userEdit = RandomUserEdit();
             await _userEditRepo.Create(userEdit);
-            var newEdit = new Edit();
-            var action = await _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, newEdit);
+            var action = await _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, new Edit());
             Assert.IsInstanceOf<ForbidResult>(action);
         }
 
@@ -215,7 +214,7 @@ namespace Backend.Tests.Controllers
 
             // Create and put wrapper object.
             var stepWrapperObj = new UserEditStepWrapper(modGoalIndex, stringStep);
-            _ = _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
+            await _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should have increased by 1.
             Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(count + 1));
@@ -235,7 +234,7 @@ namespace Backend.Tests.Controllers
 
             // Create and put wrapper object.
             stepWrapperObj = new UserEditStepWrapper(modGoalIndex, modStringStep, modStepIndex);
-            _ = _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
+            await _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should not have further increased.
             Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(count + 1));
