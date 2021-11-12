@@ -311,7 +311,7 @@ namespace Backend.Tests.Controllers
             var projectResult = await _wordController.UpdateWord(MissingId, modWord.Id, modWord);
             Assert.IsInstanceOf<NotFoundObjectResult>(projectResult);
 
-            var wordResult =  await _wordController.UpdateWord(_projId, MissingId, modWord);
+            var wordResult = await _wordController.UpdateWord(_projId, MissingId, modWord);
             Assert.IsInstanceOf<NotFoundObjectResult>(wordResult);
         }
     }
