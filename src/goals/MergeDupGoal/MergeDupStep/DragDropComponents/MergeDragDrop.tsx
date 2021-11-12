@@ -1,5 +1,6 @@
 import { Drawer, ImageListItem } from "@material-ui/core";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { Delete } from "@material-ui/icons";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 
@@ -80,6 +81,14 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
+      <ImageListItem
+        key={"trash"}
+        style={{ height: "70vh", margin: theme.spacing(1) }}
+      >
+        <Droppable key={"trash-drop"} droppableId={"trash-drop"}>
+          {() => <Delete />}
+        </Droppable>
+      </ImageListItem>
       {Object.keys(treeWords).map((key) => (
         <ImageListItem
           key={key}
