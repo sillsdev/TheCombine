@@ -24,6 +24,7 @@ namespace Backend.Tests.Controllers
 
         private User _jwtAuthenticatedUser = null!;
         private string _projId = null!;
+        private const string MissingId = "MISSING_ID";
 
         [SetUp]
         public async Task Setup()
@@ -79,6 +80,23 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestGetAllUserRolesNoPermission()
+        {
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            await _userEditRepo.Create(RandomUserEdit());
+            var result = await _userEditController.GetProjectUserEdits(_projId);
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
+        public async Task TestGetAllUserEditsMissingProject()
+        {
+            var result = await _userEditController.GetProjectUserEdits(MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public async Task TestGetUserEdit()
         {
             var userEdit = await _userEditRepo.Create(RandomUserEdit());
@@ -94,12 +112,38 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestGetUserEditNoPermission()
+        {
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var action = await _userEditController.GetUserEdit(_projId, userEdit.Id);
+            Assert.IsInstanceOf<ForbidResult>(action);
+        }
+
+        [Test]
+        public async Task TestGetUserEditMissingProjectId()
+        {
+            var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var action = await _userEditController.GetUserEdit(MissingId, userEdit.Id);
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
+        }
+
+        [Test]
         public async Task TestCreateUserEdit()
         {
             var userEdit = new UserEdit { ProjectId = _projId };
             var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(_projId)).Value;
             userEdit.Id = updatedUser.WorkedProjects[_projId];
             Assert.Contains(userEdit, await _userEditRepo.GetAllUserEdits(_projId));
+        }
+
+        [Test]
+        public async Task TestCreateUserEditNoPermission()
+        {
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var action = await _userEditController.CreateUserEdit(_projId);
+            Assert.IsInstanceOf<ForbidResult>(action);
         }
 
         [Test]
