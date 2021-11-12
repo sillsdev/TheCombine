@@ -125,7 +125,7 @@ namespace Backend.Tests.Controllers
             var rnd = new Random();
             var count = rnd.Next(1, 13);
 
-            foreach (var i in Range(0, count))
+            foreach (var _ in Range(0, count))
             {
                 await _userEditRepo.Create(RandomUserEdit());
             }
