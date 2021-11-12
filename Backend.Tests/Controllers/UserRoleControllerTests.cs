@@ -161,12 +161,16 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestUpdateUserRolesMissingProject()
+        public async Task TestUpdateUserRolesMissingIds()
         {
             var userRole = RandomUserRole();
-            var result = await _userRoleController.UpdateUserRolePermissions(
+            var projectResult = await _userRoleController.UpdateUserRolePermissions(
                 MissingId, userRole.Id, userRole.Permissions.ToArray());
-            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+            Assert.IsInstanceOf<NotFoundObjectResult>(projectResult);
+
+            var userResult = await _userRoleController.UpdateUserRolePermissions(
+                _projId, MissingId, userRole.Permissions.ToArray());
+            Assert.IsInstanceOf<NotFoundObjectResult>(userResult);
         }
 
         [Test]
