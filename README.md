@@ -252,11 +252,12 @@ $ sudo apt update
 $ sudo apt install python3 python3-venv
 ```
 
-Create an isolated Python virtual environment
+Create and activate an isolated Python virtual environment
 
 ```bash
 $ python3 -m venv venv
-$ . venv/bin/activate
+# This command is shell-specific, for the common use case of bash:
+$ source venv/bin/activate
 ```
 
 ### macOS Python Installation
@@ -269,7 +270,7 @@ Install Python 3 using Homebrew:
 $ brew install python
 ```
 
-Once Python is installed, create an isolated Python virtual environment:
+Create and activate isolated Python virtual environment:
 
 ```bash
 $ python3 -m venv venv
