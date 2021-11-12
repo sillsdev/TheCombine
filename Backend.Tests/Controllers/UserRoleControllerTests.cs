@@ -21,7 +21,7 @@ namespace Backend.Tests.Controllers
         private const string MissingId = "INVALID_PROJECT_ID";
 
         [SetUp]
-        public async Task  Setup()
+        public async Task Setup()
         {
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
@@ -48,7 +48,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task  TestGetAllUserRoles()
+        public async Task TestGetAllUserRoles()
         {
             await _userRoleRepo.Create(RandomUserRole());
             await _userRoleRepo.Create(RandomUserRole());
@@ -64,14 +64,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task  TestGetAllUserRolesMissingProject()
+        public async Task TestGetAllUserRolesMissingProject()
         {
             var result = await _userRoleController.GetProjectUserRoles(MissingId);
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
-        public async Task  TestGetAllUserRolesNoPermission()
+        public async Task TestGetAllUserRolesNoPermission()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _userRoleController.GetProjectUserRoles(_projId);
@@ -121,7 +121,7 @@ namespace Backend.Tests.Controllers
         public async Task TestCreateUserRole()
         {
             var userRole = RandomUserRole();
-            var id = (string)((ObjectResult) await _userRoleController.CreateUserRole(_projId, userRole)).Value;
+            var id = (string)((ObjectResult)await _userRoleController.CreateUserRole(_projId, userRole)).Value;
             userRole.Id = id;
             Assert.Contains(userRole, await _userRoleRepo.GetAllUserRoles(_projId));
         }
@@ -225,7 +225,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task  TestDeleteAllUserRoles()
+        public async Task TestDeleteAllUserRoles()
         {
             await _userRoleRepo.Create(RandomUserRole());
             await _userRoleRepo.Create(RandomUserRole());
@@ -238,14 +238,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task  TestDeleteAllUserRolesMissingProject()
+        public async Task TestDeleteAllUserRolesMissingProject()
         {
             var result = await _userRoleController.DeleteProjectUserRoles(MissingId);
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
-        public async Task  TestDeleteAllUserRolesNoPermission()
+        public async Task TestDeleteAllUserRolesNoPermission()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _userRoleController.DeleteProjectUserRoles(_projId);
