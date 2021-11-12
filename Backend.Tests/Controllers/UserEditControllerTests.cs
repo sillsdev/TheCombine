@@ -130,6 +130,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestGetMissingUserEdit()
+        {
+            var action = await _userEditController.GetUserEdit(_projId, MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(action);
+        }
+
+        [Test]
         public async Task TestCreateUserEdit()
         {
             var userEdit = new UserEdit { ProjectId = _projId };
@@ -160,6 +167,31 @@ namespace Backend.Tests.Controllers
 
             var allUserEdits = await _userEditRepo.GetAllUserEdits(_projId);
             Assert.Contains(updatedUserEdit, allUserEdits);
+        }
+
+        [Test]
+        public async Task TestAddGoalToUserEditNoPermissions()
+        {
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var userEdit = RandomUserEdit();
+            await _userEditRepo.Create(userEdit);
+            var newEdit = new Edit();
+            var action = await _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, newEdit);
+            Assert.IsInstanceOf<ForbidResult>(action);
+        }
+
+        [Test]
+        public async Task TestAddGoalToUserEditMissingIds()
+        {
+            var userEdit = RandomUserEdit();
+            await _userEditRepo.Create(userEdit);
+            var newEdit = new Edit();
+            var projectAction = await _userEditController.UpdateUserEditGoal(MissingId, userEdit.Id, newEdit);
+            Assert.IsInstanceOf<NotFoundObjectResult>(projectAction);
+
+            var editAction = await _userEditController.UpdateUserEditGoal(_projId, MissingId, newEdit);
+            Assert.IsInstanceOf<NotFoundObjectResult>(editAction);
         }
 
         [Test]
@@ -218,22 +250,55 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestUpdateUserEditStepNoPermissions()
+        {
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var stepWrapper = new UserEditStepWrapper(0, "A new step");
+            var action = await _userEditController.UpdateUserEditStep(_projId, userEdit.Id, stepWrapper);
+            Assert.IsInstanceOf<ForbidResult>(action);
+        }
+
+        [Test]
+        public async Task TestUpdateUserEditStepMissingIds()
+        {
+            var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var stepWrapper = new UserEditStepWrapper(0, "A new step");
+            var projectAction = await _userEditController.UpdateUserEditStep(MissingId, userEdit.Id, stepWrapper);
+            Assert.IsInstanceOf<NotFoundObjectResult>(projectAction);
+
+            var editAction = await _userEditController.UpdateUserEditStep(_projId, MissingId, stepWrapper);
+            Assert.IsInstanceOf<NotFoundObjectResult>(editAction);
+        }
+
+        [Test]
         public async Task TestDeleteUserEdit()
         {
             var origUserEdit = await _userEditRepo.Create(RandomUserEdit());
-
             Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(1));
 
             await _userEditController.DeleteUserEdit(_projId, origUserEdit.Id);
-
             Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(0));
         }
 
         [Test]
-        public async Task TestGetMissingUserEdit()
+        public async Task TestDeleteUserEditMissingPermissions()
         {
-            var action = await _userEditController.GetUserEdit(_projId, "INVALID_USER_EDIT_ID");
-            Assert.IsInstanceOf<NotFoundObjectResult>(action);
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var action = await _userEditController.DeleteUserEdit(_projId, userEdit.Id);
+            Assert.IsInstanceOf<ForbidResult>(action);
+        }
+
+        [Test]
+        public async Task TestDeleteUserEditMissingIds()
+        {
+            var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var projectAction = await _userEditController.DeleteUserEdit(MissingId, userEdit.Id);
+            Assert.IsInstanceOf<NotFoundObjectResult>(projectAction);
+
+            var editAction = await _userEditController.DeleteUserEdit(_projId, MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(editAction);
         }
     }
 }

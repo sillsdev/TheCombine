@@ -50,8 +50,15 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string projectId, string userEditId)
         {
-            var foundUserEdit = _userEdits.Single(userEdit => userEdit.Id == userEditId);
-            return Task.FromResult(_userEdits.Remove(foundUserEdit));
+            try
+            {
+                var foundUserEdit = _userEdits.Single(userEdit => userEdit.Id == userEditId);
+                return Task.FromResult(_userEdits.Remove(foundUserEdit));
+            }
+            catch (InvalidOperationException)
+            {
+                return Task.FromResult(false);
+            }
         }
 
         public Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit)
