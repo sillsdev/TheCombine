@@ -63,9 +63,7 @@ export default function AddProjectUsers() {
           position="top-right"
           autoClose={5000}
           hideProgressBar
-          newestOnTop={false}
           closeOnClick
-          rtl={false}
           pauseOnFocusLoss
           draggable
           pauseOnHover
@@ -96,7 +94,7 @@ export default function AddProjectUsers() {
         <Modal
           isOpen={showModal}
           style={customStyles}
-          shouldCloseOnOverlayClick={true}
+          shouldCloseOnOverlayClick
           onRequestClose={() => setShowModal(false)}
         >
           <EmailInvite

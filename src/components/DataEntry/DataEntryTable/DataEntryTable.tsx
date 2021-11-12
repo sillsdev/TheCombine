@@ -28,11 +28,11 @@ export const exitButtonId = "exit-to-domain-tree";
 
 interface DataEntryTableProps {
   semanticDomain: SemanticDomain;
-  treeIsOpen: boolean;
+  treeIsOpen?: boolean;
   openTree: () => void;
   getWordsFromBackend: () => Promise<Word[]>;
   showExistingData: () => void;
-  isSmallScreen: boolean;
+  isSmallScreen?: boolean;
   hideQuestions: () => void;
 }
 

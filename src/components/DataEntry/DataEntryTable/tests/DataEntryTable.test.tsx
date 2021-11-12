@@ -59,9 +59,7 @@ beforeEach(() => {
     testRenderer = renderer.create(
       <DataEntryTable
         semanticDomain={mockSemanticDomain}
-        treeIsOpen={false}
         openTree={mockOpenTree}
-        isSmallScreen={false}
         hideQuestions={mockHideQuestions}
         getWordsFromBackend={getWordsFromBackendMock}
         showExistingData={jest.fn()}
@@ -75,9 +73,8 @@ function exitToTree() {
     testRenderer.update(
       <DataEntryTable
         semanticDomain={mockSemanticDomain}
-        treeIsOpen={true}
+        treeIsOpen
         openTree={mockOpenTree}
-        isSmallScreen={false}
         hideQuestions={mockHideQuestions}
         getWordsFromBackend={getWordsFromBackendMock}
         showExistingData={jest.fn()}
