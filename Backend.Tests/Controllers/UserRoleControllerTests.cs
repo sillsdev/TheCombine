@@ -161,6 +161,23 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestCreateNewUpdateUserRole()
+        {
+            var userRole = RandomUserRole();
+            var user = new User();
+            var userId = (await _userRepo.Create(user))!.Id;
+
+            var updatePermissions = userRole.Clone().Permissions;
+            updatePermissions.Add(Permission.WordEntry);
+
+            var result = await _userRoleController.UpdateUserRolePermissions(_projId, userId, updatePermissions.ToArray());
+            var newUserRoleId = (string)((OkObjectResult)result).Value;
+            var action = await _userRoleController.GetUserRole(_projId, newUserRoleId);
+            var updatedUserRole = ((ObjectResult)action).Value as UserRole;
+            Assert.AreEqual(updatePermissions, updatedUserRole?.Permissions);
+        }
+
+        [Test]
         public async Task TestUpdateUserRolesMissingIds()
         {
             var userRole = RandomUserRole();
