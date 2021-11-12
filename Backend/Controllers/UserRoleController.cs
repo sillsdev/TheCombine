@@ -201,7 +201,6 @@ namespace BackendFramework.Controllers
             }
 
             userRole.Permissions = new List<Permission>(permissions);
-
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {
