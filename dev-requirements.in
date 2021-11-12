@@ -3,6 +3,8 @@ tox
 # Type Checking.
 mypy
 types-requests
+types-pyOpenSSL
+types-python-dateutil
 
 # Linting.
 flake8
@@ -17,12 +19,14 @@ mkdocs-material
 mkdocs-htmlproofer-plugin
 
 # Templating/Docker.
-# TODO: Try out Jinja2 3.x after dust has settled from this issue:
-#   https://github.com/pallets/jinja/issues/1168
-Jinja2 < 3
+Jinja2
 jinja2-base64-filters
 humanfriendly
 kubernetes
 pyopenssl
-types-pyOpenSSL
-types-python-dateutil
+
+# OS-specific dependencies.
+# The follow dependencies are only needed on Windows, but list them here to avoid thrashing back and forth when
+# non-Windows developers run `python -m piptools compile`
+colorama
+pyreadline3
