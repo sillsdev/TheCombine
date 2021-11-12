@@ -20,7 +20,7 @@ namespace Backend.Tests.Controllers
         private WordController _wordController = null!;
 
         private string _projId = null!;
-        private const string MissingId = "INVALID_PROJECT_ID";
+        private const string MissingId = "MISSING_ID";
 
         [SetUp]
         public void Setup()
