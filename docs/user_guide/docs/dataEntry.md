@@ -4,6 +4,12 @@
 
 Browse or search for the domain of interest.
 
+!!! tip
+
+    The Combine will automatically insert `.` between consectutive digits to make entering a domain quicker. For example,
+    typing `1234` will automatically insert `1.2.3.4`. This behavior does not happen if there are any non-digit characters
+    entered.
+
 ## New Entry
 
 ### Vernacular
