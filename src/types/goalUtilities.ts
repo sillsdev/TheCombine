@@ -1,4 +1,4 @@
-import { Edit } from "api/models";
+import { Edit, Permission } from "api/models";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
@@ -15,6 +15,18 @@ export function maxNumSteps(type: GoalType) {
       return 12;
     default:
       return 1;
+  }
+}
+
+export function GoalPermission(type: GoalType): Permission {
+  switch (type) {
+    case GoalType.MergeDups:
+    case GoalType.ReviewEntries:
+      return Permission.MergeAndReviewEntries;
+    case GoalType.CreateCharInv:
+      return Permission.DeleteEditSettingsAndUsers;
+    default:
+      return Permission.Unused;
   }
 }
 
