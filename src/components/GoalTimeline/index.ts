@@ -11,7 +11,10 @@ import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal } from "types/goals";
 
 function mapStateToProps(state: StoreState) {
-  return { ...state.goalsState };
+  return {
+    ...state.goalsState,
+    currentProjectId: state.currentProjectState.project.id,
+  };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

@@ -18,7 +18,7 @@ export function maxNumSteps(type: GoalType) {
   }
 }
 
-export function GoalPermission(type: GoalType): Permission {
+export function requiredPermission(type: GoalType): Permission {
   switch (type) {
     case GoalType.MergeDups:
     case GoalType.ReviewEntries:
