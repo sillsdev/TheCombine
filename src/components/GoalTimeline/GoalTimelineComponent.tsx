@@ -103,13 +103,16 @@ export default class GoalTimeline extends React.Component<
 
   // Creates a list of suggestions, with non-suggested goals at the end and
   // our main suggestion absent (to be displayed on the suggestions button).
-  createSuggestionData(): Goal[] {
-    const suggestions = this.state.suggestedGoalTypes;
+  // Avoids referencing this.state for testing purposes.
+  createSuggestionData(availableGoalTypes: GoalType[]): Goal[] {
+    const suggestions = this.props.goalTypeSuggestions.filter((t) =>
+      availableGoalTypes.includes(t)
+    );
     if (!suggestions?.length) {
-      return this.state.availableGoalTypes.map(goalTypeToGoal);
+      return availableGoalTypes.map(goalTypeToGoal);
     }
     const secondarySuggestions = suggestions.slice(1);
-    const nonSuggestions = this.state.availableGoalTypes.filter(
+    const nonSuggestions = availableGoalTypes.filter(
       (t) => !suggestions.includes(t)
     );
     secondarySuggestions.push(...nonSuggestions);
@@ -145,7 +148,7 @@ export default class GoalTimeline extends React.Component<
         <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
           <GoalList
             orientation="horizontal"
-            data={this.createSuggestionData()}
+            data={this.createSuggestionData(this.state.availableGoalTypes)}
             handleChange={this.handleChange}
             size={100}
             numPanes={2}
@@ -192,7 +195,7 @@ export default class GoalTimeline extends React.Component<
           </Typography>
           <GoalList
             orientation="vertical"
-            data={this.createSuggestionData()}
+            data={this.createSuggestionData(this.state.availableGoalTypes)}
             handleChange={this.handleChange}
             size={35}
             numPanes={3}
