@@ -35,6 +35,7 @@ cert_issuer: letsencrypt-prod
 # Ingress configuration
 ingress_class: nginx
 ingress_namespace: ingress-nginx
+combine_secret_name: thecombine-app-tls
 
 #######################################
 # Default Backup Schedule
