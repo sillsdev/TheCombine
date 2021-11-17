@@ -125,7 +125,6 @@ export default class GoalTimeline extends React.Component<
             handleChange={this.handleChange}
             size={100}
             numPanes={2}
-            scrollable={false}
           />
         </div>
 
@@ -149,7 +148,7 @@ export default class GoalTimeline extends React.Component<
             handleChange={this.handleChange}
             size={100}
             numPanes={3}
-            scrollable={true}
+            scrollable
           />
         </div>
       </React.Fragment>
@@ -173,7 +172,6 @@ export default class GoalTimeline extends React.Component<
             handleChange={this.handleChange}
             size={35}
             numPanes={3}
-            scrollable={false}
           />
         </ImageListItem>
 
@@ -197,7 +195,7 @@ export default class GoalTimeline extends React.Component<
             handleChange={this.handleChange}
             size={35}
             numPanes={3}
-            scrollable={true}
+            scrollable
           />
         </ImageListItem>
       </ImageList>

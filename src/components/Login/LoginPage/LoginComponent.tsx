@@ -28,8 +28,8 @@ export interface LoginDispatchProps {
 }
 
 export interface LoginStateProps {
-  loginAttempt: boolean | undefined;
-  loginFailure: boolean | undefined;
+  loginAttempt?: boolean;
+  loginFailure?: boolean;
 }
 
 interface LoginState {
