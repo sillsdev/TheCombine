@@ -77,7 +77,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    ```
 
 2. Install:
-   - [Node.js 14 (LTS)](https://nodejs.org/en/download/)
+   - [Node.js 16 (LTS)](https://nodejs.org/en/download/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
@@ -252,11 +252,12 @@ $ sudo apt update
 $ sudo apt install python3 python3-venv
 ```
 
-Create an isolated Python virtual environment
+Create and activate an isolated Python virtual environment
 
 ```bash
 $ python3 -m venv venv
-$ . venv/bin/activate
+# This command is shell-specific, for the common use case of bash:
+$ source venv/bin/activate
 ```
 
 ### macOS Python Installation
@@ -269,7 +270,7 @@ Install Python 3 using Homebrew:
 $ brew install python
 ```
 
-Once Python is installed, create an isolated Python virtual environment:
+Create and activate isolated Python virtual environment:
 
 ```bash
 $ python3 -m venv venv
@@ -488,8 +489,7 @@ Runs ESLint on the codebase to detect code problems that should be fixed.
 
 ### `npm run lint:fix-layout`
 
-Run ESLint and apply `suggestion` and `layout` fixes automatically. This will
-sort and group imports.
+Run ESLint and apply `suggestion` and `layout` fixes automatically. This will sort and group imports.
 
 #### `npm run fmt-frontend`
 

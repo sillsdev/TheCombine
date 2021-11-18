@@ -20,6 +20,7 @@ namespace Backend.Tests.Controllers
         private WordController _wordController = null!;
 
         private string _projId = null!;
+        private const string MissingId = "MISSING_ID";
 
         [SetUp]
         public void Setup()
@@ -57,6 +58,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestDeleteAllWordsMissingProject()
+        {
+            var result = await _wordController.DeleteProjectWords(MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public async Task TestDeleteFrontierWord()
         {
             var wordToDelete = await _wordRepo.Create(Util.RandomWord(_projId));
@@ -84,6 +92,18 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestDeleteFrontierWordMissingIds()
+        {
+            var wordToDelete = await _wordRepo.Create(Util.RandomWord(_projId));
+
+            var projectResult = await _wordController.DeleteFrontierWord(MissingId, wordToDelete.Id);
+            Assert.IsInstanceOf<NotFoundObjectResult>(projectResult);
+
+            var wordResult = await _wordController.DeleteFrontierWord(_projId, MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(wordResult);
+        }
+
+        [Test]
         public async Task TestGetAllWords()
         {
             await _wordRepo.Create(Util.RandomWord(_projId));
@@ -105,6 +125,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestGetAllWordsMissingProject()
+        {
+            var result = await _wordController.GetProjectWords(MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public async Task TestIsFrontierNonempty()
         {
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
@@ -121,6 +148,13 @@ namespace Backend.Tests.Controllers
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _wordController.IsFrontierNonempty(_projId);
             Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
+        public async Task TestIsFrontierNonemptyMissingProject()
+        {
+            var result = await _wordController.IsFrontierNonempty(MissingId);
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
@@ -147,15 +181,13 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetMissingId()
         {
-            const string missingId = "NEITHER_PROJ_NOR_WORD_ID";
-
-            var wordProjResult = await _wordController.GetProjectWords(missingId);
+            var wordProjResult = await _wordController.GetProjectWords(MissingId);
             Assert.IsInstanceOf<NotFoundObjectResult>(wordProjResult);
 
-            var wordResult = await _wordController.GetWord(_projId, missingId);
+            var wordResult = await _wordController.GetWord(_projId, MissingId);
             Assert.IsInstanceOf<NotFoundObjectResult>(wordResult);
 
-            var frontierProjResult = await _wordController.GetProjectFrontierWords(missingId);
+            var frontierProjResult = await _wordController.GetProjectFrontierWords(MissingId);
             Assert.IsInstanceOf<NotFoundObjectResult>(frontierProjResult);
         }
 
@@ -182,6 +214,14 @@ namespace Backend.Tests.Controllers
             var word = await _wordRepo.Create(Util.RandomWord(_projId));
             var result = await _wordController.GetWord(_projId, word.Id);
             Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
+        public async Task TestGetWordMissingProject()
+        {
+            var word = await _wordRepo.Create(Util.RandomWord(_projId));
+            var result = await _wordController.GetWord(MissingId, word.Id);
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
@@ -222,6 +262,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestCreateWordMissingProject()
+        {
+            var word = Util.RandomWord(_projId);
+            var result = await _wordController.CreateWord(MissingId, word);
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public async Task TestUpdateWord()
         {
             var origWord = await _wordRepo.Create(Util.RandomWord(_projId));
@@ -252,6 +300,19 @@ namespace Backend.Tests.Controllers
             modWord.Vernacular = "NewVernacular";
             var result = await _wordController.UpdateWord(_projId, modWord.Id, modWord);
             Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
+        public async Task TestUpdateWordMissingIds()
+        {
+            var origWord = await _wordRepo.Create(Util.RandomWord(_projId));
+            var modWord = origWord.Clone();
+            modWord.Vernacular = "NewVernacular";
+            var projectResult = await _wordController.UpdateWord(MissingId, modWord.Id, modWord);
+            Assert.IsInstanceOf<NotFoundObjectResult>(projectResult);
+
+            var wordResult = await _wordController.UpdateWord(_projId, MissingId, modWord);
+            Assert.IsInstanceOf<NotFoundObjectResult>(wordResult);
         }
     }
 }

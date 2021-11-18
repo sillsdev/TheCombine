@@ -30,8 +30,8 @@ interface RegisterDispatchProps {
 }
 
 export interface RegisterStateProps {
-  inProgress: boolean;
-  success: boolean;
+  inProgress?: boolean;
+  success?: boolean;
   failureMessage: string;
 }
 

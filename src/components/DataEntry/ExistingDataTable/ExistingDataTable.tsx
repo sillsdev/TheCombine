@@ -7,9 +7,9 @@ import { DomainWord } from "types/word";
 
 interface ExistingDataTableProps {
   domain: SemanticDomain;
-  typeDrawer: boolean;
+  typeDrawer?: boolean;
   domainWords: DomainWord[];
-  drawerOpen: boolean;
+  drawerOpen?: boolean;
   toggleDrawer: (openClosed: boolean) => void;
 }
 
