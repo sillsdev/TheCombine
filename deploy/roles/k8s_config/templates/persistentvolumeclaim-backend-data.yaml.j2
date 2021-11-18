@@ -6,7 +6,11 @@ metadata:
   namespace: {{ app_namespace }}
 spec:
   accessModes:
+{% if k8s_update_strategy == 'RollingUpdate' %}
+    - ReadWriteMany
+{% else %}
     - ReadWriteOnce
+{% endif %}
   resources:
     requests:
       storage: {{ backend_data_size }}
