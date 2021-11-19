@@ -126,6 +126,11 @@ function getMergeWords(
   if (word) {
     const data = mergeTree.data;
 
+    // List of all non-deleted senses.
+    const nonDeleted = Object.values(mergeTree.tree.words).flatMap((w) =>
+      Object.values(w.sensesGuids).flatMap((s) => s)
+    );
+
     // Create list of all senses and add merge type tags slit by src word.
     const senses: Hash<MergeTreeSense[]> = {};
 
@@ -138,19 +143,24 @@ function getMergeWords(
         if (!senses[wordId]) {
           const dbWord = data.words[wordId];
 
-          // Add each sense into senses as separate.
+          // Add each sense into senses as separate or deleted.
           senses[wordId] = [];
           for (const sense of dbWord.senses) {
             senses[wordId].push({
               ...sense,
               srcWordId: wordId,
               order: senses[wordId].length,
-              accessibility: State.Separate,
+              accessibility: nonDeleted.includes(sense.guid)
+                ? State.Separate
+                : State.Deleted,
             });
           }
         }
       }
     }
+
+    // Word to be deleted if all senses deleted.
+    //To-Do
 
     // Set sense and duplicate senses.
     Object.values(word.sensesGuids).forEach((guids) => {
@@ -231,6 +241,7 @@ export function mergeAll() {
     const mergeWordsArray: MergeWords[] = [];
     words.forEach((id) => {
       const wordsToMerge = getMergeWords(id, mergeTree);
+      console.info(wordsToMerge);
       if (wordsToMerge) {
         mergeWordsArray.push(wordsToMerge);
       }
