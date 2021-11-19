@@ -80,6 +80,13 @@ app_namespace: thecombine
 cert_proxy_namespace: combine-cert-proxy
 
 #######################################
+# k8s Upgrade strategy
+#   Recreate - for the NUCs where they are updated offline
+#   RollingUpdate - for the servers and qa which are available
+#              during an update
+k8s_update_strategy: RollingUpdate
+
+#######################################
 # Ingress configuration
 ingress_class: nginx
 ingress_namespace: ingress-nginx
