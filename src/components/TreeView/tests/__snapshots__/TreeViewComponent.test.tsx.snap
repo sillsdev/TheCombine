@@ -23,7 +23,7 @@ Array [
           htmlFor="domain-tree-search-field"
           id="domain-tree-search-field-label"
         >
-          Find a domain
+          Missing translationId: treeView.findDomain for language: \${ languageCode }
         </label>
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
