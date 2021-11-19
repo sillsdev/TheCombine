@@ -257,6 +257,51 @@ describe("MergeDupReducer", () => {
     });
   });
 
+  describe("deleteSense", () => {
+    it("deletes one-sense sense from a word with multiple senses", () => {
+      const wordId = "word3";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[wordId].sensesGuids[testRef.mergeSenseId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+    it("deletes multi-sense sense from a word with multiple senses", () => {
+      const wordId = "word3";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseB`,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[wordId].sensesGuids[testRef.mergeSenseId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+    it("deletes word when deleting final sense", () => {
+      const wordId = "word2";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[wordId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+  });
+
   describe("moveSense", () => {
     it("moves a sense out from sidebar to same word", () => {
       const wordId = "word2";
