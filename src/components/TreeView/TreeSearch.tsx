@@ -1,5 +1,6 @@
 import { Grid, TextField } from "@material-ui/core";
 import React, { useState } from "react";
+import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
@@ -16,17 +17,21 @@ export default function TreeSearch(props: TreeSearchProps) {
 
   return (
     <Grid style={{ maxWidth: 200 }}>
-      <TextField
-        fullWidth
-        id="domain-tree-search-field"
-        label="Find a domain"
-        onKeyDown={searchAndSelectDomain}
-        onChange={handleChange}
-        margin="normal"
-        autoComplete="off"
-        inputProps={{ "data-testid": testId }}
-        value={input}
-      />
+      <Translate>
+        {({ translate }) => (
+          <TextField
+            fullWidth
+            id="domain-tree-search-field"
+            label={translate("treeView.findDomain").toString()}
+            onKeyDown={searchAndSelectDomain}
+            onChange={handleChange}
+            margin="normal"
+            autoComplete="off"
+            inputProps={{ "data-testid": testId }}
+            value={input}
+          />
+        )}
+      </Translate>
     </Grid>
   );
 }

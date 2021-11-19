@@ -40,6 +40,9 @@
       "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx."
     ]
   },
+  "treeView": {
+    "findDomain": ["Find a domain", "Find a domain", "Find a domain"]
+  },
   "addWords": {
     "selectEntry": [
       "Select an entry",
@@ -94,24 +97,6 @@
       "data cleanup",
       "limpieza de datos",
       "nettoyage des données"
-    ]
-  },
-  "temp": {
-    "buttonText": [
-      "This is a button.",
-      "Este es un botón.",
-      "C'est un bouton."
-    ],
-    "labelText": [
-      "This is a label",
-      "Esto es una etiqueta.",
-      "Ceci est une étiquette"
-    ],
-    "makeSpanish": ["Make Spanish", "Hacer español", "Faire de l'espagnol"],
-    "wasPassedInFromStore": [
-      "was passed into this test object.",
-      "fue pasado a este objeto de prueba.",
-      "a été passé dans cet objet de test."
     ]
   },
   "login": {
