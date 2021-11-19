@@ -4,6 +4,7 @@ import { Word } from "api/models";
 import {
   defaultTree,
   Hash,
+  MergeTree,
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
@@ -57,6 +58,20 @@ export const mergeDupStepReducer = (
       words[destRef.wordId].sensesGuids[destRef.mergeSenseId].push(
         ...destGuids
       );
+
+      return { ...state, tree: { ...state.tree, words } };
+    }
+
+    case MergeTreeActionTypes.DELETE_SENSE: {
+      const srcRef = action.payload.src;
+      const srcWordId = srcRef.wordId;
+      const tree: MergeTree = JSON.parse(JSON.stringify(state.tree));
+      const words = tree.words;
+
+      delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
+      if (!Object.keys(words[srcWordId].sensesGuids).length) {
+        delete words[srcWordId];
+      }
 
       return { ...state, tree: { ...state.tree, words } };
     }

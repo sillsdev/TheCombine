@@ -24,6 +24,7 @@ import {
 import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
+  DeleteSenseMergeAction,
   MergeTreeActionTypes,
   MergeTreeState,
   MoveDuplicateMergeAction,
@@ -49,10 +50,11 @@ export function combineSense(
   src: MergeTreeReference,
   dest: MergeTreeReference
 ): CombineSenseMergeAction {
-  return {
-    type: MergeTreeActionTypes.COMBINE_SENSE,
-    payload: { src, dest },
-  };
+  return { type: MergeTreeActionTypes.COMBINE_SENSE, payload: { src, dest } };
+}
+
+export function deleteSense(src: MergeTreeReference): DeleteSenseMergeAction {
+  return { type: MergeTreeActionTypes.DELETE_SENSE, payload: { src } };
 }
 
 export function moveSense(
@@ -98,10 +100,7 @@ export function setSidebar(sidebar?: Sidebar): SetSidebarMergeAction {
 }
 
 export function setWordData(words: Word[]): SetDataMergeAction {
-  return {
-    type: MergeTreeActionTypes.SET_DATA,
-    payload: words,
-  };
+  return { type: MergeTreeActionTypes.SET_DATA, payload: words };
 }
 
 export function setVern(
@@ -212,12 +211,8 @@ function getMergeWords(
           });
         }
       });
-      return {
-        srcWordId: sList[0].srcWordId,
-        getAudio: !sList.find(
-          (sense) => sense.accessibility === State.Separate
-        ),
-      };
+      const getAudio = !sList.find((s) => s.accessibility === State.Separate);
+      return { srcWordId: sList[0].srcWordId, getAudio };
     });
 
     return { parent, children };
