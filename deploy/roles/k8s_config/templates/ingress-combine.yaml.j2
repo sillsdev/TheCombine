@@ -10,12 +10,10 @@ metadata:
     cert-manager.io/issuer: {{ cert_issuer }}
 {% endif %}
 spec:
-{% if "cert_manager" in k8s_components or "cert_proxy_client" in k8s_components %}
   tls:
   - hosts:
     - {{ combine_server_name }}
-    secretName: {{ combine_server_name | regex_replace('[\\._-]+','-')}}-tls
-{% endif %}
+    secretName: {{ combine_secret_name}}
   rules:
   - host: {{ combine_server_name }}
     http:

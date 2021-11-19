@@ -79,6 +79,13 @@ k8s_user: sillsdev
 k8s_group: sillsdev
 
 #######################################
+# k8s Upgrade strategy
+#   Recreate - for the NUCs where they are updated offline
+#   RollingUpdate - for the servers and qa which are available
+#              during an update
+k8s_update_strategy: Recreate
+
+#######################################
 # Ingress configuration
 ingress_class: nginx
 ingress_namespace: ingress-nginx
