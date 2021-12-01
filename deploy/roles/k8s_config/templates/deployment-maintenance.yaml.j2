@@ -84,7 +84,7 @@ spec:
                 configMapKeyRef:
                   key: backup_filter
                   name: env-maintenance
-          image: '{{ combine_image_maintenance }}'
+          image: {{ combine_image_maintenance }}
 {% if image_tag == "latest" %}
           imagePullPolicy: Always
 {% else %}
