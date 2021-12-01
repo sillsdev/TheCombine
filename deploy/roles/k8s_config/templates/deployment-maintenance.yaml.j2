@@ -12,10 +12,12 @@ spec:
     matchLabels:
       combine-component: maintenance
   strategy:
-    type: RollingUpdate
+    type: {{ k8s_update_strategy }}
+{% if k8s_update_strategy == 'RollingUpdate' %}
     rollingUpdate:
-      maxSurge: 2
-      maxUnavailable: 1
+      maxSurge: 1
+      maxUnavailable: 0
+{% endif %}
   template:
     metadata:
       creationTimestamp: null
@@ -82,7 +84,7 @@ spec:
                 configMapKeyRef:
                   key: backup_filter
                   name: env-maintenance
-          image: '{{ combine_image_maintenance }}'
+          image: {{ combine_image_maintenance }}
 {% if image_tag == "latest" %}
           imagePullPolicy: Always
 {% else %}
