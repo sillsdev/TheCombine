@@ -76,8 +76,8 @@ def main() -> None:
         if args.file:
             backup = args.file
         else:
-            # Get the list of backups but throw away the header
-            backup_list_output = aws.list().stdout.strip().split("\n")[1:]
+            # Get the list of backups
+            backup_list_output = aws.list().stdout.strip().split("\n")
 
             if len(backup_list_output) == 0:
                 print(f"No backups available from {os.environ['aws_bucket']}")
