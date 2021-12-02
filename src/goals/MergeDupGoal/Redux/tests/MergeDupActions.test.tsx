@@ -25,44 +25,22 @@ import {
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { GoalsState } from "types/goals";
 import { multiSenseWord, newDefinition, newSense, newWord } from "types/word";
-import { randomIntString } from "utilities";
 
 // Used when the guids don't matter.
-function wordAnyGuid(
-  vern: string,
-  glosses: string[],
-  id: string,
-  history?: string[]
-): Word {
+function wordAnyGuids(vern: string, glosses: string[], id: string): Word {
   return {
     ...newWord(vern),
     senses: glosses.map((g) => ({ ...newSense(g), guid: expect.any(String) })),
     id,
-    history: history ?? [],
     guid: expect.any(String),
   };
 }
-type mockWordListIndex = "WA" | "WB" | "WA2" | "WB2" | "WA3" | "WA4";
-const mockWordList: { [key in mockWordListIndex]: Word } = {
-  WA: wordAnyGuid("AAA", ["S1", "S2"], "WA"),
-  WB: wordAnyGuid("BBB", ["S3", "S4"], "WB"),
-  WA2: wordAnyGuid("AAA", ["S1", "S2"], "WA2", ["WA", "WB"]),
-  WB2: wordAnyGuid("BBB", ["S4"], "WB2", ["WB"]),
-  WA3: wordAnyGuid("AAA", ["S1", "S2", "S3"], "WA3", ["WA", "WB"]),
-  WA4: wordAnyGuid("AAA", ["S1"], "WA4", ["WA"]),
-};
 
-const mockGetWords = jest.fn();
 const mockMergeWords = jest.fn();
-function setMockFunctions() {
-  mockGetWords.mockImplementation((id: mockWordListIndex) =>
-    Promise.resolve(mockWordList[id])
-  );
-}
 
 jest.mock("backend", () => ({
   blacklistAdd: jest.fn(),
-  getWord: (id: mockWordListIndex) => mockGetWords(id),
+  getWord: jest.fn(),
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
@@ -85,24 +63,25 @@ const mockStoreState: {
   mergeDuplicateGoal: { data: {} as MergeData, tree: {} as MergeTree },
 };
 
+const vernA = "AAA";
+const vernB = "BBB";
+const idA = "WA";
+const idB = "WB";
 const words = {
-  WA: { ...multiSenseWord("AAA", ["S1", "S2"]), id: "WA" },
-  WB: { ...multiSenseWord("BBB", ["S3", "S4"]), id: "WB" },
+  WA: { ...multiSenseWord(vernA, ["S1", "S2"]), id: idA },
+  WB: { ...multiSenseWord(vernB, ["S3", "S4"]), id: idB },
 };
 const data: MergeData = { words, senses: {} };
 const S1 = words.WA.senses[0].guid;
 const S2 = words.WA.senses[1].guid;
 const S3 = words.WB.senses[0].guid;
 const S4 = words.WB.senses[1].guid;
-data.senses[S1] = { ...newSense("S1"), guid: S1, srcWordId: "WA", order: 0 };
-data.senses[S2] = { ...newSense("S2"), guid: S2, srcWordId: "WA", order: 1 };
-data.senses[S3] = { ...newSense("S3"), guid: S3, srcWordId: "WB", order: 0 };
-data.senses[S4] = { ...newSense("S4"), guid: S4, srcWordId: "WB", order: 1 };
+data.senses[S1] = { ...newSense("S1"), guid: S1, srcWordId: idA, order: 0 };
+data.senses[S2] = { ...newSense("S2"), guid: S2, srcWordId: idA, order: 1 };
+data.senses[S3] = { ...newSense("S3"), guid: S3, srcWordId: idB, order: 0 };
+data.senses[S4] = { ...newSense("S4"), guid: S4, srcWordId: idB, order: 1 };
 
-beforeEach(() => {
-  jest.clearAllMocks();
-  setMockFunctions();
-});
+beforeEach(jest.clearAllMocks);
 
 describe("MergeDupActions", () => {
   describe("mergeAll", () => {
@@ -110,8 +89,8 @@ describe("MergeDupActions", () => {
     const tree1: MergeTree = {
       ...defaultTree,
       words: {
-        WA: { sensesGuids: { ID1: [S1], ID2: [S2] }, vern: "AAA" },
-        WB: { sensesGuids: { ID1: [S3], ID2: [S4] }, vern: "BBB" },
+        WA: { sensesGuids: { ID1: [S1], ID2: [S2] }, vern: vernA },
+        WB: { sensesGuids: { ID1: [S3], ID2: [S4] }, vern: vernB },
       },
     };
     it("handles no merge", async () => {
@@ -126,8 +105,8 @@ describe("MergeDupActions", () => {
 
     // Merge sense 3 from B as duplicate into sense 1 from A
     it("merges senses from different words", async () => {
-      const WA = { sensesGuids: { ID1: [S1, S3], ID2: [S2] }, vern: "AAA" };
-      const WB = { sensesGuids: { ID1: [S4] }, vern: "BBB" };
+      const WA = { sensesGuids: { ID1: [S1, S3], ID2: [S2] }, vern: vernA };
+      const WB = { sensesGuids: { ID1: [S4] }, vern: vernB };
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const mockStore = createMockStore({
         ...mockStoreState,
@@ -138,15 +117,15 @@ describe("MergeDupActions", () => {
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const mockMerges: MergeWords[] = [
         {
-          parent: { ...mockWordList["WA2"], id: "WA", history: [] },
+          parent: wordAnyGuids(vernA, ["S1", "S2"], idA),
           children: [
-            { srcWordId: "WA", getAudio: true },
-            { srcWordId: "WB", getAudio: false },
+            { srcWordId: idA, getAudio: true },
+            { srcWordId: idB, getAudio: false },
           ],
         },
         {
-          parent: { ...mockWordList["WB2"], id: "WB", history: [] },
-          children: [{ srcWordId: "WB", getAudio: false }],
+          parent: wordAnyGuids(vernB, ["S4"], idB),
+          children: [{ srcWordId: idB, getAudio: false }],
         },
       ];
       for (const mergeWords of mockMerges) {
@@ -158,9 +137,9 @@ describe("MergeDupActions", () => {
     it("moves sense between words", async () => {
       const WA = {
         sensesGuids: { ID1: [S1], ID2: [S2], ID3: [S3] },
-        vern: "AAA",
+        vern: vernA,
       };
-      const WB = { sensesGuids: { ID1: [S4] }, vern: "BBB" };
+      const WB = { sensesGuids: { ID1: [S4] }, vern: vernB };
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const mockStore = createMockStore({
         ...mockStoreState,
@@ -171,15 +150,15 @@ describe("MergeDupActions", () => {
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const mockMerges: MergeWords[] = [
         {
-          parent: { ...mockWordList["WA3"], id: "WA", history: [] },
+          parent: wordAnyGuids(vernA, ["S1", "S2", "S3"], idA),
           children: [
-            { srcWordId: "WA", getAudio: true },
-            { srcWordId: "WB", getAudio: false },
+            { srcWordId: idA, getAudio: true },
+            { srcWordId: idB, getAudio: false },
           ],
         },
         {
-          parent: { ...mockWordList["WB2"], id: "WB", history: [] },
-          children: [{ srcWordId: "WB", getAudio: false }],
+          parent: wordAnyGuids(vernB, ["S4"], idB),
+          children: [{ srcWordId: idB, getAudio: false }],
         },
       ];
       for (const mergeWords of mockMerges) {
@@ -189,8 +168,8 @@ describe("MergeDupActions", () => {
 
     // Merge sense 1 and 2 in A as duplicates
     it("merges senses within a word", async () => {
-      const WA = { sensesGuids: { ID1: [S1, S2] }, vern: "AAA" };
-      const WB = { sensesGuids: { ID1: [S3], ID2: [S4] }, vern: "BBB" };
+      const WA = { sensesGuids: { ID1: [S1, S2] }, vern: vernA };
+      const WB = { sensesGuids: { ID1: [S3], ID2: [S4] }, vern: vernB };
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const mockStore = createMockStore({
         ...mockStoreState,
@@ -200,16 +179,16 @@ describe("MergeDupActions", () => {
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const mockMerge: MergeWords = {
-        parent: { ...mockWordList["WA4"], id: "WA", history: [] },
-        children: [{ srcWordId: "WA", getAudio: true }],
+        parent: wordAnyGuids(vernA, ["S1"], idA),
+        children: [{ srcWordId: idA, getAudio: true }],
       };
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
     });
 
     // Delete sense 2 from A
     it("delete one sense from word with multiple senses", async () => {
-      const WA = { sensesGuids: { ID1: [S1] }, vern: "AAA" };
-      const WB = { sensesGuids: { ID1: [S3], ID2: [S4] }, vern: "BBB" };
+      const WA = { sensesGuids: { ID1: [S1] }, vern: vernA };
+      const WB = { sensesGuids: { ID1: [S3], ID2: [S4] }, vern: vernB };
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const mockStore = createMockStore({
         ...mockStoreState,
@@ -219,15 +198,15 @@ describe("MergeDupActions", () => {
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const mockMerge: MergeWords = {
-        parent: { ...mockWordList["WA4"], id: "WA", history: [] },
-        children: [{ srcWordId: "WA", getAudio: true }],
+        parent: wordAnyGuids(vernA, ["S1"], idA),
+        children: [{ srcWordId: idA, getAudio: true }],
       };
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
     });
 
     // Delete both senses from B
     it("delete all senses from a word", async () => {
-      const WA = { sensesGuids: { ID1: [S1], ID2: [S2] }, vern: "AAA" };
+      const WA = { sensesGuids: { ID1: [S1], ID2: [S2] }, vern: vernA };
       const tree: MergeTree = { ...defaultTree, words: { WA } };
       const mockStore = createMockStore({
         ...mockStoreState,
@@ -237,7 +216,7 @@ describe("MergeDupActions", () => {
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const mockMerge = {
-        children: [{ srcWordId: "WB", getAudio: false }],
+        children: [{ srcWordId: idB, getAudio: false }],
       } as MergeWords;
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
     });
