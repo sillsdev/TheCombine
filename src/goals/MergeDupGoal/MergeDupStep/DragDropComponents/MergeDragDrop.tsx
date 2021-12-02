@@ -16,6 +16,8 @@ import {
 import { StoreState } from "types";
 import theme from "types/theme";
 
+export const trashId = "trash-drop";
+
 interface MergeDragDropProps {
   portrait: boolean;
 }
@@ -27,7 +29,6 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
   );
   const sidebar = mergeState.tree.sidebar;
   const treeWords = mergeState.tree.words;
-  const trashId = "trash-drop";
 
   function handleDrop(res: DropResult) {
     const senseRef: MergeTreeReference = JSON.parse(res.draggableId);
