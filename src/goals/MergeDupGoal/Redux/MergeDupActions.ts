@@ -236,12 +236,24 @@ export function mergeAll() {
     // Add to blacklist.
     await backend.blacklistAdd(Object.keys(mergeTree.data.words));
 
+    // Handle words with all senses deleted.
+    const possibleWords = Object.values(mergeTree.data.words);
+    const nonDeletedSenses = Object.values(mergeTree.tree.words).flatMap((w) =>
+      Object.values(w.sensesGuids).flatMap((s) => s)
+    );
+    const deletedWords = possibleWords.filter(
+      (w) =>
+        !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g))
+    );
+    const mergeWordsArray = deletedWords.map(
+      (w) =>
+        ({ children: [{ srcWordId: w.id, getAudio: false }] } as MergeWords)
+    );
+
     // Merge words.
     const words = Object.keys(mergeTree.tree.words);
-    const mergeWordsArray: MergeWords[] = [];
     words.forEach((id) => {
       const wordsToMerge = getMergeWords(id, mergeTree);
-      console.info(wordsToMerge);
       if (wordsToMerge) {
         mergeWordsArray.push(wordsToMerge);
       }
