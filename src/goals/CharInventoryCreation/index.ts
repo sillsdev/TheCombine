@@ -23,9 +23,10 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
       dispatch(Actions.setRejectedCharacters(inventory)),
     setSelectedCharacter: (character: string) =>
       dispatch(Actions.setSelectedCharacter(character)),
-    uploadInventory: (goal: Goal) => dispatch(Actions.uploadInventory(goal)),
-    fetchWords: () => dispatch(Actions.fetchWords()),
-    getAllCharacters: () => dispatch(Actions.getAllCharacters()),
+    uploadInventory: async (goal: Goal) =>
+      await dispatch(Actions.uploadInventory(goal)),
+    fetchWords: async () => await dispatch(Actions.fetchWords()),
+    getAllCharacters: async () => await dispatch(Actions.getAllCharacters()),
     resetInState: () => dispatch(Actions.resetInState()),
     exit: Actions.exit,
   };

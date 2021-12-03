@@ -18,26 +18,24 @@ interface SwitchState {
 export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
   constructor(props: SwitchProps) {
     super(props);
-
-    this.state = {
-      projectList: [],
-    };
-
-    this.updateProjectList();
+    this.state = { projectList: [] };
   }
 
-  componentDidUpdate(prevProps: SwitchProps) {
+  async componentDidMount() {
+    await this.updateProjectList();
+  }
+
+  async componentDidUpdate(prevProps: SwitchProps) {
     if (prevProps.project.name !== this.props.project.name) {
-      this.updateProjectList();
+      await this.updateProjectList();
     }
   }
 
-  private updateProjectList() {
-    const userId: string = getUserId();
+  private async updateProjectList() {
+    const userId = getUserId();
     if (userId) {
-      getAllActiveProjectsByUser(userId).then((projectList) => {
-        this.setState({ projectList });
-      });
+      const projectList = await getAllActiveProjectsByUser(userId);
+      this.setState({ projectList });
     }
   }
 

@@ -73,9 +73,9 @@ export default class GoalTimeline extends React.Component<
   };
 
   // Load history from database
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener("resize", this.handleWindowSizeChange);
-    this.getSuggestionsWithPermission();
+    await this.getSuggestionsWithPermission();
     this.props.loadHistory();
   }
 

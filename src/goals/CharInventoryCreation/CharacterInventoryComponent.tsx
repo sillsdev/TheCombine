@@ -26,7 +26,7 @@ interface CharacterInventoryProps {
   setRejectedCharacters: (inventory: string[]) => void;
   setSelectedCharacter: (character: string) => void;
   uploadInventory: (goal: Goal) => Promise<void>;
-  fetchWords: () => void;
+  fetchWords: () => Promise<void>;
   currentProject: Project;
   selectedCharacter: string;
   getAllCharacters: () => Promise<void>;
@@ -58,13 +58,13 @@ export default class CharacterInventory extends React.Component<
     };
   }
 
-  componentDidMount() {
-    this.props.fetchWords();
+  async componentDidMount() {
+    await this.props.fetchWords();
     this.props.setValidCharacters(this.props.currentProject.validCharacters);
     this.props.setRejectedCharacters(
       this.props.currentProject.rejectedCharacters
     );
-    this.props.getAllCharacters();
+    await this.props.getAllCharacters();
     this.props.setSelectedCharacter("");
   }
 
@@ -72,9 +72,9 @@ export default class CharacterInventory extends React.Component<
     this.setState({ cancelDialogOpen: false });
   }
 
-  save() {
+  async save() {
     this.setState({ saveInProgress: true });
-    this.props.uploadInventory(this.props.goal);
+    await this.props.uploadInventory(this.props.goal);
   }
 
   componentWillUnmount() {
