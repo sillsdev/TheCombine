@@ -59,7 +59,7 @@ namespace BackendFramework.Services
                 {
                     Permissions = new List<Permission>
                 {
-                    Permission.MergeAndCharSet,
+                    Permission.MergeAndReviewEntries,
                     Permission.Unused,
                     Permission.WordEntry
                 },

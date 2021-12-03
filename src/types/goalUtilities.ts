@@ -1,4 +1,4 @@
-import { Edit } from "api/models";
+import { Edit, Permission } from "api/models";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
@@ -15,6 +15,19 @@ export function maxNumSteps(type: GoalType) {
       return 12;
     default:
       return 1;
+  }
+}
+
+/** Specify which project permission is required for a user to access a goal. */
+export function requiredPermission(type: GoalType): Permission {
+  switch (type) {
+    case GoalType.MergeDups:
+    case GoalType.ReviewEntries:
+      return Permission.MergeAndReviewEntries;
+    case GoalType.CreateCharInv:
+      return Permission.DeleteEditSettingsAndUsers;
+    default:
+      return Permission.Owner;
   }
 }
 

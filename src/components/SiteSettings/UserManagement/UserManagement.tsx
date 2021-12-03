@@ -43,9 +43,9 @@ class UserManagement extends React.Component<UserProps, UserState> {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     Modal.setAppElement("body");
-    this.populateUsers();
+    await this.populateUsers();
   }
 
   handleOpenModal = (user: User) => {
@@ -56,15 +56,15 @@ class UserManagement extends React.Component<UserProps, UserState> {
     this.setState({ showModal: false });
   };
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
     if (this.state.userToEdit !== this.state.prevUserToEdit) {
-      this.populateUsers();
+      await this.populateUsers();
       this.setState((prevState) => ({ prevUserToEdit: prevState.userToEdit }));
     }
   }
 
-  private populateUsers() {
-    getAllUsers()
+  private async populateUsers() {
+    await getAllUsers()
       .then((allUsers) => {
         this.setState({ allUsers });
         const userAvatar = this.state.userAvatar;

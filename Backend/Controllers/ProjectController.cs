@@ -119,7 +119,7 @@ namespace BackendFramework.Controllers
                     Permission.Owner,
                     Permission.DeleteEditSettingsAndUsers,
                     Permission.ImportExport,
-                    Permission.MergeAndCharSet,
+                    Permission.MergeAndReviewEntries,
                     Permission.Unused,
                     Permission.WordEntry
                 },
@@ -168,7 +168,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
             {
                 return Forbid();
             }
