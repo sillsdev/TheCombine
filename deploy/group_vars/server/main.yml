@@ -84,7 +84,7 @@ cert_proxy_namespace: combine-cert-proxy
 #   Recreate - for the NUCs where they are updated offline
 #   RollingUpdate - for the servers and qa which are available
 #              during an update
-k8s_update_strategy: RollingUpdate
+k8s_update_strategy: Recreate
 
 #######################################
 # Ingress configuration
