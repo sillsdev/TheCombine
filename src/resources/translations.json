@@ -356,29 +356,29 @@
       "name": ["Name", "Nombre", "Nom"],
       "font": ["Font", "Font", "Font"],
       "addAnalysisLanguage": [
-        "Add an alternate analysis language.",
-        "Add an alternate analysis language.",
-        "Add an alternate analysis language."
+        "Add an alternate analysis language",
+        "Add an alternate analysis language",
+        "Add an alternate analysis language"
       ],
       "makeDefaultAnalysisLanguage": [
-        "Make this the default analysis language.",
-        "Make this the default analysis language.",
-        "Make this the default analysis language."
+        "Make this the default analysis language",
+        "Make this the default analysis language",
+        "Make this the default analysis language"
       ],
       "deleteAnalysisLanguage": [
-        "Delete this analysis language.",
-        "Delete this analysis language.",
-        "Delete this analysis language."
+        "Delete this analysis language",
+        "Delete this analysis language",
+        "Delete this analysis language"
       ],
       "getGlossLanguages": [
-        "Find all language codes used in the current data.",
-        "Find all language codes used in the current data.",
-        "Find all language codes used in the current data."
+        "Find all language codes used in the current data",
+        "Find all language codes used in the current data",
+        "Find all language codes used in the current data"
       ],
       "addAnalysisLanguageFailed": [
-        "Failed to add analysis language.",
-        "Failed to add analysis language.",
-        "Failed to add analysis language."
+        "Failed to add analysis language",
+        "Failed to add analysis language",
+        "Failed to add analysis language"
       ],
       "makeDefaultAnalysisLanguageFailed": [
         "Failed to make default analysis language",
