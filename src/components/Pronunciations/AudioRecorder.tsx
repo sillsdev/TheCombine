@@ -1,5 +1,5 @@
-import { Translate } from "react-localize-redux";
 import React from "react";
+import { Translate } from "react-localize-redux";
 import { toast, ToastContainer } from "react-toastify";
 
 import Recorder from "components/Pronunciations/Recorder";
