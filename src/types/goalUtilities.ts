@@ -18,6 +18,7 @@ export function maxNumSteps(type: GoalType) {
   }
 }
 
+/** Specify which project permission is required for a user to access a goal. */
 export function requiredPermission(type: GoalType): Permission {
   switch (type) {
     case GoalType.MergeDups:
@@ -26,7 +27,7 @@ export function requiredPermission(type: GoalType): Permission {
     case GoalType.CreateCharInv:
       return Permission.DeleteEditSettingsAndUsers;
     default:
-      return Permission.Unused;
+      return Permission.Owner;
   }
 }
 
