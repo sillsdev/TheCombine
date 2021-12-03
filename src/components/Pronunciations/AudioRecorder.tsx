@@ -1,12 +1,10 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
-
-// Style ToastContainer.
-import "react-toastify/dist/ReactToastify.min.css";
+import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 
 interface RecorderProps {
   wordId: string;
@@ -51,15 +49,7 @@ export default function AudioRecorder(props: RecorderProps) {
 
   return (
     <React.Fragment>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <UpperRightToastContainer />
       <RecorderIcon
         wordId={props.wordId}
         startRecording={startRecording}

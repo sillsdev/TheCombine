@@ -16,6 +16,8 @@ import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/word";
+import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
+import { toast } from "react-toastify";
 
 interface LanguageProps {
   project: Project;
@@ -56,7 +58,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.makeDefaultAnalysisLanguageFailed" />
+        );
+      });
   }
 
   deleteAnalysisWritingSystem(index: number) {
@@ -64,7 +71,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.deleteAnalysisLanguageFailed" />
+        );
+      });
   }
 
   addAnalysisWritingSystem() {
@@ -77,7 +89,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.addAnalysisLanguageFailed" />
+        );
+      });
   }
 
   isNewWritingSystem(): boolean {
@@ -127,6 +144,7 @@ export default class ProjectLanguages extends React.Component<
   render() {
     return (
       <React.Fragment>
+        <UpperRightToastContainer />
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}

@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-//styles the ToastContainer so that it appears on the upper right corner with the message.
-import "react-toastify/dist/ReactToastify.min.css";
 
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";

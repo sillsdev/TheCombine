@@ -289,6 +289,13 @@
         "Failed to delete user"
       ]
     },
+    "populateUsers": {
+      "toastFailure": [
+        "Failed to populate users",
+        "Failed to populate users",
+        "Failed to populate users"
+      ]
+    },
     "banners": {
       "title": ["Banners", "Banners", "Banners"],
       "loginBanner": ["Login Banner", "Login Banner", "Login Banner"],
@@ -367,6 +374,21 @@
         "Find all language codes used in the current data.",
         "Find all language codes used in the current data.",
         "Find all language codes used in the current data."
+      ],
+      "addAnalysisLanguageFailed": [
+        "Failed to add analysis language.",
+        "Failed to add analysis language.",
+        "Failed to add analysis language."
+      ],
+      "makeDefaultAnalysisLanguageFailed": [
+        "Failed to make default analysis language",
+        "Failed to make default analysis language",
+        "Failed to make default analysis language"
+      ],
+      "deleteAnalysisLanguageFailed": [
+        "Failed to delete analysis language.",
+        "Failed to delete analysis language.",
+        "Failed to delete analysis language."
       ]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],

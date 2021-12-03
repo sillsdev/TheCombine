@@ -2,14 +2,13 @@ import { Grid } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import Modal from "react-modal";
-import { toast, ToastContainer } from "react-toastify";
-//styles the ToastContainer so that it appears on the upper right corner with the message.
-import "react-toastify/dist/ReactToastify.min.css";
+import { toast } from "react-toastify";
 
 import { User } from "api/models";
 import { avatarSrc, deleteUser, getAllUsers } from "backend";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 import UserList from "components/SiteSettings/UserManagement/UserList";
+import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 
 const customStyles = {
   content: {
@@ -77,7 +76,10 @@ class UserManagement extends React.Component<UserProps, UserState> {
           this.setState({ userAvatar });
         });
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(<Translate id="siteSettings.populateUsers.toastFailure" />);
+      });
   }
 
   deleteUser(userId: string) {
@@ -102,15 +104,7 @@ class UserManagement extends React.Component<UserProps, UserState> {
             userAvatar={this.state.userAvatar}
             handleOpenModal={(user: User) => this.handleOpenModal(user)}
           />
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+          <UpperRightToastContainer />
         </Grid>
 
         <Modal
