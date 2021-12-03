@@ -41,7 +41,7 @@ namespace Backend.Tests.Controllers
                 {
                     Permission.DeleteEditSettingsAndUsers,
                     Permission.ImportExport,
-                    Permission.MergeAndCharSet
+                    Permission.MergeAndReviewEntries
                 }
             };
             return userRole;

@@ -40,7 +40,11 @@ export default function AddProjectUsers() {
     if (!projectUsers.map((u) => u.id).includes(user.id)) {
       backend
         .addOrUpdateUserRole(
-          [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
+          [
+            Permission.MergeAndReviewEntries,
+            Permission.Unused,
+            Permission.WordEntry,
+          ],
           user.id
         )
         .then(() => {

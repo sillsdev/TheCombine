@@ -19,7 +19,7 @@ class Permission(enum.Enum):
 
     WordEntry = 1
     Unused = 2
-    MergeAndCharSet = 3
+    MergeAndReviewEntries = 3
     ImportExport = 4
     DeleteEditSettingsAndUsers = 5
     Owner = 6

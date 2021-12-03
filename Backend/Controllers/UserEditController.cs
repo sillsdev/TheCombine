@@ -84,7 +84,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
             {
                 return Forbid();
             }

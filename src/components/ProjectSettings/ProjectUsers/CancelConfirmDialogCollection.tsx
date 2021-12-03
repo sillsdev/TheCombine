@@ -60,7 +60,7 @@ export default function CancelConfirmDialogCollection(
       [
         Permission.WordEntry,
         Permission.Unused,
-        Permission.MergeAndCharSet,
+        Permission.MergeAndReviewEntries,
         Permission.ImportExport,
         Permission.DeleteEditSettingsAndUsers,
       ],
@@ -84,7 +84,11 @@ export default function CancelConfirmDialogCollection(
 
   function removeAdmin(userId: string) {
     addOrUpdateUserRole(
-      [Permission.MergeAndCharSet, Permission.Unused, Permission.WordEntry],
+      [
+        Permission.MergeAndReviewEntries,
+        Permission.Unused,
+        Permission.WordEntry,
+      ],
       userId
     )
       .then(() => {
@@ -108,7 +112,7 @@ export default function CancelConfirmDialogCollection(
       [
         Permission.WordEntry,
         Permission.Unused,
-        Permission.MergeAndCharSet,
+        Permission.MergeAndReviewEntries,
         Permission.ImportExport,
         Permission.DeleteEditSettingsAndUsers,
         Permission.Owner,
@@ -120,7 +124,7 @@ export default function CancelConfirmDialogCollection(
           [
             Permission.WordEntry,
             Permission.Unused,
-            Permission.MergeAndCharSet,
+            Permission.MergeAndReviewEntries,
             Permission.ImportExport,
             Permission.DeleteEditSettingsAndUsers,
           ],
