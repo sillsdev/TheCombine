@@ -1,3 +1,5 @@
+import { errorToast } from "components/Toast/SwalToast";
+
 const RecordRTC = require("recordrtc");
 
 export default class Recorder {
@@ -35,7 +37,11 @@ export default class Recorder {
     });
   }
 
-  private static onError(error: Error) {
-    console.error("Error getting audio stream!", error);
+  private static onError(err: Error) {
+    console.error(err);
+    errorToast.fire({
+      title: "Audio Recorder",
+      text: "Error getting audio stream!",
+    });
   }
 }

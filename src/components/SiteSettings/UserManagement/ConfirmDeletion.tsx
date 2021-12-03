@@ -8,8 +8,6 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
-//styles the ToastContainer so that it appears on the upper right corner with the message.
-import "react-toastify/dist/ReactToastify.min.css";
 
 import { User } from "api/models";
 

@@ -1,5 +1,10 @@
+import React from "react";
+import { Translate } from "react-localize-redux";
+import { toast } from "react-toastify";
+
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
+import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 
 interface RecorderProps {
   wordId: string;
@@ -36,18 +41,20 @@ export default function AudioRecorder(props: RecorderProps) {
           props.uploadAudio(props.wordId, file);
         }
       })
-      .catch(() => {
-        console.error("Error recording, probably no mic access");
-        // <Translate id="pronunciations.noMicAccess" />;
-        // TODO: Show alert dialog here
+      .catch((err) => {
+        console.error(err);
+        toast.error(<Translate id="pronunciations.noMicAccess" />);
       });
   }
 
   return (
-    <RecorderIcon
-      wordId={props.wordId}
-      startRecording={startRecording}
-      stopRecording={stopRecording}
-    />
+    <React.Fragment>
+      <UpperRightToastContainer />
+      <RecorderIcon
+        wordId={props.wordId}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+      />
+    </React.Fragment>
   );
 }
