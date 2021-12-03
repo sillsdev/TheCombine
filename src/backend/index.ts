@@ -147,11 +147,10 @@ export async function avatarSrc(userId: string): Promise<string> {
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
   } catch (err) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
+    // Avoid opening a toast because a different user's avatar could cause this
+    // issue, which is not actionable by the current user. The toast could
+    // block further UI actions.
     console.error(err);
-    await errorToast.fire({
-      title: "Missing Avatar",
-      text: "User indicates it has avatar, but unable to fetch.",
-    });
     return "";
   }
 }
