@@ -1,4 +1,5 @@
 import * as backend from "backend";
+import { errorToast } from "components/Toast/SwalToast";
 import {
   fetchWords,
   getAllCharacters,
@@ -8,15 +9,15 @@ import { StoreStateDispatch } from "types/Redux/actions";
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: StoreStateDispatch) => {
     try {
-      let allWords = await backend.getFrontierWords();
-      let changedWords = allWords.filter((word) =>
+      const allWords = await backend.getFrontierWords();
+      const changedWords = allWords.filter((word) =>
         word.vernacular.includes(findValue)
       );
-      let findRegExp = new RegExp(
+      const findRegExp = new RegExp(
         findValue.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
         "g"
       );
-      for (let word of changedWords) {
+      for (const word of changedWords) {
         word.vernacular = word.vernacular.replace(findRegExp, replaceValue);
         await backend.updateWord(word);
       }
@@ -24,6 +25,10 @@ export function findAndReplace(findValue: string, replaceValue: string) {
       await dispatch(getAllCharacters());
     } catch (err) {
       console.error(err);
+      await errorToast.fire({
+        title: "Find and Replace",
+        text: `Error processing Find: ${findValue} Replace: ${replaceValue}`,
+      });
     }
   };
 }

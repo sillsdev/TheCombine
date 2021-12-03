@@ -65,7 +65,7 @@ export default function ProjectSettingsComponent() {
   }, [permissions, dispatch]);
 
   function archiveUpdate() {
-    toast(<Translate id="projectSettings.user.archiveToastSuccess" />);
+    toast.success(<Translate id="projectSettings.user.archiveToastSuccess" />);
     setTimeout(() => {
       history.push(Path.ProjScreen);
     }, 2000);

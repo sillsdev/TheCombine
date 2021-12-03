@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-//styles the ToastContainer so that it appears on the upper right corner with the message.
-import "react-toastify/dist/ReactToastify.min.css";
 
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
@@ -44,14 +42,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setRemoveUser(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
         );
       });
@@ -71,14 +69,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setMakeAdmin(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
         );
       });
@@ -96,14 +94,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setRemoveAdmin(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.removeAdminToastFailure" />
         );
       });
@@ -136,14 +134,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setMakeOwner(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.makeOwnerToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.makeOwnerToastFailure" />
         );
       });
