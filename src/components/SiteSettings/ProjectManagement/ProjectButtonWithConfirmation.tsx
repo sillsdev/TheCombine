@@ -10,7 +10,7 @@ import { themeColors } from "types/theme";
 interface ProjectButtonWithConfirmationProps {
   archive?: boolean;
   projectId: string;
-  updateParent: () => void;
+  updateParent: () => void | Promise<void>;
   warn?: boolean;
 }
 
@@ -28,8 +28,8 @@ export default function ProjectButtonWithConfirmation(
     } else {
       await restoreProject(props.projectId);
     }
-    props.updateParent();
     handleClose();
+    await props.updateParent();
   }
 
   function handleOpen() {

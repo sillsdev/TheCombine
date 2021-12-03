@@ -55,9 +55,9 @@ describe("GoalTimelineVertical", () => {
   describe("createSuggestionData", () => {
     it("Generates proper suggestion data: no options to append", () => {
       createTimeMaster([], defaultState.allGoalTypes);
-      expect(timeHandle.createSuggestionData()).toEqual(
-        goalsWithAnyGuids.slice(1)
-      );
+      expect(
+        timeHandle.createSuggestionData(defaultState.allGoalTypes)
+      ).toEqual(goalsWithAnyGuids.slice(1));
 
       // Cleanup
       createTimeMaster();
@@ -69,7 +69,9 @@ describe("GoalTimelineVertical", () => {
         ...goalsWithAnyGuids.slice(0, 2),
       ];
       createTimeMaster([], defaultState.allGoalTypes.slice(2));
-      expect(timeHandle.createSuggestionData()).toEqual(expectedGoals);
+      expect(
+        timeHandle.createSuggestionData(defaultState.allGoalTypes)
+      ).toEqual(expectedGoals);
 
       // Cleanup
       createTimeMaster();
@@ -77,7 +79,9 @@ describe("GoalTimelineVertical", () => {
 
     it("Generates proper suggestion data: empty suggestion data", () => {
       createTimeMaster([], []);
-      expect(timeHandle.createSuggestionData()).toEqual(goalsWithAnyGuids);
+      expect(
+        timeHandle.createSuggestionData(defaultState.allGoalTypes)
+      ).toEqual(goalsWithAnyGuids);
     });
   });
 });
@@ -102,6 +106,7 @@ function createTimeline(
       chooseGoal={CHOOSE_GOAL}
       clearHistory={CLEAR_HISTORY}
       loadHistory={LOAD_HISTORY}
+      currentProjectId="mockId"
       allGoalTypes={defaultState.allGoalTypes}
       currentGoal={defaultState.currentGoal}
       goalTypeSuggestions={suggestions ?? defaultState.allGoalTypes.slice(0, 3)}

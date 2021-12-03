@@ -7,9 +7,11 @@ import {
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
+import { getUserRole } from "backend";
+import { getCurrentUser } from "backend/localStorage";
 import GoalList from "components/GoalTimeline/GoalList";
-import { goalTypeToGoal } from "types/goalUtilities";
-import { Goal, GoalsState } from "types/goals";
+import { requiredPermission, goalTypeToGoal } from "types/goalUtilities";
+import { Goal, GoalsState, GoalType } from "types/goals";
 
 const timelineStyle = {
   centerButton: {
@@ -28,12 +30,15 @@ const timelineStyle = {
 };
 
 interface GoalTimelineProps {
+  currentProjectId: string;
   chooseGoal: (goal: Goal) => void;
   clearHistory: () => void;
   loadHistory: () => void;
 }
 
 interface GoalTimelineState {
+  availableGoalTypes: GoalType[];
+  suggestedGoalTypes: GoalType[];
   portrait: boolean;
 }
 
@@ -49,6 +54,8 @@ export default class GoalTimeline extends React.Component<
   constructor(props: GoalTimelineProps & GoalsState) {
     super(props);
     this.state = {
+      availableGoalTypes: [],
+      suggestedGoalTypes: [],
       portrait: window.innerWidth - 40 < window.innerHeight,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -66,8 +73,9 @@ export default class GoalTimeline extends React.Component<
   };
 
   // Load history from database
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener("resize", this.handleWindowSizeChange);
+    await this.getSuggestionsWithPermission();
     this.props.loadHistory();
   }
 
@@ -77,25 +85,46 @@ export default class GoalTimeline extends React.Component<
     this.props.chooseGoal(goal);
   }
 
+  async getSuggestionsWithPermission() {
+    const userRoleId =
+      getCurrentUser()?.projectRoles[this.props.currentProjectId];
+    if (!userRoleId) {
+      return;
+    }
+    const permissions = (await getUserRole(userRoleId)).permissions;
+    const availableGoalTypes = this.props.allGoalTypes.filter((type) =>
+      permissions.includes(requiredPermission(type))
+    );
+    const suggestedGoalTypes = availableGoalTypes.filter((t) =>
+      this.props.goalTypeSuggestions.includes(t)
+    );
+    this.setState({ availableGoalTypes, suggestedGoalTypes });
+  }
+
   // Creates a list of suggestions, with non-suggested goals at the end and
   // our main suggestion absent (to be displayed on the suggestions button).
-  createSuggestionData(): Goal[] {
-    const suggestions = this.props.goalTypeSuggestions;
+  // Avoids referencing this.state for testing purposes.
+  createSuggestionData(availableGoalTypes: GoalType[]): Goal[] {
+    const suggestions = this.props.goalTypeSuggestions.filter((t) =>
+      availableGoalTypes.includes(t)
+    );
+    // Use ? even though suggestions shouldn't ever be undefined, because somehow it can
+    // be while loading component props from the Redux state.
     if (!suggestions?.length) {
-      return this.props.allGoalTypes.map((type) => goalTypeToGoal(type));
+      return availableGoalTypes.map(goalTypeToGoal);
     }
     const secondarySuggestions = suggestions.slice(1);
-    const nonSuggestions = this.props.allGoalTypes.filter(
+    const nonSuggestions = availableGoalTypes.filter(
       (t) => !suggestions.includes(t)
     );
     secondarySuggestions.push(...nonSuggestions);
-    return secondarySuggestions.map((type) => goalTypeToGoal(type));
+    return secondarySuggestions.map(goalTypeToGoal);
   }
 
   // Creates a button for our recommended goal
   goalButton(): ReactElement {
-    const done = this.props.goalTypeSuggestions.length === 0;
-    const goal = goalTypeToGoal(this.props.goalTypeSuggestions[0]);
+    const done = this.state.suggestedGoalTypes.length === 0;
+    const goal = goalTypeToGoal(this.state.suggestedGoalTypes[0]);
     return (
       <Button
         style={timelineStyle.centerButton}
@@ -121,7 +150,7 @@ export default class GoalTimeline extends React.Component<
         <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
           <GoalList
             orientation="horizontal"
-            data={this.createSuggestionData()}
+            data={this.createSuggestionData(this.state.availableGoalTypes)}
             handleChange={this.handleChange}
             size={100}
             numPanes={2}
@@ -168,7 +197,7 @@ export default class GoalTimeline extends React.Component<
           </Typography>
           <GoalList
             orientation="vertical"
-            data={this.createSuggestionData()}
+            data={this.createSuggestionData(this.state.availableGoalTypes)}
             handleChange={this.handleChange}
             size={35}
             numPanes={3}

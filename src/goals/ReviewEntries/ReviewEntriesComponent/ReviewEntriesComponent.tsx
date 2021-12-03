@@ -29,12 +29,14 @@ export default class ReviewEntriesComponent extends React.Component<
     super(props);
     this.state = { loaded: false };
     this.recorder = new Recorder();
-    getFrontierWords().then((frontier) => {
-      this.props.updateAllWords(
-        frontier.map((w) => new ReviewEntriesWord(w, undefined, this.recorder))
-      );
-      this.setState({ loaded: true });
-    });
+  }
+
+  async componentDidMount() {
+    const frontier = await getFrontierWords();
+    this.props.updateAllWords(
+      frontier.map((w) => new ReviewEntriesWord(w, undefined, this.recorder))
+    );
+    this.setState({ loaded: true });
   }
 
   render() {
