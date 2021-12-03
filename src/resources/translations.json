@@ -386,9 +386,9 @@
         "Failed to make default analysis language"
       ],
       "deleteAnalysisLanguageFailed": [
-        "Failed to delete analysis language.",
-        "Failed to delete analysis language.",
-        "Failed to delete analysis language."
+        "Failed to delete analysis language",
+        "Failed to delete analysis language",
+        "Failed to delete analysis language"
       ]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
