@@ -108,6 +108,8 @@ export default class GoalTimeline extends React.Component<
     const suggestions = this.props.goalTypeSuggestions.filter((t) =>
       availableGoalTypes.includes(t)
     );
+    // Use ? even though suggestions shouldn't ever be undefined, because somehow it can
+    // be while loading component props from the Redux state.
     if (!suggestions?.length) {
       return availableGoalTypes.map(goalTypeToGoal);
     }
