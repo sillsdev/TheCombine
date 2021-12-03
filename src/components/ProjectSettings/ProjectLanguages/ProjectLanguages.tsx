@@ -10,14 +10,14 @@ import {
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
+import { toast } from "react-toastify";
 
 import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/word";
-import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
-import { toast } from "react-toastify";
 
 interface LanguageProps {
   project: Project;
