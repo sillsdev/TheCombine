@@ -83,12 +83,12 @@ class UserManagement extends React.Component<UserProps, UserState> {
   deleteUser(userId: string) {
     deleteUser(userId)
       .then(() => {
-        toast(<Translate id="siteSettings.deleteUser.toastSuccess" />);
+        toast.success(<Translate id="siteSettings.deleteUser.toastSuccess" />);
         this.populateUsers();
       })
       .catch((err) => {
         console.error(err);
-        toast(<Translate id="siteSettings.deleteUser.toastFailure" />);
+        toast.error(<Translate id="siteSettings.deleteUser.toastFailure" />);
       });
     this.handleCloseModal();
   }

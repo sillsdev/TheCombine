@@ -44,14 +44,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setRemoveUser(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
         );
       });
@@ -71,14 +71,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setMakeAdmin(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
         );
       });
@@ -92,14 +92,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setRemoveAdmin(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.removeAdminToastFailure" />
         );
       });
@@ -132,14 +132,14 @@ export default function CancelConfirmDialogCollection(
       .then(() => {
         setMakeOwner(false);
         setAnchorEl(undefined);
-        toast(
+        toast.success(
           <Translate id="projectSettings.userManagement.makeOwnerToastSuccess" />
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast(
+        toast.error(
           <Translate id="projectSettings.userManagement.makeOwnerToastFailure" />
         );
       });

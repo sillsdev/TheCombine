@@ -46,7 +46,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     if (await backend.isEmailTaken(email)) {
       await backend.getUserByEmail(email).then((u) => {
         this.props.addToProject(u);
-        toast(<Translate id="projectSettings.invite.userExists" />);
+        toast.error(<Translate id="projectSettings.invite.userExists" />);
       });
     } else {
       await backend.emailInviteToProject(

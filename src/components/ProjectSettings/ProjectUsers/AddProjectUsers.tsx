@@ -45,12 +45,12 @@ export default function AddProjectUsers() {
           user.id
         )
         .then(() => {
-          toast(<Translate id="projectSettings.invite.toastSuccess" />);
+          toast.success(<Translate id="projectSettings.invite.toastSuccess" />);
           dispatch(asyncRefreshCurrentProjectUsers());
         })
         .catch((err) => {
           console.error(err);
-          toast(<Translate id="projectSettings.invite.toastFail" />);
+          toast.error(<Translate id="projectSettings.invite.toastFail" />);
         });
     }
   }
