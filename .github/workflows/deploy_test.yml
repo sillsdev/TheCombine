@@ -1,0 +1,12 @@
+name: Deploy_Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Run a command on the self-hosted runner
+        run: ls /
