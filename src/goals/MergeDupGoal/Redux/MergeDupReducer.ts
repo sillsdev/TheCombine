@@ -68,7 +68,15 @@ export const mergeDupStepReducer = (
       const tree: MergeTree = JSON.parse(JSON.stringify(state.tree));
       const words = tree.words;
 
-      delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
+      const sensesGuids = words[srcWordId].sensesGuids;
+      if (srcRef.order !== undefined) {
+        sensesGuids[srcRef.mergeSenseId].splice(srcRef.order, 1);
+        if (!sensesGuids[srcRef.mergeSenseId].length) {
+          delete sensesGuids[srcRef.mergeSenseId];
+        }
+      } else {
+        delete sensesGuids[srcRef.mergeSenseId];
+      }
       if (!Object.keys(words[srcWordId].sensesGuids).length) {
         delete words[srcWordId];
       }

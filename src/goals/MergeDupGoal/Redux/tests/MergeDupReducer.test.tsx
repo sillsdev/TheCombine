@@ -300,6 +300,38 @@ describe("MergeDupReducer", () => {
 
       checkTreeWords(testAction, expectedWords);
     });
+
+    it("deletes a sense from the sidebar", () => {
+      const wordId = "word2";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+        order: 0,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].sensesGuids = { word2_senseA: ["word2_senseA_1"] };
+
+      checkTreeWords(testAction, expectedWords);
+    });
+
+    it("delete last sidebar sense from a word's last sense", () => {
+      const srcWordId = "word1";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 0,
+      };
+
+      const testAction = Actions.deleteSense(srcRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[srcWordId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
   });
 
   describe("moveSense", () => {
