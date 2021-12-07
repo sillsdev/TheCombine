@@ -10,10 +10,12 @@ import {
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
+import { toast } from "react-toastify";
 
 import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/word";
 
@@ -56,7 +58,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.makeDefaultAnalysisLanguageFailed" />
+        );
+      });
   }
 
   deleteAnalysisWritingSystem(index: number) {
@@ -64,7 +71,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.deleteAnalysisLanguageFailed" />
+        );
+      });
   }
 
   addAnalysisWritingSystem() {
@@ -77,7 +89,12 @@ export default class ProjectLanguages extends React.Component<
     this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.addAnalysisLanguageFailed" />
+        );
+      });
   }
 
   isNewWritingSystem(): boolean {
@@ -127,6 +144,7 @@ export default class ProjectLanguages extends React.Component<
   render() {
     return (
       <React.Fragment>
+        <UpperRightToastContainer />
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}

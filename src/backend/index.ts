@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
-import Swal from "sweetalert2";
 
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
@@ -20,6 +19,7 @@ import {
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
+import { errorToast } from "components/Toast/SwalToast";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -39,17 +39,6 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
   const url = err.config.url;
-  const errorToast = Swal.mixin({
-    toast: true,
-    position: "bottom",
-    showConfirmButton: false,
-    timer: 5000,
-    timerProgressBar: true,
-    icon: "error",
-    showCancelButton: true,
-    cancelButtonText: "Dismiss",
-  });
-
   const response = err.response;
   if (response) {
     const status = response.status;
@@ -156,9 +145,12 @@ export async function avatarSrc(userId: string): Promise<string> {
     const resp = await avatarApi.downloadAvatar({ userId }, options);
     const image = Buffer.from(resp.data, "base64").toString("base64");
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
-  } catch (e) {
+  } catch (err) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
-    console.error(e);
+    // Avoid opening a toast because a different user's avatar could cause this
+    // issue, which is not actionable by the current user. The toast could
+    // block further UI actions.
+    console.error(err);
     return "";
   }
 }
@@ -318,6 +310,10 @@ export async function getAllActiveProjectsByUser(
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
       console.error(err);
+      await errorToast.fire({
+        title: "Error Fetching Project",
+        text: `Unable to fetch Project: ${projectId}`,
+      });
     }
   }
   return projects;

@@ -28,11 +28,13 @@ export default class ChooseProject extends React.Component<
   constructor(props: ChooseProjectProps) {
     super(props);
     this.state = { projectList: [] };
+  }
+
+  async componentDidMount() {
     const userId = getUserId();
     if (userId) {
-      getAllActiveProjectsByUser(userId).then((projectList) => {
-        this.setState({ projectList });
-      });
+      const projectList = await getAllActiveProjectsByUser(userId);
+      this.setState({ projectList });
     }
   }
 

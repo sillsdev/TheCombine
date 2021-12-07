@@ -84,7 +84,7 @@ namespace BackendFramework.Models
         ImportExport = 4,
 
         /// <summary> Can merge words and change the char set </summary>
-        MergeAndCharSet = 3,
+        MergeAndReviewEntries = 3,
 
         /// <summary> Unused </summary>
         Unused = 2,
