@@ -98,6 +98,10 @@ export default function DragSense(props: DragSenseProps) {
             userSelect: "none",
             minWidth: 150,
             maxWidth: 300,
+            opacity:
+              snapshot.draggingOver === trashId || snapshot.combineWith
+                ? 0.7
+                : 1,
             background:
               snapshot.draggingOver === trashId
                 ? "red"

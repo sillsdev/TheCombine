@@ -40,6 +40,10 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
               marginBottom: theme.spacing(1),
               marginTop: theme.spacing(1),
               maxWidth: 300,
+              opacity:
+                snapshot.draggingOver === trashId || snapshot.combineWith
+                  ? 0.7
+                  : 1,
               background:
                 snapshot.draggingOver === trashId
                   ? "red"

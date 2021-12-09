@@ -18,9 +18,7 @@ import theme from "types/theme";
 
 export const trashId = "trash-drop";
 
-interface MergeDragDropProps {
-  portrait: boolean;
-}
+interface MergeDragDropProps {}
 
 export default function MergeDragDrop(props: MergeDragDropProps) {
   const dispatch = useDispatch();
@@ -87,10 +85,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      <ImageListItem
-        key={"trash"}
-        style={{ height: "70vh", margin: theme.spacing(1) }}
-      >
+      <ImageListItem key={"trash"} style={{ marginTop: "35vh" }}>
         <Droppable key={trashId} droppableId={trashId}>
           {(provided) => (
             <div ref={provided.innerRef}>
@@ -105,19 +100,11 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
           key={key}
           style={{ height: "70vh", margin: theme.spacing(1) }}
         >
-          <DropWord
-            mergeState={mergeState}
-            portrait={props.portrait}
-            wordId={key}
-          />
+          <DropWord mergeState={mergeState} wordId={key} />
         </ImageListItem>
       ))}
       <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
-        <DropWord
-          mergeState={mergeState}
-          portrait={props.portrait}
-          wordId={newId}
-        />
+        <DropWord mergeState={mergeState} wordId={newId} />
       </ImageListItem>
       {renderSidebar()}
     </DragDropContext>
