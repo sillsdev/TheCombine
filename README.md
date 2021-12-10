@@ -590,8 +590,9 @@ Task: add an existing user to a project
 Notes:
 
 1. The `--project` and `--user` options may be shortened to `--p` and `--u` respectively.
-2. The user is added to the project with normal project member permissions (`[3,2,1]`). Add the `--admin` option to add
-   the user with project administrator permissions (`[5,4,3,2,1]`)
+2. The user is added to the project with normal project member permissions (`MergeAndReviewEntries`, and
+   `WordEntry`). Add the `--admin` option to add the user with project administrator permissions 
+   (`DeleteEditSettingsAndUsers`, `ImportExport`, `MergeAndReviewEntries`, and `WordEntry`)
 
 ### Backup _TheCombine_
 
