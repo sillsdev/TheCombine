@@ -2,7 +2,7 @@ name: "Deploy Update to QA Server"
 
 on:
   push:
-    branches: [master, deploy_GH_actions]
+    branches: [master]
 
 jobs:
   build:
