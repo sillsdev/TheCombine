@@ -89,7 +89,7 @@ export default function MergeDragDrop(props: MergeDragDropProps) {
         <Droppable key={trashId} droppableId={trashId}>
           {(provided) => (
             <div ref={provided.innerRef}>
-              <Delete />
+              <Delete fontSize="large" />
               <div style={{ position: "absolute" }}>{provided.placeholder}</div>
             </div>
           )}
