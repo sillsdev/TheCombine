@@ -86,8 +86,7 @@ namespace BackendFramework.Models
         /// <summary> Can merge words and change the char set </summary>
         MergeAndReviewEntries = 3,
 
-        /// <summary> Unused </summary>
-        Unused = 2,
+        // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
 
         /// <summary> Can enter words </summary>
         WordEntry = 1

@@ -5,8 +5,10 @@ Add user to a project.
 This script will add a user to a Combine project in the database
 
 To add the user to the project, we need to:
- 1. If the --admin argument is used, set the requested permissions to [5,4,3,2,1];
-    otherwise, set them to [3,2,1]
+ 1. If the --admin argument is used, set the requested permissions to
+        [DeleteEditSettingsAndUsers, ImportExport, MergeAndReviewEntries, WordEntry]
+    otherwise
+        [MergeAndReviewEntries, WordEntry]
  2. Look up the user id - check the "user" info against the username and
     email fields in the UsersCollection.
  3. Check to see if the user is already in the project.  If he/she is
@@ -62,13 +64,11 @@ def main() -> None:
             Permission.DeleteEditSettingsAndUsers.value,
             Permission.ImportExport.value,
             Permission.MergeAndReviewEntries.value,
-            Permission.Unused.value,
             Permission.WordEntry.value,
         ]
     else:
         req_permissions = [
             Permission.MergeAndReviewEntries.value,
-            Permission.Unused.value,
             Permission.WordEntry.value,
         ]
 
