@@ -47,7 +47,7 @@ export function MergesCount(changes: MergesCompleted): ReactElement {
 
 function MergeChange(change: MergeUndoIds): ReactElement {
   return (
-    <div key={change.parentIds[0]}>
+    <div key={change.parentIds[0] ?? "noParent"}>
       <Grid
         container
         style={{
@@ -146,7 +146,11 @@ export function doWordsIncludeMerges(
   merge: MergeUndoIds
 ): boolean {
   const wordIds = words.map((word) => word.id);
-  return merge.parentIds.every((id) => wordIds.includes(id));
+  // The undo operation will fail if any of the children are in the frontier.
+  return (
+    merge.parentIds.every((id) => wordIds.includes(id)) &&
+    !merge.childIds.some((id) => wordIds.includes(id))
+  );
 }
 
 interface WordPaperProps {

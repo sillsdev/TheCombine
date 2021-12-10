@@ -76,7 +76,7 @@ namespace Backend.Tests.Services
 
             var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
 
-            // There should only be no word added, and no words left in the frontier
+            // There should be no word added and no words left in the frontier.
             Assert.That(newWords, Has.Count.EqualTo(0));
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(0));
@@ -100,7 +100,7 @@ namespace Backend.Tests.Services
             var mergeWordsList = new List<MergeWords> { mergeWords };
             var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
 
-            // Check for correct history length;
+            // Check for correct history length.
             var dbParent = newWords.First();
             Assert.That(dbParent.History, Has.Count.EqualTo(numberOfChildren));
 
