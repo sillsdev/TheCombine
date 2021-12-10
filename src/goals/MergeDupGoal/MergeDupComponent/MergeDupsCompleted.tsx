@@ -69,9 +69,11 @@ function MergeChange(change: MergeUndoIds): ReactElement {
             }}
           />
         </Grid>
-        {change.parentIds.map((id) => (
-          <WordPaper key={id} wordId={id} />
-        ))}
+        {change.parentIds.length ? (
+          change.parentIds.map((id) => <WordPaper key={id} wordId={id} />)
+        ) : (
+          <WordPaper key={"noParent"} wordId={""} />
+        )}
         <UndoButton
           merge={change}
           textId="mergeDups.undo.undo"
@@ -178,7 +180,7 @@ function WordPaper(props: WordPaperProps): ReactElement {
           <Typography variant="h5">{word?.vernacular}</Typography>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-          {word?.senses.map(SenseCard)}
+          {word?.senses?.map(SenseCard)}
         </div>
       </Paper>
     </Grid>
