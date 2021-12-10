@@ -38,5 +38,5 @@ export interface MergeWords {
    * @type {boolean}
    * @memberof MergeWords
    */
-  noParent: boolean;
+  noParent?: boolean;
 }

@@ -225,7 +225,7 @@ function getMergeWords(
       return { srcWordId: sList[0].srcWordId, getAudio };
     });
 
-    return { parent, children, noParent: false };
+    return { parent, children };
   }
 }
 

@@ -122,12 +122,10 @@ describe("MergeDupActions", () => {
             { srcWordId: idA, getAudio: true },
             { srcWordId: idB, getAudio: false },
           ],
-          noParent: false,
         },
         {
           parent: wordAnyGuids(vernB, ["S4"], idB),
           children: [{ srcWordId: idB, getAudio: false }],
-          noParent: false,
         },
       ];
       for (const mergeWords of mockMerges) {
@@ -157,12 +155,10 @@ describe("MergeDupActions", () => {
             { srcWordId: idA, getAudio: true },
             { srcWordId: idB, getAudio: false },
           ],
-          noParent: false,
         },
         {
           parent: wordAnyGuids(vernB, ["S4"], idB),
           children: [{ srcWordId: idB, getAudio: false }],
-          noParent: false,
         },
       ];
       for (const mergeWords of mockMerges) {
@@ -185,7 +181,6 @@ describe("MergeDupActions", () => {
       const mockMerge: MergeWords = {
         parent: wordAnyGuids(vernA, ["S1"], idA),
         children: [{ srcWordId: idA, getAudio: true }],
-        noParent: false,
       };
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
     });
@@ -205,7 +200,6 @@ describe("MergeDupActions", () => {
       const mockMerge: MergeWords = {
         parent: wordAnyGuids(vernA, ["S1"], idA),
         children: [{ srcWordId: idA, getAudio: true }],
-        noParent: false,
       };
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
     });

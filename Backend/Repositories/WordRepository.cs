@@ -98,6 +98,10 @@ namespace BackendFramework.Repositories
         /// <returns> The words created </returns>
         public async Task<List<Word>> Create(List<Word> words)
         {
+            if (words.Count == 0)
+            {
+                return words;
+            }
             foreach (var w in words)
             {
                 PopulateBlankWordTimes(w);
