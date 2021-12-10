@@ -225,7 +225,7 @@ function getMergeWords(
       return { srcWordId: sList[0].srcWordId, getAudio };
     });
 
-    return { parent, children };
+    return { parent, children, noParent: false };
   }
 }
 
@@ -248,7 +248,7 @@ export function mergeAll() {
     const mergeWordsArray: MergeWords[] = deletedWords.map((w) => ({
       parent: w,
       children: [{ srcWordId: w.id, getAudio: false }],
-      _delete: true,
+      noParent: true,
     }));
 
     // Merge words.

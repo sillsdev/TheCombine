@@ -38,5 +38,5 @@ export interface MergeWords {
    * @type {boolean}
    * @memberof MergeWords
    */
-  _delete: boolean;
+  noParent: boolean;
 }
