@@ -159,9 +159,6 @@ function getMergeWords(
       }
     }
 
-    // Word to be deleted if all senses deleted.
-    //To-Do
-
     // Set sense and duplicate senses.
     Object.values(word.sensesGuids).forEach((guids) => {
       // Set the first sense to be merged as State.Active.
