@@ -18,7 +18,7 @@ class Permission(enum.Enum):
     """Define enumerated type for Combine user permissions."""
 
     WordEntry = 1
-    Unused = 2
+    # Integer value 2 is currently unused.
     MergeAndReviewEntries = 3
     ImportExport = 4
     DeleteEditSettingsAndUsers = 5
