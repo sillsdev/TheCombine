@@ -6,7 +6,7 @@ This script will add a user to a Combine project in the database
 
 To add the user to the project, we need to:
  1. If the --admin argument is used, set the requested permissions to
-        [DeleteEditSettingsAndUsers, ImportExport, MergeAndReviewEntries, WordEntry];
+        [DeleteEditSettingsAndUsers, ImportExport, MergeAndReviewEntries, WordEntry]
     otherwise
         [MergeAndReviewEntries, WordEntry]
  2. Look up the user id - check the "user" info against the username and
