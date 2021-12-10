@@ -19,7 +19,6 @@
  */
 export enum Permission {
   WordEntry = "WordEntry",
-  Unused = "Unused",
   MergeAndReviewEntries = "MergeAndReviewEntries",
   ImportExport = "ImportExport",
   DeleteEditSettingsAndUsers = "DeleteEditSettingsAndUsers",

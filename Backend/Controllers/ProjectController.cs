@@ -120,7 +120,6 @@ namespace BackendFramework.Controllers
                     Permission.DeleteEditSettingsAndUsers,
                     Permission.ImportExport,
                     Permission.MergeAndReviewEntries,
-                    Permission.Unused,
                     Permission.WordEntry
                 },
                 ProjectId = project.Id

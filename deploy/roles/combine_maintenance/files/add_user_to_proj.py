@@ -62,13 +62,11 @@ def main() -> None:
             Permission.DeleteEditSettingsAndUsers.value,
             Permission.ImportExport.value,
             Permission.MergeAndReviewEntries.value,
-            Permission.Unused.value,
             Permission.WordEntry.value,
         ]
     else:
         req_permissions = [
             Permission.MergeAndReviewEntries.value,
-            Permission.Unused.value,
             Permission.WordEntry.value,
         ]
 
