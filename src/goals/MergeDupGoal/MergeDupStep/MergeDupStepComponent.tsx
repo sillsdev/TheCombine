@@ -73,7 +73,7 @@ class MergeDupStep extends React.Component<
         </Grid>
       </React.Fragment>
     ) : (
-      // ToDo: create component with button back to goals.
+      // TODO: create component with button back to goals.
       <Typography>
         {this.props.translate("mergeDups.helpText.noDups")}
       </Typography>

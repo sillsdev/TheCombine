@@ -16,11 +16,14 @@ namespace BackendFramework.Models
         public Word Parent { get; set; }
         [Required]
         public List<MergeSourceWord> Children { get; set; }
+        [Required]
+        public bool Delete { get; set; }
 
         public MergeWords()
         {
             Parent = new Word();
             Children = new List<MergeSourceWord>();
+            Delete = false;
         }
     }
 

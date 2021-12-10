@@ -245,10 +245,11 @@ export function mergeAll() {
       (w) =>
         !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g))
     );
-    const mergeWordsArray = deletedWords.map(
-      (w) =>
-        ({ children: [{ srcWordId: w.id, getAudio: false }] } as MergeWords)
-    );
+    const mergeWordsArray: MergeWords[] = deletedWords.map((w) => ({
+      parent: w,
+      children: [{ srcWordId: w.id, getAudio: false }],
+      _delete: true,
+    }));
 
     // Merge words.
     const words = Object.keys(mergeTree.tree.words);
