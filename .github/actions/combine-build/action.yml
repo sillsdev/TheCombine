@@ -27,10 +27,12 @@ runs:
     - name: Create Image Tag
       run: |
         echo "IMAGE_TAG="`node scripts/printVersion.js`${{ inputs.tag_suffix }} >> $GITHUB_ENV
+      shell: bash
 
     - name: Save Image Tag
       id: save_image_tag
       run: echo "::set-output name=image_tag::${{ env.IMAGE_TAG }}"
+      shell: bash
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
