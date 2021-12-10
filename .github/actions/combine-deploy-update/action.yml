@@ -18,22 +18,17 @@ runs:
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version
-      shell: bash
     - name: Deploy updated images
       run: echo "Update images with version ${{ inputs.image_tag }}"
-      shell: bash
     - name: Update frontend
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/frontend
         frontend="${{ inputs.image_repo }}/combine_frontend:${{ inputs.image_tag }}"
-      shell: bash
     - name: Update backend
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/backend
         backend="${{ inputs.image_repo }}/combine_backend:${{ inputs.image_tag }}"
-      shell: bash
     - name: Update maintenance
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/maintenance
         maintenance="${{ inputs.image_repo }}/combine_maint:${{ inputs.image_tag }}"
-      shell: bash

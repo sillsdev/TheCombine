@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v2
 
@@ -33,6 +36,9 @@ jobs:
   deploy_update:
     needs: build
     runs-on: [self-hosted, thecombine]
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v2
       - name: Deploy The Combine Update
