@@ -18,9 +18,7 @@ import theme from "types/theme";
 
 export const trashId = "trash-drop";
 
-interface MergeDragDropProps {}
-
-export default function MergeDragDrop(props: MergeDragDropProps) {
+export default function MergeDragDrop() {
   const dispatch = useDispatch();
   const mergeState = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal
