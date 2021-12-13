@@ -20,6 +20,7 @@ import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   MergesCompleted,
   MergeStepData,
+  newMergeWords,
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   ClearTreeMergeAction,
@@ -222,7 +223,7 @@ function getMergeWords(
       return { srcWordId: sList[0].srcWordId, getAudio };
     });
 
-    return { parent, children };
+    return newMergeWords(parent, children);
   }
 }
 
@@ -242,11 +243,9 @@ export function mergeAll() {
       (w) =>
         !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g))
     );
-    const mergeWordsArray: MergeWords[] = deletedWords.map((w) => ({
-      parent: w,
-      children: [{ srcWordId: w.id, getAudio: false }],
-      noParent: true,
-    }));
+    const mergeWordsArray = deletedWords.map((w) =>
+      newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
+    );
 
     // Merge words.
     const words = Object.keys(mergeTree.tree.words);

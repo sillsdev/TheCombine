@@ -47,7 +47,7 @@ export function MergesCount(changes: MergesCompleted): ReactElement {
 
 function MergeChange(change: MergeUndoIds): ReactElement {
   return (
-    <div key={change.parentIds[0] ?? "noParent"}>
+    <div key={change.parentIds[0] ?? "deleteOnly"}>
       <Grid
         container
         style={{
@@ -72,7 +72,7 @@ function MergeChange(change: MergeUndoIds): ReactElement {
         {change.parentIds.length ? (
           change.parentIds.map((id) => <WordPaper key={id} wordId={id} />)
         ) : (
-          <WordPaper key={"noParent"} wordId={""} />
+          <WordPaper key={"deleteOnly"} wordId={""} />
         )}
         <UndoButton
           merge={change}

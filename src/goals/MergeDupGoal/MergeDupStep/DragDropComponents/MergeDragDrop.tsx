@@ -1,9 +1,12 @@
-import { Drawer, ImageListItem } from "@material-ui/core";
+import { Drawer, ImageListItem, Tooltip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
+import { useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 
+import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
 import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
 import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
@@ -23,6 +26,7 @@ export default function MergeDragDrop() {
   const mergeState = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal
   );
+  const [senseToDelete, setSenseToDelete] = useState<string>("");
   const sidebar = mergeState.tree.sidebar;
   const treeWords = mergeState.tree.words;
 
@@ -30,7 +34,7 @@ export default function MergeDragDrop() {
     const senseRef: MergeTreeReference = JSON.parse(res.draggableId);
     if (res.destination?.droppableId === trashId) {
       // Case 1: the sense was dropped on the trash icon.
-      dispatch(deleteSense(senseRef));
+      setSenseToDelete(res.draggableId);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
       const combineRef: MergeTreeReference = JSON.parse(
@@ -63,6 +67,11 @@ export default function MergeDragDrop() {
     }
   }
 
+  function deleteConfirm() {
+    dispatch(deleteSense(JSON.parse(senseToDelete)));
+    setSenseToDelete("");
+  }
+
   function renderSidebar() {
     if (sidebar.senses.length <= 1) return <div />;
     return (
@@ -83,11 +92,16 @@ export default function MergeDragDrop() {
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      <ImageListItem key={"trash"} style={{ marginTop: "35vh" }}>
+      <ImageListItem key={"trash"} style={{ marginTop: "70vh" }}>
         <Droppable key={trashId} droppableId={trashId}>
           {(provided) => (
             <div ref={provided.innerRef}>
-              <Delete fontSize="large" />
+              <Tooltip
+                title={<Translate id="mergeDups.helpText.delete" />}
+                placement="top"
+              >
+                <Delete fontSize="large" />
+              </Tooltip>
               <div style={{ position: "absolute" }}>{provided.placeholder}</div>
             </div>
           )}
@@ -105,6 +119,12 @@ export default function MergeDragDrop() {
         <DropWord mergeState={mergeState} wordId={newId} />
       </ImageListItem>
       {renderSidebar()}
+      <CancelConfirmDialog
+        open={!!senseToDelete}
+        textId="mergeDups.helpText.deleteDialog"
+        handleCancel={() => setSenseToDelete("")}
+        handleConfirm={deleteConfirm}
+      />
     </DragDropContext>
   );
 }

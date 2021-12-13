@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 
 import { Word } from "api/models";
 import {
+  defaultSidebar,
   defaultTree,
   Hash,
   MergeTree,
@@ -81,7 +82,20 @@ export const mergeDupStepReducer = (
         delete words[srcWordId];
       }
 
-      return { ...state, tree: { ...state.tree, words } };
+      let sidebar = tree.sidebar;
+      if (
+        sidebar.wordId === srcRef.wordId &&
+        sidebar.mergeSenseId === srcRef.mergeSenseId &&
+        srcRef.order === undefined
+      ) {
+        if (srcRef.order === undefined) {
+          sidebar = defaultSidebar;
+        } else {
+          sidebar.senses.splice(srcRef.order, 1);
+        }
+      }
+
+      return { ...state, tree: { ...state.tree, words, sidebar } };
     }
 
     case MergeTreeActionTypes.MOVE_DUPLICATE: {

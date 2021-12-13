@@ -71,7 +71,7 @@ namespace Backend.Tests.Services
                 {
                     new() { SrcWordId = thisWord.Id }
                 },
-                NoParent = true
+                DeleteOnly = true
             };
 
             var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;

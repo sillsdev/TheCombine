@@ -73,7 +73,7 @@ namespace BackendFramework.Services
         public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
         {
             var newWords = new List<Word>();
-            await Task.WhenAll(mergeWordsList.Where(m => !m.NoParent)
+            await Task.WhenAll(mergeWordsList.Where(m => !m.DeleteOnly)
                                              .Select(m => MergePrepParent(projectId, m)
                                              .ContinueWith(task => newWords.Add(task.Result))));
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
