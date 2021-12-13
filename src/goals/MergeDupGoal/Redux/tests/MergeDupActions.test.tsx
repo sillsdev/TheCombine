@@ -68,15 +68,13 @@ const vernA = "AAA";
 const vernB = "BBB";
 const idA = "WA";
 const idB = "WB";
-const words = {
-  WA: { ...multiSenseWord(vernA, ["S1", "S2"]), id: idA },
-  WB: { ...multiSenseWord(vernB, ["S3", "S4"]), id: idB },
-};
-const data: MergeData = { words, senses: {} };
-const S1 = words.WA.senses[0].guid;
-const S2 = words.WA.senses[1].guid;
-const S3 = words.WB.senses[0].guid;
-const S4 = words.WB.senses[1].guid;
+const wordA: Word = { ...multiSenseWord(vernA, ["S1", "S2"]), id: idA };
+const wordB: Word = { ...multiSenseWord(vernB, ["S3", "S4"]), id: idB };
+const S1 = wordA.senses[0].guid;
+const S2 = wordA.senses[1].guid;
+const S3 = wordB.senses[0].guid;
+const S4 = wordB.senses[1].guid;
+const data: MergeData = { words: { WA: wordA, WB: wordB }, senses: {} };
 data.senses[S1] = { ...newSense("S1"), guid: S1, srcWordId: idA, order: 0 };
 data.senses[S2] = { ...newSense("S2"), guid: S2, srcWordId: idA, order: 1 };
 data.senses[S3] = { ...newSense("S3"), guid: S3, srcWordId: idB, order: 0 };
@@ -206,7 +204,7 @@ describe("MergeDupActions", () => {
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const child = { srcWordId: idB, getAudio: false };
-      const mockMerge = newMergeWords(words["WB"], [child], true);
+      const mockMerge = newMergeWords(wordB, [child], true);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
     });
   });
