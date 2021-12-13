@@ -1,0 +1,43 @@
+name: "Deploy Update to QA Server"
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    env:
+      QA_IMAGE_PATTERN: \\d+\\.\\d+\\.\\d+-[a-z]+\\.\\d+-build\\.\\d+
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.build_combine.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create tag suffix
+        run: |
+          echo "TAG_SUFFIX=-build.$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+
+      - name: Build The Combine
+        id: build_combine
+        uses: ./.github/actions/combine-build
+        with:
+          image_repo: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+          tag_suffix: ${{ env.TAG_SUFFIX }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Remove old AWS ECR images
+        run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint --keep ${{ env.IMAGE_TAG }} --remove ${{ env.QA_IMAGE_PATTERN }}
+  deploy_update:
+    needs: build
+    runs-on: [self-hosted, thecombine]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy The Combine Update
+        uses: ./.github/actions/combine-deploy-update
+        with:
+          image_repo: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+          image_tag: ${{ needs.build.outputs.image_tag }}
+          kube_context: dallas-rke
