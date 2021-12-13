@@ -88,11 +88,7 @@ export const mergeDupStepReducer = (
         sidebar.mergeSenseId === srcRef.mergeSenseId &&
         srcRef.order === undefined
       ) {
-        if (srcRef.order === undefined) {
-          sidebar = defaultSidebar;
-        } else {
-          sidebar.senses.splice(srcRef.order, 1);
-        }
+        sidebar = defaultSidebar;
       }
 
       return { ...state, tree: { ...state.tree, words, sidebar } };
