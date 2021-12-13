@@ -67,7 +67,7 @@ export default function MergeDragDrop() {
     }
   }
 
-  function deleteConfirm() {
+  function performDelete() {
     dispatch(deleteSense(JSON.parse(senseToDelete)));
     setSenseToDelete("");
   }
@@ -123,7 +123,7 @@ export default function MergeDragDrop() {
         open={!!senseToDelete}
         textId="mergeDups.helpText.deleteDialog"
         handleCancel={() => setSenseToDelete("")}
-        handleConfirm={deleteConfirm}
+        handleConfirm={performDelete}
       />
     </DragDropContext>
   );
