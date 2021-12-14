@@ -60,7 +60,6 @@ namespace BackendFramework.Services
                     Permissions = new List<Permission>
                 {
                     Permission.MergeAndReviewEntries,
-                    Permission.Unused,
                     Permission.WordEntry
                 },
                     ProjectId = project.Id

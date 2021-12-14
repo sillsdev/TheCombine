@@ -7,7 +7,6 @@ environments:
 
 1.  Production server: _The Combine_ is run as a web application and is available to users from the Internet.
 2.  QA server: The latest version of _The Combine_ on the `master` branch is run on the internal network for QA testing.
-    Since the QA server is on an internal network, it uses a self-signed certificate for its https traffic.
 3.  NUC: _The Combine_ is run on an Intel NUC single-board computer so that it may be used in areas with poor or no
     internet access. _The Combine_ runs as a web application that is served over a WiFi access point created by the NUC.
 
