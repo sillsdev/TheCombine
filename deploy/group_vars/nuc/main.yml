@@ -22,16 +22,9 @@ combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 ################################################
 # SSL cert variables specific to NUC targets
 ################################################
-cert_mode: "cert-client"
 cert_email: "cert@thecombine.app"
 cert_self_renewal: 60
 combine_cert_proxy_list: []
-
-################################################
-# setup variables for roles/aws_access
-################################################
-aws_user: "{{ combine_user }}"
-aws_group: "{{ combine_group }}"
 
 ################################################
 # AWS S3 storage configuration
@@ -39,13 +32,6 @@ aws_group: "{{ combine_group }}"
 aws_s3_loc: thecombine.app
 aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
-
-aws_s3_profile: s3_read_write
-aws_ecr_profile: ecr_read_only
-
-my_aws_profiles:
-  - "{{ aws_s3_profile }}"
-  - "{{ aws_ecr_profile }}"
 
 ################################################
 # Configure Kubernetes cluster

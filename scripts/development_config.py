@@ -65,10 +65,7 @@ def get_proj_config(
         #
         # The following configuration items are only needed for Docker Compose:
         #
-        "combine_use_syslog": False,
         "combine_image_certmgr": get_image_name(repo, "certmgr", release),  # Docker Compose
-        "ssl_certificate": "/etc/cert_store/nginx/localhost/fullchain.pem",
-        "ssl_private_key": "/etc/cert_store/nginx/localhost/privkey.pem",
         "cert_max_connect_tries": "10",  # Docker Compose
         "combine_app_dir": re.sub(r"\\", r"\\\\", str(project_dir)),
         "backend_files_subdir": ".CombineFiles",

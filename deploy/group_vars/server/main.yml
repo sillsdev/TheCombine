@@ -24,7 +24,6 @@ combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
 ################################################
 # SSL cert variables specific to Server targets
 ################################################
-cert_mode: "cert-server"
 cert_email: "cert@thecombine.app"
 combine_cert_proxy_list:
   - nuc2.thecombine.app
@@ -32,30 +31,11 @@ combine_cert_proxy_list:
 cert_proxy_hostname: cert-proxy.thecombine.app
 
 ################################################
-# setup variables for roles/aws_access
-################################################
-aws_user: "{{ combine_user }}"
-aws_group: "{{ combine_group }}"
-
-################################################
 # AWS S3 storage configuration
 ################################################
 aws_s3_loc: thecombine.app
 aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
-
-# Live server accesses the following AWS services:
-# S3:
-#   - store SSL certificates for the NUCs
-#   - store backups
-# ECR:
-#   - install container images
-aws_s3_profile: s3_read_write
-aws_ecr_profile: ecr_read_only
-
-my_aws_profiles:
-  - "{{ aws_s3_profile }}"
-  - "{{ aws_ecr_profile }}"
 
 # Define backup times (UTC)
 backup_hour: "10"
