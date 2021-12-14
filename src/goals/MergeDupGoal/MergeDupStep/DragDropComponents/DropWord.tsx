@@ -11,7 +11,6 @@ import theme from "types/theme";
 interface DropWordProps {
   mergeState: MergeTreeState;
   wordId: string;
-  portrait: boolean;
 }
 
 export default function DropWord(props: DropWordProps) {
@@ -39,62 +38,62 @@ export default function DropWord(props: DropWordProps) {
   }
 
   return (
-    <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>
-      {(provided) => (
-        <Paper
-          ref={provided.innerRef}
-          style={{
-            backgroundColor: "lightgrey",
-            paddingBottom: theme.spacing(1),
-          }}
-          {...provided.droppableProps}
-        >
-          <Paper
-            square
-            style={{ padding: theme.spacing(1), height: 44, minWidth: 150 }}
+    <Paper
+      style={{
+        backgroundColor: "lightgrey",
+        paddingBottom: theme.spacing(1),
+      }}
+    >
+      <Paper
+        square
+        style={{ padding: theme.spacing(1), height: 44, minWidth: 150 }}
+      >
+        {filled && (
+          <Select
+            value={treeWords[props.wordId].vern}
+            onChange={(e) =>
+              dispatch(setVern(props.wordId, e.target.value as string))
+            }
           >
-            {filled && (
-              <Select
-                value={treeWords[props.wordId].vern}
-                onChange={(e) =>
-                  dispatch(setVern(props.wordId, e.target.value as string))
-                }
-              >
-                {verns.map((vern) => (
-                  <MenuItem value={vern} key={props.wordId + vern}>
-                    <Typography variant="h5">{vern}</Typography>
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </Paper>
-          <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-            {filled &&
-              Object.keys(treeWords[props.wordId].sensesGuids).map(
-                (id, index) => {
-                  const senses = treeWords[props.wordId].sensesGuids[id].map(
-                    (g) => data.senses[g]
-                  );
-                  return (
-                    <DragSense
-                      key={id}
-                      index={index}
-                      wordId={props.wordId}
-                      mergeSenseId={id}
-                      senses={senses}
-                    />
-                  );
-                }
-              )}
-            {provided.placeholder}
+            {verns.map((vern) => (
+              <MenuItem value={vern} key={props.wordId + vern}>
+                <Typography variant="h5">{vern}</Typography>
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      </Paper>
+      <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+              {filled &&
+                Object.keys(treeWords[props.wordId].sensesGuids).map(
+                  (id, index) => {
+                    const senses = treeWords[props.wordId].sensesGuids[id].map(
+                      (g) => data.senses[g]
+                    );
+                    return (
+                      <DragSense
+                        key={id}
+                        index={index}
+                        wordId={props.wordId}
+                        mergeSenseId={id}
+                        senses={senses}
+                      />
+                    );
+                  }
+                )}
+              {provided.placeholder}
+            </div>
+            <div style={{ padding: 16, textAlign: "center" }}>
+              <Typography variant="subtitle1">
+                <Translate id="mergeDups.helpText.dragCard" />
+              </Typography>
+            </div>
           </div>
-          <div style={{ padding: 16, textAlign: "center" }}>
-            <Typography variant="subtitle1">
-              <Translate id="mergeDups.helpText.dragCard" />
-            </Typography>
-          </div>
-        </Paper>
-      )}
-    </Droppable>
+        )}
+      </Droppable>
+    </Paper>
   );
 }

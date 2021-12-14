@@ -16,11 +16,15 @@ namespace BackendFramework.Models
         public Word Parent { get; set; }
         [Required]
         public List<MergeSourceWord> Children { get; set; }
+        // If the children are to be deleted instead of merged, use DeleteOnly = True.
+        [Required]
+        public bool DeleteOnly { get; set; }
 
         public MergeWords()
         {
             Parent = new Word();
             Children = new List<MergeSourceWord>();
+            DeleteOnly = false;
         }
     }
 

@@ -20,10 +20,12 @@ import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import {
   MergesCompleted,
   MergeStepData,
+  newMergeWords,
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
+  DeleteSenseMergeAction,
   MergeTreeActionTypes,
   MergeTreeState,
   MoveDuplicateMergeAction,
@@ -49,10 +51,11 @@ export function combineSense(
   src: MergeTreeReference,
   dest: MergeTreeReference
 ): CombineSenseMergeAction {
-  return {
-    type: MergeTreeActionTypes.COMBINE_SENSE,
-    payload: { src, dest },
-  };
+  return { type: MergeTreeActionTypes.COMBINE_SENSE, payload: { src, dest } };
+}
+
+export function deleteSense(src: MergeTreeReference): DeleteSenseMergeAction {
+  return { type: MergeTreeActionTypes.DELETE_SENSE, payload: { src } };
 }
 
 export function moveSense(
@@ -98,10 +101,7 @@ export function setSidebar(sidebar?: Sidebar): SetSidebarMergeAction {
 }
 
 export function setWordData(words: Word[]): SetDataMergeAction {
-  return {
-    type: MergeTreeActionTypes.SET_DATA,
-    payload: words,
-  };
+  return { type: MergeTreeActionTypes.SET_DATA, payload: words };
 }
 
 export function setVern(
@@ -127,6 +127,11 @@ function getMergeWords(
   if (word) {
     const data = mergeTree.data;
 
+    // List of all non-deleted senses.
+    const nonDeleted = Object.values(mergeTree.tree.words).flatMap((w) =>
+      Object.values(w.sensesGuids).flatMap((s) => s)
+    );
+
     // Create list of all senses and add merge type tags slit by src word.
     const senses: Hash<MergeTreeSense[]> = {};
 
@@ -139,14 +144,16 @@ function getMergeWords(
         if (!senses[wordId]) {
           const dbWord = data.words[wordId];
 
-          // Add each sense into senses as separate.
+          // Add each sense into senses as separate or deleted.
           senses[wordId] = [];
           for (const sense of dbWord.senses) {
             senses[wordId].push({
               ...sense,
               srcWordId: wordId,
               order: senses[wordId].length,
-              accessibility: State.Separate,
+              accessibility: nonDeleted.includes(sense.guid)
+                ? State.Separate
+                : State.Deleted,
             });
           }
         }
@@ -212,15 +219,11 @@ function getMergeWords(
           });
         }
       });
-      return {
-        srcWordId: sList[0].srcWordId,
-        getAudio: !sList.find(
-          (sense) => sense.accessibility === State.Separate
-        ),
-      };
+      const getAudio = !sList.find((s) => s.accessibility === State.Separate);
+      return { srcWordId: sList[0].srcWordId, getAudio };
     });
 
-    return { parent, children };
+    return newMergeWords(parent, children);
   }
 }
 
@@ -231,9 +234,21 @@ export function mergeAll() {
     // Add to blacklist.
     await backend.blacklistAdd(Object.keys(mergeTree.data.words));
 
+    // Handle words with all senses deleted.
+    const possibleWords = Object.values(mergeTree.data.words);
+    const nonDeletedSenses = Object.values(mergeTree.tree.words).flatMap((w) =>
+      Object.values(w.sensesGuids).flatMap((s) => s)
+    );
+    const deletedWords = possibleWords.filter(
+      (w) =>
+        !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g))
+    );
+    const mergeWordsArray = deletedWords.map((w) =>
+      newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
+    );
+
     // Merge words.
     const words = Object.keys(mergeTree.tree.words);
-    const mergeWordsArray: MergeWords[] = [];
     words.forEach((id) => {
       const wordsToMerge = getMergeWords(id, mergeTree);
       if (wordsToMerge) {

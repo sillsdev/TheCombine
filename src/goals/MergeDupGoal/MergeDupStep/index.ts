@@ -7,7 +7,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
-  return { wordCount: Object.keys(state.mergeDuplicateGoal.tree.words).length };
+  return { wordCount: Object.keys(state.mergeDuplicateGoal.data.words).length };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

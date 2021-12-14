@@ -59,6 +59,30 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void MergeWordsDeleteTest()
+        {
+            var thisWord = Util.RandomWord(ProjId);
+            thisWord = _wordRepo.Create(thisWord).Result;
+
+            var mergeObject = new MergeWords
+            {
+                Parent = thisWord,
+                Children = new List<MergeSourceWord>
+                {
+                    new() { SrcWordId = thisWord.Id }
+                },
+                DeleteOnly = true
+            };
+
+            var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
+
+            // There should be no word added and no words left in the frontier.
+            Assert.That(newWords, Has.Count.EqualTo(0));
+            var frontier = _wordRepo.GetFrontier(ProjId).Result;
+            Assert.That(frontier, Has.Count.EqualTo(0));
+        }
+
+        [Test]
         public void MergeWordsMultiChildTest()
         {
             // Build a mergeWords with a parent with 3 children.
@@ -76,7 +100,7 @@ namespace Backend.Tests.Services
             var mergeWordsList = new List<MergeWords> { mergeWords };
             var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
 
-            // Check for correct history length;
+            // Check for correct history length.
             var dbParent = newWords.First();
             Assert.That(dbParent.History, Has.Count.EqualTo(numberOfChildren));
 

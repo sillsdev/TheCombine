@@ -94,19 +94,6 @@ export function multiSenseWord(vern: string, glosses: string[]): Word {
   };
 }
 
-/** Used for unit testing, as the expected result, when the guids don't matter. */
-export function multiSenseWordAnyGuid(vern: string, glosses: string[]): Word {
-  return {
-    ...newWord(vern),
-    id: randomIntString(),
-    guid: expect.any(String),
-    senses: glosses.map((gloss) => ({
-      ...newSense(gloss),
-      guid: expect.any(String),
-    })),
-  };
-}
-
 export function testWordList(): Word[] {
   return [
     { ...simpleWord("NoSense", ""), senses: [] },

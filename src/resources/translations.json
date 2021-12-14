@@ -834,7 +834,13 @@
         "Arrastra esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
         "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots"
       ],
-      "noDups": ["Nothing to merge.", "Nothing to merge.", "Nothing to merge."]
+      "noDups": ["Nothing to merge.", "Nothing to merge.", "Nothing to merge."],
+      "delete": ["Delete sense", "Delete sense", "Delete sense"],
+      "deleteDialog": [
+        "Delete this sense?",
+        "Delete this sense?",
+        "Delete this sense?"
+      ]
     },
     "completed": {
       "number": [

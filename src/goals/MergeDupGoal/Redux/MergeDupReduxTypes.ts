@@ -9,6 +9,7 @@ import {
 export enum MergeTreeActionTypes {
   CLEAR_TREE = "CLEAR_TREE",
   COMBINE_SENSE = "COMBINE_SENSE",
+  DELETE_SENSE = "DELETE_SENSE",
   MOVE_DUPLICATE = "MOVE_DUPLICATE",
   MOVE_SENSE = "MOVE_SENSE",
   ORDER_DUPLICATE = "ORDER_DUPLICATE",
@@ -30,6 +31,11 @@ export interface ClearTreeMergeAction {
 export interface CombineSenseMergeAction {
   type: MergeTreeActionTypes.COMBINE_SENSE;
   payload: { src: MergeTreeReference; dest: MergeTreeReference };
+}
+
+export interface DeleteSenseMergeAction {
+  type: MergeTreeActionTypes.DELETE_SENSE;
+  payload: { src: MergeTreeReference };
 }
 
 export interface MoveDuplicateMergeAction {
@@ -75,6 +81,7 @@ export interface SetVernacularMergeAction {
 export type MergeTreeAction =
   | ClearTreeMergeAction
   | CombineSenseMergeAction
+  | DeleteSenseMergeAction
   | MoveDuplicateMergeAction
   | MoveSenseMergeAction
   | OrderDuplicateMergeAction

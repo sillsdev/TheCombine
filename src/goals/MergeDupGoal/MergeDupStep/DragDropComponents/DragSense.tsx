@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
+import { trashId } from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
@@ -97,8 +98,14 @@ export default function DragSense(props: DragSenseProps) {
             userSelect: "none",
             minWidth: 150,
             maxWidth: 300,
+            opacity:
+              snapshot.draggingOver === trashId || snapshot.combineWith
+                ? 0.7
+                : 1,
             background:
-              snapshot.isDragging || snapshot.combineTargetFor
+              snapshot.draggingOver === trashId
+                ? "red"
+                : snapshot.isDragging || snapshot.combineTargetFor
                 ? "lightgreen"
                 : isInSidebar
                 ? "lightblue"

@@ -12,21 +12,9 @@ interface MergeDupStepProps {
   mergeAll: () => Promise<void>;
 }
 
-interface MergeDupStepState {
-  portrait: boolean;
-}
-
 class MergeDupStep extends React.Component<
-  MergeDupStepProps & LocalizeContextProps,
-  MergeDupStepState
+  MergeDupStepProps & LocalizeContextProps
 > {
-  constructor(props: MergeDupStepProps & LocalizeContextProps) {
-    super(props);
-    this.state = {
-      portrait: true,
-    };
-  }
-
   next() {
     this.props.clearSidebar();
     this.props.advanceStep();
@@ -34,13 +22,10 @@ class MergeDupStep extends React.Component<
 
   saveContinue() {
     this.props.clearSidebar();
-    this.props.mergeAll().then(() => {
-      this.next();
-    });
+    this.props.mergeAll().then(() => this.next());
   }
 
   render() {
-    //visual definition
     return this.props.wordCount ? (
       <React.Fragment>
         {/* Merging pane */}
@@ -52,15 +37,12 @@ class MergeDupStep extends React.Component<
         >
           <ImageList
             rowHeight="auto"
-            style={{
-              flexWrap: "nowrap",
-              overflow: "auto",
-            }}
+            style={{ flexWrap: "nowrap", overflow: "auto" }}
           >
-            <MergeDragDrop portrait={this.state.portrait} />
+            <MergeDragDrop />
           </ImageList>
         </div>
-        {/* Merge button */}
+        {/* Merge/skip buttons */}
         <Grid container justifyContent="flex-start">
           <Grid item>
             <Button
@@ -91,7 +73,7 @@ class MergeDupStep extends React.Component<
         </Grid>
       </React.Fragment>
     ) : (
-      // ToDo: create component with translated text and button back to goals.
+      // TODO: create component with button back to goals.
       <Typography>
         {this.props.translate("mergeDups.helpText.noDups")}
       </Typography>
