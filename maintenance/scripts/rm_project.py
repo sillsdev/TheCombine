@@ -21,10 +21,7 @@ To delete a project from the backend, we need to delete:
 """
 
 import argparse
-import json
-from pathlib import Path
 import sys
-from typing import Dict
 
 from combine_app import CombineApp
 

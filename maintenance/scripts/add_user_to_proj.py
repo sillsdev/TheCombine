@@ -20,10 +20,7 @@ To add the user to the project, we need to:
 """
 
 import argparse
-import json
-from pathlib import Path
 import sys
-from typing import Dict
 
 from combine_app import CombineApp, Permission
 
