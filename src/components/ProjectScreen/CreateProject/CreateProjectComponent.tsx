@@ -2,9 +2,11 @@ import {
   Card,
   CardContent,
   Grid,
+  IconButton,
   TextField,
   Typography,
 } from "@material-ui/core";
+import { Cancel } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -126,23 +128,15 @@ export default class CreateProject extends React.Component<
     >
   ) {
     const name = evt.target.value;
-    const languageData = this.state.languageData;
     this.setState({
-      languageData,
       name,
-      error: {
-        empty: name === "",
-        nameTaken: false,
-      },
+      error: { empty: name === "", nameTaken: false },
     });
   }
 
-  updateLanguageData(languageData: File) {
-    if (languageData) {
-      const fileName = languageData.name;
-      const name = this.state.name;
-      this.setState({ languageData, name, fileName });
-    }
+  updateLanguageData(languageData?: File) {
+    const fileName = languageData?.name;
+    this.setState({ languageData, fileName });
   }
 
   async createProject(e: React.FormEvent<EventTarget>) {
@@ -154,13 +148,9 @@ export default class CreateProject extends React.Component<
     const analysisLang = this.state.analysisLanguages;
     const languageData = this.state.languageData;
     if (name === "") {
-      this.setState({
-        error: { empty: true, nameTaken: false },
-      });
+      this.setState({ error: { empty: true, nameTaken: false } });
     } else if (await projectDuplicateCheck(this.state.name)) {
-      this.setState({
-        error: { empty: false, nameTaken: true },
-      });
+      this.setState({ error: { empty: false, nameTaken: true } });
     } else {
       this.props.asyncCreateProject(
         name,
@@ -200,36 +190,10 @@ export default class CreateProject extends React.Component<
                 ))
               }
             />
-            {/*Vernacular language picker */}
-            <Typography>
-              <Translate id="projectSettings.language.vernacularLanguage" />
-            </Typography>
-            <LanguagePicker
-              value={this.state.vernLanguage.bcp47}
-              setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
-              name={this.state.vernLanguage.name}
-              setName={(name: string) => this.setVernLangName(name)}
-              font={this.state.vernLanguage.font}
-              setFont={(font: string) => this.setVernFont(font)}
-              t={languagePickerStrings_en}
-            />
-            {/*Analysis language picker */}
-            <Typography style={{ marginTop: theme.spacing(1) }}>
-              <Translate id="projectSettings.language.analysisLanguage" />
-            </Typography>
-            <LanguagePicker
-              value={this.state.analysisLanguages[0].bcp47}
-              setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
-              name={this.state.analysisLanguages[0].name}
-              setName={(name: string) => this.setAnalysisLangName(name)}
-              font={this.state.analysisLanguages[0].font}
-              setFont={(font: string) => this.setAnalysisFont(font)}
-              t={languagePickerStrings_en}
-            />
             {/* File upload */}
             <div
               style={{
-                marginBottom: theme.spacing(1),
+                marginBottom: theme.spacing(2),
                 marginTop: theme.spacing(1),
               }}
             >
@@ -261,17 +225,52 @@ export default class CreateProject extends React.Component<
               {/* Displays the name of the selected file */}
               {this.state.fileName && (
                 <Typography
-                  variant="body1"
-                  noWrap
-                  style={{ marginTop: theme.spacing(1) }}
+                  variant="body2"
+                  style={{ margin: theme.spacing(1) }}
                 >
                   <Translate id="createProject.fileSelected" />:{" "}
                   {this.state.fileName}
+                  <IconButton
+                    size="small"
+                    onClick={() => this.updateLanguageData()}
+                  >
+                    <Cancel />
+                  </IconButton>
                 </Typography>
               )}
             </div>
+            {/* Vernacular language picker */}
+            <Typography style={{ marginTop: theme.spacing(1) }}>
+              <Translate id="projectSettings.language.vernacularLanguage" />
+            </Typography>
+            <LanguagePicker
+              value={this.state.vernLanguage.bcp47}
+              setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
+              name={this.state.vernLanguage.name}
+              setName={(name: string) => this.setVernLangName(name)}
+              font={this.state.vernLanguage.font}
+              setFont={(font: string) => this.setVernFont(font)}
+              t={languagePickerStrings_en}
+            />
+            {/* Analysis language picker */}
+            <Typography style={{ marginTop: theme.spacing(1) }}>
+              <Translate id="projectSettings.language.analysisLanguage" />
+            </Typography>
+            <LanguagePicker
+              value={this.state.analysisLanguages[0].bcp47}
+              setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
+              name={this.state.analysisLanguages[0].name}
+              setName={(name: string) => this.setAnalysisLangName(name)}
+              font={this.state.analysisLanguages[0].font}
+              setFont={(font: string) => this.setAnalysisFont(font)}
+              t={languagePickerStrings_en}
+            />
             {/* Form submission button */}
-            <Grid container justifyContent="flex-end">
+            <Grid
+              container
+              justifyContent="flex-end"
+              style={{ marginTop: theme.spacing(1) }}
+            >
               <LoadingDoneButton
                 loading={this.props.inProgress}
                 done={this.props.success}
