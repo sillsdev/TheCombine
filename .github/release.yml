@@ -1,0 +1,26 @@
+# .github/release.yml
+
+changelog:
+  exclude:
+    labels:
+      - versioning
+  categories:
+    - title: New Features
+      labels:
+        - enhancement
+    - title: Defect Fixes
+      labels:
+        - bug
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Code Maintenance
+      labels:
+        - maintenance
+    - title: Deployment
+      labels:
+        - deployment
+        - CI/CD
+    - title: Other Changes
+      labels:
+        - "*"
