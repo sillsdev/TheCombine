@@ -12,10 +12,13 @@ changelog:
       labels:
         - bug
     - title: Documentation
+      labels:
         - documentation
     - title: Code Maintenance
+      labels:
         - maintenance
     - title: Deployment
+      labels:
         - deployment
         - CI/CD
     - title: Other Changes
