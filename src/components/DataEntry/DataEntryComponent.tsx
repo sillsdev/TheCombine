@@ -78,7 +78,7 @@ export function sortDomainWordByVern(
   existingWords: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  const domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
+  const domainWords = filterWordsByDomain(existingWords, domain);
   return domainWords.sort((a, b) =>
     a.word.vernacular.length < 1
       ? -1
