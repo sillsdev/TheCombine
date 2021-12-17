@@ -119,22 +119,22 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 
       // Search for domain
       if (!isNaN(parseInt(input))) {
-        let i: number = 0;
-        while (parent) {
+        let i = 0;
+        while (parent !== undefined) {
           parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
-          if (parent && parent.id === input) {
+          if (parent !== undefined && parent.id === input) {
             props.animate(parent);
             setInput("");
             (event.target as any).value = "";
             break;
-          } else if (parent && parent.subdomains.length === 0) {
+          } else if (parent !== undefined && parent.subdomains.length === 0) {
             break;
           }
           i++;
         }
       } else {
         parent = searchDomainByName(parent, input);
-        if (parent) {
+        if (parent !== undefined) {
           props.animate(parent);
           setInput("");
           (event.target as any).value = "";
