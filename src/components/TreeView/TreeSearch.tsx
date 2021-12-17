@@ -13,7 +13,8 @@ export interface TreeSearchProps {
 export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps) {
-  const { searchAndSelectDomain, input, handleChange } = useTreeSearch(props);
+  const { input, handleChange, searchAndSelectDomain, searchError } =
+    useTreeSearch(props);
 
   return (
     <Grid style={{ maxWidth: 200 }}>
@@ -23,12 +24,20 @@ export default function TreeSearch(props: TreeSearchProps) {
             fullWidth
             id="domain-tree-search-field"
             label={translate("treeView.findDomain").toString()}
-            onKeyDown={searchAndSelectDomain}
+            // Use onKeyUp so that this fires after onChange, to facilitate
+            // error state clearing.
+            onKeyUp={searchAndSelectDomain}
             onChange={handleChange}
             margin="normal"
             autoComplete="off"
             inputProps={{ "data-testid": testId }}
             value={input}
+            error={searchError}
+            helperText={
+              searchError
+                ? translate("treeView.domainNotFound").toString()
+                : undefined
+            }
           />
         )}
       </Translate>
@@ -52,9 +61,17 @@ export function insertDecimalPoints(value: string): string {
   return value;
 }
 
+interface TreeSearchState {
+  input: string;
+  handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  searchAndSelectDomain: (event: React.KeyboardEvent) => void;
+  searchError: boolean;
+}
+
 // exported for unit testing only
-export function useTreeSearch(props: TreeSearchProps) {
-  const [input, setInput] = useState("");
+export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
+  const [input, setInput] = useState<string>("");
+  const [searchError, setSearchError] = useState<boolean>(false);
 
   // Search for a semantic domain by number
   function searchDomainByNumber(
@@ -76,7 +93,7 @@ export function useTreeSearch(props: TreeSearchProps) {
     domain: TreeSemanticDomain,
     target: string
   ): TreeSemanticDomain | undefined {
-    let check = (checkAgainst: TreeSemanticDomain | undefined) =>
+    const check = (checkAgainst: TreeSemanticDomain | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
     if (check(domain)) {
       return domain;
@@ -92,6 +109,18 @@ export function useTreeSearch(props: TreeSearchProps) {
       }
     }
     return undefined;
+  }
+
+  /** Animate the parent and clear search input after successfully searching
+   * for a new domain.*/
+  function animateSuccessfulSearch(
+    parent: TreeSemanticDomain,
+    event: React.KeyboardEvent
+  ): void {
+    props.animate(parent);
+    setInput("");
+    (event.target as any).value = "";
+    setSearchError(false);
   }
 
   // Dispatch the search for a specified domain, and switches to it if it exists
@@ -113,38 +142,43 @@ export function useTreeSearch(props: TreeSearchProps) {
 
       // Search for domain
       if (!isNaN(parseInt(input))) {
-        let i: number = 0;
-        while (parent) {
+        let i = 0;
+        while (parent !== undefined) {
           parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
-          if (parent && parent.id === input) {
-            props.animate(parent);
-            setInput("");
-            (event.target as any).value = "";
-            break;
-          } else if (parent && parent.subdomains.length === 0) {
+          if (parent !== undefined && parent.id === input) {
+            animateSuccessfulSearch(parent, event);
+            // Return to indicate success and skip setting error state.
+            return;
+          } else if (parent !== undefined && parent.subdomains.length === 0) {
             break;
           }
           i++;
         }
       } else {
         parent = searchDomainByName(parent, input);
-        if (parent) {
-          props.animate(parent);
-          setInput("");
-          (event.target as any).value = "";
+        if (parent !== undefined) {
+          animateSuccessfulSearch(parent, event);
+          // Return to indicate success and skip setting error state.
+          return;
         }
       }
+      // Did not find a domain through either numerical or textual search.
+      setSearchError(true);
     }
   }
 
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setInput(insertDecimalPoints(event.target.value));
+    // Reset the error dialogue when input is changes to avoid showing an error
+    // when a valid domain is entered, but Enter hasn't been pushed yet.
+    setSearchError(false);
   }
 
   return {
-    searchAndSelectDomain,
     input,
     handleChange,
+    searchAndSelectDomain,
+    searchError,
   };
 }
