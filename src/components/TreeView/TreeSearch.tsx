@@ -33,7 +33,7 @@ export default function TreeSearch(props: TreeSearchProps) {
             error={searchError}
             helperText={
               searchError
-                ? translate("treeView.noDomainFound").toString()
+                ? translate("treeView.domainNotFound").toString()
                 : undefined
             }
           />
@@ -145,7 +145,8 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
           parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
           if (parent !== undefined && parent.id === input) {
             animateSuccessfulSearch(parent, event);
-            break;
+            // Return to indicate success and skip setting error state.
+            return;
           } else if (parent !== undefined && parent.subdomains.length === 0) {
             break;
           }
@@ -155,11 +156,12 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
         parent = searchDomainByName(parent, input);
         if (parent !== undefined) {
           animateSuccessfulSearch(parent, event);
-        } else {
-          // Indicate input did not result in finding any domains.
-          setSearchError(true);
+          // Return to indicate success and skip setting error state.
+          return;
         }
       }
+      // Did not find a domain through either numerical or textual search.
+      setSearchError(true);
     }
   }
 
