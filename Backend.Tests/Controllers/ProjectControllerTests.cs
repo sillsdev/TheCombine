@@ -76,7 +76,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateProject()
         {
             var project = Util.RandomProject();
-            var userProject = (UserCreatedProject)((ObjectResult)_projController.CreateProject(project).Result).Value;
+            var userProject = (UserCreatedProject)((ObjectResult)_projController.CreateProject(project).Result).Value!;
             project.Id = userProject.Project.Id;
             Assert.Contains(project, _projRepo.GetAllProjects().Result);
         }
@@ -120,7 +120,7 @@ namespace Backend.Tests.Controllers
         {
             var project = _projRepo.Create(Util.RandomProject()).Result;
             var sdList = (List<SemanticDomainWithSubdomains>)(
-                (ObjectResult)_projController.GetSemDoms(project!.Id).Result).Value;
+                (ObjectResult)_projController.GetSemDoms(project!.Id).Result).Value!;
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
@@ -135,9 +135,11 @@ namespace Backend.Tests.Controllers
             var modProject = project1!.Clone();
             modProject.Name = "Proj";
             _ = _projController.UpdateProject(modProject.Id, modProject);
-            var isOldProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value;
+            var isOldProjDup =
+                ((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value!;
             Assert.IsTrue((bool)isOldProjDup);
-            var isNewProjDup = ((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value;
+            var isNewProjDup =
+                ((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value!;
             Assert.IsFalse((bool)isNewProjDup);
         }
     }

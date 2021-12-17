@@ -69,7 +69,7 @@ namespace Backend.Tests.Controllers
 
             var action = _userController.GetUser(_jwtAuthenticatedUser.Id).Result;
 
-            var foundUser = (User)((ObjectResult)action).Value;
+            var foundUser = (User)((ObjectResult)action).Value!;
             Assert.IsNotNull(foundUser.Avatar);
 
             // Clean up.

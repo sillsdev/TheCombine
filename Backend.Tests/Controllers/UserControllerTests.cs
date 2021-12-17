@@ -53,7 +53,7 @@ namespace Backend.Tests.Controllers
             var action = _userController.GetUser(user.Id).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
-            var foundUser = (User)((ObjectResult)action).Value;
+            var foundUser = (User)((ObjectResult)action).Value!;
             Assert.That(foundUser, Is.EqualTo(user));
         }
 
@@ -75,7 +75,7 @@ namespace Backend.Tests.Controllers
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
 
-            var foundUser = (User)((ObjectResult)action).Value;
+            var foundUser = (User)((ObjectResult)action).Value!;
             Assert.That(foundUser, Is.EqualTo(user));
         }
 
@@ -103,7 +103,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateUser()
         {
             var user = RandomUser();
-            var id = (string)((ObjectResult)_userController.CreateUser(user).Result).Value;
+            var id = (string)((ObjectResult)_userController.CreateUser(user).Result).Value!;
             user.Id = id;
             Assert.Contains(user, _userRepo.GetAllUsers().Result);
         }
@@ -157,19 +157,19 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user2);
 
             var result1 = (ObjectResult)_userController.CheckUsername(username1.ToLowerInvariant()).Result;
-            Assert.IsTrue((bool)result1.Value);
+            Assert.IsTrue((bool)result1.Value!);
 
             var result2 = (ObjectResult)_userController.CheckUsername(username2.ToUpperInvariant()).Result;
-            Assert.IsTrue((bool)result2.Value);
+            Assert.IsTrue((bool)result2.Value!);
 
             var result3 = (ObjectResult)_userController.CheckUsername(username1).Result;
-            Assert.IsTrue((bool)result3.Value);
+            Assert.IsTrue((bool)result3.Value!);
 
             var result4 = (ObjectResult)_userController.CheckUsername("NewUsername").Result;
-            Assert.IsFalse((bool)result4.Value);
+            Assert.IsFalse((bool)result4.Value!);
 
             var result5 = (ObjectResult)_userController.CheckUsername("").Result;
-            Assert.IsTrue((bool)result5.Value);
+            Assert.IsTrue((bool)result5.Value!);
         }
 
         [Test]
@@ -183,19 +183,19 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user2);
 
             var result1 = (ObjectResult)_userController.CheckEmail(email1.ToLowerInvariant()).Result;
-            Assert.IsTrue((bool)result1.Value);
+            Assert.IsTrue((bool)result1.Value!);
 
             var result2 = (ObjectResult)_userController.CheckEmail(email2.ToUpperInvariant()).Result;
-            Assert.IsTrue((bool)result2.Value);
+            Assert.IsTrue((bool)result2.Value!);
 
             var result3 = (ObjectResult)_userController.CheckEmail(email1).Result;
-            Assert.IsTrue((bool)result3.Value);
+            Assert.IsTrue((bool)result3.Value!);
 
             var result4 = (ObjectResult)_userController.CheckEmail("NewEmail").Result;
-            Assert.IsFalse((bool)result4.Value);
+            Assert.IsFalse((bool)result4.Value!);
 
             var result5 = (ObjectResult)_userController.CheckEmail("").Result;
-            Assert.IsTrue((bool)result5.Value);
+            Assert.IsTrue((bool)result5.Value!);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -57,8 +58,7 @@ namespace Backend.Tests.Controllers
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
             var action = _wordController.GetWord(_projId, word.Id).Result;
-
-            var foundWord = (Word)((ObjectResult)action).Value;
+            var foundWord = (Word)((ObjectResult)action).Value!;
             Assert.IsNotNull(foundWord.Audio);
         }
 

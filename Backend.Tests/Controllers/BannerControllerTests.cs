@@ -1,4 +1,5 @@
-﻿using Backend.Tests.Mocks;
+﻿using System.Threading.Tasks;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -28,9 +29,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateBanner()
         {
-            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
+            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value!;
             Assert.IsTrue(result);
-            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value;
+            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value!;
             Assert.AreEqual(banner, _siteBanner);
         }
 
@@ -45,10 +46,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetBannerNoPermission()
         {
-            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value;
+            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value!;
             Assert.IsTrue(result);
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value;
+            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value!;
             Assert.AreEqual(banner, _siteBanner);
         }
     }
