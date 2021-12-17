@@ -17,6 +17,7 @@ changelog:
         - maintenance
     - title: Deployment
         - deployment
+        - CI/CD
     - title: Other Changes
       labels:
         - "*"
