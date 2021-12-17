@@ -425,9 +425,16 @@ namespace Backend.Tests.Controllers
                 return true;
             }
 
-            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+            public void Log<TState>(
+                LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string> formatter)
             {
-                Console.WriteLine($"{logLevel}: {eventId} {state} {exception.Message}");
+                var message = "";
+                if (exception is not null)
+                {
+                    message = exception.Message;
+                }
+
+                Console.WriteLine($"{logLevel}: {eventId} {state} {message}");
             }
         }
     }
