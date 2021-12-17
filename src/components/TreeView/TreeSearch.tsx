@@ -13,7 +13,7 @@ export interface TreeSearchProps {
 export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps) {
-  const { searchAndSelectDomain, input, handleChange } = useTreeSearch(props);
+  const { input, handleChange, searchAndSelectDomain } = useTreeSearch(props);
 
   return (
     <Grid style={{ maxWidth: 200 }}>
@@ -52,8 +52,14 @@ export function insertDecimalPoints(value: string): string {
   return value;
 }
 
+interface TreeSearchState {
+  input: string;
+  handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  searchAndSelectDomain: (event: React.KeyboardEvent) => void;
+}
+
 // exported for unit testing only
-export function useTreeSearch(props: TreeSearchProps) {
+export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [input, setInput] = useState("");
 
   // Search for a semantic domain by number
@@ -76,7 +82,7 @@ export function useTreeSearch(props: TreeSearchProps) {
     domain: TreeSemanticDomain,
     target: string
   ): TreeSemanticDomain | undefined {
-    let check = (checkAgainst: TreeSemanticDomain | undefined) =>
+    const check = (checkAgainst: TreeSemanticDomain | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
     if (check(domain)) {
       return domain;
@@ -143,8 +149,8 @@ export function useTreeSearch(props: TreeSearchProps) {
   }
 
   return {
-    searchAndSelectDomain,
     input,
     handleChange,
+    searchAndSelectDomain,
   };
 }
