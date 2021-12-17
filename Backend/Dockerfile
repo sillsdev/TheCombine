@@ -1,5 +1,5 @@
 # Docker multi-stage build.
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1

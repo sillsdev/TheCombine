@@ -82,7 +82,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
        the appropriate Node.js version.
-   - [.NET Core SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
+   - [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
      - On Ubuntu 20.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment

@@ -8,7 +8,7 @@ namespace BackendFramework.Models
 {
     public class PasswordReset
     {
-        private static readonly RNGCryptoServiceProvider Rng = new();
+        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
         private const int TokenSize = 8;
 
         [BsonId]

@@ -73,7 +73,7 @@ namespace BackendFramework.Helper
         private static byte[] CreateSalt()
         {
             byte[] salt;
-            using var crypto = new RNGCryptoServiceProvider();
+            using var crypto = RandomNumberGenerator.Create();
             crypto.GetBytes(salt = new byte[SaltLength]);
             return salt;
         }
