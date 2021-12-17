@@ -13,7 +13,8 @@ export interface TreeSearchProps {
 export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps) {
-  const { input, handleChange, searchAndSelectDomain } = useTreeSearch(props);
+  const { input, handleChange, searchAndSelectDomain, searchError } =
+    useTreeSearch(props);
 
   return (
     <Grid style={{ maxWidth: 200 }}>
@@ -29,6 +30,12 @@ export default function TreeSearch(props: TreeSearchProps) {
             autoComplete="off"
             inputProps={{ "data-testid": testId }}
             value={input}
+            error={searchError}
+            helperText={
+              searchError
+                ? translate("treeView.noDomainFound").toString()
+                : undefined
+            }
           />
         )}
       </Translate>
@@ -56,11 +63,13 @@ interface TreeSearchState {
   input: string;
   handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   searchAndSelectDomain: (event: React.KeyboardEvent) => void;
+  searchError: boolean;
 }
 
 // exported for unit testing only
 export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
+  const [searchError, setSearchError] = useState<boolean>(false);
 
   // Search for a semantic domain by number
   function searchDomainByNumber(
@@ -100,6 +109,18 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
     return undefined;
   }
 
+  /** Animate the parent and clear search input after successfully searching
+   * for a new domain.*/
+  function animateSuccessfulSearch(
+    parent: TreeSemanticDomain,
+    event: React.KeyboardEvent
+  ): void {
+    props.animate(parent);
+    setInput("");
+    (event.target as any).value = "";
+    setSearchError(false);
+  }
+
   // Dispatch the search for a specified domain, and switches to it if it exists
   function searchAndSelectDomain(event: React.KeyboardEvent) {
     // stopPropagation() prevents keystrokes from reaching ReviewEntries,
@@ -123,9 +144,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
         while (parent !== undefined) {
           parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
           if (parent !== undefined && parent.id === input) {
-            props.animate(parent);
-            setInput("");
-            (event.target as any).value = "";
+            animateSuccessfulSearch(parent, event);
             break;
           } else if (parent !== undefined && parent.subdomains.length === 0) {
             break;
@@ -135,9 +154,10 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       } else {
         parent = searchDomainByName(parent, input);
         if (parent !== undefined) {
-          props.animate(parent);
-          setInput("");
-          (event.target as any).value = "";
+          animateSuccessfulSearch(parent, event);
+        } else {
+          // Indicate input did not result in finding any domains.
+          setSearchError(true);
         }
       }
     }
@@ -152,5 +172,6 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
     input,
     handleChange,
     searchAndSelectDomain,
+    searchError,
   };
 }

@@ -41,7 +41,8 @@
     ]
   },
   "treeView": {
-    "findDomain": ["Find a domain", "Find a domain", "Find a domain"]
+    "findDomain": ["Find a domain", "Find a domain", "Find a domain"],
+    "noDomainFound": ["No domain found", "No domain found", "No domain found"]
   },
   "addWords": {
     "selectEntry": [
