@@ -24,7 +24,9 @@ export default function TreeSearch(props: TreeSearchProps) {
             fullWidth
             id="domain-tree-search-field"
             label={translate("treeView.findDomain").toString()}
-            onKeyDown={searchAndSelectDomain}
+            // Use onKeyUp so that this fires after onChange, to facilitate
+            // error state clearing.
+            onKeyUp={searchAndSelectDomain}
             onChange={handleChange}
             margin="normal"
             autoComplete="off"
@@ -168,6 +170,9 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   // Change the input on typing
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setInput(insertDecimalPoints(event.target.value));
+    // Reset the error dialogue when input is changes to avoid showing an error
+    // when a valid domain is entered, but Enter hasn't been pushed yet.
+    setSearchError(false);
   }
 
   return {
