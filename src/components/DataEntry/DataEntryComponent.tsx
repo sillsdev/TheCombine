@@ -116,8 +116,7 @@ export default class DataEntryComponent extends React.Component<
   }
 
   handleWindowSizeChange = () => {
-    const smallScreen: boolean =
-      window.matchMedia("(max-width: 960px)").matches;
+    const smallScreen = window.matchMedia("(max-width: 960px)").matches;
     this.setState({
       isSmallScreen: smallScreen,
     });
