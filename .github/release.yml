@@ -11,6 +11,12 @@ changelog:
     - title: Defect Fixes
       labels:
         - bug
+    - title: Documentation
+        - documentation
+    - title: Code Maintenance
+        - maintenance
+    - title: Deployment
+        - deployment
     - title: Other Changes
       labels:
         - "*"
