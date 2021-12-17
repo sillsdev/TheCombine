@@ -49,20 +49,20 @@ export function filterWordsByDomain(
   const domainName = domain.name;
   let domainMatched = false;
 
-  for (let currentWord of words) {
-    for (let currentSense of currentWord.senses.filter(
+  for (const currentWord of words) {
+    for (const currentSense of currentWord.senses.filter(
       (s) =>
         // This is for States created before .accessibility was required in the frontend.
         s.accessibility === State.Active || s.accessibility === undefined
     )) {
       domainMatched = false;
-      for (let currentDomain of currentSense.semanticDomains) {
+      for (const currentDomain of currentSense.semanticDomains) {
         if (currentDomain.name === domainName) {
           domainMatched = true;
         }
       }
       if (domainMatched) {
-        let newDomainWord: DomainWord = {
+        const newDomainWord: DomainWord = {
           word: currentWord,
           gloss: currentSense.glosses[0],
         };
@@ -78,15 +78,14 @@ export function sortDomainWordByVern(
   existingWords: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  let domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
-  domainWords.sort((a, b) =>
+  const domainWords = filterWordsByDomain(existingWords, domain);
+  return domainWords.sort((a, b) =>
     a.word.vernacular.length < 1
       ? -1
       : a.word.vernacular < b.word.vernacular
       ? -1
       : 1
   );
-  return domainWords;
 }
 
 /**
@@ -117,7 +116,7 @@ export default class DataEntryComponent extends React.Component<
   }
 
   handleWindowSizeChange = () => {
-    let smallScreen: boolean = window.matchMedia("(max-width: 960px)").matches;
+    const smallScreen = window.matchMedia("(max-width: 960px)").matches;
     this.setState({
       isSmallScreen: smallScreen,
     });
@@ -129,13 +128,12 @@ export default class DataEntryComponent extends React.Component<
     });
 
   async getWordsFromBackend(): Promise<Word[]> {
-    let words = await getFrontierWords();
+    const words = await getFrontierWords();
     this.setState({
       existingWords: words,
     });
-    words = filterWords(words);
 
-    return words;
+    return filterWords(words);
   }
 
   updateWords = () => {};
