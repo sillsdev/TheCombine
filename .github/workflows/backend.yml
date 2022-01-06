@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet: ["5.0.x"]
+        dotnet: ["6.0.x"]
     steps:
       - uses: actions/checkout@v2
       - name: Setup dotnet
@@ -42,6 +42,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      # Manually install .NET to work around:
+      # https://github.com/github/codeql-action/issues/757
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0"
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:

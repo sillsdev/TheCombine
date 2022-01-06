@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "backend": "dotnet run --project Backend/BackendFramework.csproj",
+    "backend": "dotnet watch --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",

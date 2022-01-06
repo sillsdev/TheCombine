@@ -111,7 +111,7 @@ namespace Backend.Tests.Controllers
             await _wordRepo.Create(Util.RandomWord(_projId));
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
 
-            var words = (List<Word>)((ObjectResult)await _wordController.GetProjectWords(_projId)).Value;
+            var words = (List<Word>)((ObjectResult)await _wordController.GetProjectWords(_projId)).Value!;
             Assert.That(words, Has.Count.EqualTo(3));
             (await _wordRepo.GetAllWords(_projId)).ForEach(word => Assert.Contains(word, words));
         }
@@ -135,10 +135,10 @@ namespace Backend.Tests.Controllers
         public async Task TestIsFrontierNonempty()
         {
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
-            var shouldBeFalse = (bool)((ObjectResult)await _wordController.IsFrontierNonempty(_projId)).Value;
+            var shouldBeFalse = (bool)((ObjectResult)await _wordController.IsFrontierNonempty(_projId)).Value!;
             Assert.False(shouldBeFalse);
             await _wordRepo.Create(Util.RandomWord(_projId));
-            var shouldBeTrue = (bool)((ObjectResult)await _wordController.IsFrontierNonempty(_projId)).Value;
+            var shouldBeTrue = (bool)((ObjectResult)await _wordController.IsFrontierNonempty(_projId)).Value!;
             Assert.True(shouldBeTrue);
         }
 
@@ -164,7 +164,7 @@ namespace Backend.Tests.Controllers
             var inWord2 = await _wordRepo.Create(Util.RandomWord(_projId));
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
 
-            var frontier = (List<Word>)((ObjectResult)await _wordController.GetProjectFrontierWords(_projId)).Value;
+            var frontier = (List<Word>)((ObjectResult)await _wordController.GetProjectFrontierWords(_projId)).Value!;
             Assert.That(frontier, Has.Count.EqualTo(2));
             Assert.Contains(inWord1, frontier);
             Assert.Contains(inWord2, frontier);
@@ -202,7 +202,7 @@ namespace Backend.Tests.Controllers
             var action = await _wordController.GetWord(_projId, word.Id);
             Assert.IsInstanceOf<ObjectResult>(action);
 
-            var foundWord = (Word)((ObjectResult)action).Value;
+            var foundWord = (Word)((ObjectResult)action).Value!;
             Assert.AreEqual(word, foundWord);
         }
 
@@ -229,7 +229,7 @@ namespace Backend.Tests.Controllers
         {
             var word = Util.RandomWord(_projId);
 
-            var id = (string)((ObjectResult)await _wordController.CreateWord(_projId, word)).Value;
+            var id = (string)((ObjectResult)await _wordController.CreateWord(_projId, word)).Value!;
             word.Id = id;
 
             Assert.AreEqual(word, (await _wordRepo.GetAllWords(_projId))[0]);
@@ -239,15 +239,15 @@ namespace Backend.Tests.Controllers
             var newDuplicate = oldDuplicate.Clone();
 
             await _wordController.CreateWord(_projId, oldDuplicate);
-            var result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value;
+            var result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value!;
             Assert.AreEqual(result, "Duplicate");
 
             newDuplicate.Senses.RemoveAt(2);
-            result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value;
+            result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value!;
             Assert.AreEqual(result, "Duplicate");
 
             newDuplicate.Senses = new List<Sense>();
-            result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value;
+            result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value!;
             Assert.AreNotEqual(result, "Duplicate");
         }
 
@@ -277,7 +277,8 @@ namespace Backend.Tests.Controllers
             var modWord = origWord.Clone();
             modWord.Vernacular = "NewVernacular";
 
-            var id = (string)((ObjectResult)await _wordController.UpdateWord(_projId, modWord.Id, modWord)).Value;
+            var id = (string)((ObjectResult)await _wordController.UpdateWord(
+                _projId, modWord.Id, modWord)).Value!;
 
             var finalWord = modWord.Clone();
             finalWord.Id = id;

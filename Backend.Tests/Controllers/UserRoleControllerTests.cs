@@ -121,7 +121,7 @@ namespace Backend.Tests.Controllers
         public async Task TestCreateUserRole()
         {
             var userRole = RandomUserRole();
-            var id = (string)((ObjectResult)await _userRoleController.CreateUserRole(_projId, userRole)).Value;
+            var id = (string)((ObjectResult)await _userRoleController.CreateUserRole(_projId, userRole)).Value!;
             userRole.Id = id;
             Assert.Contains(userRole, await _userRoleRepo.GetAllUserRoles(_projId));
         }
@@ -171,7 +171,7 @@ namespace Backend.Tests.Controllers
             updatePermissions.Add(Permission.WordEntry);
 
             var result = await _userRoleController.UpdateUserRolePermissions(_projId, userId, updatePermissions.ToArray());
-            var newUserRoleId = (string)((OkObjectResult)result).Value;
+            var newUserRoleId = (string)((OkObjectResult)result).Value!;
             var action = await _userRoleController.GetUserRole(_projId, newUserRoleId);
             var updatedUserRole = ((ObjectResult)action).Value as UserRole;
             Assert.AreEqual(updatePermissions, updatedUserRole?.Permissions);
