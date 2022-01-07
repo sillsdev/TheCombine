@@ -13,14 +13,14 @@ const user: LoginData = {
 };
 
 describe("LoginReducer Tests", () => {
-  let dummyState: LoginState = {
+  const dummyState: LoginState = {
     ...LoginReducer.defaultState,
     username: user.username,
     loginSuccess: false,
   };
 
   //The state while attempting to log in
-  let loginAttemptState: LoginState = {
+  const loginAttemptState: LoginState = {
     username: "testUsername",
     loginAttempt: true,
     loginFailure: false,
@@ -30,7 +30,7 @@ describe("LoginReducer Tests", () => {
     registerSuccess: false,
   };
 
-  let action: UserAction = {
+  const action: UserAction = {
     type: LoginActionTypes.LOGIN_ATTEMPT,
     payload: user,
   };
@@ -51,7 +51,7 @@ describe("LoginReducer Tests", () => {
   });
 
   test("failed login, expecting no success", () => {
-    let loginFailureState: LoginState = {
+    const loginFailureState: LoginState = {
       ...LoginReducer.defaultState,
       username: user.username,
       loginAttempt: false,
@@ -66,7 +66,7 @@ describe("LoginReducer Tests", () => {
   });
 
   test("default state, expecting register", () => {
-    let resultState: LoginState = {
+    const resultState: LoginState = {
       username: "testUsername",
       loginAttempt: false,
       loginFailure: false,
@@ -81,7 +81,7 @@ describe("LoginReducer Tests", () => {
   });
 
   test("default state, expecting login success", () => {
-    let loginSuccessState: LoginState = {
+    const loginSuccessState: LoginState = {
       ...dummyState,
       username: user.username,
       loginSuccess: true,
@@ -94,7 +94,7 @@ describe("LoginReducer Tests", () => {
   });
 
   test("default state, expecting register success", () => {
-    let registerSuccessState: LoginState = {
+    const registerSuccessState: LoginState = {
       ...dummyState,
       username: user.username,
       registerAttempt: false,
@@ -107,7 +107,7 @@ describe("LoginReducer Tests", () => {
   });
 
   test("default state, expecting register failure", () => {
-    let registerFailureState: LoginState = {
+    const registerFailureState: LoginState = {
       ...dummyState,
       registerAttempt: false,
       registerFailure: "testUsername",

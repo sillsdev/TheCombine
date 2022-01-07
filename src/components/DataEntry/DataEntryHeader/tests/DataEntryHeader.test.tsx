@@ -40,7 +40,7 @@ describe("DataEntryHeader", () => {
       mockCallback
     );
     newDomain.questions.forEach((questionString, index) => {
-      let question: ReactTestInstance = instance.findByProps({
+      const question: ReactTestInstance = instance.findByProps({
         id: `q${index}`,
       });
       expect(question.props.children).toEqual(questionString);

@@ -35,8 +35,8 @@ interface CharacterInventoryProps {
   exit: () => void;
 }
 
-export const SAVE: string = "pushGoals";
-export const CANCEL: string = "cancelInventoryCreation";
+export const SAVE = "pushGoals";
+export const CANCEL = "cancelInventoryCreation";
 
 interface CharacterInventoryState {
   cancelDialogOpen: boolean;

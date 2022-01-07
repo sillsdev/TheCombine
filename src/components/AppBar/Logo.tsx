@@ -1,11 +1,12 @@
 import { Button, Hidden } from "@material-ui/core";
+import { ReactElement } from "react";
 
 import history, { Path } from "browserHistory";
 import logo from "resources/CombineLogoV1White.png";
 import smallLogo from "resources/CombineSmallLogoV1.png";
 
 /** A button that redirects to the home page */
-export default function Logo() {
+export default function Logo(): ReactElement {
   return (
     <Button
       onClick={() => {

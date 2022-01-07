@@ -20,28 +20,11 @@ describe("Test the TreeViewReducer", () => {
       questions: [],
     };
     const subdomains = [
-      {
-        name: "Bar",
-        id: "x.1",
-        description: "bar desc",
-        subdomains: [],
-        questions: [],
-      },
-      {
-        name: "Baz",
-        id: "x.2",
-        description: "baz desc",
-        subdomains: [],
-        questions: [],
-      },
+      new TreeSemanticDomain("Bar", "5.1"),
+      new TreeSemanticDomain("Baz", "5.2"),
     ];
-    const initialJson = [
-      {
-        ...parent,
-        subdomains: subdomains,
-      },
-    ];
-    let expectedDomain = {
+    const initialJson = [{ ...parent, subdomains }];
+    const expectedDomain = {
       name: "",
       id: "",
       description: "",
@@ -51,10 +34,7 @@ describe("Test the TreeViewReducer", () => {
       questions: [],
     };
     expectedDomain.subdomains[0].subdomains.map((value) => {
-      return {
-        ...value,
-        parentDomains: expectedDomain.subdomains[0],
-      };
+      return { ...value, parentDomains: expectedDomain.subdomains[0] };
     });
     expectedDomain.subdomains[0].parentDomain = expectedDomain;
     expect(createDomains(initialJson)).toEqual(expectedDomain);

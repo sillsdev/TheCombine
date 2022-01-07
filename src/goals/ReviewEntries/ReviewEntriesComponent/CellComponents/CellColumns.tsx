@@ -1,5 +1,6 @@
 import { Column } from "@material-table/core";
 import { Input, TextField, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import { SemanticDomain } from "api/models";
@@ -27,11 +28,11 @@ enum SortStyle {
   NONE,
 }
 
-function domainNumberToArray(id: string) {
+function domainNumberToArray(id: string): number[] {
   return id.split(".").map((digit) => parseInt(digit, 10));
 }
 
-function cleanRegExp(input: string) {
+function cleanRegExp(input: string): RegExp {
   const cleaned = input.trim().toLowerCase();
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
   const escaped = cleaned.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -45,10 +46,13 @@ export interface FieldParameterStandard {
 }
 
 // Creates the editable vernacular text field
-function vernacularField(props: FieldParameterStandard, editable: boolean) {
+function vernacularField(
+  props: FieldParameterStandard,
+  editable: boolean
+): ReactElement {
   return (
     <Translate>
-      {({ translate }) => (
+      {({ translate }): ReactElement => (
         <TextField
           key={`row-${props.rowData.id}-vernacular`}
           id={`row-${props.rowData.id}-vernacular-text`}
@@ -75,10 +79,10 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
 }
 
 // Creates the editable note text field
-function noteField(props: FieldParameterStandard) {
+function noteField(props: FieldParameterStandard): ReactElement {
   return (
     <Translate>
-      {({ translate }) => (
+      {({ translate }): ReactElement => (
         <TextField
           key={`row-${props.rowData.id}-note`}
           id={`row-${props.rowData.id}-note-text`}
@@ -323,7 +327,7 @@ const columns: Column<any>[] = [
       }
 
       let count = 0;
-      let compare: number = 0;
+      let compare = 0;
 
       let domainsA: SemanticDomain[];
       let domainsB: SemanticDomain[];

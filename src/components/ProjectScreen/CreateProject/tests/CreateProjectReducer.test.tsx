@@ -21,7 +21,7 @@ const project = {
 };
 
 describe("CreateProjectReducer", () => {
-  let resultState: CreateProjectState = {
+  const resultState: CreateProjectState = {
     name: project.name,
     inProgress: true,
     success: false,
@@ -30,7 +30,7 @@ describe("CreateProjectReducer", () => {
     analysisLanguages: project.analysisLanguages,
   };
 
-  let inProgress: CreateProjectAction = {
+  const inProgress: CreateProjectAction = {
     type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
     payload: project,
   };

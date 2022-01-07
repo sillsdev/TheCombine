@@ -30,8 +30,8 @@ const project = {
 };
 
 describe("CreateProjectAction Tests", () => {
-  let mockState: CreateProjectState = defaultState;
-  let CreateProject: CreateProjectAction = {
+  const mockState = defaultState;
+  const CreateProject: CreateProjectAction = {
     type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
     payload: {
       name: project.name,

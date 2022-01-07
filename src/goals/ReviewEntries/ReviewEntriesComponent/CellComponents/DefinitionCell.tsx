@@ -1,5 +1,5 @@
 import { Input, TextField } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -20,7 +20,7 @@ interface DefinitionCellProps {
 
 export default function DefinitionCell(
   props: FieldParameterStandard & DefinitionCellProps
-) {
+): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems[0].bcp47
@@ -52,7 +52,7 @@ export default function DefinitionCell(
           />
         ) : (
           <Translate>
-            {({ translate }) => (
+            {({ translate }): ReactElement => (
               <Input
                 fullWidth
                 key={`definitions${props.rowData.id}`}
@@ -72,7 +72,7 @@ export default function DefinitionCell(
           </Translate>
         )
       )}
-      bottomCell={props.editable ? SPACER : null}
+      bottomCell={props.editable ? SPACER : undefined}
     />
   );
 }
@@ -84,7 +84,7 @@ interface DefinitionListProps {
   onChange: (definitions: Definition[]) => void;
 }
 
-function DefinitionList(props: DefinitionListProps) {
+function DefinitionList(props: DefinitionListProps): ReactElement {
   const langs = props.definitions.map((g) => g.language);
   if (!langs.includes(props.defaultLang)) {
     props.onChange([
@@ -117,7 +117,7 @@ interface DefinitionFieldProps {
   onChange: (definition: Definition) => void;
 }
 
-function DefinitionField(props: DefinitionFieldProps) {
+function DefinitionField(props: DefinitionFieldProps): ReactElement {
   return (
     <TextField
       id={props.textFieldId}

@@ -1,5 +1,5 @@
 import { Button, Grid, ImageList, Typography } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
@@ -15,17 +15,17 @@ interface MergeDupStepProps {
 class MergeDupStep extends React.Component<
   MergeDupStepProps & LocalizeContextProps
 > {
-  next() {
+  next(): void {
     this.props.clearSidebar();
     this.props.advanceStep();
   }
 
-  saveContinue() {
+  saveContinue(): void {
     this.props.clearSidebar();
     this.props.mergeAll().then(() => this.next());
   }
 
-  render() {
+  render(): ReactElement {
     return this.props.wordCount ? (
       <React.Fragment>
         {/* Merging pane */}

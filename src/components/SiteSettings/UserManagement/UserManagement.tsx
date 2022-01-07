@@ -21,6 +21,7 @@ const customStyles = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface UserProps {}
 
 interface UserState {

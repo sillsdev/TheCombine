@@ -29,7 +29,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
 }
 
 function charToHexValue(char: string) {
-  let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
+  let hex = char.charCodeAt(0).toString(16).toUpperCase();
   while (hex.length < 4) {
     hex = "0" + hex;
   }
@@ -38,8 +38,8 @@ function charToHexValue(char: string) {
 
 function countCharacterOccurrences(char: string, words: string[]) {
   let count = 0;
-  for (let word of words) {
-    for (let letter of word) {
+  for (const word of words) {
+    for (const letter of word) {
       if (letter === char) {
         count++;
       }

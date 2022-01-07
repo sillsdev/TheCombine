@@ -20,7 +20,7 @@ export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
   };
 
   list() {
-    let domainWords: DomainWord[] = this.props.domainWords;
+    const domainWords = this.props.domainWords;
     return (
       <List style={{ minWidth: "300px" }}>
         {domainWords.map((domainWord) => (

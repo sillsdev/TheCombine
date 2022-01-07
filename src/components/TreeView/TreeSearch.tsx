@@ -1,5 +1,5 @@
 import { Grid, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
@@ -12,7 +12,7 @@ export interface TreeSearchProps {
 
 export const testId = "testSearch";
 
-export default function TreeSearch(props: TreeSearchProps) {
+export default function TreeSearch(props: TreeSearchProps): ReactElement {
   const { input, handleChange, searchAndSelectDomain, searchError } =
     useTreeSearch(props);
 

@@ -6,7 +6,7 @@ describe("utilities", () => {
       return input;
     };
 
-    let numbers: number[] = [];
+    const numbers: number[] = [];
     for (let i = 0; i < 25; i++) numbers.push(Math.random());
 
     it("orders properly", () => {
@@ -37,7 +37,7 @@ describe("utilities", () => {
     });
 
     describe("getDistance", () => {
-      const baseWord: string = "testing";
+      const baseWord = "testing";
 
       test("with empty word", () => {
         expect(finder.getDistance("", "")).toEqual(0);

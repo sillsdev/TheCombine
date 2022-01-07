@@ -177,8 +177,8 @@ export function exit() {
 
 function countCharacterOccurrences(char: string, words: string[]) {
   let count = 0;
-  for (let word of words) {
-    for (let letter of word) {
+  for (const word of words) {
+    for (const letter of word) {
       if (letter === char) {
         count++;
       }

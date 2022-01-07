@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
@@ -19,7 +19,7 @@ const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
  * The top-level component
  */
 export default class App extends React.Component {
-  render() {
+  render(): ReactElement {
     return (
       <div className="App">
         <AnnouncementBanner />

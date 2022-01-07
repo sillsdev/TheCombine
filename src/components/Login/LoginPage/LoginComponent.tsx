@@ -93,7 +93,7 @@ export default class Login extends React.Component<
 
     const username: string = this.state.username.trim();
     const password: string = this.state.password.trim();
-    let error = { ...this.state.error };
+    const error = { ...this.state.error };
     error.username = username === "";
     error.password = password === "";
     if (error.username || error.password) {
@@ -126,7 +126,7 @@ export default class Login extends React.Component<
                 helperText={
                   this.state.error["username"] ? (
                     <Translate id="login.required" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -148,7 +148,7 @@ export default class Login extends React.Component<
                 helperText={
                   this.state.error["password"] ? (
                     <Translate id="login.required" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}

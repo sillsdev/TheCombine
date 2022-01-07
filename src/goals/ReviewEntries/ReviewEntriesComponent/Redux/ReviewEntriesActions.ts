@@ -170,7 +170,7 @@ function refreshWord(
   oldWordId: string,
   wordUpdater: (wordId: string) => Promise<string>
 ) {
-  return async (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch): Promise<void> => {
     const newWordId = await wordUpdater(oldWordId);
     const word = await backend.getWord(newWordId);
     dispatch(updateWord(oldWordId, new ReviewEntriesWord(word)));

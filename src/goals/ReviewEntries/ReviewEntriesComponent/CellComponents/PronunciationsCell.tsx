@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { connect } from "react-redux";
 
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
@@ -19,7 +19,7 @@ interface PronunciationCellProps {
 
 /** Used to connect the pronunciation component to the deleteAudio and uploadAudio actions */
 class PronunciationsCell extends React.Component<PronunciationCellProps> {
-  render() {
+  render(): ReactElement {
     return (
       <Pronunciations
         wordId={this.props.wordId}

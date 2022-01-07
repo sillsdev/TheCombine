@@ -1,3 +1,4 @@
+import { MergeUndoIds } from "api/models";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import {
@@ -13,14 +14,10 @@ describe("goalUtilities", () => {
       const oldGoal: Goal = new MergeDups();
       oldGoal.numSteps = maxNumSteps(oldGoal.goalType);
       oldGoal.steps = [
-        {
-          words: [...goalDataMock.plannedWords[0]],
-        },
-        {
-          words: [...goalDataMock.plannedWords[1]],
-        },
+        { words: [...goalDataMock.plannedWords[0]] },
+        { words: [...goalDataMock.plannedWords[1]] },
       ];
-      oldGoal.changes = { merges: [{}, {}] };
+      oldGoal.changes = { merges: [{} as MergeUndoIds, {} as MergeUndoIds] };
       const edit = convertGoalToEdit(oldGoal);
       const newGoal = convertEditToGoal(edit);
       expect(newGoal.guid).toEqual(oldGoal.guid);

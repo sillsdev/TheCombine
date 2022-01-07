@@ -1,4 +1,5 @@
 import Typography from "@material-ui/core/Typography";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
@@ -9,7 +10,9 @@ interface CharacterStatusTextProps {
   inline?: boolean;
 }
 
-export default function CharacterStatusText(props: CharacterStatusTextProps) {
+export default function CharacterStatusText(
+  props: CharacterStatusTextProps
+): ReactElement {
   return (
     <Typography
       variant="body2"

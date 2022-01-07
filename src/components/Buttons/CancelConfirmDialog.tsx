@@ -6,6 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 interface CancelConfirmDialogProps {
@@ -20,7 +21,9 @@ interface CancelConfirmDialogProps {
 /**
  * Dialog to cancel or confirm an action
  */
-export default function CancelConfirmDialog(props: CancelConfirmDialogProps) {
+export default function CancelConfirmDialog(
+  props: CancelConfirmDialogProps
+): ReactElement {
   return (
     <Dialog
       open={props.open}

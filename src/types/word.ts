@@ -143,7 +143,7 @@ export function cleanGlosses(glosses: Gloss[]): Gloss[] {
   );
 }
 
-export function getAnalysisLangsFromWords(words: Word[]) {
+export function getAnalysisLangsFromWords(words: Word[]): string[] {
   return reduceMultiType<Word, string[]>(words, [], wordReducer);
 }
 function reduceMultiType<A, B>(
@@ -155,7 +155,7 @@ function reduceMultiType<A, B>(
   toReduce.forEach((item) => (accumulated = reducer(accumulated, item)));
   return accumulated;
 }
-function wordReducer(accumulator: string[], word: Word) {
+function wordReducer(accumulator: string[], word: Word): string[] {
   const newLangs = word.senses
     .flatMap((s) => [...s.definitions, ...s.glosses])
     .map((dg) => dg.language);

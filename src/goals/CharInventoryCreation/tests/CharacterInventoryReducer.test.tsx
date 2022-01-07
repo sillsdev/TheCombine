@@ -38,7 +38,7 @@ describe("Test Character Inventory Reducer", () => {
   });
 
   it("Returns state passed in when passed an undefined action", () => {
-    let inv = {
+    const inv = {
       validCharacters: DATA,
       allWords: [],
       characterSet: [],
@@ -54,9 +54,7 @@ describe("Test Character Inventory Reducer", () => {
   });
 
   it("Returns default state when passed reset action", () => {
-    let action: StoreAction = {
-      type: StoreActionTypes.RESET,
-    };
+    const action: StoreAction = { type: StoreActionTypes.RESET };
 
     expect(
       characterInventoryReducer({} as CharacterInventoryState, action)

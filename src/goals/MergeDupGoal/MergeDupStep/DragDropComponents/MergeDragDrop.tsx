@@ -1,6 +1,6 @@
 import { Drawer, ImageListItem, Tooltip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ import theme from "types/theme";
 
 export const trashId = "trash-drop";
 
-export default function MergeDragDrop() {
+export default function MergeDragDrop(): ReactElement {
   const dispatch = useDispatch();
   const mergeState = useSelector(
     (state: StoreState) => state.mergeDuplicateGoal
@@ -30,7 +30,7 @@ export default function MergeDragDrop() {
   const sidebar = mergeState.tree.sidebar;
   const treeWords = mergeState.tree.words;
 
-  function handleDrop(res: DropResult) {
+  function handleDrop(res: DropResult): void {
     const senseRef: MergeTreeReference = JSON.parse(res.draggableId);
     if (res.destination?.droppableId === trashId) {
       // Case 1: the sense was dropped on the trash icon.
@@ -67,13 +67,15 @@ export default function MergeDragDrop() {
     }
   }
 
-  function performDelete() {
+  function performDelete(): void {
     dispatch(deleteSense(JSON.parse(senseToDelete)));
     setSenseToDelete("");
   }
 
-  function renderSidebar() {
-    if (sidebar.senses.length <= 1) return <div />;
+  function renderSidebar(): ReactElement {
+    if (sidebar.senses.length <= 1) {
+      return <div />;
+    }
     return (
       <Drawer
         anchor="right"
@@ -94,7 +96,7 @@ export default function MergeDragDrop() {
     <DragDropContext onDragEnd={handleDrop}>
       <ImageListItem key={"trash"} style={{ marginTop: "70vh" }}>
         <Droppable key={trashId} droppableId={trashId}>
-          {(provided) => (
+          {(provided): ReactElement => (
             <div ref={provided.innerRef}>
               <Tooltip
                 title={<Translate id="mergeDups.helpText.delete" />}
