@@ -187,7 +187,7 @@ export function getUserEditId(): string | undefined {
 async function saveCurrentStep(goal: Goal) {
   const userEditId = getUserEditId();
   if (userEditId) {
-    const step = goal.steps[goal.currentStep] ?? undefined;
+    const step = goal.steps[goal.currentStep];
     await Backend.addStepToGoal(userEditId, goal.index, step, goal.currentStep);
   }
 }
