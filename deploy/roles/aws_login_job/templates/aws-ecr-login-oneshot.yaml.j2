@@ -5,6 +5,8 @@ metadata:
   name: "{{ aws_ecr_login.job_name }}"
   namespace: {{ aws_namespace }}
 spec:
+  # keep completed jobs for 24 hrs so that logs are
+  # available in case of issues
   ttlSecondsAfterFinished: 86400
   template:
     metadata:
