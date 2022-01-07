@@ -5,7 +5,9 @@ metadata:
   name: "{{ aws_ecr_login.job_name }}"
   namespace: {{ aws_namespace }}
 spec:
-  ttlSecondsAfterFinished: 300
+  # keep completed jobs for 24 hrs so that logs are
+  # available in case of issues
+  ttlSecondsAfterFinished: 86400
   template:
     metadata:
       creationTimestamp: null
@@ -60,7 +62,7 @@ spec:
           capabilities: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
+      dnsPolicy: Default
       restartPolicy: Never
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
