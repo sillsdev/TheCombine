@@ -9,7 +9,7 @@ import { defaultState } from "components/App/DefaultState";
 import App from "components/App/component";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
-  <div id="mockRecaptcha">Recaptcha'ed</div>
+  <div id="mockRecaptcha">Recaptcha</div>
 ));
 jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "div");
 
