@@ -38,8 +38,11 @@ filelock==3.4.2
 flake8==4.0.1
     # via
     #   -r dev-requirements.in
+    #   flake8-comprehensions
     #   flake8-polyfill
     #   pep8-naming
+flake8-comprehensions==3.7.0
+    # via -r dev-requirements.in
 flake8-polyfill==1.0.2
     # via pep8-naming
 ghp-import==2.0.2
