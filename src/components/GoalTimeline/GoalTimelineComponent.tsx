@@ -62,7 +62,7 @@ export default class GoalTimeline extends React.Component<
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", () => this.handleWindowSizeChange);
+    window.removeEventListener("resize", () => this.handleWindowSizeChange());
     this.props.clearHistory();
   }
 
@@ -73,7 +73,7 @@ export default class GoalTimeline extends React.Component<
 
   // Load history from database
   async componentDidMount() {
-    window.addEventListener("resize", () => this.handleWindowSizeChange);
+    window.addEventListener("resize", () => this.handleWindowSizeChange());
     await this.getSuggestionsWithPermission();
     this.props.loadHistory();
   }
