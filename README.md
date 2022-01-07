@@ -717,7 +717,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 - [C#](https://www.w3schools.com/cs/default.asp)
 - [Our style guide](docs/style_guide/c_sharp_style_guide.md)
-- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-5.0)
+- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started)
 - [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
 
 ### Frontend (Typescript + React + Redux)

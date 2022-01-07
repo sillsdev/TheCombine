@@ -10,7 +10,7 @@ In general, follow the Microsoft C# Coding Guidelines described in the following
 
 # Exceptions
 
-The following guidelines supersede the Microsoft C# Coding Guidelines, an should be used.
+The following guidelines supersede the Microsoft C# Coding Guidelines, and should be used.
 
 ## Type Inference
 
@@ -22,13 +22,14 @@ Add braces to one-line `if` statements;
 
 ```c#
 # Yes:
-if (isEmpty) {
-  callFun();
+if (isEmpty)
+{
+    callFun();
 }
 
 # No:
 if (isEmpty)
-  callFun();
+    callFun();
 ```
 
 ### Rationale
@@ -50,8 +51,7 @@ foreach (var i in Range(0, 4))
 for (var i = 0; i < 4; i++)
 ```
 
-The signature of [`Range`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range?view=netcore-5.0)
-is:
+The signature of [`Range`](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range) is:
 
 ```c#
 Range (int start, int count);
