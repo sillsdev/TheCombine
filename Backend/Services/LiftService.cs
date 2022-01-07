@@ -13,7 +13,6 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
-using SIL.Extensions;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Lift.Parsing;

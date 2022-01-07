@@ -4,6 +4,7 @@ import {
   Grid,
   IconButton,
   Table,
+  TableBody,
   TableCell,
   TableRow,
   Typography,
@@ -61,41 +62,43 @@ function getSenseInLanguages(
 function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
   return (
     <Table padding="none">
-      {senseInLangs.map((sInLang) => (
-        <React.Fragment>
-          <TableRow key={sInLang.language}>
-            <TableCell style={{ borderBottom: "none" }}>
-              <Typography variant="caption">{`${sInLang.language}: `}</Typography>
-            </TableCell>
-            <TableCell style={{ borderBottom: "none" }}>
-              <Typography
-                variant="h5"
-                style={{ marginBottom: theme.spacing(1) }}
-              >
-                {sInLang.glossText}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          {!!sInLang.definitionText && (
-            <TableRow key={sInLang.language + "def"}>
-              <TableCell style={{ borderBottom: "none" }} />
+      <TableBody>
+        {senseInLangs.map((sInLang, index) => (
+          <React.Fragment key={index}>
+            <TableRow key={sInLang.language}>
               <TableCell style={{ borderBottom: "none" }}>
-                <div
-                  style={{
-                    marginBottom: theme.spacing(1),
-                    paddingLeft: theme.spacing(1),
-                    borderLeft: "1px solid black",
-                  }}
+                <Typography variant="caption">{`${sInLang.language}: `}</Typography>
+              </TableCell>
+              <TableCell style={{ borderBottom: "none" }}>
+                <Typography
+                  variant="h5"
+                  style={{ marginBottom: theme.spacing(1) }}
                 >
-                  <Typography variant="h6" color="textSecondary">
-                    {sInLang.definitionText}
-                  </Typography>
-                </div>
+                  {sInLang.glossText}
+                </Typography>
               </TableCell>
             </TableRow>
-          )}
-        </React.Fragment>
-      ))}
+            {!!sInLang.definitionText && (
+              <TableRow key={sInLang.language + "def"}>
+                <TableCell style={{ borderBottom: "none" }} />
+                <TableCell style={{ borderBottom: "none" }}>
+                  <div
+                    style={{
+                      marginBottom: theme.spacing(1),
+                      paddingLeft: theme.spacing(1),
+                      borderLeft: "1px solid black",
+                    }}
+                  >
+                    <Typography variant="h6" color="textSecondary">
+                      {sInLang.definitionText}
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </React.Fragment>
+        ))}
+      </TableBody>
     </Table>
   );
 }

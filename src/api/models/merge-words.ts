@@ -33,4 +33,10 @@ export interface MergeWords {
    * @memberof MergeWords
    */
   children: Array<MergeSourceWord>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof MergeWords
+   */
+  deleteOnly: boolean;
 }

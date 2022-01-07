@@ -27,6 +27,8 @@ export default function FileInputButton(props: BrowseProps) {
         name="name"
         accept={props.accept}
         onChange={(e) => updateFirstFile(e.target.files as FileList)}
+        // Clear value on-click to allow same file to be selected twice in a row
+        onClick={(e) => (e.currentTarget.value = "")}
         style={{ display: "none" }}
       />
 

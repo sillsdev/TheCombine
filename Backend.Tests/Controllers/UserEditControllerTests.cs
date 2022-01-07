@@ -140,7 +140,7 @@ namespace Backend.Tests.Controllers
         public async Task TestCreateUserEdit()
         {
             var userEdit = new UserEdit { ProjectId = _projId };
-            var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(_projId)).Value;
+            var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(_projId)).Value!;
             userEdit.Id = updatedUser.WorkedProjects[_projId];
             Assert.Contains(userEdit, await _userEditRepo.GetAllUserEdits(_projId));
         }

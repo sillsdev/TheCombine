@@ -1,4 +1,4 @@
-import { MergeUndoIds, Word } from "api/models";
+import { MergeSourceWord, MergeUndoIds, MergeWords, Word } from "api/models";
 
 export interface MergeDupData {
   plannedWords: Word[][];
@@ -10,4 +10,12 @@ export interface MergeStepData {
 
 export interface MergesCompleted {
   merges: MergeUndoIds[];
+}
+
+export function newMergeWords(
+  parent: Word,
+  children: MergeSourceWord[],
+  deleteOnly = false
+): MergeWords {
+  return { parent, children, deleteOnly };
 }

@@ -257,6 +257,83 @@ describe("MergeDupReducer", () => {
     });
   });
 
+  describe("deleteSense", () => {
+    it("deletes one-sense sense from a word with multiple senses", () => {
+      const wordId = "word3";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[wordId].sensesGuids[testRef.mergeSenseId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+    it("deletes multi-sense sense from a word with multiple senses", () => {
+      const wordId = "word3";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseB`,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[wordId].sensesGuids[testRef.mergeSenseId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+    it("deletes word when deleting final sense", () => {
+      const wordId = "word2";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[wordId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+
+    it("deletes a sense from the sidebar", () => {
+      const wordId = "word2";
+      const testRef: MergeTreeReference = {
+        wordId,
+        mergeSenseId: `${wordId}_senseA`,
+        order: 0,
+      };
+
+      const testAction = Actions.deleteSense(testRef);
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].sensesGuids = { word2_senseA: ["word2_senseA_1"] };
+
+      checkTreeWords(testAction, expectedWords);
+    });
+
+    it("delete last sidebar sense from a word's last sense", () => {
+      const srcWordId = "word1";
+      const srcRef: MergeTreeReference = {
+        wordId: srcWordId,
+        mergeSenseId: `${srcWordId}_senseA`,
+        order: 0,
+      };
+
+      const testAction = Actions.deleteSense(srcRef);
+
+      const expectedWords = testTreeWords();
+      delete expectedWords[srcWordId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+  });
+
   describe("moveSense", () => {
     it("moves a sense out from sidebar to same word", () => {
       const wordId = "word2";

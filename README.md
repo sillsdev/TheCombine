@@ -82,7 +82,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
        the appropriate Node.js version.
-   - [.NET Core SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
+   - [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
      - On Ubuntu 20.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
@@ -717,7 +717,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 
 - [C#](https://www.w3schools.com/cs/default.asp)
 - [Our style guide](docs/style_guide/c_sharp_style_guide.md)
-- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-5.0)
+- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started)
 - [NUnit](https://docs.nunit.org/articles/nunit/intro.html) (unit testing)
 
 ### Frontend (Typescript + React + Redux)

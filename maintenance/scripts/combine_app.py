@@ -29,11 +29,11 @@ class CombineApp:
     """Run commands on the Combine services."""
 
     def __init__(
-        self, *, kubeconfig_path: Path = Path(), k8s_namespace: str = "thecombine"
+        self, *, kubeconfig_path: Optional[Path] = None, k8s_namespace: str = "thecombine"
     ) -> None:
         """Initialize the CombineApp from the configuration file."""
         self.kubectl_opts = ["-n", f"{k8s_namespace}"]
-        if kubeconfig_path.is_file():
+        if kubeconfig_path is not None and kubeconfig_path.is_file():
             self.kubectl_opts.append(f"--kubeconfig={kubeconfig_path}")
         # Cache the pod id so we only have to look it up once
         self.pod_id_cache: Dict[str, str] = {}

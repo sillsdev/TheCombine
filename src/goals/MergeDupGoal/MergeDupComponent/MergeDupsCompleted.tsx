@@ -47,7 +47,7 @@ export function MergesCount(changes: MergesCompleted): ReactElement {
 
 function MergeChange(change: MergeUndoIds): ReactElement {
   return (
-    <div key={change.parentIds[0]}>
+    <div key={change.parentIds[0] ?? "deleteOnly"}>
       <Grid
         container
         style={{
@@ -69,9 +69,11 @@ function MergeChange(change: MergeUndoIds): ReactElement {
             }}
           />
         </Grid>
-        {change.parentIds.map((id) => (
-          <WordPaper key={id} wordId={id} />
-        ))}
+        {change.parentIds.length ? (
+          change.parentIds.map((id) => <WordPaper key={id} wordId={id} />)
+        ) : (
+          <WordPaper key={"deleteOnly"} wordId={""} />
+        )}
         <UndoButton
           merge={change}
           textId="mergeDups.undo.undo"
@@ -146,7 +148,11 @@ export function doWordsIncludeMerges(
   merge: MergeUndoIds
 ): boolean {
   const wordIds = words.map((word) => word.id);
-  return merge.parentIds.every((id) => wordIds.includes(id));
+  // The undo operation will fail if any of the children are in the frontier.
+  return (
+    merge.parentIds.every((id) => wordIds.includes(id)) &&
+    !merge.childIds.some((id) => wordIds.includes(id))
+  );
 }
 
 interface WordPaperProps {
@@ -174,7 +180,7 @@ function WordPaper(props: WordPaperProps): ReactElement {
           <Typography variant="h5">{word?.vernacular}</Typography>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-          {word?.senses.map(SenseCard)}
+          {word?.senses?.map(SenseCard)}
         </div>
       </Paper>
     </Grid>

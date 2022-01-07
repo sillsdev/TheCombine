@@ -1,6 +1,7 @@
 import { Card } from "@material-ui/core";
 import { Draggable } from "react-beautiful-dnd";
 
+import { trashId } from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import {
   MergeTreeReference,
   MergeTreeSense,
@@ -39,11 +40,18 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
               marginBottom: theme.spacing(1),
               marginTop: theme.spacing(1),
               maxWidth: 300,
-              background: snapshot.isDragging
-                ? "lightgreen"
-                : props.index === 0
-                ? "white"
-                : "lightgrey",
+              opacity:
+                snapshot.draggingOver === trashId || snapshot.combineWith
+                  ? 0.7
+                  : 1,
+              background:
+                snapshot.draggingOver === trashId
+                  ? "red"
+                  : snapshot.isDragging
+                  ? "lightgreen"
+                  : props.index === 0
+                  ? "white"
+                  : "lightgrey",
             }}
           >
             <SenseCardContent senses={[props.sense]} />

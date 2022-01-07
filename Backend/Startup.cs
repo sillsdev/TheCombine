@@ -143,7 +143,7 @@ namespace BackendFramework
             services.AddSignalR();
 
             // Configure Swashbuckle OpenAPI generation.
-            // https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.1
+            // https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle
             services.AddSwaggerGen();
 
             services.Configure<Settings>(

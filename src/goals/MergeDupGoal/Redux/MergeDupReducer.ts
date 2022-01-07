@@ -2,8 +2,10 @@ import { v4 } from "uuid";
 
 import { Word } from "api/models";
 import {
+  defaultSidebar,
   defaultTree,
   Hash,
+  MergeTree,
   MergeTreeSense,
   MergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
@@ -59,6 +61,37 @@ export const mergeDupStepReducer = (
       );
 
       return { ...state, tree: { ...state.tree, words } };
+    }
+
+    case MergeTreeActionTypes.DELETE_SENSE: {
+      const srcRef = action.payload.src;
+      const srcWordId = srcRef.wordId;
+      const tree: MergeTree = JSON.parse(JSON.stringify(state.tree));
+      const words = tree.words;
+
+      const sensesGuids = words[srcWordId].sensesGuids;
+      if (srcRef.order !== undefined) {
+        sensesGuids[srcRef.mergeSenseId].splice(srcRef.order, 1);
+        if (!sensesGuids[srcRef.mergeSenseId].length) {
+          delete sensesGuids[srcRef.mergeSenseId];
+        }
+      } else {
+        delete sensesGuids[srcRef.mergeSenseId];
+      }
+      if (!Object.keys(words[srcWordId].sensesGuids).length) {
+        delete words[srcWordId];
+      }
+
+      let sidebar = tree.sidebar;
+      if (
+        sidebar.wordId === srcRef.wordId &&
+        sidebar.mergeSenseId === srcRef.mergeSenseId &&
+        srcRef.order === undefined
+      ) {
+        sidebar = defaultSidebar;
+      }
+
+      return { ...state, tree: { ...state.tree, words, sidebar } };
     }
 
     case MergeTreeActionTypes.MOVE_DUPLICATE: {
