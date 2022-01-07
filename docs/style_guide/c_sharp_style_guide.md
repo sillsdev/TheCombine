@@ -22,13 +22,14 @@ Add braces to one-line `if` statements;
 
 ```c#
 # Yes:
-if (isEmpty) {
-  callFun();
+if (isEmpty)
+{
+    callFun();
 }
 
 # No:
 if (isEmpty)
-  callFun();
+    callFun();
 ```
 
 ### Rationale
