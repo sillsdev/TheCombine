@@ -4,6 +4,8 @@
 #
 #    pip-compile dev-requirements.in
 #
+attrs==21.4.0
+    # via flake8-bugbear
 beautifulsoup4==4.10.0
     # via mkdocs-htmlproofer-plugin
 black==21.12b0
@@ -38,9 +40,12 @@ filelock==3.4.2
 flake8==4.0.1
     # via
     #   -r dev-requirements.in
+    #   flake8-bugbear
     #   flake8-comprehensions
     #   flake8-polyfill
     #   pep8-naming
+flake8-bugbear==21.11.29
+    # via -r dev-requirements.in
 flake8-comprehensions==3.7.0
     # via -r dev-requirements.in
 flake8-polyfill==1.0.2
