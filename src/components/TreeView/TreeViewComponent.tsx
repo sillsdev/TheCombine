@@ -1,6 +1,6 @@
 import { Grid, Zoom } from "@material-ui/core";
 import { animate } from "motion";
-import React from "react";
+import React, { ReactElement } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
@@ -82,7 +82,7 @@ export class TreeView extends React.Component<
     } else return Promise.reject("Change already in-progress");
   }
 
-  render() {
+  render(): ReactElement {
     return (
       <React.Fragment>
         {/* Domain search */}

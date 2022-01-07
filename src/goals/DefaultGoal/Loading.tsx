@@ -1,12 +1,12 @@
 import { Typography } from "@material-ui/core";
 import { animate } from "motion";
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Translate } from "react-localize-redux";
 
 import tractor from "resources/tractor.png";
 
 /** A custom loading page */
-export default function Loading() {
+export default function Loading(): ReactElement {
   useEffect(() => {
     const half = window.innerWidth * 0.75;
     animate(

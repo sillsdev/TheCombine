@@ -301,7 +301,7 @@ export function dispatchMergeStepData(goal: MergeDups) {
 }
 
 /** Modifies the mutable input goal. */
-export async function loadMergeDupsData(goal: MergeDups) {
+export async function loadMergeDupsData(goal: MergeDups): Promise<void> {
   const newGroups = await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 
   // Add data to goal.

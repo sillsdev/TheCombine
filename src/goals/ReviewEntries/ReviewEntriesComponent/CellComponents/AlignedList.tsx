@@ -1,6 +1,6 @@
 import { Chip, Grid } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export const SPACER = "spacer";
 interface AlignedListProps {
@@ -9,7 +9,7 @@ interface AlignedListProps {
   bottomCell: ReactNode | typeof SPACER | null;
 }
 
-export default function AlignedList(props: AlignedListProps) {
+export default function AlignedList(props: AlignedListProps): ReactElement {
   return (
     <Grid container direction="column" spacing={2}>
       {props.contents.map((value, index) => (

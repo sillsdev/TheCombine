@@ -157,7 +157,7 @@ export default class TreeDepiction extends React.Component<
 
   // Places the actual sub domain tiles
   domainRow(): ReactElement[] {
-    let subDomains: ReactElement[] = [];
+    const subDomains: ReactElement[] = [];
     let domainIndex = 0;
 
     for (

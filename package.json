@@ -121,6 +121,9 @@
       "jest": true
     },
     "rules": {
+      "@typescript-eslint/ban-types": "warn",
+      "@typescript-eslint/no-empty-interface": "warn",
+      "@typescript-eslint/no-inferrable-types": "warn",
       "@typescript-eslint/switch-exhaustiveness-check": "warn",
       "react/display-name": "off",
       "react/jsx-key": "off",
@@ -151,6 +154,7 @@
         }
       ],
       "no-undef": "off",
+      "prefer-const": "error",
       "react/jsx-boolean-value": "warn"
     },
     "parser": "@typescript-eslint/parser",

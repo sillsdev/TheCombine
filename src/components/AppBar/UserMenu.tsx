@@ -5,7 +5,7 @@ import {
   Person,
   SettingsApplications,
 } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
@@ -33,7 +33,7 @@ interface UserMenuProps {
 /**
  * Avatar in AppBar with dropdown UserMenu
  */
-export default function UserMenu(props: UserMenuProps) {
+export default function UserMenu(props: UserMenuProps): ReactElement {
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
   const avatar = LocalStorage.getAvatar();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -55,9 +55,7 @@ export default function UserMenu(props: UserMenuProps) {
         aria-haspopup="true"
         onClick={handleClick}
         color="secondary"
-        style={{
-          background: tabColor(props.currentTab, Path.UserSettings),
-        }}
+        style={{ background: tabColor(props.currentTab, Path.UserSettings) }}
         id={`avatar-${idAffix}`}
       >
         <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
@@ -106,7 +104,7 @@ interface UserMenuListProps {
 /**
  * UserMenu options: site settings (for admins), user settings, log out
  */
-export function UserMenuList(props: UserMenuListProps) {
+export function UserMenuList(props: UserMenuListProps): ReactElement {
   const { REACT_APP_VERSION } = process.env;
   const dispatch = useDispatch();
   return (

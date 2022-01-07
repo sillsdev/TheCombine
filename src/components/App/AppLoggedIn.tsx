@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
@@ -17,7 +17,7 @@ const BaseGoalScreen = loadable(
 const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 
-export default function AppWithBar() {
+export default function AppWithBar(): ReactElement {
   return (
     <React.Fragment>
       <SignalRHub />

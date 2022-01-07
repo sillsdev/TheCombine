@@ -1,6 +1,6 @@
 import { IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as backend from "backend";
@@ -16,14 +16,14 @@ interface DeleteCellProps {
 
 export default function DeleteCell(
   props: DeleteCellProps & FieldParameterStandard
-) {
+): ReactElement {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const words = useSelector(
     (state: StoreState) => state.reviewEntriesState.words
   );
   const dispatch = useDispatch();
 
-  async function deleteFrontierWord() {
+  async function deleteFrontierWord(): Promise<void> {
     const wordId = props.rowData.id;
     await backend.deleteFrontierWord(wordId);
     const updatedWords = words.filter((w) => w.id !== wordId);
@@ -31,10 +31,10 @@ export default function DeleteCell(
     handleClose();
   }
 
-  function handleOpen() {
+  function handleOpen(): void {
     setDialogOpen(true);
   }
-  function handleClose() {
+  function handleClose(): void {
     setDialogOpen(false);
   }
 

@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -9,7 +9,7 @@ import CharacterStatusText from "goals/CharInventoryCreation/components/Characte
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
 import { StoreState } from "types";
 
-export default function CharInvCompleted() {
+export default function CharInvCompleted(): ReactElement {
   const changes = useSelector(
     (state: StoreState) =>
       state.goalsState.currentGoal.changes as CreateCharInvChanges
@@ -24,7 +24,9 @@ export default function CharInvCompleted() {
   );
 }
 
-function CharInvChangesMade(changes: CreateCharInvChanges) {
+function CharInvChangesMade(
+  changes: CreateCharInvChanges
+): ReactElement | ReactElement[] {
   if (!changes.charChanges?.length) {
     return (
       <Typography>
@@ -35,7 +37,9 @@ function CharInvChangesMade(changes: CreateCharInvChanges) {
   return changes.charChanges.map(CharInvChange);
 }
 
-export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
+export function CharInvChangesGoalList(
+  changes: CreateCharInvChanges
+): ReactElement {
   const changeLimit = 3;
   if (!changes.charChanges?.length) {
     return (
@@ -64,7 +68,7 @@ export function CharInvChangesGoalList(changes: CreateCharInvChanges) {
   );
 }
 
-function CharInvChange(change: CharacterChange) {
+function CharInvChange(change: CharacterChange): ReactElement {
   return (
     <React.Fragment key={change[0]}>
       <Typography display="inline">{`${change[0]}: `}</Typography>

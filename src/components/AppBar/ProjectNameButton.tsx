@@ -1,5 +1,6 @@
 import { Button, Hidden, Tooltip } from "@material-ui/core";
 import { Settings } from "@material-ui/icons";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -12,7 +13,9 @@ interface ProjectNameButtonProps {
 }
 
 /** A button that redirects to the project settings */
-export default function ProjectNameButton(props: ProjectNameButtonProps) {
+export default function ProjectNameButton(
+  props: ProjectNameButtonProps
+): ReactElement {
   const projectName = useSelector(
     (state: StoreState) => state.currentProjectState.project.name
   );

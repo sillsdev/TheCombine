@@ -5,14 +5,14 @@ export default class TreeSemanticDomain
 {
   id: string;
   name: string;
-  description: string = "";
+  description = "";
   subdomains: TreeSemanticDomain[] = [];
 
   // Additional fields not in SemanticDomainWithSubdomains
   parentDomain?: TreeSemanticDomain;
   questions: string[] = [];
 
-  constructor(id: string = "", name: string = "") {
+  constructor(id = "", name = "") {
     this.id = id;
     this.name = name;
   }

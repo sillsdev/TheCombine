@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
@@ -19,7 +19,7 @@ const ReviewEntriesComponent = loadable(
   () => import("goals/ReviewEntries/ReviewEntriesComponent")
 );
 
-function displayComponent(goal: Goal) {
+function displayComponent(goal: Goal): ReactElement {
   const isCompleted = goal.status === GoalStatus.Completed;
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
@@ -33,7 +33,7 @@ function displayComponent(goal: Goal) {
   }
 }
 
-export default function LoadingGoalScreen() {
+export default function LoadingGoalScreen(): ReactElement {
   const goalStatus = useSelector(
     (state: StoreState) => state.goalsState.currentGoal.status
   );
@@ -43,11 +43,11 @@ export default function LoadingGoalScreen() {
 /**
  * Decides which component should be rendered for a goal.
  */
-export function BaseGoalScreen() {
+export function BaseGoalScreen(): ReactElement {
   const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
   const dispatch = useDispatch();
   useEffect(() => {
-    return function cleanup() {
+    return function cleanup(): void {
       dispatch(setCurrentGoal());
       dispatch(clearReviewEntriesState());
       dispatch(clearTree());

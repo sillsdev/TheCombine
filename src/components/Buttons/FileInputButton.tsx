@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import React from "react";
+import React, { ReactElement } from "react";
 
 interface BrowseProps {
   updateFile: (file: File) => void;
@@ -10,7 +10,7 @@ interface BrowseProps {
 }
 
 // This button links to a set of functions
-export default function FileInputButton(props: BrowseProps) {
+export default function FileInputButton(props: BrowseProps): ReactElement {
   function updateFirstFile(files: FileList) {
     const file = files[0];
     if (file) {

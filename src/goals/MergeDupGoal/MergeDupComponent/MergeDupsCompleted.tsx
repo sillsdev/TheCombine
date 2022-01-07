@@ -97,7 +97,7 @@ function UndoButton(props: UndoButtonProps): ReactElement {
   const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    function checkFrontier() {
+    function checkFrontier(): void {
       getFrontierWords().then((words) =>
         setUndoBtnEnabled(
           props.merge ? doWordsIncludeMerges(words, props.merge) : false

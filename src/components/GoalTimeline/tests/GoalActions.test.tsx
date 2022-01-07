@@ -214,11 +214,7 @@ describe("GoalActions", () => {
       const goal: Goal = new MergeDups();
       goal.index = 0;
       goal.numSteps = maxNumSteps(goal.goalType);
-      goal.steps = [
-        {
-          words: [...goalDataMock.plannedWords[0]],
-        },
-      ];
+      goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
       await mockStore.dispatch<any>(
         actions.asyncLoadNewGoal(goal, mockUserEditId)
       );
@@ -309,11 +305,7 @@ describe("GoalActions", () => {
     it("should create an action to add MergeDups data", async () => {
       const goal: Goal = new MergeDups();
       goal.numSteps = maxNumSteps(goal.goalType);
-      goal.steps = [
-        {
-          words: [...goalDataMock.plannedWords[0]],
-        },
-      ];
+      goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
       await mockStore.dispatch<any>(actions.dispatchStepData(goal));
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
     });

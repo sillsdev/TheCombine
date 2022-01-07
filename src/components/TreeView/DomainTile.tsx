@@ -86,7 +86,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
   }
 
   render() {
-    let domain = this.props.domain;
+    const domain = this.props.domain;
     return (
       <Button
         id={domain.id}

@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@material-ui/core";
-import React, { ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 import theme from "types/theme";
 
@@ -22,13 +22,13 @@ export default class BaseSettingsComponent extends React.Component<
     this.state = { isVisible: true };
   }
 
-  toggleVisibility() {
+  toggleVisibility(): void {
     this.setState((prevState) => ({
       isVisible: !prevState.isVisible,
     }));
   }
 
-  render() {
+  render(): ReactElement {
     return (
       <Grid item container xs={12} spacing={2} style={{ flexWrap: "nowrap" }}>
         <Grid

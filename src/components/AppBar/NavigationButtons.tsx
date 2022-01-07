@@ -1,5 +1,5 @@
 import { Button } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
@@ -12,7 +12,9 @@ interface NavigationButtonsProps {
 }
 
 /** A button that redirects to the home page */
-export default function NavigationButtons(props: NavigationButtonsProps) {
+export default function NavigationButtons(
+  props: NavigationButtonsProps
+): ReactElement {
   const dispatch = useDispatch();
 
   return (

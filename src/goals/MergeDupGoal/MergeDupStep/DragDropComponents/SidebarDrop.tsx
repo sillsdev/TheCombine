@@ -1,5 +1,6 @@
 import { IconButton, Typography } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
+import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 
@@ -15,7 +16,7 @@ interface SidebarDropProps {
   vernacular: string;
 }
 
-export default function SidebarDrop(props: SidebarDropProps) {
+export default function SidebarDrop(props: SidebarDropProps): ReactElement {
   const dispatch = useDispatch();
 
   return (
@@ -23,7 +24,7 @@ export default function SidebarDrop(props: SidebarDropProps) {
       droppableId={`${props.sidebar.wordId} ${props.sidebar.mergeSenseId}`}
       key={props.sidebar.mergeSenseId}
     >
-      {(providedDroppable) => (
+      {(providedDroppable): ReactElement => (
         <div
           ref={providedDroppable.innerRef}
           {...providedDroppable.droppableProps}

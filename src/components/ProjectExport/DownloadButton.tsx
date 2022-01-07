@@ -29,7 +29,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   const dispatch = useDispatch();
   const [fileName, setFileName] = useState<string | undefined>();
   const [fileUrl, setFileUrl] = useState<string | undefined>();
-  let downloadLink = createRef<HTMLAnchorElement>();
+  const downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
     if (downloadLink.current && fileUrl) {

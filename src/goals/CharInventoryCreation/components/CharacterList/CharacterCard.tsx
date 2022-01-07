@@ -4,7 +4,7 @@ import {
   CardContent,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
@@ -21,7 +21,7 @@ interface CharacterCardProps {
 }
 
 export default class CharacterCard extends React.Component<CharacterCardProps> {
-  render() {
+  render(): ReactElement {
     return (
       <React.Fragment>
         <Card
@@ -64,7 +64,7 @@ export default class CharacterCard extends React.Component<CharacterCardProps> {
   }
 }
 
-function charToHexValue(char: string) {
+function charToHexValue(char: string): string {
   let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
   while (hex.length < 4) {
     hex = "0" + hex;

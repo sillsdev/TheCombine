@@ -32,7 +32,7 @@ export class RuntimeConfig {
     }
   }
 
-  public static getInstance() {
+  public static getInstance(): RuntimeConfig {
     if (!this._instance) {
       this._instance = new RuntimeConfig();
     }

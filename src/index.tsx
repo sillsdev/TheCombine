@@ -18,8 +18,8 @@ const localizedLanguages = [
   { name: "French", code: "fr" },
 ];
 const localizedTags = localizedLanguages.map((l) => l.code);
-const getPrimarySubtag = (bcp: string) => bcp.split("-")[0];
-const getLocalizedLanguage = (bcp: string) =>
+const getPrimarySubtag = (bcp: string): string => bcp.split("-")[0];
+const getLocalizedLanguage = (bcp: string): string =>
   localizedTags.includes(getPrimarySubtag(bcp)) ? getPrimarySubtag(bcp) : "en";
 const localizeInit = {
   languages: localizedLanguages,

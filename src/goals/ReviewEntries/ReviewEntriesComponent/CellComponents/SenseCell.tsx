@@ -1,6 +1,6 @@
 import { Chip, IconButton } from "@material-ui/core";
 import { Add, Delete, RestoreFromTrash } from "@material-ui/icons";
-import React from "react";
+import React, { ReactElement } from "react";
 
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
@@ -16,8 +16,8 @@ interface SenseCellProps {
 
 export default function SenseCell(
   props: SenseCellProps & FieldParameterStandard
-) {
-  function addSense() {
+): ReactElement {
+  function addSense(): ReactElement {
     const senses = [...props.rowData.senses, new ReviewEntriesSense()];
     return (
       <Chip

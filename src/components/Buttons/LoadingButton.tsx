@@ -1,6 +1,6 @@
 import { Button, CircularProgress } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import React from "react";
+import React, { ReactElement } from "react";
 
 import { themeColors } from "types/theme";
 
@@ -14,7 +14,7 @@ interface LoadingProps {
 /**
  * A button that shows a spinning wheel when loading=true
  */
-export default function LoadingButton(props: LoadingProps) {
+export default function LoadingButton(props: LoadingProps): ReactElement {
   return (
     <Button
       variant="contained"

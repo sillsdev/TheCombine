@@ -1,6 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
+import { WritingSystem } from "api/models";
 import LocalizedGlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
 
 describe("Tests GlossWithSuggestions", () => {
@@ -12,7 +13,7 @@ describe("Tests GlossWithSuggestions", () => {
           glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={() => null}
           handleEnterAndTab={() => null}
-          analysisLang={""}
+          analysisLang={{} as WritingSystem}
           textFieldId={""}
         />
       );

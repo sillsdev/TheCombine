@@ -31,7 +31,7 @@ export default class ReviewEntriesComponent extends React.Component<
     this.recorder = new Recorder();
   }
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     const frontier = await getFrontierWords();
     this.props.updateAllWords(
       frontier.map((w) => new ReviewEntriesWord(w, undefined, this.recorder))
