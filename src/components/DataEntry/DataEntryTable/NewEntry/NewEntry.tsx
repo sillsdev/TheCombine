@@ -273,7 +273,7 @@ export default class NewEntry extends React.Component<
     return keepers;
   }
 
-  updateSuggestedVerns(value?: string | null) {
+  updateSuggestedVerns(value?: string) {
     let suggestedVerns: string[] = [];
     if (value) {
       suggestedVerns = [...this.autoCompleteCandidates(value)];

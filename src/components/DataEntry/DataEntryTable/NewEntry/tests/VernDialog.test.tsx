@@ -37,19 +37,19 @@ describe("VernList ", () => {
   });
 
   it("closes dialog when selecting a menu item", () => {
-    let closeDialogMockCallback = jest.fn();
-    let words = testWordList();
+    const closeDialogMockCallback = jest.fn();
+    const words = testWordList();
     const instance = createVernListInstance(words, closeDialogMockCallback);
-    let menuItem = instance.findByProps({ id: words[0].id });
+    const menuItem = instance.findByProps({ id: words[0].id });
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(0);
     menuItem.props.onClick();
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(1);
   });
 
   it("has the correct number of menu items", () => {
-    let words = testWordList();
+    const words = testWordList();
     const instance = createVernListInstance(words, jest.fn());
-    let menuItemsCount = instance.findAllByType(StyledMenuItem).length;
+    const menuItemsCount = instance.findAllByType(StyledMenuItem).length;
     expect(words.length + 1).toBe(menuItemsCount);
   });
 });

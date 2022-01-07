@@ -185,7 +185,7 @@ export default class Register extends React.Component<
                 helperText={
                   this.state.error["name"] ? (
                     <Translate id="login.required" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -232,7 +232,7 @@ export default class Register extends React.Component<
                 helperText={
                   this.state.error["email"] ? (
                     <Translate id="login.emailTaken" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -275,7 +275,7 @@ export default class Register extends React.Component<
                 helperText={
                   this.state.error["confirmPassword"] ? (
                     <Translate id="login.confirmPasswordError" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}

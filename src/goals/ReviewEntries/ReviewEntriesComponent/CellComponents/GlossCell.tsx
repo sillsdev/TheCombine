@@ -72,7 +72,7 @@ export default function GlossCell(
           </Translate>
         )
       )}
-      bottomCell={props.editable ? SPACER : null}
+      bottomCell={props.editable ? SPACER : undefined}
     />
   );
 }

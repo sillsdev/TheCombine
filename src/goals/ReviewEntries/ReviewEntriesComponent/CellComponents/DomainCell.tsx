@@ -119,7 +119,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
             )}
           </Grid>
         ))}
-        bottomCell={props.editDomains ? SPACER : null}
+        bottomCell={props.editDomains ? SPACER : undefined}
       />
       <Dialog fullScreen open={addingDomains}>
         <TreeView returnControlToCaller={addDomain} />

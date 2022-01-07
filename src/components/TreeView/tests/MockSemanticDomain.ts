@@ -9,7 +9,7 @@ const PAR: TreeSemanticDomain = {
 };
 
 // Following subdomains
-for (let i: number = 0; i < 3; i++)
+for (let i = 0; i < 3; i++)
   PAR.subdomains.push({
     ...new TreeSemanticDomain(),
     name: "kid" + i,
@@ -19,7 +19,7 @@ for (let i: number = 0; i < 3; i++)
   });
 
 // Give subdomain 0 an even # of subdomains
-for (let i: number = 0; i < 4; i++)
+for (let i = 0; i < 4; i++)
   PAR.subdomains[0].subdomains.push({
     ...new TreeSemanticDomain(),
     name: "evenData" + i,
@@ -29,7 +29,7 @@ for (let i: number = 0; i < 4; i++)
   });
 
 // Give the the next subdomain an odd # of subdomains
-for (let i: number = 0; i < 3; i++)
+for (let i = 0; i < 3; i++)
   PAR.subdomains[1].subdomains.push({
     ...new TreeSemanticDomain(),
     name: "oddData" + i,

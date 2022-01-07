@@ -126,7 +126,7 @@ export default class Login extends React.Component<
                 helperText={
                   this.state.error["username"] ? (
                     <Translate id="login.required" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -148,7 +148,7 @@ export default class Login extends React.Component<
                 helperText={
                   this.state.error["password"] ? (
                     <Translate id="login.required" />
-                  ) : null
+                  ) : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}

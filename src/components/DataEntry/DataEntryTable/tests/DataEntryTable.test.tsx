@@ -104,7 +104,7 @@ describe("DataEntryTable", () => {
 
     it("doesn't create word when new entry has no vernacular", () => {
       // Verify that NewEntry is present
-      let newEntryItems = testRenderer.root.findAllByType(NewEntry);
+      const newEntryItems = testRenderer.root.findAllByType(NewEntry);
       expect(newEntryItems.length).toBe(1);
       // Set the new entry to have no useful content
       const newEntry = simpleWord("", "hasGloss");

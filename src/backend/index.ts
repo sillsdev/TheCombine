@@ -464,7 +464,7 @@ export async function addGoalToUserEdit(
 export async function addStepToGoal(
   userEditId: string,
   goalIndex: number,
-  step: GoalStep,
+  step?: GoalStep,
   stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
   const projectId = LocalStorage.getProjectId();

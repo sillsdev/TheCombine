@@ -69,7 +69,7 @@ let oldUser: User | undefined;
 const mockProjectId = "123";
 const mockUserEditId = "456";
 const mockUserId = "789";
-let mockUser = newUser();
+const mockUser = newUser();
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 

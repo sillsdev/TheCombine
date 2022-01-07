@@ -19,7 +19,7 @@ describe("Test the TreeViewReducer", () => {
       description: "foo description",
       questions: [],
     };
-    const subdomains = [
+    const subdomains = () => [
       {
         name: "Bar",
         id: "x.1",
@@ -35,26 +35,16 @@ describe("Test the TreeViewReducer", () => {
         questions: [],
       },
     ];
-    const initialJson = [
-      {
-        ...parent,
-        subdomains: subdomains,
-      },
-    ];
-    let expectedDomain = {
+    const initialJson = [{ ...parent, subdomains: subdomains() }];
+    const expectedDomain = {
       name: "",
       id: "",
       description: "",
-      subdomains: [
-        { ...parent, parentDomain: {}, subdomains: [...subdomains] },
-      ],
+      subdomains: [{ ...parent, parentDomain: {}, subdomains: subdomains() }],
       questions: [],
     };
     expectedDomain.subdomains[0].subdomains.map((value) => {
-      return {
-        ...value,
-        parentDomains: expectedDomain.subdomains[0],
-      };
+      return { ...value, parentDomains: expectedDomain.subdomains[0] };
     });
     expectedDomain.subdomains[0].parentDomain = expectedDomain;
     expect(createDomains(initialJson)).toEqual(expectedDomain);

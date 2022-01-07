@@ -11,8 +11,8 @@ describe("Tests GlossWithSuggestions", () => {
         <LocalizedGlossWithSuggestions
           gloss={""}
           glossInput={React.createRef<HTMLDivElement>()}
-          updateGlossField={() => null}
-          handleEnterAndTab={() => null}
+          updateGlossField={jest.fn()}
+          handleEnterAndTab={jest.fn()}
           analysisLang={{} as WritingSystem}
           textFieldId={""}
         />
