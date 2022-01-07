@@ -6,7 +6,7 @@ import os
 import signal
 import sys
 import types
-from typing import Dict
+from typing import Dict, Optional
 
 from base_cert import BaseCert
 from cert_proxy_client import CertProxyClient
@@ -16,7 +16,7 @@ from self_signed_cert import SelfSignedCert
 from utils import get_setting
 
 
-def handle_user_sig1(signum: int, frame: types.FrameType) -> None:
+def handle_user_sig1(signum: int, frame: Optional[types.FrameType]) -> None:
     """
     Handle the SIGUSR1 signal.
 
