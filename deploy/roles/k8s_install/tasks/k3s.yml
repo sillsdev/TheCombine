@@ -10,6 +10,18 @@
     warn: no
     creates: /usr/local/bin/k3s
 
+# Change KillMode from "process" to "mixed" to eliminate 90 wait for k3s containers
+# to exit.  This limits the ability to upgrade k3s in-place without stopping the
+# current containers but that is not needed for the NUC use case.
+- name: Patch k3s service
+  lineinfile:
+    path: /etc/systemd/system/k3s.service
+    regexp: ^KillMode=
+    state: present
+    line: KillMode=mixed
+  notify:
+    - Reload k3s
+
 - name: Get home directory for {{ k8s_user }}
   shell: >
     getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
