@@ -6,7 +6,7 @@ import renderer, {
 import Login from "components/Login/LoginPage/LoginComponent";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
-  <div id="mockRecaptcha">Recaptcha'ed</div>
+  <div id="mockRecaptcha">Recaptcha</div>
 ));
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
