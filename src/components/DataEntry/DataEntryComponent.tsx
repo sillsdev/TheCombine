@@ -108,11 +108,11 @@ export default class DataEntryComponent extends React.Component<
   }
 
   componentDidMount(): void {
-    window.addEventListener("resize", this.handleWindowSizeChange);
+    window.addEventListener("resize", () => this.handleWindowSizeChange());
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener("resize", this.handleWindowSizeChange);
+    window.removeEventListener("resize", () => this.handleWindowSizeChange());
   }
 
   handleWindowSizeChange(): void {
