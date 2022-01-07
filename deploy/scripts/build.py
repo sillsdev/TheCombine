@@ -22,9 +22,10 @@ def parse_args() -> argparse.Namespace:
         "--tag",
         help="Image tag",
     )
-    parser.add_argument("--repo", help="Push images to the specified Docker image repository.")
     parser.add_argument(
-        "--compose", action="store_true", help="Generate images for docker compose."
+        "--repo",
+        default="localhost:5050",
+        help="Push images to the specified Docker image repository.",
     )
     return parser.parse_args()
 
@@ -43,19 +44,14 @@ def main() -> None:
     build_specs = [
         {"dir": project_dir, "name": "frontend"},
         {"dir": project_dir / "Backend", "name": "backend"},
+        {"dir": project_dir / "maintenance", "name": "maint"},
     ]
-
-    if args.compose:
-        build_specs.append({"dir": project_dir / "certmgr", "name": "certmgr"})
-    else:
-        build_specs.append({"dir": project_dir / "maintenance", "name": "maint"})
 
     for spec in build_specs:
         os.chdir(str(spec["dir"]))
         image_name = get_image_name(args.repo, str(spec["name"]), args.tag)
         os.system(f"docker build -t {image_name} -f Dockerfile .")
-        if args.repo is not None:
-            os.system(f"docker push {image_name}")
+        os.system(f"docker push {image_name}")
 
 
 if __name__ == "__main__":
