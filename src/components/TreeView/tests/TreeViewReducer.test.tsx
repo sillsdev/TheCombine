@@ -19,28 +19,18 @@ describe("Test the TreeViewReducer", () => {
       description: "foo description",
       questions: [],
     };
-    const subdomains = () => [
-      {
-        name: "Bar",
-        id: "x.1",
-        description: "bar desc",
-        subdomains: [],
-        questions: [],
-      },
-      {
-        name: "Baz",
-        id: "x.2",
-        description: "baz desc",
-        subdomains: [],
-        questions: [],
-      },
+    const subdomains = [
+      new TreeSemanticDomain("Bar", "5.1"),
+      new TreeSemanticDomain("Baz", "5.2"),
     ];
-    const initialJson = [{ ...parent, subdomains: subdomains() }];
+    const initialJson = [{ ...parent, subdomains }];
     const expectedDomain = {
       name: "",
       id: "",
       description: "",
-      subdomains: [{ ...parent, parentDomain: {}, subdomains: subdomains() }],
+      subdomains: [
+        { ...parent, parentDomain: {}, subdomains: [...subdomains] },
+      ],
       questions: [],
     };
     expectedDomain.subdomains[0].subdomains.map((value) => {
