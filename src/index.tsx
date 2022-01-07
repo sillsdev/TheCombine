@@ -9,7 +9,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import history from "browserHistory";
 import App from "components/App/component";
 import globalTranslations from "resources/translations.json";
-import { store, persistor } from "store";
+import { persistor, store } from "store";
 import theme from "types/theme";
 
 const localizedLanguages = [
@@ -36,7 +36,7 @@ ReactDOM.render(
     <Provider store={store}>
       <LocalizeProvider store={store} initialize={localizeInit}>
         <Router history={history}>
-          <PersistGate loading={null} persistor={persistor}>
+          <PersistGate persistor={persistor}>
             <App />
           </PersistGate>
         </Router>

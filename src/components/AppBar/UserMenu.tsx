@@ -34,16 +34,16 @@ interface UserMenuProps {
  * Avatar in AppBar with dropdown UserMenu
  */
 export default function UserMenu(props: UserMenuProps): ReactElement {
-  const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
   const avatar = LocalStorage.getAvatar();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
   }
 
-  function handleClose() {
-    setAnchorElement(null);
+  function handleClose(): void {
+    setAnchorElement(undefined);
   }
 
   getIsAdmin().then(setIsAdmin);
@@ -66,19 +66,12 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
         )}
       </Button>
       <Menu
-        getContentAnchorEl={null}
         id={idAffix}
         anchorEl={anchorElement}
         open={Boolean(anchorElement)}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
