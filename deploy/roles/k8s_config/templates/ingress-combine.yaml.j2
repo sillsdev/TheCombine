@@ -13,7 +13,7 @@ spec:
   tls:
   - hosts:
     - {{ combine_server_name }}
-    secretName: {{ combine_secret_name}}
+    secretName: {{ combine_server_name | regex_replace('[\\._-]+','-')}}-tls
   rules:
   - host: {{ combine_server_name }}
     http:
