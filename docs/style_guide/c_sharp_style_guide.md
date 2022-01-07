@@ -10,7 +10,7 @@ In general, follow the Microsoft C# Coding Guidelines described in the following
 
 # Exceptions
 
-The following guidelines supersede the Microsoft C# Coding Guidelines, an should be used.
+The following guidelines supersede the Microsoft C# Coding Guidelines, and should be used.
 
 ## Type Inference
 
