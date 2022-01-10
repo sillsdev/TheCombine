@@ -114,6 +114,9 @@ export default class NewEntry extends React.Component<
   updateVernField(newValue: string, openDialog?: boolean) {
     const stateUpdates: Partial<NewEntryState> = {};
     if (newValue !== this.state.newEntry.vernacular) {
+      if (this.state.selectedWord) {
+        this.setState({ selectedWord: undefined });
+      }
       this.props.setIsReadyState(newValue.trim().length > 0);
       this.updateSuggestedVerns(newValue);
       let dupVernWords: Word[] = [];
@@ -391,7 +394,7 @@ export default class NewEntry extends React.Component<
             position: "relative",
           }}
         >
-          {!this.state.selectedWord && (
+          {!this.state.selectedWord?.id && (
             // note is not available if user selected to modify an exiting entry
             <EntryNote
               noteText={this.state.newEntry.note.text}
