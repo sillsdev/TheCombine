@@ -7,7 +7,7 @@ describe("AlignedList", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <AlignedList
-        contents={[<div />, <div />]}
+        contents={[<div key={0} />, <div key={1} />]}
         listId={"testId"}
         bottomCell={<div />}
       />,

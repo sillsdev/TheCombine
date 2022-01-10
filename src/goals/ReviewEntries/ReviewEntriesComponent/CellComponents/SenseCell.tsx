@@ -35,16 +35,15 @@ export default function SenseCell(
     <AlignedList
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
-      contents={props.rowData.senses.map((value) => (
-        <React.Fragment>
-          <IconButton
-            size="small"
-            onClick={() => props.delete!(value.guid)}
-            id={`sense-${value.guid}-delete`}
-          >
-            {value.deleted ? <RestoreFromTrash /> : <Delete />}
-          </IconButton>
-        </React.Fragment>
+      contents={props.rowData.senses.map((value, index) => (
+        <IconButton
+          size="small"
+          onClick={() => props.delete!(value.guid)}
+          id={`sense-${value.guid}-delete`}
+          key={index}
+        >
+          {value.deleted ? <RestoreFromTrash /> : <Delete />}
+        </IconButton>
       ))}
       bottomCell={addSense()}
     />
