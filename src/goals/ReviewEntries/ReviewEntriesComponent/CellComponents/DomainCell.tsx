@@ -79,7 +79,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
         key={`domainCell:${props.rowData.id}`}
         listId={`domains${props.rowData.id}`}
         contents={props.rowData.senses.map((sense, senseIndex) => (
-          <Grid container direction="row" spacing={2}>
+          <Grid container direction="row" spacing={2} key={senseIndex}>
             {sense.domains.length > 0 ? (
               sense.domains.map((domain, domainIndex) => (
                 <Grid

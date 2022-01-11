@@ -125,7 +125,6 @@
       "@typescript-eslint/no-inferrable-types": "warn",
       "@typescript-eslint/switch-exhaustiveness-check": "warn",
       "react/display-name": "off",
-      "react/jsx-key": "off",
       "import/first": "warn",
       "import/newline-after-import": "warn",
       "import/no-duplicates": "warn",

@@ -36,15 +36,14 @@ export default function SenseCell(
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
       contents={props.rowData.senses.map((value) => (
-        <React.Fragment>
-          <IconButton
-            size="small"
-            onClick={() => props.delete!(value.guid)}
-            id={`sense-${value.guid}-delete`}
-          >
-            {value.deleted ? <RestoreFromTrash /> : <Delete />}
-          </IconButton>
-        </React.Fragment>
+        <IconButton
+          size="small"
+          onClick={() => props.delete!(value.guid)}
+          id={`sense-${value.guid}-delete`}
+          key={value.guid}
+        >
+          {value.deleted ? <RestoreFromTrash /> : <Delete />}
+        </IconButton>
       ))}
       bottomCell={addSense()}
     />
