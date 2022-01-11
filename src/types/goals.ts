@@ -14,7 +14,7 @@ import {
 import { newUser } from "types/user";
 
 export type GoalData = CreateCharInvData | MergeDupData;
-export type GoalStep = CreateCharInvStepData | MergeStepData | undefined;
+export type GoalStep = CreateCharInvStepData | MergeStepData | {};
 export type GoalChanges = CreateCharInvChanges | MergesCompleted;
 
 export interface GoalProps {
@@ -77,7 +77,7 @@ export class Goal {
   constructor(
     type = GoalType.Default,
     name = GoalName.Default,
-    steps: GoalStep[] = [undefined],
+    steps: GoalStep[] = [{}],
     data?: GoalData
   ) {
     this.guid = v4();
