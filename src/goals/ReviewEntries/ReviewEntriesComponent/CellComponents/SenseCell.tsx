@@ -35,12 +35,12 @@ export default function SenseCell(
     <AlignedList
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
-      contents={props.rowData.senses.map((value, index) => (
+      contents={props.rowData.senses.map((value) => (
         <IconButton
           size="small"
           onClick={() => props.delete!(value.guid)}
           id={`sense-${value.guid}-delete`}
-          key={index}
+          key={value.guid}
         >
           {value.deleted ? <RestoreFromTrash /> : <Delete />}
         </IconButton>
