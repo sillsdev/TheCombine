@@ -147,7 +147,12 @@ export async function avatarSrc(userId: string): Promise<string> {
   const options = { headers: authHeader(), responseType: "arraybuffer" };
   try {
     const resp = await avatarApi.downloadAvatar({ userId }, options);
-    const image = Base64.encode(resp.data);
+    const image = Base64.btoa(
+      new Uint8Array(resp.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ""
+      )
+    );
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
   } catch (err) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
