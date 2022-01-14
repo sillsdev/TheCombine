@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
+import { Base64 } from "js-base64";
 
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
@@ -146,7 +147,7 @@ export async function avatarSrc(userId: string): Promise<string> {
   const options = { headers: authHeader(), responseType: "arraybuffer" };
   try {
     const resp = await avatarApi.downloadAvatar({ userId }, options);
-    const image = Buffer.from(resp.data, "base64").toString("base64");
+    const image = Base64.encode(resp.data);
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
   } catch (err) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
