@@ -73,6 +73,7 @@ venv
 
 # Kubernetes Configuration files
 **/site_files/
+**/charts/values.yaml
 
 # Host file to be used for ad hoc testing/development
 *.hosts.yml

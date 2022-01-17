@@ -29,6 +29,9 @@ humanfriendly
 kubernetes
 pyopenssl
 
+# Kubernetes Installation
+pyyaml
+
 # OS-specific dependencies.
 # The follow dependencies are only needed on Windows, but list them here to avoid thrashing back and forth when
 # non-Windows developers run `python -m piptools compile`

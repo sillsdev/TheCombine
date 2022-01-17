@@ -1,0 +1,2 @@
+mongo_image: 4.4
+database_data_size: 16Gi

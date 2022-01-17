@@ -27,10 +27,7 @@ click==8.0.3
     #   black
     #   mkdocs
 colorama==0.4.4
-    # via
-    #   -r dev-requirements.in
-    #   click
-    #   tox
+    # via -r dev-requirements.in
 cryptography==36.0.1
     # via pyopenssl
 distlib==0.3.4
@@ -104,11 +101,11 @@ mkdocs==1.2.3
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.8.0
     # via -r dev-requirements.in
-mkdocs-material==8.1.4
+mkdocs-material==8.1.5
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.0.3
     # via mkdocs-material
-mypy==0.930
+mypy==0.931
     # via -r dev-requirements.in
 mypy-extensions==0.4.3
     # via
@@ -153,15 +150,14 @@ pyopenssl==21.0.0
 pyparsing==3.0.6
     # via packaging
 pyreadline3==3.3
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.8.2
     # via
     #   ghp-import
     #   kubernetes
 pyyaml==6.0
     # via
+    #   -r dev-requirements.in
     #   kubernetes
     #   mkdocs
     #   pyyaml-env-tag
@@ -194,7 +190,7 @@ tomli==1.2.3
     #   mypy
 tox==3.24.5
     # via -r dev-requirements.in
-types-cryptography==3.3.11
+types-cryptography==3.3.12
     # via types-pyopenssl
 types-enum34==1.1.2
     # via types-cryptography
@@ -202,15 +198,17 @@ types-ipaddress==1.0.2
     # via types-cryptography
 types-pyopenssl==21.0.3
     # via -r dev-requirements.in
-types-python-dateutil==2.8.5
+types-python-dateutil==2.8.6
     # via -r dev-requirements.in
-types-requests==2.27.1
+types-requests==2.27.5
     # via -r dev-requirements.in
+types-urllib3==1.26.3
+    # via types-requests
 typing-extensions==4.0.1
     # via
     #   black
     #   mypy
-urllib3==1.26.7
+urllib3==1.26.8
     # via
     #   kubernetes
     #   requests

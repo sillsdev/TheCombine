@@ -1,24 +1,32 @@
 ---
-#################################################
+################################################
 # Group specific configuration items
 #
-# Group: qa
+# Group: prod
 ################################################
 
 # Frontend configuration items:
 config_show_cert_expiration: false
-config_analytics_write_key: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
+config_analytics_write_key: "j9EeK4oURluRSIKbaXCBKBxGCnT2WahB"
 
-#################################################
-# TheCombine is installed on the QA Server by TeamCity.  It will set the
-# IMAGE_TAG environment variable to major.minor.build_no and launch
-# Docker compose
-################################################
-image_tag: "{{ combine_version }}"
+# Live server accesses the following AWS services:
+# S3:
+#   - store SSL certificates for the NUCs
+#   - store backups
+# ECR:
+#   - install container images
+aws_s3_profile: s3_read_write
+aws_ecr_profile: ecr_read_only
 
-combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
-combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
+my_aws_profiles:
+  - "{{ aws_s3_profile }}"
+  - "{{ aws_ecr_profile }}"
+
+# Define backup times (UTC)
+backup_hour: "10"
+backup_minute: "15"
+# Maximum number of backups to keep on AWS S3 service
+max_backups: "3"
 
 ################################################
 # Configure Kubernetes cluster
@@ -35,9 +43,6 @@ create_namespaces: []
 # k8s namespaces
 app_namespace: thecombine
 cert_proxy_namespace: combine-cert-proxy
-
-k8s_user: sillsdev
-k8s_group: sillsdev
 
 #######################################
 # k8s Upgrade strategy

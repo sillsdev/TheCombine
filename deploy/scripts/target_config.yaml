@@ -1,0 +1,35 @@
+targets:
+  localhost:
+    profile: dev
+    overrides:
+      config_captcha_required: "true"
+      config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+  nuc1.thecombine.app:
+    profile: nuc
+  nuc2.thecombine.app:
+    profile: nuc
+  qa-kube.thecombine.app:
+    profile: staging
+  thecombine.app:
+    profile: prod
+    overrides:
+      config_captcha_required: "true"
+      config_captcha_sitekey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
+
+profiles:
+  dev:
+    charts:
+      - thecombine
+  nuc:
+    charts:
+      - aws-login
+      - thecombine
+  staging:
+    charts:
+      - aws-login
+      - thecombine
+  prod:
+    charts:
+      - aws-login
+      - thecombine
+      - cert-proxy-server

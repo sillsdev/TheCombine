@@ -1,0 +1,10 @@
+# Default values for thecombine.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+create_namespace: true
+app_namespace: thecombine
+
+aws_s3_loc: thecombine.app
+aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
+aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
