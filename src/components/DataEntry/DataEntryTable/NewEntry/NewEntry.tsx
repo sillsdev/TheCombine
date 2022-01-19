@@ -96,11 +96,11 @@ export default class NewEntry extends React.Component<
       (prevState.vernOpen || prevState.senseOpen) &&
       !(this.state.vernOpen || this.state.senseOpen)
     ) {
-      this.setState({
-        shouldFocus: this.state.selectedWord
+      this.setState((state: NewEntryState) => ({
+        shouldFocus: state.selectedWord
           ? FocusTarget.Gloss
           : FocusTarget.Vernacular,
-      });
+      }));
     }
   }
 
@@ -115,7 +115,8 @@ export default class NewEntry extends React.Component<
     }
   }
 
-  // This function is for child input components to grab focus when they load.
+  /** This function is for a child input component to use in componentDidUpdate
+   * to move focus to itself, if the current state says it should. */
   conditionalFocus(target: FocusTarget): void {
     if (this.state.shouldFocus === target) {
       this.focus(target);
