@@ -37,6 +37,11 @@ interface NewEntryProps {
   vernacularLang: WritingSystem;
 }
 
+export enum FocusTarget {
+  Gloss,
+  Vernacular,
+}
+
 interface NewEntryState {
   newEntry: Word;
   suggestedVerns: string[];
@@ -46,7 +51,7 @@ interface NewEntryState {
   vernOpen: boolean;
   senseOpen: boolean;
   selectedWord?: Word;
-  shouldFocusOnGloss?: boolean;
+  shouldFocus?: FocusTarget;
 }
 
 function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
@@ -85,18 +90,36 @@ export default class NewEntry extends React.Component<
   glossInput: React.RefObject<HTMLDivElement>;
 
   async componentDidUpdate(_: NewEntryProps, prevState: NewEntryState) {
+    // When the vern/sense dialogs are closed, focus needs to return to text fields.
+    // This sets a flag to trigger focus once the input components are updated.
     if (
       (prevState.vernOpen || prevState.senseOpen) &&
       !(this.state.vernOpen || this.state.senseOpen)
     ) {
-      this.setState({ shouldFocusOnGloss: true });
+      this.setState({
+        shouldFocus: this.state.selectedWord
+          ? FocusTarget.Gloss
+          : FocusTarget.Vernacular,
+      });
     }
   }
 
-  conditionalFocusOnGloss(): void {
-    if (this.state.shouldFocusOnGloss) {
-      this.focusGlossInput();
-      this.setState({ shouldFocusOnGloss: false });
+  focus(target: FocusTarget): void {
+    switch (target) {
+      case FocusTarget.Gloss:
+        focusInput(this.glossInput);
+        return;
+      case FocusTarget.Vernacular:
+        focusInput(this.vernInput);
+        return;
+    }
+  }
+
+  // This function is for child input components to grab focus when they load.
+  conditionalFocus(target: FocusTarget): void {
+    if (this.state.shouldFocus === target) {
+      this.focus(target);
+      this.setState({ shouldFocus: undefined });
     }
   }
 
@@ -177,17 +200,7 @@ export default class NewEntry extends React.Component<
       dupVernWords: [],
       selectedWord: undefined,
     });
-    this.focusVernInput();
-  }
-
-  /** Move the focus to the vernacular textbox */
-  focusVernInput() {
-    focusInput(this.vernInput);
-  }
-
-  /** Move the focus to the gloss textbox */
-  focusGlossInput() {
-    focusInput(this.glossInput);
+    this.focus(FocusTarget.Vernacular);
   }
 
   addNewWordAndReset() {
@@ -238,12 +251,12 @@ export default class NewEntry extends React.Component<
         // The user can conditionally submit a new entry without a gloss
         if (this.state.activeGloss || !checkGloss) {
           this.addOrUpdateWord();
-          this.focusVernInput();
+          this.focus(FocusTarget.Vernacular);
         } else {
-          this.focusGlossInput();
+          this.focus(FocusTarget.Gloss);
         }
       } else {
-        this.focusVernInput();
+        this.focus(FocusTarget.Vernacular);
       }
     }
   }
@@ -355,6 +368,9 @@ export default class NewEntry extends React.Component<
               }
               vernacularLang={this.props.vernacularLang}
               textFieldId={`${idAffix}-vernacular`}
+              onComponentDidUpdate={() =>
+                this.conditionalFocus(FocusTarget.Vernacular)
+              }
             />
             <VernDialog
               open={this.state.vernOpen}
@@ -400,7 +416,9 @@ export default class NewEntry extends React.Component<
             }
             analysisLang={this.props.analysisLang}
             textFieldId={`${idAffix}-gloss`}
-            onComponentDidUpdate={() => this.conditionalFocusOnGloss()}
+            onComponentDidUpdate={() =>
+              this.conditionalFocus(FocusTarget.Gloss)
+            }
           />
         </Grid>
         <Grid

@@ -16,12 +16,19 @@ interface VernWithSuggestionsProps {
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   vernacularLang: WritingSystem;
   textFieldId: string;
+  onComponentDidUpdate?: () => void;
 }
 
 /**
  * An editable vernacular field for new words, that suggests words already in database.
  */
 export default class VernWithSuggestions extends React.Component<VernWithSuggestionsProps> {
+  componentDidUpdate() {
+    if (this.props.onComponentDidUpdate) {
+      this.props.onComponentDidUpdate();
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
