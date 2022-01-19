@@ -1,15 +1,15 @@
 import { Chip, Grid } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export const SPACER = "spacer";
 interface AlignedListProps {
   contents: ReactNode[];
   listId: string;
-  bottomCell: ReactNode | typeof SPACER | null;
+  bottomCell?: ReactNode | typeof SPACER;
 }
 
-export default function AlignedList(props: AlignedListProps) {
+export default function AlignedList(props: AlignedListProps): ReactElement {
   return (
     <Grid container direction="column" spacing={2}>
       {props.contents.map((value, index) => (
@@ -19,9 +19,7 @@ export default function AlignedList(props: AlignedListProps) {
           key={`alignedList:${props.listId}:${index}`}
           style={
             props.bottomCell || index + 1 !== props.contents.length
-              ? {
-                  borderBottom: "1px solid lightgrey",
-                }
+              ? { borderBottom: "1px solid lightgrey" }
               : {}
           }
         >

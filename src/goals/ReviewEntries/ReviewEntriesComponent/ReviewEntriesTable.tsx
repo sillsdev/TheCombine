@@ -1,5 +1,6 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -16,14 +17,16 @@ interface ReviewEntriesTableProps {
 }
 
 // Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more
-function removeDuplicates(array: any[]) {
+function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
 // Constants
 const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
-export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
+export default function ReviewEntriesTable(
+  props: ReviewEntriesTableProps
+): ReactElement {
   const words = useSelector(
     (state: StoreState) => state.reviewEntriesState.words
   );
@@ -33,7 +36,7 @@ export default function ReviewEntriesTable(props: ReviewEntriesTableProps) {
 
   return (
     <Translate>
-      {({ translate }) => (
+      {({ translate }): ReactElement => (
         <MaterialTable<any>
           icons={tableIcons}
           title={

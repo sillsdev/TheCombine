@@ -35,7 +35,9 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
 
   async function onDone() {
     setDone(true);
-    setTimeout(props.doneCallback ?? (() => {}), 500);
+    if (props.doneCallback) {
+      setTimeout(props.doneCallback, 500);
+    }
   }
 
   return (

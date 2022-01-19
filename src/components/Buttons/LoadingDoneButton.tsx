@@ -1,7 +1,7 @@
 import { Button, CircularProgress } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import { Check } from "@material-ui/icons";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import { themeColors } from "types/theme";
@@ -18,7 +18,9 @@ interface LoadingDoneProps {
 /**
  * A button that shows a spinning wheel when loading and "done" when done
  */
-export default function LoadingDoneButton(props: LoadingDoneProps) {
+export default function LoadingDoneButton(
+  props: LoadingDoneProps
+): ReactElement {
   return (
     <Button
       type="submit"

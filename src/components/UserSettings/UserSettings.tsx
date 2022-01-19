@@ -229,7 +229,7 @@ class UserSettings extends React.Component<
                           helperText={
                             this.state.emailTaken
                               ? this.props.translate("login.emailTaken")
-                              : null
+                              : undefined
                           }
                           type="email"
                         />

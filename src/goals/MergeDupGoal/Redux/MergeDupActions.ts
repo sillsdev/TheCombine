@@ -277,7 +277,7 @@ function addCompletedMergeToGoal(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     if (goal.goalType === GoalType.MergeDups) {
-      const changes = goal.changes as MergesCompleted;
+      const changes = (goal.changes ?? {}) as MergesCompleted;
       if (!changes.merges) {
         changes.merges = [];
       }
@@ -301,7 +301,7 @@ export function dispatchMergeStepData(goal: MergeDups) {
 }
 
 /** Modifies the mutable input goal. */
-export async function loadMergeDupsData(goal: MergeDups) {
+export async function loadMergeDupsData(goal: MergeDups): Promise<void> {
   const newGroups = await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 
   // Add data to goal.

@@ -6,7 +6,7 @@ import {
   Select,
 } from "@material-ui/core";
 import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   LocalizeContextProps,
   withLocalize,
@@ -48,8 +48,8 @@ export class CharacterList extends React.Component<
     };
   }
 
-  render() {
-    let orderedCharacters = sortBy(
+  render(): ReactElement {
+    const orderedCharacters = sortBy(
       [...this.props.allCharacters],
       this.state.sortOrder
     );
@@ -115,7 +115,10 @@ export class CharacterList extends React.Component<
   }
 }
 
-function sortBy(characterSet: CharacterSetEntry[], sort: SortOrder) {
+function sortBy(
+  characterSet: CharacterSetEntry[],
+  sort: SortOrder
+): CharacterSetEntry[] {
   switch (sort) {
     case SortOrder.CharacterAscending:
       return characterSet.sort(sortFunction("character"));
@@ -133,11 +136,8 @@ function sortBy(characterSet: CharacterSetEntry[], sort: SortOrder) {
 }
 
 function sortFunction<K extends keyof CharacterSetEntry>(prop: K) {
-  return (a: CharacterSetEntry, b: CharacterSetEntry) => {
-    if (a[prop] < b[prop]) return -1;
-    if (a[prop] > b[prop]) return 1;
-    return 0;
-  };
+  return (a: CharacterSetEntry, b: CharacterSetEntry): number =>
+    a[prop] < b[prop] ? -1 : a[prop] > b[prop] ? 1 : 0;
 }
 
 export default withLocalize(CharacterList);

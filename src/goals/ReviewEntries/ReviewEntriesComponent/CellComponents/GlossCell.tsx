@@ -1,5 +1,5 @@
 import { Input, TextField } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -20,7 +20,7 @@ interface GlossCellProps {
 
 export default function GlossCell(
   props: FieldParameterStandard & GlossCellProps
-) {
+): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems[0].bcp47
@@ -52,7 +52,7 @@ export default function GlossCell(
           />
         ) : (
           <Translate>
-            {({ translate }) => (
+            {({ translate }): ReactElement => (
               <Input
                 fullWidth
                 key={`glosses${props.rowData.id}`}
@@ -72,7 +72,7 @@ export default function GlossCell(
           </Translate>
         )
       )}
-      bottomCell={props.editable ? SPACER : null}
+      bottomCell={props.editable ? SPACER : undefined}
     />
   );
 }
@@ -84,7 +84,7 @@ interface GlossListProps {
   onChange: (glosses: Gloss[]) => void;
 }
 
-function GlossList(props: GlossListProps) {
+function GlossList(props: GlossListProps): ReactElement {
   const langs = props.glosses.map((g) => g.language);
   if (!langs.includes(props.defaultLang)) {
     props.onChange([...props.glosses, newGloss("", props.defaultLang)]);
@@ -114,7 +114,7 @@ interface GlossFieldProps {
   onChange: (gloss: Gloss) => void;
 }
 
-function GlossField(props: GlossFieldProps) {
+function GlossField(props: GlossFieldProps): ReactElement {
   return (
     <TextField
       id={props.textFieldId}

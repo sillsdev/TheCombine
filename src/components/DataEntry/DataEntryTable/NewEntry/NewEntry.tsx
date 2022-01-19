@@ -84,7 +84,7 @@ export default class NewEntry extends React.Component<
   glossInput: React.RefObject<HTMLDivElement>;
 
   addAudio(audioFile: File) {
-    let audioFileURLs = [...this.state.audioFileURLs];
+    const audioFileURLs = [...this.state.audioFileURLs];
     audioFileURLs.push(URL.createObjectURL(audioFile));
     this.setState({
       audioFileURLs,
@@ -114,6 +114,9 @@ export default class NewEntry extends React.Component<
   updateVernField(newValue: string, openDialog?: boolean) {
     const stateUpdates: Partial<NewEntryState> = {};
     if (newValue !== this.state.newEntry.vernacular) {
+      if (this.state.selectedWord) {
+        this.setState({ selectedWord: undefined });
+      }
       this.props.setIsReadyState(newValue.trim().length > 0);
       this.updateSuggestedVerns(newValue);
       let dupVernWords: Word[] = [];
@@ -257,14 +260,14 @@ export default class NewEntry extends React.Component<
     // filter allVerns to those that start with vernacular
     // then map them into an array sorted by length and take the 2 shortest
     // and the rest longest (should make finding the long words easier)
-    let scoredStartsWith: [string, number][] = [];
-    let startsWith = this.props.allVerns.filter((vern: string) =>
+    const scoredStartsWith: [string, number][] = [];
+    const startsWith = this.props.allVerns.filter((vern: string) =>
       vern.startsWith(vernacular)
     );
     for (const v of startsWith) {
       scoredStartsWith.push([v, v.length]);
     }
-    let keepers = scoredStartsWith
+    const keepers = scoredStartsWith
       .sort((a, b) => a[1] - b[1])
       .map((vern) => vern[0]);
     if (keepers.length > this.maxSuggestions) {
@@ -273,7 +276,7 @@ export default class NewEntry extends React.Component<
     return keepers;
   }
 
-  updateSuggestedVerns(value?: string | null) {
+  updateSuggestedVerns(value?: string) {
     let suggestedVerns: string[] = [];
     if (value) {
       suggestedVerns = [...this.autoCompleteCandidates(value)];
@@ -391,7 +394,7 @@ export default class NewEntry extends React.Component<
             position: "relative",
           }}
         >
-          {!this.state.selectedWord && (
+          {!this.state.selectedWord?.id && (
             // note is not available if user selected to modify an exiting entry
             <EntryNote
               noteText={this.state.newEntry.note.text}

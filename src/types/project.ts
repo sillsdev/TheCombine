@@ -2,14 +2,14 @@ import { AutocompleteSetting, Project, WritingSystem } from "api/models";
 import { randomIntString } from "utilities";
 
 export function newWritingSystem(
-  bcp47: string = "",
-  name: string = "",
-  font: string = ""
+  bcp47 = "",
+  name = "",
+  font = ""
 ): WritingSystem {
   return { bcp47, name, font };
 }
 
-export function newProject(name: string = ""): Project {
+export function newProject(name = ""): Project {
   return {
     id: "",
     name,

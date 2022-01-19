@@ -1,6 +1,6 @@
 import { Chip, Dialog, Grid, IconButton } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,7 @@ interface DomainCellProps {
   editDomains?: (guid: string, newDomains: SemanticDomain[]) => void;
 }
 
-export default function DomainCell(props: DomainCellProps) {
+export default function DomainCell(props: DomainCellProps): ReactElement {
   const [addingDomains, setAddingDomains] = useState<boolean>(false);
   const [senseToChange, setSenseToChange] = useState<
     ReviewEntriesSense | undefined
@@ -32,12 +32,12 @@ export default function DomainCell(props: DomainCellProps) {
     (state: StoreState) => state.treeViewState?.currentDomain
   );
 
-  function prepAddDomain(sense: ReviewEntriesSense) {
+  function prepAddDomain(sense: ReviewEntriesSense): void {
     setAddingDomains(true);
     setSenseToChange(sense);
   }
 
-  function addDomain() {
+  function addDomain(): void {
     setAddingDomains(false);
     if (props.editDomains && senseToChange) {
       if (!selectedDomain) {
@@ -52,7 +52,10 @@ export default function DomainCell(props: DomainCellProps) {
     }
   }
 
-  function deleteDomain(toDelete: SemanticDomain, sense: ReviewEntriesSense) {
+  function deleteDomain(
+    toDelete: SemanticDomain,
+    sense: ReviewEntriesSense
+  ): void {
     if (props.editDomains) {
       props.editDomains(
         sense.guid,
@@ -61,9 +64,12 @@ export default function DomainCell(props: DomainCellProps) {
     }
   }
 
-  function getChipStyle(senseIndex: number, domainIndex: number) {
+  function getChipStyle(
+    senseIndex: number,
+    domainIndex: number
+  ): { backgroundColor?: string } {
     return props.sortingByThis && senseIndex === 0 && domainIndex === 0
-      ? { backgroundColor: themeColors.highlight }
+      ? { backgroundColor: themeColors.highlight as string }
       : {};
   }
 
@@ -73,7 +79,7 @@ export default function DomainCell(props: DomainCellProps) {
         key={`domainCell:${props.rowData.id}`}
         listId={`domains${props.rowData.id}`}
         contents={props.rowData.senses.map((sense, senseIndex) => (
-          <Grid container direction="row" spacing={2}>
+          <Grid container direction="row" spacing={2} key={senseIndex}>
             {sense.domains.length > 0 ? (
               sense.domains.map((domain, domainIndex) => (
                 <Grid
@@ -113,7 +119,7 @@ export default function DomainCell(props: DomainCellProps) {
             )}
           </Grid>
         ))}
-        bottomCell={props.editDomains ? SPACER : null}
+        bottomCell={props.editDomains ? SPACER : undefined}
       />
       <Dialog fullScreen open={addingDomains}>
         <TreeView returnControlToCaller={addDomain} />

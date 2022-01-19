@@ -62,19 +62,18 @@ export default class GoalTimeline extends React.Component<
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.handleWindowSizeChange);
+    window.removeEventListener("resize", () => this.handleWindowSizeChange());
     this.props.clearHistory();
   }
 
   handleWindowSizeChange = () => {
-    this.setState({
-      portrait: window.innerWidth - 40 < window.innerHeight,
-    });
+    const portrait = window.innerWidth - 40 < window.innerHeight;
+    this.setState({ portrait });
   };
 
   // Load history from database
   async componentDidMount() {
-    window.addEventListener("resize", this.handleWindowSizeChange);
+    window.addEventListener("resize", () => this.handleWindowSizeChange());
     await this.getSuggestionsWithPermission();
     this.props.loadHistory();
   }

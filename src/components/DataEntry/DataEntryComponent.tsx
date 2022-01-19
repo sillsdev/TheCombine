@@ -1,5 +1,5 @@
 import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 
 import { SemanticDomain, State, Word } from "api/models";
 import { getFrontierWords } from "backend";
@@ -107,38 +107,28 @@ export default class DataEntryComponent extends React.Component<
     };
   }
 
-  async componentDidMount() {
-    window.addEventListener("resize", this.handleWindowSizeChange);
+  componentDidMount(): void {
+    window.addEventListener("resize", () => this.handleWindowSizeChange());
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.handleWindowSizeChange);
+  componentWillUnmount(): void {
+    window.removeEventListener("resize", () => this.handleWindowSizeChange());
   }
 
-  handleWindowSizeChange = () => {
-    const smallScreen = window.matchMedia("(max-width: 960px)").matches;
-    this.setState({
-      isSmallScreen: smallScreen,
-    });
-  };
+  handleWindowSizeChange(): void {
+    const isSmallScreen = window.matchMedia("(max-width: 960px)").matches;
+    this.setState({ isSmallScreen });
+  }
 
-  toggleDrawer = (openClose: boolean) =>
-    this.setState({
-      drawerOpen: openClose,
-    });
+  toggleDrawer = (drawerOpen: boolean) => this.setState({ drawerOpen });
 
   async getWordsFromBackend(): Promise<Word[]> {
-    const words = await getFrontierWords();
-    this.setState({
-      existingWords: words,
-    });
-
-    return filterWords(words);
+    const existingWords = await getFrontierWords();
+    this.setState({ existingWords });
+    return filterWords(existingWords);
   }
 
-  updateWords = () => {};
-
-  render() {
+  render(): ReactElement {
     const semanticDomain = newSemanticDomain(
       this.props.domain.id,
       this.props.domain.name

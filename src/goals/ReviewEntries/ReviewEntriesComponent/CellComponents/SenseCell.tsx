@@ -1,6 +1,6 @@
 import { Chip, IconButton } from "@material-ui/core";
 import { Add, Delete, RestoreFromTrash } from "@material-ui/icons";
-import React from "react";
+import { ReactElement } from "react";
 
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
@@ -16,8 +16,8 @@ interface SenseCellProps {
 
 export default function SenseCell(
   props: SenseCellProps & FieldParameterStandard
-) {
-  function addSense() {
+): ReactElement {
+  function addSense(): ReactElement {
     const senses = [...props.rowData.senses, new ReviewEntriesSense()];
     return (
       <Chip
@@ -36,15 +36,14 @@ export default function SenseCell(
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
       contents={props.rowData.senses.map((value) => (
-        <React.Fragment>
-          <IconButton
-            size="small"
-            onClick={() => props.delete!(value.guid)}
-            id={`sense-${value.guid}-delete`}
-          >
-            {value.deleted ? <RestoreFromTrash /> : <Delete />}
-          </IconButton>
-        </React.Fragment>
+        <IconButton
+          size="small"
+          onClick={() => props.delete!(value.guid)}
+          id={`sense-${value.guid}-delete`}
+          key={value.guid}
+        >
+          {value.deleted ? <RestoreFromTrash /> : <Delete />}
+        </IconButton>
       ))}
       bottomCell={addSense()}
     />

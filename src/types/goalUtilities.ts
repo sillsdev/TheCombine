@@ -9,7 +9,7 @@ import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 
-export function maxNumSteps(type: GoalType) {
+export function maxNumSteps(type: GoalType): number {
   switch (type) {
     case GoalType.MergeDups:
       return 12;
@@ -31,7 +31,7 @@ export function requiredPermission(type: GoalType): Permission {
   }
 }
 
-export function goalTypeToGoal(type: GoalType) {
+export function goalTypeToGoal(type: GoalType): Goal {
   switch (type) {
     case GoalType.CreateCharInv:
       return new CreateCharInv();

@@ -133,7 +133,7 @@ export class DataEntryTable extends React.Component<
 
   /** Finished with this page of words, select new semantic domain */
   // TODO: Implement
-  submit(e?: React.FormEvent<HTMLFormElement>, _c?: Function) {
+  submit(e?: React.FormEvent<HTMLFormElement>) {
     if (e) {
       e.preventDefault();
     }
@@ -209,7 +209,7 @@ export class DataEntryTable extends React.Component<
     });
   }
   async updateWordBackAndFrontSimple(wordToUpdate: Word) {
-    let updatedWord = await this.updateWordInBackend(wordToUpdate);
+    const updatedWord = await this.updateWordInBackend(wordToUpdate);
     this.replaceInDisplay(wordToUpdate.id, updatedWord);
   }
 
@@ -247,7 +247,7 @@ export class DataEntryTable extends React.Component<
         } else {
           const updatedWord = addSemanticDomainToSense(
             this.props.semanticDomain,
-            existingWord!, // Existing word already null checked
+            existingWord,
             senseIndex
           );
           await this.updateWordBackAndFront(
@@ -315,7 +315,7 @@ export class DataEntryTable extends React.Component<
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     this.defunctWord(wordToUpdate.id);
-    let updatedWord = await backend.updateWord(wordToUpdate);
+    const updatedWord = await backend.updateWord(wordToUpdate);
     await this.updateExisting();
     return updatedWord;
   }
@@ -524,11 +524,7 @@ export class DataEntryTable extends React.Component<
 
   render() {
     return (
-      <form
-        onSubmit={(e?: React.FormEvent<HTMLFormElement>, callback?: Function) =>
-          this.submit(e, callback)
-        }
-      >
+      <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => this.submit(e)}>
         <input type="submit" style={{ display: "none" }} />
 
         <Grid container>

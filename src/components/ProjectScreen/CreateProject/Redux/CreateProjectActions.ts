@@ -99,7 +99,7 @@ export function failure(
   name: string,
   vernacularLanguage: WritingSystem,
   analysisLanguages: WritingSystem[],
-  errorMsg: string = ""
+  errorMsg = ""
 ): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_FAILURE,

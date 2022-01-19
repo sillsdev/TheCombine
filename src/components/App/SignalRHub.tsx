@@ -14,13 +14,13 @@ export default function SignalRHub() {
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-  const [connection, setConnection] = useState<null | HubConnection>(null);
+  const [connection, setConnection] = useState<HubConnection | undefined>();
 
   useEffect(() => {
     if (connection) {
       connection.stop();
     }
-    setConnection(null);
+    setConnection(undefined);
     if (exportState.status === ExportStatus.Exporting) {
       const newConnection = new HubConnectionBuilder()
         .withUrl(`${baseURL}/hub`)

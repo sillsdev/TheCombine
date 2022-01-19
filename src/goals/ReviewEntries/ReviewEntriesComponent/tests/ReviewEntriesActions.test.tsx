@@ -60,7 +60,7 @@ function sense1(): Sense {
 function sense1_local() {
   return new ReviewEntriesSense(sense1());
 }
-function mockFrontierWord(vernacular: string = "word"): Word {
+function mockFrontierWord(vernacular = "word"): Word {
   return {
     ...newWord(vernacular),
     guid: commonGuid,
@@ -68,7 +68,7 @@ function mockFrontierWord(vernacular: string = "word"): Word {
     senses: [sense0()],
   };
 }
-function mockReviewEntriesWord(vernacular: string = "word"): ReviewEntriesWord {
+function mockReviewEntriesWord(vernacular = "word"): ReviewEntriesWord {
   return {
     ...new ReviewEntriesWord(),
     id: "word",

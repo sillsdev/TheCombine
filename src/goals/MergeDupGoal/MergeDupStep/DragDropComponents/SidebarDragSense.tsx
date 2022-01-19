@@ -1,4 +1,5 @@
 import { Card } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 import { trashId } from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
@@ -16,7 +17,9 @@ interface SidebarDragSenseProps {
   index: number;
 }
 
-export default function SidebarDragSense(props: SidebarDragSenseProps) {
+export default function SidebarDragSense(
+  props: SidebarDragSenseProps
+): ReactElement {
   const ref: MergeTreeReference = {
     wordId: props.sidebar.wordId,
     mergeSenseId: props.sidebar.mergeSenseId,
@@ -29,7 +32,7 @@ export default function SidebarDragSense(props: SidebarDragSenseProps) {
       draggableId={JSON.stringify(ref)}
       index={props.index}
     >
-      {(provided, snapshot) => (
+      {(provided, snapshot): ReactElement => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}

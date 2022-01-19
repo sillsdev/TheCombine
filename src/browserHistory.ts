@@ -10,7 +10,7 @@ import { changePage } from "types/Redux/analytics";
  * See https://reacttraining.com/react-router/web/guides/quick-start for more
  * information.
  */
-let history = createBrowserHistory();
+const history = createBrowserHistory();
 
 // set up analytics for page navigation
 history.listen((location) => {
@@ -63,7 +63,7 @@ function getWindowOrigin(): string {
 /** Open the user guide in a new tab.
  * Leads to a 404 in development.
  */
-export function openUserGuide() {
+export function openUserGuide(): void {
   const origin = getWindowOrigin();
   window.open(`${origin}/docs`);
 }

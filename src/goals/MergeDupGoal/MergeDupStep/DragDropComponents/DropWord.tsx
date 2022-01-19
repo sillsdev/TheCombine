@@ -1,4 +1,5 @@
 import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
@@ -13,12 +14,12 @@ interface DropWordProps {
   wordId: string;
 }
 
-export default function DropWord(props: DropWordProps) {
+export default function DropWord(props: DropWordProps): ReactElement {
   const dispatch = useDispatch();
   const treeWords = props.mergeState.tree.words;
   const data = props.mergeState.data;
   const filled = !!treeWords[props.wordId];
-  let verns: string[] = [];
+  const verns: string[] = [];
   if (filled) {
     verns.push(
       ...new Set(
@@ -64,7 +65,7 @@ export default function DropWord(props: DropWordProps) {
         )}
       </Paper>
       <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>
-        {(provided) => (
+        {(provided): ReactElement => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
               {filled &&

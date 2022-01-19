@@ -13,9 +13,9 @@ import {
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import { newUser } from "types/user";
 
-export type GoalData = CreateCharInvData | MergeDupData | {};
+export type GoalData = CreateCharInvData | MergeDupData;
 export type GoalStep = CreateCharInvStepData | MergeStepData | {};
-export type GoalChanges = CreateCharInvChanges | MergesCompleted | {};
+export type GoalChanges = CreateCharInvChanges | MergesCompleted;
 
 export interface GoalProps {
   goal?: Goal;
@@ -70,15 +70,15 @@ export class Goal {
   steps: GoalStep[];
   numSteps: number;
   currentStep: number;
-  data: GoalData;
+  data?: GoalData;
   status: GoalStatus;
-  changes: GoalChanges;
+  changes?: GoalChanges;
 
   constructor(
     type = GoalType.Default,
     name = GoalName.Default,
     steps: GoalStep[] = [{}],
-    data: GoalData = {}
+    data?: GoalData
   ) {
     this.guid = v4();
     this.goalType = type;
@@ -90,6 +90,5 @@ export class Goal {
     this.currentStep = 0;
     this.data = data;
     this.status = GoalStatus.Loading;
-    this.changes = {};
   }
 }

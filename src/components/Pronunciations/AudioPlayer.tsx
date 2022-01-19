@@ -149,7 +149,6 @@ export default function AudioPlayer(props: PlayerProps) {
       </Tooltip>
       <Menu
         TransitionComponent={Fade}
-        getContentAnchorEl={null}
         id="play-menu"
         anchorEl={anchor}
         open={Boolean(anchor)}

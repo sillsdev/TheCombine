@@ -104,7 +104,7 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
 export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const goalsState = getState().goalsState;
-    let goal = goalsState.currentGoal;
+    const goal = goalsState.currentGoal;
     goal.currentStep++;
     if (goal.currentStep < goal.numSteps) {
       // Update data.
@@ -187,7 +187,7 @@ export function getUserEditId(): string | undefined {
 async function saveCurrentStep(goal: Goal) {
   const userEditId = getUserEditId();
   if (userEditId) {
-    const step = goal.steps[goal.currentStep] ?? {};
+    const step = goal.steps[goal.currentStep];
     await Backend.addStepToGoal(userEditId, goal.index, step, goal.currentStep);
   }
 }

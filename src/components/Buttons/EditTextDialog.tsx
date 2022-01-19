@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
@@ -29,7 +29,9 @@ interface EditTextDialogProps {
 /**
  * Dialog for editing text and confirm or cancel the edit
  */
-export default function EditTextDialog(props: EditTextDialogProps) {
+export default function EditTextDialog(
+  props: EditTextDialogProps
+): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.text);
 
@@ -47,7 +49,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
     props.close();
   }
 
-  function escapeClose(_: {}, reason: "backdropClick" | "escapeKeyDown") {
+  function escapeClose(_: any, reason: "backdropClick" | "escapeKeyDown") {
     if (reason === "escapeKeyDown") {
       props.close();
     }

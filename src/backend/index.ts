@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
+import { Base64 } from "js-base64";
 
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
@@ -130,7 +131,10 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /* AvatarController.cs */
 
-export async function uploadAvatar(userId: string, imgFile: File) {
+export async function uploadAvatar(
+  userId: string,
+  imgFile: File
+): Promise<void> {
   const headers = { ...authHeader(), "content-type": "application/json" };
   await avatarApi.uploadAvatar({ userId, ...fileUpload(imgFile) }, { headers });
   if (userId === LocalStorage.getUserId()) {
@@ -143,7 +147,12 @@ export async function avatarSrc(userId: string): Promise<string> {
   const options = { headers: authHeader(), responseType: "arraybuffer" };
   try {
     const resp = await avatarApi.downloadAvatar({ userId }, options);
-    const image = Buffer.from(resp.data, "base64").toString("base64");
+    const image = Base64.btoa(
+      new Uint8Array(resp.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ""
+      )
+    );
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
   } catch (err) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
@@ -209,7 +218,7 @@ export async function uploadLift(
 }
 
 /** Tell the backend to create a LIFT file for the project. */
-export async function exportLift(projectId: string) {
+export async function exportLift(projectId: string): Promise<string> {
   return (await liftApi.exportLiftFile({ projectId }, defaultOptions())).data;
 }
 
@@ -228,7 +237,7 @@ export async function downloadLift(projectId: string): Promise<string> {
 }
 
 /** After downloading a LIFT file, clear it from the backend. */
-export async function deleteLift(projectId?: string) {
+export async function deleteLift(projectId?: string): Promise<void> {
   projectId = projectId ? projectId : LocalStorage.getProjectId();
   await liftApi.deleteLiftFile({ projectId }, defaultOptions());
 }
@@ -246,7 +255,7 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
   return (await mergeApi.mergeWords(params, defaultOptions())).data;
 }
 
-export async function undoMerge(wordIds: MergeUndoIds) {
+export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
   const params = {
     projectId: LocalStorage.getProjectId(),
     mergeUndoIds: wordIds,
@@ -255,7 +264,7 @@ export async function undoMerge(wordIds: MergeUndoIds) {
 }
 
 /** Adds a list of wordIds to current project's merge blacklist. */
-export async function blacklistAdd(wordIds: string[]) {
+export async function blacklistAdd(wordIds: string[]): Promise<void> {
   await mergeApi.blacklistAdd(
     { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
     defaultOptions()

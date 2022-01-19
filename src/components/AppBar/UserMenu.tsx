@@ -5,7 +5,7 @@ import {
   Person,
   SettingsApplications,
 } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
@@ -33,17 +33,17 @@ interface UserMenuProps {
 /**
  * Avatar in AppBar with dropdown UserMenu
  */
-export default function UserMenu(props: UserMenuProps) {
-  const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
+export default function UserMenu(props: UserMenuProps): ReactElement {
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
   const avatar = LocalStorage.getAvatar();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
   }
 
-  function handleClose() {
-    setAnchorElement(null);
+  function handleClose(): void {
+    setAnchorElement(undefined);
   }
 
   getIsAdmin().then(setIsAdmin);
@@ -55,9 +55,7 @@ export default function UserMenu(props: UserMenuProps) {
         aria-haspopup="true"
         onClick={handleClick}
         color="secondary"
-        style={{
-          background: tabColor(props.currentTab, Path.UserSettings),
-        }}
+        style={{ background: tabColor(props.currentTab, Path.UserSettings) }}
         id={`avatar-${idAffix}`}
       >
         <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
@@ -68,19 +66,12 @@ export default function UserMenu(props: UserMenuProps) {
         )}
       </Button>
       <Menu
-        getContentAnchorEl={null}
         id={idAffix}
         anchorEl={anchorElement}
         open={Boolean(anchorElement)}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
@@ -106,7 +97,7 @@ interface UserMenuListProps {
 /**
  * UserMenu options: site settings (for admins), user settings, log out
  */
-export function UserMenuList(props: UserMenuListProps) {
+export function UserMenuList(props: UserMenuListProps): ReactElement {
   const { REACT_APP_VERSION } = process.env;
   const dispatch = useDispatch();
   return (

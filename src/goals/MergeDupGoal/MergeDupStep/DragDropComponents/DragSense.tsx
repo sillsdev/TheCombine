@@ -1,5 +1,5 @@
 import { Card } from "@material-ui/core";
-import { useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -25,7 +25,7 @@ function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
   return true;
 }
 
-export default function DragSense(props: DragSenseProps) {
+export default function DragSense(props: DragSenseProps): ReactElement {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
   const analysisLangs = useSelector((state: StoreState) =>
     state.currentProjectState.project.analysisWritingSystems.map(
@@ -51,7 +51,7 @@ export default function DragSense(props: DragSenseProps) {
     );
   }, [dispatch, props]);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (): void => {
     if (isInSidebar) {
       dispatch(setSidebar());
     } else {
@@ -87,7 +87,7 @@ export default function DragSense(props: DragSenseProps) {
       })}
       index={props.index}
     >
-      {(provided, snapshot) => (
+      {(provided, snapshot): ReactElement => (
         <Card
           ref={provided.innerRef}
           {...provided.draggableProps}

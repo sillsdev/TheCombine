@@ -1,10 +1,6 @@
 import { User } from "api/models";
 
-export function newUser(
-  name: string = "",
-  username: string = "",
-  password: string = ""
-): User {
+export function newUser(name = "", username = "", password = ""): User {
   return {
     name,
     username,

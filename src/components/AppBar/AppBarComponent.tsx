@@ -1,5 +1,5 @@
 import { AppBar, Grid, Toolbar } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { getProjectId } from "backend/localStorage";
@@ -13,7 +13,7 @@ import DownloadButton from "components/ProjectExport/DownloadButton";
 import theme from "types/theme";
 
 /** An app bar shown at the top of all logged in pages */
-export default function AppBarComponent() {
+export default function AppBarComponent(): ReactElement {
   const location = useLocation();
   const [currentTab, setCurrentTab] = useState<Path>(Path.ProjScreen);
   useEffect(() => setCurrentTab(getBasePath(location.pathname)), [location]);

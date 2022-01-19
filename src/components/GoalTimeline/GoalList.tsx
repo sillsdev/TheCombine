@@ -134,7 +134,7 @@ export function makeGoalTile(
 
 function GoalInfo(goal: Goal): ReactElement {
   if (goal.status === GoalStatus.Completed) {
-    let goalInfo;
+    let goalInfo: ReactElement | null;
     switch (goal.goalType) {
       case GoalType.CreateCharInv:
         goalInfo = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
@@ -143,8 +143,6 @@ function GoalInfo(goal: Goal): ReactElement {
         goalInfo = MergesCount(goal.changes as MergesCompleted);
         break;
       case GoalType.ReviewEntries:
-        goalInfo = null;
-        break;
       default:
         goalInfo = null;
         break;
