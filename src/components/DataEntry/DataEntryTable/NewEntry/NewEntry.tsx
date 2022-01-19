@@ -46,6 +46,7 @@ interface NewEntryState {
   vernOpen: boolean;
   senseOpen: boolean;
   selectedWord?: Word;
+  shouldFocusOnGloss?: boolean;
 }
 
 function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
@@ -82,6 +83,22 @@ export default class NewEntry extends React.Component<
   }
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
+
+  async componentDidUpdate(_: NewEntryProps, prevState: NewEntryState) {
+    if (
+      (prevState.vernOpen || prevState.senseOpen) &&
+      !(this.state.vernOpen || this.state.senseOpen)
+    ) {
+      this.setState({ shouldFocusOnGloss: true });
+    }
+  }
+
+  conditionalFocusOnGloss(): void {
+    if (this.state.shouldFocusOnGloss) {
+      this.focusGlossInput();
+      this.setState({ shouldFocusOnGloss: false });
+    }
+  }
 
   addAudio(audioFile: File) {
     const audioFileURLs = [...this.state.audioFileURLs];
@@ -383,6 +400,7 @@ export default class NewEntry extends React.Component<
             }
             analysisLang={this.props.analysisLang}
             textFieldId={`${idAffix}-gloss`}
+            onComponentDidUpdate={() => this.conditionalFocusOnGloss()}
           />
         </Grid>
         <Grid
