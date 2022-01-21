@@ -2,12 +2,12 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-export interface ContinuePromptDialogueProps {
+export interface MergeDupContinueDialogProps {
   onSelection: (shouldContinue: boolean) => void;
 }
 
-export function MergeDupContinueDialogue(
-  props: ContinuePromptDialogueProps
+export function MergeDupContinueDialog(
+  props: MergeDupContinueDialogProps
 ): ReactElement {
   const [open, setOpen] = React.useState<boolean>(true);
   const { onSelection } = props;
