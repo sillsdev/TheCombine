@@ -24,6 +24,7 @@ import { errorToast } from "components/Toast/SwalToast";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
+import {  UserEditStepWrapper } from "api";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -469,13 +470,17 @@ export async function addGoalToUserEdit(
 /** Returns index of step within specified goal */
 export async function addStepToGoal(
   userEditId: string,
-  goalIndex: number,
   step: GoalStep,
+  goalIndex?: number,
   stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
   const projectId = LocalStorage.getProjectId();
   const stepString = JSON.stringify(step);
-  const userEditStepWrapper = { goalIndex, stepString, stepIndex };
+  const userEditStepWrapper: UserEditStepWrapper = {
+    goalIndex,
+    stepString,
+    stepIndex,
+  };
   const resp = await userEditApi.updateUserEditStep(
     { projectId, userEditId, userEditStepWrapper },
     defaultOptions()

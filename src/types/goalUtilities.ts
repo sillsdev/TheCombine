@@ -65,7 +65,7 @@ export function convertGoalToEdit(goal: Goal): Edit {
 export function convertEditToGoal(edit: Edit, index?: number): Goal {
   const goal = goalTypeToGoal(edit.goalType);
   goal.guid = edit.guid;
-  goal.index = index ?? -1;
+  goal.index = index;
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
   goal.numSteps = goal.steps.length;
   goal.changes = JSON.parse(edit.changes);
