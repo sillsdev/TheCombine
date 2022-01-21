@@ -12,14 +12,17 @@ export function MergeDupContinueDialog(
   const [open, setOpen] = React.useState<boolean>(true);
   const { onSelection } = props;
 
-  const handleYes = () => {
+  const handle = (shouldContinue: boolean): void => {
     setOpen(false);
-    onSelection(true);
+    onSelection(shouldContinue);
   };
 
-  const handleNo = () => {
-    setOpen(false);
-    onSelection(false);
+  const handleYes = (): void => {
+    handle(true);
+  };
+
+  const handleNo = (): void => {
+    handle(false);
   };
 
   return (
