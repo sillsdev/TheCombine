@@ -15,6 +15,7 @@ interface GlossWithSuggestionsProps {
   onBlur?: () => void;
   analysisLang: WritingSystem;
   textFieldId: string;
+  onComponentDidUpdate?: () => void;
 }
 
 /**
@@ -25,6 +26,9 @@ export default class GlossWithSuggestions extends React.Component<GlossWithSugge
   spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
 
   componentDidUpdate(prevProps: GlossWithSuggestionsProps) {
+    if (this.props.onComponentDidUpdate) {
+      this.props.onComponentDidUpdate();
+    }
     if (prevProps.analysisLang.bcp47 !== this.props.analysisLang.bcp47) {
       this.spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
     }

@@ -16,7 +16,9 @@ import {
   WritingSystem,
 } from "api/models";
 import * as backend from "backend";
-import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import NewEntry, {
+  FocusTarget,
+} from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
@@ -586,7 +588,7 @@ export class DataEntryTable extends React.Component<
                   recorder={this.recorder}
                   focusNewEntry={() => {
                     if (this.refNewEntry.current) {
-                      this.refNewEntry.current.focusVernInput();
+                      this.refNewEntry.current.focus(FocusTarget.Vernacular);
                     }
                   }}
                   analysisLang={this.state.analysisLang}
