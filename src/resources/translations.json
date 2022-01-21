@@ -352,11 +352,7 @@
         "Langue d'analyse"
       ],
       "uiLang": ["Interface", "Interfaz", "Interface"],
-      "interfaceLanguage": [
-        "Interface Languages",
-        "Lenguajes de interfaz",
-        "Langues de l'interface"
-      ],
+      "languages": ["Languages", "Languages", "Languages"],
       "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
       "name": ["Name", "Nombre", "Nom"],
       "font": ["Font", "Font", "Font"],
