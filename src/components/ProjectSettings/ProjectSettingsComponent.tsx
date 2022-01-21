@@ -93,7 +93,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<Language />}
-          title={<Translate id="projectSettings.language.interfaceLanguage" />}
+          title={<Translate id="projectSettings.language.languages" />}
           body={<ProjectLanguages />}
         />
       )}
