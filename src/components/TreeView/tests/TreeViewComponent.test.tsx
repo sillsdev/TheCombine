@@ -1,6 +1,7 @@
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import { WritingSystem } from "api";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import TreeViewComponent, {
   TreeView,
@@ -75,11 +76,12 @@ describe("TreeView", () => {
   });
 });
 
-function createTree() {
+function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
       <Provider store={store}>
         <TreeViewComponent
+          semDomWritingSystem={{ bcp47: "" } as WritingSystem}
           currentDomain={MockDomain}
           returnControlToCaller={RETURN_MOCK}
           navigateTree={NAVIGATE_MOCK}
@@ -90,6 +92,6 @@ function createTree() {
   treeHandle = treeMaster.root.findByType(TreeView).instance;
 }
 
-function snapTest() {
+function snapTest(): void {
   expect(treeMaster.toJSON()).toMatchSnapshot();
 }

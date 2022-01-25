@@ -17,6 +17,7 @@ export function newProject(name = ""): Project {
     liftImported: false,
     definitionsEnabled: false,
     semanticDomains: [],
+    semDomWritingSystem: newWritingSystem(),
     vernacularWritingSystem: newWritingSystem(),
     analysisWritingSystems: [newWritingSystem()],
     validCharacters: [],

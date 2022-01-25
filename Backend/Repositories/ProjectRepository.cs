@@ -98,6 +98,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.LiftImported, project.LiftImported)
                 .Set(x => x.DefinitionsEnabled, project.DefinitionsEnabled)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
+                .Set(x => x.SemDomWritingSystem, project.SemDomWritingSystem)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
                 .Set(x => x.ValidCharacters, project.ValidCharacters)
