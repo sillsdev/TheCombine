@@ -1,5 +1,6 @@
 import {
   Definition,
+  Flag,
   MergeSourceWord,
   MergeUndoIds,
   MergeWords,
@@ -26,6 +27,7 @@ import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
   DeleteSenseMergeAction,
+  FlagWord,
   MergeTreeActionTypes,
   MergeTreeState,
   MoveDuplicateMergeAction,
@@ -56,6 +58,10 @@ export function combineSense(
 
 export function deleteSense(src: MergeTreeReference): DeleteSenseMergeAction {
   return { type: MergeTreeActionTypes.DELETE_SENSE, payload: { src } };
+}
+
+export function flagWord(wordId: string, flag: Flag): FlagWord {
+  return { type: MergeTreeActionTypes.FLAG_WORD, payload: { wordId, flag } };
 }
 
 export function moveSense(

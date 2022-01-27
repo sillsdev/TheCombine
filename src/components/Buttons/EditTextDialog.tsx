@@ -21,6 +21,7 @@ interface EditTextDialogProps {
   titleId: string;
   close: () => void;
   updateText: (newText: string) => void | Promise<void>;
+  onCancel?: () => void;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
   textFieldId?: string;
@@ -46,6 +47,9 @@ export default function EditTextDialog(
 
   function onCancel() {
     setText(props.text);
+    if (props.onCancel) {
+      props.onCancel();
+    }
     props.close();
   }
 

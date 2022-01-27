@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 
 import {
   Definition,
+  Flag,
   Gloss,
   Note,
   SemanticDomain,
@@ -52,6 +53,10 @@ export function firstGlossText(sense: Sense): string {
   return sense.glosses[0]?.def ?? "";
 }
 
+export function newFlag(text = ""): Flag {
+  return { active: !!text, text };
+}
+
 export function newNote(text = "", language = ""): Note {
   return { text, language };
 }
@@ -69,6 +74,7 @@ export function newWord(vernacular = ""): Word {
     history: [],
     projectId: "",
     note: newNote(),
+    flag: newFlag(),
   };
 }
 

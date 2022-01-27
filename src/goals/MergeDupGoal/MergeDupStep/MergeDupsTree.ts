@@ -1,4 +1,5 @@
-import { Sense, Word } from "api/models";
+import { Flag, Sense, Word } from "api/models";
+import { newFlag } from "types/word";
 
 export type Hash<V> = { [key: string]: V };
 
@@ -21,6 +22,14 @@ export interface MergeTreeReference {
 export interface MergeTreeWord {
   sensesGuids: Hash<string[]>;
   vern: string;
+  flag: Flag;
+}
+
+export function newMergeTreeWord(
+  vern = "",
+  sensesGuids?: Hash<string[]>
+): MergeTreeWord {
+  return { vern, sensesGuids: sensesGuids ?? {}, flag: newFlag() };
 }
 
 export interface Sidebar {

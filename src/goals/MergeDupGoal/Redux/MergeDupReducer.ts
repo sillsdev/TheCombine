@@ -8,6 +8,7 @@ import {
   MergeTree,
   MergeTreeSense,
   MergeTreeWord,
+  newMergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
@@ -15,6 +16,7 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { newFlag } from "types/word";
 
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
@@ -94,6 +96,14 @@ export const mergeDupStepReducer = (
       return { ...state, tree: { ...state.tree, words, sidebar } };
     }
 
+    case MergeTreeActionTypes.FLAG_WORD: {
+      const words: Hash<MergeTreeWord> = JSON.parse(
+        JSON.stringify(state.tree.words)
+      );
+      words[action.payload.wordId].flag = action.payload.flag;
+      return { ...state, tree: { ...state.tree, words } };
+    }
+
     case MergeTreeActionTypes.MOVE_DUPLICATE: {
       const srcRef = action.payload.ref;
       const destWordId = action.payload.destWordId;
@@ -113,7 +123,7 @@ export const mergeDupStepReducer = (
 
       // Check if dropping the sense into a new word.
       if (words[destWordId] === undefined) {
-        words[destWordId] = { vern: "", sensesGuids: {} };
+        words[destWordId] = newMergeTreeWord();
       }
 
       if (srcGuids.length === 0) {
@@ -157,7 +167,7 @@ export const mergeDupStepReducer = (
         if (Object.keys(words[srcWordId].sensesGuids).length === 1) {
           return state;
         }
-        words[destWordId] = { vern: "", sensesGuids: {} };
+        words[destWordId] = newMergeTreeWord();
       }
 
       // Update the destWord.
@@ -256,10 +266,7 @@ export const mergeDupStepReducer = (
           senses[sense.guid] = { ...sense, srcWordId: word.id, order };
           sensesGuids[v4()] = [sense.guid];
         });
-        wordsTree[word.id] = {
-          sensesGuids,
-          vern: word.vernacular,
-        };
+        wordsTree[word.id] = newMergeTreeWord(word.vernacular, sensesGuids);
       });
       return {
         ...state,
