@@ -43,7 +43,7 @@ quote_value() {
 
 OUTFILE=${FRONTEND_HOST_DIR}/scripts/config.js
 
-# env_map defines a mapping between environement
+# env_map defines a mapping between environment
 # variable names and field names in the configuration
 # JavaScript object that is generated.
 declare -A env_map

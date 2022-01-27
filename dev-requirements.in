@@ -5,6 +5,7 @@ mypy
 types-requests
 types-pyOpenSSL
 types-python-dateutil
+types-PyYAML
 
 # Linting.
 flake8

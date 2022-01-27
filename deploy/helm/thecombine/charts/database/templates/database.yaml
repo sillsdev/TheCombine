@@ -1,16 +1,20 @@
+# Defines the following Kubernetes resources for The Combine:
+#  - PersistentVolumeClaim/database-data
+#  - Deployment/database
+#  - Service/database
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   name: database-data
-  namespace: {{.Values.app_namespace | default "thecombine"}}
+  namespace: {{.Values.global.namespace}}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{.Values.database_data_size}}
+      storage: {{.Values.persistentVolumeSize}}
 status: {}
 ---
 apiVersion: apps/v1
@@ -20,7 +24,7 @@ metadata:
   labels:
     combine-component: database
   name: database
-  namespace: {{.Values.app_namespace}}
+  namespace: {{.Values.global.namespace}}
 spec:
   replicas: 1
   selector:
@@ -35,9 +39,8 @@ spec:
         combine-component: database
     spec:
       containers:
-        - image: mongo:{{ .Values.mongo_image }}
-          imagePullPolicy:
-            {{.Values.image_pull_policy | default "IfNotPresent"}}
+        - image: mongo:{{ .Values.mongoImageTag }}
+          imagePullPolicy: IfNotPresent
           name: database
           ports:
             - containerPort: 27017
@@ -59,7 +62,7 @@ metadata:
   labels:
     combine-component: database
   name: database
-  namespace: {{.Values.app_namespace}}
+  namespace: {{.Values.global.namespace}}
 spec:
   ports:
     - name: "27017"

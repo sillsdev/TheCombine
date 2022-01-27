@@ -1,1 +1,5 @@
-test_env: "Set from group config"
+---
+aws-login:
+  enabled: true
+  awsEcr:
+    cron: no

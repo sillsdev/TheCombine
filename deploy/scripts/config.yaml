@@ -1,0 +1,68 @@
+targets:
+  localhost:
+    profile: dev
+    set:
+      frontend.configCaptchaRequired: "true"
+      frontend.configCaptchaSitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+  nuc1.thecombine.app:
+    profile: nuc
+  nuc2.thecombine.app:
+    profile: nuc
+  qa-kube.thecombine.app:
+    profile: staging
+  thecombine.app:
+    profile: prod
+    set:
+      frontend.configCaptchaRequired: "true"
+      frontend.configCaptchaSitekey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
+
+profiles:
+  dev:
+    charts:
+      - thecombine
+  nuc:
+    charts:
+      - thecombine
+  staging:
+    charts:
+      - thecombine
+  prod:
+    charts:
+      - thecombine
+      - cert-proxy-server
+
+charts:
+  thecombine:
+    secrets:
+      - config_item: awsAccount
+        env_var: AWS_ACCOUNT
+      - config_item: awsDefaultRegion
+        env_var: AWS_DEFAULT_REGION
+      - config_item: awsEcrAccessKeyId
+        env_var: AWS_ECR_ACCESS_KEY_ID
+      - config_item: awsEcrSecretAccessKey
+        env_var: AWS_ECR_SECRET_ACCESS_KEY
+      - config_item: awsS3AccessKeyId
+        env_var: AWS_S3_ACCESS_KEY_ID
+      - config_item: awsS3SecretAccessKey
+        env_var: AWS_S3_SECRET_ACCESS_KEY
+      - config_item: combineJwtSecretKey
+        env_var: COMBINE_JWT_SECRET_KEY
+      - config_item: combineSmtpUsername
+        env_var: COMBINE_SMTP_USERNAME
+      - config_item: combineSmtpPassword
+        env_var: COMBINE_SMTP_PASSWORD
+  cert-proxy-server:
+    secrets:
+      - config_item: awsAccount
+        env_var: AWS_ACCOUNT
+      - config_item: awsDefaultRegion
+        env_var: AWS_DEFAULT_REGION
+      - config_item: awsEcrAccessKeyId
+        env_var: AWS_ECR_ACCESS_KEY_ID
+      - config_item: awsEcrSecretAccessKey
+        env_var: AWS_ECR_SECRET_ACCESS_KEY
+      - config_item: awsS3AccessKeyId
+        env_var: AWS_S3_ACCESS_KEY_ID
+      - config_item: awsS3SecretAccessKey
+        env_var: AWS_S3_SECRET_ACCESS_KEY

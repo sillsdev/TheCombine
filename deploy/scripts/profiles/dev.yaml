@@ -1,0 +1,13 @@
+---
+aws-login:
+  enabled: false
+
+global:
+  imageRegistry: localhost:5000
+
+ingressClass: traefik
+useDefaultTls: true
+
+certManager:
+  enabled: true
+  certIssuer: self-signed

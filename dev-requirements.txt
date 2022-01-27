@@ -49,9 +49,9 @@ flake8==4.0.1
     #   pep8-naming
 flake8-broken-line==0.4.0
     # via -r dev-requirements.in
-flake8-bugbear==21.11.29
+flake8-bugbear==22.1.11
     # via -r dev-requirements.in
-flake8-comprehensions==3.7.0
+flake8-comprehensions==3.8.0
     # via -r dev-requirements.in
 flake8-eradicate==1.2.0
     # via -r dev-requirements.in
@@ -65,7 +65,7 @@ humanfriendly==10.0
     # via -r dev-requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.10.0
+importlib-metadata==4.10.1
     # via
     #   markdown
     #   mkdocs
@@ -101,7 +101,7 @@ mkdocs==1.2.3
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.8.0
     # via -r dev-requirements.in
-mkdocs-material==8.1.5
+mkdocs-material==8.1.7
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.0.3
     # via mkdocs-material
@@ -147,7 +147,7 @@ pymdown-extensions==9.1
     # via mkdocs-material
 pyopenssl==21.0.0
     # via -r dev-requirements.in
-pyparsing==3.0.6
+pyparsing==3.0.7
     # via packaging
 pyreadline3==3.3
     # via -r dev-requirements.in
@@ -190,19 +190,21 @@ tomli==1.2.3
     #   mypy
 tox==3.24.5
     # via -r dev-requirements.in
-types-cryptography==3.3.12
+types-cryptography==3.3.14
     # via types-pyopenssl
-types-enum34==1.1.2
+types-enum34==1.1.8
     # via types-cryptography
-types-ipaddress==1.0.2
+types-ipaddress==1.0.7
     # via types-cryptography
 types-pyopenssl==21.0.3
     # via -r dev-requirements.in
-types-python-dateutil==2.8.6
+types-python-dateutil==2.8.8
     # via -r dev-requirements.in
-types-requests==2.27.5
+types-pyyaml==6.0.3
     # via -r dev-requirements.in
-types-urllib3==1.26.3
+types-requests==2.27.7
+    # via -r dev-requirements.in
+types-urllib3==1.26.7
     # via types-requests
 typing-extensions==4.0.1
     # via

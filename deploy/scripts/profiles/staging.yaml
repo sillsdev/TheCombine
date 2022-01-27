@@ -1,0 +1,14 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: staging
+################################################
+
+global:
+  namespace: thecombine
+
+#######################################
+# Ingress configuration
+ingress_class: nginx
+ingress_namespace: ingress-nginx

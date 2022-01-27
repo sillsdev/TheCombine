@@ -1,2 +1,25 @@
-mongo_image: 4.4
-database_data_size: 16Gi
+# Default values for backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  namespace: default
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  awsAccount: "Change Me"
+  awsDefaultRegion: "Change Me"
+  pullSecretName: "None"
+  combineJwtSecretKey: "Change Me"
+  combineSmtpUsername: "Change Me"
+  combineSmtpPassword: "Change Me"
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: local
+
+persistentVolumeSize: 32Gi
+combinePasswordResetTime: 15
+combineSmtpAddress: no-reply@thecombine.app
+combineSmtpFrom: "The Combine"
+combineSmtpPort: 587
+combineSmtpServer: "email-smtp.us-east-1.amazonaws.com"
+imageName: combine_backend

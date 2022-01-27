@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{.Values.awsEcr.serviceAccount}}
+  namespace: {{.Values.awsEcr.namespace}}
+imagePullSecrets:
+  - name: {{.Values.global.pullSecretName}}
+secrets:
+  - name: aws_ecr_credentials

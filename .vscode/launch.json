@@ -5,6 +5,55 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Setup localhost (Kubernetes)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--target",
+        "localhost",
+        "--image-tag",
+        "latest",
+        "--kubeconfig",
+        "/home/grady/.kube/local/config"
+      ]
+    },
+    {
+      "name": "Debug localhost (Kubernetes)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--target",
+        "localhost",
+        "--debug",
+        "--dry-run",
+        "--image-tag",
+        "latest",
+        "--kubeconfig",
+        "/home/grady/.kube/local/config"
+      ]
+    },
+    {
+      "name": "Setup NUC1 (Kubernetes)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--target",
+        "nuc1.thecombine.app",
+        "--dry-run",
+        "--debug",
+        "--image-tag",
+        "0.7.14-alpha.2",
+        "--kubeconfig",
+        "/home/grady/.kube/nuc1/config"
+      ]
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",

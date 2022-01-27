@@ -2,9 +2,35 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-create_namespace: true
-app_namespace: thecombine
+global:
+  namespace: default
+  serverName: localhost
+  pullSecretName: aws-login-credentials
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  awsAccount: "Change Me"
+  awsDefaultRegion: "Change Me"
+  awsEcrAccessKeyId: "Change Me"
+  awsEcrSecretAccessKey: "Change Me"
+  awsS3AccessKeyId: "Change Me"
+  awsS3SecretAccessKey: "Change Me"
+  combineJwtSecretKey: "Change Me"
+  combineSmtpUsername: "Change Me"
+  combineSmtpPassword: "Change Me"
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: awsEcr
+
+aws-login:
+  enabled: true
+
+certManager:
+  enabled: false
+  certIssuer: self-signed
+
+ingressClass: nginx
+useDefaultTle: false
 
 aws_s3_loc: thecombine.app
-aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
-aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
+aws_s3_backup_loc: backups
+aws_s3_cert_loc: certs
