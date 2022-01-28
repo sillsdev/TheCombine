@@ -243,7 +243,7 @@ export default class ProjectLanguages extends React.Component<
         </Typography>
         <Select
           id="semantic-domains-language"
-          value={this.props.project.semDomWritingSystem?.bcp47 ?? ""}
+          value={this.props.project.semDomWritingSystem.bcp47 ?? ""}
           onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
             this.setSemDomWritingSystem(event.target.value as string)
           }
