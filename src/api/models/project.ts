@@ -56,10 +56,16 @@ export interface Project {
   definitionsEnabled: boolean;
   /**
    *
-   * @type {Array<SemanticDomain>}
+   * @type {WritingSystem}
    * @memberof Project
    */
-  semanticDomains: Array<SemanticDomain>;
+  semDomWritingSystem: WritingSystem;
+  /**
+   *
+   * @type {AutocompleteSetting}
+   * @memberof Project
+   */
+  autocompleteSetting: AutocompleteSetting;
   /**
    *
    * @type {WritingSystem}
@@ -74,6 +80,12 @@ export interface Project {
   analysisWritingSystems: Array<WritingSystem>;
   /**
    *
+   * @type {Array<SemanticDomain>}
+   * @memberof Project
+   */
+  semanticDomains: Array<SemanticDomain>;
+  /**
+   *
    * @type {Array<string>}
    * @memberof Project
    */
@@ -84,12 +96,6 @@ export interface Project {
    * @memberof Project
    */
   rejectedCharacters: Array<string>;
-  /**
-   *
-   * @type {AutocompleteSetting}
-   * @memberof Project
-   */
-  autocompleteSetting: AutocompleteSetting;
   /**
    *
    * @type {Array<CustomField>}

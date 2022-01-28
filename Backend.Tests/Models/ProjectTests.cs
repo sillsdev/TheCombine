@@ -35,19 +35,23 @@ namespace Backend.Tests.Models
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
-            project2.VernacularWritingSystem.Name = "different";
-            Assert.IsFalse(project.Equals(project2));
-
-            project2 = project.Clone();
             project2.AutocompleteSetting = 1 - project.AutocompleteSetting;
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
-            project2.SemanticDomains.Add(new SemanticDomain());
+            project2.SemDomWritingSystem.Bcp47 = "diff";
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
+            project2.VernacularWritingSystem.Name = "different";
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
             project2.AnalysisWritingSystems.Add(new WritingSystem());
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
+            project2.SemanticDomains.Add(new SemanticDomain());
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
