@@ -27,7 +27,7 @@ function getSemDomWritingSystem(
   return allSemDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
-interface TreeViewProps {
+export interface TreeViewProps {
   semDomWritingSystem: WritingSystem;
   currentDomain: TreeSemanticDomain;
   navigateTree: (domain: TreeSemanticDomain) => void;
@@ -55,8 +55,7 @@ export class TreeView extends React.Component<
      * Default: English. */
     const lang =
       getSemDomWritingSystem(props.semDomWritingSystem)?.bcp47 ??
-      props.activeLanguage?.code;
-    // Use ? after props.activeLanguage, since it's not defined in unit tests.
+      props.activeLanguage.code;
     let domains: TreeSemanticDomain[];
     switch (lang) {
       case "fr":
@@ -70,12 +69,11 @@ export class TreeView extends React.Component<
         break;
     }
 
-    // If the state has the current domain defined then use that in the navigateTree call
+    // If current domain defined in state, use that in the navigateTree call
     if (this.props.currentDomain.name) {
       this.props.navigateTree(props.currentDomain);
     } else {
       const newDomain = createDomains(domains);
-      // If the current domain is the default then set the name to the translation of "Semantic Domain"
       if (!newDomain.name) {
         newDomain.name = this.props.translate("addWords.domain") as string;
       }
