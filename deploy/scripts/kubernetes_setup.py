@@ -21,6 +21,9 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--clean", action="store_true", help="Delete chart, if it exists, before installing."
+    )
+    parser.add_argument(
         "--config",
         "-c",
         help="Configuration file for the target(s).",
@@ -121,6 +124,17 @@ def run_cmd(
         sys.exit(err.returncode)
 
 
+def get_installed_charts() -> List[str]:
+    """Create a list of the helm charts that are already installed on the target."""
+    lookup_results = run_cmd(["helm", "list", "-o", "yaml"])
+    chart_info: List[Dict[str, str]] = yaml.safe_load(lookup_results.stdout)
+    chart_list: List[str] = []
+    for chart in chart_info:
+        chart_list.append(chart["name"])
+    print(chart_info)
+    return chart_list
+
+
 def main() -> None:
     args = parse_args()
     if args.target is None:
@@ -173,53 +187,66 @@ def main() -> None:
     if profile in config["profiles"]:
         # get the path for the profile configuration file
         profile_config = prog_dir / "profiles" / f"{profile}.yaml"
-        # open a temporary directory for creating the secrets YAML files
-        with tempfile.TemporaryDirectory() as secrets_dir:
-            # get list of charts for this target
-            chart_list = config["profiles"][profile]["charts"]
-            for chart in chart_list:
-                # build the secrets file
-                secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
-                include_secrets = create_secrets(
-                    config["charts"][chart]["secrets"], output_file=secrets_file
-                )
-                # create the base helm install command
-                chart_dir = helm_dir / chart
-                helm_cmd = [
-                    "helm",
-                    "install",
-                    chart,
-                    str(chart_dir),
-                ]
-                # set the debug option if desired
-                if args.debug:
-                    helm_cmd.extend(["--debug"])
-                # set the dry-run option if desired
-                if args.dry_run:
-                    helm_cmd.extend(["--dry-run"])
-                # add the profile specific configuration
-                if profile_config.exists:
-                    helm_cmd.extend(["-f", str(profile_config)])
-                # add the secrets file
-                if include_secrets:
-                    helm_cmd.extend(
-                        [
-                            "-f",
-                            str(secrets_file),
-                        ]
-                    )
-                # add any additional configuration files from the command line
-                if len(addl_configs) > 0:
-                    helm_cmd.extend(addl_configs)
-                # last of all, add any value overrides from the command line
-                helm_cmd.extend(["--set", ",".join(target_vars)])
-                process_env = {**os.environ}
-                if args.kubeconfig:
-                    process_env["KUBECONFIG"] = args.kubeconfig
+    else:
+        print(f"Warning: cannot find profile {profile}", file=sys.stderr)
+    # open a temporary directory for creating the secrets YAML files
+    with tempfile.TemporaryDirectory() as secrets_dir:
+        # get list of charts for this target
+        installed_charts = get_installed_charts()
+        chart_list = config["profiles"][profile]["charts"]
+        for chart in chart_list:
+            # delete existing chart if --clean specified
+            helm_action = "install"
+            if chart in installed_charts:
+                if args.clean:
+                    run_cmd["helm", "delete", chart]
+                else:
+                    helm_action = "upgrade"
 
-                # Update chart dependencies
-                run_cmd(["helm", "dependency", "update", chart_dir], print_output=True)
-                run_cmd(helm_cmd, print_output=True)
+            # build the secrets file
+            secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
+            include_secrets = create_secrets(
+                config["charts"][chart]["secrets"], output_file=secrets_file
+            )
+            # create the base helm install command
+            chart_dir = helm_dir / chart
+            helm_cmd = [
+                "helm",
+                helm_action,
+                chart,
+                str(chart_dir),
+            ]
+            # set the debug option if desired
+            if args.debug:
+                helm_cmd.extend(["--debug"])
+            # set the dry-run option if desired
+            if args.dry_run:
+                helm_cmd.extend(["--dry-run"])
+            # add the profile specific configuration
+            if profile_config.exists:
+                helm_cmd.extend(["-f", str(profile_config)])
+            # add the secrets file
+            if include_secrets:
+                helm_cmd.extend(
+                    [
+                        "-f",
+                        str(secrets_file),
+                    ]
+                )
+            # add any additional configuration files from the command line
+            if len(addl_configs) > 0:
+                helm_cmd.extend(addl_configs)
+            # last of all, add any value overrides from the command line
+            helm_cmd.extend(["--set", ",".join(target_vars)])
+            process_env = {**os.environ}
+            if args.kubeconfig:
+                process_env["KUBECONFIG"] = args.kubeconfig
+
+            # Update chart dependencies
+            run_cmd(["helm", "dependency", "update", chart_dir], print_output=True)
+            if args.debug:
+                print(f"Helm command: {helm_cmd}")
+            run_cmd(helm_cmd, print_output=True)
 
 
 if __name__ == "__main__":

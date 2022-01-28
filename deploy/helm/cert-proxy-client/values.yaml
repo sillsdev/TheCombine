@@ -1,4 +1,4 @@
-# Default values for thecombine.
+# Default values for cert-proxy-client.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -10,28 +10,19 @@ global:
   updateStrategy: Recreate
   awsAccount: "Change Me"
   awsDefaultRegion: "Change Me"
-  awsEcrAccessKeyId: "Change Me"
-  awsEcrSecretAccessKey: "Change Me"
   awsS3AccessKeyId: "Change Me"
   awsS3SecretAccessKey: "Change Me"
-  combineJwtSecretKey: "Change Me"
-  combineSmtpUsername: "Change Me"
-  combineSmtpPassword: "Change Me"
   imageTag: "latest"
   # Define the type of image registry to use, awsEcr or local
   imageRegistry: awsEcr
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
 
-aws-login:
-  enabled: true
+awsS3CertLoc: certs
+certRenewBefore: "60"
+imageName: combine_maint
 
-cert-proxy-client:
-  enabled: false
-
-certManager:
-  enabled: false
-  certIssuer: self-signed
-
-ingressClass: nginx
-useDefaultTle: false
+serviceAccount:
+  name:
+  role:
+  roleBinding:

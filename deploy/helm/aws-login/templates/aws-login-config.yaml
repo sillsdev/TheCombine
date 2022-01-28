@@ -4,8 +4,8 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: "{{ .Values.awsEcr.configName }}"
-  namespace: "{{ .Values.awsEcr.namespace }}"
+  namespace: "{{ .Values.global.namespace }}"
 data:
-  NAMESPACES: "{{ .Values.awsEcr.namespace }}"
-  PULL_SECRET_NAME: "{{ .Values.awsEcr.pullSecretName }}"
+  NAMESPACES: "{{ .Values.global.namespace }}"
+  PULL_SECRET_NAME: "{{ .Values.global.pullSecretName }}"
   DOCKER_EMAIL: "{{ .Values.awsEcr.dockerEmail }}"

@@ -1,9 +1,10 @@
+{{- if .Values.awsEcr.cron }}
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ .Values.awsEcr.cronJobName }}
-  namespace: {{ .Values.awsEcr.namespace }}
+  namespace: {{ .Values.global.namespace }}
 spec:
   concurrencyPolicy: Allow
   failedJobsHistoryLimit: 1
@@ -71,3 +72,4 @@ spec:
   schedule: {{ .Values.awsEcr.schedule }}
   successfulJobsHistoryLimit: 1
   suspend: false
+{{- end }}

@@ -37,20 +37,35 @@
       ]
     },
     {
-      "name": "Setup NUC1 (Kubernetes)",
+      "name": "Setup NUC2 (Kubernetes)",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
       "console": "integratedTerminal",
       "args": [
         "--target",
-        "nuc1.thecombine.app",
-        "--dry-run",
-        "--debug",
+        "nuc2.thecombine.app",
         "--image-tag",
         "0.7.14-alpha.2",
         "--kubeconfig",
-        "/home/grady/.kube/nuc1/config"
+        "/home/grady/.kube/nuc2/config"
+      ]
+    },
+    {
+      "name": "Debug NUC2 (Kubernetes)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--target",
+        "nuc2.thecombine.app",
+        "--debug",
+        "--dry-run",
+        "--image-tag",
+        "0.7.14-alpha.2",
+        "--kubeconfig",
+        "/home/grady/.kube/nuc2/config"
       ]
     },
     {

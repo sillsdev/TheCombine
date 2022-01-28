@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ .Values.serviceAccount.name }}"
+  namespace: {{ .Values.global.namespace }}
+{{- if ne .Values.global.pullSecretName "None" }}
+imagePullSecrets:
+  - name: {{ .Values.global.pullSecretName }}
+{{- end }}
+secrets:
+  - name: aws_s3_credentials

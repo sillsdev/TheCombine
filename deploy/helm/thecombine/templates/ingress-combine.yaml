@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-thecombine
+  name: thecombine
   namespace: {{ .Values.global.namespace }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingressClass }}
