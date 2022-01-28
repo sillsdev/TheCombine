@@ -16,7 +16,6 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
-import { newFlag } from "types/word";
 
 const defaultData = { words: {}, senses: {} };
 export const defaultState: MergeTreeState = {
