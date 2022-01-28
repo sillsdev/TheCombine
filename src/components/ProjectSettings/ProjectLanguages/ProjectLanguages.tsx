@@ -1,4 +1,10 @@
-import { Grid, IconButton, Typography } from "@material-ui/core";
+import {
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  Typography,
+} from "@material-ui/core";
 import {
   Add,
   ArrowUpward,
@@ -16,6 +22,8 @@ import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
+import { allSemDomWritingSystems } from "components/TreeView/TreeViewComponent";
+import { newWritingSystem } from "types/project";
 import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/word";
 
@@ -49,7 +57,7 @@ export default class ProjectLanguages extends React.Component<
     langsInProject: undefined,
   };
 
-  setNewAnalysisDefault(index: number) {
+  setNewAnalysisDefault(index: number): void {
     const newDefault = this.props.project.analysisWritingSystems.splice(
       index,
       1
@@ -66,7 +74,7 @@ export default class ProjectLanguages extends React.Component<
       });
   }
 
-  deleteAnalysisWritingSystem(index: number) {
+  deleteAnalysisWritingSystem(index: number): void {
     this.props.project.analysisWritingSystems.splice(index, 1);
     this.props
       .saveChangesToProject(this.props.project)
@@ -79,7 +87,7 @@ export default class ProjectLanguages extends React.Component<
       });
   }
 
-  addAnalysisWritingSystem() {
+  addAnalysisWritingSystem(): void {
     const ws = {
       name: this.state.name,
       bcp47: this.state.bcp47,
@@ -130,18 +138,33 @@ export default class ProjectLanguages extends React.Component<
     );
   }
 
-  async getActiveAnalysisLangs() {
+  async getActiveAnalysisLangs(): Promise<void> {
     const langCodes = getAnalysisLangsFromWords(await getFrontierWords());
     langCodes.sort();
     const langsInProject = langCodes.join(", ");
     this.setState({ langsInProject });
   }
 
-  resetState() {
+  resetState(): void {
     this.setState(this.defaultState);
   }
 
-  render() {
+  async setSemDomWritingSystem(lang: string): Promise<void> {
+    this.props.project.semDomWritingSystem =
+      allSemDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
+      newWritingSystem();
+    this.props
+      .saveChangesToProject(this.props.project)
+      .then(() => this.resetState())
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          <Translate id="projectSettings.language.updateSemDomWritingSystemFailed" />
+        );
+      });
+  }
+
+  render(): ReactElement {
     return (
       <React.Fragment>
         <UpperRightToastContainer />
@@ -214,6 +237,36 @@ export default class ProjectLanguages extends React.Component<
             {this.state.langsInProject}
           </React.Fragment>
         )}
+        <Typography>
+          <Translate id="projectSettings.language.semanticDomains" />
+          {": "}
+        </Typography>
+        <Select
+          id="semantic-domains-language"
+          value={this.props.project.semDomWritingSystem.bcp47}
+          onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
+            this.setSemDomWritingSystem(event.target.value as string)
+          }
+          /* Use `displayEmpty` and a conditional `renderValue` function to force
+           * something to appear when the menu is closed and its value is "" */
+          displayEmpty
+          renderValue={
+            this.props.project.semDomWritingSystem.bcp47
+              ? undefined
+              : () => (
+                  <Translate id="projectSettings.language.semanticDomainsDefault" />
+                )
+          }
+        >
+          <MenuItem value={""}>
+            <Translate id="projectSettings.language.semanticDomainsDefault" />
+          </MenuItem>
+          {allSemDomWritingSystems.map((ws) => (
+            <MenuItem key={ws.bcp47} value={ws.bcp47}>
+              {`${ws.bcp47} (${ws.name})`}
+            </MenuItem>
+          ))}
+        </Select>
       </React.Fragment>
     );
   }

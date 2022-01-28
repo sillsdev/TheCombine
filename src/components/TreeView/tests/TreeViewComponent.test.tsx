@@ -1,12 +1,10 @@
-import { Provider } from "react-redux";
+import { LocalizeContextProps } from "react-localize-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
-import TreeViewComponent, {
-  TreeView,
-} from "components/TreeView/TreeViewComponent";
+import { TreeView, TreeViewProps } from "components/TreeView/TreeViewComponent";
 import MockDomain from "components/TreeView/tests/MockSemanticDomain";
-import { store } from "store";
+import { newWritingSystem } from "types/project";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeView;
@@ -57,13 +55,8 @@ describe("TreeView", () => {
   });
 
   it("Sets a new domain upon navigation", async () => {
-    const newDom: TreeSemanticDomain = {
-      name: "test",
-      id: "test",
-      description: "super testy",
-      subdomains: [],
-      questions: [],
-    };
+    const newDom = new TreeSemanticDomain("test", "test");
+    newDom.description = "super testy";
 
     await treeHandle.animate(newDom);
     expect(NAVIGATE_MOCK).toHaveBeenCalledWith(newDom);
@@ -75,21 +68,26 @@ describe("TreeView", () => {
   });
 });
 
-function createTree() {
+const treeViewProps: TreeViewProps = {
+  semDomWritingSystem: newWritingSystem(),
+  currentDomain: MockDomain,
+  returnControlToCaller: RETURN_MOCK,
+  navigateTree: NAVIGATE_MOCK,
+};
+
+const localizeProps = {
+  activeLanguage: { code: "" },
+} as LocalizeContextProps;
+
+function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <Provider store={store}>
-        <TreeViewComponent
-          currentDomain={MockDomain}
-          returnControlToCaller={RETURN_MOCK}
-          navigateTree={NAVIGATE_MOCK}
-        />
-      </Provider>
+      <TreeView {...treeViewProps} {...localizeProps} />
     );
   });
   treeHandle = treeMaster.root.findByType(TreeView).instance;
 }
 
-function snapTest() {
+function snapTest(): void {
   expect(treeMaster.toJSON()).toMatchSnapshot();
 }
