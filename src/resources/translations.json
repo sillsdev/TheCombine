@@ -357,9 +357,9 @@
         "Semantic Domains"
       ],
       "semanticDomainsDefault": [
-        "(default to browser language)",
-        "(default to browser language)",
-        "(default to browser language)"
+        "(Default to browser language)",
+        "(Default to browser language)",
+        "(Default to browser language)"
       ],
       "languages": ["Languages", "Languages", "Languages"],
       "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
