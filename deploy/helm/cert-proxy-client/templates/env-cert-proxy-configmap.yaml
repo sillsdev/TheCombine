@@ -2,11 +2,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: {{ proxy_client_attr.env_name }}
+  name: {{ .Values.envName }}
   namespace: {{ .Values.global.namespace }}
 data:
   AWS_S3_BUCKET: {{ print "s3://" .Values.global.awsS3Location "/" .Values.awsS3CertLoc | quote }}
-  CERT_SECRET: {{ regexReplaceAll "[\\._-]+" "-" .Values.global.serverName "-tls" | quote }}
+  CERT_SECRET: {{ template "cert-proxy-client.certSecretName" . }}
   CERT_NAMESPACE: {{ .Values.global.namespace  }}
   CERT_RENEW_BEFORE: "{{ .Values.certRenewBefore }}"
   TEST_URL: "https://aws.amazon.com"

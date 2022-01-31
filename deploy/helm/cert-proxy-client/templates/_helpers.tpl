@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "maintenance.name" -}}
+{{- define "cert-proxy-client.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "maintenance.fullname" -}}
+{{- define "cert-proxy-client.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "maintenance.chart" -}}
+{{- define "cert-proxy-client.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "maintenance.labels" -}}
-helm.sh/chart: {{ include "maintenance.chart" . }}
-{{ include "maintenance.selectorLabels" . }}
+{{- define "cert-proxy-client.labels" -}}
+helm.sh/chart: {{ include "cert-proxy-client.chart" . }}
+{{ include "cert-proxy-client.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,15 +45,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "maintenance.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "maintenance.name" . }}
+{{- define "cert-proxy-client.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cert-proxy-client.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Build continer image name
 */}}
-{{- define "maintenance.containerImage" -}}
+{{- define "cert-proxy-client.containerImage" -}}
 {{- $registry := "localhost:5000" }}
 {{- if contains "awsEcr" .Values.global.imageRegistry }}
 {{- $registry = printf "%s.dkr.ecr.%s.amazonaws.com" .Values.global.awsAccount .Values.global.awsDefaultRegion }}
@@ -62,9 +62,9 @@ Build continer image name
 {{- end }}
 
 {{/*
-Build the backup location string
+Build the SSL Certificate secret name
 */}}
-{{- define "maintenance.backupNameFilter" -}}
+{{- define "cert-proxy-client.certSecretName" -}}
 {{- $locationString := replace "." "-" .Values.global.serverName }}
-{{- print "/" $locationString "-" }}
+{{- print $locationString "-tls" }}
 {{- end }}

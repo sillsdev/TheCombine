@@ -46,7 +46,7 @@
         "--target",
         "nuc2.thecombine.app",
         "--image-tag",
-        "0.7.14-alpha.2",
+        "0.7.13",
         "--kubeconfig",
         "/home/grady/.kube/nuc2/config"
       ]
@@ -63,7 +63,7 @@
         "--debug",
         "--dry-run",
         "--image-tag",
-        "0.7.14-alpha.2",
+        "0.7.13",
         "--kubeconfig",
         "/home/grady/.kube/nuc2/config"
       ]

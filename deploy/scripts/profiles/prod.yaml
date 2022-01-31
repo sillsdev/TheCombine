@@ -5,9 +5,6 @@
 # Group: prod
 ################################################
 
-global:
-  namespace: thecombine
-
 # Frontend configuration items:
 frontend:
   configShowCertExpiration: false
@@ -21,11 +18,3 @@ maintenance:
   backupSchedule: "15 03 * * *"
   # Maximum number of backups to keep on AWS S3 service
   maxBackups: "3"
-
-certProxy:
-  namespace: combine-cert-proxy
-
-#######################################
-# Ingress configuration
-ingressClass: nginx
-ingressNamespace: ingress-nginx

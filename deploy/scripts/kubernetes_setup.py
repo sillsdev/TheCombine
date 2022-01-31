@@ -131,7 +131,6 @@ def get_installed_charts() -> List[str]:
     chart_list: List[str] = []
     for chart in chart_info:
         chart_list.append(chart["name"])
-    print(chart_info)
     return chart_list
 
 
@@ -193,6 +192,9 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as secrets_dir:
         # get list of charts for this target
         installed_charts = get_installed_charts()
+        if args.debug:
+            print(f"Installed Charts:\n{installed_charts}")
+
         chart_list = config["profiles"][profile]["charts"]
         for chart in chart_list:
             # delete existing chart if --clean specified

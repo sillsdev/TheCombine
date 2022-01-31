@@ -6,6 +6,7 @@ global:
   namespace: default
   serverName: localhost
   pullSecretName: aws-login-credentials
+  awsS3Access: aws-s3-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
   awsAccount: "Change Me"
@@ -21,8 +22,13 @@ global:
 awsS3CertLoc: certs
 certRenewBefore: "60"
 imageName: combine_maint
+envName: env-cert-proxy
+
+schedule: "*/30 * * * *"
+
+cert_renew_before: 60
 
 serviceAccount:
-  name:
-  role:
-  roleBinding:
+  name: account-tls-secret
+  role: role-tls-secret
+  roleBinding: role-tls-secret-binding

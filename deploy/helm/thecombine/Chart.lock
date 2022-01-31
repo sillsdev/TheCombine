@@ -2,5 +2,8 @@ dependencies:
 - name: aws-login
   repository: file://../aws-login
   version: 0.1.0
-digest: sha256:4b5744d997bf061344c4582115bc3a4cceec5c3ae3201ca823b45726db2f8162
-generated: "2022-01-21T10:26:23.043948699-05:00"
+- name: cert-proxy-client
+  repository: file://../cert-proxy-client
+  version: 0.1.0
+digest: sha256:17badc838f100b6aa51c1e4ac005e908e69785f57a2676ac2d645c35882ecf3f
+generated: "2022-01-28T09:19:20.264439645-05:00"

@@ -1,7 +1,4 @@
 ---
-global:
-  namespace: thecombine
-
 aws-login:
   enabled: true
   awsEcr:

@@ -12,10 +12,13 @@ global:
   awsS3AccessKeyId: "Change Me"
   awsS3SecretAccessKey: "Change Me"
   pullSecretName: "None"
+  awsS3Access: aws-s3-credentials
   imageTag: "latest"
   # Define the type of image registry to use, awsEcr or local
   imageRegistry: local
   awsS3Location: "thecombine.app"
+
+imageName: combine_maint
 
 serviceAccount:
   name: account-maintenance

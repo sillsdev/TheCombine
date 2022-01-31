@@ -24,7 +24,7 @@ spec:
       labels:
         combine-component: maintenance
     spec:
-      serviceAccountName: {{ .Values.serviceAccount }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
         - command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 86400; done;" ]
@@ -33,22 +33,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCESS_KEY_ID
-                  name: aws-s3-credentials
+                  name: {{ .Values.global.awsS3Access | quote }}
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: AWS_SECRET_ACCESS_KEY
-                  name: aws-s3-credentials
+                  name: {{ .Values.global.awsS3Access | quote }}
             - name: AWS_ACCOUNT
               valueFrom:
                 secretKeyRef:
                   key: AWS_ACCOUNT
-                  name: aws-s3-credentials
+                  name: {{ .Values.global.awsS3Access | quote }}
             - name: AWS_DEFAULT_REGION
               valueFrom:
                 secretKeyRef:
                   key: AWS_DEFAULT_REGION
-                  name: aws-s3-credentials
+                  name: {{ .Values.global.awsS3Access | quote }}
             - name: aws_bucket
               valueFrom:
                 configMapKeyRef:

@@ -11,6 +11,8 @@ metadata:
 {{- end }}
 {{- if .Values.certManager.enabled }}
     cert-manager.io/issuer: {{ .Values.certManager.certIssuer }}
+    cert-manager.io/duration: 2160h
+    cert-manager.io/renew-before: 720h
 {{- end }}
 spec:
   tls:

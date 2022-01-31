@@ -3,9 +3,10 @@
 # Declare variables to be passed into your templates.
 
 global:
-  namespace: default
+  namespace: thecombine
   serverName: localhost
   pullSecretName: aws-login-credentials
+  awsS3Access: aws-s3-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
   awsAccount: "Change Me"
@@ -31,7 +32,19 @@ cert-proxy-client:
 
 certManager:
   enabled: false
-  certIssuer: self-signed
+  certIssuer: letsencrypt-prod
+
+frontend:
+  configShowCertExpiration: false
+  configAnalyticsWriteKey: ""
+
+# Maintenance configuration items
+maintenance:
+  #######################################
+  # Backup Schedule
+  # Run every day at 03:15 UTC
+  backupSchedule: "15 03 * * *"
+  # Maximum number of backups to keep on AWS S3 service
+  maxBackups: "3"
 
 ingressClass: nginx
-useDefaultTle: false
