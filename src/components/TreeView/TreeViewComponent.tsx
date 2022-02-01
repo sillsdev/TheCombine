@@ -3,16 +3,32 @@ import { animate } from "motion";
 import React, { ReactElement } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
+import { WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { createDomains } from "components/TreeView/TreeViewReducer";
-// Domain data
 import en from "resources/semantic-domains/en.json";
 import es from "resources/semantic-domains/es.json";
 import fr from "resources/semantic-domains/fr.json";
+import { newWritingSystem } from "types/project";
 
-interface TreeViewProps {
+/* This list should cover the domain data imported from resources/semantic-domains/
+ * and be covered by the switch statement below. */
+export const allSemDomWritingSystems = [
+  newWritingSystem("en", "English"),
+  newWritingSystem("es", "Español"),
+  newWritingSystem("fr", "Francés"),
+];
+
+function getSemDomWritingSystem(
+  lang: WritingSystem
+): WritingSystem | undefined {
+  return allSemDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
+}
+
+export interface TreeViewProps {
+  semDomWritingSystem: WritingSystem;
   currentDomain: TreeSemanticDomain;
   navigateTree: (domain: TreeSemanticDomain) => void;
   returnControlToCaller: () => void;
@@ -33,29 +49,31 @@ export class TreeView extends React.Component<
 
     this.animate = this.animate.bind(this);
 
+    /* Select the language used for the semantic domains.
+     * Primary: Has it been specified for the project?
+     * Secondary: What is the current browser/ui language?
+     * Default: English. */
+    const lang =
+      getSemDomWritingSystem(props.semDomWritingSystem)?.bcp47 ??
+      props.activeLanguage.code;
     let domains: TreeSemanticDomain[];
-    if (props.activeLanguage) {
-      // not defined in unit tests
-      switch (props.activeLanguage.code) {
-        case "fr":
-          domains = fr;
-          break;
-        case "es":
-          domains = es;
-          break;
-        default:
-          domains = en;
-          break;
-      }
-    } else {
-      domains = en;
+    switch (lang) {
+      case "fr":
+        domains = fr;
+        break;
+      case "es":
+        domains = es;
+        break;
+      default:
+        domains = en;
+        break;
     }
-    // If the state has the current domain defined then use that in the navigateTree call
+
+    // If current domain defined in state, use that in the navigateTree call
     if (this.props.currentDomain.name) {
       this.props.navigateTree(props.currentDomain);
     } else {
       const newDomain = createDomains(domains);
-      // If the current domain is the default then set the name to the translation of "Semantic Domain"
       if (!newDomain.name) {
         newDomain.name = this.props.translate("addWords.domain") as string;
       }

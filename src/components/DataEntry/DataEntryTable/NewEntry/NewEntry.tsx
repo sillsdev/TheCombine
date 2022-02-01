@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
@@ -37,6 +37,11 @@ interface NewEntryProps {
   vernacularLang: WritingSystem;
 }
 
+export enum FocusTarget {
+  Gloss,
+  Vernacular,
+}
+
 interface NewEntryState {
   newEntry: Word;
   suggestedVerns: string[];
@@ -46,6 +51,7 @@ interface NewEntryState {
   vernOpen: boolean;
   senseOpen: boolean;
   selectedWord?: Word;
+  shouldFocus?: FocusTarget;
 }
 
 function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
@@ -83,7 +89,48 @@ export default class NewEntry extends React.Component<
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
 
-  addAudio(audioFile: File) {
+  async componentDidUpdate(
+    _: NewEntryProps,
+    prevState: NewEntryState
+  ): Promise<void> {
+    /* When the vern/sense dialogs are closed, focus needs to return to text
+    fields. The following sets a flag (state.shouldFocus) to trigger focus once
+    the input components are updated. Focus is triggered by
+    this.conditionalFocus() passed to each input component and called within its
+    respective componentDidUpdate(). */
+    if (
+      (prevState.vernOpen || prevState.senseOpen) &&
+      !(this.state.vernOpen || this.state.senseOpen)
+    ) {
+      this.setState((state: NewEntryState) => ({
+        shouldFocus: state.selectedWord
+          ? FocusTarget.Gloss
+          : FocusTarget.Vernacular,
+      }));
+    }
+  }
+
+  focus(target: FocusTarget): void {
+    switch (target) {
+      case FocusTarget.Gloss:
+        focusInput(this.glossInput);
+        return;
+      case FocusTarget.Vernacular:
+        focusInput(this.vernInput);
+        return;
+    }
+  }
+
+  /** This function is for a child input component to call in componentDidUpdate
+   * to move focus to itself, if the current state.shouldFocus says it should. */
+  conditionalFocus(target: FocusTarget): void {
+    if (this.state.shouldFocus === target) {
+      this.focus(target);
+      this.setState({ shouldFocus: undefined });
+    }
+  }
+
+  addAudio(audioFile: File): void {
     const audioFileURLs = [...this.state.audioFileURLs];
     audioFileURLs.push(URL.createObjectURL(audioFile));
     this.setState({
@@ -91,7 +138,7 @@ export default class NewEntry extends React.Component<
     });
   }
 
-  removeAudio(fileName: string) {
+  removeAudio(fileName: string): void {
     this.setState((prevState) => ({
       audioFileURLs: prevState.audioFileURLs.filter(
         (fileURL) => fileURL !== fileName
@@ -99,7 +146,7 @@ export default class NewEntry extends React.Component<
     }));
   }
 
-  updateGlossField(newValue: string) {
+  updateGlossField(newValue: string): void {
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
@@ -111,7 +158,7 @@ export default class NewEntry extends React.Component<
     }));
   }
 
-  updateVernField(newValue: string, openDialog?: boolean) {
+  updateVernField(newValue: string, openDialog?: boolean): void {
     const stateUpdates: Partial<NewEntryState> = {};
     if (newValue !== this.state.newEntry.vernacular) {
       if (this.state.selectedWord) {
@@ -142,7 +189,7 @@ export default class NewEntry extends React.Component<
     });
   }
 
-  updateNote(text: string) {
+  updateNote(text: string): void {
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
@@ -151,7 +198,7 @@ export default class NewEntry extends React.Component<
     }));
   }
 
-  resetState() {
+  resetState(): void {
     this.setState({
       newEntry: newWord(),
       activeGloss: "",
@@ -160,20 +207,10 @@ export default class NewEntry extends React.Component<
       dupVernWords: [],
       selectedWord: undefined,
     });
-    this.focusVernInput();
+    this.focus(FocusTarget.Vernacular);
   }
 
-  /** Move the focus to the vernacular textbox */
-  focusVernInput() {
-    focusInput(this.vernInput);
-  }
-
-  /** Move the focus to the gloss textbox */
-  focusGlossInput() {
-    focusInput(this.glossInput);
-  }
-
-  addNewWordAndReset() {
+  addNewWordAndReset(): void {
     const newEntry: Word = this.state.newEntry.senses.length
       ? this.state.newEntry
       : {
@@ -190,7 +227,7 @@ export default class NewEntry extends React.Component<
     this.resetState();
   }
 
-  addOrUpdateWord() {
+  addOrUpdateWord(): void {
     if (this.state.dupVernWords.length) {
       // Duplicate vern ...
       if (!this.state.selectedWord) {
@@ -214,24 +251,24 @@ export default class NewEntry extends React.Component<
     }
   }
 
-  handleEnter(e: React.KeyboardEvent, checkGloss: boolean) {
+  handleEnter(e: React.KeyboardEvent, checkGloss: boolean): void {
     if (!this.state.vernOpen && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular
       if (this.state.newEntry.vernacular) {
         // The user can conditionally submit a new entry without a gloss
         if (this.state.activeGloss || !checkGloss) {
           this.addOrUpdateWord();
-          this.focusVernInput();
+          this.focus(FocusTarget.Vernacular);
         } else {
-          this.focusGlossInput();
+          this.focus(FocusTarget.Gloss);
         }
       } else {
-        this.focusVernInput();
+        this.focus(FocusTarget.Vernacular);
       }
     }
   }
 
-  handleCloseVernDialog(selectedWordId?: string) {
+  handleCloseVernDialog(selectedWordId?: string): void {
     let selectedWord: Word | undefined;
     let senseOpen = false;
     if (selectedWordId === "") {
@@ -245,7 +282,7 @@ export default class NewEntry extends React.Component<
     this.setState({ selectedWord, senseOpen, vernOpen: false });
   }
 
-  handleCloseSenseDialog(senseIndex?: number) {
+  handleCloseSenseDialog(senseIndex?: number): void {
     if (senseIndex === undefined) {
       this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
@@ -276,7 +313,7 @@ export default class NewEntry extends React.Component<
     return keepers;
   }
 
-  updateSuggestedVerns(value?: string) {
+  updateSuggestedVerns(value?: string): void {
     let suggestedVerns: string[] = [];
     if (value) {
       suggestedVerns = [...this.autoCompleteCandidates(value)];
@@ -305,7 +342,7 @@ export default class NewEntry extends React.Component<
     this.setState({ suggestedVerns });
   }
 
-  render() {
+  render(): ReactElement {
     return (
       <Grid container id={idAffix} alignItems="center">
         <Grid
@@ -338,6 +375,9 @@ export default class NewEntry extends React.Component<
               }
               vernacularLang={this.props.vernacularLang}
               textFieldId={`${idAffix}-vernacular`}
+              onComponentDidUpdate={() =>
+                this.conditionalFocus(FocusTarget.Vernacular)
+              }
             />
             <VernDialog
               open={this.state.vernOpen}
@@ -383,6 +423,9 @@ export default class NewEntry extends React.Component<
             }
             analysisLang={this.props.analysisLang}
             textFieldId={`${idAffix}-gloss`}
+            onComponentDidUpdate={() =>
+              this.conditionalFocus(FocusTarget.Gloss)
+            }
           />
         </Grid>
         <Grid

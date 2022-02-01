@@ -351,12 +351,17 @@
         "Lenguaje de análisis",
         "Langue d'analyse"
       ],
-      "uiLang": ["Interface", "Interfaz", "Interface"],
-      "interfaceLanguage": [
-        "Interface Languages",
-        "Lenguajes de interfaz",
-        "Langues de l'interface"
+      "semanticDomains": [
+        "Semantic Domains",
+        "Semantic Domains",
+        "Semantic Domains"
       ],
+      "semanticDomainsDefault": [
+        "(Default to browser language)",
+        "(Default to browser language)",
+        "(Default to browser language)"
+      ],
+      "languages": ["Languages", "Languages", "Languages"],
       "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
       "name": ["Name", "Nombre", "Nom"],
       "font": ["Font", "Font", "Font"],
@@ -394,6 +399,11 @@
         "Failed to delete analysis language",
         "Failed to delete analysis language",
         "Failed to delete analysis language"
+      ],
+      "updateSemDomWritingSystemFailed": [
+        "Failed to update semantic domains language",
+        "Failed to update semantic domains language",
+        "Failed to update semantic domains language"
       ]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],

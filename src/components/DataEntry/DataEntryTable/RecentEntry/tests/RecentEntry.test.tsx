@@ -3,7 +3,6 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import EditTextDialog from "components/Buttons/EditTextDialog";
 import {
   EntryNote,
@@ -14,13 +13,14 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentE
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
+import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { newWritingSystem } from "types/project";
 import { simpleWord } from "types/word";
 
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");
 
-const mockStore = configureMockStore()(defaultState);
+const mockStore = configureMockStore()({ pronunciationsState });
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
 const mockWord = simpleWord(mockVern, mockGloss);
