@@ -6,3 +6,6 @@ aws-login:
 
 cert-proxy-client:
   enabled: true
+
+certManager:
+  enabled: false
