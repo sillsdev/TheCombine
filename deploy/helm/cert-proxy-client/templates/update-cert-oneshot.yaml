@@ -1,6 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Values.global.namespace }}
   name: update-cert-oneshot
   namespace: {{ .Values.global.namespace }}
 spec:
