@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 
-"""Build the containerd images for The Combine."""
+"""
+Build the containerd images for The Combine.
+
+This script currently supports using 'docker' or 'nerdctl' to build the container
+images.  'nerdctl' is recommended when using Rancher Desktop for the development
+environment and 'docker' is recommended when using Docker Desktop.
+"""
 
 import argparse
 import os
@@ -36,10 +42,15 @@ def parse_args() -> argparse.Namespace:
         "--repo", "-r", help="Push images to the specified Docker image repository."
     )
     parser.add_argument(
-        "--namespace",
-        "-n",
+        "--nerdctl",
         action="store_true",
         help="Use 'nerdctl' instead of 'docker' to build images.",
+        default="k8s.io",
+    )
+    parser.add_argument(
+        "--namespace",
+        "-n",
+        help="Namespace for 'nerdctl' when building images.",
         default="k8s.io",
     )
     return parser.parse_args()
@@ -55,6 +66,11 @@ def build_image(image_name: str, *, push_image: bool = False) -> None:
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
+
+    if args.nerdctl:
+        build_cmd = ["nerdctl", "-n", args.namespace]
+    else:
+        build_cmd = ["docker"]
 
     build_specs = [
         {"dir": project_dir, "name": "frontend"},
