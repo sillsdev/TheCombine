@@ -77,6 +77,7 @@ venv
 
 # Host file to be used for ad hoc testing/development
 *.hosts.yml
+*.hosts.yaml
 
 # YAML files for ad hoc testing/development
 _*.yml
