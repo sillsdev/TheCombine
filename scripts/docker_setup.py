@@ -130,7 +130,7 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             "docker_setup",
-            project_dir / "scripts" / "docker_setup_templates" / "config",
+            project_dir / "scripts" / "setup_files" / "config",
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=False,
@@ -154,16 +154,14 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             "docker_setup",
-            project_dir / "scripts" / "docker_setup_templates" / "maintenance",
+            project_dir / "scripts" / "setup_files" / "maintenance",
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
         lstrip_blocks=True,
     )
     template_name = "script_conf.json.j2"
-    template_path = (
-        project_dir / "deploy" / "roles" / "combine_maintenance" / "files" / "script_conf.json"
-    )
+    template_path = project_dir / "scripts" / "setup_files" / "script_conf.json"
     template = jinja_env.get_template(template_name)
     print(f"Writing: {template_path}")
     template_path.write_text(template.render(dev_config))
