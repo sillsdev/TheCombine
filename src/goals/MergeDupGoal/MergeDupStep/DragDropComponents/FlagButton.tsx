@@ -1,9 +1,9 @@
+import { Flag as FlagIcon, FlagOutlined } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
 
 import { Flag } from "api";
 import EditTextDialog from "components/Buttons/EditTextDialog";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { Flag as FlagIcon, FlagOutlined } from "@material-ui/icons";
 
 interface FlagButtonProps {
   flag: Flag;
