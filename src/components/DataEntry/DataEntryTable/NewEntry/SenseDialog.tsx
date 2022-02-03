@@ -13,7 +13,7 @@ import { Word } from "api/models";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
-import { firstGlossText } from "types/word";
+import { firstGlossText } from "types/wordUtilities";
 
 interface SenseDialogProps {
   selectedWord: Word;

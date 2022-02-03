@@ -25,7 +25,7 @@ import { UpperRightToastContainer } from "components/Toast/UpperRightToastContai
 import { allSemDomWritingSystems } from "components/TreeView/TreeViewComponent";
 import { newWritingSystem } from "types/project";
 import theme from "types/theme";
-import { getAnalysisLangsFromWords } from "types/word";
+import { getAnalysisLangsFromWords } from "types/wordUtilities";
 
 interface LanguageProps {
   project: Project;

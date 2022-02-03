@@ -11,7 +11,8 @@ import {
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { firstGlossText, newGloss } from "types/word";
+import { newGloss } from "types/word";
+import { firstGlossText } from "types/wordUtilities";
 
 const idAffix = "recent-entry";
 

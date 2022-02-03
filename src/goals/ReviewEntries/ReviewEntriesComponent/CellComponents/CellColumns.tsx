@@ -1,19 +1,21 @@
 import { Column } from "@material-table/core";
-import { Input, TextField, Typography } from "@material-ui/core";
-import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { Input, Typography } from "@material-ui/core";
 
 import { SemanticDomain } from "api/models";
 import DefinitionCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DefinitionCell";
 import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import FlagCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/FlagCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
+import NoteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/NoteCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
 import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import VernacularCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/VernacularCell";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { compareFlags } from "types/wordUtilities";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
@@ -25,7 +27,20 @@ enum SortStyle {
   DOMAIN,
   PRONUNCIATION,
   //NOTE_TEXT,
+  FLAG,
   NONE,
+}
+
+export enum ColumnTitle {
+  VERNACULAR = "Vernacular",
+  SENSES = "Senses",
+  DEFINITIONS = "Definitions",
+  GLOSSES = "Glosses",
+  DOMAINS = "Domains",
+  PRONUNCIATIONS = "Pronunciations",
+  NOTE = "Note",
+  FLAG = "Flag",
+  DELETE = "Delete",
 }
 
 function domainNumberToArray(id: string): number[] {
@@ -45,79 +60,23 @@ export interface FieldParameterStandard {
   onRowDataChange?: (...args: any) => any;
 }
 
-// Creates the editable vernacular text field
-function vernacularField(
-  props: FieldParameterStandard,
-  editable: boolean
-): ReactElement {
-  return (
-    <Translate>
-      {({ translate }): ReactElement => (
-        <TextField
-          key={`row-${props.rowData.id}-vernacular`}
-          id={`row-${props.rowData.id}-vernacular-text`}
-          multiline
-          value={props.value}
-          error={props.value.length === 0}
-          placeholder={translate("reviewEntries.noVernacular").toString()}
-          InputProps={{
-            readOnly: !editable,
-            disableUnderline: !editable,
-          }}
-          // Handles editing local word
-          onChange={(event) =>
-            props.onRowDataChange &&
-            props.onRowDataChange({
-              ...props.rowData,
-              vernacular: event.target.value,
-            })
-          }
-        />
-      )}
-    </Translate>
-  );
-}
-
-// Creates the editable note text field
-function noteField(props: FieldParameterStandard): ReactElement {
-  return (
-    <Translate>
-      {({ translate }): ReactElement => (
-        <TextField
-          key={`row-${props.rowData.id}-note`}
-          id={`row-${props.rowData.id}-note-text`}
-          multiline
-          value={props.value}
-          placeholder={translate("reviewEntries.noNote").toString()}
-          // Handles editing local word
-          onChange={(event) =>
-            props.onRowDataChange &&
-            props.onRowDataChange({
-              ...props.rowData,
-              noteText: event.target.value,
-            })
-          }
-        />
-      )}
-    </Translate>
-  );
-}
-
 let currentSort: SortStyle = SortStyle.NONE;
 const columns: Column<any>[] = [
   // Vernacular column
   {
-    title: "Vernacular",
-    field: "vernacular",
-    render: (rowData: ReviewEntriesWord) =>
-      vernacularField({ rowData, value: rowData.vernacular }, false),
-    editComponent: (props: FieldParameterStandard) =>
-      vernacularField(props, true),
+    title: ColumnTitle.VERNACULAR,
+    field: ColumnTitle.VERNACULAR,
+    render: (rowData: ReviewEntriesWord) => (
+      <VernacularCell rowData={rowData} value={rowData.vernacular} />
+    ),
+    editComponent: (props: FieldParameterStandard) => (
+      <VernacularCell {...props} editable />
+    ),
   },
   // Sense column
   {
-    title: "Senses",
-    field: "senses",
+    title: ColumnTitle.SENSES,
+    field: ColumnTitle.SENSES,
     // Fix column to minimum width.
     width: 0,
     render: (rowData: ReviewEntriesWord) => (
@@ -147,20 +106,13 @@ const columns: Column<any>[] = [
           });
         }
       };
-      return (
-        <SenseCell
-          rowData={props.rowData}
-          onRowDataChange={props.onRowDataChange}
-          delete={deleteSense}
-          value
-        />
-      );
+      return <SenseCell {...props} delete={deleteSense} value />;
     },
   },
   // Definitions column
   {
-    title: "Definitions",
-    field: "definitions",
+    title: ColumnTitle.DEFINITIONS,
+    field: ColumnTitle.DEFINITIONS,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
       <DefinitionCell
@@ -170,12 +122,7 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => (
-      <DefinitionCell
-        value={props.value}
-        rowData={props.rowData}
-        onRowDataChange={props.onRowDataChange}
-        editable
-      />
+      <DefinitionCell {...props} editable />
     ),
     customFilterAndSearch: (
       term: string,
@@ -211,8 +158,8 @@ const columns: Column<any>[] = [
   },
   // Glosses column
   {
-    title: "Glosses",
-    field: "glosses",
+    title: ColumnTitle.GLOSSES,
+    field: ColumnTitle.GLOSSES,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
       <GlossCell
@@ -222,12 +169,7 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => (
-      <GlossCell
-        value={props.value}
-        rowData={props.rowData}
-        onRowDataChange={props.onRowDataChange}
-        editable
-      />
+      <GlossCell {...props} editable />
     ),
     customFilterAndSearch: (
       term: string,
@@ -263,8 +205,8 @@ const columns: Column<any>[] = [
   },
   // Semantic Domains column
   {
-    title: "Domains",
-    field: "domains",
+    title: ColumnTitle.DOMAINS,
+    field: ColumnTitle.DOMAINS,
     render: (rowData: ReviewEntriesWord) => (
       <DomainCell
         rowData={rowData}
@@ -383,8 +325,8 @@ const columns: Column<any>[] = [
   },
   // Audio column
   {
-    title: "Pronunciations",
-    field: "pronunciations",
+    title: ColumnTitle.PRONUNCIATIONS,
+    field: ColumnTitle.PRONUNCIATIONS,
     editable: "never",
     filterPlaceholder: "#",
     render: (rowData: ReviewEntriesWord) => (
@@ -409,8 +351,8 @@ const columns: Column<any>[] = [
   },
   // Note column
   {
-    title: "Note",
-    field: "noteText",
+    title: ColumnTitle.NOTE,
+    field: ColumnTitle.NOTE,
     render: (rowData: ReviewEntriesWord) => (
       <Input
         fullWidth
@@ -421,12 +363,35 @@ const columns: Column<any>[] = [
         multiline
       />
     ),
-    editComponent: (props: FieldParameterStandard) => noteField(props),
+    editComponent: (props: FieldParameterStandard) => <NoteCell {...props} />,
+  },
+  // Flag column
+  {
+    title: ColumnTitle.FLAG,
+    field: ColumnTitle.FLAG,
+    render: (rowData: ReviewEntriesWord) => (
+      <FlagCell value={rowData.flag} rowData={rowData} />
+    ),
+    editComponent: (props: FieldParameterStandard) => (
+      <FlagCell {...props} editable />
+    ),
+    customFilterAndSearch: (
+      filter: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
+      return rowData.flag.text.includes(filter);
+    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.FLAG) {
+        currentSort = SortStyle.FLAG;
+      }
+      return compareFlags(a.flag, b.flag);
+    },
   },
   // Delete Entry column
   {
-    title: "Delete",
-    field: "delete",
+    title: ColumnTitle.DELETE,
+    field: ColumnTitle.DELETE,
     filtering: false,
     sorting: false,
     editable: "never",
