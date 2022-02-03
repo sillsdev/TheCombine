@@ -897,7 +897,7 @@
           {
             "name": "Grass, herb, vine",
             "id": "1.5.3",
-            "description": "Use this domain for small plants that have roots, stems, flowers, and seeds, but do not have a wooden trunk (Phylum Spermatophyta, Subdivision Angiospermae). Also include the seedless plants, such as ferns (phylum Pteridophyta, class Felicineae), horsetails (phylum Pteridophyta, class Equisetineae), and club mosses (phylum Pteridophyta, class Lycopodineae). Plants of the Pteridophyta phylum have no flowers or seeds. Ferns have large, divided, feather-like leaves, or fronds. Club mosses are small (rarely over one meter) evergreen plants with simple leaves resembling pine or hemlock needles. Sometimes they grow upright, but often trail on the ground, where they propagate by means of runners. Horsetails send up tall, vertical, jointed stalks with branches covered with scale like leaves.",
+            "description": "Use this domain for small plants that have roots, stems, flowers, and seeds, but do not have a wooden trunk (Phylum Spermatophyta, Subdivision Angiospermae). Also include the seedless plants, such as ferns (phylum Pteridophyta, class Filicineae), horsetails (phylum Pteridophyta, class Equisetineae), and club mosses (phylum Pteridophyta, class Lycopodineae). Plants of the Pteridophyta phylum have no flowers or seeds. Ferns have large, divided, feather-like leaves, or fronds. Club mosses are small (rarely over one meter) evergreen plants with simple leaves resembling pine or hemlock needles. Sometimes they grow upright, but often trail on the ground, where they propagate by means of runners. Horsetails send up tall, vertical, jointed stalks with branches covered with scale like leaves.",
             "questions": [
               "(1) What general words refer to small plants?",
               "(2) What general types of small plants are there?",
@@ -2539,7 +2539,7 @@
               "(12) What words refer to a disease of the lungs?",
               "(13) What words refer to a disease of the heart?",
               "(14) What words refer to a disease of the liver?",
-              "(15) What words refer to sexually transmitted  disease?",
+              "(15) What words refer to sexually transmitted disease?",
               "(16) What words refer to a disease of the bones and joints?",
               "(17) What words refer to cancer?"
             ],
@@ -2886,7 +2886,7 @@
               "(6) What words refer to treating a broken bone?",
               "(7) What words refer to surgery?",
               "(8) What words refer to treating pain?",
-              "(9) What words refer to  things are done to treat disease?",
+              "(9) What words refer to things are done to treat disease?",
               "(10) What words refer to trying to find out what is wrong with a sick person?",
               "(11) What words refer to telling a sick person what to do in order to get well?",
               "(12) What words refer to curing someone?",
@@ -13115,8 +13115,8 @@
               "(1) What types of buildings are there?",
               "(2) What kinds of buildings are used by animals?",
               "(3) What kinds of buildings are used for work and to make things?",
-              "(4) What kinds of buildings are used  to store things?",
-              "(5) What kinds of buildings are used  to sell things?",
+              "(4) What kinds of buildings are used to store things?",
+              "(5) What kinds of buildings are used to sell things?",
               "(6) What kinds of buildings are used by the government?",
               "(7) What kinds of buildings are used by the police?",
               "(8) What kinds of buildings are used by the military?",
@@ -13282,7 +13282,6 @@
                   "(3) What words refer to the room where the toilet is?",
                   "(4) What kinds of rooms are there in an office?",
                   "(5) What kinds of rooms are there in a store?",
-                  "(6) What kinds of rooms are there in a church?",
                   "(6) What kinds of rooms are there in a religious building (church, mosque, synagogue, temple)?"
                 ],
                 "subdomains": []
@@ -13776,8 +13775,8 @@
               "(1) What words refer to digging a well?",
               "(2) What words are used for storing water?",
               "(3) What words are used of a system of water transportation?",
-              "(4) What words refer to using waterpower?",
-              "(5) What words are used of generating electricity using waterpower?",
+              "(4) What words refer to using water power?",
+              "(5) What words are used of generating electricity using water power?",
               "(6) What words are used of removing water from something?"
             ],
             "subdomains": [
@@ -14838,7 +14837,7 @@
                   "(3) What words refer to continuing to move without trying to speed up or slow down?",
                   "(4) What words refer to how fast something is moving?",
                   "(5) What words refer to moving quickly for a short time?",
-                  "(6) What idiophones are used of moving quickly?"
+                  "(6) What ideophones are used of moving quickly?"
                 ],
                 "subdomains": [
                   {
@@ -14849,7 +14848,7 @@
                       "(1) What words refer to moving slowly?",
                       "(2) What words refer to moving more slowly?",
                       "(3) What do you say to someone when you want him to slow down?",
-                      "(4) What idiophones are used of moving slowly?"
+                      "(4) What ideophones are used of moving slowly?"
                     ],
                     "subdomains": []
                   }
@@ -14994,7 +14993,7 @@
                   "(4) What words refer to climbing?",
                   "(5) What words refer to moving onto something?",
                   "(6) What words refer to climbing over something?",
-                  "(7) What words refer to the sun or moon  moving up in the sky?",
+                  "(7) What words refer to the sun or moon moving up in the sky?",
                   "(8) What words refer to an airplane moving up?",
                   "(9) What words refer to the act of moving up?",
                   "(10) What words refer to someone who moves up?",
@@ -16128,7 +16127,7 @@
               "(1) What words refer to gathering things?",
               "(2) What words refer to things gathering?",
               "(3) What words describe things that have been gathered?",
-              "(4) What words refer to a group of  things that have been gathered together?"
+              "(4) What words refer to a group of things that have been gathered together?"
             ],
             "subdomains": [
               {
@@ -17153,7 +17152,7 @@
                 "questions": [
                   "(1) What words describe the only person or thing?",
                   "(2) What words indicate that there is only a particular number or amount of something?",
-                  "(3)  What words indicate something is true of only one thing or one group of things, and not true of others?",
+                  "(3) What words indicate something is true of only one thing or one group of things, and not true of others?",
                   "(4) What words indicate that something is only what you say it is, and not something more?"
                 ],
                 "subdomains": []
@@ -20606,7 +20605,7 @@
               {
                 "name": "Event propositions",
                 "id": "9.1.2.7",
-                "description": "Use this domain for words that indicate event propositions. Event propositions are similar in that they are normally expressed by a subject and a verb, possibly including an object, indirect object, or complement clause. However there are multiple ways in which a language can express an event, such as a passive construction, noun phrase, or subordinate clause. In addition each event type is different in its primary cases, and in the ways those cases are marked. Each event type has subtypes, such as intransitive, transitive, and bitransitive verbs. A great deal of research is needed in order to identify all the variations. Ultimately every verb must be investigated to determine how it behaves in each syntactic construction and how its case relations are marked. No two verbs are entirely alike.",
+                "description": "Use this domain for words that indicate event propositions. Event propositions are similar in that they are normally expressed by a subject and a verb, possibly including an object, indirect object, or complement clause. However there are multiple ways in which a language can express an event, such as a passive construction, noun phrase, or subordinate clause. In addition each event type is different in its primary cases, and in the ways those cases are marked. Each event type has subtypes, such as intransitive, transitive, and ditransitive verbs. A great deal of research is needed in order to identify all the variations. Ultimately every verb must be investigated to determine how it behaves in each syntactic construction and how its case relations are marked. No two verbs are entirely alike.",
                 "questions": ["(1) What words indicate an event?"],
                 "subdomains": []
               }
@@ -20833,10 +20832,10 @@
             "subdomains": []
           },
           {
-            "name": "Idiophones",
+            "name": "Ideophones",
             "id": "9.2.8",
-            "description": "Use this domain to list all idiophones. If there are many idiophones in your language, it is probably not worth the trouble to list them here. The Shoebox program (and other dictionary programs) can sort your dictionary by part of speech.",
-            "questions": ["(1) What idiophones are in your language?"],
+            "description": "Use this domain to list all ideophones. If there are many ideophones in your language, it is probably not worth the trouble to list them here. Dictionary programs can sort your dictionary by part of speech, if needed.",
+            "questions": ["(1) What ideophones are in your language?"],
             "subdomains": []
           },
           {
@@ -21913,7 +21912,7 @@
                   "(5) counterfactual: the proposition describes an unreal or imagined situation that could have been true but was not: 'If you had taken algebra, you would know this formula' (but you did not).",
                   "(6) The verb forms that occur in these sentences will be coded according to the type of sentence, and according to which clause of the sentence they occur in.",
                   "(7) Example: the English 'had' + past participle would be coded as:",
-                  "(8) meaning label:  protasis",
+                  "(8) meaning label: protasis",
                   "(9) meaning label: counterfactual",
                   "(10) Since the conjunction 'if' obligatorily occurs in the protasis, there will also be the following:",
                   "(11) Co-occurrence restriction: 'if'",
