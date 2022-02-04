@@ -183,8 +183,14 @@ function WordPaper(props: WordPaperProps): ReactElement {
           square
           style={{ padding: theme.spacing(1), height: 44, minWidth: 100 }}
         >
-          <Typography variant="h5">{word?.vernacular}</Typography>
-          <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
+          <Grid container justifyContent="space-between">
+            <Grid>
+              <Typography variant="h5">{word?.vernacular}</Typography>
+            </Grid>
+            <Grid>
+              <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
+            </Grid>
+          </Grid>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
           {word?.senses?.map(SenseCard)}

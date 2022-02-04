@@ -9,6 +9,7 @@ interface IconButtonWithTooltipProps {
   small?: boolean;
   onClick?: () => void;
   buttonId?: string;
+  side?: "bottom" | "left" | "right" | "top";
 }
 
 export default function IconButtonWithTooltip(
@@ -19,7 +20,7 @@ export default function IconButtonWithTooltip(
       title={
         props.text ?? (props.textId ? <Translate id={props.textId} /> : false)
       }
-      placement="right"
+      placement={props.side ?? "right"}
     >
       <span>
         <IconButton

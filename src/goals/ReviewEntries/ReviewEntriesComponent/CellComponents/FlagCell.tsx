@@ -1,4 +1,3 @@
-import { Grid, TextField } from "@material-ui/core";
 import { ReactElement } from "react";
 
 import { Flag } from "api/models";
@@ -18,33 +17,10 @@ export default function FlagCell(
     }
   }
   return (
-    <Grid container>
-      <Grid>
-        <FlagButton
-          flag={props.value}
-          updateFlag={updateFlag}
-          buttonId={`row-${props.rowData.id}-flag`}
-        />
-      </Grid>
-      <Grid>
-        <TextField
-          id={`row-${props.rowData.id}-flag-text`}
-          disabled={!props.editable}
-          variant="outlined"
-          multiline
-          value={props.rowData.flag.text}
-          onChange={(event) =>
-            props.onRowDataChange &&
-            props.onRowDataChange({
-              ...props.rowData,
-              flag: {
-                active: props.rowData.flag.active || !!event.target.value,
-                text: event.target.value,
-              },
-            })
-          }
-        />
-      </Grid>
-    </Grid>
+    <FlagButton
+      flag={props.value}
+      updateFlag={props.editable ? updateFlag : undefined}
+      buttonId={`row-${props.rowData.id}-flag`}
+    />
   );
 }

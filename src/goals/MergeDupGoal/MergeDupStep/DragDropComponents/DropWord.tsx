@@ -1,5 +1,5 @@
-import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
-import React, { ReactElement } from "react";
+import { Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
@@ -54,27 +54,31 @@ export default function DropWord(props: DropWordProps): ReactElement {
         style={{ padding: theme.spacing(1), height: 44, minWidth: 150 }}
       >
         {filled && (
-          <React.Fragment>
-            <Select
-              value={treeWords[props.wordId].vern}
-              onChange={(e) =>
-                dispatch(setVern(props.wordId, e.target.value as string))
-              }
-            >
-              {verns.map((vern) => (
-                <MenuItem value={vern} key={props.wordId + vern}>
-                  <Typography variant="h5">{vern}</Typography>
-                </MenuItem>
-              ))}
-            </Select>
-            <FlagButton
-              flag={flag}
-              updateFlag={(newFlag: Flag) => {
-                dispatch(flagWord(props.wordId, newFlag));
-              }}
-              buttonId={`word-${props.wordId}-flag`}
-            />
-          </React.Fragment>
+          <Grid container justifyContent="space-between">
+            <Grid>
+              <Select
+                value={treeWords[props.wordId].vern}
+                onChange={(e) =>
+                  dispatch(setVern(props.wordId, e.target.value as string))
+                }
+              >
+                {verns.map((vern) => (
+                  <MenuItem value={vern} key={props.wordId + vern}>
+                    <Typography variant="h5">{vern}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid>
+              <FlagButton
+                flag={flag}
+                updateFlag={(newFlag: Flag) => {
+                  dispatch(flagWord(props.wordId, newFlag));
+                }}
+                buttonId={`word-${props.wordId}-flag`}
+              />
+            </Grid>
+          </Grid>
         )}
       </Paper>
       <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>

@@ -52,10 +52,12 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         }
         text={text}
         textId={active ? "mergeDups.flags.edit" : "mergeDups.flags.add"}
+        small
         onClick={
           props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
         }
         buttonId={props.buttonId}
+        side="left"
       />
       {props.updateFlag ? (
         <EditTextDialog
