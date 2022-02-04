@@ -42,6 +42,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { maxNumSteps } from "types/goalUtilities";
 import { GoalType } from "types/goals";
+import { compareFlags } from "types/wordUtilities";
 
 // Action Creators
 
@@ -196,20 +197,22 @@ function getMergeWords(
     });
 
     // Don't return empty merges: when the only child is the parent word
-    // and has the same number of senses as parent (all with State.Active).
+    // and has the same number of senses as parent (all with State.Active)
+    // and has the same flag.
     if (Object.values(senses).length === 1) {
       const onlyChild = Object.values(senses)[0];
       if (
         onlyChild[0].srcWordId === wordId &&
         onlyChild.length === data.words[wordId].senses.length &&
-        !onlyChild.find((s) => s.accessibility !== State.Active)
+        !onlyChild.find((s) => s.accessibility !== State.Active) &&
+        compareFlags(word.flag, data.words[wordId].flag) === 0
       ) {
         return undefined;
       }
     }
 
     // Construct parent and children.
-    const parent: Word = { ...data.words[wordId], senses: [] };
+    const parent: Word = { ...data.words[wordId], senses: [], flag: word.flag };
     if (!parent.vernacular) {
       parent.vernacular = word.vern;
     }
