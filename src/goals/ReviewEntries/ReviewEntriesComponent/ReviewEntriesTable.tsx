@@ -1,6 +1,6 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -34,6 +34,8 @@ export default function ReviewEntriesTable(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   return (
     <Translate>
       {({ translate }): ReactElement => (
@@ -65,6 +67,9 @@ export default function ReviewEntriesTable(
                   });
               }),
           }}
+          onRowsPerPageChange={(_: number): void => {
+            setIsLoading(true);
+          }}
           options={{
             draggable: false,
             filtering: true,
@@ -78,6 +83,7 @@ export default function ReviewEntriesTable(
               Math.min(words.length, ROWS_PER_PAGE[2]),
             ]),
           }}
+          isLoading={isLoading}
         />
       )}
     </Translate>
