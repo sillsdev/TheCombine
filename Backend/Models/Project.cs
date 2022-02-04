@@ -31,8 +31,13 @@ namespace BackendFramework.Models
         public bool DefinitionsEnabled { get; set; }
 
         [Required]
-        [BsonElement("semanticDomains")]
-        public List<SemanticDomain> SemanticDomains { get; set; }
+        [BsonElement("autocompleteSetting")]
+        [BsonRepresentation(BsonType.String)]
+        public AutocompleteSetting AutocompleteSetting { get; set; }
+
+        [Required]
+        [BsonElement("semDomWritingSystem")]
+        public WritingSystem SemDomWritingSystem { get; set; }
 
         [Required]
         [BsonElement("vernacularWritingSystem")]
@@ -43,17 +48,16 @@ namespace BackendFramework.Models
         public List<WritingSystem> AnalysisWritingSystems { get; set; }
 
         [Required]
+        [BsonElement("semanticDomains")]
+        public List<SemanticDomain> SemanticDomains { get; set; }
+
+        [Required]
         [BsonElement("validCharacters")]
         public List<string> ValidCharacters { get; set; }
 
         [Required]
         [BsonElement("rejectedCharacters")]
         public List<string> RejectedCharacters { get; set; }
-
-        [Required]
-        [BsonElement("autocompleteSetting")]
-        [BsonRepresentation(BsonType.String)]
-        public AutocompleteSetting AutocompleteSetting { get; set; }
 
         /// <summary> Not implemented in frontend. </summary>
         [BsonElement("customFields")]
@@ -79,6 +83,7 @@ namespace BackendFramework.Models
             LiftImported = false;
             DefinitionsEnabled = false;
             AutocompleteSetting = AutocompleteSetting.On;
+            SemDomWritingSystem = new WritingSystem();
             VernacularWritingSystem = new WritingSystem();
             AnalysisWritingSystems = new List<WritingSystem>();
             SemanticDomains = new List<SemanticDomain>();
@@ -100,6 +105,7 @@ namespace BackendFramework.Models
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
                 AutocompleteSetting = AutocompleteSetting,
+                SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 AnalysisWritingSystems = new List<WritingSystem>(),
                 SemanticDomains = new List<SemanticDomain>(),
@@ -155,6 +161,7 @@ namespace BackendFramework.Models
                 other.LiftImported.Equals(LiftImported) &&
                 other.DefinitionsEnabled.Equals(DefinitionsEnabled) &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
+                other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
                 other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
@@ -201,6 +208,7 @@ namespace BackendFramework.Models
             hash.Add(DefinitionsEnabled);
             hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
+            hash.Add(SemDomWritingSystem);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
             hash.Add(SemanticDomains);

@@ -8,6 +8,7 @@ import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
   return {
+    semDomWritingSystem: state.currentProjectState.project.semDomWritingSystem,
     currentDomain: state.treeViewState.currentDomain,
     treeOpen: state.treeViewState.open,
   };

@@ -1,7 +1,7 @@
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import ReactDOM from "react-dom";
 import { renderToStaticMarkup } from "react-dom/server";
-import { LocalizeProvider } from "react-localize-redux";
+import { InitializePayload, LocalizeProvider } from "react-localize-redux";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
@@ -21,7 +21,7 @@ const localizedTags = localizedLanguages.map((l) => l.code);
 const getPrimarySubtag = (bcp: string): string => bcp.split("-")[0];
 const getLocalizedLanguage = (bcp: string): string =>
   localizedTags.includes(getPrimarySubtag(bcp)) ? getPrimarySubtag(bcp) : "en";
-const localizeInit = {
+const localizeInit: InitializePayload = {
   languages: localizedLanguages,
   translation: globalTranslations,
   options: {

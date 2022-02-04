@@ -1,15 +1,17 @@
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import { Project } from "api/models";
 import CharacterInventory, {
   CANCEL,
   SAVE,
 } from "goals/CharInventoryCreation/CharacterInventoryComponent";
+import { defaultState as characterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
-import { store } from "store";
 
 // Constants
+const mockStore = configureMockStore()({ characterInventoryState });
 const SET_INV = jest.fn();
 const UPLOAD_INV = jest.fn();
 
@@ -31,7 +33,7 @@ jest.mock("@material-ui/core", () => {
 function renderCharInvCreation() {
   renderer.act(() => {
     charMaster = renderer.create(
-      <Provider store={store}>
+      <Provider store={mockStore}>
         <CharacterInventory
           goal={new CreateCharInv()}
           currentProject={{ validCharacters: ["a"] } as Project}
