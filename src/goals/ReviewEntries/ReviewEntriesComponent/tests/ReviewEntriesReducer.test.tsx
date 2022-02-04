@@ -5,6 +5,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
+import { englishWritingSystem } from "types/project";
 import { newSemanticDomain } from "types/word";
 
 const mockState = {
@@ -19,7 +20,7 @@ const reviewEntriesWord: ReviewEntriesWord = {
     {
       guid: "1",
       definitions: [],
-      glosses: [{ def: "bupBUP", language: "en" }],
+      glosses: [{ def: "bupBUP", language: englishWritingSystem.bcp47 }],
       domains: [
         newSemanticDomain("number", "domain"),
         newSemanticDomain("number2", "domain2"),
@@ -36,7 +37,7 @@ const result: ReviewEntriesWord = {
     {
       guid: "1",
       definitions: [],
-      glosses: [{ def: "bupBUP", language: "en" }],
+      glosses: [{ def: "bupBUP", language: englishWritingSystem.bcp47 }],
       domains: [
         newSemanticDomain("number", "domain"),
         newSemanticDomain("number2", "domain2"),

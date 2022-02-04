@@ -11,12 +11,12 @@ import { createDomains } from "components/TreeView/TreeViewReducer";
 import en from "resources/semantic-domains/en.json";
 import es from "resources/semantic-domains/es.json";
 import fr from "resources/semantic-domains/fr.json";
-import { newWritingSystem } from "types/project";
+import { englishWritingSystem, newWritingSystem } from "types/project";
 
 /* This list should cover the domain data imported from resources/semantic-domains/
  * and be covered by the switch statement below. */
 export const allSemDomWritingSystems = [
-  newWritingSystem("en", "English"),
+  englishWritingSystem,
   newWritingSystem("es", "Español"),
   newWritingSystem("fr", "Francés"),
 ];

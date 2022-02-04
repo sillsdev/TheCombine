@@ -4,6 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
+import { englishWritingSystem } from "types/project";
 
 // The multiline Input, TextField cause problems in the mock environment.
 jest.mock("@material-ui/core/Input", () => "div");
@@ -11,7 +12,7 @@ jest.mock("@material-ui/core/TextField", () => "div");
 
 const state = {
   currentProjectState: {
-    project: { analysisWritingSystems: [{ bcp47: "en" }] },
+    project: { analysisWritingSystems: [englishWritingSystem] },
   },
 };
 const mockStore = configureMockStore()(state);

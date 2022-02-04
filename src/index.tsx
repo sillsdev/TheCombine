@@ -10,17 +10,20 @@ import history from "browserHistory";
 import App from "components/App/component";
 import globalTranslations from "resources/translations.json";
 import { persistor, store } from "store";
+import { englishWritingSystem } from "types/project";
 import theme from "types/theme";
 
 const localizedLanguages = [
-  { name: "English", code: "en" },
+  { name: englishWritingSystem.name, code: englishWritingSystem.bcp47 },
   { name: "Spanish", code: "es" },
   { name: "French", code: "fr" },
 ];
 const localizedTags = localizedLanguages.map((l) => l.code);
 const getPrimarySubtag = (bcp: string): string => bcp.split("-")[0];
 const getLocalizedLanguage = (bcp: string): string =>
-  localizedTags.includes(getPrimarySubtag(bcp)) ? getPrimarySubtag(bcp) : "en";
+  localizedTags.includes(getPrimarySubtag(bcp))
+    ? getPrimarySubtag(bcp)
+    : englishWritingSystem.bcp47;
 const localizeInit: InitializePayload = {
   languages: localizedLanguages,
   translation: globalTranslations,

@@ -1,6 +1,14 @@
 import { AutocompleteSetting, Project, WritingSystem } from "api/models";
 import { randomIntString } from "utilities";
 
+/** English writing system, used as a default writing system in many parts of
+ * the application. */
+export const englishWritingSystem: WritingSystem = {
+  bcp47: "en",
+  name: "English",
+  font: "",
+};
+
 export function newWritingSystem(
   bcp47 = "",
   name = "",

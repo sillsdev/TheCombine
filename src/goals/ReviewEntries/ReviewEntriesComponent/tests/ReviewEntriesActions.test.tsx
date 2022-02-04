@@ -11,6 +11,7 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { englishWritingSystem } from "types/project";
 import { newGloss, newSemanticDomain, newSense, newWord } from "types/word";
 
 const mockGetWord = jest.fn();
@@ -31,7 +32,7 @@ jest.mock("backend/localStorage", () => ({
 const mockStore = configureMockStore([thunk])();
 
 // Dummy strings, glosses, and domains.
-const langEn = "en";
+const langEn = englishWritingSystem.bcp47;
 const langEs = "es";
 const commonGuid = "mockGuid";
 const gloss0 = newGloss("gloss", langEn);

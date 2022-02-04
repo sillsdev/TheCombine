@@ -7,6 +7,7 @@ import {
   StyledMenuItem,
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import { englishWritingSystem } from "types/project";
 import { simpleWord, testWordList } from "types/word";
 
 jest.mock(
@@ -16,7 +17,7 @@ jest.mock(
 
 const mockState = {
   currentProjectState: {
-    project: { analysisWritingSystems: [{ bcp47: "en" }] },
+    project: { analysisWritingSystems: [englishWritingSystem] },
   },
 };
 const mockStore = configureMockStore()(mockState);
@@ -29,7 +30,7 @@ describe("VernList ", () => {
           <VernList
             vernacularWords={[simpleWord("", "")]}
             closeDialog={jest.fn()}
-            analysisLang={"en"}
+            analysisLang={englishWritingSystem.bcp47}
           />
         </Provider>
       );
@@ -63,7 +64,7 @@ function createVernListInstance(
       <VernList
         vernacularWords={_vernacularWords}
         closeDialog={_mockCallback}
-        analysisLang={"en"}
+        analysisLang={englishWritingSystem.bcp47}
       />
     </Provider>
   ).root;

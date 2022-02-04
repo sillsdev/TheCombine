@@ -2,9 +2,10 @@ import ReactDOM from "react-dom";
 
 import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { englishWritingSystem } from "types/project";
 import { newDefinition, newGloss, newSemanticDomain } from "types/word";
 
-const LANG = "en";
+const LANG = englishWritingSystem.bcp47;
 const DEFINITION = newDefinition("groovy", LANG);
 const GLOSS = newGloss("hoovy", LANG);
 const DOMAIN = newSemanticDomain("0.1", "Person");

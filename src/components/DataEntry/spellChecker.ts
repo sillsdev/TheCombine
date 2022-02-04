@@ -1,11 +1,12 @@
 import nspell from "nspell";
 
 import { aff, dic } from "resources/dictionaries";
+import { englishWritingSystem } from "types/project";
 
 class SpellChecker {
   spell: nspell;
 
-  constructor(analysisLang = "en") {
+  constructor(analysisLang = englishWritingSystem.bcp47) {
     switch (analysisLang.split("-")[0]) {
       case "es":
         this.spell = nspell(aff.es, dic.es);

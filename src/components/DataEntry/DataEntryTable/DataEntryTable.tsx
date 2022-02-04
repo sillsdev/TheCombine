@@ -22,7 +22,7 @@ import NewEntry, {
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
-import { newWritingSystem } from "types/project";
+import { englishWritingSystem, newWritingSystem } from "types/project";
 import theme from "types/theme";
 import { firstGlossText, newSense, simpleWord } from "types/word";
 
@@ -102,7 +102,7 @@ export class DataEntryTable extends React.Component<
       recentlyAddedWords: [],
       isReady: false,
       suggestVerns: true,
-      analysisLang: newWritingSystem("en", "English"),
+      analysisLang: englishWritingSystem,
       vernacularLang: newWritingSystem("qaa", "Unknown"),
       defunctWordIds: [],
       isFetchingFrontier: false,
@@ -127,8 +127,7 @@ export class DataEntryTable extends React.Component<
   async getProjectSettings() {
     const proj = await backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
-    const analysisLang =
-      proj.analysisWritingSystems[0] ?? newWritingSystem("en", "English");
+    const analysisLang = proj.analysisWritingSystems[0] ?? englishWritingSystem;
     const vernacularLang = proj.vernacularWritingSystem;
     this.setState({ analysisLang, vernacularLang, suggestVerns });
   }

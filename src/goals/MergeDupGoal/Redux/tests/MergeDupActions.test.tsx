@@ -25,6 +25,7 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { GoalsState } from "types/goals";
+import { englishWritingSystem } from "types/project";
 import { multiSenseWord, newDefinition, newSense, newWord } from "types/word";
 
 // Used when the guids don't matter.
@@ -260,9 +261,9 @@ describe("MergeDupActions", () => {
   });
 
   describe("mergeDefinitionIntoSense", () => {
-    const defAEn = newDefinition("a", "en");
+    const defAEn = newDefinition("a", englishWritingSystem.bcp47);
     const defAFr = newDefinition("a", "fr");
-    const defBEn = newDefinition("b", "en");
+    const defBEn = newDefinition("b", englishWritingSystem.bcp47);
     let sense: MergeTreeSense;
 
     beforeEach(() => {
@@ -272,7 +273,10 @@ describe("MergeDupActions", () => {
     it("ignores definitions with empty text.", () => {
       mergeDefinitionIntoSense(sense, newDefinition());
       expect(sense.definitions).toHaveLength(0);
-      mergeDefinitionIntoSense(sense, newDefinition("", "en"));
+      mergeDefinitionIntoSense(
+        sense,
+        newDefinition("", englishWritingSystem.bcp47)
+      );
       expect(sense.definitions).toHaveLength(0);
     });
 
@@ -295,14 +299,18 @@ describe("MergeDupActions", () => {
       const twoEnTexts = `${defAEn.text};${defBEn.text}`;
       mergeDefinitionIntoSense(sense, defBEn);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language === "en")!.text).toEqual(
-        twoEnTexts
-      );
+      expect(
+        sense.definitions.find(
+          (d) => d.language === englishWritingSystem.bcp47
+        )!.text
+      ).toEqual(twoEnTexts);
       mergeDefinitionIntoSense(sense, defAEn);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language === "en")!.text).toEqual(
-        twoEnTexts
-      );
+      expect(
+        sense.definitions.find(
+          (d) => d.language === englishWritingSystem.bcp47
+        )!.text
+      ).toEqual(twoEnTexts);
     });
   });
 });
