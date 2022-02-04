@@ -22,7 +22,7 @@ function removeDuplicates<T>(array: T[]): T[] {
 }
 
 // Constants
-const ROWS_PER_PAGE: number[] = [10, 100, 1000];
+const ROWS_PER_PAGE = [10, 100, 1000];
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
