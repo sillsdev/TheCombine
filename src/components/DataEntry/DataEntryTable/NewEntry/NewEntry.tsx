@@ -369,7 +369,7 @@ export default class NewEntry extends React.Component<
                 this.updateVernField(this.state.newEntry.vernacular, true);
               }}
               onClose={(
-                e: React.ChangeEvent<{}>,
+                _: React.ChangeEvent<{}>,
                 reason: AutocompleteCloseReason
               ): void => {
                 // Handle if the user fully types an identical vernacular to a
