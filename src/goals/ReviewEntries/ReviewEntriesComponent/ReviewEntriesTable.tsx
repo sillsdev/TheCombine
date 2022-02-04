@@ -16,7 +16,8 @@ interface ReviewEntriesTableProps {
   ) => Promise<void>;
 }
 
-// Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more
+// Remove the duplicates from an array; sugar syntax, as the place it's used
+// is already hideous enough without adding more
 function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
