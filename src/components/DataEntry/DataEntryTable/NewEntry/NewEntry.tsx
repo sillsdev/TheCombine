@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@material-ui/core";
+import { AutocompleteCloseReason } from "@material-ui/lab";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
@@ -86,6 +87,7 @@ export default class NewEntry extends React.Component<
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
   }
+
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
 
@@ -365,6 +367,23 @@ export default class NewEntry extends React.Component<
               }}
               onBlur={() => {
                 this.updateVernField(this.state.newEntry.vernacular, true);
+              }}
+              onClose={(
+                e: React.ChangeEvent<{}>,
+                reason: AutocompleteCloseReason
+              ): void => {
+                // Handle if the user fully types an identical vernacular to a
+                // suggestion and selects it from the Autocomplete. This should
+                // open the dialog.
+                switch (reason) {
+                  case "select-option":
+                    // User pressed Enter or Left Click on an item.
+                    this.updateVernField(this.state.newEntry.vernacular, true);
+                    break;
+                  default:
+                    // If the user Escapes out of the Autocomplete, do nothing.
+                    break;
+                }
               }}
               suggestedVerns={this.state.suggestedVerns}
               handleEnterAndTab={(e: React.KeyboardEvent) =>
