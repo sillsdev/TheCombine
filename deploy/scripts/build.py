@@ -45,7 +45,6 @@ def parse_args() -> argparse.Namespace:
         "--nerdctl",
         action="store_true",
         help="Use 'nerdctl' instead of 'docker' to build images.",
-        default="k8s.io",
     )
     parser.add_argument(
         "--namespace",
@@ -56,21 +55,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_image(image_name: str, *, push_image: bool = False) -> None:
-    """Build the specified Docker image."""
-    os.system(f"nerdctl build -t {image_name} -f Dockerfile .")
-    if push_image:
-        os.system(f"nerdctl push {image_name}")
-
-
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
 
     if args.nerdctl:
-        build_cmd = ["nerdctl", "-n", args.namespace]
+        build_cmd = f"nerdctl -n {args.namespace}"
     else:
-        build_cmd = ["docker"]
+        build_cmd = "docker"
 
     build_specs = [
         {"dir": project_dir, "name": "frontend"},
@@ -81,9 +73,9 @@ def main() -> None:
     for spec in build_specs:
         os.chdir(str(spec["dir"]))
         image_name = get_image_name(args.repo, str(spec["name"]), args.tag)
-        os.system(f"nerdctl build -t {image_name} -f Dockerfile .")
+        os.system(f"{build_cmd} build -t {image_name} -f Dockerfile .")
         if args.repo is not None:
-            os.system(f"nerdctl push {image_name}")
+            os.system(f"{build_cmd} push {image_name}")
 
 
 if __name__ == "__main__":
