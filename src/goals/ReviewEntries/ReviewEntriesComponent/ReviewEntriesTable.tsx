@@ -22,7 +22,7 @@ function removeDuplicates<T>(array: T[]): T[] {
 }
 
 // Constants
-const ROWS_PER_PAGE = [10, 100, 1000];
+const ROWS_PER_PAGE = [10, 100, 250];
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
@@ -67,9 +67,6 @@ export default function ReviewEntriesTable(
                   });
               }),
           }}
-          onRowsPerPageChange={(_: number): void => {
-            setIsLoading(true);
-          }}
           options={{
             draggable: false,
             filtering: true,
@@ -83,7 +80,6 @@ export default function ReviewEntriesTable(
               Math.min(words.length, ROWS_PER_PAGE[2]),
             ]),
           }}
-          isLoading={isLoading}
         />
       )}
     </Translate>
