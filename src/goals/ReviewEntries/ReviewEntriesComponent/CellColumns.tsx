@@ -2,15 +2,17 @@ import { Column } from "@material-table/core";
 import { Input, Typography } from "@material-ui/core";
 
 import { SemanticDomain } from "api/models";
-import DefinitionCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DefinitionCell";
-import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
-import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import FlagCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/FlagCell";
-import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
-import NoteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/NoteCell";
-import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
-import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import VernacularCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/VernacularCell";
+import {
+  DefinitionCell,
+  DeleteCell,
+  DomainCell,
+  FlagCell,
+  GlossCell,
+  NoteCell,
+  PronunciationsCell,
+  SenseCell,
+  VernacularCell,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -70,10 +72,10 @@ const columns: Column<any>[] = [
       <VernacularCell rowData={rowData} value={rowData.vernacular} />
     ),
     editComponent: (props: FieldParameterStandard) => (
-      <VernacularCell {...props} editable />
+      <VernacularCell {...props} value={props.rowData.vernacular} editable />
     ),
   },
-  // Sense column
+  // Senses column
   {
     title: ColumnTitle.SENSES,
     field: ColumnTitle.SENSES,
@@ -106,7 +108,7 @@ const columns: Column<any>[] = [
           });
         }
       };
-      return <SenseCell {...props} delete={deleteSense} value />;
+      return <SenseCell {...props} delete={deleteSense} />;
     },
   },
   // Definitions column
@@ -373,7 +375,7 @@ const columns: Column<any>[] = [
       <FlagCell value={rowData.flag} rowData={rowData} />
     ),
     editComponent: (props: FieldParameterStandard) => (
-      <FlagCell {...props} editable />
+      <FlagCell {...props} value={props.rowData.flag} editable />
     ),
     customFilterAndSearch: (
       filter: string,

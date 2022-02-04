@@ -1,9 +1,9 @@
 import { Grid, TextField } from "@material-ui/core";
-import { Flag as FlagFilled, FlagOutlined } from "@material-ui/icons";
 import { ReactElement } from "react";
 
-import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
-import { themeColors } from "types/theme";
+import { Flag } from "api/models";
+import FlagButton from "components/Buttons/FlagButton";
+import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 
 interface FlagCellProps {
   editable?: boolean;
@@ -12,20 +12,25 @@ interface FlagCellProps {
 export default function FlagCell(
   props: FieldParameterStandard & FlagCellProps
 ): ReactElement {
+  function updateFlag(flag: Flag): void {
+    if (props.onRowDataChange) {
+      props.onRowDataChange({ ...props.rowData, flag });
+    }
+  }
   return (
     <Grid container>
       <Grid>
-        {props.rowData.flag.active ? (
-          <FlagFilled style={{ color: themeColors.error }} />
-        ) : (
-          <FlagOutlined />
-        )}
+        <FlagButton
+          flag={props.value}
+          updateFlag={updateFlag}
+          buttonId={`row-${props.rowData.id}-flag`}
+        />
       </Grid>
       <Grid>
         <TextField
-          id={`row-${props.rowData.id}-flag`}
+          id={`row-${props.rowData.id}-flag-text`}
+          disabled={!props.editable}
           variant="outlined"
-          margin="dense"
           multiline
           value={props.rowData.flag.text}
           onChange={(event) =>

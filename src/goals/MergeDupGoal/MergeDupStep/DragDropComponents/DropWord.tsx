@@ -5,11 +5,12 @@ import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
 import { Flag } from "api/models";
+import FlagButton from "components/Buttons/FlagButton";
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
-import FlagButton from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/FlagButton";
 import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import theme from "types/theme";
+import { newFlag } from "types/word";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
@@ -21,7 +22,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
   const treeWords = props.mergeState.tree.words;
   const data = props.mergeState.data;
   const filled = !!treeWords[props.wordId];
-  const flag = data.words[props.wordId].flag;
+  const flag = data.words[props.wordId]?.flag ?? newFlag();
   const verns: string[] = [];
   if (filled) {
     verns.push(

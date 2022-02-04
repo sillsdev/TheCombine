@@ -2,7 +2,7 @@ import { TextField } from "@material-ui/core";
 import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 
 export default function NoteCell(props: FieldParameterStandard): ReactElement {
   return (

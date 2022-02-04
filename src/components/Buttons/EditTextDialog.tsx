@@ -24,6 +24,8 @@ interface EditTextDialogProps {
   onCancel?: () => void;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
+  buttonTextIdCancel?: string;
+  buttonTextIdConfirm?: string;
   textFieldId?: string;
 }
 
@@ -100,7 +102,7 @@ export default function EditTextDialog(
           color="primary"
           id={props.buttonIdCancel}
         >
-          <Translate id="buttons.cancel" />
+          <Translate id={props.buttonTextIdCancel ?? "buttons.cancel"} />
         </Button>
         <LoadingButton
           loading={loading}
@@ -111,7 +113,7 @@ export default function EditTextDialog(
             id: props.buttonIdConfirm,
           }}
         >
-          <Translate id="buttons.confirm" />
+          <Translate id={props.buttonTextIdConfirm ?? "buttons.confirm"} />
         </LoadingButton>
       </DialogActions>
     </Dialog>

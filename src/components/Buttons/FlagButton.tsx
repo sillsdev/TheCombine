@@ -1,9 +1,10 @@
-import { Flag as FlagIcon, FlagOutlined } from "@material-ui/icons";
+import { Flag as FlagFilled, FlagOutlined } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
 
-import { Flag } from "api";
+import { Flag } from "api/models";
 import EditTextDialog from "components/Buttons/EditTextDialog";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { themeColors } from "types/theme";
 
 interface FlagButtonProps {
   flag: Flag;
@@ -31,7 +32,13 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   return (
     <React.Fragment>
       <IconButtonWithTooltip
-        icon={active ? <FlagIcon /> : <FlagOutlined />}
+        icon={
+          active ? (
+            <FlagFilled style={{ color: themeColors.error }} />
+          ) : (
+            <FlagOutlined />
+          )
+        }
         textId={active ? "mergeDups.flags.edit" : "mergeDups.flags.add"}
         onClick={() => setOpen(true)}
         buttonId={props.buttonId}
@@ -43,8 +50,10 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         close={() => setOpen(false)}
         updateText={updateFlag}
         onCancel={removeFlag}
-        buttonIdCancel="mergeDups.flags.remove"
-        buttonIdConfirm="mergeDups.flags.save"
+        buttonIdCancel="flag-remove"
+        buttonIdConfirm="flag-save"
+        buttonTextIdCancel="mergeDups.flags.remove"
+        buttonTextIdConfirm="mergeDups.flags.save"
       />
     </React.Fragment>
   );

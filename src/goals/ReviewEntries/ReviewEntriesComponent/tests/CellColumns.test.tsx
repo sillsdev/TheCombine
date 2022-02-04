@@ -1,6 +1,6 @@
 import columns, {
   ColumnTitle,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import {
   newDefinition,
