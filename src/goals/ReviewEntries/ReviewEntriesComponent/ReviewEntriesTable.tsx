@@ -1,6 +1,6 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
@@ -33,8 +33,6 @@ export default function ReviewEntriesTable(
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
     <Translate>
