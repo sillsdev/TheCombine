@@ -16,13 +16,14 @@ interface ReviewEntriesTableProps {
   ) => Promise<void>;
 }
 
-// Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more
+// Remove the duplicates from an array; sugar syntax, as the place it's used
+// is already hideous enough without adding more
 function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
 // Constants
-const ROWS_PER_PAGE: number[] = [10, 100, 1000];
+const ROWS_PER_PAGE = [10, 100, 250];
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
