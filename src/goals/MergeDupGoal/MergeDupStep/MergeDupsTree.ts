@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 import { Flag, Sense, Word } from "api/models";
 import { newFlag } from "types/word";
 
@@ -30,6 +32,15 @@ export function newMergeTreeWord(
   sensesGuids?: Hash<string[]>
 ): MergeTreeWord {
   return { vern, sensesGuids: sensesGuids ?? {}, flag: newFlag() };
+}
+
+export function convertWordtoMergeTreeWord(word: Word): MergeTreeWord {
+  const mergeTreeWord = newMergeTreeWord(word.vernacular);
+  word.senses.forEach((sense) => {
+    mergeTreeWord.sensesGuids[v4()] = [sense.guid];
+  });
+  mergeTreeWord.flag = word.flag;
+  return mergeTreeWord;
 }
 
 export interface Sidebar {

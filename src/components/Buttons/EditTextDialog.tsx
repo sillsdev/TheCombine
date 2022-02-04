@@ -27,6 +27,7 @@ interface EditTextDialogProps {
   buttonTextIdCancel?: string;
   buttonTextIdConfirm?: string;
   textFieldId?: string;
+  allowNoChangeSave?: boolean;
 }
 
 /**
@@ -39,7 +40,7 @@ export default function EditTextDialog(
   const [text, setText] = useState<string>(props.text);
 
   async function onConfirm() {
-    if (text !== props.text) {
+    if (text !== props.text || props.allowNoChangeSave) {
       setLoading(true);
       await props.updateText(text);
       setLoading(false);

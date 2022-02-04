@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 
 import { Word } from "api/models";
 import {
+  convertWordtoMergeTreeWord,
   defaultSidebar,
   defaultTree,
   Hash,
@@ -260,12 +261,10 @@ export const mergeDupStepReducer = (
       const wordsTree: Hash<MergeTreeWord> = {};
       action.payload.forEach((word) => {
         words[word.id] = JSON.parse(JSON.stringify(word));
-        const sensesGuids: Hash<string[]> = {};
         word.senses.forEach((sense, order) => {
           senses[sense.guid] = { ...sense, srcWordId: word.id, order };
-          sensesGuids[v4()] = [sense.guid];
         });
-        wordsTree[word.id] = newMergeTreeWord(word.vernacular, sensesGuids);
+        wordsTree[word.id] = convertWordtoMergeTreeWord(word);
       });
       return {
         ...state,
