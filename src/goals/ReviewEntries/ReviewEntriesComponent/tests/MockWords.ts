@@ -3,7 +3,13 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { newNote, newSemanticDomain, newSense, newWord } from "types/word";
+import {
+  newFlag,
+  newNote,
+  newSemanticDomain,
+  newSense,
+  newWord,
+} from "types/word";
 
 export default function mockWords(): ReviewEntriesWord[] {
   return [
@@ -23,6 +29,7 @@ export default function mockWords(): ReviewEntriesWord[] {
           deleted: false,
         },
       ],
+      noteText: "first word",
     },
     {
       ...new ReviewEntriesWord(),
@@ -37,6 +44,7 @@ export default function mockWords(): ReviewEntriesWord[] {
           deleted: false,
         },
       ],
+      flag: newFlag("second word"),
     },
   ];
 }
@@ -47,6 +55,7 @@ export function mockCreateWord(word: ReviewEntriesWord): Word {
     id: word.id,
     senses: word.senses.map((sense) => createMockSense(sense)),
     note: newNote(word.noteText),
+    flag: word.flag,
   };
 }
 

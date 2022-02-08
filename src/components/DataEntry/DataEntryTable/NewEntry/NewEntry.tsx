@@ -16,7 +16,8 @@ import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog"
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { firstGlossText, newSense, newWord } from "types/word";
+import { newSense, newWord } from "types/word";
+import { firstGlossText } from "types/wordUtilities";
 import { LevenshteinDistance } from "utilities";
 
 const idAffix = "new-entry";

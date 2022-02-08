@@ -4,7 +4,9 @@ import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import columns, {
+  ColumnTitle,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import { StoreState } from "types";
@@ -48,7 +50,7 @@ export default function ReviewEntriesTable(
           columns={
             showDefinitions
               ? columns
-              : columns.filter((c) => c.field !== "definitions")
+              : columns.filter((c) => c.field !== ColumnTitle.Definitions)
           }
           data={words}
           editable={{

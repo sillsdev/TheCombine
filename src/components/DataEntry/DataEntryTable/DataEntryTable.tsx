@@ -24,7 +24,8 @@ import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { newWritingSystem } from "types/project";
 import theme from "types/theme";
-import { firstGlossText, newSense, simpleWord } from "types/word";
+import { newSense, simpleWord } from "types/word";
+import { firstGlossText } from "types/wordUtilities";
 
 export const exitButtonId = "exit-to-domain-tree";
 
