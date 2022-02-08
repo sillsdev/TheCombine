@@ -4,13 +4,9 @@ import { ReactElement } from "react";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import {
-  ReviewEntriesSense,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 interface SenseCellProps {
-  rowData: ReviewEntriesWord;
   delete: (deleteIndex: string) => void;
 }
 

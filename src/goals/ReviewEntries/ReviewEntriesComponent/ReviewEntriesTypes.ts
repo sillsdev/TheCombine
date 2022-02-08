@@ -11,6 +11,16 @@ import Recorder from "components/Pronunciations/Recorder";
 import { newSense, newWord } from "types/word";
 import { cleanDefinitions, cleanGlosses } from "types/wordUtilities";
 
+// These must match the ReviewEntriesWord fields for use in ReviewEntriesTable
+export enum ReviewEntriesWordField {
+  Id = "id",
+  Vernacular = "vernacular",
+  Senses = "senses",
+  Pronunciations = "pronunciationFiles",
+  Note = "noteText",
+  Flag = "flag",
+}
+
 export class ReviewEntriesWord {
   id: string;
   vernacular: string;

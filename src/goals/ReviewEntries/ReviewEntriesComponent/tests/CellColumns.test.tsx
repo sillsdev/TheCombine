@@ -98,7 +98,7 @@ const SORT_BY_FLAGIES = [WORD_0, WORD_2, WORD_1, WORD_3];
 
 describe("CellColumns filter and sort functions", () => {
   describe("Sense column", () => {
-    const col = columns.find((c) => c.field === ColumnTitle.SENSES);
+    const col = columns.find((c) => c.title === ColumnTitle.Senses);
 
     it("properly sorts a list by sense count", () => {
       if (col?.customSort) {
@@ -114,7 +114,7 @@ describe("CellColumns filter and sort functions", () => {
   });
 
   describe("Definitions column", () => {
-    const col = columns.find((c) => c.field === ColumnTitle.DEFINITIONS);
+    const col = columns.find((c) => c.title === ColumnTitle.Definitions);
 
     it("returns true when searching a word for an extant definition", () => {
       if (col?.customFilterAndSearch) {
@@ -148,7 +148,7 @@ describe("CellColumns filter and sort functions", () => {
   });
 
   describe("Glosses column", () => {
-    const col = columns.find((c) => c.field === ColumnTitle.GLOSSES);
+    const col = columns.find((c) => c.title === ColumnTitle.Glosses);
 
     it("returns true when searching a word for an extant gloss", () => {
       if (col?.customFilterAndSearch) {
@@ -180,7 +180,7 @@ describe("CellColumns filter and sort functions", () => {
   });
 
   describe("Domains column", () => {
-    const col = columns.find((c) => c.field === ColumnTitle.DOMAINS);
+    const col = columns.find((c) => c.title === ColumnTitle.Domains);
 
     it("returns true when searching a word for an extant domain", () => {
       if (col?.customFilterAndSearch) {
@@ -242,7 +242,7 @@ describe("CellColumns filter and sort functions", () => {
   });
 
   describe("Flag column", () => {
-    const col = columns.find((c) => c.field === ColumnTitle.FLAG);
+    const col = columns.find((c) => c.title === ColumnTitle.Flag);
 
     it("returns true when searching a word for extant flag-text", () => {
       if (col?.customFilterAndSearch) {
@@ -253,7 +253,6 @@ describe("CellColumns filter and sort functions", () => {
     });
 
     it("returns false when searching a word for nonexistent flag-text", () => {
-      const col = columns.find((c) => c.field === ColumnTitle.FLAG);
       if (col?.customFilterAndSearch) {
         expect(col.customFilterAndSearch("asdfghjkl", WORD, {})).toBeFalsy();
       } else {
@@ -262,7 +261,6 @@ describe("CellColumns filter and sort functions", () => {
     });
 
     it("properly sorts a list by flags", () => {
-      const col = columns.find((c) => c.field === ColumnTitle.FLAG);
       if (col?.customSort) {
         expect(
           [...SORT_BY_GLOSSES].sort((a, b) =>
