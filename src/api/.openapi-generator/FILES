@@ -27,6 +27,7 @@ models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
 models/email-invite.ts
+models/flag.ts
 models/gloss.ts
 models/index.ts
 models/merge-source-word.ts

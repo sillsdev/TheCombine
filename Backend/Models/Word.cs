@@ -76,6 +76,10 @@ namespace BackendFramework.Models
         [BsonElement("note")]
         public Note Note { get; set; }
 
+        [Required]
+        [BsonElement("flag")]
+        public Flag Flag { get; set; }
+
         public Word()
         {
             Id = "";
@@ -95,6 +99,7 @@ namespace BackendFramework.Models
             History = new List<string>();
             Senses = new List<Sense>();
             Note = new Note();
+            Flag = new Flag();
         }
 
         public Word Clone()
@@ -115,7 +120,8 @@ namespace BackendFramework.Models
                 EditedBy = new List<string>(),
                 History = new List<string>(),
                 Senses = new List<Sense>(),
-                Note = Note.Clone()
+                Note = Note.Clone(),
+                Flag = Flag.Clone()
             };
 
             foreach (var file in Audio)
@@ -153,7 +159,8 @@ namespace BackendFramework.Models
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains) &&
 
-                other.Note.Equals(Note);
+                other.Note.Equals(Note) &&
+                other.Flag.Equals(Flag);
         }
 
         public override bool Equals(object? obj)
@@ -193,6 +200,7 @@ namespace BackendFramework.Models
             hash.Add(OtherField);
             hash.Add(ProjectId);
             hash.Add(Note);
+            hash.Add(Flag);
             return hash.ToHashCode();
         }
     }
@@ -377,6 +385,54 @@ namespace BackendFramework.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(Language, Text);
+        }
+    }
+
+    /// <summary> A flag on a Word or Sense, for Combine data, not for export. </summary>
+    public class Flag
+    {
+        /// <summary> Indicates if a flag is active. </summary>
+        [Required]
+        public bool Active { get; set; }
+
+        /// <summary> User-specified text. </summary>
+        [Required]
+        public string Text { get; set; }
+
+        public Flag()
+        {
+            Active = false;
+            Text = "";
+        }
+
+        public Flag(string text)
+        {
+            Active = true;
+            Text = text;
+        }
+
+        public Flag Clone()
+        {
+            return new Flag
+            {
+                Active = Active,
+                Text = (string)Text.Clone()
+            };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Flag other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return Active.Equals(other.Active) && Text.Equals(other.Text);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Active, Text);
         }
     }
 

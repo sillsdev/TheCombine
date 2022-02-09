@@ -2,9 +2,14 @@ root = true
 
 [*.{js,jsx,ts,tsx}]
 max_line_length = 80
+indent_size = 2
 
 [*.cs]
 max_line_length = 120
+indent_size = 4
+
+[*.py]
+max_line_length = 99
 
 [*.md]
 max_line_length = 120

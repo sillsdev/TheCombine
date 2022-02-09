@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Flag } from "./flag";
 import { Note } from "./note";
 import { Sense } from "./sense";
 import { State } from "./state";
@@ -112,4 +113,10 @@ export interface Word {
    * @memberof Word
    */
   note: Note;
+  /**
+   *
+   * @type {Flag}
+   * @memberof Word
+   */
+  flag: Flag;
 }

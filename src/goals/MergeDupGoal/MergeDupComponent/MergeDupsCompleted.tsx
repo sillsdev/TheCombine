@@ -4,13 +4,15 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import { MergeUndoIds, Sense, Word } from "api/models";
+import { Flag, MergeUndoIds, Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import FlagButton from "components/Buttons/FlagButton";
 import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
+import { newFlag } from "types/word";
 
 export default function MergeDupsCompleted(): ReactElement {
   const changes = useSelector(
@@ -161,9 +163,13 @@ interface WordPaperProps {
 
 function WordPaper(props: WordPaperProps): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
+  const [flag, setFlag] = useState<Flag>(newFlag());
   useEffect(() => {
     getWord(props.wordId).then(setWord);
   }, [props.wordId, setWord]);
+  useEffect(() => {
+    setFlag(word?.flag ?? newFlag());
+  }, [word, setFlag]);
 
   return (
     <Grid key={props.wordId} style={{ margin: theme.spacing(1) }}>
@@ -177,7 +183,14 @@ function WordPaper(props: WordPaperProps): ReactElement {
           square
           style={{ padding: theme.spacing(1), height: 44, minWidth: 100 }}
         >
-          <Typography variant="h5">{word?.vernacular}</Typography>
+          <Grid container justifyContent="space-between">
+            <Grid>
+              <Typography variant="h5">{word?.vernacular}</Typography>
+            </Grid>
+            <Grid>
+              <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
+            </Grid>
+          </Grid>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
           {word?.senses?.map(SenseCard)}

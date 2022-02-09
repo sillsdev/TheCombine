@@ -9,16 +9,15 @@ import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWord
 jest.mock("@material-ui/core/Input", () => "div");
 jest.mock("@material-ui/core/TextField", () => "div");
 
-const state = {
+const mockStore = configureMockStore()({
   currentProjectState: {
     project: { analysisWritingSystems: [{ bcp47: "en" }] },
   },
-};
-const mockStore = configureMockStore()(state);
+});
 const mockWord = mockWords()[0];
 
 describe("GlossCell", () => {
-  it("Renders sort-stylized without crashing", () => {
+  it("renders sort-stylized without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
@@ -28,7 +27,7 @@ describe("GlossCell", () => {
     });
   });
 
-  it("Renders editable without crashing", () => {
+  it("renders editable without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>

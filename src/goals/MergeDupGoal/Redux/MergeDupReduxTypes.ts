@@ -1,4 +1,4 @@
-import { Word } from "api/models";
+import { Flag, Word } from "api/models";
 import {
   MergeData,
   MergeTree,
@@ -10,6 +10,7 @@ export enum MergeTreeActionTypes {
   CLEAR_TREE = "CLEAR_TREE",
   COMBINE_SENSE = "COMBINE_SENSE",
   DELETE_SENSE = "DELETE_SENSE",
+  FLAG_WORD = "FLAG_WORD",
   MOVE_DUPLICATE = "MOVE_DUPLICATE",
   MOVE_SENSE = "MOVE_SENSE",
   ORDER_DUPLICATE = "ORDER_DUPLICATE",
@@ -36,6 +37,11 @@ export interface CombineSenseMergeAction {
 export interface DeleteSenseMergeAction {
   type: MergeTreeActionTypes.DELETE_SENSE;
   payload: { src: MergeTreeReference };
+}
+
+export interface FlagWord {
+  type: MergeTreeActionTypes.FLAG_WORD;
+  payload: { wordId: string; flag: Flag };
 }
 
 export interface MoveDuplicateMergeAction {
@@ -82,6 +88,7 @@ export type MergeTreeAction =
   | ClearTreeMergeAction
   | CombineSenseMergeAction
   | DeleteSenseMergeAction
+  | FlagWord
   | MoveDuplicateMergeAction
   | MoveSenseMergeAction
   | OrderDuplicateMergeAction

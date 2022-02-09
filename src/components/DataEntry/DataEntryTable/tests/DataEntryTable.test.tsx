@@ -12,12 +12,12 @@ import DataEntryTable, {
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
 import {
-  firstGlossText,
   multiSenseWord,
   newSemanticDomain,
   newSense,
   simpleWord,
 } from "types/word";
+import { firstGlossText } from "types/wordUtilities";
 
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),

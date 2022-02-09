@@ -1,3 +1,5 @@
+// The input file is expected to be the Semantic Domain list part of FieldWorks LocalizedList-{language}.xml
+// which is generated during the localization process for FieldWorks from Crowdin data
 const fs = require("fs"),
   xml2js = require("xml2js"),
   path = require("path");
