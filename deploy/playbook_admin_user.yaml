@@ -8,7 +8,7 @@
 ##############################################################
 
 - name: Setup TheCombine to run under Kubernetes
-  hosts: nuc
+  hosts: nuc, server
   become: no
   gather_facts: no
 

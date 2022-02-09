@@ -23,15 +23,12 @@ profiles:
   nuc:
     charts:
       - thecombine
-      - create-admin-user
   staging:
     charts:
       - thecombine
-      - create-admin-user
   prod:
     charts:
       - thecombine
-      - create-admin-user
       - cert-proxy-server
 
 charts:

@@ -29,6 +29,11 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--chart",
+        help="Chart to install.  If chart is not specified,"
+        " the charts specified in the target's configuration will be installed/upgraded.",
+    )
+    parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
     parser.add_argument(
@@ -200,7 +205,10 @@ def main() -> None:
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)
     # open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
-        chart_list = config["profiles"][profile]["charts"]
+        if args.chart is None:
+            chart_list = config["profiles"][profile]["charts"]
+        else:
+            chart_list = [args.chart]
         for chart in chart_list:
             # get list of charts in target namespace
             chart_namespace = config["charts"][chart]["namespace"]
