@@ -23,7 +23,6 @@ import { LevenshteinDistance } from "utilities";
 const idAffix = "new-entry";
 
 interface NewEntryProps {
-  allVerns: string[];
   allWords: Word[];
   defunctWordIds: string[];
   updateWordWithNewGloss: (
@@ -46,6 +45,7 @@ export enum FocusTarget {
 
 interface NewEntryState {
   newEntry: Word;
+  allVerns: string[];
   suggestedVerns: string[];
   dupVernWords: Word[];
   activeGloss: string;
@@ -79,6 +79,7 @@ export default class NewEntry extends React.Component<
     this.state = {
       newEntry: newWord(),
       activeGloss: "",
+      allVerns: [],
       audioFileURLs: [],
       suggestedVerns: [],
       dupVernWords: [],
@@ -93,9 +94,14 @@ export default class NewEntry extends React.Component<
   glossInput: React.RefObject<HTMLDivElement>;
 
   async componentDidUpdate(
-    _: NewEntryProps,
+    prevProps: NewEntryProps,
     prevState: NewEntryState
   ): Promise<void> {
+    if (prevProps.allWords !== this.props.allWords) {
+      const vernsWithDups = this.props.allWords.map((w: Word) => w.vernacular);
+      this.setState({ allVerns: [...new Set(vernsWithDups)] });
+    }
+
     /* When the vern/sense dialogs are closed, focus needs to return to text
     fields. The following sets a flag (state.shouldFocus) to trigger focus once
     the input components are updated. Focus is triggered by
@@ -301,7 +307,7 @@ export default class NewEntry extends React.Component<
     // then map them into an array sorted by length and take the 2 shortest
     // and the rest longest (should make finding the long words easier)
     const scoredStartsWith: [string, number][] = [];
-    const startsWith = this.props.allVerns.filter((vern: string) =>
+    const startsWith = this.state.allVerns.filter((vern: string) =>
       vern.startsWith(vernacular)
     );
     for (const v of startsWith) {
@@ -321,7 +327,7 @@ export default class NewEntry extends React.Component<
     if (value) {
       suggestedVerns = [...this.autoCompleteCandidates(value)];
       if (suggestedVerns.length < this.maxSuggestions) {
-        const viableVerns: string[] = this.props.allVerns.filter(
+        const viableVerns: string[] = this.state.allVerns.filter(
           (vern: string) =>
             this.levDistance.getDistance(vern, value) < this.maxLevDistance
         );
