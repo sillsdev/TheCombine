@@ -44,10 +44,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    2. [Linux Python Installation](#linux-python-installation)
    3. [macOS Python Installation](#macos-python-installation)
    4. [Python Packages](#python-packages)
-4. [Amazon Web Services](#amazon-web-services)
-   1. [Installing `aws-cli`](#installing-aws-cli)
-   2. [Configuring `aws-cli`](#configuring-aws-cli)
-5. [Available Scripts](#available-scripts)
+4. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Using OpenAPI](#using-openapi)
    3. [Running the Automated Tests](#running-the-automated-tests)
@@ -56,7 +53,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    6. [Set Project Version](#set-project-version)
    7. [Inspect Database](#inspect-database)
    8. [Cleanup Local Repo](#cleanup-local-repository)
-6. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
+5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Add a User to a Project](#add-a-user-to-a-project)
    2. [Backup _TheCombine_](#backup-thecombine)
    3. [Create a New Admin User](#create-a-new-admin-user)
@@ -64,16 +61,16 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    5. [Drop Database](#drop-database)
    6. [Grant Admin Rights](#grant-admin-rights)
    7. [Restore _TheCombine_](#restore-thecombine)
-7. [User Guide](#user-guide)
-8. [Production](#production)
-9. [Learn More](#learn-more)
+6. [User Guide](#user-guide)
+7. [Production](#production)
+8. [Learn More](#learn-more)
 
 ## Getting Started with Development
 
 1. Clone this repo:
 
    ```bash
-   $ git clone https://github.com/sillsdev/TheCombine.git
+   git clone https://github.com/sillsdev/TheCombine.git
    ```
 
 2. Install:
@@ -134,7 +131,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
    ```bash
    # For Windows, use `copy`.
-   $ cp .env.local.template .env.local
+   cp .env.local.template .env.local
    ```
 
 8. Run `npm start` from the project directory to install dependencies and start the project.
@@ -153,9 +150,6 @@ Amazon Web Services.
 
 Install [Docker](https://docs.docker.com/get-docker/).
 
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately. This is included by default
-in Docker Desktop for Windows and macOS.
-
 (macOS / Windows Only) If you are on macOS or Windows without
 [WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
 allocated at least 4GB of Memory in Preferences | Resources.
@@ -168,7 +162,8 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
 ```bash
-(venv) $ python scripts/docker_setup.py
+# run within Python virtual environment
+python scripts/docker_setup.py
 
 # To view options, run with --help
 ```
@@ -179,20 +174,25 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    already be set. If not, then you will need to edit `.env.backend` and provide values for the variables that are
    listed.
 
-3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to all of the
-   following `docker` commands). On Windows and macOS, Docker Desktop must be running.
+3. Build the images for the Docker containers:
 
 ```bash
-$ docker-compose build --parallel
+docker-compose build --parallel
 ```
 
-> Note: If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the
-> above build again.
+> **Notes**:
+>
+> - On Linux, you either need to prepend `sudo` to all of the following `docker` commands or add yourself to the
+>   `docker` group. See the
+>   [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
+> - On Windows and macOS, Docker Desktop must be running.
+
+    If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the above build again.
 
 4. Start the containers
 
 ```bash
-$ docker-compose up --detach
+docker-compose up --detach
 ```
 
 5. Browse to https://localhost.
@@ -202,7 +202,7 @@ _By default self-signed certificates are included, so you will need to accept a 
 6. To view logs:
 
 ```bash
-$ docker-compose logs --follow
+docker-compose logs --follow
 ```
 
 To view the logs from a single service, e.g. the `backend`:
@@ -239,25 +239,26 @@ containers. Python is required to create the `docker-compose` environment and to
   `PATH`.
 
 ```bash
-$ py -m venv venv
-$ venv\Scripts\activate
+py -m venv venv
+venv\Scripts\activate
 ```
 
 ### Linux Python Installation
 
-To install Python 3 on Ubuntu, run the following commands:
+Python3 is included in the Ubuntu distribution. To install `pip3` and the virtual environment module, run the following
+commands:
 
 ```bash
-$ sudo apt update
-$ sudo apt install python3 python3-venv
+sudo apt update
+sudo apt install pip3 python3-venv
 ```
 
 Create and activate an isolated Python virtual environment
 
 ```bash
-$ python3 -m venv venv
+python3 -m venv venv
 # This command is shell-specific, for the common use case of bash:
-$ source venv/bin/activate
+source venv/bin/activate
 ```
 
 ### macOS Python Installation
@@ -267,14 +268,14 @@ Install [Homebrew](https://brew.sh/).
 Install Python 3 using Homebrew:
 
 ```bash
-$ brew install python
+brew install python
 ```
 
 Create and activate isolated Python virtual environment:
 
 ```bash
-$ python3 -m venv venv
-$ source venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 ```
 
 ### Python Packages
@@ -285,65 +286,31 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip install --upgrade pip pip-tools
-(venv) $ python -m piptools sync dev-requirements.txt
+# run within Python virtual environment
+python -m pip install --upgrade pip pip-tools
+python -m piptools sync dev-requirements.txt
 ```
 
 Note, you can also now perform automated code formatting of Python code:
 
 ```bash
-(venv) $ tox -e fmt
+# run within Python virtual environment
+tox -e fmt
 ```
 
 To run all Python linting steps:
 
 ```bash
-(venv) $ tox
+# run within Python virtual environment
+tox
 ```
 
 To upgrade all pinned dependencies:
 
 ```bash
-(venv) $ python -m piptools compile --upgrade dev-requirements.in
+# run within Python virtual environment
+python -m piptools compile --upgrade dev-requirements.in
 ```
-
-## Amazon Web Services
-
-_TheCombine_ stores its backup in an Amazon Simple Storage Service (S3) bucket. In order to run the backup and restore
-scripts for _TheCombine_, you will need to install and configure the `aws-cli`, version 2.
-
-### Installing `aws-cli`
-
-To install `aws-cli` follow the instructions for your operating system:
-
-- [AWS CLI for Windows](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)
-- [AWS CLI for Linux](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
-- [AWS CLI for macOS](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html)
-
-### Configuring `aws-cli`
-
-Once `aws-cli` is installed, you will need to configure it so that it has access to the bucket where _TheCombine's_
-backup are stored. Configure your access by running:
-
-```
-aws configure
-```
-
-You will be prompted for the following information:
-
-- AWS Access Key ID
-- AWS Secret Access Key
-- Default region name
-- Default output format
-
-Choose the default, `None`, for the _Default output format_. The other items will be provided through a secure
-communication mechanism.
-
-This will configure a default profile which will be sufficient for most users.
-
-See the Amazon document on
-[Named Profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) to add access to multiple
-S3 buckets or to an AWS Elastic Container Registry.
 
 ## Available Scripts
 
@@ -409,8 +376,9 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 
 After that, run the following script to regenerate the frontend OpenAPI bindings in place:
 
-```
-(venv) $ python scripts/generate_openapi.py
+```bash
+# run within Python virtual environment
+python scripts/generate_openapi.py
 ```
 
 ### Running the Automated Tests
@@ -428,7 +396,7 @@ To run a subset of tests, use the
 
 ```bash
 # Note the extra -- needed to separate arguments for npm vs script.
-$ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
+npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
 ```
 
 #### `npm run test-frontend`
@@ -440,7 +408,7 @@ To run a subset of tests, pass in the name of a partial file path to filter:
 
 ```bash
 # Note the extra -- needed to separate arguments for npm vs script.
-$ npm run test-frontend -- DataEntry
+npm run test-frontend -- DataEntry
 ```
 
 #### `npm run test-*:coverage`
@@ -452,7 +420,7 @@ Launches the test runners to calculate the test coverage of the frontend or back
 Run:
 
 ```bash
-$ npm run test-frontend:coverage
+npm run test-frontend:coverage
 ```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html` in a browser.
@@ -462,13 +430,13 @@ To view the frontend code coverage open `coverage/lcov-report/index.html` in a b
 Run:
 
 ```bash
-$ npm run test-backend:coverage
+npm run test-backend:coverage
 ```
 
 Generate the HTML coverage report:
 
 ```bash
-$ npm run gen-backend-coverage-report
+npm run gen-backend-coverage-report
 ```
 
 Open `coverage-backend/index.html` in a browser.
@@ -500,7 +468,7 @@ Auto-format frontend code in the `src` folder.
 Imports Semantic Domains from the provided xml file.
 
 ```bash
-$ npm run import-sem-doms -- <XML_FILE_PATH>
+npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
 ### Generate License Reports
@@ -508,15 +476,15 @@ $ npm run import-sem-doms -- <XML_FILE_PATH>
 To generate a summary of licenses used in production
 
 ```bash
-$ npm run license-summary-backend
-$ npm run license-summary-frontend
+npm run license-summary-backend
+npm run license-summary-frontend
 ```
 
 To generate a full report of the licenses used in production that is included in the user guide:
 
 ```bash
-$ npm run license-report-backend
-$ npm run license-report-frontend
+npm run license-report-backend
+npm run license-report-frontend
 ```
 
 > Note: This should be performed each time production dependencies are changed.
@@ -532,7 +500,7 @@ To update the version of the project:
 To retrieve the current version of the project from the terminal:
 
 ```bash
-$ npm run --silent version
+npm run --silent version
 ```
 
 ### Inspect Database
@@ -550,7 +518,7 @@ of development setup errors.
 
 ```bash
 # On Windows, use `py` instead of `python3`.
-$ python3 scripts/cleanup_local_repo.py
+python3 scripts/cleanup_local_repo.py
 ```
 
 ## Maintenance Scripts for TheCombine
@@ -560,19 +528,10 @@ in one of three environments:
 
 1. _Development Environment_ - To run _TheCombine_ in the development environment, run `npm start` from the project
    directory. Unless specified otherwise, each of the maintenance commands are to be run from the project directory.
-2. _In Local Docker Containers_ - To run _TheCombine_ from your software development project inside Docker containers
-   see the [Docker](#docker) section. Unless specified otherwise, each of the maintenance commands are to be run from
-   the project directory. Python scripts must be run in the virtual environment.
-3. _Production Environment_ - The [How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure
-   a production machine and install _TheCombine_ on it. For each of the commands below, use `ssh` to connect to the
-   target system where _TheCombine_ is running and run the following commands to set the user and working directory:
-
-   ```bash
-   sudo su -l combine
-   cd /opt/combine
-   ```
-
-   Unless specified otherwise, each of the maintenance commands are to be run from `/opt/combine/bin`
+2. _Production Environment_ - The [How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure
+   a production machine and install _TheCombine_ on it. For each of the commands below, you must have a `kubectl`
+   configuration file that configures the connection to the kuberetes cluster to be maintained. The configuration file
+   needs to installed at `${HOME}/.kube/config` or specified in the `KUBECONFIG` environment variable.
 
 The descriptions of each of the maintenance tasks below provide instructions for completing the task in each of the
 environments. Any of the Python scripts can be run with the `--help` option to see more usage options.
@@ -581,28 +540,26 @@ environments. Any of the Python scripts can be run with the `--help` option to s
 
 Task: add an existing user to a project
 
-| Environment     | Command                                                                                                            |
-| --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Development     | _Not Available_                                                                                                    |
-| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>` |
-| Production      | `$ bin/add_user_to_proj.py --project <PROJECT_NAME> --user <USER>`                                                 |
+| Environment | Command                                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| Development | _Not Available_                                                                                         |
+| Production  | `kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>` |
 
 Notes:
 
 1. The `--project` and `--user` options may be shortened to `--p` and `--u` respectively.
-2. The user is added to the project with normal project member permissions (`MergeAndReviewEntries`, and
-   `WordEntry`). Add the `--admin` option to add the user with project administrator permissions 
-   (`DeleteEditSettingsAndUsers`, `ImportExport`, `MergeAndReviewEntries`, and `WordEntry`)
+2. The user is added to the project with normal project member permissions (`MergeAndReviewEntries`, and `WordEntry`).
+   Add the `--admin` option to add the user with project administrator permissions (`DeleteEditSettingsAndUsers`,
+   `ImportExport`, `MergeAndReviewEntries`, and `WordEntry`)
 
 ### Backup _TheCombine_
 
 Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Storage Service (S3).
 
-| Environment     | Command                                                                   |
-| --------------- | ------------------------------------------------------------------------- |
-| Development     | _Not Available_                                                           |
-| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/combine_backup.py` |
-| Production      | `$ bin/combine_backup.py`                                                 |
+| Environment | Command                                                                    |
+| ----------- | -------------------------------------------------------------------------- |
+| Development | _Not Available_                                                            |
+| Production  | `kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]` |
 
 Notes:
 
@@ -621,21 +578,19 @@ Notes:
 
 Task: create a new user who is a site administrator
 
-| Environment     | Command                                                                                                                                              |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Development     | set/export `COMBINE_ADMIN_PASSWORD`<br>set/export `COMBINE_ADMIN_EMAIL`<br>`$ cd Backend`<br>`$ dotnet run create-admin-username=admin`              |
-| Local Container | `$ docker-compose run -e COMBINE_ADMIN_USERNAME=<USER_NAME> -e COMBINE_ADMIN_PASSWORD="<PASSWORD>" -e COMBINE_ADMIN_EMAIL="<EMAIL_ADDRESS>" backend` |
-| Production      | `$ ansible-playbook playbook_install --limit <target_name> -u sillsdev -K`<br>Run from the `deploy` directory in the project on the host machine     |
+| Environment | Command                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Development | set/export `COMBINE_ADMIN_PASSWORD`<br>set/export `COMBINE_ADMIN_EMAIL`<br>`$ cd Backend`<br>`$ dotnet run create-admin-username=admin`                |
+| Production  | `ansible-playbook playbook_admin_user.yaml --limit <target_name> -u sillsdev -K`<br>Run from the `deploy` directory in the project on the host machine |
 
 ### Delete a Project
 
 Task: Delete a project
 
-| Environment     | Command                                                                              |
-| --------------- | ------------------------------------------------------------------------------------ |
-| Development     | _Not Available_                                                                      |
-| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/rm_project.py <PROJECT_NAME>` |
-| Production      | `$ bin/rm_project.py <PROJECT_NAME>`                                                 |
+| Environment | Command                                                                   |
+| ----------- | ------------------------------------------------------------------------- |
+| Development | _Not Available_                                                           |
+| Production  | `kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>` |
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
 
@@ -643,40 +598,33 @@ You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
 
 Task: completely erase the current Mongo database
 
-| Environment                   | Command                                                                         |
-| ----------------------------- | ------------------------------------------------------------------------------- |
-| Development                   | `$ npm run drop-database`                                                       |
-| Local Container or Production | `$ docker-compose exec database mongo CombineDatabase --eval db.dropDatabase()` |
+| Environment | Command                   |
+| ----------- | ------------------------- |
+| Development | `$ npm run drop-database` |
+| Production  | _Not Recommended_         |
 
 ### Grant Admin Rights
 
-Task: grant admin rights for an existing user
+Task: grant site admin rights for an existing user
 
-| Environment     | Command                                                                                |
-| --------------- | -------------------------------------------------------------------------------------- |
-| Development     | `$ npm run set-admin-user -- <USERNAME>` <br> _Note the_ `--` \_before the user name\_ |
-| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/make_user_admin.py <USERNAME>`  |
-| Production      | `$ bin/make_user_admin.py <USERNAME>`                                                  |
-
-You may specify more than one `<USER_NAME>` to update multiple users.
+| Environment | Command                                                                                |
+| ----------- | -------------------------------------------------------------------------------------- |
+| Development | `$ npm run set-admin-user -- <USERNAME>` <br> _Note the_ `--` \_before the user name\_ |
+| Production  | _Not Available_                                                                        |
 
 ### Restore _TheCombine_
 
 Task: Restore the CombineDatabase and the Backend files from a backup stored on the Amazon Simple Storage Service (S3).
 
-| Environment     | Command                                                                                  |
-| --------------- | ---------------------------------------------------------------------------------------- |
-| Development     | _Not Available_                                                                          |
-| Local Container | `(venv)$ python deploy/roles/combine_maintenance/files/combine_restore.py [BACKUP_NAME]` |
-| Production      | `$ bin/combine_restore.py [BACKUP_NAME]`                                                 |
+| Environment | Command                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------- |
+| Development | _Not Available_                                                                           |
+| Production  | `kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]` |
 
 Notes:
 
-1. The restore script requires that the `aws-cli` version 2 is installed. The
-   [Amazon Web Services](#amazon-web-services) section describes how to install and configure `aws-cli`.
-2. The restore script can be run from any directory.
-3. The restore script is configured using `script_conf.json` in the same directory as the script.
-4. The restore script takes an optional backup name. This is the name of the backup in the AWS S3 bucket, not a local
+1. The restore script can be run from any directory.
+2. The restore script takes an optional backup name. This is the name of the backup in the AWS S3 bucket, not a local
    file. If the backup name is not provided, the restore script will list the available backups and allow you to choose
    one for the restore operation.
 
@@ -688,13 +636,15 @@ To locally build the user guide and serve it dynamically (automatically reloadin
 your Python virtual environment:
 
 ```bash
-(venv) $ tox -e user-guide-serve
+# run within Python virtual environment
+tox -e user-guide-serve
 ```
 
 To locally build the user guide statically into `docs/user-guide/site`:
 
 ```bash
-(venv) $ tox -e user-guide
+# run within Python virtual environment
+tox -e user-guide
 ```
 
 ## Production
