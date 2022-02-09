@@ -108,8 +108,11 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
                 secret_file.write(f'  {item["config_item"]}: "{secret_value}"\n')
                 secrets_written = True
             else:
-                response = input(f"*** WARNING: Required Environment Variable {item['env_var']} not set. Continue?(y/N)")
-                if response.upper() != 'Y':
+                response = input(
+                    f"*** WARNING: Required Environment Variable {item['env_var']} not set."
+                    " Continue?(y/N)"
+                )
+                if response.upper() != "Y":
                     sys.exit(1)
     return secrets_written
 
