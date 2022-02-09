@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 global:
-  namespace: default
   serverName: localhost
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate

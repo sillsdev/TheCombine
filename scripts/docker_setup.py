@@ -130,7 +130,7 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             "docker_setup",
-            project_dir / "scripts" / "setup_files" / "config",
+            str(project_dir / "scripts" / "setup_files" / "config"),
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=False,
@@ -154,7 +154,7 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             "docker_setup",
-            project_dir / "scripts" / "setup_files" / "maintenance",
+            str(project_dir / "scripts" / "setup_files" / "maintenance"),
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,

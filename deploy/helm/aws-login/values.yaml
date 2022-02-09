@@ -7,7 +7,6 @@ global:
   awsDefaultRegion: "Change Me"
   awsEcrAccessKeyId: "Change Me"
   awsEcrSecretAccessKey: "Change Me"
-  namespace: default
   pullSecretName: aws-login-credentials
 
 awsEcr:

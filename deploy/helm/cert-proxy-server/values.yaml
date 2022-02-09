@@ -6,7 +6,6 @@ Release:
   Namespace: thecombine
 
 global:
-  namespace: combine-cert-proxy
   serverName: cert-proxy.thecombine.app
   pullSecretName: aws-login-credentials
   awsS3Access: aws-s3-credentials

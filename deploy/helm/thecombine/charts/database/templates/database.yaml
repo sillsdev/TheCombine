@@ -8,7 +8,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   name: database-data
-  namespace: {{.Values.global.namespace}}
+  namespace: {{.Release.Namespace}}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -24,7 +24,7 @@ metadata:
   labels:
     combine-component: database
   name: database
-  namespace: {{.Values.global.namespace}}
+  namespace: {{.Release.Namespace}}
 spec:
   replicas: 1
   selector:
@@ -62,7 +62,7 @@ metadata:
   labels:
     combine-component: database
   name: database
-  namespace: {{.Values.global.namespace}}
+  namespace: {{.Release.Namespace}}
 spec:
   ports:
     - name: "27017"

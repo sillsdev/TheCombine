@@ -32,6 +32,7 @@ pyopenssl
 
 # Kubernetes Installation
 pyyaml
+types-PyYAML
 
 # OS-specific dependencies.
 # The follow dependencies are only needed on Windows, but list them here to avoid thrashing back and forth when

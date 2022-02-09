@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: {{ .Values.envNginxProxy }}
-  namespace: {{ .Values.global.namespace }}
+  namespace: {{ .Release.Namespace }}
 data:
   SERVER_NAME: {{ .Values.global.serverName }}

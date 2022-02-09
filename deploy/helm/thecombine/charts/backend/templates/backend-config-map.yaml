@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: env-backend
-  namespace: {{.Values.global.namespace}}
+  namespace: {{.Release.Namespace}}
 data:
   COMBINE_PASSWORD_RESET_EXPIRE_TIME:
     {{.Values.combinePasswordResetTime | quote}}

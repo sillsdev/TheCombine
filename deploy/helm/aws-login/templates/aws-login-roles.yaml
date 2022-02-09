@@ -2,11 +2,8 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  annotations:
-    meta.helm.sh/release-name: {{ .Release.Name }}
-    meta.helm.sh/release-namespace: {{ .Values.global.namespace }}
-  name: {{.Values.awsEcr.role}}
-  namespace: {{.Values.global.namespace}}
+  name: {{ .Values.awsEcr.role }}
+  namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups: [""]
     resources: ["pods", "pods/attach"]
@@ -24,13 +21,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{.Values.awsEcr.roleBinding}}
-  namespace: {{.Values.global.namespace}}
+  name: {{ .Values.awsEcr.roleBinding }}
+  namespace: {{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
-    name: {{.Values.awsEcr.serviceAccount}}
+    name: {{ .Values.awsEcr.serviceAccount }}
     apiGroup: ""
 roleRef:
   kind: Role
-  name: {{.Values.awsEcr.role}}
+  name: {{ .Values.awsEcr.role }}
   apiGroup: ""

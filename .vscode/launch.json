@@ -8,7 +8,7 @@
       "name": "Setup localhost (Kubernetes)",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
       "console": "integratedTerminal",
       "args": [
         "--target",
@@ -23,7 +23,7 @@
       "name": "Debug localhost (Kubernetes)",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
       "console": "integratedTerminal",
       "args": [
         "--target",
@@ -40,7 +40,7 @@
       "name": "Setup NUC2 (Kubernetes)",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
       "console": "integratedTerminal",
       "args": [
         "--target",
@@ -55,7 +55,7 @@
       "name": "Debug NUC2 (Kubernetes)",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/deploy/scripts/kubernetes_setup.py",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
       "console": "integratedTerminal",
       "args": [
         "--target",
@@ -66,6 +66,23 @@
         "0.7.13",
         "--kubeconfig",
         "/home/grady/.kube/nuc2/config"
+      ]
+    },
+    {
+      "name": "Debug K3S Sandbox",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--config",
+        "${workspaceFolder}/deploy/scripts/_dev.config.yaml",
+        "--target",
+        "k3s.gradynh.com",
+        "--image-tag",
+        "0.7.15-alpha.1",
+        "--kubeconfig",
+        "/home/grady/.kube/k3s/config"
       ]
     },
     {

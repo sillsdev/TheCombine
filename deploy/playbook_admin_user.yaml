@@ -8,12 +8,12 @@
 ##############################################################
 
 - name: Setup TheCombine to run under Kubernetes
-  hosts: server,qa,nuc
+  hosts: nuc
   become: no
   gather_facts: no
 
   vars_prompt:
-    - name: combine_version
+    - name: image_tag
       prompt: "Enter Combine version to install"
       private: no
 

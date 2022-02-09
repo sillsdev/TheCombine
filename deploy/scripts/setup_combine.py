@@ -1,14 +1,22 @@
 #! /usr/bin/env python3
 
 import argparse
+from enum import Enum, unique
 import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import yaml
+
+
+@unique
+class HelmAction(Enum):
+    INSTALL = "install"
+    UPGRADE = "upgrade"
+
 
 prog_dir = Path(__file__).resolve().parent
 """Directory for the current program"""
@@ -124,9 +132,9 @@ def run_cmd(
         sys.exit(err.returncode)
 
 
-def get_installed_charts() -> List[str]:
+def get_installed_charts(helm_namespace: str) -> List[str]:
     """Create a list of the helm charts that are already installed on the target."""
-    lookup_results = run_cmd(["helm", "list", "-o", "yaml"])
+    lookup_results = run_cmd(["helm", "list", "-n", helm_namespace, "-o", "yaml"])
     chart_info: List[Dict[str, str]] = yaml.safe_load(lookup_results.stdout)
     chart_list: List[str] = []
     for chart in chart_info:
@@ -190,20 +198,21 @@ def main() -> None:
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)
     # open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
-        # get list of charts for this target
-        installed_charts = get_installed_charts()
-        if args.debug:
-            print(f"Installed Charts:\n{installed_charts}")
-
         chart_list = config["profiles"][profile]["charts"]
         for chart in chart_list:
+            # get list of charts in target namespace
+            chart_namespace = config["charts"][chart]["namespace"]
+            installed_charts = get_installed_charts(chart_namespace)
+            if args.debug:
+                print(f"Charts Installed in '{chart_namespace}':\n{installed_charts}")
+
             # delete existing chart if --clean specified
-            helm_action = "install"
+            helm_action = HelmAction.INSTALL
             if chart in installed_charts:
                 if args.clean:
-                    run_cmd["helm", "delete", chart]
+                    run_cmd(["helm", "delete", chart])
                 else:
-                    helm_action = "upgrade"
+                    helm_action = HelmAction.UPGRADE
 
             # build the secrets file
             secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
@@ -214,7 +223,9 @@ def main() -> None:
             chart_dir = helm_dir / chart
             helm_cmd = [
                 "helm",
-                helm_action,
+                "--namespace",
+                config["charts"][chart]["namespace"],
+                helm_action.value,
                 chart,
                 str(chart_dir),
             ]

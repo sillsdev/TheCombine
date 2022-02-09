@@ -48,6 +48,6 @@ eth_optional: yes
 has_wifi: yes
 ap_domain: thecombine.app
 ap_ssid: "{{ansible_hostname}}_ap"
-# ap_passphrase is defined in ./vault.yml
+ap_passphrase: "Combine2020"
 ap_gateway: "10.10.10.1"
 ap_hostname: "{{ansible_hostname}}"

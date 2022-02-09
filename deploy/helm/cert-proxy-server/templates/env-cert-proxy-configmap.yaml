@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: {{ .Values.envCertProxy }}
-  namespace: {{ .Values.global.namespace }}
+  namespace: {{ .Release.Namespace }}
 data:
   AWS_S3_BUCKET: s3://{{ .Values.global.awsS3Location }}/certs
   CERT_PROXY_CERTIFICATES: {{ .Values.combineCertProxyList | join " " | quote }}

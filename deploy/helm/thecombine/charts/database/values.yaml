@@ -2,8 +2,5 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-global:
-  namespace: default
-
 mongoImageTag: "4.4"
 persistentVolumeSize: 16Gi

@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 global:
-  namespace: default
   serverName: localhost
   pullSecretName: aws-login-credentials
   awsS3Access: aws-s3-credentials

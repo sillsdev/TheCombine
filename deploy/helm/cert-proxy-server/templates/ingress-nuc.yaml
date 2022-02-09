@@ -4,7 +4,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ replace "." "-" . }}
-  namespace: {{ $.Values.global.namespace }}
+  namespace: {{ $.Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: {{ $.Values.ingressClass }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"

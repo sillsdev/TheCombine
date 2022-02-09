@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 global:
-  namespace: default
   serverName: localhost
   pullSecretName: aws-login-credentials
   # Update strategy should be "Recreate" or "Rolling Update"

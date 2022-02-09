@@ -5,7 +5,7 @@ metadata:
   labels:
     combine-component: combine-cert-proxy
   name: combine-cert-proxy
-  namespace: {{ .Values.global.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -59,7 +59,7 @@ spec:
                   key: CERT_PROXY_CERTIFICATES
                   name: {{ .Values.envCertProxy }}
             - name: CERT_PROXY_NAMESPACE
-              value: {{ .Values.global.namespace }}
+              value: {{ .Release.Namespace }}
           image: {{ template "cert-proxy-server.containerImage" . }}
 {{- if eq .Values.global.imageTag "latest" }}
           imagePullPolicy: Always

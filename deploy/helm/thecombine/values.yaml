@@ -3,12 +3,14 @@
 # Declare variables to be passed into your templates.
 
 global:
-  namespace: thecombine
   serverName: localhost
   pullSecretName: aws-login-credentials
   awsS3Access: aws-s3-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
+  adminUsername: "Change Me"
+  adminPassword: "Change Me"
+  adminEmail: "Change Me"
   awsAccount: "Change Me"
   awsDefaultRegion: "Change Me"
   awsEcrAccessKeyId: "Change Me"
@@ -37,6 +39,8 @@ certManager:
 frontend:
   configShowCertExpiration: false
   configAnalyticsWriteKey: ""
+  configCaptchaRequired: false
+  configCaptchaSiteKey: "None"
 
 # Maintenance configuration items
 maintenance:

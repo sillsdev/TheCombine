@@ -3,10 +3,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   annotations:
-    meta.helm.sh/release-name: {{ .Release.Name }}
-    meta.helm.sh/release-namespace: {{ .Values.global.namespace }}
   name: "{{ .Values.awsEcr.jobName }}"
-  namespace: {{ .Values.global.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   # keep completed jobs for 24 hrs so that logs are
   # available in case of issues

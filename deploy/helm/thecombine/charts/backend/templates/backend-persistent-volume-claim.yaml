@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   name: backend-data
-  namespace: {{.Values.global.namespace}}
+  namespace: {{.Release.Namespace}}
 spec:
   accessModes:
   {{- if contains "RollingUpdate" .Values.global.updateStrategy  }}

@@ -1,0 +1,19 @@
+# Default values for create-admin-user.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  awsAccount: "Change Me"
+  awsDefaultRegion: "Change Me"
+  adminUsername: "Change Me"
+  adminPassword: "Change Me"
+  adminEmail: "Change Me"
+  combineJwtSecretKey: "Change Me"
+  combineSmtpUsername: "Change Me"
+  combineSmtpPassword: "Change Me"
+  pullSecretName: aws-login-credentials
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: awsEcr
+
+imageName: combine_backend

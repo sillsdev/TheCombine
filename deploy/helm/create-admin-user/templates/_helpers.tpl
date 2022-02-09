@@ -1,5 +1,5 @@
 {{/* Build continer image name */}}
-{{- define "frontend.containerImage" -}}
+{{- define "create-admin-user.containerImage" }}
   {{- $registry := "localhost:5000" }}
   {{- if contains "awsEcr" .Values.global.imageRegistry }}
     {{- $registry = printf "%s.dkr.ecr.%s.amazonaws.com" .Values.global.awsAccount .Values.global.awsDefaultRegion }}

@@ -5,7 +5,7 @@ metadata:
   labels:
     combine-component: maintenance
   name: maintenance
-  namespace: {{ .Values.global.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:

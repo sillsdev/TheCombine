@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: env-frontend
-  namespace: {{.Values.global.namespace}}
+  namespace: {{.Release.Namespace}}
 data:
   SERVER_NAME: {{ .Values.global.serverName }}
   CERT_ADDL_DOMAINS: {{ .Values.combineAddlDomainList | default "" | quote }}
