@@ -53,12 +53,6 @@ charts:
         env_var: COMBINE_SMTP_USERNAME
       - config_item: combineSmtpPassword
         env_var: COMBINE_SMTP_PASSWORD
-      - config_item: adminUsername
-        env_var: COMBINE_ADMIN_USERNAME
-      - config_item: adminPassword
-        env_var: COMBINE_ADMIN_PASSWORD
-      - config_item: adminEmail
-        env_var: COMBINE_ADMIN_EMAIL
   cert-proxy-server:
     namespace: combine-cert-proxy
     secrets:
