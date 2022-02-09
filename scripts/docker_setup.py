@@ -150,22 +150,6 @@ def main() -> None:
     ]:
         env_file.chmod(0o600)
 
-    # setup maintenance configuration
-    jinja_env = Environment(
-        loader=PackageLoader(
-            "docker_setup",
-            str(project_dir / "scripts" / "setup_files" / "maintenance"),
-        ),
-        autoescape=select_autoescape(["html", "xml"]),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    template_name = "script_conf.json.j2"
-    template_path = project_dir / "scripts" / "setup_files" / "script_conf.json"
-    template = jinja_env.get_template(template_name)
-    print(f"Writing: {template_path}")
-    template_path.write_text(template.render(dev_config))
-
 
 if __name__ == "__main__":
     main()
