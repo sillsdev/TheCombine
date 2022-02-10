@@ -23,6 +23,7 @@ const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded
 
 interface TreeDepictionProps {
   currentDomain: TreeSemanticDomain;
+  parentMap: Record<string, TreeSemanticDomain>;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
@@ -220,7 +221,7 @@ export default class TreeDepiction extends React.Component<
       <React.Fragment>
         {/* Label parent domain, if available */}
         <Grid item>
-          {this.props.currentDomain.parentDomain && (
+          {this.props.parentMap[this.props.currentDomain.id] && (
             <ImageList
               cols={1}
               gap={0}
@@ -229,7 +230,7 @@ export default class TreeDepiction extends React.Component<
             >
               <ImageListItem>
                 <DomainTile
-                  domain={this.props.currentDomain.parentDomain}
+                  domain={this.props.parentMap[this.props.currentDomain.id]}
                   onClick={this.props.animate}
                   direction={Direction.Up}
                 />
@@ -242,6 +243,7 @@ export default class TreeDepiction extends React.Component<
         {/* Label current domain, and left and right brothers, if available */}
         <Grid item>
           <TreeViewHeader
+            parentMap={this.props.parentMap}
             currentDomain={this.props.currentDomain}
             animate={this.props.animate}
           />

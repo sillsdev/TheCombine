@@ -14,7 +14,6 @@ for (let i = 0; i < 3; i++)
     ...new TreeSemanticDomain(),
     name: "kid" + i,
     id: "1." + i,
-    parentDomain: PAR,
     description: `kid ${i}`,
   });
 
@@ -24,7 +23,6 @@ for (let i = 0; i < 4; i++)
     ...new TreeSemanticDomain(),
     name: "evenData" + i,
     id: PAR.subdomains[0].id + "." + i,
-    parentDomain: PAR.subdomains[0],
     description: `evens ${i}`,
   });
 
@@ -34,7 +32,6 @@ for (let i = 0; i < 3; i++)
     ...new TreeSemanticDomain(),
     name: "oddData" + i,
     id: PAR.subdomains[1].id + "." + i,
-    parentDomain: PAR.subdomains[1],
     description: `odds ${i}`,
   });
 
@@ -43,7 +40,6 @@ PAR.subdomains[2].subdomains.push({
   ...new TreeSemanticDomain(),
   name: "soloData",
   id: PAR.subdomains[2].id + ".1",
-  parentDomain: PAR.subdomains[2],
   description: "so lonely...",
 });
 
@@ -53,7 +49,6 @@ PAR.subdomains[2].subdomains[0].subdomains.push({
   ...new TreeSemanticDomain(),
   name: "depth=4",
   id: PAR.subdomains[2].subdomains[0].id + ".1",
-  parentDomain: PAR.subdomains[2].subdomains[0],
   description: "almost at the bottom...",
 });
 
@@ -61,7 +56,6 @@ PAR.subdomains[2].subdomains[0].subdomains[0].subdomains.push({
   ...new TreeSemanticDomain(),
   name: "depth=5",
   id: PAR.subdomains[2].subdomains[0].subdomains[0].id + ".1",
-  parentDomain: PAR.subdomains[2].subdomains[0].subdomains[0],
   description: "ROCK BOTTOM",
 });
 

@@ -9,7 +9,6 @@ export default class TreeSemanticDomain
   subdomains: TreeSemanticDomain[] = [];
 
   // Additional fields not in SemanticDomainWithSubdomains
-  parentDomain?: TreeSemanticDomain;
   questions: string[] = [];
 
   constructor(id = "", name = "") {

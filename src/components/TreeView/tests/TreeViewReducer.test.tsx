@@ -92,7 +92,7 @@ describe("Test the TreeViewReducer", () => {
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,
-        payload,
+        domain: payload,
       })
     ).toEqual({ ...defaultState, currentDomain: payload });
   });

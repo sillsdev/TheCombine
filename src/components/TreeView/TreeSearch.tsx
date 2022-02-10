@@ -7,6 +7,7 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeSearchProps {
   currentDomain: TreeSemanticDomain;
+  parentMap: Record<string, TreeSemanticDomain>;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
@@ -136,8 +137,8 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       event.preventDefault();
       // Find parent domain
       let parent: TreeSemanticDomain | undefined = props.currentDomain;
-      while (parent.parentDomain !== undefined) {
-        parent = parent.parentDomain;
+      while (parent && props.parentMap[parent?.id] !== undefined) {
+        parent = props.parentMap[parent?.id];
       }
 
       // Search for domain

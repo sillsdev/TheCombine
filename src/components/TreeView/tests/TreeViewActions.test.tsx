@@ -9,7 +9,7 @@ describe("TraverseTreeAction", () => {
     const domain = {};
     expect(TraverseTreeAction(domain as TreeSemanticDomain)).toEqual({
       type: TreeActionType.TRAVERSE_TREE,
-      payload: domain,
+      domain: domain,
     });
   });
 });

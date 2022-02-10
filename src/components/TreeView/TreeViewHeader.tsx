@@ -12,6 +12,7 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeHeaderProps {
   currentDomain: TreeSemanticDomain;
+  parentMap: Record<string, TreeSemanticDomain>;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
@@ -37,7 +38,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           size="large"
           color="primary"
           variant="contained"
-          disabled={!props.currentDomain.parentDomain}
+          disabled={!props.parentMap[props.currentDomain.id]}
           onClick={() => props.animate(props.currentDomain)}
           id="current-domain"
           style={{ height: "95%" }}
@@ -70,8 +71,8 @@ export function useTreeNavigation(props: TreeHeaderProps) {
     navigationAmount: number,
     props: TreeHeaderProps
   ): TreeSemanticDomain | undefined {
-    if (props.currentDomain.parentDomain) {
-      const brotherDomains = props.currentDomain.parentDomain.subdomains;
+    if (props.parentMap[props.currentDomain.id]) {
+      const brotherDomains = props.parentMap[props.currentDomain.id].subdomains;
       let index = brotherDomains.findIndex(
         (domain) => props.currentDomain.id === domain.id
       );
@@ -106,7 +107,7 @@ export function useTreeNavigation(props: TreeHeaderProps) {
           : event.key === Key.ArrowRight
           ? getBrotherDomain(1, props)
           : event.key === Key.ArrowUp
-          ? props.currentDomain.parentDomain
+          ? props.parentMap[props.currentDomain.id]
           : undefined;
       if (domain && domain.id !== props.currentDomain.id) {
         props.animate(domain);
