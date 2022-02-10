@@ -141,8 +141,8 @@ export default class DataEntryComponent extends React.Component<
             <DataEntryHeader
               domain={this.props.domain}
               questionsVisible={this.state.questionsVisible}
-              setQuestionVisibility={(visibility: boolean) =>
-                this.setState({ questionsVisible: visibility })
+              setQuestionVisibility={(questionsVisible: boolean) =>
+                this.setState({ questionsVisible })
               }
             />
             <Divider />
@@ -172,10 +172,10 @@ export default class DataEntryComponent extends React.Component<
           <TreeViewComponent
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {
-                this.setState((prevState) => ({
+                this.setState((prevState, props) => ({
                   domainWords: sortDomainWordByVern(
                     prevState.existingWords,
-                    this.props.domain
+                    props.domain
                   ),
                 }));
                 this.props.closeTree();

@@ -141,8 +141,7 @@ export default class ProjectLanguages extends React.Component<
   async getActiveAnalysisLangs(): Promise<void> {
     const langCodes = getAnalysisLangsFromWords(await getFrontierWords());
     langCodes.sort();
-    const langsInProject = langCodes.join(", ");
-    this.setState({ langsInProject });
+    this.setState({ langsInProject: langCodes.join(", ") });
   }
 
   resetState(): void {

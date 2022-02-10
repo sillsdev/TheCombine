@@ -91,13 +91,15 @@ export default class GoalTimeline extends React.Component<
       return;
     }
     const permissions = (await getUserRole(userRoleId)).permissions;
-    const availableGoalTypes = this.props.allGoalTypes.filter((type) =>
-      permissions.includes(requiredPermission(type))
-    );
-    const suggestedGoalTypes = availableGoalTypes.filter((t) =>
-      this.props.goalTypeSuggestions.includes(t)
-    );
-    this.setState({ availableGoalTypes, suggestedGoalTypes });
+    this.setState((_, props) => {
+      const availableGoalTypes = props.allGoalTypes.filter((type) =>
+        permissions.includes(requiredPermission(type))
+      );
+      const suggestedGoalTypes = availableGoalTypes.filter((t) =>
+        props.goalTypeSuggestions.includes(t)
+      );
+      return { availableGoalTypes, suggestedGoalTypes };
+    });
   }
 
   // Creates a list of suggestions, with non-suggested goals at the end and
