@@ -98,8 +98,10 @@ export default class NewEntry extends React.Component<
     prevState: NewEntryState
   ): Promise<void> {
     if (prevProps.allWords !== this.props.allWords) {
-      const vernsWithDups = this.props.allWords.map((w: Word) => w.vernacular);
-      this.setState({ allVerns: [...new Set(vernsWithDups)] });
+      this.setState((_, props) => {
+        const vernsWithDups = props.allWords.map((w: Word) => w.vernacular);
+        return { allVerns: [...new Set(vernsWithDups)] };
+      });
     }
 
     /* When the vern/sense dialogs are closed, focus needs to return to text
@@ -140,10 +142,10 @@ export default class NewEntry extends React.Component<
   }
 
   addAudio(audioFile: File): void {
-    const audioFileURLs = [...this.state.audioFileURLs];
-    audioFileURLs.push(URL.createObjectURL(audioFile));
-    this.setState({
-      audioFileURLs,
+    this.setState((prevState) => {
+      const audioFileURLs = [...prevState.audioFileURLs];
+      audioFileURLs.push(URL.createObjectURL(audioFile));
+      return { audioFileURLs };
     });
   }
 
@@ -278,17 +280,19 @@ export default class NewEntry extends React.Component<
   }
 
   handleCloseVernDialog(selectedWordId?: string): void {
-    let selectedWord: Word | undefined;
-    let senseOpen = false;
-    if (selectedWordId === "") {
-      selectedWord = newWord(this.state.newEntry.vernacular);
-    } else if (selectedWordId) {
-      selectedWord = this.state.dupVernWords.find(
-        (word: Word) => word.id === selectedWordId
-      );
-      senseOpen = true;
-    }
-    this.setState({ selectedWord, senseOpen, vernOpen: false });
+    this.setState((prevState) => {
+      let selectedWord: Word | undefined;
+      let senseOpen = false;
+      if (selectedWordId === "") {
+        selectedWord = newWord(prevState.newEntry.vernacular);
+      } else if (selectedWordId) {
+        selectedWord = prevState.dupVernWords.find(
+          (word: Word) => word.id === selectedWordId
+        );
+        senseOpen = true;
+      }
+      return { selectedWord, senseOpen, vernOpen: false };
+    });
   }
 
   handleCloseSenseDialog(senseIndex?: number): void {
