@@ -70,10 +70,12 @@ export function newWord(vernacular = ""): Word {
   };
 }
 
-/** A simplified word used in DataEntry. */
+/** A stripped-down sense used in DataEntry > ExistingDataTable. */
 export interface DomainWord {
-  word: Word;
-  gloss: Gloss;
+  wordGuid: string;
+  vernacular: string;
+  senseGuid: string;
+  gloss: string;
 }
 
 export function simpleWord(vern: string, gloss: string): Word {
