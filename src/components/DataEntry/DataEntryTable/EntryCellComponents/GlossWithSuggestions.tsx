@@ -8,6 +8,7 @@ import SpellChecker from "components/DataEntry/spellChecker";
 
 interface GlossWithSuggestionsProps {
   isNew?: boolean;
+  isDisabled?: boolean;
   gloss: string;
   glossInput?: React.RefObject<HTMLDivElement>;
   updateGlossField: (newValue: string) => void;
@@ -38,6 +39,7 @@ export default class GlossWithSuggestions extends React.Component<GlossWithSugge
     return (
       <Autocomplete
         id={this.props.textFieldId}
+        disabled={this.props.isDisabled}
         filterOptions={(options: unknown[]) =>
           options.length <= this.maxSuggestions
             ? options
