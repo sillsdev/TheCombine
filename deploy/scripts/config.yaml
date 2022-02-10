@@ -1,3 +1,14 @@
+# This file defines the properties of the different targets where The Combine will be installed
+
+# Set of targets
+# Each key of 'targets' represents a host on which The Combine may be installed.  The hostname is
+# entered as its DNS name, even if a shortcut name is defined in your hosts file or an ssh config
+# file.
+#
+# Each target will have the following keys:
+#   profile: the target profile to be used; must be a profile listed in the set of profiles below
+#   set (optional): list of target specific values to override the standard definition using the
+#            helm `--set` option.
 targets:
   localhost:
     profile: dev
@@ -16,21 +27,39 @@ targets:
       frontend.configCaptchaRequired: "true"
       frontend.configCaptchaSitekey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
 
+# Set of profiles
+# Each key of 'profiles' defines one of the profiles used by the set of targets.
+#
+# Each profile has a 'charts' key that lists the helm charts that are to be installed or
+# upgraded in that profile.
+#
+# In addition to the chart definitions, each profile may have a file in ./deploy/scripts/profiles
+# to define overrides for configuration values.
+
 profiles:
-  dev:
+  dev: # Profile for local development machines (not supported yet)
     charts:
       - thecombine
-  nuc:
+  nuc: # Profile for a NUC or a machine whose TLS certificate will be created by another
+    # system and is downloaded from AWS S3
     charts:
       - thecombine
-  staging:
+  staging: # Profile for the QA server
     charts:
       - thecombine
-  prod:
+  prod: # Profile for the Production/Live server
     charts:
       - thecombine
       - cert-proxy-server
 
+# Set of charts
+# The set of charts defines properties for each of the charts listed in the profiles above.
+# There are 2 keys for each chart:
+#   namespace: the namespace where helm should install the chart.  Note that the namespace needs to be
+#             created beforehand
+#   secrets: a list of secrets that are required for each chart.  Each secret contains:
+#     config_item: the name of the configuration value that is referenced in the chart's template files
+#     env_var: the name of the environment variable that holds the value for the config_item.
 charts:
   thecombine:
     namespace: thecombine

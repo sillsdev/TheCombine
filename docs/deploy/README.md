@@ -84,47 +84,85 @@ The minimum target system requirements for installing _The Combine_ are:
 
 #### Installing Kubernetes
 
-First, setup ssh access to the target if it has not been done already:
+This section covers how to install Kubernetes and prepare the cluster for installing _The Combine_. If you are
+installing/upgrading _The Combine_ on the QA server or the Production (or Live) server, skip to the next section. These
+systems are managed and prepared by the Operations Team.
 
-If you do not have an ssh key pair, create one using:
+For the NUCs or other test systems that are managed by the development team, we will install, [k3s](https://k3s.io/), a
+lightweight, Kubernetes engine from Rancher. When that is installed, we will create the namespaces that are needed for
+_The Combine_.
 
-```bash
-ssh-keygen
-```
+Note that these steps need to be done from a Linux host machine with Ansible installed.
 
-Copy your ssh id to the target system using:
+1. First, setup ssh access to the target if it has not been done already:
 
-```bash
-ssh-copy-id <target_user>@<target>
-```
+   1. If you do not have an ssh key pair, create one using:
 
-Install Kubernetes and setup your configuration file for running `kubectl`:
+      ```bash
+      ssh-keygen
+      ```
 
-```bash
-cd <COMBINE>/deploy
-ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
-```
+   2. Copy your ssh id to the target system using:
 
-**Notes:**
+      ```bash
+      ssh-copy-id <target_user>@<target>
+      ```
 
-- Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target machine_.
-- The _\<target\>_ must be listed in `<COMBINE>/deploy/hosts.yml`. If it is not, then you need to create your own
-  inventory file (see [below](#creating-your-own-inventory-file)).
-- The _\<target\>_ can be a hostname or a group in the inventory file, e.g. `qa`.
-- Each time you may be prompted for passwords:
-  - `BECOME password` - enter your `sudo` password for the _\<target_user\>_ on the _\<target\>_ machine.
-  - `Vault password` - some of the Ansible variable files are encrypted in Ansible vaults. If you need the Ansible vault
-    password, send a request explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
+2. Install Kubernetes and setup your configuration file for running `kubectl`:
 
-When the playbook has finished the installation, it will have installed a `kubectl` configuration file on your host
-machine in `${HOME}/.kube/<target>/config`.
+   ```bash
+   cd <COMBINE>/deploy
+   ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
+   ```
+
+   **Notes:**
+
+   - Do not add the `-K` option if you do not need to enter your password to run `sudo` commands _on the target
+     machine_.
+   - The _\<target\>_ must be listed in `<COMBINE>/deploy/hosts.yml`. If it is not, then you need to create your own
+     inventory file (see [below](#creating-your-own-inventory-file)).
+   - The _\<target\>_ can be a hostname or a group in the inventory file, e.g. `qa`.
+   - Each time you may be prompted for passwords:
+   - `BECOME password` - enter your `sudo` password for the _\<target_user\>_ on the _\<target\>_ machine.
+   - `Vault password` - some of the Ansible variable files are encrypted in Ansible vaults. If you need the Ansible
+     vault password, send a request explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
+
+   When the playbook has finished the installation, it will have installed a `kubectl` configuration file on your host
+   machine in `${HOME}/.kube/<target>/config`.
+
+3. Setup the `kubectl` config file for the target for the steps that follow. There are several ways to do this:
+
+   1. If you have no other targets that you are working with, copy/move/link the configuration file to `~/.kube/config`
+   2. setup an environment variable to specify the `kubeconfig` file:
+
+      ```bash
+      export KUBECONFIG=~/.kube/<target>/config
+      ```
+
+      where `<target>` is the name of the target that was installed, e.g. `nuc1`
+
+   3. Add `--kubeconfig=~/.kube/<target>/config` to each `helm` and `kubectl` command. The `setup_combine.py` command
+      accepts a `kubeconfig` option as well.
+
+4. Create `thecombine` namespace:
+
+   ```bash
+   kubectl create namespace thecombine
+   ```
+
+5. Create `combine-cert-proxy` namespace for systems that use the `prod` profile. These systems must be routable from
+   the public internet. See `./deploy/scripts/config.yaml` for which systems use this profile.
+
+   ```bash
+   kubectl create namespace combine-cert-proxy
+   ```
 
 ### Installing _The Combine_ Helm Charts
 
 #### Setup
 
 If you do not have a `kubectl` configuration file for the _\<target\>_ system, you need to install it. For the NUCs, it
-is setup automatically by the Ansible playbook run in the previous step.
+is setup automatically by the Ansible playbook run in the previous section.
 
 For the Production or QA server,
 
