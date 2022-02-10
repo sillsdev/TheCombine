@@ -54,13 +54,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    7. [Inspect Database](#inspect-database)
    8. [Cleanup Local Repo](#cleanup-local-repository)
 5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
-   1. [Add a User to a Project](#add-a-user-to-a-project)
-   2. [Backup _TheCombine_](#backup-thecombine)
-   3. [Create a New Admin User](#create-a-new-admin-user)
-   4. [Delete a Project](#delete-a-project)
-   5. [Drop Database](#drop-database)
-   6. [Grant Admin Rights](#grant-admin-rights)
-   7. [Restore _TheCombine_](#restore-thecombine)
+   1. [Development Environment](#development-environment)
+   1. [Production/QA Environment](#productionqa-environment)
 6. [User Guide](#user-guide)
 7. [Production](#production)
 8. [Learn More](#learn-more)
@@ -101,7 +96,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
    - configure `git` to use `ansible-vault` for comparing encrypted vault files:
 
-     ```
+     ```bash
      git config --global diff.ansible-vault.textconv "ansible-vault view"
      ```
 
@@ -110,7 +105,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - edit your `.profile` to export the environment variable `ANSIBLE_VAULT_PASSWORD_FILE` set to the path of the file
      with the vault password:
 
-     ```
+     ```bash
      export ANSIBLE_VAULT_PASSWORD_FILE=${HOME}/.vault-password
      ```
 
@@ -164,12 +159,12 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
 1. Create the required docker files by running the configuration script in an activated Python virtual environment from
    _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
-```bash
-# run within Python virtual environment
-python scripts/docker_setup.py
+   ```bash
+   # run within Python virtual environment
+   python scripts/docker_setup.py
 
-# To view options, run with --help
-```
+   # To view options, run with --help
+   ```
 
 2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
    Backend container. If you have defined them as OS variables in the
@@ -179,51 +174,52 @@ python scripts/docker_setup.py
 
 3. Build the images for the Docker containers:
 
-```bash
-docker-compose build --parallel
-```
+   ```bash
+   docker-compose build --parallel
+   ```
 
-> **Notes**:
->
-> - On Linux, you either need to prepend `sudo` to all of the following `docker` commands or add yourself to the
->   `docker` group. See the
->   [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
-> - On Windows and macOS, Docker Desktop must be running.
+   > **Notes**:
+   >
+   > - On Linux, you either need to prepend `sudo` to all of the following `docker` commands or add yourself to the
+   >   `docker` group. See the
+   >   [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
+   > - On Windows and macOS, Docker Desktop must be running.
 
-    If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the above build again.
+   If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the above
+   build again.
 
 4. Start the containers
 
-```bash
-docker-compose up --detach
-```
+   ```bash
+   docker-compose up --detach
+   ```
 
-5. Browse to https://localhost.
+5. Browse to [https://localhost](https://localhost).
 
-_By default self-signed certificates are included, so you will need to accept a warning in the browser._
+   _By default self-signed certificates are included, so you will need to accept a warning in the browser._
 
 6. To view logs:
 
-```bash
-docker-compose logs --follow
-```
+   ```bash
+   docker-compose logs --follow
+   ```
 
-To view the logs from a single service, e.g. the `backend`:
+   To view the logs from a single service, e.g. the `backend`:
 
-```bash
-$ docker-compose logs --follow backend
-```
+   ```bash
+   docker-compose logs --follow backend
+   ```
 
-The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged. To
-just get the current snapshot of the logs, do not add the `--follow` option.
+   The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged.
+   To just get the current snapshot of the logs, do not add the `--follow` option.
 
 7. To stop
 
-```bash
-$ docker-compose down
-```
+   ```bash
+   docker-compose down
+   ```
 
-Add the `--volumes` option to remove any stored data when the containers are stopped.
+   Add the `--volumes` option to remove any stored data when the containers are stopped.
 
 ## Python
 
@@ -241,10 +237,10 @@ containers. Python is required to create the `docker-compose` environment and to
   using the [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher installed globally into the
   `PATH`.
 
-```bash
-py -m venv venv
-venv\Scripts\activate
-```
+  ```bash
+  py -m venv venv
+  venv\Scripts\activate
+  ```
 
 ### Linux Python Installation
 
@@ -326,8 +322,9 @@ In the project directory, you can run:
 > Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
 > [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
 
-Installs the necessary packages and runs the app in the development mode.<br> Open
-[http://localhost:3000](http://localhost:3000) to view it in the browser.
+Installs the necessary packages and runs the app in the development mode.
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 #### `npm run frontend`
 
@@ -366,14 +363,14 @@ Run after `npm run build` to analyze the contents build bundle chunks.
 
 You need to have run `npm start` or `npm run backend` first.
 
-To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).<br>
+To browse the auto-generated OpenAPI UI, browse to [http://localhost:5000/openapi](http://localhost:5000/openapi).
 
 #### Regenerate OpenAPI bindings for frontend
 
 First, you must install the Java Runtime Environment (JRE) 8 or newer as mentioned in the
 [`openapi-generator` README](https://github.com/OpenAPITools/openapi-generator#13---download-jar).
 
-- For Windows: https://www.microsoft.com/openjdk
+- For Windows: Install [OpenJDK](https://www.microsoft.com/openjdk)
 - For Ubuntu: `sudo apt install default-jre`
 - For macOS: `brew install adoptopenjdk`
 
@@ -404,7 +401,7 @@ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.Project
 
 #### `npm run test-frontend`
 
-Launches the test runners in the interactive watch mode.<br> See the section about
+Launches the test runners in the interactive watch mode. See the section about
 [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 To run a subset of tests, pass in the name of a partial file path to filter:
@@ -527,26 +524,78 @@ python3 scripts/cleanup_local_repo.py
 ## Maintenance Scripts for TheCombine
 
 The maintenance scripts enable certain maintenance tasks on your instance of _TheCombine_. _TheCombine_ may be running
-in one of three environments:
+in either a development environment or the production/qa environment. in one of two environments:
 
-1. _Development Environment_ - To run _TheCombine_ in the development environment, run `npm start` from the project
-   directory. Unless specified otherwise, each of the maintenance commands are to be run from the project directory.
-2. _Production Environment_ - The [How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure
-   a production machine and install _TheCombine_ on it. For each of the commands below, you must have a `kubectl`
-   configuration file that configures the connection to the kuberetes cluster to be maintained. The configuration file
-   needs to installed at `${HOME}/.kube/config` or specified in the `KUBECONFIG` environment variable.
+1. _Development Environment_ -
+2. _Production Environment_ - The descriptions of each of the maintenance tasks below provide instructions for
+   completing the task in each of the environments.
 
-The descriptions of each of the maintenance tasks below provide instructions for completing the task in each of the
-environments. Any of the Python scripts can be run with the `--help` option to see more usage options.
+### Development Environment
 
-### Add a User to a Project
+The following maintenance tasks can be performed in the development environment. To run _TheCombine_ in the development
+environment, run `npm start` from the project directory. Unless specified otherwise, each of the maintenance commands
+are to be run from the project directory.
+
+#### Create a New Admin User (Development)
+
+Task: create a new user who is a site administrator
+
+Commands
+
+- set/export `COMBINE_ADMIN_PASSWORD`
+- set/export `COMBINE_ADMIN_EMAIL`
+- run
+
+  ```bash
+  cd Backend
+  dotnet run create-admin-username=admin
+  ```
+
+#### Drop Database
+
+Task: completely erase the current Mongo database
+
+Run:
+
+```bash
+npm run drop-database
+```
+
+#### Grant Admin Rights
+
+Task: grant site admin rights for an existing user
+
+Run:
+
+```bash
+# Note the '--' before the user name
+npm run set-admin-user -- <USERNAME>
+```
+
+### Production/QA Environment
+
+The following maintenance tasks can be performed in the Production/QA environment. The
+[How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure a production machine and install
+_TheCombine_ on it.
+
+For each of the `kubectl` commands below:
+
+- you must have a `kubectl` configuration file that configures the connection to the kuberetes cluster to be maintained.
+  The configuration file needs to installed at `${HOME}/.kube/config` or specified in the `KUBECONFIG` environment
+  variable.
+- the `kubectl` commands can be run from any directory
+- any of the Python scripts (local or remote using `kubectl`) can be run with the `--help` option to see more usage
+  options.
+
+#### Add a User to a Project
 
 Task: add an existing user to a project
 
-| Environment | Command                                                                                                 |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Development | _Not Available_                                                                                         |
-| Production  | `kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>` |
+Run:
+
+```bash
+kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
+```
 
 Notes:
 
@@ -555,14 +604,15 @@ Notes:
    Add the `--admin` option to add the user with project administrator permissions (`DeleteEditSettingsAndUsers`,
    `ImportExport`, `MergeAndReviewEntries`, and `WordEntry`)
 
-### Backup _TheCombine_
+#### Backup _TheCombine_
 
 Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Storage Service (S3).
 
-| Environment | Command                                                                    |
-| ----------- | -------------------------------------------------------------------------- |
-| Development | _Not Available_                                                            |
-| Production  | `kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]` |
+Run:
+
+```bash
+kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]
+```
 
 Notes:
 
@@ -577,63 +627,49 @@ Notes:
    [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
    for documentation on how to use the command line to list and to manage the backup objects.
 
-### Create a New Admin User
+#### Create a New Admin User (Production)
 
 Task: create a new user who is a site administrator
 
-| Environment | Command                                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Development | set/export `COMBINE_ADMIN_PASSWORD`<br>set/export `COMBINE_ADMIN_EMAIL`<br>`$ cd Backend`<br>`$ dotnet run create-admin-username=admin`                |
-| Production  | `ansible-playbook playbook_admin_user.yaml --limit <target_name> -u sillsdev -K`<br>Run from the `deploy` directory in the project on the host machine |
+Run:
 
-### Delete a Project
+```bash
+# Run from the `deploy` directory in the project on the host machine
+ansible-playbook playbook_admin_user.yaml --limit <target_name> -u sillsdev -K
+```
+
+#### Delete a Project
 
 Task: Delete a project
 
-| Environment | Command                                                                   |
-| ----------- | ------------------------------------------------------------------------- |
-| Development | _Not Available_                                                           |
-| Production  | `kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>` |
+Run:
+
+```bash
+kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
+```
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
 
-### Drop Database
-
-Task: completely erase the current Mongo database
-
-| Environment | Command                   |
-| ----------- | ------------------------- |
-| Development | `$ npm run drop-database` |
-| Production  | _Not Recommended_         |
-
-### Grant Admin Rights
-
-Task: grant site admin rights for an existing user
-
-| Environment | Command                                                                                |
-| ----------- | -------------------------------------------------------------------------------------- |
-| Development | `$ npm run set-admin-user -- <USERNAME>` <br> _Note the_ `--` \_before the user name\_ |
-| Production  | _Not Available_                                                                        |
-
-### Restore _TheCombine_
+#### Restore _TheCombine_
 
 Task: Restore the CombineDatabase and the Backend files from a backup stored on the Amazon Simple Storage Service (S3).
 
-| Environment | Command                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| Development | _Not Available_                                                                           |
-| Production  | `kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]` |
+Run:
 
-Notes:
+```bash
+kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
+```
 
-1. The restore script can be run from any directory.
-2. The restore script takes an optional backup name. This is the name of the backup in the AWS S3 bucket, not a local
-   file. If the backup name is not provided, the restore script will list the available backups and allow you to choose
-   one for the restore operation.
+Note:
+
+The restore script takes an optional backup name. This is the name of the backup in the AWS S3 bucket, not a local file.
+If the backup name is not provided, the restore script will list the available backups and allow you to choose one for
+the restore operation.
 
 ## User Guide
 
-The User Guide found at https://sillsdev.github.io/TheCombine is automatically built from the `master` branch.
+The User Guide found at [https://sillsdev.github.io/TheCombine](https://sillsdev.github.io/TheCombine) is automatically
+built from the `master` branch.
 
 To locally build the user guide and serve it dynamically (automatically reloading on change), run the following from
 your Python virtual environment:
@@ -666,7 +702,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [MongoDB](https://docs.mongodb.com/manual/introduction)
 - [MongoDB tutorial](https://university.mongodb.com/courses/M001/about)
 
-### Backend (C# + ASP<area>.NET)
+### Backend (C# + ASP.NET)
 
 - [C#](https://www.w3schools.com/cs/default.asp)
 - [Our style guide](docs/style_guide/c_sharp_style_guide.md)

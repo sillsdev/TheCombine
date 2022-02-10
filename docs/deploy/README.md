@@ -2,15 +2,6 @@
 
 This document describes how to deploy _The Combine_ to a target Kubernetes cluster.
 
-<table>
-<tr>
- <td>Author/Owner:</td><td>Jim Grady</td>
-</tr>
-<tr>
- <td>Email:</td><td>jimgrady.jg@gmail.com</td>
-</tr>
-</table>
-
 ## Assumptions
 
 _The Combine_ is designed to be installed on a server on the internet or an organization's intranet or on a standalone
@@ -23,8 +14,8 @@ PC such as an Intel NUC. The instructions assume that:
 
 - the term _NUC_ will be used to describe a target that is a standalone PC. It can be any 64-bit Intel Architecture
   machine.
-- most of the commands described in this document are to be run from within the <tt>git</tt> repository for _The
-  Combine_ that has been cloned on the host machine. This directory is referred to as \<COMBINE\>.
+- most of the commands described in this document are to be run from within the `git` repository for _The Combine_ that
+  has been cloned on the host machine. This directory is referred to as \<COMBINE\>.
 - the target machine where _The Combine_ is being installed will be referred to as _\<target\>_
 - the user on the target machine that will be used for installing docker, etc. will be referred to as _\<target_user\>_.
   You must be able to login to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
@@ -48,9 +39,9 @@ PC such as an Intel NUC. The instructions assume that:
    1. [Install Ubuntu Server](#install-ubuntu-server)
    2. [Vault Password](#vault-password)
 
-# Step-by-step Instructions
+## Step-by-step Instructions
 
-## Prepare your host system
+### Prepare your host system
 
 _The Combine_ can be installed on a system that already has Kubernetes installed from any host system type. This is the
 normal case for the QA and Live servers that are managed by the Operations Team. To install _The Combine_ to an existing
@@ -68,7 +59,7 @@ Kubernetes cluster, you will need the following tools:
   git clone https://github.com/sillsdev/TheCombine
   ```
 
-### Linux Host
+#### Linux Host
 
 Some extra tools are required to setup a machine that does not have an existing Kubernetes cluster. The methods
 described here must be performed on a Linux host.
@@ -77,13 +68,13 @@ The extra tools that are needed are:
 
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
 
-## Installing Kubernetes and Initializing Your Cluster
+### Installing Kubernetes and Initializing Your Cluster
 
 This section describes how to install Kubernetes and start the Kubernetes cluster on the target system. If you are
 installing _The Combine_ on an existing cluster, skip this section and go to
 [Installing _The Combine_ Helm Charts](#installing-the-combine-helm-charts).
 
-### Minimum System Requirements
+#### Minimum System Requirements
 
 The minimum target system requirements for installing _The Combine_ are:
 
@@ -91,7 +82,7 @@ The minimum target system requirements for installing _The Combine_ are:
 - 4 GB RAM
 - 32 GB Storage
 
-### Installing Kubernetes
+#### Installing Kubernetes
 
 First, setup ssh access to the target if it has not been done already:
 
@@ -122,15 +113,15 @@ ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K 
 - The _\<target\>_ can be a hostname or a group in the inventory file, e.g. `qa`.
 - Each time you may be prompted for passwords:
   - `BECOME password` - enter your `sudo` password for the _\<target_user\>_ on the _\<target\>_ machine.
-  - `Vault password` - some of the Ansible variable files are encrypted in Ansible vaults. See the current owner (above)
-    for the Vault password.
+  - `Vault password` - some of the Ansible variable files are encrypted in Ansible vaults. If you need the Ansible vault
+    password, send a request explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
 
 When the playbook has finished the installation, it will have installed a `kubectl` configuration file on your host
 machine in `${HOME}/.kube/<target>/config`.
 
-## Installing _The Combine_ Helm Charts
+### Installing _The Combine_ Helm Charts
 
-### Setup
+#### Setup
 
 If you do not have a `kubectl` configuration file for the _\<target\>_ system, you need to install it. For the NUCs, it
 is setup automatically by the Ansible playbook run in the previous step.
@@ -142,6 +133,7 @@ For the Production or QA server,
 2. Copy your `kubectl` configuration to the clipboard and paste it into a file on your host machine, e.g.
    `${HOME}/.kube/prod/config` for the production server.
 3. Setup the following environment variables:
+
    - AWS_ACCOUNT
    - AWS_DEFAULT_REGION
    - AWS_ECR_ACCESS_KEY_ID
@@ -150,12 +142,16 @@ For the Production or QA server,
    - AWS_S3_SECRET_ACCESS_KEY
    - COMBINE_JWT_SECRET_KEY
    - COMBINE_SMTP_USERNAME
-   - COMBINE*SMTP_PASSWORD These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or
-     the \_System* app (Windows). See the owner of the document (above) for the values for each variable.
+   - COMBINE_SMTP_PASSWORD
+
+   These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app
+   (Windows). If you are a member of the development team and need the environment variable values, send a request
+   explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
+
 4. Set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. (This is not necessary
    if the configuration file is at `${HOME}/.kube/config.)
 
-### Install _The Combine_ Cluster
+#### Install _The Combine_ Cluster
 
 To install/upgrade _The Combine_ run the following command:
 
@@ -202,13 +198,17 @@ Notes:
    2. if your kubeconfig file is located in `${HOME}/.kube/config`.
 
 2. You can see the options for a script by running:
-   ```
+
+   ```bash
    kubectl [--kubeconfig=<path-to-kubernetes-file] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
    ```
+
    The only exception is `combine-backup-job.sh` which does not have any script options.
+
 3. The `-n thecombine` option is not required if you set `thecombine` as the default namespace for your kubeconfig file
    by running:
-   ```
+
+   ```bash
    kubectl config set-context --current --namespace=thecombine
    ```
 
@@ -241,24 +241,25 @@ See the Ansible documentation,
 [Build Your Inventory](https://docs.ansible.com/ansible/latest/network/getting_started/first_inventory.html) for more
 information on inventory files.
 
-# Automated Backups
+## Automated Backups
 
 If the ansible variables `backup_hours` and `backup_minutes` are defined for a target, then `cron` will be setup to
 create a backup of _The Combine_ database and backend files every day at the specified times. The hours/minutes can be
 set to any string that is recognized by `cron`. The backups are stored in an Amazon S3 bucket.
 
-# Design
+## Design
 
 Please see the Kubernetes Design document at [./kubernetes_design/README.md](./kubernetes_design/README.md)
 
-# Additional Details
+## Additional Details
 
-## Install Ubuntu Server
+### Install Ubuntu Server
 
 To install the OS on a new target machine, such as, a new NUC, follow these steps:
 
-1. Download the ISO image for Ubuntu Server from Ubuntu (currently at https://ubuntu.com/download/server; click on
-   _Option 2 - Manual server installation_ and then _Download Ubuntu Server 20.04.3 LTS_)
+1. Download the ISO image for Ubuntu Server from Ubuntu (currently at
+   [https://ubuntu.com/download/server](https://ubuntu.com/download/server); click on _Option 2 - Manual server
+   installation_ and then _Download Ubuntu Server 20.04.3 LTS_)
 
 2. copy the .iso file to a bootable USB stick:
 
@@ -278,30 +279,32 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
    3. You do not need to install any additional snaps; the _Ansible_ playbooks will install any needed software
 
 4. Update all packages:
-   ```
+
+   ```bash
    sudo apt update && sudo apt upgrade -y
    ```
+
 5. Reboot:
-   ```
+
+   ```bash
    sudo reboot
    ```
 
-## Vault Password
+### Vault Password
 
 The Ansible playbooks require that some of the variable files are encrypted. When running one of the playbooks, you will
 need to provide the password for the encrypted files. The password can be provided by:
 
-1. entering the password when prompted. Add the <tt>--ask-vault-pass</tt> option for <tt>ansible-playbook</tt> to be
-   prompted for the password when it is required.
-2. specify a file that has the password. Add the <tt>--vault-password-file</tt> option for <tt>ansible-playbook</tt>
-   followed by the path of a file that holds the vault password.
-3. set the environment variable <tt>ANSIBLE_VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault
-   password. This prevents you from needing to provide the vault password whenever you run an ansible playbook, either
-   directly or from within a script such as <tt>setup-nuc.sh</tt>.
+1. entering the password when prompted. Add the `--ask-vault-pass` option for `ansible-playbook` to be prompted for the
+   password when it is required.
+2. specify a file that has the password. Add the `--vault-password-file` option for `ansible-playbook` followed by the
+   path of a file that holds the vault password.
+3. set the environment variable `ANSIBLE_VAULT_PASSWORD_FILE` to the path of a file that holds the vault password. This
+   prevents you from needing to provide the vault password whenever you run an ansible playbook.
 
 If you use a file to hold the vault password, then:
 
 - _Make sure that you are the only one with read permission for the password file!_
 - _Make sure that the password file is not tracked in the git repository!_
 
-For example, use hidden file in your home directory, such as <tt>\$HOME/.ansible-vault</tt>, with mode of <tt>0600</tt>.
+For example, use hidden file in your home directory, such as `${HOME}/.ansible-vault`, with mode of `0600`.
