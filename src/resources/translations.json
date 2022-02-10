@@ -835,14 +835,14 @@
         "Faites glisser un nouveau sens ici"
       ],
       "saveAndContinue": [
-        "Merge all these words and load a new set of words",
-        "Combina todas estas palabras y carga un nuevo conjunto de palabras",
-        "Fusionner tous ces mots et charger un nouvel ensemble de mots"
+        "Save changes and load a new set of words",
+        "Save changes and load a new set of words",
+        "Save changes and load a new set of words"
       ],
       "skip": [
-        "Load a new set of words",
-        "Cargar un nuevo conjunto de palabras",
-        "Charger un nouvel ensemble de mots"
+        "Discard changes and load a new set of words",
+        "Discard changes and load a new set of words",
+        "Discard changes and load a new set of words"
       ],
       "list": [
         "Drag this word to the right to start merging it with other words",
@@ -856,6 +856,13 @@
         "Delete this sense?",
         "Delete this sense?"
       ]
+    },
+    "flags": {
+      "add": ["Add flag", "Add flag", "Add flag"],
+      "edit": ["Edit flag", "Edit flag", "Edit flag"],
+      "remove": ["Remove flag", "Remove flag", "Remove flag"],
+      "save": ["Save flag", "Save flag", "Save flag"],
+      "text": ["Text: ", "Text: ", "Text: "]
     },
     "completed": {
       "number": [

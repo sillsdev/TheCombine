@@ -35,8 +35,9 @@ export default class VernWithSuggestions extends React.Component<VernWithSuggest
       <React.Fragment>
         <Autocomplete
           id={this.props.textFieldId}
-          freeSolo
           disabled={this.props.isDisabled}
+          // freeSolo allows use of a typed entry not available as a drop-down option
+          freeSolo
           value={this.props.vernacular}
           options={this.props.suggestedVerns ? this.props.suggestedVerns : []}
           onBlur={this.props.onBlur}

@@ -11,7 +11,8 @@ import {
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
-import { firstGlossText, newGloss } from "types/word";
+import { newGloss } from "types/word";
+import { firstGlossText } from "types/wordUtilities";
 
 const idAffix = "recent-entry";
 
@@ -29,6 +30,7 @@ interface RecentEntryProps {
   focusNewEntry: () => void;
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
+  disabled?: boolean;
 }
 
 interface RecentEntryState {
@@ -107,7 +109,9 @@ export default class RecentEntry extends React.Component<
         >
           <VernWithSuggestions
             vernacular={this.state.vernacular}
-            isDisabled={this.props.entry.senses.length > 1}
+            isDisabled={
+              this.props.disabled || this.props.entry.senses.length > 1
+            }
             updateVernField={(newValue: string) =>
               this.updateVernField(newValue)
             }
@@ -134,6 +138,7 @@ export default class RecentEntry extends React.Component<
         >
           <GlossWithSuggestions
             gloss={this.state.gloss}
+            isDisabled={this.props.disabled}
             updateGlossField={(newValue: string) =>
               this.updateGlossField(newValue)
             }
@@ -158,11 +163,13 @@ export default class RecentEntry extends React.Component<
             position: "relative",
           }}
         >
-          <EntryNote
-            noteText={this.props.entry.note.text}
-            updateNote={this.props.updateNote}
-            buttonId={`${idAffix}-${this.props.rowIndex}-note`}
-          />
+          {!this.props.disabled && (
+            <EntryNote
+              noteText={this.props.entry.note.text}
+              updateNote={this.props.updateNote}
+              buttonId={`${idAffix}-${this.props.rowIndex}-note`}
+            />
+          )}
         </Grid>
         <Grid
           item
@@ -173,17 +180,19 @@ export default class RecentEntry extends React.Component<
             position: "relative",
           }}
         >
-          <Pronunciations
-            wordId={this.props.entry.id}
-            pronunciationFiles={this.props.entry.audio}
-            recorder={this.props.recorder}
-            deleteAudio={(wordId: string, fileName: string) => {
-              this.props.deleteAudioFromWord(wordId, fileName);
-            }}
-            uploadAudio={(wordId: string, audioFile: File) => {
-              this.props.addAudioToWord(wordId, audioFile);
-            }}
-          />
+          {!this.props.disabled && (
+            <Pronunciations
+              wordId={this.props.entry.id}
+              pronunciationFiles={this.props.entry.audio}
+              recorder={this.props.recorder}
+              deleteAudio={(wordId: string, fileName: string) => {
+                this.props.deleteAudioFromWord(wordId, fileName);
+              }}
+              uploadAudio={(wordId: string, audioFile: File) => {
+                this.props.addAudioToWord(wordId, audioFile);
+              }}
+            />
+          )}
         </Grid>
         <Grid
           item
@@ -194,7 +203,7 @@ export default class RecentEntry extends React.Component<
             position: "relative",
           }}
         >
-          {this.state.hovering && (
+          {!this.props.disabled && this.state.hovering && (
             <DeleteEntry
               removeEntry={() => this.props.removeEntry()}
               buttonId={`${idAffix}-${this.props.rowIndex}-delete`}

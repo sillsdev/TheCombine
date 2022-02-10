@@ -1,13 +1,16 @@
-import { MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
+import { Flag } from "api/models";
+import FlagButton from "components/Buttons/FlagButton";
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
-import { setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import theme from "types/theme";
+import { newFlag } from "types/word";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
@@ -19,6 +22,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
   const treeWords = props.mergeState.tree.words;
   const data = props.mergeState.data;
   const filled = !!treeWords[props.wordId];
+  const flag = data.words[props.wordId]?.flag ?? newFlag();
   const verns: string[] = [];
   if (filled) {
     verns.push(
@@ -50,18 +54,31 @@ export default function DropWord(props: DropWordProps): ReactElement {
         style={{ padding: theme.spacing(1), height: 44, minWidth: 150 }}
       >
         {filled && (
-          <Select
-            value={treeWords[props.wordId].vern}
-            onChange={(e) =>
-              dispatch(setVern(props.wordId, e.target.value as string))
-            }
-          >
-            {verns.map((vern) => (
-              <MenuItem value={vern} key={props.wordId + vern}>
-                <Typography variant="h5">{vern}</Typography>
-              </MenuItem>
-            ))}
-          </Select>
+          <Grid container justifyContent="space-between">
+            <Grid>
+              <Select
+                value={treeWords[props.wordId].vern}
+                onChange={(e) =>
+                  dispatch(setVern(props.wordId, e.target.value as string))
+                }
+              >
+                {verns.map((vern) => (
+                  <MenuItem value={vern} key={props.wordId + vern}>
+                    <Typography variant="h5">{vern}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid>
+              <FlagButton
+                flag={flag}
+                updateFlag={(newFlag: Flag) => {
+                  dispatch(flagWord(props.wordId, newFlag));
+                }}
+                buttonId={`word-${props.wordId}-flag`}
+              />
+            </Grid>
+          </Grid>
         )}
       </Paper>
       <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>

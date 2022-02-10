@@ -170,6 +170,44 @@ namespace Backend.Tests.Models
         }
     }
 
+    public class FlagTests
+    {
+        private const string Text = "Text";
+
+        [Test]
+        public void TestEquals()
+        {
+            var flag = new Flag { Active = true, Text = Text };
+            Assert.That(flag.Equals(new Flag { Active = true, Text = Text }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var flag = new Flag { Active = true };
+            Assert.IsFalse(flag.Equals(null));
+        }
+
+        [Test]
+        public void TestNotEquals()
+        {
+            var flag = new Flag { Active = true, Text = Text };
+            Assert.IsFalse(flag.Equals(new Flag { Active = false, Text = Text }));
+            Assert.IsFalse(flag.Equals(new Flag { Active = true, Text = "Different text" }));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Flag { Text = "1" }.GetHashCode(),
+                new Flag { Text = "2" }.GetHashCode());
+            Assert.AreNotEqual(
+                new Flag { Active = true }.GetHashCode(),
+                new Flag { Active = false }.GetHashCode());
+        }
+    }
+
     public class GlossTests
     {
         private const string Language = "fr";

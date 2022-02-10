@@ -10,16 +10,15 @@ import { englishWritingSystem } from "types/project";
 jest.mock("@material-ui/core/Input", () => "div");
 jest.mock("@material-ui/core/TextField", () => "div");
 
-const state = {
+const mockStore = configureMockStore()({
   currentProjectState: {
     project: { analysisWritingSystems: [englishWritingSystem] },
   },
-};
-const mockStore = configureMockStore()(state);
+});
 const mockWord = mockWords()[0];
 
 describe("GlossCell", () => {
-  it("Renders sort-stylized without crashing", () => {
+  it("renders sort-stylized without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
@@ -29,7 +28,7 @@ describe("GlossCell", () => {
     });
   });
 
-  it("Renders editable without crashing", () => {
+  it("renders editable without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>

@@ -2,15 +2,11 @@ import { Chip, IconButton } from "@material-ui/core";
 import { Add, Delete, RestoreFromTrash } from "@material-ui/icons";
 import { ReactElement } from "react";
 
+import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
-import {
-  ReviewEntriesSense,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 interface SenseCellProps {
-  rowData: ReviewEntriesWord;
   delete: (deleteIndex: string) => void;
 }
 
