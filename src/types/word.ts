@@ -71,11 +71,20 @@ export function newWord(vernacular = ""): Word {
 }
 
 /** A stripped-down sense used in DataEntry > ExistingDataTable. */
-export interface DomainWord {
+export class DomainWord {
   wordGuid: string;
   vernacular: string;
   senseGuid: string;
   gloss: string;
+
+  constructor(word: Word, senseIndex = 0, glossIndex = 0) {
+    const sense = word.senses[senseIndex] ?? newSense();
+    const gloss = sense.glosses[glossIndex] ?? newGloss();
+    this.wordGuid = word.guid;
+    this.vernacular = word.vernacular;
+    this.senseGuid = sense.guid;
+    this.gloss = gloss.def;
+  }
 }
 
 export function simpleWord(vern: string, gloss: string): Word {

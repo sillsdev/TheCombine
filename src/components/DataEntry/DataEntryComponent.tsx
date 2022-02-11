@@ -54,12 +54,7 @@ export function filterWordsByDomain(
           sense.accessibility === State.Active) &&
         sense.semanticDomains.map((dom) => dom.id).includes(domain.id)
       ) {
-        domainWords.push({
-          wordGuid: currentWord.guid,
-          vernacular: currentWord.vernacular,
-          senseGuid: sense.guid,
-          gloss: sense.glosses[0]?.def ?? "",
-        });
+        domainWords.push(new DomainWord({ ...currentWord, senses: [sense] }));
       }
     }
   }
