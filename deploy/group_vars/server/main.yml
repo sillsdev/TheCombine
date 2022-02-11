@@ -14,10 +14,8 @@
 k8s_engine: none
 k8s_components: []
 
-create_namespaces: []
 # k8s namespaces
 app_namespace: thecombine
-cert_proxy_namespace: combine-cert-proxy
 
 #######################################
 # Ingress configuration

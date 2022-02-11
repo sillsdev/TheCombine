@@ -18,10 +18,6 @@ k8s_components:
 
 # k8s namespaces
 app_namespace: thecombine
-cert_proxy_namespace: "{{ app_namespace }}"
-
-create_namespaces:
-  - "{{ app_namespace }}"
 
 k8s_user: sillsdev
 k8s_group: sillsdev

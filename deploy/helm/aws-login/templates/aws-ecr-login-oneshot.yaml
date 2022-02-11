@@ -2,7 +2,6 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  annotations:
   name: "{{ .Values.awsEcr.jobName }}"
   namespace: {{ .Release.Namespace }}
 spec:

@@ -25,6 +25,6 @@ appVersion: "1.16.0"
 
 dependencies:
   - name: aws-login
-    version: "0.1.0"
+    version: 0.1.0
     repository: file://../aws-login
     condition: aws-login.enabled
