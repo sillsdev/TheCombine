@@ -8,14 +8,13 @@ TheCombine in Docker containers in an environment as similar to the
 production environment as possible. The script shall be run from the
 project's root directory.
 
-Tasks:
-    1. Create the following directory:
-        ../nginx/scripts
-    2. Build docker-compose.yml from
-       roles/combine_config/templates/docker-compose.yml.j2
-    3. Create frontend environment file
-    4. Create backend environment file (w/o SMTP specified)
-    5. Create nginx configuration file
+Task:
+    - Create the following files in the project root directory:
+        - docker-compose.yml
+        - .env.frontend
+        - .env.backend
+        - .env.certmgr
+      from Jinja2 templates in scripts/setup_files/config
 """
 
 import argparse

@@ -30,7 +30,7 @@ humanfriendly
 kubernetes
 pyopenssl
 
-# Kubernetes Installation
+# Kubernetes Installation.
 pyyaml
 
 # OS-specific dependencies.
