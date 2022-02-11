@@ -3,14 +3,14 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: env-frontend
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
 data:
   SERVER_NAME: {{ .Values.global.serverName }}
   CERT_ADDL_DOMAINS: {{ .Values.combineAddlDomainList | default "" | quote }}
   CERT_PROXY_DOMAINS: {{ .Values.combineCertProxyList | default "" | quote }}
   CONFIG_USE_CONNECTION_URL: "true"
-  CONFIG_CAPTCHA_REQD: {{.Values.configCaptchaRequired | quote}}
-  CONFIG_CAPTCHA_SITE_KEY: {{.Values.configCaptchaSiteKey | quote}}
+  CONFIG_CAPTCHA_REQD: {{ .Values.configCaptchaRequired | quote }}
+  CONFIG_CAPTCHA_SITE_KEY: {{ .Values.configCaptchaSiteKey | quote }}
   CONFIG_EMAIL_ENABLED: {{ .Values.configEmailEnabled | quote }}
   CONFIG_SHOW_CERT_EXPIRATION: {{ .Values.configShowCertExpiration | quote }}
   {{- if .Values.configAnalyticsWriteKey }}

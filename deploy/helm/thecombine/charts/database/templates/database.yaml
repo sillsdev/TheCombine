@@ -8,13 +8,13 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   name: database-data
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{.Values.persistentVolumeSize}}
+      storage: {{ .Values.persistentVolumeSize }}
 status: {}
 ---
 apiVersion: apps/v1
@@ -24,7 +24,7 @@ metadata:
   labels:
     combine-component: database
   name: database
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -62,7 +62,7 @@ metadata:
   labels:
     combine-component: database
   name: database
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
     - name: "27017"
