@@ -1,4 +1,10 @@
 ---
+################################################
+# Profile specific configuration items
+#
+# Profile: nuc
+################################################
+
 aws-login:
   enabled: true
   awsEcr:

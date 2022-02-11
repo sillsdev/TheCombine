@@ -1,4 +1,10 @@
 ---
+################################################
+# Profile specific configuration items
+#
+# Profile: dev
+################################################
+
 aws-login:
   enabled: false
 

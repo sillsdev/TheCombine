@@ -1,8 +1,8 @@
 ---
 ################################################
-# Group specific configuration items
+# Profile specific configuration items
 #
-# Group: prod
+# Profile: prod
 ################################################
 
 # Frontend configuration items:
