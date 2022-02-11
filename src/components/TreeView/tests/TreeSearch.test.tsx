@@ -10,14 +10,17 @@ import TreeSearch, {
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import MockDomain, {
+  parMap,
+} from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
-  animate: MOCK_ANIMATE,
   currentDomain: MockDomain,
+  parentMap: parMap,
+  animate: MOCK_ANIMATE,
 };
 
 beforeEach(() => {

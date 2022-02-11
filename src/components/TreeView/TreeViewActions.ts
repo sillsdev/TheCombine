@@ -1,4 +1,6 @@
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeSemanticDomain, {
+  ParentMap,
+} from "components/TreeView/TreeSemanticDomain";
 
 export enum TreeActionType {
   CLOSE_TREE = "CLOSE_TREE",
@@ -10,7 +12,7 @@ export enum TreeActionType {
 export interface TreeViewAction {
   type: TreeActionType;
   domain?: TreeSemanticDomain;
-  parentMap?: Record<string, TreeSemanticDomain>;
+  parentMap?: ParentMap;
 }
 
 export function CloseTreeAction(): TreeViewAction {
@@ -27,8 +29,6 @@ export function TraverseTreeAction(
   return { type: TreeActionType.TRAVERSE_TREE, domain: newDomain };
 }
 
-export function SetParentMapAction(
-  newParentMap: Record<string, TreeSemanticDomain>
-): TreeViewAction {
+export function SetParentMapAction(newParentMap: ParentMap): TreeViewAction {
   return { type: TreeActionType.SET_PARENT_MAP, parentMap: newParentMap };
 }

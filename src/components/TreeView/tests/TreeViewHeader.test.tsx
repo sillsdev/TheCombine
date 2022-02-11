@@ -7,18 +7,22 @@ import {
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import MockDomain, {
+  parMap,
+} from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const testProps: TreeHeaderProps = {
-  animate: MOCK_ANIMATE,
   currentDomain: MockDomain,
+  parentMap: parMap,
+  animate: MOCK_ANIMATE,
 };
 // These props have a currentDomain with a parent and two brothers
 const upOneWithBrothersProps: TreeHeaderProps = {
-  animate: MOCK_ANIMATE,
   currentDomain: MockDomain.subdomains[1],
+  parentMap: parMap,
+  animate: MOCK_ANIMATE,
 };
 const eventListeners: Map<string, EventListener> = new Map<
   string,

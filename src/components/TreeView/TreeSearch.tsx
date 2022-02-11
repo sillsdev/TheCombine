@@ -3,11 +3,13 @@ import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeSemanticDomain, {
+  ParentMap,
+} from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeSearchProps {
   currentDomain: TreeSemanticDomain;
-  parentMap: Record<string, TreeSemanticDomain>;
+  parentMap: ParentMap;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
@@ -137,8 +139,8 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       event.preventDefault();
       // Find parent domain
       let parent: TreeSemanticDomain | undefined = props.currentDomain;
-      while (parent && props.parentMap[parent?.id] !== undefined) {
-        parent = props.parentMap[parent?.id];
+      while (parent && props.parentMap[parent.id]) {
+        parent = props.parentMap[parent.id];
       }
 
       // Search for domain

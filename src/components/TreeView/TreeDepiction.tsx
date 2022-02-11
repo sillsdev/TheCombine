@@ -2,7 +2,9 @@ import { Grid, ImageList, ImageListItem } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeSemanticDomain, {
+  ParentMap,
+} from "components/TreeView/TreeSemanticDomain";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 import {
   endcapLeft,
@@ -23,7 +25,7 @@ const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded
 
 interface TreeDepictionProps {
   currentDomain: TreeSemanticDomain;
-  parentMap: Record<string, TreeSemanticDomain>;
+  parentMap: ParentMap;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 

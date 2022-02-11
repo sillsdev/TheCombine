@@ -36,7 +36,11 @@ function testFromNode(message: string, node: TreeSemanticDomain) {
 function createTree(domain: TreeSemanticDomain) {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeDepiction currentDomain={domain} animate={jest.fn()} />
+      <TreeDepiction
+        currentDomain={domain}
+        parentMap={{}}
+        animate={jest.fn()}
+      />
     );
   });
 }

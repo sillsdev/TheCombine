@@ -1,13 +1,19 @@
 import { LocalizeContextProps } from "react-localize-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import { Provider } from "react-redux";
+import renderer, {
+  ReactTestInstance,
+  ReactTestRenderer,
+} from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeView, TreeViewProps } from "components/TreeView/TreeViewComponent";
+import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
 import MockDomain from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/project";
 
 var treeMaster: ReactTestRenderer;
-var treeHandle: TreeView;
+var treeHandle: ReactTestInstance;
 
 const RETURN_MOCK = jest.fn();
 const NAVIGATE_MOCK = jest.fn();
@@ -31,6 +37,8 @@ jest.mock("components/TreeView/TreeViewReducer", () => {
     },
   };
 });
+
+const mockStore = configureMockStore()({ treeViewState });
 
 beforeAll(() => {
   createTree();
@@ -58,12 +66,12 @@ describe("TreeView", () => {
     const newDom = new TreeSemanticDomain("test", "test");
     newDom.description = "super testy";
 
-    await treeHandle.animate(newDom);
+    await (treeHandle as any).animate(newDom);
     expect(NAVIGATE_MOCK).toHaveBeenCalledWith(newDom);
   });
 
   it("Returns control to caller when the same semantic domain is passed in", async () => {
-    await treeHandle.animate(MockDomain);
+    await (treeHandle as any).animate(MockDomain);
     expect(RETURN_MOCK).toHaveBeenCalledTimes(1);
   });
 });
@@ -82,7 +90,9 @@ const localizeProps = {
 function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeView {...treeViewProps} {...localizeProps} />
+      <Provider store={mockStore}>
+        <TreeView {...treeViewProps} {...localizeProps} />
+      </Provider>
     );
   });
   treeHandle = treeMaster.root.findByType(TreeView).instance;

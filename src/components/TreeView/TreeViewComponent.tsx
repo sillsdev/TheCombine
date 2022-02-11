@@ -1,6 +1,6 @@
 import { Grid, Zoom } from "@material-ui/core";
 import { animate } from "motion";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,7 +22,7 @@ import { newWritingSystem } from "types/project";
 export const allSemDomWritingSystems = [
   newWritingSystem("en", "English"),
   newWritingSystem("es", "Español"),
-  newWritingSystem("fr", "Francés"),
+  newWritingSystem("fr", "Français"),
 ];
 
 function getSemDomWritingSystem(
@@ -43,13 +43,10 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
   const parentMap = useSelector(
     (state: StoreState) => state.treeViewState.parentMap
   );
-  const currentDomain = useSelector(
-    (state: StoreState) => state.treeViewState.currentDomain
-  );
   const dispatch = useDispatch();
 
   const loadLocalizedJson = (languageKey: string): Promise<any> => {
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       import(`resources/semantic-domains/${languageKey}.json`).then((data) => {
         res(data?.default);
       });
@@ -69,8 +66,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
 
     /* Select the language used for the semantic domains.
      * Primary: Has it been specified for the project?
-     * Secondary: What is the current browser/ui language?
-     * Default: English. */
+     * Secondary: What is the current browser/ui language? */
     const lang =
       getSemDomWritingSystem(props.semDomWritingSystem)?.bcp47 ??
       props.activeLanguage.code;

@@ -16,3 +16,5 @@ export default class TreeSemanticDomain
     this.name = name;
   }
 }
+
+export type ParentMap = Record<string, TreeSemanticDomain>;

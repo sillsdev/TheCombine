@@ -8,11 +8,13 @@ import { useCallback, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeSemanticDomain, {
+  ParentMap,
+} from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeHeaderProps {
   currentDomain: TreeSemanticDomain;
-  parentMap: Record<string, TreeSemanticDomain>;
+  parentMap: ParentMap;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
@@ -72,14 +74,11 @@ export function useTreeNavigation(props: TreeHeaderProps) {
     props: TreeHeaderProps
   ): TreeSemanticDomain | undefined {
     if (props.parentMap[props.currentDomain.id]) {
-      const brotherDomains = props.parentMap[props.currentDomain.id].subdomains;
-      let index = brotherDomains.findIndex(
-        (domain) => props.currentDomain.id === domain.id
-      );
-
+      const brothers = props.parentMap[props.currentDomain.id].subdomains;
+      let index = brothers.findIndex((d) => d.id === props.currentDomain.id);
       index += navigationAmount;
-      if (0 <= index && index < brotherDomains.length) {
-        return brotherDomains[index];
+      if (0 <= index && index < brothers.length) {
+        return brothers[index];
       }
     }
     // No brother domain navigationAmount over from currentDomain

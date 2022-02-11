@@ -24,19 +24,16 @@ describe("Test the TreeViewReducer", () => {
       new TreeSemanticDomain("Baz", "5.2"),
     ];
     const initialJson = [{ ...parent, subdomains }];
-    const expectedDomain = {
+    const expectedDomain: TreeSemanticDomain = {
       name: "",
       id: "",
       description: "",
-      subdomains: [
-        { ...parent, parentDomain: {}, subdomains: [...subdomains] },
-      ],
+      subdomains: [{ ...parent, subdomains: [...subdomains] }],
       questions: [],
     };
     expectedDomain.subdomains[0].subdomains.map((value) => {
       return { ...value, parentDomains: expectedDomain.subdomains[0] };
     });
-    expectedDomain.subdomains[0].parentDomain = expectedDomain;
     expect(createDomains(initialJson)).toEqual(expectedDomain);
   });
 
@@ -47,9 +44,7 @@ describe("Test the TreeViewReducer", () => {
   });
 
   it("Returns default state when reset action is passed", () => {
-    const action: StoreAction = {
-      type: StoreActionTypes.RESET,
-    };
+    const action: StoreAction = { type: StoreActionTypes.RESET };
 
     expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
   });
