@@ -76,8 +76,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
-    const message = e.target.value;
-    this.setState({ message });
+    this.setState({ message: e.target.value });
   }
 
   render() {

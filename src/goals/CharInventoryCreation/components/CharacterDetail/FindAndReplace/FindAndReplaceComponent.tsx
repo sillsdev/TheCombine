@@ -47,9 +47,7 @@ export class FindAndReplace extends React.Component<
   ) {
     const value = e.target.value;
 
-    this.setState({
-      [field]: value,
-    } as Pick<FindAndReplaceState, K>);
+    this.setState({ [field]: value } as Pick<FindAndReplaceState, K>);
   }
 
   render() {
