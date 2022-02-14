@@ -10,7 +10,7 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeView, TreeViewProps } from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
 import MockDomain from "components/TreeView/tests/MockSemanticDomain";
-import { newWritingSystem } from "types/project";
+import { newProject, newWritingSystem } from "types/project";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: ReactTestInstance;
@@ -38,7 +38,10 @@ jest.mock("components/TreeView/TreeViewReducer", () => {
   };
 });
 
-const mockStore = configureMockStore()({ treeViewState });
+const mockStore = configureMockStore()({
+  treeViewState,
+  currentProjectState: { project: newProject() },
+});
 
 beforeAll(() => {
   createTree();
@@ -77,8 +80,6 @@ describe("TreeView", () => {
 });
 
 const treeViewProps: TreeViewProps = {
-  semDomWritingSystem: newWritingSystem(),
-  currentDomain: MockDomain,
   returnControlToCaller: RETURN_MOCK,
   navigateTree: NAVIGATE_MOCK,
 };

@@ -1,5 +1,5 @@
 import TreeSemanticDomain, {
-  ParentMap,
+  DomainMap,
 } from "components/TreeView/TreeSemanticDomain";
 
 // Parent
@@ -8,7 +8,7 @@ const PAR: TreeSemanticDomain = {
   description: "parent desc",
 };
 
-export const parMap: ParentMap = {};
+export const parMap: DomainMap = {};
 
 // Following subdomains
 for (let i = 0; i < 3; i++) {

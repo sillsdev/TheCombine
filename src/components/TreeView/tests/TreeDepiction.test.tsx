@@ -38,7 +38,7 @@ function createTree(domain: TreeSemanticDomain) {
     treeMaster = renderer.create(
       <TreeDepiction
         currentDomain={domain}
-        parentMap={{}}
+        domainMap={{}}
         animate={jest.fn()}
       />
     );

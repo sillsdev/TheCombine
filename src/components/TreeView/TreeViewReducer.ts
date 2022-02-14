@@ -1,5 +1,5 @@
 import TreeSemanticDomain, {
-  ParentMap,
+  DomainMap,
 } from "components/TreeView/TreeSemanticDomain";
 import {
   TreeViewAction,
@@ -9,38 +9,38 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export interface TreeViewState {
   currentDomain: TreeSemanticDomain;
-  parentMap: ParentMap;
-  open: boolean;
+  domainMap: DomainMap;
+  open?: boolean;
 }
 
-// Parses a list of semantic domains (to be received from backend)
-export function createDomains(data: TreeSemanticDomain[]): {
-  currentDomain: TreeSemanticDomain;
-  parentMap: ParentMap;
-} {
-  const domains: TreeSemanticDomain = {
-    ...defaultState.currentDomain,
-    subdomains: data,
-  };
-  const parentMap: ParentMap = {};
-  addParentDomains(domains, parentMap);
-  return { currentDomain: domains, parentMap };
+// Parses a list of semantic domains (to be loaded from file)
+export function createDomains(data: TreeSemanticDomain[]): TreeViewState {
+  const currentDomain = new TreeSemanticDomain();
+  currentDomain.subdomains = data;
+  const domainMap: DomainMap = {};
+  mapDomain(currentDomain, domainMap);
+  return { currentDomain, domainMap };
 }
 
-// Adds the parent domains to the information sent by the backend
-function addParentDomains(parent: TreeSemanticDomain, parentMap: ParentMap) {
-  if (parent.subdomains) {
-    for (const domain of parent.subdomains) {
-      parentMap[domain.id] = parent;
-      addParentDomains(domain, parentMap);
-    }
+// Split off subdomains and add domainIds
+function mapDomain(
+  domain: TreeSemanticDomain,
+  domainMap: DomainMap,
+  parentId?: string
+) {
+  domain.parentId = parentId;
+  domain.childIds = domain.subdomains.map((dom) => dom.id);
+  for (const child of domain.subdomains) {
+    mapDomain(child, domainMap, domain.id);
   }
+  domain.subdomains = [];
+  domainMap[domain.id] = domain;
 }
 
 // Creates a dummy default state
 export const defaultState: TreeViewState = {
   open: false,
-  parentMap: {},
+  domainMap: {},
   currentDomain: new TreeSemanticDomain(),
 };
 
@@ -59,10 +59,10 @@ export const treeViewReducer = (
       }
       return { ...state, currentDomain: action.domain };
     case TreeActionType.SET_PARENT_MAP:
-      if (!action.parentMap) {
-        throw new Error("Cannot set parent map, without a parent map.");
+      if (!action.domainMap) {
+        throw new Error("Cannot set parent map without a parent map.");
       }
-      return { ...state, parentMap: action.parentMap };
+      return { ...state, domainMap: action.domainMap };
     case StoreActionTypes.RESET:
       return defaultState;
     default:

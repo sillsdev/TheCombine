@@ -1,24 +1,23 @@
 import { Grid, Zoom } from "@material-ui/core";
 import { animate } from "motion";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  SetParentMapAction,
-  TraverseTreeAction,
-  TreeActionType,
-} from "./TreeViewActions";
 import { WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import {
+  SetDomainMapAction,
+  TraverseTreeAction,
+  TreeActionType,
+} from "components/TreeView/TreeViewActions";
 import { createDomains } from "components/TreeView/TreeViewReducer";
 import { StoreState } from "types";
 import { newWritingSystem } from "types/project";
 
-/* This list should cover the domain data imported from resources/semantic-domains/
- * and be covered by the switch statement below. */
+// This list should cover the domain data in resources/semantic-domains/
 export const allSemDomWritingSystems = [
   newWritingSystem("en", "English"),
   newWritingSystem("es", "Español"),
@@ -32,18 +31,25 @@ function getSemDomWritingSystem(
 }
 
 export interface TreeViewProps {
-  semDomWritingSystem: WritingSystem;
-  currentDomain: TreeSemanticDomain;
-  navigateTree: (domain: TreeSemanticDomain) => void;
   returnControlToCaller: () => void;
 }
 
 export function TreeView(props: TreeViewProps & LocalizeContextProps) {
+  const currentDomain = useSelector(
+    (state: StoreState) => state.treeViewState.currentDomain
+  );
+  const semDomWritingSystem = useSelector(
+    (state: StoreState) => state.currentProjectState.project.semDomWritingSystem
+  );
   const visible = useSelector((state: StoreState) => state.treeViewState.open);
-  const parentMap = useSelector(
-    (state: StoreState) => state.treeViewState.parentMap
+  const domainMap = useSelector(
+    (state: StoreState) => state.treeViewState.domainMap
   );
   const dispatch = useDispatch();
+  const navigateTree = (domain: TreeSemanticDomain) => {
+    dispatch(TraverseTreeAction(domain));
+  };
+  const [lang, setLang] = useState("");
 
   const loadLocalizedJson = (languageKey: string): Promise<any> => {
     return new Promise((res) => {
@@ -53,31 +59,33 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
     });
   };
 
-  const loadLocalizedDomains = useCallback(() => {
-    async function getSemanticDomains(lang: string) {
-      const localizedDomains = await loadLocalizedJson(lang);
-      const { currentDomain, parentMap } = createDomains(localizedDomains);
-      if (!currentDomain.name) {
-        currentDomain.name = props.translate("addWords.domain") as string;
-      }
-      dispatch(SetParentMapAction(parentMap));
-      dispatch(TraverseTreeAction(currentDomain));
-    }
+  useEffect(() => {
+    dispatch({ type: TreeActionType.OPEN_TREE }); // Start with the tree open
 
     /* Select the language used for the semantic domains.
      * Primary: Has it been specified for the project?
      * Secondary: What is the current browser/ui language? */
-    const lang =
-      getSemDomWritingSystem(props.semDomWritingSystem)?.bcp47 ??
-      props.activeLanguage.code;
+    setLang(
+      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
+        props.activeLanguage.code
+    );
+  }, [dispatch, semDomWritingSystem, setLang, props]);
 
-    getSemanticDomains(lang);
-  }, [props, dispatch]);
-
+  const headDomainName = props.translate("addWords.domain") as string;
   useEffect(() => {
-    dispatch({ type: TreeActionType.OPEN_TREE }); // Start with the tree open
-    loadLocalizedDomains();
-  }, [dispatch, loadLocalizedDomains]);
+    async function getSemanticDomains(lang: string) {
+      const localizedDomains = await loadLocalizedJson(lang);
+      const { currentDomain, domainMap } = createDomains(localizedDomains);
+      if (!currentDomain.name) {
+        currentDomain.name = headDomainName;
+      }
+      dispatch(SetDomainMapAction(domainMap));
+      dispatch(TraverseTreeAction(currentDomain));
+    }
+    if (lang) {
+      getSemanticDomains(lang);
+    }
+  }, [dispatch, lang, headDomainName]);
 
   function animateHandler(domain?: TreeSemanticDomain): Promise<void> {
     if (visible) {
@@ -85,8 +93,8 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
       return new Promise((resolve) =>
         setTimeout(() => {
           if (domain && !visible) {
-            if (domain.id !== props.currentDomain.id) {
-              props.navigateTree(domain);
+            if (domain.id !== currentDomain.id) {
+              navigateTree(domain);
               dispatch({ type: TreeActionType.OPEN_TREE });
             } else {
               props.returnControlToCaller();
@@ -103,8 +111,8 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
       {/* Domain search */}
       <Grid container justifyContent="center">
         <TreeSearch
-          currentDomain={props.currentDomain}
-          parentMap={parentMap}
+          currentDomain={currentDomain}
+          domainMap={domainMap}
           animate={animateHandler}
         />
       </Grid>
@@ -112,7 +120,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
       <Zoom
         in={visible}
         onEntered={() => {
-          if (props.currentDomain.id) {
+          if (currentDomain.id) {
             animate(
               "#current-domain",
               { transform: ["none", "scale(.9)", "none"] },
@@ -128,9 +136,9 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
           alignItems="center"
         >
           <TreeDepiction
-            currentDomain={props.currentDomain}
+            currentDomain={currentDomain}
             animate={animateHandler}
-            parentMap={parentMap}
+            domainMap={domainMap}
           />
         </Grid>
       </Zoom>

@@ -19,7 +19,7 @@ const MOCK_ANIMATE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
   currentDomain: MockDomain,
-  parentMap: parMap,
+  domainMap: parMap,
   animate: MOCK_ANIMATE,
 };
 

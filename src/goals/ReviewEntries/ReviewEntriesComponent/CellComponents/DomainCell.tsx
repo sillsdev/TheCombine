@@ -5,7 +5,7 @@ import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
 import { SemanticDomain } from "api/models";
-import TreeView from "components/TreeView";
+import TreeView from "components/TreeView/TreeViewComponent";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";

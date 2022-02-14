@@ -4,12 +4,12 @@ import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
 import TreeSemanticDomain, {
-  ParentMap,
+  DomainMap,
 } from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeSearchProps {
   currentDomain: TreeSemanticDomain;
-  parentMap: ParentMap;
+  domainMap: DomainMap;
   animate: (domain: TreeSemanticDomain) => Promise<void>;
 }
 
@@ -76,39 +76,14 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [input, setInput] = useState<string>("");
   const [searchError, setSearchError] = useState<boolean>(false);
 
-  // Search for a semantic domain by number
-  function searchDomainByNumber(
-    parent: TreeSemanticDomain,
-    number: string
-  ): TreeSemanticDomain | undefined {
-    for (const domain of parent.subdomains)
-      if (domain.id === number) {
-        return domain;
-      }
-    if (parent.id === number) {
-      return parent;
-    }
-    return undefined;
-  }
-
   // Searches for a semantic domain by name
-  function searchDomainByName(
-    domain: TreeSemanticDomain,
-    target: string
-  ): TreeSemanticDomain | undefined {
+  function searchDomainByName(target: string): TreeSemanticDomain | undefined {
     const check = (checkAgainst: TreeSemanticDomain | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
-    if (check(domain)) {
-      return domain;
-    }
-    // If there are subdomains
-    if (domain.subdomains.length > 0) {
-      let tempDomain: TreeSemanticDomain | undefined;
-      for (const sub of domain.subdomains) {
-        tempDomain = searchDomainByName(sub, target);
-        if (check(tempDomain)) {
-          return tempDomain;
-        }
+    for (const id in props.domainMap) {
+      const domain = props.domainMap[id];
+      if (check(domain)) {
+        return domain;
       }
     }
     return undefined;
@@ -137,30 +112,19 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 
     if (event.key === Key.Enter) {
       event.preventDefault();
-      // Find parent domain
-      let parent: TreeSemanticDomain | undefined = props.currentDomain;
-      while (parent && props.parentMap[parent.id]) {
-        parent = props.parentMap[parent.id];
-      }
 
       // Search for domain
       if (!isNaN(parseInt(input))) {
-        let i = 0;
-        while (parent !== undefined) {
-          parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
-          if (parent !== undefined && parent.id === input) {
-            animateSuccessfulSearch(parent, event);
-            // Return to indicate success and skip setting error state.
-            return;
-          } else if (parent !== undefined && parent.subdomains.length === 0) {
-            break;
-          }
-          i++;
+        const domain = props.domainMap[input];
+        if (domain) {
+          animateSuccessfulSearch(domain, event);
+          // Return to indicate success and skip setting error state.
+          return;
         }
       } else {
-        parent = searchDomainByName(parent, input);
-        if (parent !== undefined) {
-          animateSuccessfulSearch(parent, event);
+        const domain = searchDomainByName(input);
+        if (domain !== undefined) {
+          animateSuccessfulSearch(domain, event);
           // Return to indicate success and skip setting error state.
           return;
         }

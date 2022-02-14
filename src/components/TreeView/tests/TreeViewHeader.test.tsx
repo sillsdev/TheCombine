@@ -15,13 +15,13 @@ import MockDomain, {
 const MOCK_ANIMATE = jest.fn();
 const testProps: TreeHeaderProps = {
   currentDomain: MockDomain,
-  parentMap: parMap,
+  domainMap: parMap,
   animate: MOCK_ANIMATE,
 };
 // These props have a currentDomain with a parent and two brothers
 const upOneWithBrothersProps: TreeHeaderProps = {
   currentDomain: MockDomain.subdomains[1],
-  parentMap: parMap,
+  domainMap: parMap,
   animate: MOCK_ANIMATE,
 };
 const eventListeners: Map<string, EventListener> = new Map<

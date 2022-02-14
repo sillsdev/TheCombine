@@ -1,5 +1,5 @@
 import TreeSemanticDomain, {
-  ParentMap,
+  DomainMap,
 } from "components/TreeView/TreeSemanticDomain";
 
 export enum TreeActionType {
@@ -12,7 +12,7 @@ export enum TreeActionType {
 export interface TreeViewAction {
   type: TreeActionType;
   domain?: TreeSemanticDomain;
-  parentMap?: ParentMap;
+  domainMap?: DomainMap;
 }
 
 export function CloseTreeAction(): TreeViewAction {
@@ -29,6 +29,6 @@ export function TraverseTreeAction(
   return { type: TreeActionType.TRAVERSE_TREE, domain: newDomain };
 }
 
-export function SetParentMapAction(newParentMap: ParentMap): TreeViewAction {
-  return { type: TreeActionType.SET_PARENT_MAP, parentMap: newParentMap };
+export function SetDomainMapAction(newDomainMap: DomainMap): TreeViewAction {
+  return { type: TreeActionType.SET_PARENT_MAP, domainMap: newDomainMap };
 }
