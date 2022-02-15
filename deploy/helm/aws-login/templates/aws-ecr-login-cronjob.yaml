@@ -1,5 +1,4 @@
 {{- if .Values.awsEcr.cron }}
----
 apiVersion: batch/v1
 kind: CronJob
 metadata:

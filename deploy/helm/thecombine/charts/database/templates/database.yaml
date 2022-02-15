@@ -2,7 +2,6 @@
 #  - PersistentVolumeClaim/database-data
 #  - Deployment/database
 #  - Service/database
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
