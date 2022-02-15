@@ -11,7 +11,6 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import {
   SetDomainMapAction,
   TraverseTreeAction,
-  TreeActionType,
 } from "components/TreeView/TreeViewActions";
 import { createDomains } from "components/TreeView/TreeViewReducer";
 import { StoreState } from "types";
@@ -41,7 +40,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
   const semDomWritingSystem = useSelector(
     (state: StoreState) => state.currentProjectState.project.semDomWritingSystem
   );
-  const visible = useSelector((state: StoreState) => state.treeViewState.open);
+  const [visible, setVisible] = useState(true);
   const domainMap = useSelector(
     (state: StoreState) => state.treeViewState.domainMap
   );
@@ -60,8 +59,6 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
   };
 
   useEffect(() => {
-    dispatch({ type: TreeActionType.OPEN_TREE }); // Start with the tree open
-
     /* Select the language used for the semantic domains.
      * Primary: Has it been specified for the project?
      * Secondary: What is the current browser/ui language? */
@@ -69,7 +66,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
       getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
         props.activeLanguage.code
     );
-  }, [dispatch, semDomWritingSystem, setLang, props]);
+  }, [semDomWritingSystem, setLang, props]);
 
   const headDomainName = props.translate("addWords.domain") as string;
   useEffect(() => {
@@ -87,18 +84,16 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
     }
   }, [dispatch, lang, headDomainName]);
 
-  function animateHandler(domain?: TreeSemanticDomain): Promise<void> {
+  function animateHandler(domain: TreeSemanticDomain): Promise<void> {
     if (visible) {
-      dispatch({ type: TreeActionType.OPEN_TREE });
+      setVisible(false);
       return new Promise((resolve) =>
         setTimeout(() => {
-          if (domain && !visible) {
-            if (domain.id !== currentDomain.id) {
-              navigateTree(domain);
-              dispatch({ type: TreeActionType.OPEN_TREE });
-            } else {
-              props.returnControlToCaller();
-            }
+          if (domain.id !== currentDomain.id) {
+            navigateTree(domain);
+            setVisible(true);
+          } else {
+            props.returnControlToCaller();
           }
           resolve();
         }, 300)

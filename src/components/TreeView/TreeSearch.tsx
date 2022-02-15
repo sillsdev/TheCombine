@@ -89,13 +89,13 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
     return undefined;
   }
 
-  /** Animate the parent and clear search input after successfully searching
-   * for a new domain.*/
+  /** Animate the domain and clear search input after successfully searching
+   * for a new domain. */
   function animateSuccessfulSearch(
-    parent: TreeSemanticDomain,
+    domain: TreeSemanticDomain,
     event: React.KeyboardEvent
   ): void {
-    props.animate(parent);
+    props.animate(domain);
     setInput("");
     (event.target as any).value = "";
     setSearchError(false);
