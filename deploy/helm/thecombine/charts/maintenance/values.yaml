@@ -22,6 +22,7 @@ global:
   imageTag: "latest"
   # Define the type of image registry to use, awsEcr or local
   imageRegistry: local
+  # Default AWS S3 location
   awsS3Location: "thecombine.app"
 
 imageName: combine_maint
