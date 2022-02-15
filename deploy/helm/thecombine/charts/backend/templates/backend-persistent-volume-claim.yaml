@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
-  {{- if contains "RollingUpdate" .Values.global.updateStrategy  }}
+  {{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
     - ReadWriteMany
   {{- else }}
     - ReadWriteOnce

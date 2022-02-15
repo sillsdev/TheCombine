@@ -13,7 +13,7 @@ spec:
       combine-component: frontend
   strategy:
     type: {{ .Values.global.updateStrategy }}
-{{- if contains "RollingUpdate" .Values.global.updateStrategy  }}
+{{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
