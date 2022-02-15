@@ -2,18 +2,25 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
 global:
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
-  adminUsername: "Change Me"
-  adminPassword: "Change Me"
-  adminEmail: "Change Me"
-  awsAccount: "Change Me"
-  awsDefaultRegion: "Change Me"
+  adminUsername: "Override"
+  adminPassword: "Override"
+  adminEmail: "Override"
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
   pullSecretName: "None"
-  combineJwtSecretKey: "Change Me"
-  combineSmtpUsername: "Change Me"
-  combineSmtpPassword: "Change Me"
+  combineJwtSecretKey: "Override"
+  combineSmtpUsername: "Override"
+  combineSmtpPassword: "Override"
   imageTag: "latest"
   # Define the type of image registry to use, awsEcr or local
   imageRegistry: local
