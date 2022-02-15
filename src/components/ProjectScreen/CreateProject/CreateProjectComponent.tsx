@@ -82,40 +82,40 @@ export default class CreateProject extends React.Component<
 
   setAnalysisBcp47 = (bcp47: string) => {
     if (bcp47) {
-      if (this.state.analysisLanguages[0]) {
-        this.setState((state) => {
-          state.analysisLanguages[0].bcp47 = bcp47;
-          return { analysisLanguages: state.analysisLanguages };
-        });
-      } else {
-        const analysisLanguages = [newWritingSystem(bcp47)];
-        this.setState({ analysisLanguages });
-      }
+      this.setState((state) => {
+        const analysisLanguages = state.analysisLanguages;
+        if (analysisLanguages.length) {
+          analysisLanguages[0].bcp47 = bcp47;
+        } else {
+          analysisLanguages.push(newWritingSystem(bcp47));
+        }
+        return { analysisLanguages };
+      });
     }
   };
 
   setAnalysisLangName = (name: string) => {
-    if (this.state.analysisLanguages[0]) {
-      this.setState((state) => {
-        state.analysisLanguages[0].name = name;
-        return { analysisLanguages: state.analysisLanguages };
-      });
-    } else {
-      const analysisLanguages = [newWritingSystem("", name)];
-      this.setState({ analysisLanguages });
-    }
+    this.setState((state) => {
+      const analysisLanguages = state.analysisLanguages;
+      if (analysisLanguages.length) {
+        analysisLanguages[0].name = name;
+      } else {
+        analysisLanguages.push(newWritingSystem("", name));
+      }
+      return { analysisLanguages };
+    });
   };
 
   setAnalysisFont = (font: string) => {
-    if (this.state.analysisLanguages[0]) {
-      this.setState((state) => {
-        state.analysisLanguages[0].font = font;
-        return { analysisLanguages: state.analysisLanguages };
-      });
-    } else {
-      const analysisLanguages = [newWritingSystem("", "", font)];
-      this.setState({ analysisLanguages });
-    }
+    this.setState((state) => {
+      const analysisLanguages = state.analysisLanguages;
+      if (analysisLanguages.length) {
+        analysisLanguages[0].font = font;
+      } else {
+        analysisLanguages.push(newWritingSystem("", "", font));
+      }
+      return { analysisLanguages };
+    });
   };
 
   componentDidMount() {
@@ -135,13 +135,14 @@ export default class CreateProject extends React.Component<
   }
 
   updateLanguageData(languageData?: File) {
-    const fileName = languageData?.name;
-    this.setState({ languageData, fileName });
+    this.setState({ languageData, fileName: languageData?.name });
   }
 
   async createProject(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
-    if (this.props.success) return;
+    if (this.props.success) {
+      return;
+    }
 
     const name = this.state.name.trim();
     const vernLang = this.state.vernLanguage;

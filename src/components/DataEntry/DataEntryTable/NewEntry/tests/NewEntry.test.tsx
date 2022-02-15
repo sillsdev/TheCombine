@@ -12,7 +12,6 @@ describe("NewEntry", () => {
     renderer.act(() => {
       renderer.create(
         <NewEntry
-          allVerns={[]}
           allWords={[]}
           defunctWordIds={[]}
           updateWordWithNewGloss={jest.fn()}
