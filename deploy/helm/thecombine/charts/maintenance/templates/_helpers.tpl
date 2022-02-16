@@ -9,6 +9,6 @@
 
 {{/* Build the backup location string */}}
 {{- define "maintenance.backupNameFilter" -}}
-  {{- $locationString := replace "." "-" .Values.global.serverName }}
-  {{- print "/" $locationString "-" }}
+  {{- $hostString := replace "." "-" .Values.global.serverName }}
+  {{- print "/" $hostString "-" }}
 {{- end }}
