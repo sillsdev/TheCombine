@@ -5,6 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Setup Local K8S",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
+      "console": "integratedTerminal",
+      "args": ["--target", "localhost", "--image-tag", "latest"]
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",

@@ -9,7 +9,7 @@ aws-login:
   enabled: false
 
 global:
-  imageRegistry: localhost:5000
+  imageRegistry: localhost:5050
 
 ingressClass: traefik
 

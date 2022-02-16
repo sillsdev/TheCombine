@@ -1,6 +1,6 @@
 {{/* Build continer image name */}}
 {{- define "maintenance.containerImage" -}}
-  {{- $registry := "localhost:5000" }}
+  {{- $registry := .Values.global.imageRegistry }}
   {{- if contains "awsEcr" .Values.global.imageRegistry }}
     {{- $registry = printf "%s.dkr.ecr.%s.amazonaws.com" .Values.global.awsAccount .Values.global.awsDefaultRegion }}
   {{- end }}
