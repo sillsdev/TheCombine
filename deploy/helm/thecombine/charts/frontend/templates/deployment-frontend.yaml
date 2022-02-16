@@ -31,11 +31,6 @@ spec:
                 configMapKeyRef:
                   key: CERT_ADDL_DOMAINS
                   name: env-frontend
-            - name: CERT_PROXY_DOMAINS
-              valueFrom:
-                configMapKeyRef:
-                  key: CERT_PROXY_DOMAINS
-                  name: env-frontend
             - name: CONFIG_CAPTCHA_REQD
               valueFrom:
                 configMapKeyRef:
