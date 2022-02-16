@@ -194,7 +194,7 @@ For the Production or QA server,
 To install/upgrade _The Combine_ run the following command:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 cd <COMBINE>/deploy
 python scripts/setup_combine.py
 ```
