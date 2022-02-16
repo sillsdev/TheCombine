@@ -10,7 +10,14 @@
       "request": "launch",
       "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
       "console": "integratedTerminal",
-      "args": ["--target", "localhost", "--image-tag", "latest"]
+      "args": [
+        "--target",
+        "localhost",
+        "--image-tag",
+        "latest",
+        "--debug",
+        "--dry-run"
+      ]
     },
     {
       "type": "chrome",
