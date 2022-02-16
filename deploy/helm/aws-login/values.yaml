@@ -8,6 +8,7 @@
 #  or upgraded.  DO NOT enter secret values in this file!
 #  The ./deploy/scripts/setup_combine.py script automatically creates
 #  the overrides from environment variables.  See ./docs/deploy/README.md
+
 global:
   awsAccount: "Override"
   awsDefaultRegion: "Override"

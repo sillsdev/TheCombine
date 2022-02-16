@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingressClass }}
-{{- if eq .Values.ingressClass "nginx" }}    
+{{- if eq .Values.ingressClass "nginx" }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
 {{- end }}
 {{- if .Values.certManager.enabled }}
