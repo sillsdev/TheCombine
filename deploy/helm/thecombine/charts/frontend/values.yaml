@@ -15,8 +15,6 @@ imageName: combine_frontend
 
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
-# The cert proxy list is a space-separated string list of names for creating certificates
-combineCertProxyList: ""
 configCaptchaRequired: "false"
 configCaptchaSiteKey: "None"
 configEmailEnabled: "false"

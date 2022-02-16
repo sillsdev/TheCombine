@@ -9,6 +9,6 @@
 
 {{/* Build the SSL Certificate secret name */}}
 {{- define "cert-proxy-client.certSecretName" -}}
-  {{- $locationString := replace "." "-" .Values.global.serverName }}
-  {{- print $locationString "-tls" }}
+  {{- $hostString := replace "." "-" .Values.global.serverName }}
+  {{- print $hostString "-tls" }}
 {{- end }}
