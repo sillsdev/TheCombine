@@ -7,7 +7,6 @@ metadata:
 data:
   SERVER_NAME: {{ .Values.global.serverName }}
   CERT_ADDL_DOMAINS: {{ .Values.combineAddlDomainList | quote }}
-  CERT_PROXY_DOMAINS: {{ .Values.combineCertProxyList | quote }}
   CONFIG_USE_CONNECTION_URL: "true"
   CONFIG_CAPTCHA_REQD: {{ .Values.configCaptchaRequired | quote }}
   CONFIG_CAPTCHA_SITE_KEY: {{ .Values.configCaptchaSiteKey | quote }}
