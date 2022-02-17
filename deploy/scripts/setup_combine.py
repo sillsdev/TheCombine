@@ -152,6 +152,19 @@ def get_installed_charts(helm_namespace: str) -> List[str]:
     return chart_list
 
 
+def add_namespace(namespace: str) -> bool:
+    """
+    Create a Kubernetes namespace if and only if it does not exist.
+    
+    Returns True if the namespace was added.
+    """
+    lookup_results = run_cmd(["kubectl", "get", "namespace", namespace], check_results=False)
+    if lookup_results.returncode != 0:
+        run_cmd(["kubectl", "create", "namespace", namespace])
+        return True
+    return False
+
+
 def main() -> None:
     args = parse_args()
     if args.target is None:
@@ -184,10 +197,6 @@ def main() -> None:
 
     # create list of target specific variable values
     target_vars: List[str] = [f"global.serverName={target}", f"global.imageTag={image_tag}"]
-    if "set" in this_config:
-        for name in this_config["set"]:
-            value = this_config["set"][name]
-            target_vars.append(f"{name}={value}")
     if args.set:
         target_vars.extend(args.set)
 
@@ -213,11 +222,15 @@ def main() -> None:
         else:
             chart_list = [args.chart]
         for chart in chart_list:
-            # get list of charts in target namespace
+            # create the chart namespace if it does not exist
             chart_namespace = config["charts"][chart]["namespace"]
-            installed_charts = get_installed_charts(chart_namespace)
-            if args.debug:
-                print(f"Charts Installed in '{chart_namespace}':\n{installed_charts}")
+            if add_namespace(chart_namespace):
+                installed_charts = []
+            else:
+                # get list of charts in target namespace
+                installed_charts = get_installed_charts(chart_namespace)
+                if args.debug:
+                    print(f"Charts Installed in '{chart_namespace}':\n{installed_charts}")
 
             # delete existing chart if --clean specified
             helm_action = HelmAction.INSTALL
@@ -232,12 +245,17 @@ def main() -> None:
             include_secrets = create_secrets(
                 config["charts"][chart]["secrets"], output_file=secrets_file
             )
+            if "set" in this_config:
+                config_file = Path(secrets_dir).resolve() / f"config_{chart}.yaml"
+                with open(config_file, "w") as file:
+                    yaml.dump(this_config["set"], file)
+
             # create the base helm install command
             chart_dir = helm_dir / chart
             helm_cmd = [
                 "helm",
                 "--namespace",
-                config["charts"][chart]["namespace"],
+                chart_namespace,
                 helm_action.value,
                 chart,
                 str(chart_dir),
@@ -259,6 +277,8 @@ def main() -> None:
                         str(secrets_file),
                     ]
                 )
+            if config_file is not None:
+                helm_cmd.extend(["-f", str(config_file)])
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
                 helm_cmd.extend(addl_configs)

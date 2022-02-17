@@ -14,7 +14,7 @@ spec:
   tls:
   - hosts:
     - {{ . }}
-    secretName: {{ regexReplaceAll "[\\._-]+" "-" . }}-tls
+    secretName: {{ replace "." "-" . }}-tls
   rules:
   - host: {{ . }}
     http:
