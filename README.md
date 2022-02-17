@@ -330,15 +330,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Runs only the front end of the app in the development mode.
 
-> Note: The frontend automatically recompiles if you make frontend edits. You will also see any lint errors in the
-> console.
-
 #### `npm run backend`
 
 Runs only the backend.
-
-> Note: The backend automatically recompiles if you make backend edits. You will also see any lint errors in the
-> console.
 
 #### `npm run database`
 
