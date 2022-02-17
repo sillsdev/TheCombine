@@ -155,7 +155,7 @@ def get_installed_charts(helm_namespace: str) -> List[str]:
 def add_namespace(namespace: str) -> bool:
     """
     Create a Kubernetes namespace if and only if it does not exist.
-    
+
     Returns True if the namespace was added.
     """
     lookup_results = run_cmd(["kubectl", "get", "namespace", namespace], check_results=False)
