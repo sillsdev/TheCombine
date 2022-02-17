@@ -144,19 +144,6 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
    3. Add `--kubeconfig=~/.kube/<target>/config` to each `helm` and `kubectl` command. The `setup_combine.py` command
       accepts a `kubeconfig` option as well.
 
-4. Create `thecombine` namespace:
-
-   ```bash
-   kubectl create namespace thecombine
-   ```
-
-5. Create `combine-cert-proxy` namespace for systems that use the `prod` profile. These systems must be routable from
-   the public internet. See `./deploy/scripts/config.yaml` for which systems use this profile.
-
-   ```bash
-   kubectl create namespace combine-cert-proxy
-   ```
-
 ### Installing _The Combine_ Helm Charts
 
 #### Setup
@@ -194,7 +181,7 @@ For the Production or QA server,
 To install/upgrade _The Combine_ run the following command:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 cd <COMBINE>/deploy
 python scripts/setup_combine.py
 ```

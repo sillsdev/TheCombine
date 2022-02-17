@@ -160,7 +160,7 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
    ```bash
-   # run within Python virtual environment
+   # run within Python virtual environment (venv)
    python scripts/docker_setup.py
 
    # To view options, run with --help
@@ -285,7 +285,7 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 python -m pip install --upgrade pip pip-tools
 python -m piptools sync dev-requirements.txt
 ```
@@ -293,21 +293,21 @@ python -m piptools sync dev-requirements.txt
 Note, you can also now perform automated code formatting of Python code:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 tox -e fmt
 ```
 
 To run all Python linting steps:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 tox
 ```
 
 To upgrade all pinned dependencies:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 python -m piptools compile --upgrade dev-requirements.in
 ```
 
@@ -330,14 +330,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Runs only the front end of the app in the development mode.
 
-> Note: The frontend automatically recompiles if your make frontend edits. You will also see any lint errors in the
-> console.
-
 #### `npm run backend`
 
 Runs only the backend.
-
-> Note: If you make backend edits, the backend will _not_ recompile—you need to rerun `npm start` or `npm run backend`.
 
 #### `npm run database`
 
@@ -377,7 +372,7 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 After that, run the following script to regenerate the frontend OpenAPI bindings in place:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 python scripts/generate_openapi.py
 ```
 
@@ -524,11 +519,7 @@ python3 scripts/cleanup_local_repo.py
 ## Maintenance Scripts for TheCombine
 
 The maintenance scripts enable certain maintenance tasks on your instance of _TheCombine_. _TheCombine_ may be running
-in either a development environment or the production/qa environment. in one of two environments:
-
-1. _Development Environment_ -
-2. _Production Environment_ - The descriptions of each of the maintenance tasks below provide instructions for
-   completing the task in each of the environments.
+in either a development environment or the production/qa environment.
 
 ### Development Environment
 
@@ -675,14 +666,14 @@ To locally build the user guide and serve it dynamically (automatically reloadin
 your Python virtual environment:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 tox -e user-guide-serve
 ```
 
 To locally build the user guide statically into `docs/user-guide/site`:
 
 ```bash
-# run within Python virtual environment
+# run within Python virtual environment (venv)
 tox -e user-guide
 ```
 
