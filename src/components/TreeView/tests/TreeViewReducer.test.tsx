@@ -1,4 +1,6 @@
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeSemanticDomain, {
+  DomainMap,
+} from "components/TreeView/TreeSemanticDomain";
 import {
   TreeViewAction,
   TreeActionType,
@@ -12,29 +14,51 @@ import {
 import { StoreAction, StoreActionTypes } from "rootActions";
 
 describe("Test the TreeViewReducer", () => {
-  it("Creates a SemanticDomain from a JSON string using createDomains", () => {
-    const parent = {
-      name: "Foo",
-      id: "x",
-      description: "foo description",
-      questions: [],
-    };
+  it("Creates currentDomain and domainMap from JSON data using createDomains", () => {
+    // The json data loaded in doesn't have childIds.
+    const parent = new TreeSemanticDomain("Foo", "5") as any;
+    delete parent.childIds;
     const subdomains = [
-      new TreeSemanticDomain("Bar", "5.1"),
-      new TreeSemanticDomain("Baz", "5.2"),
+      new TreeSemanticDomain("Bar", "5.1") as any,
+      new TreeSemanticDomain("Baz", "5.2") as any,
     ];
-    const initialJson = [{ ...parent, subdomains }];
+    delete subdomains[0].childIds;
+    delete subdomains[1].childIds;
+    const initialJson = [{ ...parent, subdomains } as TreeSemanticDomain];
+
+    // Any parentId and childIds are to be generated.
     const expectedDomain: TreeSemanticDomain = {
       name: "",
       id: "",
       description: "",
-      subdomains: [{ ...parent, subdomains: [...subdomains] }],
+      subdomains: [],
       questions: [],
+      childIds: [parent.id],
     };
-    expectedDomain.subdomains[0].subdomains.map((value) => {
-      return { ...value, parentDomains: expectedDomain.subdomains[0] };
-    });
-    expect(createDomains(initialJson)).toEqual(expectedDomain);
+    const expectedMap: DomainMap = {
+      "": expectedDomain,
+      [parent.id]: {
+        ...parent,
+        subdomains: [],
+        parentId: "",
+        childIds: [subdomains[0].id, subdomains[1].id],
+      },
+      [subdomains[0].id]: {
+        ...subdomains[0],
+        parentId: parent.id,
+        childIds: [],
+      },
+      [subdomains[1].id]: {
+        ...subdomains[1],
+        parentId: parent.id,
+        childIds: [],
+      },
+    };
+    const expectedState: TreeViewState = {
+      currentDomain: expectedDomain,
+      domainMap: expectedMap,
+    };
+    expect(createDomains(initialJson)).toEqual(expectedState);
   });
 
   it("Returns defaultState when passed undefined", () => {

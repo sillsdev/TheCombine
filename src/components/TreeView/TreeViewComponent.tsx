@@ -68,8 +68,8 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
     );
   }, [semDomWritingSystem, setLang, props]);
 
-  const headDomainName = props.translate("addWords.domain") as string;
   useEffect(() => {
+    const headDomainName = props.translate("addWords.domain") as string;
     async function getSemanticDomains(lang: string) {
       const localizedDomains = await loadLocalizedJson(lang);
       const { currentDomain, domainMap } = createDomains(localizedDomains);
@@ -82,7 +82,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
     if (lang) {
       getSemanticDomains(lang);
     }
-  }, [dispatch, lang, headDomainName]);
+  }, [dispatch, lang]);
 
   function animateHandler(domain: TreeSemanticDomain): Promise<void> {
     if (visible) {
