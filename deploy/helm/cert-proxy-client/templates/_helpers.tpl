@@ -19,7 +19,7 @@
       {{- print "Always" }}
     {{- else }}
       {{- print "IfNotPresent" }}
-    {{-end }}
+    {{- end }}
   {{- end }}
 {{- end }}
 
