@@ -45,14 +45,19 @@ jest.mock("components/TreeView/TreeViewReducer", () => {
   const realReducer = jest.requireActual("components/TreeView/TreeViewReducer");
   return {
     ...realReducer,
-    createDomains: () => {
+    createDomainMap: () => {
       return { currentDomain: mockDomain, domainMap: mockMap };
     },
   };
 });
 
 const mockStore = configureMockStore()({
-  treeViewState,
+  treeViewState: {
+    ...treeViewState,
+    currentDomain: mockMap[mockDomain.id],
+    domainMap: mockMap,
+    language: "en",
+  },
   currentProjectState: { project: newProject() },
 });
 

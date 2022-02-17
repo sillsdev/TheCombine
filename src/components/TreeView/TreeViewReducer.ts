@@ -10,38 +10,15 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 export interface TreeViewState {
   currentDomain: TreeSemanticDomain;
   domainMap: DomainMap;
+  language: string;
   open?: boolean;
 }
 
-// Parses a list of semantic domains (to be loaded from file)
-export function createDomains(data: TreeSemanticDomain[]): TreeViewState {
-  const currentDomain = new TreeSemanticDomain();
-  currentDomain.subdomains = data;
-  const domainMap: DomainMap = {};
-  mapDomain(currentDomain, domainMap);
-  return { currentDomain, domainMap };
-}
-
-// Split off subdomains and add domainIds
-function mapDomain(
-  domain: TreeSemanticDomain,
-  domainMap: DomainMap,
-  parentId?: string
-) {
-  domain.parentId = parentId;
-  domain.childIds = domain.subdomains.map((dom) => dom.id);
-  for (const child of domain.subdomains) {
-    mapDomain(child, domainMap, domain.id);
-  }
-  domain.subdomains = [];
-  domainMap[domain.id] = domain;
-}
-
-// Creates a dummy default state
 export const defaultState: TreeViewState = {
+  language: "",
   open: false,
-  domainMap: {},
   currentDomain: new TreeSemanticDomain(),
+  domainMap: {},
 };
 
 export const treeViewReducer = (
@@ -53,16 +30,23 @@ export const treeViewReducer = (
       return { ...state, open: false };
     case TreeActionType.OPEN_TREE:
       return { ...state, open: true };
+    case TreeActionType.SET_DOMAIN_MAP:
+      if (!action.domainMap || !action.language) {
+        throw new Error(
+          "Cannot set domain map without a domain map and language."
+        );
+      }
+      return {
+        ...state,
+        currentDomain: action.domainMap[state.currentDomain.id],
+        domainMap: action.domainMap,
+        language: action.language,
+      };
     case TreeActionType.TRAVERSE_TREE:
       if (!action.domain) {
         throw new Error("Cannot traverse tree without specifying domain.");
       }
       return { ...state, currentDomain: action.domain };
-    case TreeActionType.SET_PARENT_MAP:
-      if (!action.domainMap) {
-        throw new Error("Cannot set parent map without a parent map.");
-      }
-      return { ...state, domainMap: action.domainMap };
     case StoreActionTypes.RESET:
       return defaultState;
     default:

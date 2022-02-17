@@ -10,15 +10,13 @@ import TreeSearch, {
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
-import MockDomain, {
-  parMap,
-} from "components/TreeView/tests/MockSemanticDomain";
+import { parMap } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
-  currentDomain: MockDomain,
+  currentDomain: parMap["1"],
   domainMap: parMap,
   animate: MOCK_ANIMATE,
 };
@@ -58,9 +56,10 @@ describe("TreeSearch", () => {
     }
 
     it("switches semantic domain if given number found", () => {
-      simulateTypeAndEnter("1.0");
+      const node = parMap["1.0"];
+      simulateTypeAndEnter(node.id);
       expect(MOCK_STOP_PROP).toHaveBeenCalled();
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 
     it("does not switch semantic domain if given number not found", () => {
@@ -74,15 +73,16 @@ describe("TreeSearch", () => {
     });
 
     it("switches on a length 5 number", () => {
-      const leafNode =
-        MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
-      simulateTypeAndEnter(leafNode.id);
+      const leafNodeId = "1.2.1.1.1";
+      const leafNode = parMap[leafNodeId];
+      simulateTypeAndEnter(leafNodeId);
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafNode);
     });
 
     it("switches semantic domain if given name found", () => {
-      simulateTypeAndEnter(MockDomain.subdomains[0].name);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+      const node = parMap["1.0"];
+      simulateTypeAndEnter(node.name);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 
     it("does not switch semantic domain if given name not found", () => {
@@ -110,14 +110,13 @@ describe("TreeSearch", () => {
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );
-      userEvent.type(screen.getByTestId(testId), "1.2{enter}");
+      const targetId = "1.2";
+      userEvent.type(screen.getByTestId(testId), `${targetId}{enter}`);
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );
-      // verify that we're testing with the matching domain
-      expect(MockDomain.subdomains[2].id).toEqual("1.2");
       // verify that we would switch to the domain requested
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap[targetId]);
     });
   });
 });

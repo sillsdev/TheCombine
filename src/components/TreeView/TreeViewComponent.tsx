@@ -9,10 +9,9 @@ import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import {
-  SetDomainMapAction,
-  TraverseTreeAction,
+  traverseTreeAction,
+  updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
-import { createDomains } from "components/TreeView/TreeViewReducer";
 import { StoreState } from "types";
 import { newWritingSystem } from "types/project";
 
@@ -37,6 +36,9 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
   const currentDomain = useSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
+  const semDomLanguage = useSelector(
+    (state: StoreState) => state.treeViewState.language
+  );
   const semDomWritingSystem = useSelector(
     (state: StoreState) => state.currentProjectState.project.semDomWritingSystem
   );
@@ -46,43 +48,25 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
   );
   const dispatch = useDispatch();
   const navigateTree = (domain: TreeSemanticDomain) => {
-    dispatch(TraverseTreeAction(domain));
-  };
-  const [lang, setLang] = useState("");
-
-  const loadLocalizedJson = (languageKey: string): Promise<any> => {
-    return new Promise((res) => {
-      import(`resources/semantic-domains/${languageKey}.json`).then((data) => {
-        res(data?.default);
-      });
-    });
+    dispatch(traverseTreeAction(domain));
   };
 
   useEffect(() => {
     /* Select the language used for the semantic domains.
      * Primary: Has it been specified for the project?
      * Secondary: What is the current browser/ui language? */
-    setLang(
+    const newLang =
       getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
-        props.activeLanguage.code
-    );
-  }, [semDomWritingSystem, setLang, props]);
-
-  useEffect(() => {
-    const headDomainName = props.translate("addWords.domain") as string;
-    async function getSemanticDomains(lang: string) {
-      const localizedDomains = await loadLocalizedJson(lang);
-      const { currentDomain, domainMap } = createDomains(localizedDomains);
-      if (!currentDomain.name) {
-        currentDomain.name = headDomainName;
-      }
-      dispatch(SetDomainMapAction(domainMap));
-      dispatch(TraverseTreeAction(currentDomain));
+      props.activeLanguage.code;
+    if (newLang && newLang !== semDomLanguage) {
+      dispatch(updateTreeLanguage(newLang));
     }
-    if (lang) {
-      getSemanticDomains(lang);
-    }
-  }, [dispatch, lang]);
+  }, [
+    semDomLanguage,
+    semDomWritingSystem,
+    dispatch,
+    props.activeLanguage.code,
+  ]);
 
   function animateHandler(domain: TreeSemanticDomain): Promise<void> {
     if (visible) {

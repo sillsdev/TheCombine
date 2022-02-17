@@ -7,20 +7,18 @@ import {
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
-import MockDomain, {
-  parMap,
-} from "components/TreeView/tests/MockSemanticDomain";
+import { parMap } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const testProps: TreeHeaderProps = {
-  currentDomain: MockDomain,
+  currentDomain: parMap["1"],
   domainMap: parMap,
   animate: MOCK_ANIMATE,
 };
 // These props have a currentDomain with a parent and two brothers
 const upOneWithBrothersProps: TreeHeaderProps = {
-  currentDomain: MockDomain.subdomains[1],
+  currentDomain: parMap["1.1"],
   domainMap: parMap,
   animate: MOCK_ANIMATE,
 };
@@ -54,31 +52,31 @@ describe("TreeViewHeader", () => {
 
       // The top domain (used in testProps) has no brother on either side
       expect(result.current.getLeftBrother(upOneWithBrothersProps)).toEqual(
-        MockDomain.subdomains[0]
+        parMap["1.0"]
       );
       expect(result.current.getRightBrother(upOneWithBrothersProps)).toEqual(
-        MockDomain.subdomains[2]
+        parMap["1.2"]
       );
     });
   });
 
   describe("typing arrow key", () => {
-    it("right arrow moves to right sibling", () => {
-      render(<TreeViewHeader {...upOneWithBrothersProps} />);
-      simulateKey(Key.ArrowRight);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
-    });
-
     it("left arrow moves to left sibling", () => {
       render(<TreeViewHeader {...upOneWithBrothersProps} />);
       simulateKey(Key.ArrowLeft);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap["1.0"]);
+    });
+
+    it("right arrow moves to right sibling", () => {
+      render(<TreeViewHeader {...upOneWithBrothersProps} />);
+      simulateKey(Key.ArrowRight);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap["1.2"]);
     });
 
     it("up arrow moves to parent domain", () => {
       render(<TreeViewHeader {...upOneWithBrothersProps} />);
       simulateKey(Key.ArrowUp);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap["1"]);
     });
   });
 });

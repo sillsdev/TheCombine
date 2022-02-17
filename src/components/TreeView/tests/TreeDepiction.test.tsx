@@ -2,27 +2,25 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import { parMap } from "components/TreeView/tests/MockSemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {
-  testFromNode("Renders correctly: from Parent", MockDomain);
+  testFromNode("Renders correctly: from parent", parMap["1"]);
   testFromNode(
     "Renders correctly: node w/ even # of subdomains",
-    MockDomain.subdomains[0]
+    parMap["1.0"]
+  );
+  testFromNode("Renders correctly: node w/ odd # of subdomains", parMap["1.1"]);
+  testFromNode(
+    "Renders correctly: node w/ 1 subdomains and 2 siblings",
+    parMap["1.2"]
   );
   testFromNode(
-    "Renders correctly: node w/ odd # of subdomains",
-    MockDomain.subdomains[1]
+    "Renders correctly: node w/ 1 subdomains and no siblings",
+    parMap["1.2.1"]
   );
-  testFromNode(
-    "Renders correctly: node w/ 1 subdomains",
-    MockDomain.subdomains[2]
-  );
-  testFromNode(
-    "Renders correctly: node w/ no subdomains",
-    MockDomain.subdomains[2].subdomains[0]
-  );
+  testFromNode("Renders correctly: node w/ no subdomains", parMap["1.2.1.1.1"]);
 });
 
 // Perform a snapshot test
@@ -38,7 +36,7 @@ function createTree(domain: TreeSemanticDomain) {
     treeMaster = renderer.create(
       <TreeDepiction
         currentDomain={domain}
-        domainMap={{}}
+        domainMap={parMap}
         animate={jest.fn()}
       />
     );
