@@ -10,3 +10,16 @@
     {{- printf "%s:%s" .Values.imageName .Values.global.imageTag }}
   {{- end }}
 {{- end }}
+
+{{/* Get the Image Pull Policy */}}
+{{- define "cert-proxy-server.imagePullPolicy" }}
+  {{- if .Values.imagePullPolicy }}
+    {{- print .Values.imagePullPolicy }}
+  {{- else }}
+    {{- if eq .Values.global.imageTag "latest" }}
+      {{- print "Always" }}
+    {{- else }}
+      {{- print "IfNotPresent" }}
+    {{-end }}
+  {{- end }}
+{{- end }}

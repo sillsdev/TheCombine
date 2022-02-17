@@ -20,8 +20,8 @@ global:
   pullSecretName: "None"
   awsS3Access: aws-s3-credentials
   imageTag: "latest"
-  # Define the type of image registry to use, awsEcr or local
-  imageRegistry: local
+  # Define the image registry to use (may be blank for local images)
+  imageRegistry: ""
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
 

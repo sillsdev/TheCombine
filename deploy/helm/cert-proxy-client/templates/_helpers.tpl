@@ -8,6 +8,18 @@
     {{- printf "%s/%s:%s" $registry .Values.imageName .Values.global.imageTag }}
   {{- else }}
     {{- printf "%s:%s" .Values.imageName .Values.global.imageTag }}
+{{- end }}
+
+{{/* Get the Image Pull Policy */}}
+{{- define "cert-proxy-client.imagePullPolicy" }}
+  {{- if .Values.imagePullPolicy }}
+    {{- print .Values.imagePullPolicy }}
+  {{- else }}
+    {{- if eq .Values.global.imageTag "latest" }}
+      {{- print "Always" }}
+    {{- else }}
+      {{- print "IfNotPresent" }}
+    {{-end }}
   {{- end }}
 {{- end }}
 

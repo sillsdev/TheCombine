@@ -11,6 +11,19 @@
   {{- end }}
 {{- end }}
 
+{{/* Get the Image Pull Policy */}}
+{{- define "maintenance.imagePullPolicy" }}
+  {{- if .Values.global.imagePullPolicy }}
+    {{- print .Values.global.imagePullPolicy }}
+  {{- else }}
+    {{- if eq .Values.global.imageTag "latest" }}
+      {{- print "Always" }}
+    {{- else }}
+      {{- print "IfNotPresent" }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
 {{/* Build the backup location string */}}
 {{- define "maintenance.backupNameFilter" -}}
   {{- $hostString := replace "." "-" .Values.global.serverName }}

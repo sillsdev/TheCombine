@@ -26,8 +26,11 @@ spec:
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
-        - command: [ "/bin/bash", "-c", "--" ]
+        - name: maintenance
+          command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 86400; done;" ]
+          image: {{ template "maintenance.containerImage" . }}
+          imagePullPolicy: {{ template "maintenance.imagePullPolicy" . }}
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -84,13 +87,6 @@ spec:
                 configMapKeyRef:
                   key: backup_filter
                   name: env-maintenance
-          image: {{ template "maintenance.containerImage" . }}
-{{- if eq .Values.global.imageTag "latest" }}
-          imagePullPolicy: Always
-{{- else }}
-          imagePullPolicy: IfNotPresent
-{{- end }}
-          name: maintenance
           resources: {}
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}

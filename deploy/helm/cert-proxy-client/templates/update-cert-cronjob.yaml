@@ -18,11 +18,7 @@ spec:
           serviceAccountName: {{ .Values.serviceAccount.name }}
           containers:
             - image: {{ template "cert-proxy-client.containerImage" . }}
-{{- if eq .Values.global.imageTag "latest" }}
-              imagePullPolicy: Always
-{{- else }}
-              imagePullPolicy: IfNotPresent
-{{- end }}
+              imagePullPolicy: {{ template "cert-proxy-client.imagePullPolicy" . }}
               name: update-cert-cronjob
               command:
                 - update_cert.py

@@ -25,7 +25,10 @@ spec:
         combine-component: frontend
     spec:
       containers:
-        - env:
+        - name: frontend
+          image: {{ template "frontend.containerImage" . }}
+          imagePullPolicy: {{ template "frontend.imagePullPolicy" . }}
+          env:
             - name: CERT_ADDL_DOMAINS
               valueFrom:
                 configMapKeyRef:
@@ -56,13 +59,6 @@ spec:
                 configMapKeyRef:
                   key: ENV_HTTP_ONLY
                   name: env-frontend
-          image: {{ template "frontend.containerImage" . }}
-{{- if eq .Values.global.imageTag "latest" }}
-          imagePullPolicy: Always
-{{- else }}
-          imagePullPolicy: IfNotPresent
-{{- end }}
-          name: frontend
           ports:
             - containerPort: 80
             - containerPort: 443
