@@ -35,6 +35,7 @@ if (fs.existsSync(coverageInfoFile)) {
   }
 } else {
   console.log(
-    `${coverageInfoFile} does not exist. First run: npm run coverage.`
+    `${coverageInfoFile} does not exist. First run:\n
+    npm run gen-backend-coverage-report.`
   );
 }
