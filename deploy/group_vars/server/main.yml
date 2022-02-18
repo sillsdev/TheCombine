@@ -14,6 +14,9 @@
 k8s_engine: none
 k8s_components: []
 
+image_pull_secret: aws-login-credentials
+
+create_namespaces: []
 # k8s namespaces
 app_namespace: thecombine
 
