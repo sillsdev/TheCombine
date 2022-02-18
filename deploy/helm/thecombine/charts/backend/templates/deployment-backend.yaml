@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    combine-component: backend
+  name: backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      combine-component: backend
+  strategy:
+    type: {{ .Values.global.updateStrategy }}
+{{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+{{- end }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        combine-component: backend
+    spec:
+      initContainers:
+        - name: chwonit
+          image: busybox:stable
+          command: ["sh","-c","chown -R 999:999 /myvol"]
+          volumeMounts:
+          - name: backend-data
+            mountPath: /myvol/combine-files
+          imagePullPolicy: IfNotPresent
+      containers:
+        - env:
+            - name: COMBINE_JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_JWT_SECRET_KEY
+                  name: env-backend-secrets
+            - name: COMBINE_PASSWORD_RESET_EXPIRE_TIME
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_PASSWORD_RESET_EXPIRE_TIME
+                  name: env-backend
+            - name: COMBINE_SMTP_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_SMTP_ADDRESS
+                  name: env-backend
+            - name: COMBINE_SMTP_FROM
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_SMTP_FROM
+                  name: env-backend
+            - name: COMBINE_SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_SMTP_PASSWORD
+                  name: env-backend-secrets
+            - name: COMBINE_SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_SMTP_PORT
+                  name: env-backend
+            - name: COMBINE_SMTP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_SMTP_SERVER
+                  name: env-backend
+            - name: COMBINE_SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_SMTP_USERNAME
+                  name: env-backend-secrets
+          image: {{ template "backend.containerImage" . }}
+{{- if eq .Values.global.imageTag "latest" }}
+          imagePullPolicy: Always
+{{- else }}
+          imagePullPolicy: IfNotPresent
+{{- end }}
+          name: backend
+          ports:
+            - containerPort: 5000
+          resources: {}
+          volumeMounts:
+            - mountPath: /home/app/.CombineFiles
+              name: backend-data
+      restartPolicy: Always
+{{- if ne .Values.global.pullSecretName "None" }}
+      imagePullSecrets:
+         - name: {{ .Values.global.pullSecretName }}
+{{- end }}
+      volumes:
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: backend-data
+status: {}

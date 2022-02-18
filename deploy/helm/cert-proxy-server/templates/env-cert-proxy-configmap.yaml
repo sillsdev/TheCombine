@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: {{ .Values.envCertProxy }}
+  namespace: {{ .Release.Namespace }}
+data:
+  AWS_S3_BUCKET: {{ print "s3://" .Values.global.awsS3Location "/" .Values.awsS3CertLoc | quote }}
+  CERT_PROXY_CERTIFICATES: {{ .Values.combineCertProxyList | join " " | quote }}

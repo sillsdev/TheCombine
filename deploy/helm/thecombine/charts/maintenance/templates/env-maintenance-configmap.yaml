@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: env-maintenance
+  namespace: {{ .Release.Namespace }}
+data:
+  aws_bucket: {{ print "s3://" .Values.global.awsS3Location "/" .Values.awsS3BackupLoc | quote }}
+  db_files_subdir: {{ .Values.dbFilesSubdir | quote }}
+  backend_files_subdir: {{ .Values.backendFilesSubdir }}
+  combine_host: {{ replace "." "-" .Values.global.serverName | quote }}
+  # The 'backup_filter' is only slightly different than the 'combine_host' environment
+  # variables in that it adds the delimiters to be able to reliably select backups
+  # for this host from the list of backups.  This is done as an environment variable
+  # to provide flexibility for future clean schemes while minimizing the need to
+  # rebuild the container image.
+  backup_filter: {{ template "maintenance.backupNameFilter" . }}
+  wait_time: {{ .Values.waitTime | quote }}
+  max_backups: {{ .Values.maxBackups | quote }}
