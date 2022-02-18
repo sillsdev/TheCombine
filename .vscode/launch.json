@@ -5,21 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Setup Local K8S",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
-      "console": "integratedTerminal",
-      "args": [
-        "--target",
-        "localhost",
-        "--image-tag",
-        "latest",
-        "--debug",
-        "--dry-run"
-      ]
-    },
-    {
       "name": "Build All",
       "type": "python",
       "request": "launch",
@@ -39,7 +24,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/Backend/bin/Debug/net5.0/BackendFramework.dll",
+      "program": "${workspaceFolder}/Backend/bin/Debug/net6.0/BackendFramework.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Backend",
       "stopAtEntry": false,
