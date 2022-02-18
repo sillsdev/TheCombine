@@ -26,7 +26,7 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { GoalsState } from "types/goals";
-import { englishWritingSystem } from "types/project";
+import { langCode } from "types/project";
 import {
   multiSenseWord,
   newDefinition,
@@ -282,9 +282,9 @@ describe("MergeDupActions", () => {
   });
 
   describe("mergeDefinitionIntoSense", () => {
-    const defAEn = newDefinition("a", englishWritingSystem.bcp47);
-    const defAFr = newDefinition("a", "fr");
-    const defBEn = newDefinition("b", englishWritingSystem.bcp47);
+    const defAEn = newDefinition("a", langCode.En);
+    const defAFr = newDefinition("a", langCode.Fr);
+    const defBEn = newDefinition("b", langCode.En);
     let sense: MergeTreeSense;
 
     beforeEach(() => {
@@ -294,10 +294,7 @@ describe("MergeDupActions", () => {
     it("ignores definitions with empty text.", () => {
       mergeDefinitionIntoSense(sense, newDefinition());
       expect(sense.definitions).toHaveLength(0);
-      mergeDefinitionIntoSense(
-        sense,
-        newDefinition("", englishWritingSystem.bcp47)
-      );
+      mergeDefinitionIntoSense(sense, newDefinition("", langCode.En));
       expect(sense.definitions).toHaveLength(0);
     });
 
@@ -313,24 +310,20 @@ describe("MergeDupActions", () => {
 
       mergeDefinitionIntoSense(sense, defAFr);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language === "fr")!.text).toEqual(
-        defAFr.text
-      );
+      expect(
+        sense.definitions.find((d) => d.language === langCode.Fr)!.text
+      ).toEqual(defAFr.text);
 
       const twoEnTexts = `${defAEn.text};${defBEn.text}`;
       mergeDefinitionIntoSense(sense, defBEn);
       expect(sense.definitions).toHaveLength(2);
       expect(
-        sense.definitions.find(
-          (d) => d.language === englishWritingSystem.bcp47
-        )!.text
+        sense.definitions.find((d) => d.language === langCode.En)!.text
       ).toEqual(twoEnTexts);
       mergeDefinitionIntoSense(sense, defAEn);
       expect(sense.definitions).toHaveLength(2);
       expect(
-        sense.definitions.find(
-          (d) => d.language === englishWritingSystem.bcp47
-        )!.text
+        sense.definitions.find((d) => d.language === langCode.En)!.text
       ).toEqual(twoEnTexts);
     });
   });

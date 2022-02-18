@@ -2,7 +2,7 @@ import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { englishWritingSystem } from "types/project";
+import { langCode } from "types/project";
 import {
   newDefinition,
   newFlag,
@@ -10,7 +10,7 @@ import {
   newSemanticDomain,
 } from "types/word";
 
-const LANG = englishWritingSystem.bcp47;
+const LANG = langCode.En;
 const DEFINITION = newDefinition("groovy", LANG);
 const GLOSS = newGloss("hoovy", LANG);
 const DOMAIN = newSemanticDomain("0.1", "Person");

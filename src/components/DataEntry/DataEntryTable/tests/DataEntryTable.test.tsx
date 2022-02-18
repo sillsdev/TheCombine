@@ -10,7 +10,7 @@ import DataEntryTable, {
   exitButtonId,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
-import { newProject } from "types/project";
+import { langCode, newProject } from "types/project";
 import {
   multiSenseWord,
   newSemanticDomain,
@@ -124,7 +124,7 @@ describe("DataEntryTable", () => {
     const word = mockWord();
     word.senses = [];
     const gloss = "firstSense";
-    const language = "es";
+    const language = langCode.Es;
 
     const expectedSense = newSense(gloss, language, mockSemanticDomain);
     expectedSense.guid = expect.any(String);
@@ -142,7 +142,7 @@ describe("DataEntryTable", () => {
   it("adds a sense to a word that already has a sense", () => {
     const word = mockWord();
     const gloss = "newSense";
-    const language = "es";
+    const language = langCode.Es;
 
     const expectedSense = newSense(gloss, language, mockSemanticDomain);
     expectedSense.guid = expect.any(String);
@@ -163,7 +163,7 @@ describe("DataEntryTable", () => {
   it("adds a semantic domain to existing sense", () => {
     const word = mockWord();
     const gloss = "senseToBeModified";
-    const language = "fr";
+    const language = langCode.Fr;
     const sense = newSense(gloss, language);
     word.senses = [sense];
 

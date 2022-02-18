@@ -3,6 +3,7 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { langCode } from "types/project";
 import {
   newFlag,
   newNote,
@@ -22,8 +23,8 @@ export default function mockWords(): ReviewEntriesWord[] {
           guid: "1",
           definitions: [],
           glosses: [
-            { def: "bup", language: "en" },
-            { def: "AHHHHHH", language: "es" },
+            { def: "bup", language: langCode.En },
+            { def: "AHHHHHH", language: langCode.Es },
           ],
           domains: [newSemanticDomain("number", "domain")],
           deleted: false,
@@ -39,7 +40,7 @@ export default function mockWords(): ReviewEntriesWord[] {
         {
           guid: "2",
           definitions: [],
-          glosses: [{ def: "gloss", language: "en" }],
+          glosses: [{ def: "gloss", language: langCode.En }],
           domains: [newSemanticDomain("number", "domain")],
           deleted: false,
         },
