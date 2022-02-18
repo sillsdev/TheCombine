@@ -11,7 +11,7 @@ export interface TreeViewState {
   currentDomain: TreeSemanticDomain;
   domainMap: DomainMap;
   language: string;
-  open?: boolean;
+  open: boolean;
 }
 
 export const defaultState: TreeViewState = {

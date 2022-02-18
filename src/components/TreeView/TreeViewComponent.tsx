@@ -1,6 +1,6 @@
 import { Grid, Zoom } from "@material-ui/core";
 import { animate } from "motion";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,7 +32,9 @@ export interface TreeViewProps {
   returnControlToCaller: () => void;
 }
 
-export function TreeView(props: TreeViewProps & LocalizeContextProps) {
+export function TreeView(
+  props: TreeViewProps & LocalizeContextProps
+): ReactElement {
   const currentDomain = useSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
@@ -58,6 +60,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
     if (newLang && newLang !== semDomLanguage) {
       const headString = props.translate("addWords.domain") as string;
       dispatch(updateTreeLanguage(newLang, headString));
+      // Don't update when props updates, except props.activeLanguage.code
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     semDomLanguage,
