@@ -35,7 +35,6 @@ class CombineApp:
         Frontend = "frontend"
         Maintenance = "maintenance"
 
-
     def __init__(
         self, *, kubeconfig_path: Optional[Path] = None, k8s_namespace: str = "thecombine"
     ) -> None:
@@ -91,7 +90,7 @@ class CombineApp:
         obj_id_pattern = re.compile(r'ObjectId\(("[0-9a-f]{24}")\)', re.MULTILINE)
         return obj_id_pattern.sub(r"\1", buffer)
 
-    def get_pod_id(self, service: Component, *, instance: int = 0) -> str:
+    def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
         """Look up the Kubernetes pod id for the specified service."""
         if service.value not in self.pod_id_cache:
             self.pod_id_cache[service.value] = self.kubectl(
@@ -114,7 +113,7 @@ class CombineApp:
             properly type hint this return type without generating many false positives.
         """
         db_results = self.exec(
-            self.get_pod_id("database"),
+            self.get_pod_id(CombineApp.Component.Database),
             ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd],
         )
         result_str = self.object_id_to_str(db_results.stdout)
@@ -129,7 +128,7 @@ class CombineApp:
         """Run the supplied database query returning an Array."""
         cmd = f"db.{collection}.find({query}, {projection}).toArray()"
         db_results = self.exec(
-            self.get_pod_id("database"),
+            self.get_pod_id(CombineApp.Component.Database),
             ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd],
         )
         result_str = self.object_id_to_str(db_results.stdout)
