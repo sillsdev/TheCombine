@@ -84,9 +84,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
    - [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
-   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.0.211103`
+   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
+     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
    - [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
      `dotnet tool update --global dotnet-project-licenses`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL

@@ -6,7 +6,7 @@
 //  $ dotnet tool install --global dotnet-reportgenerator-globaltool --version x.x.x
 //
 // Usage:
-//  $ npm run coverage
+//  $ npm run test-backend:coverage
 //  $ npm run gen-backend-coverage-report
 import { spawnSync } from "child_process";
 import * as path from "path";
@@ -35,6 +35,7 @@ if (fs.existsSync(coverageInfoFile)) {
   }
 } else {
   console.log(
-    `${coverageInfoFile} does not exist. First run: npm run coverage.`
+    `${coverageInfoFile} does not exist. First run:\n
+    npm run gen-backend-coverage-report`
   );
 }
