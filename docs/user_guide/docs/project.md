@@ -45,7 +45,8 @@ with new data entries.
     If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up
     in [data cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
 
-The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed.
+The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed in
+[Data Entry](./dataEntry.md).
 
 ### Import and Export
 
