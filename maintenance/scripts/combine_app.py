@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import enum
+from enum import Enum, unique
 import json
 from pathlib import Path
 import re
@@ -13,8 +13,8 @@ from typing import Any, Dict, List, Optional
 from maint_utils import run_cmd
 
 
-@enum.unique
-class Permission(enum.Enum):
+@unique
+class Permission(Enum):
     """Define enumerated type for Combine user permissions."""
 
     WordEntry = 1
@@ -27,6 +27,13 @@ class Permission(enum.Enum):
 
 class CombineApp:
     """Run commands on the Combine services."""
+
+    @unique
+    class Component(Enum):
+        Database = "database"
+        Backend = "backend"
+        Frontend = "frontend"
+        Maintenance = "maintenance"
 
     def __init__(
         self, *, kubeconfig_path: Optional[Path] = None, k8s_namespace: str = "thecombine"
@@ -83,10 +90,10 @@ class CombineApp:
         obj_id_pattern = re.compile(r'ObjectId\(("[0-9a-f]{24}")\)', re.MULTILINE)
         return obj_id_pattern.sub(r"\1", buffer)
 
-    def get_pod_id(self, service: str, *, instance: int = 0) -> str:
+    def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
         """Look up the Kubernetes pod id for the specified service."""
-        if service not in self.pod_id_cache:
-            self.pod_id_cache[service] = self.kubectl(
+        if service.value not in self.pod_id_cache:
+            self.pod_id_cache[service.value] = self.kubectl(
                 [
                     "get",
                     "pods",
@@ -95,7 +102,7 @@ class CombineApp:
                     f"-l=combine-component={service}",
                 ]
             ).stdout.strip()
-        return self.pod_id_cache[service]
+        return self.pod_id_cache[service.value]
 
     def db_cmd(self, cmd: str) -> Optional[Dict[str, Any]]:
         """Run the supplied database command using the mongo shell in the database container.
@@ -106,7 +113,7 @@ class CombineApp:
             properly type hint this return type without generating many false positives.
         """
         db_results = self.exec(
-            self.get_pod_id("database"),
+            self.get_pod_id(CombineApp.Component.Database),
             ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd],
         )
         result_str = self.object_id_to_str(db_results.stdout)
@@ -121,7 +128,7 @@ class CombineApp:
         """Run the supplied database query returning an Array."""
         cmd = f"db.{collection}.find({query}, {projection}).toArray()"
         db_results = self.exec(
-            self.get_pod_id("database"),
+            self.get_pod_id(CombineApp.Component.Database),
             ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd],
         )
         result_str = self.object_id_to_str(db_results.stdout)

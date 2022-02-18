@@ -73,9 +73,11 @@ venv
 
 # Kubernetes Configuration files
 **/site_files/
+**/charts/*.tgz
 
 # Host file to be used for ad hoc testing/development
 *.hosts.yml
+*.hosts.yaml
 
 # YAML files for ad hoc testing/development
 _*.yml

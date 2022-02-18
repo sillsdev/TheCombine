@@ -1,0 +1,17 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: nuc
+################################################
+
+aws-login:
+  enabled: true
+  awsEcr:
+    cron: no
+
+cert-proxy-client:
+  enabled: true
+
+certManager:
+  enabled: false

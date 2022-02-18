@@ -16,6 +16,7 @@ docker_pinned_pkgs:
   - pkg: docker-ce-rootless-extras
     version: "5:20.10.*"
 
+combine_use_syslog: false
 combine_log_directory: /var/log/combine
 docker_log_file: docker.log
 container_log_file: app.log

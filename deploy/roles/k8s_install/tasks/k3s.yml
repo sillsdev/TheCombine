@@ -52,6 +52,9 @@
     - "{{ k8s_user_home.stdout }}"
     - /root
 
+- name: Change context name from 'default'
+  command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config rename-context default {{ kubecfgdir }}
+
 - name: Save kubectl configuration on host
   fetch:
     src: "{{ k8s_user_home.stdout }}/.kube/config"

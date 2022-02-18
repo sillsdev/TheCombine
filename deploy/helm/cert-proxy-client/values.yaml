@@ -1,0 +1,40 @@
+# Default values for cert-proxy-client.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
+global:
+  serverName: localhost
+  pullSecretName: aws-login-credentials
+  awsS3Access: aws-s3-credentials
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  awsS3AccessKeyId: "Override"
+  awsS3SecretAccessKey: "Override"
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: awsEcr
+  # Default AWS S3 location
+  awsS3Location: "thecombine.app"
+
+awsS3CertLoc: certs
+certRenewBefore: "60"
+imageName: combine_maint
+envName: env-cert-proxy
+
+schedule: "*/30 * * * *"
+
+cert_renew_before: 60
+
+serviceAccount:
+  name: account-tls-secret
+  role: role-tls-secret
+  roleBinding: role-tls-secret-binding
