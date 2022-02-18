@@ -2,9 +2,9 @@ import SpellChecker from "components/DataEntry/spellChecker";
 
 jest.mock("components/DataEntry/DataEntryHeader/DataEntryHeader");
 jest.mock("components/DataEntry/DataEntryTable/DataEntryTable");
-jest.mock("components/TreeView");
+jest.mock("components/TreeView/TreeViewComponent");
 
-describe("Tests spell checker", () => {
+describe("SpellChecker", () => {
   it("constructs properly", () => {
     const spellChecker = new SpellChecker();
     const properties = Object.keys(spellChecker);
@@ -17,19 +17,21 @@ describe("Tests spell checker", () => {
     expect(hasSpellProperty).toEqual(true);
   });
 
-  it("correctly detects a correctly spelled word", () => {
-    const spellChecker = new SpellChecker();
-    const isSpelledCorrectly = spellChecker.correct("word");
-    expect(isSpelledCorrectly).toEqual(true);
+  describe("correct", () => {
+    it("detects a correctly spelled word", () => {
+      const spellChecker = new SpellChecker();
+      const isSpelledCorrectly = spellChecker.correct("word");
+      expect(isSpelledCorrectly).toEqual(true);
+    });
+
+    it("detects a misspelled word", () => {
+      const spellChecker = new SpellChecker();
+      const isSpelledCorrectly = spellChecker.correct("abjkdsjf");
+      expect(isSpelledCorrectly).toEqual(false);
+    });
   });
 
-  it("correctly detects a misspelled word", () => {
-    const spellChecker = new SpellChecker();
-    const isSpelledCorrectly = spellChecker.correct("abjkdsjf");
-    expect(isSpelledCorrectly).toEqual(false);
-  });
-
-  it("returns an array", () => {
+  it("getSpellingSuggestions returns an array", () => {
     const spellChecker = new SpellChecker();
     const spellingSuggestions = spellChecker.getSpellingSuggestions("abjkdsjf");
     expect(spellingSuggestions.length).toBeGreaterThanOrEqual(0);

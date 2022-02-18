@@ -1,7 +1,8 @@
+import { Button } from "@material-ui/core";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 var tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
@@ -22,7 +23,7 @@ describe("DomainTile", () => {
 
   it("Click calls function", () => {
     createTile();
-    tileMaster.root.findByType("button").props.onClick();
+    tileMaster.root.findByType(Button).props.onClick();
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(1);
   });
 });
@@ -32,7 +33,7 @@ function createTile(direction?: Direction) {
   renderer.act(() => {
     tileMaster = renderer.create(
       <DomainTile
-        domain={MockDomain}
+        domain={domMap[mapIds.parent]}
         onClick={MOCK_ANIMATE}
         direction={direction}
       />

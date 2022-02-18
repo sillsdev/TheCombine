@@ -4,7 +4,7 @@ import { Translate } from "react-localize-redux";
 import { useDispatch } from "react-redux";
 
 import history, { Path } from "browserHistory";
-import { OpenTreeAction } from "components/TreeView/TreeViewActions";
+import { openTreeAction } from "components/TreeView/TreeViewActions";
 import { tabColor } from "types/theme";
 
 interface NavigationButtonsProps {
@@ -22,7 +22,7 @@ export default function NavigationButtons(
       <Button
         id="data-entry"
         onClick={() => {
-          dispatch(OpenTreeAction());
+          dispatch(openTreeAction());
           history.push(Path.DataEntry);
         }}
         color="inherit"
