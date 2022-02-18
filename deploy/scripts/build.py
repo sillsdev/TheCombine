@@ -9,9 +9,17 @@ environment and 'docker' is recommended when using Docker Desktop.
 """
 
 import argparse
+from dataclasses import dataclass
 import os
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
+
+
+@dataclass(frozen=True)
+class BuildSpec:
+    dir: Path
+    name: str
+
 
 project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
@@ -64,15 +72,15 @@ def main() -> None:
     else:
         build_cmd = "docker"
 
-    build_specs = [
-        {"dir": project_dir, "name": "frontend"},
-        {"dir": project_dir / "Backend", "name": "backend"},
-        {"dir": project_dir / "maintenance", "name": "maint"},
+    build_specs: List[BuildSpec] = [
+        BuildSpec(project_dir, "frontend"),
+        BuildSpec(project_dir / "Backend", "backend"),
+        BuildSpec(project_dir / "maintenance", "maint"),
     ]
 
     for spec in build_specs:
-        os.chdir(str(spec["dir"]))
-        image_name = get_image_name(args.repo, str(spec["name"]), args.tag)
+        os.chdir(str(spec.dir))
+        image_name = get_image_name(args.repo, spec.name, args.tag)
         os.system(f"{build_cmd} build -t {image_name} -f Dockerfile .")
         if args.repo is not None:
             os.system(f"{build_cmd} push {image_name}")

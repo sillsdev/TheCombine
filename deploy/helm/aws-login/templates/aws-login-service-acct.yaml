@@ -6,4 +6,4 @@ metadata:
 imagePullSecrets:
   - name: {{ .Values.global.pullSecretName }}
 secrets:
-  - name: aws_ecr_credentials
+  - name: {{ .Values.awsEcr.secretsName }}

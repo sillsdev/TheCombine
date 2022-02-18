@@ -78,7 +78,7 @@ def main() -> None:
             for field in ("workedProjects", "projectRoles"):
                 combine.db_cmd(db_delete_from_user_fields(project_id, field))
             combine.db_cmd(db_delete_from_projects(project_id))
-            backend_pod = combine.get_pod_id("backend")
+            backend_pod = combine.get_pod_id(combine.Component.Backend)
             combine.exec(backend_pod, ["rm", "-rf", f"/home/app/.CombineFiles/{project_id}"])
         else:
             print(f"Cannot find {project}", file=sys.stderr)

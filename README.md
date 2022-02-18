@@ -55,7 +55,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    8. [Cleanup Local Repo](#cleanup-local-repository)
 5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Development Environment](#development-environment)
-   1. [Production/QA Environment](#productionqa-environment)
+   2. [Production/QA Environment](#productionqa-environment)
 6. [User Guide](#user-guide)
 7. [Production](#production)
 8. [Learn More](#learn-more)
@@ -160,11 +160,10 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
    ```bash
-   # run within Python virtual environment (venv)
    python scripts/docker_setup.py
-
-   # To view options, run with --help
    ```
+
+   To view options, run with --help
 
 2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
    Backend container. If you have defined them as OS variables in the
@@ -194,7 +193,7 @@ For information on _Docker Compose_ see the [Docker Compose documentation](https
    docker-compose up --detach
    ```
 
-5. Browse to [https://localhost](https://localhost).
+5. Browse to <https://localhost>.
 
    _By default self-signed certificates are included, so you will need to accept a warning in the browser._
 
@@ -244,8 +243,8 @@ containers. Python is required to create the `docker-compose` environment and to
 
 ### Linux Python Installation
 
-Python3 is included in the Ubuntu distribution. To install the `pip` and `venv` modules for Python3, run the following
-commands:
+The `python3` package is included in the Ubuntu distribution. To install the `pip` and `venv` modules for Python 3, run
+the following commands:
 
 ```bash
 sudo apt update
@@ -285,29 +284,27 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-# run within Python virtual environment (venv)
 python -m pip install --upgrade pip pip-tools
 python -m piptools sync dev-requirements.txt
 ```
 
-Note, you can also now perform automated code formatting of Python code:
+The following Python scripts can now be run from the virtual environment.
+
+To perform automated code formatting of Python code:
 
 ```bash
-# run within Python virtual environment (venv)
 tox -e fmt
 ```
 
 To run all Python linting steps:
 
 ```bash
-# run within Python virtual environment (venv)
 tox
 ```
 
 To upgrade all pinned dependencies:
 
 ```bash
-# run within Python virtual environment (venv)
 python -m piptools compile --upgrade dev-requirements.in
 ```
 
@@ -324,7 +321,7 @@ In the project directory, you can run:
 
 Installs the necessary packages and runs the app in the development mode.
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open <http://localhost:3000> to view it in the browser.
 
 #### `npm run frontend`
 
@@ -369,10 +366,10 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 - For Ubuntu: `sudo apt install default-jre`
 - For macOS: `brew install adoptopenjdk`
 
-After that, run the following script to regenerate the frontend OpenAPI bindings in place:
+After that, run the following script in your Python virtual environment to regenerate the frontend OpenAPI bindings in
+place:
 
 ```bash
-# run within Python virtual environment (venv)
 python scripts/generate_openapi.py
 ```
 
@@ -571,9 +568,9 @@ _TheCombine_ on it.
 
 For each of the `kubectl` commands below:
 
-- you must have a `kubectl` configuration file that configures the connection to the kuberetes cluster to be maintained.
-  The configuration file needs to installed at `${HOME}/.kube/config` or specified in the `KUBECONFIG` environment
-  variable.
+- you must have a `kubectl` configuration file that configures the connection to the kubernetes cluster to be
+  maintained. The configuration file needs to installed at `${HOME}/.kube/config` or specified in the `KUBECONFIG`
+  environment variable.
 - the `kubectl` commands can be run from any directory
 - any of the Python scripts (local or remote using `kubectl`) can be run with the `--help` option to see more usage
   options.
@@ -659,21 +656,18 @@ the restore operation.
 
 ## User Guide
 
-The User Guide found at [https://sillsdev.github.io/TheCombine](https://sillsdev.github.io/TheCombine) is automatically
-built from the `master` branch.
+The User Guide found at <https://sillsdev.github.io/TheCombine> is automatically built from the `master` branch.
 
 To locally build the user guide and serve it dynamically (automatically reloading on change), run the following from
 your Python virtual environment:
 
 ```bash
-# run within Python virtual environment (venv)
 tox -e user-guide-serve
 ```
 
 To locally build the user guide statically into `docs/user-guide/site`:
 
 ```bash
-# run within Python virtual environment (venv)
 tox -e user-guide
 ```
 

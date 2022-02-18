@@ -7,7 +7,8 @@ This document describes how to deploy _The Combine_ to a target Kubernetes clust
 _The Combine_ is designed to be installed on a server on the internet or an organization's intranet or on a standalone
 PC such as an Intel NUC. The instructions assume that:
 
-1. a server already has Kubernetes installed and that the basic infrastucture and namespaces are already configured; and
+1. a server already has Kubernetes installed and that the basic infrastructure and namespaces are already configured;
+   and
 2. a standalone PC is running an up-to-date version of Ubuntu Server with an OpenSSH server running.
 
 ## Conventions
@@ -25,14 +26,14 @@ PC such as an Intel NUC. The instructions assume that:
 1. [Step-by-step Instructions](#step-by-step-instructions)
    1. [Prepare your host system](#prepare-your-host-system)
       1. [Linux Host](#linux-host)
-      2. [Windows Host](#windows-host)
-   2. [Installing and Running _The Combine_](#installing-and-running-the-combine)
+   2. [Installing Kubernetes and Initializing Your Cluster](#installing-kubernetes-and-initializing-your-cluster)
       1. [Minimum System Requirements](#minimum-system-requirements)
-      2. [Prepare to Install _The Combine_ on a NUC](#prepare-to-install-the-combine-on-a-nuc)
-      3. [Prepare to Install _The Combine_ on a Server](#prepare-to-install-the-combine-on-a-server)
-      4. [Install _The Combine_ Cluster](#install-the-combine-cluster)
-      5. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
-      6. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
+      2. [Installing Kubernetes](#installing-kubernetes)
+   3. [Installing _The Combine_ Helm Charts](#installing-the-combine-helm-charts)
+      1. [Setup](#setup)
+      2. [Install _The Combine_ Cluster](#install-the-combine-cluster)
+   4. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
+   5. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
 2. [Automated Backups](#automated-backups)
 3. [Design](#design)
 4. [Additional Details](#additional-details)
@@ -178,12 +179,11 @@ For the Production or QA server,
 
 #### Install _The Combine_ Cluster
 
-To install/upgrade _The Combine_ run the following command:
+To install/upgrade _The Combine_ change directory to the project root directory and run the following command within
+your Python virtual environment:
 
 ```bash
-# run within Python virtual environment (venv)
-cd <COMBINE>/deploy
-python scripts/setup_combine.py
+python deploy/scripts/setup_combine.py
 ```
 
 Notes:
@@ -282,9 +282,8 @@ Please see the Kubernetes Design document at [./kubernetes_design/README.md](./k
 
 To install the OS on a new target machine, such as, a new NUC, follow these steps:
 
-1. Download the ISO image for Ubuntu Server from Ubuntu (currently at
-   [https://ubuntu.com/download/server](https://ubuntu.com/download/server); click on _Option 2 - Manual server
-   installation_ and then _Download Ubuntu Server 20.04.3 LTS_)
+1. Download the ISO image for Ubuntu Server from Ubuntu (currently at <https://ubuntu.com/download/server>; click on
+   _Option 2 - Manual server installation_ and then _Download Ubuntu Server 20.04.3 LTS_)
 
 2. copy the .iso file to a bootable USB stick:
 

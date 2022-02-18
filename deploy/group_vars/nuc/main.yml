@@ -16,6 +16,8 @@ k8s_components:
   - ingress_controller
   - cert_proxy_client
 
+image_pull_secret: aws-login-credentials
+
 # k8s namespaces
 app_namespace: thecombine
 
