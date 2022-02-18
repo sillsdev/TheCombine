@@ -7,19 +7,19 @@ import {
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
-import { parMap } from "components/TreeView/tests/MockSemanticDomain";
+import { domMap } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const testProps: TreeHeaderProps = {
-  currentDomain: parMap["1"],
-  domainMap: parMap,
+  currentDomain: domMap["1"],
+  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 // These props have a currentDomain with a parent and two brothers
 const upOneWithBrothersProps: TreeHeaderProps = {
-  currentDomain: parMap["1.1"],
-  domainMap: parMap,
+  currentDomain: domMap["1.1"],
+  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 const eventListeners: Map<string, EventListener> = new Map<
@@ -52,10 +52,10 @@ describe("TreeViewHeader", () => {
 
       // The top domain (used in testProps) has no brother on either side
       expect(result.current.getLeftBrother(upOneWithBrothersProps)).toEqual(
-        parMap["1.0"]
+        domMap["1.0"]
       );
       expect(result.current.getRightBrother(upOneWithBrothersProps)).toEqual(
-        parMap["1.2"]
+        domMap["1.2"]
       );
     });
   });
@@ -64,19 +64,19 @@ describe("TreeViewHeader", () => {
     it("left arrow moves to left sibling", () => {
       render(<TreeViewHeader {...upOneWithBrothersProps} />);
       simulateKey(Key.ArrowLeft);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap["1.0"]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap["1.0"]);
     });
 
     it("right arrow moves to right sibling", () => {
       render(<TreeViewHeader {...upOneWithBrothersProps} />);
       simulateKey(Key.ArrowRight);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap["1.2"]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap["1.2"]);
     });
 
     it("up arrow moves to parent domain", () => {
       render(<TreeViewHeader {...upOneWithBrothersProps} />);
       simulateKey(Key.ArrowUp);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap["1"]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap["1"]);
     });
   });
 });

@@ -10,14 +10,14 @@ import TreeSearch, {
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
-import { parMap } from "components/TreeView/tests/MockSemanticDomain";
+import { domMap } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
-  currentDomain: parMap["1"],
-  domainMap: parMap,
+  currentDomain: domMap["1"],
+  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 
@@ -56,7 +56,7 @@ describe("TreeSearch", () => {
     }
 
     it("switches semantic domain if given number found", () => {
-      const node = parMap["1.0"];
+      const node = domMap["1.0"];
       simulateTypeAndEnter(node.id);
       expect(MOCK_STOP_PROP).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
@@ -74,13 +74,13 @@ describe("TreeSearch", () => {
 
     it("switches on a length 5 number", () => {
       const leafNodeId = "1.2.1.1.1";
-      const leafNode = parMap[leafNodeId];
+      const leafNode = domMap[leafNodeId];
       simulateTypeAndEnter(leafNodeId);
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafNode);
     });
 
     it("switches semantic domain if given name found", () => {
-      const node = parMap["1.0"];
+      const node = domMap["1.0"];
       simulateTypeAndEnter(node.name);
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
@@ -116,23 +116,25 @@ describe("TreeSearch", () => {
         ""
       );
       // verify that we would switch to the domain requested
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(parMap[targetId]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[targetId]);
     });
   });
 });
 
-test.each([
-  ["a", "a"],
-  ["1a", "1a"],
-  ["1", "1"],
-  ["1.", "1."],
-  ["1.0", "1.0"],
-  ["10", "1.0"],
-  ["12", "1.2"],
-  ["123", "1.2.3"],
-  ["1.2.3.", "1.2.3."],
-  ["..1", "1"],
-  ["1..2", "1.2"],
-])("insertDecimalPoints", (input, output) => {
-  expect(insertDecimalPoints(input)).toBe(output);
+describe("insertDecimalPoints", () => {
+  test.each([
+    ["a", "a"],
+    ["1a", "1a"],
+    ["1", "1"],
+    ["1.", "1."],
+    ["1.0", "1.0"],
+    ["10", "1.0"],
+    ["12", "1.2"],
+    ["123", "1.2.3"],
+    ["1.2.3.", "1.2.3."],
+    ["..1", "1"],
+    ["1..2", "1.2"],
+  ])("inserts correctly", (input, output) => {
+    expect(insertDecimalPoints(input)).toBe(output);
+  });
 });

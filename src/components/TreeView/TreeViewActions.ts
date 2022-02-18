@@ -52,8 +52,11 @@ function mapDomain(
 }
 
 // Parses a list of semantic domains (to be loaded from file)
-export function createDomainMap(data: TreeSemanticDomain[]): DomainMap {
-  const domain = new TreeSemanticDomain();
+export function createDomainMap(
+  data: TreeSemanticDomain[],
+  headString = ""
+): DomainMap {
+  const domain = new TreeSemanticDomain("", headString);
   domain.subdomains = data;
   const domainMap: DomainMap = {};
   mapDomain(domain, domainMap);
@@ -68,11 +71,11 @@ function loadLocalizedJson(languageKey: string): Promise<any> {
   });
 }
 
-export function updateTreeLanguage(language: string) {
+export function updateTreeLanguage(language: string, headString = "") {
   return async (dispatch: StoreStateDispatch) => {
     if (language) {
       const localizedDomains = await loadLocalizedJson(language);
-      const domainMap = createDomainMap(localizedDomains);
+      const domainMap = createDomainMap(localizedDomains, headString);
       dispatch(setDomainMapAction(domainMap, language));
     }
   };

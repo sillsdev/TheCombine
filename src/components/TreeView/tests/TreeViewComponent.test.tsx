@@ -10,7 +10,7 @@ import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeView, TreeViewProps } from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
 import mockDomain, {
-  parMap as mockMap,
+  domMap as mockMap,
 } from "components/TreeView/tests/MockSemanticDomain";
 import { newProject } from "types/project";
 

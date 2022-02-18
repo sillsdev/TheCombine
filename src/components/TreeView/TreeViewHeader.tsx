@@ -106,8 +106,11 @@ export function useTreeNavigation(props: TreeHeaderProps) {
           : event.key === Key.ArrowUp &&
             props.currentDomain.parentId !== undefined
           ? props.domainMap[props.currentDomain.parentId]
+          : event.key === Key.ArrowDown &&
+            props.currentDomain.childIds.length === 1
+          ? props.domainMap[props.currentDomain.childIds[0]]
           : undefined;
-      if (domain && domain.id !== props.currentDomain.parentId) {
+      if (domain) {
         props.animate(domain);
       }
     },

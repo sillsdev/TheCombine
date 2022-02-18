@@ -59,8 +59,9 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
       getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
       props.activeLanguage.code;
     if (newLang && newLang !== semDomLanguage) {
-      dispatch(updateTreeLanguage(newLang));
-    }
+      const headString = props.translate("addWords.domain") as string;
+      dispatch(updateTreeLanguage(newLang, headString));
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     semDomLanguage,
     semDomWritingSystem,
