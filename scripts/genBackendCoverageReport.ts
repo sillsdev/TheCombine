@@ -6,7 +6,7 @@
 //  $ dotnet tool install --global dotnet-reportgenerator-globaltool --version x.x.x
 //
 // Usage:
-//  $ npm run coverage
+//  $ npm run test-backend:coverage
 //  $ npm run gen-backend-coverage-report
 import { spawnSync } from "child_process";
 import * as path from "path";
