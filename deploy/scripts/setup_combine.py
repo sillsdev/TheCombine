@@ -1,5 +1,21 @@
 #! /usr/bin/env python3
 
+"""
+Install The Combine Helm charts on a specified Kubernetes cluster.
+
+The setup_combine.py script users a configuration file to customize the installation of The Combine on the specified target.
+For each target, the configuration file lists:
+    - the configuration profile to be used
+    - target specific values to be overridden
+
+For each profile, the configuration file lists the charts that are to be installed.
+
+For each chart, the configuration file lists:
+    - namespace for the chart
+    - a list of secrets to be defined from environment variables
+
+The script also adds value definitions from a profile specific configuration file if it exists.
+"""
 import argparse
 from enum import Enum, unique
 import os
@@ -14,8 +30,21 @@ import yaml
 
 @unique
 class HelmAction(Enum):
+    """
+    Enumerate helm commands for maintaining The Combine on the target system.
+
+    INSTALL is used when the chart is not already installed on the target.
+    UPGRADE is used when the chart is already installed.
+    """
+
     INSTALL = "install"
     UPGRADE = "upgrade"
+
+
+@unique
+class ExitStatus(Enum):
+    SUCCESS = 0
+    FAILURE = 1
 
 
 prog_dir = Path(__file__).resolve().parent
@@ -113,7 +142,7 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
                     " Continue?(y/N)"
                 )
                 if response.upper() != "Y":
-                    sys.exit(1)
+                    sys.exit(ExitStatus.FAILURE.value)
     return secrets_written
 
 
@@ -170,23 +199,23 @@ def main() -> None:
     if args.target is None:
         target = input("Enter the target name:")
         if not target:
-            sys.exit(0)
+            sys.exit(ExitStatus.SUCCESS.value)
     else:
         target = args.target
 
     if args.image_tag is None:
         image_tag = input("Enter image tag to install:")
         if not image_tag:
-            sys.exit(0)
+            sys.exit(ExitStatus.SUCCESS.value)
     else:
         image_tag = args.image_tag
 
-    with open(args.config, "r") as file:
+    with open(args.config) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
 
     if target not in config["targets"]:
         print(f"Cannot find configuration for {target}")
-        sys.exit(1)
+        sys.exit(ExitStatus.FAILURE.value)
 
     this_config = config["targets"][target]
 
@@ -194,6 +223,10 @@ def main() -> None:
         profile = this_config["profile"]
     else:
         profile = args.profile
+
+    # Set KUBECONFIG environment variable if specified
+    if args.kubeconfig:
+        os.environ["KUBECONFIG"] = args.kubeconfig
 
     # create list of target specific variable values
     target_vars: List[str] = [f"global.serverName={target}", f"global.imageTag={image_tag}"]
@@ -214,11 +247,12 @@ def main() -> None:
         # get the path for the profile configuration file
         profile_config = prog_dir / "profiles" / f"{profile}.yaml"
     else:
+        profile_config = None
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)
     # open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
         if args.chart is None:
-            chart_list = config["profiles"][profile]["charts"]
+            chart_list: List[str] = config["profiles"][profile]["charts"]
         else:
             chart_list = [args.chart]
         for chart in chart_list:
@@ -267,7 +301,7 @@ def main() -> None:
             if args.dry_run:
                 helm_cmd.extend(["--dry-run"])
             # add the profile specific configuration
-            if profile_config.exists:
+            if profile_config is not None and profile_config.exists:
                 helm_cmd.extend(["-f", str(profile_config)])
             # add the secrets file
             if include_secrets:
@@ -284,9 +318,6 @@ def main() -> None:
                 helm_cmd.extend(addl_configs)
             # last of all, add any value overrides from the command line
             helm_cmd.extend(["--set", ",".join(target_vars)])
-            process_env = {**os.environ}
-            if args.kubeconfig:
-                process_env["KUBECONFIG"] = args.kubeconfig
 
             # Update chart dependencies
             run_cmd(["helm", "dependency", "update", chart_dir], print_output=True)

@@ -5,6 +5,47 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Setup Local K8S",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--target",
+        "localhost",
+        "--image-tag",
+        "latest",
+        "--debug",
+        "--dry-run"
+      ]
+    },
+    {
+      "name": "Setup nuc1",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/setup_combine.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--config",
+        "${workspaceFolder}/deploy/scripts/_dev.config.yaml",
+        "--target",
+        "nuc1.gradynh.com",
+        "--image-tag",
+        "0.7.15",
+        "--kubeconfig",
+        "/home/grady/.kube/nuc1/config",
+        "--debug",
+        "--dry-run"
+      ]
+    },
+    {
+      "name": "Build All",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/build.py",
+      "console": "integratedTerminal"
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",
