@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -247,7 +247,7 @@ def main() -> None:
     # install each of the helm charts for the selected target
     if profile in config["profiles"]:
         # get the path for the profile configuration file
-        profile_config = prog_dir / "profiles" / f"{profile}.yaml"
+        profile_config: Optional[Path] = prog_dir / "profiles" / f"{profile}.yaml"
     else:
         profile_config = None
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)
