@@ -80,8 +80,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   function searchDomainByName(target: string): TreeSemanticDomain | undefined {
     const check = (checkAgainst: TreeSemanticDomain | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
-    for (const id in props.domainMap) {
-      const domain = props.domainMap[id];
+    for (const domain of Object.values(props.domainMap)) {
       if (check(domain)) {
         return domain;
       }

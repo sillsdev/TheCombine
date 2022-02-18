@@ -36,6 +36,9 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
   const currentDomain = useSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
+  const domainMap = useSelector(
+    (state: StoreState) => state.treeViewState.domainMap
+  );
   const semDomLanguage = useSelector(
     (state: StoreState) => state.treeViewState.language
   );
@@ -43,13 +46,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
     (state: StoreState) => state.currentProjectState.project.semDomWritingSystem
   );
   const [visible, setVisible] = useState(true);
-  const domainMap = useSelector(
-    (state: StoreState) => state.treeViewState.domainMap
-  );
   const dispatch = useDispatch();
-  const navigateTree = (domain: TreeSemanticDomain) => {
-    dispatch(traverseTreeAction(domain));
-  };
 
   useEffect(() => {
     /* Select the language used for the semantic domains.
@@ -75,7 +72,7 @@ export function TreeView(props: TreeViewProps & LocalizeContextProps) {
       return new Promise((resolve) =>
         setTimeout(() => {
           if (domain.id !== currentDomain.id) {
-            navigateTree(domain);
+            dispatch(traverseTreeAction(domain));
             setVisible(true);
           } else {
             props.returnControlToCaller();

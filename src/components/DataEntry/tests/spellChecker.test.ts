@@ -17,16 +17,18 @@ describe("SpellChecker", () => {
     expect(hasSpellProperty).toEqual(true);
   });
 
-  it("correct detects a correctly spelled word", () => {
-    const spellChecker = new SpellChecker();
-    const isSpelledCorrectly = spellChecker.correct("word");
-    expect(isSpelledCorrectly).toEqual(true);
-  });
+  describe("correct", () => {
+    it("detects a correctly spelled word", () => {
+      const spellChecker = new SpellChecker();
+      const isSpelledCorrectly = spellChecker.correct("word");
+      expect(isSpelledCorrectly).toEqual(true);
+    });
 
-  it("correct detects a misspelled word", () => {
-    const spellChecker = new SpellChecker();
-    const isSpelledCorrectly = spellChecker.correct("abjkdsjf");
-    expect(isSpelledCorrectly).toEqual(false);
+    it("detects a misspelled word", () => {
+      const spellChecker = new SpellChecker();
+      const isSpelledCorrectly = spellChecker.correct("abjkdsjf");
+      expect(isSpelledCorrectly).toEqual(false);
+    });
   });
 
   it("getSpellingSuggestions returns an array", () => {

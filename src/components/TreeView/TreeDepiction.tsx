@@ -147,20 +147,20 @@ export default class TreeDepiction extends React.Component<
   domainRow(): ReactElement[] {
     const childIds = this.props.currentDomain.childIds;
     const subdomains: ReactElement[] = [];
-    for (let i = 0; i < childIds.length; i++) {
+    childIds.forEach((childId, i) => {
       if (i > 0) {
         subdomains.push(<ImageListItem key={"GapTile" + i} />);
       }
       subdomains.push(
         <ImageListItem key={"DomainTile" + i} cols={RATIO_TILE_TO_GAP}>
           <DomainTile
-            domain={this.props.domainMap[childIds[i]]}
+            domain={this.props.domainMap[childId]}
             onClick={(d) => this.props.animate(d)}
             direction={Direction.Down}
           />
         </ImageListItem>
       );
-    }
+    });
     return subdomains;
   }
 

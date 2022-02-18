@@ -41,7 +41,7 @@ function mapDomain(
   domain: TreeSemanticDomain,
   domainMap: DomainMap,
   parentId?: string
-) {
+): void {
   domain.parentId = parentId;
   domain.childIds = domain.subdomains.map((dom) => dom.id);
   for (const child of domain.subdomains) {
@@ -51,7 +51,7 @@ function mapDomain(
   domainMap[domain.id] = domain;
 }
 
-// Parses a list of semantic domains (to be loaded from file)
+/** Parses a list of semantic domains (to be loaded from file) */
 export function createDomainMap(
   data: TreeSemanticDomain[],
   headString = ""

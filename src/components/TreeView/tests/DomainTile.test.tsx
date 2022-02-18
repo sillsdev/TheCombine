@@ -1,3 +1,4 @@
+import { Button } from "@material-ui/core";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
@@ -22,7 +23,7 @@ describe("DomainTile", () => {
 
   it("Click calls function", () => {
     createTile();
-    tileMaster.root.findByType("button").props.onClick();
+    tileMaster.root.findByType(Button).props.onClick();
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(1);
   });
 });
