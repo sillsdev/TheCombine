@@ -41,7 +41,7 @@ runs:
         maintenance="${{ inputs.image_repo }}/combine_maint:${{ inputs.image_tag }}"
       shell: bash
     - name: Update Cert Proxy Server
-      if: ${{ inputs.update_cert_proxy }}
+      if: ${{ inputs.update_cert_proxy == 'true' }}
       run: kubectl --context ${{ inputs.kube_context }}
         --namespace combine-cert-proxy
         set image deployment/combine-cert-proxy
