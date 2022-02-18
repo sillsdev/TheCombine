@@ -3,7 +3,9 @@
 """
 Install The Combine Helm charts on a specified Kubernetes cluster.
 
-The setup_combine.py script users a configuration file to customize the installation of The Combine on the specified target.
+The setup_combine.py script users a configuration file to customize the installation of The Combine
+on the specified target.
+
 For each target, the configuration file lists:
     - the configuration profile to be used
     - target specific values to be overridden
@@ -320,7 +322,7 @@ def main() -> None:
             helm_cmd.extend(["--set", ",".join(target_vars)])
 
             # Update chart dependencies
-            run_cmd(["helm", "dependency", "update", chart_dir], print_output=True)
+            run_cmd(["helm", "dependency", "update", str(chart_dir)], print_output=True)
             if args.debug:
                 print(f"Helm command: {helm_cmd}")
             run_cmd(helm_cmd, print_output=True)
