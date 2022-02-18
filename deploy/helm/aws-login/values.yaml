@@ -1,0 +1,35 @@
+# Default values for aws-login.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
+global:
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  awsEcrAccessKeyId: "Override"
+  awsEcrSecretAccessKey: "Override"
+  pullSecretName: aws-login-credentials
+
+awsEcr:
+  configName: aws-ecr-config
+  cron: yes
+  cronJobName: ecr-cred-helper-cron
+  dockerEmail: noreply@thecombine.app
+  image: sillsdev/aws-kubectl
+  imageTag: "0.1.9"
+  jobName: ecr-cred-helper
+  schedule: "0 */8 * * *"
+  secretsName: aws-ecr-credentials
+  serviceAccount: account-ecr-login
+  role: role-ecr-login
+  roleBinding: role-ecr-login-binding
+
+database:
+  mongo_image_tag: 4.4
+  data_size: 16Gi

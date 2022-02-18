@@ -52,7 +52,7 @@ def main() -> None:
         aws_file = f"{os.environ['combine_host']}-{date_str}.tar.gz"
 
         step.print("Dump the database.")
-        db_pod = combine.get_pod_id("database")
+        db_pod = combine.get_pod_id(CombineApp.Component.Database)
         if not db_pod:
             print("Cannot find the database container.", file=sys.stderr)
             sys.exit(1)
@@ -86,7 +86,7 @@ def main() -> None:
         )
 
         step.print("Copy the backend files.")
-        backend_pod = combine.get_pod_id("backend")
+        backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
         if not backend_pod:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: "{{ .Values.awsEcr.configName }}"
+  namespace: "{{ .Release.Namespace }}"
+data:
+  NAMESPACES: "{{ .Release.Namespace }}"
+  PULL_SECRET_NAME: "{{ .Values.global.pullSecretName }}"
+  DOCKER_EMAIL: "{{ .Values.awsEcr.dockerEmail }}"

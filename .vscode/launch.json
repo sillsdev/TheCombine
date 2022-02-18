@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Build All",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/deploy/scripts/build.py",
+      "console": "integratedTerminal"
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",
@@ -17,7 +24,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/Backend/bin/Debug/net5.0/BackendFramework.dll",
+      "program": "${workspaceFolder}/Backend/bin/Debug/net6.0/BackendFramework.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Backend",
       "stopAtEntry": false,
@@ -43,6 +50,13 @@
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
     }
   ]
 }

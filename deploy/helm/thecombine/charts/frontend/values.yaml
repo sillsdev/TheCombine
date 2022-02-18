@@ -1,0 +1,22 @@
+# Default values for frontend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  serverName: localhost
+  pullSecretName: aws-login-credentials
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: local
+
+imageName: combine_frontend
+
+# The additional domain list is a space-separated string list of domains
+combineAddlDomainList: ""
+configCaptchaRequired: "false"
+configCaptchaSiteKey: "None"
+configEmailEnabled: "false"
+configShowCertExpiration: "false"
+configAnalyticsWriteKey: ""

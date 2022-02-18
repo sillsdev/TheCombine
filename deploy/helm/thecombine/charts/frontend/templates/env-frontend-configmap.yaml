@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: env-frontend
+  namespace: {{ .Release.Namespace }}
+data:
+  SERVER_NAME: {{ .Values.global.serverName }}
+  CERT_ADDL_DOMAINS: {{ .Values.combineAddlDomainList | quote }}
+  CONFIG_USE_CONNECTION_URL: "true"
+  CONFIG_CAPTCHA_REQD: {{ .Values.configCaptchaRequired | quote }}
+  CONFIG_CAPTCHA_SITE_KEY: {{ .Values.configCaptchaSiteKey | quote }}
+  CONFIG_EMAIL_ENABLED: {{ .Values.configEmailEnabled | quote }}
+  CONFIG_SHOW_CERT_EXPIRATION: {{ .Values.configShowCertExpiration | quote }}
+  {{- if .Values.configAnalyticsWriteKey }}
+  CONFIG_ANALYTICS_WRITE_KEY: {{ .Values.configAnalyticsWriteKey | quote }}
+  {{- end }}
+  ENV_HTTP_ONLY: "yes"

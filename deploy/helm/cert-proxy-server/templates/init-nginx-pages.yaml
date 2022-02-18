@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.nginxPages }}
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "../files/pages/*").AsConfig | indent 2 }}

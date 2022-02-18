@@ -1,0 +1,48 @@
+# Default values for maintenance.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
+global:
+  serverName: localhost
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  awsS3AccessKeyId: "Override"
+  awsS3SecretAccessKey: "Override"
+  pullSecretName: "None"
+  awsS3Access: aws-s3-credentials
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: local
+  # Default AWS S3 location
+  awsS3Location: "thecombine.app"
+
+imageName: combine_maint
+
+serviceAccount:
+  name: account-maintenance
+  role: role-maintenance
+  roleBinding: role-maintenance-binding
+
+serviceAccount.name: account-maintenance
+#######################################
+# Variables controlling backups
+#######################################
+
+# Default Backup Schedule - no backups
+backupSchedule: ""
+maxBackups: "3"
+# Seconds to wait for the backend and frontend to be available when running
+# a backup
+waitTime: "120"
+awsS3BackupLoc: backups
+dbFilesSubdir: dump
+backendFilesSubdir: ".CombineFiles"

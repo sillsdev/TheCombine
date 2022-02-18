@@ -1,0 +1,74 @@
+{{- if .Values.awsEcr.cron }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.awsEcr.cronJobName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      ttlSecondsAfterFinished: 300
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          serviceAccountName: {{ .Values.awsEcr.serviceAccount }}
+          containers:
+          - image: {{ .Values.awsEcr.image }}:{{ .Values.awsEcr.imageTag }}
+            imagePullPolicy: IfNotPresent
+            name: {{ .Values.awsEcr.cronJobName }}
+            command:
+              - ecr-get-login.sh
+            env:
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_DEFAULT_REGION
+                  name: {{ .Values.awsEcr.secretsName }}
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: {{ .Values.awsEcr.secretsName }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: {{ .Values.awsEcr.secretsName }}
+            - name: AWS_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCOUNT
+                  name: {{ .Values.awsEcr.secretsName }}
+            - name: NAMESPACES
+              valueFrom:
+                configMapKeyRef:
+                  key: NAMESPACES
+                  name: {{ .Values.awsEcr.configName }}
+            - name: PULL_SECRET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: PULL_SECRET_NAME
+                  name: {{ .Values.awsEcr.configName }}
+            - name: DOCKER_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_EMAIL
+                  name: {{ .Values.awsEcr.configName }}
+            resources: {}
+            securityContext:
+              capabilities: {}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: Default
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 30
+  schedule: {{ .Values.awsEcr.schedule }}
+  successfulJobsHistoryLimit: 1
+  suspend: false
+{{- end }}

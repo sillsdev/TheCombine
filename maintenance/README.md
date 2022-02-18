@@ -9,3 +9,5 @@ current supported tasks are:
 - Restore _The Combine_ from a previous backup in AWS S3
 - Monitor the NUC Certificates created by cert-manager.io and push them to AWS S3 (on a public server)
 - Check the current certificate for newer versions on AWS S3 and update them (on the NUCs)
+- Add an existing user to a project
+- Remove a project and its associated files

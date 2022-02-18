@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  name: backend-data
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  {{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
+    - ReadWriteMany
+  {{- else }}
+    - ReadWriteOnce
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolumeSize | quote }}
+status: {}

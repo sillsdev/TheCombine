@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: thecombine
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+{{- if eq .Values.ingressClass "nginx" }}
+    nginx.ingress.kubernetes.io/proxy-body-size: "250m"
+{{- end }}
+{{- if .Values.certManager.enabled }}
+    cert-manager.io/issuer: {{ .Values.certManager.certIssuer }}
+    cert-manager.io/duration: 2160h
+    cert-manager.io/renew-before: 720h
+{{- end }}
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.global.serverName }}
+    secretName: {{ replace "." "-" .Values.global.serverName }}-tls
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+{{- if ne .Values.global.serverName "localhost" }}
+    host: {{ .Values.global.serverName }}
+{{- end }}
