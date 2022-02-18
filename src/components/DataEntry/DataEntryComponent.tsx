@@ -46,31 +46,18 @@ export function filterWordsByDomain(
   domain: SemanticDomain
 ): DomainWord[] {
   const domainWords: DomainWord[] = [];
-  const domainName = domain.name;
-  let domainMatched = false;
-
   for (const currentWord of words) {
-    for (const currentSense of currentWord.senses.filter(
-      (s) =>
+    for (const sense of currentWord.senses) {
+      if (
         // This is for States created before .accessibility was required in the frontend.
-        s.accessibility === State.Active || s.accessibility === undefined
-    )) {
-      domainMatched = false;
-      for (const currentDomain of currentSense.semanticDomains) {
-        if (currentDomain.name === domainName) {
-          domainMatched = true;
-        }
-      }
-      if (domainMatched) {
-        const newDomainWord: DomainWord = {
-          word: currentWord,
-          gloss: currentSense.glosses[0],
-        };
-        domainWords.push(newDomainWord);
+        (sense.accessibility === undefined ||
+          sense.accessibility === State.Active) &&
+        sense.semanticDomains.map((dom) => dom.id).includes(domain.id)
+      ) {
+        domainWords.push(new DomainWord({ ...currentWord, senses: [sense] }));
       }
     }
   }
-
   return domainWords;
 }
 
@@ -79,13 +66,10 @@ export function sortDomainWordByVern(
   domain: SemanticDomain
 ): DomainWord[] {
   const domainWords = filterWordsByDomain(existingWords, domain);
-  return domainWords.sort((a, b) =>
-    a.word.vernacular.length < 1
-      ? -1
-      : a.word.vernacular < b.word.vernacular
-      ? -1
-      : 1
-  );
+  return domainWords.sort((a, b) => {
+    const comp = a.vernacular.localeCompare(b.vernacular);
+    return comp !== 0 ? comp : a.gloss.localeCompare(b.gloss);
+  });
 }
 
 /**
@@ -141,8 +125,8 @@ export default class DataEntryComponent extends React.Component<
             <DataEntryHeader
               domain={this.props.domain}
               questionsVisible={this.state.questionsVisible}
-              setQuestionVisibility={(visibility: boolean) =>
-                this.setState({ questionsVisible: visibility })
+              setQuestionVisibility={(questionsVisible: boolean) =>
+                this.setState({ questionsVisible })
               }
             />
             <Divider />
@@ -172,10 +156,10 @@ export default class DataEntryComponent extends React.Component<
           <TreeViewComponent
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {
-                this.setState((prevState) => ({
+                this.setState((prevState, props) => ({
                   domainWords: sortDomainWordByVern(
                     prevState.existingWords,
-                    this.props.domain
+                    props.domain
                   ),
                 }));
                 this.props.closeTree();

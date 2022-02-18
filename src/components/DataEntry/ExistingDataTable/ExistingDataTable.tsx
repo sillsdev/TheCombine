@@ -25,9 +25,9 @@ export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
       <List style={{ minWidth: "300px" }}>
         {domainWords.map((domainWord) => (
           <ImmutableExistingData
-            key={domainWord.word.id}
-            vernacular={domainWord.word.vernacular}
-            gloss={domainWord.gloss ? domainWord.gloss.def : ""}
+            key={`${domainWord.wordGuid}-${domainWord.senseGuid}`}
+            vernacular={domainWord.vernacular}
+            gloss={domainWord.gloss}
           />
         ))}
       </List>

@@ -7,11 +7,7 @@ import {
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { DomainWord, newSense, simpleWord } from "types/word";
 
-const mockWord = simpleWord("", "");
-const mockDomainWord: DomainWord = {
-  word: mockWord,
-  gloss: mockWord.senses[0].glosses[0],
-};
+const mockWord = simpleWord("vern", "gloss");
 
 describe("DataEntryComponent", () => {
   describe("filterWords", () => {
@@ -21,7 +17,7 @@ describe("DataEntryComponent", () => {
       expect(filterWords(words)).toEqual(expectedWords);
     });
 
-    it("filters out words that aren't Active.", () => {
+    it("removes words that aren't Active.", () => {
       const words: Word[] = [
         {
           ...mockWord,
@@ -35,88 +31,77 @@ describe("DataEntryComponent", () => {
       expect(filterWords(words)).toHaveLength(0);
     });
 
-    it("doesn't filter words that are Active.", () => {
-      const words: Word[] = [
-        {
-          ...mockWord,
-          senses: [newSense()],
-        },
-      ];
-      expect(filterWords(words)).toHaveLength(1);
+    it("keeps words that are Active.", () => {
+      expect(filterWords([mockWord, mockWord])).toHaveLength(2);
     });
   });
 
-  it("filterWordsByDomain filters out words that do not match desired domain", () => {
-    const mockDomains = [
-      new TreeSemanticDomain("ID_one", "daily"),
-      new TreeSemanticDomain("ID_two, weather"),
-    ];
+  describe("filterWordsByDomain", () => {
+    it("filters out words that do not match desired domain.", () => {
+      const mockDomains = [
+        new TreeSemanticDomain("ID_one", "daily"),
+        new TreeSemanticDomain("ID_two", "weather"),
+      ];
 
-    const senses = [
-      newSense("", "", mockDomains[0]),
-      newSense("", "", mockDomains[1]),
-    ];
+      const senses = [
+        newSense("inExtraDomain", "", mockDomains[0]),
+        newSense("inTargetDomain", "", mockDomains[1]),
+      ];
 
-    const unfilteredWords: Word[] = [
-      {
-        ...mockWord,
-        vernacular: "one",
-        senses: [...mockWord.senses, senses[0]],
-      },
-      {
-        ...mockWord,
-        vernacular: "two",
-        senses: [...mockWord.senses, senses[1]],
-      },
-      {
-        ...mockWord,
-        vernacular: "three",
-        senses: [...mockWord.senses, senses[0]],
-      },
-    ];
+      const unfilteredWords: Word[] = [
+        {
+          ...mockWord,
+          vernacular: "one",
+          senses: [...mockWord.senses, senses[0]],
+        },
+        {
+          ...mockWord,
+          vernacular: "two",
+          senses: [...mockWord.senses, senses[1]],
+        },
+        {
+          ...mockWord,
+          vernacular: "three",
+          senses: [...mockWord.senses, senses[0]],
+        },
+      ];
 
-    const domainWords: DomainWord[] = [];
-    const curDomainWord: DomainWord = {
-      word: unfilteredWords[1],
-      gloss: unfilteredWords[1].senses[0].glosses[0],
-    };
-    domainWords.push(curDomainWord);
-    expect(filterWordsByDomain(unfilteredWords, mockDomains[1])).toStrictEqual(
-      domainWords
-    );
+      const targetDomain = mockDomains[1];
+      const expectedWord = unfilteredWords[1];
+      const senseIndex = expectedWord.senses.findIndex(
+        (s) => s.semanticDomains[0]?.id == targetDomain.id
+      );
+      expect(
+        filterWordsByDomain(unfilteredWords, mockDomains[1])
+      ).toStrictEqual([new DomainWord(expectedWord, senseIndex)]);
+    });
   });
 
-  it("sortDomainWordByVern sorts words alphabetically", () => {
-    const mockDomain = new TreeSemanticDomain("ID_one", "daily");
-    const unfilteredWords: Word[] = [
-      { ...mockWord },
-      { ...mockWord },
-      { ...mockWord },
-    ];
-    const filteredDomainWords: DomainWord[] = [
-      { ...mockDomainWord },
-      { ...mockDomainWord },
-      { ...mockDomainWord },
-    ];
+  describe("sortDomainWordByVern", () => {
+    it("sorts words alphabetically.", () => {
+      const mockDomain = new TreeSemanticDomain("ID_one", "daily");
+      const unfilteredWords: Word[] = [
+        { ...mockWord },
+        { ...mockWord },
+        { ...mockWord },
+      ];
 
-    for (const currentWord of unfilteredWords) {
-      currentWord.senses[0].semanticDomains[0] = mockDomain;
-    }
-    unfilteredWords[0].vernacular = "Always";
-    unfilteredWords[1].vernacular = "Be";
-    unfilteredWords[2].vernacular = "?character";
+      for (const currentWord of unfilteredWords) {
+        currentWord.senses[0].semanticDomains[0] = mockDomain;
+      }
+      unfilteredWords[0].vernacular = "Always";
+      unfilteredWords[1].vernacular = "Be";
+      unfilteredWords[2].vernacular = "?character";
 
-    filteredDomainWords[0].word = unfilteredWords[0];
-    filteredDomainWords[1].word = unfilteredWords[1];
-    filteredDomainWords[2].word = unfilteredWords[2];
-
-    const expectedList = [
-      filteredDomainWords[2],
-      filteredDomainWords[0],
-      filteredDomainWords[1],
-    ];
-    expect(sortDomainWordByVern(unfilteredWords, mockDomain)).toStrictEqual(
-      expectedList
-    );
+      const filteredDomainWords = unfilteredWords.map((w) => new DomainWord(w));
+      const expectedList = [
+        filteredDomainWords[2],
+        filteredDomainWords[0],
+        filteredDomainWords[1],
+      ];
+      expect(sortDomainWordByVern(unfilteredWords, mockDomain)).toStrictEqual(
+        expectedList
+      );
+    });
   });
 });

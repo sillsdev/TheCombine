@@ -21,9 +21,13 @@ interface EditTextDialogProps {
   titleId: string;
   close: () => void;
   updateText: (newText: string) => void | Promise<void>;
+  onCancel?: () => void;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
+  buttonTextIdCancel?: string;
+  buttonTextIdConfirm?: string;
   textFieldId?: string;
+  allowNoChangeSave?: boolean;
 }
 
 /**
@@ -36,7 +40,7 @@ export default function EditTextDialog(
   const [text, setText] = useState<string>(props.text);
 
   async function onConfirm() {
-    if (text !== props.text) {
+    if (text !== props.text || props.allowNoChangeSave) {
       setLoading(true);
       await props.updateText(text);
       setLoading(false);
@@ -46,6 +50,9 @@ export default function EditTextDialog(
 
   function onCancel() {
     setText(props.text);
+    if (props.onCancel) {
+      props.onCancel();
+    }
     props.close();
   }
 
@@ -96,7 +103,7 @@ export default function EditTextDialog(
           color="primary"
           id={props.buttonIdCancel}
         >
-          <Translate id="buttons.cancel" />
+          <Translate id={props.buttonTextIdCancel ?? "buttons.cancel"} />
         </Button>
         <LoadingButton
           loading={loading}
@@ -107,7 +114,7 @@ export default function EditTextDialog(
             id: props.buttonIdConfirm,
           }}
         >
-          <Translate id="buttons.confirm" />
+          <Translate id={props.buttonTextIdConfirm ?? "buttons.confirm"} />
         </LoadingButton>
       </DialogActions>
     </Dialog>

@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 
 import {
   Definition,
+  Flag,
   Gloss,
   Note,
   SemanticDomain,
@@ -44,12 +45,8 @@ export function newSense(
   return sense;
 }
 
-/**
- * Returns the text of the first gloss of a sense.
- * In the case that the array of glosses is empty, returns an empty string.
- */
-export function firstGlossText(sense: Sense): string {
-  return sense.glosses[0]?.def ?? "";
+export function newFlag(text = ""): Flag {
+  return { active: !!text, text };
 }
 
 export function newNote(text = "", language = ""): Note {
@@ -69,13 +66,25 @@ export function newWord(vernacular = ""): Word {
     history: [],
     projectId: "",
     note: newNote(),
+    flag: newFlag(),
   };
 }
 
-/** A simplified word used in DataEntry. */
-export interface DomainWord {
-  word: Word;
-  gloss: Gloss;
+/** A stripped-down sense used in DataEntry > ExistingDataTable. */
+export class DomainWord {
+  wordGuid: string;
+  vernacular: string;
+  senseGuid: string;
+  gloss: string;
+
+  constructor(word: Word, senseIndex = 0, glossIndex = 0) {
+    const sense = word.senses[senseIndex] ?? newSense();
+    const gloss = sense.glosses[glossIndex] ?? newGloss();
+    this.wordGuid = word.guid;
+    this.vernacular = word.vernacular;
+    this.senseGuid = sense.guid;
+    this.gloss = gloss.def;
+  }
 }
 
 export function simpleWord(vern: string, gloss: string): Word {
@@ -111,53 +120,4 @@ export function testWordList(): Word[] {
     simpleWord("Yes", "Wumbo"),
     simpleWord("Yes", "Mayonnaise"),
   ];
-}
-
-const sep = "; ";
-/** Removes definitions with empty def and combine glosses with same lang. */
-export function cleanDefinitions(defs: Definition[]): Definition[] {
-  const nonempty = defs.filter((d) => d.text.length);
-  const langs = [...new Set(nonempty.map((d) => d.language))];
-  return langs.map((language) =>
-    newDefinition(
-      nonempty
-        .filter((d) => d.language === language)
-        .map((d) => d.text)
-        .join(sep),
-      language
-    )
-  );
-}
-/** Removes glosses with empty def and combine glosses with same lang. */
-export function cleanGlosses(glosses: Gloss[]): Gloss[] {
-  const nonempty = glosses.filter((g) => g.def.length);
-  const langs = [...new Set(nonempty.map((g) => g.language))];
-  return langs.map((language) =>
-    newGloss(
-      nonempty
-        .filter((g) => g.language === language)
-        .map((g) => g.def)
-        .join(sep),
-      language
-    )
-  );
-}
-
-export function getAnalysisLangsFromWords(words: Word[]): string[] {
-  return reduceMultiType<Word, string[]>(words, [], wordReducer);
-}
-function reduceMultiType<A, B>(
-  toReduce: A[],
-  initial: B,
-  reducer: (accumulator: B, currentItem: A) => B
-): B {
-  let accumulated = initial;
-  toReduce.forEach((item) => (accumulated = reducer(accumulated, item)));
-  return accumulated;
-}
-function wordReducer(accumulator: string[], word: Word): string[] {
-  const newLangs = word.senses
-    .flatMap((s) => [...s.definitions, ...s.glosses])
-    .map((dg) => dg.language);
-  return [...new Set([...accumulator, ...newLangs])];
 }

@@ -25,7 +25,7 @@ import { UpperRightToastContainer } from "components/Toast/UpperRightToastContai
 import { allSemDomWritingSystems } from "components/TreeView/TreeViewComponent";
 import { newWritingSystem } from "types/project";
 import theme from "types/theme";
-import { getAnalysisLangsFromWords } from "types/word";
+import { getAnalysisLangsFromWords } from "types/wordUtilities";
 
 interface LanguageProps {
   project: Project;
@@ -141,8 +141,7 @@ export default class ProjectLanguages extends React.Component<
   async getActiveAnalysisLangs(): Promise<void> {
     const langCodes = getAnalysisLangsFromWords(await getFrontierWords());
     langCodes.sort();
-    const langsInProject = langCodes.join(", ");
-    this.setState({ langsInProject });
+    this.setState({ langsInProject: langCodes.join(", ") });
   }
 
   resetState(): void {

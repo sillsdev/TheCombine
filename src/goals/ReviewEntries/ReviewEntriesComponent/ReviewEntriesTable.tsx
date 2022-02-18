@@ -4,7 +4,9 @@ import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 import { useSelector } from "react-redux";
 
-import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
+import columns, {
+  ColumnTitle,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import { StoreState } from "types";
@@ -16,13 +18,14 @@ interface ReviewEntriesTableProps {
   ) => Promise<void>;
 }
 
-// Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more
+// Remove the duplicates from an array; sugar syntax, as the place it's used
+// is already hideous enough without adding more
 function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
 // Constants
-const ROWS_PER_PAGE: number[] = [10, 100, 1000];
+const ROWS_PER_PAGE = [10, 100, 250];
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
@@ -47,7 +50,7 @@ export default function ReviewEntriesTable(
           columns={
             showDefinitions
               ? columns
-              : columns.filter((c) => c.field !== "definitions")
+              : columns.filter((c) => c.field !== ColumnTitle.Definitions)
           }
           data={words}
           editable={{

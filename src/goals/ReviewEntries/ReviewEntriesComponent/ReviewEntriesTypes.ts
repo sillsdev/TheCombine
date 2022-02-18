@@ -1,5 +1,6 @@
 import {
   Definition,
+  Flag,
   Gloss,
   SemanticDomain,
   Sense,
@@ -7,7 +8,18 @@ import {
   Word,
 } from "api/models";
 import Recorder from "components/Pronunciations/Recorder";
-import { cleanDefinitions, cleanGlosses, newSense, newWord } from "types/word";
+import { newSense, newWord } from "types/word";
+import { cleanDefinitions, cleanGlosses } from "types/wordUtilities";
+
+// These must match the ReviewEntriesWord fields for use in ReviewEntriesTable
+export enum ReviewEntriesWordField {
+  Id = "id",
+  Vernacular = "vernacular",
+  Senses = "senses",
+  Pronunciations = "pronunciationFiles",
+  Note = "noteText",
+  Flag = "flag",
+}
 
 export class ReviewEntriesWord {
   id: string;
@@ -15,6 +27,7 @@ export class ReviewEntriesWord {
   senses: ReviewEntriesSense[];
   pronunciationFiles: string[];
   noteText: string;
+  flag: Flag;
   recorder?: Recorder;
 
   constructor(word?: Word, analysisLang?: string, commonRecorder?: Recorder) {
@@ -28,6 +41,7 @@ export class ReviewEntriesWord {
     );
     this.pronunciationFiles = word.audio;
     this.noteText = word.note.text;
+    this.flag = word.flag;
     this.recorder = commonRecorder;
   }
 }

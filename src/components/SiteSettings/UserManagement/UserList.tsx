@@ -83,10 +83,7 @@ class UserList extends React.Component<
       });
     }
 
-    this.setState({
-      filterInput: event,
-      filteredUsers: filteredUsers,
-    });
+    this.setState({ filterInput: event, filteredUsers });
   }
 
   private getSortedUsers() {
@@ -133,9 +130,7 @@ class UserList extends React.Component<
                 labelId="sorting-order-select"
                 defaultValue={UserOrder.Username}
                 onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                  this.setState({
-                    userOrder: event.target.value as UserOrder,
-                  });
+                  this.setState({ userOrder: event.target.value as UserOrder });
                 }}
               >
                 <MenuItem value={UserOrder.Name}>

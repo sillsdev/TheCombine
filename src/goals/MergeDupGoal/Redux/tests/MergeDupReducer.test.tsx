@@ -4,6 +4,7 @@ import {
   MergeTreeReference,
   MergeTreeSense,
   MergeTreeWord,
+  newMergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import * as Actions from "goals/MergeDupGoal/Redux/MergeDupActions";
 import {
@@ -16,7 +17,7 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
-import { testWordList } from "types/word";
+import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
 const mockUuid = require("uuid") as { v4: jest.Mock };
@@ -66,21 +67,16 @@ describe("MergeDupReducer", () => {
 
   function testTreeWords(): Hash<MergeTreeWord> {
     return {
-      word1: {
-        sensesGuids: { word1_senseA: ["word1_senseA_0"] },
-        vern: "senses:A0",
-      },
-      word2: {
-        sensesGuids: { word2_senseA: ["word2_senseA_0", "word2_senseA_1"] },
-        vern: "senses:A01",
-      },
-      word3: {
-        sensesGuids: {
-          word3_senseA: ["word3_senseA_0"],
-          word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
-        },
-        vern: "senses:A0B01",
-      },
+      word1: newMergeTreeWord("senses:A0", {
+        word1_senseA: ["word1_senseA_0"],
+      }),
+      word2: newMergeTreeWord("senses:A01", {
+        word2_senseA: ["word2_senseA_0", "word2_senseA_1"],
+      }),
+      word3: newMergeTreeWord("senses:A0B01", {
+        word3_senseA: ["word3_senseA_0"],
+        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
+      }),
     };
   }
   const mockState: MergeTreeState = {
@@ -329,6 +325,19 @@ describe("MergeDupReducer", () => {
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
+
+      checkTreeWords(testAction, expectedWords);
+    });
+  });
+
+  describe("flagWord", () => {
+    it("adds a flag to a word", () => {
+      const wordId = "word1";
+      const testFlag = newFlag("flagged");
+      const testAction = Actions.flagWord(wordId, testFlag);
+
+      const expectedWords = testTreeWords();
+      expectedWords[wordId].flag = testFlag;
 
       checkTreeWords(testAction, expectedWords);
     });

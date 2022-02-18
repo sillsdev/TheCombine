@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import * as backend from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/CellColumns";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
@@ -14,9 +13,7 @@ interface DeleteCellProps {
   rowData: ReviewEntriesWord;
 }
 
-export default function DeleteCell(
-  props: DeleteCellProps & FieldParameterStandard
-): ReactElement {
+export default function DeleteCell(props: DeleteCellProps): ReactElement {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const words = useSelector(
     (state: StoreState) => state.reviewEntriesState.words
