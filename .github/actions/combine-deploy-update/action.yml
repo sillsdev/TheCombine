@@ -10,6 +10,9 @@ inputs:
   kube_context:
     description: "Context for the kubectl commands"
     required: true
+  update_cert_proxy:
+    description: "Specification for whether the combine-cert-proxy should be updated."
+    required: true
 runs:
   using: "composite"
   steps:
@@ -35,5 +38,12 @@ runs:
     - name: Update maintenance
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/maintenance
+        maintenance="${{ inputs.image_repo }}/combine_maint:${{ inputs.image_tag }}"
+      shell: bash
+    - name: Update Cert Proxy Server
+      if: ${{ inputs.update_cert_proxy }}
+      run: kubectl --context ${{ inputs.kube_context }}
+        --namespace combine-cert-proxy
+        set image deployment/combine-cert-proxy
         maintenance="${{ inputs.image_repo }}/combine_maint:${{ inputs.image_tag }}"
       shell: bash

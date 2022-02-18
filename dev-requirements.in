@@ -5,6 +5,7 @@ mypy
 types-requests
 types-pyOpenSSL
 types-python-dateutil
+types-PyYAML
 
 # Linting.
 flake8
@@ -28,6 +29,9 @@ jinja2-base64-filters
 humanfriendly
 kubernetes
 pyopenssl
+
+# Kubernetes Installation.
+pyyaml
 
 # OS-specific dependencies.
 # The follow dependencies are only needed on Windows, but list them here to avoid thrashing back and forth when

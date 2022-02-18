@@ -1,0 +1,82 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: update-cert-oneshot
+  namespace: {{ .Release.Namespace }}
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+      - image: {{ template "cert-proxy-client.containerImage" . }}
+{{- if eq .Values.global.imageTag "latest" }}
+        imagePullPolicy: Always
+{{- else }}
+        imagePullPolicy: IfNotPresent
+{{- end }}
+        name: update-cert-oneshot
+        command:
+          - update_cert.py
+        env:
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              key: AWS_DEFAULT_REGION
+              name: {{ .Values.global.awsS3Access | quote }}
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: {{ .Values.global.awsS3Access | quote }}
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: {{ .Values.global.awsS3Access | quote }}
+        - name: AWS_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCOUNT
+              name: {{ .Values.global.awsS3Access | quote }}
+        - name: AWS_S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              key: AWS_S3_BUCKET
+              name: {{ .Values.envName  | quote }}
+        - name: CERT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_SECRET
+              name: {{ .Values.envName  | quote }}
+        - name: CERT_NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_NAMESPACE
+              name: {{ .Values.envName  | quote }}
+        - name: CERT_RENEW_BEFORE
+          valueFrom:
+            configMapKeyRef:
+              key: CERT_RENEW_BEFORE
+              name: {{ .Values.envName  | quote }}
+        - name: TEST_URL
+          valueFrom:
+            configMapKeyRef:
+              key: TEST_URL
+              name: {{ .Values.envName  | quote }}
+        - name: VERBOSE
+          valueFrom:
+            configMapKeyRef:
+              key: VERBOSE
+              name: {{ .Values.envName  | quote }}
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30

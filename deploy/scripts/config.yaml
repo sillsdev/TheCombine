@@ -1,0 +1,102 @@
+# This file defines the properties of the different targets where The Combine will be installed
+
+# Set of targets
+# Each key of 'targets' represents a host on which The Combine may be installed.  The hostname is
+# entered as its DNS name, even if a shortcut name is defined in your hosts file or an ssh config
+# file.
+#
+# Each target will have the following keys:
+#   profile: the target profile to be used; must be a profile listed in the set of profiles below
+#   set (optional): list of target specific values to override the standard definition using the
+#            helm `--set` option.
+targets:
+  localhost:
+    profile: dev
+    set:
+      frontend.configCaptchaRequired: "true"
+      frontend.configCaptchaSitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+  nuc1.thecombine.app:
+    profile: nuc
+  nuc2.thecombine.app:
+    profile: nuc
+  qa-kube.thecombine.app:
+    profile: staging
+  thecombine.app:
+    profile: prod
+    set:
+      frontend.configCaptchaRequired: "true"
+      frontend.configCaptchaSitekey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
+      combineCertProxyList:
+        - nuc1.thecombine.app
+        - nuc2.thecombine.app
+
+# Set of profiles
+# Each key of 'profiles' defines one of the profiles used by the set of targets.
+#
+# Each profile has a 'charts' key that lists the helm charts that are to be installed or
+# upgraded in that profile.
+#
+# In addition to the chart definitions, each profile may have a file in ./deploy/scripts/profiles
+# to define overrides for configuration values.
+
+profiles:
+  dev: # Profile for local development machines (not supported yet)
+    charts:
+      - thecombine
+  nuc: # Profile for a NUC or a machine whose TLS certificate will be created by another
+    # system and is downloaded from AWS S3
+    charts:
+      - thecombine
+  staging: # Profile for the QA server
+    charts:
+      - thecombine
+  prod: # Profile for the Production/Live server
+    charts:
+      - thecombine
+      - cert-proxy-server
+
+# Set of charts
+# The set of charts defines properties for each of the charts listed in the profiles above.
+# There are 2 keys for each chart:
+#   namespace: the namespace where helm should install the chart.  Note that the namespace needs to be
+#             created beforehand
+#   secrets: a list of secrets that are required for each chart.  Each secret contains:
+#     config_item: the name of the configuration value that is referenced in the chart's template files
+#     env_var: the name of the environment variable that holds the value for the config_item.
+charts:
+  thecombine:
+    namespace: thecombine
+    secrets:
+      - config_item: awsAccount
+        env_var: AWS_ACCOUNT
+      - config_item: awsDefaultRegion
+        env_var: AWS_DEFAULT_REGION
+      - config_item: awsEcrAccessKeyId
+        env_var: AWS_ECR_ACCESS_KEY_ID
+      - config_item: awsEcrSecretAccessKey
+        env_var: AWS_ECR_SECRET_ACCESS_KEY
+      - config_item: awsS3AccessKeyId
+        env_var: AWS_S3_ACCESS_KEY_ID
+      - config_item: awsS3SecretAccessKey
+        env_var: AWS_S3_SECRET_ACCESS_KEY
+      - config_item: combineJwtSecretKey
+        env_var: COMBINE_JWT_SECRET_KEY
+      - config_item: combineSmtpUsername
+        env_var: COMBINE_SMTP_USERNAME
+      - config_item: combineSmtpPassword
+        env_var: COMBINE_SMTP_PASSWORD
+  cert-proxy-server:
+    namespace: combine-cert-proxy
+    secrets:
+      - config_item: awsAccount
+        env_var: AWS_ACCOUNT
+      - config_item: awsDefaultRegion
+        env_var: AWS_DEFAULT_REGION
+      - config_item: awsEcrAccessKeyId
+        env_var: AWS_ECR_ACCESS_KEY_ID
+      - config_item: awsEcrSecretAccessKey
+        env_var: AWS_ECR_SECRET_ACCESS_KEY
+      - config_item: awsS3AccessKeyId
+        env_var: AWS_S3_ACCESS_KEY_ID
+      - config_item: awsS3SecretAccessKey
+        env_var: AWS_S3_SECRET_ACCESS_KEY

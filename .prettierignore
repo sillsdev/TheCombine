@@ -1,3 +1,9 @@
 # These files are very large and slow to format.
 src/resources/dictionaries
 docs/user_guide/site
+
+# Prettier cannot handle Helm Templates.
+# See https://github.com/prettier/prettier/issues/6517
+# Even when bracketSpacing is set to false, prettier will sometimes
+# break the Helm templates.
+**/helm/**/templates/*.yaml

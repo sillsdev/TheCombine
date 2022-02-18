@@ -1,0 +1,61 @@
+# Default values for thecombine.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
+global:
+  serverName: localhost
+  pullSecretName: aws-login-credentials
+  awsS3Access: aws-s3-credentials
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  adminUsername: "Override"
+  adminPassword: "Override"
+  adminEmail: "Override"
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  awsEcrAccessKeyId: "Override"
+  awsEcrSecretAccessKey: "Override"
+  awsS3AccessKeyId: "Override"
+  awsS3SecretAccessKey: "Override"
+  combineJwtSecretKey: "Override"
+  combineSmtpUsername: "Override"
+  combineSmtpPassword: "Override"
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: awsEcr
+  # Default AWS S3 location
+  awsS3Location: "thecombine.app"
+
+aws-login:
+  enabled: true
+
+cert-proxy-client:
+  enabled: false
+
+certManager:
+  enabled: false
+  certIssuer: letsencrypt-prod
+
+frontend:
+  configShowCertExpiration: false
+  configAnalyticsWriteKey: ""
+  configCaptchaRequired: false
+  configCaptchaSiteKey: "None"
+
+# Maintenance configuration items
+maintenance:
+  #######################################
+  # Backup Schedule
+  # Run every day at 03:15 UTC
+  backupSchedule: "15 03 * * *"
+  # Maximum number of backups to keep on AWS S3 service
+  maxBackups: "3"
+
+ingressClass: nginx

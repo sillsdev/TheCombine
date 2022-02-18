@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    combine-component: frontend
+  name: frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      combine-component: frontend
+  strategy:
+    type: {{ .Values.global.updateStrategy }}
+{{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+{{- end }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        combine-component: frontend
+    spec:
+      containers:
+        - env:
+            - name: CERT_ADDL_DOMAINS
+              valueFrom:
+                configMapKeyRef:
+                  key: CERT_ADDL_DOMAINS
+                  name: env-frontend
+            - name: CONFIG_CAPTCHA_REQD
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_CAPTCHA_REQD
+                  name: env-frontend
+            - name: CONFIG_CAPTCHA_SITE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_CAPTCHA_SITE_KEY
+                  name: env-frontend
+            - name: CONFIG_USE_CONNECTION_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_USE_CONNECTION_URL
+                  name: env-frontend
+            - name: SERVER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVER_NAME
+                  name: env-frontend
+            - name: ENV_HTTP_ONLY
+              valueFrom:
+                configMapKeyRef:
+                  key: ENV_HTTP_ONLY
+                  name: env-frontend
+          image: {{ template "frontend.containerImage" . }}
+{{- if eq .Values.global.imageTag "latest" }}
+          imagePullPolicy: Always
+{{- else }}
+          imagePullPolicy: IfNotPresent
+{{- end }}
+          name: frontend
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          resources: {}
+      restartPolicy: Always
+{{- if ne .Values.global.pullSecretName "None" }}
+      imagePullSecrets:
+         - name: {{ .Values.global.pullSecretName }}
+{{- end }}
+status: {}

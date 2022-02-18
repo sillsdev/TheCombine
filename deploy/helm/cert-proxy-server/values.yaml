@@ -1,0 +1,59 @@
+# Default values for cert-proxy-server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
+Release:
+  Namespace: thecombine
+
+global:
+  serverName: cert-proxy.thecombine.app
+  pullSecretName: aws-login-credentials
+  awsS3Access: aws-s3-credentials
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  awsEcrAccessKeyId: "Override"
+  awsEcrSecretAccessKey: "Override"
+  awsS3AccessKeyId: "Override"
+  awsS3SecretAccessKey: "Override"
+  imageTag: "latest"
+  # Define the type of image registry to use, awsEcr or local
+  imageRegistry: awsEcr
+  # Default AWS S3 location
+  awsS3Location: "thecombine.app"
+
+serviceAccount:
+  name: account-cert-server
+  role: role-cert-server
+  roleBinding: role-cert-server-binding
+
+aws-login:
+  enabled: true
+
+# Override service account info to avoid name collisions
+awsEcr:
+  serviceAccount: account-ecr-login-cert-proxy
+  role: role-ecr-login-cert-proxy
+  roleBinding: role-ecr-login-cert-proxy-binding
+
+envCertProxy: env-cert-proxy
+envNginxProxy: env-nginx-proxy
+nginxPages: init-nginx-pages
+ingressClass: nginx
+certEmail: "cert@thecombine.app"
+imageName: combine_maint
+
+awsS3CertLoc: certs
+certIssuer: letsencrypt-prod
+# Renew before there are 1440 hours left (60 days)
+certRenewBefore: 1440h
+
+combineCertProxyList: []

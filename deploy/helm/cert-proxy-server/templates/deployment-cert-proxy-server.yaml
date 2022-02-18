@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    combine-component: combine-cert-proxy
+  name: combine-cert-proxy
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      combine-component: combine-cert-proxy
+  strategy:
+    type: {{ .Values.global.updateStrategy }}
+{{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+{{- end }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        combine-component: combine-cert-proxy
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - command: [ "/home/user/.local/bin/monitor.py" ]
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: {{ .Values.global.awsS3Access }}
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: {{ .Values.global.awsS3Access }}
+            - name: AWS_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCOUNT
+                  name: {{ .Values.global.awsS3Access }}
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_DEFAULT_REGION
+                  name: {{ .Values.global.awsS3Access }}
+            - name: AWS_S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  key: AWS_S3_BUCKET
+                  name: {{ .Values.envCertProxy }}
+            - name: CERT_PROXY_CERTIFICATES
+              valueFrom:
+                configMapKeyRef:
+                  key: CERT_PROXY_CERTIFICATES
+                  name: {{ .Values.envCertProxy }}
+            - name: CERT_PROXY_NAMESPACE
+              value: {{ .Release.Namespace }}
+          image: {{ template "cert-proxy-server.containerImage" . }}
+{{- if eq .Values.global.imageTag "latest" }}
+          imagePullPolicy: Always
+{{- else }}
+          imagePullPolicy: IfNotPresent
+{{- end }}
+          name: combine-cert-proxy
+          resources: {}
+      restartPolicy: Always
+{{- if ne .Values.global.pullSecretName "None" }}
+      imagePullSecrets:
+         - name: {{ .Values.global.pullSecretName }}
+{{- end }}
+status: {}
