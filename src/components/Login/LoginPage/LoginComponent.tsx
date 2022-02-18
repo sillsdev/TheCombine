@@ -83,9 +83,7 @@ export default class Login extends React.Component<
   ) {
     const value = e.target.value;
 
-    this.setState({
-      [field]: value,
-    } as Pick<LoginState, K>);
+    this.setState({ [field]: value } as Pick<LoginState, K>);
   }
 
   login(e: React.FormEvent<EventTarget>) {

@@ -36,8 +36,8 @@ export default class ProjectImport extends React.Component<
     };
   }
 
-  private updateLiftFile(file: File) {
-    this.setState({ liftFile: file, liftFilename: file.name });
+  private updateLiftFile(liftFile: File) {
+    this.setState({ liftFile, liftFilename: liftFile.name });
   }
 
   private async uploadWords() {

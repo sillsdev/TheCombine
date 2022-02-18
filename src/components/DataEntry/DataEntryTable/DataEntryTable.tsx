@@ -165,24 +165,26 @@ export class DataEntryTable extends React.Component<
       return;
     }
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
-    const wordWithAudio = await backend.getWord(wordId);
+    const word = await backend.getWord(wordId);
     await this.updateExisting();
 
     if (ignoreRecent) {
       return;
     }
 
-    const recentlyAddedWords = [...this.state.recentlyAddedWords];
-    const newWordAccess: WordAccess = {
-      word: wordWithAudio,
-      senseIndex: 0,
-    };
-    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
-      recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
-    } else {
-      recentlyAddedWords.push(newWordAccess);
-    }
-    this.setState({ recentlyAddedWords });
+    this.setState((prevState) => {
+      const recentlyAddedWords = [...prevState.recentlyAddedWords];
+      const newWordAccess: WordAccess = { word, senseIndex: 0 };
+      if (
+        insertIndex !== undefined &&
+        insertIndex < recentlyAddedWords.length
+      ) {
+        recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
+      } else {
+        recentlyAddedWords.push(newWordAccess);
+      }
+      return { recentlyAddedWords };
+    });
   }
 
   /** Update the word in the backend and the frontend */
@@ -197,16 +199,16 @@ export class DataEntryTable extends React.Component<
       updatedWord = await backend.getWord(wordId);
     }
 
-    const recentlyAddedWords = [...this.state.recentlyAddedWords];
-    const updatedWordAccess: WordAccess = {
-      word: updatedWord,
-      senseIndex: senseIndex,
-    };
-    recentlyAddedWords.push(updatedWordAccess);
-
-    this.setState({ recentlyAddedWords }, () => {
-      this.replaceInDisplay(wordToUpdate.id, updatedWord);
-    });
+    this.setState(
+      (prevState) => {
+        const recentlyAddedWords = [...prevState.recentlyAddedWords];
+        recentlyAddedWords.push({ word: updatedWord, senseIndex });
+        return { recentlyAddedWords };
+      },
+      () => {
+        this.replaceInDisplay(wordToUpdate.id, updatedWord);
+      }
+    );
   }
   async updateWordBackAndFrontSimple(wordToUpdate: Word) {
     const updatedWord = await this.updateWordInBackend(wordToUpdate);
@@ -428,9 +430,11 @@ export class DataEntryTable extends React.Component<
   }
 
   removeRecentEntry(entryIndex: number) {
-    const recentlyAddedWords = [...this.state.recentlyAddedWords];
-    recentlyAddedWords.splice(entryIndex, 1);
-    this.setState({ recentlyAddedWords });
+    this.setState((prevState) => {
+      const recentlyAddedWords = [...prevState.recentlyAddedWords];
+      recentlyAddedWords.splice(entryIndex, 1);
+      return { recentlyAddedWords };
+    });
   }
 
   // Update a vern in a word and replace every displayed instance of that word.
