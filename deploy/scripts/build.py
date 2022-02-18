@@ -79,7 +79,7 @@ def main() -> None:
     ]
 
     for spec in build_specs:
-        os.chdir(str(spec.dir))
+        os.chdir(spec.dir)
         image_name = get_image_name(args.repo, spec.name, args.tag)
         os.system(f"{build_cmd} build -t {image_name} -f Dockerfile .")
         if args.repo is not None:
