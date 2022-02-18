@@ -9,7 +9,8 @@ export default class TreeSemanticDomain
   subdomains: TreeSemanticDomain[] = [];
 
   // Additional fields not in SemanticDomainWithSubdomains
-  parentDomain?: TreeSemanticDomain;
+  parentId?: string;
+  childIds: string[] = [];
   questions: string[] = [];
 
   constructor(id = "", name = "") {
@@ -17,3 +18,5 @@ export default class TreeSemanticDomain
     this.name = name;
   }
 }
+
+export type DomainMap = Record<string, TreeSemanticDomain>;

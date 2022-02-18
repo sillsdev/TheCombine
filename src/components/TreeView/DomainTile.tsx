@@ -18,7 +18,7 @@ export enum Direction {
 
 interface DomainTileProps {
   domain: TreeSemanticDomain;
-  onClick: (domain: TreeSemanticDomain) => any;
+  onClick: (domain: TreeSemanticDomain) => void;
   direction?: Direction | undefined;
 }
 

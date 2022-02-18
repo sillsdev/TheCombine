@@ -2,26 +2,30 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {
-  testFromNode("Renders correctly: from Parent", MockDomain);
+  testFromNode("Renders correctly: from parent", domMap[mapIds.parent]);
   testFromNode(
     "Renders correctly: node w/ even # of subdomains",
-    MockDomain.subdomains[0]
+    domMap[mapIds.evenKid]
   );
   testFromNode(
     "Renders correctly: node w/ odd # of subdomains",
-    MockDomain.subdomains[1]
+    domMap[mapIds.oddKid]
   );
   testFromNode(
-    "Renders correctly: node w/ 1 subdomains",
-    MockDomain.subdomains[2]
+    "Renders correctly: node w/ 1 subdomains and 2 siblings",
+    domMap[mapIds.longKid]
+  );
+  testFromNode(
+    "Renders correctly: node w/ 1 subdomains and no siblings",
+    domMap[mapIds.depth3]
   );
   testFromNode(
     "Renders correctly: node w/ no subdomains",
-    MockDomain.subdomains[2].subdomains[0]
+    domMap[mapIds.depth5]
   );
 });
 
@@ -36,7 +40,11 @@ function testFromNode(message: string, node: TreeSemanticDomain) {
 function createTree(domain: TreeSemanticDomain) {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeDepiction currentDomain={domain} animate={jest.fn()} />
+      <TreeDepiction
+        currentDomain={domain}
+        domainMap={domMap}
+        animate={jest.fn()}
+      />
     );
   });
 }
