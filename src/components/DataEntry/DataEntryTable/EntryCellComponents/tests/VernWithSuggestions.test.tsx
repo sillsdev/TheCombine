@@ -2,7 +2,7 @@ import React from "react";
 import renderer from "react-test-renderer";
 
 import LocalizedVernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
-import { newWritingSystem } from "types/project";
+import { newWritingSystem } from "types/writingSystem";
 
 describe("Tests VernWithSuggestions", () => {
   it("renders without crashing", () => {

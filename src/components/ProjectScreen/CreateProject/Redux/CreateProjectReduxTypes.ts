@@ -1,5 +1,5 @@
 import { Project, WritingSystem } from "api/models";
-import { newWritingSystem } from "types/project";
+import { newWritingSystem } from "types/writingSystem";
 
 export enum CreateProjectActionTypes {
   CREATE_PROJECT_FAILURE = "CREATE_PROJECT_FAILURE",
