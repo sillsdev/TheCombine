@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.awsEcr.serviceAccount }}
+  namespace: {{ .Release.Namespace }}
+imagePullSecrets:
+  - name: {{ .Values.global.pullSecretName }}
+secrets:
+  - name: {{ .Values.awsEcr.secretsName }}

@@ -8,14 +8,13 @@ TheCombine in Docker containers in an environment as similar to the
 production environment as possible. The script shall be run from the
 project's root directory.
 
-Tasks:
-    1. Create the following directory:
-        ../nginx/scripts
-    2. Build docker-compose.yml from
-       roles/combine_config/templates/docker-compose.yml.j2
-    3. Create frontend environment file
-    4. Create backend environment file (w/o SMTP specified)
-    5. Create nginx configuration file
+Task:
+    - Create the following files in the project root directory:
+        - docker-compose.yml
+        - .env.frontend
+        - .env.backend
+        - .env.certmgr
+      from Jinja2 templates in scripts/setup_files/config
 """
 
 import argparse
@@ -130,7 +129,7 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             "docker_setup",
-            str(Path("..") / "deploy" / "roles" / "combine_config" / "templates"),
+            str(project_dir / "scripts" / "setup_files" / "config"),
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=False,
@@ -149,24 +148,6 @@ def main() -> None:
         project_dir / ".env.certmgr",
     ]:
         env_file.chmod(0o600)
-
-    # setup maintenance configuration
-    jinja_env = Environment(
-        loader=PackageLoader(
-            "docker_setup",
-            str(Path("..") / "deploy" / "roles" / "combine_maintenance" / "templates"),
-        ),
-        autoescape=select_autoescape(["html", "xml"]),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    template_name = "script_conf.json.j2"
-    template_path = (
-        project_dir / "deploy" / "roles" / "combine_maintenance" / "files" / "script_conf.json"
-    )
-    template = jinja_env.get_template(template_name)
-    print(f"Writing: {template_path}")
-    template_path.write_text(template.render(dev_config))
 
 
 if __name__ == "__main__":

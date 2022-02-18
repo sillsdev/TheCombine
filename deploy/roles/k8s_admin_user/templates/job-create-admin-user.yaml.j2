@@ -42,7 +42,7 @@ spec:
                 secretKeyRef:
                   key: COMBINE_ADMIN_EMAIL
                   name: {{ admin_user_secrets_name }}
-          image: {{ combine_image_backend }}
+          image: "{{ aws_account }}.dkr.ecr.{{ aws_region }}.amazonaws.com/combine_backend:{{ image_tag }}"
           name: {{ admin_user_job_name }}
 {% if image_tag == "latest" %}
           imagePullPolicy: Always

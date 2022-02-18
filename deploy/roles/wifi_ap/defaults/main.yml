@@ -1,6 +1,6 @@
 ---
 ap_ssid: "{{ ansible_hostname }}_ap"
-ap_passphrase: "Set a new passphrase in your vault file."
+ap_passphrase: "Set a new passphrase in your config file."
 ap_gateway: "10.10.10.1"
 ap_domain: example.com
 ap_hostname: "{{ ansible_hostname }}"

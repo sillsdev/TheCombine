@@ -1,0 +1,18 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: dev
+################################################
+
+aws-login:
+  enabled: false
+
+global:
+  imageRegistry: localhost:5000
+
+ingressClass: traefik
+
+certManager:
+  enabled: true
+  certIssuer: self-signed

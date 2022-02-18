@@ -5,48 +5,6 @@
 # Group: nuc
 ################################################
 
-config_analytics_write_key: ""
-
-#################################################
-# TheCombine is installed using Ansible and the playbook_install.yml
-# playbook.  It will set the IMAGE_TAG environment variable to
-# value provided by the user and launch docker-compose
-################################################
-image_tag: "{{ combine_version | default('${IMAGE_TAG}') }}"
-
-combine_image_backend: "{{ aws_ecr }}/combine_backend:{{ image_tag }}"
-combine_image_frontend: "{{ aws_ecr }}/combine_frontend:{{ image_tag }}"
-combine_image_certmgr: "{{ aws_ecr }}/combine_certmgr:{{ image_tag }}"
-combine_image_maintenance: "{{ aws_ecr }}/combine_maint:{{ image_tag }}"
-
-################################################
-# SSL cert variables specific to NUC targets
-################################################
-cert_mode: "cert-client"
-cert_email: "cert@thecombine.app"
-cert_self_renewal: 60
-combine_cert_proxy_list: []
-
-################################################
-# setup variables for roles/aws_access
-################################################
-aws_user: "{{ combine_user }}"
-aws_group: "{{ combine_group }}"
-
-################################################
-# AWS S3 storage configuration
-################################################
-aws_s3_loc: thecombine.app
-aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
-aws_s3_cert_loc: "{{ aws_s3_loc }}/certs"
-
-aws_s3_profile: s3_read_write
-aws_ecr_profile: ecr_read_only
-
-my_aws_profiles:
-  - "{{ aws_s3_profile }}"
-  - "{{ aws_ecr_profile }}"
-
 ################################################
 # Configure Kubernetes cluster
 ################################################
@@ -62,32 +20,12 @@ image_pull_secret: aws-login-credentials
 
 # k8s namespaces
 app_namespace: thecombine
-cert_proxy_namespace: "{{ app_namespace }}"
-
-create_namespaces:
-  - "{{ app_namespace }}"
-
-aws_ecr_login:
-  cron: no
-  image: sillsdev/aws-kubectl:0.1.9
-  secrets_name: aws-ecr-credentials
-  config_name: aws-ecr-config
-  pull_secret_name: "{{ image_pull_secret | default('aws-login-credentials') }}"
-  job_name: ecr-cred-helper
 
 k8s_user: sillsdev
 k8s_group: sillsdev
 
 #######################################
-# k8s Upgrade strategy
-#   Recreate - for the NUCs where they are updated offline
-#   RollingUpdate - for the servers and qa which are available
-#              during an update
-k8s_update_strategy: Recreate
-
-#######################################
 # Ingress configuration
-ingress_class: nginx
 ingress_namespace: ingress-nginx
 
 # For the NUCs we want to use the ansible host name
@@ -96,17 +34,6 @@ ingress_namespace: ingress-nginx
 # server since it is used to get the certificates for the
 # NUC.
 k8s_dns_name: "{{ ansible_hostname }}"
-
-################################################
-# The use model for the Combine when deployed on
-# a NUC is for workshops in areas with unreliable
-# or no internet connection.  As a result, the
-# CAPTCHA and functions that require email are
-# are disabled.
-################################################
-config_captcha_required: "false"
-config_captcha_sitekey: "none"
-config_email_enabled: "false"
 
 ################################################
 # Ethernet settings
@@ -119,6 +46,6 @@ eth_optional: yes
 has_wifi: yes
 ap_domain: thecombine.app
 ap_ssid: "{{ansible_hostname}}_ap"
-# ap_passphrase is defined in ./vault.yml
+ap_passphrase: "Combine2020"
 ap_gateway: "10.10.10.1"
 ap_hostname: "{{ansible_hostname}}"
