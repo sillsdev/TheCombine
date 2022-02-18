@@ -98,18 +98,25 @@ export function useTreeNavigation(props: TreeHeaderProps) {
   // Navigate tree via arrow keys
   const navigateDomainArrowKeys = useCallback(
     (event: KeyboardEvent) => {
-      const domain =
-        event.key === Key.ArrowLeft
-          ? getBrotherDomain(-1, props)
-          : event.key === Key.ArrowRight
-          ? getBrotherDomain(1, props)
-          : event.key === Key.ArrowUp &&
-            props.currentDomain.parentId !== undefined
-          ? props.domainMap[props.currentDomain.parentId]
-          : event.key === Key.ArrowDown &&
-            props.currentDomain.childIds.length === 1
-          ? props.domainMap[props.currentDomain.childIds[0]]
-          : undefined;
+      let domain: TreeSemanticDomain | undefined;
+      switch (event.key) {
+        case Key.ArrowLeft:
+          domain = getBrotherDomain(-1, props);
+          break;
+        case Key.ArrowRight:
+          domain = getBrotherDomain(1, props);
+          break;
+        case Key.ArrowUp:
+          if (props.currentDomain.parentId !== undefined) {
+            domain = props.domainMap[props.currentDomain.parentId];
+          }
+          break;
+        case Key.ArrowDown:
+          if (props.currentDomain.childIds.length === 1) {
+            domain = props.domainMap[props.currentDomain.childIds[0]];
+          }
+          break;
+      }
       if (domain) {
         props.animate(domain);
       }
