@@ -2,13 +2,13 @@ import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { langCode } from "types/project";
 import {
   newDefinition,
   newFlag,
   newGloss,
   newSemanticDomain,
 } from "types/word";
+import { langCode } from "types/writingSystem";
 
 const LANG = langCode.En;
 const DEFINITION = newDefinition("groovy", LANG);

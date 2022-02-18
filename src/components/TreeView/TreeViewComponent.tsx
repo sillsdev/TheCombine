@@ -13,7 +13,7 @@ import {
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
 import { StoreState } from "types";
-import { semDomWritingSystems } from "types/project";
+import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
   lang: WritingSystem

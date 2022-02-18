@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
-import { defaultWritingSystem } from "types/project";
+import { defaultWritingSystem } from "types/writingSystem";
 
 // The multiline Input, TextField cause problems in the mock environment.
 jest.mock("@material-ui/core/Input", () => "div");

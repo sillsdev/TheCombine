@@ -26,7 +26,6 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { GoalsState } from "types/goals";
-import { langCode } from "types/project";
 import {
   multiSenseWord,
   newDefinition,
@@ -34,6 +33,7 @@ import {
   newSense,
   newWord,
 } from "types/word";
+import { langCode } from "types/writingSystem";
 
 // Used when the guids don't matter.
 function wordAnyGuids(vern: string, glosses: string[], id: string): Word {

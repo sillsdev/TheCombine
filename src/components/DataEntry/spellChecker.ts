@@ -1,7 +1,7 @@
 import nspell from "nspell";
 
 import { aff, dic } from "resources/dictionaries";
-import { defaultWritingSystem, langCode } from "types/project";
+import { defaultWritingSystem, langCode } from "types/writingSystem";
 
 class SpellChecker {
   spell: nspell;

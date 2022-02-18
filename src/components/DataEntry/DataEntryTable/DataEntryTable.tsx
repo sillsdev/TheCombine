@@ -22,10 +22,10 @@ import NewEntry, {
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
-import { defaultWritingSystem, newWritingSystem } from "types/project";
 import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
+import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 
 export const exitButtonId = "exit-to-domain-tree";
 

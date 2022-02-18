@@ -3,7 +3,6 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { langCode } from "types/project";
 import {
   newFlag,
   newNote,
@@ -11,6 +10,7 @@ import {
   newSense,
   newWord,
 } from "types/word";
+import { langCode } from "types/writingSystem";
 
 export default function mockWords(): ReviewEntriesWord[] {
   return [

@@ -14,8 +14,8 @@ import history from "browserHistory";
 import App from "components/App/component";
 import globalTranslations from "resources/translations.json";
 import { persistor, store } from "store";
-import { defaultWritingSystem, uiWritingSystems } from "types/project";
 import theme from "types/theme";
+import { defaultWritingSystem, uiWritingSystems } from "types/writingSystem";
 
 const localizedLanguages: NamedLanguage[] = uiWritingSystems.map((ws) => ({
   name: ws.name,

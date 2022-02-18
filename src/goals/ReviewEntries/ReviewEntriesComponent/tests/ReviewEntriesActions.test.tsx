@@ -11,8 +11,8 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { langCode } from "types/project";
 import { newGloss, newSemanticDomain, newSense, newWord } from "types/word";
+import { langCode } from "types/writingSystem";
 
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();

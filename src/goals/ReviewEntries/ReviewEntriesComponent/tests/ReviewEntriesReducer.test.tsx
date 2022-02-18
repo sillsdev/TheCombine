@@ -5,8 +5,8 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
-import { langCode } from "types/project";
 import { newSemanticDomain } from "types/word";
+import { langCode } from "types/writingSystem";
 
 const mockState = {
   ...defaultState,

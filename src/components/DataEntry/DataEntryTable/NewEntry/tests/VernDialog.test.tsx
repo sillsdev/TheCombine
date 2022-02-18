@@ -7,8 +7,8 @@ import {
   StyledMenuItem,
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
-import { defaultWritingSystem } from "types/project";
 import { simpleWord, testWordList } from "types/word";
+import { defaultWritingSystem } from "types/writingSystem";
 
 jest.mock(
   "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell",

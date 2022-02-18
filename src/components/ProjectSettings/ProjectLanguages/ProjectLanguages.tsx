@@ -22,9 +22,9 @@ import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
-import { newWritingSystem, semDomWritingSystems } from "types/project";
 import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/wordUtilities";
+import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 
 interface LanguageProps {
   project: Project;

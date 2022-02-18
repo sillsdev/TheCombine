@@ -10,7 +10,7 @@ import DataEntryTable, {
   exitButtonId,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
-import { langCode, newProject } from "types/project";
+import { newProject } from "types/project";
 import {
   multiSenseWord,
   newSemanticDomain,
@@ -18,6 +18,7 @@ import {
   simpleWord,
 } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
+import { langCode } from "types/writingSystem";
 
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),
