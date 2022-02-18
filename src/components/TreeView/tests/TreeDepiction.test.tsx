@@ -2,25 +2,31 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
-import { domMap } from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {
-  testFromNode("Renders correctly: from parent", domMap["1"]);
+  testFromNode("Renders correctly: from parent", domMap[mapIds.parent]);
   testFromNode(
     "Renders correctly: node w/ even # of subdomains",
-    domMap["1.0"]
+    domMap[mapIds.evenKid]
   );
-  testFromNode("Renders correctly: node w/ odd # of subdomains", domMap["1.1"]);
+  testFromNode(
+    "Renders correctly: node w/ odd # of subdomains",
+    domMap[mapIds.oddKid]
+  );
   testFromNode(
     "Renders correctly: node w/ 1 subdomains and 2 siblings",
-    domMap["1.2"]
+    domMap[mapIds.longKid]
   );
   testFromNode(
     "Renders correctly: node w/ 1 subdomains and no siblings",
-    domMap["1.2.1"]
+    domMap[mapIds.depth3]
   );
-  testFromNode("Renders correctly: node w/ no subdomains", domMap["1.2.1.1.1"]);
+  testFromNode(
+    "Renders correctly: node w/ no subdomains",
+    domMap[mapIds.depth5]
+  );
 });
 
 // Perform a snapshot test

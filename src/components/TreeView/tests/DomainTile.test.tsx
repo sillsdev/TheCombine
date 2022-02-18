@@ -1,7 +1,7 @@
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 var tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
@@ -32,7 +32,7 @@ function createTile(direction?: Direction) {
   renderer.act(() => {
     tileMaster = renderer.create(
       <DomainTile
-        domain={MockDomain}
+        domain={domMap[mapIds.parent]}
         onClick={MOCK_ANIMATE}
         direction={direction}
       />

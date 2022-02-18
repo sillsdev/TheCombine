@@ -9,8 +9,8 @@ import configureMockStore from "redux-mock-store";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import { TreeView, TreeViewProps } from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
-import mockDomain, {
-  domMap as mockMap,
+import mockMap, {
+  jsonDomain as mockDomain,
 } from "components/TreeView/tests/MockSemanticDomain";
 import { newProject } from "types/project";
 

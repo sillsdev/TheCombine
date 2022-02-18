@@ -2,15 +2,29 @@ import TreeSemanticDomain, {
   DomainMap,
 } from "components/TreeView/TreeSemanticDomain";
 
+export enum mapIds {
+  "head" = "",
+  "parent" = "1",
+  "firstKid" = "1.0",
+  "middleKid" = "1.1",
+  "lastKid" = "1.2",
+  "evenKid" = "1.0",
+  "oddKid" = "1.1",
+  "longKid" = "1.2",
+  "depth3" = "1.2.1",
+  "depth4" = "1.2.1.1",
+  "depth5" = "1.2.1.1.1",
+}
+
 // Parent
 const parent: TreeSemanticDomain = {
-  ...new TreeSemanticDomain("1", "parent"),
+  ...new TreeSemanticDomain(mapIds.parent, "parent"),
   description: "parent desc",
 };
 
-export const domMap: DomainMap = {};
-domMap[""] = { ...new TreeSemanticDomain(), childIds: [parent.id] };
-domMap[parent.id] = { ...parent, parentId: "" };
+const domMap: DomainMap = {};
+domMap[mapIds.head] = { ...new TreeSemanticDomain(), childIds: [parent.id] };
+domMap[parent.id] = { ...parent, parentId: mapIds.head };
 
 // Following subdomains
 for (let i = 0; i < 3; i++) {
@@ -52,7 +66,7 @@ for (let i = 0; i < 3; i++) {
 
 // Give the the last subdomain one subdomain with total depth of 5
 const dom2 = parent.subdomains[2];
-let id = dom2.id + ".1";
+let id = mapIds.depth3;
 const dom20 = {
   ...new TreeSemanticDomain(id, "depth=3"),
   description: "so lonely...",
@@ -61,7 +75,7 @@ dom2.subdomains.push(dom20);
 domMap[dom2.id].childIds.push(id);
 domMap[id] = { ...dom20, parentId: dom2.id };
 
-id += ".1";
+id = mapIds.depth4;
 const dom200: TreeSemanticDomain = {
   ...new TreeSemanticDomain(id, "depth=4"),
   description: "almost at the bottom...",
@@ -69,7 +83,7 @@ const dom200: TreeSemanticDomain = {
 dom20.subdomains.push(dom200);
 domMap[dom20.id].childIds.push(id);
 domMap[id] = { ...dom200, parentId: dom20.id };
-id += ".1";
+id = mapIds.depth5;
 dom200.subdomains.push({
   ...new TreeSemanticDomain(id, "depth=5"),
   description: "ROCK BOTTOM",
@@ -77,4 +91,6 @@ dom200.subdomains.push({
 domMap[dom200.id].childIds.push(id);
 domMap[id] = { ...dom200.subdomains[0], parentId: dom200.id };
 
-export default parent;
+export const jsonDomain = parent;
+
+export default domMap;
