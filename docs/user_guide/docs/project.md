@@ -10,17 +10,17 @@ A project is for a single vernacular language.
 
 If you have linguistics data in a [LIFT](https://software.sil.org/lifttools) file (likely exported from The Combine,
 [WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), or
-[Lexique Pro](software.sil.org/lexiquepro)), you can hit the BROWSE button next to "Upload existing data?" to import the
-data into your project.
+[Lexique Pro](https://software.sil.org/lexiquepro)), you can hit the BROWSE button next to "Upload existing data?" to
+import the data into your project.
 
-### Vernacular, Analysis Language
+### Vernacular and Analysis Language
 
 The _vernacular language_ is the language for which words are being collected. This is usually a local, indigenous,
 minority, autochthonous, heritage, or endangered language or dialect.
 
 The _analysis language_ is the primary language into which the vernacular language is being translated. This is usually
 a regional, national, official, or majority language of the location where the vernacular is used. Alternate vernacular
-languages can be added after project creation (see [below](#vernacular-and-analysis-languages)).
+languages can be added after project creation (see [below](#project-languages)).
 
 ## Manage a Project
 
@@ -33,16 +33,20 @@ Settings for managing the project. The following settings are available for proj
 A distinguishing and descriptive name is recommended. The project name is part of the filename when you
 [export](#import-and-export) your project.
 
-### Vernacular and Analysis Languages
+### Project Languages
 
-The vernacular language specified at project creation is fixed.
+The _vernacular language_ specified at project creation is fixed.
 
-There may be multiple analysis languages associated with the project, but only the top one on the list here is
-associated with new data entries.
+There may be multiple _analysis languages_ associated with the project, but only the top one in the list is associated
+with new data entries.
 
 !!! note
 
-    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up in [data cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
+    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up
+    in [data cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
+
+The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed in
+[Data Entry](./dataEntry.md).
 
 ### Import and Export
 
@@ -90,7 +94,8 @@ user management menu with the following options:
 
 !!! important
 
-    There is only one Owner per project. If you "Make Owner" another user, you will move from Owner to Admin for the project and no longer be able to make/remove Admin on other users or archive the project.
+    There is only one Owner per project. If you "Make Owner" another user, you will move from Owner to Admin for the
+    project and no longer be able to make/remove Admin on other users or archive the project.
 
 #### Add Users
 
