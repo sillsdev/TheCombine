@@ -1,4 +1,6 @@
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeSemanticDomain, {
+  DomainMap,
+} from "components/TreeView/TreeSemanticDomain";
 import {
   TreeViewAction,
   TreeActionType,
@@ -7,33 +9,16 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export interface TreeViewState {
   currentDomain: TreeSemanticDomain;
+  domainMap: DomainMap;
+  language: string;
   open: boolean;
 }
 
-// Parses a list of semantic domains (to be received from backend)
-export function createDomains(data: TreeSemanticDomain[]): TreeSemanticDomain {
-  const domains: TreeSemanticDomain = {
-    ...defaultState.currentDomain,
-    subdomains: data,
-  };
-  addParentDomains(domains);
-  return domains;
-}
-
-// Adds the parent domains to the information sent by the backend
-function addParentDomains(parent: TreeSemanticDomain) {
-  if (parent.subdomains) {
-    for (const domain of parent.subdomains) {
-      domain.parentDomain = parent;
-      addParentDomains(domain);
-    }
-  }
-}
-
-// Creates a dummy default state
 export const defaultState: TreeViewState = {
+  language: "",
   open: false,
   currentDomain: new TreeSemanticDomain(),
+  domainMap: {},
 };
 
 export const treeViewReducer = (
@@ -45,11 +30,23 @@ export const treeViewReducer = (
       return { ...state, open: false };
     case TreeActionType.OPEN_TREE:
       return { ...state, open: true };
+    case TreeActionType.SET_DOMAIN_MAP:
+      if (!action.domainMap || !action.language) {
+        throw new Error(
+          "Cannot set domain map without a domain map and language."
+        );
+      }
+      return {
+        ...state,
+        currentDomain: action.domainMap[state.currentDomain.id],
+        domainMap: action.domainMap,
+        language: action.language,
+      };
     case TreeActionType.TRAVERSE_TREE:
-      if (!action.payload) {
+      if (!action.domain) {
         throw new Error("Cannot traverse tree without specifying domain.");
       }
-      return { ...state, currentDomain: action.payload };
+      return { ...state, currentDomain: action.domain };
     case StoreActionTypes.RESET:
       return defaultState;
     default:

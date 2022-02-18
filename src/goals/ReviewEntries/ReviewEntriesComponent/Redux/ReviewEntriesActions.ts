@@ -32,9 +32,7 @@ function updateWord(
 }
 
 export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
-  return {
-    type: ReviewEntriesActionTypes.ClearReviewEntriesState,
-  };
+  return { type: ReviewEntriesActionTypes.ClearReviewEntriesState };
 }
 
 // Return the translation code for our error, or undefined if there is no error

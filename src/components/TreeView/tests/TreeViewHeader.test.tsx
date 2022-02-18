@@ -7,19 +7,36 @@ import {
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
+
+// Current domain with no siblings, three kids
 const testProps: TreeHeaderProps = {
+  currentDomain: domMap[mapIds.parent],
+  domainMap: domMap,
   animate: MOCK_ANIMATE,
-  currentDomain: MockDomain,
 };
-// These props have a currentDomain with a parent and two brothers
-const upOneWithBrothersProps: TreeHeaderProps = {
+// Current domain with a parent, two siblings, and multiple kids
+const twoBrothersManyKids: TreeHeaderProps = {
+  currentDomain: domMap[mapIds.middleKid],
+  domainMap: domMap,
   animate: MOCK_ANIMATE,
-  currentDomain: MockDomain.subdomains[1],
 };
+// Current domain with a parent, no siblings, one kid
+const noBrothersOneKid: TreeHeaderProps = {
+  currentDomain: domMap[mapIds.depth3],
+  domainMap: domMap,
+  animate: MOCK_ANIMATE,
+};
+// Current domain with a parent, no siblings, no kids
+const noBrothersNoKids: TreeHeaderProps = {
+  currentDomain: domMap[mapIds.depth5],
+  domainMap: domMap,
+  animate: MOCK_ANIMATE,
+};
+
 const eventListeners: Map<string, EventListener> = new Map<
   string,
   EventListener
@@ -45,36 +62,59 @@ describe("TreeViewHeader", () => {
     // getBrotherDomain
     it("return the expected brothers", () => {
       const { result } = renderHook(() =>
-        useTreeNavigation(upOneWithBrothersProps)
+        useTreeNavigation(twoBrothersManyKids)
       );
 
       // The top domain (used in testProps) has no brother on either side
-      expect(result.current.getLeftBrother(upOneWithBrothersProps)).toEqual(
-        MockDomain.subdomains[0]
+      expect(result.current.getLeftBrother(twoBrothersManyKids)).toEqual(
+        domMap[mapIds.firstKid]
       );
-      expect(result.current.getRightBrother(upOneWithBrothersProps)).toEqual(
-        MockDomain.subdomains[2]
+      expect(result.current.getRightBrother(twoBrothersManyKids)).toEqual(
+        domMap[mapIds.lastKid]
       );
     });
   });
 
   describe("typing arrow key", () => {
-    it("right arrow moves to right sibling", () => {
-      render(<TreeViewHeader {...upOneWithBrothersProps} />);
-      simulateKey(Key.ArrowRight);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
-    });
-
     it("left arrow moves to left sibling", () => {
-      render(<TreeViewHeader {...upOneWithBrothersProps} />);
+      render(<TreeViewHeader {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowLeft);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.firstKid]);
     });
-
+    it("left arrow does nothing when no left sibling", () => {
+      render(<TreeViewHeader {...noBrothersOneKid} />);
+      simulateKey(Key.ArrowLeft);
+      expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    });
+    it("right arrow moves to right sibling", () => {
+      render(<TreeViewHeader {...twoBrothersManyKids} />);
+      simulateKey(Key.ArrowRight);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);
+    });
+    it("right arrow does nothing when no right sibling", () => {
+      render(<TreeViewHeader {...noBrothersOneKid} />);
+      simulateKey(Key.ArrowRight);
+      expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    });
     it("up arrow moves to parent domain", () => {
-      render(<TreeViewHeader {...upOneWithBrothersProps} />);
+      render(<TreeViewHeader {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowUp);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.parent]);
+    });
+    it("down arrow does nothing when multiple kids", () => {
+      render(<TreeViewHeader {...twoBrothersManyKids} />);
+      simulateKey(Key.ArrowDown);
+      expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    });
+    it("down arrow moves to only child", () => {
+      render(<TreeViewHeader {...noBrothersOneKid} />);
+      simulateKey(Key.ArrowDown);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.depth4]);
+    });
+    it("down arrow does nothing when no kids", () => {
+      render(<TreeViewHeader {...noBrothersNoKids} />);
+      simulateKey(Key.ArrowDown);
+      expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
   });
 });

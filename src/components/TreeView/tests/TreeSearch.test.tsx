@@ -10,14 +10,15 @@ import TreeSearch, {
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
+  currentDomain: domMap["1"],
+  domainMap: domMap,
   animate: MOCK_ANIMATE,
-  currentDomain: MockDomain,
 };
 
 beforeEach(() => {
@@ -55,9 +56,10 @@ describe("TreeSearch", () => {
     }
 
     it("switches semantic domain if given number found", () => {
-      simulateTypeAndEnter("1.0");
+      const node = domMap[mapIds.firstKid];
+      simulateTypeAndEnter(node.id);
       expect(MOCK_STOP_PROP).toHaveBeenCalled();
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 
     it("does not switch semantic domain if given number not found", () => {
@@ -66,20 +68,20 @@ describe("TreeSearch", () => {
     });
 
     it("does not switch semantic domain on realistic but non-existent subdomain", () => {
-      simulateTypeAndEnter("1.2.1.1.1.1");
+      simulateTypeAndEnter("1.2.1.1.1.1.1");
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
     it("switches on a length 5 number", () => {
-      const leafNode =
-        MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
-      simulateTypeAndEnter(leafNode.id);
+      const leafNode = domMap[mapIds.depth5];
+      simulateTypeAndEnter(mapIds.depth5);
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafNode);
     });
 
     it("switches semantic domain if given name found", () => {
-      simulateTypeAndEnter(MockDomain.subdomains[0].name);
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+      const node = domMap[mapIds.firstKid];
+      simulateTypeAndEnter(node.name);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 
     it("does not switch semantic domain if given name not found", () => {
@@ -107,30 +109,30 @@ describe("TreeSearch", () => {
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );
-      userEvent.type(screen.getByTestId(testId), "1.2{enter}");
+      userEvent.type(screen.getByTestId(testId), `${mapIds.lastKid}{enter}`);
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );
-      // verify that we're testing with the matching domain
-      expect(MockDomain.subdomains[2].id).toEqual("1.2");
       // verify that we would switch to the domain requested
-      expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
+      expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);
     });
   });
 });
 
-test.each([
-  ["a", "a"],
-  ["1a", "1a"],
-  ["1", "1"],
-  ["1.", "1."],
-  ["1.0", "1.0"],
-  ["10", "1.0"],
-  ["12", "1.2"],
-  ["123", "1.2.3"],
-  ["1.2.3.", "1.2.3."],
-  ["..1", "1"],
-  ["1..2", "1.2"],
-])("insertDecimalPoints", (input, output) => {
-  expect(insertDecimalPoints(input)).toBe(output);
+describe("insertDecimalPoints", () => {
+  test.each([
+    ["a", "a"],
+    ["1a", "1a"],
+    ["1", "1"],
+    ["1.", "1."],
+    ["1.0", "1.0"],
+    ["10", "1.0"],
+    ["12", "1.2"],
+    ["123", "1.2.3"],
+    ["1.2.3.", "1.2.3."],
+    ["..1", "1"],
+    ["1..2", "1.2"],
+  ])("inserts correctly", (input, output) => {
+    expect(insertDecimalPoints(input)).toBe(output);
+  });
 });

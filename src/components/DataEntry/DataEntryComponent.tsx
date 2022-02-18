@@ -7,14 +7,14 @@ import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
-import TreeViewComponent from "components/TreeView";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import TreeView from "components/TreeView/TreeViewComponent";
 import theme from "types/theme";
 import { DomainWord, newSemanticDomain } from "types/word";
 
 interface DataEntryProps {
   domain: TreeSemanticDomain;
-  treeIsOpen: boolean;
+  treeIsOpen?: boolean;
   closeTree: () => void;
   openTree: () => void;
 }
@@ -151,9 +151,9 @@ export default class DataEntryComponent extends React.Component<
           toggleDrawer={this.toggleDrawer}
         />
 
-        <Dialog fullScreen open={this.props.treeIsOpen}>
+        <Dialog fullScreen open={!!this.props.treeIsOpen}>
           <AppBar />
-          <TreeViewComponent
+          <TreeView
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {
                 this.setState((prevState, props) => ({
