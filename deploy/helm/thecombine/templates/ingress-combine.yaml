@@ -19,7 +19,8 @@ spec:
     - {{ .Values.global.serverName }}
     secretName: {{ replace "." "-" .Values.global.serverName }}-tls
   rules:
-  - http:
+  - host: {{ .Values.global.serverName }}
+    http:
       paths:
       - backend:
           service:
