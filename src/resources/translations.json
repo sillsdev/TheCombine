@@ -892,7 +892,7 @@
     "archive": ["Archive", "Archivar", "Archiver"],
     "browse": ["Browse", "Navegar", "Parcourir"],
     "cancel": ["Cancel", "Cancelar", "Annuler"],
-    "clear": ["Clear", "Clear", "Clear"],
+    "clearText": ["Clear text", "Clear text", "Clear text"],
     "confirm": ["Confirm", "Confirmar", "Confirmer"],
     "delete": ["Delete", "Eliminar", "Effacer"],
     "deletePermanently": [

@@ -73,7 +73,10 @@ export default function DeleteEditTextDialog(
 
   const endAdornment = (
     <InputAdornment position="end">
-      <Tooltip title={<Translate id={"buttons.clear"} />} placement={"left"}>
+      <Tooltip
+        title={<Translate id={"buttons.clearText"} />}
+        placement={"left"}
+      >
         <IconButton size="small" onClick={() => setText("")}>
           <Backspace />
         </IconButton>
