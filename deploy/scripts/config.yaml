@@ -10,7 +10,7 @@
 #   set (optional): list of target specific values to override the standard definition using the
 #            helm `--set` option.
 targets:
-  thecombine.localhost:
+  localhost:
     profile: dev
     set:
       frontend.configCaptchaRequired: "true"
