@@ -7,67 +7,77 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Tooltip,
 } from "@material-ui/core";
-import { Clear } from "@material-ui/icons";
+import { Backspace, Close } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
-interface EditTextDialogProps {
+interface DeleteEditTextDialogProps {
   open: boolean;
   text: string;
   titleId: string;
   close: () => void;
   updateText: (newText: string) => void | Promise<void>;
-  buttonIdCancel?: string;
-  buttonIdConfirm?: string;
-  buttonTextIdCancel?: string;
-  buttonTextIdConfirm?: string;
+  onDelete?: () => void;
+  buttonIdDelete?: string;
+  buttonIdSave?: string;
+  buttonTextIdDelete?: string;
+  buttonTextIdSave?: string;
   textFieldId?: string;
 }
 
 /**
- * Dialog for editing text and confirm or cancel the edit
+ * Dialog for editing text, with distinction between cancel and delete.
  */
-export default function EditTextDialog(
-  props: EditTextDialogProps
+export default function DeleteEditTextDialog(
+  props: DeleteEditTextDialogProps
 ): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.text);
-
-  async function onConfirm() {
-    if (text !== props.text) {
-      setLoading(true);
-      await props.updateText(text);
-      setLoading(false);
-    }
-    props.close();
-  }
 
   function onCancel() {
     setText(props.text);
     props.close();
   }
 
+  function onDelete() {
+    setText(props.text);
+    if (props.onDelete) {
+      props.onDelete();
+    }
+    props.close();
+  }
+
+  async function onSave() {
+    setLoading(true);
+    await props.updateText(text);
+    setLoading(false);
+    props.close();
+  }
+
   function escapeClose(_: any, reason: "backdropClick" | "escapeKeyDown") {
     if (reason === "escapeKeyDown") {
-      props.close();
+      onCancel();
     }
   }
 
   function confirmIfEnter(event: React.KeyboardEvent<any>) {
     if (event.key === Key.Enter) {
-      onConfirm();
+      onSave();
     }
   }
 
   const endAdornment = (
     <InputAdornment position="end">
-      <IconButton onClick={() => setText("")}>
-        <Clear />
-      </IconButton>
+      <Tooltip title={<Translate id={"buttons.clear"} />} placement={"left"}>
+        <IconButton size="small" onClick={() => setText("")}>
+          <Backspace />
+        </IconButton>
+      </Tooltip>
     </InputAdornment>
   );
 
@@ -80,6 +90,16 @@ export default function EditTextDialog(
     >
       <DialogTitle id="alert-dialog-title">
         <Translate id={props.titleId} />
+        <Tooltip title={<Translate id={"buttons.cancel"} />} placement={"left"}>
+          <IconButton
+            size="small"
+            aria-label="cancel"
+            onClick={onCancel}
+            style={{ position: "absolute", right: 4, top: 4 }}
+          >
+            <Close />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
       <DialogContent>
         <TextField
@@ -93,23 +113,23 @@ export default function EditTextDialog(
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={onCancel}
+          onClick={onDelete}
           variant="outlined"
           color="primary"
-          id={props.buttonIdCancel}
+          id={props.buttonIdDelete}
         >
-          <Translate id={props.buttonTextIdCancel ?? "buttons.cancel"} />
+          <Translate id={props.buttonTextIdDelete ?? "buttons.delete"} />
         </Button>
         <LoadingButton
           loading={loading}
           buttonProps={{
-            onClick: onConfirm,
+            onClick: onSave,
             color: "primary",
             variant: "contained",
-            id: props.buttonIdConfirm,
+            id: props.buttonIdSave,
           }}
         >
-          <Translate id={props.buttonTextIdConfirm ?? "buttons.confirm"} />
+          <Translate id={props.buttonTextIdSave ?? "buttons.save"} />
         </LoadingButton>
       </DialogActions>
     </Dialog>
