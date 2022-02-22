@@ -639,7 +639,7 @@ export class DataEntryTable extends React.Component<
               tabIndex={-1}
               onClick={this.props.openTree}
             >
-              <Translate id="buttons.complete" />
+              <Translate id="buttons.exit" />
             </Button>
           </Grid>
         </Grid>
