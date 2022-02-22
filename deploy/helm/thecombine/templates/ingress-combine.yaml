@@ -4,9 +4,11 @@ metadata:
   name: thecombine
   namespace: {{ .Release.Namespace }}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
 {{- if eq .Values.ingressClass "nginx" }}
+    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
+{{- else if eq .Values.ingressClass "traefik" }}
+    traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
 {{- if .Values.certManager.enabled }}
     cert-manager.io/issuer: {{ .Values.certManager.certIssuer }}
