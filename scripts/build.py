@@ -21,7 +21,7 @@ class BuildSpec:
     name: str
 
 
-project_dir = Path(__file__).resolve().parent.parent.parent
+project_dir = Path(__file__).resolve().parent.parent
 """Absolute path to the checked out repository."""
 
 
@@ -73,9 +73,9 @@ def main() -> None:
         build_cmd = "docker"
 
     build_specs: List[BuildSpec] = [
-        BuildSpec(project_dir, "frontend"),
         BuildSpec(project_dir / "Backend", "backend"),
         BuildSpec(project_dir / "maintenance", "maint"),
+        BuildSpec(project_dir, "frontend"),
     ]
 
     for spec in build_specs:

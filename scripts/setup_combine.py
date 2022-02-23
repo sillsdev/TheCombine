@@ -22,11 +22,11 @@ import argparse
 from enum import Enum, unique
 import os
 from pathlib import Path
-import subprocess
 import sys
 import tempfile
 from typing import Any, Dict, List, Optional
 
+from utils import add_namespace, run_cmd
 import yaml
 
 
@@ -71,7 +71,7 @@ def parse_args() -> argparse.Namespace:
         "--config",
         "-c",
         help="Configuration file for the target(s).",
-        default=str(prog_dir / "config.yaml"),
+        default=str(prog_dir / "setup_files" / "combine_config.yaml"),
     )
     parser.add_argument(
         "--debug",
@@ -148,31 +148,6 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
     return secrets_written
 
 
-def run_cmd(
-    cmd: List[str],
-    *,
-    check_results: bool = True,
-    print_output: bool = False,
-) -> subprocess.CompletedProcess[str]:
-    """Run a command with subprocess and catch any CalledProcessErrors."""
-    try:
-        process_results = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=check_results,
-        )
-        if print_output:
-            print(process_results.stdout)
-        return process_results
-    except subprocess.CalledProcessError as err:
-        print(f"CalledProcessError returned {err.returncode}")
-        print(f"stdout: {err.stdout}")
-        print(f"stderr: {err.stderr}")
-        sys.exit(err.returncode)
-
-
 def get_installed_charts(helm_namespace: str) -> List[str]:
     """Create a list of the helm charts that are already installed on the target."""
     lookup_results = run_cmd(["helm", "list", "-n", helm_namespace, "-o", "yaml"])
@@ -181,19 +156,6 @@ def get_installed_charts(helm_namespace: str) -> List[str]:
     for chart in chart_info:
         chart_list.append(chart["name"])
     return chart_list
-
-
-def add_namespace(namespace: str) -> bool:
-    """
-    Create a Kubernetes namespace if and only if it does not exist.
-
-    Returns True if the namespace was added.
-    """
-    lookup_results = run_cmd(["kubectl", "get", "namespace", namespace], check_results=False)
-    if lookup_results.returncode != 0:
-        run_cmd(["kubectl", "create", "namespace", namespace])
-        return True
-    return False
 
 
 def main() -> None:
@@ -241,13 +203,12 @@ def main() -> None:
             addl_configs.extend(["-f", file])
 
     # lookup directory for helm files
-    deploy_dir = Path(__file__).resolve().parent.parent
-    helm_dir = deploy_dir / "helm"
+    helm_dir = prog_dir.parent / "deploy" / "helm"
 
     # install each of the helm charts for the selected target
     if profile in config["profiles"]:
         # get the path for the profile configuration file
-        profile_config: Optional[Path] = prog_dir / "profiles" / f"{profile}.yaml"
+        profile_config: Optional[Path] = prog_dir / "setup_files" / "profiles" / f"{profile}.yaml"
     else:
         profile_config = None
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)

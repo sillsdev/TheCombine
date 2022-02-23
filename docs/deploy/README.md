@@ -183,7 +183,7 @@ To install/upgrade _The Combine_ change directory to the project root directory 
 your Python virtual environment:
 
 ```bash
-python deploy/scripts/setup_combine.py
+python scripts/setup_combine.py
 ```
 
 Notes:
@@ -191,7 +191,7 @@ Notes:
 - You will be prompted for the _target_ where _The Combine_ is to be installed as well as version to install. The
   version is the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version
   number, e.g. _0.7.15_.
-- The _target_ must be one listed in `<COMBINE>/deploy/scripts/config.yaml`.
+- The _target_ must be one listed in `<COMBINE>/scripts/setup_files/config.yaml`.
 - Run `python scripts/setup_combine.py --help` for additional options such as specifying a different configuration file
   for additional targets.
 
