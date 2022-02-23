@@ -892,7 +892,7 @@
     "archive": ["Archive", "Archivar", "Archiver"],
     "browse": ["Browse", "Navegar", "Parcourir"],
     "cancel": ["Cancel", "Cancelar", "Annuler"],
-    "complete": ["Exit", "Exit", "Exit"],
+    "clearText": ["Clear text", "Clear text", "Clear text"],
     "confirm": ["Confirm", "Confirmar", "Confirmer"],
     "delete": ["Delete", "Eliminar", "Effacer"],
     "deletePermanently": [
@@ -901,6 +901,7 @@
       "Effacer pour toujours ?"
     ],
     "done": ["Done", "Hecho", "Achevé"],
+    "exit": ["Exit", "Exit", "Exit"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
     "makeAdmin": ["Make Admin", "Make Admin", "Make Admin"],
