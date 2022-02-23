@@ -78,7 +78,9 @@ def main() -> None:
             helm_cmd.append("upgrade")
         else:
             helm_cmd.append("install")
-        helm_cmd.extend(["-n", chart_spec["namespace"], chart_spec["name"], chart_spec["reference"]])
+        helm_cmd.extend(
+            ["-n", chart_spec["namespace"], chart_spec["name"], chart_spec["reference"]]
+        )
         if "options" in chart_spec:
             helm_cmd.extend(chart_spec["options"])
         run_cmd(helm_cmd, print_output=args.verbose)
