@@ -47,7 +47,7 @@ frontend:
   configShowCertExpiration: false
   configAnalyticsWriteKey: ""
   configCaptchaRequired: false
-  configCaptchaSiteKey: "None"
+  configCaptchaSiteKey: "None - from thecombine chart"
 
 # Maintenance configuration items
 maintenance:

@@ -194,8 +194,6 @@ def main() -> None:
 
     # create list of target specific variable values
     target_vars: List[str] = [f"global.serverName={target}", f"global.imageTag={image_tag}"]
-    if args.set:
-        target_vars.extend(args.set)
 
     addl_configs = []
     if args.values:
@@ -243,9 +241,7 @@ def main() -> None:
                 config["charts"][chart]["secrets"], output_file=secrets_file
             )
             if "set" in this_config:
-                config_file = Path(secrets_dir).resolve() / f"config_{chart}.yaml"
-                with open(config_file, "w") as file:
-                    yaml.dump(this_config["set"], file)
+                target_vars.extend(this_config["set"])
 
             # create the base helm install command
             chart_dir = helm_dir / chart
@@ -274,13 +270,15 @@ def main() -> None:
                         str(secrets_file),
                     ]
                 )
-            if config_file is not None:
-                helm_cmd.extend(["-f", str(config_file)])
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
                 helm_cmd.extend(addl_configs)
             # last of all, add any value overrides from the command line
-            helm_cmd.extend(["--set", ",".join(target_vars)])
+            if args.set:
+                target_vars.extend(args.set)
+
+            for variable in target_vars:
+                helm_cmd.extend(["--set", variable])
 
             # Update chart dependencies
             run_cmd(["helm", "dependency", "update", str(chart_dir)], print_output=True)
