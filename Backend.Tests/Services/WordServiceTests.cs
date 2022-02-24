@@ -29,10 +29,10 @@ namespace Backend.Tests.Services
 
             var isUnique = _wordService.WordIsUnique(newWord).Result;
 
-            // The word should be unique, as the frontier is empty
+            // The word should be unique, as the frontier is empty.
             Assert.That(isUnique, Is.True);
 
-            // There should only be no change to the frontier
+            // There should only be no change to the frontier.
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(0));
         }
@@ -49,10 +49,10 @@ namespace Backend.Tests.Services
             newWord.Senses = oldWordDiffProj.Senses.Select(s => s.Clone()).ToList();
 
             var isUnique = _wordService.WordIsUnique(newWord).Result;
-            // The word should be unique: an identical word is in a diff project
+            // The word should be unique: an identical word is in a diff project.
             Assert.That(isUnique, Is.True);
 
-            // There should be no change to the frontier
+            // There should be no change to the frontier.
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             Assert.That(frontier.First(), Is.EqualTo(oldWordSameProj));
@@ -148,7 +148,7 @@ namespace Backend.Tests.Services
             var isUnique = _wordService.WordIsUnique(newWord).Result;
             Assert.That(isUnique, Is.False);
 
-            // Frontier unchanged.
+            // Frontier content unchanged.
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             var frontierSense = frontier.First().Senses.Find(s => s.Guid == emptySense.Guid);
