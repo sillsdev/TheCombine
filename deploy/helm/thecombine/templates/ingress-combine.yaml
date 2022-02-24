@@ -5,7 +5,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
 {{- if eq .Values.ingressClass "nginx" }}
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
 {{- else if eq .Values.ingressClass "traefik" }}
     traefik.ingress.kubernetes.io/router.entrypoints: web
@@ -16,6 +15,7 @@ metadata:
     cert-manager.io/renew-before: 720h
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingressClass }}
   tls:
   - hosts:
     - {{ .Values.global.serverName }}
