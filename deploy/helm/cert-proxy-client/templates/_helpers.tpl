@@ -8,6 +8,7 @@
     {{- printf "%s/%s:%s" $registry .Values.imageName .Values.global.imageTag }}
   {{- else }}
     {{- printf "%s:%s" .Values.imageName .Values.global.imageTag }}
+  {{- end }}
 {{- end }}
 
 {{/* Get the Image Pull Policy */}}
