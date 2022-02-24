@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 from typing import Any, Dict, List
 
-from utils import add_namespace, run_cmd
+from utils import add_namespace, get_helm_opts, run_cmd
 import yaml
 
 prog_dir = Path(__file__).resolve().parent
@@ -73,7 +73,7 @@ def main() -> None:
         # add namespace if needed
         add_namespace(chart_spec["namespace"])
         # install the chart
-        helm_cmd = ["helm"]
+        helm_cmd = ["helm"] + get_helm_opts(args)
         if chart_spec["name"] in curr_charts:
             helm_cmd.append("upgrade")
         else:

@@ -2,6 +2,7 @@
 A Collection of useful functions for Python
 """
 
+import argparse
 import subprocess
 import sys
 from typing import List
@@ -43,3 +44,15 @@ def add_namespace(namespace: str) -> bool:
         run_cmd(["kubectl", "create", "namespace", namespace])
         return True
     return False
+
+
+def get_helm_opts(args: argparse.Namespace) -> List[str]:
+    """Create list of general helm options based on argparse Namespace."""
+    helm_opts = []
+    if args.kubeconfig:
+        helm_opts.extend(["--kubeconfig", args.kubeconfig])
+    if args.context:
+        helm_opts.extend(["--kube-context", args.context])
+    if args.debug:
+        helm_opts.append("--debug")
+    return helm_opts

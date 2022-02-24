@@ -26,7 +26,7 @@ import sys
 import tempfile
 from typing import Any, Dict, List, Optional
 
-from utils import add_namespace, run_cmd
+from utils import add_namespace, get_helm_opts, run_cmd
 import yaml
 
 
@@ -60,11 +60,6 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "--chart",
-        help="Chart to install.  If chart is not specified,"
-        " the charts specified in the target's configuration will be installed/upgraded.",
-    )
-    parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
     parser.add_argument(
@@ -74,9 +69,13 @@ def parse_args() -> argparse.Namespace:
         default=str(prog_dir / "setup_files" / "combine_config.yaml"),
     )
     parser.add_argument(
+        "--context",
+        help="Context in kubectl configuration file to be used.",
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
-        help="Invoke the 'helm install' command with the '--debug' option.",
+        help="Enable verbose output for helm commands.",
     )
     parser.add_argument(
         "--dry-run",
@@ -148,9 +147,9 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
     return secrets_written
 
 
-def get_installed_charts(helm_namespace: str) -> List[str]:
+def get_installed_charts(helm_opts: List[str], helm_namespace: str) -> List[str]:
     """Create a list of the helm charts that are already installed on the target."""
-    lookup_results = run_cmd(["helm", "list", "-n", helm_namespace, "-o", "yaml"])
+    lookup_results = run_cmd(["helm"] + helm_opts + ["list", "-n", helm_namespace, "-o", "yaml"])
     chart_info: List[Dict[str, str]] = yaml.safe_load(lookup_results.stdout)
     chart_list: List[str] = []
     for chart in chart_info:
@@ -188,22 +187,22 @@ def main() -> None:
     else:
         profile = args.profile
 
-    # Set KUBECONFIG environment variable if specified
-    if args.kubeconfig:
-        os.environ["KUBECONFIG"] = args.kubeconfig
+    # Create a base helm command for commands used to alter
+    # the target cluster
+    helm_opts = get_helm_opts(args)
 
     # create list of target specific variable values
     target_vars: List[str] = [f"global.serverName={target}", f"global.imageTag={image_tag}"]
 
     addl_configs = []
     if args.values:
-        for file in args.values:
-            addl_configs.extend(["-f", file])
+        for filepath in args.values:
+            addl_configs.extend(["-f", filepath])
 
     # lookup directory for helm files
     helm_dir = prog_dir.parent / "deploy" / "helm"
 
-    # install each of the helm charts for the selected target
+    # lookup the configuration values for the profile of the selected target
     if profile in config["profiles"]:
         # get the path for the profile configuration file
         profile_config: Optional[Path] = prog_dir / "setup_files" / "profiles" / f"{profile}.yaml"
@@ -212,26 +211,21 @@ def main() -> None:
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)
     # open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
-        if args.chart is None:
-            chart_list: List[str] = config["profiles"][profile]["charts"]
-        else:
-            chart_list = [args.chart]
-        for chart in chart_list:
+        for chart in config["profiles"][profile]["charts"]:
             # create the chart namespace if it does not exist
             chart_namespace = config["charts"][chart]["namespace"]
             if add_namespace(chart_namespace):
                 installed_charts = []
             else:
                 # get list of charts in target namespace
-                installed_charts = get_installed_charts(chart_namespace)
-                if args.debug:
-                    print(f"Charts Installed in '{chart_namespace}':\n{installed_charts}")
+                installed_charts = get_installed_charts(helm_opts, chart_namespace)
 
-            # delete existing chart if --clean specified
+            # set helm_action based on whether chart is already installed
             helm_action = HelmAction.INSTALL
             if chart in installed_charts:
                 if args.clean:
-                    run_cmd(["helm", "delete", chart])
+                    # delete existing chart if --clean specified
+                    run_cmd(["helm"] + helm_opts + ["delete", chart], print_output=True)
                 else:
                     helm_action = HelmAction.UPGRADE
 
@@ -240,31 +234,32 @@ def main() -> None:
             include_secrets = create_secrets(
                 config["charts"][chart]["secrets"], output_file=secrets_file
             )
-            if "set" in this_config:
-                target_vars.extend(this_config["set"])
+            if "set_values" in this_config:
+                target_vars.extend(this_config["set_values"])
 
             # create the base helm install command
             chart_dir = helm_dir / chart
-            helm_cmd = [
-                "helm",
-                "--namespace",
-                chart_namespace,
-                helm_action.value,
-                chart,
-                str(chart_dir),
-            ]
-            # set the debug option if desired
-            if args.debug:
-                helm_cmd.extend(["--debug"])
+            helm_install_cmd = (
+                ["helm"]
+                + helm_opts
+                + [
+                    "--namespace",
+                    chart_namespace,
+                    helm_action.value,
+                    chart,
+                    str(chart_dir),
+                ]
+            )
+
             # set the dry-run option if desired
             if args.dry_run:
-                helm_cmd.extend(["--dry-run"])
+                helm_install_cmd.extend(["--dry-run"])
             # add the profile specific configuration
             if profile_config is not None and profile_config.exists:
-                helm_cmd.extend(["-f", str(profile_config)])
+                helm_install_cmd.extend(["-f", str(profile_config)])
             # add the secrets file
             if include_secrets:
-                helm_cmd.extend(
+                helm_install_cmd.extend(
                     [
                         "-f",
                         str(secrets_file),
@@ -272,19 +267,22 @@ def main() -> None:
                 )
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
-                helm_cmd.extend(addl_configs)
+                helm_install_cmd.extend(addl_configs)
             # last of all, add any value overrides from the command line
             if args.set:
                 target_vars.extend(args.set)
 
             for variable in target_vars:
-                helm_cmd.extend(["--set", variable])
+                helm_install_cmd.extend(["--set", variable])
 
             # Update chart dependencies
+            # Note that this operation is performed on the local helm charts
+            # so the kubeconfig and context arguments are not passed to the
+            # helm command.
             run_cmd(["helm", "dependency", "update", str(chart_dir)], print_output=True)
             if args.debug:
-                print(f"Helm command: {helm_cmd}")
-            run_cmd(helm_cmd, print_output=True)
+                print(f"Helm command: {helm_install_cmd}")
+            run_cmd(helm_install_cmd, print_output=True)
 
 
 if __name__ == "__main__":

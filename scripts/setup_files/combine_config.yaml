@@ -12,7 +12,7 @@
 targets:
   localhost:
     profile: dev
-    set:
+    set_values:
       - frontend.configCaptchaRequired=true
       - frontend.configCaptchaSiteKey=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
   nuc1.thecombine.app:
@@ -23,7 +23,7 @@ targets:
     profile: staging
   thecombine.app:
     profile: prod
-    set:
+    set_values:
       - frontend.configCaptchaRequired=true
       - frontend.configCaptchaSitekey=6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t
       - combineCertProxyList=nuc1.thecombine.app nuc2.thecombine.app
