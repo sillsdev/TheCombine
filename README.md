@@ -75,8 +75,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
        the appropriate Node.js version.
    - [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
-     - On Ubuntu 20.04, follow these
-       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
+     - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
      Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
@@ -84,6 +83,15 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - C# (`ms-dotnettools.csharp`)
      - Prettier - Code formatter (`esbenp.prettier-vscode`)
    - [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
+   - [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
+     supported platforms and how to setup your virtual environment.
+   - [Docker Desktop](#docker-desktop): Use Docker Desktop to create a local Kubernetes cluster to test _The Combine_
+     when running in containers. (_Optional. Only needed for running under Kubernetes._)
+   - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl): Tool for managing a Kubernetes cluster. (_Optional.
+     Only needed for running under Kubernetes._)
+   - [Helm Client](https://helm.sh/docs/intro/install/): `helm` is used to install kubernetes packages, known as
+     _charts_. _The Combine_ is deployed to Kubernetes clusters as a set of charts. It also depends on external charts
+     that are installed with `helm`. (_Optional. Only needed for running under Kubernetes._)
    - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
@@ -91,28 +99,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      `dotnet tool update --global dotnet-project-licenses`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
    certificate.
-4. (Linux,macOS Only) Install
-   [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) and then:
-
-   - configure `git` to use `ansible-vault` for comparing encrypted vault files:
-
-     ```bash
-     git config --global diff.ansible-vault.textconv "ansible-vault view"
-     ```
-
-   - save the ansible vault password in a file, e.g. `${HOME}/.vault-password`
-   - set the permissions for the vault password file to `0600`
-   - edit your `.profile` to export the environment variable `ANSIBLE_VAULT_PASSWORD_FILE` set to the path of the file
-     with the vault password:
-
-     ```bash
-     export ANSIBLE_VAULT_PASSWORD_FILE=${HOME}/.vault-password
-     ```
-
-5. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
+4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
    _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
    _System_ app (Windows).
-6. If you want the email services to work you will need to set the following environment variables. These values must be
+5. If you want the email services to work you will need to set the following environment variables. These values must be
    kept secret, so ask your email administrator to supply them.
 
    - `COMBINE_SMTP_SERVER`
@@ -122,110 +112,25 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-7. (Optional) To opt in to segment.com analytics to test the analytics during development:
+6. _(Optional)_ To opt in to segment.com analytics to test the analytics during development:
 
    ```bash
    # For Windows, use `copy`.
    cp .env.local.template .env.local
    ```
 
-8. Run `npm start` from the project directory to install dependencies and start the project.
+7. Run `npm start` from the project directory to install dependencies and start the project.
 
-9. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
+8. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
-
-Note, those starting development can skip the following sections related to production or deployment: 2. Docker, 4.
-Amazon Web Services.
 
 [chocolatey]: https://chocolatey.org/
 
-## Docker
+### Python
 
-### Installing Docker
+_Python 3_ is required to run the scripts that are used to initialize and maintain the cluster.
 
-Install [Docker](https://docs.docker.com/get-docker/).
-
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately. This is included by default
-in Docker Desktop for Windows and macOS.
-
-(macOS / Windows Only) If you are on macOS or Windows without
-[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
-allocated at least 4GB of Memory in Preferences | Resources.
-
-### Build and Run
-
-For information on _Docker Compose_ see the [Docker Compose documentation](https://docs.docker.com/compose/).
-
-1. Create the required docker files by running the configuration script in an activated Python virtual environment from
-   _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
-
-   ```bash
-   python scripts/docker_setup.py
-   ```
-
-   To view options, run with --help
-
-2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
-   Backend container. If you have defined them as OS variables in the
-   [Getting Started with Development](#getting-started-with-development) section above, then these variables will
-   already be set. If not, then you will need to edit `.env.backend` and provide values for the variables that are
-   listed.
-
-3. Build the images for the Docker containers:
-
-   ```bash
-   docker-compose build --parallel
-   ```
-
-   > **Notes**:
-   >
-   > - On Linux, you either need to prepend `sudo` to all of the following `docker` commands or add yourself to the
-   >   `docker` group. See the
-   >   [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
-   > - On Windows and macOS, Docker Desktop must be running.
-
-   If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the above
-   build again.
-
-4. Start the containers
-
-   ```bash
-   docker-compose up --detach
-   ```
-
-5. Browse to <https://localhost>.
-
-   _By default self-signed certificates are included, so you will need to accept a warning in the browser._
-
-6. To view logs:
-
-   ```bash
-   docker-compose logs --follow
-   ```
-
-   To view the logs from a single service, e.g. the `backend`:
-
-   ```bash
-   docker-compose logs --follow backend
-   ```
-
-   The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged.
-   To just get the current snapshot of the logs, do not add the `--follow` option.
-
-7. To stop
-
-   ```bash
-   docker-compose down
-   ```
-
-   Add the `--volumes` option to remove any stored data when the containers are stopped.
-
-## Python
-
-A Python script, `scripts/docker_setup.py` is used to configure the files needed to run _TheCombine_ in Docker
-containers. Python is required to create the `docker-compose` environment and to run some of the maintenance scripts.
-
-### Windows Python Installation
+#### Windows Python Installation
 
 - Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
 
@@ -241,7 +146,7 @@ containers. Python is required to create the `docker-compose` environment and to
   venv\Scripts\activate
   ```
 
-### Linux Python Installation
+#### Linux Python Installation
 
 The `python3` package is included in the Ubuntu distribution. To install the `pip` and `venv` modules for Python 3, run
 the following commands:
@@ -259,7 +164,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### macOS Python Installation
+#### macOS Python Installation
 
 Install [Homebrew](https://brew.sh/).
 
@@ -276,7 +181,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Python Packages
+#### Python Packages
 
 **Important**: All Python commands and scripts should be executed within a terminal using an activated Python virtual
 environment. This will be denoted with the `(venv)` prefix on the prompt.
@@ -307,6 +212,173 @@ To upgrade all pinned dependencies:
 ```bash
 python -m piptools compile --upgrade dev-requirements.in
 ```
+
+### Docker Desktop
+
+_Docker Desktop_ provides the local kubernetes cluster.
+
+#### Windows/MacOS
+
+Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
+
+#### Linux
+
+_Docker Desktop for Linux_ (DD4L) is currently in the _Tech Preview_ stage of development. As a result, it requires a
+few more steps to install and setup _Docker Desktop_.
+
+> Docker Desktop for Linux is currently available on Ubuntu 21.04, 21.10 and Debian distributions.
+
+Follow the installation instructions at <https://docs.docker.com/desktop/linux/>. In particular, note the section on
+_Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger than the memory for the
+virtual machine. The current preview sets both sizes to 1/2 of the available memory so you will need to adjust it. If
+`/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide any error message. There is info in
+`/var/lib/syslog`, however.
+
+## Setup Local Kubernetes Cluster
+
+This section describes how to create a local Kubernetes cluster using _Docker Desktop_ and how to build and deploy _The
+Combine_ to the cluster. Unless specified otherwise, all of the commands below are run from _The Combine's_ project
+directory and are run in an activated Python virtual environment. (See the [Python 3](#python-3) section to create the
+virtual environment.)
+
+### Setup of Docker Desktop
+
+Once _Docker Desktop_ has been installed, start it set it up as follows:
+
+1. Click the gear icon in the upper right to open the settings dialog;
+2. Click on the _Kubernetes_ link on the left-hand side;
+3. Select _Enable Kubernetes_ and click _Apply & Restart_;
+4. Click _Install_ on the dialog that is displayed.
+
+(macOS / Windows Only) If you are on macOS or Windows without
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
+allocated at least 4GB of Memory in Preferences | Resources.
+
+### Install Required Charts
+
+Install the required charts by running:
+
+```bash
+python scripts/setup_cluster.py
+```
+
+`scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired Kubernetes
+cluster. For most development users, there will only be the _Docker Desktop_ cluster to manage and the _Docker Desktop_
+installation process will set that up correctly. If there are multiple clusters to manage, the `--kubeconfig` and
+`--context` options will let you specify a different cluster.
+
+Run the script with the `--help` option to see possible options for the script.
+
+### Build _The Combine_ Containers
+
+Build _The Combine_ containers by running the build script in an activated Python virtual environment from
+_TheCombine_'s project directory. (See the [Python 3](#python-3) section to create the virtual environment.)
+
+```bash
+python scripts/build.py
+```
+
+The `build.py` script takes the following arguments:
+
+| argument | use                                                                   |
+| -------- | --------------------------------------------------------------------- |
+| `--help` | Print script usage message                                            |
+| `--repo` | Tag the image with the specified repo and push the image to the repo. |
+| `--tag`  | Version tag for the created image.                                    |
+
+Notes:
+
+- If you specify the `--repo` option, you may need to be logged in with `docker login`.
+- If `--tag` is not used, the image will be untagged. When running or pulling an image with the tag `latest`, the
+  newest, untagged image will be pulled.
+- `--repo` and `--tag` are not specified under normal development use.
+
+### Install/Update _The Combine_
+
+Install the Kubernetes resources to run _The Combine_ by running:
+
+```bash
+python scripts/setup_combine.py
+```
+
+The script will prompt the user for the target system and for the image tag of _The Combine_ software to be loaded:
+
+```bash
+(venv) user@host:~/projects/combine$ python scripts/setup_combine.py
+Enter the target name:localhost
+Enter image tag to install:latest
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "ingress-nginx" chart repository
+...Successfully got an update from the "jetstack" chart repository
+...Successfully got an update from the "bitnami" chart repository
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Saving 2 charts
+Deleting outdated charts
+
+NAME: thecombine
+LAST DEPLOYED: Fri Feb 25 09:41:00 2022
+NAMESPACE: thecombine
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+```
+
+For development testing, the target system is `localhost`; other target systems are listed in
+`scripts/setup_files/combine_config.yaml`.
+
+The usual image tag is `latest`; it will use the most recent untagged image.
+
+`scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired Kubernetes
+cluster. For most development users, there will only be the _Docker Desktop_ cluster to manage and the _Docker Desktop_
+installation process will set that up correctly. If there are multiple clusters to manage, the `--kubeconfig` and
+`--context` options will let you specify a different cluster.
+
+Run the script with the `--help` option to see possible options for the script.
+
+When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
+all the containers are up and running. Run `kubectl -n thecombine get deployments` or `kubectl -n thecombine get pods`
+to see when the cluster is ready. For example,
+
+```bash
+$ kubectl -n thecombine get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+backend       1/1     1            1           10m
+database      1/1     1            1           10m
+frontend      1/1     1            1           10m
+maintenance   1/1     1            1           10m
+$ kubectl -n thecombine get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+backend-5657559949-z2flp       1/1     Running   0          10m
+database-794b4d956f-zjszm      1/1     Running   0          10m
+frontend-7d6d79f8c5-lkhhz      1/1     Running   0          10m
+maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
+```
+
+Once all the deployments are `READY` or all the pods are `Running`, browse to <https://localhost>.
+
+_By default self-signed certificates are included, so you will need to accept a warning in the browser._
+
+### Stopping _The Combine_
+
+To stop _The Combine_, you can do one of the following:
+
+- stop _The Combine_ deployments:
+
+  ```bash
+  kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database
+  ```
+
+  You can restart the deployments by setting `--replicas=1`.
+
+- uninstall the helm chart:
+
+  ```bash
+  helm -n thecombine uninstall thecombine
+  ```
+
+- shutdown _Docker Desktop_. Note that closing the dashboard window does not stop _Docker Desktop_; you must close it
+  from the System Tray (or equivalent) by clicking on the _Docker_ icon and selecting _Quit Docker Desktop_.
 
 ## Available Scripts
 
@@ -706,3 +778,18 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
 - [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
+
+### Kubernetes/Helm
+
+- [Kubernetes Concepts](https://kubernetes.io/docs/concepts/)
+- [Kubernetes Tutorials](https://kubernetes.io/docs/tutorials/)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [Helm Documentation](https://helm.sh/docs/) has links for:
+
+  - [Introduction](https://helm.sh/docs/intro/),
+  - [Topic Guides](https://helm.sh/docs/topics/),
+  - [Best Practices](https://helm.sh/docs/chart_best_practices),
+  - [Chart Template Guide](https://helm.sh/docs/chart_template_guide),
+  - [Helm Commands](https://helm.sh/docs/helm),
+
+  and more.
