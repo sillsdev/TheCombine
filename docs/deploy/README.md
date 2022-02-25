@@ -109,10 +109,10 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
       ssh-copy-id <target_user>@<target>
       ```
 
-2. Install Kubernetes and setup your configuration file for running `kubectl`:
+2. To install Kubernetes and setup your configuration file for running `kubectl`, run this command from the `deploy`
+   folder in the project:
 
    ```bash
-   cd <COMBINE>/deploy
    ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
    ```
 
@@ -144,6 +144,14 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
 
    3. Add `--kubeconfig=~/.kube/<target>/config` to each `helm` and `kubectl` command. The `setup_combine.py` command
       accepts a `kubeconfig` option as well.
+
+4. Install the charts needed for _The Combine_
+
+   From the project directory with an activated _Python_ virtual environment, run:
+
+   ```bash
+   python scripts/setup_cluster.py --type nuc
+   ```
 
 ### Installing _The Combine_ Helm Charts
 

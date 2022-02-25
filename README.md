@@ -293,6 +293,24 @@ Notes:
   newest, untagged image will be pulled.
 - `--repo` and `--tag` are not specified under normal development use.
 
+### Setup Required Environment Variables
+
+Setup the following environment variables:
+
+- AWS_ACCOUNT
+- AWS_DEFAULT_REGION
+- AWS_ECR_ACCESS_KEY_ID
+- AWS_ECR_SECRET_ACCESS_KEY
+- AWS_S3_ACCESS_KEY_ID
+- AWS_S3_SECRET_ACCESS_KEY
+- COMBINE_JWT_SECRET_KEY
+- COMBINE_SMTP_USERNAME
+- COMBINE_SMTP_PASSWORD
+
+These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+If you are a member of the development team and need the environment variable values, send a request explaining your
+need to [admin@thecombine.app](mailto:admin@thecombine.app).
+
 ### Install/Update _The Combine_
 
 Install the Kubernetes resources to run _The Combine_ by running:
