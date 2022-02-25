@@ -35,16 +35,23 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ## Table of Contents
 
-1. [Getting Started with Development](#getting-started-with-development)
-2. [Docker](#docker)
-   1. [Installing Docker](#installing-docker)
-   2. [Build and Run](#build-and-run)
-3. [Python](#python)
-   1. [Windows Python Installation](#windows-python-installation)
-   2. [Linux Python Installation](#linux-python-installation)
-   3. [macOS Python Installation](#macos-python-installation)
-   4. [Python Packages](#python-packages)
-4. [Available Scripts](#available-scripts)
+1. Getting Started with Development](#getting-started-with-development)
+   1. [Python](#python)
+      1. [Windows Python Installation](#windows-python-installation)
+      2. [Linux Python Installation](#linux-python-installation)
+      3. [macOS Python Installation](#macos-python-installation)
+      4. [Python Packages](#python-packages)
+   2. [Docker Desktop](#docker-desktop)
+      1. [Docker Desktop for Windows/macOS](#docker-desktop-for-windowsmacos)
+      2. [Docker Desktop for Linux](#docker-desktop-for-linux)
+2. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
+   1. [Setup of Docker Desktop](#setup-of-docker-desktop)
+   2. [Install Required Charts](#install-required-charts)
+   3. [Build _The Combine_ Containers](#build-the-combine-containers)
+   4. [Setup Required Environment Variables](#setup-required-environment-variables)
+   5. [Install/Update _The Combine_](#installupdate-the-combine)
+   6. [Stopping _The Combine_](#stopping-the-combine)
+3. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Using OpenAPI](#using-openapi)
    3. [Running the Automated Tests](#running-the-automated-tests)
@@ -53,12 +60,12 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    6. [Set Project Version](#set-project-version)
    7. [Inspect Database](#inspect-database)
    8. [Cleanup Local Repo](#cleanup-local-repository)
-5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
+4. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Development Environment](#development-environment)
-   2. [Production/QA Environment](#productionqa-environment)
-6. [User Guide](#user-guide)
-7. [Production](#production)
-8. [Learn More](#learn-more)
+   2. [Kubernetes Environment](#kubernetes-environment)
+5. [User Guide](#user-guide)
+6. [Production](#production)
+7. [Learn More](#learn-more)
 
 ## Getting Started with Development
 
@@ -217,14 +224,14 @@ python -m piptools compile --upgrade dev-requirements.in
 
 _Docker Desktop_ provides the local kubernetes cluster.
 
-#### Windows/MacOS
+#### Docker Desktop for Windows/macOS
 
 Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
 
-#### Linux
+#### Docker Desktop for Linux
 
-_Docker Desktop for Linux_ (DD4L) is currently in the _Tech Preview_ stage of development. As a result, it requires a
-few more steps to install and setup _Docker Desktop_.
+_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development. As a result, it requires a few more
+steps to install and setup _Docker Desktop_. From the Docker Desktop for Linux page:
 
 > Docker Desktop for Linux is currently available on Ubuntu 21.04, 21.10 and Debian distributions.
 
@@ -650,11 +657,10 @@ Run:
 npm run set-admin-user -- <USERNAME>
 ```
 
-### Production/QA Environment
+### Kubernetes Environment
 
-The following maintenance tasks can be performed in the Production/QA environment. The
-[How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure a production machine and install
-_TheCombine_ on it.
+The following maintenance tasks can be performed in the Kubernetes environment. The Kubernetes cluster may be one of the
+production or QA clusters or the local development cluster.
 
 For each of the `kubectl` commands below:
 

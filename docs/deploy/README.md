@@ -51,7 +51,7 @@ Kubernetes cluster, you will need the following tools:
 - Git
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) for examining and modifying your Kubernetes cluster
 - [Helm](https://helm.sh/docs/intro/install/) for installing Helm Charts (Kubernetes Packages)
-- [Docker](https://docs.docker.com/get-docker/)
+- [Docker](https://docs.docker.com/get-docker/) or [Docker Desktop](../../README.md#docker-desktop-for-linux)
 - Python - See the project [README](../../README.md#python) for instructions on how to setup Python and the virtual
   environment
 - clone the project repo:
@@ -79,7 +79,7 @@ installing _The Combine_ on an existing cluster, skip this section and go to
 
 The minimum target system requirements for installing _The Combine_ are:
 
-- Ubuntu 20.04 Server operating system (see [Install Ubuntu Focal Server](#install-ubuntu-focal-server))
+- Ubuntu 20.04 Server operating system (see [Install Ubuntu Server](#install-ubuntu-server))
 - 4 GB RAM
 - 32 GB Storage
 
