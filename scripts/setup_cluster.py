@@ -21,7 +21,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser = setup_helm_opts(parser)
     parser.add_argument(
-        "-type",
+        "--type", "-t",
         choices=["docker-desktop", "nuc", "rancher-desktop"],
         default="docker-desktop",
         help="Type of Kubernetes cluster to be setup.",
