@@ -28,6 +28,7 @@ def run_cmd(
         return process_results
     except subprocess.CalledProcessError as err:
         print(f"CalledProcessError returned {err.returncode}")
+        print(f"command: {err.cmd}")
         print(f"stdout: {err.stdout}")
         print(f"stderr: {err.stderr}")
         sys.exit(err.returncode)
@@ -44,6 +45,24 @@ def add_namespace(namespace: str) -> bool:
         run_cmd(["kubectl", "create", "namespace", namespace])
         return True
     return False
+
+
+def setup_helm_opts(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """Add commandline arguments that are shared between scripts calling helm."""
+    parser.add_argument(
+        "--context",
+        help="Context in kubectl configuration file to be used.",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable verbose output for helm commands.",
+    )
+    parser.add_argument(
+        "--kubeconfig",
+        help="Specify the kubectl configuration file to be used.",
+    )
+    return parser
 
 
 def get_helm_opts(args: argparse.Namespace) -> List[str]:

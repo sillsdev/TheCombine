@@ -5,7 +5,8 @@ import argparse
 from pathlib import Path
 from typing import Any, Dict, List
 
-from utils import add_namespace, get_helm_opts, run_cmd
+from helmaction import HelmAction
+from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
 
 prog_dir = Path(__file__).resolve().parent
@@ -18,6 +19,7 @@ def parse_args() -> argparse.Namespace:
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+    parser = setup_helm_opts(parser)
     parser.add_argument(
         "-type",
         choices=["docker-desktop", "nuc", "rancher-desktop"],
@@ -30,9 +32,6 @@ def parse_args() -> argparse.Namespace:
         help="Configuration file for the target(s).",
         default=str(prog_dir / "setup_files" / "cluster_config.yaml"),
     )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Print output of commands upon completion."
-    )
     return parser.parse_args()
 
 
@@ -42,6 +41,8 @@ def main() -> None:
     with open(args.config) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
 
+    # Note that the helm repo commands affect the helm client and therefore
+    # are not affected by the helm options
     this_cluster: List[str] = config["clusters"][args.type]
     helm_cmd_results = run_cmd(["helm", "repo", "list", "-o", "yaml"])
     curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
@@ -55,14 +56,14 @@ def main() -> None:
         if repo_spec["name"] not in curr_repo_list:
             run_cmd(
                 ["helm", "repo", "add", repo_spec["name"], repo_spec["url"]],
-                print_output=args.verbose,
+                print_output=args.debug,
             )
             repo_added = True
     if repo_added:
-        run_cmd(["helm", "repo", "update"], print_output=args.verbose)
+        run_cmd(["helm", "repo", "update"], print_output=args.debug)
 
     # List current charts
-    chart_list_results = run_cmd(["helm", "list", "-o", "yaml"])
+    chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
     curr_charts = []
     for chart in yaml.safe_load(chart_list_results.stdout):
         curr_charts.append(chart["name"])
@@ -75,15 +76,21 @@ def main() -> None:
         # install the chart
         helm_cmd = ["helm"] + get_helm_opts(args)
         if chart_spec["name"] in curr_charts:
-            helm_cmd.append("upgrade")
+            helm_action = HelmAction.UPGRADE
         else:
-            helm_cmd.append("install")
+            helm_action = HelmAction.INSTALL
         helm_cmd.extend(
-            ["-n", chart_spec["namespace"], chart_spec["name"], chart_spec["reference"]]
+            [
+                "-n",
+                chart_spec["namespace"],
+                helm_action.value,
+                chart_spec["name"],
+                chart_spec["reference"],
+            ]
         )
         if "options" in chart_spec:
             helm_cmd.extend(chart_spec["options"])
-        run_cmd(helm_cmd, print_output=args.verbose)
+        run_cmd(helm_cmd, print_output=args.debug)
 
 
 if __name__ == "__main__":

@@ -26,21 +26,9 @@ import sys
 import tempfile
 from typing import Any, Dict, List, Optional
 
-from utils import add_namespace, get_helm_opts, run_cmd
+from helmaction import HelmAction
+from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
-
-
-@unique
-class HelmAction(Enum):
-    """
-    Enumerate helm commands for maintaining The Combine on the target system.
-
-    INSTALL is used when the chart is not already installed on the target.
-    UPGRADE is used when the chart is already installed.
-    """
-
-    INSTALL = "install"
-    UPGRADE = "upgrade"
 
 
 @unique
@@ -59,6 +47,7 @@ def parse_args() -> argparse.Namespace:
         description="Generate Helm Charts for The Combine.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+    parser = setup_helm_opts(parser)
     parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
@@ -67,15 +56,6 @@ def parse_args() -> argparse.Namespace:
         "-c",
         help="Configuration file for the target(s).",
         default=str(prog_dir / "setup_files" / "combine_config.yaml"),
-    )
-    parser.add_argument(
-        "--context",
-        help="Context in kubectl configuration file to be used.",
-    )
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable verbose output for helm commands.",
     )
     parser.add_argument(
         "--dry-run",
@@ -87,12 +67,6 @@ def parse_args() -> argparse.Namespace:
         "--image-tag",
         help="Tag for the container images to be installed for The Combine.",
         dest="image_tag",
-    )
-    parser.add_argument(
-        "--kubeconfig",
-        "-k",
-        help="Set the $KUBECONFIG environment variable for the helm/kubectl commands"
-        " invoked by this script.",
     )
     parser.add_argument(
         "--profile",
