@@ -37,18 +37,14 @@ ENV FRONTEND_HOST_DIR /usr/share/nginx/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
-RUN mkdir ${FRONTEND_HOST_DIR}/nuc
 RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${USER_GUIDE_HOST_DIR}
 COPY --from=frontend_builder /app/build ${FRONTEND_HOST_DIR}
-COPY nginx/pages/nuc_home.html ${FRONTEND_HOST_DIR}/nuc/index.html
 COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.html
-COPY public/favicon.ico ${FRONTEND_HOST_DIR}/nuc/favicon.ico
 COPY public/favicon.ico ${FRONTEND_HOST_DIR}/url_moved/favicon.ico
-COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/nuc/tractor.png
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png
 
 # Setup nginx configuration templates
