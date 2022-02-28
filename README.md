@@ -35,7 +35,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ## Table of Contents
 
-1. Getting Started with Development](#getting-started-with-development)
+1. [Getting Started with Development](#getting-started-with-development)
    1. [Python](#python)
       1. [Windows Python Installation](#windows-python-installation)
       2. [Linux Python Installation](#linux-python-installation)
@@ -230,16 +230,31 @@ Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
 
 #### Docker Desktop for Linux
 
-_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development. As a result, it requires a few more
-steps to install and setup _Docker Desktop_. From the Docker Desktop for Linux page:
+_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 21.04,
+21.10 and Debian distributions. As a result, it requires a few more steps to install and setup _Docker Desktop_.
 
-> Docker Desktop for Linux is currently available on Ubuntu 21.04, 21.10 and Debian distributions.
+To install _Docker Desktop for Linux_,
 
-Follow the installation instructions at <https://docs.docker.com/desktop/linux/>. In particular, note the section on
-_Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger than the memory for the
-virtual machine. The current preview sets both sizes to 1/2 of the available memory so you will need to adjust it. If
-`/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide any error message. There is info in
-`/var/lib/syslog`, however.
+1. If you installed `docker` or `docker-compose` previously, remove them:
+
+   ```bash
+   sudo apt purge docker-ce docker-ce-cli containerd.io
+   sudo apt autoremove
+   if [ -L /usr/bin/docker-compose ] ; then sudo rm /usr/bin/docker-compose ; fi
+   if [ -x /usr/local/bin/docker-compose ] ; then sudo rm /usr/local/bin/docker-compose ; fi
+   ```
+
+2. Create the `docker` group if it does not exist already:
+
+   ```bash
+   sudo addgroup --system docker
+   ```
+
+3. Follow the installation instructions at <https://docs.docker.com/desktop/linux/>. In particular, note the section on
+   _Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger than the memory for the
+   virtual machine. The current preview sets both sizes to 1/2 of the available memory so you will need to adjust it. If
+   `/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide any error message. There is info
+   in `/var/lib/syslog`, however.
 
 ## Setup Local Kubernetes Cluster
 
@@ -295,7 +310,16 @@ The `build.py` script takes the following arguments:
 
 Notes:
 
-- If you specify the `--repo` option, you may need to be logged in with `docker login`.
+- If you see errors like:
+
+  ```bash
+  => ERROR [internal] load metadata for docker.io/library/nginx:1.21        0.5s
+  => ERROR [internal] load metadata for docker.io/library/python:3.9        0.5s
+  => ERROR [internal] load metadata for docker.io/library/node:16           0.5s
+  ```
+
+  then you may need to be logged into [Docker Hub](https://hub.docker.io) with `docker login`.
+
 - If `--tag` is not used, the image will be untagged. When running or pulling an image with the tag `latest`, the
   newest, untagged image will be pulled.
 - `--repo` and `--tag` are not specified under normal development use.
