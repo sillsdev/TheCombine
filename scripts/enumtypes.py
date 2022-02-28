@@ -1,3 +1,5 @@
+"""Define a collection of enum types for The Combine scripts."""
+
 from enum import Enum, unique
 
 
@@ -12,3 +14,9 @@ class HelmAction(Enum):
 
     INSTALL = "install"
     UPGRADE = "upgrade"
+
+
+@unique
+class ExitStatus(Enum):
+    SUCCESS = 0
+    FAILURE = 1

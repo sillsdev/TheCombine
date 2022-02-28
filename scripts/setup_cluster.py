@@ -3,9 +3,10 @@
 
 import argparse
 from pathlib import Path
+import sys
 from typing import Any, Dict, List
 
-from helmaction import HelmAction
+from enumtypes import ExitStatus, HelmAction
 from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
 
@@ -23,14 +24,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--type",
         "-t",
-        choices=["docker-desktop", "nuc", "rancher-desktop"],
-        default="docker-desktop",
-        help="Type of Kubernetes cluster to be setup.",
+        default="standard",
+        help="Type of Kubernetes cluster to be setup as defined in the config file.",
     )
     parser.add_argument(
         "--config",
         "-c",
-        help="Configuration file for the target(s).",
+        help="Configuration file for the cluster type(s).",
         default=str(prog_dir / "setup_files" / "cluster_config.yaml"),
     )
     return parser.parse_args()
@@ -42,14 +42,23 @@ def main() -> None:
     with open(args.config) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
 
+    # Verify that the requested type is in the configuration
+    if args.type not in config["clusters"]:
+        print(
+            f"Cluster type '{args.type}' is not in the configuration file, {args.config}",
+            file=sys.stderr,
+        )
+        sys.exit(ExitStatus.FAILURE.value)
+
     # Note that the helm repo commands affect the helm client and therefore
     # are not affected by the helm options
     this_cluster: List[str] = config["clusters"][args.type]
-    helm_cmd_results = run_cmd(["helm", "repo", "list", "-o", "yaml"])
-    curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
     curr_repo_list = []
-    for repo in curr_helm_repos:
-        curr_repo_list.append(repo["name"])
+    helm_cmd_results = run_cmd(["helm", "repo", "list", "-o", "yaml"], check_results=False)
+    if helm_cmd_results.returncode == 0:
+        curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
+        for repo in curr_helm_repos:
+            curr_repo_list.append(repo["name"])
     # Check for repos that need to be added
     repo_added = False
     for chart_descr in this_cluster:

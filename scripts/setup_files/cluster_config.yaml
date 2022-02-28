@@ -1,14 +1,11 @@
 # Define the charts that need to be installed for each cluster type
 clusters:
-  docker-desktop:
+  standard:
     - cert-manager
     - nginx-ingress-controller
-  rancher-desktop:
+  rancher:
     - cert-manager
     - rancher-ui
-  nuc:
-    - cert-manager
-    - nginx-ingress-controller
 
 # Specify how each chart is to be installed.  The "repo" key specified which
 # helm repository needs to be added and the "chart" key specifies how to

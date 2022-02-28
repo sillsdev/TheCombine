@@ -19,23 +19,15 @@ For each chart, the configuration file lists:
 The script also adds value definitions from a profile specific configuration file if it exists.
 """
 import argparse
-from enum import Enum, unique
 import os
 from pathlib import Path
 import sys
 import tempfile
 from typing import Any, Dict, List, Optional
 
-from helmaction import HelmAction
+from enumtypes import ExitStatus, HelmAction
 from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
-
-
-@unique
-class ExitStatus(Enum):
-    SUCCESS = 0
-    FAILURE = 1
-
 
 prog_dir = Path(__file__).resolve().parent
 """Directory for the current program"""
