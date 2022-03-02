@@ -12,8 +12,8 @@ k8s_required_pkgs:
 k3s_options:
   - --write-kubeconfig-mode
   - 644
-#  - --disable
-#  - traefik
+  - --disable
+  - traefik
 
 # Options for installing the microk8s engine
 microk8s_options:
