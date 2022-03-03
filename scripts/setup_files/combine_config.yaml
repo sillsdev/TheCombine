@@ -12,9 +12,10 @@
 targets:
   localhost:
     profile: dev
-    set_values:
-      - frontend.configCaptchaRequired=true
-      - frontend.configCaptchaSiteKey=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
+    override:
+      frontend:
+        configCaptchaRequired: "true"
+        configCaptchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
   nuc1.thecombine.app:
     profile: nuc
   nuc2.thecombine.app:
@@ -23,10 +24,15 @@ targets:
     profile: staging
   thecombine.app:
     profile: prod
-    set_values:
-      - frontend.configCaptchaRequired=true
-      - frontend.configCaptchaSitekey=6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t
-      - combineCertProxyList=nuc1.thecombine.app nuc2.thecombine.app
+    override:
+      frontend:
+        configCaptchaRequired: "true"
+        configCaptchaSiteKey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
+      combineCertProxyList:
+        - nuc1.thecombine.app
+        - nuc2.thecombine.app
+      global:
+        awsS3Location: gradynh.com
 
 # Set of profiles
 # Each key of 'profiles' defines one of the profiles used by the set of targets.

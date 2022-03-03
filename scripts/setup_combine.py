@@ -200,8 +200,12 @@ def main() -> None:
             include_secrets = create_secrets(
                 config["charts"][chart]["secrets"], output_file=secrets_file
             )
-            if "set_values" in this_config:
-                target_vars.extend(this_config["set_values"])
+            if "override" in this_config:
+                override_file = Path(secrets_dir).resolve() / f"config_{chart}.yaml"
+                with open(override_file, "w") as file:
+                    yaml.dump(this_config["override"], file)
+            else:
+                override_file = None
 
             # create the base helm install command
             chart_dir = helm_dir / chart
@@ -231,6 +235,8 @@ def main() -> None:
                         str(secrets_file),
                     ]
                 )
+            if override_file is not None:
+                helm_cmd.extend(["-f", str(override_file)])
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
                 helm_install_cmd.extend(addl_configs)
