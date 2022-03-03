@@ -285,6 +285,8 @@ def main() -> None:
                 config_file = Path(secrets_dir).resolve() / f"config_{chart}.yaml"
                 with open(config_file, "w") as file:
                     yaml.dump(this_config["set"], file)
+            else:
+                config_file = None
 
             # create the base helm install command
             chart_dir = helm_dir / chart
