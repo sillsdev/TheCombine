@@ -18,9 +18,11 @@ def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.Complet
             check=check_results,
         )
     except subprocess.CalledProcessError as err:
-        print(f"CalledProcessError returned {err.returncode}")
-        print(f"stdout: {err.stdout}")
-        print(f"stderr: {err.stderr}")
+        print("CalledProcessError")
+        print(f"...Command: {err.cmd}")
+        print(f"...returncode {err.returncode}")
+        print(f"...stdout: {err.stdout}")
+        print(f"...stderr: {err.stderr}")
         sys.exit(err.returncode)
 
 
