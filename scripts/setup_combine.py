@@ -236,7 +236,7 @@ def main() -> None:
                     ]
                 )
             if override_file is not None:
-                helm_cmd.extend(["-f", str(override_file)])
+                helm_install_cmd.extend(["-f", str(override_file)])
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
                 helm_install_cmd.extend(addl_configs)
