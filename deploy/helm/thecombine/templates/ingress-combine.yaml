@@ -6,8 +6,6 @@ metadata:
   annotations:
 {{- if eq .Values.ingressClass "nginx" }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
-{{- else if eq .Values.ingressClass "traefik" }}
-    traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
 {{- if .Values.certManager.enabled }}
     cert-manager.io/issuer: {{ .Values.certManager.certIssuer }}
