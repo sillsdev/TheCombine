@@ -99,7 +99,7 @@ class CombineApp:
                     "pods",
                     "--field-selector=status.phase==Running",
                     "-o" f"jsonpath={{.items[{instance}].metadata.name}}",
-                    f"-l=combine-component={service}",
+                    f"-l=combine-component={service.value}",
                 ]
             ).stdout.strip()
         return self.pod_id_cache[service.value]
