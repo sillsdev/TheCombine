@@ -75,6 +75,15 @@ namespace Backend.Tests
             };
         }
 
+        public static Definition RandomDefinition()
+        {
+            return new Definition
+            {
+                Text = RandString(),
+                Language = RandString(3)
+            };
+        }
+
         public static Gloss RandomGloss()
         {
             return new Gloss

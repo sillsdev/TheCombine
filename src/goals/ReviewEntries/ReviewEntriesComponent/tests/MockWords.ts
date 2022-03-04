@@ -10,6 +10,7 @@ import {
   newSense,
   newWord,
 } from "types/word";
+import { Bcp47Code } from "types/writingSystem";
 
 export default function mockWords(): ReviewEntriesWord[] {
   return [
@@ -22,8 +23,8 @@ export default function mockWords(): ReviewEntriesWord[] {
           guid: "1",
           definitions: [],
           glosses: [
-            { def: "bup", language: "en" },
-            { def: "AHHHHHH", language: "es" },
+            { def: "bup", language: Bcp47Code.En },
+            { def: "AHHHHHH", language: Bcp47Code.Es },
           ],
           domains: [newSemanticDomain("number", "domain")],
           deleted: false,
@@ -39,7 +40,7 @@ export default function mockWords(): ReviewEntriesWord[] {
         {
           guid: "2",
           definitions: [],
-          glosses: [{ def: "gloss", language: "en" }],
+          glosses: [{ def: "gloss", language: Bcp47Code.En }],
           domains: [newSemanticDomain("number", "domain")],
           deleted: false,
         },

@@ -33,6 +33,7 @@ import {
   newSense,
   newWord,
 } from "types/word";
+import { Bcp47Code } from "types/writingSystem";
 
 // Used when the guids don't matter.
 function wordAnyGuids(vern: string, glosses: string[], id: string): Word {
@@ -281,9 +282,9 @@ describe("MergeDupActions", () => {
   });
 
   describe("mergeDefinitionIntoSense", () => {
-    const defAEn = newDefinition("a", "en");
-    const defAFr = newDefinition("a", "fr");
-    const defBEn = newDefinition("b", "en");
+    const defAEn = newDefinition("a", Bcp47Code.En);
+    const defAFr = newDefinition("a", Bcp47Code.Fr);
+    const defBEn = newDefinition("b", Bcp47Code.En);
     let sense: MergeTreeSense;
 
     beforeEach(() => {
@@ -293,7 +294,7 @@ describe("MergeDupActions", () => {
     it("ignores definitions with empty text.", () => {
       mergeDefinitionIntoSense(sense, newDefinition());
       expect(sense.definitions).toHaveLength(0);
-      mergeDefinitionIntoSense(sense, newDefinition("", "en"));
+      mergeDefinitionIntoSense(sense, newDefinition("", Bcp47Code.En));
       expect(sense.definitions).toHaveLength(0);
     });
 
@@ -309,21 +310,21 @@ describe("MergeDupActions", () => {
 
       mergeDefinitionIntoSense(sense, defAFr);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language === "fr")!.text).toEqual(
-        defAFr.text
-      );
+      expect(
+        sense.definitions.find((d) => d.language === Bcp47Code.Fr)!.text
+      ).toEqual(defAFr.text);
 
       const twoEnTexts = `${defAEn.text};${defBEn.text}`;
       mergeDefinitionIntoSense(sense, defBEn);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language === "en")!.text).toEqual(
-        twoEnTexts
-      );
+      expect(
+        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
+      ).toEqual(twoEnTexts);
       mergeDefinitionIntoSense(sense, defAEn);
       expect(sense.definitions).toHaveLength(2);
-      expect(sense.definitions.find((d) => d.language === "en")!.text).toEqual(
-        twoEnTexts
-      );
+      expect(
+        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
+      ).toEqual(twoEnTexts);
     });
   });
 });
