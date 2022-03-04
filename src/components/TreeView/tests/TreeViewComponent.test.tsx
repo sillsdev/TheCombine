@@ -11,7 +11,7 @@ import { defaultState as treeViewState } from "components/TreeView/TreeViewReduc
 import mockMap, {
   jsonDomain as mockDomain,
 } from "components/TreeView/tests/MockSemanticDomain";
-import { newWritingSystem } from "types/project";
+import { newWritingSystem } from "types/writingSystem";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: ReactTestInstance;

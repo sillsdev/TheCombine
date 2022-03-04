@@ -14,8 +14,8 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { newWritingSystem } from "types/project";
 import { simpleWord } from "types/word";
+import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");

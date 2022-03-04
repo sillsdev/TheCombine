@@ -1,16 +1,17 @@
 import nspell from "nspell";
 
 import { aff, dic } from "resources/dictionaries";
+import { defaultWritingSystem, Bcp47Code } from "types/writingSystem";
 
 class SpellChecker {
   spell: nspell;
 
-  constructor(analysisLang = "en") {
+  constructor(analysisLang = defaultWritingSystem.bcp47) {
     switch (analysisLang.split("-")[0]) {
-      case "es":
+      case Bcp47Code.Es:
         this.spell = nspell(aff.es, dic.es);
         break;
-      case "fr":
+      case Bcp47Code.Fr:
         this.spell = nspell(aff.fr, dic.fr);
         break;
       default:

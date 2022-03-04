@@ -1,8 +1,8 @@
 import renderer from "react-test-renderer";
 
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
-import { newWritingSystem } from "types/project";
 import { newSemanticDomain } from "types/word";
+import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
