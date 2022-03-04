@@ -13,19 +13,12 @@ import {
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
 import { StoreState } from "types";
-import { newWritingSystem } from "types/project";
-
-// This list should cover the domain data in resources/semantic-domains/
-export const allSemDomWritingSystems = [
-  newWritingSystem("en", "English"),
-  newWritingSystem("es", "Español"),
-  newWritingSystem("fr", "Français"),
-];
+import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
   lang: WritingSystem
 ): WritingSystem | undefined {
-  return allSemDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
+  return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
 export interface TreeViewProps {

@@ -22,10 +22,9 @@ import { Project, WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
-import { allSemDomWritingSystems } from "components/TreeView/TreeViewComponent";
-import { newWritingSystem } from "types/project";
 import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/wordUtilities";
+import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 
 interface LanguageProps {
   project: Project;
@@ -150,7 +149,7 @@ export default class ProjectLanguages extends React.Component<
 
   async setSemDomWritingSystem(lang: string): Promise<void> {
     this.props.project.semDomWritingSystem =
-      allSemDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
+      semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
       newWritingSystem();
     this.props
       .saveChangesToProject(this.props.project)
@@ -260,7 +259,7 @@ export default class ProjectLanguages extends React.Component<
           <MenuItem value={""}>
             <Translate id="projectSettings.language.semanticDomainsDefault" />
           </MenuItem>
-          {allSemDomWritingSystems.map((ws) => (
+          {semDomWritingSystems.map((ws) => (
             <MenuItem key={ws.bcp47} value={ws.bcp47}>
               {`${ws.bcp47} (${ws.name})`}
             </MenuItem>
