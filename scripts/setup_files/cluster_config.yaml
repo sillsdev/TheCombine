@@ -4,7 +4,6 @@ clusters:
     - cert-manager
     - nginx-ingress-controller
   rancher:
-    - cert-manager
     - rancher-ui
 
 # Specify how each chart is to be installed.  The "repo" key specified which
