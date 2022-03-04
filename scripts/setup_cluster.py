@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 from typing import Any, Dict, List
 
-from enumtypes import ExitStatus, HelmAction
+from scripts.enum_types import ExitStatus, HelmAction
 from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
 
@@ -66,11 +66,11 @@ def main() -> None:
         if repo_spec["name"] not in curr_repo_list:
             run_cmd(
                 ["helm", "repo", "add", repo_spec["name"], repo_spec["url"]],
-                print_output=args.debug,
+                print_output=args.verbose,
             )
             repo_added = True
     if repo_added:
-        run_cmd(["helm", "repo", "update"], print_output=args.debug)
+        run_cmd(["helm", "repo", "update"], print_output=args.verbose)
 
     # List current charts
     chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
@@ -100,7 +100,7 @@ def main() -> None:
         )
         if "options" in chart_spec:
             helm_cmd.extend(chart_spec["options"])
-        run_cmd(helm_cmd, print_output=args.debug)
+        run_cmd(helm_cmd, print_output=args.verbose)
 
 
 if __name__ == "__main__":

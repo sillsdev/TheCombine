@@ -25,7 +25,7 @@ import sys
 import tempfile
 from typing import Any, Dict, List, Optional
 
-from enumtypes import ExitStatus, HelmAction
+from scripts.enum_types import ExitStatus, HelmAction
 from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
 
@@ -56,19 +56,22 @@ def parse_args() -> argparse.Namespace:
         dest="dry_run",
     )
     parser.add_argument(
-        "--image-tag",
-        help="Tag for the container images to be installed for The Combine.",
-        dest="image_tag",
-    )
-    parser.add_argument(
         "--profile",
         "-p",
         help="Profile name for the target. "
         "If not specified, the profile will be read from the config file.",
     )
     parser.add_argument(
-        "--target",
+        "--repo", "-r", help="Push images to the specified Docker image repository."
+    )
+    parser.add_argument(
+        "--tag",
         "-t",
+        help="Tag for the container images to be installed for The Combine.",
+        dest="image_tag",
+    )
+    parser.add_argument(
+        "--target",
         help="Target system where The Combine is to be installed.",
     )
     # Arguments passed to the helm install command
@@ -123,14 +126,25 @@ def get_installed_charts(helm_opts: List[str], helm_namespace: str) -> List[str]
     return chart_list
 
 
-def main() -> None:
-    args = parse_args()
-    if args.target is None:
-        target = input("Enter the target name:")
+def get_target(config: Dict[str, Any], preset: Optional[str]) -> str:
+    if preset is None:
+        print("Available targets:")
+        for key in config["targets"]:
+            print(f"   {key}")
+        target = input("Enter the target name (<Enter> to exit):")
         if not target:
             sys.exit(ExitStatus.SUCCESS.value)
     else:
-        target = args.target
+        return preset
+    return target
+
+def main() -> None:
+    args = parse_args()
+
+    with open(args.config) as file:
+        config: Dict[str, Any] = yaml.safe_load(file)
+
+    target = get_target(config, args.target)
 
     if args.image_tag is None:
         image_tag = input("Enter image tag to install:")
@@ -138,9 +152,6 @@ def main() -> None:
             sys.exit(ExitStatus.SUCCESS.value)
     else:
         image_tag = args.image_tag
-
-    with open(args.config) as file:
-        config: Dict[str, Any] = yaml.safe_load(file)
 
     if target not in config["targets"]:
         print(f"Cannot find configuration for {target}")
@@ -158,7 +169,9 @@ def main() -> None:
     helm_opts = get_helm_opts(args)
 
     # create list of target specific variable values
-    target_vars: List[str] = [f"global.serverName={target}", f"global.imageTag={image_tag}"]
+    target_vars: List[str] = [f"global.serverName={this_config['serverName']}", f"global.imageTag={image_tag}"]
+    if args.repo:
+        target_vars.append(f"global.imageRegistry={args.repo}")
 
     addl_configs = []
     if args.values:
@@ -252,7 +265,7 @@ def main() -> None:
             # so the kubeconfig and context arguments are not passed to the
             # helm command.
             run_cmd(["helm", "dependency", "update", str(chart_dir)], print_output=True)
-            if args.debug:
+            if args.verbose:
                 print(f"Helm command: {helm_install_cmd}")
             run_cmd(helm_install_cmd, print_output=True)
 

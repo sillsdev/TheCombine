@@ -63,6 +63,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+
+def run(cmd: str) -> None:
+    """Print a command and run it"""
+    print(cmd)
+    os.system(cmd)
+
+
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
@@ -81,9 +88,9 @@ def main() -> None:
     for spec in build_specs:
         os.chdir(spec.dir)
         image_name = get_image_name(args.repo, spec.name, args.tag)
-        os.system(f"{build_cmd} build -t {image_name} -f Dockerfile .")
+        run(f"{build_cmd} build -t {image_name} -f Dockerfile .")
         if args.repo is not None:
-            os.system(f"{build_cmd} push {image_name}")
+            run(f"{build_cmd} push {image_name}")
 
 
 if __name__ == "__main__":

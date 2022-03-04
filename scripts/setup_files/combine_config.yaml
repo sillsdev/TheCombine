@@ -11,18 +11,23 @@
 #            helm `--set` option.
 targets:
   localhost:
+    serverName: thecombine.local
     profile: dev
     override:
       frontend:
         configCaptchaRequired: "true"
         configCaptchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
-  nuc1.thecombine.app:
+  nuc1:
+    serverName: nuc1.thecombine.app
     profile: nuc
-  nuc2.thecombine.app:
+  nuc2:
+    serverName: nuc2.thecombine.app
     profile: nuc
-  qa-kube.thecombine.app:
+  qa:
+    serverName: qa-kube.thecombine.app
     profile: staging
-  thecombine.app:
+  prod:
+    serverName: thecombine.app
     profile: prod
     override:
       frontend:
