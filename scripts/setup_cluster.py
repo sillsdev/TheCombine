@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 from typing import Any, Dict, List
 
-from scripts.enum_types import ExitStatus, HelmAction
+from enum_types import ExitStatus, HelmAction
 from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
 import yaml
 
