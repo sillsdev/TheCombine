@@ -7,39 +7,10 @@ import {
   treeViewReducer,
   defaultState,
   TreeViewState,
-  createDomains,
 } from "components/TreeView/TreeViewReducer";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
 describe("Test the TreeViewReducer", () => {
-  it("Creates a SemanticDomain from a JSON string using createDomains", () => {
-    const parent = {
-      name: "Foo",
-      id: "x",
-      description: "foo description",
-      questions: [],
-    };
-    const subdomains = [
-      new TreeSemanticDomain("Bar", "5.1"),
-      new TreeSemanticDomain("Baz", "5.2"),
-    ];
-    const initialJson = [{ ...parent, subdomains }];
-    const expectedDomain = {
-      name: "",
-      id: "",
-      description: "",
-      subdomains: [
-        { ...parent, parentDomain: {}, subdomains: [...subdomains] },
-      ],
-      questions: [],
-    };
-    expectedDomain.subdomains[0].subdomains.map((value) => {
-      return { ...value, parentDomains: expectedDomain.subdomains[0] };
-    });
-    expectedDomain.subdomains[0].parentDomain = expectedDomain;
-    expect(createDomains(initialJson)).toEqual(expectedDomain);
-  });
-
   it("Returns defaultState when passed undefined", () => {
     expect(treeViewReducer(undefined, {} as TreeViewAction)).toEqual(
       defaultState
@@ -47,9 +18,7 @@ describe("Test the TreeViewReducer", () => {
   });
 
   it("Returns default state when reset action is passed", () => {
-    const action: StoreAction = {
-      type: StoreActionTypes.RESET,
-    };
+    const action: StoreAction = { type: StoreActionTypes.RESET };
 
     expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
   });
@@ -92,7 +61,7 @@ describe("Test the TreeViewReducer", () => {
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,
-        payload,
+        domain: payload,
       })
     ).toEqual({ ...defaultState, currentDomain: payload });
   });

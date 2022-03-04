@@ -72,6 +72,7 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
         onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
+        getContentAnchorEl={undefined}
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>

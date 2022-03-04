@@ -1,16 +1,20 @@
 import { LocalizeContextProps } from "react-localize-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import { Provider } from "react-redux";
+import renderer, {
+  ReactTestInstance,
+  ReactTestRenderer,
+} from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
-import { TreeView, TreeViewProps } from "components/TreeView/TreeViewComponent";
-import MockDomain from "components/TreeView/tests/MockSemanticDomain";
+import TreeView, { TreeViewProps } from "components/TreeView/TreeViewComponent";
+import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
+import mockMap, {
+  jsonDomain as mockDomain,
+} from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/project";
 
 var treeMaster: ReactTestRenderer;
-var treeHandle: TreeView;
-
-const RETURN_MOCK = jest.fn();
-const NAVIGATE_MOCK = jest.fn();
+var treeHandle: ReactTestInstance;
 
 // Mock out Zoom to avoid issues with portals
 jest.mock("@material-ui/core", () => {
@@ -21,73 +25,40 @@ jest.mock("@material-ui/core", () => {
   };
 });
 
-// Mock createDomains
-jest.mock("components/TreeView/TreeViewReducer", () => {
-  const realReducer = jest.requireActual("components/TreeView/TreeViewReducer");
-  return {
-    ...realReducer,
-    createDomains: () => {
-      return { currentDomain: MockDomain };
-    },
-  };
+const mockStore = configureMockStore()({
+  treeViewState: {
+    ...treeViewState,
+    currentDomain: mockMap[mockDomain.id],
+    domainMap: mockMap,
+  },
+  currentProjectState: {
+    project: { semDomWritingSystem: newWritingSystem() },
+  },
 });
 
 beforeAll(() => {
   createTree();
 });
 
-beforeEach(() => {
-  RETURN_MOCK.mockClear();
-  NAVIGATE_MOCK.mockClear();
-});
-
 describe("TreeView", () => {
-  it("Constructs correctly to match snapshot", () => {
+  it("Renders without crashing", () => {
     createTree();
-    snapTest();
-  });
-
-  // This assumes MockDomain was used in createTree() below and MockDomain.name !== ""
-  it("Navigates to .currentDomain in construction", () => {
-    createTree();
-    expect(NAVIGATE_MOCK).toHaveBeenCalledTimes(1);
-    expect(NAVIGATE_MOCK).toHaveBeenCalledWith(MockDomain);
-  });
-
-  it("Sets a new domain upon navigation", async () => {
-    const newDom = new TreeSemanticDomain("test", "test");
-    newDom.description = "super testy";
-
-    await treeHandle.animate(newDom);
-    expect(NAVIGATE_MOCK).toHaveBeenCalledWith(newDom);
-  });
-
-  it("Returns control to caller when the same semantic domain is passed in", async () => {
-    await treeHandle.animate(MockDomain);
-    expect(RETURN_MOCK).toHaveBeenCalledTimes(1);
+    expect(treeHandle).toBeTruthy();
   });
 });
 
-const treeViewProps: TreeViewProps = {
-  semDomWritingSystem: newWritingSystem(),
-  currentDomain: MockDomain,
-  returnControlToCaller: RETURN_MOCK,
-  navigateTree: NAVIGATE_MOCK,
-};
-
+const treeViewProps: TreeViewProps = { returnControlToCaller: jest.fn() };
 const localizeProps = {
   activeLanguage: { code: "" },
+  translate: (() => "TranslatedString") as LocalizeContextProps["translate"],
 } as LocalizeContextProps;
-
 function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeView {...treeViewProps} {...localizeProps} />
+      <Provider store={mockStore}>
+        <TreeView {...treeViewProps} {...localizeProps} />
+      </Provider>
     );
   });
   treeHandle = treeMaster.root.findByType(TreeView).instance;
-}
-
-function snapTest(): void {
-  expect(treeMaster.toJSON()).toMatchSnapshot();
 }

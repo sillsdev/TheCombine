@@ -2,7 +2,7 @@ import { Flag as FlagFilled, FlagOutlined } from "@material-ui/icons";
 import React, { ReactElement, useEffect, useState } from "react";
 
 import { Flag } from "api/models";
-import EditTextDialog from "components/Buttons/EditTextDialog";
+import DeleteEditTextDialog from "components/Buttons/DeleteEditTextDialog";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { themeColors } from "types/theme";
 
@@ -60,18 +60,17 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         side="left"
       />
       {props.updateFlag ? (
-        <EditTextDialog
+        <DeleteEditTextDialog
           open={open}
           text={props.flag.text}
           titleId="mergeDups.flags.edit"
           close={() => setOpen(false)}
           updateText={updateFlag}
-          onCancel={removeFlag}
-          buttonIdCancel="flag-remove"
-          buttonIdConfirm="flag-save"
-          buttonTextIdCancel="mergeDups.flags.remove"
-          buttonTextIdConfirm="mergeDups.flags.save"
-          allowNoChangeSave
+          onDelete={removeFlag}
+          buttonIdDelete="flag-remove"
+          buttonIdSave="flag-save"
+          buttonTextIdDelete="mergeDups.flags.remove"
+          buttonTextIdSave="mergeDups.flags.save"
         />
       ) : null}
     </React.Fragment>

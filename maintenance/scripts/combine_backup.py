@@ -41,7 +41,10 @@ def main() -> None:
 
     step.print("Make sure backend and database are available")
     wait_time = int(os.getenv("wait_time", 60))
-    if not wait_for_dependents(["database", "backend"], timeout=wait_time):
+    if not wait_for_dependents(
+        [CombineApp.Component.Database.value, CombineApp.Component.Backend.value],
+        timeout=wait_time,
+    ):
         print("Database or Backend are not available")
         sys.exit(1)
 
