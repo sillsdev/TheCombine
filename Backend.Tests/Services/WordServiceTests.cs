@@ -71,7 +71,7 @@ namespace Backend.Tests.Services
             oldSense.Definitions.Add(Util.RandomDefinition());
             oldSense.Glosses.Add(Util.RandomGloss());
             oldWord.Senses.Add(oldSense);
-            oldWord = _wordRepo.Create(oldWord).Result;
+            _ = _wordRepo.Create(oldWord).Result;
 
             var isUnique = _wordService.WordIsUnique(newWord).Result;
             Assert.That(isUnique, Is.False);
@@ -143,7 +143,7 @@ namespace Backend.Tests.Services
             newWord.Senses = new List<Sense> { emptySense.Clone() };
             emptySense.SemanticDomains.Add(Util.RandomSemanticDomain());
             oldWord.Senses.Add(emptySense);
-            oldWord = _wordRepo.Create(oldWord).Result;
+            _ = _wordRepo.Create(oldWord).Result;
 
             var isUnique = _wordService.WordIsUnique(newWord).Result;
             Assert.That(isUnique, Is.False);
