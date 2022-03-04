@@ -12,7 +12,7 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { newGloss, newSemanticDomain, newSense, newWord } from "types/word";
-import { langCode } from "types/writingSystem";
+import { Bcp47Code } from "types/writingSystem";
 
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
@@ -33,9 +33,9 @@ const mockStore = configureMockStore([thunk])();
 
 // Dummy strings, glosses, and domains.
 const commonGuid = "mockGuid";
-const gloss0 = newGloss("gloss", langCode.En);
-const gloss0Es = newGloss("glossario", langCode.Es);
-const gloss1 = newGloss("infinite", langCode.En);
+const gloss0 = newGloss("gloss", Bcp47Code.En);
+const gloss0Es = newGloss("glossario", Bcp47Code.Es);
+const gloss1 = newGloss("infinite", Bcp47Code.En);
 const domain0 = newSemanticDomain("1", "Universe");
 const domain1 = newSemanticDomain("8.3.3.2.1", "Shadow");
 

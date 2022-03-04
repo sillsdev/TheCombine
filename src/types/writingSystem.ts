@@ -1,6 +1,6 @@
 import { WritingSystem } from "api/models";
 
-export enum langCode {
+export enum Bcp47Code {
   Default = "en",
   En = "en",
   Es = "es",
@@ -8,25 +8,25 @@ export enum langCode {
 }
 
 const writingSystem = {
-  [langCode.En]: newWritingSystem(langCode.En, "English"),
-  [langCode.Es]: newWritingSystem(langCode.Es, "Español"),
-  [langCode.Fr]: newWritingSystem(langCode.Es, "Français"),
+  [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
+  [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"),
+  [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Es, "Français"),
 };
 
-export const defaultWritingSystem = writingSystem[langCode.Default];
+export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
 
 // This list should cover the languages of resources/translations.json
 export const uiWritingSystems = [
-  writingSystem[langCode.En],
-  writingSystem[langCode.Es],
-  writingSystem[langCode.Fr],
+  writingSystem[Bcp47Code.En],
+  writingSystem[Bcp47Code.Es],
+  writingSystem[Bcp47Code.Fr],
 ];
 
 // This list should cover the domain data in resources/semantic-domains/
 export const semDomWritingSystems = [
-  writingSystem[langCode.En],
-  writingSystem[langCode.Es],
-  writingSystem[langCode.Fr],
+  writingSystem[Bcp47Code.En],
+  writingSystem[Bcp47Code.Es],
+  writingSystem[Bcp47Code.Fr],
 ];
 
 export function newWritingSystem(

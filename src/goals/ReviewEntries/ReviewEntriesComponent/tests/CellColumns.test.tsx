@@ -8,9 +8,9 @@ import {
   newGloss,
   newSemanticDomain,
 } from "types/word";
-import { langCode } from "types/writingSystem";
+import { Bcp47Code } from "types/writingSystem";
 
-const LANG = langCode.En;
+const LANG = Bcp47Code.En;
 const DEFINITION = newDefinition("groovy", LANG);
 const GLOSS = newGloss("hoovy", LANG);
 const DOMAIN = newSemanticDomain("0.1", "Person");

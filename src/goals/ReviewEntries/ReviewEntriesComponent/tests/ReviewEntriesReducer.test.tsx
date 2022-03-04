@@ -6,7 +6,7 @@ import {
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 import { newSemanticDomain } from "types/word";
-import { langCode } from "types/writingSystem";
+import { Bcp47Code } from "types/writingSystem";
 
 const mockState = {
   ...defaultState,
@@ -20,7 +20,7 @@ const reviewEntriesWord: ReviewEntriesWord = {
     {
       guid: "1",
       definitions: [],
-      glosses: [{ def: "bupBUP", language: langCode.En }],
+      glosses: [{ def: "bupBUP", language: Bcp47Code.En }],
       domains: [
         newSemanticDomain("number", "domain"),
         newSemanticDomain("number2", "domain2"),
@@ -37,7 +37,7 @@ const result: ReviewEntriesWord = {
     {
       guid: "1",
       definitions: [],
-      glosses: [{ def: "bupBUP", language: langCode.En }],
+      glosses: [{ def: "bupBUP", language: Bcp47Code.En }],
       domains: [
         newSemanticDomain("number", "domain"),
         newSemanticDomain("number2", "domain2"),
