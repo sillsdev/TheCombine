@@ -95,10 +95,12 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - [Docker Desktop](#docker-desktop): Use Docker Desktop to create a local Kubernetes cluster to test _The Combine_
      when running in containers. (_Optional. Only needed for running under Kubernetes._)
    - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl): Tool for managing a Kubernetes cluster. (_Optional.
-     Only needed for running under Kubernetes._)
+     Only needed for running under Kubernetes._) On Windows, if using [Chocolatey][chocolatey]:
+     `choco install kubernetes-cli`.
    - [Helm Client](https://helm.sh/docs/intro/install/): `helm` is used to install kubernetes packages, known as
      _charts_. _The Combine_ is deployed to Kubernetes clusters as a set of charts. It also depends on external charts
-     that are installed with `helm`. (_Optional. Only needed for running under Kubernetes._)
+     that are installed with `helm`. (_Optional. Only needed for running under Kubernetes._) On Windows, if using
+     [Chocolatey][chocolatey]: `choco install kubernetes-helm`.
    - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
      `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
@@ -260,7 +262,7 @@ To install _Docker Desktop for Linux_,
 
 This section describes how to create a local Kubernetes cluster using _Docker Desktop_ and how to build and deploy _The
 Combine_ to the cluster. Unless specified otherwise, all of the commands below are run from _The Combine's_ project
-directory and are run in an activated Python virtual environment. (See the [Python 3](#python-3) section to create the
+directory and are run in an activated Python virtual environment. (See the [Python](#python) section to create the
 virtual environment.)
 
 ### Setup of Docker Desktop
@@ -339,8 +341,6 @@ Setup the following environment variables:
 - COMBINE_SMTP_PASSWORD
 
 These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
-If you are a member of the development team and need the environment variable values, send a request explaining your
-need to [admin@thecombine.app](mailto:admin@thecombine.app).
 
 ### Install/Update _The Combine_
 
