@@ -138,6 +138,7 @@ def get_target(config: Dict[str, Any], preset: Optional[str]) -> str:
         return preset
     return target
 
+
 def main() -> None:
     args = parse_args()
 
@@ -169,7 +170,10 @@ def main() -> None:
     helm_opts = get_helm_opts(args)
 
     # create list of target specific variable values
-    target_vars: List[str] = [f"global.serverName={this_config['serverName']}", f"global.imageTag={image_tag}"]
+    target_vars: List[str] = [
+        f"global.serverName={this_config['serverName']}",
+        f"global.imageTag={image_tag}",
+    ]
     if args.repo:
         target_vars.append(f"global.imageRegistry={args.repo}")
 

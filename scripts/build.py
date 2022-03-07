@@ -63,7 +63,6 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-
 def run(cmd: str) -> None:
     """Print a command and run it"""
     print(cmd)

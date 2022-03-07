@@ -50,7 +50,7 @@ def add_namespace(namespace: str) -> bool:
 def setup_helm_opts(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     Add commandline arguments that are shared between scripts calling helm.
-    
+
     Sets up '--verbose' as the equivalent of '--debug'.
     """
     parser.add_argument(
@@ -58,7 +58,8 @@ def setup_helm_opts(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         help="Context in kubectl configuration file to be used.",
     )
     parser.add_argument(
-        "--verbose", "--debug",
+        "--verbose",
+        "--debug",
         action="store_true",
         help="Enable verbose output for helm commands.",
     )
