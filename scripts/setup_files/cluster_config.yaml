@@ -38,7 +38,7 @@ rancher-ui:
   repo:
     name: rancher-latest
     url: https://releases.rancher.com/server-charts/latest
-  chart:
+  chart:  # helm -n cattle-system upgrade rancher rancher-latest/rancher --version=2.6.3 --set hostname=rancher.local --set ingress.extraAnnotations.'kubernetes\.io/ingress\.class'=nginx --wait --debug
     name: rancher
     reference: rancher-latest/rancher
     namespace: cattle-system
@@ -47,6 +47,6 @@ rancher-ui:
       - --set
       - hostname=rancher.local
       - --set
-      - bootstrapPassword=IShouldHaveChangedThePassword
+      - "ingress.extraAnnotations.'kubernetes\.io/ingress\.class'=nginx"
       - --wait
       - --debug
