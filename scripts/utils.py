@@ -60,6 +60,7 @@ def setup_helm_opts(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--verbose",
         "--debug",
+        "-v",
         action="store_true",
         help="Enable verbose output for helm commands.",
     )
