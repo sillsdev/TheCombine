@@ -12,7 +12,7 @@ import argparse
 from dataclasses import dataclass
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, Optional
 
 
 @dataclass(frozen=True)
@@ -40,6 +40,12 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "component",
+        choices=["all", "frontend", "backend", "maintenance"],
+        default="all",
+        help="Combine component to build.",
     )
     parser.add_argument(
         "--tag",
@@ -78,13 +84,19 @@ def main() -> None:
     else:
         build_cmd = "docker"
 
-    build_specs: List[BuildSpec] = [
-        BuildSpec(project_dir / "Backend", "backend"),
-        BuildSpec(project_dir / "maintenance", "maint"),
-        BuildSpec(project_dir, "frontend"),
-    ]
+    if args.component == "all":
+        to_do = [ "backend", "frontend", "maintenance" ]
+    else:
+        to_do = [ args.component ]
 
-    for spec in build_specs:
+    build_specs: Dict[str, BuildSpec] = {
+        "backend": BuildSpec(project_dir / "Backend", "backend"),
+        "maintenance": BuildSpec(project_dir / "maintenance", "maint"),
+        "frontend": BuildSpec(project_dir, "frontend"),
+    }
+
+    for component in to_do:
+        spec = build_specs[component]
         os.chdir(spec.dir)
         image_name = get_image_name(args.repo, spec.name, args.tag)
         run(f"{build_cmd} build -t {image_name} -f Dockerfile .")
