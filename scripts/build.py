@@ -85,9 +85,9 @@ def main() -> None:
         build_cmd = "docker"
 
     if args.component == "all":
-        to_do = [ "backend", "frontend", "maintenance" ]
+        to_do = ["backend", "frontend", "maintenance"]
     else:
-        to_do = [ args.component ]
+        to_do = [args.component]
 
     build_specs: Dict[str, BuildSpec] = {
         "backend": BuildSpec(project_dir / "Backend", "backend"),
