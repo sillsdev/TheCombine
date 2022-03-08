@@ -98,6 +98,7 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
     Returns true if one or more secrets were written to output_file.
     """
     secrets_written = False
+    missing_env_vars = []
     with open(output_file, "w") as secret_file:
         secret_file.write("---\n")
         secret_file.write("global:\n")
@@ -107,12 +108,14 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
                 secret_file.write(f'  {item["config_item"]}: "{secret_value}"\n')
                 secrets_written = True
             else:
-                response = input(
-                    f"*** WARNING: Required Environment Variable {item['env_var']} not set."
-                    " Continue?(y/N)"
-                )
-                if response.upper() != "Y":
-                    sys.exit(ExitStatus.FAILURE.value)
+                missing_env_vars.append(item['env_var'])
+    if len(missing_env_vars) > 0:
+        print("The following environment variables are not defined:")
+        print(", ".join(missing_env_vars))
+        response = input("Continue?(y/N)")
+        if response.upper() != "Y":
+            sys.exit(ExitStatus.FAILURE.value)
+
     return secrets_written
 
 
