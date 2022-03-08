@@ -2,6 +2,7 @@
 """Install the pre-requisite helm charts for the Combine on a k8s cluster."""
 
 import argparse
+import os
 from pathlib import Path
 import sys
 from typing import Any, Dict, List
@@ -100,7 +101,10 @@ def main() -> None:
         )
         if "options" in chart_spec:
             helm_cmd.extend(chart_spec["options"])
-        run_cmd(helm_cmd, print_output=args.verbose)
+        helm_cmd_str = " ".join(helm_cmd)
+        if args.verbose:
+            print(helm_cmd_str)
+        os.system(helm_cmd_str)
 
 
 if __name__ == "__main__":
