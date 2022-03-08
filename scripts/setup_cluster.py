@@ -107,14 +107,14 @@ def main() -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             if "override" in chart_spec:
                 override_file = Path(temp_dir).resolve() / "overrides.yaml"
-                with open(override_file, 'w') as file:
+                with open(override_file, "w") as file:
                     yaml.dump(chart_spec["override"], file)
                 helm_cmd.extend(["-f", str(override_file)])
             if args.verbose:
                 print(helm_cmd)
             # Run with os.system so that there is feedback on stdout/stderr while the
             # command is running
-            os.system(' '.join(helm_cmd))
+            os.system(" ".join(helm_cmd))
 
 
 if __name__ == "__main__":
