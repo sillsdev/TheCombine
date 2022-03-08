@@ -5,6 +5,7 @@ import argparse
 import os
 from pathlib import Path
 import sys
+import tempfile
 from typing import Any, Dict, List
 
 from enum_types import ExitStatus, HelmAction
@@ -99,12 +100,21 @@ def main() -> None:
                 chart_spec["reference"],
             ]
         )
-        if "options" in chart_spec:
-            helm_cmd.extend(chart_spec["options"])
-        helm_cmd_str = " ".join(helm_cmd)
-        if args.verbose:
-            print(helm_cmd_str)
-        os.system(helm_cmd_str)
+        if "version" in chart_spec:
+            helm_cmd.extend(["--version", chart_spec["version"]])
+        if "wait" in chart_spec and chart_spec["wait"]:
+            helm_cmd.append("--wait")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            if "override" in chart_spec:
+                override_file = Path(temp_dir).resolve() / "overrides.yaml"
+                with open(override_file, 'w') as file:
+                    yaml.dump(chart_spec["override"], file)
+                helm_cmd.extend(["-f", str(override_file)])
+            if args.verbose:
+                print(helm_cmd)
+            # Run with os.system so that there is feedback on stdout/stderr while the
+            # command is running
+            os.system(' '.join(helm_cmd))
 
 
 if __name__ == "__main__":
