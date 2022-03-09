@@ -137,7 +137,7 @@ def get_target(config: Dict[str, Any]) -> str:
         print(f"   {key}")
     try:
         return input("Enter the target name (Ctrl-C to cancel):")
-    except KeyboardInterrupt as err:
+    except KeyboardInterrupt:
         print("Exiting.")
         sys.exit(ExitStatus.FAILURE.value)
 
@@ -151,8 +151,6 @@ def main() -> None:
     target = args.target
     while target not in config["targets"]:
         target = get_target(config)
-        if target == "exit":
-            sys.exit(ExitStatus.SUCCESS.value)
 
     this_config = config["targets"][target]
 
