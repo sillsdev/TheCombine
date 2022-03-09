@@ -108,7 +108,7 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
                 secret_file.write(f'  {item["config_item"]}: "{secret_value}"\n')
                 secrets_written = True
             else:
-                missing_env_vars.append(item['env_var'])
+                missing_env_vars.append(item["env_var"])
     if len(missing_env_vars) > 0:
         print("The following environment variables are not defined:")
         print(", ".join(missing_env_vars))
@@ -271,10 +271,12 @@ def main() -> None:
             # Note that this operation is performed on the local helm charts
             # so the kubeconfig and context arguments are not passed to the
             # helm command.
-            run_cmd(["helm", "dependency", "update", str(chart_dir)], print_output=True)
-            if args.verbose:
-                print(f"Helm command: {helm_install_cmd}")
-            run_cmd(helm_install_cmd, print_output=True)
+            run_cmd(
+                ["helm", "dependency", "update", str(chart_dir)],
+                print_cmd=args.verbose,
+                print_output=True,
+            )
+            run_cmd(helm_install_cmd, print_cmd=args.verbose, print_output=True)
 
 
 if __name__ == "__main__":

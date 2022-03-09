@@ -12,9 +12,12 @@ def run_cmd(
     cmd: List[str],
     *,
     check_results: bool = True,
+    print_cmd: bool = False,
     print_output: bool = False,
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
+    if print_cmd:
+        print(f"Running: {cmd}")
     try:
         process_results = subprocess.run(
             cmd,

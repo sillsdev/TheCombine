@@ -56,7 +56,9 @@ def main() -> None:
     # are not affected by the helm options
     this_cluster: List[str] = config["clusters"][args.type]
     curr_repo_list = []
-    helm_cmd_results = run_cmd(["helm", "repo", "list", "-o", "yaml"], check_results=False)
+    helm_cmd_results = run_cmd(
+        ["helm", "repo", "list", "-o", "yaml"], print_cmd=args.verbose, check_results=False
+    )
     if helm_cmd_results.returncode == 0:
         curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
         for repo in curr_helm_repos:
@@ -68,11 +70,12 @@ def main() -> None:
         if repo_spec["name"] not in curr_repo_list:
             run_cmd(
                 ["helm", "repo", "add", repo_spec["name"], repo_spec["url"]],
+                print_cmd=args.verbose,
                 print_output=args.verbose,
             )
             repo_added = True
     if repo_added:
-        run_cmd(["helm", "repo", "update"], print_output=args.verbose)
+        run_cmd(["helm", "repo", "update"], print_cmd=args.verbose, print_output=args.verbose)
 
     # List current charts
     chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
@@ -110,11 +113,12 @@ def main() -> None:
                 with open(override_file, "w") as file:
                     yaml.dump(chart_spec["override"], file)
                 helm_cmd.extend(["-f", str(override_file)])
+            helm_cmd_str = " ".join(helm_cmd)
             if args.verbose:
-                print(helm_cmd)
+                print(f"Running: {helm_cmd_str}")
             # Run with os.system so that there is feedback on stdout/stderr while the
             # command is running
-            os.system(" ".join(helm_cmd))
+            os.system(helm_cmd_str)
 
 
 if __name__ == "__main__":
