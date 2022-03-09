@@ -50,7 +50,7 @@ def add_namespace(namespace: str) -> bool:
     return False
 
 
-def setup_helm_opts(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+def add_helm_opts(parser: argparse.ArgumentParser) -> None:
     """
     Add commandline arguments that are shared between scripts calling helm.
 
@@ -71,7 +71,6 @@ def setup_helm_opts(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--kubeconfig",
         help="Specify the kubectl configuration file to be used.",
     )
-    return parser
 
 
 def get_helm_opts(args: argparse.Namespace) -> List[str]:

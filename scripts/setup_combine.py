@@ -26,7 +26,7 @@ import tempfile
 from typing import Any, Dict, List, Optional
 
 from enum_types import ExitStatus, HelmAction
-from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
+from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
 import yaml
 
 prog_dir = Path(__file__).resolve().parent
@@ -39,7 +39,7 @@ def parse_args() -> argparse.Namespace:
         description="Generate Helm Charts for The Combine.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser = setup_helm_opts(parser)
+    add_helm_opts(parser)
     parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
@@ -67,11 +67,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--tag",
         "-t",
+        default="latest",
         help="Tag for the container images to be installed for The Combine.",
         dest="image_tag",
     )
     parser.add_argument(
         "--target",
+        default="localhost",
         help="Target system where The Combine is to be installed.",
     )
     # Arguments passed to the helm install command
@@ -98,7 +100,7 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
     Returns true if one or more secrets were written to output_file.
     """
     secrets_written = False
-    missing_env_vars = []
+    missing_env_vars: List[str] = []
     with open(output_file, "w") as secret_file:
         secret_file.write("---\n")
         secret_file.write("global:\n")
@@ -129,17 +131,15 @@ def get_installed_charts(helm_opts: List[str], helm_namespace: str) -> List[str]
     return chart_list
 
 
-def get_target(config: Dict[str, Any], preset: Optional[str]) -> str:
-    if preset is None:
-        print("Available targets:")
-        for key in config["targets"]:
-            print(f"   {key}")
-        target = input("Enter the target name (<Enter> to exit):")
-        if not target:
-            sys.exit(ExitStatus.SUCCESS.value)
-    else:
-        return preset
-    return target
+def get_target(config: Dict[str, Any]) -> str:
+    print("Available targets:")
+    for key in config["targets"]:
+        print(f"   {key}")
+    try:
+        return input("Enter the target name (Ctrl-C to cancel):")
+    except KeyboardInterrupt as err:
+        print("Exiting.")
+        sys.exit(ExitStatus.FAILURE.value)
 
 
 def main() -> None:
@@ -148,18 +148,11 @@ def main() -> None:
     with open(args.config) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
 
-    target = get_target(config, args.target)
-
-    if args.image_tag is None:
-        image_tag = input("Enter image tag to install:")
-        if not image_tag:
+    target = args.target
+    while target not in config["targets"]:
+        target = get_target(config)
+        if target == "exit":
             sys.exit(ExitStatus.SUCCESS.value)
-    else:
-        image_tag = args.image_tag
-
-    if target not in config["targets"]:
-        print(f"Cannot find configuration for {target}")
-        sys.exit(ExitStatus.FAILURE.value)
 
     this_config = config["targets"][target]
 
@@ -173,14 +166,14 @@ def main() -> None:
     helm_opts = get_helm_opts(args)
 
     # create list of target specific variable values
-    target_vars: List[str] = [
+    target_vars = [
         f"global.serverName={this_config['serverName']}",
-        f"global.imageTag={image_tag}",
+        f"global.imageTag={args.image_tag}",
     ]
     if args.repo:
         target_vars.append(f"global.imageRegistry={args.repo}")
 
-    addl_configs = []
+    addl_configs: List[str] = []
     if args.values:
         for filepath in args.values:
             addl_configs.extend(["-f", filepath])
@@ -201,7 +194,7 @@ def main() -> None:
             # create the chart namespace if it does not exist
             chart_namespace = config["charts"][chart]["namespace"]
             if add_namespace(chart_namespace):
-                installed_charts = []
+                installed_charts: List[str] = []
             else:
                 # get list of charts in target namespace
                 installed_charts = get_installed_charts(helm_opts, chart_namespace)
@@ -211,7 +204,11 @@ def main() -> None:
             if chart in installed_charts:
                 if args.clean:
                     # delete existing chart if --clean specified
-                    run_cmd(["helm"] + helm_opts + ["delete", chart], print_output=True)
+                    run_cmd(
+                        ["helm"] + helm_opts + ["delete", chart],
+                        print_cmd=args.verbose,
+                        print_output=True,
+                    )
                 else:
                     helm_action = HelmAction.UPGRADE
 

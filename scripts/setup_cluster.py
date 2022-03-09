@@ -9,7 +9,7 @@ import tempfile
 from typing import Any, Dict, List
 
 from enum_types import ExitStatus, HelmAction
-from utils import add_namespace, get_helm_opts, run_cmd, setup_helm_opts
+from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
 import yaml
 
 prog_dir = Path(__file__).resolve().parent
@@ -22,7 +22,7 @@ def parse_args() -> argparse.Namespace:
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser = setup_helm_opts(parser)
+    add_helm_opts(parser)
     parser.add_argument(
         "--type",
         "-t",
