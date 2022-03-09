@@ -481,16 +481,9 @@ _TheCombine_'s project directory. (See the [Python](#python) section to create t
 python scripts/build.py
 ```
 
-The `build.py` script takes the following arguments:
-
-| argument | use                                                                   |
-| -------- | --------------------------------------------------------------------- |
-| `--help` | Print script usage message                                            |
-| `--repo` | Tag the image with the specified repo and push the image to the repo. |
-| `--tag`  | Version tag for the created image.                                    |
-
 Notes:
 
+- Run with the `--help` option to see all available options.
 - If `--tag` is not used, the image will be untagged. When running or pulling an image with the tag `latest`, the
   newest, untagged image will be pulled.
 - `--repo` and `--tag` are not specified under normal development use.
@@ -529,7 +522,7 @@ The script will list available targets and prompt the user for the target system
 of _The Combine_ software to be loaded:
 
 ```console
-(venv) user@host:~/projects/combine$ python scripts/setup_combine.py
+$ python scripts/setup_combine.py
 Available targets:
    localhost
    nuc1
@@ -541,8 +534,6 @@ Enter image tag to install:latest
 Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "ingress-nginx" chart repository
 ...Successfully got an update from the "jetstack" chart repository
-...Successfully got an update from the "bitnami" chart repository
-...Successfully got an update from the "stable" chart repository
 Update Complete. ⎈Happy Helming!⎈
 Saving 2 charts
 Deleting outdated charts
