@@ -42,7 +42,7 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "component",
+        "--component",
         choices=["all", "frontend", "backend", "maintenance"],
         default="all",
         help="Combine component to build.",
