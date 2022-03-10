@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import history, { Path } from "browserHistory";
 import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
+import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/MergeDupContinueDialog";
 import { StoreState } from "types";
 import { GoalType } from "types/goals";
 import { goalTypeToGoal } from "types/goalUtilities";
@@ -15,16 +16,17 @@ export default function NextGoalScreen(): ReactElement {
   const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
 
   const dispatch = useDispatch();
-  function loadNextGoal() {
-    dispatch(asyncAddGoal(goalTypeToGoal(goal.goalType)));
-  }
-  function exit() {
-    history.push(Path.Goals);
+  function loadNextGoal(shouldContinue: boolean) {
+    if (shouldContinue) {
+      dispatch(asyncAddGoal(goalTypeToGoal(goal.goalType)));
+    } else {
+      history.push(Path.Goals);
+    }
   }
 
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      return <div />;
+      return <MergeDupContinueDialog onSelection={loadNextGoal} />;
     default:
       return <PageNotFound />;
   }
