@@ -27,7 +27,9 @@ export function MergeDupContinueDialog(
 
   return (
     <Dialog open={open}>
-      <DialogTitle>{"Continue merging?"}</DialogTitle>
+      <DialogTitle>
+        <Translate id="mergeDups.continueDialog.title" />
+      </DialogTitle>
       <DialogActions>
         <Button
           color="primary"
@@ -35,10 +37,10 @@ export function MergeDupContinueDialog(
           onClick={handleYes}
           autoFocus
         >
-          <Translate id="charInventory.dialog.yes" />
+          <Translate id="mergeDups.continueDialog.yes" />
         </Button>
         <Button color="secondary" variant="contained" onClick={handleNo}>
-          <Translate id="charInventory.dialog.no" />
+          <Translate id="mergeDups.continueDialog.no" />
         </Button>
       </DialogActions>
     </Dialog>
