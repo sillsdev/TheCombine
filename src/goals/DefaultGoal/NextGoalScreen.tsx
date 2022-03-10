@@ -6,25 +6,27 @@ import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/MergeDupContinueDialog";
 import { StoreState } from "types";
-import { GoalType } from "types/goals";
 import { goalTypeToGoal } from "types/goalUtilities";
+import { GoalType } from "types/goals";
 
 /**
  * Dialog for continuing to a new goal or returning to GoalTimeline.
  */
 export default function NextGoalScreen(): ReactElement {
-  const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
+  const goalType = useSelector(
+    (state: StoreState) => state.goalsState.previousGoalType
+  );
 
   const dispatch = useDispatch();
   function loadNextGoal(shouldContinue: boolean) {
     if (shouldContinue) {
-      dispatch(asyncAddGoal(goalTypeToGoal(goal.goalType)));
+      dispatch(asyncAddGoal(goalTypeToGoal(goalType)));
     } else {
       history.push(Path.Goals);
     }
   }
 
-  switch (goal.goalType) {
+  switch (goalType) {
     case GoalType.MergeDups:
       return <MergeDupContinueDialog onSelection={loadNextGoal} />;
     default:
