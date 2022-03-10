@@ -56,6 +56,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
    3. [Setup of Docker Desktop (all platforms)](#setup-of-docker-desktop-all-platforms)
+   4. [Install Kubernetes Tools](#install-kubernetes-tools)
 4. [Setup The Combine](#setup-the-combine)
    1. [Install Required Charts](#install-required-charts)
    2. [Install the Rancher User Interface](#install-the-rancher-user-interface)
@@ -502,6 +503,16 @@ Once _Docker Desktop_ has been installed, start it set it up as follows:
 (macOS / Windows Only) If you are on macOS or Windows without
 [WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
 allocated at least 4GB of Memory in Preferences | Resources.
+
+### Install Kubernetes Tools
+
+If the following tools were not installed with either _Rancher Desktop_ or _Docker Desktop_, install them from these
+links:
+
+1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-cli`
+2. [helm](https://helm.sh/docs/intro/install/)
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-helm`
 
 ## Setup The Combine
 
