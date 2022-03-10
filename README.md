@@ -425,10 +425,7 @@ python3 scripts/cleanup_local_repo.py
 
 ## Setup Local Kubernetes Cluster
 
-This section describes how to create a local Kubernetes cluster using _Rancher Desktop_ and how to build and deploy _The
-Combine_ to the cluster. Unless specified otherwise, all of the commands below are run from _The Combine's_ project
-directory and are run in an activated Python virtual environment. (See the [Python](#python) section to create the
-virtual environment.)
+This section describes how to create a local Kubernetes cluster using either _Rancher Desktop_ or _Docker Desktop_.
 
 ### Install Rancher Desktop
 
@@ -448,6 +445,66 @@ displayed,
 2. uncheck the _Enable Traefik_ checkbox (you do not need to wait until Kubernetes finishes loading).
 
 ![alt text](docs/images/rancher-desktop-prefs.png "Rancher Desktop Preferences")
+
+### Install Docker Desktop
+
+#### Docker Desktop for Windows/macOS
+
+Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
+
+#### Docker Desktop for Linux
+
+_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 21.04,
+21.10 and Debian distributions. As a result, it requires a few more steps to install and setup _Docker Desktop_.
+
+To install _Docker Desktop for Linux_,
+
+1. If you installed `docker` or `docker-compose` previously, remove them:
+
+   ```bash
+   sudo apt purge docker-ce docker-ce-cli containerd.io
+   sudo apt autoremove
+   if [ -L /usr/bin/docker-compose ] ; then sudo rm /usr/bin/docker-compose ; fi
+   if [ -x /usr/local/bin/docker-compose ] ; then sudo rm /usr/local/bin/docker-compose ; fi
+   ```
+
+2. Create the `docker` group if it does not exist already:
+
+   ```bash
+   sudo addgroup --system docker
+   ```
+
+3. Follow the installation instructions at <https://docs.docker.com/desktop/linux/> with the following caveats:
+
+   1. After you setup the Docker Repository, make sure that you run
+
+      ```bash
+      sudo apt update
+      ```
+
+   2. Note the section on _Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger
+      than the memory for the virtual machine. The current preview sets both sizes to 1/2 of the available memory so you
+      will need to adjust it. If `/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide
+      any error message. There is info in `/var/lib/syslog`, however.
+
+### Setup of Docker Desktop (all platforms)
+
+Once _Docker Desktop_ has been installed, start it set it up as follows:
+
+1. Click the gear icon in the upper right to open the settings dialog;
+2. Click on the _Kubernetes_ link on the left-hand side;
+3. Select _Enable Kubernetes_ and click _Apply & Restart_;
+4. Click _Install_ on the dialog that is displayed.
+
+(macOS / Windows Only) If you are on macOS or Windows without
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
+allocated at least 4GB of Memory in Preferences | Resources.
+
+## Setup The Combine
+
+This section describes how to build and deploy _The Combine_ to your Kubernetes cluster. Unless specified otherwise, all
+of the commands below are run from _The Combine's_ project directory and are run in an activated Python virtual
+environment. (See the [Python](#python) section to create the virtual environment.)
 
 ### Install Required Charts
 
@@ -484,6 +541,16 @@ python scripts/build.py
 Notes:
 
 - Run with the `--help` option to see all available options.
+- If you see errors like:
+
+  ```bash
+  => ERROR [internal] load metadata for docker.io/library/nginx:1.21        0.5s
+  => ERROR [internal] load metadata for docker.io/library/python:3.9        0.5s
+  => ERROR [internal] load metadata for docker.io/library/node:16           0.5s
+  ```
+
+  then you may need to be logged into [Docker Hub](https://hub.docker.io) with `docker login`.
+
 - If `--tag` is not used, the image will be untagged. When running or pulling an image with the tag `latest`, the
   newest, untagged image will be pulled.
 - `--repo` and `--tag` are not specified under normal development use.
