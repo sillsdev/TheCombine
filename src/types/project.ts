@@ -1,13 +1,6 @@
-import { AutocompleteSetting, Project, WritingSystem } from "api/models";
+import { AutocompleteSetting, Project } from "api/models";
+import { newWritingSystem } from "types/writingSystem";
 import { randomIntString } from "utilities";
-
-export function newWritingSystem(
-  bcp47 = "",
-  name = "",
-  font = ""
-): WritingSystem {
-  return { bcp47, name, font };
-}
 
 export function newProject(name = ""): Project {
   return {

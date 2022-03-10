@@ -18,6 +18,7 @@ import {
   simpleWord,
 } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
+import { Bcp47Code } from "types/writingSystem";
 
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),
@@ -124,7 +125,7 @@ describe("DataEntryTable", () => {
     const word = mockWord();
     word.senses = [];
     const gloss = "firstSense";
-    const language = "es";
+    const language = Bcp47Code.Es;
 
     const expectedSense = newSense(gloss, language, mockSemanticDomain);
     expectedSense.guid = expect.any(String);
@@ -142,7 +143,7 @@ describe("DataEntryTable", () => {
   it("adds a sense to a word that already has a sense", () => {
     const word = mockWord();
     const gloss = "newSense";
-    const language = "es";
+    const language = Bcp47Code.Es;
 
     const expectedSense = newSense(gloss, language, mockSemanticDomain);
     expectedSense.guid = expect.any(String);
@@ -163,7 +164,7 @@ describe("DataEntryTable", () => {
   it("adds a semantic domain to existing sense", () => {
     const word = mockWord();
     const gloss = "senseToBeModified";
-    const language = "fr";
+    const language = Bcp47Code.Fr;
     const sense = newSense(gloss, language);
     word.senses = [sense];
 
