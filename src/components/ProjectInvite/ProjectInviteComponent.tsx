@@ -3,10 +3,10 @@ import { RouteComponentProps } from "react-router-dom";
 
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
-import Register from "components/Login/RegisterPage/RegisterComponent";
+import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
 interface ProjectInviteDispatchProps {
-  register?: (
+  signUp?: (
     name: string,
     user: string,
     email: string,
@@ -76,11 +76,11 @@ export default class ProjectInvite extends React.Component<
 
   render() {
     const text = (
-      <Register
+      <SignUp
         inProgress={this.props.inProgress}
         success={this.props.success}
         failureMessage={this.props.failureMessage}
-        register={this.props.register}
+        signUp={this.props.signUp}
         reset={this.props.reset}
         returnToEmailInvite={this.validateLink}
       />

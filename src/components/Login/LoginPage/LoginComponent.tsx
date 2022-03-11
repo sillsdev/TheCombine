@@ -198,7 +198,7 @@ export default class Login extends React.Component<
                 </div>
               )}
 
-              {/* User Guide, Register, and Login buttons */}
+              {/* User Guide, Sign Up, and Login buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
                   <Button id={`${idAffix}-guide`} onClick={openUserGuide}>
@@ -208,12 +208,12 @@ export default class Login extends React.Component<
 
                 <Grid item xs={4} sm={3}>
                   <Button
-                    id={`${idAffix}-register`}
+                    id={`${idAffix}-signUp`}
                     onClick={() => {
-                      history.push(Path.Register);
+                      history.push(Path.SignUp);
                     }}
                   >
-                    <Translate id="login.register" />
+                    <Translate id="login.signUp" />
                   </Button>
                 </Grid>
 

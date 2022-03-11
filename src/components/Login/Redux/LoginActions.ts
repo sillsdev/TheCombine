@@ -54,48 +54,48 @@ export function logoutAndResetStore() {
   };
 }
 
-export function asyncRegister(
+export function asyncSignUp(
   name: string,
   username: string,
   email: string,
   password: string
 ) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(registerAttempt(username));
+    dispatch(signUpAttempt(username));
     // Create new user
     const user = newUser(name, username, password);
     user.email = email;
     await backend
       .addUser(user)
       .then(() => {
-        dispatch(registerSuccess(username));
+        dispatch(signUpSuccess(username));
         setTimeout(() => {
           dispatch(asyncLogin(username, password));
         }, 1000);
       })
       .catch((err) =>
-        dispatch(registerFailure(err.response?.status ?? err.message))
+        dispatch(signUpFailure(err.response?.status ?? err.message))
       );
   };
 }
 
-export function registerAttempt(username: string): UserAction {
+export function signUpAttempt(username: string): UserAction {
   return {
-    type: LoginActionTypes.REGISTER_ATTEMPT,
+    type: LoginActionTypes.SIGN_UP_ATTEMPT,
     payload: { username },
   };
 }
 
-export function registerFailure(errorMessage: string): UserAction {
+export function signUpFailure(errorMessage: string): UserAction {
   return {
-    type: LoginActionTypes.REGISTER_FAILURE,
+    type: LoginActionTypes.SIGN_UP_FAILURE,
     payload: { username: errorMessage },
   };
 }
 
-export function registerSuccess(username: string): UserAction {
+export function signUpSuccess(username: string): UserAction {
   return {
-    type: LoginActionTypes.REGISTER_SUCCESS,
+    type: LoginActionTypes.SIGN_UP_SUCCESS,
     payload: { username },
   };
 }

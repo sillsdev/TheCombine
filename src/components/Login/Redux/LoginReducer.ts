@@ -10,9 +10,9 @@ export const defaultState: LoginState = {
   loginAttempt: false,
   loginFailure: false,
   loginSuccess: false,
-  registerAttempt: false,
-  registerFailure: "",
-  registerSuccess: false,
+  signUpAttempt: false,
+  signUpFailure: "",
+  signUpSuccess: false,
 };
 
 export const loginReducer = (
@@ -42,27 +42,27 @@ export const loginReducer = (
         username: action.payload.username,
         loginSuccess: true,
       };
-    case LoginActionTypes.REGISTER_ATTEMPT:
+    case LoginActionTypes.SIGN_UP_ATTEMPT:
       return {
         ...state,
         username: action.payload.username,
-        registerAttempt: true,
-        registerFailure: "",
-        registerSuccess: false,
+        signUpAttempt: true,
+        signUpFailure: "",
+        signUpSuccess: false,
       };
-    case LoginActionTypes.REGISTER_SUCCESS:
+    case LoginActionTypes.SIGN_UP_SUCCESS:
       return {
         ...state,
         username: action.payload.username,
-        registerAttempt: false,
-        registerSuccess: true,
+        signUpAttempt: false,
+        signUpSuccess: true,
       };
-    case LoginActionTypes.REGISTER_FAILURE:
+    case LoginActionTypes.SIGN_UP_FAILURE:
       return {
         ...state,
-        registerAttempt: false,
-        registerFailure: action.payload.username,
-        registerSuccess: false,
+        signUpAttempt: false,
+        signUpFailure: action.payload.username,
+        signUpSuccess: false,
       };
     case StoreActionTypes.RESET:
       return defaultState;

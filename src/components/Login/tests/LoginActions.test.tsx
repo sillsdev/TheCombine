@@ -48,16 +48,16 @@ const loginSuccess: UserAction = {
 const reset: RootAction.StoreAction = {
   type: RootAction.StoreActionTypes.RESET,
 };
-const registerAttempt: UserAction = {
-  type: LoginActionTypes.REGISTER_ATTEMPT,
+const signUpAttempt: UserAction = {
+  type: LoginActionTypes.SIGN_UP_ATTEMPT,
   payload: { username: mockUser.username },
 };
-const registerFailure: UserAction = {
-  type: LoginActionTypes.REGISTER_FAILURE,
+const signUpFailure: UserAction = {
+  type: LoginActionTypes.SIGN_UP_FAILURE,
   payload: { username: mockUser.username },
 };
-const registerSuccess: UserAction = {
-  type: LoginActionTypes.REGISTER_SUCCESS,
+const signUpSuccess: UserAction = {
+  type: LoginActionTypes.SIGN_UP_SUCCESS,
   payload: { username: mockUser.username },
 };
 
@@ -66,10 +66,8 @@ beforeEach(() => {
 });
 
 describe("LoginAction", () => {
-  test("register returns correct value", () => {
-    expect(LoginAction.registerAttempt(mockUser.username)).toEqual(
-      registerAttempt
-    );
+  test("sign up returns correct value", () => {
+    expect(LoginAction.signUpAttempt(mockUser.username)).toEqual(signUpAttempt);
   });
 
   describe("asyncLogin", () => {
@@ -92,39 +90,33 @@ describe("LoginAction", () => {
     });
   });
 
-  describe("asyncRegister", () => {
-    it("register failure correctly affects state", async () => {
+  describe("asyncSignUp", () => {
+    it("sign up failure correctly affects state", async () => {
       mockAddUser.mockRejectedValue(new Error(mockUser.username));
       const mockStore = createMockStore(mockState);
       await mockStore.dispatch<any>(
-        LoginAction.asyncRegister(
+        LoginAction.asyncSignUp(
           mockUser.name,
           mockUser.username,
           mockUser.email,
           mockUser.password
         )
       );
-      expect(mockStore.getActions()).toEqual([
-        registerAttempt,
-        registerFailure,
-      ]);
+      expect(mockStore.getActions()).toEqual([signUpAttempt, signUpFailure]);
     });
 
-    it("register success correctly affects state", async () => {
+    it("sign up success correctly affects state", async () => {
       mockAddUser.mockResolvedValue(mockUser);
       const mockStore = createMockStore(mockState);
       await mockStore.dispatch<any>(
-        LoginAction.asyncRegister(
+        LoginAction.asyncSignUp(
           mockUser.name,
           mockUser.username,
           mockUser.email,
           mockUser.password
         )
       );
-      expect(mockStore.getActions()).toEqual([
-        registerAttempt,
-        registerSuccess,
-      ]);
+      expect(mockStore.getActions()).toEqual([signUpAttempt, signUpSuccess]);
     });
   });
 
@@ -150,24 +142,24 @@ describe("LoginAction", () => {
       );
     });
 
-    test("registerAttempt", () => {
+    test("signUpAttempt", () => {
       testActionCreatorAgainst(
-        LoginAction.registerAttempt,
-        LoginActionTypes.REGISTER_ATTEMPT
+        LoginAction.signUpAttempt,
+        LoginActionTypes.SIGN_UP_ATTEMPT
       );
     });
 
-    test("registerFailure", () => {
+    test("signUpFailure", () => {
       testActionCreatorAgainst(
-        LoginAction.registerFailure,
-        LoginActionTypes.REGISTER_FAILURE
+        LoginAction.signUpFailure,
+        LoginActionTypes.SIGN_UP_FAILURE
       );
     });
 
-    test("registerSuccess", () => {
+    test("signUpSuccess", () => {
       testActionCreatorAgainst(
-        LoginAction.registerSuccess,
-        LoginActionTypes.REGISTER_SUCCESS
+        LoginAction.signUpSuccess,
+        LoginActionTypes.SIGN_UP_SUCCESS
       );
     });
   });

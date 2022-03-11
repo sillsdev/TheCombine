@@ -130,21 +130,17 @@
       "Volver al inicio de sesión",
       "Retour au login"
     ],
-    "register": ["Register", "Registrar", "S'inscrire"],
-    "registerNew": [
-      "Register New User",
-      "Registrar nuevo usuario",
-      "Enregistrer un nouvel utilisateur"
-    ],
-    "registerSuccess": [
+    "signUp": ["Sign Up", "Sign Up", "Sign Up"],
+    "signUpNew": ["Sign Up New User", "Sign Up New User", "Sign Up New User"],
+    "signUpSuccess": [
       "User Created",
       "Usuario creado",
       "Utilisateur a été créé"
     ],
-    "registerFailed": [
-      "Failed to register",
-      "Error al registrar",
-      "N'a pas réussi à s'inscrire"
+    "signUpFailed": [
+      "Failed to sign up",
+      "Failed to sign up",
+      "Failed to sign up"
     ],
     "usernameInvalid": [
       "This username is too short or already taken",

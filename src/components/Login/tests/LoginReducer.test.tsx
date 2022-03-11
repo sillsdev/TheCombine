@@ -25,9 +25,9 @@ describe("LoginReducer Tests", () => {
     loginAttempt: true,
     loginFailure: false,
     loginSuccess: false,
-    registerAttempt: false,
-    registerFailure: "",
-    registerSuccess: false,
+    signUpAttempt: false,
+    signUpFailure: "",
+    signUpSuccess: false,
   };
 
   const action: UserAction = {
@@ -65,17 +65,17 @@ describe("LoginReducer Tests", () => {
     );
   });
 
-  test("default state, expecting register", () => {
+  test("default state, expecting sign up", () => {
     const resultState: LoginState = {
       username: "testUsername",
       loginAttempt: false,
       loginFailure: false,
       loginSuccess: false,
-      registerAttempt: true,
-      registerFailure: "",
-      registerSuccess: false,
+      signUpAttempt: true,
+      signUpFailure: "",
+      signUpSuccess: false,
     };
-    action.type = LoginActionTypes.REGISTER_ATTEMPT;
+    action.type = LoginActionTypes.SIGN_UP_ATTEMPT;
 
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(resultState);
   });
@@ -93,29 +93,29 @@ describe("LoginReducer Tests", () => {
     );
   });
 
-  test("default state, expecting register success", () => {
-    const registerSuccessState: LoginState = {
+  test("default state, expecting sign up success", () => {
+    const signUpSuccessState: LoginState = {
       ...dummyState,
       username: user.username,
-      registerAttempt: false,
-      registerSuccess: true,
+      signUpAttempt: false,
+      signUpSuccess: true,
     };
-    action.type = LoginActionTypes.REGISTER_SUCCESS;
+    action.type = LoginActionTypes.SIGN_UP_SUCCESS;
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      registerSuccessState
+      signUpSuccessState
     );
   });
 
-  test("default state, expecting register failure", () => {
-    const registerFailureState: LoginState = {
+  test("default state, expecting sign up failure", () => {
+    const signUpFailureState: LoginState = {
       ...dummyState,
-      registerAttempt: false,
-      registerFailure: "testUsername",
-      registerSuccess: false,
+      signUpAttempt: false,
+      signUpFailure: "testUsername",
+      signUpSuccess: false,
     };
-    action.type = LoginActionTypes.REGISTER_FAILURE;
+    action.type = LoginActionTypes.SIGN_UP_FAILURE;
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      registerFailureState
+      signUpFailureState
     );
   });
 

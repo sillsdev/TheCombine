@@ -4,7 +4,7 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
-import Register from "components/Login/RegisterPage/RegisterComponent";
+import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
@@ -15,9 +15,9 @@ jest.mock("backend", () => ({
   isUsernameTaken: () => false,
 }));
 
-const REGISTER = jest.fn();
-var registerMaster: ReactTestRenderer;
-var registerHandle: ReactTestInstance;
+const mockReset = jest.fn();
+var signUpMaster: ReactTestRenderer;
+var signUpHandle: ReactTestInstance;
 
 const DATA = "stuff";
 const MOCK_EVENT = {
@@ -27,29 +27,30 @@ const MOCK_EVENT = {
   },
 };
 
-describe("Testing register component", () => {
+describe("Testing sign up component", () => {
   beforeEach(() => {
     renderer.act(() => {
-      registerMaster = renderer.create(
-        <Register failureMessage="" reset={REGISTER} />
+      signUpMaster = renderer.create(
+        <SignUp failureMessage="" reset={mockReset} />
       );
     });
-    registerHandle = registerMaster.root.findByType(Register);
-    REGISTER.mockClear();
+    signUpHandle = signUpMaster.root.findByType(SignUp);
+    mockReset.mockClear();
   });
 
   it("Renders properly", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<Register failureMessage="" reset={REGISTER} />, div);
+    ReactDOM.render(<SignUp failureMessage="" reset={mockReset} />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 
-  // These test whether various combinations of registration data should result in errors
-  test("Register: no data", () => {
-    testRegister("", "", "", "", "", true, true, true, true, false);
+  // These test whether various combinations of sign up data should result in
+  // errors
+  test("Sign Up: no data", () => {
+    testSignUp("", "", "", "", "", true, true, true, true, false);
   });
-  test("Register: confirm password doesn't match password", () => {
-    testRegister(
+  test("Sign Up: confirm password doesn't match password", () => {
+    testSignUp(
       "Frodo Baggins",
       "underhill",
       "a@b.c",
@@ -62,8 +63,8 @@ describe("Testing register component", () => {
       true
     );
   });
-  test("Register: username too short", () => {
-    testRegister(
+  test("Sign Up: username too short", () => {
+    testSignUp(
       "Samwise Gamgee",
       "sg",
       "a@b.c",
@@ -76,8 +77,8 @@ describe("Testing register component", () => {
       false
     );
   });
-  test("Register: password too short", () => {
-    testRegister(
+  test("Sign Up: password too short", () => {
+    testSignUp(
       "Bilbo Baggins",
       "bbb",
       "a@b.c",
@@ -92,7 +93,7 @@ describe("Testing register component", () => {
   });
 });
 
-async function testRegister(
+async function testSignUp(
   name: string,
   username: string,
   email: string,
@@ -104,15 +105,15 @@ async function testRegister(
   error_password: boolean,
   error_confirmPassword: boolean
 ) {
-  registerHandle.instance.setState({
+  signUpHandle.instance.setState({
     name,
     username,
     email,
     password,
     confirmPassword,
   });
-  await registerHandle.instance.register(MOCK_EVENT);
-  expect(registerHandle.instance.state.error).toEqual({
+  await signUpHandle.instance.signUp(MOCK_EVENT);
+  expect(signUpHandle.instance.state.error).toEqual({
     name: error_name,
     username: error_username,
     email: error_email,
