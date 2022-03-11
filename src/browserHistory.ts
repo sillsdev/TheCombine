@@ -35,8 +35,8 @@ export enum Path {
   ProjSettings = "/app/project-settings",
   PwRequest = "/forgot/request",
   PwReset = "/forgot/reset",
-  SignUp = "/sign-up",
   Root = "/",
+  SignUp = "/sign-up",
   SiteSettings = "/app/site-settings",
   UserSettings = "/app/user-settings",
 }
