@@ -525,13 +525,13 @@ environment. (See the [Python](#python) section to create the virtual environmen
 Install the required charts by running:
 
 ```bash
-python scripts/setup_cluster.py -v
+python deploy/scripts/setup_cluster.py -v
 ```
 
-`scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired Kubernetes
-cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the _Rancher
-Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the `--kubeconfig`
-and `--context` options will let you specify a different cluster.
+`deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired
+Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the
+_Rancher Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the
+`--kubeconfig` and `--context` options will let you specify a different cluster.
 
 Run the script with the `--help` option to see possible options for the script.
 
@@ -540,7 +540,7 @@ Run the script with the `--help` option to see possible options for the script.
 Install the Rancher User Interface by running:
 
 ```bash
-python scripts/setup_cluster.py --type rancher -v
+python deploy/scripts/setup_cluster.py --type rancher -v
 ```
 
 ### Build _The Combine_ Containers
@@ -549,7 +549,7 @@ Build _The Combine_ containers by running the build script in an activated Pytho
 _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
 ```bash
-python scripts/build.py
+python deploy/scripts/build.py
 ```
 
 Notes:
@@ -596,14 +596,14 @@ These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
 Install the Kubernetes resources to run _The Combine_ by running:
 
 ```bash
-python scripts/setup_combine.py
+python deploy/scripts/setup_combine.py
 ```
 
 The script will list available targets and prompt the user for the target system followed by a prompt for the image tag
 of _The Combine_ software to be loaded:
 
 ```console
-$ python scripts/setup_combine.py
+$ python deploy/scripts/setup_combine.py
 Available targets:
    localhost
    nuc1
@@ -631,10 +631,10 @@ For development testing, the target system is `localhost`.
 
 The usual image tag is `latest`; it will use the most recent untagged image.
 
-`scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired Kubernetes
-cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the _Rancher
-Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the `--kubeconfig`
-and `--context` options will let you specify a different cluster.
+`deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
+Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the
+_Rancher Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the
+`--kubeconfig` and `--context` options will let you specify a different cluster.
 
 Run the script with the `--help` option to see possible options for the script.
 

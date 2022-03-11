@@ -13,7 +13,7 @@ from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
 import yaml
 
 prog_dir = Path(__file__).resolve().parent
-"""Absolute path to the checked out repository."""
+"""Absolute path to the directory of this script."""
 
 
 def parse_args() -> argparse.Namespace:

@@ -8,7 +8,7 @@
       "name": "Build All",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/scripts/build.py",
+      "program": "${workspaceFolder}/deploy/scripts/build.py",
       "console": "integratedTerminal"
     },
     {

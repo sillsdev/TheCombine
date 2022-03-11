@@ -79,14 +79,14 @@ def parse_args() -> argparse.Namespace:
     # Arguments passed to the helm install command
     parser.add_argument(
         "--set",  # matches a 'helm install' option
-        nargs="*",
+        nargs="+",
         help="Specify additional Helm configuration variable to override default values."
         " See `helm install --help`",
     )
     parser.add_argument(
         "--values",
         "-f",  # matches a 'helm install' option
-        nargs="*",
+        nargs="+",
         help="Specify additional Helm configuration file to override default values."
         " See `helm install --help`",
     )
@@ -177,7 +177,7 @@ def main() -> None:
             addl_configs.extend(["-f", filepath])
 
     # lookup directory for helm files
-    helm_dir = prog_dir.parent / "deploy" / "helm"
+    helm_dir = prog_dir.parent / "helm"
 
     # lookup the configuration values for the profile of the selected target
     if profile in config["profiles"]:

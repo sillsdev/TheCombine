@@ -12,7 +12,7 @@ import argparse
 from dataclasses import dataclass
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 
 @dataclass(frozen=True)
@@ -21,7 +21,7 @@ class BuildSpec:
     name: str
 
 
-project_dir = Path(__file__).resolve().parent.parent
+project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
 
 
@@ -42,10 +42,10 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "--component",
-        choices=["all", "frontend", "backend", "maintenance"],
-        default="all",
-        help="Combine component to build.",
+        "--components",
+        nargs="*",
+        choices=["frontend", "backend", "maintenance"],
+        help="Combine components to build.",
     )
     parser.add_argument(
         "--tag",
@@ -84,10 +84,11 @@ def main() -> None:
     else:
         build_cmd = "docker"
 
-    if args.component == "all":
-        to_do = ["backend", "frontend", "maintenance"]
+    to_do: List[str] = []
+    if args.components is not None:
+        to_do = args.components
     else:
-        to_do = [args.component]
+        to_do = ["backend", "frontend", "maintenance"]
 
     build_specs: Dict[str, BuildSpec] = {
         "backend": BuildSpec(project_dir / "Backend", "backend"),
