@@ -84,7 +84,6 @@ def main() -> None:
     else:
         build_cmd = "docker"
 
-    to_do: List[str] = []
     if args.components is not None:
         to_do = args.components
     else:

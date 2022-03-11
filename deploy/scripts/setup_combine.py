@@ -29,8 +29,8 @@ from enum_types import ExitStatus, HelmAction
 from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
 import yaml
 
-prog_dir = Path(__file__).resolve().parent
-"""Directory for the current program"""
+scripts_dir = Path(__file__).resolve().parent
+"""Directory for the deploy scripts"""
 
 
 def parse_args() -> argparse.Namespace:
@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
         "--config",
         "-c",
         help="Configuration file for the target(s).",
-        default=str(prog_dir / "setup_files" / "combine_config.yaml"),
+        default=str(scripts_dir / "setup_files" / "combine_config.yaml"),
     )
     parser.add_argument(
         "--dry-run",
@@ -119,7 +119,7 @@ def create_secrets(
         if not env_vars_req:
             response = input("Continue?(y/N)")
             if response.upper() != "Y":
-                return
+                return secrets_written
         sys.exit(ExitStatus.FAILURE.value)
 
     return secrets_written
@@ -181,12 +181,12 @@ def main() -> None:
             addl_configs.extend(["-f", filepath])
 
     # lookup directory for helm files
-    helm_dir = prog_dir.parent / "helm"
+    helm_dir = scripts_dir.parent / "helm"
 
     # lookup the configuration values for the profile of the selected target
     if profile in config["profiles"]:
         # get the path for the profile configuration file
-        profile_config: Optional[Path] = prog_dir / "setup_files" / "profiles" / f"{profile}.yaml"
+        profile_config: Optional[Path] = scripts_dir / "setup_files" / "profiles" / f"{profile}.yaml"
     else:
         profile_config = None
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)

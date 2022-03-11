@@ -12,8 +12,8 @@ from enum_types import ExitStatus, HelmAction
 from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
 import yaml
 
-prog_dir = Path(__file__).resolve().parent
-"""Absolute path to the directory of this script."""
+scripts_dir = Path(__file__).resolve().parent
+"""Absolute path to the directory of the deploy scripts."""
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
         "--config",
         "-c",
         help="Configuration file for the cluster type(s).",
-        default=str(prog_dir / "setup_files" / "cluster_config.yaml"),
+        default=str(scripts_dir / "setup_files" / "cluster_config.yaml"),
     )
     return parser.parse_args()
 
@@ -55,7 +55,7 @@ def main() -> None:
     # Note that the helm repo commands affect the helm client and therefore
     # are not affected by the helm options
     this_cluster: List[str] = config["clusters"][args.type]
-    curr_repo_list = []
+    curr_repo_list: List[str] = []
     helm_cmd_results = run_cmd(
         ["helm", "repo", "list", "-o", "yaml"], print_cmd=args.verbose, check_results=False
     )
@@ -79,7 +79,7 @@ def main() -> None:
 
     # List current charts
     chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
-    curr_charts = []
+    curr_charts: List[str] = []
     for chart in yaml.safe_load(chart_list_results.stdout):
         curr_charts.append(chart["name"])
 
