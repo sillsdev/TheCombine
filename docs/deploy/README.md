@@ -150,7 +150,7 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
    From the project directory with an activated _Python_ virtual environment, run:
 
    ```bash
-   python scripts/setup_cluster.py --type nuc
+   python deploy/scripts/setup_cluster.py --type nuc
    ```
 
 ### Installing _The Combine_ Helm Charts
@@ -191,7 +191,7 @@ To install/upgrade _The Combine_ change directory to the project root directory 
 your Python virtual environment:
 
 ```bash
-python scripts/setup_combine.py
+python deploy/scripts/setup_combine.py
 ```
 
 Notes:
@@ -199,9 +199,9 @@ Notes:
 - You will be prompted for the _target_ where _The Combine_ is to be installed as well as version to install. The
   version is the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version
   number, e.g. _0.7.15_.
-- The _target_ must be one listed in `<COMBINE>/scripts/setup_files/config.yaml`.
-- Run `python scripts/setup_combine.py --help` for additional options such as specifying a different configuration file
-  for additional targets.
+- The _target_ must be one listed in `<COMBINE>/deploy/scripts/setup_files/config.yaml`.
+- Run `python deploy/scripts/setup_combine.py --help` for additional options such as specifying a different
+  configuration file for additional targets.
 
 ### Maintenance Scripts for Kubernetes
 
