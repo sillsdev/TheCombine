@@ -18,7 +18,7 @@ export default function NextGoalScreen(): ReactElement {
   );
 
   const dispatch = useDispatch();
-  function loadNextGoal(shouldContinue: boolean) {
+  function loadNextGoal(shouldContinue: boolean): void {
     if (shouldContinue) {
       dispatch(asyncAddGoal(goalTypeToGoal(goalType)));
     } else {

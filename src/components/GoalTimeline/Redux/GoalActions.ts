@@ -178,6 +178,7 @@ function goalCleanup(goal: Goal): void {
       break;
     default:
       history.push(Path.Goals);
+      break;
   }
 }
 
