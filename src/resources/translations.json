@@ -857,19 +857,17 @@
         "Delete this sense?"
       ]
     },
-    "flags": {
-      "add": ["Add flag", "Add flag", "Add flag"],
-      "edit": ["Edit flag", "Edit flag", "Edit flag"],
-      "remove": ["Remove flag", "Remove flag", "Remove flag"],
-      "save": ["Save flag", "Save flag", "Save flag"],
-      "text": ["Text: ", "Text: ", "Text: "]
-    },
     "completed": {
       "number": [
         "Number of merges completed: ",
         "Number of merges completed: ",
         "Number of merges completed: "
       ]
+    },
+    "continueDialog": {
+      "title": ["Continue merging?", "Continue merging?", "Continue merging?"],
+      "yes": ["yes", "si", "oui"],
+      "no": ["no", "no", "non"]
     },
     "undo": {
       "undo": ["Undo Merge", "Undo Merge", "Undo Merge"],
@@ -884,6 +882,13 @@
         "Undo Unavailable"
       ]
     }
+  },
+  "flags": {
+    "add": ["Add flag", "Add flag", "Add flag"],
+    "edit": ["Edit flag", "Edit flag", "Edit flag"],
+    "remove": ["Remove flag", "Remove flag", "Remove flag"],
+    "save": ["Save flag", "Save flag", "Save flag"],
+    "text": ["Text: ", "Text: ", "Text: "]
   },
   "buttons": {
     "accept": ["Accept", "Aceptar", "Accepter"],

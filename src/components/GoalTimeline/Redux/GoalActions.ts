@@ -81,7 +81,7 @@ export function asyncAddGoal(goal: Goal) {
       }
 
       // Serve goal.
-      history.push(`${Path.GoalCurrent}`);
+      history.push(Path.GoalCurrent);
     }
   };
 }
@@ -117,7 +117,7 @@ export function asyncAdvanceStep() {
       // Save to database.
       await saveCurrentStep(goal);
     } else {
-      history.push(Path.Goals);
+      goalCleanup(goal);
     }
   };
 }
@@ -168,6 +168,17 @@ export function updateStepFromData(goal: Goal): boolean {
       return true;
     default:
       return false;
+  }
+}
+
+function goalCleanup(goal: Goal): void {
+  switch (goal.goalType) {
+    case GoalType.MergeDups:
+      history.push(Path.GoalNext);
+      break;
+    default:
+      history.push(Path.Goals);
+      break;
   }
 }
 
