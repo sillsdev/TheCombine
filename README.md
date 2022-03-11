@@ -559,11 +559,13 @@ Notes:
 
   ```bash
   => ERROR [internal] load metadata for docker.io/library/nginx:1.21        0.5s
-  => ERROR [internal] load metadata for docker.io/library/python:3.9        0.5s
-  => ERROR [internal] load metadata for docker.io/library/node:16           0.5s
   ```
 
-  then you may need to be logged into [Docker Hub](https://hub.docker.io) with `docker login`.
+  pull the image directly and re-run the build. In this case, you would run:
+
+  ```bash
+  docker pull nginx:1.21
+  ```
 
 - If `--tag` is not used, the image will be untagged. When running or pulling an image with the tag `latest`, the
   newest, untagged image will be pulled.
