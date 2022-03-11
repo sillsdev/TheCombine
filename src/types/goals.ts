@@ -27,6 +27,7 @@ export interface GoalsState {
   currentGoal: Goal;
   goalTypeSuggestions: GoalType[];
   history: Goal[];
+  previousGoalType: GoalType;
 }
 
 // The enum value is a permanent id for UserEdits and should not be changed.
