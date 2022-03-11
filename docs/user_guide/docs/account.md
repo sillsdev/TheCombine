@@ -1,10 +1,10 @@
 # Account
 
-How to register, login, and edit your account.
+How to sign up, login, and edit your account.
 
 ![Login](images/login.png){ .center }
 
-## Register
+## Sign Up
 
 To create a new account, click the [SIGN UP](../sign-up) button on the Login page.
 

@@ -90,7 +90,7 @@ describe("LoginAction", () => {
     });
   });
 
-  describe("asyncRegister", () => {
+  describe("asyncSignUp", () => {
     it("sign up failure correctly affects state", async () => {
       mockAddUser.mockRejectedValue(new Error(mockUser.username));
       const mockStore = createMockStore(mockState);

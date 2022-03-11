@@ -15,7 +15,7 @@ jest.mock("backend", () => ({
   isUsernameTaken: () => false,
 }));
 
-const REGISTER = jest.fn();
+const mockReset = jest.fn();
 var signUpMaster: ReactTestRenderer;
 var signUpHandle: ReactTestInstance;
 
@@ -31,25 +31,26 @@ describe("Testing sign up component", () => {
   beforeEach(() => {
     renderer.act(() => {
       signUpMaster = renderer.create(
-        <SignUp failureMessage="" reset={REGISTER} />
+        <SignUp failureMessage="" reset={mockReset} />
       );
     });
     signUpHandle = signUpMaster.root.findByType(SignUp);
-    REGISTER.mockClear();
+    mockReset.mockClear();
   });
 
   it("Renders properly", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<SignUp failureMessage="" reset={REGISTER} />, div);
+    ReactDOM.render(<SignUp failureMessage="" reset={mockReset} />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 
-  // These test whether various combinations of registration data should result in errors
-  test("Register: no data", () => {
-    testRegister("", "", "", "", "", true, true, true, true, false);
+  // These test whether various combinations of sign up data should result in
+  // errors
+  test("Sign Up: no data", () => {
+    testSignUp("", "", "", "", "", true, true, true, true, false);
   });
-  test("Register: confirm password doesn't match password", () => {
-    testRegister(
+  test("Sign Up: confirm password doesn't match password", () => {
+    testSignUp(
       "Frodo Baggins",
       "underhill",
       "a@b.c",
@@ -62,8 +63,8 @@ describe("Testing sign up component", () => {
       true
     );
   });
-  test("Register: username too short", () => {
-    testRegister(
+  test("Sign Up: username too short", () => {
+    testSignUp(
       "Samwise Gamgee",
       "sg",
       "a@b.c",
@@ -76,8 +77,8 @@ describe("Testing sign up component", () => {
       false
     );
   });
-  test("Register: password too short", () => {
-    testRegister(
+  test("Sign Up: password too short", () => {
+    testSignUp(
       "Bilbo Baggins",
       "bbb",
       "a@b.c",
@@ -92,7 +93,7 @@ describe("Testing sign up component", () => {
   });
 });
 
-async function testRegister(
+async function testSignUp(
   name: string,
   username: string,
   email: string,

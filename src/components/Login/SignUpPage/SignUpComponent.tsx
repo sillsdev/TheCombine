@@ -291,7 +291,7 @@ export default class SignUp extends React.Component<
                 </Typography>
               )}
 
-              {/* Register and Login buttons */}
+              {/* Sign Up and Login buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <Button
