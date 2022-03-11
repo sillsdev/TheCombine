@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 
 import { User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import { defaultState } from "components/GoalTimeline/DefaultState";
+import { defaultState as goalsState } from "components/GoalTimeline/DefaultState";
 import * as actions from "components/GoalTimeline/Redux/GoalActions";
 import {
   GoalActionTypes,
@@ -17,7 +17,7 @@ import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
 import { maxNumSteps } from "types/goalUtilities";
-import { Goal, GoalsState } from "types/goals";
+import { Goal } from "types/goals";
 import { newUser } from "types/user";
 
 jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {
@@ -90,16 +90,7 @@ beforeAll(() => {
   oldProjectId = LocalStorage.getProjectId();
   oldUser = LocalStorage.getCurrentUser();
 
-  const mockStoreState: { goalsState: GoalsState } = {
-    goalsState: {
-      allGoalTypes: [...defaultState.allGoalTypes],
-      currentGoal: new Goal(),
-      goalTypeSuggestions: [...defaultState.goalTypeSuggestions],
-      history: [...defaultState.history],
-    },
-  };
-
-  mockStore = createMockStore(mockStoreState);
+  mockStore = createMockStore({ goalsState });
 });
 
 beforeEach(() => {

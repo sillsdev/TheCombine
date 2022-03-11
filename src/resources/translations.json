@@ -130,21 +130,17 @@
       "Volver al inicio de sesión",
       "Retour au login"
     ],
-    "register": ["Register", "Registrar", "S'inscrire"],
-    "registerNew": [
-      "Register New User",
-      "Registrar nuevo usuario",
-      "Enregistrer un nouvel utilisateur"
-    ],
-    "registerSuccess": [
+    "signUp": ["Sign Up", "Sign Up", "Sign Up"],
+    "signUpNew": ["Sign Up New User", "Sign Up New User", "Sign Up New User"],
+    "signUpSuccess": [
       "User Created",
       "Usuario creado",
       "Utilisateur a été créé"
     ],
-    "registerFailed": [
-      "Failed to register",
-      "Error al registrar",
-      "N'a pas réussi à s'inscrire"
+    "signUpFailed": [
+      "Failed to sign up",
+      "Failed to sign up",
+      "Failed to sign up"
     ],
     "usernameInvalid": [
       "This username is too short or already taken",
@@ -857,19 +853,17 @@
         "Delete this sense?"
       ]
     },
-    "flags": {
-      "add": ["Add flag", "Add flag", "Add flag"],
-      "edit": ["Edit flag", "Edit flag", "Edit flag"],
-      "remove": ["Remove flag", "Remove flag", "Remove flag"],
-      "save": ["Save flag", "Save flag", "Save flag"],
-      "text": ["Text: ", "Text: ", "Text: "]
-    },
     "completed": {
       "number": [
         "Number of merges completed: ",
         "Number of merges completed: ",
         "Number of merges completed: "
       ]
+    },
+    "continueDialog": {
+      "title": ["Continue merging?", "Continue merging?", "Continue merging?"],
+      "yes": ["yes", "si", "oui"],
+      "no": ["no", "no", "non"]
     },
     "undo": {
       "undo": ["Undo Merge", "Undo Merge", "Undo Merge"],
@@ -884,6 +878,13 @@
         "Undo Unavailable"
       ]
     }
+  },
+  "flags": {
+    "add": ["Add flag", "Add flag", "Add flag"],
+    "edit": ["Edit flag", "Edit flag", "Edit flag"],
+    "remove": ["Remove flag", "Remove flag", "Remove flag"],
+    "save": ["Save flag", "Save flag", "Save flag"],
+    "text": ["Text: ", "Text: ", "Text: "]
   },
   "buttons": {
     "accept": ["Accept", "Aceptar", "Accepter"],

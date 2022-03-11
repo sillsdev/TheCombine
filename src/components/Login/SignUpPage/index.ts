@@ -1,14 +1,14 @@
 import { connect } from "react-redux";
 
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
-import ProjectInvite, {
-  ProjectInviteStateProps,
-} from "components/ProjectInvite/ProjectInviteComponent";
+import SignUp, {
+  SignUpStateProps,
+} from "components/Login/SignUpPage/SignUpComponent";
 import { reset } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
-function mapStateToProps(state: StoreState): ProjectInviteStateProps {
+function mapStateToProps(state: StoreState): SignUpStateProps {
   return {
     inProgress: state.loginState.signUpAttempt,
     success: state.loginState.signUpSuccess,
@@ -18,13 +18,16 @@ function mapStateToProps(state: StoreState): ProjectInviteStateProps {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    signUp: (name: string, user: string, email: string, password: string) => {
-      dispatch(asyncSignUp(name, user, email, password));
+    signUp: (
+      name: string,
+      username: string,
+      email: string,
+      password: string
+    ) => {
+      dispatch(asyncSignUp(name, username, email, password));
     },
-    reset: () => {
-      dispatch(reset());
-    },
+    reset: () => dispatch(reset()),
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectInvite);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

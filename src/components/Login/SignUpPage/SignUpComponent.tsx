@@ -17,10 +17,10 @@ import {
   meetsUsernameRequirements,
 } from "utilities";
 
-const idAffix = "register";
+const idAffix = "signUp";
 
-interface RegisterDispatchProps {
-  register?: (
+interface SignUpDispatchProps {
+  signUp?: (
     name: string,
     username: string,
     email: string,
@@ -29,17 +29,17 @@ interface RegisterDispatchProps {
   reset: () => void;
 }
 
-export interface RegisterStateProps {
+export interface SignUpStateProps {
   inProgress?: boolean;
   success?: boolean;
   failureMessage: string;
 }
 
-interface RegisterProps {
+interface SignUpProps {
   returnToEmailInvite?: () => void;
 }
 
-interface RegisterState {
+interface SignUpState {
   name: string;
   username: string;
   email: string;
@@ -54,13 +54,11 @@ interface RegisterState {
   };
 }
 
-export default class Register extends React.Component<
-  RegisterDispatchProps & RegisterStateProps & RegisterProps,
-  RegisterState
+export default class SignUp extends React.Component<
+  SignUpDispatchProps & SignUpStateProps & SignUpProps,
+  SignUpState
 > {
-  constructor(
-    props: RegisterProps & RegisterDispatchProps & RegisterStateProps
-  ) {
+  constructor(props: SignUpProps & SignUpDispatchProps & SignUpStateProps) {
     super(props);
     this.state = {
       name: "",
@@ -88,14 +86,14 @@ export default class Register extends React.Component<
   }
 
   /** Updates the state to match the value in a textbox */
-  updateField<K extends keyof RegisterState>(
+  updateField<K extends keyof SignUpState>(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >,
     field: K
   ) {
     const value = e.target.value;
-    this.setState({ [field]: value } as Pick<RegisterState, K>);
+    this.setState({ [field]: value } as Pick<SignUpState, K>);
     this.setState((prevState) => ({
       error: { ...prevState.error, [field]: false },
     }));
@@ -121,7 +119,7 @@ export default class Register extends React.Component<
     }
   }
 
-  async register(e: React.FormEvent<HTMLFormElement>) {
+  async signUp(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const name = this.state.name.trim();
     const username = this.state.username.trim();
@@ -140,9 +138,9 @@ export default class Register extends React.Component<
 
     if (Object.values(error).some((e) => e)) {
       this.setState({ error });
-    } else if (this.props.register) {
-      this.props.register(name, username, email, password);
-      // Temporary solution - Not sure how to force register to finish first
+    } else if (this.props.signUp) {
+      this.props.signUp(name, username, email, password);
+      // Temporary solution - Not sure how to force sign up to finish first
       setTimeout(() => {
         if (this.props.returnToEmailInvite) {
           this.props.returnToEmailInvite();
@@ -157,7 +155,7 @@ export default class Register extends React.Component<
     // Intentional weak comparison. props.failureMessage may evaluate to number
     // eslint-disable-next-line eqeqeq
     if (this.props.failureMessage == "400") {
-      failureMessage = <Translate id="login.registerFailed" />;
+      failureMessage = <Translate id="login.signUpFailed" />;
     } else {
       failureMessage = <Translate id="login.networkError" />;
     }
@@ -165,11 +163,11 @@ export default class Register extends React.Component<
     return (
       <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>
-          <form onSubmit={(e) => this.register(e)}>
+          <form onSubmit={(e) => this.signUp(e)}>
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="login.registerNew" />
+                <Translate id="login.signUpNew" />
               </Typography>
 
               {/* Name field */}
@@ -283,7 +281,7 @@ export default class Register extends React.Component<
                 inputProps={{ maxLength: 100 }}
               />
 
-              {/* "Failed to register" */}
+              {/* "Failed to sign up" */}
               {!!this.props.failureMessage && (
                 <Typography
                   variant="body2"
@@ -293,7 +291,7 @@ export default class Register extends React.Component<
                 </Typography>
               )}
 
-              {/* Register and Login buttons */}
+              {/* Sign Up and Login buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <Button
@@ -310,13 +308,13 @@ export default class Register extends React.Component<
                   <LoadingDoneButton
                     loading={this.props.inProgress}
                     done={this.props.success}
-                    doneText={<Translate id="login.registerSuccess" />}
+                    doneText={<Translate id="login.signUpSuccess" />}
                     buttonProps={{
-                      id: `${idAffix}-register`,
+                      id: `${idAffix}-signUp`,
                       color: "primary",
                     }}
                   >
-                    <Translate id="login.register" />
+                    <Translate id="login.signUp" />
                   </LoadingDoneButton>
                 </Grid>
               </Grid>

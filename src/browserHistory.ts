@@ -27,6 +27,7 @@ export default history;
 export enum Path {
   DataEntry = "/app/data-entry",
   GoalCurrent = "/app/goals/current",
+  GoalNext = "/app/goals/next",
   Goals = "/app/goals",
   Login = "/login",
   ProjInvite = "/invite",
@@ -34,8 +35,8 @@ export enum Path {
   ProjSettings = "/app/project-settings",
   PwRequest = "/forgot/request",
   PwReset = "/forgot/reset",
-  Register = "/register",
   Root = "/",
+  SignUp = "/sign-up",
   SiteSettings = "/app/site-settings",
   UserSettings = "/app/user-settings",
 }

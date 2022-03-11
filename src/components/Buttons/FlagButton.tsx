@@ -51,7 +51,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           )
         }
         text={text}
-        textId={active ? "mergeDups.flags.edit" : "mergeDups.flags.add"}
+        textId={active ? "flags.edit" : "flags.add"}
         small
         onClick={
           props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
@@ -63,14 +63,14 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         <DeleteEditTextDialog
           open={open}
           text={props.flag.text}
-          titleId="mergeDups.flags.edit"
+          titleId="flags.edit"
           close={() => setOpen(false)}
           updateText={updateFlag}
           onDelete={removeFlag}
           buttonIdDelete="flag-remove"
           buttonIdSave="flag-save"
-          buttonTextIdDelete="mergeDups.flags.remove"
-          buttonTextIdSave="mergeDups.flags.save"
+          buttonTextIdDelete="flags.remove"
+          buttonTextIdSave="flags.save"
         />
       ) : null}
     </React.Fragment>

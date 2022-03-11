@@ -10,6 +10,7 @@ import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 import ProjectSettings from "components/ProjectSettings/ProjectSettingsComponent";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
 import UserSettings from "components/UserSettings/UserSettings";
+import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 
 const BaseGoalScreen = loadable(
   () => import("goals/DefaultGoal/BaseGoalScreen")
@@ -25,6 +26,7 @@ export default function AppWithBar(): ReactElement {
       <Switch>
         <Route exact path={Path.DataEntry} component={DataEntry} />
         <Route exact path={Path.GoalCurrent} component={BaseGoalScreen} />
+        <Route exact path={Path.GoalNext} component={NextGoalScreen} />
         <Route exact path={Path.Goals} component={GoalTimeline} />
         <Route exact path={Path.ProjScreen} component={ProjectScreen} />
         <Route exact path={Path.ProjSettings} component={ProjectSettings} />

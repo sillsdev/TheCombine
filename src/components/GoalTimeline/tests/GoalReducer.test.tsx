@@ -52,6 +52,7 @@ describe("GoalReducer", () => {
       const newState: GoalsState = {
         ...state,
         history: [goal6, goal7],
+        previousGoalType: goal7.goalType,
       };
 
       expect(goalReducer(state, loadUserEditsAction)).toEqual(newState);
@@ -73,6 +74,7 @@ describe("GoalReducer", () => {
         ...defaultState,
         currentGoal,
         goalTypeSuggestions,
+        previousGoalType: currentGoal.goalType,
       };
       expect(goalReducer(defaultState, updateGoalAction)).toEqual(newState);
     });
