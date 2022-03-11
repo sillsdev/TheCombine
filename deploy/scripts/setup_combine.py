@@ -186,7 +186,9 @@ def main() -> None:
     # lookup the configuration values for the profile of the selected target
     if profile in config["profiles"]:
         # get the path for the profile configuration file
-        profile_config: Optional[Path] = scripts_dir / "setup_files" / "profiles" / f"{profile}.yaml"
+        profile_config: Optional[Path] = (
+            scripts_dir / "setup_files" / "profiles" / f"{profile}.yaml"
+        )
     else:
         profile_config = None
         print(f"Warning: cannot find profile {profile}", file=sys.stderr)

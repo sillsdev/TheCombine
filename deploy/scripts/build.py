@@ -12,7 +12,7 @@ import argparse
 from dataclasses import dataclass
 import os
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 
 @dataclass(frozen=True)
