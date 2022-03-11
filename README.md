@@ -65,6 +65,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    5. [Install/Update _The Combine_](#installupdate-the-combine)
    6. [Connecting to your Cluster](#connecting-to-your-cluster)
    7. [Stopping _The Combine_](#stopping-the-combine)
+   8. [Deleting Helm Charts](#deleting-helm-charts)
 5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
@@ -537,6 +538,9 @@ Run the script with the `--help` option to see possible options for the script.
 
 ### Install the Rancher User Interface
 
+_Note: This step is optional. Installing the Rancher User Interface provides a graphical view of your Kubernetes
+cluster._
+
 Install the Rancher User Interface by running:
 
 ```bash
@@ -573,15 +577,17 @@ Notes:
 
 ### Setup Environment Variables
 
+_Note: This is optional for Development Environments._
+
 In addition to the environment variables defined in [Prepare the Environment](#prepare-the-environment), you may setup
 the following environment variables:
 
-- AWS_ACCOUNT
-- AWS_DEFAULT_REGION
-- AWS_ECR_ACCESS_KEY_ID
-- AWS_ECR_SECRET_ACCESS_KEY
-- AWS_S3_ACCESS_KEY_ID
-- AWS_S3_SECRET_ACCESS_KEY
+- `AWS_ACCOUNT`
+- `AWS_DEFAULT_REGION`
+- `AWS_ECR_ACCESS_KEY_ID`
+- `AWS_ECR_SECRET_ACCESS_KEY`
+- `AWS_S3_ACCESS_KEY_ID`
+- `AWS_S3_SECRET_ACCESS_KEY`
 
 These variables will allow the Combine to:
 
@@ -644,13 +650,18 @@ When the script completes, the resources will be installed on the specified clus
 all the containers are up and running. Run `kubectl -n thecombine get deployments` or `kubectl -n thecombine get pods`
 to see when the cluster is ready. For example,
 
-```bash
+```console
 $ kubectl -n thecombine get deployments
 NAME          READY   UP-TO-DATE   AVAILABLE   AGE
 backend       1/1     1            1           10m
 database      1/1     1            1           10m
 frontend      1/1     1            1           10m
 maintenance   1/1     1            1           10m
+```
+
+or
+
+```console
 $ kubectl -n thecombine get pods
 NAME                           READY   STATUS    RESTARTS   AGE
 backend-5657559949-z2flp       1/1     Running   0          10m
@@ -670,21 +681,43 @@ ingress-controller-ingress-nginx-controller-admission   ClusterIP      10.43.238
 ingress-controller-ingress-nginx-controller             LoadBalancer   10.43.228.138   172.21.53.205   80:31284/TCP,443:32765/TCP   54s
 ```
 
-#### Windows Hosts Configuration
+#### Network Hosts Configuration
 
-On Windows, _Rancher Desktop_ creates a virtual ethernet interface for the `EXTERNAL-IP` address in the `kubectl` output
-above. You want to add entries in your network hosts file to equate this IP address with `thecombine.local` and
-`rancher.local`:
+The cluster's ingress controller uses the hostnames `thecombine.local` and `rancher.local` to be able to route traffic
+to the appropriate service. You will need to update your network hosts file to direct traffic for these hosts to the
+ingress controller. The way that you need to setup the host file varies by operating system and Kubernetes desktop app.
 
-```textfile
-172.21.53.205 thecombine.local rancher.local
-```
+- Windows:
 
-#### Linux Hosts Configuration
+  Hosts file: `%windir%\System32\drivers\etc\hosts`
 
-On Linux, no virtual ethernet interface is created. You can, however, connect to the cluster using the ports specified
-in `get services` output. For Linux, add entries to `/etc/hosts` to equate the localhost IP address, `127.0.0.1` with
-`thecombine.local` and `rancher.local`.
+  - _Rancher Desktop_: Add
+
+    ```textfile
+    172.21.53.205  thecombine.local rancher.local
+    ```
+
+    _Rancher Desktop_ creates a virtual ethernet interface for the `EXTERNAL-IP` address. The IP address should be
+    verified with the `kubectl` above before editing the hosts file.
+
+  - _Docker Desktop_: Add
+
+    ```textfile
+    127.0.0.1  thecombine.local rancher.local
+    ```
+
+- Linux/macOS:
+
+  Hosts file: `/etc/hosts`
+
+  _Rancher Desktop_ and _Docker Desktop_: Add
+
+  ```textfile
+  127.0.0.1  thecombine.local rancher.local
+  ```
+
+  No virtual ethernet interface is created. You can, however, connect to the cluster using the ports specified in
+  `get services` output.
 
 #### Connecting to _The Combine_
 
@@ -750,6 +783,28 @@ To stop _The Combine_, you can do one of the following:
   ```bash
   helm -n thecombine uninstall thecombine
   ```
+
+### Deleting Helm Charts
+
+The setup scripts will install different helm charts if they do not exist and upgrade existing charts. There may be
+cases where existing charts need to be deleted and re-installed instead of upgraded, for example, when a configuration
+change requires changes to an immutable attribute of a resource. To delete a chart, first list all of the existing
+charts:
+
+```console
+$ helm list -A
+NAME                NAMESPACE       REVISION    UPDATED                                 STATUS      CHART                   APP VERSION
+cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
+ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
+rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
+thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
+```
+
+Using the chart name and namespace, you can then delete the chart, for example:
+
+```bash
+helm -n cattle-system delete rancher
+```
 
 ## Maintenance Scripts for TheCombine
 

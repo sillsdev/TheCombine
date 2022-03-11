@@ -13,6 +13,7 @@ targets:
   localhost:
     serverName: thecombine.local
     profile: dev
+    env_vars_required: false
     override:
       frontend:
         configCaptchaRequired: "true"
@@ -20,15 +21,19 @@ targets:
   nuc1:
     serverName: nuc1.thecombine.app
     profile: nuc
+    env_vars_required: true
   nuc2:
     serverName: nuc2.thecombine.app
     profile: nuc
+    env_vars_required: true
   qa:
     serverName: qa-kube.thecombine.app
     profile: staging
+    env_vars_required: true
   prod:
     serverName: thecombine.app
     profile: prod
+    env_vars_required: true
     override:
       frontend:
         configCaptchaRequired: "true"

@@ -93,7 +93,9 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
+def create_secrets(
+    secrets: List[Dict[str, str]], *, output_file: Path, env_vars_req: bool
+) -> bool:
     """
     Create a YAML file that contains the secrets for the specified chart.
 
@@ -114,9 +116,11 @@ def create_secrets(secrets: List[Dict[str, str]], *, output_file: Path) -> bool:
     if len(missing_env_vars) > 0:
         print("The following environment variables are not defined:")
         print(", ".join(missing_env_vars))
-        response = input("Continue?(y/N)")
-        if response.upper() != "Y":
-            sys.exit(ExitStatus.FAILURE.value)
+        if not env_vars_req:
+            response = input("Continue?(y/N)")
+            if response.upper() != "Y":
+                return
+        sys.exit(ExitStatus.FAILURE.value)
 
     return secrets_written
 
@@ -213,7 +217,9 @@ def main() -> None:
             # build the secrets file
             secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
             include_secrets = create_secrets(
-                config["charts"][chart]["secrets"], output_file=secrets_file
+                config["charts"][chart]["secrets"],
+                output_file=secrets_file,
+                env_vars_req=this_config["env_vars_required"],
             )
             if "override" in this_config:
                 override_file = Path(secrets_dir).resolve() / f"config_{chart}.yaml"
