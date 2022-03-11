@@ -27,7 +27,7 @@ export default class App extends React.Component {
           <Route exact path={Path.Root} component={LandingPage} />
           <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
           <Route path={Path.Login} component={Login} />
-          <Route path={Path.Register} component={Register} />
+          <Route path={Path.SignUp} component={Register} />
           <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
           <Route path={Path.PwRequest} component={ResetRequest} />
           <Route

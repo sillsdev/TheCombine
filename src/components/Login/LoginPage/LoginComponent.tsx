@@ -210,10 +210,10 @@ export default class Login extends React.Component<
                   <Button
                     id={`${idAffix}-register`}
                     onClick={() => {
-                      history.push(Path.Register);
+                      history.push(Path.SignUp);
                     }}
                   >
-                    <Translate id="login.register" />
+                    <Translate id="login.signUp" />
                   </Button>
                 </Grid>
 

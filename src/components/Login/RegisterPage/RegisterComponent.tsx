@@ -157,7 +157,7 @@ export default class Register extends React.Component<
     // Intentional weak comparison. props.failureMessage may evaluate to number
     // eslint-disable-next-line eqeqeq
     if (this.props.failureMessage == "400") {
-      failureMessage = <Translate id="login.registerFailed" />;
+      failureMessage = <Translate id="login.signUpFailed" />;
     } else {
       failureMessage = <Translate id="login.networkError" />;
     }
@@ -169,7 +169,7 @@ export default class Register extends React.Component<
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="login.registerNew" />
+                <Translate id="login.signUpNew" />
               </Typography>
 
               {/* Name field */}
@@ -310,13 +310,13 @@ export default class Register extends React.Component<
                   <LoadingDoneButton
                     loading={this.props.inProgress}
                     done={this.props.success}
-                    doneText={<Translate id="login.registerSuccess" />}
+                    doneText={<Translate id="login.signUpSuccess" />}
                     buttonProps={{
                       id: `${idAffix}-register`,
                       color: "primary",
                     }}
                   >
-                    <Translate id="login.register" />
+                    <Translate id="login.signUp" />
                   </LoadingDoneButton>
                 </Grid>
               </Grid>

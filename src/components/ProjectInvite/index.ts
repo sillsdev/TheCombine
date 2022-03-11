@@ -10,9 +10,9 @@ import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): ProjectInviteStateProps {
   return {
-    inProgress: state.loginState.registerAttempt,
-    success: state.loginState.registerSuccess,
-    failureMessage: state.loginState.registerFailure,
+    inProgress: state.loginState.signUpAttempt,
+    success: state.loginState.signUpSuccess,
+    failureMessage: state.loginState.signUpFailure,
   };
 }
 

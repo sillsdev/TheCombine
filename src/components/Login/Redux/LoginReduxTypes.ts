@@ -2,9 +2,9 @@ export enum LoginActionTypes {
   LOGIN_ATTEMPT = "LOGIN_ATTEMPT",
   LOGIN_FAILURE = "LOGIN_FAILURE",
   LOGIN_SUCCESS = "LOGIN_SUCCESS",
-  REGISTER_ATTEMPT = "REGISTER_ATTEMPT",
-  REGISTER_FAILURE = "REGISTER_FAILURE",
-  REGISTER_SUCCESS = "REGISTER_SUCCESS",
+  SIGN_UP_ATTEMPT = "SIGN_UP_ATTEMPT",
+  SIGN_UP_FAILURE = "SIGN_UP_FAILURE",
+  SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS",
 }
 
 export interface LoginState {
@@ -12,18 +12,18 @@ export interface LoginState {
   loginAttempt: boolean;
   loginFailure: boolean;
   loginSuccess: boolean;
-  registerAttempt: boolean;
-  registerFailure: string;
-  registerSuccess: boolean;
+  signUpAttempt: boolean;
+  signUpFailure: string;
+  signUpSuccess: boolean;
 }
 
 export type LoginType =
   | typeof LoginActionTypes.LOGIN_ATTEMPT
   | typeof LoginActionTypes.LOGIN_FAILURE
   | typeof LoginActionTypes.LOGIN_SUCCESS
-  | typeof LoginActionTypes.REGISTER_ATTEMPT
-  | typeof LoginActionTypes.REGISTER_FAILURE
-  | typeof LoginActionTypes.REGISTER_SUCCESS;
+  | typeof LoginActionTypes.SIGN_UP_ATTEMPT
+  | typeof LoginActionTypes.SIGN_UP_FAILURE
+  | typeof LoginActionTypes.SIGN_UP_SUCCESS;
 
 export interface LoginData {
   username: string;

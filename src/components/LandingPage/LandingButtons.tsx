@@ -34,9 +34,9 @@ export default function LandingButtons(props: LandingButtonsProps) {
         style={{ height: "100%" }}
       >
         <LandingButton
-          onClick={() => history.push(Path.Register)}
-          textId="login.register"
-          buttonId={`${idAffix}-register`}
+          onClick={() => history.push(Path.SignUp)}
+          textId="login.signUp"
+          buttonId={`${idAffix}-signUp`}
         />
         <LandingButton
           onClick={() => history.push(Path.Login)}
