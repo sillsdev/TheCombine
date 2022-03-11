@@ -4,7 +4,7 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
-import Register from "components/Login/RegisterPage/RegisterComponent";
+import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
@@ -16,8 +16,8 @@ jest.mock("backend", () => ({
 }));
 
 const REGISTER = jest.fn();
-var registerMaster: ReactTestRenderer;
-var registerHandle: ReactTestInstance;
+var signUpMaster: ReactTestRenderer;
+var signUpHandle: ReactTestInstance;
 
 const DATA = "stuff";
 const MOCK_EVENT = {
@@ -27,20 +27,20 @@ const MOCK_EVENT = {
   },
 };
 
-describe("Testing register component", () => {
+describe("Testing sign up component", () => {
   beforeEach(() => {
     renderer.act(() => {
-      registerMaster = renderer.create(
-        <Register failureMessage="" reset={REGISTER} />
+      signUpMaster = renderer.create(
+        <SignUp failureMessage="" reset={REGISTER} />
       );
     });
-    registerHandle = registerMaster.root.findByType(Register);
+    signUpHandle = signUpMaster.root.findByType(SignUp);
     REGISTER.mockClear();
   });
 
   it("Renders properly", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<Register failureMessage="" reset={REGISTER} />, div);
+    ReactDOM.render(<SignUp failureMessage="" reset={REGISTER} />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 
@@ -104,15 +104,15 @@ async function testRegister(
   error_password: boolean,
   error_confirmPassword: boolean
 ) {
-  registerHandle.instance.setState({
+  signUpHandle.instance.setState({
     name,
     username,
     email,
     password,
     confirmPassword,
   });
-  await registerHandle.instance.register(MOCK_EVENT);
-  expect(registerHandle.instance.state.error).toEqual({
+  await signUpHandle.instance.signUp(MOCK_EVENT);
+  expect(signUpHandle.instance.state.error).toEqual({
     name: error_name,
     username: error_username,
     email: error_email,

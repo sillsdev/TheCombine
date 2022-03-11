@@ -54,7 +54,7 @@ export function logoutAndResetStore() {
   };
 }
 
-export function asyncRegister(
+export function asyncSignUp(
   name: string,
   username: string,
   email: string,

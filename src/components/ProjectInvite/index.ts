@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { asyncRegister } from "components/Login/Redux/LoginActions";
+import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import ProjectInvite, {
   ProjectInviteStateProps,
 } from "components/ProjectInvite/ProjectInviteComponent";
@@ -18,8 +18,8 @@ function mapStateToProps(state: StoreState): ProjectInviteStateProps {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    register: (name: string, user: string, email: string, password: string) => {
-      dispatch(asyncRegister(name, user, email, password));
+    signUp: (name: string, user: string, email: string, password: string) => {
+      dispatch(asyncSignUp(name, user, email, password));
     },
     reset: () => {
       dispatch(reset());

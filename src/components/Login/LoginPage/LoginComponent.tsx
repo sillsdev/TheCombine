@@ -208,7 +208,7 @@ export default class Login extends React.Component<
 
                 <Grid item xs={4} sm={3}>
                   <Button
-                    id={`${idAffix}-register`}
+                    id={`${idAffix}-signUp`}
                     onClick={() => {
                       history.push(Path.SignUp);
                     }}

@@ -66,7 +66,7 @@ beforeEach(() => {
 });
 
 describe("LoginAction", () => {
-  test("register returns correct value", () => {
+  test("sign up returns correct value", () => {
     expect(LoginAction.signUpAttempt(mockUser.username)).toEqual(signUpAttempt);
   });
 
@@ -91,11 +91,11 @@ describe("LoginAction", () => {
   });
 
   describe("asyncRegister", () => {
-    it("register failure correctly affects state", async () => {
+    it("sign up failure correctly affects state", async () => {
       mockAddUser.mockRejectedValue(new Error(mockUser.username));
       const mockStore = createMockStore(mockState);
       await mockStore.dispatch<any>(
-        LoginAction.asyncRegister(
+        LoginAction.asyncSignUp(
           mockUser.name,
           mockUser.username,
           mockUser.email,
@@ -105,11 +105,11 @@ describe("LoginAction", () => {
       expect(mockStore.getActions()).toEqual([signUpAttempt, signUpFailure]);
     });
 
-    it("register success correctly affects state", async () => {
+    it("sign up success correctly affects state", async () => {
       mockAddUser.mockResolvedValue(mockUser);
       const mockStore = createMockStore(mockState);
       await mockStore.dispatch<any>(
-        LoginAction.asyncRegister(
+        LoginAction.asyncSignUp(
           mockUser.name,
           mockUser.username,
           mockUser.email,
