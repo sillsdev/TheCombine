@@ -17,7 +17,7 @@ targets:
     override:
       frontend:
         configCaptchaRequired: "true"
-        configCaptchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+        configCaptchaSiteKey: "6LdBKdIeAAAAAD6hEBDPa0zUMitfVfQvpkgjehNV"
   nuc1:
     serverName: nuc1.thecombine.app
     profile: nuc
