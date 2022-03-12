@@ -766,11 +766,14 @@ rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0
 thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
 ```
 
-Using the chart name and namespace, you can then delete the chart, for example:
+Using the chart name and namespace, you can then delete the chart:
 
 ```bash
-helm -n cattle-system delete rancher
+helm -n <chart_namespace> delete <chart_name>
 ```
+
+where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
+delete. These are listed in the output of `helm list -A`.
 
 ## Maintenance Scripts for TheCombine
 
