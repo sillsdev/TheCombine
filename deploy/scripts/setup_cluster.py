@@ -35,6 +35,12 @@ def parse_args() -> argparse.Namespace:
         help="Configuration file for the cluster type(s).",
         default=str(scripts_dir / "setup_files" / "cluster_config.yaml"),
     )
+    parser.add_argument(
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Print less output information.",
+    )
     return parser.parse_args()
 
 
@@ -57,7 +63,7 @@ def main() -> None:
     this_cluster: List[str] = config["clusters"][args.type]
     curr_repo_list: List[str] = []
     helm_cmd_results = run_cmd(
-        ["helm", "repo", "list", "-o", "yaml"], print_cmd=args.verbose, check_results=False
+        ["helm", "repo", "list", "-o", "yaml"], print_cmd=not args.quiet, check_results=False
     )
     if helm_cmd_results.returncode == 0:
         curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
@@ -70,12 +76,12 @@ def main() -> None:
         if repo_spec["name"] not in curr_repo_list:
             run_cmd(
                 ["helm", "repo", "add", repo_spec["name"], repo_spec["url"]],
-                print_cmd=args.verbose,
-                print_output=args.verbose,
+                print_cmd=not args.quiet,
+                print_output=not args.quiet,
             )
             repo_added = True
     if repo_added:
-        run_cmd(["helm", "repo", "update"], print_cmd=args.verbose, print_output=args.verbose)
+        run_cmd(["helm", "repo", "update"], print_cmd=not args.quiet, print_output=not args.quiet)
 
     # List current charts
     chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
@@ -114,7 +120,7 @@ def main() -> None:
                     yaml.dump(chart_spec["override"], file)
                 helm_cmd.extend(["-f", str(override_file)])
             helm_cmd_str = " ".join(helm_cmd)
-            if args.verbose:
+            if not args.quiet:
                 print(f"Running: {helm_cmd_str}")
             # Run with os.system so that there is feedback on stdout/stderr while the
             # command is running

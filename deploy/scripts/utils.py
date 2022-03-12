@@ -17,7 +17,7 @@ def run_cmd(
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     if print_cmd:
-        print(f"Running: {cmd}")
+        print(f"Running: {' '.join(cmd)}")
     try:
         process_results = subprocess.run(
             cmd,
@@ -61,11 +61,9 @@ def add_helm_opts(parser: argparse.ArgumentParser) -> None:
         help="Context in kubectl configuration file to be used.",
     )
     parser.add_argument(
-        "--verbose",
         "--debug",
-        "-v",
         action="store_true",
-        help="Enable verbose output for helm commands.",
+        help="Enable debugging output for helm commands.",
     )
     parser.add_argument(
         "--kubeconfig",
@@ -82,6 +80,6 @@ def get_helm_opts(args: argparse.Namespace) -> List[str]:
         helm_opts.extend(["--kubeconfig", args.kubeconfig])
     if args.context:
         helm_opts.extend(["--kube-context", args.context])
-    if args.verbose:
+    if args.debug:
         helm_opts.append("--debug")
     return helm_opts

@@ -62,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         "If not specified, the profile will be read from the config file.",
     )
     parser.add_argument(
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Print less output information.",
+    )
+    parser.add_argument(
         "--repo", "-r", help="Push images to the specified Docker image repository."
     )
     parser.add_argument(
@@ -117,8 +123,8 @@ def create_secrets(
         print("The following environment variables are not defined:")
         print(", ".join(missing_env_vars))
         if not env_vars_req:
-            response = input("Continue?(y/N)")
-            if response.upper() != "Y":
+            response = input("Continue?(y/N)").upper()
+            if response == "Y" or response == "YES":
                 return secrets_written
         sys.exit(ExitStatus.FAILURE.value)
 
@@ -210,7 +216,7 @@ def main() -> None:
                     # delete existing chart if --clean specified
                     run_cmd(
                         ["helm"] + helm_opts + ["--namespace", chart_namespace, "delete", chart],
-                        print_cmd=args.verbose,
+                        print_cmd=not args.quiet,
                         print_output=True,
                     )
                 else:
@@ -276,10 +282,10 @@ def main() -> None:
             # helm command.
             run_cmd(
                 ["helm", "dependency", "update", str(chart_dir)],
-                print_cmd=args.verbose,
+                print_cmd=not args.quiet,
                 print_output=True,
             )
-            run_cmd(helm_install_cmd, print_cmd=args.verbose, print_output=True)
+            run_cmd(helm_install_cmd, print_cmd=not args.quiet, print_output=True)
 
 
 if __name__ == "__main__":
