@@ -209,7 +209,7 @@ def main() -> None:
                 if args.clean:
                     # delete existing chart if --clean specified
                     run_cmd(
-                        ["helm"] + helm_opts + ["delete", chart],
+                        ["helm"] + helm_opts + ["--namespace", chart_namespace, "delete", chart],
                         print_cmd=args.verbose,
                         print_output=True,
                     )
