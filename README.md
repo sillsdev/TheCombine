@@ -698,7 +698,8 @@ Once your host configuration has been setup, you can connect to _The Combine_ by
 Notes:
 
 1. You must specify the `https://` or your browser will probably do a web search.
-2. On Linux, the port number will change whenever the cluster is restarted.
+2. On Linux, the port number will change whenever the cluster is reset. It does not change when you stop and then
+   restart _Rancher Desktop_.
 3. _By default self-signed certificates are used, so you will need to accept a warning in the browser._
 
 #### Connecting to _Rancher_
