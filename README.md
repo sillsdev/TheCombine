@@ -525,7 +525,7 @@ environment. (See the [Python](#python) section to create the virtual environmen
 Install the required charts by running:
 
 ```bash
-python deploy/scripts/setup_cluster.py -v
+python deploy/scripts/setup_cluster.py
 ```
 
 `deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired
@@ -543,7 +543,7 @@ cluster._
 Install the Rancher User Interface by running:
 
 ```bash
-python deploy/scripts/setup_cluster.py --type rancher -v
+python deploy/scripts/setup_cluster.py --type rancher
 ```
 
 ### Build _The Combine_ Containers
