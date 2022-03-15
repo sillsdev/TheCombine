@@ -243,6 +243,28 @@ namespace BackendFramework.Models
             return Text == "";
         }
 
+        /// <summary> Add another note to the existing note. </summary>
+        public void Add(Note note)
+        {
+            if (!note.IsBlank() && !Equals(note))
+            {
+                if (IsBlank())
+                {
+                    Language = note.Language;
+                    Text = note.Text;
+                }
+                else
+                {
+                    Text += "; ";
+                    if (Language != note.Language)
+                    {
+                        Text += String.Format("[{0}] ", note.Language);
+                    }
+                    Text += note.Text;
+                }
+            }
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj is not Note other || GetType() != obj.GetType())

@@ -92,6 +92,60 @@ namespace Backend.Tests.Models
             Assert.That(new Note { Language = Language }.IsBlank());
             Assert.IsFalse(new Note { Text = Text }.IsBlank());
         }
+
+        [Test]
+        public void TestAddBlank()
+        {
+            var note = new Note(Language, Text);
+
+            var blankNote = new Note();
+            var newNote = note.Clone();
+            blankNote.Add(newNote);
+            Assert.That(blankNote.Equals(note));
+
+            blankNote = new Note();
+            var oldNote = note.Clone();
+            oldNote.Add(blankNote);
+            Assert.That(oldNote.Equals(note));
+        }
+
+        [Test]
+        public void TestAddIdentical()
+        {
+            var note = new Note(Language, Text);
+            var oldNote = note.Clone();
+            var newNote = note.Clone();
+            oldNote.Add(newNote);
+            Assert.That(oldNote.Equals(note));
+        }
+
+        [Test]
+        public void TestAddSameLanguage()
+        {
+            var note = new Note(Language, Text);
+            var oldNote = note.Clone();
+            var newNote = note.Clone();
+            var newText = "sameLangNewText";
+            newNote.Text = newText;
+            oldNote.Add(newNote);
+            var expectedNote = note.Clone();
+            expectedNote.Text += "; " + newText;
+            Assert.That(oldNote.Equals(expectedNote));
+        }
+
+        [Test]
+        public void TestAddDiffLanguage()
+        {
+            var note = new Note(Language, Text);
+            var oldNote = note.Clone();
+            var newNote = note.Clone();
+            var newLanguage = "diffLang";
+            newNote.Language = newLanguage;
+            oldNote.Add(newNote);
+            var expectedNote = note.Clone();
+            expectedNote.Text += "; [" + newLanguage + "] " + newNote.Text;
+            Assert.That(oldNote.Equals(expectedNote));
+        }
     }
 
     public class SenseTests

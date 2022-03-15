@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -181,6 +182,9 @@ namespace BackendFramework.Services
                             // Add edited by and remove duplicates
                             matchingVern.EditedBy.AddRange(word.EditedBy);
                             matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
+
+                            // Add note
+                            matchingVern.Note.Add(word.Note);
 
                             // Add semantic domains and remove duplicates
                             oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
