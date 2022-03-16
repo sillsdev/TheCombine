@@ -30,6 +30,7 @@ nginx-ingress-controller:
     name: ingress-controller
     reference: ingress-nginx/ingress-nginx
     namespace: ingress-nginx
+    wait: true
 
 rancher-ui:
   repo:
