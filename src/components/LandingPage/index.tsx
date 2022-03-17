@@ -1,7 +1,8 @@
-import { Box, Grid, Hidden, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Hidden, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import history, { Path } from "browserHistory";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
   horizontalButtonsHeight,
@@ -64,6 +65,10 @@ function body() {
         {<br />}
         {<br />}
         <Translate id="landingPage.descriptionP3" />
+        {<br />}
+        {<br />}
+        <Translate id="landingPage.descriptionP4" />
+        <SignUpButton />
       </Typography>
       <img
         src={tractor}
@@ -76,5 +81,21 @@ function body() {
         }}
       />
     </React.Fragment>
+  );
+}
+
+function SignUpButton() {
+  return (
+    <Button
+      size="small"
+      variant="outlined"
+      color="primary"
+      onClick={() => history.push(Path.SignUp)}
+      id={"landing-body-signUp"}
+    >
+      <Typography variant="subtitle1">
+        <Translate id={"login.signUp"} />
+      </Typography>
+    </Button>
   );
 }

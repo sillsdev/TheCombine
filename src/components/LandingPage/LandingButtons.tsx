@@ -60,12 +60,7 @@ interface LandingButtonProps {
 }
 function LandingButton(props: LandingButtonProps) {
   return (
-    <Grid
-      item
-      style={{
-        textAlign: "center",
-      }}
-    >
+    <Grid item style={{ textAlign: "center" }}>
       <Button
         variant="contained"
         color="primary"
