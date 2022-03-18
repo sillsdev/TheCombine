@@ -94,54 +94,54 @@ namespace Backend.Tests.Models
         }
 
         [Test]
-        public void TestAddBlank()
+        public void TestAppendBlank()
         {
             var note = new Note(Language, Text);
 
             var blankNote = new Note();
             var newNote = note.Clone();
-            blankNote.Add(newNote);
+            blankNote.Append(newNote);
             Assert.That(blankNote.Equals(note));
 
             blankNote = new Note();
             var oldNote = note.Clone();
-            oldNote.Add(blankNote);
+            oldNote.Append(blankNote);
             Assert.That(oldNote.Equals(note));
         }
 
         [Test]
-        public void TestAddIdentical()
+        public void TestAppendIdentical()
         {
             var note = new Note(Language, Text);
             var oldNote = note.Clone();
             var newNote = note.Clone();
-            oldNote.Add(newNote);
+            oldNote.Append(newNote);
             Assert.That(oldNote.Equals(note));
         }
 
         [Test]
-        public void TestAddSameLanguage()
+        public void TestAppendSameLanguage()
         {
             var note = new Note(Language, Text);
             var oldNote = note.Clone();
             var newNote = note.Clone();
-            var newText = "sameLangNewText";
+            const string newText = "sameLangNewText";
             newNote.Text = newText;
-            oldNote.Add(newNote);
+            oldNote.Append(newNote);
             var expectedNote = note.Clone();
-            expectedNote.Text += "; " + newText;
+            expectedNote.Text += $"; {newText}";
             Assert.That(oldNote.Equals(expectedNote));
         }
 
         [Test]
-        public void TestAddDiffLanguage()
+        public void TestAppendDiffLanguage()
         {
             var note = new Note(Language, Text);
             var oldNote = note.Clone();
             var newNote = note.Clone();
-            var newLanguage = "diffLang";
+            const string newLanguage = "diffLang";
             newNote.Language = newLanguage;
-            oldNote.Add(newNote);
+            oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; [{newLanguage}] {newNote.Text}";
             Assert.That(oldNote.Equals(expectedNote));

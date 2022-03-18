@@ -243,25 +243,23 @@ namespace BackendFramework.Models
             return Text == "";
         }
 
-        /// <summary> Add another note to the existing note. </summary>
-        public void Add(Note note)
+        /// <summary> Append another note to the existing note. </summary>
+        public void Append(Note note)
         {
-            if (!note.IsBlank() && !Equals(note))
+            if (note.IsBlank() || Equals(note))
             {
-                if (IsBlank())
-                {
-                    Language = note.Language;
-                    Text = note.Text;
-                }
-                else
-                {
-                    Text += "; ";
-                    if (Language != note.Language)
-                    {
-                        Text += $"[{note.Language}] ";
-                    }
-                    Text += note.Text;
-                }
+                return;
+            }
+
+            if (IsBlank())
+            {
+                Language = note.Language;
+                Text = note.Text;
+            }
+            else
+            {
+                var langTag = Language == note.Language ? "" : $"[{note.Language}] ";
+                Text += $"; {langTag}{note.Text}";
             }
         }
 
