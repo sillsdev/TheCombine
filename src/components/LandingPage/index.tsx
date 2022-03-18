@@ -6,6 +6,7 @@ import history, { Path } from "browserHistory";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
   horizontalButtonsHeight,
+  SignUpButton,
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
 import tractor from "resources/tractor.png";
@@ -53,23 +54,29 @@ export default function LandingPage(): ReactElement {
 function body(): ReactElement {
   return (
     <React.Fragment>
-      <Typography
-        variant="body2"
-        align="justify"
-        style={{ padding: theme.spacing(3) }}
-      >
-        <Translate id="landingPage.descriptionP1" />
-        {<br />}
-        {<br />}
-        <Translate id="landingPage.descriptionP2" />
-        {<br />}
-        {<br />}
-        <Translate id="landingPage.descriptionP3" />
-        {<br />}
-        {<br />}
-        <Translate id="landingPage.descriptionP4" />
-        <SignUpButton />
-      </Typography>
+      <div style={{ padding: theme.spacing(3) }}>
+        <Typography variant="body2" align="justify">
+          <Translate id="landingPage.descriptionP1" />
+          {<br />}
+          {<br />}
+          <Translate id="landingPage.descriptionP2" />
+          {<br />}
+          {<br />}
+          <Translate id="landingPage.descriptionP3" />
+          {<br />}
+        </Typography>
+        <Typography
+          variant="h6"
+          align="justify"
+          style={{
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(1),
+          }}
+        >
+          <Translate id="landingPage.descriptionP4" />
+        </Typography>
+        <SignUpButton buttonIdPrefix="landing-body" />
+      </div>
       <img
         src={tractor}
         alt="Tractor"
@@ -81,21 +88,5 @@ function body(): ReactElement {
         }}
       />
     </React.Fragment>
-  );
-}
-
-function SignUpButton(): ReactElement {
-  return (
-    <Button
-      size="small"
-      variant="outlined"
-      color="primary"
-      onClick={() => history.push(Path.SignUp)}
-      id={"landing-body-signUp"}
-    >
-      <Typography variant="subtitle1">
-        <Translate id={"login.signUp"} />
-      </Typography>
-    </Button>
   );
 }

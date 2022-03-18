@@ -1,6 +1,6 @@
 # Account
 
-How to sign up, login, and edit your account.
+How to sign up, log in, and edit your account.
 
 ![Login](images/login.png){ .center }
 
@@ -12,9 +12,9 @@ To create a new account, click the [SIGN UP](../sign-up) button on the Login pag
 
     The email address is used to reset your password, so there is only one account allowed per email address.
 
-## Login
+## Log In
 
-[Login](../login) to The Combine with the username and password given at registration.
+[Log in](../login) to The Combine with the username and password given at registration.
 
 If you want to change your password, click the "Forget password?" link. Follow the instructions and a password-reset
 will be sent to the email address associated with your account.
