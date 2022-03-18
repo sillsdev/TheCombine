@@ -164,6 +164,7 @@ export class DataEntryTable extends React.Component<
       );
       return;
     }
+    // TODO: add the audio even if the word is a duplicate
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
     const word = await backend.getWord(wordId);
     await this.updateExisting();
