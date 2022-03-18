@@ -1,10 +1,11 @@
 import { AppBar, Button, Grid, Toolbar, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 export const bottomBarHeight = 55;
 
 /** A  bar shown at the bottom of the landing page. */
-export default function BottomBar() {
+export default function BottomBar(): ReactElement {
   const { REACT_APP_VERSION } = process.env;
   return (
     <div style={{ marginTop: bottomBarHeight }}>
