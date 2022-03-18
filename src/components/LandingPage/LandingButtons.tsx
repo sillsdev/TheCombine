@@ -1,4 +1,5 @@
 import { Button, Card, Grid, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { openUserGuide, Path } from "browserHistory";
@@ -19,7 +20,9 @@ interface LandingButtonsProps {
   top?: boolean;
 }
 
-export default function LandingButtons(props: LandingButtonsProps) {
+export default function LandingButtons(
+  props: LandingButtonsProps
+): ReactElement {
   return (
     <Card
       style={{
@@ -58,7 +61,7 @@ interface LandingButtonProps {
   textId: string;
   buttonId: string;
 }
-function LandingButton(props: LandingButtonProps) {
+function LandingButton(props: LandingButtonProps): ReactElement {
   return (
     <Grid item style={{ textAlign: "center" }}>
       <Button

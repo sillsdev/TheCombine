@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Hidden, Typography } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { Path } from "browserHistory";
@@ -14,7 +14,7 @@ import theme from "types/theme";
 const heightBetweenBars =
   window.innerHeight - topBarHeight - bottomBarHeight - theme.spacing(1);
 
-export default function LandingPage() {
+export default function LandingPage(): ReactElement {
   return (
     <React.Fragment>
       <TopBar />
@@ -50,7 +50,7 @@ export default function LandingPage() {
   );
 }
 
-function body() {
+function body(): ReactElement {
   return (
     <React.Fragment>
       <Typography
@@ -84,7 +84,7 @@ function body() {
   );
 }
 
-function SignUpButton() {
+function SignUpButton(): ReactElement {
   return (
     <Button
       size="small"
