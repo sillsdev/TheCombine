@@ -15,8 +15,8 @@ global:
   updateStrategy: Recreate
   awsAccount: "Override"
   awsDefaultRegion: "Override"
-  awsS3AccessKeyId: "Override"
-  awsS3SecretAccessKey: "Override"
+  awsAccessKeyId: "Override"
+  awsSecretAccessKey: "Override"
   pullSecretName: "None"
   awsS3Access: aws-s3-credentials
   imageTag: "latest"

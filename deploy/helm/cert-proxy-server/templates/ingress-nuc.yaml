@@ -5,16 +5,16 @@ metadata:
   name: {{ replace "." "-" . }}
   namespace: {{ $.Release.Namespace }}
   annotations:
-{{- if eq .Values.ingressClass "nginx" }}
+{{- if eq $.Values.ingressClass "nginx" }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
-{{- else if eq .Values.ingressClass "traefik" }}
+{{- else if eq $.Values.ingressClass "traefik" }}
     traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
     cert-manager.io/issuer: {{ $.Values.certIssuer }}
     cert-manager.io/duration: 2160h
     cert-manager.io/renew-before: {{ $.Values.certRenewBefore }}
 spec:
-  ingressClassName: {{ .Values.ingressClass }}
+  ingressClassName: {{ $.Values.ingressClass }}
   tls:
   - hosts:
     - {{ . }}

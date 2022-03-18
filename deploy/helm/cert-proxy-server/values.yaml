@@ -20,10 +20,8 @@ global:
   updateStrategy: Recreate
   awsAccount: "Override"
   awsDefaultRegion: "Override"
-  awsEcrAccessKeyId: "Override"
-  awsEcrSecretAccessKey: "Override"
-  awsS3AccessKeyId: "Override"
-  awsS3SecretAccessKey: "Override"
+  awsAccessKeyId: "Override"
+  awsSecretAccessKey: "Override"
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr

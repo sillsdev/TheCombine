@@ -18,6 +18,8 @@ targets:
       frontend:
         configCaptchaRequired: "true"
         configCaptchaSiteKey: "6LdBKdIeAAAAAD6hEBDPa0zUMitfVfQvpkgjehNV"
+      global:
+        awsS3Location: dev.thecombine.app
   nuc1:
     serverName: nuc1.thecombine.app
     profile: nuc
@@ -42,7 +44,7 @@ targets:
         - nuc1.thecombine.app
         - nuc2.thecombine.app
       global:
-        awsS3Location: thecombine.app
+        awsS3Location: prod.thecombine.app
 
 # Set of profiles
 # Each key of 'profiles' defines one of the profiles used by the set of targets.
@@ -85,14 +87,10 @@ charts:
         env_var: AWS_ACCOUNT
       - config_item: awsDefaultRegion
         env_var: AWS_DEFAULT_REGION
-      - config_item: awsEcrAccessKeyId
-        env_var: AWS_ECR_ACCESS_KEY_ID
-      - config_item: awsEcrSecretAccessKey
-        env_var: AWS_ECR_SECRET_ACCESS_KEY
-      - config_item: awsS3AccessKeyId
-        env_var: AWS_S3_ACCESS_KEY_ID
-      - config_item: awsS3SecretAccessKey
-        env_var: AWS_S3_SECRET_ACCESS_KEY
+      - config_item: awsAccessKeyId
+        env_var: AWS_ACCESS_KEY_ID
+      - config_item: awsSecretAccessKey
+        env_var: AWS_SECRET_ACCESS_KEY
       - config_item: combineJwtSecretKey
         env_var: COMBINE_JWT_SECRET_KEY
       - config_item: combineSmtpUsername
@@ -106,11 +104,7 @@ charts:
         env_var: AWS_ACCOUNT
       - config_item: awsDefaultRegion
         env_var: AWS_DEFAULT_REGION
-      - config_item: awsEcrAccessKeyId
-        env_var: AWS_ECR_ACCESS_KEY_ID
-      - config_item: awsEcrSecretAccessKey
-        env_var: AWS_ECR_SECRET_ACCESS_KEY
-      - config_item: awsS3AccessKeyId
-        env_var: AWS_S3_ACCESS_KEY_ID
-      - config_item: awsS3SecretAccessKey
-        env_var: AWS_S3_SECRET_ACCESS_KEY
+      - config_item: awsAccessKeyId
+        env_var: AWS_ACCESS_KEY_ID
+      - config_item: awsSecretAccessKey
+        env_var: AWS_SECRET_ACCESS_KEY

@@ -583,10 +583,8 @@ the following environment variables:
 
 - `AWS_ACCOUNT`
 - `AWS_DEFAULT_REGION`
-- `AWS_ECR_ACCESS_KEY_ID`
-- `AWS_ECR_SECRET_ACCESS_KEY`
-- `AWS_S3_ACCESS_KEY_ID`
-- `AWS_S3_SECRET_ACCESS_KEY`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
 
 These variables will allow the Combine to:
 
