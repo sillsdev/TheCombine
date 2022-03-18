@@ -143,7 +143,7 @@ namespace Backend.Tests.Models
             newNote.Language = newLanguage;
             oldNote.Add(newNote);
             var expectedNote = note.Clone();
-            expectedNote.Text += "; [" + newLanguage + "] " + newNote.Text;
+            expectedNote.Text += $"; [{newLanguage}] {newNote.Text}";
             Assert.That(oldNote.Equals(expectedNote));
         }
     }

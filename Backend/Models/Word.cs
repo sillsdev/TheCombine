@@ -258,7 +258,7 @@ namespace BackendFramework.Models
                     Text += "; ";
                     if (Language != note.Language)
                     {
-                        Text += String.Format("[{0}] ", note.Language);
+                        Text += $"[{note.Language}] ";
                     }
                     Text += note.Text;
                 }
