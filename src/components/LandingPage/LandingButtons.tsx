@@ -1,4 +1,5 @@
 import { Button, Card, Grid, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { openUserGuide, Path } from "browserHistory";
@@ -19,7 +20,9 @@ interface LandingButtonsProps {
   top?: boolean;
 }
 
-export default function LandingButtons(props: LandingButtonsProps) {
+export default function LandingButtons(
+  props: LandingButtonsProps
+): ReactElement {
   return (
     <Card
       style={{
@@ -33,11 +36,7 @@ export default function LandingButtons(props: LandingButtonsProps) {
         alignItems="center"
         style={{ height: "100%" }}
       >
-        <LandingButton
-          onClick={() => history.push(Path.SignUp)}
-          textId="login.signUp"
-          buttonId={`${idAffix}-signUp`}
-        />
+        <SignUpButton />
         <LandingButton
           onClick={() => history.push(Path.Login)}
           textId="login.login"
@@ -53,21 +52,31 @@ export default function LandingButtons(props: LandingButtonsProps) {
   );
 }
 
+interface SignUpButtonProps {
+  buttonIdPrefix?: string;
+}
+export function SignUpButton(props: SignUpButtonProps): ReactElement {
+  return (
+    <LandingButton
+      onClick={() => history.push(Path.SignUp)}
+      textId="login.signUp"
+      buttonId={`${props.buttonIdPrefix ?? idAffix}-signUp`}
+      filled
+    />
+  );
+}
+
 interface LandingButtonProps {
   onClick: () => void;
   textId: string;
   buttonId: string;
+  filled?: boolean;
 }
-function LandingButton(props: LandingButtonProps) {
+function LandingButton(props: LandingButtonProps): ReactElement {
   return (
-    <Grid
-      item
-      style={{
-        textAlign: "center",
-      }}
-    >
+    <Grid item style={{ textAlign: "center" }}>
       <Button
-        variant="contained"
+        variant={props.filled ? "contained" : "outlined"}
         color="primary"
         onClick={props.onClick}
         style={{ height: buttonHeight, width: buttonWidth }}

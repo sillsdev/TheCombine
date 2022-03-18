@@ -38,6 +38,11 @@
       "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx.",
       "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx.",
       "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx."
+    ],
+    "descriptionP4": [
+      "Sign up to get started with your word collection!",
+      "Sign up to get started with your word collection!",
+      "Sign up to get started with your word collection!"
     ]
   },
   "treeView": {
@@ -119,7 +124,7 @@
       "¿Se te olvidó tu contraseña?",
       "Mot de passe oublié ?"
     ],
-    "login": ["Login", "Iniciar sesión", "Se connecter"],
+    "login": ["Log in", "Iniciar sesión", "Se connecter"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña.",

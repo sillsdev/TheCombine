@@ -19,7 +19,7 @@ PC such as an Intel NUC. The instructions assume that:
   has been cloned on the host machine. This directory is referred to as \<COMBINE\>.
 - the target machine where _The Combine_ is being installed will be referred to as _\<target\>_
 - the user on the target machine that will be used for installing docker, etc. will be referred to as _\<target_user\>_.
-  You must be able to login to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
+  You must be able to log in to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
 
 ## Contents
 

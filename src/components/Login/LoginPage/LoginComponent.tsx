@@ -198,7 +198,7 @@ export default class Login extends React.Component<
                 </div>
               )}
 
-              {/* User Guide, Sign Up, and Login buttons */}
+              {/* User Guide, Sign Up, and Log In buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item xs={4} sm={6}>
                   <Button id={`${idAffix}-guide`} onClick={openUserGuide}>

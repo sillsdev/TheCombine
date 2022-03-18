@@ -1,10 +1,11 @@
 import { Box, Grid, Hidden, Typography } from "@material-ui/core";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
   horizontalButtonsHeight,
+  SignUpButton,
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
 import tractor from "resources/tractor.png";
@@ -13,7 +14,7 @@ import theme from "types/theme";
 const heightBetweenBars =
   window.innerHeight - topBarHeight - bottomBarHeight - theme.spacing(1);
 
-export default function LandingPage() {
+export default function LandingPage(): ReactElement {
   return (
     <React.Fragment>
       <TopBar />
@@ -49,22 +50,32 @@ export default function LandingPage() {
   );
 }
 
-function body() {
+function body(): ReactElement {
   return (
     <React.Fragment>
-      <Typography
-        variant="body2"
-        align="justify"
-        style={{ padding: theme.spacing(3) }}
-      >
-        <Translate id="landingPage.descriptionP1" />
-        {<br />}
-        {<br />}
-        <Translate id="landingPage.descriptionP2" />
-        {<br />}
-        {<br />}
-        <Translate id="landingPage.descriptionP3" />
-      </Typography>
+      <div style={{ padding: theme.spacing(3) }}>
+        <Typography variant="body2" align="justify">
+          <Translate id="landingPage.descriptionP1" />
+          {<br />}
+          {<br />}
+          <Translate id="landingPage.descriptionP2" />
+          {<br />}
+          {<br />}
+          <Translate id="landingPage.descriptionP3" />
+          {<br />}
+        </Typography>
+        <Typography
+          variant="h6"
+          align="justify"
+          style={{
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(1),
+          }}
+        >
+          <Translate id="landingPage.descriptionP4" />
+        </Typography>
+        <SignUpButton buttonIdPrefix="landing-body" />
+      </div>
       <img
         src={tractor}
         alt="Tractor"

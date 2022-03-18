@@ -1,4 +1,5 @@
 import { AppBar, Grid, Hidden, Toolbar, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
 import logo from "resources/CombineLogoV1White.png";
@@ -6,7 +7,7 @@ import logo from "resources/CombineLogoV1White.png";
 export const topBarHeight = 70;
 
 /** A  bar shown at the top of the landing page. */
-export default function TopBar() {
+export default function TopBar(): ReactElement {
   return (
     <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
       <AppBar position="fixed">
