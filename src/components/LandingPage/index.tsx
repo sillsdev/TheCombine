@@ -1,8 +1,7 @@
-import { Box, Button, Grid, Hidden, Typography } from "@material-ui/core";
+import { Box, Grid, Hidden, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-import history, { Path } from "browserHistory";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
   horizontalButtonsHeight,
