@@ -124,8 +124,7 @@ namespace Backend.Tests.Services
             // The newNote should be added to the old word.
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            var frontierNote = frontier.First().Note;
-            Assert.That(frontierNote, Is.EqualTo(newNote));
+            Assert.That(frontier.First().Note, Is.EqualTo(newNote));
         }
 
         [Test]
