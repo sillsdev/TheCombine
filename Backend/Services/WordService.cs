@@ -132,7 +132,10 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        /// <summary> Checks if a word being added is an exact duplicate of a preexisting word </summary>
+        /// <summary>
+        /// Checks if a word being added is a duplicate of a preexisting word.
+        /// If a duplicate, updates the existing word with any new domains or note.
+        /// </summary>
         public async Task<bool> WordIsUnique(Word word)
         {
             // Get all words from frontier
@@ -178,11 +181,6 @@ namespace BackendFramework.Services
                         {
                             foundDuplicateSense = true;
 
-                            // Add edited by and remove duplicates
-                            matchingVern.EditedBy.AddRange(word.EditedBy);
-                            matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
-
-                            // Add semantic domains and remove duplicates
                             oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
                             oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
                         }
@@ -195,10 +193,14 @@ namespace BackendFramework.Services
                     }
                 }
 
-                // Update the word only if all the senses were duplicates
+                // Update the existing word only if all the senses were duplicates
                 if (foundDuplicateSense)
                 {
                     isUniqueWord = false;
+
+                    matchingVern.Note.Append(word.Note);
+                    matchingVern.EditedBy.AddRange(word.EditedBy);
+                    matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
                     await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
                 }
             }
