@@ -105,6 +105,29 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void WordIsUniqueFalseAddsNote()
+        {
+            var oldWord = Util.RandomWord(ProjId);
+            oldWord.Note.Text = "";
+            oldWord = _wordRepo.Create(oldWord).Result;
+
+            // Make the new word a duplicate of the old word, but with a note added.
+            var newWord = Util.RandomWord(ProjId);
+            newWord.Vernacular = oldWord.Vernacular;
+            newWord.Senses = new List<Sense> { oldWord.Senses.First().Clone() };
+            var newNote = new Note("lang", "text");
+            newWord.Note = newNote.Clone();
+
+            var isUnique = _wordService.WordIsUnique(newWord).Result;
+            Assert.That(isUnique, Is.False);
+
+            // The newNote should be added to the old word.
+            var frontier = _wordRepo.GetFrontier(ProjId).Result;
+            Assert.That(frontier, Has.Count.EqualTo(1));
+            Assert.That(frontier.First().Note, Is.EqualTo(newNote));
+        }
+
+        [Test]
         public void WordIsUniqueSameVernNoDefNoGlossTrue()
         {
             var oldWord = Util.RandomWord(ProjId);
