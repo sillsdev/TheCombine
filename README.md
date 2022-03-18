@@ -66,6 +66,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    6. [Connecting to your Cluster](#connecting-to-your-cluster)
    7. [Stopping _The Combine_](#stopping-the-combine)
    8. [Deleting Helm Charts](#deleting-helm-charts)
+   9. [Checking The System Status](#checking-the-system-status)
 5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
@@ -773,6 +774,57 @@ helm -n <chart_namespace> delete <chart_name>
 
 where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
 delete. These are listed in the output of `helm list -A`.
+
+### Checking The System Status
+
+Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
+Combine_ is setup as four deployments:
+
+- frontend
+- backend
+- database
+- maintenance
+
+Each deployment definition is used to create a _pod_ that runs the docker image.
+
+To see the state of the deployments, run:
+
+```console
+$ kubectl -n thecombine get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+database      1/1     1            1           3h41m
+maintenance   1/1     1            1           3h41m
+backend       1/1     1            1           3h41m
+frontend      1/1     1            1           3h41m
+```
+
+Similarly, you can view the state of the pods:
+
+```console
+$ kubectl -n thecombine get pods
+NAME                           READY   STATUS      RESTARTS        AGE
+database-794b4d956f-g2n5k      1/1     Running     1 (3h51m ago)   3h58m
+ecr-cred-helper--1-w9xxp       0/1     Completed   0               164m
+maintenance-85644b9c76-55pz8   1/1     Running     0               130m
+backend-69b77c46c5-8dqlv       1/1     Running     0               130m
+frontend-c94c5747c-pz6cc       1/1     Running     0               60m
+```
+
+Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the
+`kubectl -n thecombine get pods` command or the deployment, for example, to view the logs of the frontend, you would
+run:
+
+```bash
+kubectl -n thecombine logs frontend-c94c5747c-pz6cc
+```
+
+or
+
+```bash
+kubectl -n thecombine logs deployment/frontend
+```
+
+If you want to monitor the logs while the system is running, add the `--follow` option to the command.
 
 ## Maintenance Scripts for TheCombine
 
