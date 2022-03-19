@@ -20,12 +20,10 @@ global:
   updateStrategy: Recreate
   awsAccount: "Override"
   awsDefaultRegion: "Override"
-  awsEcrAccessKeyId: "Override"
-  awsEcrSecretAccessKey: "Override"
-  awsS3AccessKeyId: "Override"
-  awsS3SecretAccessKey: "Override"
+  awsAccessKeyId: "Override"
+  awsSecretAccessKey: "Override"
   imageTag: "latest"
-  # Define the type of image registry to use, awsEcr or local
+  # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
@@ -55,5 +53,3 @@ awsS3CertLoc: certs
 certIssuer: letsencrypt-prod
 # Renew before there are 1440 hours left (60 days)
 certRenewBefore: 1440h
-
-combineCertProxyList: []

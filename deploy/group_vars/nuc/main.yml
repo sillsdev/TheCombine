@@ -12,9 +12,6 @@
 # Specify which Kubernetes engine to install -
 # one of k3s or none.
 k8s_engine: k3s
-k8s_components:
-  - ingress_controller
-  - cert_proxy_client
 
 image_pull_secret: aws-login-credentials
 

@@ -33,7 +33,10 @@ spec:
             mountPath: /myvol/combine-files
           imagePullPolicy: IfNotPresent
       containers:
-        - env:
+        - name: backend
+          image: {{ template "backend.containerImage" . }}
+          imagePullPolicy: {{ template "backend.imagePullPolicy" . }}
+          env:
             - name: COMBINE_JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -74,13 +77,6 @@ spec:
                 secretKeyRef:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
-          image: {{ template "backend.containerImage" . }}
-{{- if eq .Values.global.imageTag "latest" }}
-          imagePullPolicy: Always
-{{- else }}
-          imagePullPolicy: IfNotPresent
-{{- end }}
-          name: backend
           ports:
             - containerPort: 5000
           resources: {}

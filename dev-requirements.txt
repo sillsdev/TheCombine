@@ -20,9 +20,9 @@ certifi==2021.10.8
     #   requests
 cffi==1.15.0
     # via cryptography
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
     # via requests
-click==8.0.3
+click==8.0.4
     # via
     #   black
     #   mkdocs
@@ -34,7 +34,7 @@ distlib==0.3.4
     # via virtualenv
 eradicate==2.0.0
     # via flake8-eradicate
-filelock==3.4.2
+filelock==3.6.0
     # via
     #   tox
     #   virtualenv
@@ -65,7 +65,7 @@ humanfriendly==10.0
     # via -r dev-requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.10.1
+importlib-metadata==4.11.1
     # via
     #   markdown
     #   mkdocs
@@ -79,9 +79,9 @@ jinja2==3.0.3
     #   mkdocs-material
 jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
-kubernetes==21.7.0
+kubernetes==22.6.0
     # via -r dev-requirements.in
-lxml==4.7.1
+lxml==4.8.0
     # via mkdocs-htmlproofer-plugin
 markdown==3.3.6
     # via
@@ -89,7 +89,7 @@ markdown==3.3.6
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
     #   pymdown-extensions
-markupsafe==2.0.1
+markupsafe==2.1.0
     # via jinja2
 mccabe==0.6.1
     # via flake8
@@ -101,7 +101,7 @@ mkdocs==1.2.3
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.8.0
     # via -r dev-requirements.in
-mkdocs-material==8.1.10
+mkdocs-material==8.2.1
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.0.3
     # via mkdocs-material
@@ -121,7 +121,7 @@ pathspec==0.9.0
     # via black
 pep8-naming==0.12.1
     # via -r dev-requirements.in
-platformdirs==2.5.0
+platformdirs==2.5.1
     # via
     #   black
     #   virtualenv
@@ -143,7 +143,7 @@ pyflakes==2.4.0
     # via flake8
 pygments==2.11.2
     # via mkdocs-material
-pymdown-extensions==9.1
+pymdown-extensions==9.2
     # via mkdocs-material
 pyopenssl==22.0.0
     # via -r dev-requirements.in
@@ -201,11 +201,11 @@ types-python-dateutil==2.8.9
     # via -r dev-requirements.in
 types-pyyaml==6.0.4
     # via -r dev-requirements.in
-types-requests==2.27.8
+types-requests==2.27.11
     # via -r dev-requirements.in
 types-urllib3==1.26.9
     # via types-requests
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via
     #   black
     #   mypy
@@ -213,11 +213,11 @@ urllib3==1.26.8
     # via
     #   kubernetes
     #   requests
-virtualenv==20.13.1
+virtualenv==20.13.2
     # via tox
 watchdog==2.1.6
     # via mkdocs
-websocket-client==1.2.3
+websocket-client==1.3.0
     # via kubernetes
 zipp==3.7.0
     # via importlib-metadata

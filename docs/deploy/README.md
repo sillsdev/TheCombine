@@ -51,7 +51,7 @@ Kubernetes cluster, you will need the following tools:
 - Git
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) for examining and modifying your Kubernetes cluster
 - [Helm](https://helm.sh/docs/intro/install/) for installing Helm Charts (Kubernetes Packages)
-- [Docker](https://docs.docker.com/get-docker/)
+- [Docker](https://docs.docker.com/get-docker/) or [Docker Desktop](../../README.md#docker-desktop-for-linux)
 - Python - See the project [README](../../README.md#python) for instructions on how to setup Python and the virtual
   environment
 - clone the project repo:
@@ -79,7 +79,7 @@ installing _The Combine_ on an existing cluster, skip this section and go to
 
 The minimum target system requirements for installing _The Combine_ are:
 
-- Ubuntu 20.04 Server operating system (see [Install Ubuntu Focal Server](#install-ubuntu-focal-server))
+- Ubuntu 20.04 Server operating system (see [Install Ubuntu Server](#install-ubuntu-server))
 - 4 GB RAM
 - 32 GB Storage
 
@@ -109,10 +109,10 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
       ssh-copy-id <target_user>@<target>
       ```
 
-2. Install Kubernetes and setup your configuration file for running `kubectl`:
+2. To install Kubernetes and setup your configuration file for running `kubectl`, run this command from the `deploy`
+   folder in the project:
 
    ```bash
-   cd <COMBINE>/deploy
    ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
    ```
 
@@ -145,6 +145,14 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
    3. Add `--kubeconfig=~/.kube/<target>/config` to each `helm` and `kubectl` command. The `setup_combine.py` command
       accepts a `kubeconfig` option as well.
 
+4. Install the charts needed for _The Combine_
+
+   From the project directory with an activated _Python_ virtual environment, run:
+
+   ```bash
+   python deploy/scripts/setup_cluster.py --type nuc
+   ```
+
 ### Installing _The Combine_ Helm Charts
 
 #### Setup
@@ -162,10 +170,8 @@ For the Production or QA server,
 
    - AWS_ACCOUNT
    - AWS_DEFAULT_REGION
-   - AWS_ECR_ACCESS_KEY_ID
-   - AWS_ECR_SECRET_ACCESS_KEY
-   - AWS_S3_ACCESS_KEY_ID
-   - AWS_S3_SECRET_ACCESS_KEY
+   - AWS_ACCESS_KEY_ID
+   - AWS_SECRET_ACCESS_KEY
    - COMBINE_JWT_SECRET_KEY
    - COMBINE_SMTP_USERNAME
    - COMBINE_SMTP_PASSWORD
@@ -191,9 +197,9 @@ Notes:
 - You will be prompted for the _target_ where _The Combine_ is to be installed as well as version to install. The
   version is the Docker image tag in the AWS ECR image repository. The standard releases are tagged with the version
   number, e.g. _0.7.15_.
-- The _target_ must be one listed in `<COMBINE>/deploy/scripts/config.yaml`.
-- Run `python scripts/setup_combine.py --help` for additional options such as specifying a different configuration file
-  for additional targets.
+- The _target_ must be one listed in `<COMBINE>/deploy/scripts/setup_files/config.yaml`.
+- Run `python deploy/scripts/setup_combine.py --help` for additional options such as specifying a different
+  configuration file for additional targets.
 
 ### Maintenance Scripts for Kubernetes
 

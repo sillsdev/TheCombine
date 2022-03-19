@@ -52,8 +52,13 @@
     - "{{ k8s_user_home.stdout }}"
     - /root
 
+- name: List contexts
+  command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config get-contexts
+  register: k3s_contexts
+
 - name: Change context name from 'default'
   command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config rename-context default {{ kubecfgdir }}
+  when: k3s_contexts.stdout is regex("^\*? +default.*")
 
 - name: Save kubectl configuration on host
   fetch:

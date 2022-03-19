@@ -4,7 +4,6 @@ metadata:
   name: thecombine
   namespace: {{ .Release.Namespace }}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
 {{- if eq .Values.ingressClass "nginx" }}
     nginx.ingress.kubernetes.io/proxy-body-size: "250m"
 {{- end }}
@@ -14,12 +13,14 @@ metadata:
     cert-manager.io/renew-before: 720h
 {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingressClass }}
   tls:
   - hosts:
     - {{ .Values.global.serverName }}
     secretName: {{ replace "." "-" .Values.global.serverName }}-tls
   rules:
-  - http:
+  - host: {{ .Values.global.serverName }}
+    http:
       paths:
       - backend:
           service:

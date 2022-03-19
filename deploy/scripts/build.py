@@ -12,7 +12,7 @@ import argparse
 from dataclasses import dataclass
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, Optional
 
 
 @dataclass(frozen=True)
@@ -42,6 +42,12 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--components",
+        nargs="*",
+        choices=["frontend", "backend", "maintenance"],
+        help="Combine components to build.",
+    )
+    parser.add_argument(
         "--tag",
         "-t",
         help="Image tag",
@@ -63,6 +69,12 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def run(cmd: str) -> None:
+    """Print a command and run it"""
+    print(cmd)
+    os.system(cmd)
+
+
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
@@ -72,18 +84,24 @@ def main() -> None:
     else:
         build_cmd = "docker"
 
-    build_specs: List[BuildSpec] = [
-        BuildSpec(project_dir, "frontend"),
-        BuildSpec(project_dir / "Backend", "backend"),
-        BuildSpec(project_dir / "maintenance", "maint"),
-    ]
+    if args.components is not None:
+        to_do = args.components
+    else:
+        to_do = ["backend", "frontend", "maintenance"]
 
-    for spec in build_specs:
+    build_specs: Dict[str, BuildSpec] = {
+        "backend": BuildSpec(project_dir / "Backend", "backend"),
+        "maintenance": BuildSpec(project_dir / "maintenance", "maint"),
+        "frontend": BuildSpec(project_dir, "frontend"),
+    }
+
+    for component in to_do:
+        spec = build_specs[component]
         os.chdir(spec.dir)
         image_name = get_image_name(args.repo, spec.name, args.tag)
-        os.system(f"{build_cmd} build -t {image_name} -f Dockerfile .")
+        run(f"{build_cmd} build -t {image_name} -f Dockerfile .")
         if args.repo is not None:
-            os.system(f"{build_cmd} push {image_name}")
+            run(f"{build_cmd} push {image_name}")
 
 
 if __name__ == "__main__":

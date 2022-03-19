@@ -61,11 +61,7 @@ spec:
             - name: CERT_PROXY_NAMESPACE
               value: {{ .Release.Namespace }}
           image: {{ template "cert-proxy-server.containerImage" . }}
-{{- if eq .Values.global.imageTag "latest" }}
-          imagePullPolicy: Always
-{{- else }}
-          imagePullPolicy: IfNotPresent
-{{- end }}
+          imagePullPolicy: {{ template "cert-proxy-server.imagePullPolicy" . }}
           name: combine-cert-proxy
           resources: {}
       restartPolicy: Always

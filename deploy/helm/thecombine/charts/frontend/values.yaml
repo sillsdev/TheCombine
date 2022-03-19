@@ -8,15 +8,15 @@ global:
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
   imageTag: "latest"
-  # Define the type of image registry to use, awsEcr or local
-  imageRegistry: local
+  # Define the image registry to use (may be blank for local images)
+  imageRegistry: ""
 
 imageName: combine_frontend
 
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
 configCaptchaRequired: "false"
-configCaptchaSiteKey: "None"
+configCaptchaSiteKey: "None - from frontend chart"
 configEmailEnabled: "false"
 configShowCertExpiration: "false"
 configAnalyticsWriteKey: ""

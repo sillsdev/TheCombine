@@ -1,0 +1,50 @@
+# Define the charts that need to be installed for each cluster type
+clusters:
+  standard:
+    - cert-manager
+    - nginx-ingress-controller
+  rancher:
+    - rancher-ui
+
+# Specify how each chart is to be installed.  The "repo" key specified which
+# helm repository needs to be added and the "chart" key specifies how to
+# install/update the chart.
+cert-manager:
+  repo:
+    name: jetstack
+    url: https://charts.jetstack.io
+  chart:
+    name: cert-manager
+    reference: jetstack/cert-manager
+    namespace: cert-manager
+    version: v1.7.1
+    wait: true
+    override:
+      installCRDs: true
+
+nginx-ingress-controller:
+  repo:
+    name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  chart:
+    name: ingress-controller
+    reference: ingress-nginx/ingress-nginx
+    namespace: ingress-nginx
+    wait: true
+
+rancher-ui:
+  repo:
+    name: rancher-latest
+    url: https://releases.rancher.com/server-charts/latest
+  chart:
+    name: rancher
+    reference: rancher-latest/rancher
+    namespace: cattle-system
+    version: 2.6.3
+    wait: true
+    override:
+      hostname: rancher.local
+      bootstrapPassword: admin
+      ingress:
+        extraAnnotations:
+          kubernetes.io/ingress.class: nginx

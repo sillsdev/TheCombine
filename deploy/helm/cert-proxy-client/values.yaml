@@ -17,10 +17,10 @@ global:
   updateStrategy: Recreate
   awsAccount: "Override"
   awsDefaultRegion: "Override"
-  awsS3AccessKeyId: "Override"
-  awsS3SecretAccessKey: "Override"
+  awsAccessKeyId: "Override"
+  awsSecretAccessKey: "Override"
   imageTag: "latest"
-  # Define the type of image registry to use, awsEcr or local
+  # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
   # Default AWS S3 location
   awsS3Location: "thecombine.app"

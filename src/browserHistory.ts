@@ -66,5 +66,5 @@ function getWindowOrigin(): string {
  */
 export function openUserGuide(): void {
   const origin = getWindowOrigin();
-  window.open(`${origin}/docs`);
+  window.open(`${origin}/docs/`);
 }

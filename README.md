@@ -36,15 +36,14 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 ## Table of Contents
 
 1. [Getting Started with Development](#getting-started-with-development)
-2. [Docker](#docker)
-   1. [Installing Docker](#installing-docker)
-   2. [Build and Run](#build-and-run)
-3. [Python](#python)
-   1. [Windows Python Installation](#windows-python-installation)
-   2. [Linux Python Installation](#linux-python-installation)
-   3. [macOS Python Installation](#macos-python-installation)
-   4. [Python Packages](#python-packages)
-4. [Available Scripts](#available-scripts)
+   1. [Install Required Software](#install-required-software)
+   2. [Prepare The Environment](#prepare-the-environment)
+   3. [Python](#python)
+      1. [Windows Python Installation](#windows-python-installation)
+      2. [Linux Python Installation](#linux-python-installation)
+      3. [macOS Python Installation](#macos-python-installation)
+      4. [Python Packages](#python-packages)
+2. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Using OpenAPI](#using-openapi)
    3. [Running the Automated Tests](#running-the-automated-tests)
@@ -52,15 +51,32 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    5. [Generate License Reports](#generate-license-reports)
    6. [Set Project Version](#set-project-version)
    7. [Inspect Database](#inspect-database)
-   8. [Cleanup Local Repo](#cleanup-local-repository)
+   8. [Cleanup Local Repository](#cleanup-local-repository)
+3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
+   1. [Install Rancher Desktop](#install-rancher-desktop)
+   2. [Install Docker Desktop](#install-docker-desktop)
+   3. [Setup of Docker Desktop (all platforms)](#setup-of-docker-desktop-all-platforms)
+   4. [Install Kubernetes Tools](#install-kubernetes-tools)
+4. [Setup The Combine](#setup-the-combine)
+   1. [Install Required Charts](#install-required-charts)
+   2. [Install the Rancher User Interface](#install-the-rancher-user-interface)
+   3. [Build _The Combine_ Containers](#build-the-combine-containers)
+   4. [Setup Environment Variables](#setup-environment-variables)
+   5. [Install/Update _The Combine_](#installupdate-the-combine)
+   6. [Connecting to your Cluster](#connecting-to-your-cluster)
+   7. [Stopping _The Combine_](#stopping-the-combine)
+   8. [Deleting Helm Charts](#deleting-helm-charts)
+   9. [Checking The System Status](#checking-the-system-status)
 5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Development Environment](#development-environment)
-   2. [Production/QA Environment](#productionqa-environment)
+   2. [Kubernetes Environment](#kubernetes-environment)
 6. [User Guide](#user-guide)
 7. [Production](#production)
 8. [Learn More](#learn-more)
 
 ## Getting Started with Development
+
+### Install Required Software
 
 1. Clone this repo:
 
@@ -68,51 +84,36 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    git clone https://github.com/sillsdev/TheCombine.git
    ```
 
-2. Install:
-   - [Node.js 16 (LTS)](https://nodejs.org/en/download/)
-     - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
-     - On Ubuntu, follow
-       [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using
-       the appropriate Node.js version.
-   - [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
-     - On Ubuntu 20.04, follow these
-       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#2004-).
-   - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
-     Variable
-     - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
-   - [VS Code](https://code.visualstudio.com/download) and the following extensions:
-     - C# (`ms-dotnettools.csharp`)
-     - Prettier - Code formatter (`esbenp.prettier-vscode`)
-   - [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
-   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-   - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-   - [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
-     `dotnet tool update --global dotnet-project-licenses`
-3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
+2. [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
+3. [Node.js 16 (LTS)](https://nodejs.org/en/download/)
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
+   - On Ubuntu, follow
+     [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
+     appropriate Node.js version.
+4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
+   - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
+5. [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
+   Variable
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
+6. [VS Code](https://code.visualstudio.com/download) and the following extensions:
+   - C# (`ms-dotnettools.csharp`)
+   - Prettier - Code formatter (`esbenp.prettier-vscode`)
+7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
+   supported platforms and how to setup your virtual environment.
+8. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
+9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+10. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+    `dotnet tool update --global dotnet-project-licenses`
+
+### Prepare the Environment
+
+1. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL
    certificate.
-4. (Linux,macOS Only) Install
-   [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) and then:
-
-   - configure `git` to use `ansible-vault` for comparing encrypted vault files:
-
-     ```bash
-     git config --global diff.ansible-vault.textconv "ansible-vault view"
-     ```
-
-   - save the ansible vault password in a file, e.g. `${HOME}/.vault-password`
-   - set the permissions for the vault password file to `0600`
-   - edit your `.profile` to export the environment variable `ANSIBLE_VAULT_PASSWORD_FILE` set to the path of the file
-     with the vault password:
-
-     ```bash
-     export ANSIBLE_VAULT_PASSWORD_FILE=${HOME}/.vault-password
-     ```
-
-5. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
+2. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
    _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
    _System_ app (Windows).
-6. If you want the email services to work you will need to set the following environment variables. These values must be
+3. If you want the email services to work you will need to set the following environment variables. These values must be
    kept secret, so ask your email administrator to supply them.
 
    - `COMBINE_SMTP_SERVER`
@@ -122,110 +123,25 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-7. (Optional) To opt in to segment.com analytics to test the analytics during development:
+4. _(Optional)_ To opt in to segment.com analytics to test the analytics during development:
 
    ```bash
    # For Windows, use `copy`.
    cp .env.local.template .env.local
    ```
 
-8. Run `npm start` from the project directory to install dependencies and start the project.
+5. Run `npm start` from the project directory to install dependencies and start the project.
 
-9. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
+6. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
-
-Note, those starting development can skip the following sections related to production or deployment: 2. Docker, 4.
-Amazon Web Services.
 
 [chocolatey]: https://chocolatey.org/
 
-## Docker
+### Python
 
-### Installing Docker
+_Python 3_ is required to run the scripts that are used to initialize and maintain the cluster.
 
-Install [Docker](https://docs.docker.com/get-docker/).
-
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately. This is included by default
-in Docker Desktop for Windows and macOS.
-
-(macOS / Windows Only) If you are on macOS or Windows without
-[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
-allocated at least 4GB of Memory in Preferences | Resources.
-
-### Build and Run
-
-For information on _Docker Compose_ see the [Docker Compose documentation](https://docs.docker.com/compose/).
-
-1. Create the required docker files by running the configuration script in an activated Python virtual environment from
-   _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
-
-   ```bash
-   python scripts/docker_setup.py
-   ```
-
-   To view options, run with --help
-
-2. The `docker_setup.py` will generate a file, `.env.backend`, that defines the environment variables needed by the
-   Backend container. If you have defined them as OS variables in the
-   [Getting Started with Development](#getting-started-with-development) section above, then these variables will
-   already be set. If not, then you will need to edit `.env.backend` and provide values for the variables that are
-   listed.
-
-3. Build the images for the Docker containers:
-
-   ```bash
-   docker-compose build --parallel
-   ```
-
-   > **Notes**:
-   >
-   > - On Linux, you either need to prepend `sudo` to all of the following `docker` commands or add yourself to the
-   >   `docker` group. See the
-   >   [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
-   > - On Windows and macOS, Docker Desktop must be running.
-
-   If you get an `unexpected character ...` error, you may need to run `docker-compose disable-v2` then try the above
-   build again.
-
-4. Start the containers
-
-   ```bash
-   docker-compose up --detach
-   ```
-
-5. Browse to <https://localhost>.
-
-   _By default self-signed certificates are included, so you will need to accept a warning in the browser._
-
-6. To view logs:
-
-   ```bash
-   docker-compose logs --follow
-   ```
-
-   To view the logs from a single service, e.g. the `backend`:
-
-   ```bash
-   docker-compose logs --follow backend
-   ```
-
-   The `--follow` option (abbreviated as -f) will show you the current logs and update the display as items are logged.
-   To just get the current snapshot of the logs, do not add the `--follow` option.
-
-7. To stop
-
-   ```bash
-   docker-compose down
-   ```
-
-   Add the `--volumes` option to remove any stored data when the containers are stopped.
-
-## Python
-
-A Python script, `scripts/docker_setup.py` is used to configure the files needed to run _TheCombine_ in Docker
-containers. Python is required to create the `docker-compose` environment and to run some of the maintenance scripts.
-
-### Windows Python Installation
+#### Windows Python Installation
 
 - Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
 
@@ -241,7 +157,7 @@ containers. Python is required to create the `docker-compose` environment and to
   venv\Scripts\activate
   ```
 
-### Linux Python Installation
+#### Linux Python Installation
 
 The `python3` package is included in the Ubuntu distribution. To install the `pip` and `venv` modules for Python 3, run
 the following commands:
@@ -259,7 +175,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### macOS Python Installation
+#### macOS Python Installation
 
 Install [Homebrew](https://brew.sh/).
 
@@ -276,7 +192,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Python Packages
+#### Python Packages
 
 **Important**: All Python commands and scripts should be executed within a terminal using an activated Python virtual
 environment. This will be denoted with the `(venv)` prefix on the prompt.
@@ -506,12 +422,409 @@ To browse the database locally during development, open MongoDB Compass Communit
 
 It's sometimes possible for a developer's local temporary state to get out of sync with other developers or CI. This
 script removes temporary files and packages while leaving database data intact. This can help troubleshoot certain types
-of development setup errors.
+of development setup errors. Run from within a Python virtual environment.
 
 ```bash
-# On Windows, use `py` instead of `python3`.
-python3 scripts/cleanup_local_repo.py
+python scripts/cleanup_local_repo.py
 ```
+
+## Setup Local Kubernetes Cluster
+
+This section describes how to create a local Kubernetes cluster using either _Rancher Desktop_ or _Docker Desktop_.
+
+### Install Rancher Desktop
+
+Install [Rancher Desktop](https://rancherdesktop.io/) to create a local Kubernetes cluster to test _The Combine_ when
+running in containers. (_Optional. Only needed for running under Kubernetes._)
+
+When _Rancher Desktop_ is first run, you will be prompted to select the container runtime:
+
+![alt text](docs/images/rancher-desktop-select-runtime.png "Rancher Desktop Select Runtime")
+
+Select _dockerd (moby)_ and click _Accept_.
+
+The _Rancher Desktop Preferences_ dialog will be displayed as it loads the Kubernetes environment. While the page is
+displayed,
+
+1. select the _Kubernetes Settings_, and
+2. uncheck the _Enable Traefik_ checkbox (you do not need to wait until Kubernetes finishes loading).
+
+![alt text](docs/images/rancher-desktop-prefs.png "Rancher Desktop Preferences")
+
+### Install Docker Desktop
+
+#### Docker Desktop for Windows/macOS
+
+Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
+
+#### Docker Desktop for Linux
+
+_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 21.04,
+21.10 and Debian distributions. As a result, it requires a few more steps to install and setup _Docker Desktop_.
+
+To install _Docker Desktop for Linux_,
+
+1. If you installed `docker` or `docker-compose` previously, remove them:
+
+   ```bash
+   sudo apt purge docker-ce docker-ce-cli containerd.io
+   sudo apt autoremove
+   if [ -L /usr/bin/docker-compose ] ; then sudo rm /usr/bin/docker-compose ; fi
+   if [ -x /usr/local/bin/docker-compose ] ; then sudo rm /usr/local/bin/docker-compose ; fi
+   ```
+
+2. Create the `docker` group if it does not exist already:
+
+   ```bash
+   sudo addgroup --system docker
+   ```
+
+3. Follow the installation instructions at <https://docs.docker.com/desktop/linux/> with the following caveats:
+
+   1. After you setup the Docker Repository, make sure that you run
+
+      ```bash
+      sudo apt update
+      ```
+
+   2. Note the section on _Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger
+      than the memory for the virtual machine. The current preview sets both sizes to 1/2 of the available memory so you
+      will need to adjust it. If `/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide
+      any error message. There is info in `/var/lib/syslog`, however.
+
+### Setup of Docker Desktop (all platforms)
+
+Once _Docker Desktop_ has been installed, start it set it up as follows:
+
+1. Click the gear icon in the upper right to open the settings dialog;
+2. Click on the _Kubernetes_ link on the left-hand side;
+3. Select _Enable Kubernetes_ and click _Apply & Restart_;
+4. Click _Install_ on the dialog that is displayed.
+
+(macOS / Windows Only) If you are on macOS or Windows without
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
+allocated at least 4GB of Memory in Preferences | Resources.
+
+### Install Kubernetes Tools
+
+If the following tools were not installed with either _Rancher Desktop_ or _Docker Desktop_, install them from these
+links:
+
+1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-cli`
+2. [helm](https://helm.sh/docs/intro/install/)
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-helm`
+
+## Setup The Combine
+
+This section describes how to build and deploy _The Combine_ to your Kubernetes cluster. Unless specified otherwise, all
+of the commands below are run from _The Combine's_ project directory and are run in an activated Python virtual
+environment. (See the [Python](#python) section to create the virtual environment.)
+
+### Install Required Charts
+
+Install the required charts by running:
+
+```bash
+python deploy/scripts/setup_cluster.py
+```
+
+`deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired
+Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the
+_Rancher Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the
+`--kubeconfig` and `--context` options will let you specify a different cluster.
+
+Run the script with the `--help` option to see possible options for the script.
+
+### Install the Rancher User Interface
+
+_Note: This step is optional. Installing the Rancher User Interface provides a graphical view of your Kubernetes
+cluster._
+
+Install the Rancher User Interface by running:
+
+```bash
+python deploy/scripts/setup_cluster.py --type rancher
+```
+
+### Build _The Combine_ Containers
+
+Build _The Combine_ containers by running the build script in an activated Python virtual environment from
+_TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
+
+```bash
+python deploy/scripts/build.py
+```
+
+Notes:
+
+- Run with the `--help` option to see all available options.
+- If you see errors like:
+
+  ```bash
+  => ERROR [internal] load metadata for docker.io/library/nginx:1.21        0.5s
+  ```
+
+  pull the image directly and re-run the build. In this case, you would run:
+
+  ```bash
+  docker pull nginx:1.21
+  ```
+
+- If `--tag` is not used, the image will be untagged. When running or pulling an image with the tag `latest`, the
+  newest, untagged image will be pulled.
+- `--repo` and `--tag` are not specified under normal development use.
+
+### Setup Environment Variables
+
+_Note: This is optional for Development Environments._
+
+In addition to the environment variables defined in [Prepare the Environment](#prepare-the-environment), you may setup
+the following environment variables:
+
+- `AWS_ACCOUNT`
+- `AWS_DEFAULT_REGION`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+
+These variables will allow the Combine to:
+
+- pull released and QA software images from AWS Elastic Container Registry (ECR);
+- create backups and push them to AWS S3 storage; and
+- restore _The Combine's_ database and backend files from a backup stored in AWS S3 storage.
+
+The Combine application will function in a local cluster without these variables set.
+
+These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+
+### Install/Update _The Combine_
+
+Install the Kubernetes resources to run _The Combine_ by running:
+
+```bash
+python deploy/scripts/setup_combine.py [--target <target_name>] [--tag <image_tag>]
+```
+
+The default target is `localhost`; the default tag is `latest`. For development testing the script will usually be run
+with no arguments.
+
+If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
+`deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
+Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the
+_Rancher Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the
+`--kubeconfig` and `--context` options will let you specify a different cluster.
+
+Run the script with the `--help` option to see possible options for the script.
+
+When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
+all the containers are up and running. Run `kubectl -n thecombine get deployments` or `kubectl -n thecombine get pods`
+to see when the cluster is ready. For example,
+
+```console
+$ kubectl -n thecombine get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+backend       1/1     1            1           10m
+database      1/1     1            1           10m
+frontend      1/1     1            1           10m
+maintenance   1/1     1            1           10m
+```
+
+or
+
+```console
+$ kubectl -n thecombine get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+backend-5657559949-z2flp       1/1     Running   0          10m
+database-794b4d956f-zjszm      1/1     Running   0          10m
+frontend-7d6d79f8c5-lkhhz      1/1     Running   0          10m
+maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
+```
+
+### Connecting to Your Cluster
+
+To find the IP address of the Kubernetes cluster, run:
+
+```bash
+$ kubectl -n ingress-nginx get services
+NAME                                                    TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+ingress-controller-ingress-nginx-controller-admission   ClusterIP      10.43.238.232   <none>          443/TCP                      54s
+ingress-controller-ingress-nginx-controller             LoadBalancer   10.43.228.138   172.21.53.205   80:31284/TCP,443:32765/TCP   54s
+```
+
+#### Network Hosts Configuration
+
+The cluster's ingress controller uses the hostnames `thecombine.local` and `rancher.local` to be able to route traffic
+to the appropriate service. You will need to update your network hosts file to direct traffic for these hosts to the
+ingress controller. The way that you need to setup the host file varies by operating system and Kubernetes desktop app.
+
+- Windows:
+
+  Hosts file: `%windir%\System32\drivers\etc\hosts`
+
+  - _Rancher Desktop_: Add
+
+    ```textfile
+    172.21.53.205  thecombine.local rancher.local
+    ```
+
+    _Rancher Desktop_ creates a virtual ethernet interface for the `EXTERNAL-IP` address. The IP address should be
+    verified with the `kubectl` above before editing the hosts file.
+
+  - _Docker Desktop_: Add
+
+    ```textfile
+    127.0.0.1  thecombine.local rancher.local
+    ```
+
+- Linux/macOS:
+
+  Hosts file: `/etc/hosts`
+
+  _Rancher Desktop_ and _Docker Desktop_: Add
+
+  ```textfile
+  127.0.0.1  thecombine.local rancher.local
+  ```
+
+  No virtual ethernet interface is created. You can, however, connect to the cluster using the ports specified in
+  `get services` output.
+
+#### Connecting to _The Combine_
+
+Once your host configuration has been setup, you can connect to _The Combine_ by entering the URL
+`https://thecombine.local` in the address bar of your web browser. (`https://thecombine.local:<portnumber>` for Linux)
+
+Notes:
+
+1. You must specify the `https://` or your browser will probably do a web search.
+2. On Linux, the port number will change whenever the cluster is reset. It does not change when you stop and then
+   restart _Rancher Desktop_.
+3. _By default self-signed certificates are used, so you will need to accept a warning in the browser._
+
+#### Connecting to _Rancher_
+
+You can connect to the _Rancher UI_ by entering the URL `https://rancher.local` in the address bar of your web browser.
+(`https://rancher.local:<portnumber>` for Linux)
+
+##### First Time Sign-In to Rancher
+
+The first time that you connect to the _Rancher UI_ you will be shown the following screen:
+
+![alt text](docs/images/rancher-initial-sign-in.png "Rancher Initial Sign-In")
+
+At this page, you will:
+
+1. Enter the bootstrap password - `admin`. This password is changed for subsequent logins.
+2. Select your password for future logins. You can either accept the randomly generated one (save it) or provide your
+   own. The user name will be `admin`.
+3. Accept the Terms & Conditions.
+4. Click _Continue_.
+
+When you click _Continue_, the _Getting Started_ page is displayed:
+
+![alt text](docs/images/rancher-getting-started.png "Rancher Getting Started")
+
+This page allows you to:
+
+1. Select how the UI should open in the future; and
+2. Click on a link to display the dashboard for your Kubernetes cluster.
+
+##### Rancher UI Dashboard
+
+The Rancher Dashboard shows an overview of your Kubernetes cluster. The left-hand pane allows you to explore the
+different Kubernetes resources that are deployed in the cluster. This includes viewing configuration, current states,
+and logs:
+
+![alt text](docs/images/rancher-cluster-dashboard.png "Rancher Cluster Dashboard")
+
+### Stopping _The Combine_
+
+To stop _The Combine_ without deleting it, you scale it back to 0 replicas running:
+
+```bash
+kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database
+```
+
+You can restart the deployments by setting `--replicas=1`.
+
+### Deleting Helm Charts
+
+Deleting a helm chart will delete all Kubernetes resources including any persistent data or any data stored in a
+container.
+
+In addition to clearing out old data, there may be cases where existing charts need to be deleted and re-installed
+instead of upgraded, for example, when a configuration change requires changes to an immutable attribute of a resource.
+
+To delete a chart, first list all of the existing charts:
+
+```console
+$ helm list -A
+NAME                NAMESPACE       REVISION    UPDATED                                 STATUS      CHART                   APP VERSION
+cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
+ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
+rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
+thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
+```
+
+Using the chart name and namespace, you can then delete the chart:
+
+```bash
+helm -n <chart_namespace> delete <chart_name>
+```
+
+where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
+delete. These are listed in the output of `helm list -A`.
+
+### Checking The System Status
+
+Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
+Combine_ is setup as four deployments:
+
+- frontend
+- backend
+- database
+- maintenance
+
+Each deployment definition is used to create a _pod_ that runs the docker image.
+
+To see the state of the deployments, run:
+
+```console
+$ kubectl -n thecombine get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+database      1/1     1            1           3h41m
+maintenance   1/1     1            1           3h41m
+backend       1/1     1            1           3h41m
+frontend      1/1     1            1           3h41m
+```
+
+Similarly, you can view the state of the pods:
+
+```console
+$ kubectl -n thecombine get pods
+NAME                           READY   STATUS      RESTARTS        AGE
+database-794b4d956f-g2n5k      1/1     Running     1 (3h51m ago)   3h58m
+ecr-cred-helper--1-w9xxp       0/1     Completed   0               164m
+maintenance-85644b9c76-55pz8   1/1     Running     0               130m
+backend-69b77c46c5-8dqlv       1/1     Running     0               130m
+frontend-c94c5747c-pz6cc       1/1     Running     0               60m
+```
+
+Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the
+`kubectl -n thecombine get pods` command or the deployment, for example, to view the logs of the frontend, you would
+run:
+
+```bash
+kubectl -n thecombine logs frontend-c94c5747c-pz6cc
+```
+
+or
+
+```bash
+kubectl -n thecombine logs deployment/frontend
+```
+
+If you want to monitor the logs while the system is running, add the `--follow` option to the command.
 
 ## Maintenance Scripts for TheCombine
 
@@ -560,11 +873,10 @@ Run:
 npm run set-admin-user -- <USERNAME>
 ```
 
-### Production/QA Environment
+### Kubernetes Environment
 
-The following maintenance tasks can be performed in the Production/QA environment. The
-[How To Deploy TheCombine](docs/deploy/README.md) Document describes how to configure a production machine and install
-_TheCombine_ on it.
+The following maintenance tasks can be performed in the Kubernetes environment. The Kubernetes cluster may be one of the
+production or QA clusters or the local development cluster.
 
 For each of the `kubectl` commands below:
 
@@ -706,3 +1018,18 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
 - [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
+
+### Kubernetes/Helm
+
+- [Kubernetes Concepts](https://kubernetes.io/docs/concepts/)
+- [Kubernetes Tutorials](https://kubernetes.io/docs/tutorials/)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [Helm Documentation](https://helm.sh/docs/) has links for:
+
+  - [Introduction](https://helm.sh/docs/intro/),
+  - [Topic Guides](https://helm.sh/docs/topics/),
+  - [Best Practices](https://helm.sh/docs/chart_best_practices),
+  - [Chart Template Guide](https://helm.sh/docs/chart_template_guide),
+  - [Helm Commands](https://helm.sh/docs/helm),
+
+  and more.

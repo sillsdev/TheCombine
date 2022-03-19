@@ -9,9 +9,11 @@ aws-login:
   enabled: false
 
 global:
-  imageRegistry: localhost:5000
+  imageRegistry: ""
+  imagePullPolicy: Never
 
-ingressClass: traefik
+ingressClass: nginx
+imagePullPolicy: Never
 
 certManager:
   enabled: true
