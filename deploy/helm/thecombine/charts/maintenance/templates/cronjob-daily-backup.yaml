@@ -1,4 +1,4 @@
-{{- if .Values.backupSchedule }}
+{{- if empty .Values.backupSchedule | not }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:

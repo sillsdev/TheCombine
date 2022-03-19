@@ -49,10 +49,7 @@ frontend:
 
 # Maintenance configuration items
 maintenance:
-  #######################################
-  # Backup Schedule
-  # Run every day at 03:15 UTC
-  backupSchedule: "15 03 * * *"
+  backupSchedule: ""
   # Maximum number of backups to keep on AWS S3 service
   maxBackups: "3"
 
