@@ -45,6 +45,11 @@ targets:
         - nuc2.thecombine.app
       global:
         awsS3Location: prod.thecombine.app
+      maintenence:
+        #######################################
+        # Backup Schedule
+        # Run every day at 03:15 UTC
+        backupSchedule: "15 03 * * *"
 
 # Set of profiles
 # Each key of 'profiles' defines one of the profiles used by the set of targets.
