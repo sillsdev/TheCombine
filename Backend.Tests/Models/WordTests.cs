@@ -50,6 +50,17 @@ namespace Backend.Tests.Models
                 new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode(),
                 new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode());
         }
+
+        [Test]
+        public void TestContains()
+        {
+            var word = Util.RandomWord();
+            var diffWord = word.Clone();
+            diffWord.Senses.RemoveAt(1);
+            Assert.IsTrue(word.Contains(diffWord));
+            diffWord.Vernacular = "different";
+            Assert.IsFalse(word.Contains(diffWord));
+        }
     }
 
     public class NoteTests
@@ -202,7 +213,7 @@ namespace Backend.Tests.Models
         }
 
         [Test]
-        public void TestIsDuplicateOf()
+        public void TestIsContainedIn()
         {
             var domList = new List<SemanticDomain> { new SemanticDomain { Id = "id" } };
             var glossList = new List<Gloss> { new Gloss { Def = "def" } };
@@ -211,11 +222,11 @@ namespace Backend.Tests.Models
             var domGlossSense = new Sense { Glosses = glossList, SemanticDomains = domList };
             var defGlossSense = new Sense { Definitions = defList, Glosses = glossList };
             // For empty senses, semantic domains are checked.
-            Assert.IsTrue((new Sense()).IsDuplicateOf(domSense));
-            Assert.IsFalse(domSense.IsDuplicateOf(new Sense()));
+            Assert.IsTrue((new Sense()).IsContainedIn(domSense));
+            Assert.IsFalse(domSense.IsContainedIn(new Sense()));
             // For non-empty senses, semantic domains aren't checked.
-            Assert.IsTrue(domGlossSense.IsDuplicateOf(defGlossSense));
-            Assert.IsFalse(defGlossSense.IsDuplicateOf(domGlossSense));
+            Assert.IsTrue(domGlossSense.IsContainedIn(defGlossSense));
+            Assert.IsFalse(defGlossSense.IsContainedIn(domGlossSense));
         }
     }
 
@@ -261,6 +272,7 @@ namespace Backend.Tests.Models
     public class FlagTests
     {
         private const string Text = "Text";
+        private const string Text2 = "Different Text";
 
         [Test]
         public void TestEquals()
@@ -281,18 +293,74 @@ namespace Backend.Tests.Models
         {
             var flag = new Flag { Active = true, Text = Text };
             Assert.IsFalse(flag.Equals(new Flag { Active = false, Text = Text }));
-            Assert.IsFalse(flag.Equals(new Flag { Active = true, Text = "Different text" }));
+            Assert.IsFalse(flag.Equals(new Flag { Active = true, Text = Text2 }));
         }
 
         [Test]
         public void TestHashCode()
         {
             Assert.AreNotEqual(
-                new Flag { Text = "1" }.GetHashCode(),
-                new Flag { Text = "2" }.GetHashCode());
+                new Flag { Text = Text }.GetHashCode(),
+                new Flag { Text = Text2 }.GetHashCode());
             Assert.AreNotEqual(
                 new Flag { Active = true }.GetHashCode(),
                 new Flag { Active = false }.GetHashCode());
+        }
+
+        [Test]
+        public void TestAppendBlank()
+        {
+            var flag = new Flag(Text);
+            var blankFlag = new Flag(" ");
+
+            var oldFlag = flag.Clone();
+            var newFlag = blankFlag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(flag));
+
+            oldFlag = blankFlag.Clone();
+            newFlag = flag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(flag));
+        }
+
+        [Test]
+        public void TestAppendNotActive()
+        {
+            var activeFlag = new Flag(Text);
+            var inactiveFlag = new Flag { Text = Text2 };
+
+            var oldFlag = activeFlag.Clone();
+            var newFlag = inactiveFlag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(activeFlag));
+
+            oldFlag = inactiveFlag.Clone();
+            newFlag = activeFlag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(activeFlag));
+        }
+
+        [Test]
+        public void TestAppendIdentical()
+        {
+            var flag = new Flag(Text);
+            var oldFlag = flag.Clone();
+            var newFlag = flag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(flag));
+        }
+
+        [Test]
+        public void TestAppendNewText()
+        {
+            var flag = new Flag(Text);
+            var oldFlag = flag.Clone();
+            var newFlag = new Flag(Text2);
+            oldFlag.Append(newFlag);
+            var expectedFlag = flag.Clone();
+            expectedFlag.Text += $"; {Text2}";
+            Assert.That(oldFlag.Equals(expectedFlag));
         }
     }
 

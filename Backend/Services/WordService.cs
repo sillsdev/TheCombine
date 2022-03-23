@@ -139,21 +139,14 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<string> FindExistingDuplicate(Word word)
         {
-            // Get all words from frontier
+            // Get all words from frontier with matching vernacular
             var allWords = await _wordRepo.GetFrontier(word.ProjectId);
-
-            // Find all words with matching vernacular
-            var allSameVernWords = allWords.FindAll(x => x.Vernacular == word.Vernacular);
-
-            // Iterate over words with the same vernacular
-            foreach (var sameVernWord in allSameVernWords)
+            var duplicatedWord = allWords.Find(w => w.Contains(word));
+            if (duplicatedWord is null)
             {
-                if (word.Senses.All(s => sameVernWord.Senses.Any(s.IsDuplicateOf)))
-                {
-                    return sameVernWord.Id;
-                }
+                return "";
             }
-            return "";
+            return duplicatedWord.Id;
         }
 
         /// <summary>
@@ -169,25 +162,10 @@ namespace BackendFramework.Services
             }
 
             var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
-            if (duplicatedWord is null)
+            if (duplicatedWord is null || !duplicatedWord.CombineContainedWord(word))
             {
-                throw new System.Exception();
+                throw new System.Exception("Failed to combine duplicate.");
             }
-
-            // Iterate over senses of the new word
-            foreach (var newSense in word.Senses)
-            {
-                var duplicatedSense = duplicatedWord.Senses.Find(newSense.IsDuplicateOf);
-                if (duplicatedSense is null)
-                {
-                    throw new System.Exception();
-                }
-                duplicatedSense.SemanticDomains.AddRange(newSense.SemanticDomains);
-                duplicatedSense.SemanticDomains = duplicatedSense.SemanticDomains.Distinct().ToList();
-            }
-            duplicatedWord.Note.Append(word.Note);
-            duplicatedWord.EditedBy.AddRange(word.EditedBy);
-            duplicatedWord.EditedBy = duplicatedWord.EditedBy.Distinct().ToList();
             await Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
 
             return false;
