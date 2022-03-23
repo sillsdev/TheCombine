@@ -134,9 +134,10 @@ namespace BackendFramework.Services
 
         /// <summary>
         /// Checks if a word being added is a duplicate of a preexisting word.
-        /// If a duplicate, updates the existing word with any new domains or note.
+        /// If a duplicate, returns the id of the existing word.
+        /// Otherwise, returns empty string.
         /// </summary>
-        public async Task<bool> WordIsUnique(Word word)
+        public async Task<string> FindExistingDuplicate(Word word)
         {
             // Get all words from frontier
             var allWords = await _wordRepo.GetFrontier(word.ProjectId);
@@ -144,47 +145,72 @@ namespace BackendFramework.Services
             // Find all words with matching vernacular
             var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
 
-            var foundDuplicateSense = false;
-            var isUniqueWord = true;
-
             // Iterate over words with the same vernacular
             foreach (var matchingVern in allVernaculars)
             {
-                // Iterate over senses of the new word
-                foreach (var newSense in word.Senses)
+                if (word.Senses.All(s => matchingVern.Senses.Any(s.IsDuplicateOf)))
                 {
-                    foundDuplicateSense = false;
+                    return matchingVern.Id;
+                }
+            }
+            return "";
+        }
 
-                    // Iterate over senses of the old word
-                    foreach (var oldSense in matchingVern.Senses)
+        /// <summary>
+        /// Checks if a word being added is a duplicate of a preexisting word.
+        /// If a duplicate, updates the existing word with any new domains or note.
+        /// </summary>
+        public async Task<bool> WordIsUnique(Word word)
+        {
+            var dupId = await FindExistingDuplicate(word);
+            if (string.IsNullOrEmpty(dupId))
+            {
+                return true;
+            }
+
+            var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
+            if (duplicatedWord is null)
+            {
+                throw new System.Exception();
+            }
+
+            var foundDuplicateSense = false;
+            var isUniqueWord = true;
+
+            // Iterate over senses of the new word
+            foreach (var newSense in word.Senses)
+            {
+                foundDuplicateSense = false;
+
+                // Iterate over senses of the old word
+                foreach (var oldSense in duplicatedWord.Senses)
+                {
+                    // If new sense is a strict subset of the old one, then merge it in
+                    if (newSense.IsDuplicateOf(oldSense))
                     {
-                        // If new sense is a strict subset of the old one, then merge it in
-                        if (newSense.IsDuplicateOf(oldSense))
-                        {
-                            foundDuplicateSense = true;
+                        foundDuplicateSense = true;
 
-                            oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
-                            oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
-                        }
-                    }
-
-                    // If we never found a matching sense in the old word, the words are different
-                    if (!foundDuplicateSense)
-                    {
-                        break;
+                        oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
+                        oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
                     }
                 }
 
-                // Update the existing word only if all the senses were duplicates
-                if (foundDuplicateSense)
+                // If we never found a matching sense in the old word, the words are different
+                if (!foundDuplicateSense)
                 {
-                    isUniqueWord = false;
-
-                    matchingVern.Note.Append(word.Note);
-                    matchingVern.EditedBy.AddRange(word.EditedBy);
-                    matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
-                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                    break;
                 }
+            }
+
+            // Update the existing word only if all the senses were duplicates
+            if (foundDuplicateSense)
+            {
+                isUniqueWord = false;
+
+                duplicatedWord.Note.Append(word.Note);
+                duplicatedWord.EditedBy.AddRange(word.EditedBy);
+                duplicatedWord.EditedBy = duplicatedWord.EditedBy.Distinct().ToList();
+                await Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
             }
             return isUniqueWord;
         }
