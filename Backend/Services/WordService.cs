@@ -143,14 +143,14 @@ namespace BackendFramework.Services
             var allWords = await _wordRepo.GetFrontier(word.ProjectId);
 
             // Find all words with matching vernacular
-            var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
+            var allSameVernWords = allWords.FindAll(x => x.Vernacular == word.Vernacular);
 
             // Iterate over words with the same vernacular
-            foreach (var matchingVern in allVernaculars)
+            foreach (var sameVernWord in allSameVernWords)
             {
-                if (word.Senses.All(s => matchingVern.Senses.Any(s.IsDuplicateOf)))
+                if (word.Senses.All(s => sameVernWord.Senses.Any(s.IsDuplicateOf)))
                 {
-                    return matchingVern.Id;
+                    return sameVernWord.Id;
                 }
             }
             return "";
@@ -174,45 +174,23 @@ namespace BackendFramework.Services
                 throw new System.Exception();
             }
 
-            var foundDuplicateSense = false;
-            var isUniqueWord = true;
-
             // Iterate over senses of the new word
             foreach (var newSense in word.Senses)
             {
-                foundDuplicateSense = false;
-
-                // Iterate over senses of the old word
-                foreach (var oldSense in duplicatedWord.Senses)
+                var duplicatedSense = duplicatedWord.Senses.Find(newSense.IsDuplicateOf);
+                if (duplicatedSense is null)
                 {
-                    // If new sense is a strict subset of the old one, then merge it in
-                    if (newSense.IsDuplicateOf(oldSense))
-                    {
-                        foundDuplicateSense = true;
-
-                        oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
-                        oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
-                    }
+                    throw new System.Exception();
                 }
-
-                // If we never found a matching sense in the old word, the words are different
-                if (!foundDuplicateSense)
-                {
-                    break;
-                }
+                duplicatedSense.SemanticDomains.AddRange(newSense.SemanticDomains);
+                duplicatedSense.SemanticDomains = duplicatedSense.SemanticDomains.Distinct().ToList();
             }
+            duplicatedWord.Note.Append(word.Note);
+            duplicatedWord.EditedBy.AddRange(word.EditedBy);
+            duplicatedWord.EditedBy = duplicatedWord.EditedBy.Distinct().ToList();
+            await Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
 
-            // Update the existing word only if all the senses were duplicates
-            if (foundDuplicateSense)
-            {
-                isUniqueWord = false;
-
-                duplicatedWord.Note.Append(word.Note);
-                duplicatedWord.EditedBy.AddRange(word.EditedBy);
-                duplicatedWord.EditedBy = duplicatedWord.EditedBy.Distinct().ToList();
-                await Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
-            }
-            return isUniqueWord;
+            return false;
         }
     }
 }

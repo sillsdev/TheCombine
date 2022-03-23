@@ -236,17 +236,13 @@ namespace Backend.Tests.Controllers
             Assert.AreEqual(word, (await _wordRepo.GetFrontier(_projId))[0]);
 
             var oldDuplicate = Util.RandomWord(_projId);
-            var newDuplicate = oldDuplicate.Clone();
-
             await _wordController.CreateWord(_projId, oldDuplicate);
+
+            var newDuplicate = oldDuplicate.Clone();
+            newDuplicate.Senses.RemoveAt(2);
             var result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value!;
             Assert.AreEqual(result, "Duplicate");
-
-            newDuplicate.Senses.RemoveAt(2);
-            result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value!;
-            Assert.AreEqual(result, "Duplicate");
-
-            newDuplicate.Senses = new List<Sense>();
+            newDuplicate.Senses.Add(Util.RandomSense());
             result = (string)((ObjectResult)await _wordController.CreateWord(_projId, newDuplicate)).Value!;
             Assert.AreNotEqual(result, "Duplicate");
         }
