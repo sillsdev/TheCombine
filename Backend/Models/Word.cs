@@ -365,6 +365,13 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Guid, Accessibility, Definitions, Glosses, SemanticDomains);
         }
+
+        public bool IsEmpty()
+        {
+            return
+                Glosses.All(gloss => string.IsNullOrEmpty(gloss.Def)) &&
+                Definitions.All(def => string.IsNullOrEmpty(def.Text));
+        }
     }
 
     public class Definition

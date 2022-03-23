@@ -153,9 +153,6 @@ namespace BackendFramework.Services
                 // Iterate over senses of the new word
                 foreach (var newSense in word.Senses)
                 {
-                    var newHasDefOrGloss =
-                        newSense.Glosses.Any(gloss => !string.IsNullOrEmpty(gloss.Def)) ||
-                        newSense.Definitions.Any(def => !string.IsNullOrEmpty(def.Text));
                     var newSemDomIds = newSense.SemanticDomains.Select(dom => dom.Id);
 
                     foundDuplicateSense = false;
@@ -163,20 +160,16 @@ namespace BackendFramework.Services
                     // Iterate over senses of the old word
                     foreach (var oldSense in matchingVern.Senses)
                     {
-                        var oldHasDefOrGloss =
-                            oldSense.Glosses.Any(gloss => !string.IsNullOrEmpty(gloss.Def)) ||
-                            oldSense.Definitions.Any(def => !string.IsNullOrEmpty(def.Text));
-                        var neitherHasDefOrGloss = !oldHasDefOrGloss && !newHasDefOrGloss;
                         var oldSemDomIds = oldSense.SemanticDomains.Select(dom => dom.Id);
                         var oldHasSameSemDoms = newSemDomIds.All(oldSemDomIds.Contains);
 
                         // If new sense is a strict subset of the old one, then merge it in
                         if (
-                            (newHasDefOrGloss &&
+                            (!newSense.IsEmpty() &&
                             newSense.Glosses.All(oldSense.Glosses.Contains) &&
                             newSense.Definitions.All(oldSense.Definitions.Contains)) ||
                             // If new sense has no def/gloss, more conditions are checked
-                            (neitherHasDefOrGloss && oldHasSameSemDoms)
+                            (newSense.IsEmpty() && oldSense.IsEmpty() && oldHasSameSemDoms)
                         )
                         {
                             foundDuplicateSense = true;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BackendFramework.Models;
 using NUnit.Framework;
 
@@ -182,6 +183,22 @@ namespace Backend.Tests.Models
             Assert.AreNotEqual(
                 new Sense { Guid = _commonGuid, Accessibility = State.Active }.GetHashCode(),
                 new Sense { Guid = _commonGuid, Accessibility = State.Deleted }.GetHashCode());
+        }
+
+        [Test]
+        public void TestIsEmpty()
+        {
+            var emptyDef = new Definition { Language = "l1" };
+            var fullDef = new Definition { Language = "l2", Text = "something" };
+            var emptyGloss = new Gloss { Language = "l3" };
+            var fullGloss = new Gloss { Language = "l4", Def = "anything" };
+            Assert.IsFalse(new Sense { Glosses = new List<Gloss> { emptyGloss, fullGloss } }.IsEmpty());
+            Assert.IsFalse(new Sense { Definitions = new List<Definition> { fullDef, emptyDef } }.IsEmpty());
+            Assert.IsTrue(new Sense
+            {
+                Definitions = new List<Definition> { emptyDef },
+                Glosses = new List<Gloss> { emptyGloss }
+            }.IsEmpty());
         }
     }
 
