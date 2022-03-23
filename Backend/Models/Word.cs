@@ -372,6 +372,21 @@ namespace BackendFramework.Models
                 Glosses.All(gloss => string.IsNullOrEmpty(gloss.Def)) &&
                 Definitions.All(def => string.IsNullOrEmpty(def.Text));
         }
+
+        public bool IsDuplicateOf(Sense otherSense)
+        {
+            if (IsEmpty())
+            {
+                // If sense has no def/gloss text, also compare semantic domains
+                var semDomIds = SemanticDomains.Select(dom => dom.Id);
+                var otherSemDomIds = otherSense.SemanticDomains.Select(dom => dom.Id);
+                return otherSense.IsEmpty() && semDomIds.All(otherSemDomIds.Contains);
+            }
+
+            return
+                Glosses.All(otherSense.Glosses.Contains) &&
+                Definitions.All(otherSense.Definitions.Contains);
+        }
     }
 
     public class Definition

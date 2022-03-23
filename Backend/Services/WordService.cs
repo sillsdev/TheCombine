@@ -153,24 +153,13 @@ namespace BackendFramework.Services
                 // Iterate over senses of the new word
                 foreach (var newSense in word.Senses)
                 {
-                    var newSemDomIds = newSense.SemanticDomains.Select(dom => dom.Id);
-
                     foundDuplicateSense = false;
 
                     // Iterate over senses of the old word
                     foreach (var oldSense in matchingVern.Senses)
                     {
-                        var oldSemDomIds = oldSense.SemanticDomains.Select(dom => dom.Id);
-                        var oldHasSameSemDoms = newSemDomIds.All(oldSemDomIds.Contains);
-
                         // If new sense is a strict subset of the old one, then merge it in
-                        if (
-                            (!newSense.IsEmpty() &&
-                            newSense.Glosses.All(oldSense.Glosses.Contains) &&
-                            newSense.Definitions.All(oldSense.Definitions.Contains)) ||
-                            // If new sense has no def/gloss, more conditions are checked
-                            (newSense.IsEmpty() && oldSense.IsEmpty() && oldHasSameSemDoms)
-                        )
+                        if (newSense.IsDuplicateOf(oldSense))
                         {
                             foundDuplicateSense = true;
 

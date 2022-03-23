@@ -200,6 +200,23 @@ namespace Backend.Tests.Models
                 Glosses = new List<Gloss> { emptyGloss }
             }.IsEmpty());
         }
+
+        [Test]
+        public void TestIsDuplicateOf()
+        {
+            var domList = new List<SemanticDomain> { new SemanticDomain { Id = "id" } };
+            var glossList = new List<Gloss> { new Gloss { Def = "def" } };
+            var defList = new List<Definition> { new Definition { Text = "text" } };
+            var domSense = new Sense { SemanticDomains = domList };
+            var domGlossSense = new Sense { Glosses = glossList, SemanticDomains = domList };
+            var defGlossSense = new Sense { Definitions = defList, Glosses = glossList };
+            // For empty senses, semantic domains are checked.
+            Assert.IsTrue((new Sense()).IsDuplicateOf(domSense));
+            Assert.IsFalse(domSense.IsDuplicateOf(new Sense()));
+            // For non-empty senses, semantic domains aren't checked.
+            Assert.IsTrue(domGlossSense.IsDuplicateOf(defGlossSense));
+            Assert.IsFalse(defGlossSense.IsDuplicateOf(domGlossSense));
+        }
     }
 
     public class DefinitionTests
