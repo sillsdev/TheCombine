@@ -158,16 +158,19 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            // If word is not already in frontier, add it.
-            if (await _wordService.WordIsUnique(word))
+            // If word is a duplicate to something in the frontier, update that.
+            // Otherwise, add as a new word.
+            var dupId = await _wordService.FindContainingWord(word);
+            if (!string.IsNullOrEmpty(dupId))
             {
-                await _wordRepo.Create(word);
+                var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
+                if (duplicatedWord is not null && duplicatedWord.CombineContainedWord(word))
+                {
+                    await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
+                    return Ok("Duplicate");
+                }
             }
-            else
-            {
-                // Otherwise it is a duplicate.
-                return Ok("Duplicate");
-            }
+            await _wordRepo.Create(word);
             return Ok(word.Id);
         }
 

@@ -137,7 +137,7 @@ namespace BackendFramework.Services
         /// If a duplicate, returns the id of the existing word.
         /// Otherwise, returns empty string.
         /// </summary>
-        public async Task<string> FindExistingDuplicate(Word word)
+        public async Task<string> FindContainingWord(Word word)
         {
             // Get all words from frontier with matching vernacular
             var allWords = await _wordRepo.GetFrontier(word.ProjectId);
@@ -147,28 +147,6 @@ namespace BackendFramework.Services
                 return "";
             }
             return duplicatedWord.Id;
-        }
-
-        /// <summary>
-        /// Checks if a word being added is a duplicate of a preexisting word.
-        /// If a duplicate, updates the existing word with any new domains or note.
-        /// </summary>
-        public async Task<bool> WordIsUnique(Word word)
-        {
-            var dupId = await FindExistingDuplicate(word);
-            if (string.IsNullOrEmpty(dupId))
-            {
-                return true;
-            }
-
-            var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
-            if (duplicatedWord is null || !duplicatedWord.CombineContainedWord(word))
-            {
-                throw new System.Exception("Failed to combine duplicate.");
-            }
-            await Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
-
-            return false;
         }
     }
 }
