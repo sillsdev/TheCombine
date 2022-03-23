@@ -64,7 +64,7 @@ namespace Backend.Tests.Models
         }
 
         [Test]
-        public void CombineContainedWordAddsStuff()
+        public void TestCombineContainedWord()
         {
             var oldWord = Util.RandomWord();
             var newWord = Util.RandomWord(oldWord.ProjectId);

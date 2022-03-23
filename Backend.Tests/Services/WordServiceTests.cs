@@ -23,7 +23,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void FindContainingWordNoFrontierEmpty()
+        public void TestFindContainingWordNoFrontier()
         {
             var newWord = Util.RandomWord(ProjId);
 
@@ -34,7 +34,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void FindContainingWordNewVernEmpty()
+        public void TestFindContainingWordNewVern()
         {
             var oldWordSameProj = Util.RandomWord(ProjId);
             _ = _wordRepo.Create(oldWordSameProj).Result;
@@ -50,7 +50,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void FindContainingWordSameVernSubsetSenseId()
+        public void TestFindContainingWordSameVernSubsetSense()
         {
             var oldWord = Util.RandomWord(ProjId);
             var newWord = Util.RandomWord(ProjId);
@@ -69,7 +69,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void FindContainingWordSameVernEmptySensesDiffDomsEmpty()
+        public void TestFindContainingWordSameVernEmptySensesDiffDoms()
         {
             var oldWord = Util.RandomWord(ProjId);
             oldWord = _wordRepo.Create(oldWord).Result;
@@ -88,7 +88,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void FindContainingWordSameVernEmptySensesSameDomsId()
+        public void TestFindContainingWordSameVernEmptySensesSameDoms()
         {
             var oldWord = Util.RandomWord(ProjId);
             var newWord = Util.RandomWord(ProjId);
