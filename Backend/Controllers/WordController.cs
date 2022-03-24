@@ -145,7 +145,7 @@ namespace BackendFramework.Controllers
         /// Checks if a <see cref="Word"/> is a duplicate--i.e., are its primary text fields
         /// (Vernacular, Gloss text, Definition text) contained in a frontier entry?
         /// </summary>
-        /// <returns> Id of containing word </returns>
+        /// <returns> Id of containing word, or empty string if none. </returns>
         [HttpPost("getduplicateid", Name = "GetDuplicateId")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> GetDuplicateId(string projectId, [FromBody, BindRequired] Word word)
@@ -161,8 +161,7 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            var dupId = await _wordService.FindContainingWord(word);
-            return Ok(dupId ?? "");
+            return Ok(await _wordService.FindContainingWord(word));
         }
 
         /// <summary> Combines a <see cref="Word"/> into the existing duplicate with specified wordId. </summary>
