@@ -142,11 +142,7 @@ namespace BackendFramework.Services
             // Get all words from frontier with matching vernacular
             var allWords = await _wordRepo.GetFrontier(word.ProjectId);
             var duplicatedWord = allWords.Find(w => w.Contains(word));
-            if (duplicatedWord is null)
-            {
-                return "";
-            }
-            return duplicatedWord.Id;
+            return duplicatedWord?.Id ?? "";
         }
     }
 }
