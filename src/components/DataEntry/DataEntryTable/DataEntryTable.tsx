@@ -157,14 +157,6 @@ export class DataEntryTable extends React.Component<
   ) {
     wordToAdd.note.language = this.state.analysisLang.bcp47;
     const addedWord = await backend.createWord(wordToAdd);
-    if (addedWord.id === "Duplicate") {
-      alert(
-        this.props.translate("addWords.wordInDatabase") +
-          `: ${wordToAdd.vernacular}, ${firstGlossText(wordToAdd.senses[0])}`
-      );
-      return;
-    }
-    // TODO: add the audio even if the word is a duplicate
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
     const word = await backend.getWord(wordId);
     await this.updateExisting();
