@@ -139,9 +139,8 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<string> FindContainingWord(Word word)
         {
-            // Get all words from frontier with matching vernacular
-            var allWords = await _wordRepo.GetFrontier(word.ProjectId);
-            var duplicatedWord = allWords.Find(w => w.Contains(word));
+            var frontier = await _wordRepo.GetFrontier(word.ProjectId);
+            var duplicatedWord = frontier.Find(w => w.Contains(word));
             return duplicatedWord?.Id ?? "";
         }
     }

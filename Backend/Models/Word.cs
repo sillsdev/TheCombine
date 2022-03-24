@@ -291,14 +291,16 @@ namespace BackendFramework.Models
             return string.IsNullOrWhiteSpace(Text);
         }
 
-        /// <summary> Append other note to the existing note. </summary>
+        /// <summary> Append other note to the present note. </summary>
         public void Append(Note other)
         {
+            // There's nothing to append if other note is blank or identical.
             if (other.IsBlank() || Equals(other))
             {
                 return;
             }
 
+            // If present note is blank, simply copy other note.
             if (IsBlank())
             {
                 Language = other.Language;
@@ -420,11 +422,14 @@ namespace BackendFramework.Models
                 Definitions.All(def => string.IsNullOrWhiteSpace(def.Text));
         }
 
+        /// <summary>
+        /// Check if all Gloss, Definition strings are contained in other Sense.
+        /// If they are all empty, also require other sense is empty and includes same Semantic Domains.
+        /// </summary>
         public bool IsContainedIn(Sense other)
         {
             if (IsEmpty())
             {
-                // If sense has no def/gloss text, also compare semantic domains
                 var semDomIds = SemanticDomains.Select(dom => dom.Id);
                 var otherSemDomIds = other.SemanticDomains.Select(dom => dom.Id);
                 return other.IsEmpty() && semDomIds.All(otherSemDomIds.Contains);
@@ -524,23 +529,20 @@ namespace BackendFramework.Models
             return HashCode.Combine(Active, Text);
         }
 
-        /// <summary> Append other flag to the existing flag. </summary>
+        /// <summary> Append other flag to the present flag. </summary>
         public void Append(Flag other)
         {
-            if (!other.Active || Equals(other))
+            // There's nothing to append if other flag is inactive/identical, or both are active and other is empty.
+            if (!other.Active || Equals(other) || (Active && string.IsNullOrWhiteSpace(other.Text)))
             {
                 return;
             }
 
+            // If present flag is inactive or empty, simply copy the active other flag.
             if (!Active || string.IsNullOrWhiteSpace(Text))
             {
                 Active = true;
                 Text = other.Text;
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(other.Text))
-            {
                 return;
             }
 
