@@ -198,6 +198,63 @@ export const WordApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {Word} word
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDuplicateId: async (
+      projectId: string,
+      word: Word,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getDuplicateId", "projectId", projectId);
+      // verify required parameter 'word' is not null or undefined
+      assertParamExists("getDuplicateId", "word", word);
+      const localVarPath =
+        `/v1/projects/{projectId}/words/getduplicateid`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        word,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -382,6 +439,65 @@ export const WordApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} dupId
+     * @param {Word} word
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateDuplicate: async (
+      projectId: string,
+      dupId: string,
+      word: Word,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("updateDuplicate", "projectId", projectId);
+      // verify required parameter 'dupId' is not null or undefined
+      assertParamExists("updateDuplicate", "dupId", dupId);
+      // verify required parameter 'word' is not null or undefined
+      assertParamExists("updateDuplicate", "word", word);
+      const localVarPath = `/v1/projects/{projectId}/words/{dupId}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"dupId"}}`, encodeURIComponent(String(dupId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        word,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} wordId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -525,6 +641,32 @@ export const WordApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {Word} word
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getDuplicateId(
+      projectId: string,
+      word: Word,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getDuplicateId(
+        projectId,
+        word,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -609,6 +751,35 @@ export const WordApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.isFrontierNonempty(projectId, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} dupId
+     * @param {Word} word
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateDuplicate(
+      projectId: string,
+      dupId: string,
+      word: Word,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateDuplicate(
+        projectId,
+        dupId,
+        word,
+        options
+      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -708,6 +879,22 @@ export const WordApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {Word} word
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDuplicateId(
+      projectId: string,
+      word: Word,
+      options?: any
+    ): AxiosPromise<string> {
+      return localVarFp
+        .getDuplicateId(projectId, word, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -761,6 +948,24 @@ export const WordApiFactory = function (
     ): AxiosPromise<boolean> {
       return localVarFp
         .isFrontierNonempty(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} dupId
+     * @param {Word} word
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateDuplicate(
+      projectId: string,
+      dupId: string,
+      word: Word,
+      options?: any
+    ): AxiosPromise<string> {
+      return localVarFp
+        .updateDuplicate(projectId, dupId, word, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -841,6 +1046,27 @@ export interface WordApiDeleteProjectWordsRequest {
 }
 
 /**
+ * Request parameters for getDuplicateId operation in WordApi.
+ * @export
+ * @interface WordApiGetDuplicateIdRequest
+ */
+export interface WordApiGetDuplicateIdRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetDuplicateId
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {Word}
+   * @memberof WordApiGetDuplicateId
+   */
+  readonly word: Word;
+}
+
+/**
  * Request parameters for getProjectFrontierWords operation in WordApi.
  * @export
  * @interface WordApiGetProjectFrontierWordsRequest
@@ -901,6 +1127,34 @@ export interface WordApiIsFrontierNonemptyRequest {
    * @memberof WordApiIsFrontierNonempty
    */
   readonly projectId: string;
+}
+
+/**
+ * Request parameters for updateDuplicate operation in WordApi.
+ * @export
+ * @interface WordApiUpdateDuplicateRequest
+ */
+export interface WordApiUpdateDuplicateRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateDuplicate
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateDuplicate
+   */
+  readonly dupId: string;
+
+  /**
+   *
+   * @type {Word}
+   * @memberof WordApiUpdateDuplicate
+   */
+  readonly word: Word;
 }
 
 /**
@@ -992,6 +1246,26 @@ export class WordApi extends BaseAPI {
 
   /**
    *
+   * @param {WordApiGetDuplicateIdRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public getDuplicateId(
+    requestParameters: WordApiGetDuplicateIdRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .getDuplicateId(
+        requestParameters.projectId,
+        requestParameters.word,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {WordApiGetProjectFrontierWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -1048,6 +1322,27 @@ export class WordApi extends BaseAPI {
   ) {
     return WordApiFp(this.configuration)
       .isFrontierNonempty(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {WordApiUpdateDuplicateRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public updateDuplicate(
+    requestParameters: WordApiUpdateDuplicateRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .updateDuplicate(
+        requestParameters.projectId,
+        requestParameters.dupId,
+        requestParameters.word,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

@@ -59,7 +59,7 @@ namespace BackendFramework.Controllers
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
         /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
-        /// <returns> Path to local audio file </returns>
+        /// <returns> Id of updated word </returns>
         [HttpPost("upload", Name = "UploadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,

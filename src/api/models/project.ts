@@ -56,16 +56,16 @@ export interface Project {
   definitionsEnabled: boolean;
   /**
    *
-   * @type {WritingSystem}
-   * @memberof Project
-   */
-  semDomWritingSystem: WritingSystem;
-  /**
-   *
    * @type {AutocompleteSetting}
    * @memberof Project
    */
   autocompleteSetting: AutocompleteSetting;
+  /**
+   *
+   * @type {WritingSystem}
+   * @memberof Project
+   */
+  semDomWritingSystem: WritingSystem;
   /**
    *
    * @type {WritingSystem}
