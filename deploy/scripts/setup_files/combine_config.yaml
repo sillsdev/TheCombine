@@ -54,9 +54,6 @@ targets:
           configCaptchaRequired: "true"
           configCaptchaSiteKey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
       # override values for 'cert-proxy-server' chart
-      cert-proxy-server:
-        global:
-          serverName: cert-proxy.thecombine.app
 
 # Set of profiles
 # Each key of 'profiles' defines one of the profiles used by the set of targets.

@@ -13,7 +13,6 @@ Release:
   Namespace: thecombine
 
 global:
-  serverName: cert-proxy.thecombine.app
   pullSecretName: aws-login-credentials
   awsS3Access: aws-s3-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
@@ -27,6 +26,8 @@ global:
   imageRegistry: awsEcr
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
+
+certProxyServerName: cert-proxy.thecombine.app
 
 serviceAccount:
   name: account-cert-server
