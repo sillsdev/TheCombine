@@ -151,7 +151,9 @@ def get_target(config: Dict[str, Any]) -> str:
         sys.exit(ExitStatus.FAILURE.value)
 
 
-def add_override_values(config: Dict[str, Any], *, chart: str, temp_dir: Path, helm_cmd: List[str]) -> None:
+def add_override_values(
+    config: Dict[str, Any], *, chart: str, temp_dir: Path, helm_cmd: List[str]
+) -> None:
     """Add value overrides specified in the script configuration file."""
     if "override" in config and chart in config["override"]:
         override_file = temp_dir / f"config_{chart}.yaml"
@@ -160,8 +162,8 @@ def add_override_values(config: Dict[str, Any], *, chart: str, temp_dir: Path, h
         helm_cmd.extend(["-f", str(override_file)])
 
 
-def add_profile_values(config: Dict[str, Any],
-    *, profile_name: str, chart: str, temp_dir: Path, helm_cmd: List[str]
+def add_profile_values(
+    config: Dict[str, Any], *, profile_name: str, chart: str, temp_dir: Path, helm_cmd: List[str]
 ) -> None:
     """Add profile specific values for the chart."""
     # lookup the configuration values for the profile of the selected target
@@ -284,7 +286,12 @@ def main() -> None:
                     ]
                 )
 
-            add_override_values(this_config, chart=chart, temp_dir=Path(secrets_dir).resolve(), helm_cmd=helm_install_cmd)
+            add_override_values(
+                this_config,
+                chart=chart,
+                temp_dir=Path(secrets_dir).resolve(),
+                helm_cmd=helm_install_cmd,
+            )
 
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
