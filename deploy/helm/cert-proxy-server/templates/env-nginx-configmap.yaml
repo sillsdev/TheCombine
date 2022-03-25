@@ -5,4 +5,4 @@ metadata:
   name: {{ .Values.envNginxProxy }}
   namespace: {{ .Release.Namespace }}
 data:
-  SERVER_NAME: {{ .Values.global.serverName }}
+  SERVER_NAME: {{ .Values.certProxyServerName }}

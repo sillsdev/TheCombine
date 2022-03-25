@@ -3,5 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.nginxPages }}
   namespace: {{ .Release.Namespace }}
-data:
-{{ (.Files.Glob "../files/pages/*").AsConfig | indent 2 }}
+# Add files as binary data since some are binary image files
+binaryData:
+{{ (.Files.Glob "files/pages/*").AsSecrets | indent 2 }}

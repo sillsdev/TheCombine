@@ -5,13 +5,15 @@
 # Profile: nuc
 ################################################
 
-aws-login:
-  enabled: true
-  awsEcr:
-    cron: no
+charts:
+  thecombine:
+    aws-login:
+      enabled: true
+      awsEcr:
+        cron: no
 
-cert-proxy-client:
-  enabled: true
+    cert-proxy-client:
+      enabled: true
 
-certManager:
-  enabled: false
+    certManager:
+      enabled: false
