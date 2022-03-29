@@ -204,9 +204,7 @@ namespace BackendFramework.Models
             return hash.ToHashCode();
         }
 
-        /// <summary>
-        /// Determine whether vernacular and sense strings contain those of other word.
-        /// </summary>
+        /// <summary> Determine whether vernacular and sense strings contain those of other word. </summary>
         public bool Contains(Word other)
         {
             return
@@ -216,12 +214,12 @@ namespace BackendFramework.Models
         }
 
         /// <summary>
-        /// Add contents of other contained word.
-        /// Returns true if operation succeeded.
+        /// Append contents of other contained word.
         /// Warning! The following content of the other word are lost:
         /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
         /// </summary>
-        public bool CombineContainedWord(Word other)
+        /// <returns> A bool: true if operation succeeded and word updated. </returns>
+        public bool AppendContainedWordContents(Word other)
         {
             // Confirm that the other word is contained
             if (!Contains(other))
@@ -285,7 +283,7 @@ namespace BackendFramework.Models
             };
         }
 
-        /// <summary> Whether the Note contains any contents that can be serialized. </summary>
+        /// <summary> Whether the Note contains any non-whitespace contents. </summary>
         public bool IsBlank()
         {
             return string.IsNullOrWhiteSpace(Text);

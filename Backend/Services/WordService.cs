@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -132,16 +131,13 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        /// <summary>
-        /// Checks if a word being added is a duplicate of a preexisting word.
-        /// If a duplicate, returns the id of the existing word.
-        /// Otherwise, returns empty string.
-        /// </summary>
-        public async Task<string> FindContainingWord(Word word)
+        /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>
+        /// <returns> The id string of the existing word, or null if none. </returns>
+        public async Task<string?> FindContainingWord(Word word)
         {
             var frontier = await _wordRepo.GetFrontier(word.ProjectId);
             var duplicatedWord = frontier.Find(w => w.Contains(word));
-            return duplicatedWord?.Id ?? "";
+            return duplicatedWord?.Id;
         }
     }
 }

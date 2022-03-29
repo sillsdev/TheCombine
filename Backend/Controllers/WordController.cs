@@ -161,14 +161,15 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            return Ok(await _wordService.FindContainingWord(word));
+            return Ok(await _wordService.FindContainingWord(word) ?? "");
         }
 
         /// <summary> Combines a <see cref="Word"/> into the existing duplicate with specified wordId. </summary>
         /// <returns> Id of updated word. </returns>
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateDuplicate(string projectId, string dupId, [FromBody, BindRequired] Word word)
+        public async Task<IActionResult> UpdateDuplicate(
+            string projectId, string dupId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -186,7 +187,7 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(dupId);
             }
-            if (!duplicatedWord.CombineContainedWord(word))
+            if (!duplicatedWord.AppendContainedWordContents(word))
             {
                 return Conflict();
             }
@@ -220,7 +221,8 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word </returns>
         [HttpPut("{wordId}", Name = "UpdateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateWord(string projectId, string wordId, [FromBody, BindRequired] Word word)
+        public async Task<IActionResult> UpdateWord(
+            string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {

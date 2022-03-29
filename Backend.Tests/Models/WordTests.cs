@@ -64,7 +64,7 @@ namespace Backend.Tests.Models
         }
 
         [Test]
-        public void TestCombineContainedWord()
+        public void TestAppendContainedWordContents()
         {
             var oldWord = Util.RandomWord();
             var newWord = Util.RandomWord(oldWord.ProjectId);
@@ -90,7 +90,7 @@ namespace Backend.Tests.Models
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
-            Assert.That(oldWord.CombineContainedWord(newWord));
+            Assert.That(oldWord.AppendContainedWordContents(newWord));
 
             var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
             Assert.That(updatedSense, Is.Not.Null);
@@ -141,7 +141,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestIsBlank()
         {
-            Assert.That(new Note().IsBlank());
+            Assert.That(new Note { Text = "  " }.IsBlank());
             Assert.That(new Note { Language = Language }.IsBlank());
             Assert.IsFalse(new Note { Text = Text }.IsBlank());
         }
