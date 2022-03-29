@@ -30,7 +30,7 @@ namespace Backend.Tests.Services
             var dupId = _wordService.FindContainingWord(newWord).Result;
 
             // The word should be unique, as the frontier is empty.
-            Assert.That(dupId, Is.Empty);
+            Assert.That(dupId, Is.Null);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Backend.Tests.Services
 
             var dupId = _wordService.FindContainingWord(newWord).Result;
             // The word should be unique: an identical word is in a diff project.
-            Assert.That(dupId, Is.Empty);
+            Assert.That(dupId, Is.Null);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace Backend.Tests.Services
             newWord.Senses = new List<Sense> { newSense };
 
             var dupId = _wordService.FindContainingWord(newWord).Result;
-            Assert.That(dupId, Is.Empty);
+            Assert.That(dupId, Is.Null);
         }
 
         [Test]
