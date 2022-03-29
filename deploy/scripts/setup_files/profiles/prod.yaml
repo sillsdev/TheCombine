@@ -5,16 +5,25 @@
 # Profile: prod
 ################################################
 
-# Frontend configuration items:
-frontend:
-  configShowCertExpiration: false
-  configAnalyticsWriteKey: "j9EeK4oURluRSIKbaXCBKBxGCnT2WahB"
-
-# Maintenance configuration items
-maintenance:
-  #######################################
-  # Backup Schedule
-  # Run every day at 03:15 UTC
-  backupSchedule: "15 03 * * *"
-  # Maximum number of backups to keep on AWS S3 service
-  maxBackups: "3"
+charts:
+  thecombine:
+    # Frontend configuration items:
+    frontend:
+      configShowCertExpiration: false
+      configAnalyticsWriteKey: "j9EeK4oURluRSIKbaXCBKBxGCnT2WahB"
+    # Maintenance configuration items
+    maintenance:
+      #######################################
+      # Backup Schedule
+      # Run every day at 03:15 UTC
+      backupSchedule: "15 03 * * *"
+      # Maximum number of backups to keep on AWS S3 service
+      maxBackups: "3"
+    global:
+      awsS3Location: prod.thecombine.app
+  cert-proxy-server:
+    global:
+      awsS3Location: prod.thecombine.app
+    combineCertProxyList:
+      - nuc1.thecombine.app
+      - nuc2.thecombine.app

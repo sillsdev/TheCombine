@@ -23,7 +23,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from enum_types import ExitStatus, HelmAction
 from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
@@ -140,6 +140,7 @@ def get_installed_charts(helm_opts: List[str], helm_namespace: str) -> List[str]
 
 
 def get_target(config: Dict[str, Any]) -> str:
+    """List available targets and get selection from the user."""
     print("Available targets:")
     for key in config["targets"]:
         print(f"   {key}")
@@ -148,6 +149,37 @@ def get_target(config: Dict[str, Any]) -> str:
     except KeyboardInterrupt:
         print("Exiting.")
         sys.exit(ExitStatus.FAILURE.value)
+
+
+def add_override_values(
+    config: Dict[str, Any], *, chart: str, temp_dir: Path, helm_cmd: List[str]
+) -> None:
+    """Add value overrides specified in the script configuration file."""
+    if "override" in config and chart in config["override"]:
+        override_file = temp_dir / f"config_{chart}.yaml"
+        with open(override_file, "w") as file:
+            yaml.dump(config["override"][chart], file)
+        helm_cmd.extend(["-f", str(override_file)])
+
+
+def add_profile_values(
+    config: Dict[str, Any], *, profile_name: str, chart: str, temp_dir: Path, helm_cmd: List[str]
+) -> None:
+    """Add profile specific values for the chart."""
+    # lookup the configuration values for the profile of the selected target
+    # get the path for the profile configuration file
+    if profile_name in config["profiles"]:
+        profile_def = scripts_dir / "setup_files" / "profiles" / f"{profile_name}.yaml"
+        if profile_def.exists:
+            with open(profile_def) as file:
+                profile_values = yaml.safe_load(file)
+            if chart in profile_values["charts"]:
+                profile_file = temp_dir / f"profile_{profile_name}_{chart}.yaml"
+                with open(profile_file, "w") as file:
+                    yaml.dump(profile_values["charts"][chart], file)
+                helm_cmd.extend(["-f", str(profile_file)])
+        else:
+            print(f"Warning: cannot find profile {profile_name}", file=sys.stderr)
 
 
 def main() -> None:
@@ -173,7 +205,6 @@ def main() -> None:
 
     # create list of target specific variable values
     target_vars = [
-        f"global.serverName={this_config['serverName']}",
         f"global.imageTag={args.image_tag}",
     ]
     if args.repo:
@@ -187,15 +218,6 @@ def main() -> None:
     # lookup directory for helm files
     helm_dir = scripts_dir.parent / "helm"
 
-    # lookup the configuration values for the profile of the selected target
-    if profile in config["profiles"]:
-        # get the path for the profile configuration file
-        profile_config: Optional[Path] = (
-            scripts_dir / "setup_files" / "profiles" / f"{profile}.yaml"
-        )
-    else:
-        profile_config = None
-        print(f"Warning: cannot find profile {profile}", file=sys.stderr)
     # open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
         for chart in config["profiles"][profile]["charts"]:
@@ -227,12 +249,6 @@ def main() -> None:
                 output_file=secrets_file,
                 env_vars_req=this_config["env_vars_required"],
             )
-            if "override" in this_config:
-                override_file = Path(secrets_dir).resolve() / f"config_{chart}.yaml"
-                with open(override_file, "w") as file:
-                    yaml.dump(this_config["override"], file)
-            else:
-                override_file = None
 
             # create the base helm install command
             chart_dir = helm_dir / chart
@@ -251,9 +267,16 @@ def main() -> None:
             # set the dry-run option if desired
             if args.dry_run:
                 helm_install_cmd.extend(["--dry-run"])
+
             # add the profile specific configuration
-            if profile_config is not None and profile_config.exists:
-                helm_install_cmd.extend(["-f", str(profile_config)])
+            add_profile_values(
+                config,
+                profile_name=profile,
+                chart=chart,
+                temp_dir=Path(secrets_dir).resolve(),
+                helm_cmd=helm_install_cmd,
+            )
+
             # add the secrets file
             if include_secrets:
                 helm_install_cmd.extend(
@@ -262,8 +285,14 @@ def main() -> None:
                         str(secrets_file),
                     ]
                 )
-            if override_file is not None:
-                helm_install_cmd.extend(["-f", str(override_file)])
+
+            add_override_values(
+                this_config,
+                chart=chart,
+                temp_dir=Path(secrets_dir).resolve(),
+                helm_cmd=helm_install_cmd,
+            )
+
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
                 helm_install_cmd.extend(addl_configs)
