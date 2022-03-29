@@ -544,31 +544,10 @@ export async function removeUserRole(
 
 /* WordController.cs */
 
-export async function createWord(
-  word: Word,
-  duplicateCheck = true
-): Promise<Word> {
-  let addedWord: Word | undefined = undefined;
-
-  // Check if word is duplicate to existing word.
-  if (duplicateCheck) {
-    const duplicatedId = await getDuplicateId(word);
-    if (duplicatedId) {
-      const updatedId = await updateDuplicate(duplicatedId, word);
-      if (updatedId) {
-        addedWord = await getWord(updatedId);
-      }
-    }
-  }
-
-  if (!addedWord) {
-    const params = { projectId: LocalStorage.getProjectId(), word };
-    const resp = await wordApi.createWord(params, defaultOptions());
-    addedWord = word;
-    addedWord.id = resp.data;
-  }
-
-  return addedWord;
+export async function createWord(word: Word): Promise<Word> {
+  const params = { projectId: LocalStorage.getProjectId(), word };
+  word.id = (await wordApi.createWord(params, defaultOptions())).data;
+  return word;
 }
 
 export async function deleteFrontierWord(wordId: string): Promise<string> {
@@ -604,9 +583,10 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
 export async function updateDuplicate(
   dupId: string,
   word: Word
-): Promise<string> {
+): Promise<Word> {
   const params = { projectId: LocalStorage.getProjectId(), dupId, word };
-  return (await wordApi.updateDuplicate(params, defaultOptions())).data;
+  const resp = await wordApi.updateDuplicate(params, defaultOptions());
+  return await getWord(resp.data);
 }
 
 export async function updateWord(word: Word): Promise<Word> {

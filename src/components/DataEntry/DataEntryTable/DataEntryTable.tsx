@@ -123,7 +123,7 @@ export class DataEntryTable extends React.Component<
     }
   }
 
-  async getProjectSettings() {
+  async getProjectSettings(): Promise<void> {
     const proj = await backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
     const analysisLang = proj.analysisWritingSystems[0] ?? defaultWritingSystem;
@@ -141,7 +141,7 @@ export class DataEntryTable extends React.Component<
 
   // Use this before updating any word on the backend,
   // to make sure that word doesn't get edited by two different functions
-  defunctWord(wordId: string) {
+  defunctWord(wordId: string): void {
     const defunctWordIds = this.state.defunctWordIds;
     if (!defunctWordIds.includes(wordId)) {
       defunctWordIds.push(wordId);
@@ -154,30 +154,49 @@ export class DataEntryTable extends React.Component<
     audioURLs: string[],
     insertIndex?: number,
     ignoreRecent?: boolean
-  ) {
+  ): Promise<void> {
     wordToAdd.note.language = this.state.analysisLang.bcp47;
+
+    // Check if word is duplicate to existing word.
+    const duplicatedId = await backend.getDuplicateId(wordToAdd);
+    if (duplicatedId) {
+      this.addDuplicateWord(wordToAdd, audioURLs, duplicatedId, ignoreRecent);
+      return;
+    }
+
     const addedWord = await backend.createWord(wordToAdd);
+
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
-    const word = await backend.getWord(wordId);
-    await this.updateExisting();
 
     if (ignoreRecent) {
       return;
     }
 
-    this.setState((prevState) => {
-      const recentlyAddedWords = [...prevState.recentlyAddedWords];
-      const newWordAccess: WordAccess = { word, senseIndex: 0 };
-      if (
-        insertIndex !== undefined &&
-        insertIndex < recentlyAddedWords.length
-      ) {
-        recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
-      } else {
-        recentlyAddedWords.push(newWordAccess);
-      }
-      return { recentlyAddedWords };
-    });
+    // TODO: consider state update order here.
+    const word = await backend.getWord(wordId);
+    this.addToDisplay(
+      { word, senseIndex: 0 },
+      insertIndex,
+      this.updateExisting
+    );
+  }
+
+  async addDuplicateWord(
+    wordToAdd: Word,
+    audioURLs: string[],
+    duplicatedId: string,
+    ignoreRecent?: boolean
+  ): Promise<void> {
+    const updatedWord = await backend.updateDuplicate(duplicatedId, wordToAdd);
+    const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
+
+    if (ignoreRecent) {
+      return;
+    }
+
+    // TODO: consider state update order here.
+    this.replaceInDisplay(duplicatedId, await backend.getWord(wordId));
+    await this.updateExisting();
   }
 
   /** Update the word in the backend and the frontend */
@@ -185,25 +204,19 @@ export class DataEntryTable extends React.Component<
     wordToUpdate: Word,
     senseIndex: number,
     audioURLs?: string[]
-  ) {
-    let updatedWord = await this.updateWordInBackend(wordToUpdate);
+  ): Promise<void> {
+    let word = await this.updateWordInBackend(wordToUpdate);
     if (audioURLs && audioURLs.length) {
-      const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
-      updatedWord = await backend.getWord(wordId);
+      const wordId = await this.addAudiosToBackend(word.id, audioURLs);
+      word = await backend.getWord(wordId);
     }
 
-    this.setState(
-      (prevState) => {
-        const recentlyAddedWords = [...prevState.recentlyAddedWords];
-        recentlyAddedWords.push({ word: updatedWord, senseIndex });
-        return { recentlyAddedWords };
-      },
-      () => {
-        this.replaceInDisplay(wordToUpdate.id, updatedWord);
-      }
-    );
+    this.addToDisplay({ word, senseIndex }, undefined, () => {
+      this.replaceInDisplay(wordToUpdate.id, word);
+    });
   }
-  async updateWordBackAndFrontSimple(wordToUpdate: Word) {
+
+  async updateWordBackAndFrontSimple(wordToUpdate: Word): Promise<void> {
     const updatedWord = await this.updateWordInBackend(wordToUpdate);
     this.replaceInDisplay(wordToUpdate.id, updatedWord);
   }
@@ -288,7 +301,10 @@ export class DataEntryTable extends React.Component<
     return updatedWordId;
   }
 
-  async addAudioToRecentWord(oldWordId: string, audioFile: File) {
+  async addAudioToRecentWord(
+    oldWordId: string,
+    audioFile: File
+  ): Promise<void> {
     this.defunctWord(oldWordId);
     await backend.uploadAudio(oldWordId, audioFile).then(async (newWordId) => {
       await backend.getWord(newWordId).then(async (w) => {
@@ -298,7 +314,10 @@ export class DataEntryTable extends React.Component<
     });
   }
 
-  async deleteAudioFromRecentWord(oldWordId: string, fileName: string) {
+  async deleteAudioFromRecentWord(
+    oldWordId: string,
+    fileName: string
+  ): Promise<void> {
     this.defunctWord(oldWordId);
     await backend.deleteAudio(oldWordId, fileName).then(async (newWordId) => {
       await backend.getWord(newWordId).then(async (w) => {
@@ -315,7 +334,7 @@ export class DataEntryTable extends React.Component<
     return updatedWord;
   }
 
-  async updateExisting() {
+  async updateExisting(): Promise<void> {
     if (!this.state.isFetchingFrontier) {
       this.setState({ isFetchingFrontier: true });
       const existingWords = await this.props.getWordsFromBackend();
@@ -334,9 +353,7 @@ export class DataEntryTable extends React.Component<
     const recentWord: Word = { ...recentEntry.word };
     const senseCount = recentWord.senses.length;
     const senseIndex = recentEntry.senseIndex;
-    const recentSense: Sense = {
-      ...recentWord.senses[senseIndex],
-    };
+    const recentSense: Sense = { ...recentWord.senses[senseIndex] };
 
     this.removeRecentEntry(entryIndex);
 
@@ -365,7 +382,7 @@ export class DataEntryTable extends React.Component<
     entryIndex: number,
     newVern: string,
     targetWordId?: string
-  ) {
+  ): Promise<void> {
     if (targetWordId !== undefined) {
       throw new Error("VernDialog on RecentEntry is not yet supported.");
     }
@@ -389,7 +406,7 @@ export class DataEntryTable extends React.Component<
     }
   }
 
-  async updateRecentEntryGloss(entryIndex: number, def: string) {
+  async updateRecentEntryGloss(entryIndex: number, def: string): Promise<void> {
     const oldEntry = this.state.recentlyAddedWords[entryIndex];
     const oldWord = oldEntry.word;
     const senseIndex = oldEntry.senseIndex;
@@ -411,7 +428,10 @@ export class DataEntryTable extends React.Component<
     }
   }
 
-  async updateRecentEntryNote(entryIndex: number, newText: string) {
+  async updateRecentEntryNote(
+    entryIndex: number,
+    newText: string
+  ): Promise<void> {
     const oldEntry = this.state.recentlyAddedWords[entryIndex];
     const oldWord = oldEntry.word;
     const oldNote = oldWord.note;
@@ -422,7 +442,7 @@ export class DataEntryTable extends React.Component<
     }
   }
 
-  removeRecentEntry(entryIndex: number) {
+  removeRecentEntry(entryIndex: number): void {
     this.setState((prevState) => {
       const recentlyAddedWords = [...prevState.recentlyAddedWords];
       recentlyAddedWords.splice(entryIndex, 1);
@@ -430,15 +450,15 @@ export class DataEntryTable extends React.Component<
     });
   }
 
-  // Update a vern in a word and replace every displayed instance of that word.
-  async updateVernacular(word: Word, vernacular: string) {
+  /** Update a vern in a word and replace every displayed instance of that word. */
+  async updateVernacular(word: Word, vernacular: string): Promise<void> {
     const updatedWord: Word = { ...word, vernacular };
     await this.updateWordInBackend(updatedWord).then((updatedWord) =>
       this.replaceInDisplay(word.id, updatedWord)
     );
   }
 
-  // Update a sense in a word and replace every displayed instance of that word.
+  /** Update a sense in a word and replace every displayed instance of that word. */
   async updateSense(
     word: Word,
     senseIndex: number,
@@ -453,7 +473,7 @@ export class DataEntryTable extends React.Component<
     });
   }
 
-  // Remove a sense from a word and replace every displayed instance of that word.
+  /** Remove a sense from a word and replace every displayed instance of that word. */
   async removeSense(word: Word, senseIndex: number): Promise<string> {
     const senses = [...word.senses];
     senses.splice(senseIndex, 1);
@@ -464,9 +484,33 @@ export class DataEntryTable extends React.Component<
     });
   }
 
-  // Replace every displayed instance of a word.
-  // If removedSenseIndex is provided, that sense was removed.
-  replaceInDisplay(oldWordId: string, word: Word, removedSenseIndex?: number) {
+  /** Add word to the display of recent entries. */
+  addToDisplay(
+    wordAccess: WordAccess,
+    insertIndex?: number,
+    callback?: () => void
+  ): void {
+    this.setState((prevState) => {
+      const recentlyAddedWords = [...prevState.recentlyAddedWords];
+      if (
+        insertIndex !== undefined &&
+        insertIndex < recentlyAddedWords.length
+      ) {
+        recentlyAddedWords.splice(insertIndex, 0, wordAccess);
+      } else {
+        recentlyAddedWords.push(wordAccess);
+      }
+      return { recentlyAddedWords };
+    }, callback ?? (() => {}));
+  }
+
+  /** Replace every displayed instance of a word.
+   * If removedSenseIndex is provided, that sense was removed. */
+  replaceInDisplay(
+    oldWordId: string,
+    word: Word,
+    removedSenseIndex?: number
+  ): void {
     this.setState((prevState) => {
       const recentlyAddedWords = [...prevState.recentlyAddedWords];
       recentlyAddedWords.forEach((entry, index) => {
@@ -489,14 +533,16 @@ export class DataEntryTable extends React.Component<
     });
   }
 
-  async deleteWord(word: Word) {
+  /** Delete specified word and clear from recent words. */
+  async deleteWord(word: Word): Promise<void> {
     this.defunctWord(word.id);
     await backend
       .deleteFrontierWord(word.id)
       .then(async () => await this.updateExisting());
   }
 
-  exitGracefully() {
+  /** Submit un-submitted word before resetting. */
+  exitGracefully(): void {
     // Check if there is a new word, but user exited without pressing enter
     if (this.refNewEntry.current) {
       const newEntry = this.refNewEntry.current.state.newEntry;

@@ -22,6 +22,7 @@ import { Bcp47Code } from "types/writingSystem";
 
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),
+  getDuplicateId: jest.fn(),
   getProject: (id: string) => mockGetProject(id),
   getWord: (id: string) => mockGetWord(id),
   updateWord: (word: Word) => mockUpdateWord(word),
