@@ -190,7 +190,7 @@ export class DataEntryTable extends React.Component<
       return;
     }
 
-    this.replaceInDisplay(duplicatedId, await backend.getWord(wordId));
+    this.addOrReplaceInDisplay(duplicatedId, await backend.getWord(wordId));
   }
 
   /** Update the word in the backend and the frontend */
@@ -478,7 +478,7 @@ export class DataEntryTable extends React.Component<
     });
   }
 
-  /** Add word to the display of recent entries. */
+  /** Add one-sense word to the display of recent entries. */
   addToDisplay(
     wordAccess: WordAccess,
     insertIndex?: number,
@@ -496,6 +496,32 @@ export class DataEntryTable extends React.Component<
       }
       return { recentlyAddedWords };
     }, callback ?? (() => {}));
+  }
+
+  /** Replace every displayed instance of a word, or add if not already there. */
+  addOrReplaceInDisplay(oldWordId: string, word: Word): void {
+    this.setState((prevState) => {
+      const recentlyAddedWords = [...prevState.recentlyAddedWords];
+      let defunctWordIds = prevState.defunctWordIds;
+
+      if (recentlyAddedWords.find((w) => w.word.id === oldWordId)) {
+        recentlyAddedWords.forEach((entry) => {
+          if (entry.word.id === oldWordId) {
+            entry.word = word;
+          }
+        });
+        defunctWordIds = defunctWordIds.filter((id) => id !== oldWordId);
+      } else {
+        const thisDomId = this.props.semanticDomain.id;
+        word.senses.forEach((sense, senseIndex) => {
+          if (sense.semanticDomains.find((dom) => dom.id === thisDomId)) {
+            recentlyAddedWords.push({ word, senseIndex });
+          }
+        });
+      }
+
+      return { recentlyAddedWords, defunctWordIds };
+    });
   }
 
   /** Replace every displayed instance of a word.
