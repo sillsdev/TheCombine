@@ -117,9 +117,9 @@ export class DataEntryTable extends React.Component<
     await this.getProjectSettings();
   }
 
-  componentDidUpdate(prevProps: DataEntryTableProps) {
+  async componentDidUpdate(prevProps: DataEntryTableProps) {
     if (this.props.treeIsOpen && !prevProps.treeIsOpen) {
-      this.exitGracefully();
+      await this.exitGracefully();
     }
   }
 
@@ -165,20 +165,15 @@ export class DataEntryTable extends React.Component<
     }
 
     const addedWord = await backend.createWord(wordToAdd);
-
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
+    await this.updateExisting();
 
     if (ignoreRecent) {
       return;
     }
 
-    // TODO: consider state update order here.
     const word = await backend.getWord(wordId);
-    this.addToDisplay(
-      { word, senseIndex: 0 },
-      insertIndex,
-      this.updateExisting
-    );
+    this.addToDisplay({ word, senseIndex: 0 }, insertIndex);
   }
 
   async addDuplicateWord(
@@ -189,14 +184,13 @@ export class DataEntryTable extends React.Component<
   ): Promise<void> {
     const updatedWord = await backend.updateDuplicate(duplicatedId, wordToAdd);
     const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
+    await this.updateExisting();
 
     if (ignoreRecent) {
       return;
     }
 
-    // TODO: consider state update order here.
     this.replaceInDisplay(duplicatedId, await backend.getWord(wordId));
-    await this.updateExisting();
   }
 
   /** Update the word in the backend and the frontend */
@@ -542,7 +536,7 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Submit un-submitted word before resetting. */
-  exitGracefully(): void {
+  async exitGracefully(): Promise<void> {
     // Check if there is a new word, but user exited without pressing enter
     if (this.refNewEntry.current) {
       const newEntry = this.refNewEntry.current.state.newEntry;
@@ -553,7 +547,7 @@ export class DataEntryTable extends React.Component<
       }
       const newEntryAudio = this.refNewEntry.current.state.audioFileURLs;
       if (newEntry?.vernacular) {
-        this.addNewWord(newEntry, newEntryAudio, undefined, true);
+        await this.addNewWord(newEntry, newEntryAudio, undefined, true);
         this.refNewEntry.current.resetState();
       }
     }

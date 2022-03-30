@@ -70,8 +70,8 @@ beforeEach(() => {
   });
 });
 
-function exitToTree() {
-  renderer.act(() => {
+async function exitToTree() {
+  await renderer.act(async () => {
     testRenderer.update(
       <DataEntryTable
         semanticDomain={mockSemanticDomain}
@@ -87,31 +87,31 @@ function exitToTree() {
 
 describe("DataEntryTable", () => {
   describe("exiting--i.e., props updated to open tree", () => {
-    it("hides questions", () => {
+    it("hides questions", async () => {
       expect(mockHideQuestions).not.toBeCalled();
-      exitToTree();
+      await exitToTree();
       expect(mockHideQuestions).toBeCalled();
     });
 
-    it("creates word when new entry has vernacular", () => {
+    it("creates word when new entry has vernacular", async () => {
       // Verify that NewEntry is present
       const newEntryItems = testRenderer.root.findAllByType(NewEntry);
       expect(newEntryItems.length).toBe(1);
       // Set the new entry to have useful content
       const newEntry = simpleWord("hasVern", "");
       newEntryItems[0].instance.setState({ newEntry });
-      exitToTree();
+      await exitToTree();
       expect(mockCreateWord).toBeCalled();
     });
 
-    it("doesn't create word when new entry has no vernacular", () => {
+    it("doesn't create word when new entry has no vernacular", async () => {
       // Verify that NewEntry is present
       const newEntryItems = testRenderer.root.findAllByType(NewEntry);
       expect(newEntryItems.length).toBe(1);
       // Set the new entry to have no useful content
       const newEntry = simpleWord("", "hasGloss");
       newEntryItems[0].instance.setState({ newEntry });
-      exitToTree();
+      await exitToTree();
       expect(mockCreateWord).not.toBeCalled();
     });
   });
