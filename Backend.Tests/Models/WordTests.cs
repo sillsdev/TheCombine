@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BackendFramework.Models;
 using NUnit.Framework;
 
@@ -49,6 +51,57 @@ namespace Backend.Tests.Models
                 new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode(),
                 new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode());
         }
+
+        [Test]
+        public void TestContains()
+        {
+            var word = Util.RandomWord();
+            var diffWord = word.Clone();
+            diffWord.Senses.RemoveAt(1);
+            Assert.IsTrue(word.Contains(diffWord));
+            diffWord.Vernacular = "different";
+            Assert.IsFalse(word.Contains(diffWord));
+        }
+
+        [Test]
+        public void TestAppendContainedWordContents()
+        {
+            var oldWord = Util.RandomWord();
+            var newWord = Util.RandomWord(oldWord.ProjectId);
+            newWord.Vernacular = oldWord.Vernacular;
+
+            // Make newWord have a cloned sense of oldWord,
+            // but with one new semantic domain added.
+            var newSense = oldWord.Senses.First().Clone();
+            var newSemDom = Util.RandomSemanticDomain();
+            newSense.SemanticDomains.Add(newSemDom);
+            newWord.Senses = new List<Sense> { newSense };
+
+            // Clear oldWord's Note, Flag and add some to newWord.
+            oldWord.Note = new Note();
+            oldWord.Flag = new Flag();
+            var newNote = new Note(Vernacular, Text);
+            newWord.Note = newNote.Clone();
+            var newFlag = new Flag(Text);
+            newWord.Flag = newFlag.Clone();
+
+            // Add something to newWord in Audio, EditedBy, History.
+            newWord.Audio.Add(Text);
+            newWord.EditedBy.Add(Text);
+            newWord.History.Add(Text);
+
+            Assert.That(oldWord.AppendContainedWordContents(newWord));
+
+            var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
+            Assert.That(updatedSense, Is.Not.Null);
+            var updatedDom = updatedSense!.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
+            Assert.That(updatedDom, Is.Not.Null);
+            Assert.That(oldWord.Flag.Equals(newFlag));
+            Assert.That(oldWord.Note.Equals(newNote));
+            Assert.That(oldWord.Audio.Contains(Text));
+            Assert.That(oldWord.EditedBy.Contains(Text));
+            Assert.That(oldWord.History.Contains(Text));
+        }
     }
 
     public class NoteTests
@@ -88,7 +141,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestIsBlank()
         {
-            Assert.That(new Note().IsBlank());
+            Assert.That(new Note { Text = "  " }.IsBlank());
             Assert.That(new Note { Language = Language }.IsBlank());
             Assert.IsFalse(new Note { Text = Text }.IsBlank());
         }
@@ -183,6 +236,39 @@ namespace Backend.Tests.Models
                 new Sense { Guid = _commonGuid, Accessibility = State.Active }.GetHashCode(),
                 new Sense { Guid = _commonGuid, Accessibility = State.Deleted }.GetHashCode());
         }
+
+        [Test]
+        public void TestIsEmpty()
+        {
+            var emptyDef = new Definition { Language = "l1" };
+            var fullDef = new Definition { Language = "l2", Text = "something" };
+            var emptyGloss = new Gloss { Language = "l3" };
+            var fullGloss = new Gloss { Language = "l4", Def = "anything" };
+            Assert.IsFalse(new Sense { Glosses = new List<Gloss> { emptyGloss, fullGloss } }.IsEmpty());
+            Assert.IsFalse(new Sense { Definitions = new List<Definition> { fullDef, emptyDef } }.IsEmpty());
+            Assert.IsTrue(new Sense
+            {
+                Definitions = new List<Definition> { emptyDef },
+                Glosses = new List<Gloss> { emptyGloss }
+            }.IsEmpty());
+        }
+
+        [Test]
+        public void TestIsContainedIn()
+        {
+            var domList = new List<SemanticDomain> { new SemanticDomain { Id = "id" } };
+            var glossList = new List<Gloss> { new Gloss { Def = "def" } };
+            var defList = new List<Definition> { new Definition { Text = "text" } };
+            var domSense = new Sense { SemanticDomains = domList };
+            var domGlossSense = new Sense { Glosses = glossList, SemanticDomains = domList };
+            var defGlossSense = new Sense { Definitions = defList, Glosses = glossList };
+            // For empty senses, semantic domains are checked.
+            Assert.IsTrue((new Sense()).IsContainedIn(domSense));
+            Assert.IsFalse(domSense.IsContainedIn(new Sense()));
+            // For non-empty senses, semantic domains aren't checked.
+            Assert.IsTrue(domGlossSense.IsContainedIn(defGlossSense));
+            Assert.IsFalse(defGlossSense.IsContainedIn(domGlossSense));
+        }
     }
 
     public class DefinitionTests
@@ -227,6 +313,7 @@ namespace Backend.Tests.Models
     public class FlagTests
     {
         private const string Text = "Text";
+        private const string Text2 = "Different Text";
 
         [Test]
         public void TestEquals()
@@ -247,18 +334,74 @@ namespace Backend.Tests.Models
         {
             var flag = new Flag { Active = true, Text = Text };
             Assert.IsFalse(flag.Equals(new Flag { Active = false, Text = Text }));
-            Assert.IsFalse(flag.Equals(new Flag { Active = true, Text = "Different text" }));
+            Assert.IsFalse(flag.Equals(new Flag { Active = true, Text = Text2 }));
         }
 
         [Test]
         public void TestHashCode()
         {
             Assert.AreNotEqual(
-                new Flag { Text = "1" }.GetHashCode(),
-                new Flag { Text = "2" }.GetHashCode());
+                new Flag { Text = Text }.GetHashCode(),
+                new Flag { Text = Text2 }.GetHashCode());
             Assert.AreNotEqual(
                 new Flag { Active = true }.GetHashCode(),
                 new Flag { Active = false }.GetHashCode());
+        }
+
+        [Test]
+        public void TestAppendBlank()
+        {
+            var flag = new Flag(Text);
+            var blankFlag = new Flag(" ");
+
+            var oldFlag = flag.Clone();
+            var newFlag = blankFlag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(flag));
+
+            oldFlag = blankFlag.Clone();
+            newFlag = flag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(flag));
+        }
+
+        [Test]
+        public void TestAppendNotActive()
+        {
+            var activeFlag = new Flag(Text);
+            var inactiveFlag = new Flag { Text = Text2 };
+
+            var oldFlag = activeFlag.Clone();
+            var newFlag = inactiveFlag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(activeFlag));
+
+            oldFlag = inactiveFlag.Clone();
+            newFlag = activeFlag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(activeFlag));
+        }
+
+        [Test]
+        public void TestAppendIdentical()
+        {
+            var flag = new Flag(Text);
+            var oldFlag = flag.Clone();
+            var newFlag = flag.Clone();
+            oldFlag.Append(newFlag);
+            Assert.That(oldFlag.Equals(flag));
+        }
+
+        [Test]
+        public void TestAppendNewText()
+        {
+            var flag = new Flag(Text);
+            var oldFlag = flag.Clone();
+            var newFlag = new Flag(Text2);
+            oldFlag.Append(newFlag);
+            var expectedFlag = flag.Clone();
+            expectedFlag.Text += $"; {Text2}";
+            Assert.That(oldFlag.Equals(expectedFlag));
         }
     }
 

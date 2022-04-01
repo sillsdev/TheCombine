@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -132,79 +131,13 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        /// <summary>
-        /// Checks if a word being added is a duplicate of a preexisting word.
-        /// If a duplicate, updates the existing word with any new domains or note.
-        /// </summary>
-        public async Task<bool> WordIsUnique(Word word)
+        /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>
+        /// <returns> The id string of the existing word, or null if none. </returns>
+        public async Task<string?> FindContainingWord(Word word)
         {
-            // Get all words from frontier
-            var allWords = await _wordRepo.GetFrontier(word.ProjectId);
-
-            // Find all words with matching vernacular
-            var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
-
-            var foundDuplicateSense = false;
-            var isUniqueWord = true;
-
-            // Iterate over words with the same vernacular
-            foreach (var matchingVern in allVernaculars)
-            {
-                // Iterate over senses of the new word
-                foreach (var newSense in word.Senses)
-                {
-                    var newHasDefOrGloss =
-                        newSense.Glosses.Any(gloss => !string.IsNullOrEmpty(gloss.Def)) ||
-                        newSense.Definitions.Any(def => !string.IsNullOrEmpty(def.Text));
-                    var newSemDomIds = newSense.SemanticDomains.Select(dom => dom.Id);
-
-                    foundDuplicateSense = false;
-
-                    // Iterate over senses of the old word
-                    foreach (var oldSense in matchingVern.Senses)
-                    {
-                        var oldHasDefOrGloss =
-                            oldSense.Glosses.Any(gloss => !string.IsNullOrEmpty(gloss.Def)) ||
-                            oldSense.Definitions.Any(def => !string.IsNullOrEmpty(def.Text));
-                        var neitherHasDefOrGloss = !oldHasDefOrGloss && !newHasDefOrGloss;
-                        var oldSemDomIds = oldSense.SemanticDomains.Select(dom => dom.Id);
-                        var oldHasSameSemDoms = newSemDomIds.All(oldSemDomIds.Contains);
-
-                        // If new sense is a strict subset of the old one, then merge it in
-                        if (
-                            (newHasDefOrGloss &&
-                            newSense.Glosses.All(oldSense.Glosses.Contains) &&
-                            newSense.Definitions.All(oldSense.Definitions.Contains)) ||
-                            // If new sense has no def/gloss, more conditions are checked
-                            (neitherHasDefOrGloss && oldHasSameSemDoms)
-                        )
-                        {
-                            foundDuplicateSense = true;
-
-                            oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
-                            oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
-                        }
-                    }
-
-                    // If we never found a matching sense in the old word, the words are different
-                    if (!foundDuplicateSense)
-                    {
-                        break;
-                    }
-                }
-
-                // Update the existing word only if all the senses were duplicates
-                if (foundDuplicateSense)
-                {
-                    isUniqueWord = false;
-
-                    matchingVern.Note.Append(word.Note);
-                    matchingVern.EditedBy.AddRange(word.EditedBy);
-                    matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
-                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
-                }
-            }
-            return isUniqueWord;
+            var frontier = await _wordRepo.GetFrontier(word.ProjectId);
+            var duplicatedWord = frontier.Find(w => w.Contains(word));
+            return duplicatedWord?.Id;
         }
     }
 }

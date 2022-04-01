@@ -30,7 +30,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
 
-        public LiftController(IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
+        public LiftController(
+            IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
             ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
         {
             _projRepo = projRepo;

@@ -203,6 +203,52 @@ namespace BackendFramework.Models
             hash.Add(Flag);
             return hash.ToHashCode();
         }
+
+        /// <summary> Determine whether vernacular and sense strings contain those of other word. </summary>
+        public bool Contains(Word other)
+        {
+            return
+                ProjectId == other.ProjectId &&
+                Vernacular == other.Vernacular &&
+                other.Senses.All(s => Senses.Any(s.IsContainedIn));
+        }
+
+        /// <summary>
+        /// Append contents of other contained word.
+        /// Warning! The following content of the other word are lost:
+        /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
+        /// </summary>
+        /// <returns> A bool: true if operation succeeded and word updated. </returns>
+        public bool AppendContainedWordContents(Word other)
+        {
+            // Confirm that the other word is contained
+            if (!Contains(other))
+            {
+                return false;
+            }
+            var sensesWithAddedSemDoms = Senses.Select(s => s.Clone()).ToList();
+            foreach (var otherSense in other.Senses)
+            {
+                var containingSense = sensesWithAddedSemDoms.Find(otherSense.IsContainedIn);
+                if (containingSense is null)
+                {
+                    return false;
+                }
+                containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
+                containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
+            }
+
+            // Preserve other word's SemanticDomains, Note, Flag, Audio, EditedBy, History
+            Senses = sensesWithAddedSemDoms;
+            Note.Append(other.Note);
+            Flag.Append(other.Flag);
+            Audio.AddRange(other.Audio);
+            EditedBy.AddRange(other.EditedBy);
+            EditedBy = EditedBy.Distinct().ToList();
+            History.AddRange(other.History);
+
+            return true;
+        }
     }
 
     /// <summary> A note associated with a Word, compatible with FieldWorks. </summary>
@@ -237,30 +283,31 @@ namespace BackendFramework.Models
             };
         }
 
-        /// <summary> Whether the Note contains any contents that can be serialized. </summary>
+        /// <summary> Whether the Note contains any non-whitespace contents. </summary>
         public bool IsBlank()
         {
-            return Text == "";
+            return string.IsNullOrWhiteSpace(Text);
         }
 
-        /// <summary> Append another note to the existing note. </summary>
-        public void Append(Note note)
+        /// <summary> Append other note to the present note. </summary>
+        public void Append(Note other)
         {
-            if (note.IsBlank() || Equals(note))
+            // There's nothing to append if other note is blank or identical.
+            if (other.IsBlank() || Equals(other))
             {
                 return;
             }
 
+            // If present note is blank, simply copy other note.
             if (IsBlank())
             {
-                Language = note.Language;
-                Text = note.Text;
+                Language = other.Language;
+                Text = other.Text;
+                return;
             }
-            else
-            {
-                var langTag = Language == note.Language ? "" : $"[{note.Language}] ";
-                Text += $"; {langTag}{note.Text}";
-            }
+
+            var langTag = Language == other.Language ? "" : $"[{other.Language}] ";
+            Text += $"; {langTag}{other.Text}";
         }
 
         public override bool Equals(object? obj)
@@ -365,6 +412,31 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Guid, Accessibility, Definitions, Glosses, SemanticDomains);
         }
+
+        public bool IsEmpty()
+        {
+            return
+                Glosses.All(gloss => string.IsNullOrWhiteSpace(gloss.Def)) &&
+                Definitions.All(def => string.IsNullOrWhiteSpace(def.Text));
+        }
+
+        /// <summary>
+        /// Check if all Gloss, Definition strings are contained in other Sense.
+        /// If they are all empty, also require other sense is empty and includes same Semantic Domains.
+        /// </summary>
+        public bool IsContainedIn(Sense other)
+        {
+            if (IsEmpty())
+            {
+                var semDomIds = SemanticDomains.Select(dom => dom.Id);
+                var otherSemDomIds = other.SemanticDomains.Select(dom => dom.Id);
+                return other.IsEmpty() && semDomIds.All(otherSemDomIds.Contains);
+            }
+
+            return
+                Glosses.All(other.Glosses.Contains) &&
+                Definitions.All(other.Definitions.Contains);
+        }
     }
 
     public class Definition
@@ -453,6 +525,26 @@ namespace BackendFramework.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(Active, Text);
+        }
+
+        /// <summary> Append other flag to the present flag. </summary>
+        public void Append(Flag other)
+        {
+            // There's nothing to append if other flag is inactive/identical, or both are active and other is empty.
+            if (!other.Active || Equals(other) || (Active && string.IsNullOrWhiteSpace(other.Text)))
+            {
+                return;
+            }
+
+            // If present flag is inactive or empty, simply copy the active other flag.
+            if (!Active || string.IsNullOrWhiteSpace(Text))
+            {
+                Active = true;
+                Text = other.Text;
+                return;
+            }
+
+            Text += $"; {other.Text}";
         }
     }
 

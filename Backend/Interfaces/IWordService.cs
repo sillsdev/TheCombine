@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
     {
         Task<bool> Update(string projectId, string wordId, Word word);
         Task<bool> Delete(string projectId, string wordId);
-        Task<bool> WordIsUnique(Word word);
+        Task<string?> FindContainingWord(Word word);
         Task<Word?> Delete(string projectId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string wordId);
     }

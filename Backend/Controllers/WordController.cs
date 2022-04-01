@@ -141,8 +141,63 @@ namespace BackendFramework.Controllers
             return Ok(await _wordRepo.GetFrontier(projectId));
         }
 
+        /// <summary>
+        /// Checks if a <see cref="Word"/> is a duplicate--i.e., are its primary text fields
+        /// (Vernacular, Gloss text, Definition text) contained in a frontier entry?
+        /// </summary>
+        /// <returns> Id of containing word, or empty string if none. </returns>
+        [HttpPost("getduplicateid", Name = "GetDuplicateId")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> GetDuplicateId(string projectId, [FromBody, BindRequired] Word word)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+            word.ProjectId = projectId;
+
+            return Ok(await _wordService.FindContainingWord(word) ?? "");
+        }
+
+        /// <summary> Combines a <see cref="Word"/> into the existing duplicate with specified wordId. </summary>
+        /// <returns> Id of updated word. </returns>
+        [HttpPost("{dupId}", Name = "UpdateDuplicate")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UpdateDuplicate(
+            string projectId, string dupId, [FromBody, BindRequired] Word word)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+            word.ProjectId = projectId;
+
+            var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
+            if (duplicatedWord is null)
+            {
+                return NotFound(dupId);
+            }
+            if (!duplicatedWord.AppendContainedWordContents(word))
+            {
+                return Conflict();
+            }
+
+            await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
+            return Ok(duplicatedWord.Id);
+        }
+
         /// <summary> Creates a <see cref="Word"/>. </summary>
-        /// <returns> Id of created word </returns>
+        /// <returns> Id of created word. </returns>
         [HttpPost(Name = "CreateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateWord(string projectId, [FromBody, BindRequired] Word word)
@@ -158,16 +213,7 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            // If word is not already in frontier, add it.
-            if (await _wordService.WordIsUnique(word))
-            {
-                await _wordRepo.Create(word);
-            }
-            else
-            {
-                // Otherwise it is a duplicate.
-                return Ok("Duplicate");
-            }
+            await _wordRepo.Create(word);
             return Ok(word.Id);
         }
 
@@ -175,7 +221,8 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word </returns>
         [HttpPut("{wordId}", Name = "UpdateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateWord(string projectId, string wordId, [FromBody, BindRequired] Word word)
+        public async Task<IActionResult> UpdateWord(
+            string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {

@@ -545,9 +545,9 @@ export async function removeUserRole(
 /* WordController.cs */
 
 export async function createWord(word: Word): Promise<Word> {
-  const projectId = LocalStorage.getProjectId();
-  const resp = await wordApi.createWord({ projectId, word }, defaultOptions());
-  return { ...word, id: resp.data };
+  const params = { projectId: LocalStorage.getProjectId(), word };
+  word.id = (await wordApi.createWord(params, defaultOptions())).data;
+  return word;
 }
 
 export async function deleteFrontierWord(wordId: string): Promise<string> {
@@ -555,14 +555,24 @@ export async function deleteFrontierWord(wordId: string): Promise<string> {
   return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
 }
 
-export async function getWord(wordId: string): Promise<Word> {
-  const params = { projectId: LocalStorage.getProjectId(), wordId };
-  return (await wordApi.getWord(params, defaultOptions())).data;
-}
-
 export async function getAllWords(): Promise<Word[]> {
   const projectId = LocalStorage.getProjectId();
   return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;
+}
+
+export async function getDuplicateId(word: Word): Promise<string> {
+  const params = { projectId: LocalStorage.getProjectId(), word };
+  return (await wordApi.getDuplicateId(params, defaultOptions())).data;
+}
+
+export async function getFrontierWords(): Promise<Word[]> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await wordApi.getProjectFrontierWords(params, defaultOptions())).data;
+}
+
+export async function getWord(wordId: string): Promise<Word> {
+  const params = { projectId: LocalStorage.getProjectId(), wordId };
+  return (await wordApi.getWord(params, defaultOptions())).data;
 }
 
 export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
@@ -570,9 +580,13 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
   return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
 }
 
-export async function getFrontierWords(): Promise<Word[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
-  return (await wordApi.getProjectFrontierWords(params, defaultOptions())).data;
+export async function updateDuplicate(
+  dupId: string,
+  word: Word
+): Promise<Word> {
+  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
+  const resp = await wordApi.updateDuplicate(params, defaultOptions());
+  return await getWord(resp.data);
 }
 
 export async function updateWord(word: Word): Promise<Word> {

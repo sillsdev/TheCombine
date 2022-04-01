@@ -13,8 +13,6 @@ import React, { ReactElement, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { Key } from "ts-key-enum";
 
-import LoadingButton from "components/Buttons/LoadingButton";
-
 interface EditTextDialogProps {
   open: boolean;
   text: string;
@@ -34,16 +32,13 @@ interface EditTextDialogProps {
 export default function EditTextDialog(
   props: EditTextDialogProps
 ): ReactElement {
-  const [loading, setLoading] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.text);
 
   async function onConfirm() {
-    if (text !== props.text) {
-      setLoading(true);
-      await props.updateText(text);
-      setLoading(false);
-    }
     props.close();
+    if (text !== props.text) {
+      await props.updateText(text);
+    }
   }
 
   function onCancel() {
@@ -100,17 +95,14 @@ export default function EditTextDialog(
         >
           <Translate id={props.buttonTextIdCancel ?? "buttons.cancel"} />
         </Button>
-        <LoadingButton
-          loading={loading}
-          buttonProps={{
-            onClick: onConfirm,
-            color: "primary",
-            variant: "contained",
-            id: props.buttonIdConfirm,
-          }}
+        <Button
+          onClick={onConfirm}
+          variant="outlined"
+          color="primary"
+          id={props.buttonIdConfirm}
         >
           <Translate id={props.buttonTextIdConfirm ?? "buttons.confirm"} />
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
