@@ -50,7 +50,7 @@ export default function ReviewEntriesTable(
           columns={
             showDefinitions
               ? columns
-              : columns.filter((c) => c.field !== ColumnTitle.Definitions)
+              : columns.filter((c) => c.title !== ColumnTitle.Definitions)
           }
           data={words}
           editable={{
