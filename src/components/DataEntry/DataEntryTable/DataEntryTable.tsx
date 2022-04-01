@@ -158,9 +158,9 @@ export class DataEntryTable extends React.Component<
     wordToAdd.note.language = this.state.analysisLang.bcp47;
 
     // Check if word is duplicate to existing word.
-    const duplicatedId = await backend.getDuplicateId(wordToAdd);
-    if (duplicatedId) {
-      this.addDuplicateWord(wordToAdd, audioURLs, duplicatedId, ignoreRecent);
+    const dupId = await backend.getDuplicateId(wordToAdd);
+    if (dupId) {
+      await this.addDuplicateWord(wordToAdd, audioURLs, dupId, ignoreRecent);
       return;
     }
 
