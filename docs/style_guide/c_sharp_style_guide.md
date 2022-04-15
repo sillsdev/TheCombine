@@ -98,8 +98,8 @@ Assert.AreEqual(word, otherWord);
 ```
 
 For `ContentEquals` (e.g. comparing objects but ignoring the `Id` field),
-[configure a `CompareLogic`](https://github.com/GregFinzer/Compare-Net-Objects/wiki/Ignoring-Members) structure.
-Order of Lists can also
+[configure a `CompareLogic`](https://github.com/GregFinzer/Compare-Net-Objects/wiki/Ignoring-Members) structure. Order
+of Lists can also
 [be ignored](https://github.com/GregFinzer/Compare-Net-Objects/wiki/Comparing-Lists-of-Different-Lengths).
 
 ```c#
@@ -115,7 +115,6 @@ return other.ProjectId.Equals(ProjectId) &&
     other.WordIds.Count == WordIds.Count &&
     other.WordIds.All(WordIds.Contains);
 ```
-
 
 ### Rationale
 
