@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using KellermanSoftware.CompareNetObjects;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -155,6 +156,9 @@ namespace BackendFramework.Models
 
         public bool ContentEquals(Project other)
         {
+            var inviteCompare = new CompareLogic();
+            var inviteResult = inviteCompare.Compare(other.InviteTokens, InviteTokens).AreEqual;
+
             return
                 other.Name.Equals(Name) &&
                 other.IsActive.Equals(IsActive) &&
@@ -185,8 +189,7 @@ namespace BackendFramework.Models
                 other.PartsOfSpeech.Count == PartsOfSpeech.Count &&
                 other.PartsOfSpeech.All(PartsOfSpeech.Contains) &&
 
-                other.InviteTokens.Count == InviteTokens.Count &&
-                other.InviteTokens.All(InviteTokens.Contains);
+                inviteResult;
         }
 
         public override bool Equals(object? obj)
