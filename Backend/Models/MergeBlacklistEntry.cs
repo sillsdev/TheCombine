@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using KellermanSoftware.CompareNetObjects;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -48,25 +47,10 @@ namespace BackendFramework.Models
 
         public bool ContentEquals(MergeBlacklistEntry other)
         {
-            return
-                other.ProjectId.Equals(ProjectId) &&
-                other.UserId.Equals(UserId) &&
-                other.WordIds.Count == WordIds.Count &&
-                other.WordIds.All(WordIds.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not MergeBlacklistEntry other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            return other.Id.Equals(Id) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, UserId, WordIds);
+            var compare = new CompareLogic();
+            compare.Config.IgnoreProperty<MergeBlacklistEntry>(x => x.Id);
+            compare.Config.IgnoreCollectionOrder = true;
+            return compare.Compare(this, other).AreEqual;
         }
     }
 }

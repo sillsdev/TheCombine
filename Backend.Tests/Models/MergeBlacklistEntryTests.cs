@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BackendFramework.Models;
+using KellermanSoftware.CompareNetObjects;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -23,11 +24,11 @@ namespace Backend.Tests.Models
                 WordIds = _wordIds
             };
             var entryB = entryA.Clone();
-            Assert.That(entryA.Equals(entryB));
+            entryA.ShouldCompare(entryB);
         }
 
         [Test]
-        public void TestEquals()
+        public void TestContentEquals()
         {
             var entryA = new MergeBlacklistEntry
             {
@@ -43,55 +44,7 @@ namespace Backend.Tests.Models
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            Assert.That(entryA.Equals(entryB));
-        }
-
-        [Test]
-        public void TestEqualsFalse()
-        {
-            var entryA = new MergeBlacklistEntry();
-            var entryB = new MergeBlacklistEntry();
-            entryA.Id = EntryId;
-            Assert.IsFalse(entryA.Equals(entryB));
-
-            entryB = entryA.Clone();
-            entryA.ProjectId = ProjId;
-            Assert.IsFalse(entryA.Equals(entryB));
-
-            entryB = entryA.Clone();
-            entryA.UserId = UserId;
-            Assert.IsFalse(entryA.Equals(entryB));
-
-            entryB = entryA.Clone();
-            entryA.WordIds = _wordIds;
-            Assert.IsFalse(entryA.Equals(entryB));
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var edit = new MergeBlacklistEntry { ProjectId = ProjId };
-            Assert.IsFalse(edit.Equals(null));
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            var entryA = new MergeBlacklistEntry
-            {
-                Id = EntryId,
-                ProjectId = ProjId,
-                UserId = UserId,
-                WordIds = _wordIdsReversed
-            };
-            var entryB = new MergeBlacklistEntry
-            {
-                Id = "DifferentTestId",
-                ProjectId = ProjId,
-                UserId = UserId,
-                WordIds = _wordIdsReversed
-            };
-            Assert.AreNotEqual(entryA.GetHashCode(), entryB.GetHashCode());
+            Assert.That(entryA.ContentEquals(entryB));
         }
     }
 }
