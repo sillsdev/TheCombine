@@ -47,9 +47,14 @@ namespace BackendFramework.Models
 
         public bool ContentEquals(MergeBlacklistEntry other)
         {
-            var compare = new CompareLogic();
+            var compare = new CompareLogic
+            {
+                Config =
+                {
+                    IgnoreCollectionOrder = true
+                }
+            };
             compare.Config.IgnoreProperty<MergeBlacklistEntry>(x => x.Id);
-            compare.Config.IgnoreCollectionOrder = true;
             return compare.Compare(this, other).AreEqual;
         }
     }

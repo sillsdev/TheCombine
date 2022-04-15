@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using KellermanSoftware.CompareNetObjects;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
@@ -92,28 +91,14 @@ namespace BackendFramework.Models
 
         public bool ContentEquals(MergeUndoIds other)
         {
-            if (other.ParentIds.Count != ParentIds.Count || other.ChildIds.Count != ChildIds.Count)
+            var compare = new CompareLogic
             {
-                return false;
-            }
-            return
-                other.ParentIds.All(ParentIds.Contains) &&
-                other.ChildIds.All(ChildIds.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not MergeUndoIds other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ParentIds, ChildIds);
+                Config =
+                {
+                    IgnoreCollectionOrder = true
+                }
+            };
+            return compare.Compare(this, other).AreEqual;
         }
     }
 }
