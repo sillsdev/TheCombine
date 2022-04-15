@@ -75,3 +75,29 @@ for (var i = 1; i < 4; i++)
 - Remove some error-prone boilerplate (`i++`)
 - Remove the possibly of incrementing the wrong value (e.g. incrementing `i` instead of `j` in an inner loop)
 - Express clearly the intent
+
+## Use `CompareNETObjects` to compare objects of the same type
+
+[`CompareNETObjects`](https://github.com/GregFinzer/Compare-Net-Objects/wiki/Getting-Started) is a C# library that supports
+comparing instances of deeply objects, including their nested attributes.
+
+For normal application logic, use [`Compare`](https://github.com/GregFinzer/Compare-Net-Objects/wiki/Getting-Started#c-example)
+and check `AreEqual` on the result.
+
+For unit testing, use 
+[`ShouldCompare`/`ShouldNotCompare`](https://github.com/GregFinzer/Compare-Net-Objects/wiki/Test-Extensions#shouldcompare),
+which will throw an exception if the objects are not equal.
+
+```c#
+# Yes:
+word.ShouldCompare(otherWord);
+
+# No:
+Assert.AreEqual(word, otherWord);
+```
+
+### Rationale
+
+The alternative is to implement a large amount of boilerplate for each class but implementing the `Equals()` and
+`GetHashCode()` method. This implementation is error-prone (e.g. it is easy to forget adding an extra field to check) and
+requires additional unit test boilerplate to test the implementation.

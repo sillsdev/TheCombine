@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Backend.Tests.Mocks;
+﻿using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using KellermanSoftware.CompareNetObjects;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
@@ -32,7 +32,7 @@ namespace Backend.Tests.Controllers
             var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value!;
             Assert.IsTrue(result);
             var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value!;
-            Assert.AreEqual(banner, _siteBanner);
+            banner.ShouldCompare(_siteBanner);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Backend.Tests.Controllers
             Assert.IsTrue(result);
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value!;
-            Assert.AreEqual(banner, _siteBanner);
+            banner.ShouldCompare(_siteBanner);
         }
     }
 }
