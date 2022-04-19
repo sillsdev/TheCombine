@@ -21,6 +21,8 @@ charts:
       maxBackups: "3"
     global:
       awsS3Location: prod.thecombine.app
+    certManager:
+      enabled: true
   cert-proxy-server:
     global:
       awsS3Location: prod.thecombine.app
