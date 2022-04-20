@@ -23,3 +23,13 @@
     {{- end }}
   {{- end }}
 {{- end }}
+
+{{/* Trim brackets from beginning/end of string */}}
+{{- define "cert-proxy-server.toString" }}
+  {{- $returnString := "" }}
+  {{- range . }}
+    {{- $returnString = printf "%s %s" $returnString . }}
+  {{- end }}
+  {{- $returnString = trim $returnString }}
+  {{- printf "\"%s\"" $returnString }}
+{{- end }}
