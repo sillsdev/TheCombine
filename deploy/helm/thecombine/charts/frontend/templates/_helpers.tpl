@@ -1,4 +1,4 @@
-{{/* Build continer image name */}}
+{{/* Build container image name */}}
 {{- define "frontend.containerImage" -}}
   {{- if .Values.global.imageRegistry }}
     {{- $registry := .Values.global.imageRegistry }}

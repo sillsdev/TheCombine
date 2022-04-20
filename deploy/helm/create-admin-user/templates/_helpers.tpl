@@ -1,4 +1,4 @@
-{{/* Build continer image name */}}
+{{/* Build container image name */}}
 {{- define "create-admin-user.containerImage" }}
   {{- if .Values.global.imageRegistry }}
     {{- $registry := .Values.global.imageRegistry }}
