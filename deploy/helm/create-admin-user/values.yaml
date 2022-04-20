@@ -2,15 +2,21 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
 global:
-  awsAccount: "Change Me"
-  awsDefaultRegion: "Change Me"
-  adminUsername: "Change Me"
-  adminPassword: "Change Me"
-  adminEmail: "Change Me"
-  combineJwtSecretKey: "Change Me"
-  combineSmtpUsername: "Change Me"
-  combineSmtpPassword: "Change Me"
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  adminUsername: "Override"
+  adminPassword: "Override"
+  adminEmail: "Override"
+  combineJwtSecretKey: "Override"
+  combineSmtpUsername: "Override"
+  combineSmtpPassword: "Override"
   pullSecretName: aws-login-credentials
   imageTag: "latest"
   # Define the type of image registry to use, awsEcr or local
