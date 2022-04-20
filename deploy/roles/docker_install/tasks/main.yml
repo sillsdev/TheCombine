@@ -18,7 +18,7 @@
     cache_valid_time: 600
   changed_when: false
 
-- name: Install docker pre-requisites
+- name: Install pre-requisite packages
   apt:
     name:
       - apt-transport-https
@@ -40,99 +40,8 @@
     state: present
     filename: docker
 
-- name: Pin Docker to validated version
-  template:
-    src: apt-preferences.j2
-    dest: "/etc/apt/preferences.d/{{ item.pkg }}-pin"
-    owner: root
-    group: root
-    mode: 0644
-  with_items: "{{ docker_pinned_pkgs }}"
-  notify: update packages
-
-- name: Install Docker Engine
+- name: Install Docker Packages
   apt:
     name: "{{ docker_packages }}"
     update_cache: yes
   notify: reboot target
-
-- name: Enable Docker service
-  service:
-    name: docker
-    enabled: yes
-    state: started
-
-- name: Create directory for TheCombine logs
-  file:
-    path: "{{ combine_log_directory }}"
-    state: directory
-    owner: syslog
-    group: adm
-    mode: 0775
-  when: combine_use_syslog
-
-  # Create the configuration file for logging the Docker events.  Note that
-  # the default logging configuration is 50-default.conf.  Since "30" < "50",
-  # the docker configuration will be processed first and the stop command at
-  # the end of the file ("& ~") will prevent the log message from being duplicated
-  # in /var/log/syslog.  If it becomes useful to have the messages in
-  # /var/log/syslog as well, change the configuration file name to one that is
-  # > "50".
-- name: Setup rsyslog to log to separate file
-  template:
-    src: combine-log.conf.j2
-    dest: /etc/rsyslog.d/30-docker.conf
-    owner: root
-    group: root
-    mode: 0644
-  when: combine_use_syslog
-  notify: restart rsyslog
-
-- name: Configure Default Docker Logging
-  template:
-    src: daemon.json.j2
-    dest: /etc/docker/daemon.json
-    owner: root
-    group: root
-    mode: 0600
-  notify: restart docker
-
-- name: Configure Combine Log Rotation
-  template:
-    src: logrotate.conf.j2
-    dest: /etc/logrotate.d/docker
-    owner: root
-    group: root
-    mode: 0644
-  when: combine_use_syslog
-
-- name: check for docker-compose version
-  command: docker-compose --version
-  register: compose_version
-  changed_when: false
-  failed_when: false
-
-- name: Install Docker Compose
-  get_url:
-    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
-    dest: "/usr/local/bin/docker-compose"
-    owner: root
-    group: root
-    mode: 0755
-  when: compose_version.rc != 0 or docker_compose_version not in compose_version.stdout
-
-- name: Create link for /usr/bin/docker-compose
-  file:
-    src: "/usr/local/bin/docker-compose"
-    dest: "/usr/bin/docker-compose"
-    state: link
-    owner: root
-    group: root
-    mode: 0777
-
-- name: Add user to docker group
-  user:
-    name: "{{ ansible_user_id }}"
-    groups:
-      - docker
-    append: yes
