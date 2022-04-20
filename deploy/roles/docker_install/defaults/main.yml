@@ -4,19 +4,4 @@ credential_helper_version: v0.6.3
 
 # Kubernetes/minikube is validated on Docker 19.03.x
 docker_packages:
-  - docker-ce
-  - docker-ce-cli
   - containerd.io
-
-docker_pinned_pkgs:
-  - pkg: docker-ce
-    version: "5:20.10.*"
-  - pkg: docker-ce-cli
-    version: "5:20.10.*"
-  - pkg: docker-ce-rootless-extras
-    version: "5:20.10.*"
-
-combine_use_syslog: false
-combine_log_directory: /var/log/combine
-docker_log_file: docker.log
-container_log_file: app.log

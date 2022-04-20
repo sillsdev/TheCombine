@@ -4,12 +4,6 @@
     name: "{{ k8s_required_pkgs }}"
 
 # configure kubernetes user
-- name: adding existing user '{{ k8s_user }}' to group docker
-  user:
-    name: "{{ k8s_user }}"
-    groups: docker
-    append: yes
-
 - name: Install Kubernetes Engine
   include_tasks:
     file: "{{ k8s_engine }}.yml"
