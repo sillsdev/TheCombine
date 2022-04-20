@@ -68,7 +68,7 @@ def parse_args() -> argparse.Namespace:
         help="Print less output information.",
     )
     parser.add_argument(
-        "--repo", "-r", help="Push images to the specified Docker image repository."
+        "--repo", "-r", help="Pull images from the specified Docker image repository."
     )
     parser.add_argument(
         "--tag",

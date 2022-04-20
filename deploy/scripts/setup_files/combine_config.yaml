@@ -72,12 +72,15 @@ profiles:
     # system and is downloaded from AWS S3
     charts:
       - thecombine
+      - create-admin-user
   staging: # Profile for the QA server
     charts:
       - thecombine
+      - create-admin-user
   prod: # Profile for the Production/Live server
     charts:
       - thecombine
+      - create-admin-user
       - cert-proxy-server
 
 # Set of charts
@@ -106,6 +109,25 @@ charts:
         env_var: COMBINE_SMTP_USERNAME
       - config_item: combineSmtpPassword
         env_var: COMBINE_SMTP_PASSWORD
+  create-admin-user:
+    namespace: thecombine
+    secrets:
+      - config_item: awsAccount
+        env_var: AWS_ACCOUNT
+      - config_item: awsDefaultRegion
+        env_var: AWS_DEFAULT_REGION
+      - config_item: combineJwtSecretKey
+        env_var: COMBINE_JWT_SECRET_KEY
+      - config_item: combineSmtpUsername
+        env_var: COMBINE_SMTP_USERNAME
+      - config_item: combineSmtpPassword
+        env_var: COMBINE_SMTP_PASSWORD
+      - config_item: adminUsername
+        env_var: COMBINE_ADMIN_USERNAME
+      - config_item: adminPassword
+        env_var: COMBINE_ADMIN_PASSWORD
+      - config_item: adminEmail
+        env_var: COMBINE_ADMIN_EMAIL
   cert-proxy-server:
     namespace: combine-cert-proxy
     secrets:

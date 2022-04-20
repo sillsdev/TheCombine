@@ -1,54 +1,48 @@
----
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ admin_user_job_name }}
-  namespace: {{ app_namespace }}
+  name: create-admin-user
+  namespace: {{ .Release.Namespace }}
 spec:
   ttlSecondsAfterFinished: 300
   template:
     metadata:
       creationTimestamp: null
     spec:
-      dnsPolicy: ClusterFirst
       restartPolicy: Never
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
-{% if image_pull_secret is defined and image_pull_secret | length %}
+{{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
-        - name: {{ image_pull_secret }}
-{% endif %}
+        - name: {{ .Values.global.pullSecretName }}
+{{- end }}
       containers:
         - env:
             - name: COMBINE_JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   key: COMBINE_JWT_SECRET_KEY
-                  name: env-backend-secrets
+                  name: admin-user-secrets
             - name: ASPNETCORE_URLS
               value: http://+:5050
             - name: COMBINE_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
                   key: COMBINE_ADMIN_USERNAME
-                  name: {{ admin_user_secrets_name }}
+                  name: admin-user-secrets
             - name: COMBINE_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: COMBINE_ADMIN_PASSWORD
-                  name: {{ admin_user_secrets_name }}
+                  name: admin-user-secrets
             - name: COMBINE_ADMIN_EMAIL
               valueFrom:
                 secretKeyRef:
                   key: COMBINE_ADMIN_EMAIL
-                  name: {{ admin_user_secrets_name }}
-          image: "{{ aws_account }}.dkr.ecr.{{ aws_region }}.amazonaws.com/combine_backend:{{ image_tag }}"
-          name: {{ admin_user_job_name }}
-{% if image_tag == "latest" %}
-          imagePullPolicy: Always
-{% else %}
-          imagePullPolicy: IfNotPresent
-{% endif %}
+                  name: admin-user-secrets
+          image: {{ template "create-admin-user.containerImage" . }}
+          imagePullPolicy: {{ template "create-admin-user.imagePullPolicy" . }}
+          name: create-admin-user
           resources: {}
           volumeMounts:
             - mountPath: /home/app/.CombineFiles

@@ -1,4 +1,4 @@
-{{/* Build continer image name */}}
+{{/* Build container image name */}}
 {{- define "cert-proxy-client.containerImage" -}}
   {{- if .Values.global.imageRegistry }}
     {{- $registry := .Values.global.imageRegistry }}
