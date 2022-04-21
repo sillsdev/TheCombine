@@ -45,7 +45,7 @@ Click on a character tile to open a panel for that character.
 !!! tip
 
     You may have to scroll to see the panel. If your window is wide enough, there will be a blank margin on the
-    right; the panel will be at the top off this. If your window is narrow, tiles fill all the way to the right side of the
+    right; the panel will be at the top of this. If your window is narrow, tiles fill all the way to the right side of the
     window; the panel will be at the bottom, below all the tiles.
 
 ![Character Inventory character panel](images/characterInventoryPanel.png){ .center }
