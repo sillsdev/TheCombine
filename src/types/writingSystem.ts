@@ -10,7 +10,7 @@ export enum Bcp47Code {
 const writingSystem = {
   [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"),
-  [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Es, "Français"),
+  [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"),
 };
 
 export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
