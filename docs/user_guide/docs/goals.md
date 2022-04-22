@@ -28,6 +28,67 @@ column.
 
 ## Merge Duplicates
 
+This tool automatically finds sets of potential duplicate entries. First it presents sets of words with identical
+vernaculars. Then it presents sets with similar vernaculars or identical glosses (or definitions).
+
+![Merge Duplicates two entries](images/mergeTwo.png)
+
+Each entry is displayed in one column, and each sense of that entry is a displayed as a tile that you can
+click-and-drag. There are three basic things you can do with a sense: move it, merge it into another sense, or delete
+it.
+
+### Move a Sense
+
+When you click-and-hold a sense, it turns green. You can drag-and-drop the sense to a different place in the same column
+to reorder the senses of that entry. Or you can drag-and-drop the sense into another column to move the sense to the
+other entry.
+
+![Merge Duplicates moving a sense](images/mergeMove.png)
+
+If you want to split an entry with multiple senses into multiple entries, you can drag one of the senses into the empty
+extra column on the right.
+
+### Merge a Sense
+
+--content coming soon--
+
+### Delete a Sense
+
+To delete a sense, drag it to the garbage can icon in the lower-left corner. When the sense turns red, release.
+
+![Merge Duplicates deleting a sense](images/mergeDelete.png)
+
+If you delete the last sense of a column, the whole column will disappear, and that entry will be deleted when you save.
+
+![Merge Duplicates sense deleted](images/mergeDeleted.png)
+
+### Finishing a Set
+
+There are two buttons at the bottom for wrapping up work on the current set of potential duplicates and moving on to the
+next set: "Save & Continue" and "Skip".
+
+#### Save & Continue
+
+![Merge Duplicates Save and Continue button](images/mergeSaveAndContinue.png)
+
+The blue "Save and Continue" button does two things. First, it saves all changes made (i.e., all moved, merged, or
+deleted senses), updating the words in the database. Second, it saves the ids of unmerged words as non-duplicates.
+
+!!! tip
+
+    Are the potential duplicates not duplicates? Just click Save & Continue to tell The Combine not to show you that set again.
+
+!!! note
+
+    If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set can appear again as potential duplicates.
+
+#### Skip
+
+![Merge Duplicates Skip button](images/mergeSkip.png)
+
+The grey "Skip" button resets any changes made to the set of potential duplicates. The same set will be suggested again
+the next time Merge Duplicates is opened.
+
 ## Create Character Inventory
 
 Character Inventory tools are only available to project admins. The character inventory for a project's vernacular
