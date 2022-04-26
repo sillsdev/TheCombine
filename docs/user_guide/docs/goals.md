@@ -50,7 +50,25 @@ extra column on the right.
 
 ### Merge a Sense
 
---content coming soon--
+If you drag a sense over another sense, the other sense also turns green.
+
+![Merge Duplicates merging a sense](images/mergeMerge.png)
+
+Dropping a sense onto another sense (when they are both green) merges the senses. This causes a blue sidebar to appear
+on the right, showing what senses are being merged.
+
+![Merge Duplicates senses merged](images/mergeSidebar.png)
+
+!!! important
+
+    When multiple senses are merged, all semantic domains are preserved, but **only the top sense in the sidebar** has its glosses (and definitions) preserved.
+
+You can drag-and-drop senses to or from the sidebar to change which senses are being merged. Or within the sidebar, you
+can move a different sense to the top (to preserve its glosses).
+
+![Merge Duplicates moving a sidebar sense](images/mergeSidebarMove.png)
+
+Click on the right angle bracket (>) to close or open the blue sidebar.
 
 ### Delete a Sense
 
@@ -61,6 +79,24 @@ To delete a sense, drag it to the garbage can icon in the lower-left corner. Whe
 If you delete the last sense of a column, the whole column will disappear, and that entry will be deleted when you save.
 
 ![Merge Duplicates sense deleted](images/mergeDeleted.png)
+
+### Flag an Entry
+
+There is a flag icon at the top-right corner of every column (to the right of the vernacular).
+
+![Merge Duplicates flagging an entry](images/mergeFlag.png){ .center }
+
+You can click on the flag icon to flag the entry for future inspection or editing. (You can sort flagged entries in
+[Review Entries](#review-entries).) When you flag an entry, you are given the option to add text.
+
+![Merge Duplicates adding or editing a flag](images/mergeEditFlag.png){ .center }
+
+Whether or not any text is typed, you will know that the entry is flagged because the flag icon will be solid red. If
+you added text, you can hover your cursor over the flag to see the text.
+
+![Merge Duplicates a flagged entry](images/mergeFlagged.png){ .center }
+
+Click on the red flag icon to edit the text or remove the flag.
 
 ### Finishing a Set
 
