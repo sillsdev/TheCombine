@@ -26,7 +26,10 @@
           - net-tools
 
     - name: Skip sudo password for {{ developer }}
-      lineinfile:
-        line: "{{ developer }}  ALL=(ALL) NOPASSWD:ALL"
-        path: /etc/sudoers
+      template:
+        src: sudoer.j2
+        dest: /etc/sudoers.d/{{ developer }}
+        owner: root
+        group: root
+        mode: 0440
       when: developer != 'none'
