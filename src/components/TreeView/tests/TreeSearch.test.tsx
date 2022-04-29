@@ -91,12 +91,15 @@ describe("TreeSearch", () => {
   });
 
   describe("Integration tests, verify component uses hooks to achieve desired UX", () => {
-    test("typing non-matching domain search data does not clear input, or attempt to navigate", () => {
+    test("typing non-matching domain search data does not clear input, or attempt to navigate", async () => {
       render(<TreeSearch {...testProps} />);
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );
-      userEvent.type(screen.getByTestId(testId), "flibbertigibbet{enter}");
+      await userEvent.type(
+        screen.getByTestId(testId),
+        "flibbertigibbet{enter}"
+      );
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         "flibbertigibbet"
       );
@@ -104,12 +107,15 @@ describe("TreeSearch", () => {
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
-    test("typing valid domain number navigates and clears input", () => {
+    test("typing valid domain number navigates and clears input", async () => {
       render(<TreeSearch {...testProps} />);
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );
-      userEvent.type(screen.getByTestId(testId), `${mapIds.lastKid}{enter}`);
+      await userEvent.type(
+        screen.getByTestId(testId),
+        `${mapIds.lastKid}{enter}`
+      );
       expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
         ""
       );

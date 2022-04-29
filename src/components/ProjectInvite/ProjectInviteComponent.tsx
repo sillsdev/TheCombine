@@ -50,7 +50,7 @@ export default class ProjectInvite extends React.Component<
   }
   removeLastURLParam(pathname: string): string {
     const index = pathname.lastIndexOf("/");
-    return pathname.substr(0, index);
+    return pathname.substring(0, index);
   }
 
   async validateLink() {
