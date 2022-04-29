@@ -2,7 +2,11 @@
 - name: Install packages to create the Access Point
   apt:
     name:
+      - util-linux
+      - procps
       - hostapd
+      - iproute2
+      - iw
       - dnsmasq
     update_cache: yes
     cache_valid_time: 3600

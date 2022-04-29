@@ -93,3 +93,11 @@
     regexp: '^(\s+server: https:\/\/)[.0-9]+:(1?6443)'
     backrefs: yes
     line: '\1{{ k8s_dns_name }}:\2'
+
+- name: Replace 'default' cluster, user, etc with {{ kubecfgdir }}
+  delegate_to: localhost
+  become: no
+  replace:
+    path: "{{ kubecfg }}"
+    regexp: "^(.*)default(.*)$"
+    replace: '\1{{ kubecfgdir }}\2'
