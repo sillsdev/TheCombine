@@ -11,6 +11,8 @@ charts:
       enabled: true
       awsEcr:
         cron: no
+    global:
+      awsS3Location: prod.thecombine.app
 
     cert-proxy-client:
       enabled: true
