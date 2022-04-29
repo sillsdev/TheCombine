@@ -2,6 +2,8 @@
 - name: Install packages to create the Access Point
   apt:
     name:
+      - util-linux
+      - procps
       - hostapd
       - iproute2
       - iw
