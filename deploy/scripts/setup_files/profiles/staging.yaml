@@ -1,0 +1,17 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: prod
+################################################
+
+charts:
+  thecombine:
+    # Frontend configuration items:
+    frontend:
+      configShowCertExpiration: false
+      configAnalyticsWriteKey: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
+    global:
+      awsS3Location: prod.thecombine.app
+    certManager:
+      enabled: false
