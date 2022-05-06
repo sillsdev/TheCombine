@@ -59,8 +59,9 @@ def parse_args() -> Namespace:
         Notes:
 
          - The repo names must be specified BEFORE the --remove or --keep options.
-         - If neither --untagged nor --remove options is specified, then {os.path.basename(__file__)}
-           will list the images (same as specifying '--list').
+         - If neither --untagged nor --remove options is specified, then
+           {os.path.basename(__file__)} will list the images.  This is the same
+           behavior as specifying '--list'.
 
         """,
         formatter_class=RawFormatter,
@@ -78,7 +79,9 @@ def parse_args() -> Namespace:
         nargs="+",
         help="List of tags to keep that would otherwise be removed",
     )
-    parser.add_argument("--list", action="store_true", help="List images in the repo.  No images are deleted.")
+    parser.add_argument(
+        "--list", action="store_true", help="List images in the repo.  No images are deleted."
+    )
     parser.add_argument(
         "--remove",
         dest="rm_pattern",
@@ -145,7 +148,9 @@ def main() -> None:
     args = parse_args()
 
     # Verify that either '--untagged' or '--remove' or '--list' are specified
-    list_images = args.list or (not args.untagged and (args.rm_pattern is None or len(args.rm_pattern) == 0))
+    list_images = args.list or (
+        not args.untagged and (args.rm_pattern is None or len(args.rm_pattern) == 0)
+    )
 
     rm_pattern: Optional[str] = None
     if args.rm_pattern is not None:
@@ -194,7 +199,8 @@ def main() -> None:
                     print(f'digest {image_struct["imageDigest"]}')
         if not list_images:
             # Remove all the specified image(s) in blocks of 100 (AWS limit)
-            # See https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_BatchDeleteImage.html
+            # See:
+            # https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_BatchDeleteImage.html
             if len(image_ids) > 0:
                 aws_delete_limit = 100
                 for i in range(0, len(image_ids), aws_delete_limit):
