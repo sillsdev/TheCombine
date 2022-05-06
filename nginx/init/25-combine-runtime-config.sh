@@ -64,10 +64,10 @@ for env_var in "${!env_map[@]}"; do
     jsField=${env_map[${env_var}]}
     jsValue=${!env_var}
     # check to see if $jsValue needs to be quoted
-    if quote_value ${jsValue} ; then
-      printf '   %s: "%s",\n' ${jsField} ${jsValue} >> $OUTFILE
+    if quote_value "${jsValue}" ; then
+      printf '   %s: "%s",\n' ${jsField} "${jsValue}" >> $OUTFILE
     else
-      printf '   %s: %s,\n' ${jsField} ${jsValue} >> $OUTFILE
+      printf '   %s: %s,\n' ${jsField} "${jsValue}" >> $OUTFILE
     fi
   fi
 done

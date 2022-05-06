@@ -17,7 +17,11 @@ spec:
   tls:
   - hosts:
     - {{ .Values.global.serverName }}
+{{- if .Values.tlsSecretName }}
+    secretName: {{ .Values.tlsSecretName }}
+{{- else }}
     secretName: {{ replace "." "-" .Values.global.serverName }}-tls
+{{- end }}
   rules:
   - host: {{ .Values.global.serverName }}
     http:
