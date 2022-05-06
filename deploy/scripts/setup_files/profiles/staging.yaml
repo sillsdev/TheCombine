@@ -2,20 +2,17 @@
 ################################################
 # Profile specific configuration items
 #
-# Profile: nuc
+# Profile: prod
 ################################################
 
 charts:
   thecombine:
-    aws-login:
-      enabled: true
-      awsEcr:
-        cron: no
+    # Frontend configuration items:
+    frontend:
+      configShowCertExpiration: false
+      configAnalyticsWriteKey: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
     global:
       awsS3Location: prod.thecombine.app
-
-    cert-proxy-client:
-      enabled: true
-
+    tlsSecretName: thecombine-app-tls
     certManager:
       enabled: false
