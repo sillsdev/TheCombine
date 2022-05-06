@@ -22,7 +22,7 @@ charts:
     global:
       awsS3Location: prod.thecombine.app
     certManager:
-      enabled: true
+      enabled: false
   cert-proxy-server:
     global:
       awsS3Location: prod.thecombine.app
