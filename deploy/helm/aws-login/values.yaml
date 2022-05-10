@@ -22,7 +22,7 @@ awsEcr:
   cronJobName: ecr-cred-helper-cron
   dockerEmail: noreply@thecombine.app
   image: sillsdev/aws-kubectl
-  imageTag: "0.1.9"
+  imageTag: "0.2.0"
   jobName: ecr-cred-helper
   schedule: "0 */8 * * *"
   secretsName: aws-ecr-credentials
