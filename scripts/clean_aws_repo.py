@@ -59,7 +59,9 @@ def parse_args() -> Namespace:
         Notes:
 
          - The repo names must be specified BEFORE the --remove or --keep options.
-         - You must specify --untagged and/or --remove options.
+         - If neither --untagged nor --remove options is specified, then
+           {os.path.basename(__file__)} will list the images.  This is the same
+           behavior as specifying '--list'.
 
         """,
         formatter_class=RawFormatter,
@@ -76,6 +78,9 @@ def parse_args() -> Namespace:
         "--keep",
         nargs="+",
         help="List of tags to keep that would otherwise be removed",
+    )
+    parser.add_argument(
+        "--list", action="store_true", help="List images in the repo.  No images are deleted."
     )
     parser.add_argument(
         "--remove",
@@ -142,13 +147,10 @@ def main() -> None:
     """Clean out old images in the AWS ECR repository."""
     args = parse_args()
 
-    # Verify that either '--untagged' or '--remove' are specified
-    if not args.untagged and (args.rm_pattern is None or len(args.rm_pattern) == 0):
-        print("Nothing to do.  Run:")
-        prog_name = os.path.basename(__file__)
-        print(f"   {prog_name} --help")
-        print("for usage instructions.")
-        exit(0)
+    # Verify that either '--untagged' or '--remove' or '--list' are specified
+    list_images = args.list or (
+        not args.untagged and (args.rm_pattern is None or len(args.rm_pattern) == 0)
+    )
 
     rm_pattern: Optional[str] = None
     if args.rm_pattern is not None:
@@ -179,6 +181,8 @@ def main() -> None:
                     # 'latest' is a special tag - always points to most recent
                     # untagged image.  Delete this image by digest name but only
                     # if untagged images are to be deleted
+                    if list_images:
+                        print(f"tag {tag}")
                     if tag == "latest":
                         if args.untagged:
                             image_ids.append(f"imageDigest={image_struct['imageDigest']}")
@@ -191,23 +195,27 @@ def main() -> None:
                 # No tags exist for this image
                 if args.untagged:
                     image_ids.append(f'imageDigest={image_struct["imageDigest"]}')
-        # Remove all the specified image(s) in blocks of 100 (AWS limit)
-        # See https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_BatchDeleteImage.html
-        if len(image_ids) > 0:
-            aws_delete_limit = 100
-            for i in range(0, len(image_ids), aws_delete_limit):
-                aws_cmd = build_aws_cmd(
-                    args.profile,
-                    repo,
-                    "batch-delete-image",
-                    ["--image-ids"] + image_ids[i : i + aws_delete_limit],
-                )
-                if args.dry_run:
-                    print(f"AWS Command: {aws_cmd}")
-                else:
-                    run_aws_cmd(aws_cmd, args.verbose)
-        elif args.verbose:
-            print("No images/tags were deleted.")
+                if list_images:
+                    print(f'digest {image_struct["imageDigest"]}')
+        if not list_images:
+            # Remove all the specified image(s) in blocks of 100 (AWS limit)
+            # See:
+            # https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_BatchDeleteImage.html
+            if len(image_ids) > 0:
+                aws_delete_limit = 100
+                for i in range(0, len(image_ids), aws_delete_limit):
+                    aws_cmd = build_aws_cmd(
+                        args.profile,
+                        repo,
+                        "batch-delete-image",
+                        ["--image-ids"] + image_ids[i : i + aws_delete_limit],
+                    )
+                    if args.dry_run:
+                        print(f"AWS Command: {aws_cmd}")
+                    else:
+                        run_aws_cmd(aws_cmd, args.verbose)
+            elif args.verbose:
+                print("No images/tags were deleted.")
 
 
 if __name__ == "__main__":

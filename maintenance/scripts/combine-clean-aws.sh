@@ -66,9 +66,11 @@ while [[ $# -gt 0 ]] ; do
   esac
 done
 
-max_backups=${max_backups:=3}
+# Prepend 's3://' to $aws_bucket if it is needed.
+[[ $aws_bucket =~ ^s3:// ]] || aws_bucket=s3://${aws_bucket}
 
-AWS_BACKUPS=($(/usr/local/bin/aws s3 ls s3://${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
+max_backups=${max_backups:=3}
+AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
 NUM_BACKUPS=${#AWS_BACKUPS[@]}
 
 if [[ $VERBOSE -eq 1 ]] ; then
@@ -85,7 +87,7 @@ if [[ ${NUM_BACKUPS} -gt ${max_backups} ]] ; then
   loop_limit=$(( ${NUM_BACKUPS} - ${max_backups} ))
 
   for (( bu=0; bu < $loop_limit; bu++ )) ; do
-    cmd="/usr/local/bin/aws s3 rm s3://${aws_bucket}/${AWS_BACKUPS[${bu}]}"
+    cmd="/usr/local/bin/aws s3 rm ${aws_bucket}/${AWS_BACKUPS[${bu}]}"
     if [[ $DRYRUN -eq 1 ]] ; then
       echo "$cmd"
     else

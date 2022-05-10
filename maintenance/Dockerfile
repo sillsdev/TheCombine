@@ -8,7 +8,7 @@
 #    secret accordingly.
 # The scripts are written in Python.
 
-FROM sillsdev/aws-kubectl:0.1.9
+FROM sillsdev/aws-kubectl:0.2.0
 
 USER root
 

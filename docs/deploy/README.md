@@ -79,7 +79,7 @@ installing _The Combine_ on an existing cluster, skip this section and go to
 
 The minimum target system requirements for installing _The Combine_ are:
 
-- Ubuntu 20.04 Server operating system (see [Install Ubuntu Server](#install-ubuntu-server))
+- Ubuntu 20.04 Server operating system (22.04 is recommended). See [Install Ubuntu Server](#install-ubuntu-server).
 - 4 GB RAM
 - 32 GB Storage
 
@@ -289,7 +289,7 @@ Please see the Kubernetes Design document at [./kubernetes_design/README.md](./k
 To install the OS on a new target machine, such as, a new NUC, follow these steps:
 
 1. Download the ISO image for Ubuntu Server from Ubuntu (currently at <https://ubuntu.com/download/server>; click on
-   _Option 2 - Manual server installation_ and then _Download Ubuntu Server 20.04.3 LTS_)
+   _Option 2 - Manual server installation_ and then _Download Ubuntu Server 22.04 LTS_)
 
 2. copy the .iso file to a bootable USB stick:
 
