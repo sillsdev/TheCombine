@@ -457,7 +457,7 @@ Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
 
 #### Docker Desktop for Linux
 
-_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 21.04,
+_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 22.04,
 21.10 and Debian distributions. As a result, it requires a few more steps to install and setup _Docker Desktop_.
 
 To install _Docker Desktop for Linux_,

@@ -28,7 +28,7 @@ spec:
       containers:
         - name: maintenance
           command: [ "/bin/bash", "-c", "--" ]
-          args: [ "while true; do sleep 86400; done;" ]
+          args: [ 'sleep infinity & PID=$! ; trap "kill $PID" INT TERM ; wait' ]
           image: {{ template "maintenance.containerImage" . }}
           imagePullPolicy: {{ template "maintenance.imagePullPolicy" . }}
           env:
