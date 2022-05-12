@@ -29,11 +29,10 @@ There is only one note per entry, even if the entry has multiple senses, glosses
 You can add multiple recordings to an entry (e.g., a male voice and a female voice). As with the [Note](#note), audio
 recordings are associated with the entry and not its senses.
 
-To record audio, there is a red circle button with a square. For each recorded audio, there is a green circle button
-with a triangle.
+To record audio, there is a red square button. For each recorded audio, there is a green triangle button.
 
-**With a mouse:** Click-and-hold the red circle to record. Click a green circle to play its audio, or shift-click to
+**With a mouse:** Click-and-hold the red square to record. Click a green triangle to play its audio, or shift-click to
 delete its recording.
 
-**On a touch screen:** Press-and-hold the red circle to record. Tap a green circle to play its audio, or press-and-hold
-to bring up a menu (with options to play or delete).
+**On a touch screen:** Press-and-hold the red square to record. Tap a green triangle to play its audio, or
+press-and-hold to bring up a menu (with options to play or delete).
