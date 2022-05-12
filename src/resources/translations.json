@@ -948,9 +948,9 @@
       "Maintenez le bouton enfoncée pour enregistrer."
     ],
     "playTooltip": [
-      "Press to play, shift click to delete.",
-      "Presiona para jugar, presiona shift para eliminar.",
-      "Appuyez sur pour lire, Maj + clic pour effacer."
+      "Click to play; shift click to delete.",
+      "Presiona para jugar; presiona shift para eliminar.",
+      "Clic pour lire; Maj + clic pour effacer."
     ],
     "noMicAccess": [
       "Recording error: Could not access a microphone.",

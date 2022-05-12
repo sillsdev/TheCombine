@@ -68,7 +68,7 @@ affixed.
 
 ### Autocomplete
 
-The default setting is On: When a user is entering the [vernacular](dataEntry.md#vernacular) of a new entry in Data
+The default setting is On: When a user is entering the [vernacular form](dataEntry.md#vernacular) of a new entry in Data
 Entry, this setting gives suggestions of similar existing entries, allowing the user to select an existing entry and add
 a new sense to that entry, rather than creating a (mostly) duplicate to something previously entered.
 
