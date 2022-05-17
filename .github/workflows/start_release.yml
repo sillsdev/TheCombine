@@ -26,13 +26,14 @@ jobs:
         shell: bash
       - name: Create branch
         run: |
+          echo "Creating new ${{ github.event.inputs.release_type }} release."
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b release-staging
           cd $GITHUB_WORKSPACE/scripts
-          NEW_VERSION=`python3 app_version.py --release ${{ inputs.release_type }}`
+          NEW_VERSION=`python3 app_version.py --release ${{ github.event.inputs.release_type }}`
           if [[ -n $NEW_VERSION ]] ; then
             git commit -a -m "Release version ${NEW_VERSION}"
-            git push
+            git push --set-upstream origin release-staging
           fi
         shell: bash
