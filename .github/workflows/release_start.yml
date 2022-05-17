@@ -1,4 +1,4 @@
-name: Start Release
+name: Release - start
 
 on:
   workflow_dispatch:
@@ -31,9 +31,10 @@ jobs:
           git config user.email github-actions@github.com
           git checkout -b release-staging
           cd $GITHUB_WORKSPACE/scripts
-          NEW_VERSION=`python3 app_version.py --release ${{ github.event.inputs.release_type }}`
-          if [[ -n $NEW_VERSION ]] ; then
-            git commit -a -m "Release version ${NEW_VERSION}"
+          RLS_VERSION=`python3 app_version.py --release ${{ github.event.inputs.release_type }}`
+          if [[ -n $RLS_VERSION ]] ; then
+            git commit -a -m "Release version ${RLS_VERSION}"
             git push --set-upstream origin release-staging
+            gh pr create -B master -H release-staging --title "Release ${RLS_VERSION}"
           fi
         shell: bash

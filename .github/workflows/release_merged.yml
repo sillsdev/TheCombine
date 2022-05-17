@@ -1,4 +1,4 @@
-name: Release Merged
+name: Release - merged
 
 on:
   pull_request_target:
