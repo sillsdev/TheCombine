@@ -1,0 +1,21 @@
+name: Release Merged
+
+on:
+  pull_request_target:
+    types:
+      - merged
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release-staging
+        uses: actions/checkout@v3
+      - name: Install Python dependencies
+        run: pip3 install -r $GITHUB_WORKSPACE/requirements.txt
+        shell: bash
+      - name: Print info
+        run: |
+          echo "head_ref: ${{ github.head_ref }}"
+          node $GITHUB_WORKSPACE/scripts/printVersion.js
+        shell: bash
