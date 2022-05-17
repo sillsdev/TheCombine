@@ -1,0 +1,38 @@
+name: Start Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        type: choice
+        description: Type of release to create
+        options:
+          - major
+          - minor
+          - patch
+        default: patch
+        required: true
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v3
+      - name: Install Python dependencies
+        run: pip3 install -r $GITHUB_WORKSPACE/requirements.txt
+        shell: bash
+      - name: Create branch
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout -b release-staging
+          cd $GITHUB_WORKSPACE/scripts
+          NEW_VERSION=`python3 app_version.py --release ${{ inputs.release_type }}`
+          if [[ -n $NEW_VERSION ]] ; then
+            git commit -a -m "Release version ${NEW_VERSION}"
+            git push
+          fi
+        shell: bash

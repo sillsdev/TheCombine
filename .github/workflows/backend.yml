@@ -20,14 +20,14 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v2
-        with:
-          files: Backend.Tests/coverage.cobertura.xml
-          flags: backend
-          name: Backend
-          fail_ci_if_error: true
+      # - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      # - name: Upload coverage report
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     files: Backend.Tests/coverage.cobertura.xml
+      #     flags: backend
+      #     name: Backend
+      #     fail_ci_if_error: true
 
       # Development build.
       - run: dotnet build BackendFramework.sln

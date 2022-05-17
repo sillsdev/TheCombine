@@ -2,7 +2,9 @@ name: New Prerelease Version
 
 on:
   push:
-    branches: [auto_increment_version]
+    branches-ignore:
+      - master
+      - release-staging
 
 jobs:
   auto_increment:
