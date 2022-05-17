@@ -4,6 +4,6 @@ dependencies:
   version: 0.1.0
 - name: cert-proxy-client
   repository: file://../cert-proxy-client
-  version: 0.1.0
-digest: sha256:17badc838f100b6aa51c1e4ac005e908e69785f57a2676ac2d645c35882ecf3f
-generated: "2022-01-28T09:19:20.264439645-05:00"
+  version: 0.7.23-alpha.2
+digest: sha256:8436eca48666f41a8289be46b563c831c98d23aac895e2131c1c34ac1df04449
+generated: "2022-05-17T09:10:19.608420536-04:00"

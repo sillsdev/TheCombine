@@ -1,0 +1,35 @@
+name: New Prerelease Version
+
+on:
+  push:
+    branches: [auto_increment_version]
+
+jobs:
+  auto_increment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v3
+        with:
+          path: master
+          ref: master
+      - name: Checkout pr source
+        uses: actions/checkout@v3
+        with:
+          path: pr_src
+      - name: Install Python dependencies
+        run: pip3 install -r $GITHUB_WORKSPACE/pr_src/requirements.txt
+        shell: bash
+      - name: Increment alpha version of the application
+        run: |
+          cd $GITHUB_WORKSPACE/master/scripts
+          BASE_VERSION=`node printVersion.js`
+          cd $GITHUB_WORKSPACE/pr_src/scripts
+          NEW_VERSION=`python3 app_version.py --incr alpha --base-version=${BASE_VERSION}`
+          if [[ -n $NEW_VERSION ]] ; then
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git commit -a -m "Bump version to ${NEW_VERSION}"
+            git push
+          fi
+        shell: bash
