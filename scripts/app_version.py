@@ -36,12 +36,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--incr",
-        choices=["release", "major", "minor", "patch", "alpha", "beta", "rc"],
+        choices=["alpha", "beta", "rc"],
         help="Version level to be incremented. This is ignored if '--set' is specified.",
     )
     parser.add_argument(
         "--release",
-        action="store_true",
+        choices=[
+            "major",
+            "minor",
+            "patch",
+        ],
         help="Make the current version a release version."
         "  This is ignored if '--set' is specified.",
     )
@@ -119,26 +123,29 @@ def main() -> None:
                 curr_version = base_version
 
         logging.info(f"Incrementing: {curr_version}")
-        if args.release:
-            next_version = Version(
-                major=curr_version.major, minor=curr_version.minor, patch=curr_version.patch
-            )
-        if args.incr is not None:
-            if args.incr == "major":
+        if args.release is not None:
+            if args.release == "major":
                 next_version = Version(major=curr_version.major + 1, minor=0, patch=0)
-            elif args.incr == "minor":
+            elif args.release == "minor":
                 next_version = Version(
                     major=curr_version.major, minor=curr_version.minor + 1, patch=0
                 )
-            elif args.incr == "patch":
-                next_version = Version(
-                    major=curr_version.major,
-                    minor=curr_version.minor,
-                    patch=curr_version.patch + 1,
-                )
             else:
-                # !!! This assumes that only pre-release increment requests have not been handled
-                next_version = increment_prerelease(curr_version, args.incr)
+                if len(curr_version.prerelease) > 0:
+                    next_version = Version(
+                        major=curr_version.major,
+                        minor=curr_version.minor,
+                        patch=curr_version.patch,
+                    )
+                else:
+                    next_version = Version(
+                        major=curr_version.major,
+                        minor=curr_version.minor,
+                        patch=curr_version.patch + 1,
+                    )
+
+        if args.incr is not None:
+            next_version = increment_prerelease(curr_version, args.incr)
 
     package["version"] = str(next_version)
     logging.info(f"New version: {next_version}")
