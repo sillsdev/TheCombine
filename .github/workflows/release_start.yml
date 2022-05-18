@@ -25,6 +25,8 @@ jobs:
         run: pip3 install -r $GITHUB_WORKSPACE/requirements.txt
         shell: bash
       - name: Create branch
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "Creating new ${{ github.event.inputs.release_type }} release."
           git config user.name github-actions
