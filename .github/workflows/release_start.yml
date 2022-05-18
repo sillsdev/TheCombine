@@ -37,6 +37,6 @@ jobs:
           if [[ -n $RLS_VERSION ]] ; then
             git commit -a -m "Release version ${RLS_VERSION}"
             git push --set-upstream origin release-staging
-            gh pr create -B master -H release-staging --title "Release ${RLS_VERSION}"
+            gh pr create -B master -H release-staging --fill
           fi
         shell: bash
