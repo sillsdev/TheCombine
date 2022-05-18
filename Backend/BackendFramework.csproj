@@ -32,6 +32,8 @@
     <PackageReference Include="SIL.Lift" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="8.0.0" />
+    <PackageReference Include="SIL.WritingSystems" Version="8.0.0" >
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
   </ItemGroup>
 </Project>
