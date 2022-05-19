@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet: ["6.0.202"]
+        dotnet: ["6.0.x"]
     steps:
       - uses: actions/checkout@v2
       - name: Setup dotnet
@@ -20,14 +20,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      # - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-      # - name: Upload coverage report
-      #   uses: codecov/codecov-action@v2
-      #   with:
-      #     files: Backend.Tests/coverage.cobertura.xml
-      #     flags: backend
-      #     name: Backend
-      #     fail_ci_if_error: true
+      - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 
       # Development build.
       - run: dotnet build BackendFramework.sln
@@ -49,7 +42,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "6.0.202"
+          dotnet-version: "6.0.x"
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:

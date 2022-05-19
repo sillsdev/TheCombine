@@ -27,10 +27,12 @@ jobs:
           cd $GITHUB_WORKSPACE/master/scripts
           BASE_VERSION=`node printVersion.js`
           cd $GITHUB_WORKSPACE/pr_src/scripts
-          NEW_VERSION=`python3 app_version.py --incr alpha --base-version=${BASE_VERSION}`
-          if [[ -n $NEW_VERSION ]] ; then
-            git config user.name github-actions
-            git config user.email github-actions@github.com
+          python3 app_version.py --incr --base-version=${BASE_VERSION}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          CHANGE_LIST=`git status -s`
+          if [ -n "${CHANGE_LIST}" ] ; then
+            NEW_VERSION=`python3 app_version.py --get`
             git commit -a -m "Bump version to ${NEW_VERSION}"
             git push
           fi

@@ -4,6 +4,7 @@ import argparse
 import json
 import logging
 from pathlib import Path
+import sys
 
 from ruamel.yaml import YAML
 from semantic_version import Version
@@ -25,6 +26,8 @@ helm_charts = {
     "maintenance": helm_dir / "thecombine" / "charts" / "maintenance" / "Chart.yaml",
 }
 
+prerelease_sequence = ["alpha", "beta", "rc"]
+
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -36,8 +39,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--incr",
-        choices=["alpha", "beta", "rc"],
-        help="Version level to be incremented. This is ignored if '--set' is specified.",
+        action="store_true",
+        help="Increment the pre-release.  This is ignored if '--set' is specified.",
+    )
+    parser.add_argument(
+        "--prerelease",
+        action="store_true",
+        help="Increment to the next pre-release type. This is ignored if '--set' is specified.",
     )
     parser.add_argument(
         "--release",
@@ -50,7 +58,10 @@ def parse_args() -> argparse.Namespace:
         "  This is ignored if '--set' is specified.",
     )
     parser.add_argument(
-        "--set", help="Applicatio version string. Must be a semantic version string."
+        "--get", action="store_true", help="Print the application version string on STDOUT"
+    )
+    parser.add_argument(
+        "--set", help="Applicatiom version string. Must be a semantic version string."
     )
     parser.add_argument(
         "--verbose",
@@ -71,33 +82,59 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def increment_prerelease(v: Version, prerelease_type: str) -> Version:
+def incr_prerelease_type(v: Version) -> Version:
+    """Bump a version's prerelease type, to the next type in the sequence."""
+    if len(v.prerelease) == 0:
+        # This is a release version.  Next version is the first in
+        # the pre-release series
+        return Version(
+            major=v.major,
+            minor=v.minor,
+            patch=v.patch + 1,
+            prerelease=[prerelease_sequence[0], "0"],
+        )
+    # Find the next pre-release type in the series
+    try:
+        i = prerelease_sequence.index(v.prerelease[0])
+    except ValueError:
+        logging.error(f"Do not recognize pre-release type of {curr}")
+        sys.exit(1)
+    i += 1
+    if i == len(prerelease_sequence):
+        # We're at the end of the sequence so bump the pre-release number
+        # instead
+        return increment_prerelease(v)
+    return Version(
+        major=v.major, minor=v.minor, patch=v.patch, prerelease=[prerelease_sequence[i], "0"]
+    )
+
+
+def increment_prerelease(v: Version) -> Version:
     if len(v.prerelease) == 2:
-        if v.prerelease[0] == prerelease_type and v.prerelease[1].isnumeric():
+        if v.prerelease[1].isnumeric():
             new_prerelease = str(int(v.prerelease[1]) + 1)
             return Version(
                 major=v.major,
                 minor=v.minor,
                 patch=v.patch,
-                prerelease=[prerelease_type, new_prerelease],
-            )
-        if v.prerelease[1].isnumeric():
-            return Version(
-                major=v.major, minor=v.minor, patch=v.patch + 1, prerelease=[prerelease_type, "0"]
+                prerelease=[v.prerelease[0], new_prerelease],
             )
     elif len(v.prerelease) == 0:
+        # If the version, v, is a release, return the first pre-release for the next release.
         return Version(
             major=v.major,
             minor=v.minor,
-            patch=v.patch,
-            prerelease=[prerelease_type, "0"],
+            patch=v.patch + 1,
+            prerelease=[prerelease_sequence[0], "0"],
         )
-    except_message = f"Cannot increment {prerelease_type} version for {v}"
-    raise ValueError(except_message)
+    else:
+        except_message = f"Cannot increment prerelease for {v}"
+        raise ValueError(except_message)
 
 
 def main() -> None:
     args = parse_args()
+
     if args.verbose or args.dry_run:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
@@ -107,6 +144,9 @@ def main() -> None:
         package = json.load(json_file)
 
     curr_version = Version(package["version"])
+    if args.get:
+        print(curr_version)
+        sys.exit(0)
     if args.set is not None:
         next_version = Version(args.set)
     else:
@@ -118,11 +158,11 @@ def main() -> None:
             if base_version < curr_version:
                 logging.info(f"{base_version} < {curr_version}")
                 logging.info("Nothing to do")
-                exit(0)
+                sys.exit(0)
             else:
                 curr_version = base_version
 
-        logging.info(f"Incrementing: {curr_version}")
+        logging.info(f"Current version: {curr_version}")
         if args.release is not None:
             if args.release == "major":
                 next_version = Version(major=curr_version.major + 1, minor=0, patch=0)
@@ -143,9 +183,10 @@ def main() -> None:
                         minor=curr_version.minor,
                         patch=curr_version.patch + 1,
                     )
-
-        if args.incr is not None:
-            next_version = increment_prerelease(curr_version, args.incr)
+        elif args.incr:
+            next_version = increment_prerelease(curr_version)
+        elif args.prerelease:
+            next_version = incr_prerelease_type(curr_version)
 
     package["version"] = str(next_version)
     logging.info(f"New version: {next_version}")
@@ -170,9 +211,6 @@ def main() -> None:
                         dep_chart["version"] = str(next_version)
             with open(str(chart_path), "w") as chart_file:
                 yaml.dump(chart, chart_file)
-        # Print the new version on standard out so that it can by used by calling
-        # scripts
-        print(str(next_version))
 
 
 if __name__ == "__main__":
