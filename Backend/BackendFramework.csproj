@@ -4,7 +4,6 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Data\sdList.txt" />
@@ -13,6 +12,9 @@
     <EmbeddedResource Include="Data\sdList.txt" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="RelaxNG" Version="3.2.3" >
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.15.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
@@ -21,15 +23,9 @@
     <PackageReference Include="MailKit" Version="3.1.1" />
 
     <!-- SIL Maintained Dependencies. -->
-    <PackageReference Include="icu.net" Version="2.7.1" >
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
-    <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" >
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
-    <PackageReference Include="SIL.Core" Version="8.0.0" >
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
+    <PackageReference Include="icu.net" Version="2.7.1" />
+    <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
+    <PackageReference Include="SIL.Core" Version="8.0.0" />
     <PackageReference Include="SIL.Core.Desktop" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
@@ -39,8 +35,6 @@
     <PackageReference Include="SIL.Lift" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="8.0.0" >
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
+    <PackageReference Include="SIL.WritingSystems" Version="8.0.0" />
   </ItemGroup>
 </Project>
