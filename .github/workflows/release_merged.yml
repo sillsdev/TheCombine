@@ -3,7 +3,9 @@ name: Release - merged
 on:
   pull_request_target:
     types:
-      - merged
+      - closed
+    branches:
+      - release-staging
 
 jobs:
   release:
@@ -18,4 +20,5 @@ jobs:
         run: |
           echo "head_ref: ${{ github.head_ref }}"
           node $GITHUB_WORKSPACE/scripts/printVersion.js
+          git status
         shell: bash

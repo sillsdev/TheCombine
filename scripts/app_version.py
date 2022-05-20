@@ -14,7 +14,7 @@ package_file = Path(__file__).resolve().parent.parent / "package.json"
 helm_dir = Path(__file__).resolve().parent.parent / "deploy" / "helm"
 
 # Map the chart names to their location.  This is useful for updating
-# dependencies as well as the charts.
+# dependencies (in Chart.yaml) as well as the charts.
 helm_charts = {
     "cert-proxy-client": helm_dir / "cert-proxy-client" / "Chart.yaml",
     "cert-proxy-server": helm_dir / "cert-proxy-server" / "Chart.yaml",
@@ -96,9 +96,8 @@ def incr_prerelease_type(v: Version) -> Version:
     # Find the next pre-release type in the series
     try:
         i = prerelease_sequence.index(v.prerelease[0])
-    except ValueError:
-        logging.error(f"Do not recognize pre-release type of {curr}")
-        sys.exit(1)
+    except ValueError as err:
+        raise ValueError(f"Do not recognize pre-release type of {v.prerelease[0]}") from err
     i += 1
     if i == len(prerelease_sequence):
         # We're at the end of the sequence so bump the pre-release number
