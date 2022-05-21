@@ -11,21 +11,6 @@ from semantic_version import Version
 
 package_file = Path(__file__).resolve().parent.parent / "package.json"
 
-helm_dir = Path(__file__).resolve().parent.parent / "deploy" / "helm"
-
-# Map the chart names to their location.  This is useful for updating
-# dependencies (in Chart.yaml) as well as the charts.
-helm_charts = {
-    "cert-proxy-client": helm_dir / "cert-proxy-client" / "Chart.yaml",
-    "cert-proxy-server": helm_dir / "cert-proxy-server" / "Chart.yaml",
-    "create-admin-user": helm_dir / "create-admin-user" / "Chart.yaml",
-    "thecombine": helm_dir / "thecombine" / "Chart.yaml",
-    "backend": helm_dir / "thecombine" / "charts" / "backend" / "Chart.yaml",
-    "database": helm_dir / "thecombine" / "charts" / "database" / "Chart.yaml",
-    "frontend": helm_dir / "thecombine" / "charts" / "frontend" / "Chart.yaml",
-    "maintenance": helm_dir / "thecombine" / "charts" / "maintenance" / "Chart.yaml",
-}
-
 prerelease_sequence = ["alpha", "beta", "rc"]
 
 
@@ -33,8 +18,7 @@ def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     # Parse user command line arguments
     parser = argparse.ArgumentParser(
-        description="Update the project version. Prints the new app "
-        "version on STDOUT if there is a change.",
+        description="Update the project version.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
