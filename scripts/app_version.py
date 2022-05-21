@@ -179,21 +179,6 @@ def main() -> None:
         # Update package.json
         with open(package_file, "w") as json_file:
             json.dump(package, json_file, indent=2)
-        # Update chart files
-        yaml = YAML()
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        for chart_name in helm_charts:
-            chart_path = helm_charts[chart_name]
-            with open(str(chart_path), "r") as chart_file:
-                chart = yaml.load(chart_file)
-            chart["version"] = str(next_version)
-            chart["appVersion"] = str(next_version)
-            if "dependencies" in chart:
-                for dep_chart in chart["dependencies"]:
-                    if dep_chart["name"] in helm_charts:
-                        dep_chart["version"] = str(next_version)
-            with open(str(chart_path), "w") as chart_file:
-                yaml.dump(chart, chart_file)
 
 
 if __name__ == "__main__":
