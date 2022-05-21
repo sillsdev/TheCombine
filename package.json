@@ -1,6 +1,6 @@
 {
   "name": "thecombine",
-  "version": "0.7.26",
+  "version": "0.7.27-alpha.0",
   "license": "MIT",
   "private": true,
   "scripts": {
