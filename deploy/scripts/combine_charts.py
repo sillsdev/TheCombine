@@ -14,6 +14,7 @@ helm_dir = Path(__file__).resolve().parent.parent / "helm"
 # Map the chart names to their location.  This is useful for updating
 # dependencies (in Chart.yaml) as well as the charts.
 helm_charts = [
+    helm_dir / "aws-login",
     helm_dir / "thecombine",
     helm_dir / "thecombine" / "charts" / "backend",
     helm_dir / "thecombine" / "charts" / "database",
@@ -54,7 +55,7 @@ def generate(version: str) -> None:
     for chart_dir in helm_charts:
         # Initialize the Jinja2 environment
         jinja_env = Environment(
-            loader=PackageLoader("update_charts", chart_dir),
+            loader=PackageLoader("combine_charts", chart_dir),
             autoescape=select_autoescape(["html", "xml"]),
             trim_blocks=False,
             lstrip_blocks=True,

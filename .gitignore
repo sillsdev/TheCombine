@@ -77,6 +77,7 @@ venv
 
 # Helm charts - generated from templates
 **/Chart.yaml
+**/Chart.lock
 
 # Host file to be used for ad hoc testing/development
 *.hosts.yml
