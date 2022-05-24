@@ -25,10 +25,10 @@ appVersion: "0.7.23"
 
 dependencies:
   - name: aws-login
-    version: 0.1.0
+    version: 0.1.9
     repository: file://../aws-login
     condition: aws-login.enabled
   - name: cert-proxy-client
-    version: 0.1.0
+    version: 0.7.23
     repository: file://../cert-proxy-client
     condition: cert-proxy-client.enabled
