@@ -66,7 +66,7 @@ def parse_args() -> argparse.Namespace:
         "--get", action="store_true", help="Print the application version string on STDOUT"
     )
     parser.add_argument(
-        "--set", help="Applicatiom version string. Must be a semantic version string."
+        "--set", help="Application version string. Must be a semantic version string."
     )
     parser.add_argument(
         "--verbose",
