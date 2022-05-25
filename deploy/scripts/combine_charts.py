@@ -23,6 +23,7 @@ helm_charts = [
     helm_dir / "create-admin-user",
 ]
 
+default_aws_login_version = "0.2.0"
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -35,11 +36,11 @@ def parse_args() -> argparse.Namespace:
         "version",
         help="New version for the Helm charts.",
     )
-    parser.add_argument("--aws", default="0.2.0", help="Version for the aws-login functionality.")
+    parser.add_argument("--aws", default=default_aws_login_version, help="Version for the aws-login functionality.")
     return parser.parse_args()
 
 
-def generate(version: str, aws_login_version: str = "0.2.0") -> None:
+def generate(version: str, aws_login_version: str = default_aws_login_version) -> None:
     """Generate the Helm Charts for The Combine using the specified version numbers."""
     version_config = {
         "version": {
