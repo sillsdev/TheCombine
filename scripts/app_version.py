@@ -24,6 +24,7 @@ Run "app_version.py --help" for a description of the script arguments.
 import argparse
 import json
 import logging
+import os
 from pathlib import Path
 import sys
 
@@ -211,8 +212,10 @@ def main() -> None:
         # Update package.json
         package["version"] = str(next_version)
         with open(package_file, "w") as json_file:
-            json.dump(package, json_file, indent=2)
-
+            json.dump(package, json_file, indent=2,)
+            json_file.write("\n")
+        os.chdir(str(package_file.parent))
+        os.system("npm install")
 
 if __name__ == "__main__":
     main()
