@@ -1,5 +1,5 @@
 # Docker multi-stage build.
-FROM mcr.microsoft.com/dotnet/sdk:6.0.202 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.

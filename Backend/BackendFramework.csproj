@@ -12,6 +12,9 @@
     <EmbeddedResource Include="Data\sdList.txt" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="RelaxNG" Version="3.2.3" >
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.15.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />

@@ -1,6 +1,0 @@
-dependencies:
-- name: aws-login
-  repository: file://../aws-login
-  version: 0.1.0
-digest: sha256:4b5744d997bf061344c4582115bc3a4cceec5c3ae3201ca823b45726db2f8162
-generated: "2022-01-31T09:29:11.741139641-05:00"
