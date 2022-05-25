@@ -200,10 +200,10 @@ def main() -> None:
                         minor=curr_version.minor,
                         patch=curr_version.patch + 1,
                     )
-        elif args.incr:
-            next_version = increment_prerelease(curr_version)
         elif args.prerelease:
             next_version = incr_prerelease_type(curr_version)
+        elif args.incr:
+            next_version = increment_prerelease(curr_version)
 
     logging.info(f"New version: {next_version}")
 
