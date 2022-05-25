@@ -400,15 +400,45 @@ npm run license-report-frontend
 
 To update the version of the project:
 
-1. Edit package.json `"version"` to a [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) compatible
-   string (e.g. `"0.1.1-alpha.0"`).
-2. Run `npm install` to automatically update `package-lock.json`.
+Run each the following scripts in your Python virtual environment.
 
-To retrieve the current version of the project from the terminal:
+1. To set the version to the next pre-release version:
 
-```bash
-npm run --silent version
-```
+   ```bash
+   python scripts/app_version.py --incr
+   ```
+
+2. To set the version to a specific version:
+
+   ```bash
+   python scripts/app_version.py --set <version_string>
+   ```
+
+   where `<version_string>` is a Semantic Version string (see <https://semver.org>)
+
+3. To set the version to a release version:
+
+   ```bash
+   python scripts/app_version.py --release <release_type>
+   ```
+
+   where `<release_type>` is one of:
+
+   - `major`
+   - `minor`
+   - `patch`
+
+4. To read the current version:
+
+   ```bash
+   python scripts/app_version.py --get
+   ```
+
+5. For more information on the command options:
+
+   ```bash
+   python scripts/app_version.py --help
+   ```
 
 ### Inspect Database
 
