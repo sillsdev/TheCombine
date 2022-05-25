@@ -103,7 +103,7 @@ mkdocs-material==8.2.15
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.0.3
     # via mkdocs-material
-mypy==0.950
+mypy==0.960
     # via -r dev-requirements.in
 mypy-extensions==0.4.3
     # via

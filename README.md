@@ -199,7 +199,7 @@ With an active virtual environment, install Python development requirements for 
 
 ```bash
 python -m pip install --upgrade pip pip-tools
-python -m piptools sync dev-requirements.txt
+python -m piptools sync requirements.txt dev-requirements.txt
 ```
 
 The following Python scripts can now be run from the virtual environment.
@@ -219,6 +219,7 @@ tox
 To upgrade all pinned dependencies:
 
 ```bash
+python -m piptools compile --upgrade requirements.in
 python -m piptools compile --upgrade dev-requirements.in
 ```
 
