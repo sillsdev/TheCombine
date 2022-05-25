@@ -44,11 +44,11 @@ def generate(version: str, aws_login_version: str = default_aws_login_version) -
     """Generate the Helm Charts for The Combine using the specified version numbers."""
     version_config = {
         "version": {
-            "aws_login": f"v{aws_login_version}",
-            "thecombine": f"v{version}",
-            "cert_proxy_client": f"v{version}",
-            "cert_proxy_server": f"v{version}",
-            "create_admin_user": f"v{version}",
+            "aws_login": aws_login_version,
+            "thecombine": version,
+            "cert_proxy_client": version,
+            "cert_proxy_server": version,
+            "create_admin_user": version,
         }
     }
 
