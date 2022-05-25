@@ -1,6 +1,6 @@
 apiVersion: v2
-name: frontend
-description: A Helm chart for Kubernetes
+name: thecombine
+description: A Helm chart for The Combine Rapid Word Collection Tool
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -15,10 +15,20 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.7.23
+version: {{ version.thecombine }}
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "0.7.23"
+appVersion: "{{ version.thecombine }}"
+
+dependencies:
+  - name: aws-login
+    version: {{ version.aws_login }}
+    repository: file://../aws-login
+    condition: aws-login.enabled
+  - name: cert-proxy-client
+    version: {{ version.cert_proxy_client }}
+    repository: file://../cert-proxy-client
+    condition: cert-proxy-client.enabled

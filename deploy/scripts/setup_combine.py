@@ -19,12 +19,14 @@ For each chart, the configuration file lists:
 The script also adds value definitions from a profile specific configuration file if it exists.
 """
 import argparse
+import json
 import os
 from pathlib import Path
 import sys
 import tempfile
 from typing import Any, Dict, List
 
+import combine_charts
 from enum_types import ExitStatus, HelmAction
 from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
 import yaml
@@ -184,6 +186,14 @@ def add_profile_values(
 
 def main() -> None:
     args = parse_args()
+
+    # Build the Chart.yaml files from templates
+    package_file = Path(__file__).resolve().parent.parent.parent / "package.json"
+
+    with open(package_file) as json_file:
+        package = json.load(json_file)
+
+    combine_charts.generate(package["version"])
 
     with open(args.config) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
