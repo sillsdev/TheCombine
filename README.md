@@ -199,7 +199,7 @@ With an active virtual environment, install Python development requirements for 
 
 ```bash
 python -m pip install --upgrade pip pip-tools
-python -m piptools sync gharequirements.txt dev-requirements.txt
+python -m piptools sync gha-requirements.txt dev-requirements.txt
 ```
 
 The following Python scripts can now be run from the virtual environment.
