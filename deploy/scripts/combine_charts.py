@@ -25,6 +25,7 @@ helm_charts = [
 
 default_aws_login_version = "0.2.0"
 
+
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     # Parse user command line arguments
@@ -36,7 +37,9 @@ def parse_args() -> argparse.Namespace:
         "version",
         help="New version for the Helm charts.",
     )
-    parser.add_argument("--aws", default=default_aws_login_version, help="Version for the aws-login functionality.")
+    parser.add_argument(
+        "--aws", default=default_aws_login_version, help="Version for the aws-login functionality."
+    )
     return parser.parse_args()
 
 
