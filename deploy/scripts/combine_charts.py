@@ -10,8 +10,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 helm_dir = Path(__file__).resolve().parent.parent / "helm"
 
-# Map the chart names to their location.  This is useful for updating
-# dependencies (in Chart.yaml) as well as the charts.
+# List of the Helm Charts to be updated
 helm_charts = [
     helm_dir / "aws-login",
     helm_dir / "thecombine",
@@ -36,14 +35,15 @@ def parse_args() -> argparse.Namespace:
         "version",
         help="New version for the Helm charts.",
     )
+    parser.add_argument("--aws", default="0.2.0", help="Version for the aws-login functionality.")
     return parser.parse_args()
 
 
-def generate(version: str) -> None:
-    print("New version: {version}")
+def generate(version: str, aws_login_version: str = "0.2.0") -> None:
+    """Generate the Helm Charts for The Combine using the specified version numbers."""
     version_config = {
         "version": {
-            "aws_login": "v0.2.0",
+            "aws_login": f"v{aws_login_version}",
             "thecombine": f"v{version}",
             "cert_proxy_client": f"v{version}",
             "cert_proxy_server": f"v{version}",
@@ -59,17 +59,13 @@ def generate(version: str) -> None:
             trim_blocks=False,
             lstrip_blocks=True,
         )
-
+        # Generate the Chart.yaml file from the Chart.yaml.j2 template
         template = jinja_env.get_template("Chart.yaml.j2")
         final_chart = chart_dir / "Chart.yaml"
-        print(f"Writing: {final_chart}")
         final_chart.write_text(template.render(version_config))
 
 
-def main() -> None:
-    args = parse_args()
-    generate(args.version)
-
-
 if __name__ == "__main__":
-    main()
+    """Allow calling from the command line for testing, etc."""
+    args = parse_args()
+    generate(args.version, args.aws)
