@@ -30,7 +30,7 @@ def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     # Parse user command line arguments
     parser = argparse.ArgumentParser(
-        description="Update the version and appVersions for the Helm charts.",
+        description="Update version and appVersion occurrences for the Helm charts.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
