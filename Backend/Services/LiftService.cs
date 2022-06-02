@@ -217,7 +217,7 @@ namespace BackendFramework.Services
 
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
-            // So the the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
+            // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
             var deletedWords = allWords.Where(
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
             foreach (var wordEntry in activeWords)
