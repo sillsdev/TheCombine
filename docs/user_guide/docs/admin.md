@@ -21,7 +21,7 @@ Administrators can customize their instance of The Combine by configuration bann
 ### Announcement Banner
 
 The announcement banner places a bright banner across the top of the page when users visit The Combine. These banners
-are intended for displaying important, short term messages to users related to the instance of The Combine. Uses could
+are intended for displaying important, short-term messages to users related to the instance of The Combine. Uses could
 include scheduled upgrades, planned down time, or upcoming server changes.
 
 ![Announcement Banner](images/announcementBanner.png){ .center }

@@ -19,7 +19,7 @@ The _vernacular language_ is the language for which words are being collected. T
 minority, autochthonous, heritage, or endangered language or dialect.
 
 The _analysis language_ is the primary language into which the vernacular language is being translated. This is usually
-a regional, national, official, or majority language of the location where the vernacular is used. Alternate vernacular
+a regional, national, official, or majority language of the location where the vernacular is used. Alternate analysis
 languages can be added after project creation (see [below](#project-languages)).
 
 ## Manage a Project

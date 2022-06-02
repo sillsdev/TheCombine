@@ -22,7 +22,8 @@ An entry can have multiple senses/glosses, though only one can be added when the
 
 ### Note
 
-There is only one note per entry, even if the entry has multiple senses, glosses, or semantic domains.
+You can have one note on each entry. Any annotation for an entry's senses, glosses, semantic domains, etc. can be added
+to the entry's note.
 
 ### Recording
 
