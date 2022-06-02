@@ -54,6 +54,6 @@ nav:
   - Data Entry: dataEntry.md
   - Data Cleanup: goals.md
   - Admin: admin.md
-  - Third Party Licenses:
+  - Third-Party Licenses:
       - Backend: licenses/backend_licenses.txt
       - Frontend: licenses/frontend_licenses.txt
