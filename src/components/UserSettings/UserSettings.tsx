@@ -13,11 +13,7 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
@@ -91,11 +87,8 @@ interface UserSettingsState {
 /**
  * A page to edit a user's details
  */
-class UserSettings extends React.Component<
-  LocalizeContextProps,
-  UserSettingsState
-> {
-  constructor(props: LocalizeContextProps) {
+class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
+  constructor(props: WithTranslation) {
     super(props);
     const potentialUser = getCurrentUser();
     const user = potentialUser ?? newUser();
@@ -142,7 +135,7 @@ class UserSettings extends React.Component<
         phone: this.state.phone,
         email: this.state.email,
       });
-      alert(this.props.translate("userSettings.updateSuccess"));
+      alert(this.props.t("userSettings.updateSuccess"));
     } else {
       this.setState({ emailTaken: true });
     }
@@ -171,7 +164,7 @@ class UserSettings extends React.Component<
                         fullWidth
                         variant="outlined"
                         value={this.state.name}
-                        label={<Translate id="login.name" />}
+                        label={this.props.t("login.name")}
                         onChange={(e) => this.updateField(e, "name")}
                         inputProps={{ maxLength: 100 }}
                         style={{
@@ -180,7 +173,7 @@ class UserSettings extends React.Component<
                         }}
                       />
                       <Typography variant="subtitle2" style={{ color: "grey" }}>
-                        <Translate id="login.username" />
+                        {this.props.t("login.username")}
                         {": "}
                         {this.state.user.username}
                       </Typography>
@@ -220,7 +213,7 @@ class UserSettings extends React.Component<
                           fullWidth
                           variant="outlined"
                           value={this.state.email}
-                          label={<Translate id="login.email" />}
+                          label={this.props.t("login.email")}
                           onChange={(e) => {
                             this.updateField(e, "email");
                             this.setState({ emailTaken: false });
@@ -228,7 +221,7 @@ class UserSettings extends React.Component<
                           error={this.state.emailTaken}
                           helperText={
                             this.state.emailTaken
-                              ? this.props.translate("login.emailTaken")
+                              ? this.props.t("login.emailTaken")
                               : undefined
                           }
                           type="email"
@@ -243,7 +236,7 @@ class UserSettings extends React.Component<
                       variant="contained"
                       id={`${idAffix}-save`}
                     >
-                      <Translate id="buttons.save" />
+                      {this.props.t("buttons.save")}
                     </Button>
                   </Grid>
                 </Grid>
@@ -263,4 +256,4 @@ class UserSettings extends React.Component<
   }
 }
 
-export default withLocalize(UserSettings);
+export default withTranslation()(UserSettings);

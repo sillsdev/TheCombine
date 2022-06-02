@@ -12,7 +12,6 @@ i18n
     debug: true,
     fallbackLng: Bcp47Code.Default,
     interpolation: { escapeValue: false },
-    resources: { en: { translation: {} } },
   });
 
 export default i18n;
