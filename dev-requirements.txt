@@ -12,7 +12,7 @@ beautifulsoup4==4.11.1
     # via mkdocs-htmlproofer-plugin
 black==22.3.0
     # via -r dev-requirements.in
-cachetools==5.1.0
+cachetools==5.2.0
     # via google-auth
 certifi==2022.5.18.1
     # via
@@ -34,7 +34,7 @@ distlib==0.3.4
     # via virtualenv
 eradicate==2.1.0
     # via flake8-eradicate
-filelock==3.7.0
+filelock==3.7.1
     # via
     #   tox
     #   virtualenv
@@ -45,7 +45,6 @@ flake8==4.0.1
     #   flake8-bugbear
     #   flake8-comprehensions
     #   flake8-eradicate
-    #   flake8-polyfill
     #   pep8-naming
 flake8-broken-line==0.4.0
     # via -r dev-requirements.in
@@ -55,8 +54,6 @@ flake8-comprehensions==3.10.0
     # via -r dev-requirements.in
 flake8-eradicate==1.2.1
     # via -r dev-requirements.in
-flake8-polyfill==1.0.2
-    # via pep8-naming
 ghp-import==2.1.0
     # via mkdocs
 google-auth==2.6.6
@@ -79,7 +76,7 @@ jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
 kubernetes==23.6.0
     # via -r dev-requirements.in
-lxml==4.8.0
+lxml==4.9.0
     # via mkdocs-htmlproofer-plugin
 markdown==3.3.7
     # via
@@ -99,11 +96,11 @@ mkdocs==1.3.0
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.8.0
     # via -r dev-requirements.in
-mkdocs-material==8.2.15
+mkdocs-material==8.3.2
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.0.3
     # via mkdocs-material
-mypy==0.950
+mypy==0.960
     # via -r dev-requirements.in
 mypy-extensions==0.4.3
     # via
@@ -117,7 +114,7 @@ packaging==21.3
     #   tox
 pathspec==0.9.0
     # via black
-pep8-naming==0.12.1
+pep8-naming==0.13.0
     # via -r dev-requirements.in
 platformdirs==2.5.2
     # via
@@ -191,13 +188,13 @@ types-cryptography==3.3.21
     # via types-pyopenssl
 types-pyopenssl==22.0.3
     # via -r dev-requirements.in
-types-python-dateutil==2.8.16
+types-python-dateutil==2.8.17
     # via -r dev-requirements.in
-types-pyyaml==6.0.7
+types-pyyaml==6.0.8
     # via -r dev-requirements.in
-types-requests==2.27.27
+types-requests==2.27.30
     # via -r dev-requirements.in
-types-urllib3==1.26.14
+types-urllib3==1.26.15
     # via types-requests
 typing-extensions==4.2.0
     # via mypy

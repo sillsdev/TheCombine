@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from typing import Dict, Optional
 
+from app_release import get_release, set_release
+
 
 @dataclass(frozen=True)
 class BuildSpec:
@@ -95,6 +97,12 @@ def main() -> None:
         "frontend": BuildSpec(project_dir, "frontend"),
     }
 
+    # Create the version file
+    release_file = project_dir / "public" / "scripts" / "release.js"
+
+    set_release(get_release(), release_file)
+
+    # Build each of the component images
     for component in to_do:
         spec = build_specs[component]
         os.chdir(spec.dir)
@@ -102,6 +110,10 @@ def main() -> None:
         run(f"{build_cmd} build -t {image_name} -f Dockerfile .")
         if args.repo is not None:
             run(f"{build_cmd} push {image_name}")
+
+    # Remove the version file
+    if release_file.exists():
+        release_file.unlink()
 
 
 if __name__ == "__main__":

@@ -1,10 +1,6 @@
 name: "Combine Build"
 description: "Build Docker images for The Combine and push to AWS ECR"
 inputs:
-  tag_suffix:
-    description: "Suffix for image tag"
-    required: true
-    default: ""
   image_repo:
     description: "Docker Image Repository"
     required: true
@@ -26,7 +22,7 @@ runs:
   steps:
     - name: Create Image Tag
       run: |
-        echo "IMAGE_TAG="`node scripts/printVersion.js`${{ inputs.tag_suffix }} >> $GITHUB_ENV
+        echo "IMAGE_TAG="`python3 deploy/scripts/app_release --get` >> $GITHUB_ENV
       shell: bash
 
     - name: Save Image Tag
@@ -44,6 +40,11 @@ runs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Set release file
+      run: |
+        RELEASE=`python3 deploy/scripts/app_release.py --get`
+        python3 deploy/scripts/app_release.py --set ${RELEASE}
 
     - name: Build Frontend
       uses: docker/build-push-action@v2
