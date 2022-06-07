@@ -51,7 +51,7 @@ for (let i = 0; i < 4; i++) {
   domMap[id] = { ...subdom, parentId: dom0.id };
 }
 
-// Give the the next subdomain an odd # of subdomains
+// Give the next subdomain an odd # of subdomains
 const dom1 = parent.subdomains[1];
 for (let i = 0; i < 3; i++) {
   const id = dom1.id + "." + i;
@@ -64,7 +64,7 @@ for (let i = 0; i < 3; i++) {
   domMap[id] = { ...subdom, parentId: dom1.id };
 }
 
-// Give the the last subdomain one subdomain with total depth of 5
+// Give the last subdomain one subdomain with total depth of 5
 const dom2 = parent.subdomains[2];
 let id = mapIds.depth3;
 const dom20 = {

@@ -10,10 +10,10 @@ The columns are: Actions, Vernacular, Senses, Glosses, Domains, Pronunciations, 
 
 ![Review Entries column headers](images/reviewEntriesColumns.png)
 
-At the top of columns with predominantly text content (Vernacular, Glosses, Domains, Note, or Flag) you can sort
+At the top of columns with predominantly text content (Vernacular, Glosses, Domains, Note, or Flag), you can sort
 alphabetically or filter with a text search.
 
-At the top of the Senses and Pronunciations columns you can sort or filter by the number of senses or recordings that
+At the top of the Senses and Pronunciations columns, you can sort or filter by the number of senses or recordings that
 entries have.
 
 There is also a Definitions column that can be turned on or off in [Project Settings](project.md#definitions).
@@ -171,4 +171,4 @@ something else, type the replacement character or string in the "Replace with" b
 
 !!! important
 
-    The find-and-replace operation makes changes to entries, not the the character inventory. It **cannot be undone!**
+    The find-and-replace operation makes changes to entries, not to the character inventory. It **cannot be undone!**
