@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import React, { useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { archiveProject, restoreProject } from "backend";
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
@@ -21,6 +21,7 @@ export default function ProjectButtonWithConfirmation(
   props: ButtonProps & ProjectButtonWithConfirmationProps
 ) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   async function updateProj() {
     if (props.archive) {
@@ -48,7 +49,7 @@ export default function ProjectButtonWithConfirmation(
         id={`proj-${props.projectId}-${props.archive ? "archive" : "restore"}`}
         style={props.warn ? { color: themeColors.error } : {}}
       >
-        <Translate id={`buttons.${props.archive ? "archive" : "restore"}`} />
+        {t(`buttons.${props.archive ? "archive" : "restore"}`)}
       </Button>
       <ButtonConfirmation
         open={open}

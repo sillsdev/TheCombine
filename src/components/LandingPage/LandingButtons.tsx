@@ -1,6 +1,6 @@
 import { Button, Card, Grid, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import history, { openUserGuide, Path } from "browserHistory";
 import theme from "types/theme";
@@ -73,6 +73,8 @@ interface LandingButtonProps {
   filled?: boolean;
 }
 function LandingButton(props: LandingButtonProps): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Grid item style={{ textAlign: "center" }}>
       <Button
@@ -82,9 +84,7 @@ function LandingButton(props: LandingButtonProps): ReactElement {
         style={{ height: buttonHeight, width: buttonWidth }}
         id={props.buttonId}
       >
-        <Typography variant="subtitle1">
-          <Translate id={props.textId} />
-        </Typography>
+        <Typography variant="subtitle1">{t(props.textId)}</Typography>
       </Button>
     </Grid>
   );

@@ -10,7 +10,7 @@ import {
 import { Help } from "@material-ui/icons";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import React from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
@@ -109,7 +109,7 @@ export default class Login extends React.Component<
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="login.title" />
+                {"login.title"}
               </Typography>
 
               {/* Username field */}
@@ -117,14 +117,12 @@ export default class Login extends React.Component<
                 id={`${idAffix}-username`}
                 required
                 autoComplete="username"
-                label={<Translate id="login.username" />}
+                label={"login.username"}
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
                 error={this.state.error["username"]}
                 helperText={
-                  this.state.error["username"] ? (
-                    <Translate id="login.required" />
-                  ) : undefined
+                  this.state.error["username"] ? "login.required" : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -138,15 +136,13 @@ export default class Login extends React.Component<
                 id={`${idAffix}-password`}
                 required
                 autoComplete="current-password"
-                label={<Translate id="login.password" />}
+                label={"login.password"}
                 type="password"
                 value={this.state.password}
                 onChange={(e) => this.updateField(e, "password")}
                 error={this.state.error["password"]}
                 helperText={
-                  this.state.error["password"] ? (
-                    <Translate id="login.required" />
-                  ) : undefined
+                  this.state.error["password"] ? "login.required" : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -162,7 +158,7 @@ export default class Login extends React.Component<
                     onClick={() => history.push(Path.PwRequest)}
                     variant="subtitle2"
                   >
-                    <Translate id="login.forgotPassword" />
+                    {"login.forgotPassword"}
                   </Link>
                 </Typography>
               )}
@@ -173,7 +169,7 @@ export default class Login extends React.Component<
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
                 >
-                  <Translate id="login.failed" />
+                  {"login.failed"}
                 </Typography>
               )}
 
@@ -213,7 +209,7 @@ export default class Login extends React.Component<
                       history.push(Path.SignUp);
                     }}
                   >
-                    <Translate id="login.signUp" />
+                    {"login.signUp"}
                   </Button>
                 </Grid>
 
@@ -227,7 +223,7 @@ export default class Login extends React.Component<
                     disabled={!this.state.isVerified}
                     loading={this.props.loginAttempt}
                   >
-                    <Translate id="login.login" />
+                    {"login.login"}
                   </LoadingButton>
                 </Grid>
               </Grid>

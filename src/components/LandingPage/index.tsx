@@ -1,7 +1,6 @@
 import { Box, Grid, Hidden, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
-import { Translate } from "react-localize-redux";
 
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
@@ -61,10 +60,10 @@ function Body(): ReactElement {
           {t("landingPage.descriptionP1")}
           {<br />}
           {<br />}
-          <Translate id="landingPage.descriptionP2" />
+          {t("landingPage.descriptionP2")}
           {<br />}
           {<br />}
-          <Translate id="landingPage.descriptionP3" />
+          {t("landingPage.descriptionP3")}
           {<br />}
         </Typography>
         <Typography
@@ -75,7 +74,7 @@ function Body(): ReactElement {
             paddingBottom: theme.spacing(1),
           }}
         >
-          <Translate id="landingPage.descriptionP4" />
+          {t("landingPage.descriptionP4")}
         </Typography>
         <SignUpButton buttonIdPrefix="landing-body" />
       </div>

@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
 import history, { Path } from "browserHistory";
@@ -16,6 +16,7 @@ export default function NavigationButtons(
   props: NavigationButtonsProps
 ): ReactElement {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
@@ -31,7 +32,7 @@ export default function NavigationButtons(
           background: tabColor(props.currentTab, Path.DataEntry),
         }}
       >
-        <Translate id="appBar.dataEntry" />
+        {t("appBar.dataEntry")}
       </Button>
       <Button
         id="goals"
@@ -44,7 +45,7 @@ export default function NavigationButtons(
           background: tabColor(props.currentTab, Path.Goals),
         }}
       >
-        <Translate id="appBar.dataCleanup" />
+        {t("appBar.dataCleanup")}
       </Button>
     </React.Fragment>
   );

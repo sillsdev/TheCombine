@@ -1,11 +1,7 @@
 import { Switch, Typography } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
 import React from "react";
-import {
-  Translate,
-  withLocalize,
-  LocalizeContextProps,
-} from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
@@ -21,7 +17,7 @@ interface DataEntryHeaderProps {
  * Displays information about the current data entry view
  */
 export class DataEntryHeader extends React.Component<
-  DataEntryHeaderProps & LocalizeContextProps
+  DataEntryHeaderProps & WithTranslation
 > {
   render() {
     const hasQuestions: boolean =
@@ -32,7 +28,7 @@ export class DataEntryHeader extends React.Component<
         align="center"
         style={{ marginBottom: theme.spacing(2) }}
       >
-        <Translate id="addWords.domain" />
+        {this.props.t("addWords.domain")}
         {": "}
         {this.props.domain.name + " (" + this.props.domain.id + ")"}
         <Typography>{this.props.domain.description}</Typography>
@@ -67,4 +63,4 @@ export function getQuestions(questionsVisible: boolean, questions: string[]) {
     ));
   }
 }
-export default withLocalize(DataEntryHeader);
+export default withTranslation()(DataEntryHeader);

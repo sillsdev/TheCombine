@@ -1,7 +1,7 @@
 import { Grid, Zoom } from "@material-ui/core";
 import { animate } from "motion";
 import React, { ReactElement, useEffect, useState } from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import { WritingSystem } from "api";
@@ -25,9 +25,7 @@ export interface TreeViewProps {
   returnControlToCaller: () => void;
 }
 
-export function TreeView(
-  props: TreeViewProps & LocalizeContextProps
-): ReactElement {
+export function TreeView(props: TreeViewProps & WithTranslation): ReactElement {
   const currentDomain = useSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
@@ -48,19 +46,13 @@ export function TreeView(
      * Primary: Has it been specified for the project?
      * Secondary: What is the current browser/ui language? */
     const newLang =
-      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
-      props.activeLanguage.code;
+      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ?? props.i18n.language;
     if (newLang && newLang !== semDomLanguage) {
-      const headString = props.translate("addWords.domain") as string;
+      const headString = props.t("addWords.domain") as string;
       dispatch(updateTreeLanguage(newLang, headString));
-      // Don't update when props updates, except props.activeLanguage.code
+      // Don't update when props updates, except props.i18n.language
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    semDomLanguage,
-    semDomWritingSystem,
-    dispatch,
-    props.activeLanguage.code,
-  ]);
+  }, [semDomLanguage, semDomWritingSystem, dispatch, props.i18n.language]);
 
   function animateHandler(domain: TreeSemanticDomain): Promise<void> {
     if (visible) {
@@ -119,4 +111,4 @@ export function TreeView(
   );
 }
 
-export default withLocalize(TreeView);
+export default withTranslation()(TreeView);

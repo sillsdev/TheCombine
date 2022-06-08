@@ -1,6 +1,6 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText, updateBanner } from "backend";
@@ -23,6 +23,7 @@ interface BannerProps {
 function Banner(props: BannerProps): ReactElement {
   const idAffix = `site-settings-banner-${props.type}`;
   const [text, setText] = useState<string>("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     getBannerText(props.type).then(setText);
@@ -67,7 +68,7 @@ function Banner(props: BannerProps): ReactElement {
           variant="outlined"
           fullWidth
           multiline
-          label={<Translate id={labelId(props.type)} />}
+          label={t(labelId(props.type))}
           value={text}
           onChange={handleOnChange}
           style={{ minWidth: 300 }}
@@ -82,7 +83,7 @@ function Banner(props: BannerProps): ReactElement {
           color="primary"
           onClick={handleSaveClick}
         >
-          <Translate id="buttons.save" />
+          {t("buttons.save")}
         </Button>
       </Grid>
 
@@ -93,7 +94,7 @@ function Banner(props: BannerProps): ReactElement {
           variant="contained"
           onClick={handleResetClick}
         >
-          <Translate id="buttons.reset" />
+          {t("buttons.reset")}
         </Button>
       </Grid>
     </Grid>

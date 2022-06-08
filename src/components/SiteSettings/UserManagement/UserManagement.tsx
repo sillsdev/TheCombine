@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
@@ -79,19 +79,19 @@ class UserManagement extends React.Component<UserProps, UserState> {
       })
       .catch((err) => {
         console.error(err);
-        toast.error(<Translate id="siteSettings.populateUsers.toastFailure" />);
+        toast.error("siteSettings.populateUsers.toastFailure");
       });
   }
 
   deleteUser(userId: string) {
     deleteUser(userId)
       .then(() => {
-        toast.success(<Translate id="siteSettings.deleteUser.toastSuccess" />);
+        toast.success("siteSettings.deleteUser.toastSuccess");
         this.populateUsers();
       })
       .catch((err) => {
         console.error(err);
-        toast.error(<Translate id="siteSettings.deleteUser.toastFailure" />);
+        toast.error("siteSettings.deleteUser.toastFailure");
       });
     this.handleCloseModal();
   }

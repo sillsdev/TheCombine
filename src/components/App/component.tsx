@@ -12,7 +12,6 @@ import ResetRequest from "components/PasswordReset/RequestPage";
 import PasswordReset from "components/PasswordReset/ResetPage";
 import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite";
-import Loading from "goals/DefaultGoal/Loading";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
@@ -23,7 +22,7 @@ export default class App extends React.Component {
   render(): ReactElement {
     return (
       <div className="App">
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<div />}>
           <AnnouncementBanner />
           <Switch>
             <Route exact path={Path.Root} component={LandingPage} />

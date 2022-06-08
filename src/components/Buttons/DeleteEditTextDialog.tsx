@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { Backspace, Close } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -38,6 +38,7 @@ export default function DeleteEditTextDialog(
 ): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.text);
+  const { t } = useTranslation();
 
   function onCancel() {
     setText(props.text);
@@ -73,10 +74,7 @@ export default function DeleteEditTextDialog(
 
   const endAdornment = (
     <InputAdornment position="end">
-      <Tooltip
-        title={<Translate id={"buttons.clearText"} />}
-        placement={"left"}
-      >
+      <Tooltip title={t("buttons.clearText")} placement={"left"}>
         <IconButton size="small" onClick={() => setText("")}>
           <Backspace />
         </IconButton>
@@ -92,8 +90,8 @@ export default function DeleteEditTextDialog(
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        <Translate id={props.titleId} />
-        <Tooltip title={<Translate id={"buttons.cancel"} />} placement={"left"}>
+        {t(props.titleId)}
+        <Tooltip title={t("buttons.cancel")} placement={"left"}>
           <IconButton
             size="small"
             aria-label="cancel"
@@ -121,7 +119,7 @@ export default function DeleteEditTextDialog(
           color="primary"
           id={props.buttonIdDelete}
         >
-          <Translate id={props.buttonTextIdDelete ?? "buttons.delete"} />
+          {t(props.buttonTextIdDelete ?? "buttons.delete")}
         </Button>
         <LoadingButton
           loading={loading}
@@ -132,7 +130,7 @@ export default function DeleteEditTextDialog(
             id: props.buttonIdSave,
           }}
         >
-          <Translate id={props.buttonTextIdSave ?? "buttons.save"} />
+          {t(props.buttonTextIdSave ?? "buttons.save")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

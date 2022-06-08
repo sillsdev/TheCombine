@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
@@ -21,11 +21,11 @@ interface ChooseProjectState {
   projectList: Project[];
 }
 
-export default class ChooseProject extends React.Component<
-  ChooseProjectProps,
+export class ChooseProject extends React.Component<
+  ChooseProjectProps & WithTranslation,
   ChooseProjectState
 > {
-  constructor(props: ChooseProjectProps) {
+  constructor(props: ChooseProjectProps & WithTranslation) {
     super(props);
     this.state = { projectList: [] };
   }
@@ -49,7 +49,7 @@ export default class ChooseProject extends React.Component<
         <CardContent>
           {/* Title */}
           <Typography variant="h5" align="center" gutterBottom>
-            <Translate id="selectProject.title" />
+            {this.props.t("selectProject.title")}
           </Typography>
 
           {/* List of projects */}
@@ -70,3 +70,5 @@ export default class ChooseProject extends React.Component<
     );
   }
 }
+
+export default withTranslation()(ChooseProject);

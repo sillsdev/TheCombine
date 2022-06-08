@@ -1,6 +1,6 @@
 import { Button, Grid, ImageList, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
@@ -13,7 +13,7 @@ interface MergeDupStepProps {
 }
 
 class MergeDupStep extends React.Component<
-  MergeDupStepProps & LocalizeContextProps
+  MergeDupStepProps & WithTranslation
 > {
   next(): void {
     this.props.clearSidebar();
@@ -50,35 +50,29 @@ class MergeDupStep extends React.Component<
               variant="contained"
               style={{ marginRight: theme.spacing(3) }}
               onClick={() => this.saveContinue()}
-              title={
-                this.props.translate(
-                  "mergeDups.helpText.saveAndContinue"
-                ) as string
-              }
+              title={this.props.t("mergeDups.helpText.saveAndContinue")}
               id="merge-save"
             >
-              {this.props.translate("buttons.saveAndContinue")}
+              {this.props.t("buttons.saveAndContinue")}
             </Button>
             <Button
               color="secondary"
               variant="contained"
               style={{ marginRight: theme.spacing(3) }}
               onClick={() => this.next()}
-              title={this.props.translate("mergeDups.helpText.skip") as string}
+              title={this.props.t("mergeDups.helpText.skip")}
               id="merge-skip"
             >
-              {this.props.translate("buttons.skip")}
+              {this.props.t("buttons.skip")}
             </Button>
           </Grid>
         </Grid>
       </React.Fragment>
     ) : (
       // TODO: create component with button back to goals.
-      <Typography>
-        {this.props.translate("mergeDups.helpText.noDups")}
-      </Typography>
+      <Typography>{this.props.t("mergeDups.helpText.noDups")}</Typography>
     );
   }
 }
 
-export default withLocalize(MergeDupStep);
+export default withTranslation()(MergeDupStep);

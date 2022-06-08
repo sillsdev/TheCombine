@@ -15,7 +15,7 @@ import {
 } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { Project, WritingSystem } from "api/models";
@@ -68,7 +68,8 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          <Translate id="projectSettings.language.makeDefaultAnalysisLanguageFailed" />
+          ""
+          //{t("projectSettings.language.makeDefaultAnalysisLanguageFailed" />
         );
       });
   }
@@ -81,7 +82,8 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          <Translate id="projectSettings.language.deleteAnalysisLanguageFailed" />
+          ""
+          //{t("projectSettings.language.deleteAnalysisLanguageFailed" />
         );
       });
   }
@@ -99,7 +101,8 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          <Translate id="projectSettings.language.addAnalysisLanguageFailed" />
+          ""
+          //{t("projectSettings.language.addAnalysisLanguageFailed" />
         );
       });
   }
@@ -157,7 +160,8 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          <Translate id="projectSettings.language.updateSemDomWritingSystemFailed" />
+          ""
+          //{t("projectSettings.language.updateSemDomWritingSystemFailed" />
         );
       });
   }
@@ -167,14 +171,14 @@ export default class ProjectLanguages extends React.Component<
       <React.Fragment>
         <UpperRightToastContainer />
         <Typography>
-          <Translate id="projectSettings.language.vernacular" />
+          {/*t("projectSettings.language.vernacular" />*/}
           {": "}
         </Typography>
         <ImmutableWritingSystem
           ws={this.props.project.vernacularWritingSystem}
         />
         <Typography style={{ marginTop: theme.spacing(1) }}>
-          <Translate id="projectSettings.language.analysis" />
+          {/*t("projectSettings.language.analysis" />*/}
           {": "}
         </Typography>
         {this.props.project.analysisWritingSystems.map(
@@ -236,7 +240,7 @@ export default class ProjectLanguages extends React.Component<
           </React.Fragment>
         )}
         <Typography>
-          <Translate id="projectSettings.language.semanticDomains" />
+          {/*t("projectSettings.language.semanticDomains" />*/}
           {": "}
         </Typography>
         <Select
@@ -251,13 +255,13 @@ export default class ProjectLanguages extends React.Component<
           renderValue={
             this.props.project.semDomWritingSystem.bcp47
               ? undefined
-              : () => (
-                  <Translate id="projectSettings.language.semanticDomainsDefault" />
-                )
+              : () => ({
+                  /*t("projectSettings.language.semanticDomainsDefault" />*/
+                })
           }
         >
           <MenuItem value={""}>
-            <Translate id="projectSettings.language.semanticDomainsDefault" />
+            {/*t("projectSettings.language.semanticDomainsDefault" />*/}
           </MenuItem>
           {semDomWritingSystems.map((ws) => (
             <MenuItem key={ws.bcp47} value={ws.bcp47}>
@@ -288,19 +292,19 @@ function ImmutableWritingSystem(
       )}
       <Grid item>
         <Typography>
-          <Translate id="projectSettings.language.name" />
+          {/*t("projectSettings.language.name" />*/}
           {`: ${props.ws.name}, `}
         </Typography>
       </Grid>
       <Grid item>
         <Typography>
-          <Translate id="projectSettings.language.bcp47" />
+          {/*t("projectSettings.language.bcp47" />*/}
           {`: ${props.ws.bcp47}, `}
         </Typography>
       </Grid>
       <Grid item>
         <Typography>
-          <Translate id="projectSettings.language.font" />
+          {/*t("projectSettings.language.font" />*/}
           {`: ${props.ws.font}`}
         </Typography>
       </Grid>

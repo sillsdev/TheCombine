@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import React, { useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 
@@ -20,6 +20,7 @@ interface DeleteEntryProps {
  */
 export default function DeleteEntry(props: DeleteEntryProps) {
   const [open, setOpen] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   function handleClick() {
     if (props.confirmId) {
@@ -31,7 +32,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
 
   return (
     <React.Fragment>
-      <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
+      <Tooltip title={t("addWords.deleteRow")} placement="top">
         <IconButton
           tabIndex={-1}
           size="small"

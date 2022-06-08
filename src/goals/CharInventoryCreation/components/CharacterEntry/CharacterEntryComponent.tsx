@@ -1,7 +1,7 @@
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import React from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 
 import CharactersInput from "goals/CharInventoryCreation/components/CharacterEntry/CharactersInput";
 import theme from "types/theme";
@@ -51,7 +51,7 @@ export default class CharacterEntry extends React.Component<
               }
               id="character-entry-submit"
             >
-              <Translate id="charInventory.characterSet.advanced" />{" "}
+              {"charInventory.characterSet.advanced"}{" "}
               <KeyboardArrowDown
                 style={{
                   transform: this.state.checked
@@ -70,7 +70,7 @@ export default class CharacterEntry extends React.Component<
                     this.props.setValidCharacters(chars)
                   }
                   label={
-                    <Translate id="charInventory.characterSet.acceptedCharacters" />
+                    <div>{"charInventory.characterSet.acceptedCharacters"}</div>
                   }
                   id="valid-characters-input"
                 />
@@ -84,7 +84,7 @@ export default class CharacterEntry extends React.Component<
                     this.props.setRejectedCharacters(chars)
                   }
                   label={
-                    <Translate id="charInventory.characterSet.rejectedCharacters" />
+                    <div>{"charInventory.characterSet.rejectedCharacters"}</div>
                   }
                   id="rejected-characters-input"
                 />

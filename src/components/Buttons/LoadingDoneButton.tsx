@@ -2,7 +2,7 @@ import { Button, CircularProgress } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import { Check } from "@material-ui/icons";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { themeColors } from "types/theme";
 
@@ -21,6 +21,8 @@ interface LoadingDoneProps {
 export default function LoadingDoneButton(
   props: LoadingDoneProps
 ): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Button
       type="submit"
@@ -36,7 +38,7 @@ export default function LoadingDoneButton(
       {props.done ? (
         <React.Fragment>
           <Check />
-          {props.doneText ?? <Translate id="buttons.done" />}
+          {props.doneText ?? t("buttons.done")}
         </React.Fragment>
       ) : (
         props.children

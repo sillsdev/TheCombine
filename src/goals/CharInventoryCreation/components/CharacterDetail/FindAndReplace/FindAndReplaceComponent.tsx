@@ -1,6 +1,6 @@
 import { Button, TextField, Typography } from "@material-ui/core";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 
 import CharacterReplaceDialog from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 
@@ -17,10 +17,10 @@ interface FindAndReplaceState {
 }
 
 export class FindAndReplace extends React.Component<
-  FindAndReplaceProps & LocalizeContextProps,
+  FindAndReplaceProps & WithTranslation,
   FindAndReplaceState
 > {
-  constructor(props: FindAndReplaceProps & LocalizeContextProps) {
+  constructor(props: FindAndReplaceProps & WithTranslation) {
     super(props);
     this.state = {
       warningDialogOpen: false,
@@ -29,7 +29,7 @@ export class FindAndReplace extends React.Component<
     };
   }
 
-  componentDidUpdate(prevProps: FindAndReplaceProps & LocalizeContextProps) {
+  componentDidUpdate(prevProps: FindAndReplaceProps & WithTranslation) {
     if (prevProps.initialFindValue !== this.props.initialFindValue) {
       this.setState((_, props) => ({
         findValue: props.initialFindValue,
@@ -54,10 +54,10 @@ export class FindAndReplace extends React.Component<
     return (
       <React.Fragment>
         <Typography variant="overline">
-          {this.props.translate("charInventory.characterSet.findAndReplace")}
+          {this.props.t("charInventory.characterSet.findAndReplace")}
         </Typography>
         <TextField
-          label={this.props.translate("charInventory.characterSet.find")}
+          label={this.props.t("charInventory.characterSet.find")}
           value={this.state.findValue}
           onChange={(e) => this.updateField(e, "findValue")}
           variant="outlined"
@@ -66,7 +66,7 @@ export class FindAndReplace extends React.Component<
           inputProps={{ maxLength: 100 }}
         />
         <TextField
-          label={this.props.translate("charInventory.characterSet.replaceWith")}
+          label={this.props.t("charInventory.characterSet.replaceWith")}
           value={this.state.replaceValue}
           onChange={(e) => this.updateField(e, "replaceValue")}
           variant="outlined"
@@ -80,7 +80,7 @@ export class FindAndReplace extends React.Component<
             this.setState({ warningDialogOpen: true });
           }}
         >
-          {this.props.translate("charInventory.characterSet.apply")}
+          {this.props.t("charInventory.characterSet.apply")}
         </Button>
         <CharacterReplaceDialog
           open={this.state.warningDialogOpen}
@@ -102,4 +102,4 @@ export class FindAndReplace extends React.Component<
   }
 }
 
-export default withLocalize(FindAndReplace);
+export default withTranslation()(FindAndReplace);

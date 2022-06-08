@@ -1,6 +1,6 @@
 import { Grid, TextField } from "@material-ui/core";
 import React, { ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import TreeSemanticDomain, {
@@ -16,34 +16,27 @@ export interface TreeSearchProps {
 export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps): ReactElement {
+  const { t } = useTranslation();
   const { input, handleChange, searchAndSelectDomain, searchError } =
     useTreeSearch(props);
 
   return (
     <Grid style={{ maxWidth: 200 }}>
-      <Translate>
-        {({ translate }) => (
-          <TextField
-            fullWidth
-            id="domain-tree-search-field"
-            label={translate("treeView.findDomain").toString()}
-            // Use onKeyUp so that this fires after onChange, to facilitate
-            // error state clearing.
-            onKeyUp={searchAndSelectDomain}
-            onChange={handleChange}
-            margin="normal"
-            autoComplete="off"
-            inputProps={{ "data-testid": testId }}
-            value={input}
-            error={searchError}
-            helperText={
-              searchError
-                ? translate("treeView.domainNotFound").toString()
-                : undefined
-            }
-          />
-        )}
-      </Translate>
+      <TextField
+        fullWidth
+        id="domain-tree-search-field"
+        label={t("treeView.findDomain")}
+        // Use onKeyUp so that this fires after onChange, to facilitate
+        // error state clearing.
+        onKeyUp={searchAndSelectDomain}
+        onChange={handleChange}
+        margin="normal"
+        autoComplete="off"
+        inputProps={{ "data-testid": testId }}
+        value={input}
+        error={searchError}
+        helperText={searchError ? t("treeView.domainNotFound") : undefined}
+      />
     </Grid>
   );
 }

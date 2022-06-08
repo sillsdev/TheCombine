@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { MoreVert, SortByAlpha } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Permission, User, UserRole } from "api/models";
@@ -37,6 +37,7 @@ export default function ActiveUsers() {
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getUserRoles().then(setProjUserRoles);
@@ -148,16 +149,16 @@ export default function ActiveUsers() {
 
   const sortOptions = [
     <MenuItem key="sortByName" value={UserOrder.Name}>
-      <Translate id="projectSettings.language.name" />
+      {t("projectSettings.language.name")}
     </MenuItem>,
     <MenuItem key="sortByUsername" value={UserOrder.Username}>
-      <Translate id="login.username" />
+      {t("login.username")}
     </MenuItem>,
   ];
   if (currentUserIsProjectOwner || currentUser.isAdmin) {
     sortOptions.push(
       <MenuItem key="sortByEmail" value={UserOrder.Email}>
-        <Translate id="login.email" />
+        {t("login.email")}
       </MenuItem>
     );
   }
@@ -166,7 +167,7 @@ export default function ActiveUsers() {
     <React.Fragment>
       <FormControl style={{ minWidth: 100 }}>
         <InputLabel id="sorting-order-select">
-          <Translate id="charInventory.sortBy" />
+          {t("charInventory.sortBy")}
         </InputLabel>
         <Select
           labelId="sorting-order-select"
@@ -180,7 +181,7 @@ export default function ActiveUsers() {
         </Select>
       </FormControl>
       <Tooltip
-        title={<Translate id="projectSettings.userManagement.reverseOrder" />}
+        title={t("projectSettings.userManagement.reverseOrder")}
         placement="right"
       >
         <IconButton

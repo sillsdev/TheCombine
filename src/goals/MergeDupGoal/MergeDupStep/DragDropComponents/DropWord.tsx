@@ -1,7 +1,7 @@
 import { Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
 import { Flag } from "api/models";
@@ -19,6 +19,8 @@ interface DropWordProps {
 
 export default function DropWord(props: DropWordProps): ReactElement {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+
   const treeWords = props.mergeState.tree.words;
   const data = props.mergeState.data;
   const filled = !!treeWords[props.wordId];
@@ -106,7 +108,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
             </div>
             <div style={{ padding: 16, textAlign: "center" }}>
               <Typography variant="subtitle1">
-                <Translate id="mergeDups.helpText.dragCard" />
+                {t("mergeDups.helpText.dragCard")}
               </Typography>
             </div>
           </div>

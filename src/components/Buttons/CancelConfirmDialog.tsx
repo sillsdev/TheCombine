@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 interface CancelConfirmDialogProps {
   open: boolean;
@@ -24,6 +24,8 @@ interface CancelConfirmDialogProps {
 export default function CancelConfirmDialog(
   props: CancelConfirmDialogProps
 ): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Dialog
       open={props.open}
@@ -32,11 +34,11 @@ export default function CancelConfirmDialog(
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        <Translate id="buttons.proceedWithCaution" />
+        {t("buttons.proceedWithCaution")}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate id={props.textId} />
+          {t(props.textId)}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -46,7 +48,7 @@ export default function CancelConfirmDialog(
           color="primary"
           id={props.buttonIdCancel}
         >
-          <Translate id="buttons.cancel" />
+          {t("buttons.cancel")}
         </Button>
         <Button
           onClick={props.handleConfirm}
@@ -54,7 +56,7 @@ export default function CancelConfirmDialog(
           color="primary"
           id={props.buttonIdConfirm}
         >
-          <Translate id="buttons.confirm" />
+          {t("buttons.confirm")}
         </Button>
       </DialogActions>
     </Dialog>

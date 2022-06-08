@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Cached, Error as ErrorIcon } from "@material-ui/icons";
 import React, { createRef, ReactElement, useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getProjectName } from "backend";
@@ -29,6 +29,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   const dispatch = useDispatch();
   const [fileName, setFileName] = useState<string | undefined>();
   const [fileUrl, setFileUrl] = useState<string | undefined>();
+  const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   return (
     <React.Fragment>
       {exportState.status !== ExportStatus.Default && (
-        <Tooltip title={<Translate id={textId()} />} placement="bottom">
+        <Tooltip title={t(textId())} placement="bottom">
           <IconButton
             tabIndex={-1}
             onClick={iconFunction()}

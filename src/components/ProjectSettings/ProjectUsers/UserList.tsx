@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { Done } from "@material-ui/icons";
 import { useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { avatarSrc, getAllUsers } from "backend";
@@ -29,6 +29,7 @@ export default function UserList(props: UserListProps) {
   const [hoverUserId, setHoverUserId] = useState<string>("");
   const [filteredProjUsers, setFilteredProjUsers] = useState<User[]>([]);
   const [filteredNonProjUsers, setFilteredNonProjUsers] = useState<User[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     clearFilter();
@@ -79,9 +80,7 @@ export default function UserList(props: UserListProps) {
 
   return (
     <Grid item xs={12}>
-      <Typography>
-        <Translate id="projectSettings.invite.searchTitle" />
-      </Typography>
+      <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
       <Input
         type="text"
         onChange={(e) => handleChange(e.target.value)}
@@ -118,7 +117,7 @@ export default function UserList(props: UserListProps) {
                 onClick={() => props.addToProject(user)}
                 id={`project-user-add-${user.username}`}
               >
-                <Translate id="buttons.add" />
+                {t("buttons.add")}
               </Button>
             )}
           </ListItem>

@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 
 import { getUserRole } from "backend";
 import { getCurrentUser } from "backend/localStorage";
@@ -138,7 +138,7 @@ export default class GoalTimeline extends React.Component<
         id={`new-goal-${goal.name}`}
       >
         <Typography variant="h4">
-          <Translate id={done ? "goal.selector.done" : goal.name + ".title"} />
+          {done ? "goal.selector.done" : goal.name + ".title"}
         </Typography>
       </Button>
     );
@@ -160,17 +160,13 @@ export default class GoalTimeline extends React.Component<
 
         {/* Recommendation */}
         <div style={{ ...timelineStyle.paneStyling, width: "60%" }}>
-          <Typography variant="h6">
-            <Translate id="goal.selector.present" />
-          </Typography>
+          <Typography variant="h6">{"goal.selector.present"}</Typography>
           {this.goalButton()}
         </div>
 
         {/* History */}
         <div style={timelineStyle.paneStyling}>
-          <Typography variant="h6">
-            <Translate id="goal.selector.past" />
-          </Typography>
+          <Typography variant="h6">{"goal.selector.past"}</Typography>
           <GoalList
             completed
             orientation="horizontal"
@@ -193,9 +189,7 @@ export default class GoalTimeline extends React.Component<
           cols={5}
           style={{ ...timelineStyle.paneStyling, float: "right" }}
         >
-          <Typography variant="h6">
-            <Translate id="goal.selector.other" />
-          </Typography>
+          <Typography variant="h6">{"goal.selector.other"}</Typography>
           <GoalList
             orientation="vertical"
             data={this.createSuggestionData(this.state.availableGoalTypes)}
@@ -207,17 +201,13 @@ export default class GoalTimeline extends React.Component<
 
         {/* Recommendation */}
         <ImageListItem cols={3} style={timelineStyle.paneStyling}>
-          <Typography variant="h5">
-            <Translate id="goal.selector.present" />
-          </Typography>
+          <Typography variant="h5">{"goal.selector.present"}</Typography>
           {this.goalButton()}
         </ImageListItem>
 
         {/* History */}
         <ImageListItem cols={5} style={timelineStyle.paneStyling}>
-          <Typography variant="h6">
-            <Translate id="goal.selector.past" />
-          </Typography>
+          <Typography variant="h6">{"goal.selector.past"}</Typography>
           <GoalList
             completed
             orientation="vertical"

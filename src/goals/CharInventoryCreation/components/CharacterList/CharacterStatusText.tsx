@@ -1,6 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { themeColors } from "types/theme";
@@ -13,6 +13,8 @@ interface CharacterStatusTextProps {
 export default function CharacterStatusText(
   props: CharacterStatusTextProps
 ): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Typography
       variant="body2"
@@ -21,7 +23,7 @@ export default function CharacterStatusText(
       style={CharacterStatusStyle(props.status)}
       display={props.inline ? "inline" : "initial"}
     >
-      <Translate id={`buttons.${props.status}`} />
+      {t(`buttons.${props.status}`)}
     </Typography>
   );
 }

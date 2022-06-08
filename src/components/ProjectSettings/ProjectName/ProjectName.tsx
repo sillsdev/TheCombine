@@ -1,6 +1,6 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 
@@ -56,7 +56,7 @@ export default class ProjectName extends React.Component<NameProps, NameState> {
             }
             id="project-name-save"
           >
-            <Translate id="buttons.save" />
+            {/*t("buttons.save" />*/}
           </Button>
         </Grid>
       </Grid>

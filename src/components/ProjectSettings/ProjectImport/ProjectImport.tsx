@@ -1,7 +1,7 @@
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { Translate } from "react-localize-redux";
+//import { renderToStaticMarkup } from "react-dom/server";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import * as backend from "backend";
@@ -24,11 +24,11 @@ interface ImportState {
   uploadState: UploadState;
 }
 
-export default class ProjectImport extends React.Component<
-  ImportProps,
+export class ProjectImport extends React.Component<
+  ImportProps & WithTranslation,
   ImportState
 > {
-  constructor(props: ImportProps) {
+  constructor(props: ImportProps & WithTranslation) {
     super(props);
     this.updateLiftFile = this.updateLiftFile.bind(this);
     this.state = {
@@ -55,11 +55,11 @@ export default class ProjectImport extends React.Component<
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="body2">
-              <Translate id="projectSettings.import.body" />{" "}
-              <Translate
+              {this.props.t("projectSettings.import.body")}{" "}
+              {/*<Translate
                 id="createProject.uploadFormat"
                 options={{ renderInnerHtml: true, renderToStaticMarkup }}
-              />
+    />*/}
             </Typography>
           </Grid>
           <Grid item>
@@ -72,7 +72,7 @@ export default class ProjectImport extends React.Component<
                 id: "project-import-select-file",
               }}
             >
-              <Translate id="projectSettings.import.chooseFile" />
+              {this.props.t("projectSettings.import.chooseFile")}
             </FileInputButton>
           </Grid>
 
@@ -88,13 +88,13 @@ export default class ProjectImport extends React.Component<
               onClick={() => this.uploadWords()}
               id="project-import-submit"
             >
-              <Translate
-                id={`buttons.${
+              {this.props.t(
+                `buttons.${
                   this.state.uploadState === UploadState.Done
                     ? "done"
                     : "upload"
-                }`}
-              />
+                }`
+              )}
               {this.state.uploadState === UploadState.InProgress && (
                 <CircularProgress
                   size={24}
@@ -114,7 +114,7 @@ export default class ProjectImport extends React.Component<
             {/* Displays the name of the selected file */}
             {this.state.liftFilename && (
               <Typography variant="body1" noWrap>
-                <Translate id="createProject.fileSelected" />
+                {this.props.t("createProject.fileSelected")}
                 {": "}
                 {this.state.liftFilename}
               </Typography>
@@ -125,3 +125,5 @@ export default class ProjectImport extends React.Component<
     );
   }
 }
+
+export default withTranslation()(ProjectImport);

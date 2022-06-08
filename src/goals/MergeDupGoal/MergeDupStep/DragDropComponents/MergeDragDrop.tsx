@@ -2,7 +2,7 @@ import { Drawer, ImageListItem, Tooltip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 
@@ -27,6 +27,8 @@ export default function MergeDragDrop(): ReactElement {
     (state: StoreState) => state.mergeDuplicateGoal
   );
   const [senseToDelete, setSenseToDelete] = useState<string>("");
+  const { t } = useTranslation();
+
   const sidebar = mergeState.tree.sidebar;
   const treeWords = mergeState.tree.words;
 
@@ -98,10 +100,7 @@ export default function MergeDragDrop(): ReactElement {
         <Droppable key={trashId} droppableId={trashId}>
           {(provided): ReactElement => (
             <div ref={provided.innerRef}>
-              <Tooltip
-                title={<Translate id="mergeDups.helpText.delete" />}
-                placement="top"
-              >
+              <Tooltip title={t("mergeDups.helpText.delete")} placement="top">
                 <Delete fontSize="large" />
               </Tooltip>
               <div style={{ position: "absolute" }}>{provided.placeholder}</div>

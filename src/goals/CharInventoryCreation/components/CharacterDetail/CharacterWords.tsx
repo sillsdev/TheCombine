@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { StoreState } from "types";
@@ -17,12 +17,12 @@ export default function CharacterWords(
   const allWords = useSelector(
     (state: StoreState) => state.characterInventoryState.allWords
   );
+  const { t } = useTranslation();
   const words = getWordsContainingChar(props.character, allWords, 5);
+
   return (
     <React.Fragment>
-      <Typography variant="overline">
-        <Translate id="charInventory.examples" />
-      </Typography>
+      <Typography variant="overline">{t("charInventory.examples")}</Typography>
       {words.map((word) => (
         <Typography variant="body1" key={`${props.character}_${word}`}>
           {highlightCharacterInWord(props.character, word)}

@@ -8,7 +8,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+//import { useTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -122,7 +122,7 @@ export default class CharacterInventory extends React.Component<
                   style: { margin: theme.spacing(1) },
                 }}
               >
-                <Translate id="buttons.save" />
+                {"buttons.save"}
               </LoadingButton>
               <Button
                 id={CANCEL}
@@ -133,7 +133,7 @@ export default class CharacterInventory extends React.Component<
                 style={{ margin: theme.spacing(1) }}
               >
                 {" "}
-                <Translate id="buttons.cancel" />
+                {"buttons.cancel"}
               </Button>
             </Grid>
           </Grid>
@@ -147,11 +147,11 @@ export default class CharacterInventory extends React.Component<
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            <Translate id="charInventory.dialog.title" />
+            {"charInventory.dialog.title"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              <Translate id="charInventory.dialog.content" />
+              {"charInventory.dialog.content"}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -161,10 +161,10 @@ export default class CharacterInventory extends React.Component<
               color="secondary"
               autoFocus
             >
-              <Translate id="charInventory.dialog.yes" />
+              {"charInventory.dialog.yes"}
             </Button>
             <Button onClick={() => this.handleClose()} color="primary">
-              <Translate id="charInventory.dialog.no" />
+              {"charInventory.dialog.no"}
             </Button>
           </DialogActions>
         </Dialog>

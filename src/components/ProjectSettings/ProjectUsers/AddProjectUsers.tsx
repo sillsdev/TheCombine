@@ -1,6 +1,6 @@
 import { Button, Grid, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -31,6 +31,7 @@ export default function AddProjectUsers() {
   );
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     Modal.setAppElement("body");
@@ -44,12 +45,12 @@ export default function AddProjectUsers() {
           user.id
         )
         .then(() => {
-          toast.success(<Translate id="projectSettings.invite.toastSuccess" />);
+          toast.success(t("projectSettings.invite.toastSuccess"));
           dispatch(asyncRefreshCurrentProjectUsers());
         })
         .catch((err) => {
           console.error(err);
-          toast.error(<Translate id="projectSettings.invite.toastFail" />);
+          toast.error(t("projectSettings.invite.toastFail"));
         });
     }
   }
@@ -64,9 +65,7 @@ export default function AddProjectUsers() {
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <Typography>
-              <Translate id="projectSettings.invite.or" />
-            </Typography>
+            <Typography>{t("projectSettings.invite.or")}</Typography>
           </Grid>
 
           <Grid item xs={12}>
@@ -75,7 +74,7 @@ export default function AddProjectUsers() {
               onClick={() => setShowModal(true)}
               id="project-user-invite"
             >
-              <Translate id="projectSettings.invite.inviteByEmailLabel" />
+              {t("projectSettings.invite.inviteByEmailLabel")}
             </Button>
           </Grid>
         </Grid>

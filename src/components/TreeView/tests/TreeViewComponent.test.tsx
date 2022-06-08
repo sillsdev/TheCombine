@@ -1,4 +1,4 @@
-import { LocalizeContextProps } from "react-localize-redux";
+import { WithTranslation } from "react-i18next";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
@@ -49,9 +49,9 @@ describe("TreeView", () => {
 
 const treeViewProps: TreeViewProps = { returnControlToCaller: jest.fn() };
 const localizeProps = {
-  activeLanguage: { code: "" },
-  translate: (() => "TranslatedString") as LocalizeContextProps["translate"],
-} as LocalizeContextProps;
+  i18n: { language: "" },
+  t: (() => "TranslatedString") as WithTranslation["t"],
+} as WithTranslation;
 function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
