@@ -8,6 +8,12 @@ import configureMockStore from "redux-mock-store";
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 const createMockStore = configureMockStore();
 const mockState = {
   currentProjectState: { project: {} },

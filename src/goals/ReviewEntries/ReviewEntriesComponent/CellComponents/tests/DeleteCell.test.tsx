@@ -6,6 +6,12 @@ import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 const mockStore = configureMockStore()({ reviewEntriesState });
 const mockWord = mockWords()[0];
 
@@ -14,7 +20,7 @@ describe("DeleteCell", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <DeleteCell rowData={mockWord} value={""} />
+          <DeleteCell rowData={mockWord} />
         </Provider>
       );
     });

@@ -7,6 +7,12 @@ import thunk from "redux-thunk";
 import { BaseGoalScreen } from "goals/DefaultGoal/BaseGoalScreen";
 import { Goal } from "types/goals";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = { goalsState: { currentGoal: new Goal() } };
 const mockStore = createMockStore(mockStoreState);

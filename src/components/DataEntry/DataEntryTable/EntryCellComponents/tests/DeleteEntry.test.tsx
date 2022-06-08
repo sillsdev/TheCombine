@@ -2,6 +2,12 @@ import renderer from "react-test-renderer";
 
 import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 describe("DeleteEntry", () => {
   it("renders without crashing", () => {
     renderer.act(() => {

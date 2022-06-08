@@ -20,6 +20,16 @@ import {
 import { firstGlossText } from "types/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
+    return Component;
+  },
+}));
+
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),
   getDuplicateId: jest.fn(),
@@ -28,7 +38,7 @@ jest.mock("backend", () => ({
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
-jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
+jest.mock("components/Pronunciations/PronunciationsComponent", () => "");
 jest.mock("components/Pronunciations/Recorder");
 jest.spyOn(window, "alert").mockImplementation(() => {});
 

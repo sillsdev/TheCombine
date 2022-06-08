@@ -5,6 +5,13 @@ import configureMockStore from "redux-mock-store";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+jest.mock("components/TreeView/TreeViewComponent", () => "");
+
 const mockStore = configureMockStore()();
 const mockWord = mockWords()[0];
 

@@ -4,7 +4,9 @@ import configureMockStore from "redux-mock-store";
 
 import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 
-jest.mock("components/AppBar/AppBarComponent", () => "div");
+jest.mock("components/AppBar/AppBarComponent", () => "");
+jest.mock("components/ProjectScreen/ChooseProject", () => "");
+jest.mock("components/ProjectScreen/CreateProject", () => "");
 
 const state = {
   currentProjectState: { project: {} },

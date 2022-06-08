@@ -7,10 +7,15 @@ import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 import { newUser } from "types/user";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 jest.mock("backend", () => ({
   getUser: () => mockGetUser(),
 }));
-
 jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),

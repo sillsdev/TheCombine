@@ -7,8 +7,13 @@ import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWord
 import { defaultWritingSystem } from "types/writingSystem";
 
 // The multiline Input, TextField cause problems in the mock environment.
-jest.mock("@material-ui/core/Input", () => "div");
-jest.mock("@material-ui/core/TextField", () => "div");
+jest.mock("@material-ui/core/Input", () => "");
+jest.mock("@material-ui/core/TextField", () => "");
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
 
 const mockStore = configureMockStore()({
   currentProjectState: {

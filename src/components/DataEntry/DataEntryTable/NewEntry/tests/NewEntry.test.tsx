@@ -4,7 +4,17 @@ import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newSemanticDomain } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
-jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
+    return Component;
+  },
+}));
+
+jest.mock("components/Pronunciations/PronunciationsComponent", () => "");
 jest.mock("components/Pronunciations/Recorder");
 
 describe("NewEntry", () => {

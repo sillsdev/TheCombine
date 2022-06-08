@@ -29,6 +29,17 @@ jest.mock("@material-ui/core", () => {
     Dialog: materialUiCore.Container,
   };
 });
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
+    return Component;
+  },
+}));
+
+jest.mock("goals/CharInventoryCreation/components/CharacterDetail", () => "");
 
 function renderCharInvCreation() {
   renderer.act(() => {

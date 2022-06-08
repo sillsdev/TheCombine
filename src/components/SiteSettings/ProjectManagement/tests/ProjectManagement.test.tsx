@@ -8,7 +8,12 @@ import { randomProject } from "types/project";
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
-jest.mock("components/ProjectExport/ExportButton");
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+jest.mock("components/ProjectExport/ExportButton", () => "");
 
 var testRenderer: ReactTestRenderer;
 

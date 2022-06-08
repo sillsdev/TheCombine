@@ -13,6 +13,11 @@ const mockMaterialTable = jest.fn();
 const mockUpdateAllWords = jest.fn();
 const mockUuid = jest.fn();
 
+// To deal with the table not wanting to behave in testing.
+jest.mock("@material-table/core", () => ({
+  __esModule: true,
+  default: () => mockMaterialTable(),
+}));
 // Standard dialog mock-out.
 jest.mock("@material-ui/core", () => {
   const material = jest.requireActual("@material-ui/core");
@@ -21,17 +26,18 @@ jest.mock("@material-ui/core", () => {
     Dialog: material.Container,
   };
 });
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
   getFrontierWords: () => mockGetFrontierWords(),
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
-jest.mock("uuid", () => ({ v4: () => mockUuid() }));
-// To deal with the table not wanting to behave in testing.
-jest.mock("@material-table/core", () => ({
-  __esModule: true,
-  default: () => mockMaterialTable(),
-}));
+jest.mock("components/TreeView/TreeViewComponent", () => "");
 
 // Mock store + axios
 const mockReviewEntryWords = mockWords();

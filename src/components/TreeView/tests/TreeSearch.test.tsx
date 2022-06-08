@@ -12,6 +12,12 @@ import TreeSearch, {
 } from "components/TreeView/TreeSearch";
 import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const MOCK_STOP_PROP = jest.fn();

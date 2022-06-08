@@ -11,7 +11,13 @@ import App from "components/App/component";
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
-jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "div");
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "");
+jest.mock("components/PasswordReset/ResetPage", () => "");
 
 const createMockStore = configureMockStore([thunk]);
 const mockStore = createMockStore(defaultState);

@@ -22,7 +22,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               }
             }
           >
-            Missing translationId: charInventory.characterSet.title for language: \${ languageCode }
+            charInventory.characterSet.title
              
             <svg
               aria-describedby={null}
@@ -35,7 +35,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               onMouseOver={[Function]}
               onTouchEnd={[Function]}
               onTouchStart={[Function]}
-              title={null}
+              title="charInventory.characterSet.help"
               viewBox="0 0 24 24"
             >
               <path
@@ -79,7 +79,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               <span
                 className="MuiButton-label"
               >
-                Missing translationId: charInventory.characterSet.advanced for language: \${ languageCode }
+                charInventory.characterSet.advanced
                  
                 <svg
                   aria-hidden={true}
@@ -135,7 +135,9 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         htmlFor="valid-characters-input"
                         id="valid-characters-input-label"
                       >
-                        Missing translationId: charInventory.characterSet.acceptedCharacters for language: \${ languageCode }
+                        <div>
+                          charInventory.characterSet.acceptedCharacters
+                        </div>
                       </label>
                       <div
                         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
@@ -171,7 +173,9 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                             className="PrivateNotchedOutline-legendLabelled-3"
                           >
                             <span>
-                              Missing translationId: charInventory.characterSet.acceptedCharacters for language: \${ languageCode }
+                              <div>
+                                charInventory.characterSet.acceptedCharacters
+                              </div>
                             </span>
                           </legend>
                         </fieldset>
@@ -196,7 +200,9 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         htmlFor="rejected-characters-input"
                         id="rejected-characters-input-label"
                       >
-                        Missing translationId: charInventory.characterSet.rejectedCharacters for language: \${ languageCode }
+                        <div>
+                          charInventory.characterSet.rejectedCharacters
+                        </div>
                       </label>
                       <div
                         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
@@ -232,7 +238,9 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                             className="PrivateNotchedOutline-legendLabelled-3"
                           >
                             <span>
-                              Missing translationId: charInventory.characterSet.rejectedCharacters for language: \${ languageCode }
+                              <div>
+                                charInventory.characterSet.rejectedCharacters
+                              </div>
                             </span>
                           </legend>
                         </fieldset>
@@ -255,7 +263,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               data-shrink={true}
               htmlFor="sort-order"
             >
-              Missing translationId: charInventory.sortBy for language: \${ languageCode }
+              charInventory.sortBy
             </label>
             <div
               className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -271,7 +279,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                 role="button"
                 tabIndex={0}
               >
-                Missing translationId: charInventory.characters for language: \${ languageCode }
+                charInventory.characters
                 <svg
                   aria-hidden={true}
                   className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
@@ -349,7 +357,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
           <span
             className="MuiButton-label"
           >
-            Missing translationId: buttons.save for language: \${ languageCode }
+            buttons.save
           </span>
           <span
             className="MuiTouchRipple-root"
@@ -383,7 +391,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
             className="MuiButton-label"
           >
              
-            Missing translationId: buttons.cancel for language: \${ languageCode }
+            buttons.cancel
           </span>
           <span
             className="MuiTouchRipple-root"
@@ -406,7 +414,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
       <h2
         className="MuiTypography-root MuiTypography-h6"
       >
-        Missing translationId: charInventory.dialog.title for language: \${ languageCode }
+        charInventory.dialog.title
       </h2>
     </div>
     <div
@@ -416,7 +424,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
         className="MuiTypography-root MuiDialogContentText-root MuiTypography-body1 MuiTypography-colorTextSecondary"
         id="alert-dialog-description"
       >
-        Missing translationId: charInventory.dialog.content for language: \${ languageCode }
+        charInventory.dialog.content
       </p>
     </div>
     <div
@@ -444,7 +452,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
         <span
           className="MuiButton-label"
         >
-          Missing translationId: charInventory.dialog.yes for language: \${ languageCode }
+          charInventory.dialog.yes
         </span>
         <span
           className="MuiTouchRipple-root"
@@ -471,7 +479,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
         <span
           className="MuiButton-label"
         >
-          Missing translationId: charInventory.dialog.no for language: \${ languageCode }
+          charInventory.dialog.no
         </span>
         <span
           className="MuiTouchRipple-root"

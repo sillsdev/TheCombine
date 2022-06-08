@@ -7,6 +7,12 @@ import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { Goal } from "types/goals";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 const createMockStore = configureMockStore([thunk]);
 let mockStore = createMockStore();
 function createMockStoreWithGoal(goal: Goal) {

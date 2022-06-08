@@ -10,7 +10,12 @@ import { Goal, GoalType } from "types/goals";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
-jest.mock("components/AppBar/AppBarComponent", () => "div");
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+jest.mock("components/AppBar/AppBarComponent", () => "");
 
 // Constants
 const CHOOSE_GOAL = jest.fn();
@@ -111,6 +116,7 @@ function createTimeline(
       currentGoal={defaultState.currentGoal}
       goalTypeSuggestions={suggestions ?? defaultState.allGoalTypes.slice(0, 3)}
       history={history ?? goals.slice(0, 3)}
+      previousGoalType={GoalType.Default}
     />
   );
 }

@@ -11,6 +11,12 @@ import {
   PronunciationsStatus,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
+
 // Mock the node module used by AudioRecorder
 jest.mock("components/Pronunciations/Recorder");
 

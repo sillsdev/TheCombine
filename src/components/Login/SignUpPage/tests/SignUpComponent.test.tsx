@@ -9,6 +9,11 @@ import SignUp from "components/Login/SignUpPage/SignUpComponent";
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+}));
 
 jest.mock("backend", () => ({
   isEmailTaken: () => false,

@@ -7,6 +7,13 @@ import DataEntryHeader, {
 } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
+jest.mock("react-i18next", () => ({
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
+    return Component;
+  },
+}));
+
 const mockStore = configureMockStore()();
 const mockCallback = jest.fn();
 

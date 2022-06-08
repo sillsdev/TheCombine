@@ -1,4 +1,3 @@
-import { WithTranslation } from "react-i18next";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
@@ -12,6 +11,20 @@ import mockMap, {
   jsonDomain as mockDomain,
 } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
+
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return { t: (str: string) => str };
+  },
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = {
+      ...Component.defaultProps,
+      t: (s: string) => s,
+      i18n: { language: "" },
+    };
+    return Component;
+  },
+}));
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: ReactTestInstance;
@@ -48,15 +61,11 @@ describe("TreeView", () => {
 });
 
 const treeViewProps: TreeViewProps = { returnControlToCaller: jest.fn() };
-const localizeProps = {
-  i18n: { language: "" },
-  t: (() => "TranslatedString") as WithTranslation["t"],
-} as WithTranslation;
 function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
       <Provider store={mockStore}>
-        <TreeView {...treeViewProps} {...localizeProps} />
+        <TreeView {...treeViewProps} />
       </Provider>
     );
   });

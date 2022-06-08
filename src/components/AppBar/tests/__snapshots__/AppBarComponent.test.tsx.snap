@@ -30,7 +30,7 @@ Array [
     <span
       className="MuiButton-label"
     >
-      Missing translationId: appBar.dataEntry for language: \${ languageCode }
+      appBar.dataEntry
     </span>
   </button>,
   <button
@@ -61,7 +61,7 @@ Array [
     <span
       className="MuiButton-label"
     >
-      Missing translationId: appBar.dataCleanup for language: \${ languageCode }
+      appBar.dataCleanup
     </span>
   </button>,
 ]
@@ -92,7 +92,7 @@ exports[`NavigationButtons has only one tab shaded 2`] = `
     }
   }
   tabIndex={0}
-  title={null}
+  title="userMenu.projectSettings"
   type="button"
 >
   <span
@@ -140,7 +140,7 @@ exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
     }
   }
   tabIndex={0}
-  title={null}
+  title="userMenu.projectSettings"
   type="button"
 >
   <span

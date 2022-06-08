@@ -95,6 +95,7 @@ export class PasswordReset extends React.Component<
                 />
                 {!this.state.passwordFitsRequirements && (
                   <Typography
+                    id="login.passwordRequirements"
                     variant="body2"
                     style={{ display: "inline", margin: 24, color: "red" }}
                   >
@@ -122,6 +123,7 @@ export class PasswordReset extends React.Component<
                 {!this.state.isPasswordConfirmed &&
                   this.state.passwordConfirm.length > 0 && (
                     <Typography
+                      id="login.confirmPasswordError"
                       variant="body2"
                       style={{ display: "inline", margin: 24, color: "red" }}
                     >
@@ -136,6 +138,7 @@ export class PasswordReset extends React.Component<
                   this.state.sentAttempt ? (
                     <React.Fragment>
                       <Typography
+                        id="passwordReset.resetFail"
                         variant="body2"
                         style={{ display: "inline", margin: 24, color: "red" }}
                       >
