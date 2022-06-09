@@ -3,7 +3,8 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Project } from "api/models";
-import CharacterInventory, {
+import CharacterInventoryWithTranslate, {
+  CharacterInventory,
   CANCEL,
   SAVE,
 } from "goals/CharInventoryCreation/CharacterInventoryComponent";
@@ -45,7 +46,7 @@ function renderCharInvCreation() {
   renderer.act(() => {
     charMaster = renderer.create(
       <Provider store={mockStore}>
-        <CharacterInventory
+        <CharacterInventoryWithTranslate
           goal={new CreateCharInv()}
           currentProject={{ validCharacters: ["a"] } as Project}
           setValidCharacters={SET_INV}

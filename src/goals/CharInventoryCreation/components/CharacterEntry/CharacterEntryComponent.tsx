@@ -1,98 +1,73 @@
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
-import React from "react";
-//import { useTranslation } from "react-i18next";
+import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import CharactersInput from "goals/CharInventoryCreation/components/CharacterEntry/CharactersInput";
 import theme from "types/theme";
 
-interface CharacterEntryProps {
+interface CharEntryProps {
   setValidCharacters: (inventory: string[]) => void;
   validCharacters: string[];
   setRejectedCharacters: (inventory: string[]) => void;
   rejectedCharacters: string[];
 }
 
-interface CharacterEntryState {
-  checked: boolean;
-}
-
 /**
  * Allows for viewing and entering accepted and rejected characters in a
  * character set
  */
-export default class CharacterEntry extends React.Component<
-  CharacterEntryProps,
-  CharacterEntryState
-> {
-  constructor(props: CharacterEntryProps) {
-    super(props);
-    this.state = {
-      checked: false,
-    };
-  }
+export default function CharacterEntry(props: CharEntryProps): ReactElement {
+  const [checked, setChecked] = useState(false);
+  const { t } = useTranslation();
 
-  render() {
-    return (
-      <React.Fragment>
-        <Grid item xs={12}>
-          <Grid
-            container
-            style={{
-              padding: theme.spacing(1),
-              background: "whitesmoke",
-              borderTop: "1px solid #ccc",
-            }}
-            spacing={2}
+  return (
+    <React.Fragment>
+      <Grid item xs={12}>
+        <Grid
+          container
+          style={{
+            padding: theme.spacing(1),
+            background: "whitesmoke",
+            borderTop: "1px solid #ccc",
+          }}
+          spacing={2}
+        >
+          <Button
+            onClick={() => setChecked(!checked)}
+            id="character-entry-submit"
           >
-            <Button
-              onClick={() =>
-                this.setState((prevState) => ({ checked: !prevState.checked }))
-              }
-              id="character-entry-submit"
-            >
-              {"charInventory.characterSet.advanced"}{" "}
-              <KeyboardArrowDown
-                style={{
-                  transform: this.state.checked
-                    ? "rotate(180deg)"
-                    : "rotate(0deg)",
-                  transition: "all 200ms",
-                }}
+            {t("charInventory.characterSet.advanced")}{" "}
+            <KeyboardArrowDown
+              style={{
+                transform: checked ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "all 200ms",
+              }}
+            />
+          </Button>
+          <Collapse in={checked} style={{ width: "100%" }}>
+            {/* Input for accepted characters */}
+            <Grid item xs={12}>
+              <CharactersInput
+                characters={props.validCharacters}
+                setCharacters={(chars) => props.setValidCharacters(chars)}
+                label={t("charInventory.characterSet.acceptedCharacters")}
+                id="valid-characters-input"
               />
-            </Button>
-            <Collapse in={this.state.checked} style={{ width: "100%" }}>
-              {/* Input for accepted characters */}
-              <Grid item xs={12}>
-                <CharactersInput
-                  characters={this.props.validCharacters}
-                  setCharacters={(chars) =>
-                    this.props.setValidCharacters(chars)
-                  }
-                  label={
-                    <div>{"charInventory.characterSet.acceptedCharacters"}</div>
-                  }
-                  id="valid-characters-input"
-                />
-              </Grid>
+            </Grid>
 
-              {/* Input for rejected characters */}
-              <Grid item xs={12}>
-                <CharactersInput
-                  characters={this.props.rejectedCharacters}
-                  setCharacters={(chars) =>
-                    this.props.setRejectedCharacters(chars)
-                  }
-                  label={
-                    <div>{"charInventory.characterSet.rejectedCharacters"}</div>
-                  }
-                  id="rejected-characters-input"
-                />
-              </Grid>
-            </Collapse>
-          </Grid>
+            {/* Input for rejected characters */}
+            <Grid item xs={12}>
+              <CharactersInput
+                characters={props.rejectedCharacters}
+                setCharacters={(chars) => props.setRejectedCharacters(chars)}
+                label={t("charInventory.characterSet.rejectedCharacters")}
+                id="rejected-characters-input"
+              />
+            </Grid>
+          </Collapse>
         </Grid>
-      </React.Fragment>
-    );
-  }
+      </Grid>
+    </React.Fragment>
+  );
 }

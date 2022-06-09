@@ -135,9 +135,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         htmlFor="valid-characters-input"
                         id="valid-characters-input-label"
                       >
-                        <div>
-                          charInventory.characterSet.acceptedCharacters
-                        </div>
+                        charInventory.characterSet.acceptedCharacters
                       </label>
                       <div
                         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
@@ -173,9 +171,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                             className="PrivateNotchedOutline-legendLabelled-3"
                           >
                             <span>
-                              <div>
-                                charInventory.characterSet.acceptedCharacters
-                              </div>
+                              charInventory.characterSet.acceptedCharacters
                             </span>
                           </legend>
                         </fieldset>
@@ -200,9 +196,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         htmlFor="rejected-characters-input"
                         id="rejected-characters-input-label"
                       >
-                        <div>
-                          charInventory.characterSet.rejectedCharacters
-                        </div>
+                        charInventory.characterSet.rejectedCharacters
                       </label>
                       <div
                         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
@@ -238,9 +232,7 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                             className="PrivateNotchedOutline-legendLabelled-3"
                           >
                             <span>
-                              <div>
-                                charInventory.characterSet.rejectedCharacters
-                              </div>
+                              charInventory.characterSet.rejectedCharacters
                             </span>
                           </legend>
                         </fieldset>

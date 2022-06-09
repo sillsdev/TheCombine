@@ -120,14 +120,19 @@ export function makeGoalTile(
             goal.goalType !== GoalType.MergeDups)
         }
       >
-        {GoalInfo(goal)}
+        <GoalInfo goal={goal} />
       </Button>
     </ImageListItem>
   );
 }
 
-function GoalInfo(goal?: Goal): ReactElement {
+interface GoalInfoProps {
+  goal?: Goal;
+}
+function GoalInfo(props: GoalInfoProps): ReactElement {
   const { t } = useTranslation();
+
+  const goal = props.goal;
   if (!goal) {
     return <Typography variant="h6">{t("goal.selector.noHistory")}</Typography>;
   }
@@ -153,5 +158,6 @@ function GoalInfo(goal?: Goal): ReactElement {
       </Typography>
     );
   }
+
   return <Typography variant="h4">{t(goal.name + ".title")}</Typography>;
 }
