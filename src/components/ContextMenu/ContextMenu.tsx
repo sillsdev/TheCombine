@@ -4,7 +4,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 export type MenuType = [string, () => void];
 
-interface ContextMenuProps {
+interface ContextMenuProps extends WithTranslation {
   options: MenuType[];
   anchorName: string;
 }
@@ -15,12 +15,12 @@ interface ContextMenuState {
 export const RIGHT_CLICK = "contextmenu";
 
 export class ContextMenu extends React.Component<
-  ContextMenuProps & WithTranslation,
+  ContextMenuProps,
   ContextMenuState
 > {
   anchor: Element | null;
 
-  constructor(props: ContextMenuProps & WithTranslation) {
+  constructor(props: ContextMenuProps) {
     super(props);
     this.state = { isOpen: false };
     this.anchor = null;

@@ -26,7 +26,7 @@ enum UserOrder {
   Email,
 }
 
-interface UserListProps {
+interface UserListProps extends WithTranslation {
   allUsers: User[];
   userAvatar: { [key: string]: string };
   handleOpenModal: (user: User) => void;
@@ -40,11 +40,8 @@ interface UserListState {
   userOrder: UserOrder;
 }
 
-class UserList extends React.Component<
-  UserListProps & WithTranslation,
-  UserListState
-> {
-  constructor(props: UserListProps & WithTranslation) {
+class UserList extends React.Component<UserListProps, UserListState> {
+  constructor(props: UserListProps) {
     super(props);
 
     this.state = {

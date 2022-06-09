@@ -21,11 +21,11 @@ function getSemDomWritingSystem(
   return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
-export interface TreeViewProps {
+export interface TreeViewProps extends WithTranslation {
   returnControlToCaller: () => void;
 }
 
-export function TreeView(props: TreeViewProps & WithTranslation): ReactElement {
+export function TreeView(props: TreeViewProps): ReactElement {
   const currentDomain = useSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );

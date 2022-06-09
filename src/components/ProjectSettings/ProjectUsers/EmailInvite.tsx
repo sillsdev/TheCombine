@@ -15,7 +15,7 @@ import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
-interface InviteProps {
+interface InviteProps extends WithTranslation {
   addToProject: (user: User) => void;
   close: () => void;
 }
@@ -28,11 +28,8 @@ interface InviteState {
   done: boolean;
 }
 
-class EmailInvite extends React.Component<
-  InviteProps & WithTranslation,
-  InviteState
-> {
-  constructor(props: InviteProps & WithTranslation) {
+class EmailInvite extends React.Component<InviteProps, InviteState> {
+  constructor(props: InviteProps) {
     super(props);
     this.state = {
       emailAddress: "",

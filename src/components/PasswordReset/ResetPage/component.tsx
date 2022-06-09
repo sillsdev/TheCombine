@@ -16,7 +16,9 @@ export interface ResetDispatchProps {
   passwordReset: (token: string, password: string) => void;
 }
 
-interface PasswordResetProps extends RouteComponentProps<MatchParams> {
+interface PasswordResetProps
+  extends RouteComponentProps<MatchParams>,
+    WithTranslation {
   resetState: RequestState;
 }
 
@@ -30,12 +32,10 @@ interface PasswordResetState {
 }
 
 export class PasswordReset extends React.Component<
-  PasswordResetProps & ResetDispatchProps & WithTranslation,
+  PasswordResetProps & ResetDispatchProps,
   PasswordResetState
 > {
-  constructor(
-    props: PasswordResetProps & ResetDispatchProps & WithTranslation
-  ) {
+  constructor(props: PasswordResetProps & ResetDispatchProps) {
     super(props);
     this.state = {
       token: props.match && props.match.params.token,

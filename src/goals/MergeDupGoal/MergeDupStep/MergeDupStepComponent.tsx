@@ -5,16 +5,14 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
 
-interface MergeDupStepProps {
+interface MergeDupStepProps extends WithTranslation {
   wordCount: number;
   advanceStep: () => void;
   clearSidebar: () => void;
   mergeAll: () => Promise<void>;
 }
 
-class MergeDupStep extends React.Component<
-  MergeDupStepProps & WithTranslation
-> {
+class MergeDupStep extends React.Component<MergeDupStepProps> {
   next(): void {
     this.props.clearSidebar();
     this.props.advanceStep();

@@ -12,7 +12,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
 
-interface CharacterListProps {
+interface CharacterListProps extends WithTranslation {
   setSelectedCharacter: (character: string) => void;
   allCharacters: CharacterSetEntry[];
 }
@@ -32,10 +32,10 @@ enum SortOrder {
 }
 
 export class CharacterList extends React.Component<
-  CharacterListProps & WithTranslation,
+  CharacterListProps,
   CharacterListState
 > {
-  constructor(props: CharacterListProps & WithTranslation) {
+  constructor(props: CharacterListProps) {
     super(props);
     this.state = {
       sortOrder: SortOrder.CharacterAscending,

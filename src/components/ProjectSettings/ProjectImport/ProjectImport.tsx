@@ -13,7 +13,7 @@ enum UploadState {
   Done,
 }
 
-interface ImportProps {
+interface ImportProps extends WithTranslation {
   projectId: string;
   updateProject: (newProject: Project) => void;
 }
@@ -24,11 +24,8 @@ interface ImportState {
   uploadState: UploadState;
 }
 
-export class ProjectImport extends React.Component<
-  ImportProps & WithTranslation,
-  ImportState
-> {
-  constructor(props: ImportProps & WithTranslation) {
+export class ProjectImport extends React.Component<ImportProps, ImportState> {
+  constructor(props: ImportProps) {
     super(props);
     this.updateLiftFile = this.updateLiftFile.bind(this);
     this.state = {

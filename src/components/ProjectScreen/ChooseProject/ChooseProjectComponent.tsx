@@ -13,7 +13,7 @@ import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 
-interface ChooseProjectProps {
+interface ChooseProjectProps extends WithTranslation {
   setCurrentProject: (project: Project) => void;
 }
 
@@ -22,10 +22,10 @@ interface ChooseProjectState {
 }
 
 export class ChooseProject extends React.Component<
-  ChooseProjectProps & WithTranslation,
+  ChooseProjectProps,
   ChooseProjectState
 > {
-  constructor(props: ChooseProjectProps & WithTranslation) {
+  constructor(props: ChooseProjectProps) {
     super(props);
     this.state = { projectList: [] };
   }

@@ -7,7 +7,7 @@ import { Key } from "ts-key-enum";
 import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import theme from "types/theme";
 
-interface DataEntryHeaderProps {
+interface DataEntryHeaderProps extends WithTranslation {
   domain: TreeSemanticDomain;
   questionsVisible: boolean;
   setQuestionVisibility: (visibility: boolean) => void;
@@ -16,9 +16,7 @@ interface DataEntryHeaderProps {
 /**
  * Displays information about the current data entry view
  */
-export class DataEntryHeader extends React.Component<
-  DataEntryHeaderProps & WithTranslation
-> {
+export class DataEntryHeader extends React.Component<DataEntryHeaderProps> {
   render() {
     const hasQuestions: boolean =
       this.props.domain.questions && this.props.domain.questions.length > 0;

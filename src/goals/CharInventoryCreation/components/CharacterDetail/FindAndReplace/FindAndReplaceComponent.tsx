@@ -4,7 +4,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 
 import CharacterReplaceDialog from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 
-interface FindAndReplaceProps {
+interface FindAndReplaceProps extends WithTranslation {
   initialFindValue: string;
   allWords: string[];
   findAndReplace: (findValue: string, replaceValue: string) => Promise<void>;
@@ -17,10 +17,10 @@ interface FindAndReplaceState {
 }
 
 export class FindAndReplace extends React.Component<
-  FindAndReplaceProps & WithTranslation,
+  FindAndReplaceProps,
   FindAndReplaceState
 > {
-  constructor(props: FindAndReplaceProps & WithTranslation) {
+  constructor(props: FindAndReplaceProps) {
     super(props);
     this.state = {
       warningDialogOpen: false,
@@ -29,7 +29,7 @@ export class FindAndReplace extends React.Component<
     };
   }
 
-  componentDidUpdate(prevProps: FindAndReplaceProps & WithTranslation) {
+  componentDidUpdate(prevProps: FindAndReplaceProps) {
     if (prevProps.initialFindValue !== this.props.initialFindValue) {
       this.setState((_, props) => ({
         findValue: props.initialFindValue,

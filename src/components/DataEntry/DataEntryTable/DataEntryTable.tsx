@@ -25,7 +25,7 @@ import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 
 export const exitButtonId = "exit-to-domain-tree";
 
-interface DataEntryTableProps {
+interface DataEntryTableProps extends WithTranslation {
   semanticDomain: SemanticDomain;
   treeIsOpen?: boolean;
   openTree: () => void;
@@ -87,10 +87,10 @@ export function addSenseToWord(
  * A data entry table containing recent word entries
  */
 export class DataEntryTable extends React.Component<
-  DataEntryTableProps & WithTranslation,
+  DataEntryTableProps,
   DataEntryTableState
 > {
-  constructor(props: DataEntryTableProps & WithTranslation) {
+  constructor(props: DataEntryTableProps) {
     super(props);
     this.state = {
       existingWords: [],
