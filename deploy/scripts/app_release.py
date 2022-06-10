@@ -12,7 +12,7 @@ project_dir = Path(__file__).resolve().parent.parent.parent
 
 def get_release() -> str:
     os.chdir(project_dir)
-    result = run_cmd(["git", "describe", "--tags"], chomp=True)
+    result = run_cmd(["git", "describe", "--tags", "HEAD"], chomp=True)
     # Check to see if this is a release version.
     match = re.search(r"^v?(\d+\.\d+\.\d+)(-\S+\.\d+)?$", result.stdout)
     if match:
@@ -30,7 +30,7 @@ def get_release() -> str:
             # Get the branch name
             result = run_cmd(["git", "branch", "--show-current"], chomp=True)
             branch_name = re.sub("_+", "-", result.stdout)
-            return f"{release_string}+{branch_name}.{num_commits}"
+            return f"{release_string}-{branch_name}.{num_commits}"
     message = f"Unrecognized release value in tag: {result.stdout}"
     raise ValueError(message)
 
@@ -56,6 +56,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--set", help="Release string to be stored in the release file.")
     parser.add_argument(
+        "--set-current", action="store_true", help="Set the release to the value returned by --get"
+    )
+    parser.add_argument(
         "--path",
         default=str(project_dir / "public" / "scripts" / "release.js"),
         help="Location of the release output file",
@@ -72,5 +75,7 @@ if __name__ == "__main__":
     args = parse_args()
     if args.get:
         print(get_release())
+    elif args.set_current:
+        set_release(get_release(), Path(args.path))
     elif args.set is not None:
         set_release(args.set, Path(args.path))
