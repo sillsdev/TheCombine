@@ -1,16 +1,17 @@
 name: "Deploy Update to Live Server"
 
 on:
-  push:
-    branches: [live]
+  release:
+    branches: [master]
+    types: [published]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -23,7 +24,7 @@ jobs:
     needs: build
     runs-on: [self-hosted, thecombine]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Deploy The Combine Update
         uses: ./.github/actions/combine-deploy-update
         with:

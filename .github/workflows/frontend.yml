@@ -8,12 +8,12 @@ on:
 
 jobs:
   lint_test_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         node-version: [16.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -38,12 +38,17 @@ jobs:
       - run: npm run build
 
   docker_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.type }} == "PullRequest"
     steps:
-      - name: Build
-        id: docker_build
-        uses: docker/build-push-action@v2
+      - uses: actions/checkout@v3
         with:
-          push: false
+          fetch-depth: 0
+      - name: Build frontend
+        run: |
+          deploy/scripts/build.py --components frontend
+        shell: bash
       - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: |
+          docker image inspect combine_frontend:latest -f '{{json .Id}}'
+        shell: bash
