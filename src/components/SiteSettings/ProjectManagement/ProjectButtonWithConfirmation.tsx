@@ -49,13 +49,15 @@ export default function ProjectButtonWithConfirmation(
         id={`proj-${props.projectId}-${props.archive ? "archive" : "restore"}`}
         style={props.warn ? { color: themeColors.error } : {}}
       >
-        {t(`buttons.${props.archive ? "archive" : "restore"}`)}
+        {t(props.archive ? "buttons.archive" : "buttons.restore")}
       </Button>
       <ButtonConfirmation
         open={open}
-        textId={`siteSettings.${
-          props.archive ? "archive" : "restore"
-        }ProjectText`}
+        textId={
+          props.archive
+            ? "siteSettings.archiveProjectText"
+            : "siteSettings.restoreProjectText"
+        }
         titleId="buttons.proceedWithCaution"
         onClose={handleClose}
         onConfirm={updateProj}

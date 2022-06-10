@@ -15,7 +15,11 @@ import {
 } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React, { ReactElement } from "react";
-//import { useTranslation } from "react-i18next";
+import {
+  useTranslation,
+  withTranslation,
+  WithTranslation,
+} from "react-i18next";
 import { toast } from "react-toastify";
 
 import { Project, WritingSystem } from "api/models";
@@ -26,7 +30,7 @@ import theme from "types/theme";
 import { getAnalysisLangsFromWords } from "types/wordUtilities";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 
-interface LanguageProps {
+interface LanguageProps extends WithTranslation {
   project: Project;
   saveChangesToProject: (project: Project) => Promise<void>;
 }
@@ -39,7 +43,7 @@ interface LanguageState {
   langsInProject?: string;
 }
 
-export default class ProjectLanguages extends React.Component<
+export class ProjectLanguages extends React.Component<
   LanguageProps,
   LanguageState
 > {
@@ -68,8 +72,9 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          ""
-          //{t("projectSettings.language.makeDefaultAnalysisLanguageFailed" />
+          this.props.t(
+            "projectSettings.language.makeDefaultAnalysisLanguageFailed"
+          )
         );
       });
   }
@@ -82,8 +87,7 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          ""
-          //{t("projectSettings.language.deleteAnalysisLanguageFailed" />
+          this.props.t("projectSettings.language.deleteAnalysisLanguageFailed")
         );
       });
   }
@@ -101,8 +105,7 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          ""
-          //{t("projectSettings.language.addAnalysisLanguageFailed" />
+          this.props.t("projectSettings.language.addAnalysisLanguageFailed")
         );
       });
   }
@@ -160,8 +163,9 @@ export default class ProjectLanguages extends React.Component<
       .catch((err) => {
         console.error(err);
         toast.error(
-          ""
-          //{t("projectSettings.language.updateSemDomWritingSystemFailed" />
+          this.props.t(
+            "projectSettings.language.updateSemDomWritingSystemFailed"
+          )
         );
       });
   }
@@ -171,14 +175,14 @@ export default class ProjectLanguages extends React.Component<
       <React.Fragment>
         <UpperRightToastContainer />
         <Typography>
-          {/*t("projectSettings.language.vernacular" />*/}
+          {this.props.t("projectSettings.language.vernacular")}
           {": "}
         </Typography>
         <ImmutableWritingSystem
           ws={this.props.project.vernacularWritingSystem}
         />
         <Typography style={{ marginTop: theme.spacing(1) }}>
-          {/*t("projectSettings.language.analysis" />*/}
+          {this.props.t("projectSettings.language.analysis")}
           {": "}
         </Typography>
         {this.props.project.analysisWritingSystems.map(
@@ -228,19 +232,19 @@ export default class ProjectLanguages extends React.Component<
               icon={<Add />}
               textId="projectSettings.language.addAnalysisLanguage"
               onClick={() => this.setState({ add: true })}
-              buttonId={`analysis-language-new`}
+              buttonId={"analysis-language-new"}
             />
             <IconButtonWithTooltip
               icon={<Search />}
               textId="projectSettings.language.getGlossLanguages"
               onClick={() => this.getActiveAnalysisLangs()}
-              buttonId={`analysis-language-get`}
+              buttonId={"analysis-language-get"}
             />
             {this.state.langsInProject}
           </React.Fragment>
         )}
         <Typography>
-          {/*t("projectSettings.language.semanticDomains" />*/}
+          {this.props.t("projectSettings.language.semanticDomains")}
           {": "}
         </Typography>
         <Select
@@ -255,13 +259,14 @@ export default class ProjectLanguages extends React.Component<
           renderValue={
             this.props.project.semDomWritingSystem.bcp47
               ? undefined
-              : () => ({
-                  /*t("projectSettings.language.semanticDomainsDefault" />*/
-                })
+              : () =>
+                  this.props.t(
+                    "projectSettings.language.semanticDomainsDefault"
+                  )
           }
         >
           <MenuItem value={""}>
-            {/*t("projectSettings.language.semanticDomainsDefault" />*/}
+            {this.props.t("projectSettings.language.semanticDomainsDefault")}
           </MenuItem>
           {semDomWritingSystems.map((ws) => (
             <MenuItem key={ws.bcp47} value={ws.bcp47}>
@@ -283,6 +288,8 @@ interface ImmutableWritingSystemProps {
 function ImmutableWritingSystem(
   props: ImmutableWritingSystemProps
 ): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Grid container spacing={1}>
       {props.index !== undefined && (
@@ -292,19 +299,19 @@ function ImmutableWritingSystem(
       )}
       <Grid item>
         <Typography>
-          {/*t("projectSettings.language.name" />*/}
+          {t("projectSettings.language.name")}
           {`: ${props.ws.name}, `}
         </Typography>
       </Grid>
       <Grid item>
         <Typography>
-          {/*t("projectSettings.language.bcp47" />*/}
+          {t("projectSettings.language.bcp47")}
           {`: ${props.ws.bcp47}, `}
         </Typography>
       </Grid>
       <Grid item>
         <Typography>
-          {/*t("projectSettings.language.font" />*/}
+          {t("projectSettings.language.font")}
           {`: ${props.ws.font}`}
         </Typography>
       </Grid>
@@ -312,3 +319,5 @@ function ImmutableWritingSystem(
     </Grid>
   );
 }
+
+export default withTranslation()(ProjectLanguages);

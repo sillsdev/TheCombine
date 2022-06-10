@@ -86,11 +86,9 @@ export class ProjectImport extends React.Component<ImportProps, ImportState> {
               id="project-import-submit"
             >
               {this.props.t(
-                `buttons.${
-                  this.state.uploadState === UploadState.Done
-                    ? "done"
-                    : "upload"
-                }`
+                this.state.uploadState === UploadState.Done
+                  ? "buttons.done"
+                  : "buttons.upload"
               )}
               {this.state.uploadState === UploadState.InProgress && (
                 <CircularProgress

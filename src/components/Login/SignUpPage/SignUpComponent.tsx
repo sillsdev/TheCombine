@@ -150,15 +150,13 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
   }
 
   render() {
-    // Determine error message
-    let failureMessage;
+    // Determine error message id
     // Intentional weak comparison. props.failureMessage may evaluate to number
     // eslint-disable-next-line eqeqeq
-    if (this.props.failureMessage == "400") {
-      failureMessage = "login.signUpFailed";
-    } else {
-      failureMessage = "login.networkError";
-    }
+    const failureMessageId =
+      this.props.failureMessage == "400"
+        ? "login.signUpFailed"
+        : "login.networkError";
 
     return (
       <Grid container justifyContent="center">
@@ -283,7 +281,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
                 >
-                  {this.props.t(failureMessage)}
+                  {this.props.t(failureMessageId)}
                 </Typography>
               )}
 
