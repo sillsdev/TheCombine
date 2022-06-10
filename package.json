@@ -33,8 +33,7 @@
     "test-frontend": "react-scripts test",
     "test-frontend:coverage": "react-scripts test --coverage --watchAll=false",
     "test-frontend:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "version": "node scripts/printVersion.js"
+    "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter"
   },
   "dependencies": {
     "@loadable/component": "^5.15.0",
