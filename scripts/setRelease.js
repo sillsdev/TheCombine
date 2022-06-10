@@ -38,15 +38,9 @@ function runPy() {
   }
 }
 
-// define our variables
-const version = runPy("deploy/scripts/app_release.py", "--get").replace(
-  /[\n\r]+$/,
-  ""
-);
 runPy(
   "deploy/scripts/app_release.py",
-  "--set",
-  version,
+  "--set-current",
   "--path",
   "./public/scripts/release.js"
 );
