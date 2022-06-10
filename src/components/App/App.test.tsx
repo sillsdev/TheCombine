@@ -15,9 +15,12 @@ jest.mock("react-i18next", () => ({
   useTranslation: () => {
     return { t: (str: string) => str };
   },
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
+    return Component;
+  },
 }));
 jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "");
-jest.mock("components/PasswordReset/ResetPage", () => "");
 
 const createMockStore = configureMockStore([thunk]);
 const mockStore = createMockStore(defaultState);

@@ -8,6 +8,12 @@ import Login from "components/Login/LoginPage/LoginComponent";
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
+jest.mock("react-i18next", () => ({
+  withTranslation: () => (Component: any) => {
+    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
+    return Component;
+  },
+}));
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
