@@ -8,9 +8,7 @@ import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 import { newUser } from "types/user";
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 
 jest.mock("backend", () => ({

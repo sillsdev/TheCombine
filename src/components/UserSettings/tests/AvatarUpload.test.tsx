@@ -5,9 +5,7 @@ import configureMockStore from "redux-mock-store";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 
 // This test relies on nothing in the store so mock an empty store

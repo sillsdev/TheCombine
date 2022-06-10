@@ -10,9 +10,7 @@ import { defaultWritingSystem } from "types/writingSystem";
 jest.mock("@material-ui/core/Input", () => "");
 jest.mock("@material-ui/core/TextField", () => "");
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 
 const mockStore = configureMockStore()({

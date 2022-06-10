@@ -6,9 +6,7 @@ import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 jest.mock("components/TreeView/TreeViewComponent", () => "");
 

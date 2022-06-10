@@ -27,9 +27,7 @@ jest.mock("@material-ui/core", () => {
   };
 });
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({

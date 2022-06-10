@@ -18,9 +18,7 @@ import { simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 
 jest.mock("backend");

@@ -8,7 +8,7 @@ import history, { Path } from "browserHistory";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { meetsPasswordRequirements } from "utilities";
 
-interface MatchParams {
+export interface MatchParams {
   token: string;
 }
 

@@ -12,9 +12,7 @@ jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
   withTranslation: () => (Component: any) => {
     Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
     return Component;

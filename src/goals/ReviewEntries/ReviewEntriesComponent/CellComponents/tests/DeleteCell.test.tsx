@@ -7,9 +7,7 @@ import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEn
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => {
-    return { t: (str: string) => str };
-  },
+  useTranslation: () => ({ t: (str: string) => str }),
 }));
 
 const mockStore = configureMockStore()({ reviewEntriesState });

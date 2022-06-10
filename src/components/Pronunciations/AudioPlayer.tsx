@@ -161,7 +161,7 @@ export default function AudioPlayer(props: PlayerProps) {
         }}
       >
         <MenuItem
-          id={`audio-${isPlaying ? "stop" : "play"}`}
+          id={isPlaying ? "audio-stop" : "audio-play"}
           onClick={() => {
             togglePlay();
             handleClose();
