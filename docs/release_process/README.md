@@ -13,7 +13,7 @@ The release process has the following assumptions:
   [README](https://github.com/sillsdev/TheCombine/blob/master/README.md#python) file.
 - the user has write permissions for _The Combine_ project on _GitHub_.
 
-## Using the GitHub Interface to New Release
+## Using the GitHub Interface to Create a Release
 
 You can create the release on _GitHub_ as follows:
 

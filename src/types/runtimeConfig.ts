@@ -60,7 +60,7 @@ export class RuntimeConfig {
     if (window.hasOwnProperty("release")) {
       return window.release;
     }
-    return "0.0.0-default.0";
+    return "v0.0.0-default.0";
   }
 
   public captchaSiteKey(): string {
