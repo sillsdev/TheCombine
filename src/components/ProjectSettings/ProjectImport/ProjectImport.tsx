@@ -1,7 +1,6 @@
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 import React from "react";
-//import { renderToStaticMarkup } from "react-dom/server";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { Trans, withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import * as backend from "backend";
@@ -53,10 +52,11 @@ export class ProjectImport extends React.Component<ImportProps, ImportState> {
           <Grid item xs={12}>
             <Typography variant="body2">
               {this.props.t("projectSettings.import.body")}{" "}
-              {/*<Translate
-                id="createProject.uploadFormat"
-                options={{ renderInnerHtml: true, renderToStaticMarkup }}
-    />*/}
+              <Trans i18nKey="createProject.uploadFormat">
+                A
+                <a href="https://code.google.com/archive/p/lift-standard/">B</a>
+                C
+              </Trans>
             </Typography>
           </Grid>
           <Grid item>

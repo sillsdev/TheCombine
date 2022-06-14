@@ -82,7 +82,7 @@
   "createProject": {
     "name": "Nom du projet",
     "upload?": "Upload existing data?",
-    "uploadFormat": "File must be a zipped folder containing a <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange FormaT (LIFT)</a> project.",
+    "uploadFormat": "File must be a zipped folder containing a <1>Lexicon Interchange FormaT (LIFT)</1> project.",
     "create": "Créer un projet",
     "fileSelected": "Fichier sélectionné",
     "success": "Projet créé !",

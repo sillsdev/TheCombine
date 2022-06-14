@@ -9,8 +9,7 @@ import {
 import { Cancel } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
-//import { renderToStaticMarkup } from "react-dom/server";
-//import { useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 
 import { WritingSystem } from "api/models";
 import { projectDuplicateCheck } from "backend";
@@ -214,10 +213,13 @@ export default class CreateProject extends React.Component<
                 {"buttons.browse"}
               </FileInputButton>
               <Typography variant="caption" display="block">
-                {/*<Translate
-                  id="createProject.uploadFormat"
-                  options={{ renderInnerHtml: true, renderToStaticMarkup }}
-              />*/}
+                <Trans i18nKey="createProject.uploadFormat">
+                  A
+                  <a href="https://code.google.com/archive/p/lift-standard/">
+                    B
+                  </a>
+                  C
+                </Trans>
               </Typography>
               {/* Displays the name of the selected file */}
               {this.state.fileName && (

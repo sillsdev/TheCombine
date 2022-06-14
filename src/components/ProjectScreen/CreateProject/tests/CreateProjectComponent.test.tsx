@@ -1,3 +1,4 @@
+import { I18nextProvider } from "react-i18next";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
@@ -7,10 +8,7 @@ import configureMockStore from "redux-mock-store";
 
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
+import i18n from "tests/i18nMock";
 
 const createMockStore = configureMockStore();
 const mockState = {
@@ -39,7 +37,9 @@ it("renders without crashing", () => {
   renderer.act(() => {
     renderer.create(
       <Provider store={mockStore}>
-        <CreateProjectComponent />
+        <I18nextProvider i18n={i18n}>
+          <CreateProjectComponent />
+        </I18nextProvider>
       </Provider>
     );
   });
