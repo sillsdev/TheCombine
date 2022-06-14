@@ -1,4 +1,5 @@
 import { Provider } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -7,7 +8,6 @@ import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import PasswordReset, {
   MatchParams,
 } from "components/PasswordReset/ResetPage/component";
-import { RouteComponentProps } from "react-router-dom";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (str: string) => str }),
