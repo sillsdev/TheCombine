@@ -2,6 +2,8 @@
 A Collection of useful functions for Python
 """
 
+from __future__ import annotations
+
 import argparse
 import re
 import subprocess

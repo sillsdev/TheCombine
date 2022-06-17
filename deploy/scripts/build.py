@@ -8,6 +8,8 @@ images.  'nerdctl' is recommended when using Rancher Desktop for the development
 environment and 'docker' is recommended when using Docker Desktop.
 """
 
+from __future__ import annotations
+
 import argparse
 from dataclasses import dataclass
 import os
