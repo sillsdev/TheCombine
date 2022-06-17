@@ -6,7 +6,7 @@ on:
 
 jobs:
   docker_build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context

@@ -38,7 +38,7 @@ jobs:
       - run: npm run build --legacy-peer-deps
 
   docker_build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: ${{ github.event.type }} == "PullRequest"
     steps:
       - uses: actions/checkout@v3
