@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [16.14]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci --legacy-peer-deps
-      - run: npm run fmt-frontend-check --legacy-peer-deps
-      - run: npm run lint --legacy-peer-deps
+      - run: npm ci
+      - run: npm run fmt-frontend-check
+      - run: npm run lint
 
       # Coverage.
-      - run: npm run test-frontend:coverage --legacy-peer-deps
+      - run: npm run test-frontend:coverage
         env:
           CI: true
       - name: Upload coverage report
@@ -35,7 +35,7 @@ jobs:
           fail_ci_if_error: true
 
       # Release build.
-      - run: npm run build --legacy-peer-deps
+      - run: npm run build
 
   docker_build:
     runs-on: ubuntu-latest
