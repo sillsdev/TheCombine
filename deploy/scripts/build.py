@@ -12,11 +12,13 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+import logging
 import os
 from pathlib import Path
 from typing import Dict, Optional
 
 from app_release import get_release, set_release
+from utils import run_cmd
 
 
 @dataclass(frozen=True)
@@ -70,18 +72,24 @@ def parse_args() -> argparse.Namespace:
         help="Namespace for 'nerdctl' when building images.",
         default="k8s.io",
     )
+    parser.add_argument(
+        "--output-level",
+        "-o",
+        choices=["none", "progress", "all"],
+        help="Specify the amount of output desired during the build.",
+    )
     return parser.parse_args()
-
-
-def run(cmd: str) -> None:
-    """Print a command and run it"""
-    print(cmd)
-    os.system(cmd)
 
 
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
+
+    if args.output_level != "none":
+        log_level = logging.INFO
+    else:
+        log_level = logging.WARNING
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     if args.nerdctl:
         build_cmd = f"nerdctl -n {args.namespace}"
@@ -109,9 +117,17 @@ def main() -> None:
         spec = build_specs[component]
         os.chdir(spec.dir)
         image_name = get_image_name(args.repo, spec.name, args.tag)
-        run(f"{build_cmd} build -t {image_name} -f Dockerfile .")
+        logging.info(f"Building component {component}")
+        print_all = args.output_level == "all"
+        run_cmd(
+            [build_cmd, "build", "-t", image_name, "-f", "Dockerfile", "."],
+            print_cmd=print_all,
+            print_output=print_all,
+        )
+        logging.info(f"{component} build complete")
         if args.repo is not None:
-            run(f"{build_cmd} push {image_name}")
+            run_cmd([build_cmd, "push", image_name])
+            logging.info(f"{image_name} pushed to {args.repo}")
 
     # Remove the version file
     if release_file.exists():
