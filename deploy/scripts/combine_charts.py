@@ -23,7 +23,7 @@ helm_charts = [
     helm_dir / "create-admin-user",
 ]
 
-default_aws_login_version = "0.2.0"
+default_aws_login_version = "0.2.1"
 
 
 def parse_args() -> argparse.Namespace:
