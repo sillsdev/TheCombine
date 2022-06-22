@@ -34,6 +34,15 @@ targets:
       thecombine:
         global:
           serverName: nuc2.thecombine.app
+  nuc3:
+    profile: nuc
+    env_vars_required: true
+    override:
+      # override values for 'thecombine' chart
+      thecombine:
+        global:
+          serverName: nuc3.thecombine.app
+
   qa:
     profile: staging
     env_vars_required: true
