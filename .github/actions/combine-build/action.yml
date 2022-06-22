@@ -2,7 +2,7 @@ name: "Combine Build"
 description: "Build a single Docker image for The Combine and push it to AWS ECR"
 inputs:
   image_registry:
-    description: "Docker Image Repository"
+    description: "Docker Image Registry"
     required: true
   image_registry_alias:
     description: "Custom or default alias for AWS Public ECR registries.  Blank for AWS ECR Private registries."
