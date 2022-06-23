@@ -7,3 +7,6 @@ docs/user_guide/site
 # Even when bracketSpacing is set to false, prettier will sometimes
 # break the Helm templates.
 **/helm/**/templates/*.yaml
+
+# Ignore generated JavaScript for Release info
+public/scripts/release.js

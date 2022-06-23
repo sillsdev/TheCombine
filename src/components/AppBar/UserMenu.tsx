@@ -13,6 +13,7 @@ import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { openUserGuide, Path } from "browserHistory";
 import { clearCurrentProject } from "components/Project/ProjectActions";
+import { RuntimeConfig } from "types/runtimeConfig";
 import theme, { tabColor } from "types/theme";
 
 const idAffix = "user-menu";
@@ -99,7 +100,7 @@ interface UserMenuListProps {
  * UserMenu options: site settings (for admins), user settings, log out
  */
 export function UserMenuList(props: UserMenuListProps): ReactElement {
-  const { REACT_APP_VERSION } = process.env;
+  const combineAppRelease = RuntimeConfig.getInstance().appRelease();
   const dispatch = useDispatch();
   const { t } = useTranslation();
   return (
@@ -157,7 +158,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         disabled
         style={{ justifyContent: "center" }}
       >
-        v{REACT_APP_VERSION}
+        {combineAppRelease}
       </MenuItem>
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "name": "thecombine",
-  "version": "0.7.25-alpha.0",
+  "version": "1.0.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
     "fmt-backend-check": "dotnet-format --check",
     "fmt-frontend": "prettier       --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "frontend": "react-scripts start",
+    "frontend": "npm run set-release && react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "import-sem-doms": "tsc scripts/importSemanticDomains.ts && node scripts/importSemanticDomains.js",
     "license-report-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/docs/licenses/backend_licenses.txt",
@@ -25,15 +25,15 @@
     "lint:fix-layout": "eslint --max-warnings=0 --ext js,ts,tsx,jsx src --fix --fix-type layout,suggestion",
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
     "set-admin-user": "tsc scripts/setAdminUser.ts && node scripts/setAdminUser.js",
-    "start": "npm install && npm-run-all --parallel backend database frontend",
+    "set-release": "node scripts/setRelease.js",
+    "start": "npm install && npm run set-release && npm-run-all --parallel backend database frontend",
     "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
     "test-frontend": "react-scripts test",
     "test-frontend:coverage": "react-scripts test --coverage --watchAll=false",
     "test-frontend:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "version": "node scripts/printVersion.js"
+    "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter"
   },
   "dependencies": {
     "@loadable/component": "^5.15.0",

@@ -19,13 +19,13 @@ For each chart, the configuration file lists:
 The script also adds value definitions from a profile specific configuration file if it exists.
 """
 import argparse
-import json
 import os
 from pathlib import Path
 import sys
 import tempfile
 from typing import Any, Dict, List
 
+from app_release import get_release
 import combine_charts
 from enum_types import ExitStatus, HelmAction
 from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
@@ -187,16 +187,12 @@ def add_profile_values(
 def main() -> None:
     args = parse_args()
 
-    # Build the Chart.yaml files from templates
-    package_file = Path(__file__).resolve().parent.parent.parent / "package.json"
-
-    with open(package_file) as json_file:
-        package = json.load(json_file)
-
-    combine_charts.generate(package["version"])
-
+    # Lookup the cluster configuration
     with open(args.config) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
+
+    # Build the Chart.yaml files from templates
+    combine_charts.generate(get_release())
 
     target = args.target
     while target not in config["targets"]:
@@ -217,8 +213,13 @@ def main() -> None:
     target_vars = [
         f"global.imageTag={args.image_tag}",
     ]
+
     if args.repo:
         target_vars.append(f"global.imageRegistry={args.repo}")
+
+    # add any value overrides from the command line
+    if args.set:
+        target_vars.extend(args.set)
 
     addl_configs: List[str] = []
     if args.values:
@@ -306,9 +307,6 @@ def main() -> None:
             # add any additional configuration files from the command line
             if len(addl_configs) > 0:
                 helm_install_cmd.extend(addl_configs)
-            # last of all, add any value overrides from the command line
-            if args.set:
-                target_vars.extend(args.set)
 
             for variable in target_vars:
                 helm_install_cmd.extend(["--set", variable])
