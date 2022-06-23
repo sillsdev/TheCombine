@@ -2,11 +2,13 @@ import { AppBar, Button, Grid, Toolbar, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
+import { RuntimeConfig } from "types/runtimeConfig";
+
 export const bottomBarHeight = 55;
 
 /** A  bar shown at the bottom of the landing page. */
 export default function BottomBar(): ReactElement {
-  const { REACT_APP_VERSION } = process.env;
+  const combineAppRelease = RuntimeConfig.getInstance().appRelease();
   return (
     <div style={{ marginTop: bottomBarHeight }}>
       <AppBar
@@ -24,7 +26,7 @@ export default function BottomBar(): ReactElement {
             alignItems="center"
           >
             <Grid item>
-              <Typography variant="caption">v{REACT_APP_VERSION}</Typography>
+              <Typography variant="caption">{combineAppRelease}</Typography>
             </Grid>
             <Grid item>
               <Button

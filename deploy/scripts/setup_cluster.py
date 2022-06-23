@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Install the pre-requisite helm charts for the Combine on a k8s cluster."""
 
+from __future__ import annotations
+
 import argparse
 import os
 from pathlib import Path

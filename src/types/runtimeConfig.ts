@@ -9,6 +9,7 @@ interface RuntimeConfigItems {
 declare global {
   interface Window {
     runtimeConfig: RuntimeConfigItems;
+    release: string;
   }
 }
 
@@ -53,6 +54,13 @@ export class RuntimeConfig {
       baseUrl = defaultConfig.baseUrl;
     }
     return baseUrl;
+  }
+
+  public appRelease(): string {
+    if (window.hasOwnProperty("release")) {
+      return window.release;
+    }
+    return "v0.0.0-default.0";
   }
 
   public captchaSiteKey(): string {
