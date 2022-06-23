@@ -51,13 +51,14 @@ def parse_args() -> argparse.Namespace:
         description="Command line interface for get/set release commands.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "--get",
         action="store_true",
         help="Print the release (from git) on stdout.",
     )
-    parser.add_argument("--set", help="Release string to be stored in the release file.")
-    parser.add_argument(
+    group.add_argument("--set", help="Release string to be stored in the release file.")
+    group.add_argument(
         "--set-current", action="store_true", help="Set the release to the value returned by --get"
     )
     parser.add_argument(
@@ -69,11 +70,7 @@ def parse_args() -> argparse.Namespace:
 
 
 if __name__ == "__main__":
-    """
-    Allow calling from the command line.
-
-    Allow calling from the command line so that node scripts can get/set the release.
-    """
+    """Allow calling from the command line so that node scripts can get/set the release."""
     args = parse_args()
     if args.get:
         print(get_release())
