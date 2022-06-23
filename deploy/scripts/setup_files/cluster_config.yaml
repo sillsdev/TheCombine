@@ -38,9 +38,9 @@ rancher-ui:
     url: https://releases.rancher.com/server-charts/latest
   chart:
     name: rancher
-    reference: rancher-latest/rancher
+    reference: rancher-stable/rancher
     namespace: cattle-system
-    version: 2.6.3
+    version: 2.6.5
     wait: true
     override:
       hostname: rancher.local

@@ -2,7 +2,10 @@
 A Collection of useful functions for Python
 """
 
+from __future__ import annotations
+
 import argparse
+import re
 import subprocess
 import sys
 from typing import List
@@ -14,6 +17,7 @@ def run_cmd(
     check_results: bool = True,
     print_cmd: bool = False,
     print_output: bool = False,
+    chomp: bool = False,
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     if print_cmd:
@@ -28,6 +32,8 @@ def run_cmd(
         )
         if print_output:
             print(process_results.stdout)
+        if chomp:
+            process_results.stdout = re.sub(r"[\r\n]+$", "", process_results.stdout)
         return process_results
     except subprocess.CalledProcessError as err:
         print(f"CalledProcessError returned {err.returncode}")
