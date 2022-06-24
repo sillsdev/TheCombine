@@ -10,7 +10,7 @@ export const bottomBarHeight = 55;
 export default function BottomBar(): ReactElement {
   const { t } = useTranslation();
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
-  
+
   return (
     <div style={{ marginTop: bottomBarHeight }}>
       <AppBar
