@@ -22,7 +22,7 @@ export default function LandingPage(): ReactElement {
         <Hidden xsDown>
           <Grid item sm md xl>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
-              {<Body />}
+              <Body />
             </Box>
           </Grid>
           <Grid item sm={3} md={2} xl={1}>
@@ -40,7 +40,7 @@ export default function LandingPage(): ReactElement {
                 overflow: "auto",
               }}
             >
-              {<Body />}
+              <Body />
             </Box>
           </Grid>
         </Hidden>
