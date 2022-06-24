@@ -4,14 +4,17 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
-import { Bcp47Code } from "types/writingSystem";
+import { Bcp47Code, uiWritingSystems } from "types/writingSystem";
 
 i18n
   .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    debug: true,
+    //debug: true, // Uncomment to troubleshoot
+    supportedLngs: uiWritingSystems.map((ws) => ws.bcp47),
+    // nonExplicitSupportedLngs will (e.g.) use 'es' if the browser is 'es-MX'
+    nonExplicitSupportedLngs: true,
     fallbackLng: Bcp47Code.Default,
     interpolation: { escapeValue: false },
   });
