@@ -46,13 +46,19 @@ export function TreeView(props: TreeViewProps): ReactElement {
      * Primary: Has it been specified for the project?
      * Secondary: What is the current browser/ui language? */
     const newLang =
-      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ?? props.i18n.language;
+      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
+      props.i18n.resolvedLanguage;
     if (newLang && newLang !== semDomLanguage) {
       const headString = props.t("addWords.domain") as string;
       dispatch(updateTreeLanguage(newLang, headString));
-      // Don't update when props updates, except props.i18n.language
+      // Don't update when props updates, except props.i18n.resolvedLanguage
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [semDomLanguage, semDomWritingSystem, dispatch, props.i18n.language]);
+  }, [
+    semDomLanguage,
+    semDomWritingSystem,
+    dispatch,
+    props.i18n.resolvedLanguage,
+  ]);
 
   function animateHandler(domain: TreeSemanticDomain): Promise<void> {
     if (visible) {
