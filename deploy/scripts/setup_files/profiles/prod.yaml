@@ -7,6 +7,10 @@
 
 charts:
   thecombine:
+    # Disable AWS Login - only run released images from
+    # public.ecr.aws/thecombine
+    aws-login:
+      enabled: false
     # Frontend configuration items:
     frontend:
       configShowCertExpiration: false
