@@ -177,7 +177,7 @@ For the Production or QA server,
    explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
 
 4. Set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. (This is not necessary
-   if the configuration file is at `\${HOME}/.kube/config`.)
+   if the configuration file is at `${HOME}/.kube/config`.)
 
 #### Install _The Combine_ Cluster
 
