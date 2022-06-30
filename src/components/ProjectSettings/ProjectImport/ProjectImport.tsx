@@ -53,9 +53,11 @@ export class ProjectImport extends React.Component<ImportProps, ImportState> {
             <Typography variant="body2">
               {this.props.t("projectSettings.import.body")}{" "}
               <Trans i18nKey="createProject.uploadFormat">
-                A
-                <a href="https://code.google.com/archive/p/lift-standard/">B</a>
-                C
+                FillerTextA
+                <a href="https://code.google.com/archive/p/lift-standard/">
+                  FillerTextB
+                </a>
+                FillerTextC
               </Trans>
             </Typography>
           </Grid>

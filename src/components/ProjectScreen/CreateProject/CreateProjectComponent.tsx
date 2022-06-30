@@ -215,11 +215,11 @@ export class CreateProject extends React.Component<
               </FileInputButton>
               <Typography variant="caption" display="block">
                 <Trans i18nKey="createProject.uploadFormat">
-                  A
+                  FillerTextA
                   <a href="https://code.google.com/archive/p/lift-standard/">
-                    B
+                    FillerTextB
                   </a>
-                  C
+                  FillerTextC
                 </Trans>
               </Typography>
               {/* Displays the name of the selected file */}
