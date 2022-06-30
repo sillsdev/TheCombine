@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
 import mockWords, {
   mockCreateWord,
@@ -26,16 +28,13 @@ jest.mock("@material-ui/core", () => {
     Dialog: material.Container,
   };
 });
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
   getFrontierWords: () => mockGetFrontierWords(),
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
-jest.mock("components/TreeView/TreeViewComponent", () => "");
+jest.mock("components/TreeView/TreeViewComponent", () => "div");
 
 // Mock store + axios
 const mockReviewEntryWords = mockWords();

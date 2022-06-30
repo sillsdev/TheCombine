@@ -4,17 +4,11 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import { Project, WritingSystem } from "api/models";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
 import { newProject } from "types/project";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
 
 const mockAnalysisWritingSystems: WritingSystem[] = [
   { name: "a", bcp47: "a", font: "" },

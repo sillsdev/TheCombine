@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { Path } from "browserHistory";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
@@ -9,9 +11,6 @@ import NavigationButtons from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
 
 const mockPath = jest.fn();
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
 jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: mockPath() }),
 }));

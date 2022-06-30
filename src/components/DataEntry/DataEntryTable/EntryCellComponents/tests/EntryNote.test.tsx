@@ -1,15 +1,9 @@
 import { AddComment, Comment } from "@material-ui/icons";
 import renderer from "react-test-renderer";
 
-import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
+import "tests/mockReactI18next";
 
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
+import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
 
 const mockText = "Test text";
 

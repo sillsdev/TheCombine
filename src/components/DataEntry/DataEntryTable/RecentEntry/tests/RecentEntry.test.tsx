@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { Word } from "api/models";
 import EditTextDialog from "components/Buttons/EditTextDialog";
 import {
@@ -16,10 +18,6 @@ import Recorder from "components/Pronunciations/Recorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
 
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");

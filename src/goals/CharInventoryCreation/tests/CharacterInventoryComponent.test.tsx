@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { Project } from "api/models";
 import CharacterInventoryWithTranslate, {
   CharacterInventory,
@@ -30,15 +32,10 @@ jest.mock("@material-ui/core", () => {
     Dialog: materialUiCore.Container,
   };
 });
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
-
-jest.mock("goals/CharInventoryCreation/components/CharacterDetail", () => "");
+jest.mock(
+  "goals/CharInventoryCreation/components/CharacterDetail",
+  () => "div"
+);
 
 function renderCharInvCreation() {
   renderer.act(() => {

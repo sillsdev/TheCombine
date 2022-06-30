@@ -2,14 +2,9 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
+import "tests/mockReactI18next";
 
-jest.mock("react-i18next", () => ({
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
+import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
 
 const mockStore = configureMockStore()();
 

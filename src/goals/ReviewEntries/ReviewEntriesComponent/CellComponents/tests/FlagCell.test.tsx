@@ -1,11 +1,9 @@
 import renderer from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import FlagCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/FlagCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
 
 const mockWord = mockWords()[1];
 

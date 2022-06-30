@@ -4,17 +4,12 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import ContextMenu, {
   MenuType,
   RIGHT_CLICK,
 } from "components/ContextMenu/ContextMenu";
-
-jest.mock("react-i18next", () => ({
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
 
 // Mock DOM
 jest.autoMockOn();

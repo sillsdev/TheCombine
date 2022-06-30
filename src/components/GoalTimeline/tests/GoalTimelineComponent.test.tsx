@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import GoalTimelineWithTranslation, {
   GoalTimeline,
@@ -12,14 +14,7 @@ import { Goal, GoalType } from "types/goals";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
-jest.mock("components/AppBar/AppBarComponent", () => "");
+jest.mock("components/AppBar/AppBarComponent", () => "div");
 
 // Constants
 const CHOOSE_GOAL = jest.fn();

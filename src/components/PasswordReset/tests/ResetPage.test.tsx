@@ -3,19 +3,13 @@ import { RouteComponentProps } from "react-router-dom";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { resetFail } from "components/PasswordReset/Redux/ResetActions";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import PasswordReset, {
   MatchParams,
 } from "components/PasswordReset/ResetPage/component";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
 
 var testRenderer: ReactTestRenderer;
 // This test relies on nothing in the store so mock an empty store

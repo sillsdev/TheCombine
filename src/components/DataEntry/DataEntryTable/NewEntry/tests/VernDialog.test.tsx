@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { Word } from "api/models";
 import {
   StyledMenuItem,
@@ -10,17 +12,9 @@ import {
 import { simpleWord, testWordList } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
-
 jest.mock(
   "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell",
-  () => ""
+  () => "div"
 );
 
 const mockState = {

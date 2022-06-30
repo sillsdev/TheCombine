@@ -3,13 +3,11 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import "tests/mockReactI18next";
+
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { Goal } from "types/goals";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore = createMockStore();

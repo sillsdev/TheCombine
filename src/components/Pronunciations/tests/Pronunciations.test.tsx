@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
@@ -10,10 +12,6 @@ import {
   defaultState as pronunciationsState,
   PronunciationsStatus,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-}));
 
 // Mock the node module used by AudioRecorder
 jest.mock("components/Pronunciations/Recorder");

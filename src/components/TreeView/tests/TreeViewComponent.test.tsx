@@ -5,6 +5,8 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeView from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
@@ -12,18 +14,6 @@ import mockMap, {
   jsonDomain as mockDomain,
 } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
-
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = {
-      ...Component.defaultProps,
-      t: (s: string) => s,
-      i18n: { resolvedLanguage: "" },
-    };
-    return Component;
-  },
-}));
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: ReactTestInstance;

@@ -4,19 +4,13 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
-
 jest.mock("backend", () => ({
   isEmailTaken: () => false,
   isUsernameTaken: () => false,

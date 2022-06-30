@@ -5,20 +5,15 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import "tests/mockReactI18next";
+
 import { defaultState } from "components/App/DefaultState";
 import App from "components/App/component";
 
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = { ...Component.defaultProps, t: (s: string) => s };
-    return Component;
-  },
-}));
-jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "");
+jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "div");
 
 const createMockStore = configureMockStore([thunk]);
 const mockStore = createMockStore(defaultState);
