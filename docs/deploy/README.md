@@ -177,7 +177,7 @@ For the Production or QA server,
    explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
 
 4. Set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. (This is not necessary
-   if the configuration file is at `\${HOME}/.kube/config.)
+   if the configuration file is at `\${HOME}/.kube/config`.)
 
 #### Install _The Combine_ Cluster
 
@@ -319,11 +319,15 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
    sudo reboot
    ```
 
-7. _[Host]_ Add the NUC to your /etc/hosts:
+7. _[NUC]_ Lookup IP Address for the NUC:
 
-   From the NUC, run the command `ip address` to see the current IP address of the NUC. Then edit `/etc/hosts` on your
-   host machine to add an entry for the NUC. The name of the NUC or one of the aliases, much match its name in the
-   Ansible host file, e.g.:
+   From the NUC, run the command `ip address`. Record the current IP address for the Ethernet interface; the Ethernet
+   interface starts with `en`, followed by a letter and then a digit (`en[a-z][0-9]`).
+
+8. _[Host]_ Add the NUC to your /etc/hosts:
+
+   Edit `/etc/hosts` on your host machine to add an entry for the NUC. The name of the NUC or one of the aliases, much
+   match its name in the Ansible host file, e.g.:
 
    ```console
    127.0.0.1   localhost
@@ -332,7 +336,9 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
    10.0.0.41   nuc1
    ```
 
-8. _[Host]_ Add your ssh key to the NUCs authorized keys:
+   You will need to use `sudo` to edit `/etc/hosts`.
+
+9. _[Host]_ Add your ssh key to the NUCs authorized keys:
 
    ```bash
    ssh-copy-id user@nuc
