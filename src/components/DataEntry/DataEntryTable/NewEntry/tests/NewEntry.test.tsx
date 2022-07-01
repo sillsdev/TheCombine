@@ -1,5 +1,7 @@
 import renderer from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newSemanticDomain } from "types/word";
 import { newWritingSystem } from "types/writingSystem";

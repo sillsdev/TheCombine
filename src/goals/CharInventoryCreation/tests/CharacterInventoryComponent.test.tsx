@@ -2,8 +2,11 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { Project } from "api/models";
-import CharacterInventory, {
+import CharacterInventoryWithTranslate, {
+  CharacterInventory,
   CANCEL,
   SAVE,
 } from "goals/CharInventoryCreation/CharacterInventoryComponent";
@@ -29,12 +32,16 @@ jest.mock("@material-ui/core", () => {
     Dialog: materialUiCore.Container,
   };
 });
+jest.mock(
+  "goals/CharInventoryCreation/components/CharacterDetail",
+  () => "div"
+);
 
 function renderCharInvCreation() {
   renderer.act(() => {
     charMaster = renderer.create(
       <Provider store={mockStore}>
-        <CharacterInventory
+        <CharacterInventoryWithTranslate
           goal={new CreateCharInv()}
           currentProject={{ validCharacters: ["a"] } as Project}
           setValidCharacters={SET_INV}

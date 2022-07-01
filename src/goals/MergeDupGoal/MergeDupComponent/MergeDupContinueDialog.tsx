@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 export interface MergeDupContinueDialogProps {
   onSelection: (shouldContinue: boolean) => void;
@@ -10,26 +10,24 @@ export function MergeDupContinueDialog(
   props: MergeDupContinueDialogProps
 ): ReactElement {
   const [open, setOpen] = React.useState<boolean>(true);
+  const { t } = useTranslation();
+
   const { onSelection } = props;
 
   const handle = (shouldContinue: boolean): void => {
     setOpen(false);
     onSelection(shouldContinue);
   };
-
   const handleYes = (): void => {
     handle(true);
   };
-
   const handleNo = (): void => {
     handle(false);
   };
 
   return (
     <Dialog open={open}>
-      <DialogTitle>
-        <Translate id="mergeDups.continueDialog.title" />
-      </DialogTitle>
+      <DialogTitle>{t("mergeDups.continueDialog.title")}</DialogTitle>
       <DialogActions>
         <Button
           color="primary"
@@ -37,10 +35,10 @@ export function MergeDupContinueDialog(
           onClick={handleYes}
           autoFocus
         >
-          <Translate id="mergeDups.continueDialog.yes" />
+          {t("mergeDups.continueDialog.yes")}
         </Button>
         <Button color="secondary" variant="contained" onClick={handleNo}>
-          <Translate id="mergeDups.continueDialog.no" />
+          {t("mergeDups.continueDialog.no")}
         </Button>
       </DialogActions>
     </Dialog>

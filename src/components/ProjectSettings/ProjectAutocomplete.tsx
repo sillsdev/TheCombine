@@ -1,7 +1,7 @@
 import { Grid, MenuItem, Select, Tooltip } from "@material-ui/core";
 import { HelpOutline } from "@material-ui/icons";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AutocompleteSetting } from "api/models";
@@ -13,6 +13,7 @@ export default function ProjectAutocomplete() {
     (state: StoreState) => state.currentProjectState.project
   );
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   return (
     <Grid container>
@@ -30,16 +31,16 @@ export default function ProjectAutocomplete() {
           }
         >
           <MenuItem value={AutocompleteSetting.Off}>
-            <Translate id="projectSettings.autocomplete.off" />
+            {t("projectSettings.autocomplete.off")}
           </MenuItem>
           <MenuItem value={AutocompleteSetting.On}>
-            <Translate id="projectSettings.autocomplete.on" />
+            {t("projectSettings.autocomplete.on")}
           </MenuItem>
         </Select>
       </Grid>
       <Grid>
         <Tooltip
-          title={<Translate id="projectSettings.autocomplete.hint" />}
+          title={t("projectSettings.autocomplete.hint")}
           placement="right"
         >
           <HelpOutline />

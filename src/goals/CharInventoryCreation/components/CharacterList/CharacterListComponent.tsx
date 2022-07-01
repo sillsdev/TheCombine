@@ -7,16 +7,12 @@ import {
 } from "@material-ui/core";
 import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
 import React, { ReactElement } from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 
 import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
 
-interface CharacterListProps {
+interface CharacterListProps extends WithTranslation {
   setSelectedCharacter: (character: string) => void;
   allCharacters: CharacterSetEntry[];
 }
@@ -36,10 +32,10 @@ enum SortOrder {
 }
 
 export class CharacterList extends React.Component<
-  CharacterListProps & LocalizeContextProps,
+  CharacterListProps,
   CharacterListState
 > {
-  constructor(props: CharacterListProps & LocalizeContextProps) {
+  constructor(props: CharacterListProps) {
     super(props);
     this.state = {
       sortOrder: SortOrder.CharacterAscending,
@@ -59,7 +55,7 @@ export class CharacterList extends React.Component<
         <Grid item xs={12}>
           <FormControl>
             <InputLabel htmlFor="sort-order">
-              <Translate id="charInventory.sortBy" />
+              {this.props.t("charInventory.sortBy")}
             </InputLabel>
             <Select
               value={this.state.sortOrder}
@@ -71,23 +67,23 @@ export class CharacterList extends React.Component<
               }}
             >
               <MenuItem value={SortOrder.CharacterAscending}>
-                {this.props.translate("charInventory.characters")}
+                {this.props.t("charInventory.characters")}
                 <ArrowUpward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.CharacterDescending}>
-                {this.props.translate("charInventory.characters")}
+                {this.props.t("charInventory.characters")}
                 <ArrowDownward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.OccurrencesAscending}>
-                {this.props.translate("charInventory.occurrences")}
+                {this.props.t("charInventory.occurrences")}
                 <ArrowUpward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.OccurrencesDescending}>
-                {this.props.translate("charInventory.occurrences")}
+                {this.props.t("charInventory.occurrences")}
                 <ArrowDownward fontSize="small" />
               </MenuItem>
               <MenuItem value={SortOrder.Status}>
-                {this.props.translate("charInventory.status")}
+                {this.props.t("charInventory.status")}
               </MenuItem>
             </Select>
           </FormControl>
@@ -140,4 +136,4 @@ function sortFunction<K extends keyof CharacterSetEntry>(prop: K) {
     a[prop] < b[prop] ? -1 : a[prop] > b[prop] ? 1 : 0;
 }
 
-export default withLocalize(CharacterList);
+export default withTranslation()(CharacterList);

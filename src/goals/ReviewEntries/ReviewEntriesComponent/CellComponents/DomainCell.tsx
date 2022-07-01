@@ -1,7 +1,7 @@
 import { Chip, Dialog, Grid, IconButton } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { SemanticDomain } from "api/models";
@@ -72,6 +72,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
       ? { backgroundColor: themeColors.highlight as string }
       : {};
   }
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
@@ -102,7 +103,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
             ) : (
               <Grid item xs key={`noDomain${sense.guid}`}>
                 <Chip
-                  label={<Translate id="reviewEntries.noDomain" />}
+                  label={t("reviewEntries.noDomain")}
                   color={props.sortingByThis ? "default" : "secondary"}
                   style={getChipStyle(senseIndex, 0)}
                 />

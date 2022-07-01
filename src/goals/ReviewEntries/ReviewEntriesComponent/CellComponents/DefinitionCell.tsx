@@ -1,6 +1,6 @@
 import { Input, TextField } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Definition } from "api/models";
@@ -25,6 +25,7 @@ export default function DefinitionCell(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems[0].bcp47
   );
+  const { t } = useTranslation();
 
   return (
     <AlignedList
@@ -51,25 +52,21 @@ export default function DefinitionCell(
             }
           />
         ) : (
-          <Translate>
-            {({ translate }): ReactElement => (
-              <Input
-                fullWidth
-                key={`definitions${props.rowData.id}`}
-                value={ReviewEntriesSense.definitionString(props.value[index])}
-                placeholder={translate("reviewEntries.noDefinition").toString()}
-                disabled={sense.deleted}
-                readOnly
-                disableUnderline
-                multiline
-                style={
-                  props.sortingByThis && index === 0
-                    ? { backgroundColor: themeColors.highlight }
-                    : {}
-                }
-              />
-            )}
-          </Translate>
+          <Input
+            fullWidth
+            key={`definitions${props.rowData.id}`}
+            value={ReviewEntriesSense.definitionString(props.value[index])}
+            placeholder={t("reviewEntries.noDefinition")}
+            disabled={sense.deleted}
+            readOnly
+            disableUnderline
+            multiline
+            style={
+              props.sortingByThis && index === 0
+                ? { backgroundColor: themeColors.highlight }
+                : {}
+            }
+          />
         )
       )}
       bottomCell={props.editable ? SPACER : undefined}

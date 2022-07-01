@@ -1,7 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
 import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import columns, {
@@ -36,53 +36,47 @@ export default function ReviewEntriesTable(
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
+  const { t } = useTranslation();
 
   return (
-    <Translate>
-      {({ translate }): ReactElement => (
-        <MaterialTable<any>
-          icons={tableIcons}
-          title={
-            <Typography component="h1" variant="h4">
-              {translate("reviewEntries.title")}
-            </Typography>
-          }
-          columns={
-            showDefinitions
-              ? columns
-              : columns.filter((c) => c.title !== ColumnTitle.Definitions)
-          }
-          data={words}
-          editable={{
-            onRowUpdate: (
-              newData: ReviewEntriesWord,
-              oldData: ReviewEntriesWord
-            ) =>
-              new Promise(async (resolve, reject) => {
-                await props
-                  .onRowUpdate(newData, oldData)
-                  .then(resolve)
-                  .catch((reason) => {
-                    alert(translate(reason));
-                    reject(reason);
-                  });
-              }),
-          }}
-          options={{
-            draggable: false,
-            filtering: true,
-            pageSize:
-              words.length > 0
-                ? Math.min(words.length, ROWS_PER_PAGE[0])
-                : ROWS_PER_PAGE[0],
-            pageSizeOptions: removeDuplicates([
-              Math.min(words.length, ROWS_PER_PAGE[0]),
-              Math.min(words.length, ROWS_PER_PAGE[1]),
-              Math.min(words.length, ROWS_PER_PAGE[2]),
-            ]),
-          }}
-        />
-      )}
-    </Translate>
+    <MaterialTable<any>
+      icons={tableIcons}
+      title={
+        <Typography component="h1" variant="h4">
+          {t("reviewEntries.title")}
+        </Typography>
+      }
+      columns={
+        showDefinitions
+          ? columns
+          : columns.filter((c) => c.title !== ColumnTitle.Definitions)
+      }
+      data={words}
+      editable={{
+        onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
+          new Promise(async (resolve, reject) => {
+            await props
+              .onRowUpdate(newData, oldData)
+              .then(resolve)
+              .catch((reason) => {
+                alert(t(reason));
+                reject(reason);
+              });
+          }),
+      }}
+      options={{
+        draggable: false,
+        filtering: true,
+        pageSize:
+          words.length > 0
+            ? Math.min(words.length, ROWS_PER_PAGE[0])
+            : ROWS_PER_PAGE[0],
+        pageSizeOptions: removeDuplicates([
+          Math.min(words.length, ROWS_PER_PAGE[0]),
+          Math.min(words.length, ROWS_PER_PAGE[1]),
+          Math.min(words.length, ROWS_PER_PAGE[2]),
+        ]),
+      }}
+    />
   );
 }

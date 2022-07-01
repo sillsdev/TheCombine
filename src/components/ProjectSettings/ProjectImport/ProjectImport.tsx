@@ -1,7 +1,6 @@
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { Translate } from "react-localize-redux";
+import { Trans, withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import * as backend from "backend";
@@ -13,7 +12,7 @@ enum UploadState {
   Done,
 }
 
-interface ImportProps {
+interface ImportProps extends WithTranslation {
   projectId: string;
   updateProject: (newProject: Project) => void;
 }
@@ -24,10 +23,7 @@ interface ImportState {
   uploadState: UploadState;
 }
 
-export default class ProjectImport extends React.Component<
-  ImportProps,
-  ImportState
-> {
+export class ProjectImport extends React.Component<ImportProps, ImportState> {
   constructor(props: ImportProps) {
     super(props);
     this.updateLiftFile = this.updateLiftFile.bind(this);
@@ -55,11 +51,14 @@ export default class ProjectImport extends React.Component<
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="body2">
-              <Translate id="projectSettings.import.body" />{" "}
-              <Translate
-                id="createProject.uploadFormat"
-                options={{ renderInnerHtml: true, renderToStaticMarkup }}
-              />
+              {this.props.t("projectSettings.import.body")}{" "}
+              <Trans i18nKey="createProject.uploadFormat">
+                FillerTextA
+                <a href="https://code.google.com/archive/p/lift-standard/">
+                  FillerTextB
+                </a>
+                FillerTextC
+              </Trans>
             </Typography>
           </Grid>
           <Grid item>
@@ -72,7 +71,7 @@ export default class ProjectImport extends React.Component<
                 id: "project-import-select-file",
               }}
             >
-              <Translate id="projectSettings.import.chooseFile" />
+              {this.props.t("projectSettings.import.chooseFile")}
             </FileInputButton>
           </Grid>
 
@@ -88,13 +87,11 @@ export default class ProjectImport extends React.Component<
               onClick={() => this.uploadWords()}
               id="project-import-submit"
             >
-              <Translate
-                id={`buttons.${
-                  this.state.uploadState === UploadState.Done
-                    ? "done"
-                    : "upload"
-                }`}
-              />
+              {this.props.t(
+                this.state.uploadState === UploadState.Done
+                  ? "buttons.done"
+                  : "buttons.upload"
+              )}
               {this.state.uploadState === UploadState.InProgress && (
                 <CircularProgress
                   size={24}
@@ -114,7 +111,7 @@ export default class ProjectImport extends React.Component<
             {/* Displays the name of the selected file */}
             {this.state.liftFilename && (
               <Typography variant="body1" noWrap>
-                <Translate id="createProject.fileSelected" />
+                {this.props.t("createProject.fileSelected")}
                 {": "}
                 {this.state.liftFilename}
               </Typography>
@@ -125,3 +122,5 @@ export default class ProjectImport extends React.Component<
     );
   }
 }
+
+export default withTranslation()(ProjectImport);

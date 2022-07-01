@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import validator from "validator";
 
@@ -15,7 +15,7 @@ import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
-interface InviteProps {
+interface InviteProps extends WithTranslation {
   addToProject: (user: User) => void;
   close: () => void;
 }
@@ -46,7 +46,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     if (await backend.isEmailTaken(email)) {
       await backend.getUserByEmail(email).then((u) => {
         this.props.addToProject(u);
-        toast.error(<Translate id="projectSettings.invite.userExists" />);
+        toast.error(this.props.t("projectSettings.invite.userExists"));
       });
     } else {
       await backend.emailInviteToProject(
@@ -86,12 +86,12 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
           <Card style={{ width: 450 }}>
             <CardContent>
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="projectSettings.invite.inviteByEmailLabel" />
+                {this.props.t("projectSettings.invite.inviteByEmailLabel")}
               </Typography>
               <TextField
                 id="project-user-invite-email"
                 required
-                label={<Translate id="projectSettings.invite.emailLabel" />}
+                label={this.props.t("projectSettings.invite.emailLabel")}
                 onChange={(e) => this.updateEmailField(e)}
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -120,7 +120,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                       color: "primary",
                     }}
                   >
-                    <Translate id="buttons.invite" />
+                    {this.props.t("buttons.invite")}
                   </LoadingDoneButton>
                 </Grid>
               </Grid>
@@ -132,4 +132,4 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   }
 }
 
-export default EmailInvite;
+export default withTranslation()(EmailInvite);

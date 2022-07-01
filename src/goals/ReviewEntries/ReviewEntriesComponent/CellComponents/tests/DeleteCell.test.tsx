@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
@@ -14,7 +16,7 @@ describe("DeleteCell", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <DeleteCell rowData={mockWord} value={""} />
+          <DeleteCell rowData={mockWord} />
         </Provider>
       );
     });

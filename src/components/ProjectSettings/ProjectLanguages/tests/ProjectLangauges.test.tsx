@@ -1,17 +1,15 @@
 import { LanguagePicker } from "mui-language-picker";
-import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
 } from "react-test-renderer";
-import configureMockStore from "redux-mock-store";
+
+import "tests/mockReactI18next";
 
 import { Project, WritingSystem } from "api/models";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";
 import { newProject } from "types/project";
 
-// This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore()();
 const mockAnalysisWritingSystems: WritingSystem[] = [
   { name: "a", bcp47: "a", font: "" },
   { name: "b", bcp47: "b", font: "" },
@@ -30,12 +28,10 @@ function renderProjLangs(proj: Project) {
   mockUpdateProject.mockResolvedValue(undefined);
   renderer.act(() => {
     projectMaster = renderer.create(
-      <Provider store={mockStore}>
-        <ProjectLanguages
-          project={proj}
-          saveChangesToProject={mockUpdateProject}
-        />
-      </Provider>
+      <ProjectLanguages
+        project={proj}
+        saveChangesToProject={mockUpdateProject}
+      />
     );
   });
 }

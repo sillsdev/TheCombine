@@ -1,4 +1,3 @@
-import { LocalizeContextProps } from "react-localize-redux";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
@@ -6,7 +5,10 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import TreeView, { TreeViewProps } from "components/TreeView/TreeViewComponent";
+import "tests/mockReactI18next";
+
+import TreeDepiction from "components/TreeView/TreeDepiction";
+import TreeView from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
 import mockMap, {
   jsonDomain as mockDomain,
@@ -47,18 +49,13 @@ describe("TreeView", () => {
   });
 });
 
-const treeViewProps: TreeViewProps = { returnControlToCaller: jest.fn() };
-const localizeProps = {
-  activeLanguage: { code: "" },
-  translate: (() => "TranslatedString") as LocalizeContextProps["translate"],
-} as LocalizeContextProps;
 function createTree(): void {
   renderer.act(() => {
     treeMaster = renderer.create(
       <Provider store={mockStore}>
-        <TreeView {...treeViewProps} {...localizeProps} />
+        <TreeView returnControlToCaller={jest.fn()} />
       </Provider>
     );
   });
-  treeHandle = treeMaster.root.findByType(TreeView).instance;
+  treeHandle = treeMaster.root.findByType(TreeDepiction).instance;
 }

@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 import { defaultWritingSystem } from "types/writingSystem";

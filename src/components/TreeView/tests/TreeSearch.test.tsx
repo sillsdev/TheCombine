@@ -4,6 +4,8 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
 
+import "tests/mockReactI18next";
+
 import TreeSearch, {
   insertDecimalPoints,
   testId,

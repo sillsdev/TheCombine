@@ -1,6 +1,6 @@
 import { Button, ButtonGroup } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 interface CharacterStatusControlProps {
   character: string;
@@ -12,6 +12,8 @@ interface CharacterStatusControlProps {
 export default function CharacterStatusControl(
   props: CharacterStatusControlProps
 ) {
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
       <ButtonGroup
@@ -20,13 +22,13 @@ export default function CharacterStatusControl(
         aria-label="small outlined secondary button group"
       >
         <Button onClick={() => props.accept(props.character)}>
-          <Translate id="buttons.accept" />
+          {t("buttons.accept")}
         </Button>
         <Button onClick={() => props.unset(props.character)}>
-          <Translate id="buttons.undecided" />
+          {t("buttons.undecided")}
         </Button>
         <Button onClick={() => props.reject(props.character)}>
-          <Translate id="buttons.reject" />
+          {t("buttons.reject")}
         </Button>
       </ButtonGroup>
     </React.Fragment>

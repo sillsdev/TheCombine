@@ -1,6 +1,8 @@
 import { ListItem } from "@material-ui/core";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { ProjectList } from "components/SiteSettings/ProjectManagement/ProjectManagement";
@@ -8,7 +10,7 @@ import { randomProject } from "types/project";
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
-jest.mock("components/ProjectExport/ExportButton");
+jest.mock("components/ProjectExport/ExportButton", () => "div");
 
 var testRenderer: ReactTestRenderer;
 

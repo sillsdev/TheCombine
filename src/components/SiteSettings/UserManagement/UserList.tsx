@@ -14,11 +14,7 @@ import {
 } from "@material-ui/core";
 import { DeleteForever, VpnKey } from "@material-ui/icons";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { getUserId } from "backend/localStorage";
@@ -30,7 +26,7 @@ enum UserOrder {
   Email,
 }
 
-interface UserListProps {
+interface UserListProps extends WithTranslation {
   allUsers: User[];
   userAvatar: { [key: string]: string };
   handleOpenModal: (user: User) => void;
@@ -44,11 +40,8 @@ interface UserListState {
   userOrder: UserOrder;
 }
 
-class UserList extends React.Component<
-  UserListProps & LocalizeContextProps,
-  UserListState
-> {
-  constructor(props: UserListProps & LocalizeContextProps) {
+class UserList extends React.Component<UserListProps, UserListState> {
+  constructor(props: UserListProps) {
     super(props);
 
     this.state = {
@@ -110,21 +103,19 @@ class UserList extends React.Component<
       <React.Fragment>
         <Grid item xs={12}>
           <Typography>
-            <Translate id="projectSettings.invite.searchTitle" />
+            {this.props.t("projectSettings.invite.searchTitle")}
           </Typography>
           <Grid container alignItems="flex-end">
             <Input
               type="text"
               onChange={(e) => this.handleChange(e.target.value)}
-              placeholder={
-                this.props.translate(
-                  "projectSettings.invite.searchPlaceholder"
-                ) as string
-              }
+              placeholder={this.props.t(
+                "projectSettings.invite.searchPlaceholder"
+              )}
             />
             <FormControl style={{ minWidth: 100 }}>
               <InputLabel id="sorting-order-select">
-                <Translate id="charInventory.sortBy" />
+                {this.props.t("charInventory.sortBy")}
               </InputLabel>
               <Select
                 labelId="sorting-order-select"
@@ -134,13 +125,13 @@ class UserList extends React.Component<
                 }}
               >
                 <MenuItem value={UserOrder.Name}>
-                  <Translate id="projectSettings.language.name" />
+                  {this.props.t("projectSettings.language.name")}
                 </MenuItem>
                 <MenuItem value={UserOrder.Username}>
-                  <Translate id="login.username" />
+                  {this.props.t("login.username")}
                 </MenuItem>
                 <MenuItem value={UserOrder.Email}>
-                  <Translate id="login.email" />
+                  {this.props.t("login.email")}
                 </MenuItem>
               </Select>
             </FormControl>
@@ -178,4 +169,4 @@ class UserList extends React.Component<
   }
 }
 
-export default withLocalize(UserList);
+export default withTranslation()(UserList);

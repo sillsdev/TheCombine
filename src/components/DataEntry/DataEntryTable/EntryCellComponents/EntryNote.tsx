@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { AddComment, Comment } from "@material-ui/icons";
 import React, { useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import EditTextDialog from "components/Buttons/EditTextDialog";
 
@@ -16,13 +16,12 @@ interface EntryNoteProps {
  */
 export default function EntryNote(props: EntryNoteProps) {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
       <Tooltip
-        title={
-          props.noteText ? props.noteText : <Translate id="addWords.addNote" />
-        }
+        title={props.noteText ? props.noteText : t("addWords.addNote")}
         placement="top"
       >
         <IconButton

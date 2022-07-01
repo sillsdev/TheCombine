@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { CSSProperties, ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
 import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
@@ -120,19 +120,23 @@ export function makeGoalTile(
             goal.goalType !== GoalType.MergeDups)
         }
       >
-        {goal ? (
-          GoalInfo(goal)
-        ) : (
-          <Typography variant="h6">
-            <Translate id="goal.selector.noHistory" />
-          </Typography>
-        )}
+        <GoalInfo goal={goal} />
       </Button>
     </ImageListItem>
   );
 }
 
-function GoalInfo(goal: Goal): ReactElement {
+interface GoalInfoProps {
+  goal?: Goal;
+}
+function GoalInfo(props: GoalInfoProps): ReactElement {
+  const { t } = useTranslation();
+
+  const goal = props.goal;
+  if (!goal) {
+    return <Typography variant="h6">{t("goal.selector.noHistory")}</Typography>;
+  }
+
   if (goal.status === GoalStatus.Completed) {
     let goalInfo: ReactElement | null;
     switch (goal.goalType) {
@@ -149,14 +153,11 @@ function GoalInfo(goal: Goal): ReactElement {
     }
     return (
       <Typography variant="h6">
-        <Translate id={goal.name + ".title"} />
+        {t(goal.name + ".title")}
         {goalInfo}
       </Typography>
     );
   }
-  return (
-    <Typography variant="h4">
-      <Translate id={goal.name + ".title"} />
-    </Typography>
-  );
+
+  return <Typography variant="h4">{t(goal.name + ".title")}</Typography>;
 }

@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { getUserRole } from "backend";
 import { getCurrentUser } from "backend/localStorage";
@@ -29,7 +29,7 @@ const timelineStyle = {
   },
 };
 
-interface GoalTimelineProps {
+interface GoalTimelineProps extends WithTranslation {
   currentProjectId: string;
   chooseGoal: (goal: Goal) => void;
   clearHistory: () => void;
@@ -47,7 +47,7 @@ interface GoalTimelineState {
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
-export default class GoalTimeline extends React.Component<
+export class GoalTimeline extends React.Component<
   GoalTimelineProps & GoalsState,
   GoalTimelineState
 > {
@@ -138,7 +138,7 @@ export default class GoalTimeline extends React.Component<
         id={`new-goal-${goal.name}`}
       >
         <Typography variant="h4">
-          <Translate id={done ? "goal.selector.done" : goal.name + ".title"} />
+          {this.props.t(done ? "goal.selector.done" : goal.name + ".title")}
         </Typography>
       </Button>
     );
@@ -161,7 +161,7 @@ export default class GoalTimeline extends React.Component<
         {/* Recommendation */}
         <div style={{ ...timelineStyle.paneStyling, width: "60%" }}>
           <Typography variant="h6">
-            <Translate id="goal.selector.present" />
+            {this.props.t("goal.selector.present")}
           </Typography>
           {this.goalButton()}
         </div>
@@ -169,7 +169,7 @@ export default class GoalTimeline extends React.Component<
         {/* History */}
         <div style={timelineStyle.paneStyling}>
           <Typography variant="h6">
-            <Translate id="goal.selector.past" />
+            {this.props.t("goal.selector.past")}
           </Typography>
           <GoalList
             completed
@@ -194,7 +194,7 @@ export default class GoalTimeline extends React.Component<
           style={{ ...timelineStyle.paneStyling, float: "right" }}
         >
           <Typography variant="h6">
-            <Translate id="goal.selector.other" />
+            {this.props.t("goal.selector.other")}
           </Typography>
           <GoalList
             orientation="vertical"
@@ -208,7 +208,7 @@ export default class GoalTimeline extends React.Component<
         {/* Recommendation */}
         <ImageListItem cols={3} style={timelineStyle.paneStyling}>
           <Typography variant="h5">
-            <Translate id="goal.selector.present" />
+            {this.props.t("goal.selector.present")}
           </Typography>
           {this.goalButton()}
         </ImageListItem>
@@ -216,7 +216,7 @@ export default class GoalTimeline extends React.Component<
         {/* History */}
         <ImageListItem cols={5} style={timelineStyle.paneStyling}>
           <Typography variant="h6">
-            <Translate id="goal.selector.past" />
+            {this.props.t("goal.selector.past")}
           </Typography>
           <GoalList
             completed
@@ -236,3 +236,5 @@ export default class GoalTimeline extends React.Component<
     return this.state.portrait ? this.renderPortrait() : this.renderLandscape();
   }
 }
+
+export default withTranslation()(GoalTimeline);

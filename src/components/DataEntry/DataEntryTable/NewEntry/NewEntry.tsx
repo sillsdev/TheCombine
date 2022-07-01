@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import { AutocompleteCloseReason } from "@material-ui/lab";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomain, Word, WritingSystem } from "api/models";
@@ -512,12 +512,17 @@ export default class NewEntry extends React.Component<
             buttonId={`${idAffix}-delete`}
           />
         </Grid>
-        <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
-          <Typography variant="caption">
-            <Translate id="addWords.pressEnter" />
-          </Typography>
-        </Grid>
+        <EnterGrid />
       </Grid>
     );
   }
+}
+
+function EnterGrid(): ReactElement {
+  const { t } = useTranslation();
+  return (
+    <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
+      <Typography variant="caption">{t("addWords.pressEnter")}</Typography>
+    </Grid>
+  );
 }

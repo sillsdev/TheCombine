@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Delete, PlayArrow, Stop } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
@@ -51,6 +51,7 @@ export default function AudioPlayer(props: PlayerProps) {
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState<boolean>(false);
   const classes = useStyles();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (
@@ -127,10 +128,7 @@ export default function AudioPlayer(props: PlayerProps) {
 
   return (
     <React.Fragment>
-      <Tooltip
-        title={<Translate id="pronunciations.playTooltip" />}
-        placement="top"
-      >
+      <Tooltip title={t("pronunciations.playTooltip")} placement="top">
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
@@ -163,7 +161,7 @@ export default function AudioPlayer(props: PlayerProps) {
         }}
       >
         <MenuItem
-          id={`audio-${isPlaying ? "stop" : "play"}`}
+          id={isPlaying ? "audio-stop" : "audio-play"}
           onClick={() => {
             togglePlay();
             handleClose();

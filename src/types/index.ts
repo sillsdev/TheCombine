@@ -1,5 +1,3 @@
-import { LocalizeState } from "react-localize-redux";
-
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
 import { PasswordResetState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
@@ -15,9 +13,6 @@ import { GoalsState } from "types/goals";
 
 //root store structure
 export interface StoreState {
-  //handles localization through react-localize-redux utilities
-  localize: LocalizeState;
-
   //login
   loginState: LoginState;
   passwordResetState: PasswordResetState;

@@ -1,6 +1,6 @@
 import { Tooltip, IconButton } from "@material-ui/core";
 import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 interface IconButtonWithTooltipProps {
   icon: ReactElement;
@@ -15,11 +15,11 @@ interface IconButtonWithTooltipProps {
 export default function IconButtonWithTooltip(
   props: IconButtonWithTooltipProps
 ): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Tooltip
-      title={
-        props.text ?? (props.textId ? <Translate id={props.textId} /> : false)
-      }
+      title={props.text ?? (props.textId ? t(props.textId) : false)}
       placement={props.side ?? "right"}
     >
       <span>

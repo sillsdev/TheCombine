@@ -1014,7 +1014,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 - [Redux concepts](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
 - [Redux tutorials](https://redux.js.org/tutorials/typescript-quick-start)
-- [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/) (text localization)
+- [React-i18next](https://react.i18next.com/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
 - [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
 

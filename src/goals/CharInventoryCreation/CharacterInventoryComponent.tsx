@@ -8,7 +8,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -20,7 +20,7 @@ import CharacterSetHeader from "goals/CharInventoryCreation/components/Character
 import { Goal } from "types/goals";
 import theme from "types/theme";
 
-interface CharacterInventoryProps {
+interface CharacterInventoryProps extends WithTranslation {
   goal: Goal;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
@@ -46,7 +46,7 @@ interface CharacterInventoryState {
 /**
  * Allows users to define a character inventory for a project
  */
-export default class CharacterInventory extends React.Component<
+export class CharacterInventory extends React.Component<
   CharacterInventoryProps,
   CharacterInventoryState
 > {
@@ -122,7 +122,7 @@ export default class CharacterInventory extends React.Component<
                   style: { margin: theme.spacing(1) },
                 }}
               >
-                <Translate id="buttons.save" />
+                {this.props.t("buttons.save")}
               </LoadingButton>
               <Button
                 id={CANCEL}
@@ -133,7 +133,7 @@ export default class CharacterInventory extends React.Component<
                 style={{ margin: theme.spacing(1) }}
               >
                 {" "}
-                <Translate id="buttons.cancel" />
+                {this.props.t("buttons.cancel")}
               </Button>
             </Grid>
           </Grid>
@@ -147,11 +147,11 @@ export default class CharacterInventory extends React.Component<
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            <Translate id="charInventory.dialog.title" />
+            {this.props.t("charInventory.dialog.title")}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              <Translate id="charInventory.dialog.content" />
+              {this.props.t("charInventory.dialog.content")}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -161,10 +161,10 @@ export default class CharacterInventory extends React.Component<
               color="secondary"
               autoFocus
             >
-              <Translate id="charInventory.dialog.yes" />
+              {this.props.t("charInventory.dialog.yes")}
             </Button>
             <Button onClick={() => this.handleClose()} color="primary">
-              <Translate id="charInventory.dialog.no" />
+              {this.props.t("charInventory.dialog.no")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -172,3 +172,5 @@ export default class CharacterInventory extends React.Component<
     );
   }
 }
+
+export default withTranslation()(CharacterInventory);

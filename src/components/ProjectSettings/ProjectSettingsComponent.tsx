@@ -12,7 +12,7 @@ import {
   Language,
 } from "@material-ui/icons";
 import { useEffect, useMemo, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -42,6 +42,7 @@ export default function ProjectSettingsComponent() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const roleId = currentRoles[projectId];
@@ -65,7 +66,7 @@ export default function ProjectSettingsComponent() {
   }, [permissions, dispatch]);
 
   function archiveUpdate() {
-    toast.success(<Translate id="projectSettings.user.archiveToastSuccess" />);
+    toast.success(t("projectSettings.user.archiveToastSuccess"));
     setTimeout(() => {
       history.push(Path.ProjScreen);
     }, 2000);
@@ -76,7 +77,7 @@ export default function ProjectSettingsComponent() {
       {/* Project List */}
       <BaseSettingsComponent
         icon={<List />}
-        title={<Translate id="projectSettings.projectList" />}
+        title={t("projectSettings.projectList")}
         body={<ProjectSwitch />}
       />
 
@@ -84,7 +85,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<Edit />}
-          title={<Translate id="projectSettings.name" />}
+          title={t("projectSettings.name")}
           body={<ProjectName />}
         />
       )}
@@ -93,7 +94,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<Language />}
-          title={<Translate id="projectSettings.language.languages" />}
+          title={t("projectSettings.language.languages")}
           body={<ProjectLanguages />}
         />
       )}
@@ -102,13 +103,13 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.ImportExport) && (
         <BaseSettingsComponent
           icon={<CloudUpload />}
-          title={<Translate id="projectSettings.import.header" />}
+          title={t("projectSettings.import.header")}
           body={
             imports ? (
               <ProjectImport />
             ) : (
               <Typography variant="body2">
-                <Translate id="projectSettings.import.notAllowed" />
+                {t("projectSettings.import.notAllowed")}
               </Typography>
             )
           }
@@ -119,7 +120,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.ImportExport) && (
         <BaseSettingsComponent
           icon={<GetApp />}
-          title={<Translate id="projectSettings.exportProject.label" />}
+          title={t("projectSettings.exportProject.label")}
           body={<ExportButton projectId={projectId} />}
         />
       )}
@@ -127,7 +128,7 @@ export default function ProjectSettingsComponent() {
       {/* Autocomplete toggle */}
       <BaseSettingsComponent
         icon={<Sms />}
-        title={<Translate id="projectSettings.autocomplete.label" />}
+        title={t("projectSettings.autocomplete.label")}
         body={<ProjectAutocomplete />}
       />
 
@@ -135,7 +136,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<Assignment />}
-          title={<Translate id="projectSettings.definitions.label" />}
+          title={t("projectSettings.definitions.label")}
           body={<ProjectDefinitions />}
         />
       )}
@@ -144,7 +145,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<People />}
-          title={<Translate id="projectSettings.user.currentUsers" />}
+          title={t("projectSettings.user.currentUsers")}
           body={<ActiveUsers />}
         />
       )}
@@ -153,7 +154,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<PersonAdd />}
-          title={<Translate id="projectSettings.user.addUser" />}
+          title={t("projectSettings.user.addUser")}
           body={<AddProjectUsers />}
         />
       )}
@@ -162,7 +163,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.Owner) && (
         <BaseSettingsComponent
           icon={<Archive />}
-          title={<Translate id="projectSettings.user.archive" />}
+          title={t("projectSettings.user.archive")}
           body={
             <ProjectButtonWithConfirmation
               archive // Project Settings are only available for active projects

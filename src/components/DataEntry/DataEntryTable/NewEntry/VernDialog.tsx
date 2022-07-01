@@ -7,7 +7,7 @@ import {
   withStyles,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
@@ -62,11 +62,11 @@ export const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export function VernList(props: VernListProps) {
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
-      <Typography variant="h3">
-        <Translate id="addWords.selectEntry" />
-      </Typography>
+      <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word) => (
           <StyledMenuItem
@@ -90,7 +90,7 @@ export function VernList(props: VernListProps) {
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
-          <Translate id="addWords.newEntryFor" />
+          {t("addWords.newEntryFor")}
           {props.vernacularWords[0].vernacular}
         </StyledMenuItem>
       </MenuList>

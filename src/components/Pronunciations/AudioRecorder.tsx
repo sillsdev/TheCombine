@@ -1,5 +1,5 @@
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import Recorder from "components/Pronunciations/Recorder";
@@ -21,6 +21,7 @@ export function getFileNameForWord(wordId: string): string {
 }
 
 export default function AudioRecorder(props: RecorderProps) {
+  const { t } = useTranslation();
   const recorder = props.recorder ?? new Recorder();
 
   function startRecording() {
@@ -43,7 +44,7 @@ export default function AudioRecorder(props: RecorderProps) {
       })
       .catch((err) => {
         console.error(err);
-        toast.error(<Translate id="pronunciations.noMicAccess" />);
+        toast.error(t("pronunciations.noMicAccess"));
       });
   }
 
