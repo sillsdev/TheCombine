@@ -7,10 +7,10 @@
 
 charts:
   thecombine:
+    # Disable AWS Login - only run released images from
+    # public.ecr.aws/thecombine
     aws-login:
-      enabled: true
-      awsEcr:
-        cron: no
+      enabled: false
     global:
       awsS3Location: prod.thecombine.app
 

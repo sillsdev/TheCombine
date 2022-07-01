@@ -36,9 +36,7 @@ PC such as an Intel NUC. The instructions assume that:
    5. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
 2. [Automated Backups](#automated-backups)
 3. [Design](#design)
-4. [Additional Details](#additional-details)
-   1. [Install Ubuntu Server](#install-ubuntu-server)
-   2. [Vault Password](#vault-password)
+4. [Install Ubuntu Server](#install-ubuntu-server)
 
 ## Step-by-step Instructions
 
@@ -113,7 +111,7 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
    folder in the project:
 
    ```bash
-   ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K --ask-vault-pass
+   ansible-playbook playbook_kube_install.yml --limit <target> -u <target_user> -K
    ```
 
    **Notes:**
@@ -125,8 +123,6 @@ Note that these steps need to be done from a Linux host machine with Ansible ins
    - The _\<target\>_ can be a hostname or a group in the inventory file, e.g. `qa`.
    - Each time you may be prompted for passwords:
    - `BECOME password` - enter your `sudo` password for the _\<target_user\>_ on the _\<target\>_ machine.
-   - `Vault password` - some of the Ansible variable files are encrypted in Ansible vaults. If you need the Ansible
-     vault password, send a request explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
 
    When the playbook has finished the installation, it will have installed a `kubectl` configuration file on your host
    machine in `${HOME}/.kube/<target>/config`.
@@ -181,7 +177,7 @@ For the Production or QA server,
    explaining your need to [admin@thecombine.app](mailto:admin@thecombine.app).
 
 4. Set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. (This is not necessary
-   if the configuration file is at `${HOME}/.kube/config.)
+   if the configuration file is at `${HOME}/.kube/config`.)
 
 #### Install _The Combine_ Cluster
 
@@ -282,24 +278,27 @@ set to any string that is recognized by `cron`. The backups are stored in an Ama
 
 Please see the Kubernetes Design document at [./kubernetes_design/README.md](./kubernetes_design/README.md)
 
-## Additional Details
+## Install Ubuntu Server
 
-### Install Ubuntu Server
+Note: In the instructions below, each step indicates whether the step is to be performed on the Host PC (_[Host]_) or
+the target PC (_[NUC]_).
 
 To install the OS on a new target machine, such as, a new NUC, follow these steps:
 
-1. Download the ISO image for Ubuntu Server from Ubuntu (currently at <https://ubuntu.com/download/server>; click on
-   _Option 2 - Manual server installation_ and then _Download Ubuntu Server 22.04 LTS_)
+1. _[Host]_ Download the ISO image for Ubuntu Server from Ubuntu (currently at <https://ubuntu.com/download/server>;
+   click on _Option 2 - Manual server installation_ and then _Download Ubuntu Server 22.04 LTS_)
 
-2. copy the .iso file to a bootable USB stick:
+2. _[Host]_ copy the .iso file to a bootable USB stick:
 
    1. Ubuntu host: Use the _Startup Disk Creator_, or
    2. Windows host: follow the
       [tutorial](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows#1-overview) on ubuntu.com.
 
-3. Boot the PC from the bootable media and follow the installation instructions. In particular,
+3. _[NUC]_ Connect the NUC to a wired, Ethernet network connection, an HDMI Display and a USB Keyboard.
 
-   1. You will want the installer to format the entire \[virtual\] disk. Using LVM is not recommended.
+4. _[NUC]_ Boot the NUC from the bootable media and follow the installation instructions. In particular,
+
+   1. You will want the installer to format the entire disk. Using LVM is not recommended.
 
    2. Make sure that you install the OpenSSH server when prompted:
       ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
@@ -308,33 +307,42 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 
    3. You do not need to install any additional snaps; the _Ansible_ playbooks will install any needed software
 
-4. Update all packages:
+5. _[NUC]_ Update all packages:
 
    ```bash
    sudo apt update && sudo apt upgrade -y
    ```
 
-5. Reboot:
+6. _[NUC]_ Reboot:
 
    ```bash
    sudo reboot
    ```
 
-### Vault Password
+7. _[NUC]_ Lookup IP Address for the NUC:
 
-The Ansible playbooks require that some of the variable files are encrypted. When running one of the playbooks, you will
-need to provide the password for the encrypted files. The password can be provided by:
+   From the NUC, run the command `ip address`. Record the current IP address for the Ethernet interface; the Ethernet
+   interface starts with `en`, followed by a letter and then a digit (`en[a-z][0-9]`).
 
-1. entering the password when prompted. Add the `--ask-vault-pass` option for `ansible-playbook` to be prompted for the
-   password when it is required.
-2. specify a file that has the password. Add the `--vault-password-file` option for `ansible-playbook` followed by the
-   path of a file that holds the vault password.
-3. set the environment variable `ANSIBLE_VAULT_PASSWORD_FILE` to the path of a file that holds the vault password. This
-   prevents you from needing to provide the vault password whenever you run an ansible playbook.
+8. _[Host]_ Add the NUC to your /etc/hosts:
 
-If you use a file to hold the vault password, then:
+   Edit `/etc/hosts` on your host machine to add an entry for the NUC. The name of the NUC or one of the aliases, much
+   match its name in the Ansible host file, e.g.:
 
-- _Make sure that you are the only one with read permission for the password file!_
-- _Make sure that the password file is not tracked in the git repository!_
+   ```console
+   127.0.0.1   localhost
+   127.0.1.1   mypc
 
-For example, use hidden file in your home directory, such as `${HOME}/.ansible-vault`, with mode of `0600`.
+   10.0.0.41   nuc1
+   ```
+
+   You will need to use `sudo` to edit `/etc/hosts`.
+
+9. _[Host]_ Add your ssh key to the NUCs authorized keys:
+
+   ```bash
+   ssh-copy-id user@nuc
+   ```
+
+   where `user` is the username created when Ubuntu Server was installed on the NUC and `nuc` is the name of the nuc
+   that was added to `/etc/hosts`.
