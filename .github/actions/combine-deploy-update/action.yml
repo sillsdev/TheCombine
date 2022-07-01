@@ -2,7 +2,7 @@ name: "Combine Deploy Updates"
 description: "Deploy updated images for The Combine to the Kubernetes cluster"
 inputs:
   image_registry:
-    description: "Docker Image Repository"
+    description: "Docker Image Registry"
     required: true
   image_registry_alias:
     description: "Custom or default alias for AWS Public ECR registries.  Blank for AWS ECR Private registries."
