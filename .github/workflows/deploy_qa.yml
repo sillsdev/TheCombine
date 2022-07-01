@@ -2,7 +2,7 @@ name: "Deploy Update to QA Server"
 
 on:
   push:
-    branches: [master]
+    branches: [master, fix-ci-cd-repo-names]
 
 jobs:
   build:
