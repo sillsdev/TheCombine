@@ -1,14 +1,14 @@
 import { Button, Card, Grid, TextField, Typography } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router-dom";
 
 import history, { Path } from "browserHistory";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { meetsPasswordRequirements } from "utilities";
 
-interface MatchParams {
+export interface MatchParams {
   token: string;
 }
 
@@ -16,7 +16,9 @@ export interface ResetDispatchProps {
   passwordReset: (token: string, password: string) => void;
 }
 
-interface PasswordResetProps extends RouteComponentProps<MatchParams> {
+interface PasswordResetProps
+  extends RouteComponentProps<MatchParams>,
+    WithTranslation {
   resetState: RequestState;
 }
 
@@ -29,7 +31,7 @@ interface PasswordResetState {
   isPasswordConfirmed: boolean;
 }
 
-export default class PasswordReset extends React.Component<
+export class PasswordReset extends React.Component<
   PasswordResetProps & ResetDispatchProps,
   PasswordResetState
 > {
@@ -72,13 +74,13 @@ export default class PasswordReset extends React.Component<
           <Card style={{ padding: 10, width: 450 }}>
             <form onSubmit={this.onSubmit}>
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="passwordReset.resetTitle" />
+                {this.props.t("passwordReset.resetTitle")}
               </Typography>
               <Grid item>
                 <TextField
                   id="password-reset-password1"
                   variant="outlined"
-                  label={<Translate id="login.password" />}
+                  label={this.props.t("login.password")}
                   type="password"
                   value={this.state.password}
                   style={{ width: "100%" }}
@@ -93,10 +95,11 @@ export default class PasswordReset extends React.Component<
                 />
                 {!this.state.passwordFitsRequirements && (
                   <Typography
+                    id="login.passwordRequirements"
                     variant="body2"
                     style={{ display: "inline", margin: 24, color: "red" }}
                   >
-                    <Translate id="login.passwordRequirements" />
+                    {this.props.t("login.passwordRequirements")}
                   </Typography>
                 )}
               </Grid>
@@ -104,7 +107,7 @@ export default class PasswordReset extends React.Component<
                 <TextField
                   id="password-reset-password2"
                   variant="outlined"
-                  label={<Translate id="login.confirmPassword" />}
+                  label={this.props.t("login.confirmPassword")}
                   type="password"
                   value={this.state.passwordConfirm}
                   style={{ width: "100%" }}
@@ -120,10 +123,11 @@ export default class PasswordReset extends React.Component<
                 {!this.state.isPasswordConfirmed &&
                   this.state.passwordConfirm.length > 0 && (
                     <Typography
+                      id="login.confirmPasswordError"
                       variant="body2"
                       style={{ display: "inline", margin: 24, color: "red" }}
                     >
-                      <Translate id="login.confirmPasswordError" />
+                      {this.props.t("login.confirmPasswordError")}
                     </Typography>
                   )}
               </Grid>
@@ -134,10 +138,11 @@ export default class PasswordReset extends React.Component<
                   this.state.sentAttempt ? (
                     <React.Fragment>
                       <Typography
+                        id="passwordReset.resetFail"
                         variant="body2"
                         style={{ display: "inline", margin: 24, color: "red" }}
                       >
-                        <Translate id="passwordReset.resetFail" />
+                        {this.props.t("passwordReset.resetFail")}
                       </Typography>
                       <Button
                         id="password-reset-submit"
@@ -145,7 +150,7 @@ export default class PasswordReset extends React.Component<
                         color="primary"
                         onClick={this.backToLogin}
                       >
-                        <Translate id="passwordReset.backToLogin" />
+                        {this.props.t("passwordReset.backToLogin")}
                         &nbsp;
                         <ExitToAppIcon />
                       </Button>
@@ -163,7 +168,7 @@ export default class PasswordReset extends React.Component<
                       }
                       onClick={this.onSubmit}
                     >
-                      <Translate id="passwordReset.submit" />
+                      {this.props.t("passwordReset.submit")}
                     </Button>
                   )}
                 </Grid>
@@ -175,3 +180,5 @@ export default class PasswordReset extends React.Component<
     );
   }
 }
+
+export default withTranslation()(PasswordReset);

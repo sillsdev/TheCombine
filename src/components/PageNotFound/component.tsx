@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import history, { Path } from "browserHistory";
 import tractor from "resources/tractor.png";
@@ -10,10 +10,12 @@ import tractor from "resources/tractor.png";
  * to a nonexistent route.
  */
 export default function PageNotFound() {
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
       <Typography variant="h4" style={{ textAlign: "center" }}>
-        <Translate id="generic.404Title" />
+        {t("generic.404Title")}
       </Typography>
       <img
         src={tractor}
@@ -24,7 +26,7 @@ export default function PageNotFound() {
         }}
       />
       <Typography variant="h5" style={{ textAlign: "center" }}>
-        <Translate id="generic.404Text" />
+        {t("generic.404Text")}
       </Typography>
     </React.Fragment>
   );

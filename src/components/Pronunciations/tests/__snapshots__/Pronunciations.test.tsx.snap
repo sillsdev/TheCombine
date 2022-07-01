@@ -24,7 +24,7 @@ Array [
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={-1}
-    title={null}
+    title="pronunciations.recordTooltip"
     type="button"
   >
     <span
@@ -68,7 +68,7 @@ Array [
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={-1}
-    title={null}
+    title="pronunciations.playTooltip"
     type="button"
   >
     <span
@@ -109,7 +109,7 @@ Array [
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={-1}
-    title={null}
+    title="pronunciations.playTooltip"
     type="button"
   >
     <span

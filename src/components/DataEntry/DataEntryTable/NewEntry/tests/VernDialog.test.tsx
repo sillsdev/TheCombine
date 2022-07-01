@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { Word } from "api/models";
 import {
   StyledMenuItem,

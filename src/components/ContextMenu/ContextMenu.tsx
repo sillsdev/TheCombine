@@ -1,10 +1,10 @@
 import { Menu, MenuItem } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 export type MenuType = [string, () => void];
 
-interface ContextMenuProps {
+interface ContextMenuProps extends WithTranslation {
   options: MenuType[];
   anchorName: string;
 }
@@ -14,7 +14,7 @@ interface ContextMenuState {
 
 export const RIGHT_CLICK = "contextmenu";
 
-export default class ContextMenu extends React.Component<
+export class ContextMenu extends React.Component<
   ContextMenuProps,
   ContextMenuState
 > {
@@ -64,7 +64,7 @@ export default class ContextMenu extends React.Component<
           item[1]();
         }}
       >
-        <Translate id={item[0]} />
+        {this.props.t(item[0])}
       </MenuItem>
     );
   }
@@ -83,3 +83,5 @@ export default class ContextMenu extends React.Component<
     );
   }
 }
+
+export default withTranslation()(ContextMenu);

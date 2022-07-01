@@ -1,20 +1,35 @@
 import { Provider } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { resetFail } from "components/PasswordReset/Redux/ResetActions";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
-import PasswordReset from "components/PasswordReset/ResetPage/component";
+import PasswordReset, {
+  MatchParams,
+} from "components/PasswordReset/ResetPage/component";
 
 var testRenderer: ReactTestRenderer;
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore([])({});
 
+const mockRouteComponentProps: RouteComponentProps<MatchParams> = {
+  location: {} as any,
+  history: {} as any,
+  match: { params: { token: "" } } as any,
+};
+
 beforeEach(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <PasswordReset resetState={0} passwordReset={jest.fn()} />
+        <PasswordReset
+          resetState={0}
+          passwordReset={jest.fn()}
+          {...mockRouteComponentProps}
+        />
       </Provider>
     );
   });
@@ -148,6 +163,7 @@ describe("PasswordReset", () => {
           <PasswordReset
             resetState={RequestState.Fail}
             passwordReset={jest.fn()}
+            {...mockRouteComponentProps}
           />
         </Provider>
       );

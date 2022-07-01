@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
@@ -28,6 +28,7 @@ export default function ButtonConfirmation(
   props: ButtonConfirmationProps
 ): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   async function onConfirm() {
     setLoading(true);
@@ -43,12 +44,10 @@ export default function ButtonConfirmation(
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        <Translate id={props.titleId} />
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">{t(props.titleId)}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate id={props.textId} />
+          {t(props.textId)}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -58,7 +57,7 @@ export default function ButtonConfirmation(
           color="primary"
           id={props.buttonIdClose}
         >
-          <Translate id="buttons.cancel" />
+          {t("buttons.cancel")}
         </Button>
         <LoadingButton
           loading={loading}
@@ -69,7 +68,7 @@ export default function ButtonConfirmation(
             id: props.buttonIdConfirm,
           }}
         >
-          <Translate id="buttons.confirm" />
+          {t("buttons.confirm")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

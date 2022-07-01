@@ -7,7 +7,7 @@ import {
   CardActions,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 
@@ -18,6 +18,8 @@ interface ConfirmDeletionProps {
 }
 
 export default function ConfirmDeletion(props: ConfirmDeletionProps) {
+  const { t } = useTranslation();
+
   if (props.user) {
     return (
       <React.Fragment>
@@ -32,7 +34,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                 {props.user.username}
               </Typography>
               <Typography align="center" variant="h6">
-                <Translate id="siteSettings.deleteUser.confirm" />
+                {t("siteSettings.deleteUser.confirm")}
               </Typography>
             </CardContent>
             <CardActions>
@@ -51,7 +53,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       variant="h6"
                       style={{ color: "red" }}
                     >
-                      <Translate id="buttons.delete" />
+                      {t("buttons.delete")}
                     </Typography>
                   </Button>
                 </Grid>
@@ -67,7 +69,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       variant="h6"
                       style={{ color: "inherit" }}
                     >
-                      <Translate id="buttons.cancel" />
+                      {t("buttons.cancel")}
                     </Typography>
                   </Button>
                 </Grid>

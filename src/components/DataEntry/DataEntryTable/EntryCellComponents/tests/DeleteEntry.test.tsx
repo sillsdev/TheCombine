@@ -1,5 +1,7 @@
 import renderer from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
 
 describe("DeleteEntry", () => {

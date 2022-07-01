@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
@@ -35,7 +35,10 @@ export interface SignUpStateProps {
   failureMessage: string;
 }
 
-interface SignUpProps {
+interface SignUpProps
+  extends SignUpDispatchProps,
+    SignUpStateProps,
+    WithTranslation {
   returnToEmailInvite?: () => void;
 }
 
@@ -54,11 +57,8 @@ interface SignUpState {
   };
 }
 
-export default class SignUp extends React.Component<
-  SignUpDispatchProps & SignUpStateProps & SignUpProps,
-  SignUpState
-> {
-  constructor(props: SignUpProps & SignUpDispatchProps & SignUpStateProps) {
+export class SignUp extends React.Component<SignUpProps, SignUpState> {
+  constructor(props: SignUpProps) {
     super(props);
     this.state = {
       name: "",
@@ -150,15 +150,13 @@ export default class SignUp extends React.Component<
   }
 
   render() {
-    // Determine error message
-    let failureMessage;
+    // Determine error message id
     // Intentional weak comparison. props.failureMessage may evaluate to number
     // eslint-disable-next-line eqeqeq
-    if (this.props.failureMessage == "400") {
-      failureMessage = <Translate id="login.signUpFailed" />;
-    } else {
-      failureMessage = <Translate id="login.networkError" />;
-    }
+    const failureMessageId =
+      this.props.failureMessage == "400"
+        ? "login.signUpFailed"
+        : "login.networkError";
 
     return (
       <Grid container justifyContent="center">
@@ -167,7 +165,7 @@ export default class SignUp extends React.Component<
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="login.signUpNew" />
+                {this.props.t("login.signUpNew")}
               </Typography>
 
               {/* Name field */}
@@ -176,14 +174,14 @@ export default class SignUp extends React.Component<
                 required
                 autoFocus
                 autoComplete="name"
-                label={<Translate id="login.name" />}
+                label={this.props.t("login.name")}
                 value={this.state.name}
                 onChange={(e) => this.updateField(e, "name")}
                 error={this.state.error["name"]}
                 helperText={
-                  this.state.error["name"] ? (
-                    <Translate id="login.required" />
-                  ) : undefined
+                  this.state.error["name"]
+                    ? this.props.t("login.required")
+                    : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -196,18 +194,16 @@ export default class SignUp extends React.Component<
                 id={`${idAffix}-username`}
                 required
                 autoComplete="username"
-                label={<Translate id="login.username" />}
+                label={this.props.t("login.username")}
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
                 onBlur={() => this.checkUsername(this.state.username)}
                 error={this.state.error["username"]}
-                helperText={
-                  this.state.error["username"] ? (
-                    <Translate id="login.usernameInvalid" />
-                  ) : (
-                    <Translate id="login.usernameRequirements" />
-                  )
-                }
+                helperText={this.props.t(
+                  this.state.error["username"]
+                    ? "login.usernameInvalid"
+                    : "login.usernameRequirements"
+                )}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -220,7 +216,7 @@ export default class SignUp extends React.Component<
                 required
                 type="email"
                 autoComplete="email"
-                label={<Translate id="login.email" />}
+                label={this.props.t("login.email")}
                 value={this.state.email}
                 onChange={(e) => this.updateField(e, "email")}
                 onBlur={() =>
@@ -228,9 +224,9 @@ export default class SignUp extends React.Component<
                 }
                 error={this.state.error["email"]}
                 helperText={
-                  this.state.error["email"] ? (
-                    <Translate id="login.emailTaken" />
-                  ) : undefined
+                  this.state.error["email"]
+                    ? this.props.t("login.emailTaken")
+                    : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -243,18 +239,16 @@ export default class SignUp extends React.Component<
                 id={`${idAffix}-password1`}
                 required
                 autoComplete="new-password"
-                label={<Translate id="login.password" />}
+                label={this.props.t("login.password")}
                 type="password"
                 value={this.state.password}
                 onChange={(e) => this.updateField(e, "password")}
                 error={this.state.error["password"]}
-                helperText={
-                  this.state.error["password"] ? (
-                    <Translate id="login.passwordRequirements" />
-                  ) : (
-                    <Translate id="login.passwordRequirements" />
-                  )
-                }
+                helperText={this.props.t(
+                  this.state.error["password"]
+                    ? "login.passwordRequirements"
+                    : "login.passwordRequirements"
+                )}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -265,15 +259,15 @@ export default class SignUp extends React.Component<
               <TextField
                 id={`${idAffix}-password2`}
                 autoComplete="new-password"
-                label={<Translate id="login.confirmPassword" />}
+                label={this.props.t("login.confirmPassword")}
                 type="password"
                 value={this.state.confirmPassword}
                 onChange={(e) => this.updateField(e, "confirmPassword")}
                 error={this.state.error["confirmPassword"]}
                 helperText={
-                  this.state.error["confirmPassword"] ? (
-                    <Translate id="login.confirmPasswordError" />
-                  ) : undefined
+                  this.state.error["confirmPassword"]
+                    ? this.props.t("login.confirmPasswordError")
+                    : undefined
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -287,7 +281,7 @@ export default class SignUp extends React.Component<
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
                 >
-                  {failureMessage}
+                  {this.props.t(failureMessageId)}
                 </Typography>
               )}
 
@@ -301,20 +295,20 @@ export default class SignUp extends React.Component<
                       history.push(Path.Login);
                     }}
                   >
-                    <Translate id="login.backToLogin" />
+                    {this.props.t("login.backToLogin")}
                   </Button>
                 </Grid>
                 <Grid item>
                   <LoadingDoneButton
                     loading={this.props.inProgress}
                     done={this.props.success}
-                    doneText={<Translate id="login.signUpSuccess" />}
+                    doneText={this.props.t("login.signUpSuccess")}
                     buttonProps={{
                       id: `${idAffix}-signUp`,
                       color: "primary",
                     }}
                   >
-                    <Translate id="login.signUp" />
+                    {this.props.t("login.signUp")}
                   </LoadingDoneButton>
                 </Grid>
               </Grid>
@@ -325,3 +319,5 @@ export default class SignUp extends React.Component<
     );
   }
 }
+
+export default withTranslation()(SignUp);

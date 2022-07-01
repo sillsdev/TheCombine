@@ -1,6 +1,8 @@
 import { AddComment, Comment } from "@material-ui/icons";
 import renderer from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
 
 const mockText = "Test text";

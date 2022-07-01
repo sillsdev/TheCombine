@@ -3,8 +3,12 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import { defaultState } from "components/GoalTimeline/DefaultState";
-import GoalTimeline from "components/GoalTimeline/GoalTimelineComponent";
+import GoalTimelineWithTranslation, {
+  GoalTimeline,
+} from "components/GoalTimeline/GoalTimelineComponent";
 import { goalTypeToGoal } from "types/goalUtilities";
 import { Goal, GoalType } from "types/goals";
 
@@ -102,7 +106,7 @@ function createTimeline(
   suggestions?: GoalType[]
 ): ReactElement {
   return (
-    <GoalTimeline
+    <GoalTimelineWithTranslation
       chooseGoal={CHOOSE_GOAL}
       clearHistory={CLEAR_HISTORY}
       loadHistory={LOAD_HISTORY}
@@ -111,6 +115,7 @@ function createTimeline(
       currentGoal={defaultState.currentGoal}
       goalTypeSuggestions={suggestions ?? defaultState.allGoalTypes.slice(0, 3)}
       history={history ?? goals.slice(0, 3)}
+      previousGoalType={GoalType.Default}
     />
   );
 }

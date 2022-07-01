@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 interface EditTextDialogProps {
@@ -33,6 +33,7 @@ export default function EditTextDialog(
   props: EditTextDialogProps
 ): ReactElement {
   const [text, setText] = useState<string>(props.text);
+  const { t } = useTranslation();
 
   async function onConfirm() {
     props.close();
@@ -73,9 +74,7 @@ export default function EditTextDialog(
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        <Translate id={props.titleId} />
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">{t(props.titleId)}</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -93,7 +92,7 @@ export default function EditTextDialog(
           color="primary"
           id={props.buttonIdCancel}
         >
-          <Translate id={props.buttonTextIdCancel ?? "buttons.cancel"} />
+          {t(props.buttonTextIdCancel ?? "buttons.cancel")}
         </Button>
         <Button
           onClick={onConfirm}
@@ -101,7 +100,7 @@ export default function EditTextDialog(
           color="primary"
           id={props.buttonIdConfirm}
         >
-          <Translate id={props.buttonTextIdConfirm ?? "buttons.confirm"} />
+          {t(props.buttonTextIdConfirm ?? "buttons.confirm")}
         </Button>
       </DialogActions>
     </Dialog>

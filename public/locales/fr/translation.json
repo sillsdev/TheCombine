@@ -1,0 +1,370 @@
+{
+  "generic": {
+    "404Title": "404: Page not found",
+    "404Text": "Click on the combine to go back home.",
+    "loadingTitle": "Loading...",
+    "loadingText": "Please wait while The Combine processes your data."
+  },
+  "landingPage": {
+    "subtitle": "A Web App for Harvesting Words Together",
+    "privacyPolicy": "Privacy Policy",
+    "descriptionP1": "Words are the building blocks of language, vital to both communicating information and sharing culture. A dictionary, filled with words and their meanings, is a fundamental language resource, helping to document and preserve the language for future generations within the community and providing a bridge for communication with other communities. But many minority-language communities around the world have no such resource in their language, putting them at a disadvantage.",
+    "descriptionP2": "The Combine is an easy-to-use tool in the Rapid Word Collection (RWC) process—a method of gathering the words that will serve as the backbone for a bilingual dictionary. At the heart of the RWC process are native speakers from a particular language community. Presented with one semantic domain at a time, a group of 4-6 native speakers comes up with as many words in their language as they can think of that are related to that domain. The Combine facilitates the entry of these words into a database, along with translations, audio recordings, and notes, to more fully capture their form and meaning.",
+    "descriptionP3": "People with little prior linguistic knowledge and limited computer experience can be quickly trained to use The Combine's main word-harvesting capabilities. Then the resulting words can be organized and edited within The Combine before exporting the data to use in other tools such as FLEx.",
+    "descriptionP4": "Sign up to get started with your word collection!"
+  },
+  "treeView": {
+    "findDomain": "Find a domain",
+    "domainNotFound": "Domain not found"
+  },
+  "addWords": {
+    "selectEntry": "Choisissez une entrée",
+    "selectSense": "Choisissez un sens",
+    "newEntryFor": "Nouvelle entrée pour : ",
+    "newSenseFor": "Nouveau sens pour : ",
+    "senseInWord": "Le mot a déjà ce sens dans ce domaine",
+    "deleteRow": "Effacer cette ligne",
+    "deleteRowWarning": "Cette ligne sera supprimée définitivement !",
+    "addNote": "Add a note",
+    "domain": "Domaine",
+    "gloss": "Glose",
+    "glosses": "Gloses",
+    "pressEnter": "Appuyez sur Entrée pour enregistrer le mot",
+    "vernacular": "Vernaculaire",
+    "wordInDatabase": "Ce mot est déjà dans la base de données"
+  },
+  "appBar": {
+    "dataEntry": "saisie",
+    "dataCleanup": "nettoyage des données"
+  },
+  "login": {
+    "title": "Ouvrir une session",
+    "name": "Votre nom",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "passwordRequirements": "Le mot de passe doit comporter 8 caractères ou plus.",
+    "forgotPassword": "Mot de passe oublié ?",
+    "login": "Se connecter",
+    "failed": "N'a pas réussi à se connecter. Veuillez vérifier votre nom d'utilisateur et votre mot de passe.",
+    "backToLogin": "Retour au login",
+    "signUp": "Sign Up",
+    "signUpNew": "Sign Up New User",
+    "signUpSuccess": "Utilisateur a été créé",
+    "signUpFailed": "Failed to sign up",
+    "usernameInvalid": "Ce nom d'utilisateur est trop court ou est déjà utilisé",
+    "usernameRequirements": "Le nom d'utilisateur doit contenir 3 caractères ou plus.",
+    "emailTaken": "Un utilisateur avec cet email existe déjà",
+    "networkError": "Erreur réseau",
+    "loggingIn": "Se connecter...",
+    "required": "Requis",
+    "confirmPassword": "Confirmer le mot de passe",
+    "confirmPasswordError": "Les mots de passe ne correspondent pas",
+    "email": "Email",
+    "emailError": "Veuillez entrer un email valide"
+  },
+  "passwordReset": {
+    "emailOrUsername": "E-mail ou nom d'utilisateur",
+    "resetRequestTitle": "Réinitialiser la demande de mot de passe",
+    "resetTitle": "Réinitialisez le mot de passe",
+    "resetRequestInstructions": "Nous vous enverrons un lien de réinitialisation unique pour votre compte à votre email",
+    "submit": "Soumettre",
+    "resetFail": "Erreur de réinitialisation du mot de passe",
+    "notFoundError": "Pas de résultat trouvé",
+    "backToLogin": "Retour connexion"
+  },
+  "userMenu": {
+    "siteSettings": "Paramètres du site",
+    "projectSettings": "Paramètres du projet",
+    "userSettings": "Réglages utilisateur",
+    "logout": "Se déconnecter",
+    "userGuide": "User Guide"
+  },
+  "createProject": {
+    "name": "Nom du projet",
+    "upload?": "Upload existing data?",
+    "uploadFormat": "File must be a zipped folder containing a <1>Lexicon Interchange FormaT (LIFT)</1> project.",
+    "create": "Créer un projet",
+    "fileSelected": "Fichier sélectionné",
+    "success": "Projet créé !",
+    "nameTaken": "Nom pris"
+  },
+  "selectProject": {
+    "title": "Sélectionner un projet"
+  },
+  "siteSettings": {
+    "archiveProjectText": "Ce projet ne sera accessible à aucun utilisateur.",
+    "restoreProjectText": "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?",
+    "deleteUser": {
+      "confirm": "Confirm Deleting User from The Combine Database",
+      "toastSuccess": "User successfully deleted",
+      "toastFailure": "Failed to delete user"
+    },
+    "populateUsers": {
+      "toastFailure": "Failed to populate users"
+    },
+    "banners": {
+      "title": "Banners",
+      "loginBanner": "Login Banner",
+      "announcementBanner": "Announcement Banner"
+    }
+  },
+  "userSettings": {
+    "updateSuccess": "Settings successfully updated."
+  },
+  "projectExport": {
+    "cannotExportEmpty": "Project is empty. You cannot export a project with no words.",
+    "downloadInProgress": "Download in progress",
+    "exportFailed": "Export failed",
+    "exportInProgress": "Export in progress"
+  },
+  "projectSettings": {
+    "language": {
+      "header": "Langue",
+      "vernacular": "Vernaculaire",
+      "vernacularLanguage": "Langue vernaculaire",
+      "analysis": "Analyse",
+      "analysisLanguage": "Langue d'analyse",
+      "semanticDomains": "Semantic Domains",
+      "semanticDomainsDefault": "(Default to browser language)",
+      "languages": "Languages",
+      "bcp47": "BCP 47",
+      "name": "Nom",
+      "font": "Font",
+      "addAnalysisLanguage": "Add an alternate analysis language",
+      "makeDefaultAnalysisLanguage": "Make this the default analysis language",
+      "deleteAnalysisLanguage": "Delete this analysis language",
+      "getGlossLanguages": "Find all language codes used in the current data",
+      "addAnalysisLanguageFailed": "Failed to add analysis language",
+      "makeDefaultAnalysisLanguageFailed": "Failed to make default analysis language",
+      "deleteAnalysisLanguageFailed": "Failed to delete analysis language",
+      "updateSemDomWritingSystemFailed": "Failed to update semantic domains language"
+    },
+    "name": "Nom du projet",
+    "projectList": "Projets",
+    "userList": "Utilisateurs",
+    "userManagement": {
+      "makeAdminWarning": "Make this user a project admin?",
+      "makeOwnerWarning": "Transfer project ownership to this user?",
+      "removeAdminWarning": "Remove project admin from this user?",
+      "removeUserWarning": "Remove this user from the project?",
+      "userRemovedToastSuccess": "User Removed!",
+      "userRemovedToastFailure": "Failed to Remove User.",
+      "makeAdminToastSuccess": "User Given Project Admin!",
+      "makeAdminToastFailure": "Failed to give project admin to user.",
+      "removeAdminToastSuccess": "Removed Project Admin from User!",
+      "removeAdminToastFailure": "Failed to remove project admin from user.",
+      "makeOwnerToastSuccess": "Transferred Project Ownership!",
+      "makeOwnerToastFailure": "Failed to transfer project ownership.",
+      "manageUser": "Manage User",
+      "reverseOrder": "Reverse Order"
+    },
+    "import": {
+      "header": "Importer des données",
+      "body": "Les données importées seront ajoutées à ce projet. The Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser.",
+      "chooseFile": "Choisissez Fichier",
+      "done": "Achevé !",
+      "notAllowed": "Vous avez déjà importé un fichier LIFT dans ce projet."
+    },
+    "user": {
+      "currentUsers": "Utilisateurs actuels",
+      "usersAndRoles": "Utilisateurs et rôles",
+      "addUser": "Ajouter utilisateur",
+      "selectUser": "Choisissez un utilisateur",
+      "selectRole": "Choisissez leur rôle",
+      "confirmUser": "Sélectionnez cet utilisateur",
+      "roles": {
+        "typist": "Dactylographe",
+        "cleaner": "Nettoyant",
+        "admin": "Admin"
+      },
+      "archive": "Archive Project",
+      "archiveToastSuccess": "Project Archived!"
+    },
+    "exportProject": {
+      "label": "Exporter le projet"
+    },
+    "autocomplete": {
+      "label": "Autocomplet",
+      "off": "Éteint",
+      "on": "Allumé",
+      "hint": "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
+    },
+    "definitions": {
+      "label": "Display Definitions",
+      "hint": "In Review Entries, show a Definitions column; in Merge Duplicates, show the Definition below the Gloss."
+    },
+    "invite": {
+      "inviteByEmailLabel": "Inviter par email",
+      "userExists": "This user is already registered!",
+      "or": "OU",
+      "searchPlaceholder": "Chercher...",
+      "searchTitle": "Rechercher utilisateurs",
+      "emailLabel": "Email",
+      "messageLabel": "Message",
+      "toastSuccess": "Utilisateur Ajouté !",
+      "toastFail": "Échec de l'ajout de l'utilisateur !"
+    }
+  },
+  "goal": {
+    "selector": {
+      "selectOption": "Sélectionnez cet objectif",
+      "past": "Vous avez terminé :",
+      "present": "Notre recommandation :",
+      "other": "Autres options :",
+      "noHistory": "Rien pour l'instant",
+      "done": "Tout est fait"
+    },
+    "progress": {
+      "step": "Étape",
+      "stepMerge": "Merge Set",
+      "of": "sur"
+    }
+  },
+  "createStrWordInv": {
+    "title": "Créer un inventaire des mots grammaticaux"
+  },
+  "handleFlags": {
+    "title": "Gérer les drapeaux"
+  },
+  "spellCheckGloss": {
+    "title": "Vérifier l'orthographe du glossaire"
+  },
+  "validateChars": {
+    "title": "Valider les caractères"
+  },
+  "validateStrWords": {
+    "title": "Validate Structural Characters"
+  },
+  "reviewEntries": {
+    "title": "Examiner les entrées",
+    "sense": "Sens",
+    "noVernacular": "Pas d'entrée vernaculaire !",
+    "noDefinition": "Pas d'entrée de définitions",
+    "noGloss": "Pas d'entrée de gloses",
+    "noDomain": "Aucun domaine sélectionné",
+    "noNote": "Pas de note",
+    "deleteWordWarning": "Ce mot sera définitivement supprimé !",
+    "error": {
+      "gloss": "Les gloses ne peuvent pas être laissés vides",
+      "domain": "Les domaines ne peuvent pas être laissés vides",
+      "senses": "Ne pas enregistrer entrée sans sens",
+      "vernacular": "Le vernaculaire ne peut pas être laissé vide"
+    }
+  },
+  "charInventory": {
+    "title": "Créer un inventaire de caractères",
+    "characters": "caractères",
+    "examples": "Exemples",
+    "occurrences": "occurrences",
+    "status": "statut",
+    "sortBy": "Trier par",
+    "characterSet": {
+      "title": "Jeu de caractères vernaculaires :",
+      "help": "Définir les caractères valides pour cette langue",
+      "addButton": "Ajouter des caractères",
+      "addButtonTitle": "Ajouter les caractères de la boîte au jeu de caractères",
+      "deleteButton": "Supprimer sélectionné",
+      "deleteButtonTitle": "Supprimer les caractères sélectionnés du jeu de caractères",
+      "acceptedCharacters": "Caractères approuvés",
+      "rejectedCharacters": "Caractères rejetés",
+      "noCharacters": "Aucun caractère existe ! Tapez les caractères dans la case ci-dessous pour commencer.",
+      "required": "Ajouter des caractères en les saisissant dans cette case",
+      "advanced": "Avancé",
+      "occurrences": "occurrences",
+      "find": "Rechercher",
+      "replace": "Replace",
+      "replaceWith": "Remplacer avec",
+      "replaceAll": "Replace all occurences of",
+      "findAndReplace": "Find & Replace",
+      "apply": "appliquer",
+      "charDetails": "(Character Details has not been implemented.)"
+    },
+    "sampleWords": {
+      "title": "Exemples de mots",
+      "description": "Voici quelques mots qui ne correspondent pas à votre jeu de caractères actuel :",
+      "ignore": "Ignorer ce mot pour l'instant",
+      "add": "Ajouter les caractères dans ce mot au jeu"
+    },
+    "dialog": {
+      "title": "Modifications non sauvegardées",
+      "content": "Supprimer les modifications apportées au jeu de caractères ?",
+      "yes": "oui",
+      "no": "non"
+    },
+    "changes": {
+      "noChanges": "No changes made in this goal.",
+      "more": "more"
+    }
+  },
+  "mergeDups": {
+    "title": "Fusionner les doublons",
+    "helpText": {
+      "dragCard": "Drag a card here to merge.",
+      "root": "Faites glisser les mots ici pour commencer à les fusionner",
+      "dups": "Faites glisser les mots en double ici",
+      "sense": "Faites glisser un nouveau sens ici",
+      "saveAndContinue": "Save changes and load a new set of words",
+      "skip": "Discard changes and load a new set of words",
+      "list": "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots",
+      "noDups": "Nothing to merge.",
+      "delete": "Delete sense",
+      "deleteDialog": "Delete this sense?"
+    },
+    "completed": {
+      "number": "Number of merges completed: "
+    },
+    "continueDialog": {
+      "title": "Continue merging?",
+      "yes": "oui",
+      "no": "non"
+    },
+    "undo": {
+      "undo": "Undo Merge",
+      "undoDialog": "Undo this merge?",
+      "undoDisabled": "Undo Unavailable"
+    }
+  },
+  "flags": {
+    "add": "Add flag",
+    "edit": "Edit flag",
+    "remove": "Remove flag",
+    "save": "Save flag",
+    "text": "Text: "
+  },
+  "buttons": {
+    "accept": "Accepter",
+    "accepted": "Acceptée",
+    "add": "Ajouter",
+    "archive": "Archiver",
+    "browse": "Parcourir",
+    "cancel": "Annuler",
+    "clearText": "Clear text",
+    "confirm": "Confirmer",
+    "delete": "Effacer",
+    "deletePermanently": "Effacer pour toujours ?",
+    "done": "Achevé",
+    "exit": "Exit",
+    "export": "Exporter",
+    "invite": "Inviter",
+    "makeAdmin": "Make Admin",
+    "makeOwner": "Make Owner",
+    "proceedWithCaution": "Procéder avec prudence !",
+    "reject": "Rejeter",
+    "rejected": "Rejeté",
+    "removeAdmin": "Remove Project Admin",
+    "removeFromProject": "Remove from Project",
+    "reset": "Reset",
+    "restore": "Restaurer",
+    "save": "Enregistrer",
+    "saveAndContinue": "Enregistrer et continuer",
+    "skip": "Sauter",
+    "undecided": "Incertain",
+    "upload": "Télécharger"
+  },
+  "pronunciations": {
+    "recordTooltip": "Maintenez le bouton enfoncée pour enregistrer.",
+    "playTooltip": "Clic pour lire; Maj + clic pour effacer.",
+    "noMicAccess": "Erreur d'enregistrement : Impossible d'accéder à un microphone.",
+    "deleteRecording": "Effacer enregistrement"
+  }
+}

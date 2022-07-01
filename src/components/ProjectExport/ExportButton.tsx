@@ -1,5 +1,5 @@
 import { ButtonProps } from "@material-ui/core/Button";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import { isFrontierNonempty } from "backend";
@@ -14,14 +14,16 @@ interface ExportButtonProps {
 }
 
 /** A button for exporting project to Lift file */
-export function ExportButton(props: ExportButtonProps & LocalizeContextProps) {
+export default function ExportButton(props: ExportButtonProps) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+
   function exportProj() {
     isFrontierNonempty(props.projectId).then((isNonempty) => {
       if (isNonempty) {
         dispatch(asyncExportProject(props.projectId));
       } else {
-        alert(props.translate("projectExport.cannotExportEmpty"));
+        alert(t("projectExport.cannotExportEmpty"));
       }
     });
   }
@@ -45,9 +47,7 @@ export function ExportButton(props: ExportButtonProps & LocalizeContextProps) {
         id: `project-${props.projectId}-export`,
       }}
     >
-      {props.translate("buttons.export")}
+      {t("buttons.export")}
     </LoadingButton>
   );
 }
-
-export default withLocalize(ExportButton);

@@ -1,7 +1,7 @@
 import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -36,6 +36,7 @@ export default function CancelConfirmDialogCollection(
   const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
   const [makeOwnerDialogOpen, setMakeOwner] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
+  const { t } = useTranslation();
 
   function removeUser(userId: string) {
     removeUserRole([Permission.DeleteEditSettingsAndUsers], userId)
@@ -43,14 +44,14 @@ export default function CancelConfirmDialogCollection(
         setRemoveUser(false);
         setAnchorEl(undefined);
         toast.success(
-          <Translate id="projectSettings.userManagement.userRemovedToastSuccess" />
+          t("projectSettings.userManagement.userRemovedToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
         toast.error(
-          <Translate id="projectSettings.userManagement.userRemovedToastFailure" />
+          t("projectSettings.userManagement.userRemovedToastFailure")
         );
       });
   }
@@ -69,15 +70,13 @@ export default function CancelConfirmDialogCollection(
         setMakeAdmin(false);
         setAnchorEl(undefined);
         toast.success(
-          <Translate id="projectSettings.userManagement.makeAdminToastSuccess" />
+          t("projectSettings.userManagement.makeAdminToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast.error(
-          <Translate id="projectSettings.userManagement.makeAdminToastFailure" />
-        );
+        toast.error(t("projectSettings.userManagement.makeAdminToastFailure"));
       });
   }
 
@@ -90,14 +89,14 @@ export default function CancelConfirmDialogCollection(
         setRemoveAdmin(false);
         setAnchorEl(undefined);
         toast.success(
-          <Translate id="projectSettings.userManagement.removeAdminToastSuccess" />
+          t("projectSettings.userManagement.removeAdminToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
         toast.error(
-          <Translate id="projectSettings.userManagement.removeAdminToastFailure" />
+          t("projectSettings.userManagement.removeAdminToastFailure")
         );
       });
   }
@@ -128,15 +127,13 @@ export default function CancelConfirmDialogCollection(
         setMakeOwner(false);
         setAnchorEl(undefined);
         toast.success(
-          <Translate id="projectSettings.userManagement.makeOwnerToastSuccess" />
+          t("projectSettings.userManagement.makeOwnerToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
-        toast.error(
-          <Translate id="projectSettings.userManagement.makeOwnerToastFailure" />
-        );
+        toast.error(t("projectSettings.userManagement.makeOwnerToastFailure"));
       });
   }
 
@@ -146,7 +143,7 @@ export default function CancelConfirmDialogCollection(
       id={idRemoveUser}
       onClick={() => setRemoveUser(true)}
     >
-      <Translate id="buttons.removeFromProject" />
+      {t("buttons.removeFromProject")}
     </MenuItem>,
   ];
   if (props.isProjectOwner) {
@@ -156,7 +153,7 @@ export default function CancelConfirmDialogCollection(
         id={idRemoveAdmin}
         onClick={() => setRemoveAdmin(true)}
       >
-        <Translate id="buttons.removeAdmin" />
+        {t("buttons.removeAdmin")}
       </MenuItem>
     ) : (
       <MenuItem
@@ -164,7 +161,7 @@ export default function CancelConfirmDialogCollection(
         id={idAddAdmin}
         onClick={() => setMakeAdmin(true)}
       >
-        <Translate id="buttons.makeAdmin" />
+        {t("buttons.makeAdmin")}
       </MenuItem>
     );
     managementOptions.push(adminOption);
@@ -176,7 +173,7 @@ export default function CancelConfirmDialogCollection(
           id={idMakeOwner}
           onClick={() => setMakeOwner(true)}
         >
-          <Translate id="buttons.makeOwner" />
+          {t("buttons.makeOwner")}
         </MenuItem>
       );
     }
@@ -217,7 +214,7 @@ export default function CancelConfirmDialogCollection(
         buttonIdConfirm={`${idMakeOwner}-confirm`}
       />
       <Tooltip
-        title={<Translate id="projectSettings.userManagement.manageUser" />}
+        title={t("projectSettings.userManagement.manageUser")}
         placement="right"
       >
         <IconButton

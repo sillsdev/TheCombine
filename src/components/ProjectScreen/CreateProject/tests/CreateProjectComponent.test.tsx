@@ -1,3 +1,4 @@
+import { I18nextProvider } from "react-i18next";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
@@ -5,8 +6,9 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import CreateProjectComponent from "components/ProjectScreen/CreateProject";
-import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
+import CreateProjectWithProps from "components/ProjectScreen/CreateProject";
+import { CreateProject } from "components/ProjectScreen/CreateProject/CreateProjectComponent";
+import i18n from "tests/i18nMock";
 
 const createMockStore = configureMockStore();
 const mockState = {
@@ -35,7 +37,9 @@ it("renders without crashing", () => {
   renderer.act(() => {
     renderer.create(
       <Provider store={mockStore}>
-        <CreateProjectComponent />
+        <I18nextProvider i18n={i18n}>
+          <CreateProjectWithProps />
+        </I18nextProvider>
       </Provider>
     );
   });
@@ -45,7 +49,7 @@ it("errors on empty name", () => {
   renderer.act(() => {
     projectMaster = renderer.create(
       <Provider store={mockStore}>
-        <CreateProjectComponent />
+        <CreateProjectWithProps />
       </Provider>
     );
   });

@@ -1,6 +1,6 @@
 import { AppBar, Button, Grid, Toolbar, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { RuntimeConfig } from "types/runtimeConfig";
 
@@ -8,7 +8,9 @@ export const bottomBarHeight = 55;
 
 /** A  bar shown at the bottom of the landing page. */
 export default function BottomBar(): ReactElement {
+  const { t } = useTranslation();
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
+
   return (
     <div style={{ marginTop: bottomBarHeight }}>
       <AppBar
@@ -40,7 +42,7 @@ export default function BottomBar(): ReactElement {
                 id="privacy-policy"
               >
                 <Typography variant="caption">
-                  <Translate id="landingPage.privacyPolicy" />
+                  {t("landingPage.privacyPolicy")}
                 </Typography>
               </Button>
             </Grid>

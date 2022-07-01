@@ -1,6 +1,6 @@
 import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { FiberManualRecord } from "@material-ui/icons";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -22,6 +22,7 @@ export default function RecorderIcon(props: RecorderIconProps) {
     (state: StoreState) => state.pronunciationsState
   );
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const useStyles = makeStyles((theme) => ({
     button: {
@@ -66,10 +67,7 @@ export default function RecorderIcon(props: RecorderIconProps) {
   }
 
   return (
-    <Tooltip
-      title={<Translate id="pronunciations.recordTooltip" />}
-      placement="top"
-    >
+    <Tooltip title={t("pronunciations.recordTooltip")} placement="top">
       <IconButton
         tabIndex={-1}
         onMouseDown={toggleIsRecordingToTrue}

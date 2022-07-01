@@ -3,6 +3,8 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import { Sense, Word } from "api/models";
 import DataEntryTable, {
   addSemanticDomainToSense,

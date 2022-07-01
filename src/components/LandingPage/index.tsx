@@ -1,6 +1,6 @@
 import { Box, Grid, Hidden, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
@@ -22,7 +22,7 @@ export default function LandingPage(): ReactElement {
         <Hidden xsDown>
           <Grid item sm md xl>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
-              {body()}
+              <Body />
             </Box>
           </Grid>
           <Grid item sm={3} md={2} xl={1}>
@@ -40,7 +40,7 @@ export default function LandingPage(): ReactElement {
                 overflow: "auto",
               }}
             >
-              {body()}
+              <Body />
             </Box>
           </Grid>
         </Hidden>
@@ -50,18 +50,20 @@ export default function LandingPage(): ReactElement {
   );
 }
 
-function body(): ReactElement {
+function Body(): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
       <div style={{ padding: theme.spacing(3) }}>
         <Typography variant="body2" align="justify">
-          <Translate id="landingPage.descriptionP1" />
+          {t("landingPage.descriptionP1")}
           {<br />}
           {<br />}
-          <Translate id="landingPage.descriptionP2" />
+          {t("landingPage.descriptionP2")}
           {<br />}
           {<br />}
-          <Translate id="landingPage.descriptionP3" />
+          {t("landingPage.descriptionP3")}
           {<br />}
         </Typography>
         <Typography
@@ -72,7 +74,7 @@ function body(): ReactElement {
             paddingBottom: theme.spacing(1),
           }}
         >
-          <Translate id="landingPage.descriptionP4" />
+          {t("landingPage.descriptionP4")}
         </Typography>
         <SignUpButton buttonIdPrefix="landing-body" />
       </div>

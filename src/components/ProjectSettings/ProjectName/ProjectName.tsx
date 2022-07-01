@@ -1,10 +1,10 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 
-interface NameProps {
+interface NameProps extends WithTranslation {
   project: Project;
   saveChangesToProject: (project: Project) => void;
 }
@@ -13,7 +13,7 @@ interface NameState {
   projectName: string;
 }
 
-export default class ProjectName extends React.Component<NameProps, NameState> {
+export class ProjectName extends React.Component<NameProps, NameState> {
   constructor(props: NameProps) {
     super(props);
     this.state = {
@@ -56,10 +56,12 @@ export default class ProjectName extends React.Component<NameProps, NameState> {
             }
             id="project-name-save"
           >
-            <Translate id="buttons.save" />
+            {this.props.t("buttons.save")}
           </Button>
         </Grid>
       </Grid>
     );
   }
 }
+
+export default withTranslation()(ProjectName);

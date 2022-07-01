@@ -6,7 +6,7 @@ import {
   SettingsApplications,
 } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
 import { getUser } from "backend";
@@ -102,6 +102,7 @@ interface UserMenuListProps {
 export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   return (
     <div ref={props.forwardedRef}>
       {/* Only show Site Settings link to Admin users. */}
@@ -115,7 +116,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           }}
         >
           <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
-          <Translate id="userMenu.siteSettings" />
+          {t("userMenu.siteSettings")}
         </MenuItem>
       )}
 
@@ -127,7 +128,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         }}
       >
         <Person style={{ marginRight: theme.spacing(1) }} />
-        <Translate id="userMenu.userSettings" />
+        {t("userMenu.userSettings")}
       </MenuItem>
 
       <MenuItem
@@ -138,7 +139,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         }}
       >
         <Help style={{ marginRight: theme.spacing(1) }} />
-        <Translate id="userMenu.userGuide" />
+        {t("userMenu.userGuide")}
       </MenuItem>
 
       <MenuItem
@@ -149,7 +150,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         }}
       >
         <ExitToApp style={{ marginRight: theme.spacing(1) }} />
-        <Translate id="userMenu.logout" />
+        {t("userMenu.logout")}
       </MenuItem>
 
       <MenuItem

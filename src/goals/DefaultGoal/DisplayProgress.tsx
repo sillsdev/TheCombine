@@ -1,5 +1,5 @@
 import { Grid, LinearProgress, Paper, Typography } from "@material-ui/core";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { StoreState } from "types";
@@ -20,8 +20,9 @@ export default function DisplayProgress() {
   const goalType = useSelector(
     (state: StoreState) => state.goalsState.currentGoal.goalType
   );
-  const percentComplete = (currentStep / numSteps) * 100;
+  const { t } = useTranslation();
 
+  const percentComplete = (currentStep / numSteps) * 100;
   const stepTranslateId =
     goalType === GoalType.MergeDups
       ? "goal.progress.stepMerge"
@@ -32,9 +33,9 @@ export default function DisplayProgress() {
       <Grid container direction="column">
         <Grid item xs>
           <Typography variant={"h4"}>
-            <Translate id={stepTranslateId} />
+            {t(stepTranslateId)}
             {` ${currentStep + 1} `}
-            <Translate id="goal.progress.of" />
+            {t("goal.progress.of")}
             {` ${numSteps}`}
           </Typography>
         </Grid>

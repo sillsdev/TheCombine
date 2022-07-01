@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import "tests/mockReactI18next";
+
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
 // This test relies on nothing in the store so mock an empty store

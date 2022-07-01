@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import React, { ReactElement } from "react";
+import React, { ReactElement, Suspense } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
@@ -22,20 +22,22 @@ export default class App extends React.Component {
   render(): ReactElement {
     return (
       <div className="App">
-        <AnnouncementBanner />
-        <Switch>
-          <Route exact path={Path.Root} component={LandingPage} />
-          <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
-          <Route path={Path.Login} component={Login} />
-          <Route path={Path.SignUp} component={SignUp} />
-          <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
-          <Route path={Path.PwRequest} component={ResetRequest} />
-          <Route
-            path={`${Path.ProjInvite}/:project/:token`}
-            component={ProjectInvite}
-          />
-          <Route component={PageNotFound} />
-        </Switch>
+        <Suspense fallback={<div />}>
+          <AnnouncementBanner />
+          <Switch>
+            <Route exact path={Path.Root} component={LandingPage} />
+            <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
+            <Route path={Path.Login} component={Login} />
+            <Route path={Path.SignUp} component={SignUp} />
+            <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
+            <Route path={Path.PwRequest} component={ResetRequest} />
+            <Route
+              path={`${Path.ProjInvite}/:project/:token`}
+              component={ProjectInvite}
+            />
+            <Route component={PageNotFound} />
+          </Switch>
+        </Suspense>
       </div>
     );
   }

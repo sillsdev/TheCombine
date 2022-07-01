@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
@@ -21,9 +21,6 @@ const customStyles = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface UserProps {}
-
 interface UserState {
   allUsers: User[];
   openUser?: User;
@@ -33,8 +30,8 @@ interface UserState {
   prevUserToEdit?: User;
 }
 
-class UserManagement extends React.Component<UserProps, UserState> {
-  constructor(props: UserProps) {
+class UserManagement extends React.Component<WithTranslation, UserState> {
+  constructor(props: WithTranslation) {
     super(props);
     this.state = {
       allUsers: [],
@@ -79,19 +76,19 @@ class UserManagement extends React.Component<UserProps, UserState> {
       })
       .catch((err) => {
         console.error(err);
-        toast.error(<Translate id="siteSettings.populateUsers.toastFailure" />);
+        toast.error(this.props.t("siteSettings.populateUsers.toastFailure"));
       });
   }
 
   deleteUser(userId: string) {
     deleteUser(userId)
       .then(() => {
-        toast.success(<Translate id="siteSettings.deleteUser.toastSuccess" />);
+        toast.success(this.props.t("siteSettings.deleteUser.toastSuccess"));
         this.populateUsers();
       })
       .catch((err) => {
         console.error(err);
-        toast.error(<Translate id="siteSettings.deleteUser.toastFailure" />);
+        toast.error(this.props.t("siteSettings.deleteUser.toastFailure"));
       });
     this.handleCloseModal();
   }
@@ -125,4 +122,4 @@ class UserManagement extends React.Component<UserProps, UserState> {
   }
 }
 
-export default UserManagement;
+export default withTranslation()(UserManagement);

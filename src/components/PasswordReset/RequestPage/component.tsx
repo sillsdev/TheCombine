@@ -1,6 +1,6 @@
 import { Card, Grid, TextField, Typography } from "@material-ui/core";
 import React from "react";
-import { Translate } from "react-localize-redux";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
@@ -10,6 +10,10 @@ export interface ResetRequestDispatchProps {
   passwordResetRequest: (email: string) => void;
 }
 
+interface ResetRequestProps
+  extends ResetRequestDispatchProps,
+    WithTranslation {}
+
 interface ResetRequestState {
   emailOrUsername: string;
   emailOrUsernameExists: boolean;
@@ -17,11 +21,11 @@ interface ResetRequestState {
   done: boolean;
 }
 
-export default class ResetRequest extends React.Component<
-  ResetRequestDispatchProps,
+export class ResetRequest extends React.Component<
+  ResetRequestProps,
   ResetRequestState
 > {
-  constructor(props: ResetRequestDispatchProps) {
+  constructor(props: ResetRequestProps) {
     super(props);
     this.state = {
       emailOrUsernameExists: true,
@@ -59,10 +63,10 @@ export default class ResetRequest extends React.Component<
         <Grid container justifyContent="center">
           <Card style={{ padding: 10, width: 450 }}>
             <Typography variant="h5" align="center">
-              <Translate id="passwordReset.resetRequestTitle" />
+              {this.props.t("passwordReset.resetRequestTitle")}
             </Typography>
             <Typography variant="subtitle1" align="center">
-              <Translate id="passwordReset.resetRequestInstructions" />
+              {this.props.t("passwordReset.resetRequestInstructions")}
             </Typography>
             <form onSubmit={this.onSubmit}>
               <Grid item>
@@ -71,14 +75,13 @@ export default class ResetRequest extends React.Component<
                   required
                   type="text"
                   variant="outlined"
-                  label={<Translate id="passwordReset.emailOrUsername" />}
+                  label={this.props.t("passwordReset.emailOrUsername")}
                   value={this.state.emailOrUsername}
                   style={{ width: "100%" }}
                   error={!this.state.emailOrUsernameExists}
                   helperText={
-                    !this.state.emailOrUsernameExists && (
-                      <Translate id="passwordReset.notFoundError" />
-                    )
+                    !this.state.emailOrUsernameExists &&
+                    this.props.t("passwordReset.notFoundError")
                   }
                   margin="normal"
                   onChange={(e) => this.setTextField(e.target.value)}
@@ -96,7 +99,7 @@ export default class ResetRequest extends React.Component<
                     id: "password-reset-request",
                   }}
                 >
-                  <Translate id="passwordReset.submit" />
+                  {this.props.t("passwordReset.submit")}
                 </LoadingDoneButton>
               </Grid>
             </form>
@@ -106,3 +109,5 @@ export default class ResetRequest extends React.Component<
     );
   }
 }
+
+export default withTranslation()(ResetRequest);

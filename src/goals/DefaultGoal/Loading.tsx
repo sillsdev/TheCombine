@@ -1,12 +1,14 @@
 import { Typography } from "@material-ui/core";
 import { animate } from "motion";
 import React, { ReactElement, useEffect } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import tractor from "resources/tractor.png";
 
 /** A custom loading page */
 export default function Loading(): ReactElement {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const half = window.innerWidth * 0.75;
     animate(
@@ -19,7 +21,7 @@ export default function Loading(): ReactElement {
   return (
     <React.Fragment>
       <Typography variant="h4" style={{ textAlign: "center" }}>
-        <Translate id="generic.loadingTitle" />
+        {t("generic.loadingTitle")}
       </Typography>
       <img
         src={tractor}
@@ -28,7 +30,7 @@ export default function Loading(): ReactElement {
         style={{ width: "50%", margin: "0% 25%" }}
       />
       <Typography variant="h5" style={{ textAlign: "center" }}>
-        <Translate id="generic.loadingText" />
+        {t("generic.loadingText")}
       </Typography>
     </React.Fragment>
   );

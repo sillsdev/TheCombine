@@ -1,7 +1,7 @@
 import { Button, Card, Grid, Paper, Typography } from "@material-ui/core";
 import { ArrowRightAlt } from "@material-ui/icons";
 import React, { ReactElement, useEffect, useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Flag, MergeUndoIds, Sense, Word } from "api/models";
@@ -19,10 +19,12 @@ export default function MergeDupsCompleted(): ReactElement {
     (state: StoreState) =>
       state.goalsState.currentGoal.changes as MergesCompleted
   );
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
       <Typography component="h1" variant="h4">
-        <Translate id="mergeDups.title" />
+        {t("mergeDups.title")}
       </Typography>
       {MergesMade(changes)}
     </React.Fragment>
@@ -39,9 +41,11 @@ function MergesMade(changes: MergesCompleted): ReactElement {
 }
 
 export function MergesCount(changes: MergesCompleted): ReactElement {
+  const { t } = useTranslation();
+
   return (
     <Typography>
-      <Translate id="mergeDups.completed.number" />
+      {t("mergeDups.completed.number")}
       {changes.merges?.length ?? 0}
     </Typography>
   );
@@ -97,6 +101,7 @@ interface UndoButtonProps {
 function UndoButton(props: UndoButtonProps): ReactElement {
   const [isUndoBtnEnabled, setUndoBtnEnabled] = useState<boolean>(false);
   const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     function checkFrontier(): void {
@@ -118,7 +123,7 @@ function UndoButton(props: UndoButtonProps): ReactElement {
             id={`merge-undo-${props.merge.parentIds.join("-")}`}
             onClick={() => setUndoDialogOpen(true)}
           >
-            <Translate id={props.textId} />
+            {t(props.textId)}
           </Button>
           <CancelConfirmDialog
             open={undoDialogOpen}
@@ -137,9 +142,7 @@ function UndoButton(props: UndoButtonProps): ReactElement {
   return (
     <Grid container direction="column" justifyContent="center">
       <div>
-        <Button disabled>
-          <Translate id={props.disabledId} />
-        </Button>
+        <Button disabled>{t(props.disabledId)}</Button>
       </div>
     </Grid>
   );

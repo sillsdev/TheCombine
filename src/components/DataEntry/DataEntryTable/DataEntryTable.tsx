@@ -1,11 +1,7 @@
 import { Button, Grid, Typography } from "@material-ui/core";
 import { ExitToApp, List as ListIcon } from "@material-ui/icons";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { WithTranslation, withTranslation } from "react-i18next";
 
 import {
   AutocompleteSetting,
@@ -29,7 +25,7 @@ import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 
 export const exitButtonId = "exit-to-domain-tree";
 
-interface DataEntryTableProps {
+interface DataEntryTableProps extends WithTranslation {
   semanticDomain: SemanticDomain;
   treeIsOpen?: boolean;
   openTree: () => void;
@@ -91,10 +87,10 @@ export function addSenseToWord(
  * A data entry table containing recent word entries
  */
 export class DataEntryTable extends React.Component<
-  DataEntryTableProps & LocalizeContextProps,
+  DataEntryTableProps,
   DataEntryTableState
 > {
-  constructor(props: DataEntryTableProps & LocalizeContextProps) {
+  constructor(props: DataEntryTableProps) {
     super(props);
     this.state = {
       existingWords: [],
@@ -242,7 +238,7 @@ export class DataEntryTable extends React.Component<
         ) {
           // User is trying to add a sense that already exists
           alert(
-            this.props.translate("addWords.senseInWord") +
+            this.props.t("addWords.senseInWord") +
               `: ${existingWord.vernacular}, ${gloss}`
           );
           return;
@@ -598,7 +594,7 @@ export class DataEntryTable extends React.Component<
                 marginBottom: theme.spacing(2),
               }}
             >
-              <Translate id="addWords.vernacular" />
+              {this.props.t("addWords.vernacular")}
             </Typography>
           </Grid>
           <Grid item xs={4}>
@@ -610,7 +606,7 @@ export class DataEntryTable extends React.Component<
                 marginBottom: theme.spacing(2),
               }}
             >
-              <Translate id="addWords.glosses" />
+              {this.props.t("addWords.glosses")}
             </Typography>
           </Grid>
 
@@ -697,7 +693,7 @@ export class DataEntryTable extends React.Component<
               tabIndex={-1}
               onClick={this.props.openTree}
             >
-              <Translate id="buttons.exit" />
+              {this.props.t("buttons.exit")}
             </Button>
           </Grid>
         </Grid>
@@ -706,4 +702,4 @@ export class DataEntryTable extends React.Component<
   }
 }
 
-export default withLocalize(DataEntryTable);
+export default withTranslation()(DataEntryTable);

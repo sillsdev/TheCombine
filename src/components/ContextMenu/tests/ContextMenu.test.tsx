@@ -4,6 +4,8 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 
+import "tests/mockReactI18next";
+
 import ContextMenu, {
   MenuType,
   RIGHT_CLICK,

@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import React, { useState } from "react";
-import { Translate } from "react-localize-redux";
+import { useTranslation } from "react-i18next";
 
 import { uploadAvatar } from "backend";
 import { getUserId } from "backend/localStorage";
@@ -15,6 +15,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
   const [filename, setFilename] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   function updateFile(file: File) {
     if (file) {
@@ -45,7 +46,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
       {/* Displays the name of the selected file */}
       {filename && (
         <Typography variant="body1" noWrap>
-          <Translate id="createProject.fileSelected" />: {filename}
+          {t("createProject.fileSelected")}: {filename}
         </Typography>
       )}
       <Grid container spacing={1} justifyContent="flex-start">
@@ -54,7 +55,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
             updateFile={(file) => updateFile(file)}
             accept="image/*"
           >
-            <Translate id="buttons.browse" />
+            {t("buttons.browse")}
           </FileInputButton>
         </Grid>
         <Grid item>
@@ -63,7 +64,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
             done={done}
             buttonProps={{ type: "submit", id: "avatar-upload-save" }}
           >
-            <Translate id="buttons.save" />
+            {t("buttons.save")}
           </LoadingDoneButton>
         </Grid>
       </Grid>
