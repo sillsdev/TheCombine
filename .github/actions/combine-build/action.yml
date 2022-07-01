@@ -5,7 +5,10 @@ inputs:
     description: "Docker Image Registry"
     required: true
   image_registry_alias:
-    description: "Custom or default alias for AWS Public ECR registries.  Blank for AWS ECR Private registries."
+    description: >
+      Custom or default alias for AWS Public ECR registries.  Blank for AWS ECR Private registries.
+      If the image_registry_alias is specified, include the '/' at the beginning of the string,
+      e.g. /thecombine
     required: false
     default: ""
   aws_access_key_id:
