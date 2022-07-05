@@ -192,7 +192,10 @@ def main() -> None:
         config: Dict[str, Any] = yaml.safe_load(file)
 
     # Build the Chart.yaml files from templates
-    combine_charts.generate(get_release())
+    if args.image_tag != "latest":
+        combine_charts.generate(args.image_tag)
+    else:
+        combine_charts.generate(get_release())
 
     target = args.target
     while target not in config["targets"]:
