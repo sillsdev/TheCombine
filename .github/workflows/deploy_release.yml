@@ -44,3 +44,11 @@ jobs:
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
           update_cert_proxy: false
+      - name: Deploy The Combine Update
+        uses: ./.github/actions/combine-deploy-update
+        with:
+          image_registry: public.ecr.aws
+          image_registry_alias: "/thecombine"
+          image_tag: ${{ needs.build.outputs.image_tag }}
+          kube_context: ${{ secrets.LTOPS_K8S_PRODUCTION_CONTEXT }}
+          update_cert_proxy: true
