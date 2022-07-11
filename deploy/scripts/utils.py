@@ -33,7 +33,7 @@ def run_cmd(
         if print_output:
             print(process_results.stdout)
         if chomp:
-            process_results.stdout = re.sub(r"[\r\n]+$", "", process_results.stdout)
+            process_results.stdout = process_results.stdout.rstrip("\r\n\t ")
         return process_results
     except subprocess.CalledProcessError as err:
         print(f"CalledProcessError returned {err.returncode}")
