@@ -16,7 +16,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("ip", help="IPv4 address for the target device.")
     parser.add_argument("name", help="Name of the target device.")
-    parser.add_argument("--user", default="sillsdev", help="Username for ssh connection to the target device.")
+    parser.add_argument(
+        "--user", default="sillsdev", help="Username for ssh connection to the target device."
+    )
     parser.add_argument("--hosts", default="/etc/hosts", help="File for host definition.")
     return parser.parse_args()
 
@@ -24,7 +26,7 @@ def parse_args() -> argparse.Namespace:
 def update_hosts_file(tgt_ip: str, tgt_name: str, hosts_filename: Path) -> None:
     match = re.search(r"^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\..(\d{1,3})$", tgt_ip)
     if match is not None:
-        ip_pattern = tgt_ip.replace(".", "\.")
+        ip_pattern = tgt_ip.replace(".", r"\.")
     else:
         raise ValueError(f"Invalid IPv4 address: {tgt_ip}")
     # create ip address pattern from string
