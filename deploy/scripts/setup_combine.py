@@ -58,6 +58,11 @@ def parse_args() -> argparse.Namespace:
         dest="dry_run",
     )
     parser.add_argument(
+        "--wait",
+        action="store_true",
+        help="Invoke the 'helm install' command with the '--wait' option.",
+    )
+    parser.add_argument(
         "--profile",
         "-p",
         help="Profile name for the target. "
@@ -280,7 +285,9 @@ def main() -> None:
 
             # set the dry-run option if desired
             if args.dry_run:
-                helm_install_cmd.extend(["--dry-run"])
+                helm_install_cmd.append("--dry-run")
+            if args.wait:
+                helm_install_cmd.append("--wait")
 
             # add the profile specific configuration
             add_profile_values(

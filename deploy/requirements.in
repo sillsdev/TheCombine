@@ -1,0 +1,10 @@
+ansible
+
+# Templating/Docker.
+Jinja2
+jinja2-base64-filters
+kubernetes
+pyopenssl
+
+# Kubernetes Installation.
+pyyaml
