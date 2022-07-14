@@ -39,3 +39,9 @@
     - name: Install Kubernetes Tools
       import_role:
         name: k8s_install
+
+    - name: Get Kubernetes Configuration
+      import_role:
+        name: k8s_config
+      tags:
+        - kubeconfig
