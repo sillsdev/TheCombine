@@ -1,4 +1,4 @@
-@babel/runtime 7.18.3
+@babel/runtime 7.18.6
 MIT
 MIT License
 
@@ -398,8 +398,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@microsoft/signalr 5.0.17
-Apache-2.0
+@microsoft/signalr 6.0.7
+MIT
 JavaScript and TypeScript clients for SignalR for ASP.NET Core and Azure SignalR Service
 
 ## Installation
@@ -487,7 +487,7 @@ connection.start()
 ```
 
 
-@motionone/animation 10.9.0
+@motionone/animation 10.12.0
 MIT
 MIT License
 
@@ -512,7 +512,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/dom 10.10.0
+@motionone/dom 10.12.0
 MIT
 MIT License
 
@@ -537,7 +537,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/easing 10.9.0
+@motionone/easing 10.12.0
 MIT
 MIT License
 
@@ -562,7 +562,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/generators 10.9.0
+@motionone/generators 10.12.0
 MIT
 MIT License
 
@@ -587,7 +587,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/react 10.10.0
+@motionone/react 10.12.0
 MIT
 MIT License
 
@@ -612,7 +612,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/svelte 10.10.0
+@motionone/svelte 10.12.0
 MIT
 MIT License
 
@@ -637,7 +637,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/types 10.9.0
+@motionone/types 10.12.0
 MIT
 MIT License
 
@@ -662,7 +662,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/utils 10.9.0
+@motionone/utils 10.12.0
 MIT
 MIT License
 
@@ -687,7 +687,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/vue 10.10.0
+@motionone/vue 10.12.0
 MIT
 MIT License
 
@@ -806,7 +806,7 @@ MIT
     SOFTWARE
 
 
-@types/react-transition-group 4.4.4
+@types/react-transition-group 4.4.5
 MIT
     MIT License
 
@@ -831,7 +831,7 @@ MIT
     SOFTWARE
 
 
-@types/react 17.0.45
+@types/react 17.0.47
 MIT
     MIT License
 
@@ -986,18 +986,6 @@ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [ci-badge]: https://travis-ci.org/segmentio/analytics.js.png?branch=master
 
 
-async-limiter 1.0.1
-MIT
-The MIT License (MIT)
-Copyright (c) 2017 Samuel Reed <samuel.trace.reed@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 axios 0.24.0
 MIT
 Copyright (c) 2014-present Matt Zabriskie
@@ -1046,7 +1034,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-clsx 1.1.1
+clsx 1.2.1
 MIT
 MIT License
 
@@ -1241,10 +1229,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-es6-denodeify 0.1.5
-Unlicense
-
-
 event-target-shim 5.0.1
 MIT
 The MIT License (MIT)
@@ -1357,7 +1341,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-fetch-cookie 0.7.3
+fetch-cookie 0.11.0
 Unlicense
 # fetch-cookie [![npm version](https://badge.fury.io/js/fetch-cookie.svg)](https://badge.fury.io/js/fetch-cookie) [![Build Status](https://travis-ci.org/valeriangalliat/fetch-cookie.svg?branch=master)](https://travis-ci.org/valeriangalliat/fetch-cookie)
 
@@ -1404,6 +1388,25 @@ This enables you to create multiple `fetch-cookie` instances that use different 
 esentially two different HTTP clients with different login sessions on you backend (for example).
 
 All calls to `fetch` will store and send back cookies according to the URL.
+
+> Note: All errors when setting cookies are ignored by default. You can make it to throw errors in cookies by passing a third argument (default is true).
+
+```js
+const nodeFetch = require('node-fetch')
+const tough = require('tough-cookie')
+const fetch = require('fetch-cookie')(nodeFetch, new tough.CookieJar(), false) // default value is true
+// false - doesn't ignore errors, throws when an error occurs in setting cookies and breaks the request and execution
+// true - silently ignores errors and continues to make requests/redirections
+```
+
+If you use a cookie jar that is not tough-cookie, keep in mind that it must implement this interface to be compatible:
+
+```ts
+interface CookieJar {
+  getCookieString(currentUrl: string, cb: (err: any, cookies: string) => void): void;
+  setCookie(cookieString: string, currentUrl: string, cb: (err: any) => void, opts: { ignoreError:boolean }): void;
+}
+```
 
 ### Cookies on redirects
 
@@ -1528,29 +1531,6 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-html-escaper 2.0.2
-MIT
-Copyright (C) 2017-present by Andrea Giammarchi - @WebReflection
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 
 
 html-parse-stringify 3.0.1
@@ -1815,7 +1795,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-i18next 21.8.9
+i18next 21.8.13
 MIT
 The MIT License (MIT)
 
@@ -2305,7 +2285,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-motion 10.10.0
+motion 10.12.0
 MIT
 MIT License
 
@@ -2730,7 +2710,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-psl 1.8.0
+psl 1.9.0
 MIT
 The MIT License (MIT)
 
@@ -2860,7 +2840,7 @@ SOFTWARE.
 
 
 
-react-i18next 11.17.0
+react-i18next 11.18.0
 MIT
 The MIT License (MIT)
 
@@ -3587,7 +3567,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-sweetalert2 11.4.17
+sweetalert2 11.4.20
 MIT
 The MIT License (MIT)
 
@@ -3661,7 +3641,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-tough-cookie 2.5.0
+tough-cookie 4.0.0
 BSD-3-Clause
 Copyright (c) 2015, Salesforce.com, Inc.
 All rights reserved.
@@ -3720,6 +3700,30 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
+
+universalify 0.1.2
+MIT
+(The MIT License)
+
+Copyright (c) 2017, Ryan Zimmerman <opensrc@ryanzim.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the 'Software'), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 use-memo-one 1.1.2
 MIT
@@ -3924,7 +3928,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-ws 6.2.2
+ws 7.5.8
 MIT
 The MIT License (MIT)
 
