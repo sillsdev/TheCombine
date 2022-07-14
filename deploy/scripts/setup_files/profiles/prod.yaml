@@ -25,9 +25,13 @@ charts:
       maxBackups: "3"
     global:
       awsS3Location: prod.thecombine.app
+      pullSecretName: None
     certManager:
       enabled: false
   cert-proxy-server:
+    aws-login:
+      enabled: false
     global:
       awsS3Location: prod.thecombine.app
+      pullSecretName: None
     combineCertProxyList: nuc1.thecombine.app nuc2.thecombine.app nuc3.thecombine.app

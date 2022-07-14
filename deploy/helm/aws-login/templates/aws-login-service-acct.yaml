@@ -3,7 +3,9 @@ kind: ServiceAccount
 metadata:
   name: {{ .Values.awsEcr.serviceAccount }}
   namespace: {{ .Release.Namespace }}
+{{- if ne .Values.global.pullSecretName "None" }}
 imagePullSecrets:
   - name: {{ .Values.global.pullSecretName }}
+{{- end }}
 secrets:
   - name: {{ .Values.awsEcr.secretsName }}
