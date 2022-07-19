@@ -10,7 +10,7 @@ from utils import run_cmd
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(
-        description="Setup access to the target device for Ansible.",
+        description="Print the expiration date for each certificate installed on the target.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--namespace", "-n", help="Namespace to check for TLS secrets.")
