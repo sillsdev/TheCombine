@@ -24,6 +24,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def update_hosts_file(tgt_ip: str, tgt_name: str, hosts_filename: Path) -> None:
+    """Map tgt_name to tgt_ip in the specified hosts_filename."""
     match = re.search(r"^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\..(\d{1,3})$", tgt_ip)
     if match is not None:
         ip_pattern = tgt_ip.replace(".", r"\.")
@@ -52,13 +53,13 @@ def update_hosts_file(tgt_ip: str, tgt_name: str, hosts_filename: Path) -> None:
                 output_line = f"{line} {tgt_name}"
                 entry_found = True
             elif name_in_line.search(line):
-                # replace IP address for args.name an any other hosts with that IP address
+                # replace IP address for args.name and any other hosts with that IP address
                 output_line = re.sub(r"^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\..(\d{1,3})", tgt_ip, line)
                 entry_found = True
             else:
                 output_line = f"{line}"
-
             output_file.write(f"{output_line}\n")
+
         if not entry_found:
             output_file.write(f"{tgt_ip}  {tgt_name}\n")
         hosts_file.close()
@@ -67,6 +68,7 @@ def update_hosts_file(tgt_ip: str, tgt_name: str, hosts_filename: Path) -> None:
 
 
 def main() -> None:
+    """Setup access to the the target specified on the command line."""
     args = parse_args()
     # Add the target IP and target name to /etc/hosts (or other hosts file)
     update_hosts_file(args.ip, args.name, Path(args.hosts).resolve())
