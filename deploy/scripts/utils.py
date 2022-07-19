@@ -26,7 +26,7 @@ def run_cmd(
             cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            universal_newlines=True,
+            text=True,
             check=check_results,
         )
         if print_output:
