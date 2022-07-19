@@ -34,6 +34,9 @@ RUN pip3 install -r ${HOME}/requirements.txt
 
 RUN mkdir ${HOME}/.ssh
 
+# Copy configuration management scripts
+COPY docker_home/* ${HOME}/
+
 # Copy Python scripts for setting up and deploying the target
 # to ~/scripts
 COPY scripts/ ${HOME}/scripts
@@ -42,4 +45,5 @@ COPY helm/ ${HOME}/helm
 # Copy Ansible configuration files to ~/ansible
 COPY ansible/ ${HOME}/ansible
 
+# Run bash as a login shell
 ENTRYPOINT [ "/bin/bash" ]
