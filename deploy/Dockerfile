@@ -45,5 +45,4 @@ COPY helm/ ${HOME}/helm
 # Copy Ansible configuration files to ~/ansible
 COPY ansible/ ${HOME}/ansible
 
-# Run bash as a login shell
 ENTRYPOINT [ "/bin/bash" ]
