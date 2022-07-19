@@ -2,7 +2,7 @@
 
 import argparse
 import subprocess
-from typing import List
+from typing import List, Optional
 
 from utils import run_cmd
 
@@ -17,25 +17,32 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def get_expiration(secret: str, kubectl_opts: List[str]) -> str:
+def get_expiration(secret: str, kubectl_opts: List[str]) -> Optional[str]:
     if not secret:
         return None
-    get_secret = subprocess.Popen( ["kubectl"]
+    get_secret = subprocess.Popen(
+        ["kubectl"]
         + kubectl_opts
         + [
             "get",
             secret,
             "-o",
-            "jsonpath={.data['tls\.crt']}",
+            r"jsonpath={.data['tls\.crt']}",
         ],
         stdout=subprocess.PIPE,
         text=True,
     )
-    decode = subprocess.Popen(["base64", "-d"], stdin=get_secret.stdout, stdout=subprocess.PIPE,
+    decode = subprocess.Popen(
+        ["base64", "-d"],
+        stdin=get_secret.stdout,
+        stdout=subprocess.PIPE,
         text=True,
     )
-    get_secret.stdout.close()
-    enddate = subprocess.Popen(["openssl",
+    if get_secret.stdout is not None:
+        get_secret.stdout.close()
+    enddate = subprocess.Popen(
+        [
+            "openssl",
             "x509",
             "-enddate",
             "-noout",
@@ -44,9 +51,10 @@ def get_expiration(secret: str, kubectl_opts: List[str]) -> str:
         stdout=subprocess.PIPE,
         text=True,
     )
-    decode.stdout.close()
+    if decode.stdout is not None:
+        decode.stdout.close()
     expiration = enddate.communicate()[0]
-    expiration = expiration.replace("notAfter=","").strip()
+    expiration = expiration.replace("notAfter=", "").strip()
     return expiration
 
 
