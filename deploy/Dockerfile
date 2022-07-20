@@ -32,6 +32,7 @@ ENV PATH ${PATH}:${HOME}/scripts
 COPY requirements.txt ${HOME}
 RUN pip3 install -r ${HOME}/requirements.txt
 
+# Create directory for SSH Keys
 RUN mkdir ${HOME}/.ssh
 
 # Copy configuration management scripts
@@ -40,8 +41,10 @@ COPY docker_home/* ${HOME}/
 # Copy Python scripts for setting up and deploying the target
 # to ~/scripts
 COPY scripts/ ${HOME}/scripts
+
 # Copy helm templates to ~/helm
 COPY helm/ ${HOME}/helm
+
 # Copy Ansible configuration files to ~/ansible
 COPY ansible/ ${HOME}/ansible
 

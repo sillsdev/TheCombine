@@ -68,7 +68,7 @@ def update_hosts_file(tgt_ip: str, tgt_name: str, hosts_filename: Path) -> None:
 
 
 def main() -> None:
-    """Setup access to the the target specified on the command line."""
+    """Setup access to the target specified on the command line."""
     args = parse_args()
     # Add the target IP and target name to /etc/hosts (or other hosts file)
     update_hosts_file(args.ip, args.name, Path(args.hosts).resolve())
