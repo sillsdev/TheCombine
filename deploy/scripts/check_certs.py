@@ -14,6 +14,7 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--namespace", "-n", help="Namespace to check for TLS secrets.")
+    parser.add_argument("--short", "-s", action="store_true", help="Print the short form of the expriation date(s).")
     return parser.parse_args()
 
 
@@ -75,7 +76,11 @@ def main() -> None:
 
     for secret in secrets_list.stdout.split("\n"):
         if secret:
-            print(f"{secret} expires on {get_expiration(secret, kubectl_opts)}")
+            expiration_date = get_expiration(secret, kubectl_opts)
+            if args.short:
+                print(f"{secret}\t{expiration_date}")
+            else:
+                print(f"{secret} expires on {expiration_date}")
 
 
 if __name__ == "__main__":
