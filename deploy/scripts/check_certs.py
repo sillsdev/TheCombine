@@ -14,7 +14,12 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--namespace", "-n", help="Namespace to check for TLS secrets.")
-    parser.add_argument("--short", "-s", action="store_true", help="Print the short form of the expriation date(s).")
+    parser.add_argument(
+        "--short",
+        "-s",
+        action="store_true",
+        help="Print the short form of the expriation date(s).",
+    )
     return parser.parse_args()
 
 
