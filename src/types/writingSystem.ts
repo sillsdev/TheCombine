@@ -5,12 +5,14 @@ export enum Bcp47Code {
   En = "en",
   Es = "es",
   Fr = "fr",
+  Zh = "zh",
 }
 
 const writingSystem = {
   [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"),
   [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"),
+  [Bcp47Code.Zh]: newWritingSystem(Bcp47Code.Zh, "中文"),
 };
 
 export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
@@ -20,6 +22,7 @@ export const uiWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],
   writingSystem[Bcp47Code.Fr],
+  writingSystem[Bcp47Code.Zh],
 ];
 
 // This list should cover the domain data in resources/semantic-domains/
