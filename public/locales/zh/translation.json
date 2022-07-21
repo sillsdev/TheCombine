@@ -76,7 +76,7 @@
   "createProject": {
     "name": "项目名称",
     "upload?": "上传现有数据？",
-    "uploadFormat": "文件必须是一个包含 &lt;a href='https://code.google.com/archive/p/lift-standard/'&gt;Lexicon Interchange FormaT (LIFT)&lt;/a&gt; 项目的压缩文件夹。",
+    "uploadFormat": "文件必须是一个包含 <1>Lexicon Interchange FormaT (LIFT)</1> 项目的压缩文件夹。",
     "create": "创建项目",
     "fileSelected": "文件已选定",
     "success": "项目已创建！",

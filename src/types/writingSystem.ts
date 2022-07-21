@@ -17,7 +17,7 @@ const writingSystem = {
 
 export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
 
-// This list should cover the languages of resources/translations.json
+// This list should cover the languages of public/locales/*/translation.json
 export const uiWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],

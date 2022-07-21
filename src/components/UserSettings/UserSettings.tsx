@@ -182,7 +182,9 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
 
                   <Grid item container spacing={2}>
                     <Grid item>
-                      <Typography variant="h6">Contact</Typography>
+                      <Typography variant="h6">
+                        {this.props.t("userSettings.contact")}
+                      </Typography>
                     </Grid>
 
                     <Grid item container spacing={1} alignItems="center">
@@ -195,7 +197,7 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
                           fullWidth
                           variant="outlined"
                           value={this.state.phone}
-                          label="Phone"
+                          label={this.props.t("userSettings.phone")}
                           onChange={(e) => this.updateField(e, "phone")}
                           type="tel"
                         />

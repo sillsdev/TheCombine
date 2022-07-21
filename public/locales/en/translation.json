@@ -109,6 +109,8 @@
     }
   },
   "userSettings": {
+    "contact": "Contact info",
+    "phone": "Phone number",
     "updateSuccess": "Settings successfully updated."
   },
   "projectExport": {
