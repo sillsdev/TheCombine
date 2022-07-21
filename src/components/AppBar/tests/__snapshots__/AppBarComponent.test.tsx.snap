@@ -21,7 +21,7 @@ Array [
     style={
       Object {
         "background": "#1976d2",
-        "width": "min-content",
+        "width": "fit-content",
       }
     }
     tabIndex={0}
@@ -52,7 +52,7 @@ Array [
     style={
       Object {
         "background": "inherit",
-        "width": "min-content",
+        "width": "fit-content",
       }
     }
     tabIndex={0}
