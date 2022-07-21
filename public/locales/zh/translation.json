@@ -1,0 +1,333 @@
+{
+  "generic": {
+    "404Title": "404 您访问的页面不存在",
+    "404Text": "点击 The Combine 返回主页面。",
+    "loadingTitle": "正在加载...",
+    "loadingText": "The Combine 正在处理您的数据，请稍后。"
+  },
+  "landingPage": {
+    "subtitle": "一款用于共同收集单词的网络应用程序",
+    "privacyPolicy": "隐私政策",
+    "descriptionP1": "单词是语言的基本组成单位，对交流信息和分享文化都至关重要。充满单词及其含义的字典是一种基本的语言资源，有助于为社区内的后代记录和保存语言，并为与其他社区沟通提供桥梁。但世界上许多少数民族语言的社区没有这种资源，使他们处于不利地位。",
+    "descriptionP2": "The Combine 是快速收集单词（RWC）过程中的一个易于使用的工具。RWC是一种收集词汇的方法，将作为双语词典的骨干。RWC过程的核心是来自某个语言社区的母语者。每次针对一个语义域，由4-6名母语者组成的小组，在他们的语言中想出尽可能多的与该语义域有关的词。The Combine 协助将这些词输入数据库，并附上翻译、录音和注释，以更全面地记录其形式和意义。",
+    "descriptionP3": "先前几乎没有语言学知识和只有有限的电脑经验的人可以很快地接受培训，以使用 The Combine 的主要收集单词功能。然后，可以在 The Combine 中组织和编辑收集到的词而且将数据导出到其他工具（如FLEx）。",
+    "descriptionP4": "注册后就可以开始您的单词收集了!"
+  },
+  "treeView": { "findDomain": "查找语义域", "domainNotFound": "未找到语义域" },
+  "addWords": {
+    "selectEntry": "选择一个词条",
+    "selectSense": "选择一个词义",
+    "newEntryFor": "创建新词条为:",
+    "newSenseFor": "创建新词义为：",
+    "senseInWord": "这个词在这个语义域中已经有了这样的词义。",
+    "deleteRow": "删除这一行",
+    "deleteRowWarning": "这一行会被永久删除！",
+    "addNote": "添加备注",
+    "domain": "语义域",
+    "gloss": "注释",
+    "glosses": "词注释",
+    "pressEnter": "按回车键保存单词",
+    "vernacular": "土语",
+    "wordInDatabase": "这个词已经在数据库中"
+  },
+  "appBar": { "dataEntry": "输入数据", "dataCleanup": "清理数据" },
+  "login": {
+    "title": "登录",
+    "name": "您的姓名",
+    "username": "用户名称",
+    "password": "密码",
+    "passwordRequirements": "密码长度必须为至少 8 个字符。",
+    "forgotPassword": "忘记了密码？",
+    "login": "登录",
+    "failed": "登录失败。请检查您的用户名和密码。",
+    "backToLogin": "返回登录",
+    "signUp": "注册",
+    "signUpNew": "注册新用户",
+    "signUpSuccess": "用户已创建",
+    "signUpFailed": "注册失败",
+    "usernameInvalid": "这用户名太短或已占用",
+    "usernameRequirements": "用户名必须是3个字符或以上。",
+    "emailTaken": "使用这个电子邮箱的用户已存在",
+    "networkError": "网络错误",
+    "loggingIn": "正在登录...",
+    "required": "必填",
+    "confirmPassword": "确认密码",
+    "confirmPasswordError": "密码不匹配！",
+    "email": "电子邮件",
+    "emailError": "请输入有效的电子邮件"
+  },
+  "passwordReset": {
+    "emailOrUsername": "电子邮箱或用户名",
+    "resetRequestTitle": "请求重置密码",
+    "resetTitle": "重置密码",
+    "resetRequestInstructions": "我们会向您的电子邮箱发送一个一次性的密码重置链接。",
+    "submit": "提交",
+    "resetFail": "密码重置错误",
+    "notFoundError": "没有匹配的账户",
+    "backToLogin": "返回登录"
+  },
+  "userMenu": {
+    "siteSettings": "网站设置",
+    "projectSettings": "项目设置",
+    "userSettings": "用户设置",
+    "logout": "退出登录",
+    "userGuide": "用户指南"
+  },
+  "createProject": {
+    "name": "项目名称",
+    "upload?": "上传现有数据？",
+    "uploadFormat": "文件必须是一个包含 &lt;a href='https://code.google.com/archive/p/lift-standard/'&gt;Lexicon Interchange FormaT (LIFT)&lt;/a&gt; 项目的压缩文件夹。",
+    "create": "创建项目",
+    "fileSelected": "文件已选定",
+    "success": "项目已创建！",
+    "nameTaken": "名称已被占用"
+  },
+  "selectProject": { "title": "选择项目" },
+  "siteSettings": {
+    "archiveProjectText": "存档后任何用户都无法访问这项目了。",
+    "restoreProjectText": "本用户可能有很好的理由来存档这个项目。您确定要还原它吗？",
+    "deleteUser": {
+      "confirm": "确认从 The Combine 数据库中删除用户。",
+      "toastSuccess": "删除用户成功",
+      "toastFailure": "删除用户失败"
+    },
+    "populateUsers": { "toastFailure": "填充用户失败" },
+    "banners": {
+      "title": "横幅",
+      "loginBanner": "登录横幅",
+      "announcementBanner": "公告横幅"
+    }
+  },
+  "userSettings": { "updateSuccess": "设置已更新。" },
+  "projectExport": {
+    "cannotExportEmpty": "项目为空。您不能导出没有单词的项目。",
+    "downloadInProgress": "正在下载......",
+    "exportFailed": "导出失败",
+    "exportInProgress": "正在导出"
+  },
+  "projectSettings": {
+    "language": {
+      "header": "语言",
+      "vernacular": "土语",
+      "vernacularLanguage": "土语语言",
+      "analysis": "分析",
+      "analysisLanguage": "分析语言",
+      "semanticDomains": "语义域",
+      "semanticDomainsDefault": "(把浏览器语言设置为默认)",
+      "languages": "语言",
+      "bcp47": "BCP 47 代码",
+      "name": "名称",
+      "font": "字体",
+      "addAnalysisLanguage": "增加另一种分析语言。",
+      "makeDefaultAnalysisLanguage": "把这个作为默认分析语言。",
+      "deleteAnalysisLanguage": "删除这个分析语言。",
+      "getGlossLanguages": "查找当前数据中使用的所有语言代码。",
+      "addAnalysisLanguageFailed": "添加分析语言失败",
+      "makeDefaultAnalysisLanguageFailed": "设置为默认分析语言失败",
+      "deleteAnalysisLanguageFailed": "删除分析语言失败",
+      "updateSemDomWritingSystemFailed": "更新语义域的语言失败"
+    },
+    "name": "项目名称",
+    "projectList": "项目",
+    "userList": "用户",
+    "userManagement": {
+      "makeAdminWarning": "是否让此用户成为项目管理员？",
+      "makeOwnerWarning": "将项目所有权转移到此用户？",
+      "removeAdminWarning": "是否从此用户删除项目管理员权限？",
+      "removeUserWarning": "是否从项目中删除此用户？",
+      "userRemovedToastSuccess": "用户已经被删除！",
+      "userRemovedToastFailure": "删除用户失败.",
+      "makeAdminToastSuccess": "此用户已设为项目管理员！",
+      "makeAdminToastFailure": "用户设为项目管理员失败。",
+      "removeAdminToastSuccess": "已从此用户删除项目管理员权限！",
+      "removeAdminToastFailure": "从此用户删除项目管理员权限失败。",
+      "makeOwnerToastSuccess": "已转移项目的所有权！",
+      "makeOwnerToastFailure": "转移项目的所有权失败。",
+      "manageUser": "管理用户帐户",
+      "reverseOrder": "倒序"
+    },
+    "import": {
+      "header": "导入数据",
+      "body": "导入的数据将被添加到此项目。The Combine 不会尝试删除重复、覆盖或同步。",
+      "chooseFile": "选择文件",
+      "done": "完成!",
+      "notAllowed": "您已经把 Lift 文件导入到这个项目中。"
+    },
+    "user": {
+      "currentUsers": "当前用户",
+      "usersAndRoles": "用户和角色",
+      "addUser": "添加用户",
+      "selectUser": "选择一个用户",
+      "selectRole": "选择用户角色",
+      "confirmUser": "选择这用户",
+      "roles": { "typist": "打字员", "cleaner": "收拾者", "admin": "管理员" },
+      "archive": "存档项目",
+      "archiveToastSuccess": "项目已存档！"
+    },
+    "exportProject": { "label": "导出项目" },
+    "autocomplete": {
+      "label": "自动完成",
+      "off": "关闭",
+      "on": "开启",
+      "hint": "在数据输入中，程序将建议与正在输入的土语词条相似的现有词条。"
+    },
+    "definitions": {
+      "label": "显示定义",
+      "hint": "在检查词条中，显示定义列；在合并重复项中，在注释下面显示定义。"
+    },
+    "invite": {
+      "inviteByEmailLabel": "通过电子邮件邀请",
+      "userExists": "此用户已注册！",
+      "or": "或",
+      "searchPlaceholder": "搜索...",
+      "searchTitle": "查找用户",
+      "emailLabel": "电子邮件",
+      "messageLabel": "留言内容",
+      "toastSuccess": "添加了用户！",
+      "toastFail": "添加用户失败!"
+    }
+  },
+  "goal": {
+    "selector": {
+      "selectOption": "选择这目标",
+      "past": "您已经完成了：",
+      "present": "我们的建议是：",
+      "other": "其他选项：",
+      "noHistory": "还没有任何内容",
+      "done": "全部完成"
+    },
+    "progress": {
+      "step": "第 {0} 步，",
+      "stepMerge": "合并集",
+      "of": "共 {1} 步"
+    }
+  },
+  "createStrWordInv": { "title": "创建虚词词表" },
+  "handleFlags": { "title": "处理标志" },
+  "spellCheckGloss": { "title": "拼写检查词汇表" },
+  "validateChars": { "title": "验证字符" },
+  "validateStrWords": { "title": "Validate Structural Characters" },
+  "reviewEntries": {
+    "title": "检查词条",
+    "sense": "词义",
+    "noVernacular": "没有土语输入！",
+    "noDefinition": "此定义为空",
+    "noGloss": "没有词注释输入",
+    "noDomain": "未选择语义域",
+    "noNote": "没有备注",
+    "deleteWordWarning": "这词会被永久删除！",
+    "error": {
+      "gloss": "词注释的字段不能为空",
+      "domain": "语义域不能为空",
+      "senses": "无法保存无词义的词条",
+      "vernacular": "土语字段不能为空"
+    }
+  },
+  "charInventory": {
+    "title": "创建字符库存",
+    "characters": "字符",
+    "examples": "示例",
+    "occurrences": "出现次数",
+    "status": "状态",
+    "sortBy": "排序方式",
+    "characterSet": {
+      "title": "土语字符集",
+      "help": "定义这语言的有效字符。",
+      "addButton": "添加字符",
+      "addButtonTitle": "把框中的字符添加到字符集中",
+      "deleteButton": "删除所选的",
+      "deleteButtonTitle": "从字符集中删除所选的字符",
+      "acceptedCharacters": "已审核的字符",
+      "rejectedCharacters": "已拒绝的字符",
+      "noCharacters": "还没有字符！请在下面的框中输入字符以开始。",
+      "required": "为了添加字符，在这框中输入字符",
+      "advanced": "高级",
+      "occurrences": "出现次数",
+      "find": "查找",
+      "replace": "替换",
+      "replaceWith": "替换为",
+      "replaceAll": "替换所有出现的",
+      "findAndReplace": "查找和替换",
+      "apply": "应用",
+      "charDetails": "(字符详细信息尚未实现。)"
+    },
+    "sampleWords": {
+      "title": "例词",
+      "description": "以下是一些不适合您当前字符库存的单词：",
+      "ignore": "先别管这个词",
+      "add": "把出现在这词中的字符添加到库存中"
+    },
+    "dialog": {
+      "title": "未保存的更改",
+      "content": "放弃对字符集的更改？",
+      "yes": "是",
+      "no": "否"
+    },
+    "changes": { "noChanges": "在此目标中未进行更改。", "more": "更多" }
+  },
+  "mergeDups": {
+    "title": "合并重复项",
+    "helpText": {
+      "dragCard": "将卡片拖到此处进行合并。",
+      "root": "把词拖到这里与这词合并",
+      "dups": "把重复项拖动到这里",
+      "sense": "把新词义拖动到这里",
+      "saveAndContinue": "保存更改并加载一组新单词",
+      "skip": "放弃更改并加载一组新单词",
+      "list": "把这个词拖往右边与其他词合并",
+      "noDups": "没有什么可合并的。",
+      "delete": "删除词义",
+      "deleteDialog": "是否删除该词义？"
+    },
+    "completed": { "number": "已完成的合并次数：" },
+    "continueDialog": { "title": "是否继续合并？", "yes": "是", "no": "否" },
+    "undo": {
+      "undo": "撤消合并",
+      "undoDialog": "是否撤销此合并？",
+      "undoDisabled": "撤销不可用"
+    }
+  },
+  "flags": {
+    "add": "添加标志",
+    "edit": "编辑标志",
+    "remove": "移除标志",
+    "save": "保存标志",
+    "text": "文本:"
+  },
+  "buttons": {
+    "accept": "审核",
+    "accepted": "已审核",
+    "add": "添加",
+    "archive": "存档",
+    "browse": "浏览",
+    "cancel": "取消",
+    "clearText": "清除文本",
+    "confirm": "确认",
+    "delete": "删除",
+    "deletePermanently": "确定永久删除吗？",
+    "done": "完成",
+    "exit": "退出",
+    "export": "导出",
+    "invite": "邀请",
+    "makeAdmin": "设为管理员",
+    "makeOwner": "设为所有者",
+    "proceedWithCaution": "请小心操作",
+    "reject": "拒绝",
+    "rejected": "已拒绝",
+    "removeAdmin": "删除项目管理员",
+    "removeFromProject": "从项目中删除此用户",
+    "reset": "重置",
+    "restore": "还原",
+    "save": "保存",
+    "saveAndContinue": "保存并继续",
+    "skip": "跳过",
+    "undecided": "未定",
+    "upload": "上传"
+  },
+  "pronunciations": {
+    "recordTooltip": "长按红色按钮，进行录制",
+    "playTooltip": "单击来播放，按 Shift 并单击来删除。",
+    "noMicAccess": "录制错误：无法访问麦克风。",
+    "deleteRecording": "删除录音"
+  }
+}
