@@ -1,6 +1,6 @@
 # _The Combine_ Production Cluster
 
-## NUC Certificates in Kubernetes
+## Installation Types
 
 This document describes the design for deploying _The Combine_ as part of a Kubernetes cluster in the following
 environments:

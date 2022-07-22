@@ -2,43 +2,109 @@
 
 This document describes how to deploy _The Combine_ to a target Kubernetes cluster.
 
-## Assumptions
-
-_The Combine_ is designed to be installed on a server on the internet or an organization's intranet or on a standalone
-PC such as an Intel NUC. The instructions assume that:
-
-1. a server already has Kubernetes installed and that the basic infrastructure and namespaces are already configured;
-   and
-2. a standalone PC is running an up-to-date version of Ubuntu Server with an OpenSSH server running.
-
 ## Conventions
 
-- the term _NUC_ will be used to describe a target that is a standalone PC. It can be any 64-bit Intel Architecture
+- the _host_ machine is the machine that is used to perform the installation. It may be a Linux, Windows, or MacOS
   machine.
-- most of the commands described in this document are to be run from within the `git` repository for _The Combine_ that
-  has been cloned on the host machine. This directory is referred to as \<COMBINE\>.
-- the target machine where _The Combine_ is being installed will be referred to as _\<target\>_
-- the user on the target machine that will be used for installing docker, etc. will be referred to as _\<target_user\>_.
-  You must be able to log in to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
+- the _target_ machine is the machine where _The Combine_ is to be installed. It shall be referred to as _\<target\>_.
+- some of the commands described in this document are to be run from within the `git` repository for _The Combine_ that
+  has been cloned on the host machine. This directory shall be referred to as \<COMBINE\>.
 
 ## Contents
 
+1. [System Design](#system-design)
+2. [Host System Requirements](#host-system-requirements)
+3. [Deployment Scenarios](#deployment-scenarios)
+   1. Development Environment
+   2. QA/Production Server
+   3. NUC
+   4. Other Systems
+4. Install Ubuntu Server
+5. Install Kubernetes Engine
+6. Install Helm Charts Required by _The Combine_
+7. Install _The Combine_
+8. Maintenance
+   1. Maintenance Scripts
+   2. Automated Backups
+   3. Creating your own Configurations
+      1. Ansible Inventory file
+      2. Combine Configuration file
+
+## System Design
+
+_The Combine_ is designed as a collection of helm charts to be installed on a Kubernetes cluster. _The Combine's_
+Kubernetes resources are described in the design document at
+[./kubernetes_design/README.md](./kubernetes_design/README.md).
+
+## Deployment Scenarios
+
+The tools and methods for deploying _The Combine_ are a function of the type of system you wish to deploy, the
+_deployment scenario_ and the operating system of the host machine.
+
+### Development Environment
+
+The _Development Environment_ scenario is for software developers who need to test out changes to the application in
+development before they are deployed. This allows the developer to deploy _The Combine_ to a local Kubernetes
+environment that is closer to the production environment. The tools and methods for deploying _The Combine_ in a
+development environment are described in the
+[Setup Local Kubernetes Cluster](../../README.md#setup-local-kubernetes-cluster) section of the project README.md file.
+
+### QA/Production Server
+
+### NUC
+
+- the user on the target machine that will be used for installing docker, etc. will be referred to as _\<target_user\>_.
+  You must be able to log in to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
+
+### Other Systems
+
+## Install Ubuntu Server
+
+## Install Kubernetes Engine
+
+## Install Helm Charts Required by _The Combine_
+
+## Install _The Combine_
+
+## Maintenance
+
+### Maintenance Scripts
+
+### Automated Backups
+
+### Creating your own Configurations
+
+#### Ansible Inventory file
+
+#### Combine Configuration file
+
 1. [Step-by-step Instructions](#step-by-step-instructions)
+   1. [Choose your Installation Method](#choose-your-installation-method)
    1. [Prepare your host system](#prepare-your-host-system)
       1. [Linux Host](#linux-host)
-   2. [Installing Kubernetes and Initializing Your Cluster](#installing-kubernetes-and-initializing-your-cluster)
+   1. [Installing Kubernetes and Initializing Your Cluster](#installing-kubernetes-and-initializing-your-cluster)
       1. [Minimum System Requirements](#minimum-system-requirements)
       2. [Installing Kubernetes](#installing-kubernetes)
-   3. [Installing _The Combine_ Helm Charts](#installing-the-combine-helm-charts)
+   1. [Installing _The Combine_ Helm Charts](#installing-the-combine-helm-charts)
       1. [Setup](#setup)
       2. [Install _The Combine_ Cluster](#install-the-combine-cluster)
-   4. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
-   5. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
+   1. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
+   1. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
 2. [Automated Backups](#automated-backups)
 3. [Design](#design)
 4. [Install Ubuntu Server](#install-ubuntu-server)
 
 ## Step-by-step Instructions
+
+### Choose your Installation Method
+
+There are two methods for setting up _The Combine_ on a target system, setting up the tools on your host system or
+running the installation from a Docker container.  
+The Docker container method is required for Windows hosts that need to setup a system where Kubernetes is not already
+installed, such as a bare NUC.
+
+The advantage of setting up the tools on your host system is that the configuration is persistent; with the Docker
+container, setup steps need to be repeated when the container is restarted.
 
 ### Prepare your host system
 
@@ -273,10 +339,6 @@ information on inventory files.
 If the ansible variables `backup_hours` and `backup_minutes` are defined for a target, then `cron` will be setup to
 create a backup of _The Combine_ database and backend files every day at the specified times. The hours/minutes can be
 set to any string that is recognized by `cron`. The backups are stored in an Amazon S3 bucket.
-
-## Design
-
-Please see the Kubernetes Design document at [./kubernetes_design/README.md](./kubernetes_design/README.md)
 
 ## Install Ubuntu Server
 
