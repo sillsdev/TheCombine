@@ -47,18 +47,174 @@ The _Development Environment_ scenario is for software developers who need to te
 development before they are deployed. This allows the developer to deploy _The Combine_ to a local Kubernetes
 environment that is closer to the production environment. The tools and methods for deploying _The Combine_ in a
 development environment are described in the
-[Setup Local Kubernetes Cluster](../../README.md#setup-local-kubernetes-cluster) section of the project README.md file.
+[Setup Local Kubernetes Cluster](https://github.com/sillsdev/TheCombine#setup-local-kubernetes-cluster) section of the
+project README.md file.
 
 ### QA/Production Server
 
+For _The Combine_, the QA and Production servers are servers where the Kubernetes Cluster is created and maintained by a
+separate organization. The characteristics of these systems are:
+
+- The Kubernetes cluster has been created as follows:
+
+  - [cert-manager](https://cert-manager.io/) is installed
+  - an NGINX ingress controller is installed
+  - the namespace `thecombine` is created
+  - the TLS certificate for the server is installed in `thecombine` namespace as a `kubernetes.io/tls` secret with the
+    name `thecombine-app-tls`
+
+- The QA server has services to login to a private AWS Elastic Container Registry to run private images for _The
+  Combine_. In contrast, the Production server only runs public images.
+- On the Production server an additional namespace `combine-cert-proxy`.
+
+#### Tools Required for a QA/Production Server Installation
+
+The host tools required to install _The Combine_ on a QA or Production server are described in
+[Install Kubernetes Tools](https://github.com/sillsdev/TheCombine#install-kubernetes-tools) in the project README.md
+file.
+
+#### Steps to Install on a QA/Production Server
+
+To install _The Combine_ on one of these systems, follow the steps in
+
+- [Install _The Combine_](#install-the-combine)
+
 ### NUC
 
-- the user on the target machine that will be used for installing docker, etc. will be referred to as _\<target_user\>_.
-  You must be able to log in to _\<target\>_ as _\<target_user\>_ and _\<target_user\>_ must have `sudo` privileges.
+_The Combine_ is designed to be installed on an _Intel NUC_ or other mini-computer and to operate where no internet is
+available. The installation process assumes that a WiFi interface is available as well as a wired Ethernet interface.
 
-### Other Systems
+#### Tools Required to Install on a NUC
+
+There are two options for toolsets to install _The Combine_ on a NUC:
+
+##### Locally Installed Tools
+
+Locally installed tools can be used to install from a Linux or MacOS host machine. The required tools are:
+
+- _The Combine_ source tree
+
+  Clone the repo:
+
+  ```bash
+  git clone https://github.com/sillsdev/TheCombine.git
+  ```
+
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
+- Python: See the instructions for installing Python and dependent libraries in the project
+  [README.md](https://github.com/sillsdev/TheCombine#python)
+- [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/get-docker/)
+
+##### Install From Docker Image
+
+You can use a Docker image to install _The Combine_ using a host machine running Windows, Linux, or MacOS. The only tool
+that is needed is Docker itself: [Docker Engine](https://docs.docker.com/engine/install/) or
+[Docker Desktop](https://docs.docker.com/get-docker/)
+
+Once you have installed _Docker_, pull the image that we will be using. Open a terminal window (PowerShell, Command
+Prompt, or Unix shell) and run:
+
+```console
+docker pull public.ecr.aws/thecombine/combine_deploy:latest
+```
+
+The Docker image contains all the additional tools that are needed. It also has all of the installation scripts so that
+you do not need to clone _The Combine's_ GitHub repo. The disadvantage of using the Docker image is that any changes to
+configuration files will not be preserved. This is not a concern for most users.
+
+#### Steps to Install on a NUC
+
+To install _The Combine_ on one of these systems, follow the steps in
+
+- [Install Ubuntu Server](#install-ubuntu-server)
+- [Install Kubernetes Engine](#install-kubernetes-engine)
+- [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
+- [Install _The Combine_](#install-the-combine)
 
 ## Install Ubuntu Server
+
+Note: In the instructions below, each step indicates whether the step is to be performed on the Host PC (_[Host]_) or
+the target PC (_[NUC]_).
+
+To install the OS on a new target machine, such as, a new NUC, follow these steps:
+
+1. _[Host]_ Download the ISO image for Ubuntu Server from Ubuntu (currently at <https://ubuntu.com/download/server>;
+   click on _Option 2 - Manual server installation_ and then _Download Ubuntu Server 22.04 LTS_)
+
+2. _[Host]_ copy the .iso file to a bootable USB stick:
+
+   1. Ubuntu host: Use the _Startup Disk Creator_, or
+   2. Windows host: follow the
+      [tutorial](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows#1-overview) on ubuntu.com.
+
+3. _[NUC]_ Connect the NUC to a wired, Ethernet network connection, an HDMI Display and a USB Keyboard.
+
+4. _[NUC]_ Boot the NUC from the bootable media and follow the installation instructions. In particular,
+
+   1. You will want the installer to format the entire disk. Using LVM is not recommended.
+
+   2. Profile setup
+
+      The instructions assume the following profile entries during installation:
+
+      | Item             | Value                             |
+      | ---------------- | --------------------------------- |
+      | Your Name        | SIL Language Software Development |
+      | Your Server Name | nuc1, nuc2, or nuc3               |
+      | Pick a username  | sillsdev                          |
+
+      You may choose any name, username that you like. If you use a different servername than one of the three listed,
+      you will need to provide alternate configuration files. See the [Advanced Configuration](#advanced-configuration)
+      section. This is not recommended when running the installation from a Docker image.
+
+   3. Make sure that you install the OpenSSH server when prompted:
+      ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
+
+      In addition, you may have your SSH keys from _Github_ or _Launchpad_ preinstalled as authorized keys.
+
+   4. You do not need to install any additional snaps; the _Ansible_ playbooks will install any needed software.
+
+5. _[NUC]_ When installation is complete, log into the NUC using the username and password provided during installation
+   and update all packages:
+
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   ```
+
+6. _[NUC]_ Reboot:
+
+   ```bash
+   sudo reboot
+   ```
+
+7. _[NUC]_ Lookup IP Address for the NUC:
+
+   From the NUC, run the command `ip address`. Record the current IP address for the Ethernet interface; the Ethernet
+   interface starts with `en`, followed by a letter and then a digit (`en[a-z][0-9]`).
+
+8. _[Host]_ Setup your host's connection to the NUC:
+
+   - if using the Docker image open a terminal window and run:
+
+     ```console
+     docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
+     setup_target.py <ip_addr> <target>
+     ```
+
+     Where `<ip_addr>` is the IP address found in step 7 and `<target>` is the server name specified when Ubuntu was
+     installed.
+
+   - if using local tools, open a terminal window and run:
+
+     ```console
+     sudo deploy/scripts/setup_target.py <ip_addr> <target>
+     ```
+
+   The `setup_target.py` script will do the following:
+
+   - Add the NUC's IP address to your `/etc/hosts` file
+   - Generate an SSH key for you
+   - Copy your SSH public key to the NUC
 
 ## Install Kubernetes Engine
 
@@ -130,8 +286,6 @@ Some extra tools are required to setup a machine that does not have an existing 
 described here must be performed on a Linux host.
 
 The extra tools that are needed are:
-
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
 
 ### Installing Kubernetes and Initializing Your Cluster
 
@@ -341,70 +495,3 @@ create a backup of _The Combine_ database and backend files every day at the spe
 set to any string that is recognized by `cron`. The backups are stored in an Amazon S3 bucket.
 
 ## Install Ubuntu Server
-
-Note: In the instructions below, each step indicates whether the step is to be performed on the Host PC (_[Host]_) or
-the target PC (_[NUC]_).
-
-To install the OS on a new target machine, such as, a new NUC, follow these steps:
-
-1. _[Host]_ Download the ISO image for Ubuntu Server from Ubuntu (currently at <https://ubuntu.com/download/server>;
-   click on _Option 2 - Manual server installation_ and then _Download Ubuntu Server 22.04 LTS_)
-
-2. _[Host]_ copy the .iso file to a bootable USB stick:
-
-   1. Ubuntu host: Use the _Startup Disk Creator_, or
-   2. Windows host: follow the
-      [tutorial](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows#1-overview) on ubuntu.com.
-
-3. _[NUC]_ Connect the NUC to a wired, Ethernet network connection, an HDMI Display and a USB Keyboard.
-
-4. _[NUC]_ Boot the NUC from the bootable media and follow the installation instructions. In particular,
-
-   1. You will want the installer to format the entire disk. Using LVM is not recommended.
-
-   2. Make sure that you install the OpenSSH server when prompted:
-      ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
-
-      In addition, you may have your SSH keys from _Github_ or _Launchpad_ preinstalled as authorized keys.
-
-   3. You do not need to install any additional snaps; the _Ansible_ playbooks will install any needed software
-
-5. _[NUC]_ Update all packages:
-
-   ```bash
-   sudo apt update && sudo apt upgrade -y
-   ```
-
-6. _[NUC]_ Reboot:
-
-   ```bash
-   sudo reboot
-   ```
-
-7. _[NUC]_ Lookup IP Address for the NUC:
-
-   From the NUC, run the command `ip address`. Record the current IP address for the Ethernet interface; the Ethernet
-   interface starts with `en`, followed by a letter and then a digit (`en[a-z][0-9]`).
-
-8. _[Host]_ Add the NUC to your /etc/hosts:
-
-   Edit `/etc/hosts` on your host machine to add an entry for the NUC. The name of the NUC or one of the aliases, much
-   match its name in the Ansible host file, e.g.:
-
-   ```console
-   127.0.0.1   localhost
-   127.0.1.1   mypc
-
-   10.0.0.41   nuc1
-   ```
-
-   You will need to use `sudo` to edit `/etc/hosts`.
-
-9. _[Host]_ Add your ssh key to the NUCs authorized keys:
-
-   ```bash
-   ssh-copy-id user@nuc
-   ```
-
-   where `user` is the username created when Ubuntu Server was installed on the NUC and `nuc` is the name of the nuc
-   that was added to `/etc/hosts`.
