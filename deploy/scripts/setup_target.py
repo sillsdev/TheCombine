@@ -17,8 +17,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("ip", help="IPv4 address for the target device.")
     parser.add_argument("name", help="Name of the target device.")
     parser.add_argument(
-        "--user", default="sillsdev", help="Username for ssh connection to the target device."
+        "--target-user",
+        "-t",
+        default="sillsdev",
+        help="Username for ssh connection to the target device.",
     )
+    parser.add_argument("--local-user", "-l", help="Local user for creating ssh keys.")
     parser.add_argument("--hosts", default="/etc/hosts", help="File for host definition.")
     return parser.parse_args()
 
@@ -72,10 +76,33 @@ def main() -> None:
     args = parse_args()
     # Add the target IP and target name to /etc/hosts (or other hosts file)
     update_hosts_file(args.ip, args.name, Path(args.hosts).resolve())
+
+    """
+    Set up the ssh key and copy it do the target.
+
+    Usually this script needs to be run with `sudo` so that the /etc/hosts file can
+    be modified.  This results in, the key getting setup for the root user instead of
+    the user that invoked the script with `sudo`.
+    The --local-user/-l option is available to generate the key for a local user instead
+    of root.  Some things to note are:
+      1. This script switches to the local user with `su` to run the two commands for setting
+         up the ssh key
+      2. The --session-command option for su needs to be used instead of -c (at least for ssh-copy-id)
+      3. The command needs to be quoted.
+    """
+    if args.local_user is None:
+        cmd_prefix = ""
+        cmd_suffix = ""
+    else:
+        cmd_prefix = f'su {args.local_user} --session-command "'
+        cmd_suffix = f'"'
     # Generate ssh keys
-    os.system("ssh-keygen")
+    ssh_cmd = f"{cmd_prefix}ssh-keygen{cmd_suffix}"
+    os.system(ssh_cmd)
     # Copy ssh id to target
-    os.system(f"ssh-copy-id {args.user}@{args.name}")
+    ssh_cmd = f"{cmd_prefix}ssh-copy-id {args.target_user}@{args.name}{cmd_suffix}"
+    print(ssh_cmd)
+    os.system(ssh_cmd)
 
 
 if __name__ == "__main__":
