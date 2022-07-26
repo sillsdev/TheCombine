@@ -87,7 +87,8 @@ def main() -> None:
     of root.  Some things to note are:
       1. This script switches to the local user with `su` to run the two commands for setting
          up the ssh key
-      2. The --session-command option for su needs to be used instead of -c (at least for ssh-copy-id)
+      2. The --session-command option for su needs to be used instead of -c
+         (at least for ssh-copy-id)
       3. The command needs to be quoted.
     """
     if args.local_user is None:
@@ -95,7 +96,7 @@ def main() -> None:
         cmd_suffix = ""
     else:
         cmd_prefix = f'su {args.local_user} --session-command "'
-        cmd_suffix = f'"'
+        cmd_suffix = '"'
     # Generate ssh keys
     ssh_cmd = f"{cmd_prefix}ssh-keygen{cmd_suffix}"
     os.system(ssh_cmd)
