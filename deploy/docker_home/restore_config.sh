@@ -1,6 +1,6 @@
 # restore /etc/hosts entries for combine targets
 if [ -f "/config/hosts" ] ; then
-    cp /config/hosts /etc/hosts
+    cp /config/hosts /etc
 fi
 
 if [ -d "/config/.ssh" ] ; then
@@ -9,4 +9,9 @@ fi
 
 if [ -d "/config/.kube" ] ; then
     cp -r /config/.kube ${HOME}
+fi
+
+if [ -f "/config/.env" ] ; then
+    cp /config/.env ${HOME}
+    . ${HOME}/.env
 fi

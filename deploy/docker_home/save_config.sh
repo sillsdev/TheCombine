@@ -8,4 +8,7 @@ if [ -d "/config" ] ; then
     if [ -d "${HOME}/.kube" ] ; then
         cp -r ${HOME}/.kube /config
     fi
+    if [ -f "${HOME}/.env" ] ; then
+        cp ${HOME}/.env /config
+    fi
 fi
