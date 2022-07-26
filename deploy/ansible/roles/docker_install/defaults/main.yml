@@ -2,6 +2,5 @@
 install_credential_helper: false
 credential_helper_version: v0.6.3
 
-# Kubernetes/minikube is validated on Docker 19.03.x
 docker_packages:
   - containerd.io
