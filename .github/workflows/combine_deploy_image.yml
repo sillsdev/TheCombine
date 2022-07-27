@@ -3,8 +3,8 @@ name: "Update combine_deploy image"
 on:
   push:
     branches: [master]
-    path:
-      - deploy/**
+    paths:
+      - "deploy/**"
 
 jobs:
   build:
