@@ -376,6 +376,9 @@ Where:
     the format where release versions start with a ‘v’).
   - You can see the version of the latest release on the GitHub page for The Combine,
     <https://github.com/sillsdev/TheCombine>: ![alt text](images/releases.png "The Combine Releases")
+  - The help text for `setup_combine.py` says that the `--tag` is optional and its default value is `latest`. That is
+    used in the _Development Environment_ scenario; there are no images for _The Combine's_ components in
+    `public.ecr.aws/thecombine` with the tag `latest`.
 
 ## Maintenance
 
@@ -396,7 +399,7 @@ In addition to the daily backup, any of the scripts can be run on-demand using t
 `kubectl` command takes the form:
 
 ```bash
-kubectl [--kubeconfig=<path-to-kubernetes-file] [-n thecombine] exec -it deployment/maintenance -- <maintenance script> <script options>
+kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance script> <script options>
 ```
 
 Notes:
@@ -410,7 +413,7 @@ Notes:
 2. You can see the options for a script by running:
 
    ```bash
-   kubectl [--kubeconfig=<path-to-kubernetes-file] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
+   kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
    ```
 
    The only exception is `combine-backup-job.sh` which does not have any script options.
@@ -426,9 +429,7 @@ Notes:
 
 The `check_cert.py` will print the expiration timestamp for _The Combine's_ TLS certificate.
 
-- if using the Docker image
-
-- open a terminal window and run if the Docker image is not already started:
+- if using the Docker image, open a terminal window and run:
 
   ```console
   docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
@@ -454,15 +455,15 @@ You can create your own inventory file to enable Ansible to install the combine 
 
 To use your own inventory file:
 
-- have the filename match the pattern \*.hosts.yml, e.g. dev.hosts.yml, or save it in a directory that is not in the
-  combine source tree;
-- use hosts.yml as a model. The host will need to be in the `server`, `qa` or the `nuc` group presently. Machines in the
+- The inventory filename match the pattern \*.hosts.yml, e.g. dev.hosts.yml, or save it in a directory that is not in
+  the combine source tree.
+- Use hosts.yml as a model. The host will need to be in the `server`, `qa` or the `nuc` group presently. Machines in the
   `server` group will get a certificate from letsencrypt and must be reachable from the internet. Machines in the `qa`
   group will use a self-signed certificate. Machines in the `nuc` group are expected to have a wifi interface and will
   get a certificate that has been created for them and stored in AWS S3.
-- at a minimum, define the `combine_server_name` variable.
-- add any variables whose default value you want to override.
-- to use the custom inventory file, add the following option to the ansible-playbook commands above:
+- At a minimum, the inventory file must define the `combine_server_name` variable for each host.
+- You may add any variables whose default value you want to override.
+- To use the custom inventory file, add the following option to the ansible-playbook commands above:
   `-i custom-inventory.yml` where `custom-inventory.yml` is the name of the inventory file that you created.
 
 See the Ansible documentation,
