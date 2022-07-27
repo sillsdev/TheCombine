@@ -8,9 +8,6 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        component: [frontend, backend, maintenance]
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -26,5 +23,6 @@ jobs:
       - name: Build combine_deploy
         uses: docker/build-push-action@v3
         with:
+          context: deploy
           push: true
           tags: public.ecr.aws/thecombine/combine_deploy:latest
