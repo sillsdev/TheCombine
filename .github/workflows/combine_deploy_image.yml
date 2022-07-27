@@ -23,6 +23,6 @@ jobs:
       - name: Build combine_deploy
         uses: docker/build-push-action@v3
         with:
-          context: deploy
+          context: "{{defaultContext}}:deploy"
           push: true
           tags: public.ecr.aws/thecombine/combine_deploy:latest
