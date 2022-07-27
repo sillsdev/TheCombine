@@ -2,7 +2,7 @@ name: "Update combine_deploy image"
 
 on:
   push:
-    branches: [master, test-gha-for-combine-deploy]
+    branches: [master]
     path:
       - deploy/**
 
