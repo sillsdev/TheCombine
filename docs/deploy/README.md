@@ -13,19 +13,18 @@ This document describes how to deploy _The Combine_ to a target Kubernetes clust
 ## Contents
 
 1. [System Design](#system-design)
-2. [Host System Requirements](#host-system-requirements)
-3. [Deployment Scenarios](#deployment-scenarios)
+2. [Deployment Scenarios](#deployment-scenarios)
    1. [Development Environment](#development-environment)
    2. [QA/Production Server](#qaproduction-server)
    3. [NUC](#nuc)
-4. [Install Ubuntu Server](#install-ubuntu-server)
-5. [Install Kubernetes Engine](#install-kubernetes-engine)
-6. [Setup Kubectl and Environment](#setup-kubectl-and-environment)
+3. [Install Ubuntu Server](#install-ubuntu-server)
+4. [Install Kubernetes Engine](#install-kubernetes-engine)
+5. [Setup Kubectl and Environment](#setup-kubectl-and-environment)
    1. [Setup Kubectl](#setup-kubectl)
    2. [Setup Environment](#setup-environment)
-7. [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
-8. [Install _The Combine_](#install-the-combine)
-9. [Maintenance](#maintenance)
+6. [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
+7. [Install _The Combine_](#install-the-combine)
+8. [Maintenance](#maintenance)
    1. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
    2. [Checking Certificate Expiration](#checking-certificate-expiration)
    3. [Creating your own Configurations](#creating-your-own-configurations)
@@ -39,7 +38,7 @@ Kubernetes resources are described in the design document at
 ## Deployment Scenarios
 
 The tools and methods for deploying _The Combine_ are a function of the type of system you wish to deploy, the
-_deployment scenario_ and the operating system of the host machine.
+_deployment scenario_, and the operating system of the host machine.
 
 ### Development Environment
 
@@ -132,7 +131,6 @@ To install _The Combine_ on one of these systems, follow the steps in
 - [Install Kubernetes Engine](#install-kubernetes-engine)
 - [Setup Kubectl and Environment](#setup-kubectl-and-environment)
 - [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
-- [Setup _The Combine_ Environment Variables](#setup-the-combine-environment-variables)
 - [Install _The Combine_](#install-the-combine)
 
 ## Install Ubuntu Server
