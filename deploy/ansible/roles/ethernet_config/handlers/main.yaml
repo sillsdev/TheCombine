@@ -1,3 +1,0 @@
----
-- name: Apply netplan
-  command: /usr/sbin/netplan apply
