@@ -1,4 +1,4 @@
-import * as makeDir from "make-dir";
+import makeDir from "make-dir";
 
 const directory = "./mongo_database";
 
