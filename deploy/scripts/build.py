@@ -92,9 +92,9 @@ def main() -> None:
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     if args.nerdctl:
-        build_cmd = f"nerdctl -n {args.namespace}"
+        build_cmd = ["nerdctl", "-n", args.namespace]
     else:
-        build_cmd = "docker"
+        build_cmd = ["docker"]
 
     if args.components is not None:
         to_do = args.components
@@ -120,13 +120,13 @@ def main() -> None:
         logging.info(f"Building component {component}")
         print_all = args.output_level == "all"
         run_cmd(
-            [build_cmd, "build", "-t", image_name, "-f", "Dockerfile", "."],
+            build_cmd + ["build", "-t", image_name, "-f", "Dockerfile", "."],
             print_cmd=print_all,
             print_output=print_all,
         )
         logging.info(f"{component} build complete")
         if args.repo is not None:
-            run_cmd([build_cmd, "push", image_name])
+            run_cmd(build_cmd + ["push", image_name])
             logging.info(f"{image_name} pushed to {args.repo}")
 
     # Remove the version file
