@@ -7,7 +7,7 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
-from typing import List
+from typing import List, Optional
 
 
 def run_cmd(
@@ -17,6 +17,7 @@ def run_cmd(
     print_cmd: bool = False,
     print_output: bool = False,
     chomp: bool = False,
+    cwd: Optional[str] = None,
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     if print_cmd:
@@ -28,6 +29,7 @@ def run_cmd(
             stderr=subprocess.PIPE,
             text=True,
             check=check_results,
+            cwd=cwd,
         )
         if print_output:
             print(process_results.stdout)
