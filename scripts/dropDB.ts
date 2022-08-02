@@ -1,6 +1,6 @@
 import { spawnSync } from "child_process";
 
-const cmd = spawnSync("mongo", [
+const cmd = spawnSync("mongosh", [
   "-eval",
   "db.getSiblingDB('CombineDatabase').dropDatabase()",
 ]);
