@@ -114,7 +114,7 @@ class CombineApp:
         """
         db_results = self.exec(
             self.get_pod_id(CombineApp.Component.Database),
-            ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd],
+            ["/usr/bin/mongosh", "--quiet", "CombineDatabase", "--eval", cmd],
         )
         result_str = self.object_id_to_str(db_results.stdout)
         if result_str != "":
@@ -129,7 +129,7 @@ class CombineApp:
         cmd = f"db.{collection}.find({query}, {projection}).toArray()"
         db_results = self.exec(
             self.get_pod_id(CombineApp.Component.Database),
-            ["/usr/bin/mongo", "--quiet", "CombineDatabase", "--eval", cmd],
+            ["/usr/bin/mongosh", "--quiet", "CombineDatabase", "--eval", cmd],
         )
         result_str = self.object_id_to_str(db_results.stdout)
         if result_str != "":
