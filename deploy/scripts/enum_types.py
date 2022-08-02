@@ -17,3 +17,12 @@ class HelmAction(Enum):
 class ExitStatus(Enum):
     SUCCESS = 0
     FAILURE = 1
+
+
+@unique
+class JobStatus(Enum):
+    """Enumerate status values for a job being run in background."""
+
+    RUNNING = -1
+    SUCCESS = 0
+    ERROR = 1
