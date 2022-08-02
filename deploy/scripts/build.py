@@ -108,9 +108,9 @@ def main() -> None:
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     if args.nerdctl:
-        build_prog = f"nerdctl -n {args.namespace}"
+        build_prog = ["nerdctl", "-n", args.namespace]
     else:
-        build_prog = "docker"
+        build_prog = ["docker"]
 
     if args.components is not None:
         to_do = args.components
