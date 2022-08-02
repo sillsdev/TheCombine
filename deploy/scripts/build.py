@@ -13,18 +13,34 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import logging
-import os
 from pathlib import Path
-from typing import Dict, Optional
+import subprocess
+from typing import Dict, List, Optional
 
 from app_release import get_release, set_release
-from utils import run_cmd
-
 
 @dataclass(frozen=True)
 class BuildSpec:
     dir: Path
     name: str
+
+"""
+Simplify this:
+1. Job only has cmd, cwd, success, error
+   (still clunky - success & error are needed after job has been popped off the queue so they need
+    to be copied to the running jobs)
+2. create job_queue: Dict[str, List[Job]]
+3. create running_jobs which is a map of Popen results
+"""
+class Job:
+    def __init__(
+        self, cmd: List[str], cwd: Optional[Path]
+    ) -> None:
+        self.cmd = cmd
+        self.cwd = cwd
+
+    def run(self) -> None:
+        self.process = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.cwd)
 
 
 project_dir = Path(__file__).resolve().parent.parent.parent
@@ -92,9 +108,9 @@ def main() -> None:
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     if args.nerdctl:
-        build_cmd = f"nerdctl -n {args.namespace}"
+        build_prog = f"nerdctl -n {args.namespace}"
     else:
-        build_cmd = "docker"
+        build_prog = "docker"
 
     if args.components is not None:
         to_do = args.components
@@ -112,22 +128,34 @@ def main() -> None:
 
     set_release(get_release(), release_file)
 
-    # Build each of the component images
+    # Start build of each of the components
+    build_jobs: List[Job] = []
     for component in to_do:
         spec = build_specs[component]
-        os.chdir(spec.dir)
         image_name = get_image_name(args.repo, spec.name, args.tag)
+        build_cmd = [build_prog, "build", "-t", image_name, "-f", "Dockerfile", "."]
+        push_cmd = [build_prog, "push", image_name]
         logging.info(f"Building component {component}")
-        print_all = args.output_level == "all"
-        run_cmd(
-            [build_cmd, "build", "-t", image_name, "-f", "Dockerfile", "."],
-            print_cmd=print_all,
-            print_output=print_all,
-        )
-        logging.info(f"{component} build complete")
-        if args.repo is not None:
-            run_cmd([build_cmd, "push", image_name])
-            logging.info(f"{image_name} pushed to {args.repo}")
+        job = Job(component, image_name, build_cmd, push_cmd, spec.dir)
+        build_jobs.append(job)
+        job.build()
+
+    # Wait for the build jobs to complete; start push of built images if
+    # repo is specified
+    for job in build_jobs:
+        if hasattr(job, "build_process"):
+            results = job.build_process.wait()
+            if results == 0:
+               logging.info(f"{component} build complete")
+            else:
+                logging.error(f"*** {component} build failed. ***")
+            job.push()
+
+    # wait for the push jobs to complete
+    for job in build_jobs:
+        if hasattr(job, "push_process"):
+            job.push_process.wait()
+            logging.info(f"{job.image_name} pushed to {args.repo}")
 
     # Remove the version file
     if release_file.exists():
