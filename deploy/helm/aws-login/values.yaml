@@ -29,7 +29,3 @@ awsEcr:
   serviceAccount: account-ecr-login
   role: role-ecr-login
   roleBinding: role-ecr-login-binding
-
-database:
-  mongo_image_tag: 4.4
-  data_size: 16Gi

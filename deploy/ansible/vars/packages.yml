@@ -1,22 +1,4 @@
 ---
-###############################
-# This file defines package versions where specific packages version are
-# specified in the playbooks.  To update a package, change the version in
-# this file and rerun the specified playbook
-###############################
-
-# MongoDB version
-mongodb_version: 4.4
-
-# Packages installed by playbook_docker.yml
-docker_compose_version: 1.28.5
-
-# Version for aws-cli installed by aws_access role
-aws_cli_version: 2.1.28
-
-# Version for cert_manager.io
-cert_manager_version: v1.7.1
-
 # Packages required for targets
 required_packages:
   - python3
