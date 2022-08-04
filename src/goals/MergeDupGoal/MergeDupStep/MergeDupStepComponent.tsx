@@ -2,7 +2,6 @@ import { Button, Grid, ImageList, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 
-import LoadingButton from "components/Buttons/LoadingButton";
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
 
@@ -13,27 +12,13 @@ interface MergeDupStepProps extends WithTranslation {
   mergeAll: () => Promise<void>;
 }
 
-interface MergeDupStepState {
-  isSaving: boolean;
-}
-
-class MergeDupStep extends React.Component<
-  MergeDupStepProps,
-  MergeDupStepState
-> {
-  constructor(props: MergeDupStepProps) {
-    super(props);
-    this.state = { isSaving: false };
-  }
-
+class MergeDupStep extends React.Component<MergeDupStepProps> {
   next(): void {
     this.props.clearSidebar();
-    this.setState({ isSaving: false });
     this.props.advanceStep();
   }
 
   saveContinue(): void {
-    this.setState({ isSaving: true });
     this.props.clearSidebar();
     this.props.mergeAll().then(() => this.next());
   }
@@ -58,19 +43,16 @@ class MergeDupStep extends React.Component<
         {/* Merge/skip buttons */}
         <Grid container justifyContent="flex-start">
           <Grid item>
-            <LoadingButton
-              loading={this.state.isSaving}
-              buttonProps={{
-                color: "primary",
-                variant: "contained",
-                style: { marginRight: theme.spacing(3) },
-                onClick: () => this.saveContinue(),
-                title: this.props.t("mergeDups.helpText.saveAndContinue"),
-                id: "merge-save",
-              }}
+            <Button
+              color="primary"
+              variant="contained"
+              style={{ marginRight: theme.spacing(3) }}
+              onClick={() => this.saveContinue()}
+              title={this.props.t("mergeDups.helpText.saveAndContinue")}
+              id="merge-save"
             >
               {this.props.t("buttons.saveAndContinue")}
-            </LoadingButton>
+            </Button>
             <Button
               color="secondary"
               variant="contained"
