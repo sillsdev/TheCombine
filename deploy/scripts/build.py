@@ -77,22 +77,20 @@ class JobQueue:
         job.
         """
         if self.curr_job is not None:
-            # Get job output if it is finished
-            try:
-                job_output, job_error = self.curr_job.communicate(timeout=2)
-                logging.debug(f"{self.name} job has finished.")
-                logging.info(job_output)
-            except subprocess.TimeoutExpired:
+            # See if the job is still running
+            if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
                 return JobStatus.RUNNING
-            else:
-                if self.curr_job.returncode != 0:
-                    logging.error(job_error)
-                    self.returncode = self.curr_job.returncode
-                    # skip remaining jobs
-                    self.job_list = []
-                    return JobStatus.ERROR
-                self.curr_job = None
+            job_output, job_error = self.curr_job.communicate()
+            logging.debug(f"{self.name} job has finished.")
+            logging.info(job_output)
+            if self.curr_job.returncode != 0:
+                logging.error(job_error)
+                self.returncode = self.curr_job.returncode
+                # skip remaining jobs
+                self.job_list = []
+                return JobStatus.ERROR
+            self.curr_job = None
         if self.start_next():
             return JobStatus.RUNNING
         return JobStatus.SUCCESS
@@ -203,7 +201,7 @@ def main() -> None:
 
     # Run jobs in parallel - one job per component
     build_returncode = 0
-    while len(job_set) > 0:
+    while True:
         # loop through the running jobs until there is no more work left
         completed: List[str] = []
         for component in job_set:
@@ -217,6 +215,9 @@ def main() -> None:
         # delete any JobQueue objects that have finished
         for component in completed:
             del job_set[component]
+        if len(job_set) == 0:
+            break
+        time.sleep(5.0)
     # Remove the version file
     if release_file.exists():
         release_file.unlink()
