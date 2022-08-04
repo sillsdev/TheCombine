@@ -36,7 +36,8 @@ class Job:
 
 
 class JobQueue:
-    def __init__(self) -> None:
+    def __init__(self, name: str) -> None:
+        self.name = name
         self.job_list: List[Job] = []
         self.curr_job: Optional[subprocess.Popen[str]] = None
         self.returncode = 0
@@ -52,6 +53,7 @@ class JobQueue:
         running or if the queue is empty.
         """
         if self.curr_job is not None and self.curr_job.poll() is None:
+            logging.debug(f"{self.name}.start_next(): called while job is still running.")
             return False
         if len(self.job_list) > 0:
             next_job = self.job_list.pop(0)
@@ -62,7 +64,9 @@ class JobQueue:
                 stderr=subprocess.PIPE,
                 text=True,
             )
+            logging.debug(f"{self.name}.start_next(): new job started - {next_job}")
             return True
+        logging.debug(f"{self.name}.start_next(): no more jobs to run.")
         return False
 
     def check_jobs(self) -> JobStatus:
@@ -73,18 +77,22 @@ class JobQueue:
         job.
         """
         if self.curr_job is not None:
-            # there is a running job
-            if self.curr_job.poll is None:
+            # Get job output if it is finished
+            try:
+                job_output, job_error = self.curr_job.communicate(timeout=2)
+                logging.debug(f"{self.name} job has finished.")
+                logging.info(job_output)
+            except subprocess.TimeoutExpired:
+                logging.debug(f"{self.name} job is running.")
                 return JobStatus.RUNNING
-            job_output, job_error = self.curr_job.communicate()
-            logging.info(job_output)
-            if self.curr_job.returncode != 0:
-                logging.error(job_error)
-                self.returncode = self.curr_job.returncode
-                # skip remaining jobs
-                self.job_list = []
-                return JobStatus.ERROR
-            self.curr_job = None
+            else:
+                if self.curr_job.returncode != 0:
+                    logging.error(job_error)
+                    self.returncode = self.curr_job.returncode
+                    # skip remaining jobs
+                    self.job_list = []
+                    return JobStatus.ERROR
+                self.curr_job = None
         if self.start_next():
             return JobStatus.RUNNING
         return JobStatus.SUCCESS
@@ -115,6 +123,9 @@ def parse_args() -> argparse.Namespace:
         nargs="*",
         choices=["frontend", "backend", "maintenance"],
         help="Combine components to build.",
+    )
+    parser.add_argument(
+        "--debug", action="store_true", help="Print debugging info."
     )
     parser.add_argument(
         "--tag",
@@ -148,7 +159,9 @@ def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
 
-    if args.quiet:
+    if args.debug:
+        log_level = logging.DEBUG
+    elif args.quiet:
         log_level = logging.WARNING
     else:
         log_level = logging.INFO
@@ -180,26 +193,30 @@ def main() -> None:
     for component in to_do:
         spec = build_specs[component]
         image_name = get_image_name(args.repo, spec.name, args.tag)
+        job_set[component] = JobQueue(component)
         job_set[component].add_job(
-            Job(build_prog + ["build", "-t", image_name, "-f", "Dockerfile", "."], spec.dir)
+            Job(build_prog + ["build", "--quiet", "-t", image_name, "-f", "Dockerfile", "."], spec.dir)
         )
         if args.repo is not None:
-            job_set[component].add_job(Job(build_prog + ["push", image_name], None))
+            job_set[component].add_job(Job(build_prog + ["push", "--quiet", image_name], None))
         logging.info(f"Building component {component}")
 
-    # Run jobs in parallel - one job for each component
+    # Run jobs in parallel - one job per component
     build_returncode = 0
     while len(job_set) > 0:
         # loop through the running jobs until there is no more work left
+        completed: List[str] = []
         for component in job_set:
             job_status = job_set[component].check_jobs()
             if job_status == JobStatus.SUCCESS:
-                del job_set[component]
+                completed.append(component)
             elif job_status == JobStatus.ERROR:
                 if build_returncode != 0:
                     build_returncode = job_set[component].returncode
-                del job_set[component]
-        time.sleep(5.0)
+                completed.append(component)
+        # delete any JobQueue objects that have finished
+        for component in completed:
+            del job_set[component]
     # Remove the version file
     if release_file.exists():
         release_file.unlink()
