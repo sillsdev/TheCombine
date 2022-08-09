@@ -38,6 +38,7 @@ class Job:
 class JobQueue:
     def __init__(self, name: str, output_mode: OutputMode) -> None:
         self.name = name
+        self.status = JobStatus.RUNNING
         self.job_list: List[Job] = []
         self.curr_job: Optional[subprocess.Popen[str]] = None
         self.returncode = 0
@@ -48,6 +49,9 @@ class JobQueue:
 
     def add_job(self, job: Job) -> None:
         self.job_list.append(job)
+
+    def is_running(self) -> bool:
+        return self.status == JobStatus.RUNNING
 
     def start_next(self) -> bool:
         """
@@ -73,18 +77,21 @@ class JobQueue:
         logging.debug(f"{self.name}.start_next(): no more jobs to run.")
         return False
 
-    def check_jobs(self) -> JobStatus:
+    def check_jobs(self) -> None:
         """
         Check if all jobs in the queue have completed.
 
         If the current job has finished, and there are more jobs to run, it will start the next
         job.
         """
+        if self.status != JobStatus.RUNNING:
+            return
         if self.curr_job is not None:
             # See if the job is still running
             if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
-                return JobStatus.RUNNING
+                self.status = JobStatus.RUNNING
+                return
             if self.curr_job.returncode == 0:
                 logging.info(f"{self.name} job has finished.")
             else:
@@ -92,11 +99,13 @@ class JobQueue:
                 self.returncode = self.curr_job.returncode
                 # skip remaining jobs
                 self.job_list = []
-                return JobStatus.ERROR
+                self.status = JobStatus.ERROR
+                return
             self.curr_job = None
         if self.start_next():
-            return JobStatus.RUNNING
-        return JobStatus.SUCCESS
+            self.status = JobStatus.RUNNING
+        else:
+            self.status = JobStatus.SUCCESS
 
 
 project_dir = Path(__file__).resolve().parent.parent.parent
@@ -244,24 +253,20 @@ def main() -> None:
     build_returncode = 0
     while True:
         # loop through the running jobs until there is no more work left
-        completed: List[str] = []
+        running_jobs = False
         for component in job_set:
-            job_status = job_set[component].check_jobs()
-            if job_status == JobStatus.SUCCESS:
-                completed.append(component)
-            elif job_status == JobStatus.ERROR:
-                if build_returncode != 0:
-                    build_returncode = job_set[component].returncode
-                completed.append(component)
-        # delete any JobQueue objects that have finished
-        for component in completed:
-            del job_set[component]
-        if len(job_set) == 0:
+            job_set[component].check_jobs()
+            running_jobs = running_jobs or job_set[component].is_running()
+        if not running_jobs:
             break
         time.sleep(5.0)
     # Remove the version file
     if release_file.exists():
         release_file.unlink()
+    # Print job summary
+    logging.info("Job Summary")
+    for component in job_set:
+        logging.info(f"{component}: {job_set[component].status}")
     sys.exit(build_returncode)
 
 
