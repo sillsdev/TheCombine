@@ -12,15 +12,12 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
-from io import TextIOWrapper
 import logging
 from pathlib import Path
-import shutil
 import subprocess
 import sys
-import tempfile
 import time
-from typing import IO, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from app_release import get_release, set_release
 from enum_types import JobStatus, OutputMode
@@ -39,20 +36,15 @@ class Job:
 
 
 class JobQueue:
-    def __init__(self, name: str, output_dir: Path) -> None:
+    def __init__(self, name: str, output_mode: OutputMode) -> None:
         self.name = name
         self.job_list: List[Job] = []
         self.curr_job: Optional[subprocess.Popen[str]] = None
         self.returncode = 0
-        self.output_dir = output_dir
-        self.output_stream: Optional[TextIOWrapper] = None
-        self.job_count = 0
+        self.output_mode = output_mode
 
     def add_job(self, job: Job) -> None:
         self.job_list.append(job)
-
-    def filename(self) -> Path:
-        return self.output_dir / f"{self.name}-{self.job_count}.txt"
 
     def start_next(self) -> bool:
         """
@@ -66,15 +58,11 @@ class JobQueue:
             return False
         if len(self.job_list) > 0:
             next_job = self.job_list.pop(0)
-            if self.output_stream is not None:
-                self.output_stream.close()
-            self.job_count += 1
-            self.output_stream = open(self.filename(), "w")
             self.curr_job = subprocess.Popen(
                 next_job.command,
                 cwd=next_job.work_dir,
-                stdout=self.output_stream,
-                stderr=self.output_stream,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
             )
             logging.debug(f"{self.name}.start_next(): new job started - {next_job}")
@@ -94,30 +82,24 @@ class JobQueue:
             if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
                 return JobStatus.RUNNING
+            job_out, job_err = self.curr_job.communicate()
             if self.curr_job.returncode == 0:
                 logging.info(f"{self.name} job has finished.")
+                if self.output_mode == OutputMode.ALL:
+                    print(job_out)
+                    print(job_err)
             else:
                 logging.error(f"{self.name} job failed.")
                 self.returncode = self.curr_job.returncode
                 # skip remaining jobs
                 self.job_list = []
-                self.print_output()
+                # Print output if an error independent of preferred output mode
+                print(job_err)
                 return JobStatus.ERROR
             self.curr_job = None
         if self.start_next():
             return JobStatus.RUNNING
-        self.print_output()
         return JobStatus.SUCCESS
-
-    def print_output(self):
-        """Print the output file on stdout."""
-        if self.output_stream is not None:
-            self.output_stream.close()
-            self.output_stream = None
-        output_file_path = self.filename()
-        with open(output_file_path, "r") as f:
-            for line in f:
-                print(line, end="")
 
 
 project_dir = Path(__file__).resolve().parent.parent.parent
@@ -236,53 +218,50 @@ def main() -> None:
 
     set_release(get_release(), release_file)
 
-    # Setup the context for temporary output files
-    with tempfile.TemporaryDirectory() as temp_dir:
-        # Create the set of jobs to be run for all components
-        job_set: Dict[str, JobQueue] = {}
-        for component in to_do:
-            output_dir = Path(temp_dir).resolve()
-            spec = build_specs[component]
-            image_name = get_image_name(args.repo, spec.name, args.tag)
-            job_set[component] = JobQueue(component, output_dir)
-            job_set[component].add_job(
-                Job(
-                    build_prog
-                    + ["build"]
-                    + build_opts
-                    + [
-                        "-t",
-                        image_name,
-                        "-f",
-                        "Dockerfile",
-                        ".",
-                    ],
-                    spec.dir,
-                )
+    # Create the set of jobs to be run for all components
+    job_set: Dict[str, JobQueue] = {}
+    for component in to_do:
+        spec = build_specs[component]
+        image_name = get_image_name(args.repo, spec.name, args.tag)
+        job_set[component] = JobQueue(component, args.output_mode)
+        job_set[component].add_job(
+            Job(
+                build_prog
+                + ["build"]
+                + build_opts
+                + [
+                    "-t",
+                    image_name,
+                    "-f",
+                    "Dockerfile",
+                    ".",
+                ],
+                spec.dir,
             )
-            if args.repo is not None:
-                job_set[component].add_job(Job(build_prog + ["push", "--quiet", image_name], None))
-            logging.info(f"Building component {component}")
+        )
+        if args.repo is not None:
+            job_set[component].add_job(Job(build_prog + ["push", "--quiet", image_name], None))
+        logging.info(f"Building component {component}")
 
-        # Run jobs in parallel - one job per component
-        build_returncode = 0
-        while True:
-            # loop through the running jobs until there is no more work left
-            completed: List[str] = []
-            for component in job_set:
-                job_status = job_set[component].check_jobs()
-                if job_status == JobStatus.SUCCESS:
-                    completed.append(component)
-                elif job_status == JobStatus.ERROR:
-                    if build_returncode != 0:
-                        build_returncode = job_set[component].returncode
-                    completed.append(component)
-            # delete any JobQueue objects that have finished
-            for component in completed:
-                del job_set[component]
-            if len(job_set) == 0:
-                break
-            time.sleep(5.0)
+    # Run jobs in parallel - one job per component
+    build_returncode = 0
+    while True:
+        # loop through the running jobs until there is no more work left
+        completed: List[str] = []
+        for component in job_set:
+            job_status = job_set[component].check_jobs()
+            if job_status == JobStatus.SUCCESS:
+                completed.append(component)
+            elif job_status == JobStatus.ERROR:
+                if build_returncode != 0:
+                    build_returncode = job_set[component].returncode
+                completed.append(component)
+        # delete any JobQueue objects that have finished
+        for component in completed:
+            del job_set[component]
+        if len(job_set) == 0:
+            break
+        time.sleep(5.0)
     # Remove the version file
     if release_file.exists():
         release_file.unlink()
