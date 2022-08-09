@@ -52,7 +52,7 @@ class JobQueue:
         self.job_list.append(job)
 
     def filename(self) -> Path:
-        return Path(self.output_dir).resolve() / f"{self.name}-{self.job_count}.txt"
+        return self.output_dir / f"{self.name}-{self.job_count}.txt"
 
     def start_next(self) -> bool:
         """
@@ -113,9 +113,11 @@ class JobQueue:
         """Print the output file on stdout."""
         if self.output_stream is not None:
             self.output_stream.close()
-        if self.output_dir is not None:
-            with open(self.filename(), "r") as f:
-                shutil.copyfileobj(f, sys.stdout)
+            self.output_stream = None
+        output_file_path = self.filename()
+        with open(output_file_path, "r") as f:
+            for line in f:
+                print(line, end="")
 
 project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
@@ -270,9 +272,9 @@ def main() -> None:
             if len(job_set) == 0:
                 break
             time.sleep(5.0)
-        # Remove the version file
-        if release_file.exists():
-            release_file.unlink()
+    # Remove the version file
+    if release_file.exists():
+        release_file.unlink()
     sys.exit(build_returncode)
 
 
