@@ -20,10 +20,10 @@ import subprocess
 import sys
 import tempfile
 import time
-from typing import Dict, IO, List, Optional
+from typing import IO, Dict, List, Optional
 
 from app_release import get_release, set_release
-from enum_types import JobStatus
+from enum_types import JobStatus, OutputMode
 
 
 @dataclass(frozen=True)
@@ -119,6 +119,7 @@ class JobQueue:
             for line in f:
                 print(line, end="")
 
+
 project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
 
@@ -174,12 +175,21 @@ def parse_args() -> argparse.Namespace:
         help="Always attempt to pull a newer version of an image used in the build.",
     )
     parser.add_argument(
-        "--verbose",
-        "-v",
-        action="store_true",
-        help="Print all output.  Normally, script will only report errors.",
+        "--output-mode",
+        "-o",
+        choices=[e.value for e in OutputMode],
+        default=OutputMode.PROGRESS.value,
+        help=(
+            "Level of output desired: "
+            "none - no output, "
+            "progress - start/completion notification for each job, "
+            "all - all command output."
+        ),
     )
-    return parser.parse_args()
+
+    args = parser.parse_args()
+    args.output_mode = OutputMode(args.output_mode)
+    return args
 
 
 def main() -> None:
@@ -188,7 +198,7 @@ def main() -> None:
 
     if args.debug:
         log_level = logging.DEBUG
-    elif args.verbose:
+    elif args.output_mode != OutputMode.NONE:
         log_level = logging.INFO
     else:
         log_level = logging.WARNING
@@ -201,7 +211,7 @@ def main() -> None:
 
     # Setup build options
     build_opts: List[str] = []
-    if args.verbose:
+    if args.output_mode == OutputMode.ALL:
         build_opts = ["--progress", "plain"]
     else:
         build_opts = ["--quiet"]
@@ -238,9 +248,10 @@ def main() -> None:
             job_set[component].add_job(
                 Job(
                     build_prog
-                    + [ "build" ]
+                    + ["build"]
                     + build_opts
-                    + [ "-t",
+                    + [
+                        "-t",
                         image_name,
                         "-f",
                         "Dockerfile",

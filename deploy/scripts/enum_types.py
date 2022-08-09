@@ -26,3 +26,10 @@ class JobStatus(Enum):
     RUNNING = -1
     SUCCESS = 0
     ERROR = 1
+
+
+@unique
+class OutputMode(Enum):
+    NONE = "none"
+    PROGRESS = "progress"
+    ALL = "all"
