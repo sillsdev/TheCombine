@@ -41,7 +41,10 @@ class JobQueue:
         self.job_list: List[Job] = []
         self.curr_job: Optional[subprocess.Popen[str]] = None
         self.returncode = 0
-        self.output_mode = output_mode
+        if output_mode == OutputMode.ALL:
+            self.output_stream = None
+        else:
+            self.output_stream = subprocess.DEVNULL
 
     def add_job(self, job: Job) -> None:
         self.job_list.append(job)
@@ -61,8 +64,8 @@ class JobQueue:
             self.curr_job = subprocess.Popen(
                 next_job.command,
                 cwd=next_job.work_dir,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stdout=self.output_stream,
+                stderr=self.output_stream,
                 text=True,
             )
             logging.debug(f"{self.name}.start_next(): new job started - {next_job}")
@@ -82,19 +85,13 @@ class JobQueue:
             if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
                 return JobStatus.RUNNING
-            job_out, job_err = self.curr_job.communicate()
             if self.curr_job.returncode == 0:
                 logging.info(f"{self.name} job has finished.")
-                if self.output_mode == OutputMode.ALL:
-                    print(job_out)
-                    print(job_err)
             else:
                 logging.error(f"{self.name} job failed.")
                 self.returncode = self.curr_job.returncode
                 # skip remaining jobs
                 self.job_list = []
-                # Print output if an error independent of preferred output mode
-                print(job_err)
                 return JobStatus.ERROR
             self.curr_job = None
         if self.start_next():
