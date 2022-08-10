@@ -263,10 +263,11 @@ def main() -> None:
     # Remove the version file
     if release_file.exists():
         release_file.unlink()
-    # Print job summary
-    logging.info("Job Summary")
-    for component in job_set:
-        logging.info(f"{component}: {job_set[component].status}")
+    # Print job summary if output mode is ALL
+    if args.output_mode == OutputMode.ALL:
+        logging.info("Job Summary")
+        for component in job_set:
+            logging.info(f"{component}: {job_set[component].status}")
     sys.exit(build_returncode)
 
 
