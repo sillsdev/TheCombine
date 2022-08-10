@@ -39,6 +39,7 @@ class Job:
 
 class JobQueue:
     """Class to manage a queue of jobs."""
+
     def __init__(self, name: str, output_mode: OutputMode) -> None:
         self.name = name
         self.status = JobStatus.RUNNING
@@ -91,7 +92,6 @@ class JobQueue:
             # See if the job is still running
             if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
-                self.status = JobStatus.RUNNING
                 return self.status
             if self.curr_job.returncode == 0:
                 logging.info(f"{self.name} job has finished.")
@@ -103,9 +103,9 @@ class JobQueue:
                 self.status = JobStatus.ERROR
                 return self.status
             self.curr_job = None
-        if self.start_next():
-            self.status = JobStatus.RUNNING
-        else:
+        # start the next job.  If there are no more jobs to run, we have
+        # finished successfully
+        if not self.start_next():
             self.status = JobStatus.SUCCESS
         return self.status
 
