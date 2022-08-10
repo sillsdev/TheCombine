@@ -31,11 +31,14 @@ class BuildSpec:
 
 @dataclass
 class Job:
+    """Dataclass for a command to be queued with the working directory to be used."""
+
     command: List[str]
     work_dir: Optional[Path]
 
 
 class JobQueue:
+    """Class to manage a queue of jobs."""
     def __init__(self, name: str, output_mode: OutputMode) -> None:
         self.name = name
         self.status = JobStatus.RUNNING
@@ -48,10 +51,8 @@ class JobQueue:
             self.output_stream = subprocess.DEVNULL
 
     def add_job(self, job: Job) -> None:
+        """Add a job to the current queue."""
         self.job_list.append(job)
-
-    def is_running(self) -> bool:
-        return self.status == JobStatus.RUNNING
 
     def start_next(self) -> bool:
         """
@@ -77,7 +78,7 @@ class JobQueue:
         logging.debug(f"{self.name}.start_next(): no more jobs to run.")
         return False
 
-    def check_jobs(self) -> None:
+    def check_jobs(self) -> JobStatus:
         """
         Check if all jobs in the queue have completed.
 
@@ -85,13 +86,13 @@ class JobQueue:
         job.
         """
         if self.status != JobStatus.RUNNING:
-            return
+            return self.status
         if self.curr_job is not None:
             # See if the job is still running
             if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
                 self.status = JobStatus.RUNNING
-                return
+                return self.status
             if self.curr_job.returncode == 0:
                 logging.info(f"{self.name} job has finished.")
             else:
@@ -100,12 +101,13 @@ class JobQueue:
                 # skip remaining jobs
                 self.job_list = []
                 self.status = JobStatus.ERROR
-                return
+                return self.status
             self.curr_job = None
         if self.start_next():
             self.status = JobStatus.RUNNING
         else:
             self.status = JobStatus.SUCCESS
+        return self.status
 
 
 project_dir = Path(__file__).resolve().parent.parent.parent
@@ -174,7 +176,7 @@ def parse_args() -> argparse.Namespace:
             "all - all command output."
         ),
     )
-
+    # Transform --output-mode argument to an enumerated type
     args = parser.parse_args()
     args.output_mode = OutputMode(args.output_mode)
     return args
@@ -184,6 +186,8 @@ def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
 
+    # Setup the logging level.  The command output will be printed on stdout/stderr
+    # independent of the logging facility
     if args.debug:
         log_level = logging.DEBUG
     elif args.output_mode != OutputMode.NONE:
@@ -192,6 +196,7 @@ def main() -> None:
         log_level = logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
+    # Setup required build engine - docker or nerdctl
     if args.nerdctl:
         build_prog = ["nerdctl", "-n", args.namespace]
     else:
@@ -213,6 +218,8 @@ def main() -> None:
     else:
         to_do = ["backend", "frontend", "maintenance"]
 
+    # Create a dictionary to look up the build spec from
+    # a component name
     build_specs: Dict[str, BuildSpec] = {
         "backend": BuildSpec(project_dir / "Backend", "backend"),
         "maintenance": BuildSpec(project_dir / "maintenance", "maint"),
@@ -255,8 +262,8 @@ def main() -> None:
         # loop through the running jobs until there is no more work left
         running_jobs = False
         for component in job_set:
-            job_set[component].check_jobs()
-            running_jobs = running_jobs or job_set[component].is_running()
+            if job_set[component].check_jobs() == JobStatus.RUNNING:
+                running_jobs = True
         if not running_jobs:
             break
         time.sleep(5.0)
