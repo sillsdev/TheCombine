@@ -20,7 +20,8 @@ import time
 from typing import Dict, List, Optional
 
 from app_release import get_release, set_release
-from enum_types import JobStatus, OutputMode
+from enum_types import JobStatus
+from streamfile import StreamFile
 
 
 @dataclass(frozen=True)
@@ -40,16 +41,14 @@ class Job:
 class JobQueue:
     """Class to manage a queue of jobs."""
 
-    def __init__(self, name: str, output_mode: OutputMode) -> None:
+    def __init__(self, name: str) -> None:
         self.name = name
         self.status = JobStatus.RUNNING
         self.job_list: List[Job] = []
         self.curr_job: Optional[subprocess.Popen[str]] = None
         self.returncode = 0
-        if output_mode == OutputMode.ALL:
-            self.output_stream = None
-        else:
-            self.output_stream = subprocess.DEVNULL
+        self.output_stream = StreamFile()
+        self.error_stream = StreamFile()
 
     def add_job(self, job: Job) -> None:
         """Add a job to the current queue."""
@@ -67,12 +66,14 @@ class JobQueue:
             return False
         if len(self.job_list) > 0:
             next_job = self.job_list.pop(0)
+            self.output_stream.open()
+            self.error_stream.open()
             self.curr_job = subprocess.Popen(
                 next_job.command,
                 cwd=next_job.work_dir,
-                stdout=self.output_stream,
-                stderr=self.output_stream,
-                text=True,
+                stdout=self.output_stream.file(),
+                stderr=self.error_stream.file(),
+                encoding="utf-8",
             )
             logging.debug(f"{self.name}.start_next(): new job started - {next_job}")
             return True
@@ -93,10 +94,13 @@ class JobQueue:
             if self.curr_job.poll() is None:
                 logging.debug(f"{self.name} job is running.")
                 return self.status
+            # Current job has finished
             if self.curr_job.returncode == 0:
                 logging.info(f"{self.name} job has finished.")
+                self.output_stream.print()
             else:
                 logging.error(f"{self.name} job failed.")
+                self.error_stream.print()
                 self.returncode = self.curr_job.returncode
                 # skip remaining jobs
                 self.job_list = []
@@ -136,7 +140,6 @@ def parse_args() -> argparse.Namespace:
         choices=["frontend", "backend", "maintenance"],
         help="Combine components to build.",
     )
-    parser.add_argument("--debug", action="store_true", help="Print debugging info.")
     parser.add_argument(
         "--tag",
         "-t",
@@ -165,21 +168,26 @@ def parse_args() -> argparse.Namespace:
         help="Always attempt to pull a newer version of an image used in the build.",
     )
     parser.add_argument(
-        "--output-mode",
-        "-o",
-        choices=[e.value for e in OutputMode],
-        default=OutputMode.PROGRESS.value,
-        help=(
-            "Level of output desired: "
-            "none - no output, "
-            "progress - start/completion notification for each job, "
-            "all - all command output."
-        ),
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Run the docker build commands with '--quiet' instead of '--progress plain'.",
+    )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--debug",
+        "-d",
+        action="store_true",
+        help="Print extra debugging information.",
+    )
+    group.add_argument(
+        "--info",
+        "-i",
+        action="store_true",
+        help="Print info when jobs start and stop in addition to job output.",
     )
     # Transform --output-mode argument to an enumerated type
-    args = parser.parse_args()
-    args.output_mode = OutputMode(args.output_mode)
-    return args
+    return parser.parse_args()
 
 
 def main() -> None:
@@ -190,7 +198,7 @@ def main() -> None:
     # independent of the logging facility
     if args.debug:
         log_level = logging.DEBUG
-    elif args.output_mode != OutputMode.NONE:
+    elif args.info:
         log_level = logging.INFO
     else:
         log_level = logging.WARNING
@@ -204,10 +212,10 @@ def main() -> None:
 
     # Setup build options
     build_opts: List[str] = []
-    if args.output_mode == OutputMode.ALL:
-        build_opts = ["--progress", "plain"]
-    else:
+    if args.quiet:
         build_opts = ["--quiet"]
+    else:
+        build_opts = ["--progress", "plain"]
     if args.no_cache:
         build_opts += ["--no-cache"]
     if args.pull:
@@ -236,7 +244,7 @@ def main() -> None:
     for component in to_do:
         spec = build_specs[component]
         image_name = get_image_name(args.repo, spec.name, args.tag)
-        job_set[component] = JobQueue(component, args.output_mode)
+        job_set[component] = JobQueue(component)
         job_set[component].add_job(
             Job(
                 build_prog
@@ -253,7 +261,11 @@ def main() -> None:
             )
         )
         if args.repo is not None:
-            job_set[component].add_job(Job(build_prog + ["push", "--quiet", image_name], None))
+            if args.quiet:
+                push_args = ["--quiet"]
+            else:
+                push_args = []
+            job_set[component].add_job(Job(build_prog + ["push"] + push_args + [image_name], None))
         logging.info(f"Building component {component}")
 
     # Run jobs in parallel - one job per component
@@ -271,10 +283,13 @@ def main() -> None:
     if release_file.exists():
         release_file.unlink()
     # Print job summary if output mode is ALL
-    if args.output_mode == OutputMode.ALL:
-        logging.info("Job Summary")
+    if not args.quiet:
+        logging.info("Job Summary:")
         for component in job_set:
-            logging.info(f"{component}: {job_set[component].status}")
+            curr_queue = job_set[component]
+            if curr_queue.status == JobStatus.ERROR:
+                build_returncode = curr_queue.returncode
+            logging.info(f"{component}: {curr_queue.status.value}")
     sys.exit(build_returncode)
 
 

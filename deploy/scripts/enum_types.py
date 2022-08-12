@@ -23,13 +23,6 @@ class ExitStatus(Enum):
 class JobStatus(Enum):
     """Enumerate status values for a job being run in background."""
 
-    RUNNING = -1
-    SUCCESS = 0
-    ERROR = 1
-
-
-@unique
-class OutputMode(Enum):
-    NONE = "none"
-    PROGRESS = "progress"
-    ALL = "all"
+    RUNNING = "Running"
+    SUCCESS = "Success"
+    ERROR = "ERROR"
