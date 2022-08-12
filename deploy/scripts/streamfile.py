@@ -1,7 +1,9 @@
 """Class to encapulate a temporary file to capture streaming output."""
 
-from io import TextIOWrapper
+from __future__ import annotations
+
 from tempfile import NamedTemporaryFile
+from typing import IO
 
 
 class StreamFile:
@@ -12,7 +14,7 @@ class StreamFile:
         self.close()
         self.fp = NamedTemporaryFile(mode="w+", encoding="utf-8")
 
-    def file(self) -> TextIOWrapper:
+    def file(self) -> IO[str]:
         return self.fp.file
 
     def print(self) -> None:
