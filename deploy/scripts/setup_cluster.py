@@ -72,7 +72,6 @@ def main() -> None:
         for repo in curr_helm_repos:
             curr_repo_list.append(repo["name"])
     # Check for repos that need to be added
-    repo_added = False
     for chart_descr in this_cluster:
         repo_spec = config[chart_descr]["repo"]
         if repo_spec["name"] not in curr_repo_list:
@@ -81,9 +80,9 @@ def main() -> None:
                 print_cmd=not args.quiet,
                 print_output=not args.quiet,
             )
-            repo_added = True
-    if repo_added:
-        run_cmd(["helm", "repo", "update"], print_cmd=not args.quiet, print_output=not args.quiet)
+    # Update the helm repos with added repos and to update chart versions in
+    # existing repos.
+    run_cmd(["helm", "repo", "update"], print_cmd=not args.quiet, print_output=not args.quiet)
 
     # List current charts
     chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
