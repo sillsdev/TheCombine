@@ -16,7 +16,6 @@ import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
-const MOCK_STOP_PROP = jest.fn();
 const testProps: TreeSearchProps = {
   currentDomain: domMap["1"],
   domainMap: domMap,
@@ -42,7 +41,6 @@ describe("TreeSearch", () => {
         key: Key.Enter,
         preventDefault: jest.fn(),
         target: keyboardTarget,
-        stopPropagation: MOCK_STOP_PROP,
       };
 
       // When testing hooks any call that results in a state change needs to be wrapped in
@@ -60,7 +58,6 @@ describe("TreeSearch", () => {
     it("switches semantic domain if given number found", () => {
       const node = domMap[mapIds.firstKid];
       simulateTypeAndEnter(node.id);
-      expect(MOCK_STOP_PROP).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 

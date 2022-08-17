@@ -26,10 +26,11 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
         fullWidth
         id="domain-tree-search-field"
         label={t("treeView.findDomain")}
+        onKeyDown={stopPropagation}
+        onChange={handleChange}
         // Use onKeyUp so that this fires after onChange, to facilitate
         // error state clearing.
         onKeyUp={searchAndSelectDomain}
-        onChange={handleChange}
         margin="normal"
         autoComplete="off"
         inputProps={{ "data-testid": testId }}
@@ -95,11 +96,6 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 
   // Dispatch the search for a specified domain, and switches to it if it exists
   function searchAndSelectDomain(event: React.KeyboardEvent) {
-    // stopPropagation() prevents keystrokes from reaching ReviewEntries,
-    // but requires the search function be called onKeyDown
-    if (event.stopPropagation) {
-      event.stopPropagation();
-    }
     event.bubbles = false;
 
     if (event.key === Key.Enter) {
@@ -140,4 +136,11 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
     searchAndSelectDomain,
     searchError,
   };
+}
+
+// Prevents keystrokes from reaching parent components; must be called onKeyDown
+function stopPropagation(event: React.KeyboardEvent) {
+  if (event.stopPropagation) {
+    event.stopPropagation();
+  }
 }
