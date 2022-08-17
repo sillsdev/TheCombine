@@ -452,18 +452,12 @@ displayed,
 
 ### Install Docker Desktop
 
-#### Docker Desktop for Windows/macOS
+Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>.
 
-Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
+Notes for installing _Docker Desktop_ in Linux:
 
-#### Docker Desktop for Linux
-
-_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 22.04,
-21.10 and Debian distributions. As a result, it requires a few more steps to install and setup _Docker Desktop_.
-
-To install _Docker Desktop for Linux_,
-
-1. If you installed `docker` or `docker-compose` previously, remove them:
+1. _Docker Desktop_ requires a distribution running the GNOME or KDE Desktop environment.
+2. If you installed `docker` or `docker-compose` previously, remove them:
 
    ```bash
    sudo apt purge docker-ce docker-ce-cli containerd.io
@@ -472,26 +466,7 @@ To install _Docker Desktop for Linux_,
    if [ -x /usr/local/bin/docker-compose ] ; then sudo rm /usr/local/bin/docker-compose ; fi
    ```
 
-2. Create the `docker` group if it does not exist already:
-
-   ```bash
-   sudo addgroup --system docker
-   ```
-
-3. Follow the installation instructions at <https://docs.docker.com/desktop/linux/> with the following caveats:
-
-   1. After you setup the Docker Repository, make sure that you run
-
-      ```bash
-      sudo apt update
-      ```
-
-   2. Note the section on _Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger
-      than the memory for the virtual machine. The current preview sets both sizes to 1/2 of the available memory so you
-      will need to adjust it. If `/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide
-      any error message. There is info in `/var/lib/syslog`, however.
-
-### Setup of Docker Desktop (all platforms)
+### Setup of Docker Desktop
 
 Once _Docker Desktop_ has been installed, start it set it up as follows:
 
@@ -537,8 +512,10 @@ Run the script with the `--help` option to see possible options for the script.
 
 ### Install the Rancher User Interface
 
-_Note: This step is optional. Installing the Rancher User Interface provides a graphical view of your Kubernetes
-cluster._
+_Note: The Rancher User Interface provides a graphical view of your Kubernetes cluster and is included in Rancher
+Desktop. If you would like to use the Rancher UI, it is recommended that you install Rancher Desktop instead of Docker
+Desktop. These instructions are useful for installing the Rancher UI on a separate cluster, e.g. a sandbox server.
+Installing the Rancher UI will increase the resources required by your cluster._
 
 Install the Rancher User Interface by running:
 
