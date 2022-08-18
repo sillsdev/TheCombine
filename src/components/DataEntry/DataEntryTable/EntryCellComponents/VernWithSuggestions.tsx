@@ -54,6 +54,7 @@ export default class VernWithSuggestions extends React.Component<VernWithSuggest
           }}
           onKeyPress={(e: React.KeyboardEvent) => {
             if (e.key === Key.Enter || e.key === Key.Tab) {
+              e.preventDefault();
               this.props.handleEnterAndTab(e);
             }
           }}
