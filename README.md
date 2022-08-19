@@ -158,7 +158,7 @@ for setting up the virtual environment must be run from the top-level directory 
 
 #### Linux Python Installation
 
-The `python3` package is included in the Ubuntu distribution. To install the `pip` and `venv` modules for Python 3, run
+The `python3` package is included in the Ubuntu distribution. To [install](https://www.scaler.com/topics/python/install-python-on-linux/) the `pip` and `venv` modules for Python 3, run
 the following commands:
 
 ```bash
