@@ -53,5 +53,5 @@ runs:
       run: kubectl --context ${{ inputs.kube_context }}
         --namespace combine-cert-proxy
         set image deployment/combine-cert-proxy
-        combine-cert-proxy="${{ inputs.image_registry }}/combine_maint:${{ inputs.image_tag }}"
+        combine-cert-proxy="${{ inputs.image_registry }}${{ inputs.image_registry_alias}}/combine_maint:${{ inputs.image_tag }}"
       shell: bash
