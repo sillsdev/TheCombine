@@ -36,22 +36,22 @@ runs:
     - name: Update frontend
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/frontend
-        frontend="${{ inputs.image_registry }}${{ inputs.image_registry_alias}}/combine_frontend:${{ inputs.image_tag }}"
+        frontend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_frontend:${{ inputs.image_tag }}"
       shell: bash
     - name: Update backend
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/backend
-        backend="${{ inputs.image_registry }}${{ inputs.image_registry_alias}}/combine_backend:${{ inputs.image_tag }}"
+        backend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_backend:${{ inputs.image_tag }}"
       shell: bash
     - name: Update maintenance
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/maintenance
-        maintenance="${{ inputs.image_registry }}${{ inputs.image_registry_alias}}/combine_maint:${{ inputs.image_tag }}"
+        maintenance="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
       shell: bash
     - name: Update Cert Proxy Server
       if: ${{ inputs.update_cert_proxy == 'true' }}
       run: kubectl --context ${{ inputs.kube_context }}
         --namespace combine-cert-proxy
         set image deployment/combine-cert-proxy
-        combine-cert-proxy="${{ inputs.image_registry }}/combine_maint:${{ inputs.image_tag }}"
+        combine-cert-proxy="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
       shell: bash
