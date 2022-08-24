@@ -253,25 +253,29 @@ const columns: Column<any>[] = [
       const terms = term.split(":");
       if (terms.length === 1) {
         const regex = cleanRegExp(terms[0]);
-        for (const sense of rowData.senses)
-          for (const domain of sense.domains)
+        for (const sense of rowData.senses) {
+          for (const domain of sense.domains) {
             if (
-              regex.exec(domain.id) ||
+              regex.exec(domain.id)?.index === 0 ||
               regex.exec(domain.name.toLowerCase())
             ) {
               return true;
             }
+          }
+        }
       } else {
         const regexNumber = cleanRegExp(terms[0]);
         const regexName = cleanRegExp(terms[1]);
-        for (const sense of rowData.senses)
-          for (const domain of sense.domains)
+        for (const sense of rowData.senses) {
+          for (const domain of sense.domains) {
             if (
-              regexNumber.exec(domain.id) &&
+              regexNumber.exec(domain.id)?.index === 0 &&
               regexName.exec(domain.name.toLowerCase())
             ) {
               return true;
             }
+          }
+        }
       }
       return false;
     },

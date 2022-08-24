@@ -55,18 +55,14 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
-   3. [Setup of Docker Desktop (all platforms)](#setup-of-docker-desktop-all-platforms)
-   4. [Install Kubernetes Tools](#install-kubernetes-tools)
+   3. [Install Kubernetes Tools](#install-kubernetes-tools)
 4. [Setup The Combine](#setup-the-combine)
    1. [Install Required Charts](#install-required-charts)
-   2. [Install the Rancher User Interface](#install-the-rancher-user-interface)
-   3. [Build _The Combine_ Containers](#build-the-combine-containers)
-   4. [Setup Environment Variables](#setup-environment-variables)
-   5. [Install/Update _The Combine_](#installupdate-the-combine)
-   6. [Connecting to your Cluster](#connecting-to-your-cluster)
-   7. [Stopping _The Combine_](#stopping-the-combine)
-   8. [Deleting Helm Charts](#deleting-helm-charts)
-   9. [Checking The System Status](#checking-the-system-status)
+   2. [Build _The Combine_ Containers](#build-the-combine-containers)
+   3. [Setup Environment Variables](#setup-environment-variables)
+   4. [Install/Update _The Combine_](#installupdate-the-combine)
+   5. [Connecting to your Cluster](#connecting-to-your-cluster)
+   6. [Rancher Dashboard](#rancher-dashboard)
 5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
@@ -431,39 +427,57 @@ python scripts/cleanup_local_repo.py
 
 This section describes how to create a local Kubernetes cluster using either _Rancher Desktop_ or _Docker Desktop_.
 
+Advantages of _Rancher Desktop_:
+
+1. runs the same Kubernetes engine, `k3s`, that is used by _The Combine_ when installed on a NUC; and
+2. includes the Rancher User Interface for easy inspection and management of Kubernetes resources:
+
+![alt text](docs/images/rancher-desktop-dashboard.png "Rancher Desktop Dashboard")
+
+Advantages of _Docker Desktop_:
+
+1. can run with fewer memory resources; and
+2. simpler to navigate to the running application from your web browser.
+
+The steps to install _The Combine_ in a local Kubernetes client are:
+
+1. [Install Rancher Desktop](#install-rancher-desktop) OR [Install Docker Desktop](#install-docker-desktop)
+2. [Install Kubernetes Tools](#install-kubernetes-tools)
+3. [Setup The Combine](#setup-the-combine)
+
 ### Install Rancher Desktop
 
 Install [Rancher Desktop](https://rancherdesktop.io/) to create a local Kubernetes cluster to test _The Combine_ when
 running in containers. (_Optional. Only needed for running under Kubernetes._)
 
-When _Rancher Desktop_ is first run, you will be prompted to select the container runtime:
+When _Rancher Desktop_ is first run, you will be prompted to select a few initial configuration items:
 
 ![alt text](docs/images/rancher-desktop-select-runtime.png "Rancher Desktop Select Runtime")
 
-Select _dockerd (moby)_ and click _Accept_.
+1. Verify that _Enable Kubernetes_ is checked.
+2. Select the Kubernetes version marked as _stable, latest_.
+3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
+   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engint. It requires that you run the
+     `build.py` script with the `--nerdctl` option.
+   - _dockerd_ uses the `k3d` (`k3s` in docker).
+4. Select _Automatic_ or _Manual_ path setup.
+5. Click _Accept_.
 
-The _Rancher Desktop Preferences_ dialog will be displayed as it loads the Kubernetes environment. While the page is
-displayed,
+The _Rancher Desktop_ Main Window will be displayed as it loads the Kubernetes environment. While the page is displayed,
+click the _Settings_ icon (gear icon in the upper-right corner). The settings dialog will be displayed:
+![alt text](docs/images/rancher-desktop-prefs-kube.png "Rancher Desktop Preferences")
 
-1. select the _Kubernetes Settings_, and
-2. uncheck the _Enable Traefik_ checkbox (you do not need to wait until Kubernetes finishes loading).
-
-![alt text](docs/images/rancher-desktop-prefs.png "Rancher Desktop Preferences")
+1. Click _Kubernetes_ in the left-hand pane.
+2. Uncheck the _Enable Traefik_ checkbox.
 
 ### Install Docker Desktop
 
-#### Docker Desktop for Windows/macOS
+Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>.
 
-Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>
+Notes for installing _Docker Desktop_ in Linux:
 
-#### Docker Desktop for Linux
-
-_Docker Desktop for Linux_ is currently in the _Tech Preview_ stage of development and is available for Ubuntu 22.04,
-21.10 and Debian distributions. As a result, it requires a few more steps to install and setup _Docker Desktop_.
-
-To install _Docker Desktop for Linux_,
-
-1. If you installed `docker` or `docker-compose` previously, remove them:
+1. _Docker Desktop_ requires a distribution running the GNOME or KDE Desktop environment.
+2. If you installed `docker` or `docker-compose` previously, remove them:
 
    ```bash
    sudo apt purge docker-ce docker-ce-cli containerd.io
@@ -472,37 +486,18 @@ To install _Docker Desktop for Linux_,
    if [ -x /usr/local/bin/docker-compose ] ; then sudo rm /usr/local/bin/docker-compose ; fi
    ```
 
-2. Create the `docker` group if it does not exist already:
-
-   ```bash
-   sudo addgroup --system docker
-   ```
-
-3. Follow the installation instructions at <https://docs.docker.com/desktop/linux/> with the following caveats:
-
-   1. After you setup the Docker Repository, make sure that you run
-
-      ```bash
-      sudo apt update
-      ```
-
-   2. Note the section on _Shared Memory_. The page does not explain it but `/dev/shm` must be at least 100 MB larger
-      than the memory for the virtual machine. The current preview sets both sizes to 1/2 of the available memory so you
-      will need to adjust it. If `/dev/shm` is not large enough, _Docker Desktop_ will not start and will not provide
-      any error message. There is info in `/var/lib/syslog`, however.
-
-### Setup of Docker Desktop (all platforms)
-
-Once _Docker Desktop_ has been installed, start it set it up as follows:
+Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 
 1. Click the gear icon in the upper right to open the settings dialog;
-2. Click on the _Kubernetes_ link on the left-hand side;
-3. Select _Enable Kubernetes_ and click _Apply & Restart_;
-4. Click _Install_ on the dialog that is displayed.
+2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 4 GB (see Note);
+3. Click on the _Kubernetes_ link on the left-hand side;
+4. Select _Enable Kubernetes_ and click _Apply & Restart_;
+5. Click _Install_ on the dialog that is displayed.
 
-(macOS / Windows Only) If you are on macOS or Windows without
-[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you must ensure that Docker Desktop is
-allocated at least 4GB of Memory in Preferences | Resources.
+Note:
+
+Normally, there is a slider to adjust the Memory size for the _Docker Desktop_ virtual machine. On Windows systems using
+the WSL 2 backend, there are instructions for setting the resources outside of the _Docker Desktop_ application.
 
 ### Install Kubernetes Tools
 
@@ -529,22 +524,11 @@ python deploy/scripts/setup_cluster.py
 ```
 
 `deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired
-Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the
-_Rancher Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the
+Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_/_Docker Desktop_ cluster to
+manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
 `--kubeconfig` and `--context` options will let you specify a different cluster.
 
 Run the script with the `--help` option to see possible options for the script.
-
-### Install the Rancher User Interface
-
-_Note: This step is optional. Installing the Rancher User Interface provides a graphical view of your Kubernetes
-cluster._
-
-Install the Rancher User Interface by running:
-
-```bash
-python deploy/scripts/setup_cluster.py --type rancher
-```
 
 ### Build _The Combine_ Containers
 
@@ -552,21 +536,23 @@ Build _The Combine_ containers by running the build script in an activated Pytho
 _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
 ```bash
-python deploy/scripts/build.py
+python deploy/scripts/build.py [--nerdctl]
 ```
 
 Notes:
 
+- Use the `--nerdctl` option if you are using _Rancher Desktop_ with the `containerd` for the container runtime. If you
+  are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, omit this option.
 - Run with the `--help` option to see all available options.
 - If you see errors like:
 
-  ```bash
+  ```console
   => ERROR [internal] load metadata for docker.io/library/nginx:1.21        0.5s
   ```
 
   pull the image directly and re-run the build. In this case, you would run:
 
-  ```bash
+  ```console
   docker pull nginx:1.21
   ```
 
@@ -609,15 +595,16 @@ with no arguments.
 
 If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
 `deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
-Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_ cluster to manage and the
-_Rancher Desktop_ installation process will set that up correctly. If there are multiple clusters to manage, the
+Kubernetes cluster. For most development users, there will only be the _Rancher Desktop/Docker Desktop_ cluster to
+manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
 `--kubeconfig` and `--context` options will let you specify a different cluster.
 
 Run the script with the `--help` option to see possible options for the script.
 
 When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
-all the containers are up and running. Run `kubectl -n thecombine get deployments` or `kubectl -n thecombine get pods`
-to see when the cluster is ready. For example,
+all the containers are up and running. If you are using _Rancher Desktop_, you can use the
+[Rancher Dashboard](#rancher-dashboard) to see when the cluster is ready. Otherwise, run
+`kubectl -n thecombine get deployments` or `kubectl -n thecombine get pods`. For example,
 
 ```console
 $ kubectl -n thecombine get deployments
@@ -641,191 +628,58 @@ maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
 
 ### Connecting to Your Cluster
 
-To find the IP address of the Kubernetes cluster, run:
-
-```bash
-$ kubectl -n ingress-nginx get services
-NAME                                                    TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
-ingress-controller-ingress-nginx-controller-admission   ClusterIP      10.43.238.232   <none>          443/TCP                      54s
-ingress-controller-ingress-nginx-controller             LoadBalancer   10.43.228.138   172.21.53.205   80:31284/TCP,443:32765/TCP   54s
-```
-
 #### Network Hosts Configuration
 
-The cluster's ingress controller uses the hostnames `thecombine.local` and `rancher.local` to be able to route traffic
-to the appropriate service. You will need to update your network hosts file to direct traffic for these hosts to the
-ingress controller. The way that you need to setup the host file varies by operating system and Kubernetes desktop app.
+The cluster's ingress controller uses the hostname `thecombine.local` to _The Combine_. To direct traffic for this host
+to the ingress controller, add:
 
-- Windows:
+```textfile
+127.0.0.1  thecombine.local
+```
 
-  Hosts file: `%windir%\System32\drivers\etc\hosts`
+to your network hosts file:
 
-  - _Rancher Desktop_: Add
+- Windows: `%windir%\System32\drivers\etc\hosts`
+- Linux/macOS: `/etc/hosts`
 
-    ```textfile
-    172.21.53.205  thecombine.local rancher.local
-    ```
+#### Setup Port Forwarding
 
-    _Rancher Desktop_ creates a virtual ethernet interface for the `EXTERNAL-IP` address. The IP address should be
-    verified with the `kubectl` above before editing the hosts file.
+_Rancher Desktop only!_
 
-  - _Docker Desktop_: Add
+To connect to _The Combine_ user interface on _Rancher Desktop_, you need to setup port forwarding.
 
-    ```textfile
-    127.0.0.1  thecombine.local rancher.local
-    ```
+1. From the _Rancher Desktop_ main window, click on _Port Forwarding_ on the left-hand side.
+2. Click the _Forward_ button to the left of the `https` port for `ingress-controller-ingress-nginx-controller` in the
+   `ingress-nginx` namespace: ![alt text](docs/images/rancher-desktop-port-forward.png "Rancher Desktop Port Forward")
+3. A random port number is displayed. You may change it or accept the value and click the checkmark.
 
-- Linux/macOS:
-
-  Hosts file: `/etc/hosts`
-
-  _Rancher Desktop_ and _Docker Desktop_: Add
-
-  ```textfile
-  127.0.0.1  thecombine.local rancher.local
-  ```
-
-  No virtual ethernet interface is created. You can, however, connect to the cluster using the ports specified in
-  `get services` output.
+Note that the port forwarding is not persistent; you need to set it up whenever _Rancher Desktop_ is restarted.
 
 #### Connecting to _The Combine_
 
 Once your host configuration has been setup, you can connect to _The Combine_ by entering the URL
-`https://thecombine.local` in the address bar of your web browser. (`https://thecombine.local:<portnumber>` for Linux)
+`https://thecombine.local` in the address bar of your web browser. (`https://thecombine.local:<portnumber>` for _Rancher
+Desktop_)
 
 Notes:
 
-1. You must specify the `https://` or your browser will probably do a web search.
-2. On Linux, the port number will change whenever the cluster is reset. It does not change when you stop and then
-   restart _Rancher Desktop_.
-3. _By default self-signed certificates are used, so you will need to accept a warning in the browser._
+1. If you do not specify the `https://`, your browser may do a web search instead of navigating to _The Combine_.
+2. _By default self-signed certificates are used, so you will need to accept a warning in the browser._
 
-#### Connecting to _Rancher_
-
-You can connect to the _Rancher UI_ by entering the URL `https://rancher.local` in the address bar of your web browser.
-(`https://rancher.local:<portnumber>` for Linux)
-
-##### First Time Sign-In to Rancher
-
-The first time that you connect to the _Rancher UI_ you will be shown the following screen:
-
-![alt text](docs/images/rancher-initial-sign-in.png "Rancher Initial Sign-In")
-
-At this page, you will:
-
-1. Enter the bootstrap password - `admin`. This password is changed for subsequent logins.
-2. Select your password for future logins. You can either accept the randomly generated one (save it) or provide your
-   own. The user name will be `admin`.
-3. Accept the Terms & Conditions.
-4. Click _Continue_.
-
-When you click _Continue_, the _Getting Started_ page is displayed:
-
-![alt text](docs/images/rancher-getting-started.png "Rancher Getting Started")
-
-This page allows you to:
-
-1. Select how the UI should open in the future; and
-2. Click on a link to display the dashboard for your Kubernetes cluster.
-
-##### Rancher UI Dashboard
+### Rancher Dashboard
 
 The Rancher Dashboard shows an overview of your Kubernetes cluster. The left-hand pane allows you to explore the
 different Kubernetes resources that are deployed in the cluster. This includes viewing configuration, current states,
 and logs:
 
-![alt text](docs/images/rancher-cluster-dashboard.png "Rancher Cluster Dashboard")
+![alt text](docs/images/rancher-desktop-dashboard.png "Rancher Desktop Dashboard")
 
-### Stopping _The Combine_
+To open the _Rancher Dashboard_, right-click on the Rancher Desktop icon in the system tray and select `Dashboard` from
+the pop-up menu:
 
-To stop _The Combine_ without deleting it, you scale it back to 0 replicas running:
+![alt text](docs/images/rancher-desktop-menu.png "Starting Rancher Desktop Dashboard")
 
-```bash
-kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database
-```
-
-You can restart the deployments by setting `--replicas=1`.
-
-### Deleting Helm Charts
-
-Deleting a helm chart will delete all Kubernetes resources including any persistent data or any data stored in a
-container.
-
-In addition to clearing out old data, there may be cases where existing charts need to be deleted and re-installed
-instead of upgraded, for example, when a configuration change requires changes to an immutable attribute of a resource.
-
-To delete a chart, first list all of the existing charts:
-
-```console
-$ helm list -A
-NAME                NAMESPACE       REVISION    UPDATED                                 STATUS      CHART                   APP VERSION
-cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
-ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
-rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
-thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
-```
-
-Using the chart name and namespace, you can then delete the chart:
-
-```bash
-helm -n <chart_namespace> delete <chart_name>
-```
-
-where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
-delete. These are listed in the output of `helm list -A`.
-
-### Checking The System Status
-
-Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
-Combine_ is setup as four deployments:
-
-- frontend
-- backend
-- database
-- maintenance
-
-Each deployment definition is used to create a _pod_ that runs the docker image.
-
-To see the state of the deployments, run:
-
-```console
-$ kubectl -n thecombine get deployments
-NAME          READY   UP-TO-DATE   AVAILABLE   AGE
-database      1/1     1            1           3h41m
-maintenance   1/1     1            1           3h41m
-backend       1/1     1            1           3h41m
-frontend      1/1     1            1           3h41m
-```
-
-Similarly, you can view the state of the pods:
-
-```console
-$ kubectl -n thecombine get pods
-NAME                           READY   STATUS      RESTARTS        AGE
-database-794b4d956f-g2n5k      1/1     Running     1 (3h51m ago)   3h58m
-ecr-cred-helper--1-w9xxp       0/1     Completed   0               164m
-maintenance-85644b9c76-55pz8   1/1     Running     0               130m
-backend-69b77c46c5-8dqlv       1/1     Running     0               130m
-frontend-c94c5747c-pz6cc       1/1     Running     0               60m
-```
-
-Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the
-`kubectl -n thecombine get pods` command or the deployment, for example, to view the logs of the frontend, you would
-run:
-
-```bash
-kubectl -n thecombine logs frontend-c94c5747c-pz6cc
-```
-
-or
-
-```bash
-kubectl -n thecombine logs deployment/frontend
-```
-
-If you want to monitor the logs while the system is running, add the `--follow` option to the command.
-
-## Maintenance Scripts for TheCombine
+## Maintenance
 
 The maintenance scripts enable certain maintenance tasks on your instance of _TheCombine_. _TheCombine_ may be running
 in either a development environment or the production/qa environment.
@@ -875,7 +729,8 @@ npm run set-admin-user -- <USERNAME>
 ### Kubernetes Environment
 
 The following maintenance tasks can be performed in the Kubernetes environment. The Kubernetes cluster may be one of the
-production or QA clusters or the local development cluster.
+production or QA clusters or the local development cluster. For most of these tasks, the _Rancher Dashboard_ provides a
+more user-friendly way to maintain and manage the cluster.
 
 For each of the `kubectl` commands below:
 
@@ -885,6 +740,95 @@ For each of the `kubectl` commands below:
 - the `kubectl` commands can be run from any directory
 - any of the Python scripts (local or remote using `kubectl`) can be run with the `--help` option to see more usage
   options.
+
+#### Stopping _The Combine_
+
+To stop _The Combine_ without deleting it, you scale it back to 0 replicas running:
+
+```bash
+kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database
+```
+
+You can restart the deployments by setting `--replicas=1`.
+
+#### Deleting Helm Charts
+
+Deleting a helm chart will delete all Kubernetes resources including any persistent data or any data stored in a
+container.
+
+In addition to clearing out old data, there may be cases where existing charts need to be deleted and re-installed
+instead of upgraded, for example, when a configuration change requires changes to an immutable attribute of a resource.
+
+To delete a chart, first list all of the existing charts:
+
+```console
+$ helm list -A
+NAME                NAMESPACE       REVISION    UPDATED                                 STATUS      CHART                   APP VERSION
+cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
+ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
+rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
+thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
+```
+
+Using the chart name and namespace, you can then delete the chart:
+
+```bash
+helm -n <chart_namespace> delete <chart_name>
+```
+
+where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
+delete. These are listed in the output of `helm list -A`.
+
+#### Checking The System Status
+
+Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
+Combine_ is setup as four deployments:
+
+- frontend
+- backend
+- database
+- maintenance
+
+Each deployment definition is used to create a _pod_ that runs the docker image.
+
+To see the state of the deployments, run:
+
+```console
+$ kubectl -n thecombine get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+database      1/1     1            1           3h41m
+maintenance   1/1     1            1           3h41m
+backend       1/1     1            1           3h41m
+frontend      1/1     1            1           3h41m
+```
+
+Similarly, you can view the state of the pods:
+
+```console
+$ kubectl -n thecombine get pods
+NAME                           READY   STATUS      RESTARTS        AGE
+database-794b4d956f-g2n5k      1/1     Running     1 (3h51m ago)   3h58m
+ecr-cred-helper--1-w9xxp       0/1     Completed   0               164m
+maintenance-85644b9c76-55pz8   1/1     Running     0               130m
+backend-69b77c46c5-8dqlv       1/1     Running     0               130m
+frontend-c94c5747c-pz6cc       1/1     Running     0               60m
+```
+
+Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the
+`kubectl -n thecombine get pods` command or the deployment, for example, to view the logs of the frontend, you would
+run:
+
+```bash
+kubectl -n thecombine logs frontend-c94c5747c-pz6cc
+```
+
+or
+
+```bash
+kubectl -n thecombine logs deployment/frontend
+```
+
+If you want to monitor the logs while the system is running, add the `--follow` option to the command.
 
 #### Add a User to a Project
 

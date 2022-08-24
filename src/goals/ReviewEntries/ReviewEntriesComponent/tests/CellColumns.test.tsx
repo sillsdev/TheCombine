@@ -13,7 +13,7 @@ import { Bcp47Code } from "types/writingSystem";
 const LANG = Bcp47Code.En;
 const DEFINITION = newDefinition("groovy", LANG);
 const GLOSS = newGloss("hoovy", LANG);
-const DOMAIN = newSemanticDomain("0.1", "Person");
+const DOMAIN = newSemanticDomain("1.1.3.5", "Storm");
 const DOMAIN2 = newSemanticDomain("1", "Universe");
 const DOMAIN_BAD = newSemanticDomain("0.0", "Joke");
 const FLAG = newFlag("movie");
@@ -187,6 +187,19 @@ describe("CellColumns filter and sort functions", () => {
       if (col?.customFilterAndSearch) {
         expect(col.customFilterAndSearch(DOMAIN.id, WORD, {})).toBeTruthy();
         expect(col.customFilterAndSearch(DOMAIN.name, WORD, {})).toBeTruthy();
+      } else {
+        fail();
+      }
+    });
+
+    it("returns true when searching for start of domain number but not end", () => {
+      if (col?.customFilterAndSearch) {
+        expect(
+          col.customFilterAndSearch(DOMAIN.id.substring(0, 3), WORD, {})
+        ).toBeTruthy();
+        expect(
+          col.customFilterAndSearch(DOMAIN.id.substring(2), WORD, {})
+        ).toBeFalsy();
       } else {
         fail();
       }
