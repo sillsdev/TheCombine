@@ -176,6 +176,9 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 
       In addition, you may have your SSH keys from _Github_ or _Launchpad_ preinstalled as authorized keys.
 
+      Make sure that `Allow password authentication over SSH` is checked even if you import SSH identities. This will
+      make administration in the field easier.
+
    4. You do not need to install any additional snaps; the _Ansible_ playbooks will install any needed software.
 
 5. _[NUC]_ When installation is complete, log into the NUC using the username and password provided during installation
