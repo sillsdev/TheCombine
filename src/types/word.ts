@@ -20,10 +20,6 @@ export function newGloss(def = "", language = ""): Gloss {
   return { def, language };
 }
 
-export function newSemanticDomain(id = "", name = ""): SemanticDomain {
-  return { id, name, description: "" };
-}
-
 export function newSense(
   gloss?: string,
   lang?: string,

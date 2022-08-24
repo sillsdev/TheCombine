@@ -3,9 +3,7 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import TreeSemanticDomain, {
-  DomainMap,
-} from "components/TreeView/TreeSemanticDomain";
+import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
 
 export interface TreeSearchProps {
   currentDomain: TreeSemanticDomain;

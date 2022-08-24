@@ -14,8 +14,8 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
+import { newSemanticDomain } from "types/semanticDomain";
 import { themeColors } from "types/theme";
-import { newSemanticDomain } from "types/word";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;

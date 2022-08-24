@@ -4,7 +4,7 @@ import {
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import { TreeSemanticDomain } from "types/semanticDomain";
 import { DomainWord, newSense, simpleWord } from "types/word";
 
 const mockWord = simpleWord("vern", "gloss");
