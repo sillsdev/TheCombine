@@ -339,7 +339,7 @@ namespace BackendFramework.Models
         {
             Name = sd.Name;
             Id = sd.Id;
-            Description = sd.Description;
+            Description = "";
             Subdomains = new List<SemanticDomainWithSubdomains>();
         }
     }

@@ -589,48 +589,6 @@ namespace BackendFramework.Models
         }
     }
 
-    public class SemanticDomain
-    {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Id { get; set; }
-        [Required]
-        public string Description { get; set; }
-
-        public SemanticDomain Clone()
-        {
-            return new SemanticDomain
-            {
-                Name = (string)Name.Clone(),
-                Id = (string)Id.Clone(),
-                Description = (string)Description.Clone()
-            };
-        }
-
-        public SemanticDomain()
-        {
-            Name = "";
-            Id = "";
-            Description = "";
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not SemanticDomain other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Id, Description);
-        }
-    }
-
     /// <summary> Helper object that contains a file along with its name and path </summary>
     public class FileUpload
     {

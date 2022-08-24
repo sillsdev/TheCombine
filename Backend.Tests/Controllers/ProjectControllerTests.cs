@@ -4,7 +4,6 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -17,7 +16,6 @@ namespace Backend.Tests.Controllers
         private IUserRepository _userRepo = null!;
         private UserRoleRepositoryMock _userRoleRepo = null!;
         private IPermissionService _permissionService = null!;
-        private ISemanticDomainService _semDomService = null!;
         private ProjectController _projController = null!;
 
         private User _jwtAuthenticatedUser = null!;
@@ -29,9 +27,7 @@ namespace Backend.Tests.Controllers
             _userRepo = new UserRepositoryMock();
             _userRoleRepo = new UserRoleRepositoryMock();
             _permissionService = new PermissionServiceMock(_userRepo);
-            _semDomService = new SemanticDomainService();
-            _projController = new ProjectController(_projRepo, _semDomService, _userRoleRepo,
-                _userRepo, _permissionService)
+            _projController = new ProjectController(_projRepo, _userRoleRepo, _userRepo, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
@@ -113,17 +109,6 @@ namespace Backend.Tests.Controllers
 
             _ = _projController.DeleteAllProjects().Result;
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
-        }
-
-        [Test]
-        public void TestParseSemanticDomains()
-        {
-            var project = _projRepo.Create(Util.RandomProject()).Result;
-            var sdList = (List<SemanticDomainWithSubdomains>)(
-                (ObjectResult)_projController.GetSemDoms(project!.Id).Result).Value!;
-            Assert.That(sdList, Has.Count.EqualTo(3));
-            Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
-            Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
         }
 
         [Test]
