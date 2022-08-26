@@ -15,8 +15,8 @@ export function newSemanticDomainTreeNode(
   return {
     node: newSemanticDomain(id, name),
     parent: newSemanticDomain(),
-    left: newSemanticDomain(),
-    right: newSemanticDomain(),
+    previous: newSemanticDomain(),
+    next: newSemanticDomain(),
     children: [],
   };
 }
