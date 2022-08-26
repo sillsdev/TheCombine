@@ -112,12 +112,12 @@ namespace Backend.Tests.Models
                 new SemanticDomainTreeNode { Parent = node2 }.GetHashCode()
             );
             Assert.AreNotEqual(
-                new SemanticDomainTreeNode { Left = node1 }.GetHashCode(),
-                new SemanticDomainTreeNode { Left = node2 }.GetHashCode()
+                new SemanticDomainTreeNode { Previous = node1 }.GetHashCode(),
+                new SemanticDomainTreeNode { Previous = node2 }.GetHashCode()
             );
             Assert.AreNotEqual(
-                new SemanticDomainTreeNode { Right = node1 }.GetHashCode(),
-                new SemanticDomainTreeNode { Right = node2 }.GetHashCode()
+                new SemanticDomainTreeNode { Next = node1 }.GetHashCode(),
+                new SemanticDomainTreeNode { Next = node2 }.GetHashCode()
             );
 
             var children1 = new List<SemanticDomain> { node1 };

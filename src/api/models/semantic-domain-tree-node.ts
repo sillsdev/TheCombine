@@ -37,13 +37,13 @@ export interface SemanticDomainTreeNode {
    * @type {SemanticDomain}
    * @memberof SemanticDomainTreeNode
    */
-  left: SemanticDomain;
+  previous: SemanticDomain;
   /**
    *
    * @type {SemanticDomain}
    * @memberof SemanticDomainTreeNode
    */
-  right: SemanticDomain;
+  next: SemanticDomain;
   /**
    *
    * @type {Array<SemanticDomain>}

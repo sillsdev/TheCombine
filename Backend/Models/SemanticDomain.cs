@@ -108,9 +108,9 @@ namespace BackendFramework.Models
         [Required]
         public SemanticDomain Parent { get; set; }
         [Required]
-        public SemanticDomain Left { get; set; }
+        public SemanticDomain Previous { get; set; }
         [Required]
-        public SemanticDomain Right { get; set; }
+        public SemanticDomain Next { get; set; }
         [Required]
         public List<SemanticDomain> Children { get; set; }
 
@@ -118,8 +118,8 @@ namespace BackendFramework.Models
         {
             Node = new SemanticDomain();
             Parent = new SemanticDomain();
-            Left = new SemanticDomain();
-            Right = new SemanticDomain();
+            Previous = new SemanticDomain();
+            Next = new SemanticDomain();
             Children = new List<SemanticDomain>();
         }
 
@@ -129,8 +129,8 @@ namespace BackendFramework.Models
             {
                 Node = Node.Clone(),
                 Parent = Parent.Clone(),
-                Left = Left.Clone(),
-                Right = Right.Clone(),
+                Previous = Previous.Clone(),
+                Next = Next.Clone(),
                 Children = new List<SemanticDomain>()
             };
 
@@ -152,15 +152,15 @@ namespace BackendFramework.Models
             return
                 Node.Equals(other.Node) &&
                 Parent.Equals(other.Parent) &&
-                Left.Equals(other.Left) &&
-                Right.Equals(other.Right) &&
+                Previous.Equals(other.Previous) &&
+                Next.Equals(other.Next) &&
                 Children.Count == other.Children.Count &&
                 Children.All(other.Children.Contains);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Node, Parent, Left, Right, Children);
+            return HashCode.Combine(Node, Parent, Previous, Next, Children);
         }
     }
 
