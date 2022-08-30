@@ -10,10 +10,9 @@ There are 2 files that are created for each language:
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 from uuid import UUID
 import xml.etree.ElementTree as ET
 
@@ -43,12 +42,19 @@ def parse_args() -> argparse.Namespace:
 
 
 def get_auni_text(node: ET.Element) -> Tuple[str, str]:
+    """Returns the language and text for an AUni element."""
     if node.tag != "AUni":
         raise (ValueError("Expected AUni element"))
     return (node.attrib["ws"], node.text)
 
 
 def get_astr_text(node: ET.Element) -> Tuple[str, List[str]]:
+    """
+    Returns the language and text of an AStr element.
+
+    The text returned is a concatenation of the text of all Run
+    sub-elements.
+    """
     if node.tag != "AStr":
         raise (ValueError("Expected AStr element"))
     astr_text: List[str] = []
@@ -60,6 +66,12 @@ def get_astr_text(node: ET.Element) -> Tuple[str, List[str]]:
 
 
 def get_questions(node: ET.Element) -> Dict[str, List[DomainQuestion]]:
+    """
+    Gets a list of DomainQuestion objects from the CmDomainQ element.
+
+    The DomainQuestion consists of the question text, the example words and
+    the example sentences.
+    """
     results: Dict[str, List[DomainQuestion]] = {}
     for cm_domain_q in node:
         if cm_domain_q.tag == "CmDomainQ":
@@ -87,6 +99,12 @@ def get_questions(node: ET.Element) -> Dict[str, List[DomainQuestion]]:
 
 
 def fill_missing_fields(domains: Dict[str, SemanticDomainFull]) -> None:
+    """
+    Fill in blank fields from the value for English.
+
+    This assumes that there is an English value available and that it is defined
+    in the XML source file before any other languages.
+    """
     for lang in domains:
         if lang == "en":
             continue
@@ -98,34 +116,58 @@ def fill_missing_fields(domains: Dict[str, SemanticDomainFull]) -> None:
             domains[lang].description = domains["en"].description
 
 
-#        populate_tree_set(domain_set, tree_set, parent)
-
-
-def populate_tree_set(
+def save_domain(
     domains: Dict[str, SemanticDomainFull],
     tree_nodes: Dict[str, SemanticDomainTreeNode],
     parent: Dict[str, SemanticDomainTreeNode],
+    prev: Dict[str, SemanticDomain],
 ) -> None:
+    """
+    Complete the fields for the tree nodes and save in the global structures.
+
+    This routine performs the following operations:
+    for the domain objects of each language
+    - creates a tree node from the domain object
+    - sets the parent field in the tree node
+    - sets the previous field in the tree node
+    - sets the next field in the tree node that corresponds to the previous node
+    - saves the domain object in the global list, domain_list
+    - saves the tree node in the global structure, domain_tree
+    """
+
     for lang in domains:
         domain_item = domains[lang]
-        tree_nodes[lang] = SemanticDomainTreeNode(
-            domain_item.guid, domain_item.lang, domain_item.name, domain_item.id
-        )
+        tree_nodes[lang] = domain_item.to_semantic_domain_tree_node()
         if lang in parent:
-            tree_nodes[lang].parent = SemanticDomain(
-                parent[lang].guid, lang, parent[lang].name, parent[lang].id
-            )
-            parent[lang].children.append(
-                SemanticDomain(
-                    domain_item.guid, domain_item.lang, domain_item.name, domain_item.id
-                )
-            )
+            tree_nodes[lang].parent = parent[lang].to_semantic_domain()
+            parent[lang].children.append(domain_item.to_semantic_domain())
+        if lang in prev:
+            # set the previous link in the current domain
+            tree_nodes[lang].prev = prev[lang]
+            # set the next link in the previous domain
+            prev_id = prev[lang].id
+            domain_tree[lang][prev_id].next = tree_nodes[lang].to_semantic_domain()
+        domain_list.append(domains[lang])
+    for lang, item in tree_nodes.items():
+        domain_tree[lang][item.id] = item
 
 
-def get_sem_doms(node: ET.Element, parent: Dict[str, SemanticDomainTreeNode]):
+def get_sem_doms(
+    node: ET.Element, parent: Dict[str, SemanticDomainTreeNode], prev: Dict[str, SemanticDomain]
+) -> Dict[str, SemanticDomain]:
+    """
+    Recursively parse domains and sub-domains.
+
+    The domains and sub-domains that are extracted by get_sem_doms are placed into two global structures:
+    1. domain_list is a list of SemanticDomainFull elements that contain the full information about the domain.
+    2. domain_tree is a two-dimensional dict of SemanticDomainTreeNode elements that is keyed by language and
+       semantic domain id string.  Each element in the domain_tree has basic information about the node and its
+       neighboring nodes in the tree.
+    """
     # Check for GUID
     domain_set: Dict[str, SemanticDomainFull] = {}
     tree_set: Dict[str, SemanticDomainTreeNode] = {}
+    return_set: Dict[str, SemanticDomain] = {}
     has_sub_domains = False
     guid = UUID(node.attrib["guid"])
     for field in node:
@@ -153,25 +195,26 @@ def get_sem_doms(node: ET.Element, parent: Dict[str, SemanticDomainTreeNode]):
             fill_missing_fields(domain_set)
             # Create the nodes for the domain tree from the info in the
             # current domain nodes
-            populate_tree_set(domain_set, tree_set, parent)
+            save_domain(domain_set, tree_set, parent, prev)
+            prev_sub_domain: Dict[str, SemanticDomain] = {}
             for sub_domain in field:
-                get_sem_doms(sub_domain, tree_set)
+                prev_sub_domain = get_sem_doms(sub_domain, tree_set, prev_sub_domain)
     if not has_sub_domains:
         # Check the domain_set that was created.  If only the English version has text,
         # copy the English to the non-English entry
         fill_missing_fields(domain_set)
         # Create the nodes for the domain tree from the info in the
         # current domain nodes
-        populate_tree_set(domain_set, tree_set, parent)
+        save_domain(domain_set, tree_set, parent, prev)
     for lang in domain_set:
-        domain_list.append(domain_set[lang])
-    for lang, item in tree_set.items():
-        domain_tree[lang][item.id] = item
+        return_set[lang] = domain_set[lang].to_semantic_domain()
+    return return_set
 
 
 def main() -> None:
     args = parse_args()
     xmlfile = Path(args.xmlfile).resolve()
+    # setup logging levels
     if args.debug:
         log_level = logging.DEBUG
     elif args.verbose:
@@ -193,14 +236,14 @@ def main() -> None:
                         domain_tree[lang] = {}
                     logging.info(f"sub-element attritutes: {sub_elem.attrib}")
         elif elem.tag == "Possibilities":
+            # Parse possible domains defined in the file
+            prev_domain: Dict[str, SemanticDomain] = {}
             for domain in elem:
-                get_sem_doms(domain, {})
+                prev_domain = get_sem_doms(domain, {}, prev_domain)
 
     logging.info(f"Number of Domains: {len(domain_list)}")
     for lang in domain_tree:
         logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
-        for node in domain_tree[lang]:
-            logging.debug(f"node: {node}")
 
 
 if __name__ == "__main__":

@@ -28,6 +28,12 @@ class SemanticDomainFull(SemanticDomain):
         self.description = ""
         self.questions: List[DomainQuestion] = []
 
+    def to_semantic_domain(self) -> SemanticDomain:
+        return SemanticDomain(self.guid, self.lang, self.name, self.id)
+
+    def to_semantic_domain_tree_node(self) -> SemanticDomainTreeNode:
+        return SemanticDomainTreeNode(self.guid, self.lang, self.name, self.id)
+
 
 class SemanticDomainTreeNode(SemanticDomain):
     def __init__(self, _guid: UUID, _lang: str, _name: str, _id: str = ""):
@@ -36,3 +42,6 @@ class SemanticDomainTreeNode(SemanticDomain):
         self.children: List[SemanticDomain] = []
         self.prev: Optional[SemanticDomain] = None
         self.next: Optional[SemanticDomain] = None
+
+    def to_semantic_domain(self) -> SemanticDomain:
+        return SemanticDomain(self.guid, self.lang, self.name, self.id)
