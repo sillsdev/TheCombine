@@ -52,6 +52,7 @@ Backend/.vscode/**/*
 Backend/SIL.Lift/**/*
 Backend/ql-database
 /**/*.xml
+!deploy/scripts/semantic_domains/xml/*.xml
 /**/*.lift
 /**/*.orig
 Backend.Tests/bin/Audio/*.mp3
