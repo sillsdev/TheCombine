@@ -43,7 +43,7 @@ def parse_args() -> argparse.Namespace:
         description="Generate mongo import files for semantic domain data.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("xmlfile", help="Input XML file that defines the semantic domains.")
+    parser.add_argument("input_files", metavar="xmlfile", nargs="+", help="Input XML file that defines the semantic domains.")
     default_output_dir = project_dir / "semantic_domains" / "json"
     parser.add_argument(
         "--output-dir",
@@ -57,6 +57,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--debug", "-d", action="store_true", help="Print debugging information.")
     args = parser.parse_args()
     args.output_dir = Path(args.output_dir).resolve()
+    for i, input in enumerate(args.input_files):
+        args.input_files[i] = Path(input).resolve()
     return args
 
 
@@ -238,6 +240,8 @@ def write_json(output_dir: Path) -> None:
     not an array of JSON elements nor a nested structure.  This allows the files
     to be used by mongoimport.
     """
+    if not output_dir.is_dir():
+        output_dir.mkdir()
     for lang in domain_nodes:
         output_file = output_dir / f"nodes_{lang}.json"
         with open(output_file, "w") as file:
@@ -252,7 +256,6 @@ def write_json(output_dir: Path) -> None:
 
 def main() -> None:
     args = parse_args()
-    xmlfile = Path(args.xmlfile).resolve()
     # setup logging levels
     if args.debug:
         log_level = logging.DEBUG
@@ -261,26 +264,27 @@ def main() -> None:
     else:
         log_level = logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
-    logging.info(f"Parsing {xmlfile}")
-    tree = ElementTree.parse(xmlfile)
-    root = tree.getroot()
-    # Find the languages defined in this file
-    for elem in root:
-        if elem.tag == "Name":
-            # Languages can be found in the Name element
-            for sub_elem in elem:
-                if sub_elem.tag == "AUni" and "ws" in sub_elem.attrib:
-                    lang = sub_elem.attrib["ws"]
-                    if lang not in domain_tree:
-                        domain_tree[lang] = {}
-                    if lang not in domain_nodes:
-                        domain_nodes[lang] = {}
-                    logging.info(f"sub-element attritutes: {sub_elem.attrib}")
-        elif elem.tag == "Possibilities":
-            # Parse possible domains defined in the file
-            prev_domain: SemDomMap = {}
-            for domain in elem:
-                prev_domain = get_sem_doms(domain, {}, prev_domain)
+    for xmlfile in args.input_files:
+        logging.info(f"Parsing {xmlfile}")
+        tree = ElementTree.parse(xmlfile)
+        root = tree.getroot()
+        # Find the languages defined in this file
+        for elem in root:
+            if elem.tag == "Name":
+                # Languages can be found in the Name element
+                for sub_elem in elem:
+                    if sub_elem.tag == "AUni" and "ws" in sub_elem.attrib:
+                        lang = sub_elem.attrib["ws"]
+                        if lang not in domain_tree:
+                            domain_tree[lang] = {}
+                        if lang not in domain_nodes:
+                            domain_nodes[lang] = {}
+                        logging.info(f"sub-element attritutes: {sub_elem.attrib}")
+            elif elem.tag == "Possibilities":
+                # Parse possible domains defined in the file
+                prev_domain: SemDomMap = {}
+                for domain in elem:
+                    prev_domain = get_sem_doms(domain, {}, prev_domain)
 
     for lang in domain_nodes:
         logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
