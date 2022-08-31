@@ -3,8 +3,10 @@
 Create data files for importing the Semantic Domain information into the Mongo database.
 
 There are 2 files that are created for each language:
- - <lang>/tree.json - the semantic domain hierarchy; it contains the data for the SemanticDomainTree collection
- - <lang>/nodes.json - the contents of each element in the hierarchy; it contains the data for the SemanticDomainNodes collection
+ - <lang>/tree.json -  the semantic domain hierarchy; it contains the data for the
+                       SemanticDomainTree collection
+ - <lang>/nodes.json - the contents of each element in the hierarchy; it contains the
+                       data for the SemanticDomainNodes collection
 """
 
 from __future__ import annotations
@@ -14,7 +16,7 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Tuple
 from uuid import UUID
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 
 from semantic_domains import (
     DomainQuestion,
@@ -23,8 +25,14 @@ from semantic_domains import (
     SemanticDomainTreeNode,
 )
 
+# Define some type aliases to (hopefully) improve readability
+SemDomainMap = Dict[str, SemanticDomain]
+SemDomainFullMap = Dict[str, SemanticDomainFull]
+SemDomainTreeMap = Dict[str, SemanticDomainTreeNode]
+
+# Global variables to collect the results of our parsing
 domain_list: List[SemanticDomainFull] = []
-domain_tree: Dict[str, Dict[str, SemanticDomainTreeNode]] = {}
+domain_tree: Dict[str, SemDomainTreeMap] = {}
 
 
 def parse_args() -> argparse.Namespace:
@@ -41,14 +49,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def get_auni_text(node: ET.Element) -> Tuple[str, str]:
+def get_auni_text(node: ElementTree.Element) -> Tuple[str, str]:
     """Returns the language and text for an AUni element."""
     if node.tag != "AUni":
         raise (ValueError("Expected AUni element"))
-    return (node.attrib["ws"], node.text)
+    return (node.attrib["ws"], node.text if node.text is not None else "")
 
 
-def get_astr_text(node: ET.Element) -> Tuple[str, List[str]]:
+def get_astr_text(node: ElementTree.Element) -> Tuple[str, List[str]]:
     """
     Returns the language and text of an AStr element.
 
@@ -65,7 +73,7 @@ def get_astr_text(node: ET.Element) -> Tuple[str, List[str]]:
     return (node.attrib["ws"], astr_text)
 
 
-def get_questions(node: ET.Element) -> Dict[str, List[DomainQuestion]]:
+def get_questions(node: ElementTree.Element) -> Dict[str, List[DomainQuestion]]:
     """
     Gets a list of DomainQuestion objects from the CmDomainQ element.
 
@@ -98,7 +106,7 @@ def get_questions(node: ET.Element) -> Dict[str, List[DomainQuestion]]:
     return results
 
 
-def fill_missing_fields(domains: Dict[str, SemanticDomainFull]) -> None:
+def fill_missing_fields(domains: SemDomainFullMap) -> None:
     """
     Fill in blank fields from the value for English.
 
@@ -117,10 +125,10 @@ def fill_missing_fields(domains: Dict[str, SemanticDomainFull]) -> None:
 
 
 def save_domain(
-    domains: Dict[str, SemanticDomainFull],
-    tree_nodes: Dict[str, SemanticDomainTreeNode],
-    parent: Dict[str, SemanticDomainTreeNode],
-    prev: Dict[str, SemanticDomain],
+    domains: SemDomainFullMap,
+    tree_nodes: SemDomainTreeMap,
+    parent: SemDomainTreeMap,
+    prev: SemDomainMap,
 ) -> None:
     """
     Complete the fields for the tree nodes and save in the global structures.
@@ -153,21 +161,23 @@ def save_domain(
 
 
 def get_sem_doms(
-    node: ET.Element, parent: Dict[str, SemanticDomainTreeNode], prev: Dict[str, SemanticDomain]
-) -> Dict[str, SemanticDomain]:
+    node: ElementTree.Element, parent: SemDomainTreeMap, prev: SemDomainMap
+) -> SemDomainMap:
     """
     Recursively parse domains and sub-domains.
 
-    The domains and sub-domains that are extracted by get_sem_doms are placed into two global structures:
-    1. domain_list is a list of SemanticDomainFull elements that contain the full information about the domain.
-    2. domain_tree is a two-dimensional dict of SemanticDomainTreeNode elements that is keyed by language and
-       semantic domain id string.  Each element in the domain_tree has basic information about the node and its
-       neighboring nodes in the tree.
+    The domains and sub-domains that are extracted by get_sem_doms are placed into two global
+    structures:
+    1. domain_list is a list of SemanticDomainFull elements that contain the full information
+       about the domain.
+    2. domain_tree is a two-dimensional dict of SemanticDomainTreeNode elements that is keyed
+       by language and semantic domain id string.  Each element in the domain_tree has basic
+       information about the node and its neighboring nodes in the tree.
     """
     # Check for GUID
-    domain_set: Dict[str, SemanticDomainFull] = {}
-    tree_set: Dict[str, SemanticDomainTreeNode] = {}
-    return_set: Dict[str, SemanticDomain] = {}
+    domain_set: SemDomainFullMap = {}
+    tree_set: SemDomainTreeMap = {}
+    return_set: SemDomainMap = {}
     has_sub_domains = False
     guid = UUID(node.attrib["guid"])
     for field in node:
@@ -196,7 +206,7 @@ def get_sem_doms(
             # Create the nodes for the domain tree from the info in the
             # current domain nodes
             save_domain(domain_set, tree_set, parent, prev)
-            prev_sub_domain: Dict[str, SemanticDomain] = {}
+            prev_sub_domain: SemDomainMap = {}
             for sub_domain in field:
                 prev_sub_domain = get_sem_doms(sub_domain, tree_set, prev_sub_domain)
     if not has_sub_domains:
@@ -223,7 +233,7 @@ def main() -> None:
         log_level = logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
     logging.info(f"Parsing {xmlfile}")
-    tree = ET.parse(xmlfile)
+    tree = ElementTree.parse(xmlfile)
     root = tree.getroot()
     # Find the languages defined in this file
     for elem in root:
@@ -237,7 +247,7 @@ def main() -> None:
                     logging.info(f"sub-element attritutes: {sub_elem.attrib}")
         elif elem.tag == "Possibilities":
             # Parse possible domains defined in the file
-            prev_domain: Dict[str, SemanticDomain] = {}
+            prev_domain: SemDomainMap = {}
             for domain in elem:
                 prev_domain = get_sem_doms(domain, {}, prev_domain)
 

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import logging
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+import json
+from typing import Dict, List, Optional
 from uuid import UUID
 
 
@@ -21,6 +20,13 @@ class SemanticDomain:
         self.name = _name
         self.id = _id
 
+    def to_json(self) -> str:
+        data = {"guid": self.guid, "lang": self.lang, "name": self.name, "id": self.id}
+        return json.dumps(data)
+
+    def to_dict(self) -> Dict[str, str]:
+        return {"guid": str(self.guid), "lang": self.lang, "name": self.name, "id": self.id}
+
 
 class SemanticDomainFull(SemanticDomain):
     def __init__(self, _guid: UUID, _lang: str, _name: str, _id: str = "") -> None:
@@ -34,6 +40,26 @@ class SemanticDomainFull(SemanticDomain):
     def to_semantic_domain_tree_node(self) -> SemanticDomainTreeNode:
         return SemanticDomainTreeNode(self.guid, self.lang, self.name, self.id)
 
+    def to_json(self) -> str:
+        question_list: List[Dict[str, str]] = []
+        for item in self.questions:
+            question_list.append(
+                {
+                    "question": item.question,
+                    "example_words": item.example_words,
+                    "example_sentences": item.example_sentences,
+                }
+            )
+        data = {
+            "guid": self.guid,
+            "lang": self.lang,
+            "name": self.name,
+            "id": self.id,
+            "description": self.description,
+            "questions": question_list,
+        }
+        return json.dumps(data)
+
 
 class SemanticDomainTreeNode(SemanticDomain):
     def __init__(self, _guid: UUID, _lang: str, _name: str, _id: str = ""):
@@ -45,3 +71,21 @@ class SemanticDomainTreeNode(SemanticDomain):
 
     def to_semantic_domain(self) -> SemanticDomain:
         return SemanticDomain(self.guid, self.lang, self.name, self.id)
+
+    def to_json(self) -> str:
+        children: List[Dict[str, str]] = []
+        for item in self.children:
+            children.append(
+                {"guid": str(item.guid), "lang": item.lang, "name": item.name, "id": item.id}
+            )
+        data = {
+            "guid": self.guid,
+            "lang": self.lang,
+            "name": self.name,
+            "id": self.id,
+            "parent": {} if self.parent is None else self.parent.to_dict(),
+            "children": children,
+            "prev": {} if self.prev is None else self.prev.to_dict(),
+            "next": {} if self.next is None else self.next.to_dict(),
+        }
+        return json.dumps(data)
