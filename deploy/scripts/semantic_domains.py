@@ -21,8 +21,8 @@ class SemanticDomain:
         self.id = _id
 
     def to_json(self) -> str:
-        data = {"guid": self.guid, "lang": self.lang, "name": self.name, "id": self.id}
-        return json.dumps(data)
+        data = {"guid": str(self.guid), "lang": self.lang, "name": self.name, "id": self.id}
+        return json.dumps(data, sort_keys=True, indent=4)
 
     def to_dict(self) -> Dict[str, str]:
         return {"guid": str(self.guid), "lang": self.lang, "name": self.name, "id": self.id}
@@ -51,14 +51,14 @@ class SemanticDomainFull(SemanticDomain):
                 }
             )
         data = {
-            "guid": self.guid,
+            "guid": str(self.guid),
             "lang": self.lang,
             "name": self.name,
             "id": self.id,
             "description": self.description,
             "questions": question_list,
         }
-        return json.dumps(data)
+        return json.dumps(data, sort_keys=True, indent=4)
 
 
 class SemanticDomainTreeNode(SemanticDomain):
@@ -79,7 +79,7 @@ class SemanticDomainTreeNode(SemanticDomain):
                 {"guid": str(item.guid), "lang": item.lang, "name": item.name, "id": item.id}
             )
         data = {
-            "guid": self.guid,
+            "guid": str(self.guid),
             "lang": self.lang,
             "name": self.name,
             "id": self.id,
@@ -88,4 +88,4 @@ class SemanticDomainTreeNode(SemanticDomain):
             "prev": {} if self.prev is None else self.prev.to_dict(),
             "next": {} if self.next is None else self.next.to_dict(),
         }
-        return json.dumps(data)
+        return json.dumps(data, sort_keys=True, indent=4)

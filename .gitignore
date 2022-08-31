@@ -52,7 +52,6 @@ Backend/.vscode/**/*
 Backend/SIL.Lift/**/*
 Backend/ql-database
 /**/*.xml
-!deploy/scripts/semantic_domains/xml/*.xml
 /**/*.lift
 /**/*.orig
 Backend.Tests/bin/Audio/*.mp3
@@ -73,6 +72,10 @@ docs/user_guide/site
 __pycache__
 *.pyc
 venv
+
+# Intermediate and output files for Semantic Domain import scripts
+!deploy/scripts/semantic_domains/xml/*.xml
+deploy/scripts/semantic_domains/json/*.json
 
 # Kubernetes Configuration files
 **/site_files/

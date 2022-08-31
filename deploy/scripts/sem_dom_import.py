@@ -26,13 +26,15 @@ from semantic_domains import (
 )
 
 # Define some type aliases to (hopefully) improve readability
-SemDomainMap = Dict[str, SemanticDomain]
-SemDomainFullMap = Dict[str, SemanticDomainFull]
-SemDomainTreeMap = Dict[str, SemanticDomainTreeNode]
+SemDomMap = Dict[str, SemanticDomain]
+SemDomFullMap = Dict[str, SemanticDomainFull]
+SemDomTreeMap = Dict[str, SemanticDomainTreeNode]
 
 # Global variables to collect the results of our parsing
-domain_list: List[SemanticDomainFull] = []
-domain_tree: Dict[str, SemDomainTreeMap] = {}
+domain_nodes: Dict[str, SemDomFullMap] = {}
+domain_tree: Dict[str, SemDomTreeMap] = {}
+
+project_dir = Path(__file__).resolve().parent
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,11 +44,20 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("xmlfile", help="Input XML file that defines the semantic domains.")
+    default_output_dir = project_dir / "semantic_domains" / "json"
+    parser.add_argument(
+        "--output-dir",
+        "-o",
+        default=str(default_output_dir),
+        help="Default directory for the output files.",
+    )
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Print detailed progress information."
     )
     parser.add_argument("--debug", "-d", action="store_true", help="Print debugging information.")
-    return parser.parse_args()
+    args = parser.parse_args()
+    args.output_dir = Path(args.output_dir).resolve()
+    return args
 
 
 def get_auni_text(node: ElementTree.Element) -> Tuple[str, str]:
@@ -106,7 +117,7 @@ def get_questions(node: ElementTree.Element) -> Dict[str, List[DomainQuestion]]:
     return results
 
 
-def fill_missing_fields(domains: SemDomainFullMap) -> None:
+def fill_missing_fields(domains: SemDomFullMap) -> None:
     """
     Fill in blank fields from the value for English.
 
@@ -125,10 +136,10 @@ def fill_missing_fields(domains: SemDomainFullMap) -> None:
 
 
 def save_domain(
-    domains: SemDomainFullMap,
-    tree_nodes: SemDomainTreeMap,
-    parent: SemDomainTreeMap,
-    prev: SemDomainMap,
+    domains: SemDomFullMap,
+    tree_nodes: SemDomTreeMap,
+    parent: SemDomTreeMap,
+    prev: SemDomMap,
 ) -> None:
     """
     Complete the fields for the tree nodes and save in the global structures.
@@ -139,7 +150,7 @@ def save_domain(
     - sets the parent field in the tree node
     - sets the previous field in the tree node
     - sets the next field in the tree node that corresponds to the previous node
-    - saves the domain object in the global list, domain_list
+    - saves the domain object in the global structure, domain_nodes
     - saves the tree node in the global structure, domain_tree
     """
 
@@ -155,29 +166,27 @@ def save_domain(
             # set the next link in the previous domain
             prev_id = prev[lang].id
             domain_tree[lang][prev_id].next = tree_nodes[lang].to_semantic_domain()
-        domain_list.append(domains[lang])
+        domain_nodes[lang][domain_item.id] = domain_item
     for lang, item in tree_nodes.items():
         domain_tree[lang][item.id] = item
 
 
-def get_sem_doms(
-    node: ElementTree.Element, parent: SemDomainTreeMap, prev: SemDomainMap
-) -> SemDomainMap:
+def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomMap) -> SemDomMap:
     """
     Recursively parse domains and sub-domains.
 
     The domains and sub-domains that are extracted by get_sem_doms are placed into two global
     structures:
-    1. domain_list is a list of SemanticDomainFull elements that contain the full information
+    1. domain_nodes is a list of SemanticDomainFull elements that contain the full information
        about the domain.
     2. domain_tree is a two-dimensional dict of SemanticDomainTreeNode elements that is keyed
        by language and semantic domain id string.  Each element in the domain_tree has basic
        information about the node and its neighboring nodes in the tree.
     """
     # Check for GUID
-    domain_set: SemDomainFullMap = {}
-    tree_set: SemDomainTreeMap = {}
-    return_set: SemDomainMap = {}
+    domain_set: SemDomFullMap = {}
+    tree_set: SemDomTreeMap = {}
+    return_set: SemDomMap = {}
     has_sub_domains = False
     guid = UUID(node.attrib["guid"])
     for field in node:
@@ -206,7 +215,7 @@ def get_sem_doms(
             # Create the nodes for the domain tree from the info in the
             # current domain nodes
             save_domain(domain_set, tree_set, parent, prev)
-            prev_sub_domain: SemDomainMap = {}
+            prev_sub_domain: SemDomMap = {}
             for sub_domain in field:
                 prev_sub_domain = get_sem_doms(sub_domain, tree_set, prev_sub_domain)
     if not has_sub_domains:
@@ -219,6 +228,26 @@ def get_sem_doms(
     for lang in domain_set:
         return_set[lang] = domain_set[lang].to_semantic_domain()
     return return_set
+
+
+def write_json(output_dir: Path) -> None:
+    """
+    Serialize the domain_nodes and domain_tree structures to JSON files.
+
+    The data structures are serialized to a file of contatenated JSON elements;
+    not an array of JSON elements nor a nested structure.  This allows the files
+    to be used by mongoimport.
+    """
+    for lang in domain_nodes:
+        output_file = output_dir / f"nodes_{lang}.json"
+        with open(output_file, "w") as file:
+            for id in domain_nodes[lang]:
+                file.write(f"{domain_nodes[lang][id].to_json()}\n")
+    for lang in domain_tree:
+        output_file = output_dir / f"tree_{lang}.json"
+        with open(output_file, "w") as file:
+            for id in domain_tree[lang]:
+                file.write(f"{domain_tree[lang][id].to_json()}\n")
 
 
 def main() -> None:
@@ -244,16 +273,20 @@ def main() -> None:
                     lang = sub_elem.attrib["ws"]
                     if lang not in domain_tree:
                         domain_tree[lang] = {}
+                    if lang not in domain_nodes:
+                        domain_nodes[lang] = {}
                     logging.info(f"sub-element attritutes: {sub_elem.attrib}")
         elif elem.tag == "Possibilities":
             # Parse possible domains defined in the file
-            prev_domain: SemDomainMap = {}
+            prev_domain: SemDomMap = {}
             for domain in elem:
                 prev_domain = get_sem_doms(domain, {}, prev_domain)
 
-    logging.info(f"Number of Domains: {len(domain_list)}")
+    for lang in domain_nodes:
+        logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
     for lang in domain_tree:
         logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
+    write_json(args.output_dir)
 
 
 if __name__ == "__main__":
