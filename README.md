@@ -375,10 +375,10 @@ environment.
 
    ```bash
    cd ./deploy/scripts
-   python sem_dom_import.py semantic_domains/xml/<xml_filename>
+   python sem_dom_import.py <xml_filename> [<xml_filename> ...]
    ```
 
-   where `<xml_filename>` is the name of the file to import. Currently each file contains English and one other
+   where `<xml_filename>` is the name of the file(s) to import. Currently each file contains English and one other
    language.
 
 2. Start the database:
@@ -389,18 +389,15 @@ environment.
 
 3. Import the files that were created.
 
-   For each language that you want to import, there are two files that were created for each language in step 1, a
-   `nodes_<lang>.json` and a `tree_<lang>.json`. The `nodes` files contain the detailed data for each node in the
-   semantic domain tree for a specific language; the `tree` files contain the tree structure of the semantic domains. To
-   import the semantic domain data, run:
+   There are two files that were created for each language in step 1, a `nodes.json` and a `tree.json`. The `nodes.json`
+   file contains the detailed data for each node in the semantic domain tree; the `tree.json` file contains the tree
+   structure of the semantic domains. To import the semantic domain data, run:
 
    ```bash
-   mongoimport -d CombineDatabase -c SemanticDomains nodes_en.json --mode=merge --upsertFields=id,lang,guid
-   mongoimport -d CombineDatabase -c SemanticDomainTree tree_en.json --mode=merge --upsertFields=id,lang,guid
+   cd ./deploy/scripts/semantic_domains/json
+   mongoimport -d CombineDatabase -c SemanticDomains nodes.json --mode=merge --upsertFields=id,lang,guid
+   mongoimport -d CombineDatabase -c SemanticDomainTree tree.json --mode=merge --upsertFields=id,lang,guid
    ```
-
-   This example is for English. For other languages, substitute the language code for the `en` in the JSON filenames
-   above.
 
 ### Generate License Reports
 

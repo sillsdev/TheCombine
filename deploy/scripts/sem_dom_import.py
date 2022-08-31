@@ -247,14 +247,14 @@ def write_json(output_dir: Path) -> None:
     """
     if not output_dir.is_dir():
         output_dir.mkdir()
-    for lang in domain_nodes:
-        output_file = output_dir / f"nodes_{lang}.json"
-        with open(output_file, "w") as file:
+    output_file = output_dir / f"nodes.json"
+    with open(output_file, "w") as file:
+        for lang in domain_nodes:
             for id in domain_nodes[lang]:
                 file.write(f"{domain_nodes[lang][id].to_json()}\n")
-    for lang in domain_tree:
-        output_file = output_dir / f"tree_{lang}.json"
-        with open(output_file, "w") as file:
+    output_file = output_dir / f"tree.json"
+    with open(output_file, "w") as file:
+        for lang in domain_tree:
             for id in domain_tree[lang]:
                 file.write(f"{domain_tree[lang][id].to_json()}\n")
 
