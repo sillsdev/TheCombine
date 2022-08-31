@@ -43,7 +43,12 @@ def parse_args() -> argparse.Namespace:
         description="Generate mongo import files for semantic domain data.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("input_files", metavar="xmlfile", nargs="+", help="Input XML file that defines the semantic domains.")
+    parser.add_argument(
+        "input_files",
+        metavar="xmlfile",
+        nargs="+",
+        help="Input XML file that defines the semantic domains.",
+    )
     default_output_dir = project_dir / "semantic_domains" / "json"
     parser.add_argument(
         "--output-dir",
