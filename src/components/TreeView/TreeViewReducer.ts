@@ -1,11 +1,9 @@
-import TreeSemanticDomain, {
-  DomainMap,
-} from "components/TreeView/TreeSemanticDomain";
 import {
   TreeViewAction,
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
 
 export interface TreeViewState {
   currentDomain: TreeSemanticDomain;

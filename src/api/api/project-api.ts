@@ -39,8 +39,6 @@ import {
 // @ts-ignore
 import { Project } from "../models";
 // @ts-ignore
-import { SemanticDomainWithSubdomains } from "../models";
-// @ts-ignore
 import { User } from "../models";
 // @ts-ignore
 import { UserCreatedProject } from "../models";
@@ -276,51 +274,6 @@ export const ProjectApiAxiosParamCreator = function (
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getProject", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getSemDoms: async (
-      projectId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getSemDoms", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/semanticdomains`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
       );
@@ -654,32 +607,6 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getSemDoms(
-      projectId: string,
-      options?: any
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<SemanticDomainWithSubdomains>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getSemDoms(
-        projectId,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
      * @param {string} projectName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -840,20 +767,6 @@ export const ProjectApiFactory = function (
     },
     /**
      *
-     * @param {string} projectId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getSemDoms(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<SemanticDomainWithSubdomains>> {
-      return localVarFp
-        .getSemDoms(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
      * @param {string} projectName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -953,20 +866,6 @@ export interface ProjectApiGetProjectRequest {
    *
    * @type {string}
    * @memberof ProjectApiGetProject
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for getSemDoms operation in ProjectApi.
- * @export
- * @interface ProjectApiGetSemDomsRequest
- */
-export interface ProjectApiGetSemDomsRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectApiGetSemDoms
    */
   readonly projectId: string;
 }
@@ -1119,22 +1018,6 @@ export class ProjectApi extends BaseAPI {
   ) {
     return ProjectApiFp(this.configuration)
       .getProject(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {ProjectApiGetSemDomsRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public getSemDoms(
-    requestParameters: ProjectApiGetSemDomsRequest,
-    options?: any
-  ) {
-    return ProjectApiFp(this.configuration)
-      .getSemDoms(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

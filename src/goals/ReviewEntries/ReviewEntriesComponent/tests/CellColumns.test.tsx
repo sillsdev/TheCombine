@@ -2,12 +2,8 @@ import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import {
-  newDefinition,
-  newFlag,
-  newGloss,
-  newSemanticDomain,
-} from "types/word";
+import { newSemanticDomain } from "types/semanticDomain";
+import { newDefinition, newFlag, newGloss } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
 const LANG = Bcp47Code.En;
