@@ -14,22 +14,32 @@ class DomainQuestion:
 
 
 class SemanticDomain:
-    def __init__(self, _guid: UUID, _lang: str, _name: str, _id: str = "") -> None:
+    def __init__(self, _guid: Optional[UUID], _lang: str, _name: str, _id: str = "") -> None:
         self.guid = _guid
         self.lang = _lang
         self.name = _name
         self.id = _id
 
     def to_json(self) -> str:
-        data = {"guid": str(self.guid), "lang": self.lang, "name": self.name, "id": self.id}
+        data = {
+            "guid": "" if self.guid is None else str(self.guid),
+            "lang": self.lang,
+            "name": self.name,
+            "id": self.id,
+        }
         return json.dumps(data, sort_keys=True, indent=4)
 
     def to_dict(self) -> Dict[str, str]:
-        return {"guid": str(self.guid), "lang": self.lang, "name": self.name, "id": self.id}
+        return {
+            "guid": "" if self.guid is None else str(self.guid),
+            "lang": self.lang,
+            "name": self.name,
+            "id": self.id,
+        }
 
 
 class SemanticDomainFull(SemanticDomain):
-    def __init__(self, _guid: UUID, _lang: str, _name: str, _id: str = "") -> None:
+    def __init__(self, _guid: Optional[UUID], _lang: str, _name: str, _id: str = "") -> None:
         super().__init__(_guid, _lang, _name, _id)
         self.description = ""
         self.questions: List[DomainQuestion] = []
@@ -51,7 +61,7 @@ class SemanticDomainFull(SemanticDomain):
                 }
             )
         data = {
-            "guid": str(self.guid),
+            "guid": "" if self.guid is None else str(self.guid),
             "lang": self.lang,
             "name": self.name,
             "id": self.id,
@@ -62,7 +72,7 @@ class SemanticDomainFull(SemanticDomain):
 
 
 class SemanticDomainTreeNode(SemanticDomain):
-    def __init__(self, _guid: UUID, _lang: str, _name: str, _id: str = ""):
+    def __init__(self, _guid: Optional[UUID], _lang: str, _name: str, _id: str = ""):
         super().__init__(_guid, _lang, _name, _id)
         self.parent: Optional[SemanticDomain] = None
         self.children: List[SemanticDomain] = []
@@ -76,10 +86,15 @@ class SemanticDomainTreeNode(SemanticDomain):
         children: List[Dict[str, str]] = []
         for item in self.children:
             children.append(
-                {"guid": str(item.guid), "lang": item.lang, "name": item.name, "id": item.id}
+                {
+                    "guid": "" if item.guid is None else str(item.guid),
+                    "lang": item.lang,
+                    "name": item.name,
+                    "id": item.id,
+                }
             )
         data = {
-            "guid": str(self.guid),
+            "guid": "" if self.guid is None else str(self.guid),
             "lang": self.lang,
             "name": self.name,
             "id": self.id,

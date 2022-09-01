@@ -60,7 +60,9 @@ def parse_args() -> argparse.Namespace:
     logging_group.add_argument(
         "--verbose", "-v", action="store_true", help="Print detailed progress information."
     )
-    logging_group.add_argument("--debug", "-d", action="store_true", help="Print debugging information.")
+    logging_group.add_argument(
+        "--debug", "-d", action="store_true", help="Print debugging information."
+    )
     args = parser.parse_args()
     args.output_dir = Path(args.output_dir).resolve()
     for i, input in enumerate(args.input_files):
@@ -199,7 +201,7 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
     if "guid" in node.attrib:
         guid = UUID(node.attrib["guid"])
     else:
-        guid = ""
+        guid = None
     for field in node:
         if field.tag == "Name":
             for name_node in field:
@@ -291,8 +293,7 @@ def main() -> None:
                         domain_nodes[lang] = {}
         # Parse possible domains defined in the file
         prev_domain: SemDomMap = {}
-        for domain in elem:
-            prev_domain = get_sem_doms(root, {}, prev_domain)
+        prev_domain = get_sem_doms(root, {}, prev_domain)
 
     for lang in domain_nodes:
         logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
