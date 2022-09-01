@@ -27,7 +27,7 @@ class SemanticDomain:
             "name": self.name,
             "id": self.id,
         }
-        return json.dumps(data, sort_keys=True, indent=4)
+        return json.dumps(data, indent=4)
 
     def to_dict(self) -> Dict[str, str]:
         return {
@@ -68,7 +68,7 @@ class SemanticDomainFull(SemanticDomain):
             "description": self.description,
             "questions": question_list,
         }
-        return json.dumps(data, sort_keys=True, indent=4)
+        return json.dumps(data, indent=4)
 
 
 class SemanticDomainTreeNode(SemanticDomain):
@@ -99,8 +99,8 @@ class SemanticDomainTreeNode(SemanticDomain):
             "name": self.name,
             "id": self.id,
             "parent": {} if self.parent is None else self.parent.to_dict(),
-            "children": children,
             "prev": {} if self.prev is None else self.prev.to_dict(),
             "next": {} if self.next is None else self.next.to_dict(),
+            "children": children,
         }
-        return json.dumps(data, sort_keys=True, indent=4)
+        return json.dumps(data, indent=4)
