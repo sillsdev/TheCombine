@@ -56,10 +56,11 @@ def parse_args() -> argparse.Namespace:
         default=str(default_output_dir),
         help="Default directory for the output files.",
     )
-    parser.add_argument(
+    logging_group = parser.add_mutually_exclusive_group()
+    logging_group.add_argument(
         "--verbose", "-v", action="store_true", help="Print detailed progress information."
     )
-    parser.add_argument("--debug", "-d", action="store_true", help="Print debugging information.")
+    logging_group.add_argument("--debug", "-d", action="store_true", help="Print debugging information.")
     args = parser.parse_args()
     args.output_dir = Path(args.output_dir).resolve()
     for i, input in enumerate(args.input_files):
@@ -195,7 +196,10 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
     tree_set: SemDomTreeMap = {}
     return_set: SemDomMap = {}
     has_sub_domains = False
-    guid = UUID(node.attrib["guid"])
+    if "guid" in node.attrib:
+        guid = UUID(node.attrib["guid"])
+    else:
+        guid = ""
     for field in node:
         if field.tag == "Name":
             for name_node in field:
@@ -214,7 +218,7 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
             questions = get_questions(field)
             for lang in questions:
                 domain_set[lang].questions.extend(questions[lang])
-        elif field.tag == "SubPossibilities":
+        elif (field.tag == "Possibilities") or (field.tag == "SubPossibilities"):
             has_sub_domains = True
             # Check the domain_set that was created.  If only the English version has text,
             # copy the English to the non-English entry
@@ -274,22 +278,21 @@ def main() -> None:
         tree = ElementTree.parse(xmlfile)
         root = tree.getroot()
         # Find the languages defined in this file
+        # We need to do this first so that we know which keys
+        # to create in the global structures.
         for elem in root:
             if elem.tag == "Name":
                 # Languages can be found in the Name element
                 for sub_elem in elem:
-                    if sub_elem.tag == "AUni" and "ws" in sub_elem.attrib:
-                        lang = sub_elem.attrib["ws"]
-                        if lang not in domain_tree:
-                            domain_tree[lang] = {}
-                        if lang not in domain_nodes:
-                            domain_nodes[lang] = {}
-                        logging.info(f"sub-element attritutes: {sub_elem.attrib}")
-            elif elem.tag == "Possibilities":
-                # Parse possible domains defined in the file
-                prev_domain: SemDomMap = {}
-                for domain in elem:
-                    prev_domain = get_sem_doms(domain, {}, prev_domain)
+                    lang, name_text = get_auni_text(sub_elem)
+                    if lang not in domain_tree:
+                        domain_tree[lang] = {}
+                    if lang not in domain_nodes:
+                        domain_nodes[lang] = {}
+        # Parse possible domains defined in the file
+        prev_domain: SemDomMap = {}
+        for domain in elem:
+            prev_domain = get_sem_doms(root, {}, prev_domain)
 
     for lang in domain_nodes:
         logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
