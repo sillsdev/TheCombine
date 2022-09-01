@@ -9,6 +9,7 @@ api/invite-api.ts
 api/lift-api.ts
 api/merge-api.ts
 api/project-api.ts
+api/semantic-domain-api.ts
 api/user-api.ts
 api/user-edit-api.ts
 api/user-role-api.ts
@@ -38,6 +39,8 @@ models/password-reset-data.ts
 models/password-reset-request-data.ts
 models/permission.ts
 models/project.ts
+models/semantic-domain-full.ts
+models/semantic-domain-tree-node.ts
 models/semantic-domain-with-subdomains.ts
 models/semantic-domain.ts
 models/sense.ts

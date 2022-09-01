@@ -15,19 +15,31 @@
 /**
  *
  * @export
- * @interface SemanticDomain
+ * @interface SemanticDomainFull
  */
-export interface SemanticDomain {
+export interface SemanticDomainFull {
   /**
    *
    * @type {string}
-   * @memberof SemanticDomain
+   * @memberof SemanticDomainFull
    */
   name: string;
   /**
    *
    * @type {string}
-   * @memberof SemanticDomain
+   * @memberof SemanticDomainFull
    */
   id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainFull
+   */
+  description: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof SemanticDomainFull
+   */
+  questions: Array<string>;
 }

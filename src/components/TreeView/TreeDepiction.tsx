@@ -2,9 +2,6 @@ import { Grid, ImageList, ImageListItem } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import TreeSemanticDomain, {
-  DomainMap,
-} from "components/TreeView/TreeSemanticDomain";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 import {
   endcapLeft,
@@ -17,6 +14,7 @@ import {
   teeUpLeft,
   teeUpRight,
 } from "resources/tree";
+import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
 
 const MAX_COL_WIDTH = 50; // Max gap.
 const MIN_COL_WIDTH = 30; // Multiply this by RATIO_TILE_TO_GAP for min tile width.

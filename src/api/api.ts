@@ -19,6 +19,7 @@ export * from "./api/invite-api";
 export * from "./api/lift-api";
 export * from "./api/merge-api";
 export * from "./api/project-api";
+export * from "./api/semantic-domain-api";
 export * from "./api/user-api";
 export * from "./api/user-edit-api";
 export * from "./api/user-role-api";

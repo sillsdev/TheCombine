@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import {
   traverseTreeAction,
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
 import { StoreState } from "types";
+import { TreeSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
