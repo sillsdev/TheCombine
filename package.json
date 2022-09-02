@@ -16,7 +16,6 @@
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "frontend": "npm run set-release && react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
-    "import-sem-doms": "tsc scripts/importSemanticDomains.ts && node scripts/importSemanticDomains.js",
     "license-report-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/docs/licenses/backend_licenses.txt",
     "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
     "license-report-frontend": "npm install && license-checker-rseidelsohn --production --excludePrivatePackages --plainVertical --out docs/user_guide/docs/licenses/frontend_licenses.txt",

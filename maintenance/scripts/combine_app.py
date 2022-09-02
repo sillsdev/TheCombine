@@ -5,7 +5,6 @@ from __future__ import annotations
 from enum import Enum, unique
 import json
 from pathlib import Path
-import re
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
@@ -84,12 +83,6 @@ class CombineApp:
         """Run kubectl command adding the configuration file and namespace."""
         return run_cmd(["kubectl"] + self.kubectl_opts + cmd)
 
-    @staticmethod
-    def object_id_to_str(buffer: str) -> str:
-        """Extract a MongoDB ObjectId from a string."""
-        obj_id_pattern = re.compile(r'ObjectId\(("[0-9a-f]{24}")\)', re.MULTILINE)
-        return obj_id_pattern.sub(r"\1", buffer)
-
     def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
         """Look up the Kubernetes pod id for the specified service."""
         if service.value not in self.pod_id_cache:
@@ -114,9 +107,9 @@ class CombineApp:
         """
         db_results = self.exec(
             self.get_pod_id(CombineApp.Component.Database),
-            ["/usr/bin/mongosh", "--quiet", "CombineDatabase", "--eval", cmd],
+            ["/usr/bin/mongosh", "--quiet", "CombineDatabase", "--eval", f"JSON.stringify({cmd})"],
         )
-        result_str = self.object_id_to_str(db_results.stdout)
+        result_str = db_results.stdout
         if result_str != "":
             result_dict: Dict[str, Any] = json.loads(result_str)
             return result_dict
@@ -129,9 +122,9 @@ class CombineApp:
         cmd = f"db.{collection}.find({query}, {projection}).toArray()"
         db_results = self.exec(
             self.get_pod_id(CombineApp.Component.Database),
-            ["/usr/bin/mongosh", "--quiet", "CombineDatabase", "--eval", cmd],
+            ["/usr/bin/mongosh", "--quiet", "CombineDatabase", "--eval", f"JSON.stringify({cmd})"],
         )
-        result_str = self.object_id_to_str(db_results.stdout)
+        result_str = db_results.stdout
         if result_str != "":
             result_array: List[Dict[str, Any]] = json.loads(result_str)
             return result_array

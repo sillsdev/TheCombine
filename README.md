@@ -63,7 +63,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    4. [Install/Update _The Combine_](#installupdate-the-combine)
    5. [Connecting to your Cluster](#connecting-to-your-cluster)
    6. [Rancher Dashboard](#rancher-dashboard)
-5. [Maintenance Scripts for TheCombine](#maintenance-scripts-for-thecombine)
+5. [Maintenance](#maintenance)
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
 6. [User Guide](#user-guide)
@@ -368,11 +368,36 @@ Auto-format frontend code in the `src` folder.
 
 ### Import Semantic Domains
 
-Imports Semantic Domains from the provided xml file.
+Imports Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python virtual
+environment.
 
-```bash
-npm run import-sem-doms -- <XML_FILE_PATH>
-```
+1. Generate the files for import into the Mongo database:
+
+   ```bash
+   cd ./deploy/scripts
+   python sem_dom_import.py <xml_filename> [<xml_filename> ...]
+   ```
+
+   where `<xml_filename>` is the name of the file(s) to import. Currently each file contains English and one other
+   language.
+
+2. Start the database:
+
+   ```bash
+   npm run database
+   ```
+
+3. Import the files that were created.
+
+   There are two files that were created for each language in step 1, a `nodes.json` and a `tree.json`. The `nodes.json`
+   file contains the detailed data for each node in the semantic domain tree; the `tree.json` file contains the tree
+   structure of the semantic domains. To import the semantic domain data, run:
+
+   ```bash
+   cd ./deploy/scripts/semantic_domains/json
+   mongoimport -d CombineDatabase -c SemanticDomains nodes.json --mode=merge --upsertFields=id,lang,guid
+   mongoimport -d CombineDatabase -c SemanticDomainTree tree.json --mode=merge --upsertFields=id,lang,guid
+   ```
 
 ### Generate License Reports
 
@@ -859,13 +884,8 @@ kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]
 
 Notes:
 
-1. The backup script requires that the `aws-cli` version 2 is installed. The [Amazon Web Services](#amazon-web-services)
-   section describes how to install and configure `aws-cli`.
-2. The backup script can be run from any directory.
-3. The backup script is configured using `script_conf.json` in the same directory as the script. You may edit this file
-   to change the configuration, such as, to use a different AWS S3 bucket, or a different hostname (the hostname is used
-   to tag the backup)
-4. The daily backup job on the server will also clean up old backup for the machine that is being backed up. This is not
+1. The backup command can be run from any directory.
+2. The daily backup job on the server will also clean up old backup for the machine that is being backed up. This is not
    part of `combine_backup.py`; backups made with this script must be managed manually. See the
    [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
    for documentation on how to use the command line to list and to manage the backup objects.
