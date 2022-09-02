@@ -2,5 +2,19 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+global:
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  adminUsername: "Override"
+  adminPassword: "Override"
+  adminEmail: "Override"
+  awsAccount: "Override"
+  awsDefaultRegion: "Override"
+  pullSecretName: "None"
+  imageTag: "latest"
+  # Define the image registry to use (may be blank for local images)
+  imageRegistry: ""
+
 mongoImageTag: "5.0"
 persistentVolumeSize: 16Gi
+imageName: combine_database
