@@ -22,6 +22,7 @@ from typing import Dict, List, Optional
 from app_release import get_release, set_release
 from enum_types import JobStatus
 from streamfile import StreamFile
+from utils import run_cmd
 
 
 @dataclass(frozen=True)
@@ -224,20 +225,23 @@ def main() -> None:
     if args.components is not None:
         to_do = args.components
     else:
-        to_do = ["backend", "frontend", "maintenance"]
+        to_do = ["backend", "database", "frontend", "maintenance"]
 
     # Create a dictionary to look up the build spec from
     # a component name
     build_specs: Dict[str, BuildSpec] = {
         "backend": BuildSpec(project_dir / "Backend", "backend"),
+        "database": BuildSpec(project_dir / "database", "database"),
         "maintenance": BuildSpec(project_dir / "maintenance", "maint"),
         "frontend": BuildSpec(project_dir, "frontend"),
     }
 
     # Create the version file
     release_file = project_dir / "public" / "scripts" / "release.js"
-
     set_release(get_release(), release_file)
+
+    # Create the semantic domain definition files
+
 
     # Create the set of jobs to be run for all components
     job_set: Dict[str, JobQueue] = {}
