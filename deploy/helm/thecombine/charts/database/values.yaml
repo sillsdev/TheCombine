@@ -15,6 +15,5 @@ global:
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
 
-mongoImageTag: "5.0"
 persistentVolumeSize: 16Gi
 imageName: combine_database
