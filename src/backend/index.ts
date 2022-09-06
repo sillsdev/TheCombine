@@ -11,6 +11,8 @@ import {
   MergeWords,
   Permission,
   Project,
+  SemanticDomainFull,
+  SemanticDomainTreeNode,
   SiteBanner,
   User,
   UserEdit,
@@ -24,6 +26,7 @@ import { errorToast } from "components/Toast/SwalToast";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -91,6 +94,11 @@ const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
+const semanticDomainApi = new Api.SemanticDomainApi(
+  config,
+  BASE_PATH,
+  axiosInstance
+);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
@@ -595,4 +603,39 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
+}
+
+/* SemanticDomainController.cs */
+
+export async function getSemanticDomainFull(
+  id: string,
+  lang: string
+): Promise<SemanticDomainFull> {
+  const params = { id: id, lang: lang };
+  return (
+    await semanticDomainApi.getSemanticDomainFull(params, defaultOptions())
+  ).data;
+}
+
+export async function getSemanticDomainTreeNode(
+  id: string,
+  lang: string
+): Promise<SemanticDomainTreeNode> {
+  const params = { id: id, lang: lang };
+  return (
+    await semanticDomainApi.getSemanticDomainTreeNode(params, defaultOptions())
+  ).data;
+}
+
+export async function getSemanticDomainTreeNodeByName(
+  name: string,
+  lang: string
+): Promise<SemanticDomainTreeNode> {
+  const params = { name: name, lang: lang };
+  return (
+    await semanticDomainApi.getSemanticDomainTreeNodeByName(
+      params,
+      defaultOptions()
+    )
+  ).data;
 }

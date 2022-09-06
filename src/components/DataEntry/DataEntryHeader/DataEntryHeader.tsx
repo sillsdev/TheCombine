@@ -1,14 +1,14 @@
 import { Switch, Typography } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
+import { SemanticDomainFull } from "api/models";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
-
-import { TreeSemanticDomain } from "types/semanticDomain";
+("types/semanticDomain");
 import theme from "types/theme";
 
 interface DataEntryHeaderProps extends WithTranslation {
-  domain: TreeSemanticDomain;
+  domain: SemanticDomainFull;
   questionsVisible: boolean;
   setQuestionVisibility: (visibility: boolean) => void;
 }

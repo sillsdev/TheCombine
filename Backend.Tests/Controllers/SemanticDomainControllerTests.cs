@@ -46,7 +46,7 @@ namespace Backend.Tests.Controllers
         public void TestParseSemanticDomains()
         {
             var project = _projRepo.Create(Util.RandomProject()).Result;
-            var sdList = (List<SemanticDomainWithSubdomains>)(
+            var sdList = (List<SemanticDomainTreeNode>)(
                 (ObjectResult)_semDomController.GetSemDoms(project!.Id).Result).Value!;
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));

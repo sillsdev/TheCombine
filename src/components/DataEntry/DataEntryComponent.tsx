@@ -1,25 +1,32 @@
 import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
-import { SemanticDomain, State, Word } from "api/models";
-import { getFrontierWords } from "backend";
+import {
+  SemanticDomain,
+  SemanticDomainFull,
+  SemanticDomainTreeNode,
+  State,
+  Word,
+} from "api/models";
+import { getFrontierWords, getSemanticDomainFull } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
 import TreeView from "components/TreeView/TreeViewComponent";
-import { newSemanticDomain, TreeSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
+import { newSemanticDomain } from "types/semanticDomain";
 
 interface DataEntryProps {
-  domain: TreeSemanticDomain;
+  currentDomainTree: SemanticDomainTreeNode;
   treeIsOpen?: boolean;
   closeTree: () => void;
   openTree: () => void;
 }
 
 interface DataEntryState {
+  domain: SemanticDomainFull;
   existingWords: Word[];
   domainWords: DomainWord[];
   isSmallScreen: boolean;
@@ -83,6 +90,10 @@ export default class DataEntryComponent extends React.Component<
   constructor(props: DataEntryProps) {
     super(props);
     this.state = {
+      domain: newSemanticDomain(
+        this.props.currentDomainTree.id,
+        this.props.currentDomainTree.name
+      ),
       existingWords: [],
       domainWords: [],
       isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
@@ -113,17 +124,12 @@ export default class DataEntryComponent extends React.Component<
   }
 
   render(): ReactElement {
-    const semanticDomain = newSemanticDomain(
-      this.props.domain.id,
-      this.props.domain.name
-    );
-
     return (
       <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
         <Grid item>
           <Paper style={paperStyle}>
             <DataEntryHeader
-              domain={this.props.domain}
+              domain={this.state.domain}
               questionsVisible={this.state.questionsVisible}
               setQuestionVisibility={(questionsVisible: boolean) =>
                 this.setState({ questionsVisible })
@@ -131,7 +137,7 @@ export default class DataEntryComponent extends React.Component<
             />
             <Divider />
             <DataEntryTable
-              semanticDomain={semanticDomain}
+              semanticDomain={this.props.currentDomainTree}
               treeIsOpen={this.props.treeIsOpen}
               openTree={this.props.openTree}
               getWordsFromBackend={() => this.getWordsFromBackend()}
@@ -144,7 +150,7 @@ export default class DataEntryComponent extends React.Component<
           </Paper>
         </Grid>
         <ExistingDataTable
-          domain={this.props.domain}
+          domain={this.props.currentDomainTree}
           typeDrawer={this.state.isSmallScreen}
           domainWords={this.state.domainWords}
           drawerOpen={this.state.drawerOpen}
@@ -159,7 +165,7 @@ export default class DataEntryComponent extends React.Component<
                 this.setState((prevState, props) => ({
                   domainWords: sortDomainWordByVern(
                     prevState.existingWords,
-                    props.domain
+                    props.currentDomainTree
                   ),
                 }));
                 this.props.closeTree();

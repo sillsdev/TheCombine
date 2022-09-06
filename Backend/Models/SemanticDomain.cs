@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
     public class SemanticDomain
-    {
+	{
+        [BsonId]
+        [BsonElement("_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string MongoId { get; set; }
+
         [Required]
         [BsonElement("guid")]
         public string Guid { get; set; }
@@ -24,6 +30,7 @@ namespace BackendFramework.Models
 
         public SemanticDomain()
         {
+            MongoId = "";
             Guid = System.Guid.Empty.ToString();
             Name = "";
             Id = "";
@@ -113,34 +120,39 @@ namespace BackendFramework.Models
     /// </remarks>
     public class SemanticDomainTreeNode
     {
-        [Required]
-        [BsonElement("lang")]
-        public string Lang { get; set; }
-        [Required]
-        [BsonElement("guid")]
-        public Guid Guid { get; set; }
-        [Required]
-        [BsonElement("name")]
-        public string Name { get; set; }
-        [Required]
-        [BsonElement("id")]
-        public string Id { get; set; }
-        [Required]
-        [BsonElement("prev")]
-        public SemanticDomain? Previous { get; set; }
-        [Required]
-        [BsonElement("next")]
-        public SemanticDomain? Next { get; set; }
-        [Required]
-        [BsonElement("children")]
-        public List<SemanticDomain> Children { get; set; }
+		[BsonId]
+		[BsonElement("_id")]
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string MongoId { get; set; }
 
-        public SemanticDomainTreeNode(SemanticDomain sd)
-        {
-            Lang = sd.Lang;
-            Name = sd.Name;
-            Id = sd.Id;
-            Children = new List<SemanticDomain>();
-        }
-    }
+		[Required]
+		[BsonElement("lang")]
+		public string Lang { get; set; }
+		[Required]
+		[BsonElement("guid")]
+		public Guid Guid { get; set; }
+		[Required]
+		[BsonElement("name")]
+		public string Name { get; set; }
+		[Required]
+		[BsonElement("id")]
+		public string Id { get; set; }
+		[BsonElement("prev")]
+		public SemanticDomain? Previous { get; set; }
+		[BsonElement("next")]
+		public SemanticDomain? Next { get; set; }
+		[BsonElement("parent")]
+		public SemanticDomain? Parent { get; set; }
+		[BsonElement("children")]
+		public List<SemanticDomain> Children { get; set; }
+
+		public SemanticDomainTreeNode(SemanticDomain sd)
+		{
+			MongoId = sd.MongoId;
+			Lang = sd.Lang;
+			Name = sd.Name;
+			Id = sd.Id;
+			Children = new List<SemanticDomain>();
+		}
+	}
 }

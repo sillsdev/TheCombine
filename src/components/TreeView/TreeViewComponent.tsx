@@ -4,7 +4,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import { WritingSystem } from "api";
+import { SemanticDomain, SemanticDomainTreeNode, WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {
@@ -12,7 +12,6 @@ import {
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
 import { StoreState } from "types";
-import { TreeSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
@@ -28,9 +27,6 @@ export interface TreeViewProps extends WithTranslation {
 export function TreeView(props: TreeViewProps): ReactElement {
   const currentDomain = useSelector(
     (state: StoreState) => state.treeViewState.currentDomain
-  );
-  const domainMap = useSelector(
-    (state: StoreState) => state.treeViewState.domainMap
   );
   const semDomLanguage = useSelector(
     (state: StoreState) => state.treeViewState.language
@@ -60,7 +56,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
     props.i18n.resolvedLanguage,
   ]);
 
-  function animateHandler(domain: TreeSemanticDomain): Promise<void> {
+  function animateHandler(domain: SemanticDomain): Promise<void> {
     if (visible) {
       setVisible(false);
       return new Promise((resolve) =>
@@ -81,11 +77,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
     <React.Fragment>
       {/* Domain search */}
       <Grid container justifyContent="center">
-        <TreeSearch
-          currentDomain={currentDomain}
-          domainMap={domainMap}
-          animate={animateHandler}
-        />
+        <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
       </Grid>
       {/* Domain tree */}
       <Zoom
@@ -109,7 +101,6 @@ export function TreeView(props: TreeViewProps): ReactElement {
           <TreeDepiction
             currentDomain={currentDomain}
             animate={animateHandler}
-            domainMap={domainMap}
           />
         </Grid>
       </Zoom>

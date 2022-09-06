@@ -7,6 +7,7 @@ import {
   AutocompleteSetting,
   Note,
   SemanticDomain,
+  SemanticDomainTreeNode,
   Sense,
   Word,
   WritingSystem,
@@ -26,7 +27,7 @@ import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 export const exitButtonId = "exit-to-domain-tree";
 
 interface DataEntryTableProps extends WithTranslation {
-  semanticDomain: SemanticDomain;
+  semanticDomain: SemanticDomainTreeNode;
   treeIsOpen?: boolean;
   openTree: () => void;
   getWordsFromBackend: () => Promise<Word[]>;

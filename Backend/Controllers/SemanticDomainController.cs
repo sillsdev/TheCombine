@@ -26,19 +26,27 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns <see cref="SemanticDomainFull"/> with specified id and in specified language </summary>
-        [HttpGet("{lang}/domain/{id}", Name = "GetSemanticDomainFull")]
+        [HttpGet("domainFull", Name = "GetSemanticDomainFull")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainFull))]
-        public IActionResult GetSemanticDomainFull(string id, string lang)
+        public async Task<IActionResult> GetSemanticDomainFull(string id, string lang)
         {
-            return Ok(_semDomRepo.GetSemanticDomainFull(id, lang));
+            return Ok(await _semDomRepo.GetSemanticDomainFull(id, lang));
         }
 
         /// <summary> Returns <see cref="SemanticDomainFull"/> with specified id and in specified language </summary>
-        [HttpGet("{lang}/node/{id}", Name = "GetSemanticDomainTreeNode")]
+        [HttpGet("domainTreeNode", Name = "GetSemanticDomainTreeNode")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
-        public IActionResult GetSemanticDomainTreeNode(string id, string lang)
+        public async Task<IActionResult> GetSemanticDomainTreeNode(string id, string lang)
         {
-            return Ok(_semDomRepo.GetSemanticDomainTreeNode(id, lang));
-        }
-    }
+            return Ok(await _semDomRepo.GetSemanticDomainTreeNode(id, lang));
+		}
+
+		/// <summary> Returns <see cref="SemanticDomainFull"/> with specified id and in specified language </summary>
+		[HttpGet("domainByName", Name = "GetSemanticDomainTreeNodeByName")]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
+		public async Task<IActionResult> GetSemanticDomainTreeNodeByName(string name, string lang)
+		{
+			return Ok(await _semDomRepo.GetSemanticDomainTreeNodeByName(name, lang));
+		}
+	}
 }

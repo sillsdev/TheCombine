@@ -1,14 +1,16 @@
 import { Grid, TextField } from "@material-ui/core";
+import { SemanticDomainTreeNode } from "api";
+import {
+  getSemanticDomainTreeNode,
+  getSemanticDomainTreeNodeByName,
+} from "backend";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
-
 export interface TreeSearchProps {
-  currentDomain: TreeSemanticDomain;
-  domainMap: DomainMap;
-  animate: (domain: TreeSemanticDomain) => Promise<void>;
+  currentDomain: SemanticDomainTreeNode;
+  animate: (domain: SemanticDomainTreeNode) => Promise<void>;
 }
 
 export const testId = "testSearch";
@@ -69,21 +71,19 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [searchError, setSearchError] = useState<boolean>(false);
 
   // Searches for a semantic domain by name
-  function searchDomainByName(target: string): TreeSemanticDomain | undefined {
-    const check = (checkAgainst: TreeSemanticDomain | undefined) =>
-      checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
-    for (const domain of Object.values(props.domainMap)) {
-      if (check(domain)) {
-        return domain;
-      }
-    }
-    return undefined;
+  function searchDomainByName(
+    target: string
+  ): SemanticDomainTreeNode | undefined {
+    /// TODO: Add api search for domain by name to the backend api and use it
+    let domain: SemanticDomainTreeNode | undefined;
+    getSemanticDomainTreeNodeByName(target, "en").then((res) => (domain = res));
+    return domain;
   }
 
   /** Animate the domain and clear search input after successfully searching
    * for a new domain. */
   function animateSuccessfulSearch(
-    domain: TreeSemanticDomain,
+    domain: SemanticDomainTreeNode,
     event: React.KeyboardEvent
   ): void {
     props.animate(domain);
@@ -101,22 +101,24 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 
       // Search for domain
       if (!isNaN(parseInt(input))) {
-        const domain = props.domainMap[input];
-        if (domain) {
-          animateSuccessfulSearch(domain, event);
-          // Return to indicate success and skip setting error state.
-          return;
-        }
+        // make a blocking call to the backend API for the domain id instead of using the map
+        getSemanticDomainTreeNode(input, "en").then((domain) => {
+          if (domain) {
+            animateSuccessfulSearch(domain, event);
+            // Return to indicate success and skip setting error state.
+            return;
+          }
+        });
       } else {
-        const domain = searchDomainByName(input);
-        if (domain !== undefined) {
-          animateSuccessfulSearch(domain, event);
+        const domainByName = searchDomainByName(input);
+        if (domainByName !== undefined) {
+          animateSuccessfulSearch(domainByName, event);
           // Return to indicate success and skip setting error state.
           return;
         }
+        // Did not find a domain through either numerical or textual search.
+        setSearchError(true);
       }
-      // Did not find a domain through either numerical or textual search.
-      setSearchError(true);
     }
   }
 

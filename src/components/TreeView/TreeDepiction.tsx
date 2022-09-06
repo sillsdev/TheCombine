@@ -14,7 +14,7 @@ import {
   teeUpLeft,
   teeUpRight,
 } from "resources/tree";
-import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
+import { SemanticDomainTreeNode } from "api";
 
 const MAX_COL_WIDTH = 50; // Max gap.
 const MIN_COL_WIDTH = 30; // Multiply this by RATIO_TILE_TO_GAP for min tile width.
@@ -22,9 +22,8 @@ const RATIO_TILE_TO_GAP = 3; // Must be odd.
 const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded down.
 
 interface TreeDepictionProps {
-  currentDomain: TreeSemanticDomain;
-  domainMap: DomainMap;
-  animate: (domain: TreeSemanticDomain) => Promise<void>;
+  currentDomain: SemanticDomainTreeNode;
+  animate: (domain: SemanticDomainTreeNode) => Promise<void>;
 }
 
 interface TreeDepictionState {
@@ -58,7 +57,7 @@ export default class TreeDepiction extends React.Component<
 
   // Computes a new width for each tile
   updateColWidth() {
-    const length = this.props.currentDomain.childIds.length;
+    const length = this.props.currentDomain.children?.length;
     const clientWidth = document.documentElement.clientWidth;
     let colWidth = length
       ? Math.floor(clientWidth / (length * (RATIO_TILE_TO_GAP + 1) - 1))
@@ -77,8 +76,8 @@ export default class TreeDepiction extends React.Component<
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactElement {
-    const childIds = this.props.currentDomain.childIds;
-    const cols = childIds.length * (RATIO_TILE_TO_GAP + 1) - 1;
+    const children = this.props.currentDomain.children;
+    const cols = children ? children.length : 0 * (RATIO_TILE_TO_GAP + 1) - 1;
     return (
       <ImageList
         cols={cols}
@@ -95,7 +94,9 @@ export default class TreeDepiction extends React.Component<
   // Creates the joist connecting current domain with subdomains
   joistRow(): ReactElement[] {
     const row: ReactElement[] = [];
-    const teeCount = this.props.currentDomain.childIds.length - 2;
+    const teeCount = this.props.currentDomain.children
+      ? this.props.currentDomain.children.length
+      : 0 - 2;
     const middleTeeCount = teeCount % 2;
     const halfTeeCount = (teeCount - middleTeeCount) / 2;
 
@@ -143,16 +144,16 @@ export default class TreeDepiction extends React.Component<
 
   // Places the subdomain tiles
   domainRow(): ReactElement[] {
-    const childIds = this.props.currentDomain.childIds;
+    const children = this.props.currentDomain.children;
     const subdomains: ReactElement[] = [];
-    childIds.forEach((childId, i) => {
+    children?.forEach((child, i) => {
       if (i > 0) {
         subdomains.push(<ImageListItem key={"GapTile" + i} />);
       }
       subdomains.push(
         <ImageListItem key={"DomainTile" + i} cols={RATIO_TILE_TO_GAP}>
           <DomainTile
-            domain={this.props.domainMap[childId]}
+            domain={child}
             onClick={(d) => this.props.animate(d)}
             direction={Direction.Down}
           />
@@ -197,7 +198,7 @@ export default class TreeDepiction extends React.Component<
       <React.Fragment>
         {/* Label parent domain, if available */}
         <Grid item>
-          {currentDomain.parentId !== undefined && (
+          {currentDomain.parent !== undefined && (
             <ImageList
               cols={1}
               gap={0}
@@ -206,7 +207,7 @@ export default class TreeDepiction extends React.Component<
             >
               <ImageListItem>
                 <DomainTile
-                  domain={this.props.domainMap[currentDomain.parentId]}
+                  domain={this.props.currentDomain.parent!}
                   onClick={this.props.animate}
                   direction={Direction.Up}
                 />
@@ -220,14 +221,15 @@ export default class TreeDepiction extends React.Component<
         <Grid item>
           <TreeViewHeader
             currentDomain={currentDomain}
-            domainMap={this.props.domainMap}
             animate={this.props.animate}
           />
         </Grid>
 
         {/* Label subdomains, if available */}
         <Grid item>
-          {currentDomain.childIds.length > 0 && this.subDomains()}
+          {currentDomain.children &&
+            currentDomain.children?.length > 0 &&
+            this.subDomains()}
         </Grid>
       </React.Fragment>
     );
