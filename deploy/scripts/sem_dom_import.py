@@ -210,7 +210,7 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
         elif field.tag == "Abbreviation":
             for abbrev_node in field:
                 lang, id_text = get_auni_text(abbrev_node)
-                logging.info(f"id[{lang}]='{id_text}'")
+                logging.debug(f"id[{lang}]='{id_text}'")
                 domain_set[lang].id = id_text
         elif field.tag == "Description":
             for descr_node in field:
@@ -265,17 +265,8 @@ def write_json(output_dir: Path) -> None:
                 file.write(f"{domain_tree[lang][id].to_json()}\n")
 
 
-def main() -> None:
-    args = parse_args()
-    # setup logging levels
-    if args.debug:
-        log_level = logging.DEBUG
-    elif args.verbose:
-        log_level = logging.INFO
-    else:
-        log_level = logging.WARNING
-    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
-    for xmlfile in args.input_files:
+def generate_semantic_domains(input_files:List[Path], output_dir:Path):
+    for xmlfile in input_files:
         logging.info(f"Parsing {xmlfile}")
         tree = ElementTree.parse(xmlfile)
         root = tree.getroot()
@@ -299,7 +290,20 @@ def main() -> None:
         logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
     for lang in domain_tree:
         logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
-    write_json(args.output_dir)
+    write_json(output_dir)
+
+
+def main() -> None:
+    args = parse_args()
+    # setup logging levels
+    if args.debug:
+        log_level = logging.DEBUG
+    elif args.verbose:
+        log_level = logging.INFO
+    else:
+        log_level = logging.WARNING
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
+    generate_semantic_domains(args.input_files, args.output_dir)
 
 
 if __name__ == "__main__":
