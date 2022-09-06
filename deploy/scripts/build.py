@@ -255,7 +255,7 @@ def main() -> None:
     if args.components is not None:
         to_do = args.components
     else:
-        to_do = ["backend", "database", "frontend", "maintenance"]
+        to_do = build_specs.keys()
 
     # Create the set of jobs to be run for all components
     job_set: Dict[str, JobQueue] = {}

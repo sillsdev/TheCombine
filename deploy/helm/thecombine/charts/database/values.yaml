@@ -5,11 +5,6 @@
 global:
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
-  adminUsername: "Override"
-  adminPassword: "Override"
-  adminEmail: "Override"
-  awsAccount: "Override"
-  awsDefaultRegion: "Override"
   pullSecretName: "None"
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
