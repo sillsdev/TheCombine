@@ -210,7 +210,7 @@ namespace BackendFramework
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddTransient<ISemanticDomainService, SemanticDomainService>();
+            services.AddTransient<ISemanticDomainRepository, SemanticDomainRepository>();
 
             // User types
             services.AddTransient<IUserContext, UserContext>();
@@ -233,6 +233,10 @@ namespace BackendFramework
             // Banner types
             services.AddTransient<IBannerContext, BannerContext>();
             services.AddTransient<IBannerRepository, BannerRepository>();
+
+            // Semantic Domain types
+            // Word types (includes Frontier types)
+            services.AddSingleton<ISemanticDomainsContext, SemanticDomainsContext>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

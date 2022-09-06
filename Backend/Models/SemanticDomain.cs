@@ -2,28 +2,42 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
     public class SemanticDomain
     {
         [Required]
+        [BsonElement("guid")]
+        public string Guid { get; set; }
+        [Required]
+        [BsonElement("name")]
         public string Name { get; set; }
         [Required]
+        [BsonElement("id")]
         public string Id { get; set; }
+
+        [Required]
+        [BsonElement("lang")]
+        public string Lang { get; set; }
 
         public SemanticDomain()
         {
+            Guid = System.Guid.Empty.ToString();
             Name = "";
             Id = "";
+            Lang = "";
         }
 
         public SemanticDomain Clone()
         {
             return new SemanticDomain
             {
-                Name = (string)Name.Clone(),
-                Id = (string)Id.Clone()
+                Guid = Guid,
+                Name = Name,
+                Id = Id,
+                Lang = Lang
             };
         }
 
@@ -34,22 +48,19 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name.Equals(other.Name) && Id.Equals(other.Id);
+            return Name.Equals(other.Name) && Id.Equals(other.Id) && Lang.Equals(other.Lang);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id);
+            return HashCode.Combine(Name, Id, Lang);
         }
     }
 
-    public class SemanticDomainFull
+    public class SemanticDomainFull : SemanticDomain
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Id { get; set; }
-        [Required]
+        [BsonElement("description")]
         public string Description { get; set; }
         [Required]
         public List<string> Questions { get; set; }
@@ -60,21 +71,18 @@ namespace BackendFramework.Models
             Id = "";
             Description = "";
             Questions = new List<string>();
+            Lang = "";
         }
 
-        public SemanticDomainFull Clone()
+        public new SemanticDomainFull Clone()
         {
-            var clone = new SemanticDomainFull
-            {
-                Name = (string)Name.Clone(),
-                Id = (string)Id.Clone(),
-                Description = (string)Description.Clone(),
-                Questions = new List<string>()
-            };
+            var clone = (SemanticDomainFull)base.Clone();
+            clone.Description = Description;
+            clone.Questions = Questions;
 
             foreach (var question in Questions)
             {
-                clone.Questions.Add((string)question.Clone());
+                clone.Questions.Add(question);
             }
 
             return clone;
@@ -88,8 +96,7 @@ namespace BackendFramework.Models
             }
 
             return
-                Name.Equals(other.Name) &&
-                Id.Equals(other.Id) &&
+                base.Equals(other) &&
                 Description.Equals(other.Description) &&
                 Questions.Count == other.Questions.Count &&
                 Questions.All(other.Questions.Contains);
@@ -101,89 +108,39 @@ namespace BackendFramework.Models
         }
     }
 
-    public class SemanticDomainTreeNode
-    {
-        [Required]
-        public SemanticDomain Node { get; set; }
-        [Required]
-        public SemanticDomain Parent { get; set; }
-        [Required]
-        public SemanticDomain Previous { get; set; }
-        [Required]
-        public SemanticDomain Next { get; set; }
-        [Required]
-        public List<SemanticDomain> Children { get; set; }
-
-        public SemanticDomainTreeNode()
-        {
-            Node = new SemanticDomain();
-            Parent = new SemanticDomain();
-            Previous = new SemanticDomain();
-            Next = new SemanticDomain();
-            Children = new List<SemanticDomain>();
-        }
-
-        public SemanticDomainTreeNode Clone()
-        {
-            var clone = new SemanticDomainTreeNode
-            {
-                Node = Node.Clone(),
-                Parent = Parent.Clone(),
-                Previous = Previous.Clone(),
-                Next = Next.Clone(),
-                Children = new List<SemanticDomain>()
-            };
-
-            foreach (var child in Children)
-            {
-                clone.Children.Add(child.Clone());
-            }
-
-            return clone;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not SemanticDomainTreeNode other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                Node.Equals(other.Node) &&
-                Parent.Equals(other.Parent) &&
-                Previous.Equals(other.Previous) &&
-                Next.Equals(other.Next) &&
-                Children.Count == other.Children.Count &&
-                Children.All(other.Children.Contains);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Node, Parent, Previous, Next, Children);
-        }
-    }
-
     /// <remarks>
     /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
     /// </remarks>
-    public class SemanticDomainWithSubdomains
+    public class SemanticDomainTreeNode
     {
         [Required]
+        [BsonElement("lang")]
+        public string Lang { get; set; }
+        [Required]
+        [BsonElement("guid")]
+        public Guid Guid { get; set; }
+        [Required]
+        [BsonElement("name")]
         public string Name { get; set; }
         [Required]
+        [BsonElement("id")]
         public string Id { get; set; }
         [Required]
-        public string Description { get; set; }
+        [BsonElement("prev")]
+        public SemanticDomain? Previous { get; set; }
         [Required]
-        public List<SemanticDomainWithSubdomains> Subdomains { get; set; }
+        [BsonElement("next")]
+        public SemanticDomain? Next { get; set; }
+        [Required]
+        [BsonElement("children")]
+        public List<SemanticDomain> Children { get; set; }
 
-        public SemanticDomainWithSubdomains(SemanticDomain sd)
+        public SemanticDomainTreeNode(SemanticDomain sd)
         {
+            Lang = sd.Lang;
             Name = sd.Name;
             Id = sd.Id;
-            Description = "";
-            Subdomains = new List<SemanticDomainWithSubdomains>();
+            Children = new List<SemanticDomain>();
         }
     }
 }

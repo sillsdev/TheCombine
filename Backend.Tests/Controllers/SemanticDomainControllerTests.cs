@@ -16,7 +16,7 @@ namespace Backend.Tests.Controllers
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
         private IPermissionService _permissionService = null!;
-        private ISemanticDomainService _semDomService = null!;
+        private ISemanticDomainRepository _semDomService = null!;
         private SemanticDomainController _semDomController = null!;
 
         private User _jwtAuthenticatedUser = null!;

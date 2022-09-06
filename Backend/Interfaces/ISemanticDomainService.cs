@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
-    public interface ISemanticDomainService
+    public interface ISemanticDomainRepository
     {
-        List<SemanticDomainWithSubdomains> ParseSemanticDomains(Project proj);
+        Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang);
+        Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang);
     }
 }
