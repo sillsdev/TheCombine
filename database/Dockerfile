@@ -6,5 +6,5 @@ RUN mkdir /data/semantic-domains
 
 # Copy semantic domain import files
 COPY semantic_domains/* /data/semantic-domains/
-# Copy scripts to /usr/local/bin
-COPY scripts/* /usr/local/bin/
+# Copy database initialization scripts to /docker-entrypoint-initdb.d
+COPY docker-entrypoint-initdb.d/* /docker-entrypoint-initdb.d/

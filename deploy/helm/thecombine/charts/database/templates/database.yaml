@@ -37,20 +37,9 @@ spec:
       labels:
         combine-component: database
     spec:
-      initContainers:
-        - name: init_sem_dom
-          image: {{ template "database.containerImage" . }}
-          imagePullPolicy: {{ template "database.imagePullPolicy" . }}
-          command: [ "sh", "-c", "/usr/local/bin/update-semantic-domains.sh" ]
-          ports:
-            - containerPort: 27017
-          resources: {}
-          volumeMounts:
-            - mountPath: /data/db
-              name: database-data
       containers:
-        - image: mongo:{{ .Values.mongoImageTag }}
-          imagePullPolicy: IfNotPresent
+        - image: {{ template "database.containerImage" . }}
+          imagePullPolicy: {{ template "database.imagePullPolicy" . }}
           name: database
           ports:
             - containerPort: 27017
