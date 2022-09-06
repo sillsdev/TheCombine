@@ -22,16 +22,28 @@ import { SemanticDomain } from "./semantic-domain";
 export interface SemanticDomainTreeNode {
   /**
    *
-   * @type {SemanticDomain}
+   * @type {string}
    * @memberof SemanticDomainTreeNode
    */
-  node: SemanticDomain;
+  lang: string;
   /**
    *
-   * @type {SemanticDomain}
+   * @type {string}
    * @memberof SemanticDomainTreeNode
    */
-  parent: SemanticDomain;
+  guid: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainTreeNode
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainTreeNode
+   */
+  id: string;
   /**
    *
    * @type {SemanticDomain}

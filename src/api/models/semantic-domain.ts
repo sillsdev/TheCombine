@@ -23,6 +23,12 @@ export interface SemanticDomain {
    * @type {string}
    * @memberof SemanticDomain
    */
+  guid: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
   name: string;
   /**
    *
@@ -30,4 +36,10 @@ export interface SemanticDomain {
    * @memberof SemanticDomain
    */
   id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
+  lang: string;
 }
