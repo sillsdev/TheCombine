@@ -265,7 +265,7 @@ def write_json(output_dir: Path) -> None:
                 file.write(f"{domain_tree[lang][id].to_json()}\n")
 
 
-def generate_semantic_domains(input_files:List[Path], output_dir:Path):
+def generate_semantic_domains(input_files: List[Path], output_dir: Path) -> None:
     for xmlfile in input_files:
         logging.info(f"Parsing {xmlfile}")
         tree = ElementTree.parse(xmlfile)

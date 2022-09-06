@@ -21,8 +21,8 @@ from typing import Callable, Dict, List, Optional
 
 from app_release import get_release, set_release
 from enum_types import JobStatus
-from streamfile import StreamFile
 from sem_dom_import import generate_semantic_domains
+from streamfile import StreamFile
 
 
 @dataclass(frozen=True)
@@ -120,12 +120,13 @@ class JobQueue:
 project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
 
+
 # Pre-build functions for the different build components
 def build_semantic_domains() -> None:
     """Create the semantic domain definition files."""
     source_dir = project_dir / "deploy" / "scripts" / "semantic_domains" / "xml"
-    output_dir = project_dir / "database"/ "semantic_domains"
-    generate_semantic_domains(source_dir.glob("*.xml"), output_dir)
+    output_dir = project_dir / "database" / "semantic_domains"
+    generate_semantic_domains(list(source_dir.glob("*.xml")), output_dir)
 
 
 def create_release_file() -> None:
@@ -133,11 +134,13 @@ def create_release_file() -> None:
     release_file = project_dir / "public" / "scripts" / "release.js"
     set_release(get_release(), release_file)
 
+
 def rm_release_file() -> None:
     """Remove release.js file if it exists."""
     release_file = project_dir / "public" / "scripts" / "release.js"
     if release_file.exists():
         release_file.unlink()
+
 
 def no_op() -> None:
     pass
