@@ -90,3 +90,31 @@ def get_helm_opts(args: argparse.Namespace) -> List[str]:
     if args.debug:
         helm_opts.append("--debug")
     return helm_opts
+
+
+def get_kubecfg() -> str:
+    curr_context = ""
+    context_list: List[str] = []
+
+    result = run_cmd(["kubectl", "config", "get-contexts", "--no-headers"], check_results=True)
+    for line in result.stdout.splitlines():
+        if line[0] == '*':
+            curr_context = line.split()[1]
+            context_list.append(curr_context)
+        else:
+            context_list.append(line.split()[0])
+    
+    if len(context_list) > 1:
+        print("Available contexts:")
+        for context in context_list:
+            print(f"\t{context}")
+        while True:
+            reply = input(f"Select context({curr_context}): ")
+            if not reply:
+                break
+            elif reply in context_list:
+                curr_context = reply
+                break
+            else:
+                print("Reply not recognized.  Please re-enter.")
+    return curr_context
