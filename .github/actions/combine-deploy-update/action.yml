@@ -33,6 +33,11 @@ runs:
     - name: Deploy updated images
       run: echo "Update images with version ${{ inputs.image_tag }}"
       shell: bash
+    - name: Update database
+      run: kubectl --context ${{ inputs.kube_context }}
+        set image deployment/database
+        database="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_database:${{ inputs.image_tag }}"
+      shell: bash
     - name: Update frontend
       run: kubectl --context ${{ inputs.kube_context }}
         set image deployment/frontend
