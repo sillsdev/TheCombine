@@ -1,0 +1,24 @@
+name: database
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  docker_build:
+    if: ${{ github.event.type }} == "PullRequest"
+    runs-on: ubuntu-latest
+    steps:
+      # For subfolders, currently a full checkout is required.
+      # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build database image
+        run: |
+          deploy/scripts/build.py --components database
+        shell: bash
+      - name: Image digest
+        run: |
+          docker image inspect combine_database:latest -f '{{json .Id}}'
+        shell: bash
