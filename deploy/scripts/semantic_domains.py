@@ -39,6 +39,8 @@ class SemanticDomain:
 
 
 class SemanticDomainFull(SemanticDomain):
+    flatten_questions = True
+
     def __init__(self, _guid: Optional[UUID], _lang: str, _name: str, _id: str = "") -> None:
         super().__init__(_guid, _lang, _name, _id)
         self.description = ""
@@ -51,22 +53,28 @@ class SemanticDomainFull(SemanticDomain):
         return SemanticDomainTreeNode(self.guid, self.lang, self.name, self.id)
 
     def to_json(self) -> str:
-        question_list: List[Dict[str, str]] = []
+        full_question_list: List[Dict[str, str]] = []
+        flat_question_list: List[str] = []
         for item in self.questions:
-            question_list.append(
-                {
-                    "question": item.question,
-                    "example_words": item.example_words,
-                    "example_sentences": item.example_sentences,
-                }
-            )
+            if SemanticDomainFull.flatten_questions:
+                flat_question_list.append(item.question)
+            else:
+                full_question_list.append(
+                    {
+                        "question": item.question,
+                        "example_words": item.example_words,
+                        "example_sentences": item.example_sentences,
+                    }
+                )
         data = {
             "guid": "" if self.guid is None else str(self.guid),
             "lang": self.lang,
             "name": self.name,
             "id": self.id,
             "description": self.description,
-            "questions": question_list,
+            "questions": (
+                flat_question_list if SemanticDomainFull.flatten_questions else full_question_list
+            ),
         }
         return json.dumps(data, indent=4)
 

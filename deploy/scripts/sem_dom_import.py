@@ -56,6 +56,13 @@ def parse_args() -> argparse.Namespace:
         default=str(default_output_dir),
         help="Default directory for the output files.",
     )
+    parser.add_argument(
+        "--question-mode",
+        "-q",
+        choices=["full", "flat"],
+        default="flat",
+        help="Structure to be used for the domain questions.",
+    )
     logging_group = parser.add_mutually_exclusive_group()
     logging_group.add_argument(
         "--verbose", "-v", action="store_true", help="Print detailed progress information."
@@ -265,7 +272,9 @@ def write_json(output_dir: Path) -> None:
                 file.write(f"{domain_tree[lang][id].to_json()}\n")
 
 
-def generate_semantic_domains(input_files: List[Path], output_dir: Path) -> None:
+def generate_semantic_domains(
+    input_files: List[Path], output_dir: Path, *, flatten_questions: bool = True
+) -> None:
     for xmlfile in input_files:
         logging.info(f"Parsing {xmlfile}")
         tree = ElementTree.parse(xmlfile)
@@ -290,6 +299,8 @@ def generate_semantic_domains(input_files: List[Path], output_dir: Path) -> None
         logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
     for lang in domain_tree:
         logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
+    if not flatten_questions:
+        SemanticDomainFull.flatten_questions = False
     write_json(output_dir)
 
 
@@ -303,7 +314,9 @@ def main() -> None:
     else:
         log_level = logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
-    generate_semantic_domains(args.input_files, args.output_dir)
+    generate_semantic_domains(
+        args.input_files, args.output_dir, flatten_questions=(args.question_mode == "flat")
+    )
 
 
 if __name__ == "__main__":
