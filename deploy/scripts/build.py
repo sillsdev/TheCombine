@@ -17,10 +17,11 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional
 
 from app_release import get_release, set_release
 from enum_types import JobStatus
+from sem_dom_import import generate_semantic_domains
 from streamfile import StreamFile
 
 
@@ -28,6 +29,8 @@ from streamfile import StreamFile
 class BuildSpec:
     dir: Path
     name: str
+    pre_build: Callable[[], None]
+    post_build: Callable[[], None]
 
 
 @dataclass
@@ -118,6 +121,41 @@ project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
 
 
+# Pre-build functions for the different build components
+def build_semantic_domains() -> None:
+    """Create the semantic domain definition files."""
+    source_dir = project_dir / "deploy" / "scripts" / "semantic_domains" / "xml"
+    output_dir = project_dir / "database" / "semantic_domains"
+    generate_semantic_domains(list(source_dir.glob("*.xml")), output_dir)
+
+
+def create_release_file() -> None:
+    """Create the release.js file to be built into the Frontend."""
+    release_file = project_dir / "public" / "scripts" / "release.js"
+    set_release(get_release(), release_file)
+
+
+def rm_release_file() -> None:
+    """Remove release.js file if it exists."""
+    release_file = project_dir / "public" / "scripts" / "release.js"
+    if release_file.exists():
+        release_file.unlink()
+
+
+def no_op() -> None:
+    pass
+
+
+# Create a dictionary to look up the build spec from
+# a component name
+build_specs: Dict[str, BuildSpec] = {
+    "backend": BuildSpec(project_dir / "Backend", "backend", no_op, no_op),
+    "database": BuildSpec(project_dir / "database", "database", build_semantic_domains, no_op),
+    "maintenance": BuildSpec(project_dir / "maintenance", "maint", no_op, no_op),
+    "frontend": BuildSpec(project_dir, "frontend", create_release_file, rm_release_file),
+}
+
+
 def get_image_name(repo: Optional[str], component: str, tag: Optional[str]) -> str:
     """Build the image name from the repo, the component, and the image tag."""
     tag_str = ""
@@ -137,7 +175,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--components",
         nargs="*",
-        choices=["frontend", "backend", "maintenance"],
+        choices=build_specs.keys(),
         help="Combine components to build.",
     )
     parser.add_argument(
@@ -180,13 +218,6 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Print extra debugging information.",
     )
-    group.add_argument(
-        "--info",
-        "-i",
-        action="store_true",
-        help="Print info when jobs start and stop in addition to job output.",
-    )
-    # Transform --output-mode argument to an enumerated type
     return parser.parse_args()
 
 
@@ -198,10 +229,10 @@ def main() -> None:
     # independent of the logging facility
     if args.debug:
         log_level = logging.DEBUG
-    elif args.info:
-        log_level = logging.INFO
-    else:
+    elif args.quiet:
         log_level = logging.WARNING
+    else:
+        log_level = logging.INFO
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     # Setup required build engine - docker or nerdctl
@@ -224,25 +255,13 @@ def main() -> None:
     if args.components is not None:
         to_do = args.components
     else:
-        to_do = ["backend", "frontend", "maintenance"]
-
-    # Create a dictionary to look up the build spec from
-    # a component name
-    build_specs: Dict[str, BuildSpec] = {
-        "backend": BuildSpec(project_dir / "Backend", "backend"),
-        "maintenance": BuildSpec(project_dir / "maintenance", "maint"),
-        "frontend": BuildSpec(project_dir, "frontend"),
-    }
-
-    # Create the version file
-    release_file = project_dir / "public" / "scripts" / "release.js"
-
-    set_release(get_release(), release_file)
+        to_do = build_specs.keys()
 
     # Create the set of jobs to be run for all components
     job_set: Dict[str, JobQueue] = {}
     for component in to_do:
         spec = build_specs[component]
+        spec.pre_build()
         image_name = get_image_name(args.repo, spec.name, args.tag)
         job_set[component] = JobQueue(component)
         job_set[component].add_job(
@@ -279,9 +298,10 @@ def main() -> None:
         if not running_jobs:
             break
         time.sleep(5.0)
-    # Remove the version file
-    if release_file.exists():
-        release_file.unlink()
+    # Run the post_build cleanup functions
+    for component in to_do:
+        build_specs[component].post_build()
+
     # Print job summary if output mode is ALL
     if not args.quiet:
         logging.info("Job Summary:")

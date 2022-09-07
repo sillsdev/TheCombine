@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        component: [frontend, backend, maintenance]
+        component: [frontend, backend, maintenance, database]
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}

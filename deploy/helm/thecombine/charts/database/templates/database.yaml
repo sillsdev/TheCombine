@@ -38,8 +38,8 @@ spec:
         combine-component: database
     spec:
       containers:
-        - image: mongo:{{ .Values.mongoImageTag }}
-          imagePullPolicy: IfNotPresent
+        - image: {{ template "database.containerImage" . }}
+          imagePullPolicy: {{ template "database.imagePullPolicy" . }}
           name: database
           ports:
             - containerPort: 27017
