@@ -1,10 +1,10 @@
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import { SemanticDomainTreeNode } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/MockSemanticDomain";
-import { SemanticDomainTreeNode } from "api";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {

@@ -1,11 +1,13 @@
 import { Switch, Typography } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
-import { SemanticDomainFull } from "api/models";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
-("types/semanticDomain");
+
+import { SemanticDomainFull } from "api/models";
 import theme from "types/theme";
+
+("types/semanticDomain");
 
 interface DataEntryHeaderProps extends WithTranslation {
   domain: SemanticDomainFull;

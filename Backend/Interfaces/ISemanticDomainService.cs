@@ -8,5 +8,5 @@ namespace BackendFramework.Interfaces
         Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang);
         Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang);
         Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang);
-	}
+    }
 }

@@ -14,9 +14,9 @@ import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeade
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
 import TreeView from "components/TreeView/TreeViewComponent";
+import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
-import { newSemanticDomain } from "types/semanticDomain";
 
 interface DataEntryProps {
   currentDomainTree: SemanticDomainTreeNode;

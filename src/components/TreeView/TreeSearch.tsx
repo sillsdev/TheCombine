@@ -1,12 +1,13 @@
 import { Grid, TextField } from "@material-ui/core";
+import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Key } from "ts-key-enum";
+
 import { SemanticDomainTreeNode } from "api";
 import {
   getSemanticDomainTreeNode,
   getSemanticDomainTreeNodeByName,
 } from "backend";
-import React, { ReactElement, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Key } from "ts-key-enum";
 
 export interface TreeSearchProps {
   currentDomain: SemanticDomainTreeNode;

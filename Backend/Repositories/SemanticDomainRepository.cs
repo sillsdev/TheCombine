@@ -24,11 +24,11 @@ namespace BackendFramework.Services
                 filterDef.Eq(x => x.Lang, lang));
 
             var filterEn = filterDef.Eq("Lang", "en");
-			var filterId = filterDef.Eq("id", "1");
+            var filterId = filterDef.Eq("id", "1");
 
-			Console.WriteLine("Total in Lang = " + lang + ";id=" + id + ": " + _context.SemanticDomains.CountDocuments(filter: filterEn));
-			Console.WriteLine("Total in Lang = " + lang + ";id=" + id + ": " + _context.SemanticDomains.CountDocuments(filter: filterId));
-			var domain = await _context.SemanticDomains.FindAsync(filter: filter);
+            Console.WriteLine("Total in Lang = " + lang + ";id=" + id + ": " + _context.SemanticDomains.CountDocuments(filter: filterEn));
+            Console.WriteLine("Total in Lang = " + lang + ";id=" + id + ": " + _context.SemanticDomains.CountDocuments(filter: filterId));
+            var domain = await _context.SemanticDomains.FindAsync(filter: filter);
             try
             {
                 return await domain.FirstAsync();
@@ -42,27 +42,27 @@ namespace BackendFramework.Services
             }
         }
 
-		public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
-		{
-			var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
-			var filter = filterDef.And(
-				filterDef.Eq(x => x.Name, name),
-				filterDef.Eq(x => x.Lang, lang));
-			var domain = await _context.SemanticDomains.FindAsync(filter: filter);
-			try
-			{
-				return await domain.FirstAsync();
-			}
-			catch (InvalidOperationException e)
-			{
-				Console.WriteLine(e.Message);
-				Console.WriteLine("****");
-				Console.WriteLine(e.StackTrace);
-				return null;
-			}
-		}
+        public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
+        {
+            var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.Name, name),
+                filterDef.Eq(x => x.Lang, lang));
+            var domain = await _context.SemanticDomains.FindAsync(filter: filter);
+            try
+            {
+                return await domain.FirstAsync();
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("****");
+                Console.WriteLine(e.StackTrace);
+                return null;
+            }
+        }
 
-		public async Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
+        public async Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
         {
             var filterDef = new FilterDefinitionBuilder<SemanticDomainFull>();
             var filter = filterDef.And(

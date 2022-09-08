@@ -7,8 +7,8 @@ import {
 import { useCallback, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import { SemanticDomain, SemanticDomainTreeNode } from "api";
+import DomainTile, { Direction } from "components/TreeView/DomainTile";
 
 export interface TreeHeaderProps {
   currentDomain: SemanticDomainTreeNode;
@@ -68,7 +68,7 @@ export function useTreeNavigation(props: TreeHeaderProps) {
       return undefined;
     }
 
-    let domainTreeNode: SemanticDomainTreeNode | undefined = undefined;
+    const domainTreeNode: SemanticDomainTreeNode | undefined = undefined;
 
     return domainTreeNode;
   }

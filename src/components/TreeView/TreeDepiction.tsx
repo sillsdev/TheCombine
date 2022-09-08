@@ -1,6 +1,7 @@
 import { Grid, ImageList, ImageListItem } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
+import { SemanticDomainTreeNode } from "api";
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import { TreeViewHeader } from "components/TreeView/TreeViewHeader";
 import {
@@ -14,7 +15,6 @@ import {
   teeUpLeft,
   teeUpRight,
 } from "resources/tree";
-import { SemanticDomainTreeNode } from "api";
 
 const MAX_COL_WIDTH = 50; // Max gap.
 const MIN_COL_WIDTH = 30; // Multiply this by RATIO_TILE_TO_GAP for min tile width.
@@ -77,7 +77,7 @@ export default class TreeDepiction extends React.Component<
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactElement {
     const children = this.props.currentDomain.children;
-    const cols = children ? children.length : 0 * (RATIO_TILE_TO_GAP + 1) - 1;
+    const cols = (children ? children.length : 0) * (RATIO_TILE_TO_GAP + 1) - 1;
     return (
       <ImageList
         cols={cols}
@@ -94,9 +94,10 @@ export default class TreeDepiction extends React.Component<
   // Creates the joist connecting current domain with subdomains
   joistRow(): ReactElement[] {
     const row: ReactElement[] = [];
-    const teeCount = this.props.currentDomain.children
-      ? this.props.currentDomain.children.length
-      : 0 - 2;
+    const teeCount =
+      (this.props.currentDomain.children
+        ? this.props.currentDomain.children.length
+        : 0) - 2;
     const middleTeeCount = teeCount % 2;
     const halfTeeCount = (teeCount - middleTeeCount) / 2;
 
@@ -228,7 +229,7 @@ export default class TreeDepiction extends React.Component<
         {/* Label subdomains, if available */}
         <Grid item>
           {currentDomain.children &&
-            currentDomain.children?.length > 0 &&
+            currentDomain.children.length > 0 &&
             this.subDomains()}
         </Grid>
       </React.Fragment>

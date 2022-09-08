@@ -5,8 +5,9 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
-import { SemanticDomain } from "api/models";
 import React, { ReactElement } from "react";
+
+import { SemanticDomain } from "api/models";
 
 export enum Direction {
   Down,
