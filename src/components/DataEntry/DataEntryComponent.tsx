@@ -92,7 +92,8 @@ export default class DataEntryComponent extends React.Component<
     this.state = {
       domain: newSemanticDomain(
         this.props.currentDomainTree.id,
-        this.props.currentDomainTree.name
+        this.props.currentDomainTree.name,
+        this.props.currentDomainTree.lang
       ),
       existingWords: [],
       domainWords: [],

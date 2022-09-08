@@ -19,6 +19,17 @@ interface DataEntryHeaderProps extends WithTranslation {
  * Displays information about the current data entry view
  */
 export class DataEntryHeader extends React.Component<DataEntryHeaderProps> {
+  /*
+  TODO: Add state for SemanticDomainFull to this class and use the state
+  to set the display. Initially set the state based off the property that
+  comes in, but then it will be reset by the following call and update the component
+  to the full content.
+
+  getSemanticDomainFull(
+    this.props.domain.id,
+    this.props.domain.lang
+  ).then((fullDomain) => this.setState({ domain: fullDomain }));
+*/
   render() {
     const hasQuestions: boolean =
       this.props.domain.questions && this.props.domain.questions.length > 0;
