@@ -130,7 +130,7 @@ namespace BackendFramework.Models
         public string Lang { get; set; }
         [Required]
         [BsonElement("guid")]
-        public Guid Guid { get; set; }
+        public string Guid { get; set; }
         [Required]
         [BsonElement("name")]
         public string Name { get; set; }
@@ -148,6 +148,7 @@ namespace BackendFramework.Models
 
         public SemanticDomainTreeNode(SemanticDomain sd)
         {
+            Guid = sd.Guid;
             MongoId = sd.MongoId;
             Lang = sd.Lang;
             Name = sd.Name;

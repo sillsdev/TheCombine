@@ -3,6 +3,7 @@ import {
   TreeViewAction,
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
+import i18n from "i18n";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
 export interface TreeViewState {
@@ -16,8 +17,8 @@ export const defaultState: TreeViewState = {
   open: false,
   currentDomain: {
     guid: "",
-    lang: "",
-    id: "",
+    lang: i18n.language,
+    id: "Sem",
     name: "",
     previous: undefined,
     next: undefined,

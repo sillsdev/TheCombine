@@ -5,7 +5,7 @@ import { StoreStateDispatch } from "types/Redux/actions";
 export enum TreeActionType {
   CLOSE_TREE = "CLOSE_TREE",
   OPEN_TREE = "OPEN_TREE",
-  SET_DOMAIN_LANGUAGE = "SET_DOMAIN_MAP",
+  SET_DOMAIN_LANGUAGE = "SET_DOMAIN_LANGUAGE",
   TRAVERSE_TREE = "TRAVERSE_TREE",
   SET_CURRENT_DOMAIN = "SET_CURRENT_DOMAIN",
 }
