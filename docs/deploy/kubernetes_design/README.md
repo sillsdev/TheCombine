@@ -56,7 +56,8 @@ repository.
 
 The database container provides _mongodb_ database services for the backend.
 
-The container image is the official `mongo` image on _Docker Hub_.
+The container image for the frontend is stored in AWS Elastic Container Registry (AWS ECR) in the `combine_database`
+repository.
 
 #### Additional Database Resources
 
