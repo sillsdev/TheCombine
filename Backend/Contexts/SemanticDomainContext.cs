@@ -7,11 +7,11 @@ using MongoDB.Driver;
 namespace BackendFramework.Contexts
 {
     [ExcludeFromCodeCoverage]
-    public class SemanticDomainsContext : ISemanticDomainsContext
+    public class SemanticDomainContext : ISemanticDomainContext
     {
         private readonly IMongoDatabase _db;
 
-        public SemanticDomainsContext(IOptions<Startup.Settings> options)
+        public SemanticDomainContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);

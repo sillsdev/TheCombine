@@ -1,17 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
 
-namespace BackendFramework.Services
+namespace BackendFramework.Repositories
 {
-    /// <summary> UNUSED: Creates a tree structure JSON object of semantic domains used by the front end </summary>
     public class SemanticDomainRepository : ISemanticDomainRepository
     {
-        private ISemanticDomainsContext _context;
-        public SemanticDomainRepository(ISemanticDomainsContext context)
+        private ISemanticDomainContext _context;
+        public SemanticDomainRepository(ISemanticDomainContext context)
         {
             _context = context;
         }

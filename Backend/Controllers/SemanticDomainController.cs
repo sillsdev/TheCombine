@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -13,15 +12,10 @@ namespace BackendFramework.Controllers
     [Route("v1/semanticdomain")]
     public class SemanticDomainController : Controller
     {
-        private readonly IProjectRepository _projRepo;
-        private readonly IPermissionService _permissionService;
         private readonly ISemanticDomainRepository _semDomRepo;
 
-        public SemanticDomainController(
-            IProjectRepository projRepo, ISemanticDomainRepository semDomRepo, IPermissionService permissionService)
+        public SemanticDomainController(ISemanticDomainRepository semDomRepo)
         {
-            _projRepo = projRepo;
-            _permissionService = permissionService;
             _semDomRepo = semDomRepo;
         }
 
@@ -33,7 +27,7 @@ namespace BackendFramework.Controllers
             return Ok(await _semDomRepo.GetSemanticDomainFull(id, lang));
         }
 
-        /// <summary> Returns <see cref="SemanticDomainFull"/> with specified id and in specified language </summary>
+        /// <summary> Returns <see cref="SemanticDomainTreeNode"/> with specified id and in specified language </summary>
         [HttpGet("domainTreeNode", Name = "GetSemanticDomainTreeNode")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
         public async Task<IActionResult> GetSemanticDomainTreeNode(string id, string lang)
@@ -41,7 +35,7 @@ namespace BackendFramework.Controllers
             return Ok(await _semDomRepo.GetSemanticDomainTreeNode(id, lang));
         }
 
-        /// <summary> Returns <see cref="SemanticDomainFull"/> with specified id and in specified language </summary>
+        /// <summary> Returns <see cref="SemanticDomainTreeNode"/> with specified name and in specified language </summary>
         [HttpGet("domainByName", Name = "GetSemanticDomainTreeNodeByName")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
         public async Task<IActionResult> GetSemanticDomainTreeNodeByName(string name, string lang)

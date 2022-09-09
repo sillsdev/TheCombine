@@ -25,6 +25,12 @@ export interface SemanticDomainTreeNode {
    * @type {string}
    * @memberof SemanticDomainTreeNode
    */
+  mongoId?: string | null;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainTreeNode
+   */
   lang: string;
   /**
    *

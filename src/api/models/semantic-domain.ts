@@ -23,6 +23,12 @@ export interface SemanticDomain {
    * @type {string}
    * @memberof SemanticDomain
    */
+  mongoId?: string | null;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
   guid: string;
   /**
    *
