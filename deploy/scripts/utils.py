@@ -5,6 +5,7 @@ A Collection of useful functions for Python
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from typing import List, Optional
@@ -91,8 +92,26 @@ def get_helm_opts(args: argparse.Namespace) -> List[str]:
         helm_opts.append("--debug")
     return helm_opts
 
+def set_kubernetes_env(args: argparse.Namespace) -> List[str]:
+    """
+    Setup the Kubernetes Environment.
+    
+    Sets the KUBECONFIG environment variable if it was specified in the args.
 
-def get_kubecfg() -> str:
+    Returns a list of options to be added to 'kubectl' and 'helm' commands for connecting to the
+    target cluster.
+    """
+
+    # Set the KUBECONFIG environment variable if we are not using the current configuration
+    if args.kubeconfig:
+        os.environ["KUBECONFIG"] = args.kubeconfig
+    # Get the context from the args or the current one
+    context = get_kube_context(args)
+    return [ "--kube-context", context ]
+
+def get_kube_context(args: argparse.Namespace) -> str:
+    """Get the kubernetes context to use for 'kubectl' and 'helm' commands."""
+    
     curr_context = ""
     context_list: List[str] = []
 
