@@ -199,7 +199,7 @@ export default class TreeDepiction extends React.Component<
       <React.Fragment>
         {/* Label parent domain, if available */}
         <Grid item>
-          {currentDomain.parent !== undefined && (
+          {currentDomain.parent && (
             <ImageList
               cols={1}
               gap={0}
