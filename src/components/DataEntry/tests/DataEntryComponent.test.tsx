@@ -4,7 +4,7 @@ import {
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "components/DataEntry/DataEntryComponent";
-import { TreeSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomain } from "types/semanticDomain";
 import { DomainWord, newSense, simpleWord } from "types/word";
 
 const mockWord = simpleWord("vern", "gloss");
@@ -39,8 +39,8 @@ describe("DataEntryComponent", () => {
   describe("filterWordsByDomain", () => {
     it("filters out words that do not match desired domain.", () => {
       const mockDomains = [
-        new TreeSemanticDomain("ID_one", "daily"),
-        new TreeSemanticDomain("ID_two", "weather"),
+        newSemanticDomain("ID_one", "daily"),
+        newSemanticDomain("ID_two", "weather"),
       ];
 
       const senses = [
@@ -79,7 +79,7 @@ describe("DataEntryComponent", () => {
 
   describe("sortDomainWordByVern", () => {
     it("sorts words alphabetically.", () => {
-      const mockDomain = new TreeSemanticDomain("ID_one", "daily");
+      const mockDomain = newSemanticDomain("ID_one", "daily");
       const unfilteredWords: Word[] = [
         { ...mockWord },
         { ...mockWord },

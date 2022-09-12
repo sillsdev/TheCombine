@@ -13,17 +13,39 @@ import TreeSearch, {
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
 import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
+import { SemanticDomainTreeNode } from "api";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 const testProps: TreeSearchProps = {
   currentDomain: domMap["1"],
-  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 
+jest.mock("backend", () => ({
+  getSemanticDomainTreeNode: (id: string, lang: string) =>
+    mockGetSemanticDomainTreeNode,
+  getSemanticDomainTreeNodeByName: (name: string, lang: string) =>
+    mockGetSemanticDomainByName,
+}));
+
+const mockGetSemanticDomainTreeNode = jest.fn();
+const mockGetSemanticDomainByName = jest.fn();
+var mockDomain: SemanticDomainTreeNode = {
+  lang: "",
+  guid: "",
+  name: "",
+  id: "",
+};
+
+function setMockFunction() {
+  mockGetSemanticDomainTreeNode.mockResolvedValue(mockDomain);
+  mockGetSemanticDomainByName.mockResolvedValue(mockDomain);
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
+  setMockFunction();
 });
 
 describe("TreeSearch", () => {

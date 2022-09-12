@@ -75,7 +75,6 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   function searchDomainByName(
     target: string
   ): SemanticDomainTreeNode | undefined {
-    /// TODO: Add api search for domain by name to the backend api and use it
     let domain: SemanticDomainTreeNode | undefined;
     getSemanticDomainTreeNodeByName(target, "en").then((res) => (domain = res));
     return domain;

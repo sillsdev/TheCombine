@@ -3,7 +3,7 @@ import { Delete } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import * as backend from "backend";
+import { deleteFrontierWord as deleteFromBackend } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -22,7 +22,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
 
   async function deleteFrontierWord(): Promise<void> {
     const wordId = props.rowData.id;
-    await backend.deleteFrontierWord(wordId);
+    await deleteFromBackend(wordId);
     const updatedWords = words.filter((w) => w.id !== wordId);
     dispatch(updateAllWords(updatedWords));
     handleClose();

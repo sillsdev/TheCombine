@@ -7,7 +7,8 @@ import "tests/mockReactI18next";
 import DataEntryHeader, {
   getQuestions,
 } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
-import { TreeSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomain } from "types/semanticDomain";
+import { SemanticDomainFull } from "api";
 
 const mockStore = configureMockStore()();
 const mockCallback = jest.fn();
@@ -19,7 +20,7 @@ beforeEach(() => {
 describe("DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", () => {
     const instance = createDataEntryHeaderInstance(
-      new TreeSemanticDomain(),
+      newSemanticDomain(),
       true,
       mockCallback
     );
@@ -32,7 +33,7 @@ describe("DataEntryHeader", () => {
 
   it("Questions Visible should show questions", () => {
     const newDomain = {
-      ...new TreeSemanticDomain(),
+      ...newSemanticDomain(),
       questions: ["Q1", "Q2", "Q3"],
     };
 
@@ -54,7 +55,7 @@ describe("DataEntryHeader", () => {
   });
 
   it("Callback should be called on switch click", () => {
-    const newDomain = { ...new TreeSemanticDomain(), questions: ["Q1", "Q2"] };
+    const newDomain = { ...newSemanticDomain(), questions: ["Q1", "Q2"] };
 
     const instance: ReactTestInstance = createDataEntryHeaderInstance(
       newDomain,
@@ -71,7 +72,7 @@ describe("DataEntryHeader", () => {
 });
 
 function createDataEntryHeaderInstance(
-  _domain: TreeSemanticDomain,
+  _domain: SemanticDomainFull,
   _questionsVisible: boolean,
   _mockCallback: jest.Mock
 ): ReactTestInstance {
