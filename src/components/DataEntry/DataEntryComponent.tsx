@@ -169,6 +169,10 @@ export default class DataEntryComponent extends React.Component<
                     props.currentDomainTree
                   ),
                 }));
+                getSemanticDomainFull(
+                  this.props.currentDomainTree.id,
+                  this.props.currentDomainTree.lang
+                ).then((fullDomain) => this.setState({ domain: fullDomain }));
                 this.props.closeTree();
               })
             }

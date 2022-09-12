@@ -70,6 +70,7 @@ namespace BackendFramework.Models
         [BsonElement("description")]
         public string Description { get; set; }
         [Required]
+        [BsonElement("questions")]
         public List<string> Questions { get; set; }
 
         public SemanticDomainFull()

@@ -35,7 +35,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           size="large"
           color="primary"
           variant="contained"
-          disabled={props.currentDomain.parent === undefined}
+          disabled={!props.currentDomain.parent}
           onClick={() => props.animate(props.currentDomain)}
           id="current-domain"
           style={{ height: "95%" }}
