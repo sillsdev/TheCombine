@@ -7,7 +7,7 @@ import "tests/mockReactI18next";
 import DataEntryHeader, {
   getQuestions,
 } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
-import { TreeSemanticDomain } from "types/semanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 const mockStore = configureMockStore()();
 const mockCallback = jest.fn();

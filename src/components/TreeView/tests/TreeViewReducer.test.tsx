@@ -1,3 +1,4 @@
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import {
   TreeViewAction,
   TreeActionType,
@@ -8,7 +9,6 @@ import {
   TreeViewState,
 } from "components/TreeView/TreeViewReducer";
 import { StoreAction, StoreActionTypes } from "rootActions";
-import { TreeSemanticDomain } from "types/semanticDomain";
 
 describe("Test the TreeViewReducer", () => {
   it("Returns defaultState when passed undefined", () => {

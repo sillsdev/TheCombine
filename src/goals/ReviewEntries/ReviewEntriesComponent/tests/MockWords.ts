@@ -3,8 +3,13 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { newSemanticDomain } from "types/semanticDomain";
-import { newFlag, newNote, newSense, newWord } from "types/word";
+import {
+  newFlag,
+  newNote,
+  newSemanticDomain,
+  newSense,
+  newWord,
+} from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
 export default function mockWords(): ReviewEntriesWord[] {

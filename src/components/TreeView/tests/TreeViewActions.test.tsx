@@ -1,10 +1,12 @@
+import TreeSemanticDomain, {
+  DomainMap,
+} from "components/TreeView/TreeSemanticDomain";
 import {
   createDomainMap,
   setDomainMapAction,
   traverseTreeAction,
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
-import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
 
 describe("TraverseTreeAction", () => {
   it("SetDomainMapAction returns correct action", () => {
