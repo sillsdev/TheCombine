@@ -8,7 +8,9 @@ import { useCallback, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
-import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
+import TreeSemanticDomain, {
+  DomainMap,
+} from "components/TreeView/TreeSemanticDomain";
 
 export interface TreeHeaderProps {
   currentDomain: TreeSemanticDomain;
