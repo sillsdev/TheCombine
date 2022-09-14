@@ -3,34 +3,57 @@ import {
   traverseTreeAction,
   TreeActionType,
 } from "components/TreeView/TreeViewActions";
+import { defaultState } from "components/TreeView/TreeViewReducer";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 import * as backend from "backend";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+
+jest.mock("backend", () => ({
+  getSemanticDomainTreeNode: (id: string, lang: string) =>
+    mockGetSemDomTreeNode(id, lang),
+}));
+
+const mockGetSemDomTreeNode = jest.fn();
+
+// Mock the track and identify methods of segment analytics.
+global.analytics = { identify: jest.fn(), track: jest.fn() } as any;
+
+const createMockStore = configureMockStore([thunk]);
+const mockState = defaultState;
 
 describe("TraverseTreeAction", () => {
-  it("SetDomainLanguage returns correct action", () => {
+  it("SetDomainLanguage returns correct action", async () => {
     const language = "lang";
     const action = {
       type: TreeActionType.SET_DOMAIN_LANGUAGE,
       language,
     };
-    expect(setDomainLanguageAction(language)).toEqual(action);
+    const mockStore = createMockStore(mockState);
+    await mockStore.dispatch<any>(setDomainLanguageAction("lang"));
+    expect(mockStore.getActions()).toEqual([action]);
   });
 
-  it("TraverseTreeAction dispatches on successful", () => {
-    jest
-      .spyOn(backend, "getSemanticDomainTreeNode")
-      .mockResolvedValue(newSemanticDomainTreeNode("id", "name"));
+  it("TraverseTreeAction dispatches on successful", async () => {
+    const mockDomainReturned = newSemanticDomainTreeNode("id", "name");
+    mockGetSemDomTreeNode.mockResolvedValue(mockDomainReturned);
     const domain = { id: "id", name: "name", guid: "", lang: "" };
-    const action = { type: TreeActionType.TRAVERSE_TREE, domain };
-    expect(traverseTreeAction(domain)).toEqual(action);
+    const action = {
+      type: TreeActionType.SET_CURRENT_DOMAIN,
+      domain: mockDomainReturned,
+    };
+    const mockStore = createMockStore(mockState);
+
+    await mockStore.dispatch<any>(traverseTreeAction(domain));
+    expect(mockStore.getActions()).toEqual([action]);
   });
 
-  it("TraverseTreeAction does not dispatch on null return", () => {
-    jest
-      .spyOn(backend, "getSemanticDomainTreeNode")
-      .mockResolvedValue(undefined);
-    const domain = newSemanticDomainTreeNode("id", "name");
-    const action = { type: TreeActionType.TRAVERSE_TREE, domain };
-    expect(traverseTreeAction(domain)).toEqual(action);
+  it("TraverseTreeAction does not dispatch on null return", async () => {
+    mockGetSemDomTreeNode.mockResolvedValue(undefined);
+    const domain = { id: "id", name: "name", guid: "", lang: "" };
+    const mockStore = createMockStore(mockState);
+
+    await mockStore.dispatch<any>(traverseTreeAction(domain));
+    expect(mockStore.getActions()).toEqual([]);
   });
 });
