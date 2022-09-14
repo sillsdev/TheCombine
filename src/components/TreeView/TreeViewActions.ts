@@ -31,9 +31,11 @@ export function setDomainLanguageAction(language: string): TreeViewAction {
 export function traverseTreeAction(domain: SemanticDomain) {
   return async (dispatch: StoreStateDispatch) => {
     if (domain) {
-      getSemanticDomainTreeNode(domain.id, domain.lang).then((response) =>
-        dispatch(setCurrentDomain(response))
-      );
+      getSemanticDomainTreeNode(domain.id, domain.lang).then((response) => {
+        if (response) {
+          dispatch(setCurrentDomain(response));
+        }
+      });
     }
   };
 }

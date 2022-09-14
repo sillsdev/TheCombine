@@ -610,7 +610,7 @@ export async function updateWord(word: Word): Promise<Word> {
 export async function getSemanticDomainFull(
   id: string,
   lang: string
-): Promise<SemanticDomainFull> {
+): Promise<SemanticDomainFull | undefined> {
   const params = { id: id, lang: lang };
   return (
     await semanticDomainApi.getSemanticDomainFull(params, defaultOptions())
@@ -620,7 +620,7 @@ export async function getSemanticDomainFull(
 export async function getSemanticDomainTreeNode(
   id: string,
   lang: string
-): Promise<SemanticDomainTreeNode> {
+): Promise<SemanticDomainTreeNode | undefined> {
   const params = { id: id, lang: lang };
   return (
     await semanticDomainApi.getSemanticDomainTreeNode(params, defaultOptions())
@@ -630,12 +630,14 @@ export async function getSemanticDomainTreeNode(
 export async function getSemanticDomainTreeNodeByName(
   name: string,
   lang: string
-): Promise<SemanticDomainTreeNode> {
+): Promise<SemanticDomainTreeNode | undefined> {
   const params = { name: name, lang: lang };
-  return (
-    await semanticDomainApi.getSemanticDomainTreeNodeByName(
-      params,
-      defaultOptions()
-    )
-  ).data;
+  const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
+    params,
+    defaultOptions()
+  );
+  if (response.data) {
+    return response.data;
+  }
+  return undefined;
 }

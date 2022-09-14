@@ -15,25 +15,21 @@ const MOCK_ANIMATE = jest.fn();
 // Current domain with no siblings, three kids
 const testProps: TreeHeaderProps = {
   currentDomain: domMap[mapIds.parent],
-  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 // Current domain with a parent, two siblings, and multiple kids
 const twoBrothersManyKids: TreeHeaderProps = {
   currentDomain: domMap[mapIds.middleKid],
-  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 // Current domain with a parent, no siblings, one kid
 const noBrothersOneKid: TreeHeaderProps = {
   currentDomain: domMap[mapIds.depth3],
-  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 // Current domain with a parent, no siblings, no kids
 const noBrothersNoKids: TreeHeaderProps = {
   currentDomain: domMap[mapIds.depth5],
-  domainMap: domMap,
   animate: MOCK_ANIMATE,
 };
 

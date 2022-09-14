@@ -1,13 +1,12 @@
 import { Grid, TextField } from "@material-ui/core";
-import React, { ReactElement, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Key } from "ts-key-enum";
-
 import { SemanticDomainTreeNode } from "api";
 import {
   getSemanticDomainTreeNode,
   getSemanticDomainTreeNodeByName,
 } from "backend";
+import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Key } from "ts-key-enum";
 
 export interface TreeSearchProps {
   currentDomain: SemanticDomainTreeNode;
@@ -72,12 +71,10 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [searchError, setSearchError] = useState<boolean>(false);
 
   // Searches for a semantic domain by name
-  function searchDomainByName(
+  async function searchDomainByName(
     target: string
-  ): SemanticDomainTreeNode | undefined {
-    let domain: SemanticDomainTreeNode | undefined;
-    getSemanticDomainTreeNodeByName(target, "en").then((res) => (domain = res));
-    return domain;
+  ): Promise<SemanticDomainTreeNode | undefined> {
+    return await getSemanticDomainTreeNodeByName(target, "en");
   }
 
   /** Animate the domain and clear search input after successfully searching
@@ -93,7 +90,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   }
 
   // Dispatch the search for a specified domain, and switches to it if it exists
-  function searchAndSelectDomain(event: React.KeyboardEvent) {
+  async function searchAndSelectDomain(event: React.KeyboardEvent) {
     event.bubbles = false;
 
     if (event.key === Key.Enter) {
@@ -102,23 +99,23 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       // Search for domain
       if (!isNaN(parseInt(input))) {
         // make a blocking call to the backend API for the domain id instead of using the map
-        getSemanticDomainTreeNode(input, "en").then((domain) => {
-          if (domain) {
-            animateSuccessfulSearch(domain, event);
-            // Return to indicate success and skip setting error state.
-            return;
-          }
-        });
-      } else {
-        const domainByName = searchDomainByName(input);
-        if (domainByName !== undefined) {
-          animateSuccessfulSearch(domainByName, event);
+        let domain = await getSemanticDomainTreeNode(input, "en");
+        if (domain) {
+          animateSuccessfulSearch(domain, event);
           // Return to indicate success and skip setting error state.
           return;
         }
-        // Did not find a domain through either numerical or textual search.
-        setSearchError(true);
+      } else {
+        const domain: SemanticDomainTreeNode | undefined =
+          await searchDomainByName(input);
+        if (domain !== undefined) {
+          animateSuccessfulSearch(domain, event);
+          // Return to indicate success and skip setting error state.
+          return;
+        }
       }
+      // Did not find a domain through either numerical or textual search.
+      setSearchError(true);
     }
   }
 

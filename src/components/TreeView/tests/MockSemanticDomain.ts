@@ -38,17 +38,16 @@ for (let i = 0; i < 3; i++) {
   domMap[parent.id].children?.push(subdom);
   domMap[id] = { ...subdom, parent: parent };
 }
-/*
+
 // Give subdomain 0 an even # of subdomains
 const dom0 = parent.children?.[0];
 for (let i = 0; i < 4; i++) {
   const id = dom0?.id + "." + i;
   const subdom: SemanticDomainTreeNode = {
-    ...newSemanticDomainTreeNode(id, `evenData${i}`)
+    ...newSemanticDomainTreeNode(id, `evenData${i}`),
   };
-  dom0..push(subdom);
-  domMap[dom0.id].childIds.push(id);
-  domMap[id] = { ...subdom, parentId: dom0.id };
+  domMap[dom0!.id].children?.push(newSemanticDomainTreeNode(id));
+  domMap[id] = { ...subdom, parent: parent };
 }
 
 // Give the next subdomain an odd # of subdomains
@@ -56,38 +55,34 @@ const dom1 = parent.children?.[1];
 for (let i = 0; i < 3; i++) {
   const id = dom1?.id + "." + i;
   const subdom: SemanticDomainTreeNode = {
-    ...newSemanticDomainTreeNode(id, `oddData${i}`)
+    ...newSemanticDomainTreeNode(id, `oddData${i}`),
   };
-  dom1.subdomains.push(subdom);
-  domMap[dom1.id].childIds.push(id);
-  domMap[id] = { ...subdom, parentId: dom1.id };
+  domMap[dom1!.id]?.children?.push(newSemanticDomainTreeNode(id));
+  domMap[id] = { ...subdom, parent: parent };
 }
 
 // Give the last subdomain one subdomain with total depth of 5
-const dom2 = parent.children?[2];
+const dom2 = parent.children?.[2];
 let id = mapIds.depth3;
 const dom20 = {
   ...newSemanticDomainTreeNode(id, "depth=3"),
   description: "so lonely...",
 };
-dom2.subdomains.push(dom20);
-domMap[dom2.id].children?.push(id);
-domMap[id] = { ...dom20, parentId: dom2.id };
+domMap[dom2!.id]?.children?.push(newSemanticDomainTreeNode(id));
+domMap[id] = { ...dom20, parent: parent };
 
 id = mapIds.depth4;
 const dom200: SemanticDomainTreeNode = {
-  ...newSemanticDomainTreeNode(id, "depth=4")
+  ...newSemanticDomainTreeNode(id, "depth=4"),
 };
-dom20.subdomains.push(dom200);
-domMap[dom20.id].children?.push(id);
-domMap[id] = { ...dom200, parentId: dom20.id };
+domMap[dom20.id].children?.push(newSemanticDomainTreeNode(id));
+domMap[id] = { ...dom200, parent: dom20 };
 id = mapIds.depth5;
 dom200.children?.push({
-  ...newSemanticDomainTreeNode(id, "depth=5")
+  ...newSemanticDomainTreeNode(id, "depth=5"),
 });
-domMap[dom200.id].childIds.push(id);
-domMap[id] = { ...dom200.subdomains[0], parentId: dom200.id };
-*/
+domMap[dom200.id]?.children?.push(newSemanticDomainTreeNode(id));
+domMap[id] = { ...dom200?.children?.[0]!, parent: dom200 };
 export const jsonDomain = parent;
 
 export default domMap;
