@@ -28,7 +28,7 @@ domMap[mapIds.head] = {
 };
 domMap[parent.id] = { ...parent, parent: domMap[mapIds.head] };
 
-// Following subdomains
+// Following children
 for (let i = 0; i < 3; i++) {
   const id = "1." + i;
   const subdom: SemanticDomainTreeNode = {
@@ -36,10 +36,17 @@ for (let i = 0; i < 3; i++) {
   };
   parent.children?.push(subdom);
   domMap[parent.id].children?.push(subdom);
-  domMap[id] = { ...subdom, parent: parent };
+  domMap[id] = {
+    ...subdom,
+    parent: parent,
+    previous: i > 0 ? domMap["1." + (i - 1)] : undefined,
+  };
 }
+// now set the 'next' props for the first two children
+domMap[mapIds.firstKid].next = domMap[mapIds.middleKid];
+domMap[mapIds.middleKid].next = domMap[mapIds.lastKid];
 
-// Give subdomain 0 an even # of subdomains
+// Give child 0 an even # of children
 const dom0 = parent.children?.[0];
 for (let i = 0; i < 4; i++) {
   const id = dom0?.id + "." + i;

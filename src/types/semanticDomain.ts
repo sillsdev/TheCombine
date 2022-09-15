@@ -14,10 +14,10 @@ export function newSemanticDomainTreeNode(
   lang = "en"
 ): SemanticDomainTreeNode {
   return {
-    parent: newSemanticDomain(),
-    previous: newSemanticDomain(),
-    next: newSemanticDomain(),
-    children: [],
+    parent: undefined,
+    previous: undefined,
+    next: undefined,
+    children: undefined,
     id,
     name,
     lang,
