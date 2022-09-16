@@ -1,12 +1,13 @@
 import { Grid, TextField } from "@material-ui/core";
+import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Key } from "ts-key-enum";
+
 import { SemanticDomainTreeNode } from "api";
 import {
   getSemanticDomainTreeNode,
   getSemanticDomainTreeNodeByName,
 } from "backend";
-import React, { ReactElement, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Key } from "ts-key-enum";
 
 export interface TreeSearchProps {
   currentDomain: SemanticDomainTreeNode;
@@ -99,7 +100,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       // Search for domain
       if (!isNaN(parseInt(input))) {
         // make a blocking call to the backend API for the domain id instead of using the map
-        let domain = await getSemanticDomainTreeNode(input, "en");
+        const domain = await getSemanticDomainTreeNode(input, "en");
         if (domain) {
           animateSuccessfulSearch(domain, event);
           // Return to indicate success and skip setting error state.

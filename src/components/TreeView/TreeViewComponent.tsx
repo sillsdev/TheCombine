@@ -8,6 +8,7 @@ import { SemanticDomain, SemanticDomainTreeNode, WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {
+  initTreeDomain,
   traverseTreeAction,
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
@@ -36,6 +37,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
+  const { i18n } = props;
 
   useEffect(() => {
     /* Select the language used for the semantic domains.
@@ -43,18 +45,13 @@ export function TreeView(props: TreeViewProps): ReactElement {
      * Secondary: What is the current browser/ui language? */
     const newLang =
       getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
-      props.i18n.resolvedLanguage;
+      i18n.resolvedLanguage;
     if (newLang && newLang !== semDomLanguage) {
-      const headString = props.t("addWords.domain") as string;
-      dispatch(updateTreeLanguage(newLang, headString));
+      dispatch(updateTreeLanguage(newLang));
       // Don't update when props updates, except props.i18n.resolvedLanguage
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    semDomLanguage,
-    semDomWritingSystem,
-    dispatch,
-    props.i18n.resolvedLanguage,
-  ]);
+    dispatch(initTreeDomain(newLang));
+  }, [semDomLanguage, semDomWritingSystem, dispatch, i18n.resolvedLanguage]);
 
   function animateHandler(domain: SemanticDomain): Promise<void> {
     if (visible) {

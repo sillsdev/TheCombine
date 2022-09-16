@@ -4,11 +4,11 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
 
+import { SemanticDomainFull } from "api";
 import DataEntryHeader, {
   getQuestions,
 } from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import { newSemanticDomain } from "types/semanticDomain";
-import { SemanticDomainFull } from "api";
 
 const mockStore = configureMockStore()();
 const mockCallback = jest.fn();

@@ -6,6 +6,7 @@ import renderer, {
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
+import thunk from "redux-thunk";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeView from "components/TreeView/TreeViewComponent";
@@ -26,12 +27,10 @@ jest.mock("@material-ui/core", () => {
     Zoom: realMaterialUi.Container,
   };
 });
-
-const mockStore = configureMockStore()({
+const mockStore = configureMockStore([thunk])({
   treeViewState: {
     ...treeViewState,
     currentDomain: mockMap[mockDomain.id],
-    domainMap: mockMap,
   },
   currentProjectState: {
     project: { semDomWritingSystem: newWritingSystem() },

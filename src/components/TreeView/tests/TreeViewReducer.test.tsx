@@ -1,14 +1,14 @@
 import {
   TreeViewAction,
   TreeActionType,
-} from "components/TreeView/TreeViewActions";
+} from "components/TreeView/TreeViewReduxTypes";
 import {
   treeViewReducer,
   defaultState,
   TreeViewState,
 } from "components/TreeView/TreeViewReducer";
 import { StoreAction, StoreActionTypes } from "rootActions";
-import { TreeSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomain } from "types/semanticDomain";
 
 describe("Test the TreeViewReducer", () => {
   it("Returns defaultState when passed undefined", () => {
@@ -28,13 +28,13 @@ describe("Test the TreeViewReducer", () => {
       treeViewReducer(
         {
           ...defaultState,
-          currentDomain: defaultState.currentDomain.subdomains[0],
+          currentDomain: defaultState.currentDomain,
         },
         { type: "Nothing" } as any as TreeViewAction
       )
     ).toEqual({
       ...defaultState,
-      currentDomain: defaultState.currentDomain.subdomains[0],
+      currentDomain: defaultState.currentDomain,
     });
   });
 
@@ -57,10 +57,10 @@ describe("Test the TreeViewReducer", () => {
   });
 
   it("Returns state with a new SemanticDomain when requested to change this value", () => {
-    const payload = new TreeSemanticDomain("testId", "testName");
+    const payload = newSemanticDomain("testId", "testName");
     expect(
       treeViewReducer(defaultState, {
-        type: TreeActionType.TRAVERSE_TREE,
+        type: TreeActionType.SET_CURRENT_DOMAIN,
         domain: payload,
       })
     ).toEqual({ ...defaultState, currentDomain: payload });

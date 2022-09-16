@@ -1,20 +1,9 @@
+import { defaultState } from "./TreeViewReducer";
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
+import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-
-export enum TreeActionType {
-  CLOSE_TREE = "CLOSE_TREE",
-  OPEN_TREE = "OPEN_TREE",
-  SET_DOMAIN_LANGUAGE = "SET_DOMAIN_LANGUAGE",
-  TRAVERSE_TREE = "TRAVERSE_TREE",
-  SET_CURRENT_DOMAIN = "SET_CURRENT_DOMAIN",
-}
-
-export interface TreeViewAction {
-  type: TreeActionType;
-  domain?: SemanticDomain;
-  language?: string;
-}
+import { TreeActionType, TreeViewAction } from "./TreeViewReduxTypes";
 
 export function closeTreeAction(): TreeViewAction {
   return { type: TreeActionType.CLOSE_TREE };
@@ -46,10 +35,22 @@ export function setCurrentDomain(
   return { type: TreeActionType.SET_CURRENT_DOMAIN, domain };
 }
 
-export function updateTreeLanguage(language: string, headString = "") {
+export function updateTreeLanguage(language: string) {
   return async (dispatch: StoreStateDispatch) => {
     if (language) {
       dispatch(setDomainLanguageAction(language));
+    }
+  };
+}
+
+export function initTreeDomain(language: string) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const currentDomain = getState().treeViewState.currentDomain;
+    if (currentDomain === defaultState.currentDomain) {
+      if (!currentDomain.lang) {
+        currentDomain.lang = language ?? "en";
+      }
+      dispatch(traverseTreeAction(currentDomain));
     }
   };
 }

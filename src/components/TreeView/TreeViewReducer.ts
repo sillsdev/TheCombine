@@ -2,7 +2,7 @@ import { SemanticDomainTreeNode } from "api/models";
 import {
   TreeViewAction,
   TreeActionType,
-} from "components/TreeView/TreeViewActions";
+} from "components/TreeView/TreeViewReduxTypes";
 import i18n from "i18n";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
@@ -23,6 +23,7 @@ export const defaultState: TreeViewState = {
     previous: undefined,
     next: undefined,
     parent: undefined,
+    children: undefined,
   },
 };
 
@@ -45,11 +46,6 @@ export const treeViewReducer = (
         ...state,
         language: action.language,
       };
-    case TreeActionType.TRAVERSE_TREE:
-      if (!action.domain) {
-        throw new Error("Cannot traverse tree without specifying domain.");
-      }
-      return { ...state };
     case TreeActionType.SET_CURRENT_DOMAIN:
       if (!action.domain) {
         throw new Error("Cannot set the current domain to undefined.");
