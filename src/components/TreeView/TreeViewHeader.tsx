@@ -61,18 +61,6 @@ export function TreeViewHeader(props: TreeHeaderProps) {
 
 // exported for unit testing only
 export function useTreeNavigation(props: TreeHeaderProps) {
-  function getDomainTreeNode(
-    domain: SemanticDomain | undefined
-  ): SemanticDomainTreeNode | undefined {
-    if (!domain) {
-      return undefined;
-    }
-
-    const domainTreeNode: SemanticDomainTreeNode | undefined = undefined;
-
-    return domainTreeNode;
-  }
-
   function getRightBrother(props: TreeHeaderProps): SemanticDomain | undefined {
     return props.currentDomain.next;
   }
@@ -87,14 +75,14 @@ export function useTreeNavigation(props: TreeHeaderProps) {
       let domain: SemanticDomainTreeNode | undefined;
       switch (event.key) {
         case Key.ArrowLeft:
-          domain = getDomainTreeNode(getLeftBrother(props));
+          domain = getLeftBrother(props);
           break;
         case Key.ArrowRight:
-          domain = getDomainTreeNode(getRightBrother(props));
+          domain = getRightBrother(props);
           break;
         case Key.ArrowUp:
           if (props.currentDomain.parent !== undefined) {
-            domain = getDomainTreeNode(props.currentDomain.parent);
+            domain = props.currentDomain.parent;
           }
           break;
         case Key.ArrowDown:
@@ -102,7 +90,7 @@ export function useTreeNavigation(props: TreeHeaderProps) {
             props.currentDomain.children &&
             props.currentDomain.children.length === 1
           ) {
-            domain = getDomainTreeNode(props.currentDomain.children[0]);
+            domain = props.currentDomain.children[0];
           }
           break;
       }

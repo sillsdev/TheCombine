@@ -75,6 +75,7 @@ describe("TreeViewHeader", () => {
     it("left arrow moves to left sibling", () => {
       render(<TreeViewHeader {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowLeft);
+      expect(MOCK_ANIMATE).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.firstKid]);
     });
     it("left arrow does nothing when no left sibling", () => {
@@ -95,6 +96,7 @@ describe("TreeViewHeader", () => {
     it("up arrow moves to parent domain", () => {
       render(<TreeViewHeader {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowUp);
+      expect(MOCK_ANIMATE).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.parent]);
     });
     it("down arrow does nothing when multiple kids", () => {
