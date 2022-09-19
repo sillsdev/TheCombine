@@ -7,7 +7,7 @@ import {
 } from "@material-ui/icons";
 import React, { ReactElement } from "react";
 
-import { TreeSemanticDomain } from "types/semanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 
 export enum Direction {
   Down,

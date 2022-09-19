@@ -99,6 +99,7 @@ namespace Backend.Tests
             {
                 Name = RandString(),
                 Id = id ?? RandString(),
+                Description = RandString()
             };
         }
 

@@ -106,9 +106,9 @@ class SemanticDomainTreeNode(SemanticDomain):
             "lang": self.lang,
             "name": self.name,
             "id": self.id,
-            "parent": {} if self.parent is None else self.parent.to_dict(),
-            "prev": {} if self.prev is None else self.prev.to_dict(),
-            "next": {} if self.next is None else self.next.to_dict(),
+            "parent": None if self.parent is None else self.parent.to_dict(),
+            "prev": None if self.prev is None else self.prev.to_dict(),
+            "next": None if self.next is None else self.next.to_dict(),
             "children": children,
         }
         return json.dumps(data, indent=4)

@@ -4,7 +4,7 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { TreeSemanticDomain } from "types/semanticDomain";
+import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import theme from "types/theme";
 
 interface DataEntryHeaderProps extends WithTranslation {

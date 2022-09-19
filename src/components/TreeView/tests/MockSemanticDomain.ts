@@ -1,4 +1,6 @@
-import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
+import TreeSemanticDomain, {
+  DomainMap,
+} from "components/TreeView/TreeSemanticDomain";
 
 export enum mapIds {
   "head" = "",
