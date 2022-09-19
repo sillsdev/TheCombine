@@ -1,9 +1,9 @@
 import { defaultState } from "./TreeViewReducer";
+import { TreeActionType, TreeViewAction } from "./TreeViewReduxTypes";
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { TreeActionType, TreeViewAction } from "./TreeViewReduxTypes";
 
 export function closeTreeAction(): TreeViewAction {
   return { type: TreeActionType.CLOSE_TREE };

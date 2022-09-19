@@ -1,14 +1,12 @@
-import {
-  Button,
-  ImageList,
-  ImageListItem,
-  Typography,
-} from "@material-ui/core";
+import { Button, ImageList, ImageListItem } from "@material-ui/core";
 import { useCallback, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomain, SemanticDomainTreeNode } from "api";
-import DomainTile, { Direction } from "components/TreeView/DomainTile";
+import DomainTile, {
+  domainText,
+  Direction,
+} from "components/TreeView/DomainTile";
 
 export interface TreeHeaderProps {
   currentDomain: SemanticDomainTreeNode;
@@ -40,10 +38,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           id="current-domain"
           style={{ height: "95%" }}
         >
-          <div style={{ textTransform: "capitalize", minWidth: 200 }}>
-            <Typography variant="overline">{props.currentDomain.id}</Typography>
-            <Typography variant="h6">{props.currentDomain.name}</Typography>
-          </div>
+          {domainText(props.currentDomain, { minWidth: 200 })}
         </Button>
       </ImageListItem>
       <ImageListItem cols={2}>

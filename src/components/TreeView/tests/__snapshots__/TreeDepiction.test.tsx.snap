@@ -84,7 +84,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    
+                    head
                   </p>
                 </div>
               </div>
@@ -197,11 +197,11 @@ Array [
                 >
                   1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   parent
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -1014,11 +1014,11 @@ Array [
                 >
                   1.2
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   kid2
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -1165,7 +1165,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    depth=3
+                    
                   </p>
                 </div>
                 <svg
@@ -1388,11 +1388,11 @@ Array [
                 >
                   1.2.1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   depth=3
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -1762,11 +1762,11 @@ Array [
                 >
                   1.0
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   kid0
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -2254,7 +2254,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    evenData0
+                    
                   </p>
                 </div>
                 <svg
@@ -2349,7 +2349,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    evenData1
+                    
                   </p>
                 </div>
                 <svg
@@ -2444,7 +2444,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    evenData2
+                    
                   </p>
                 </div>
                 <svg
@@ -2539,7 +2539,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    evenData3
+                    
                   </p>
                 </div>
                 <svg
@@ -2762,11 +2762,11 @@ Array [
                 >
                   1.2.1.1.1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   depth=5
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -3071,11 +3071,11 @@ Array [
                 >
                   1.1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   kid1
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -3475,7 +3475,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    oddData0
+                    
                   </p>
                 </div>
                 <svg
@@ -3570,7 +3570,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    oddData1
+                    
                   </p>
                 </div>
                 <svg
@@ -3665,7 +3665,7 @@ Array [
                   <p
                     className="MuiTypography-root MuiTypography-body1"
                   >
-                    oddData2
+                    
                   </p>
                 </div>
                 <svg
