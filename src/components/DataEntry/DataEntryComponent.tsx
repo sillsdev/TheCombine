@@ -7,10 +7,10 @@ import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
 import TreeView from "components/TreeView/TreeViewComponent";
+import { newSemanticDomain, TreeSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
-import { DomainWord, newSemanticDomain } from "types/word";
+import { DomainWord } from "types/word";
 
 interface DataEntryProps {
   domain: TreeSemanticDomain;

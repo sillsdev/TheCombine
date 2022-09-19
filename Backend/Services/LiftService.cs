@@ -312,14 +312,14 @@ namespace BackendFramework.Services
                     if (line != "")
                     {
                         var items = line.Split("`");
-                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
+                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2]);
                     }
                 }
 
                 // Pull from new semantic domains in project
                 foreach (var sd in proj.SemanticDomains)
                 {
-                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, sd.Description);
+                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name);
                 }
 
                 await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -499,7 +499,7 @@ namespace BackendFramework.Services
         }
 
         private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name, string description)
+            XmlWriter liftRangesWriter, string id, string guid, string name)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
@@ -516,13 +516,6 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteAttributeString("lang", "en");
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(id);
-            liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end label
-
-            liftRangesWriter.WriteStartElement("description");
-            liftRangesWriter.WriteAttributeString("lang", "en");
-            liftRangesWriter.WriteStartElement("text");
-            liftRangesWriter.WriteString(description);
             liftRangesWriter.WriteEndElement(); //end text
             liftRangesWriter.WriteEndElement(); //end label
 

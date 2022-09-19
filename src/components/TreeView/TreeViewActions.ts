@@ -1,7 +1,5 @@
-import TreeSemanticDomain, {
-  DomainMap,
-} from "components/TreeView/TreeSemanticDomain";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { DomainMap, TreeSemanticDomain } from "types/semanticDomain";
 
 export enum TreeActionType {
   CLOSE_TREE = "CLOSE_TREE",

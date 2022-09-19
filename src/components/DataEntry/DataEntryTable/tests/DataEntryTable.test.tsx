@@ -13,12 +13,8 @@ import DataEntryTable, {
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
-import {
-  multiSenseWord,
-  newSemanticDomain,
-  newSense,
-  simpleWord,
-} from "types/word";
+import { newSemanticDomain } from "types/semanticDomain";
+import { multiSenseWord, newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
 

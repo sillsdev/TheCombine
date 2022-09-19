@@ -11,7 +11,8 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { newGloss, newSemanticDomain, newSense, newWord } from "types/word";
+import { newSemanticDomain } from "types/semanticDomain";
+import { newGloss, newSense, newWord } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
 const mockGetWord = jest.fn();
