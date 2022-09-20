@@ -319,7 +319,10 @@ namespace BackendFramework.Services
                 // Pull from new semantic domains in project
                 foreach (var sd in proj.SemanticDomains)
                 {
-                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name);
+                   var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
+						  ? Guid.NewGuid().ToString()
+						  : sd.Guid.ToString();
+                   WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name);
                 }
 
                 await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range

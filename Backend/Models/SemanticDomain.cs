@@ -23,7 +23,6 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("id")]
         public string Id { get; set; }
-
         [Required]
         [BsonElement("lang")]
         public string Lang { get; set; }

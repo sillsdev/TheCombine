@@ -4,7 +4,8 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
 
-import "tests/mockReactI18next";
+import "tests/mockReactI18next"; // i18n mocks are used in following internal imports
+
 import { SemanticDomainTreeNode } from "api";
 import * as backend from "backend";
 import TreeSearch, {

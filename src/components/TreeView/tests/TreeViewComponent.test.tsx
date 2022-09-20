@@ -4,8 +4,9 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
-import "tests/mockReactI18next";
 import thunk from "redux-thunk";
+
+import "tests/mockReactI18next"; // i18n mocks are used by following internal imports
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeView from "components/TreeView/TreeViewComponent";

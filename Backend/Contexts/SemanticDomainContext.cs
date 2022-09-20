@@ -21,8 +21,3 @@ namespace BackendFramework.Contexts
         public IMongoCollection<SemanticDomainFull> FullSemanticDomains => _db.GetCollection<SemanticDomainFull>("SemanticDomains");
     }
 }
-
-// Get Context and Model connected to DB, Update SemanticDomainService to access the context to provide what the Controller needs
-// Add all the IOC bits
-// ???
-// Profit!

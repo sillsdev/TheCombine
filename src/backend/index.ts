@@ -89,15 +89,15 @@ const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
-const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
-const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
-const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
-const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 const semanticDomainApi = new Api.SemanticDomainApi(
   config,
   BASE_PATH,
   axiosInstance
 );
+const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
+const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
+const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
+const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
@@ -373,6 +373,43 @@ export async function projectDuplicateCheck(
   ).data;
 }
 
+/* SemanticDomainController.cs */
+
+export async function getSemanticDomainFull(
+  id: string,
+  lang: string
+): Promise<SemanticDomainFull | undefined> {
+  const params = { id: id, lang: lang };
+  return (
+    await semanticDomainApi.getSemanticDomainFull(params, defaultOptions())
+  ).data;
+}
+
+export async function getSemanticDomainTreeNode(
+  id: string,
+  lang: string
+): Promise<SemanticDomainTreeNode | undefined> {
+  const params = { id: id, lang: lang };
+  return (
+    await semanticDomainApi.getSemanticDomainTreeNode(params, defaultOptions())
+  ).data;
+}
+
+export async function getSemanticDomainTreeNodeByName(
+  name: string,
+  lang: string
+): Promise<SemanticDomainTreeNode | undefined> {
+  const params = { name: name, lang: lang };
+  const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
+    params,
+    defaultOptions()
+  );
+  if (response.data) {
+    return response.data;
+  }
+  return undefined;
+}
+
 /* UserController.cs */
 
 export async function resetPasswordRequest(
@@ -602,41 +639,4 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
-}
-
-/* SemanticDomainController.cs */
-
-export async function getSemanticDomainFull(
-  id: string,
-  lang: string
-): Promise<SemanticDomainFull | undefined> {
-  const params = { id: id, lang: lang };
-  return (
-    await semanticDomainApi.getSemanticDomainFull(params, defaultOptions())
-  ).data;
-}
-
-export async function getSemanticDomainTreeNode(
-  id: string,
-  lang: string
-): Promise<SemanticDomainTreeNode | undefined> {
-  const params = { id: id, lang: lang };
-  return (
-    await semanticDomainApi.getSemanticDomainTreeNode(params, defaultOptions())
-  ).data;
-}
-
-export async function getSemanticDomainTreeNodeByName(
-  name: string,
-  lang: string
-): Promise<SemanticDomainTreeNode | undefined> {
-  const params = { name: name, lang: lang };
-  const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
-    params,
-    defaultOptions()
-  );
-  if (response.data) {
-    return response.data;
-  }
-  return undefined;
 }

@@ -1,13 +1,12 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { TreeActionType } from "../TreeViewReduxTypes";
-import * as backend from "backend";
 import {
   setDomainLanguageAction,
   traverseTreeAction,
 } from "components/TreeView/TreeViewActions";
 import { defaultState } from "components/TreeView/TreeViewReducer";
+import { TreeActionType } from "components/TreeView/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 jest.mock("backend", () => ({
