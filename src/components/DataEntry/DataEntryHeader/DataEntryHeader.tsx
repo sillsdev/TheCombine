@@ -7,8 +7,6 @@ import { Key } from "ts-key-enum";
 import { SemanticDomainFull } from "api/models";
 import theme from "types/theme";
 
-("types/semanticDomain");
-
 interface DataEntryHeaderProps extends WithTranslation {
   domain: SemanticDomainFull;
   questionsVisible: boolean;

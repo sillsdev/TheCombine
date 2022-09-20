@@ -4,7 +4,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import { SemanticDomain, SemanticDomainTreeNode, WritingSystem } from "api";
+import { SemanticDomain, WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {

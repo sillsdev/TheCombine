@@ -26,7 +26,6 @@ import { errorToast } from "components/Toast/SwalToast";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
-import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
