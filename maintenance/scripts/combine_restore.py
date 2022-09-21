@@ -125,10 +125,11 @@ def main() -> None:
         if not db_pod:
             print("Cannot find the database container.", file=sys.stderr)
             sys.exit(1)
+        db_files_subdir = os.environ["db_files_subdir"]
         combine.kubectl(
             [
                 "cp",
-                os.environ["db_files_subdir"],
+                db_files_subdir,
                 f"{db_pod}:/",
             ]
         )
@@ -140,6 +141,7 @@ def main() -> None:
                 "--drop",
                 "--gzip",
                 "--quiet",
+                f"--dir=/{db_files_subdir}",
             ],
         )
         combine.exec(
@@ -147,7 +149,7 @@ def main() -> None:
             [
                 "rm",
                 "-rf",
-                os.environ["db_files_subdir"],
+                f"/{db_files_subdir}",
             ],
         )
 

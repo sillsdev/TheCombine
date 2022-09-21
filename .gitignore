@@ -94,6 +94,7 @@ database/semantic_domains/*
 _*.yml
 _*.yaml
 _*.j2
+deploy/scripts/setup_files/**/dev_*.yaml
 
 # Emacs backup files (this is Jim's fault)
 *~
