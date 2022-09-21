@@ -101,10 +101,12 @@ def main() -> None:
             for i, backup_entry in enumerate(aws_backup_list):
                 print(f"{i+1}: {backup_entry[1]} ({backup_entry[0]})")
 
-            backup_num = int(
-                input("Enter the number of the backup you would like to restore (0 = None):")
+            response = input(
+                "Enter the number of the backup you would like to restore (0 = None):"
             )
-            if backup_num == 0:
+            if response:
+                backup_num = int(response)
+            if not response or backup_num == 0:
                 print("No backup selected.  Exiting.")
                 sys.exit(0)
             backup = aws_backup_list[backup_num - 1][1]
@@ -123,10 +125,11 @@ def main() -> None:
         if not db_pod:
             print("Cannot find the database container.", file=sys.stderr)
             sys.exit(1)
+        db_files_subdir = os.environ["db_files_subdir"]
         combine.kubectl(
             [
                 "cp",
-                os.environ["db_files_subdir"],
+                db_files_subdir,
                 f"{db_pod}:/",
             ]
         )
@@ -138,6 +141,7 @@ def main() -> None:
                 "--drop",
                 "--gzip",
                 "--quiet",
+                f"--dir=/{db_files_subdir}",
             ],
         )
         combine.exec(
@@ -145,7 +149,7 @@ def main() -> None:
             [
                 "rm",
                 "-rf",
-                os.environ["db_files_subdir"],
+                f"/{db_files_subdir}",
             ],
         )
 
