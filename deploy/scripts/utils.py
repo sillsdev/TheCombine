@@ -92,10 +92,11 @@ def get_helm_opts(args: argparse.Namespace) -> List[str]:
         helm_opts.append("--debug")
     return helm_opts
 
+
 def set_kubernetes_env(args: argparse.Namespace) -> List[str]:
     """
     Setup the Kubernetes Environment.
-    
+
     Sets the KUBECONFIG environment variable if it was specified in the args.
 
     Returns a list of options to be added to 'kubectl' and 'helm' commands for connecting to the
@@ -107,22 +108,23 @@ def set_kubernetes_env(args: argparse.Namespace) -> List[str]:
         os.environ["KUBECONFIG"] = args.kubeconfig
     # Get the context from the args or the current one
     context = get_kube_context(args)
-    return [ "--kube-context", context ]
+    return ["--kube-context", context]
+
 
 def get_kube_context(args: argparse.Namespace) -> str:
     """Get the kubernetes context to use for 'kubectl' and 'helm' commands."""
-    
+
     curr_context = ""
     context_list: List[str] = []
 
     result = run_cmd(["kubectl", "config", "get-contexts", "--no-headers"], check_results=True)
     for line in result.stdout.splitlines():
-        if line[0] == '*':
+        if line[0] == "*":
             curr_context = line.split()[1]
             context_list.append(curr_context)
         else:
             context_list.append(line.split()[0])
-    
+
     if len(context_list) > 1:
         print("Available contexts:")
         for context in context_list:
