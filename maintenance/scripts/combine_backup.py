@@ -12,7 +12,7 @@ import tempfile
 
 from aws_backup import AwsBackup
 from combine_app import CombineApp
-from maint_utils import wait_for_dependents
+from maint_utils import check_env_vars, wait_for_dependents
 from script_step import ScriptStep
 
 
@@ -36,7 +36,10 @@ def main() -> None:
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
     combine = CombineApp()
-    aws = AwsBackup(bucket=os.environ["aws_bucket"])
+    aws_bucket, combine_host, db_files_subdir, backend_files_subdir = check_env_vars(
+        ["aws_bucket", "combine_host", "db_files_subdir", "backend_files_subdir"]
+    )
+    aws = AwsBackup(bucket=aws_bucket)
     step = ScriptStep()
 
     step.print("Make sure backend and database are available")
@@ -52,7 +55,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as backup_dir:
         backup_file = Path("combine-backup.tar.gz")
         date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        aws_file = f"{os.environ['combine_host']}-{date_str}.tar.gz"
+        aws_file = f"{combine_host}-{date_str}.tar.gz"
 
         step.print("Dump the database.")
         db_pod = combine.get_pod_id(CombineApp.Component.Database)
@@ -72,19 +75,18 @@ def main() -> None:
             db_pod,
             [
                 "ls",
-                os.environ["db_files_subdir"],
+                db_files_subdir,
             ],
             check_results=False,
         )
         if check_backup_results.returncode != 0:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
-        db_subdir = os.environ["db_files_subdir"]
         combine.kubectl(
             [
                 "cp",
-                f"{db_pod}:/{db_subdir}",
-                str(Path(backup_dir) / db_subdir),
+                f"{db_pod}:/{db_files_subdir}",
+                str(Path(backup_dir) / db_files_subdir),
             ]
         )
 
@@ -93,12 +95,11 @@ def main() -> None:
         if not backend_pod:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)
-        backend_subdir = os.environ["backend_files_subdir"]
         combine.kubectl(
             [
                 "cp",
-                f"{backend_pod}:/home/app/{backend_subdir}/",
-                str(Path(backup_dir) / backend_subdir),
+                f"{backend_pod}:/home/app/{backend_files_subdir}/",
+                str(Path(backup_dir) / backend_files_subdir),
             ]
         )
 
@@ -107,7 +108,7 @@ def main() -> None:
         os.chdir(backup_dir)
 
         with tarfile.open(backup_file, "x:gz") as tar:
-            for name in (os.environ["backend_files_subdir"], os.environ["db_files_subdir"]):
+            for name in (backend_files_subdir, db_files_subdir):
                 tar.add(name)
 
         step.print("Push backup to AWS S3 storage.")
