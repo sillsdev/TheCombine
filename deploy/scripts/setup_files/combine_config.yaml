@@ -51,6 +51,9 @@ targets:
       thecombine:
         global:
           serverName: qa-kube.thecombine.app
+        frontend:
+          configCaptchaRequired: "true"
+          configCaptchaSiteKey: "6LdZIlkaAAAAAES4FZ5d01Shj5G4X0e2CHYg0D5t"
   prod:
     profile: prod
     env_vars_required: true
