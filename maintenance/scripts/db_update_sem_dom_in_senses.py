@@ -101,7 +101,7 @@ def main() -> None:
         curr_collection = db.get_collection(collection_name, codec_options=codec_opts)
         num_docs = curr_collection.count_documents(query)
         total_docs = curr_collection.count_documents({})
-        logging.info(f"Updating {num_docs}/{total_docs} documents in {collection_name}.")
+        logging.info(f"Checking {num_docs}/{total_docs} documents in {collection_name}.")
         for word in curr_collection.find(query):
             found_updates = False
             for sense in word["senses"]:
@@ -119,6 +119,7 @@ def main() -> None:
             if found_updates:
                 updates[ObjectId(word["_id"])] = word
         # apply the updates
+        logging.info(f"Updating {len(updates)}/{num_docs} documents in {collection_name}.")
         for obj_id, update in updates.items():
             curr_collection.update_one({"_id": obj_id}, {"$set": update})
 
