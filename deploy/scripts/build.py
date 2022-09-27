@@ -142,6 +142,17 @@ def rm_release_file() -> None:
         release_file.unlink()
 
 
+def create_maint_requirements() -> None:
+    """Build the requirements.txt file for the Maintenance image."""
+    maint_dir = project_dir / "maintenance"
+    subprocess.run(
+        ["python", "-m", "piptools", "compile", "--upgrade", "requirements.in"],
+        check=True,
+        cwd=maint_dir,
+        text=True,
+    )
+
+
 def no_op() -> None:
     pass
 
@@ -151,7 +162,7 @@ def no_op() -> None:
 build_specs: Dict[str, BuildSpec] = {
     "backend": BuildSpec(project_dir / "Backend", "backend", no_op, no_op),
     "database": BuildSpec(project_dir / "database", "database", build_semantic_domains, no_op),
-    "maintenance": BuildSpec(project_dir / "maintenance", "maint", no_op, no_op),
+    "maintenance": BuildSpec(project_dir / "maintenance", "maint", create_maint_requirements, no_op),
     "frontend": BuildSpec(project_dir, "frontend", create_release_file, rm_release_file),
 }
 
