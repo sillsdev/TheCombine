@@ -112,9 +112,9 @@ def main() -> None:
                             domain["id"] = domain["_id"]
                             domain["guid"] = get_guid(domain["id"], domain["name"])
                             domain["lang"] = ""
-                            del domain["_id"]
-                            del domain["Name"]
-                            del domain["Description"]
+                            domain.pop("_id", None)
+                            domain.pop("Name", None)
+                            domain.pop("Description", None)
                             found_updates = True
             if found_updates:
                 updates[ObjectId(word["_id"])] = word
