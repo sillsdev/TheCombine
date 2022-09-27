@@ -162,7 +162,9 @@ def no_op() -> None:
 build_specs: Dict[str, BuildSpec] = {
     "backend": BuildSpec(project_dir / "Backend", "backend", no_op, no_op),
     "database": BuildSpec(project_dir / "database", "database", build_semantic_domains, no_op),
-    "maintenance": BuildSpec(project_dir / "maintenance", "maint", create_maint_requirements, no_op),
+    "maintenance": BuildSpec(
+        project_dir / "maintenance", "maint", create_maint_requirements, no_op
+    ),
     "frontend": BuildSpec(project_dir, "frontend", create_release_file, rm_release_file),
 }
 

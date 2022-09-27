@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from typing import Any, Dict, Union
+from typing import Any, Dict
 from uuid import UUID
 
 from bson.binary import UuidRepresentation
