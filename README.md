@@ -219,6 +219,13 @@ To upgrade all pinned dependencies:
 python -m piptools compile --upgrade dev-requirements.in
 ```
 
+To upgrade the pinned dependencies for the Maintenance container:
+
+```bash
+cd maintenance
+python -m piptools compile --upgrade requirements.in
+```
+
 ## Available Scripts
 
 ### Running in Development
