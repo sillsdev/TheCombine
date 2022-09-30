@@ -13,7 +13,6 @@ namespace BackendFramework.Models
         [BsonElement("_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string MongoId { get; set; }
-
         [Required]
         [BsonElement("guid")]
         public string Guid { get; set; }
@@ -54,12 +53,12 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name.Equals(other.Name) && Id.Equals(other.Id) && Lang.Equals(other.Lang);
+            return Name.Equals(other.Name) && Id.Equals(other.Id) && Lang.Equals(other.Lang) && Guid.Equals(other.Guid);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id, Lang);
+            return HashCode.Combine(Name, Id, Lang, Guid);
         }
     }
 

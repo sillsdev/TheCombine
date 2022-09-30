@@ -21,21 +21,13 @@ namespace BackendFramework.Repositories
                 filterDef.Eq("id", id),
                 filterDef.Eq(x => x.Lang, lang));
 
-            var filterEn = filterDef.Eq("Lang", "en");
-            var filterId = filterDef.Eq("id", "1");
-
-            Console.WriteLine("Total in Lang = " + lang + ";id=" + id + ": " + _context.SemanticDomains.CountDocuments(filter: filterEn));
-            Console.WriteLine("Total in Lang = " + lang + ";id=" + id + ": " + _context.SemanticDomains.CountDocuments(filter: filterId));
             var domain = await _context.SemanticDomains.FindAsync(filter: filter);
             try
             {
                 return await domain.FirstAsync();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("****");
-                Console.WriteLine(e.StackTrace);
                 return null;
             }
         }
@@ -51,11 +43,8 @@ namespace BackendFramework.Repositories
             {
                 return await domain.FirstAsync();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("****");
-                Console.WriteLine(e.StackTrace);
                 return null;
             }
         }

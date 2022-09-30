@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BackendFramework.Models;
 using NUnit.Framework;
 
@@ -34,8 +35,13 @@ namespace Backend.Tests.Models
                 new SemanticDomain { Name = "1" }.GetHashCode(),
                 new SemanticDomain { Name = "2" }.GetHashCode()
             );
-        }
-    }
+
+			Assert.AreNotEqual(
+				new SemanticDomain { Guid = Guid.NewGuid().ToString() }.GetHashCode(),
+				new SemanticDomain { Name = Guid.NewGuid().ToString() }.GetHashCode()
+			);
+		}
+	}
 
     public class SemanticDomainFullTests
     {

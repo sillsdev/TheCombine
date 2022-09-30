@@ -11,7 +11,8 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    //debug: true, // Uncomment to troubleshoot// detection: options,
+    //debug: true, // Uncomment to troubleshoot
+    // detection: options,
     // ignoring localStorage and cookies for the detection order lets the user change languages
     // more easily (just switch in the browser and reload, instead of clearing all site data)
     detection: { order: ["queryString", "path", "navigator"] },

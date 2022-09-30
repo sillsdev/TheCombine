@@ -404,6 +404,8 @@ export async function getSemanticDomainTreeNodeByName(
     params,
     defaultOptions()
   );
+  // The backend response for this method was observed returning null
+  // rather than undefined so we will normalize it here
   if (response.data) {
     return response.data;
   }
