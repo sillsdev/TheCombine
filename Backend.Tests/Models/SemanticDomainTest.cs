@@ -36,12 +36,12 @@ namespace Backend.Tests.Models
                 new SemanticDomain { Name = "2" }.GetHashCode()
             );
 
-			Assert.AreNotEqual(
-				new SemanticDomain { Guid = Guid.NewGuid().ToString() }.GetHashCode(),
-				new SemanticDomain { Name = Guid.NewGuid().ToString() }.GetHashCode()
-			);
-		}
-	}
+            Assert.AreNotEqual(
+                new SemanticDomain { Guid = Guid.NewGuid().ToString() }.GetHashCode(),
+                new SemanticDomain { Name = Guid.NewGuid().ToString() }.GetHashCode()
+            );
+        }
+    }
 
     public class SemanticDomainFullTests
     {
