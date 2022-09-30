@@ -321,7 +321,7 @@ namespace BackendFramework.Services
                 {
                     var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                            ? Guid.NewGuid().ToString()
-                           : sd.Guid.ToString();
+                           : sd.Guid;
                     WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name);
                 }
 
