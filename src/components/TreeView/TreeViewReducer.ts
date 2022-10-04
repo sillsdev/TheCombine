@@ -5,6 +5,7 @@ import {
 } from "components/TreeView/TreeViewReduxTypes";
 import i18n from "i18n";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 export interface TreeViewState {
   currentDomain: SemanticDomainTreeNode;
@@ -15,16 +16,7 @@ export interface TreeViewState {
 export const defaultState: TreeViewState = {
   language: "",
   open: false,
-  currentDomain: {
-    guid: "",
-    lang: i18n.language,
-    id: "Sem",
-    name: "",
-    previous: undefined,
-    next: undefined,
-    parent: undefined,
-    children: undefined,
-  },
+  currentDomain: newSemanticDomainTreeNode("Sem", "", i18n.language),
 };
 
 export const treeViewReducer = (
@@ -38,9 +30,7 @@ export const treeViewReducer = (
       return { ...state, open: true };
     case TreeActionType.SET_DOMAIN_LANGUAGE:
       if (!action.language) {
-        throw new Error(
-          "Cannot set domain map without a domain map and language."
-        );
+        throw new Error("Cannot set domain language to undefined.");
       }
       return {
         ...state,

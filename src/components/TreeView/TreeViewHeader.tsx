@@ -10,18 +10,18 @@ import DomainTile, {
 
 export interface TreeHeaderProps {
   currentDomain: SemanticDomainTreeNode;
-  animate: (domain: SemanticDomainTreeNode) => Promise<void>;
+  animate: (domain: SemanticDomain) => Promise<void>;
 }
 
 export function TreeViewHeader(props: TreeHeaderProps) {
-  const { getLeftBrother, getRightBrother } = useTreeNavigation(props);
+  const { getPrevSibling, getNextSibling } = useTreeNavigation(props);
 
   return (
     <ImageList cols={7} gap={20} rowHeight={"auto"}>
       <ImageListItem cols={2}>
-        {getLeftBrother(props) ? (
+        {getPrevSibling(props) ? (
           <DomainTile
-            domain={getLeftBrother(props)!}
+            domain={getPrevSibling(props)!}
             onClick={props.animate}
             direction={Direction.Left}
           />
@@ -42,9 +42,9 @@ export function TreeViewHeader(props: TreeHeaderProps) {
         </Button>
       </ImageListItem>
       <ImageListItem cols={2}>
-        {getRightBrother(props) ? (
+        {getNextSibling(props) ? (
           <DomainTile
-            domain={getRightBrother(props)!}
+            domain={getNextSibling(props)!}
             onClick={props.animate}
             direction={Direction.Right}
           />
@@ -56,24 +56,24 @@ export function TreeViewHeader(props: TreeHeaderProps) {
 
 // exported for unit testing only
 export function useTreeNavigation(props: TreeHeaderProps) {
-  function getRightBrother(props: TreeHeaderProps): SemanticDomain | undefined {
+  function getNextSibling(props: TreeHeaderProps): SemanticDomain | undefined {
     return props.currentDomain.next;
   }
 
-  function getLeftBrother(props: TreeHeaderProps): SemanticDomain | undefined {
+  function getPrevSibling(props: TreeHeaderProps): SemanticDomain | undefined {
     return props.currentDomain.previous;
   }
 
   // Navigate tree via arrow keys
   const navigateDomainArrowKeys = useCallback(
     (event: KeyboardEvent) => {
-      let domain: SemanticDomainTreeNode | undefined;
+      let domain: SemanticDomain | undefined;
       switch (event.key) {
         case Key.ArrowLeft:
-          domain = getLeftBrother(props);
+          domain = getPrevSibling(props);
           break;
         case Key.ArrowRight:
-          domain = getRightBrother(props);
+          domain = getNextSibling(props);
           break;
         case Key.ArrowUp:
           if (props.currentDomain.parent !== undefined) {
@@ -81,10 +81,7 @@ export function useTreeNavigation(props: TreeHeaderProps) {
           }
           break;
         case Key.ArrowDown:
-          if (
-            props.currentDomain.children &&
-            props.currentDomain.children.length === 1
-          ) {
+          if (props.currentDomain.children.length === 1) {
             domain = props.currentDomain.children[0];
           }
           break;
@@ -106,7 +103,7 @@ export function useTreeNavigation(props: TreeHeaderProps) {
   }, [navigateDomainArrowKeys]);
 
   return {
-    getRightBrother,
-    getLeftBrother,
+    getNextSibling,
+    getPrevSibling,
   };
 }

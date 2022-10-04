@@ -35,7 +35,7 @@ export function domainText(
         {domain.id !== RootId ? domain.id : ""}
       </Typography>
       <Typography variant={"body1"}>
-        {domain.id !== "Sem" ? domain.name : t("addWords.domain")}
+        {domain.id !== RootId ? domain.name : t("addWords.domain")}
       </Typography>
     </div>
   );

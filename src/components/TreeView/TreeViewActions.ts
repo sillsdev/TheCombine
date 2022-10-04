@@ -4,6 +4,7 @@ import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Bcp47Code } from "types/writingSystem";
 
 export function closeTreeAction(): TreeViewAction {
   return { type: TreeActionType.CLOSE_TREE };
@@ -48,7 +49,7 @@ export function initTreeDomain(language: string) {
     const currentDomain = getState().treeViewState.currentDomain;
     if (currentDomain === defaultState.currentDomain) {
       if (!currentDomain.lang) {
-        currentDomain.lang = language ?? "en";
+        currentDomain.lang = language ?? Bcp47Code.Default;
       }
       dispatch(traverseTreeAction(currentDomain));
     }

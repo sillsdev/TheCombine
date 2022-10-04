@@ -142,6 +142,7 @@ namespace BackendFramework.Models
         public SemanticDomain? Next { get; set; }
         [BsonElement("parent")]
         public SemanticDomain? Parent { get; set; }
+        [Required]
         [BsonElement("children")]
         public List<SemanticDomain> Children { get; set; }
 

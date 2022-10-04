@@ -73,5 +73,5 @@ export interface SemanticDomainTreeNode {
    * @type {Array<SemanticDomain>}
    * @memberof SemanticDomainTreeNode
    */
-  children?: Array<SemanticDomain> | null;
+  children: Array<SemanticDomain>;
 }

@@ -1,4 +1,4 @@
-import { SemanticDomain } from "api/models";
+import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 
 export enum TreeActionType {
   CLOSE_TREE = "CLOSE_TREE",
@@ -9,6 +9,6 @@ export enum TreeActionType {
 
 export interface TreeViewAction {
   type: TreeActionType;
-  domain?: SemanticDomain;
+  domain?: SemanticDomainTreeNode;
   language?: string;
 }

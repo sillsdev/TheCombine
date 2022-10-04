@@ -48,8 +48,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
       i18n.resolvedLanguage;
     if (newLang && newLang !== semDomLanguage) {
       dispatch(updateTreeLanguage(newLang));
-      // Don't update when props updates, except props.i18n.resolvedLanguage
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
     dispatch(initTreeDomain(newLang));
   }, [semDomLanguage, semDomWritingSystem, dispatch, i18n.resolvedLanguage]);
 
