@@ -1,6 +1,6 @@
 FROM mongo:5.0
 
-WORKDIR /app
+WORKDIR /
 
 RUN mkdir /data/semantic-domains
 

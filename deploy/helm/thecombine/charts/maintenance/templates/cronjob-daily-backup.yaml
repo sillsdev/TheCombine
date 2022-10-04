@@ -11,7 +11,7 @@ spec:
     metadata:
       creationTimestamp: null
     spec:
-      ttlSecondsAfterFinished: 300
+      ttlSecondsAfterFinished: 86400
       template:
         metadata:
           creationTimestamp: null
