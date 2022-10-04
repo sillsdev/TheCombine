@@ -26,6 +26,7 @@ import { errorToast } from "components/Toast/SwalToast";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { Bcp47Code } from "types/writingSystem";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -377,9 +378,9 @@ export async function projectDuplicateCheck(
 
 export async function getSemanticDomainFull(
   id: string,
-  lang: string
+  lang?: string
 ): Promise<SemanticDomainFull | undefined> {
-  const params = { id: id, lang: lang };
+  const params = { id, lang: lang ? lang : Bcp47Code.Default };
   return (
     await semanticDomainApi.getSemanticDomainFull(params, defaultOptions())
   ).data;
@@ -387,9 +388,9 @@ export async function getSemanticDomainFull(
 
 export async function getSemanticDomainTreeNode(
   id: string,
-  lang: string
+  lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
-  const params = { id: id, lang: lang };
+  const params = { id, lang: lang ? lang : Bcp47Code.Default };
   return (
     await semanticDomainApi.getSemanticDomainTreeNode(params, defaultOptions())
   ).data;
@@ -397,19 +398,16 @@ export async function getSemanticDomainTreeNode(
 
 export async function getSemanticDomainTreeNodeByName(
   name: string,
-  lang: string
+  lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
-  const params = { name: name, lang: lang };
+  const params = { name, lang: lang ? lang : Bcp47Code.Default };
   const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
     params,
     defaultOptions()
   );
   // The backend response for this method was observed returning null
   // rather than undefined so we will normalize it here
-  if (response.data) {
-    return response.data;
-  }
-  return undefined;
+  return response.data ?? undefined;
 }
 
 /* UserController.cs */

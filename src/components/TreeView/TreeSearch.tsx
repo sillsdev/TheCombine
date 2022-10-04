@@ -66,16 +66,17 @@ interface TreeSearchState {
   searchError: boolean;
 }
 
-// exported for unit testing only
+// Exported for unit testing only
 export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [input, setInput] = useState<string>("");
   const [searchError, setSearchError] = useState<boolean>(false);
+  const lang = props.currentDomain.lang;
 
   // Searches for a semantic domain by name
   async function searchDomainByName(
     target: string
   ): Promise<SemanticDomainTreeNode | undefined> {
-    return await getSemanticDomainTreeNodeByName(target, "en");
+    return await getSemanticDomainTreeNodeByName(target, lang);
   }
 
   /** Animate the domain and clear search input after successfully searching
@@ -100,7 +101,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       // Search for domain
       if (!isNaN(parseInt(input))) {
         // make a blocking call to the backend API for the domain id instead of using the map
-        const domain = await getSemanticDomainTreeNode(input, "en");
+        const domain = await getSemanticDomainTreeNode(input, lang);
         if (domain) {
           animateSuccessfulSearch(domain, event);
           // Return to indicate success and skip setting error state.

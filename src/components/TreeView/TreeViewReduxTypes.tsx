@@ -1,4 +1,4 @@
-import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
+import { SemanticDomainTreeNode } from "api/models";
 
 export enum TreeActionType {
   CLOSE_TREE = "CLOSE_TREE",

@@ -18,7 +18,7 @@ namespace BackendFramework.Repositories
         {
             var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
-                filterDef.Eq("id", id),
+                filterDef.Eq(x => x.Id, id),
                 filterDef.Eq(x => x.Lang, lang));
 
             var domain = await _context.SemanticDomains.FindAsync(filter: filter);
