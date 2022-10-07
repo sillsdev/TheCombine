@@ -29,7 +29,7 @@ from app_release import get_release
 from aws_env import init_aws_environment
 import combine_charts
 from enum_types import ExitStatus, HelmAction
-from kube_env import add_kube_opts, KubernetesEnvironment
+from kube_env import KubernetesEnvironment, add_kube_opts
 from utils import add_namespace, run_cmd
 import yaml
 

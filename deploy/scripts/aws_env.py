@@ -84,5 +84,10 @@ def init_aws_environment() -> None:
 if __name__ == "__main__":
     init_aws_environment()
     print("AWS Environment:")
-    for env_var in ["AWS_ACCOUNT", "AWS_DEFAULT_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]:
+    for env_var in [
+        "AWS_ACCOUNT",
+        "AWS_DEFAULT_REGION",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+    ]:
         print(f"{env_var}: {os.getenv(env_var, None)}")

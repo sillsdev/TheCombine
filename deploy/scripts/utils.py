@@ -4,8 +4,6 @@ A Collection of useful functions for Python
 
 from __future__ import annotations
 
-import argparse
-from dataclasses import dataclass
 import subprocess
 import sys
 from typing import List, Optional
@@ -51,7 +49,9 @@ def add_namespace(namespace: str, kube_opts: List[str]) -> bool:
 
     Returns True if the namespace was added.
     """
-    lookup_results = run_cmd(["kubectl"] + kube_opts + ["get", "namespace", namespace], check_results=False)
+    lookup_results = run_cmd(
+        ["kubectl"] + kube_opts + ["get", "namespace", namespace], check_results=False
+    )
     if lookup_results.returncode != 0:
         run_cmd(["kubectl"] + kube_opts + ["create", "namespace", namespace])
         return True
@@ -79,7 +79,7 @@ def choose_from_list(
             try:
                 reply = input(prompt_str)
             except KeyboardInterrupt:
-                print(f"\nCancelled.")
+                print("\nCancelled.")
                 sys.exit(1)
             else:
                 if not reply:

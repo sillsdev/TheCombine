@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from typing import List
+from typing import List, Optional
 
 from utils import choose_from_list, run_cmd
 
@@ -25,6 +25,7 @@ class KubernetesEnvironment:
                 ["kubectl"] + self.get_kubeconfig() + ["config", "get-contexts", "--no-headers"],
                 check_results=True,
             )
+            curr_context: Optional[str] = None
             for line in result.stdout.splitlines():
                 if line[0] == "*":
                     curr_context = line.split()[1]
