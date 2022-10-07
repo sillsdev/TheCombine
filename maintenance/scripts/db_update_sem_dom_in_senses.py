@@ -64,7 +64,7 @@ def get_guid(id: str, name: str) -> UUID:
     if id in domain_info:
         if name in domain_info[id].names:
             return domain_info[id].guid
-    logging.warning(f"Using blank GUID for {id}")
+    logging.warning(f"Using blank GUID for {id} {name}")
     return blank_guid
 
 
@@ -88,7 +88,7 @@ def main() -> None:
     logging_level = logging.INFO if args.verbose else logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=logging_level)
 
-    client: MongoClient[Dict[str, Any]] = MongoClient(f"mongodb://{args.host}/")
+    client: MongoClient[Dict[str, Any]] = MongoClient(args.host, args.port)
     db = client.CombineDatabase
     codec_opts: CodecOptions[Dict[str, Any]] = CodecOptions(
         uuid_representation=UuidRepresentation.PYTHON_LEGACY
@@ -119,7 +119,7 @@ def main() -> None:
             if found_updates:
                 updates[ObjectId(word["_id"])] = word
         # apply the updates
-        logging.info(f"Updating {len(updates)}/{num_docs} documents in {collection_name}.")
+        logging.info(f"Updating {len(updates)}/{total_docs} documents in {collection_name}.")
         for obj_id, update in updates.items():
             curr_collection.update_one({"_id": obj_id}, {"$set": update})
 
