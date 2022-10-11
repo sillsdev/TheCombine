@@ -62,8 +62,7 @@ def init_aws_environment() -> None:
         os.environ["AWS_PROFILE"] = aws_profile
         os.environ["AWS_ACCESS_KEY_ID"] = get_profile_var(aws_profile, "aws_access_key_id")
         os.environ["AWS_SECRET_ACCESS_KEY"] = get_profile_var(aws_profile, "aws_secret_access_key")
-        region = get_profile_var(aws_profile, "region")
-        os.environ["AWS_DEFAULT_REGION"] = region
+        os.environ["AWS_DEFAULT_REGION"] = get_profile_var(aws_profile, "region")
         result = run_cmd(
             [
                 "aws",

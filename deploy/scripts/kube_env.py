@@ -74,11 +74,7 @@ class KubernetesEnvironment:
 
 
 def add_kube_opts(parser: argparse.ArgumentParser) -> None:
-    """
-    Add commandline arguments that are shared between scripts calling helm.
-
-    Sets up '--verbose' as the equivalent of '--debug'.
-    """
+    """Add commandline arguments for KUbernetes tools."""
     parser.add_argument(
         "--context",
         help="Context in kubectl configuration file to be used.",
