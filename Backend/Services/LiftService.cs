@@ -222,7 +222,8 @@ namespace BackendFramework.Services
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
             foreach (var wordEntry in activeWords)
             {
-                var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid);
+                var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
+                var entry = new LexEntry(id, wordEntry.Guid);
                 if (DateTime.TryParse(wordEntry.Created, out var createdTime))
                 {
                     entry.CreationTime = createdTime;
@@ -248,7 +249,8 @@ namespace BackendFramework.Services
 
             foreach (var wordEntry in deletedWords)
             {
-                var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid);
+                var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
+                var entry = new LexEntry(id, wordEntry.Guid);
 
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, vernacularBcp47);
@@ -488,7 +490,7 @@ namespace BackendFramework.Services
         /// </summary>
         /// <param name="sInput"></param>
         /// <returns></returns>
-        public static string? MakeSafeXmlAttribute(string sInput)
+        public static string MakeSafeXmlAttribute(string sInput)
         {
             return SecurityElement.Escape(sInput);
         }
