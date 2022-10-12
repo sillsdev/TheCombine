@@ -67,7 +67,9 @@ def choose_from_list(
     The curr_selection is automatically chosen if the options List is empty
     or has the curr_selection as its only member.
     """
-    if len(options) > 1:
+    if len(options) == 1 and curr_selection is not None and curr_selection == options[0]:
+       return curr_selection 
+    if len(options) >= 1:
         print(f"Choose {name} from:")
         for index, option in enumerate(options):
             print(f"\t{index+1}: {option}")

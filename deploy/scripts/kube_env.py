@@ -74,7 +74,7 @@ class KubernetesEnvironment:
 
 
 def add_kube_opts(parser: argparse.ArgumentParser) -> None:
-    """Add commandline arguments for KUbernetes tools."""
+    """Add commandline arguments for Kubernetes tools."""
     parser.add_argument(
         "--context",
         help="Context in kubectl configuration file to be used.",
