@@ -70,14 +70,14 @@ def choose_from_list(
     if len(options) == 1 and curr_selection is not None and curr_selection == options[0]:
         return curr_selection
     if len(options) >= 1:
-        print(f"Choose {name} from:")
-        for index, option in enumerate(options):
-            print(f"\t{index+1}: {option}")
         while True:
+            print(f"Choose {name} from:")
+            for index, option in enumerate(options):
+                print(f"\t{index+1}: {option}")
             if curr_selection is None:
                 prompt_str = f"Enter {name}: "
             else:
-                prompt_str = f"Enter {name}(Default: {curr_selection}): "
+                prompt_str = f"Enter {name} (Default: {curr_selection}): "
             try:
                 reply = input(prompt_str)
             except KeyboardInterrupt:
