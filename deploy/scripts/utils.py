@@ -68,7 +68,7 @@ def choose_from_list(
     or has the curr_selection as its only member.
     """
     if len(options) == 1 and curr_selection is not None and curr_selection == options[0]:
-       return curr_selection 
+        return curr_selection
     if len(options) >= 1:
         print(f"Choose {name} from:")
         for index, option in enumerate(options):
