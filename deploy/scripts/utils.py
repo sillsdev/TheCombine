@@ -4,7 +4,6 @@ A Collection of useful functions for Python
 
 from __future__ import annotations
 
-import argparse
 import subprocess
 import sys
 from typing import List, Optional
@@ -44,49 +43,61 @@ def run_cmd(
         sys.exit(err.returncode)
 
 
-def add_namespace(namespace: str) -> bool:
+def add_namespace(namespace: str, kube_opts: List[str]) -> bool:
     """
     Create a Kubernetes namespace if and only if it does not exist.
 
     Returns True if the namespace was added.
     """
-    lookup_results = run_cmd(["kubectl", "get", "namespace", namespace], check_results=False)
+    lookup_results = run_cmd(
+        ["kubectl"] + kube_opts + ["get", "namespace", namespace], check_results=False
+    )
     if lookup_results.returncode != 0:
-        run_cmd(["kubectl", "create", "namespace", namespace])
+        run_cmd(["kubectl"] + kube_opts + ["create", "namespace", namespace])
         return True
     return False
 
 
-def add_helm_opts(parser: argparse.ArgumentParser) -> None:
+def choose_from_list(
+    name: str, curr_selection: Optional[str], options: List[str]
+) -> Optional[str]:
     """
-    Add commandline arguments that are shared between scripts calling helm.
+    Prompt user to choose/confirm a selection from a list.
 
-    Sets up '--verbose' as the equivalent of '--debug'.
+    The curr_selection is automatically chosen if the options List is empty
+    or has the curr_selection as its only member.
     """
-    parser.add_argument(
-        "--context",
-        help="Context in kubectl configuration file to be used.",
-    )
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debugging output for helm commands.",
-    )
-    parser.add_argument(
-        "--kubeconfig",
-        help="Specify the kubectl configuration file to be used.",
-    )
-
-
-def get_helm_opts(args: argparse.Namespace) -> List[str]:
-    """
-    Create list of general helm options based on argparse Namespace.
-    """
-    helm_opts = []
-    if args.kubeconfig:
-        helm_opts.extend(["--kubeconfig", args.kubeconfig])
-    if args.context:
-        helm_opts.extend(["--kube-context", args.context])
-    if args.debug:
-        helm_opts.append("--debug")
-    return helm_opts
+    if len(options) == 1 and curr_selection is not None and curr_selection == options[0]:
+        return curr_selection
+    if len(options) >= 1:
+        while True:
+            print(f"Choose {name} from:")
+            for index, option in enumerate(options):
+                print(f"\t{index+1}: {option}")
+            if curr_selection is None:
+                prompt_str = f"Enter {name}: "
+            else:
+                prompt_str = f"Enter {name} (Default: {curr_selection}): "
+            try:
+                reply = input(prompt_str)
+            except KeyboardInterrupt:
+                print("\nCancelled.")
+                sys.exit(1)
+            else:
+                if not reply:
+                    break
+                elif reply in options:
+                    curr_selection = reply
+                    break
+                else:
+                    try:
+                        index = int(reply)
+                        if index > 0 and index <= len(options):
+                            curr_selection = options[index - 1]
+                            break
+                        else:
+                            curr_selection = None
+                    except ValueError:
+                        curr_selection = None
+                    print(f"{reply} is not in the list.  Please re-enter.")
+    return curr_selection

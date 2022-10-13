@@ -11,7 +11,8 @@ import tempfile
 from typing import Any, Dict, List
 
 from enum_types import ExitStatus, HelmAction
-from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
+from kube_env import KubernetesEnvironment, add_kube_opts
+from utils import add_namespace, run_cmd
 import yaml
 
 scripts_dir = Path(__file__).resolve().parent
@@ -24,7 +25,7 @@ def parse_args() -> argparse.Namespace:
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    add_helm_opts(parser)
+    add_kube_opts(parser)
     parser.add_argument(
         "--type",
         "-t",
@@ -90,13 +91,15 @@ def main() -> None:
     for chart in yaml.safe_load(chart_list_results.stdout):
         curr_charts.append(chart["name"])
 
+    # Verify the Kubernetes/Helm environment
+    kube_env = KubernetesEnvironment(args)
     # Install the required charts
     for chart_descr in this_cluster:
         chart_spec = config[chart_descr]["chart"]
         # add namespace if needed
-        add_namespace(chart_spec["namespace"])
+        add_namespace(chart_spec["namespace"], kube_env.get_kubectl_opts())
         # install the chart
-        helm_cmd = ["helm"] + get_helm_opts(args)
+        helm_cmd = ["helm"] + kube_env.get_helm_opts()
         if chart_spec["name"] in curr_charts:
             helm_action = HelmAction.UPGRADE
         else:
