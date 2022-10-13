@@ -5,7 +5,7 @@
 #    pip-compile requirements.in
 #
 ansible==6.0.0
-    # via -r requirements.in
+    # via -r deploy/requirements.in
 ansible-core==2.13.1
     # via ansible
 cachetools==5.2.0
@@ -28,16 +28,16 @@ idna==3.3
     # via requests
 jinja2==3.1.2
     # via
-    #   -r requirements.in
+    #   -r deploy/requirements.in
     #   ansible-core
     #   jinja2-base64-filters
 jinja2-base64-filters==0.1.4
-    # via -r requirements.in
+    # via -r deploy/requirements.in
 kubernetes==23.6.0
-    # via -r requirements.in
+    # via -r deploy/requirements.in
 markupsafe==2.1.1
     # via jinja2
-oauthlib==3.2.0
+oauthlib==3.2.1
     # via requests-oauthlib
 packaging==21.3
     # via ansible-core
@@ -50,14 +50,14 @@ pyasn1-modules==0.2.8
 pycparser==2.21
     # via cffi
 pyopenssl==22.0.0
-    # via -r requirements.in
+    # via -r deploy/requirements.in
 pyparsing==3.0.9
     # via packaging
 python-dateutil==2.8.2
     # via kubernetes
 pyyaml==6.0
     # via
-    #   -r requirements.in
+    #   -r deploy/requirements.in
     #   ansible-core
     #   kubernetes
 requests==2.28.0
