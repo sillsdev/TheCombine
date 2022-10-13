@@ -31,6 +31,7 @@ from typing import List, Tuple
 from aws_backup import AwsBackup
 from combine_app import CombineApp
 import humanfriendly
+from maint_utils import check_env_vars
 from script_step import ScriptStep
 
 
@@ -65,8 +66,12 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+    # Look up the required environment variables
+    aws_bucket, db_files_subdir, backend_files_subdir = check_env_vars(
+        ["aws_bucket", "db_files_subdir", "backend_files_subdir"]
+    )
     combine = CombineApp()
-    aws = AwsBackup(bucket=os.environ["aws_bucket"])
+    aws = AwsBackup(bucket=aws_bucket)
     step = ScriptStep()
 
     step.print("Prepare for the restore.")
@@ -80,7 +85,7 @@ def main() -> None:
             backup_list_output = aws.list().stdout.strip().split("\n")
 
             if len(backup_list_output) == 0:
-                print(f"No backups available from {os.environ['aws_bucket']}")
+                print(f"No backups available from {aws_bucket}")
                 sys.exit(0)
 
             # Convert the list of backups to a more useful structure
@@ -125,7 +130,6 @@ def main() -> None:
         if not db_pod:
             print("Cannot find the database container.", file=sys.stderr)
             sys.exit(1)
-        db_files_subdir = os.environ["db_files_subdir"]
         combine.kubectl(
             [
                 "cp",
@@ -167,13 +171,11 @@ def main() -> None:
                 [
                     "/bin/bash",
                     "-c",
-                    f"rm -rf /home/app/{os.environ['backend_files_subdir']}/*",
+                    f"rm -rf /home/app/{backend_files_subdir}/*",
                 ],
             )
 
-        combine.kubectl(
-            ["cp", os.environ["backend_files_subdir"], f"{backend_pod}:/home/app", "--no-preserve"]
-        )
+        combine.kubectl(["cp", backend_files_subdir, f"{backend_pod}:/home/app", "--no-preserve"])
 
 
 if __name__ == "__main__":
