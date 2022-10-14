@@ -46,3 +46,9 @@ ap_ssid: "{{ansible_hostname}}_ap"
 ap_passphrase: "Combine2020"
 ap_gateway: "10.10.10.1"
 ap_hostname: "{{ansible_hostname}}"
+
+################################################
+# hardware monitoring settings
+################################################
+include_hw_monitoring: yes
+history_days: 60

@@ -28,6 +28,11 @@
         name: wifi_ap
       when: has_wifi
 
+    - name: Enable hardware monitoring
+      import_role:
+        name: monitor_hardware
+      when: include_hw_monitoring
+
     - name: Configure Network Interfaces
       import_role:
         name: network_config
