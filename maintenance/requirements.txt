@@ -16,7 +16,7 @@ charset-normalizer==2.1.1
     # via requests
 cryptography==38.0.1
     # via pyopenssl
-google-auth==2.11.1
+google-auth==2.12.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
