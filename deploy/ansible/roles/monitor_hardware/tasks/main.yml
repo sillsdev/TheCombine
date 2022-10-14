@@ -1,0 +1,34 @@
+---
+##################################
+# Setup sysstat to monitor target
+# hardware.
+##################################
+
+- name: Install sensor package
+  apt:
+    name:
+      - lm-sensors
+      - sysstat
+  notify: restart target
+
+- name: Enable monitoring
+  lineinfile:
+    path: /etc/sysstat/sysstat
+    regexp: "^#*SADC_OPTIONS="
+    state: present
+    line: SADC_OPTIONS="-D -S DISK,POWER"
+  notify: restart sysstat service
+
+- name: Set history
+  lineinfile:
+    path: /etc/sysstat/sysstat
+    regexp: "^#*HISTORY="
+    state: present
+    line: HISTORY={{ history_days }}
+  notify: restart sysstat service
+
+- name: Start monitoring service
+  service:
+    name: sysstat
+    enabled: yes
+    state: started

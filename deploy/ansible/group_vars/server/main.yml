@@ -27,3 +27,8 @@ ingress_namespace: ingress-nginx
 # WiFi access point settings
 ################################################
 has_wifi: no
+
+################################################
+# hardware monitoring settings
+################################################
+include_hw_monitoring: no

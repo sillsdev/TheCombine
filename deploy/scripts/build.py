@@ -121,7 +121,7 @@ project_dir = Path(__file__).resolve().parent.parent.parent
 """Absolute path to the checked out repository."""
 
 
-# Pre-build functions for the different build components
+# Pre-build/post-build functions for the different build components
 def build_semantic_domains() -> None:
     """Create the semantic domain definition files."""
     source_dir = project_dir / "deploy" / "scripts" / "semantic_domains" / "xml"
