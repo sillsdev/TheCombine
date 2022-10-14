@@ -39,6 +39,7 @@ namespace BackendFramework.Models
         {
             return new SemanticDomain
             {
+                MongoId = MongoId,
                 Guid = Guid,
                 Name = Name,
                 Id = Id,
