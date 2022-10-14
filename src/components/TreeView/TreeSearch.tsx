@@ -99,22 +99,16 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       event.preventDefault();
 
       // Search for domain
+      let domain: SemanticDomainTreeNode | undefined;
       if (!isNaN(parseInt(input))) {
-        // make a blocking call to the backend API for the domain id instead of using the map
-        const domain = await getSemanticDomainTreeNode(input, lang);
-        if (domain) {
-          animateSuccessfulSearch(domain, event);
-          // Return to indicate success and skip setting error state.
-          return;
-        }
+        domain = await getSemanticDomainTreeNode(input, lang);
       } else {
-        const domain: SemanticDomainTreeNode | undefined =
-          await searchDomainByName(input);
-        if (domain !== undefined) {
-          animateSuccessfulSearch(domain, event);
-          // Return to indicate success and skip setting error state.
-          return;
-        }
+        domain = await searchDomainByName(input);
+      }
+      if (domain) {
+        animateSuccessfulSearch(domain, event);
+        // Return to indicate success and skip setting error state.
+        return;
       }
       // Did not find a domain through either numerical or textual search.
       setSearchError(true);

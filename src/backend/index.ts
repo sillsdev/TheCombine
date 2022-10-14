@@ -380,33 +380,35 @@ export async function getSemanticDomainFull(
   id: string,
   lang?: string
 ): Promise<SemanticDomainFull | undefined> {
-  const params = { id, lang: lang ? lang : Bcp47Code.Default };
-  return (
-    await semanticDomainApi.getSemanticDomainFull(params, defaultOptions())
-  ).data;
+  const response = await semanticDomainApi.getSemanticDomainFull(
+    { id, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
 }
 
 export async function getSemanticDomainTreeNode(
   id: string,
   lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
-  const params = { id, lang: lang ? lang : Bcp47Code.Default };
-  return (
-    await semanticDomainApi.getSemanticDomainTreeNode(params, defaultOptions())
-  ).data;
+  const response = await semanticDomainApi.getSemanticDomainTreeNode(
+    { id, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
 }
 
 export async function getSemanticDomainTreeNodeByName(
   name: string,
   lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
-  const params = { name, lang: lang ? lang : Bcp47Code.Default };
   const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
-    params,
+    { name, lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()
   );
-  // The backend response for this method was observed returning null
-  // rather than undefined so we will normalize it here
+  // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
 }
 
