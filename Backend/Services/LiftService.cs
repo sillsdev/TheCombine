@@ -11,6 +11,7 @@ using System.Xml;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using MongoDB.Bson;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
@@ -640,7 +641,12 @@ namespace BackendFramework.Services
                         // Splits on the space between the number and name of the semantic domain
                         var splitSemDom = semanticDomainString.Split(" ", 2);
                         newSense.SemanticDomains.Add(
-                            new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
+                            new SemanticDomain
+                            {
+                                Id = splitSemDom[0],
+                                MongoId = ObjectId.GenerateNewId().ToString(),
+                                Name = splitSemDom[1]
+                            });
                     }
 
                     newWord.Senses.Add(newSense);
