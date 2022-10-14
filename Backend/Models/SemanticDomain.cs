@@ -39,6 +39,7 @@ namespace BackendFramework.Models
         {
             return new SemanticDomain
             {
+                // If this clone is ever used in production, the MongoId may need to be excluded.
                 MongoId = MongoId,
                 Guid = Guid,
                 Name = Name,

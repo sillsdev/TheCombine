@@ -322,7 +322,7 @@ namespace Backend.Tests.Controllers
                 }
             }
 
-            // Check if the first SemanticDomain has an empty MongoId.
+            // Assert that the first SemanticDomain doesn't have an empty MongoId.
             if (allWords[0].Senses.Count > 0 && allWords[0].Senses[0].SemanticDomains.Count > 0)
             {
                 Assert.IsNotEmpty(allWords[0].Senses[0].SemanticDomains[0].MongoId);
