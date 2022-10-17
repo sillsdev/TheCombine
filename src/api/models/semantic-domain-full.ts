@@ -15,31 +15,49 @@
 /**
  *
  * @export
- * @interface SemanticDomainWithSubdomains
+ * @interface SemanticDomainFull
  */
-export interface SemanticDomainWithSubdomains {
+export interface SemanticDomainFull {
   /**
    *
    * @type {string}
-   * @memberof SemanticDomainWithSubdomains
+   * @memberof SemanticDomainFull
+   */
+  mongoId?: string | null;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainFull
+   */
+  guid: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainFull
    */
   name: string;
   /**
    *
    * @type {string}
-   * @memberof SemanticDomainWithSubdomains
+   * @memberof SemanticDomainFull
    */
   id: string;
   /**
    *
    * @type {string}
-   * @memberof SemanticDomainWithSubdomains
+   * @memberof SemanticDomainFull
+   */
+  lang: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainFull
    */
   description: string;
   /**
    *
-   * @type {Array<SemanticDomainWithSubdomains>}
-   * @memberof SemanticDomainWithSubdomains
+   * @type {Array<string>}
+   * @memberof SemanticDomainFull
    */
-  subdomains: Array<SemanticDomainWithSubdomains>;
+  questions: Array<string>;
 }

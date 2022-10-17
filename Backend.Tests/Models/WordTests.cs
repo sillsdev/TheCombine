@@ -433,23 +433,4 @@ namespace Backend.Tests.Models
             );
         }
     }
-
-    public class SemanticDomainTests
-    {
-        private const string Name = "Home";
-
-        [Test]
-        public void TestEquals()
-        {
-            var domain = new SemanticDomain { Name = Name };
-            Assert.That(domain.Equals(new SemanticDomain { Name = Name }));
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var domain = new SemanticDomain { Name = Name };
-            Assert.IsFalse(domain.Equals(null));
-        }
-    }
 }

@@ -14,11 +14,11 @@ import DataEntryTable, {
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
 import {
-  multiSenseWord,
   newSemanticDomain,
-  newSense,
-  simpleWord,
-} from "types/word";
+  newSemanticDomainTreeNode,
+  semDomFromTreeNode,
+} from "types/semanticDomain";
+import { multiSenseWord, newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
 
@@ -39,7 +39,8 @@ let testHandle: ReactTestInstance;
 
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
-const mockSemanticDomain = newSemanticDomain();
+const mockTreeNode = newSemanticDomainTreeNode();
+const mockSemanticDomain = semDomFromTreeNode(mockTreeNode);
 const mockOpenTree = jest.fn();
 const getWordsFromBackendMock = jest.fn();
 
@@ -62,7 +63,7 @@ beforeEach(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <DataEntryTable
-        semanticDomain={mockSemanticDomain}
+        semanticDomain={mockTreeNode}
         openTree={mockOpenTree}
         hideQuestions={mockHideQuestions}
         getWordsFromBackend={getWordsFromBackendMock}
@@ -76,7 +77,7 @@ async function exitToTree() {
   await renderer.act(async () => {
     testRenderer.update(
       <DataEntryTable
-        semanticDomain={mockSemanticDomain}
+        semanticDomain={mockTreeNode}
         treeIsOpen
         openTree={mockOpenTree}
         hideQuestions={mockHideQuestions}

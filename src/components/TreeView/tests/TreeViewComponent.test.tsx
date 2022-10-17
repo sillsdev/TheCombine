@@ -4,15 +4,14 @@ import renderer, {
   ReactTestRenderer,
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
 import "tests/mockReactI18next";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeView from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
-import mockMap, {
-  jsonDomain as mockDomain,
-} from "components/TreeView/tests/MockSemanticDomain";
+import mockMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
 var treeMaster: ReactTestRenderer;
@@ -26,12 +25,10 @@ jest.mock("@material-ui/core", () => {
     Zoom: realMaterialUi.Container,
   };
 });
-
-const mockStore = configureMockStore()({
+const mockStore = configureMockStore([thunk])({
   treeViewState: {
     ...treeViewState,
-    currentDomain: mockMap[mockDomain.id],
-    domainMap: mockMap,
+    currentDomain: mockMap[mapIds.parent],
   },
   currentProjectState: {
     project: { semDomWritingSystem: newWritingSystem() },

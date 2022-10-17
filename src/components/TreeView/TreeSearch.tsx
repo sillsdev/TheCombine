@@ -3,14 +3,15 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import TreeSemanticDomain, {
-  DomainMap,
-} from "components/TreeView/TreeSemanticDomain";
+import { SemanticDomainTreeNode } from "api";
+import {
+  getSemanticDomainTreeNode,
+  getSemanticDomainTreeNodeByName,
+} from "backend";
 
 export interface TreeSearchProps {
-  currentDomain: TreeSemanticDomain;
-  domainMap: DomainMap;
-  animate: (domain: TreeSemanticDomain) => Promise<void>;
+  currentDomain: SemanticDomainTreeNode;
+  animate: (domain: SemanticDomainTreeNode) => Promise<void>;
 }
 
 export const testId = "testSearch";
@@ -65,27 +66,23 @@ interface TreeSearchState {
   searchError: boolean;
 }
 
-// exported for unit testing only
+// Exported for unit testing only
 export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [input, setInput] = useState<string>("");
   const [searchError, setSearchError] = useState<boolean>(false);
+  const lang = props.currentDomain.lang;
 
   // Searches for a semantic domain by name
-  function searchDomainByName(target: string): TreeSemanticDomain | undefined {
-    const check = (checkAgainst: TreeSemanticDomain | undefined) =>
-      checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
-    for (const domain of Object.values(props.domainMap)) {
-      if (check(domain)) {
-        return domain;
-      }
-    }
-    return undefined;
+  async function searchDomainByName(
+    target: string
+  ): Promise<SemanticDomainTreeNode | undefined> {
+    return await getSemanticDomainTreeNodeByName(target, lang);
   }
 
   /** Animate the domain and clear search input after successfully searching
    * for a new domain. */
   function animateSuccessfulSearch(
-    domain: TreeSemanticDomain,
+    domain: SemanticDomainTreeNode,
     event: React.KeyboardEvent
   ): void {
     props.animate(domain);
@@ -95,27 +92,23 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   }
 
   // Dispatch the search for a specified domain, and switches to it if it exists
-  function searchAndSelectDomain(event: React.KeyboardEvent) {
+  async function searchAndSelectDomain(event: React.KeyboardEvent) {
     event.bubbles = false;
 
     if (event.key === Key.Enter) {
       event.preventDefault();
 
       // Search for domain
+      let domain: SemanticDomainTreeNode | undefined;
       if (!isNaN(parseInt(input))) {
-        const domain = props.domainMap[input];
-        if (domain) {
-          animateSuccessfulSearch(domain, event);
-          // Return to indicate success and skip setting error state.
-          return;
-        }
+        domain = await getSemanticDomainTreeNode(input, lang);
       } else {
-        const domain = searchDomainByName(input);
-        if (domain !== undefined) {
-          animateSuccessfulSearch(domain, event);
-          // Return to indicate success and skip setting error state.
-          return;
-        }
+        domain = await searchDomainByName(input);
+      }
+      if (domain) {
+        animateSuccessfulSearch(domain, event);
+        // Return to indicate success and skip setting error state.
+        return;
       }
       // Did not find a domain through either numerical or textual search.
       setSearchError(true);

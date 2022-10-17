@@ -322,6 +322,12 @@ namespace Backend.Tests.Controllers
                 }
             }
 
+            // Assert that the first SemanticDomain doesn't have an empty MongoId.
+            if (allWords[0].Senses.Count > 0 && allWords[0].Senses[0].SemanticDomains.Count > 0)
+            {
+                Assert.IsNotEmpty(allWords[0].Senses[0].SemanticDomains[0].MongoId);
+            }
+
             // Export.
             var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);

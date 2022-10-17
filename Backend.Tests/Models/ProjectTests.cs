@@ -88,7 +88,7 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem { Name = "WritingSystemName", Bcp47 = "en", Font = "calibri" };
             var project = new Project { Name = "ProjectName", VernacularWritingSystem = system };
-            var domain = new SemanticDomain { Name = "SemanticDomainName", Id = "1", Description = "text" };
+            var domain = new SemanticDomain { Name = "SemanticDomainName", Id = "1" };
             project.SemanticDomains.Add(domain);
 
             var customField = new CustomField { Name = "CustomFieldName", Type = "type" };

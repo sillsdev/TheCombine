@@ -13,6 +13,10 @@ jest.mock("react-i18next", () => ({
     };
     return Component;
   },
+  initReactI18next: {
+    type: "3rdParty",
+    init: jest.fn(),
+  },
 }));
 
 export {};

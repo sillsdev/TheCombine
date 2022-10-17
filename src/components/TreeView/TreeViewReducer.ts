@@ -1,15 +1,14 @@
-import TreeSemanticDomain, {
-  DomainMap,
-} from "components/TreeView/TreeSemanticDomain";
+import { SemanticDomainTreeNode } from "api/models";
 import {
   TreeViewAction,
   TreeActionType,
-} from "components/TreeView/TreeViewActions";
+} from "components/TreeView/TreeViewReduxTypes";
+import i18n from "i18n";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 export interface TreeViewState {
-  currentDomain: TreeSemanticDomain;
-  domainMap: DomainMap;
+  currentDomain: SemanticDomainTreeNode;
   language: string;
   open: boolean;
 }
@@ -17,8 +16,7 @@ export interface TreeViewState {
 export const defaultState: TreeViewState = {
   language: "",
   open: false,
-  currentDomain: new TreeSemanticDomain(),
-  domainMap: {},
+  currentDomain: newSemanticDomainTreeNode("Sem", "", i18n.language),
 };
 
 export const treeViewReducer = (
@@ -30,21 +28,17 @@ export const treeViewReducer = (
       return { ...state, open: false };
     case TreeActionType.OPEN_TREE:
       return { ...state, open: true };
-    case TreeActionType.SET_DOMAIN_MAP:
-      if (!action.domainMap || !action.language) {
-        throw new Error(
-          "Cannot set domain map without a domain map and language."
-        );
+    case TreeActionType.SET_DOMAIN_LANGUAGE:
+      if (!action.language) {
+        throw new Error("Cannot set domain language to undefined.");
       }
       return {
         ...state,
-        currentDomain: action.domainMap[state.currentDomain.id],
-        domainMap: action.domainMap,
         language: action.language,
       };
-    case TreeActionType.TRAVERSE_TREE:
+    case TreeActionType.SET_CURRENT_DOMAIN:
       if (!action.domain) {
-        throw new Error("Cannot traverse tree without specifying domain.");
+        throw new Error("Cannot set the current domain to undefined.");
       }
       return { ...state, currentDomain: action.domain };
     case StoreActionTypes.RESET:

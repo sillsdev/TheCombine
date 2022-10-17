@@ -11,6 +11,8 @@ import {
   MergeWords,
   Permission,
   Project,
+  SemanticDomainFull,
+  SemanticDomainTreeNode,
   SiteBanner,
   User,
   UserEdit,
@@ -24,6 +26,7 @@ import { errorToast } from "components/Toast/SwalToast";
 import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { Bcp47Code } from "types/writingSystem";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -87,6 +90,11 @@ const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
+const semanticDomainApi = new Api.SemanticDomainApi(
+  config,
+  BASE_PATH,
+  axiosInstance
+);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
@@ -364,6 +372,44 @@ export async function projectDuplicateCheck(
   return (
     await projectApi.projectDuplicateCheck({ projectName }, defaultOptions())
   ).data;
+}
+
+/* SemanticDomainController.cs */
+
+export async function getSemanticDomainFull(
+  id: string,
+  lang?: string
+): Promise<SemanticDomainFull | undefined> {
+  const response = await semanticDomainApi.getSemanticDomainFull(
+    { id, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainTreeNode(
+  id: string,
+  lang?: string
+): Promise<SemanticDomainTreeNode | undefined> {
+  const response = await semanticDomainApi.getSemanticDomainTreeNode(
+    { id, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainTreeNodeByName(
+  name: string,
+  lang?: string
+): Promise<SemanticDomainTreeNode | undefined> {
+  const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
+    { name, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
 }
 
 /* UserController.cs */

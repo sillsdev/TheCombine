@@ -30,7 +30,7 @@ Array [
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
             disabled={false}
-            id=""
+            id="Sem"
             onBlur={[Function]}
             onClick={[Function]}
             onDragLeave={[Function]}
@@ -83,9 +83,7 @@ Array [
                   </span>
                   <p
                     className="MuiTypography-root MuiTypography-body1"
-                  >
-                    
-                  </p>
+                  />
                 </div>
               </div>
             </span>
@@ -197,11 +195,11 @@ Array [
                 >
                   1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   parent
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -1014,11 +1012,11 @@ Array [
                 >
                   1.2
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   kid2
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -1388,11 +1386,11 @@ Array [
                 >
                   1.2.1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   depth=3
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -1762,11 +1760,11 @@ Array [
                 >
                   1.0
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   kid0
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -2762,11 +2760,11 @@ Array [
                 >
                   1.2.1.1.1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   depth=5
-                </h6>
+                </p>
               </div>
             </span>
             <span
@@ -3071,11 +3069,11 @@ Array [
                 >
                   1.1
                 </span>
-                <h6
-                  className="MuiTypography-root MuiTypography-h6"
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
                 >
                   kid1
-                </h6>
+                </p>
               </div>
             </span>
             <span

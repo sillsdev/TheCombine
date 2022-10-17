@@ -321,29 +321,6 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <remarks>
-    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
-    /// </remarks>
-    public class SemanticDomainWithSubdomains
-    {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Id { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Required]
-        public List<SemanticDomainWithSubdomains> Subdomains { get; set; }
-
-        public SemanticDomainWithSubdomains(SemanticDomain sd)
-        {
-            Name = sd.Name;
-            Id = sd.Id;
-            Description = sd.Description;
-            Subdomains = new List<SemanticDomainWithSubdomains>();
-        }
-    }
-
     public enum AutocompleteSetting
     {
         Off,

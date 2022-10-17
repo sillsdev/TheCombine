@@ -4,11 +4,11 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import { SemanticDomainFull } from "api/models";
 import theme from "types/theme";
 
 interface DataEntryHeaderProps extends WithTranslation {
-  domain: TreeSemanticDomain;
+  domain: SemanticDomainFull;
   questionsVisible: boolean;
   setQuestionVisibility: (visibility: boolean) => void;
 }
