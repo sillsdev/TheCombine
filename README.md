@@ -402,8 +402,8 @@ environment.
 
    ```bash
    cd ./deploy/scripts/semantic_domains/json
-   mongoimport -d CombineDatabase -c SemanticDomains nodes.json --mode=merge --upsertFields=id,lang,guid
-   mongoimport -d CombineDatabase -c SemanticDomainTree tree.json --mode=merge --upsertFields=id,lang,guid
+   mongoimport -d CombineDatabase -c SemanticDomains nodes.json --mode=upsert --upsertFields=id,lang,guid
+   mongoimport -d CombineDatabase -c SemanticDomainTree tree.json --mode=upsert --upsertFields=id,lang,guid
    ```
 
 ### Generate License Reports
