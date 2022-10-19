@@ -382,6 +382,14 @@ Where:
   - The help text for `setup_combine.py` says that the `--tag` is optional and its default value is `latest`. That is
     used in the _Development Environment_ scenario; there are no images for _The Combine's_ components in
     `public.ecr.aws/thecombine` with the tag `latest`.
+  - The database image contains a script that will initialize the `SemanticDomains` and the `SemanticDomainTree`
+    collections on _first use_ of the database. The script will not be run automatically when the database is restarted
+    or updated. If the Semantic Domain data are updated, for example, adding a new language, then the script needs to be
+    rerun manually:
+
+    ```console
+    kubectl -n thecombine exec deployment/database -- /docker-entrypoint-initdb.d/update-semantic-domains.sh
+    ```
 
 ## Maintenance
 
