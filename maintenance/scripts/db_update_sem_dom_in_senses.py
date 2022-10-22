@@ -2,8 +2,7 @@
 
 import argparse
 import logging
-from typing import Any, Dict
-from uuid import UUID
+from typing import Any, Dict, List, Optional
 
 from bson.binary import UuidRepresentation
 from bson.codec_options import CodecOptions
@@ -13,13 +12,14 @@ from pymongo.collection import Collection
 
 
 class SemanticDomainInfo:
-    def __init__(self, guid: UUID, name: str) -> None:
+    def __init__(self, mongo_id: Optional[ObjectId], guid: str, name: str) -> None:
+        self.mongo_id = mongo_id
         self.guid = guid
-        self.names = [name]
+        self.name = name
 
 
-domain_info: Dict[str, SemanticDomainInfo] = {}
-blank_guid = UUID("{00000000-0000-0000-0000-000000000000}")
+domain_info: Dict[str, List[SemanticDomainInfo]] = {}
+blank_guid = "00000000-0000-0000-0000-000000000000"
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,37 +44,54 @@ def get_semantic_domain_info(collection: Collection[Dict[str, Any]]) -> None:
     """
 
     for sem_dom in collection.find({}):
+        mongo_id = sem_dom["_id"]
         id = sem_dom["id"]
         lang = sem_dom["lang"]
         name = sem_dom["name"]
-        if sem_dom["guid"]:
-            guid = UUID(sem_dom["guid"])
-        else:
+        if not sem_dom["guid"]:
             logging.warning(f"Using blank GUID for {id}, {lang}")
             guid = blank_guid
-        if id in domain_info:
-            domain_info[id].names.append(name)
-            if guid != domain_info[id].guid:
-                logging.warning(f"Multiple semantic domain guids for {id}.")
         else:
-            domain_info[id] = SemanticDomainInfo(guid, name)
+            guid = str(sem_dom["guid"])
+        info = SemanticDomainInfo(mongo_id, guid, name)
+        if id in domain_info:
+            domain_info[id].append(info)
+        else:
+            domain_info[id] = [info]
 
 
-def get_guid(id: str, name: str) -> UUID:
+def get_domain_info(id: str, name: str) -> SemanticDomainInfo:
+    """Find the semantic domain info that matches the id and name."""
     if id in domain_info:
-        if name in domain_info[id].names:
-            return domain_info[id].guid
+        for info in domain_info[id]:
+            if name == info.name:
+                return info
     logging.warning(f"Using blank GUID for {id} {name}")
-    return blank_guid
+    return SemanticDomainInfo(None, blank_guid, name)
+
+
+def is_obj_id(id: str) -> bool:
+    """Test if a string looks like a Mongo ObjectId."""
+    try:
+        int(id, 16)
+    except ValueError:
+        return False
+    # Check the string length so that ids like 1, 2, etc.
+    # are not mistaken for Mongo Ids
+    if len(id) < 12:
+        return False
+    return True
 
 
 def domain_needs_update(domain: Dict[str, Any]) -> bool:
     """Test the domain to see if any parts of the old structure remain."""
 
     # Test for keys that need to be removed
-    for key in ["_id", "Name", "Description"]:
+    for key in ["Name", "Description"]:
         if key in domain.keys():
             return True
+    if "_id" in domain.keys() and not is_obj_id(str(domain["_id"])):
+        return True
     # Test for keys that need to be added
     for key in ["id", "name", "guid", "lang"]:
         if key not in domain.keys():
@@ -110,9 +127,10 @@ def main() -> None:
                         if domain_needs_update(domain):
                             domain["name"] = domain["Name"]
                             domain["id"] = domain["_id"]
-                            domain["guid"] = get_guid(domain["id"], domain["name"])
+                            this_domain = get_domain_info(domain["id"], domain["name"])
+                            domain["guid"] = this_domain.guid
                             domain["lang"] = ""
-                            domain.pop("_id", None)
+                            domain["_id"] = this_domain.mongo_id
                             domain.pop("Name", None)
                             domain.pop("Description", None)
                             found_updates = True
