@@ -8,7 +8,7 @@ jobs:
   test_build:
     strategy:
       matrix:
-        component: [database]
+        component: [database, backend, frontend, maintenance]
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
@@ -40,7 +40,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Remove old AWS ECR images
-        run: |
+        run: >
           scripts/clean_aws_repo.py
           combine_frontend combine_backend combine_maint combine_database
           --keep ${{ needs.test_build.outputs.image_tag }}

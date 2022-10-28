@@ -55,7 +55,7 @@ runs:
         password: ${{ inputs.aws_secret_access_key }}
 
     - name: Build The Combine
-      run: |
+      run: >
         deploy/scripts/build.py
         --components ${{ inputs.build_component }}
         --tag ${{ env.IMAGE_TAG }}
