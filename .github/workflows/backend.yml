@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1.5
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
@@ -47,7 +47,7 @@ jobs:
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1.5
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "6.0.x"
       - name: Initialize CodeQL
