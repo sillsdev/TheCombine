@@ -1,11 +1,11 @@
-name: "Deploy Update to QA Server"
+name: gha-warnings-test
 
 on:
   push:
-    branches: [master]
+    branches: [gha-warnings]
 
 jobs:
-  build:
+  test_build:
     strategy:
       matrix:
         component: [frontend, backend, maintenance, database]
@@ -41,15 +41,3 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Remove old AWS ECR images
         run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --keep ${{ needs.build.outputs.image_tag }} --remove "${{ env.RM_PATTERN_1 }}" "${{ env.RM_PATTERN_2 }}" --verbose
-  deploy_update:
-    needs: build
-    runs-on: [self-hosted, thecombine]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy The Combine Update
-        uses: ./.github/actions/combine-deploy-update
-        with:
-          image_registry: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
-          image_tag: ${{ needs.build.outputs.image_tag }}
-          kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
-          update_cert_proxy: false
