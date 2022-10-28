@@ -37,7 +37,7 @@ runs:
 
     - name: Save Image Tag
       id: save_image_tag
-      run: echo "{image_tag}=${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
+      run: echo "image_tag=${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Configure AWS credentials
