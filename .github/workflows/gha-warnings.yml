@@ -26,7 +26,7 @@ jobs:
           aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
           build_component: ${{ matrix.component }}
   clean_ecr_repo:
-    needs: build
+    needs: test_build
     env:
       RM_PATTERN_1: \d+\.\d+\.\d+-master\.\d+
       RM_PATTERN_2: \d+\.\d+\.\d+-[a-z]+\.\d+-master\.\d+
@@ -40,4 +40,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Remove old AWS ECR images
-        run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --keep ${{ needs.build.outputs.image_tag }} --remove "${{ env.RM_PATTERN_1 }}" "${{ env.RM_PATTERN_2 }}" --verbose
+        run: |
+          scripts/clean_aws_repo.py
+          combine_frontend combine_backend combine_maint combine_database
+          --keep ${{ needs.test_build.outputs.image_tag }}
+          --remove "${{ env.RM_PATTERN_1 }}"
+          "${{ env.RM_PATTERN_2 }}"
+          --verbose
