@@ -12,7 +12,7 @@ charts:
 
     frontend:
       configCaptchaRequired: "true"
-      configCaptchaSiteKey: "6LdBKdIeAAAAAD6hEBDPa0zUMitfVfQvpkgjehNV"
+      configCaptchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
 
     global:
       imageRegistry: ""
