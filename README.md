@@ -67,8 +67,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
 6. [User Guide](#user-guide)
-7. [Production](#production)
-8. [Learn More](#learn-more)
+7. [Continuous Integration](#continuous-integration)
+8. [Continuous Deployment](#continuous-deployment)
+9. [Production](#production)
+10. [Learn More](#learn-more)
 
 ## Getting Started with Development
 
@@ -952,6 +954,35 @@ To locally build the user guide statically into `docs/user-guide/site`:
 ```bash
 tox -e user-guide
 ```
+
+## Continuous Integration
+
+The Continuous Integration (CI) processes are initiated when a Pull Request (PR) is created. For each push to the PR
+branch, a set of CI tests are run. When all the CI tests pass _and_ the PR changes have been reviewed and approved by a
+team member, then the PR may be merged into the `master` branch. When the merge is complete, _The Combine_ software is
+built and deployed to the QA server:
+
+```mermaid
+sequenceDiagram
+   participant: D1 as Developer 1
+   participant: D2 Developer 2
+   participant: PR
+   participant: master as Master branch
+   participant: GH as GitHub Runner
+   participant: SH as Self-Hosted Runner
+   D1 ->> PR: create
+   activate PR
+   PR ->> D2: request review
+   PR ->> GH: start CI tests
+   activate GH
+
+```
+
+## Continuous Deployment
+
+_The Combine_ uses _GitHub Actions_ to implement its Continuous Integration and Continuous Deployment processes. New
+features and bug fixes are implemented on a developer's private branch. When the changes have been implemented, a Pull
+Request is created which triggers the Continuous Integration process.
 
 ## Production
 
