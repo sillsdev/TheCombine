@@ -964,17 +964,32 @@ built and deployed to the QA server:
 
 ```mermaid
 sequenceDiagram
-   participant: D1 as Developer 1
-   participant: D2 Developer 2
-   participant: PR
-   participant: master as Master branch
-   participant: GH as GitHub Runner
-   participant: SH as Self-Hosted Runner
+   participant D1 as Developer 1
+   participant D2 as Developer 2
+   participant PR
+   participant master as Master branch
+   participant GH as GitHub Runner
+   participant SH as Self-Hosted Runner
+   participant reg as AWS Private Registry
    D1 ->> PR: create
    activate PR
-   PR ->> D2: request review
-   PR ->> GH: start CI tests
    activate GH
+   par
+      PR ->> D2: request review
+      D2 ->> PR: Approved
+   and
+      PR ->> GH: start CI tests
+      GH ->> PR: all tests pass
+   end
+   deactivate GH
+   PR ->> master: merge changes
+   activate master
+   PR ->> PR: delete branch
+   deactivate PR
+   master ->> GH: build The Combine
+   master ->> reg: Push images
+   master ->> SH: Deploy to QA server
+   deactivate master
 
 ```
 
