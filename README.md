@@ -990,7 +990,10 @@ sequenceDiagram
    PR ->> PR: delete branch
    deactivate PR
    master ->> GH: build The Combine
-   master ->> reg: Push images
+   activate GH
+   GH ->> reg: Push images
+   GH ->> master: build complete
+   deactivate GH
    master ->> SH: Deploy to QA server
    deactivate master
 ```
@@ -1012,7 +1015,10 @@ sequenceDiagram
    Release ->> master: Create release tag
    activate master
    master ->> GH: build The Combine
-   master ->> reg: Push images
+   activate GH
+   GH ->> reg: Push images
+   GH ->> master: build complete
+   deactivate GH
    master ->> SH: Deploy to Production server
    deactivate master
 ```
