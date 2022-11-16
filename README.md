@@ -68,9 +68,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    2. [Kubernetes Environment](#kubernetes-environment)
 6. [User Guide](#user-guide)
 7. [Continuous Integration and Continuous Deployment](#continuous-integration-and-continuous-deployment)
-8. [Continuous Deployment](#continuous-deployment)
-9. [Production](#production)
-10. [Learn More](#learn-more)
+   1. [On Pull Request](#on-pull-request)
+   2. [On Release](#on-release)
+8. [Production](#production)
+9. [Learn More](#learn-more)
 
 ## Getting Started with Development
 
