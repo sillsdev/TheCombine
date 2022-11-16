@@ -67,7 +67,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
 6. [User Guide](#user-guide)
-7. [Continuous Integration](#continuous-integration)
+7. [Continuous Integration and Continuous Deployment](#continuous-integration-and-continuous-deployment)
 8. [Continuous Deployment](#continuous-deployment)
 9. [Production](#production)
 10. [Learn More](#learn-more)
@@ -955,31 +955,33 @@ To locally build the user guide statically into `docs/user-guide/site`:
 tox -e user-guide
 ```
 
-## Continuous Integration
+## Continuous Integration and Continuous Deployment
 
-The Continuous Integration (CI) processes are initiated when a Pull Request (PR) is created. For each push to the PR
-branch, a set of CI tests are run. When all the CI tests pass _and_ the PR changes have been reviewed and approved by a
-team member, then the PR may be merged into the `master` branch. When the merge is complete, _The Combine_ software is
-built and deployed to the QA server:
+### On Pull Request
+
+When a Pull Request (PR) is created and for each push to the PR branch, a set of CI tests are run. When all the CI tests
+pass _and_ the PR changes have been reviewed and approved by a team member, then the PR may be merged into the `master`
+branch. When the merge is complete, _The Combine_ software is built, pushed to the AWS ECR Private registry, and
+deployed to the QA server:
 
 ```mermaid
 sequenceDiagram
-   participant D1 as Developer 1
-   participant D2 as Developer 2
+   actor Author
+   actor Reviewer
    participant PR
    participant master as Master branch
    participant GH as GitHub Runner
    participant SH as Self-Hosted Runner
    participant reg as AWS Private Registry
-   D1 ->> PR: create
+   Author ->> PR: create
    activate PR
    activate GH
    par
-      PR ->> D2: request review
-      D2 ->> PR: Approved
-   and
-      PR ->> GH: start CI tests
+      PR ->> GH: run CI tests
       GH ->> PR: all tests pass
+   and
+      PR ->> Reviewer: request review
+      Reviewer ->> PR: Approved
    end
    deactivate GH
    PR ->> master: merge changes
@@ -990,14 +992,29 @@ sequenceDiagram
    master ->> reg: Push images
    master ->> SH: Deploy to QA server
    deactivate master
-
 ```
 
-## Continuous Deployment
+### On Release
 
-_The Combine_ uses _GitHub Actions_ to implement its Continuous Integration and Continuous Deployment processes. New
-features and bug fixes are implemented on a developer's private branch. When the changes have been implemented, a Pull
-Request is created which triggers the Continuous Integration process.
+When a team member creates a release on _The Combine's_ GitHub project page, a Release tag is created on the master
+branch, the software is built and pushed to the AWS ECR Public registry and then deployed to the production server.
+
+```mermaid
+sequenceDiagram
+   actor Developer
+   participant Release
+   participant master as Master branch
+   participant GH as GitHub Runner
+   participant SH as Self-Hosted Runner
+   participant reg as AWS Public Registry
+   Developer ->> Release: create
+   Release ->> master: Create release tag
+   activate master
+   master ->> GH: build The Combine
+   master ->> reg: Push images
+   master ->> SH: Deploy to Production server
+   deactivate master
+```
 
 ## Production
 
