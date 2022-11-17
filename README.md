@@ -969,33 +969,43 @@ deployed to the QA server:
 sequenceDiagram
    actor Author
    actor Reviewer
-   participant PR
-   participant master as Master branch
-   participant GH as GitHub Runner
-   participant SH as Self-Hosted Runner
+   participant github as sillsdev/TheCombine
+   participant gh_runner as GitHub Runner
+   participant sh_runner as Self-Hosted Runner
    participant reg as AWS Private Registry
-   Author ->> PR: create
-   activate PR
-   activate GH
+   participant server as QA Server
+   Author ->> github: create Pull Request(work_branch)
+   activate github
    par
-      PR ->> GH: run CI tests
-      GH ->> PR: all tests pass
+      loop for each CI test
+         github ->> gh_runner: start CI test
+         activate gh_runner
+            gh_runner ->> gh_runner: checkout work_branch
+            gh_runner ->> gh_runner: run test
+            gh_runner -->> github: test passed
+         deactivate gh_runner
+      end
    and
-      PR ->> Reviewer: request review
-      Reviewer ->> PR: Approved
+      github ->> Reviewer: request review
+      Reviewer -->> github: Approved
    end
-   deactivate GH
-   PR ->> master: merge changes
-   activate master
-   PR ->> PR: delete branch
-   deactivate PR
-   master ->> GH: build The Combine
-   activate GH
-   GH ->> reg: Push images
-   GH ->> master: build complete
-   deactivate GH
-   master ->> SH: Deploy to QA server
-   deactivate master
+   github ->> github: merge work_branch to master
+   github ->> github: delete work_branch
+   github ->> gh_runner: run deploy_qa workflow
+   activate gh_runner
+   gh_runner ->> gh_runner: checkout master
+   gh_runner ->> gh_runner: build The Combine
+   gh_runner ->> reg: Push images
+   gh_runner ->> github: build complete(image_tag)
+   deactivate gh_runner
+   github ->> sh_runner: Deploy to QA server (image_tag)
+   activate sh_runner
+   loop frontend, backend, database, maintenance
+      sh_runner ->> server: update deployment image(image_tag)
+      server ->> reg: pull image(image_tag)
+      reg ->> server: updated image(image_tag)
+   end
+   deactivate sh_runner
 ```
 
 ### On Release
@@ -1007,20 +1017,27 @@ branch, the software is built and pushed to the AWS ECR Public registry and then
 sequenceDiagram
    actor Developer
    participant Release
-   participant master as Master branch
-   participant GH as GitHub Runner
-   participant SH as Self-Hosted Runner
+   participant gh_runner as GitHub Runner
+   participant sh_runner as Self-Hosted Runner
    participant reg as AWS Public Registry
-   Developer ->> Release: create
-   Release ->> master: Create release tag
-   activate master
-   master ->> GH: build The Combine
-   activate GH
-   GH ->> reg: Push images
-   GH ->> master: build complete
-   deactivate GH
-   master ->> SH: Deploy to Production server
-   deactivate master
+   participant server as Production Server
+   Developer ->> github: create Release
+   github ->> github: Create release tag on master branch
+   github ->> gh_runner: run deploy_release workflow
+   activate gh_runner
+   gh_runner ->> gh_runner: checkout release tag
+   gh_runner ->> gh_runner: build The Combine
+   gh_runner ->> reg: Push images
+   gh_runner ->> github: build complete(image_tag)
+   deactivate gh_runner
+   github ->> sh_runner: Deploy to Production server (image_tag)
+   activate sh_runner
+   loop frontend, backend, database, maintenance
+      sh_runner ->> server: update deployment image(image_tag)
+      server ->> reg: pull image(image_tag)
+      reg ->> server: updated image(image_tag)
+   end
+   deactivate sh_runner
 ```
 
 ## Production
