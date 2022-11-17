@@ -994,14 +994,17 @@ sequenceDiagram
    github ->> github: delete work_branch
    github ->> gh_runner: run deploy_qa workflow
    activate gh_runner
-   gh_runner ->> gh_runner: checkout master
-   gh_runner ->> gh_runner: build The Combine
-   gh_runner ->> reg: Push images(image_tag)
-   gh_runner -->> github: build complete(image_tag)
+   loop component in (frontend, backend, database, maintenance)
+      Note right of gh_runner: components are built concurrently
+      gh_runner ->> gh_runner: checkout master
+      gh_runner ->> gh_runner: build component
+      gh_runner ->> reg: Push component image(image_tag)
+      gh_runner -->> github: build complete(image_tag)
+   end
    deactivate gh_runner
    github ->> sh_runner: Deploy to QA server (image_tag)
    activate sh_runner
-   loop frontend, backend, database, maintenance
+   loop deployment in (frontend, backend, database, maintenance)
       sh_runner ->> server: update deployment image(image_tag)
       server ->> reg: pull image(image_tag)
       reg -->> server: updated image(image_tag)
@@ -1017,7 +1020,7 @@ branch, the software is built and pushed to the AWS ECR Public registry and then
 ```mermaid
 sequenceDiagram
    actor Developer
-   participant githug as sillsdev/TheCombine
+   participant github as sillsdev/TheCombine
    participant gh_runner as GitHub Runner
    participant sh_runner as Self-Hosted Runner
    participant reg as AWS Public Registry
@@ -1026,14 +1029,17 @@ sequenceDiagram
    github ->> github: Create release tag on master branch
    github ->> gh_runner: run deploy_release workflow
    activate gh_runner
-   gh_runner ->> gh_runner: checkout release tag
-   gh_runner ->> gh_runner: build The Combine
-   gh_runner ->> reg: Push images(image_tag)
-   gh_runner -->> github: build complete(image_tag)
+   loop component in (frontend, backend, database, maintenance)
+      Note right of gh_runner: components are built concurrently
+      gh_runner ->> gh_runner: checkout release tag
+      gh_runner ->> gh_runner: build component
+      gh_runner ->> reg: Push component image(image_tag)
+      gh_runner -->> github: build complete(image_tag)
+   end
    deactivate gh_runner
    github ->> sh_runner: Deploy to Production server (image_tag)
    activate sh_runner
-   loop frontend, backend, database, maintenance
+   loop deployment in (frontend, backend, database, maintenance)
       sh_runner ->> server: update deployment image(image_tag)
       server ->> reg: pull image(image_tag)
       reg -->> server: updated image(image_tag)
