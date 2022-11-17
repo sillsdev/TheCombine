@@ -1005,7 +1005,7 @@ sequenceDiagram
    github ->> sh_runner: deploy to QA server (image_tag)
    activate sh_runner
    loop deployment in (frontend, backend, database, maintenance)
-      sh_runner ->> server: update deployment image(image_tag)
+      sh_runner -) server: update deployment image(image_tag)
       server ->> reg: pull image(image_tag)
       reg -->> server: updated image(image_tag)
    end
@@ -1040,7 +1040,7 @@ sequenceDiagram
    github ->> sh_runner: deploy to Production server (image_tag)
    activate sh_runner
    loop deployment in (frontend, backend, database, maintenance)
-      sh_runner ->> server: update deployment image(image_tag)
+      sh_runner -) server: update deployment image(image_tag)
       server ->> reg: pull image(image_tag)
       reg -->> server: updated image(image_tag)
    end
