@@ -988,7 +988,7 @@ sequenceDiagram
       end
    and
       github ->> Reviewer: request review
-      Reviewer -->> github: Approved
+      Reviewer -->> github: approved
    end
    github ->> github: merge work_branch to master
    github ->> github: delete work_branch
@@ -998,11 +998,11 @@ sequenceDiagram
       Note right of gh_runner: components are built concurrently
       gh_runner ->> gh_runner: checkout master
       gh_runner ->> gh_runner: build component
-      gh_runner ->> reg: Push component image(image_tag)
+      gh_runner ->> reg: push component image(image_tag)
       gh_runner -->> github: build complete(image_tag)
    end
    deactivate gh_runner
-   github ->> sh_runner: Deploy to QA server (image_tag)
+   github ->> sh_runner: deploy to QA server (image_tag)
    activate sh_runner
    loop deployment in (frontend, backend, database, maintenance)
       sh_runner ->> server: update deployment image(image_tag)
@@ -1026,18 +1026,18 @@ sequenceDiagram
    participant reg as AWS Public Registry
    participant server as Production Server
    Developer ->> github: create Release
-   github ->> github: Create release tag on master branch
+   github ->> github: create release tag on master branch
    github ->> gh_runner: run deploy_release workflow
    activate gh_runner
    loop component in (frontend, backend, database, maintenance)
       Note right of gh_runner: components are built concurrently
       gh_runner ->> gh_runner: checkout release tag
       gh_runner ->> gh_runner: build component
-      gh_runner ->> reg: Push component image(image_tag)
+      gh_runner ->> reg: push component image(image_tag)
       gh_runner -->> github: build complete(image_tag)
    end
    deactivate gh_runner
-   github ->> sh_runner: Deploy to Production server (image_tag)
+   github ->> sh_runner: deploy to Production server (image_tag)
    activate sh_runner
    loop deployment in (frontend, backend, database, maintenance)
       sh_runner ->> server: update deployment image(image_tag)
