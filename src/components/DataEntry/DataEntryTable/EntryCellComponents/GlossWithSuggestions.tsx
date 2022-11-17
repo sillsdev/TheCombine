@@ -22,7 +22,7 @@ interface GlossWithSuggestionsProps {
 /**
  * An editable gloss field that suggests spellings when current word isn't recognized.
  */
-export default class GlossWithSuggestions extends React.Component<GlossWithSuggestionsProps> {
+export class GlossWithSuggestions extends React.Component<GlossWithSuggestionsProps> {
   readonly maxSuggestions = 5;
   spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
 
@@ -79,3 +79,16 @@ export default class GlossWithSuggestions extends React.Component<GlossWithSugge
     );
   }
 }
+
+function propsAreEqual(
+  prevProps: GlossWithSuggestionsProps,
+  nextProps: GlossWithSuggestionsProps
+): boolean {
+  return (
+    prevProps.gloss === nextProps.gloss &&
+    prevProps.isDisabled === nextProps.isDisabled &&
+    prevProps.textFieldId === nextProps.textFieldId
+  );
+}
+
+export default React.memo(GlossWithSuggestions, propsAreEqual);
