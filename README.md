@@ -996,7 +996,7 @@ sequenceDiagram
    activate gh_runner
    gh_runner ->> gh_runner: checkout master
    gh_runner ->> gh_runner: build The Combine
-   gh_runner ->> reg: Push images
+   gh_runner ->> reg: Push images(image_tag)
    gh_runner -->> github: build complete(image_tag)
    deactivate gh_runner
    github ->> sh_runner: Deploy to QA server (image_tag)
@@ -1028,7 +1028,7 @@ sequenceDiagram
    activate gh_runner
    gh_runner ->> gh_runner: checkout release tag
    gh_runner ->> gh_runner: build The Combine
-   gh_runner ->> reg: Push images
+   gh_runner ->> reg: Push images(image_tag)
    gh_runner -->> github: build complete(image_tag)
    deactivate gh_runner
    github ->> sh_runner: Deploy to Production server (image_tag)
