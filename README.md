@@ -978,7 +978,8 @@ sequenceDiagram
    activate github
    par
       loop for each CI test
-         github ->> gh_runner: start CI test
+        Note over github,gh_runner: CI tests are run concurrently
+        github ->> gh_runner: start CI test
          activate gh_runner
             gh_runner ->> gh_runner: checkout work_branch
             gh_runner ->> gh_runner: run test
@@ -996,14 +997,14 @@ sequenceDiagram
    gh_runner ->> gh_runner: checkout master
    gh_runner ->> gh_runner: build The Combine
    gh_runner ->> reg: Push images
-   gh_runner ->> github: build complete(image_tag)
+   gh_runner -->> github: build complete(image_tag)
    deactivate gh_runner
    github ->> sh_runner: Deploy to QA server (image_tag)
    activate sh_runner
    loop frontend, backend, database, maintenance
       sh_runner ->> server: update deployment image(image_tag)
       server ->> reg: pull image(image_tag)
-      reg ->> server: updated image(image_tag)
+      reg -->> server: updated image(image_tag)
    end
    deactivate sh_runner
 ```
@@ -1016,7 +1017,7 @@ branch, the software is built and pushed to the AWS ECR Public registry and then
 ```mermaid
 sequenceDiagram
    actor Developer
-   participant Release
+   participant githug as sillsdev/TheCombine
    participant gh_runner as GitHub Runner
    participant sh_runner as Self-Hosted Runner
    participant reg as AWS Public Registry
@@ -1028,14 +1029,14 @@ sequenceDiagram
    gh_runner ->> gh_runner: checkout release tag
    gh_runner ->> gh_runner: build The Combine
    gh_runner ->> reg: Push images
-   gh_runner ->> github: build complete(image_tag)
+   gh_runner -->> github: build complete(image_tag)
    deactivate gh_runner
    github ->> sh_runner: Deploy to Production server (image_tag)
    activate sh_runner
    loop frontend, backend, database, maintenance
       sh_runner ->> server: update deployment image(image_tag)
       server ->> reg: pull image(image_tag)
-      reg ->> server: updated image(image_tag)
+      reg -->> server: updated image(image_tag)
    end
    deactivate sh_runner
 ```
