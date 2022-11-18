@@ -67,8 +67,11 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    1. [Development Environment](#development-environment)
    2. [Kubernetes Environment](#kubernetes-environment)
 6. [User Guide](#user-guide)
-7. [Production](#production)
-8. [Learn More](#learn-more)
+7. [Continuous Integration and Continuous Deployment](#continuous-integration-and-continuous-deployment)
+   1. [On Pull Request](#on-pull-request)
+   2. [On Release](#on-release)
+8. [Production](#production)
+9. [Learn More](#learn-more)
 
 ## Getting Started with Development
 
@@ -951,6 +954,97 @@ To locally build the user guide statically into `docs/user-guide/site`:
 
 ```bash
 tox -e user-guide
+```
+
+## Continuous Integration and Continuous Deployment
+
+### On Pull Request
+
+When a Pull Request (PR) is created and for each push to the PR branch, a set of CI tests are run. When all the CI tests
+pass _and_ the PR changes have been reviewed and approved by a team member, then the PR may be merged into the `master`
+branch. When the merge is complete, _The Combine_ software is built, pushed to the AWS ECR Private registry, and
+deployed to the QA server:
+
+```mermaid
+sequenceDiagram
+   actor Author
+   actor Reviewer
+   participant github as sillsdev/TheCombine
+   participant gh_runner as GitHub Runner
+   participant sh_runner as Self-Hosted Runner
+   participant reg as AWS Private Registry
+   participant server as QA Server
+   Author ->> github: create Pull Request(work_branch)
+   activate github
+   par
+      loop for each CI test
+        Note over github,gh_runner: CI tests are run concurrently
+        github ->> gh_runner: start CI test
+         activate gh_runner
+            gh_runner ->> gh_runner: checkout work_branch
+            gh_runner ->> gh_runner: run test
+            gh_runner -->> github: test passed
+         deactivate gh_runner
+      end
+   and
+      github ->> Reviewer: request review
+      Reviewer -->> github: approved
+   end
+   github ->> github: merge work_branch to master
+   github ->> github: delete work_branch
+   github ->> gh_runner: run deploy_qa workflow
+   activate gh_runner
+   loop component in (frontend, backend, database, maintenance)
+      Note right of gh_runner: components are built concurrently
+      gh_runner ->> gh_runner: checkout master
+      gh_runner ->> gh_runner: build component
+      gh_runner ->> reg: push component image(image_tag)
+      gh_runner -->> github: build complete(image_tag)
+   end
+   deactivate gh_runner
+   github ->> sh_runner: deploy to QA server(image_tag)
+   activate sh_runner
+   loop deployment in (frontend, backend, database, maintenance)
+      sh_runner -) server: update deployment image(image_tag)
+      server ->> reg: pull image(image_tag)
+      reg -->> server: updated image(image_tag)
+   end
+   deactivate sh_runner
+```
+
+### On Release
+
+When a team member creates a release on _The Combine's_ GitHub project page, a Release tag is created on the master
+branch, the software is built and pushed to the AWS ECR Public registry and then deployed to the production server.
+
+```mermaid
+sequenceDiagram
+   actor Developer
+   participant github as sillsdev/TheCombine
+   participant gh_runner as GitHub Runner
+   participant sh_runner as Self-Hosted Runner
+   participant reg as AWS Public Registry
+   participant server as Production Server
+   Developer ->> github: create Release
+   github ->> github: create release tag on master branch
+   github ->> gh_runner: run deploy_release workflow
+   activate gh_runner
+   loop component in (frontend, backend, database, maintenance)
+      Note right of gh_runner: components are built concurrently
+      gh_runner ->> gh_runner: checkout release tag
+      gh_runner ->> gh_runner: build component
+      gh_runner ->> reg: push component image(image_tag)
+      gh_runner -->> github: build complete(image_tag)
+   end
+   deactivate gh_runner
+   github ->> sh_runner: deploy to Production server(image_tag)
+   activate sh_runner
+   loop deployment in (frontend, backend, database, maintenance)
+      sh_runner -) server: update deployment image(image_tag)
+      server ->> reg: pull image(image_tag)
+      reg -->> server: updated image(image_tag)
+   end
+   deactivate sh_runner
 ```
 
 ## Production
