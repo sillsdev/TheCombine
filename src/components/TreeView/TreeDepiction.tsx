@@ -69,9 +69,9 @@ export default class TreeDepiction extends React.Component<
       colWidth = MAX_COL_WIDTH;
     }
 
-    if (this.state.colWidth !== colWidth) {
-      this.setState({ colWidth });
-    }
+    this.setState((prevState: TreeDepictionState) => {
+      return colWidth === prevState.colWidth ? null : { colWidth };
+    });
   }
 
   // Renders the subdomains + their connectors to the current domain
