@@ -1002,7 +1002,7 @@ sequenceDiagram
       gh_runner -->> github: build complete(image_tag)
    end
    deactivate gh_runner
-   github ->> sh_runner: deploy to QA server (image_tag)
+   github ->> sh_runner: deploy to QA server(image_tag)
    activate sh_runner
    loop deployment in (frontend, backend, database, maintenance)
       sh_runner -) server: update deployment image(image_tag)
@@ -1037,7 +1037,7 @@ sequenceDiagram
       gh_runner -->> github: build complete(image_tag)
    end
    deactivate gh_runner
-   github ->> sh_runner: deploy to Production server (image_tag)
+   github ->> sh_runner: deploy to Production server(image_tag)
    activate sh_runner
    loop deployment in (frontend, backend, database, maintenance)
       sh_runner -) server: update deployment image(image_tag)
