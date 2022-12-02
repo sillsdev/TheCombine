@@ -174,7 +174,9 @@ def parse_args() -> argparse.Namespace:
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--build-args", nargs="*", help="Build arguments to pass to the docker build.")
+    parser.add_argument(
+        "--build-args", nargs="*", help="Build arguments to pass to the docker build."
+    )
     parser.add_argument(
         "--components",
         nargs="*",
