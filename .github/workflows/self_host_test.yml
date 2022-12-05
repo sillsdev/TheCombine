@@ -5,6 +5,7 @@ on:
     branches: [build-kit]
 
   workflow_dispatch:
+    branches: [build-kit]
 
 jobs:
   test_runner:
