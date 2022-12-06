@@ -2,5 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-mongoImageTag: "5.0"
+global:
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
+  pullSecretName: "None"
+  imageTag: "latest"
+  # Define the image registry to use (may be blank for local images)
+  imageRegistry: ""
+
 persistentVolumeSize: 16Gi
+imageName: combine_database

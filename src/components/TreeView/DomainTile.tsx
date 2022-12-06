@@ -5,9 +5,10 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
-import React, { ReactElement } from "react";
+import { t } from "i18next";
+import React, { CSSProperties, ReactElement } from "react";
 
-import TreeSemanticDomain from "components/TreeView/TreeSemanticDomain";
+import { SemanticDomain } from "api/models";
 
 export enum Direction {
   Down,
@@ -17,31 +18,40 @@ export enum Direction {
 }
 
 interface DomainTileProps {
-  domain: TreeSemanticDomain;
-  onClick: (domain: TreeSemanticDomain) => void;
+  domain: SemanticDomain;
+  onClick: (domain: SemanticDomain) => void;
   direction?: Direction | undefined;
+}
+
+const RootId = "Sem";
+
+export function domainText(
+  domain: SemanticDomain,
+  extraProps: CSSProperties = {}
+): ReactElement {
+  return (
+    <div style={{ ...extraProps, textTransform: "capitalize" }}>
+      <Typography variant={"overline"}>
+        {domain.id !== RootId ? domain.id : ""}
+      </Typography>
+      <Typography variant={"body1"}>
+        {domain.id !== RootId ? domain.name : t("addWords.domain")}
+      </Typography>
+    </div>
+  );
 }
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default class DomainTile extends React.Component<DomainTileProps> {
-  domainText(domain: TreeSemanticDomain): ReactElement {
-    return (
-      <div style={{ textTransform: "capitalize" }}>
-        <Typography variant={"overline"}>{domain.id}</Typography>
-        <Typography variant={"body1"}>{domain.name}</Typography>
-      </div>
-    );
-  }
-
   textWithArrow(
-    domain: TreeSemanticDomain,
+    domain: SemanticDomain,
     direction: Direction | undefined
   ): ReactElement {
     switch (direction) {
       case Direction.Down:
         return (
           <div>
-            {this.domainText(domain)}
+            {domainText(domain)}
             <KeyboardArrowDown />
           </div>
         );
@@ -56,7 +66,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
             <Grid item>
               <ChevronLeft />
             </Grid>
-            <Grid item>{this.domainText(domain)}</Grid>
+            <Grid item>{domainText(domain)}</Grid>
           </Grid>
         );
       case Direction.Right:
@@ -67,7 +77,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
             justifyContent="space-around"
             wrap="nowrap"
           >
-            <Grid item>{this.domainText(domain)}</Grid>
+            <Grid item>{domainText(domain)}</Grid>
             <Grid item>
               <ChevronRight />
             </Grid>
@@ -77,11 +87,11 @@ export default class DomainTile extends React.Component<DomainTileProps> {
         return (
           <div>
             <KeyboardArrowUp />
-            {this.domainText(domain)}
+            {domainText(domain)}
           </div>
         );
       default:
-        return <div>{this.domainText(domain)}</div>;
+        return <div>{domainText(domain)}</div>;
     }
   }
 

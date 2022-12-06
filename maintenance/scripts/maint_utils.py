@@ -2,9 +2,28 @@
 
 from __future__ import annotations
 
+import logging
+import os
 import subprocess
 import sys
 from typing import List
+
+
+def check_env_vars(var_names: List[str]) -> tuple[str, ...]:
+    """Look up a list of environment variables and validate them."""
+    value_list: List[str] = []
+    missing_values: List[str] = []
+    for var in var_names:
+        value = os.getenv(var)
+        if value is None or not value:
+            missing_values.append(var)
+            value_list.append("")
+        else:
+            value_list.append(value)
+    if len(missing_values) > 0:
+        logging.critical(f"Missing or empty environment variables: {missing_values}")
+        sys.exit(1)
+    return tuple(value_list)
 
 
 def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess[str]:

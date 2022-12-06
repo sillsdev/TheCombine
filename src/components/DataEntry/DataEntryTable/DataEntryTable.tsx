@@ -7,6 +7,7 @@ import {
   AutocompleteSetting,
   Note,
   SemanticDomain,
+  SemanticDomainTreeNode,
   Sense,
   Word,
   WritingSystem,
@@ -26,7 +27,7 @@ import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 export const exitButtonId = "exit-to-domain-tree";
 
 interface DataEntryTableProps extends WithTranslation {
-  semanticDomain: SemanticDomain;
+  semanticDomain: SemanticDomainTreeNode;
   treeIsOpen?: boolean;
   openTree: () => void;
   getWordsFromBackend: () => Promise<Word[]>;
@@ -662,7 +663,11 @@ export class DataEntryTable extends React.Component<
                 this.addNewWord(word, audioFileURLs)
               }
               semanticDomain={this.props.semanticDomain}
-              setIsReadyState={(isReady: boolean) => this.setState({ isReady })}
+              setIsReadyState={(isReady: boolean) =>
+                this.setState((state) => {
+                  return state.isReady === isReady ? null : { isReady };
+                })
+              }
               recorder={this.recorder}
               analysisLang={this.state.analysisLang}
               vernacularLang={this.state.vernacularLang}

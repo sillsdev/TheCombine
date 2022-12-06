@@ -1,0 +1,13 @@
+---
+#########################
+# Handlers for setting
+# up hardware monitoring
+#########################
+
+- name: restart target
+  reboot:
+
+- name: restart sysstat service
+  service:
+    name: sysstat
+    state: restarted

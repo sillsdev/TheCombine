@@ -5,7 +5,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
-import { newSemanticDomain } from "types/word";
+import { newSemanticDomain } from "types/semanticDomain";
 import { Bcp47Code } from "types/writingSystem";
 
 const mockState = {

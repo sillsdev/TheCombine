@@ -31,6 +31,7 @@ from typing import List, Tuple
 from aws_backup import AwsBackup
 from combine_app import CombineApp
 import humanfriendly
+from maint_utils import check_env_vars
 from script_step import ScriptStep
 
 
@@ -65,8 +66,12 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+    # Look up the required environment variables
+    aws_bucket, db_files_subdir, backend_files_subdir = check_env_vars(
+        ["aws_bucket", "db_files_subdir", "backend_files_subdir"]
+    )
     combine = CombineApp()
-    aws = AwsBackup(bucket=os.environ["aws_bucket"])
+    aws = AwsBackup(bucket=aws_bucket)
     step = ScriptStep()
 
     step.print("Prepare for the restore.")
@@ -80,7 +85,7 @@ def main() -> None:
             backup_list_output = aws.list().stdout.strip().split("\n")
 
             if len(backup_list_output) == 0:
-                print(f"No backups available from {os.environ['aws_bucket']}")
+                print(f"No backups available from {aws_bucket}")
                 sys.exit(0)
 
             # Convert the list of backups to a more useful structure
@@ -101,10 +106,12 @@ def main() -> None:
             for i, backup_entry in enumerate(aws_backup_list):
                 print(f"{i+1}: {backup_entry[1]} ({backup_entry[0]})")
 
-            backup_num = int(
-                input("Enter the number of the backup you would like to restore (0 = None):")
+            response = input(
+                "Enter the number of the backup you would like to restore (0 = None):"
             )
-            if backup_num == 0:
+            if response:
+                backup_num = int(response)
+            if not response or backup_num == 0:
                 print("No backup selected.  Exiting.")
                 sys.exit(0)
             backup = aws_backup_list[backup_num - 1][1]
@@ -126,7 +133,7 @@ def main() -> None:
         combine.kubectl(
             [
                 "cp",
-                os.environ["db_files_subdir"],
+                db_files_subdir,
                 f"{db_pod}:/",
             ]
         )
@@ -138,6 +145,7 @@ def main() -> None:
                 "--drop",
                 "--gzip",
                 "--quiet",
+                f"--dir=/{db_files_subdir}",
             ],
         )
         combine.exec(
@@ -145,7 +153,7 @@ def main() -> None:
             [
                 "rm",
                 "-rf",
-                os.environ["db_files_subdir"],
+                f"/{db_files_subdir}",
             ],
         )
 
@@ -163,13 +171,11 @@ def main() -> None:
                 [
                     "/bin/bash",
                     "-c",
-                    f"rm -rf /home/app/{os.environ['backend_files_subdir']}/*",
+                    f"rm -rf /home/app/{backend_files_subdir}/*",
                 ],
             )
 
-        combine.kubectl(
-            ["cp", os.environ["backend_files_subdir"], f"{backend_pod}:/home/app", "--no-preserve"]
-        )
+        combine.kubectl(["cp", backend_files_subdir, f"{backend_pod}:/home/app", "--no-preserve"])
 
 
 if __name__ == "__main__":

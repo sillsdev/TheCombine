@@ -11,6 +11,7 @@ using System.Xml;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using MongoDB.Bson;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
@@ -222,7 +223,8 @@ namespace BackendFramework.Services
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
             foreach (var wordEntry in activeWords)
             {
-                var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid);
+                var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
+                var entry = new LexEntry(id, wordEntry.Guid);
                 if (DateTime.TryParse(wordEntry.Created, out var createdTime))
                 {
                     entry.CreationTime = createdTime;
@@ -248,7 +250,8 @@ namespace BackendFramework.Services
 
             foreach (var wordEntry in deletedWords)
             {
-                var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid);
+                var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
+                var entry = new LexEntry(id, wordEntry.Guid);
 
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, vernacularBcp47);
@@ -312,14 +315,17 @@ namespace BackendFramework.Services
                     if (line != "")
                     {
                         var items = line.Split("`");
-                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
+                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2]);
                     }
                 }
 
                 // Pull from new semantic domains in project
                 foreach (var sd in proj.SemanticDomains)
                 {
-                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, sd.Description);
+                    var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
+                           ? Guid.NewGuid().ToString()
+                           : sd.Guid;
+                    WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name);
                 }
 
                 await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -488,7 +494,7 @@ namespace BackendFramework.Services
         /// </summary>
         /// <param name="sInput"></param>
         /// <returns></returns>
-        public static string? MakeSafeXmlAttribute(string sInput)
+        public static string MakeSafeXmlAttribute(string sInput)
         {
             return SecurityElement.Escape(sInput);
         }
@@ -499,7 +505,7 @@ namespace BackendFramework.Services
         }
 
         private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name, string description)
+            XmlWriter liftRangesWriter, string id, string guid, string name)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
@@ -516,13 +522,6 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteAttributeString("lang", "en");
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(id);
-            liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end label
-
-            liftRangesWriter.WriteStartElement("description");
-            liftRangesWriter.WriteAttributeString("lang", "en");
-            liftRangesWriter.WriteStartElement("text");
-            liftRangesWriter.WriteString(description);
             liftRangesWriter.WriteEndElement(); //end text
             liftRangesWriter.WriteEndElement(); //end label
 
@@ -642,7 +641,12 @@ namespace BackendFramework.Services
                         // Splits on the space between the number and name of the semantic domain
                         var splitSemDom = semanticDomainString.Split(" ", 2);
                         newSense.SemanticDomains.Add(
-                            new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
+                            new SemanticDomain
+                            {
+                                Id = splitSemDom[0],
+                                MongoId = ObjectId.GenerateNewId().ToString(),
+                                Name = splitSemDom[1]
+                            });
                     }
 
                     newWord.Senses.Add(newSense);

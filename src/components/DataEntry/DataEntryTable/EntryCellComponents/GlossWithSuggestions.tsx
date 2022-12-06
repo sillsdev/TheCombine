@@ -71,6 +71,7 @@ export default class GlossWithSuggestions extends React.Component<GlossWithSugge
         )}
         onKeyPress={(e: React.KeyboardEvent) => {
           if (e.key === Key.Enter || e.key === Key.Tab) {
+            e.preventDefault();
             this.props.handleEnterAndTab(e);
           }
         }}

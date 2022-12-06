@@ -73,6 +73,11 @@ __pycache__
 *.pyc
 venv
 
+# Intermediate and output files for Semantic Domain import scripts
+!deploy/scripts/semantic_domains/xml/*.xml
+deploy/scripts/semantic_domains/json/*.json
+database/semantic_domains/*
+
 # Kubernetes Configuration files
 **/site_files/
 **/charts/*.tgz
@@ -89,6 +94,7 @@ venv
 _*.yml
 _*.yaml
 _*.j2
+deploy/scripts/setup_files/**/dev_*.yaml
 
 # Emacs backup files (this is Jim's fault)
 *~

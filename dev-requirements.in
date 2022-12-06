@@ -29,6 +29,7 @@ jinja2-base64-filters
 humanfriendly
 kubernetes
 pyopenssl
+pymongo
 
 # Kubernetes Installation.
 pyyaml

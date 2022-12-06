@@ -1,0 +1,5 @@
+---
+# Default values for monitor_hardware role
+
+# How long to keep log files (in days).
+history_days: 60

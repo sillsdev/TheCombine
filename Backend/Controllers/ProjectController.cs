@@ -19,16 +19,14 @@ namespace BackendFramework.Controllers
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
-        private readonly ISemanticDomainService _semDomService;
 
-        public ProjectController(IProjectRepository projRepo, ISemanticDomainService semDomService,
-            IUserRoleRepository userRoleRepo, IUserRepository userRepo, IPermissionService permissionService)
+        public ProjectController(IProjectRepository projRepo, IUserRoleRepository userRoleRepo,
+            IUserRepository userRepo, IPermissionService permissionService)
         {
             _projRepo = projRepo;
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
             _permissionService = permissionService;
-            _semDomService = semDomService;
         }
 
         /// <summary> Returns all <see cref="Project"/>s </summary>
@@ -206,28 +204,6 @@ namespace BackendFramework.Controllers
                 return Ok();
             }
             return NotFound();
-        }
-
-        /// <summary>
-        /// UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/>
-        /// </summary>
-        [AllowAnonymous]
-        [HttpGet("{projectId}/semanticdomains", Name = "GetSemDoms")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainWithSubdomains>))]
-        public async Task<IActionResult> GetSemDoms(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            {
-                return Forbid();
-            }
-
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-            var result = _semDomService.ParseSemanticDomains(proj);
-            return Ok(result);
         }
 
         [HttpGet("duplicate/{projectName}", Name = "ProjectDuplicateCheck")]

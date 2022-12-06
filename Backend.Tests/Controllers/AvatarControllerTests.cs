@@ -27,7 +27,7 @@ namespace Backend.Tests.Controllers
             _permissionService = new PermissionServiceMock(_userRepo);
             _avatarController = new AvatarController(_userRepo, _permissionService)
             {
-                // Mock the Http Context because this isn't an actual call avatar controller
+                // Mock the Http Context because this isn't an actual call controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
             _userController = new UserController(

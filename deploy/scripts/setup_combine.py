@@ -26,9 +26,11 @@ import tempfile
 from typing import Any, Dict, List
 
 from app_release import get_release
+from aws_env import init_aws_environment
 import combine_charts
 from enum_types import ExitStatus, HelmAction
-from utils import add_helm_opts, add_namespace, get_helm_opts, run_cmd
+from kube_env import KubernetesEnvironment, add_kube_opts
+from utils import add_namespace, run_cmd
 import yaml
 
 scripts_dir = Path(__file__).resolve().parent
@@ -41,7 +43,7 @@ def parse_args() -> argparse.Namespace:
         description="Generate Helm Charts for The Combine.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    add_helm_opts(parser)
+    add_kube_opts(parser)
     parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
@@ -213,9 +215,13 @@ def main() -> None:
     else:
         profile = args.profile
 
-    # Create a base helm command for commands used to alter
+    # Verify the Kubernetes/Helm environment
+    kube_env = KubernetesEnvironment(args)
+    # Cache options for helm commands used to alter
     # the target cluster
-    helm_opts = get_helm_opts(args)
+    helm_opts = kube_env.get_helm_opts()
+    # Check AWS Environment Variables
+    init_aws_environment()
 
     # create list of target specific variable values
     target_vars = [
@@ -242,7 +248,7 @@ def main() -> None:
         for chart in config["profiles"][profile]["charts"]:
             # create the chart namespace if it does not exist
             chart_namespace = config["charts"][chart]["namespace"]
-            if add_namespace(chart_namespace):
+            if add_namespace(chart_namespace, kube_env.get_kubectl_opts()):
                 installed_charts: List[str] = []
             else:
                 # get list of charts in target namespace
