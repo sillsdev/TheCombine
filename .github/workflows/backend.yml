@@ -8,7 +8,7 @@ on:
 
 jobs:
   test_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         dotnet: ["6.0.x"]
