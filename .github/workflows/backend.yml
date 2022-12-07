@@ -21,7 +21,9 @@ jobs:
 
       # Coverage.
       - run: find / -name libdl.so
+        shell: bash
       - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        if: success() || failure()
         env:
           LD_DEBUG: lib
       - name: Upload coverage report
