@@ -8,7 +8,7 @@ on:
 
 jobs:
   test_build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         dotnet: ["6.0.x"]
@@ -20,7 +20,10 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
+      - run: find / -name libdl.so
       - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+        env:
+          LD_DEBUG: lib
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
         with:
