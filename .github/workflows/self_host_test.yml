@@ -19,5 +19,5 @@ jobs:
           kubectl version --short
         shell: bash
       - name: List pods
-        run: kubectl --context ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }} -n thecombine get pods
+        run: kubectl options
         shell: bash
