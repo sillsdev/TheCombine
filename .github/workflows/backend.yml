@@ -20,12 +20,12 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      - run: find / -name libdl.so
+      - run: find /sr /lib -name libdl.so 2>/dev/null
         shell: bash
       - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
         if: success() || failure()
         env:
-          LD_DEBUG: lib
+          LD_DEBUG: help
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
         with:
