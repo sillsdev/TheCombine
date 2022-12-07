@@ -20,7 +20,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      - run: find /sr /lib -name libdl.so 2>/dev/null
+      - run: find /usr /lib -name libdl.so 2>/dev/null
         shell: bash
       - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
         if: success() || failure()
