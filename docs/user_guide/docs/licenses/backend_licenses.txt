@@ -8,6 +8,18 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:icu.net
+Version:2.8.1
+project URL:https://github.com/sillsdev/icu-dotnet
+Description:icu.net is a C# Wrapper around ICU4C
+
+This version of icu.net works with (more or less) any version of ICU4C.
+
+NOTE: this package contains the managed wrapper part of icu.net. You'll also have to have the unmanaged binaries of ICU installed. On Linux it is recommended to install the official ICU package that comes with the system. On Windows you can install one of the binary nuget packages, e.g. Icu4c.Win.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:icu.net
 Version:2.7.1
 project URL:https://github.com/sillsdev/icu-dotnet
 Description:icu.net is a C# Wrapper around ICU4C
@@ -3451,6 +3463,28 @@ System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>
 System.ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
  
 30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+license Type:MIT
+
+####################################################################################################
+Package:System.ValueTuple
+Version:4.4.0
+project URL:https://dot.net/
+Description:Provides the System.ValueTuple structs, which implement the underlying types for tuples in C# and Visual Basic.
+
+Commonly Used Types:
+System.ValueTuple
+System.ValueTuple<T1>
+System.ValueTuple<T1, T2>
+System.ValueTuple<T1, T2, T3>
+System.ValueTuple<T1, T2, T3, T4>
+System.ValueTuple<T1, T2, T3, T4, T5>
+System.ValueTuple<T1, T2, T3, T4, T5, T6>
+System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+System.ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+ 
+8321c729934c0f8be754953439b88e6e1c120c24 
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
