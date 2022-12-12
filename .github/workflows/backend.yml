@@ -20,10 +20,10 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      - run: |
+      - name: run coverage tests
+        run: |
           pwd
-          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-          ls -l
+          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output Backend.Tests
           ls -l Backend.Tests
         shell: bash
       - name: Upload coverage report
