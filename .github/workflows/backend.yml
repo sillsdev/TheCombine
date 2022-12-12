@@ -23,7 +23,7 @@ jobs:
       - name: run coverage tests
         run: |
           echo "Current directory: "`pwd`
-          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --results-directory test-results -v
+          dotnet test Backend.Tests/Backend.Tests.csproj --results-directory test-results -v detailed /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
           echo "Results directory:"
           ls -l test-results
         shell: bash
