@@ -8,7 +8,7 @@ on:
 
 jobs:
   test_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         dotnet: ["6.0.x"]
@@ -22,7 +22,9 @@ jobs:
       # Coverage.
       - name: run coverage tests
         run: |
-          echo "Current directory: "`pwd`
+          echo -n "Current directory: "
+          pwd
+          dotnet --version
           dotnet test Backend.Tests/Backend.Tests.csproj --results-directory test-results -v detailed /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
           echo "Results directory:"
           ls -l test-results
@@ -47,7 +49,7 @@ jobs:
       - run: dotnet-format --check
 
   CodeQL_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -73,7 +75,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
   docker_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ github.event.type }} == "PullRequest"
     steps:
       # For subfolders, currently a full checkout is required.
