@@ -21,9 +21,6 @@ jobs:
 
       # Coverage.
       - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-      - name: Find coverage report
-        run: find /home/runner/work/TheCombine -name "*.cobertura.xml" -print
-        shell: bash
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
         with:
@@ -31,6 +28,7 @@ jobs:
           flags: backend
           name: Backend
           fail_ci_if_error: true
+          verbose: true
 
       # Development build.
       - run: dotnet build BackendFramework.sln
