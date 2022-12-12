@@ -23,13 +23,13 @@ jobs:
       - name: run coverage tests
         run: |
           pwd
-          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output Backend.Tests
-          ls -l Backend.Tests
+          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --results-directory test-results
+          ls -l test-results
         shell: bash
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
         with:
-          files: Backend.Tests/coverage.cobertura.xml
+          files: test-results/coverage.cobertura.xml
           flags: backend
           name: Backend
           fail_ci_if_error: true
