@@ -20,7 +20,11 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      - run: pwd && dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      - run: |
+          pwd
+          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+          ls -l
+          ls -l Backend.Tests
         shell: bash
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
