@@ -22,7 +22,7 @@ jobs:
       # Coverage.
       - name: run coverage tests
         run: |
-          dotnet test Backend.Tests/Backend.Tests.csproj -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura
+          dotnet test Backend.Tests/Backend.Tests.csproj --verbosity detailed --  MSBuild.CollectCoverage=true MSBuild.CoverletOutputFormat=cobertura
           echo -n "Current directory: "
           pwd
           echo "Find output file:"
