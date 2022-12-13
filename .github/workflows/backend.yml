@@ -22,12 +22,11 @@ jobs:
       # Coverage.
       - name: run coverage tests
         run: |
+          dotnet test Backend.Tests/Backend.Tests.csproj --results-directory test-results -v detailed /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
           echo -n "Current directory: "
           pwd
-          dotnet --version
-          dotnet test Backend.Tests/Backend.Tests.csproj --results-directory test-results -v detailed /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-          echo "Results directory:"
-          ls -l test-results
+          echo "Find output file:"
+          find . -name "*.xml"
         shell: bash
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
