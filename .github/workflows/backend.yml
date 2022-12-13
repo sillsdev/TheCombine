@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        dotnet: ["6.0.x"]
+        dotnet: ["6.0.403"]
     steps:
       - uses: actions/checkout@v3
       - name: Setup dotnet
@@ -22,7 +22,7 @@ jobs:
       # Coverage.
       - name: run coverage tests
         run: |
-          dotnet test Backend.Tests/Backend.Tests.csproj --verbosity detailed --  MSBuild.CollectCoverage=true MSBuild.CoverletOutputFormat=cobertura
+          dotnet test Backend.Tests/Backend.Tests.csproj --verbosity detailed /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
           echo -n "Current directory: "
           pwd
           echo "Find output file:"

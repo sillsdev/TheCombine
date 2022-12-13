@@ -1,0 +1,25 @@
+name: GH Self-Hosted Runner Test
+
+on:
+  push:
+    branches: [build-kit]
+
+  workflow_dispatch:
+    branches: [build-kit]
+
+jobs:
+  test_runner:
+    runs-on: [self-hosted, thecombine]
+    steps:
+      - name: Install pre-requisites
+        run: |
+          cd
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          kubectl version --short
+        shell: bash
+      - name: Print test secret
+        run: echo "${env_test_secret}"
+        shell: bash
+        env:
+          env_test_secret: ${{ secrets.TEST_SECRET }}
