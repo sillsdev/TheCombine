@@ -22,7 +22,12 @@ jobs:
       # Coverage.
       - name: run coverage tests
         run: |
-          dotnet test Backend.Tests/Backend.Tests.csproj --verbosity detailed /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+          echo "List .NET SDKs"
+          dotnet --list-sdks
+          echo "Listing /usr/share/dotnet/sdk/"
+          ls -l /usr/share/dotnet/sdk/
+          echo "Run .NET tests"
+          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
           echo -n "Current directory: "
           pwd
           echo "Find output file:"
@@ -31,7 +36,7 @@ jobs:
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
         with:
-          files: test-results/coverage.cobertura.xml
+          files: Backend.Tests/coverage.cobertura.xml
           flags: backend
           name: Backend
           fail_ci_if_error: true
