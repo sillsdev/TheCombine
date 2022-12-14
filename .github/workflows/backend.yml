@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        dotnet: ["6.0.403"]
+        dotnet: ["6.0.x"]
     steps:
       - uses: actions/checkout@v3
       - name: Setup dotnet
@@ -22,12 +22,8 @@ jobs:
       # Coverage.
       - name: run coverage tests
         run: |
-          echo "List .NET SDKs"
-          dotnet --list-sdks
-          echo "Listing /usr/share/dotnet/sdk/"
-          ls -l /usr/share/dotnet/sdk/
           echo "Run .NET tests"
-          dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+          dotnet test Backend.Tests/Backend.Tests.csproj -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -verbosity:detailed
           echo -n "Current directory: "
           pwd
           echo "Find output file:"
