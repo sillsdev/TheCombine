@@ -23,7 +23,7 @@ jobs:
       - name: run coverage tests
         run: |
           echo "Run .NET tests"
-          dotnet test Backend.Tests/Backend.Tests.csproj -verbosity detailed -p CollectCoverage=true;CoverletOutputFormat=cobertura
+          dotnet test Backend.Tests/Backend.Tests.csproj -v detailed --results-directory ./Backend.Tests -- CollectCoverage=true CoverletOutputFormat=cobertura
           echo -n "Current directory: "
           pwd
           echo "Find output file:"
