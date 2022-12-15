@@ -21,13 +21,7 @@ jobs:
 
       # Coverage.
       - name: run coverage tests
-        run: |
-          echo "Run .NET tests"
-          dotnet test Backend.Tests/Backend.Tests.csproj
-          echo -n "Current directory: "
-          pwd
-          echo "Find output file:"
-          find . -name "*.xml"
+        run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
