@@ -5,7 +5,7 @@
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
 [![Backend Coverage][backend-codecov-badge]][codecov]
 [![Python Actions Status][github-actions-python-badge]][github-actions]
-[![CodeQL][github-actions-codeql-badge]][github-actions]
+[![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
 ![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
