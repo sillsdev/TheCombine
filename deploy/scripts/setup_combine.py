@@ -179,7 +179,7 @@ def add_profile_values(
     # get the path for the profile configuration file
     if profile_name in config["profiles"]:
         profile_def = scripts_dir / "setup_files" / "profiles" / f"{profile_name}.yaml"
-        if profile_def.exists:
+        if profile_def.exists():
             with open(profile_def) as file:
                 profile_values = yaml.safe_load(file)
             if chart in profile_values["charts"]:
