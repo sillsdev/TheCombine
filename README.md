@@ -6,6 +6,7 @@
 [![Backend Coverage][backend-codecov-badge]][codecov]
 [![Python Actions Status][github-actions-python-badge]][github-actions]
 [![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
+[![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
 ![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
@@ -17,7 +18,9 @@
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
-[github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/codeql/badge.svg
+[github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
+[github-actions-ossf-badge]:
+  https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
