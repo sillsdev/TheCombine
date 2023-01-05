@@ -3,9 +3,10 @@
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
 [![Frontend Coverage][frontend-codecov-badge]][codecov]
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
-[![Backend Coverage][backend-codecov-badge]][codecov] [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
-[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+[![Backend Coverage][backend-codecov-badge]][codecov]
 [![Python Actions Status][github-actions-python-badge]][github-actions]
+[![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
+[![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
 ![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
@@ -17,11 +18,10 @@
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
+[github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
+[github-actions-ossf-badge]:
+  https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
-[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
-[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 [localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
