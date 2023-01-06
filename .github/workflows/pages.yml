@@ -5,10 +5,11 @@ name: pages
 
 on:
   push:
-    branches: [master]
+    branches: [master, pages-permissions]
 
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
+  pages: write
 
 jobs:
   deploy:
