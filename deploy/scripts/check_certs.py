@@ -79,13 +79,13 @@ def main() -> None:
         + ["get", "secrets", "--field-selector", "type=kubernetes.io/tls", "-o", "name"]
     )
 
-    for secret in secrets_list.stdout.split("\n"):
-        if secret:
-            expiration_date = get_expiration(secret, kubectl_opts)
+    for secret_name in secrets_list.stdout.split("\n"):
+        if secret_name:
+            expiration_date = get_expiration(secret_name, kubectl_opts)
             if args.short:
-                print(f"{secret}\t{expiration_date}")
+                print(f"{secret_name}\t{expiration_date}")
             else:
-                print(f"{secret} expires on {expiration_date}")
+                print(f"{secret_name} expires on {expiration_date}")
 
 
 if __name__ == "__main__":

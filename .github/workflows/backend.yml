@@ -8,7 +8,7 @@ on:
 
 jobs:
   test_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         dotnet: ["6.0.x"]
@@ -20,7 +20,9 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       # Coverage.
-      - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      - name: run coverage tests
+        run: dotnet test Backend.Tests/Backend.Tests.csproj
+        shell: bash
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
         with:
@@ -40,7 +42,7 @@ jobs:
       - run: dotnet-format --check
 
   CodeQL_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -66,7 +68,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
   docker_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ github.event.type }} == "PullRequest"
     steps:
       # For subfolders, currently a full checkout is required.

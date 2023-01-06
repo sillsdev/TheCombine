@@ -6,7 +6,7 @@
 #
 cachetools==5.2.0
     # via google-auth
-certifi==2022.9.24
+certifi==2022.12.7
     # via
     #   kubernetes
     #   requests
@@ -14,17 +14,19 @@ cffi==1.15.1
     # via cryptography
 charset-normalizer==2.1.1
     # via requests
-cryptography==38.0.1
+cryptography==39.0.0
     # via pyopenssl
-google-auth==2.12.0
+dnspython==2.2.1
+    # via pymongo
+google-auth==2.15.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
 idna==3.4
     # via requests
-kubernetes==24.2.0
+kubernetes==25.3.0
     # via -r requirements.in
-oauthlib==3.2.1
+oauthlib==3.2.2
     # via requests-oauthlib
 pyasn1==0.4.8
     # via
@@ -34,9 +36,9 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.21
     # via cffi
-pymongo==4.2.0
+pymongo==4.3.3
     # via -r requirements.in
-pyopenssl==22.1.0
+pyopenssl==23.0.0
     # via -r requirements.in
 python-dateutil==2.8.2
     # via kubernetes
@@ -55,11 +57,11 @@ six==1.16.0
     #   google-auth
     #   kubernetes
     #   python-dateutil
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   kubernetes
     #   requests
-websocket-client==1.4.1
+websocket-client==1.4.2
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:
