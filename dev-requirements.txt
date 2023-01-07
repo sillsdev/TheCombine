@@ -190,7 +190,7 @@ tomli==2.0.1
     #   mypy
     #   pyproject-api
     #   tox
-tox==4.2.5
+tox==4.2.6
     # via -r dev-requirements.in
 types-cryptography==3.3.23.2
     # via types-pyopenssl
