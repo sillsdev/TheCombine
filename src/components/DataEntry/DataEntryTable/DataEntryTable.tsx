@@ -663,7 +663,11 @@ export class DataEntryTable extends React.Component<
                 this.addNewWord(word, audioFileURLs)
               }
               semanticDomain={this.props.semanticDomain}
-              setIsReadyState={(isReady: boolean) => this.setState({ isReady })}
+              setIsReadyState={(isReady: boolean) =>
+                this.setState((state) => {
+                  return state.isReady === isReady ? null : { isReady };
+                })
+              }
               recorder={this.recorder}
               analysisLang={this.state.analysisLang}
               vernacularLang={this.state.vernacularLang}

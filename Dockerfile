@@ -1,5 +1,5 @@
 # User guide build environment.
-FROM python:3.9 AS user_guide_builder
+FROM python:3.10 AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,7 +16,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:16.14 AS frontend_builder
+FROM node:16 AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -28,7 +28,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.21
+FROM nginx:1.23
 
 WORKDIR /app
 

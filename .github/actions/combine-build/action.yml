@@ -37,11 +37,11 @@ runs:
 
     - name: Save Image Tag
       id: save_image_tag
-      run: echo "::set-output name=image_tag::${{ env.IMAGE_TAG }}"
+      run: echo "image_tag=${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         aws-access-key-id: ${{ inputs.aws_access_key_id }}
         aws-secret-access-key: ${{ inputs.aws_secret_access_key }}
@@ -55,6 +55,9 @@ runs:
         password: ${{ inputs.aws_secret_access_key }}
 
     - name: Build The Combine
-      run: |
-        deploy/scripts/build.py --tag ${{ env.IMAGE_TAG }} --repo ${{ inputs.image_registry }}${{ inputs.image_registry_alias}}
+      run: >
+        deploy/scripts/build.py
+        --components ${{ inputs.build_component }}
+        --tag ${{ env.IMAGE_TAG }}
+        --repo ${{ inputs.image_registry }}${{ inputs.image_registry_alias}}
       shell: bash
