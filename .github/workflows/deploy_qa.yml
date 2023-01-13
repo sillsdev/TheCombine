@@ -50,7 +50,7 @@ jobs:
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             auth.docker.io:443
             github.com:443
-            ${{ matrix.component.endpoint}}
+            ${{ matrix.component.endpoints }}
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
         with:
