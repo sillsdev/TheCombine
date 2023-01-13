@@ -103,7 +103,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       if (!isNaN(parseInt(input))) {
         domain = await getSemanticDomainTreeNode(input, lang);
       } else {
-        domain = await searchDomainByName(handleInputFormat(input));
+        domain = await searchDomainByName(input);
       }
       if (domain) {
         animateSuccessfulSearch(domain, event);
@@ -113,12 +113,6 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
       // Did not find a domain through either numerical or textual search.
       setSearchError(true);
     }
-  }
-
-  // return string converted by input string, for backend searching
-  function handleInputFormat(input: string): string {
-    //String format: capitalize the first letter, lowercase for other letters
-    return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
   }
 
   // Change the input on typing

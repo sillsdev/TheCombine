@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace BackendFramework.Repositories
 {
@@ -36,7 +37,7 @@ namespace BackendFramework.Repositories
         {
             var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
-                filterDef.Eq(x => x.Name, name),
+                filterDef.Regex(x => x.Name, new BsonRegularExpression("/^" + name + "$/i")),
                 filterDef.Eq(x => x.Lang, lang));
             var domain = await _context.SemanticDomains.FindAsync(filter: filter);
             try
