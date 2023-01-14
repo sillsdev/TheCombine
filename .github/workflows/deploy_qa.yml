@@ -8,38 +8,14 @@ jobs:
   build:
     strategy:
       matrix:
-        component:
-          - name: frontend
-            endpoints: >
-              files.pythonhosted.org:443
-              production.cloudflare.docker.com:443
-              pypi.org:443
-              registry-1.docker.io:443
-              registry.npmjs.org:443
-          - name: backend
-            endpoints: >
-              api.nuget.org:443
-              dc.services.visualstudio.com:443
-              deb.debian.org:80
-              mcr.microsoft.com:443
-          - name: maintenance
-            endpoints: >
-              archive.ubuntu.com:80
-              files.pythonhosted.org:443
-              production.cloudflare.docker.com:443
-              pypi.org:443
-              registry-1.docker.io:443
-              security.ubuntu.com:80
-          - name: database
-            endpoints: >
-              production.cloudflare.docker.com:443
-              registry-1.docker.io:443
+        component: [frontend, backend, maintenance, database]
 
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
-      - name: Harden Runner
+      - name: Harden Runner (Frontend)
+        if: ${{ matrix.component == "frontend"}}
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
@@ -50,8 +26,64 @@ jobs:
             auth.docker.io:443
             api.github.com:443
             github.com:443
-            ${{ matrix.component.endpoints }}
+            files.pythonhosted.org:443
+            production.cloudflare.docker.com:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+      - name: Harden Runner (Backend)
+        if: ${{ matrix.component == "backend"}}
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+            api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            auth.docker.io:443
+            api.github.com:443
+            github.com:443
+            api.nuget.org:443
+            dc.services.visualstudio.com:443
+            deb.debian.org:80
+            mcr.microsoft.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+      - name: Harden Runner (Database)
+        if: ${{ matrix.component == "database"}}
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+            api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            auth.docker.io:443
+            api.github.com:443
+            github.com:443
+            production.cloudflare.docker.com:443
+            registry-1.docker.io:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+      - name: Harden Runner (Maintenance)
+        if: ${{ matrix.component == "maintenance"}}
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+            api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            auth.docker.io:443
+            api.github.com:443
+            github.com:443
+            archive.ubuntu.com:80
+            files.pythonhosted.org:443
+            production.cloudflare.docker.com:443
+            pypi.org:443
+            registry-1.docker.io:443
+            security.ubuntu.com:80
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
         with:
           fetch-depth: 0
@@ -63,7 +95,7 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
-          build_component: ${{ matrix.component.name }}
+          build_component: ${{ matrix.component }}
   clean_ecr_repo:
     needs: build
     env:
