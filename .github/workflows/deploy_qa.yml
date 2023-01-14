@@ -15,7 +15,7 @@ jobs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
       - name: Harden Runner (Frontend)
-        if: matrix.component == frontend
+        if: matrix.component == "frontend"
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
@@ -33,7 +33,7 @@ jobs:
             registry.npmjs.org:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Harden Runner (Backend)
-        if: matrix.component == backend
+        if: matrix.component == "backend"
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
@@ -50,7 +50,7 @@ jobs:
             mcr.microsoft.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Harden Runner (Database)
-        if: matrix.component == database
+        if: matrix.component == "database"
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
@@ -65,7 +65,7 @@ jobs:
             registry-1.docker.io:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Harden Runner (Maintenance)
-        if: matrix.component == maintenance
+        if: matrix.component == "maintenance"
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
