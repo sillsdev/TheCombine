@@ -34,8 +34,10 @@ jobs:
             dc.services.visualstudio.com:443
             deb.debian.org:80
             mcr.microsoft.com:443
-            centralus.data.mcr.microsoft.com:443
             eastus.data.mcr.microsoft.com:443
+            centralus.data.mcr.microsoft.com:443
+            westcentralus.data.mcr.microsoft.com:443
+            westus.data.mcr.microsoft.com:443
             archive.ubuntu.com:80
             security.ubuntu.com:80
             api.github.com:443
