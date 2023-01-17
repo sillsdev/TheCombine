@@ -2,7 +2,7 @@ name: "Deploy Update to QA Server"
 
 on:
   push:
-    branches: [master, harden-runners]
+    branches: [master]
 
 jobs:
   build:
@@ -79,7 +79,6 @@ jobs:
   deploy_update:
     needs: build
     runs-on: [self-hosted, thecombine]
-    if: ${{ github.ref_name == 'master' }}
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
       - name: Deploy The Combine Update
