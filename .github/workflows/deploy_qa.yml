@@ -18,7 +18,7 @@ jobs:
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
-          egress-policy: block
+          egress-policy: audit
           allowed-endpoints: >
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
