@@ -35,7 +35,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["csharp", "javascript", "python"]
+        language:
+          - name: csharp
+            endpoints: >
+              api.github.com:443
+              api.nuget.org:443
+              dc.services.visualstudio.com:443
+              github.com:443
+          - name: javascript
+            endpoints: >
+              api.github.com:443
+              github.com:443
+          - name: python
+            endpoints: >
+              api.github.com:443
+              files.pythonhosted.org:443
+              github.com:443
+              pypi.org:443
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         # Use only 'java' to analyze code written in Java, Kotlin or both
         # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
@@ -45,8 +61,9 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: ${{ matrix.language.endpoints }}
       - name: Checkout repository
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
 
@@ -54,7 +71,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@959cbb7472c4d4ad70cdfe6f4976053fe48ab394 # v2.1.37
         with:
-          languages: ${{ matrix.language }}
+          languages: ${{ matrix.language.name }}
           # If you wish to specify custom queries, you can do so here or in a config file.
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
@@ -80,4 +97,4 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@959cbb7472c4d4ad70cdfe6f4976053fe48ab394 # v2.1.37
         with:
-          category: "/language:${{matrix.language}}"
+          category: "/language:${{matrix.language.name}}"

@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         component: [frontend, backend, maintenance, database]
+
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
@@ -16,8 +17,30 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+            api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            auth.docker.io:443
+            files.pythonhosted.org:443
+            github.com:443
+            production.cloudflare.docker.com:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            api.nuget.org:443
+            dc.services.visualstudio.com:443
+            deb.debian.org:80
+            mcr.microsoft.com:443
+            eastus.data.mcr.microsoft.com:443
+            centralus.data.mcr.microsoft.com:443
+            westcentralus.data.mcr.microsoft.com:443
+            westus.data.mcr.microsoft.com:443
+            archive.ubuntu.com:80
+            security.ubuntu.com:80
+            api.github.com:443
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
         with:
           fetch-depth: 0
@@ -40,8 +63,12 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            github.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@97271860067ec931c45b8d104fbf0d15954ab85c # v1-node16
@@ -55,11 +82,6 @@ jobs:
     needs: build
     runs-on: [self-hosted, thecombine]
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
-        with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
       - name: Deploy The Combine Update
         uses: ./.github/actions/combine-deploy-update
