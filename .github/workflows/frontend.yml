@@ -19,8 +19,14 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            codecov.io:443
+            github.com:443
+            registry.npmjs.org:443
+            storage.googleapis.com:443
+            uploader.codecov.io:443
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # v3.5.1
@@ -52,8 +58,16 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            auth.docker.io:443
+            files.pythonhosted.org:443
+            github.com:443
+            production.cloudflare.docker.com:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
         with:
           fetch-depth: 0
