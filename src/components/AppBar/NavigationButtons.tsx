@@ -3,11 +3,11 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
+import { getUser } from "backend";
+import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import { openTreeAction } from "components/TreeView/TreeViewActions";
 import { tabColor } from "types/theme";
-import * as LocalStorage from "backend/localStorage";
-import { getUser } from "backend";
 
 interface NavigationButtonsProps {
   currentTab: Path;

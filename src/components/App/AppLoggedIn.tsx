@@ -9,8 +9,8 @@ import PageNotFound from "components/PageNotFound/component";
 import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 import ProjectSettings from "components/ProjectSettings/ProjectSettingsComponent";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
-import UserSettings from "components/UserSettings/UserSettings";
 import Statistics from "components/Statistics/Statistics";
+import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 
 const BaseGoalScreen = loadable(

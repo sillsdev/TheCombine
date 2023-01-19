@@ -1,39 +1,18 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  makeStyles,
-  TextField,
-  Typography,
-  ListItem,
-  List,
-} from "@material-ui/core";
+import { Card, Grid, Typography, ListItem, List } from "@material-ui/core";
 import React, { ReactElement, useState, useEffect } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { getCurrentUser } from "backend/localStorage";
-import { User } from "api/models";
-import { newUser } from "types/user";
-import { render } from "@testing-library/react";
-import * as LocalStorage from "backend/localStorage";
+
+import { Project, SemanticDomain } from "api/models";
 import {
   getAllProjects,
   getAllSemanticDomainTreeNode,
   getAllStatisticsPair,
   getAllWords,
-  getFrontierWords,
   getProjectName,
-  getSemanticDomainFull,
-  getSemanticDomainTreeNode,
-  getSemanticDomainTreeNodeByName,
 } from "backend";
-import { Project } from "api/models";
+import * as LocalStorage from "backend/localStorage";
+import { getCurrentUser } from "backend/localStorage";
 import theme from "types/theme";
-import { SemanticDomain } from "api/models";
+import { newUser } from "types/user";
 import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 
 export default function Statistics(): ReactElement {
