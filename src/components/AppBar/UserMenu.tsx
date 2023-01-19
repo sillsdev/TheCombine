@@ -4,6 +4,7 @@ import {
   Help,
   Person,
   SettingsApplications,
+  BarChart,
 } from "@material-ui/icons";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -117,6 +118,20 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         >
           <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
           {t("userMenu.siteSettings")}
+        </MenuItem>
+      )}
+
+      {props.isAdmin && (
+        <MenuItem
+          id={`${idAffix}-statistics`}
+          onClick={() => {
+            dispatch(clearCurrentProject());
+            history.push(Path.Statistics);
+            props.onSelect();
+          }}
+        >
+          <BarChart style={{ marginRight: theme.spacing(1) }} />
+          {t("userMenu.statistics")}
         </MenuItem>
       )}
 

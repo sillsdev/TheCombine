@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -7,6 +8,11 @@ namespace Backend.Tests.Mocks
     public class SemanticDomainRepositoryMock : ISemanticDomainRepository
     {
         private object? _responseObj;
+
+        public Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNode(string lang)
+        {
+            return Task.FromResult((List<SemanticDomainTreeNode>?)_responseObj);
+        }
 
         public Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
         {

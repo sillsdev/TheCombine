@@ -1,14 +1,25 @@
 import { Button } from "@material-ui/core";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
 import history, { Path } from "browserHistory";
 import { openTreeAction } from "components/TreeView/TreeViewActions";
 import { tabColor } from "types/theme";
+import * as LocalStorage from "backend/localStorage";
+import { getUser } from "backend";
 
 interface NavigationButtonsProps {
   currentTab: Path;
+}
+
+export async function getIsAdmin(): Promise<boolean> {
+  const userId = LocalStorage.getUserId();
+  const user = await getUser(userId);
+  if (user) {
+    return user.isAdmin;
+  }
+  return false;
 }
 
 /** A button that redirects to the home page */
@@ -17,6 +28,9 @@ export default function NavigationButtons(
 ): ReactElement {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  getIsAdmin().then(setIsAdmin);
 
   return (
     <React.Fragment>
@@ -47,6 +61,21 @@ export default function NavigationButtons(
       >
         {t("appBar.dataCleanup")}
       </Button>
+      {isAdmin && (
+        <Button
+          id="statistics"
+          onClick={() => {
+            history.push(Path.Statistics);
+          }}
+          color="inherit"
+          style={{
+            width: "min-content",
+            background: tabColor(props.currentTab, Path.Statistics),
+          }}
+        >
+          {t("appBar.statistics")}
+        </Button>
+      )}
     </React.Fragment>
   );
 }

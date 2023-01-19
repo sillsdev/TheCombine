@@ -99,6 +99,7 @@ const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
+const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
@@ -412,6 +413,17 @@ export async function getSemanticDomainTreeNodeByName(
   return response.data ?? undefined;
 }
 
+export async function getAllSemanticDomainTreeNode(
+  lang?: string
+): Promise<SemanticDomainTreeNode | undefined> {
+  const response = await semanticDomainApi.getAllSemanticDomainTreeNode(
+    { lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
 /* UserController.cs */
 
 export async function resetPasswordRequest(
@@ -641,4 +653,16 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
+}
+
+export async function getAllStatisticsPair(
+  projectId: string,
+  lang?: string
+): Promise<any | undefined> {
+  const response = await statisticsApi.getAllStatistics(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
 }

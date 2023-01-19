@@ -39,6 +39,7 @@ export enum Path {
   SignUp = "/sign-up",
   SiteSettings = "/app/site-settings",
   UserSettings = "/app/user-settings",
+  Statistics = "/app/statistics",
 }
 
 // Given a path string (e.g., /app/goals/?param=no),

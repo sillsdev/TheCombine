@@ -10,6 +10,7 @@ import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 import ProjectSettings from "components/ProjectSettings/ProjectSettingsComponent";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
 import UserSettings from "components/UserSettings/UserSettings";
+import Statistics from "components/Statistics/Statistics";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 
 const BaseGoalScreen = loadable(
@@ -32,6 +33,7 @@ export default function AppWithBar(): ReactElement {
         <Route exact path={Path.ProjSettings} component={ProjectSettings} />
         <Route exact path={Path.SiteSettings} component={SiteSettings} />
         <Route exact path={Path.UserSettings} component={UserSettings} />
+        <Route exact path={Path.Statistics} component={Statistics} />
         <Route component={PageNotFound} />
       </Switch>
     </React.Fragment>

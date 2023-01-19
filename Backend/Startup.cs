@@ -236,6 +236,9 @@ namespace BackendFramework
             // Semantic Domain types
             services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
             services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
+
+            //Fuen's note add a new statistics service
+            services.AddSingleton<IStatisticsService, StatisticsService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

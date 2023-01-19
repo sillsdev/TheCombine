@@ -35,7 +35,8 @@
   },
   "appBar": {
     "dataEntry": "data entry",
-    "dataCleanup": "data cleanup"
+    "dataCleanup": "data cleanup",
+    "statistics": "data statistics"
   },
   "login": {
     "title": "Log In",
@@ -77,7 +78,8 @@
     "projectSettings": "Project Settings",
     "userSettings": "User Settings",
     "logout": "Log Out",
-    "userGuide": "User Guide"
+    "userGuide": "User Guide",
+    "statistics": "Statistics"
   },
   "createProject": {
     "name": "Project Name",
