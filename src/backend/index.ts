@@ -13,6 +13,7 @@ import {
   Project,
   SemanticDomainFull,
   SemanticDomainTreeNode,
+  SemanticDomainTreeNodeInt32KeyValuePair,
   SiteBanner,
   User,
   UserEdit,
@@ -658,11 +659,11 @@ export async function updateWord(word: Word): Promise<Word> {
 export async function getAllStatisticsPair(
   projectId: string,
   lang?: string
-): Promise<any | undefined> {
+): Promise<Array<SemanticDomainTreeNodeInt32KeyValuePair>> {
   const response = await statisticsApi.getAllStatistics(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
+  return response.data;
 }
