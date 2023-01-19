@@ -184,12 +184,6 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.3.2.post1
     # via beautifulsoup4
-tomli==2.0.1
-    # via
-    #   black
-    #   mypy
-    #   pyproject-api
-    #   tox
 tox==4.2.6
     # via -r dev-requirements.in
 types-cryptography==3.3.23.2
