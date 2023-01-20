@@ -1,5 +1,5 @@
 # Docker multi-stage build.
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
+FROM bitnami/dotnet_sdk:6 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM bitnami/aspnet-core:6
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
