@@ -2,7 +2,9 @@ name: "Deploy Update to QA Server"
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - update-gh-actions
 
 jobs:
   build:
@@ -18,7 +20,7 @@ jobs:
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
@@ -31,16 +33,12 @@ jobs:
             registry.npmjs.org:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             api.nuget.org:443
+            codecov.io:443
             dc.services.visualstudio.com:443
-            deb.debian.org:80
-            mcr.microsoft.com:443
-            eastus.data.mcr.microsoft.com:443
-            centralus.data.mcr.microsoft.com:443
-            westcentralus.data.mcr.microsoft.com:443
-            westus.data.mcr.microsoft.com:443
-            archive.ubuntu.com:80
-            security.ubuntu.com:80
-            api.github.com:443
+            dotnetcli.azureedge.net:443
+            github.com:443
+            storage.googleapis.com:443
+            uploader.codecov.io:443
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           fetch-depth: 0
@@ -81,6 +79,7 @@ jobs:
   deploy_update:
     needs: build
     runs-on: [self-hosted, thecombine]
+    if: github.ref_name == "master"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - name: Deploy The Combine Update
