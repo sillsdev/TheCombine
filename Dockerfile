@@ -1,5 +1,5 @@
 # User guide build environment.
-FROM python:3.11 AS user_guide_builder
+FROM python:3.11@sha256:a3c0c6766535f85f18e7304d3a0111de5208d73935bcf1b024217005ad5ce195 AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
