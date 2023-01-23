@@ -61,13 +61,12 @@ describe("UserMenu", () => {
     });
   });
 
-  //Fuen's notes admin see two more item : Site Settings and Statistics
   it("admin users see one more item: Site Settings", async () => {
     renderMenuList();
     const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
     renderMenuList(true);
     const adminMenuItems = testRenderer.root.findAllByType(MenuItem).length;
-    expect(adminMenuItems).toBe(normalMenuItems + 2);
+    expect(adminMenuItems).toBe(normalMenuItems + 1);
   });
 });
 

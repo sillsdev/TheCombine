@@ -78,8 +78,7 @@
     "projectSettings": "Project Settings",
     "userSettings": "User Settings",
     "logout": "Log Out",
-    "userGuide": "User Guide",
-    "statistics": "Statistics"
+    "userGuide": "User Guide"
   },
   "createProject": {
     "name": "Project Name",
@@ -368,5 +367,11 @@
     "playTooltip": "Click to play; shift click to delete.",
     "noMicAccess": "Recording error: Could not access a microphone.",
     "deleteRecording": "Delete Recording"
+  },
+  "statistics": {
+    "dataStatistics": "Data Statistics:  ",
+    "domainNumber": "The Semantic Domain Number:",
+    "domainName": "The Semantic Domain Name:",
+    "countSenses": "The Count of Senses:"
   }
 }

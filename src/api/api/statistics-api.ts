@@ -53,12 +53,12 @@ export const StatisticsApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAllStatistics: async (
+    getSemanticDomainCounts: async (
       projectId?: string,
       lang?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/statistics/GetAllStatisticsPair`;
+      const localVarPath = `/v1/statistics/GetSemanticDomainCounts`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -114,7 +114,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getAllStatistics(
+    async getSemanticDomainCounts(
       projectId?: string,
       lang?: string,
       options?: any
@@ -125,7 +125,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<Array<SemanticDomainTreeNodeInt32KeyValuePair>>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getAllStatistics(
+        await localVarAxiosParamCreator.getSemanticDomainCounts(
           projectId,
           lang,
           options
@@ -158,35 +158,35 @@ export const StatisticsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAllStatistics(
+    getSemanticDomainCounts(
       projectId?: string,
       lang?: string,
       options?: any
     ): AxiosPromise<Array<SemanticDomainTreeNodeInt32KeyValuePair>> {
       return localVarFp
-        .getAllStatistics(projectId, lang, options)
+        .getSemanticDomainCounts(projectId, lang, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for getAllStatistics operation in StatisticsApi.
+ * Request parameters for getSemanticDomainCounts operation in StatisticsApi.
  * @export
- * @interface StatisticsApiGetAllStatisticsRequest
+ * @interface StatisticsApiGetSemanticDomainCountsRequest
  */
-export interface StatisticsApiGetAllStatisticsRequest {
+export interface StatisticsApiGetSemanticDomainCountsRequest {
   /**
    *
    * @type {string}
-   * @memberof StatisticsApiGetAllStatistics
+   * @memberof StatisticsApiGetSemanticDomainCounts
    */
   readonly projectId?: string;
 
   /**
    *
    * @type {string}
-   * @memberof StatisticsApiGetAllStatistics
+   * @memberof StatisticsApiGetSemanticDomainCounts
    */
   readonly lang?: string;
 }
@@ -200,17 +200,17 @@ export interface StatisticsApiGetAllStatisticsRequest {
 export class StatisticsApi extends BaseAPI {
   /**
    *
-   * @param {StatisticsApiGetAllStatisticsRequest} requestParameters Request parameters.
+   * @param {StatisticsApiGetSemanticDomainCountsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof StatisticsApi
    */
-  public getAllStatistics(
-    requestParameters: StatisticsApiGetAllStatisticsRequest = {},
+  public getSemanticDomainCounts(
+    requestParameters: StatisticsApiGetSemanticDomainCountsRequest = {},
     options?: any
   ) {
     return StatisticsApiFp(this.configuration)
-      .getAllStatistics(
+      .getSemanticDomainCounts(
         requestParameters.projectId,
         requestParameters.lang,
         options

@@ -25,12 +25,11 @@ namespace BackendFramework.Controllers
             _projRepo = projRepo;
         }
 
-
-
-        //Fuen's notes: get list of keyValuePair that contain the each domain treeNode and statistics number in order
-        [HttpGet("GetAllStatisticsPair", Name = "GetAllStatistics")]
+        /// <summary> Get a list of keyValuePair of SemanticDomainCounts <see cref="SemanticDomainTreeNode"/>s that key:SemanticDomainTreeNode and value:counts as int of a specific project in order </summary>
+        /// <returns> A list of keyValuePair<SemanticDomainTreeNode, int> <see cref="SemanticDomainTreeNode"/>s </returns>
+        [HttpGet("GetSemanticDomainCounts", Name = "GetSemanticDomainCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<KeyValuePair<SemanticDomainTreeNode, int>>))]
-        public async Task<IActionResult> GetAllStatistics(string projectId, string lang)
+        public async Task<IActionResult> GetSemanticDomainCounts(string projectId, string lang)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -44,7 +43,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _staService.GetAllStatisticsKeyPair(projectId, lang));
+            return Ok(await _staService.GetSemanticDomainCounts(projectId, lang));
         }
     }
 }

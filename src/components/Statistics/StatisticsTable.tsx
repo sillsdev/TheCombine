@@ -1,17 +1,6 @@
-import { Card, Grid, Typography, ListItem, List } from "@material-ui/core";
-import React, { ReactElement, useState, useEffect } from "react";
-
-import { Project, SemanticDomain, SemanticDomainTreeNode } from "api/models";
-import {
-  getAllProjects,
-  getAllSemanticDomainTreeNode,
-  getAllStatisticsPair,
-  getAllWords,
-  getProjectName,
-} from "backend";
-import * as LocalStorage from "backend/localStorage";
-import theme from "types/theme";
-import { defaultWritingSystem } from "types/writingSystem";
+import { Grid, Typography } from "@material-ui/core";
+import React, { ReactElement } from "react";
+import { SemanticDomainTreeNode } from "api/models";
 
 interface StatisticsProps {
   domain: SemanticDomainTreeNode;

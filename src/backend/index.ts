@@ -414,10 +414,10 @@ export async function getSemanticDomainTreeNodeByName(
   return response.data ?? undefined;
 }
 
-export async function getAllSemanticDomainTreeNode(
+export async function getAllSemanticDomainTreeNodes(
   lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
-  const response = await semanticDomainApi.getAllSemanticDomainTreeNode(
+  const response = await semanticDomainApi.getAllSemanticDomainTreeNodes(
     { lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()
   );
@@ -656,14 +656,14 @@ export async function updateWord(word: Word): Promise<Word> {
   return { ...word, id: resp.data };
 }
 
-export async function getAllStatisticsPair(
+export async function getSemanticDomainCounts(
   projectId: string,
   lang?: string
-): Promise<Array<SemanticDomainTreeNodeInt32KeyValuePair>> {
-  const response = await statisticsApi.getAllStatistics(
+): Promise<Array<SemanticDomainTreeNodeInt32KeyValuePair> | undefined> {
+  const response = await statisticsApi.getSemanticDomainCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
-  return response.data;
+  return response.data ?? undefined;
 }

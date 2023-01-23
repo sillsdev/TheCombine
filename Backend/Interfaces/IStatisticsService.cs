@@ -6,7 +6,6 @@ namespace BackendFramework.Interfaces
 {
     public interface IStatisticsService
     {
-        Task<List<KeyValuePair<SemanticDomainTreeNode, int>>> GetAllStatisticsKeyPair(string projectId, string lang);
+        Task<List<KeyValuePair<SemanticDomainTreeNode, int>>> GetSemanticDomainCounts(string projectId, string lang);
     }
-
 }

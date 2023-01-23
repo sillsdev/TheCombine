@@ -9,6 +9,6 @@ namespace BackendFramework.Interfaces
         Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang);
         Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang);
         Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang);
-        Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNode(string lang);
+        Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang);
     }
 }

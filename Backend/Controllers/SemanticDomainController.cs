@@ -43,12 +43,12 @@ namespace BackendFramework.Controllers
             return Ok(await _semDomRepo.GetSemanticDomainTreeNodeByName(name, lang));
         }
 
-        ///Fuen's notes <summary> Returns All SemanticDomainTreeNode
-        [HttpGet("domainGetAll", Name = "GetAllSemanticDomainTreeNode")]
+        /// <summary> Returns a list of all SemanticDomainTreeNodes <see cref="SemanticDomainTreeNode"/> in specified language </summary>
+        [HttpGet("domainGetAll", Name = "GetAllSemanticDomainTreeNodes")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
-        public async Task<IActionResult> GetAllSemanticDomainTreeNode(string lang)
+        public async Task<IActionResult> GetAllSemanticDomainTreeNodes(string lang)
         {
-            return Ok(await _semDomRepo.GetAllSemanticDomainTreeNode(lang));
+            return Ok(await _semDomRepo.GetAllSemanticDomainTreeNodes(lang));
         }
     }
 }

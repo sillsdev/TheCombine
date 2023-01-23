@@ -9,7 +9,7 @@ namespace Backend.Tests.Mocks
     {
         private object? _responseObj;
 
-        public Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNode(string lang)
+        public Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
             return Task.FromResult((List<SemanticDomainTreeNode>?)_responseObj);
         }

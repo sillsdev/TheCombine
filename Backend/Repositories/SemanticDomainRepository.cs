@@ -68,7 +68,9 @@ namespace BackendFramework.Repositories
             }
         }
 
-        public async Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNode(string lang)
+
+        // Get a list of all SemanticDomainTreeNodes in specified language except the root node
+        public async Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
             var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(

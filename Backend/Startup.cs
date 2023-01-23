@@ -237,7 +237,7 @@ namespace BackendFramework
             services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
             services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
 
-            //Fuen's note add a new statistics service
+            // Statistics types
             services.AddSingleton<IStatisticsService, StatisticsService>();
         }
 

@@ -17,12 +17,23 @@ namespace BackendFramework.Services
             _wordRepo = wordRepo;
             _domainRepo = domainRepo;
         }
-        public async Task<List<KeyValuePair<SemanticDomainTreeNode, int>>> GetAllStatisticsKeyPair(string projectId, string lang)
+
+        /// <summary>
+        /// Get a list of pair of SemanticDomainCounts counting the sense-domain
+        /// key: SemanticDomainTreeNode, value: counts as int
+        /// </summary>
+        /// <returns>
+        /// List of KeyValuePair<SemanticDomainTreeNode, int>
+        ///     key: SemanticDomainTreeNode
+        ///     value: counts as int
+        /// </returns>
+        public async Task<List<KeyValuePair<SemanticDomainTreeNode, int>>> GetSemanticDomainCounts(string projectId, string lang)
         {
             Dictionary<string, int> hashMap = new Dictionary<string, int>();
-            List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNode(lang);
+            List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
             List<Word> wordList = await _wordRepo.GetAllWords(projectId);
             List<KeyValuePair<SemanticDomainTreeNode, int>> resList = new List<KeyValuePair<SemanticDomainTreeNode, int>>();
+
             if (domainTreeNodeList == null || wordList == null)
             {
                 return new List<KeyValuePair<SemanticDomainTreeNode, int>>();
@@ -34,19 +45,7 @@ namespace BackendFramework.Services
                 {
                     foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
-                        var temp = sd.Id;
-                        while (temp.Length >= 1)
-                        {
-                            hashMap[temp] = hashMap.GetValueOrDefault(temp, 0) + 1;
-                            if (temp.Length == 1)
-                            {
-                                break;
-                            }
-                            if (temp.Length >= 3)
-                            {
-                                temp = temp.Substring(0, temp.Length - 2);
-                            }
-                        }
+                        hashMap[sd.Id] = hashMap.GetValueOrDefault(sd.Id, 0) + 1;
                     }
                 }
             }
@@ -58,5 +57,4 @@ namespace BackendFramework.Services
             return resList;
         }
     }
-
 }
