@@ -79,7 +79,7 @@ jobs:
   deploy_update:
     needs: build
     runs-on: [self-hosted, thecombine]
-    if: github.ref_name == "master"
+    if: ${{github.ref_name == 'master'}}
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - name: Deploy The Combine Update
