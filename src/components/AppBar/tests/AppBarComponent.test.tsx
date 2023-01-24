@@ -12,36 +12,36 @@ import ProjectNameButton from "components/AppBar/ProjectNameButton";
 import { newUser } from "types/user";
 
 const mockPath = jest.fn();
+// const mockGetUser = jest.fn();
+// const mockGetUserId = jest.fn();
+// const mockUser = newUser();
+// const mockUserId = "mockUserId";
+
 jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: mockPath() }),
 }));
 
-jest.mock("backend", () => ({
-  getUser: () => mockGetUser(),
-}));
-jest.mock("backend/localStorage", () => ({
-  getUserId: () => mockGetUserId(),
-}));
+// jest.mock("backend", () => ({
+//   getUser: () => mockGetUser(),
+// }));
+// jest.mock("backend/localStorage", () => ({
+//   getUserId: () => mockGetUserId(),
+//   getProjectId: () =>
+// }));
 
 const mockStore = configureMockStore()(defaultState);
 
 let testRenderer: ReactTestRenderer;
 
-// set a new User for each test
-const mockGetUser = jest.fn();
-const mockGetUserId = jest.fn();
-const mockUser = newUser();
-const mockUserId = "mockUserId";
+// function setMockFunctions() {
+//   mockGetUser.mockResolvedValue(mockUser);
+//   mockGetUserId.mockReturnValue(mockUserId);
+// }
 
-function setMockFunctions() {
-  mockGetUser.mockResolvedValue(mockUser);
-  mockGetUserId.mockReturnValue(mockUserId);
-}
-
-beforeEach(() => {
-  jest.clearAllMocks();
-  setMockFunctions();
-});
+// beforeEach(() => {
+//   jest.clearAllMocks();
+//   setMockFunctions();
+// });
 
 describe("AppBar", () => {
   it("renders without crashing", () => {
@@ -68,6 +68,13 @@ describe("NavigationButtons", () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <ProjectNameButton currentTab={Path.Goals} />
+      </Provider>
+    );
+    expect(testRenderer.toJSON()).toMatchSnapshot();
+
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <ProjectNameButton currentTab={Path.Statistics} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();
