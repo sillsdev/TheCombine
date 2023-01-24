@@ -1,13 +1,12 @@
 import { Card, Grid, Typography, ListItem, List } from "@material-ui/core";
 import React, { ReactElement, useState, useEffect } from "react";
-import { BarChart } from "@material-ui/icons";
+import { useTranslation } from "react-i18next";
 
+import StatisticsTable from "./StatisticsTable";
 import { Project, SemanticDomainTreeNodeInt32KeyValuePair } from "api/models";
 import { getProject, getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
-import StatisticsTable from "./StatisticsTable";
-import { useTranslation } from "react-i18next";
 
 export default function Statistics(): ReactElement {
   const [currentProject, setCurrentProject] = useState<Project>();
@@ -18,27 +17,18 @@ export default function Statistics(): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    updateCurrentProject(currentProject?.id);
-    updateStatisticsList(currentProject?.id);
-  }, [currentProject?.id]);
-
-  async function updateCurrentProject(projectId?: string) {
-    if (projectId) {
-      return setCurrentProject(await getProject(projectId));
-    }
-    return setCurrentProject(await getProject(LocalStorage.getProjectId()));
-  }
-
-  async function updateStatisticsList(projectId?: string) {
-    if (projectId != undefined) {
-      let pair:
-        | React.SetStateAction<SemanticDomainTreeNodeInt32KeyValuePair[]>
-        | undefined;
-      pair = await getAllStatistics(projectId, lang);
+    updateCurrentProject();
+    const updateStatisticList = async () => {
+      const pair = await getAllStatistics(LocalStorage.getProjectId(), lang);
       if (pair != undefined) {
-        setStatisticsList(pair);
+        return setStatisticsList(pair);
       }
-    }
+    };
+    updateStatisticList();
+  }, [lang]);
+
+  async function updateCurrentProject() {
+    await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
   }
 
   async function getAllStatistics(
@@ -47,31 +37,6 @@ export default function Statistics(): ReactElement {
   ): Promise<SemanticDomainTreeNodeInt32KeyValuePair[] | undefined> {
     return await getSemanticDomainCounts(projectId, lang);
   }
-
-  // function getListItems(projects: Project[]) {
-  //   return projects.map((project) => (
-  //     <ListItem key={project.id}>
-  //       <Grid container justifyContent="space-evenly">
-  //         <Typography variant="h6" style={{ marginRight: theme.spacing(1) }}>
-  //           {project.name}
-  //         </Typography>
-  //         <Button
-  //           id="goals"
-  //           onClick={() => {
-  //             updateCurrentProject(project.id);
-  //           }}
-  //           color="inherit"
-  //           style={{
-  //             width: "min-content",
-  //             background: tabColor(Path.Statistics, Path.Statistics),
-  //           }}
-  //         >
-  //           {t("Select")}
-  //         </Button>
-  //       </Grid>
-  //     </ListItem>
-  //   ));
-  // }
 
   function getStatisticsList(
     statisticsList: SemanticDomainTreeNodeInt32KeyValuePair[]
@@ -145,6 +110,31 @@ export default function Statistics(): ReactElement {
     </React.Fragment>
   );
 }
+
+// function getListItems(projects: Project[]) {
+//   return projects.map((project) => (
+//     <ListItem key={project.id}>
+//       <Grid container justifyContent="space-evenly">
+//         <Typography variant="h6" style={{ marginRight: theme.spacing(1) }}>
+//           {project.name}
+//         </Typography>
+//         <Button
+//           id="goals"
+//           onClick={() => {
+//             updateCurrentProject(project.id);
+//           }}
+//           color="inherit"
+//           style={{
+//             width: "min-content",
+//             background: tabColor(Path.Statistics, Path.Statistics),
+//           }}
+//         >
+//           {t("Select")}
+//         </Button>
+//       </Grid>
+//     </ListItem>
+//   ));
+// }
 
 // interface useSearchInputState {
 //   input: string;

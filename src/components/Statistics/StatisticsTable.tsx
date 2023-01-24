@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
+
 import { SemanticDomainTreeNode } from "api/models";
 
 interface StatisticsProps {
