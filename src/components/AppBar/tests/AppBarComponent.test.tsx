@@ -7,41 +7,42 @@ import "tests/mockReactI18next";
 import { Path } from "browserHistory";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
-import NavigationButtons from "components/AppBar/NavigationButtons";
+import NavigationButtons, {
+  getIsAdmin,
+} from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
 import { newUser } from "types/user";
 
 const mockPath = jest.fn();
-// const mockGetUser = jest.fn();
-// const mockGetUserId = jest.fn();
-// const mockUser = newUser();
-// const mockUserId = "mockUserId";
+const mockGetUser = jest.fn();
+//const mockGetUserId = jest.fn();
+const mockUser = newUser();
+//const mockUserId = "mockUserId";
 
 jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: mockPath() }),
 }));
 
-// jest.mock("backend", () => ({
-//   getUser: () => mockGetUser(),
-// }));
+jest.mock("backend", () => ({
+  getUser: () => mockGetUser(),
+}));
 // jest.mock("backend/localStorage", () => ({
 //   getUserId: () => mockGetUserId(),
-//   getProjectId: () =>
 // }));
 
 const mockStore = configureMockStore()(defaultState);
 
 let testRenderer: ReactTestRenderer;
 
-// function setMockFunctions() {
-//   mockGetUser.mockResolvedValue(mockUser);
-//   mockGetUserId.mockReturnValue(mockUserId);
-// }
+function setMockFunctions() {
+  mockGetUser.mockResolvedValue(mockUser);
+  // mockGetUserId.mockReturnValue(mockUserId);
+}
 
-// beforeEach(() => {
-//   jest.clearAllMocks();
-//   setMockFunctions();
-// });
+beforeAll(() => {
+  jest.clearAllMocks();
+  setMockFunctions();
+});
 
 describe("AppBar", () => {
   it("renders without crashing", () => {
