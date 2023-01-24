@@ -9,6 +9,7 @@ import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
 import NavigationButtons from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
+import { newUser } from "types/user";
 
 const mockPath = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -18,6 +19,17 @@ jest.mock("react-router-dom", () => ({
 const mockStore = configureMockStore()(defaultState);
 
 let testRenderer: ReactTestRenderer;
+
+// set a new User for each test
+const mockGetUser = jest.fn();
+const mockUser = newUser();
+function setMockFunctions() {
+  mockGetUser.mockResolvedValue(mockUser);
+}
+beforeEach(() => {
+  jest.clearAllMocks();
+  setMockFunctions();
+});
 
 describe("AppBar", () => {
   it("renders without crashing", () => {
