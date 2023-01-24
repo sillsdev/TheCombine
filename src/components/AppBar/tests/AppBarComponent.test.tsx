@@ -16,16 +16,28 @@ jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: mockPath() }),
 }));
 
+jest.mock("backend", () => ({
+  getUser: () => mockGetUser(),
+}));
+jest.mock("backend/localStorage", () => ({
+  getUserId: () => mockGetUserId(),
+}));
+
 const mockStore = configureMockStore()(defaultState);
 
 let testRenderer: ReactTestRenderer;
 
 // set a new User for each test
 const mockGetUser = jest.fn();
+const mockGetUserId = jest.fn();
 const mockUser = newUser();
+const mockUserId = "mockUserId";
+
 function setMockFunctions() {
   mockGetUser.mockResolvedValue(mockUser);
+  mockGetUserId.mockReturnValue(mockUserId);
 }
+
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunctions();
