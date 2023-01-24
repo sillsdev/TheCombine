@@ -32,7 +32,7 @@
     <PackageReference Include="SIL.DictionaryServices" Version="8.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="8.0.0">
+    <PackageReference Include="SIL.Lift" Version="11.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="SIL.WritingSystems" Version="8.0.0" />
