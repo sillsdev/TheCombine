@@ -112,16 +112,16 @@ namespace Backend.Tests.Services
         [Test]
         public void MergeWordsMultipleTest()
         {
-            var mergeWordsA = new MergeWords { Parent = Util.RandomWord(ProjId) };
-            var mergeWordsB = new MergeWords { Parent = Util.RandomWord(ProjId) };
-            var mergeWordsList = new List<MergeWords> { mergeWordsA, mergeWordsB };
+            int wordCount = 100;
+            var randWords = Util.RandomWordList(wordCount, ProjId);
+            var mergeWordsList = randWords.Select(word => new MergeWords { Parent = word }).ToList();
             var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
 
-            Assert.That(newWords, Has.Count.EqualTo(2));
+            Assert.That(newWords, Has.Count.EqualTo(wordCount));
             Assert.AreNotEqual(newWords.First().Id, newWords.Last().Id);
 
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
-            Assert.That(frontier, Has.Count.EqualTo(2));
+            Assert.That(frontier, Has.Count.EqualTo(wordCount));
             Assert.AreNotEqual(frontier.First().Id, frontier.Last().Id);
             Assert.Contains(frontier.First(), newWords);
             Assert.Contains(frontier.Last(), newWords);

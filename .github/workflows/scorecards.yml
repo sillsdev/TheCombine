@@ -12,7 +12,7 @@ on:
   schedule:
     - cron: "18 6 * * 0"
   push:
-    branches: ["master"]
+    branches: [master]
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -34,15 +34,27 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            api.osv.dev:443
+            bestpractices.coreinfrastructure.org:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            index.docker.io:443
+            mcr.microsoft.com:443
+            sigstore-tuf-root.storage.googleapis.com:443
+            auth.docker.io:443
+            rekor.sigstore.dev:443
+            api.securityscorecards.dev
       - name: "Checkout code"
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           persist-credentials: false
 
       - name: "Run analysis"
-        uses: ossf/scorecard-action@99c53751e09b9529366343771cc321ec74e9bd3d # v2.0.6
+        uses: ossf/scorecard-action@e38b1902ae4f44df626f11ba0734b14fb91f8f86 # v2.1.2
         with:
           results_file: results.sarif
           results_format: sarif
@@ -64,7 +76,7 @@ jobs:
       # Upload the results as artifacts (optional). Commenting out will disable uploads of run results in SARIF
       # format to the repository Actions tab.
       - name: "Upload artifact"
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: SARIF file
           path: results.sarif

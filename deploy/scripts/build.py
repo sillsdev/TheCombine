@@ -68,7 +68,6 @@ class JobQueue:
         running or if the queue is empty.
         """
         if self.curr_job is not None and self.curr_job.poll() is None:
-            logging.debug(f"{self.name}.start_next(): called while job is still running.")
             return False
         if len(self.job_list) > 0:
             next_job = self.job_list.pop(0)
