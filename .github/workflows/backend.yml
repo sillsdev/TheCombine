@@ -30,7 +30,7 @@ jobs:
             github.com:443
             storage.googleapis.com:443
             uploader.codecov.io:443
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - name: Setup dotnet
         uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
         with:
@@ -79,7 +79,7 @@ jobs:
             github.com:443
 
       - name: Checkout repository
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
@@ -93,7 +93,7 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@959cbb7472c4d4ad70cdfe6f4976053fe48ab394 # v2.1.37
       - name: Upload artifacts if build failed
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # v2.3.1
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: ${{ failure() }}
         with:
           name: tracer-logs
@@ -103,7 +103,7 @@ jobs:
 
   docker_build:
     runs-on: ubuntu-22.04
-    if: ${{ github.event.type }} == "PullRequest"
+    #    if: ${{ github.event.type }} == "PullRequest"
     steps:
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
@@ -117,12 +117,12 @@ jobs:
             dc.services.visualstudio.com:443
             deb.debian.org:80
             github.com:443
-            mcr.microsoft.com:443
-            eastus.data.mcr.microsoft.com:443
-            centralus.data.mcr.microsoft.com:443
-            westcentralus.data.mcr.microsoft.com:443
-            westus.data.mcr.microsoft.com:443
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+            docker.io:443
+            auth.docker.io:443
+            registry-1.docker.io:443
+            production.cloudflare.docker.com
+            security.debian.org
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           fetch-depth: 0
       - name: Build backend
