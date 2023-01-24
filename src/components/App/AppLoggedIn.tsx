@@ -32,8 +32,8 @@ export default function AppWithBar(): ReactElement {
         <Route exact path={Path.ProjScreen} component={ProjectScreen} />
         <Route exact path={Path.ProjSettings} component={ProjectSettings} />
         <Route exact path={Path.SiteSettings} component={SiteSettings} />
-        <Route exact path={Path.UserSettings} component={UserSettings} />
         <Route exact path={Path.Statistics} component={Statistics} />
+        <Route exact path={Path.UserSettings} component={UserSettings} />
         <Route component={PageNotFound} />
       </Switch>
     </React.Fragment>
