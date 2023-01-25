@@ -19,24 +19,19 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get a list of pair of SemanticDomainCounts counting the sense-domain
-        /// key: SemanticDomainTreeNode, value: counts as int
+        /// Get a list SemanticDomainCount
         /// </summary>
-        /// <returns>
-        /// List of KeyValuePair<SemanticDomainTreeNode, int>
-        ///     key: SemanticDomainTreeNode
-        ///     value: counts as int
-        /// </returns>
-        public async Task<List<KeyValuePair<SemanticDomainTreeNode, int>>> GetSemanticDomainCounts(string projectId, string lang)
+        /// <returns> List of SemanticDomainCount </returns>
+        public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
             Dictionary<string, int> hashMap = new Dictionary<string, int>();
             List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
             List<Word> wordList = await _wordRepo.GetAllWords(projectId);
-            List<KeyValuePair<SemanticDomainTreeNode, int>> resList = new List<KeyValuePair<SemanticDomainTreeNode, int>>();
+            List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
 
             if (domainTreeNodeList == null || wordList == null)
             {
-                return new List<KeyValuePair<SemanticDomainTreeNode, int>>();
+                return new List<SemanticDomainCount>();
             }
 
             foreach (Word word in wordList)
@@ -52,7 +47,7 @@ namespace BackendFramework.Services
 
             foreach (SemanticDomainTreeNode domainTreeNode in domainTreeNodeList)
             {
-                resList.Add(new KeyValuePair<SemanticDomainTreeNode, int>(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
+                resList.Add(new SemanticDomainCount(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
             }
             return resList;
         }

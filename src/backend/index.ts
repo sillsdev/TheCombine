@@ -13,7 +13,7 @@ import {
   Project,
   SemanticDomainFull,
   SemanticDomainTreeNode,
-  SemanticDomainTreeNodeInt32KeyValuePair,
+  SemanticDomainCount,
   SiteBanner,
   User,
   UserEdit,
@@ -659,7 +659,7 @@ export async function updateWord(word: Word): Promise<Word> {
 export async function getSemanticDomainCounts(
   projectId: string,
   lang?: string
-): Promise<Array<SemanticDomainTreeNodeInt32KeyValuePair> | undefined> {
+): Promise<Array<SemanticDomainCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()

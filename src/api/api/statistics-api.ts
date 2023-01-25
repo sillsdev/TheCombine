@@ -37,7 +37,7 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
-import { SemanticDomainTreeNodeInt32KeyValuePair } from "../models";
+import { SemanticDomainCount } from "../models";
 /**
  * StatisticsApi - axios parameter creator
  * @export
@@ -122,7 +122,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<Array<SemanticDomainTreeNodeInt32KeyValuePair>>
+      ) => AxiosPromise<Array<SemanticDomainCount>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getSemanticDomainCounts(
@@ -162,7 +162,7 @@ export const StatisticsApiFactory = function (
       projectId?: string,
       lang?: string,
       options?: any
-    ): AxiosPromise<Array<SemanticDomainTreeNodeInt32KeyValuePair>> {
+    ): AxiosPromise<Array<SemanticDomainCount>> {
       return localVarFp
         .getSemanticDomainCounts(projectId, lang, options)
         .then((request) => request(axios, basePath));

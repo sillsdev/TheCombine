@@ -15,9 +15,7 @@ import { newUser } from "types/user";
 
 const mockPath = jest.fn();
 const mockGetUser = jest.fn();
-//const mockGetUserId = jest.fn();
 const mockUser = newUser();
-//const mockUserId = "mockUserId";
 
 jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: mockPath() }),
@@ -26,9 +24,6 @@ jest.mock("react-router-dom", () => ({
 jest.mock("backend", () => ({
   getUser: () => mockGetUser(),
 }));
-// jest.mock("backend/localStorage", () => ({
-//   getUserId: () => mockGetUserId(),
-// }));
 
 const mockStore = configureMockStore()(defaultState);
 
@@ -36,7 +31,6 @@ let testRenderer: ReactTestRenderer;
 
 function setMockFunctions() {
   mockGetUser.mockResolvedValue(mockUser);
-  // mockGetUserId.mockReturnValue(mockUserId);
 }
 
 beforeAll(() => {

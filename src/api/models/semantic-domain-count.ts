@@ -17,19 +17,19 @@ import { SemanticDomainTreeNode } from "./semantic-domain-tree-node";
 /**
  *
  * @export
- * @interface SemanticDomainTreeNodeInt32KeyValuePair
+ * @interface SemanticDomainCount
  */
-export interface SemanticDomainTreeNodeInt32KeyValuePair {
+export interface SemanticDomainCount {
   /**
    *
    * @type {SemanticDomainTreeNode}
-   * @memberof SemanticDomainTreeNodeInt32KeyValuePair
+   * @memberof SemanticDomainCount
    */
-  key?: SemanticDomainTreeNode;
+  semanticDomainTreeNode: SemanticDomainTreeNode;
   /**
    *
    * @type {number}
-   * @memberof SemanticDomainTreeNodeInt32KeyValuePair
+   * @memberof SemanticDomainCount
    */
-  value?: number;
+  count: number;
 }

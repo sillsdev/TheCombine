@@ -25,10 +25,10 @@ namespace BackendFramework.Controllers
             _projRepo = projRepo;
         }
 
-        /// <summary> Get a list of keyValuePair of SemanticDomainCounts <see cref="SemanticDomainTreeNode"/>s that key:SemanticDomainTreeNode and value:counts as int of a specific project in order </summary>
-        /// <returns> A list of keyValuePair<SemanticDomainTreeNode, int> <see cref="SemanticDomainTreeNode"/>s </returns>
+        /// <summary> Get a list of SemanticDomainCount <see cref="SemanticDomainCount"/>s of a specific project in order </summary>
+        /// <returns> A list of SemanticDomainCount <see cref="SemanticDomainCount"/>s </returns>
         [HttpGet("GetSemanticDomainCounts", Name = "GetSemanticDomainCounts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<KeyValuePair<SemanticDomainTreeNode, int>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainCount>))]
         public async Task<IActionResult> GetSemanticDomainCounts(string projectId, string lang)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))

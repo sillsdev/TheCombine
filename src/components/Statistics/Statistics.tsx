@@ -3,7 +3,7 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import StatisticsTable from "./StatisticsTable";
-import { Project, SemanticDomainTreeNodeInt32KeyValuePair } from "api/models";
+import { Project, SemanticDomainCount } from "api/models";
 import { getProject, getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
@@ -11,17 +11,20 @@ import { defaultWritingSystem } from "types/writingSystem";
 export default function Statistics(): ReactElement {
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
-  const [statisticsList, setStatisticsList] = useState<
-    SemanticDomainTreeNodeInt32KeyValuePair[]
-  >([]);
+  const [statisticsList, setStatisticsList] = useState<SemanticDomainCount[]>(
+    []
+  );
   const { t } = useTranslation();
 
   useEffect(() => {
     updateCurrentProject();
     const updateStatisticList = async () => {
-      const pair = await getAllStatistics(LocalStorage.getProjectId(), lang);
-      if (pair != undefined) {
-        return setStatisticsList(pair);
+      const counts = await getStatisticsCounts(
+        LocalStorage.getProjectId(),
+        lang
+      );
+      if (counts != undefined) {
+        return setStatisticsList(counts);
       }
     };
     updateStatisticList();
@@ -31,22 +34,23 @@ export default function Statistics(): ReactElement {
     await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
   }
 
-  async function getAllStatistics(
+  async function getStatisticsCounts(
     projectId: string,
     lang?: string
-  ): Promise<SemanticDomainTreeNodeInt32KeyValuePair[] | undefined> {
+  ): Promise<SemanticDomainCount[] | undefined> {
     return await getSemanticDomainCounts(projectId, lang);
   }
 
-  function getStatisticsList(
-    statisticsList: SemanticDomainTreeNodeInt32KeyValuePair[]
-  ) {
+  function getStatisticsList(statisticsList: SemanticDomainCount[]) {
     return statisticsList.map((t) => (
-      <ListItem style={{ minWidth: "600px" }} key={`${t.key?.id}`}>
+      <ListItem
+        style={{ minWidth: "600px" }}
+        key={`${t.semanticDomainTreeNode.id}`}
+      >
         <StatisticsTable
-          key={`${t.key?.id}`}
-          domain={t.key!}
-          statistics={t.value!}
+          key={`${t.semanticDomainTreeNode.id}`}
+          domain={t.semanticDomainTreeNode!}
+          statistics={t.count!}
         />
       </ListItem>
     ));
@@ -110,63 +114,3 @@ export default function Statistics(): ReactElement {
     </React.Fragment>
   );
 }
-
-// function getListItems(projects: Project[]) {
-//   return projects.map((project) => (
-//     <ListItem key={project.id}>
-//       <Grid container justifyContent="space-evenly">
-//         <Typography variant="h6" style={{ marginRight: theme.spacing(1) }}>
-//           {project.name}
-//         </Typography>
-//         <Button
-//           id="goals"
-//           onClick={() => {
-//             updateCurrentProject(project.id);
-//           }}
-//           color="inherit"
-//           style={{
-//             width: "min-content",
-//             background: tabColor(Path.Statistics, Path.Statistics),
-//           }}
-//         >
-//           {t("Select")}
-//         </Button>
-//       </Grid>
-//     </ListItem>
-//   ));
-// }
-
-// interface useSearchInputState {
-//   input: string;
-//   handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-//   searchInput: (event: React.KeyboardEvent) => void;
-// }
-// export function useSearchInput(): useSearchInputState {
-//   const [input, setInput] = useState<string>("");
-//   function searchInput(event: React.KeyboardEvent) {
-//     event.bubbles = false;
-
-//     if (event.key === Key.Enter) {
-//       event.preventDefault();
-//       if (input != "") {
-//         let anchorElement = document.getElementById(input);
-//
-//         if (anchorElement) {
-//           anchorElement.scrollIntoView();
-//         }
-//         setInput("");
-//       }
-//     }
-//   }
-//   // Change the input on typing
-//   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-//     setInput(insertDecimalPoints(event.target.value));
-//     // Reset the error dialogue when input is changes to avoid showing an error
-//     // when a valid domain is entered, but Enter hasn't been pushed yet.
-//   }
-//   return {
-//     input,
-//     handleChange,
-//     searchInput,
-//   };
-// }
