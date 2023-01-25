@@ -1,8 +1,8 @@
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import "tests/mockReactI18next";
-import { newProject } from "types/project";
 import Statistics from "../Statistics";
+import { newProject } from "types/project";
 
 jest.mock("backend", () => ({
   getSemanticDomainCounts: (projectId: string, lang?: string) =>
