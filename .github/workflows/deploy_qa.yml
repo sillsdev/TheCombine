@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - gh-action-update
 
 permissions:
   contents: read
@@ -86,7 +85,6 @@ jobs:
         run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --keep ${{ needs.build.outputs.image_tag }} --remove "${{ env.RM_PATTERN_1 }}" "${{ env.RM_PATTERN_2 }}" --verbose
   deploy_update:
     needs: build
-    if: ${{ github.ref_name == 'master' }}
     runs-on: [self-hosted, thecombine]
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
