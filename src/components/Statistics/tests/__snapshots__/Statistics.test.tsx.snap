@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Statistics renders without crashing 1`] = `
+exports[`Statistics renders without crashing, UI does not change unexpectedly 1`] = `
 <div
   className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
 >

@@ -50,7 +50,7 @@ export default function Statistics(): ReactElement {
         <StatisticsTable
           key={`${t.semanticDomainTreeNode.id}`}
           domain={t.semanticDomainTreeNode!}
-          statistics={t.count!}
+          count={t.count!}
         />
       </ListItem>
     ));

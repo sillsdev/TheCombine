@@ -5,7 +5,7 @@ import { SemanticDomainTreeNode } from "api/models";
 
 interface StatisticsProps {
   domain: SemanticDomainTreeNode;
-  statistics: number;
+  count: number;
 }
 
 export default function StatisticsTable(props: StatisticsProps): ReactElement {
@@ -46,7 +46,7 @@ export default function StatisticsTable(props: StatisticsProps): ReactElement {
             position: "relative",
           }}
         >
-          <Typography variant="body1">{props.statistics}</Typography>
+          <Typography variant="body1">{props.count}</Typography>
         </Grid>
       </Grid>
     </React.Fragment>

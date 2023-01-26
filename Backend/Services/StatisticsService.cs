@@ -19,9 +19,8 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get a list SemanticDomainCount
+        /// Get the count of senses which use each semantic domain as a list of SemanticDomainCount objects
         /// </summary>
-        /// <returns> List of SemanticDomainCount </returns>
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
             Dictionary<string, int> hashMap = new Dictionary<string, int>();
