@@ -68,7 +68,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.0",
     "sha.js": "^2.4.11",
-    "sweetalert2": "^11.1.10",
+    "sweetalert2": "^11.7.1",
     "ts-key-enum": "^2.0.8",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
