@@ -69,7 +69,7 @@
     "redux-thunk": "^2.4.0",
     "sha.js": "^2.4.11",
     "sweetalert2": "^11.1.10",
-    "ts-key-enum": "^2.0.8",
+    "ts-key-enum": "^2.0.12",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
     "xml2js": "^0.4.23"
