@@ -92,7 +92,7 @@
     "@types/segment-analytics": "^0.0.34",
     "@types/sha.js": "^2.4.0",
     "@types/uuid": "^8.3.1",
-    "@types/validator": "^13.6.6",
+    "@types/validator": "^13.7.11",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.3.1",
     "eslint": "^7.32.0",
