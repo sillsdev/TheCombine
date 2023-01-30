@@ -370,8 +370,8 @@
   },
   "statistics": {
     "dataStatistics": "Data Statistics:  ",
-    "domainNumber": "The Semantic Domain Number:",
-    "domainName": "The Semantic Domain Name:",
-    "countSenses": "The Count of Senses:"
+    "domainNumber": "Domain Number:",
+    "domainName": "Domain Name:",
+    "countSenses": "Collection:"
   }
 }

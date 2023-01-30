@@ -17,7 +17,10 @@ export default function Statistics(): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    updateCurrentProject();
+    const updateCurrentProject = async () => {
+      await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
+    };
+
     const updateStatisticList = async () => {
       const counts = await getStatisticsCounts(
         LocalStorage.getProjectId(),
@@ -27,12 +30,10 @@ export default function Statistics(): ReactElement {
         return setStatisticsList(counts);
       }
     };
+
+    updateCurrentProject();
     updateStatisticList();
   }, [lang]);
-
-  async function updateCurrentProject() {
-    await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
-  }
 
   async function getStatisticsCounts(
     projectId: string,

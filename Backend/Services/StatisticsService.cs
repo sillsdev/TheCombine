@@ -25,7 +25,7 @@ namespace BackendFramework.Services
         {
             Dictionary<string, int> hashMap = new Dictionary<string, int>();
             List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
-            List<Word> wordList = await _wordRepo.GetAllWords(projectId);
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
             List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
 
             if (domainTreeNodeList == null || wordList == null)

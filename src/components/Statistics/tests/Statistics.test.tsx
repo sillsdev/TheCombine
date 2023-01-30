@@ -1,18 +1,27 @@
+import { ListItem } from "@material-ui/core";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
 } from "react-test-renderer";
 
 import "tests/mockReactI18next";
-import Statistics from "../Statistics";
+
+import { SemanticDomainCount } from "api";
+import Statistics from "components/Statistics/Statistics";
 import { newProject } from "types/project";
+import {
+  newSemanticDomainCount,
+  newSemanticDomainTreeNode,
+} from "types/semanticDomain";
 
 let testRenderer: ReactTestRenderer;
 
 const mockProject = newProject();
-mockProject.id = "mockProjectId";
 const mockProjectId = "mockProjectId";
-const backend = require("backend");
+const mockTreeNode = newSemanticDomainTreeNode();
+const mockSemanticDomainCountArray: Array<SemanticDomainCount> = [
+  newSemanticDomainCount(mockTreeNode),
+];
 
 const mockGetStatisticsCounts = jest.fn();
 const mockGetProject = jest.fn();
@@ -31,6 +40,7 @@ jest.mock("backend/localStorage", () => ({
 function setMockFunctions() {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetProject.mockResolvedValue(mockProject);
+  mockGetStatisticsCounts.mockResolvedValue(mockSemanticDomainCountArray);
 }
 
 beforeEach(async () => {
@@ -41,43 +51,21 @@ beforeEach(async () => {
   });
 });
 
-afterEach(() => {
-  // restore the spy created with spyOn
-  jest.restoreAllMocks();
-});
-
 describe("Statistics", () => {
   it("renders without crashing, UI does not change unexpectedly", async () => {
     expect(testRenderer.toJSON()).toMatchSnapshot();
+  });
+
+  it("useEffect hook was called", async () => {
+    // Verify the mock function called
     expect(mockGetProject).toBeCalled();
-    expect(mockGetProjectId).toBeCalledTimes(2);
+    expect(mockGetProjectId).toBeCalled();
+    expect(mockGetStatisticsCounts).toBeCalledTimes(1);
+
+    // Verify ListItem for the SemanticDomainCount object is present
+    const newSenDomCountList = testRenderer.root.findAllByType(ListItem);
+    expect(newSenDomCountList.length).toEqual(
+      mockSemanticDomainCountArray.length
+    );
   });
-
-  it("check if getSemanticDomainCounts method called from backend", async () => {
-    const spyFn = jest.spyOn(backend, "getSemanticDomainCounts");
-    const returnCounts = backend.getSemanticDomainCounts();
-    expect(spyFn).toHaveBeenCalled();
-    expect(returnCounts).toBe(undefined);
-  });
-
-  // it("useState updated", async () => {
-  //   await renderer.act(async () => {
-  //     testRenderer = renderer.create(<Statistics />);
-  //   });
-  //   const newStatistics = testRenderer.root.findAllByType(Statistics);
-  //   console.log(newStatistics[0].instance.setState({}));
-  //   expect(newStatistics.length).toBe(1);
-  //   testHandle = newStatistics[0];
-
-  //   const realUseState = React.useState;
-  //   const setLang = jest.fn();
-  //   const useLangMock: any = (lang: string) => [lang, setLang];
-  //   jest.spyOn(React, "useState").mockImplementation(useLangMock);
-  //   testHandle.instance.setLang({ lang: [Bcp47Code.Es] }, () => {
-  //     testRenderer.root.findByType(Statistics).instance.then(() => {
-  //       expect(mockGetProject).toBeCalled();
-  //       expect(mockGetProjectId).toBeCalled();
-  //     });
-  //   });
-  // });
 });

@@ -79,7 +79,70 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
     </ul>
     <ul
       className="MuiList-root MuiList-padding"
-    />
+    >
+      <li
+        className="MuiListItem-root MuiListItem-gutters"
+        disabled={false}
+        style={
+          Object {
+            "minWidth": "600px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-justify-content-xs-space-around"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            style={
+              Object {
+                "borderBottomStyle": "dotted",
+                "borderBottomWidth": 1,
+                "position": "relative",
+              }
+            }
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+            >
+              
+            </p>
+          </div>
+          <div
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            style={
+              Object {
+                "borderBottomStyle": "dotted",
+                "borderBottomWidth": 1,
+                "position": "relative",
+              }
+            }
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+            >
+              
+            </p>
+          </div>
+          <div
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            style={
+              Object {
+                "borderBottomStyle": "dotted",
+                "borderBottomWidth": 1,
+                "position": "relative",
+              }
+            }
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+            >
+              0
+            </p>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
 `;
