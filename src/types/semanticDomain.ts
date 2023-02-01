@@ -2,6 +2,7 @@ import {
   SemanticDomain,
   SemanticDomainFull,
   SemanticDomainTreeNode,
+  SemanticDomainCount,
 } from "api/models";
 import { Bcp47Code } from "types/writingSystem";
 
@@ -27,6 +28,16 @@ export function newSemanticDomainTreeNode(
     name,
     lang,
     guid: "",
+  };
+}
+
+export function newSemanticDomainCount(
+  semanticDomainTreeNode: SemanticDomainTreeNode,
+  count = 0
+): SemanticDomainCount {
+  return {
+    semanticDomainTreeNode: semanticDomainTreeNode,
+    count: count,
   };
 }
 
