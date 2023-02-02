@@ -23,7 +23,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8c0edbc76e98fa90f69d9a2c020dcb50019dc325 # v2.2.1
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@8203047ce9a7a68f9a4346f859090c8ae916719f # v1.7.0
+        uses: aws-actions/configure-aws-credentials@07c2f971bac433df982ccc261983ae443861db49 # v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
