@@ -8,7 +8,7 @@
 #    secret accordingly.
 # The scripts are written in Python.
 
-FROM ubuntu:22.04
+FROM ubuntu:22.10
 
 USER root
 
