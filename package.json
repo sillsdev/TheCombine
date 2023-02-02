@@ -51,7 +51,7 @@
     "i18next-http-backend": "^1.4.1",
     "js-base64": "^3.7.2",
     "make-dir": "^3.1.0",
-    "motion": "^10.4.0",
+    "motion": "^10.15.5",
     "mui-language-picker": "^1.1.15",
     "nspell": "^2.1.5",
     "react": "^17.0.2",
