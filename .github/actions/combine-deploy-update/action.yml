@@ -35,21 +35,25 @@ runs:
       shell: bash
     - name: Update database
       run: kubectl --context ${{ inputs.kube_context }}
+        --namespace thecombine
         set image deployment/database
         database="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_database:${{ inputs.image_tag }}"
       shell: bash
     - name: Update frontend
       run: kubectl --context ${{ inputs.kube_context }}
+        --namespace thecombine
         set image deployment/frontend
         frontend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_frontend:${{ inputs.image_tag }}"
       shell: bash
     - name: Update backend
       run: kubectl --context ${{ inputs.kube_context }}
+        --namespace thecombine
         set image deployment/backend
         backend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_backend:${{ inputs.image_tag }}"
       shell: bash
     - name: Update maintenance
       run: kubectl --context ${{ inputs.kube_context }}
+        --namespace thecombine
         set image deployment/maintenance
         maintenance="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
       shell: bash

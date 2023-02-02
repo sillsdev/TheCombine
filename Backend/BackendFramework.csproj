@@ -18,23 +18,23 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="MailKit" Version="3.4.3" />
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.8.1" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
-    <PackageReference Include="SIL.Core" Version="11.0.0" />
-    <PackageReference Include="SIL.Core.Desktop" Version="11.0.0">
+    <PackageReference Include="SIL.Core" Version="11.0.1" />
+    <PackageReference Include="SIL.Core.Desktop" Version="11.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="11.0.0">
+    <PackageReference Include="SIL.DictionaryServices" Version="11.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="11.0.0">
+    <PackageReference Include="SIL.Lift" Version="11.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="11.0.0" />
+    <PackageReference Include="SIL.WritingSystems" Version="11.0.1" />
   </ItemGroup>
 </Project>
