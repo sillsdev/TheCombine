@@ -9,6 +9,7 @@ import PageNotFound from "components/PageNotFound/component";
 import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
 import ProjectSettings from "components/ProjectSettings/ProjectSettingsComponent";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
+import Statistics from "components/Statistics/Statistics";
 import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 
@@ -31,6 +32,7 @@ export default function AppWithBar(): ReactElement {
         <Route exact path={Path.ProjScreen} component={ProjectScreen} />
         <Route exact path={Path.ProjSettings} component={ProjectSettings} />
         <Route exact path={Path.SiteSettings} component={SiteSettings} />
+        <Route exact path={Path.Statistics} component={Statistics} />
         <Route exact path={Path.UserSettings} component={UserSettings} />
         <Route component={PageNotFound} />
       </Switch>

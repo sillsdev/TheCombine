@@ -158,4 +158,21 @@ namespace BackendFramework.Models
             Children = new List<SemanticDomain>();
         }
     }
+
+    public class SemanticDomainCount
+    {
+        [Required]
+        [BsonElement("semanticDomainTreeNode")]
+        public SemanticDomainTreeNode SemanticDomainTreeNode { get; set; }
+
+        [Required]
+        [BsonElement("count")]
+        public int Count { get; set; }
+
+        public SemanticDomainCount(SemanticDomainTreeNode semanticDomainTreeNode, int count)
+        {
+            SemanticDomainTreeNode = semanticDomainTreeNode;
+            Count = count;
+        }
+    }
 }
