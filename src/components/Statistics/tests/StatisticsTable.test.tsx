@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import StatisticsTable from "components/Statistics/StatisticsTable";
+import StatisticsTable from "components/Statistics/DomainStatistics/SemanticDomainStatisticsTable";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 const mockTreeNode = newSemanticDomainTreeNode();

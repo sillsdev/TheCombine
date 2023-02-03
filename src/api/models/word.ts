@@ -119,4 +119,10 @@ export interface Word {
    * @memberof Word
    */
   flag: Flag;
+  /**
+   *
+   * @type {string}
+   * @memberof Word
+   */
+  userId: string;
 }

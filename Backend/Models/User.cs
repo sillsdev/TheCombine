@@ -212,4 +212,37 @@ namespace BackendFramework.Models
             Password = "";
         }
     }
+
+    // Fuen's temporarily mark
+    // new class for statistics only include username and id for data security
+    public class DomainSenseUserCount
+    {
+        [Required]
+        public string Id { get; set; }
+
+        public string Username { get; set; }
+        [Required]
+
+        public HashSet<string> DomainSet { get; set; }
+        public int DomainCount { get; set; }
+        public int SenseCount { get; set; }
+
+        public DomainSenseUserCount(string id, string username)
+        {
+            Id = id;
+            Username = username;
+            DomainSet = new HashSet<string>();
+            DomainCount = 0;
+            SenseCount = 0;
+        }
+
+        public DomainSenseUserCount()
+        {
+            Id = "";
+            Username = "";
+            DomainSet = new HashSet<string>();
+            DomainCount = 0;
+            SenseCount = 0;
+        }
+    }
 }

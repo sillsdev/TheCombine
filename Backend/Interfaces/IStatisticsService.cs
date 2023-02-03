@@ -7,5 +7,7 @@ namespace BackendFramework.Interfaces
     public interface IStatisticsService
     {
         Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang);
+
+        Task<List<DomainSenseUserCount>> GetDomainSenseUserCounts(string projectId);
     }
 }

@@ -45,5 +45,29 @@ namespace BackendFramework.Controllers
 
             return Ok(await _staService.GetSemanticDomainCounts(projectId, lang));
         }
+
+
+        ///  Fuen's temporarily mark ///
+        ///  New API
+        /// <summary> Get a list of domainSenseUserCount <see cref="DomainSenseUserCount"/>s of a specific project in order </summary>
+        [HttpGet("GetDomainSenseUserCounts", Name = "GetDomainSenseUserCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DomainSenseUserCount>))]
+        public async Task<IActionResult> GetDomainSenseUserCounts(string projectId, string lang)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            //Ensure project exists.
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            return Ok(await _staService.GetDomainSenseUserCounts(projectId));
+        }
+
     }
 }

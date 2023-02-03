@@ -80,6 +80,10 @@ namespace BackendFramework.Models
         [BsonElement("flag")]
         public Flag Flag { get; set; }
 
+        [Required]
+        [BsonElement("userId")]
+        public string userId { get; set; }
+
         public Word()
         {
             Id = "";
@@ -100,6 +104,7 @@ namespace BackendFramework.Models
             Senses = new List<Sense>();
             Note = new Note();
             Flag = new Flag();
+            userId = "";
         }
 
         public Word Clone()
@@ -121,7 +126,8 @@ namespace BackendFramework.Models
                 History = new List<string>(),
                 Senses = new List<Sense>(),
                 Note = Note.Clone(),
-                Flag = Flag.Clone()
+                Flag = Flag.Clone(),
+                userId = (string)userId.Clone(),
             };
 
             foreach (var file in Audio)
@@ -201,6 +207,7 @@ namespace BackendFramework.Models
             hash.Add(ProjectId);
             hash.Add(Note);
             hash.Add(Flag);
+            hash.Add(userId);
             return hash.ToHashCode();
         }
 
@@ -353,6 +360,10 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
 
+        [Required]
+        [BsonElement("userId")]
+        public string userId { get; set; }
+
         public Sense()
         {
             // By default generate a new, unique Guid for each new Sense.
@@ -361,6 +372,7 @@ namespace BackendFramework.Models
             Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
+            userId = "";
         }
 
         public Sense Clone()
@@ -371,7 +383,8 @@ namespace BackendFramework.Models
                 Accessibility = Accessibility,
                 Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
-                SemanticDomains = new List<SemanticDomain>()
+                SemanticDomains = new List<SemanticDomain>(),
+                userId = (string)userId.Clone(),
             };
 
             foreach (var definition in Definitions)

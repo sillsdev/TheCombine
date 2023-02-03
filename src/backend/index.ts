@@ -19,6 +19,7 @@ import {
   UserEdit,
   UserRole,
   Word,
+  DomainSenseUserCount,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -661,6 +662,18 @@ export async function getSemanticDomainCounts(
   lang?: string
 ): Promise<Array<SemanticDomainCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getDomainSenseUserCounts(
+  projectId: string,
+  lang?: string
+): Promise<Array<DomainSenseUserCount> | undefined> {
+  const response = await statisticsApi.getDomainSenseUserCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()
   );

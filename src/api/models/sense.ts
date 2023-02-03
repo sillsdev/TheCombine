@@ -53,4 +53,10 @@ export interface Sense {
    * @memberof Sense
    */
   accessibility: State;
+  /**
+   *
+   * @type {string}
+   * @memberof Sense
+   */
+  userId: string;
 }

@@ -372,6 +372,11 @@
     "dataStatistics": "Data Statistics:  ",
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
-    "countSenses": "Collection:"
+    "countSenses": "Collection:",
+    "userName": "User Name:",
+    "domainCount": "Domains:",
+    "senseCount": "Words:",
+    "userView": "Words per User",
+    "domainView": "Words per Domain"
   }
 }

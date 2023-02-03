@@ -212,6 +212,14 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
             word.ProjectId = projectId;
+            // Fuen's temporarily mark 
+            // The database model update to add a userId at word model and sense model
+            var userId = _permissionService.GetUserId(HttpContext);
+            word.userId = userId;
+            // The userId under sense model will not be change while adding another SemanticDomain at List<SemanticDomain>
+            // only give credit for first user who add a sense of the domain
+            // After words merge and word's going to have sense List, each sense keep their's userId  
+            word.Senses[0].userId = userId;
 
             await _wordRepo.Create(word);
             return Ok(word.Id);

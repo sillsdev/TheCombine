@@ -3,6 +3,7 @@ export * from "./banner-type";
 export * from "./credentials";
 export * from "./custom-field";
 export * from "./definition";
+export * from "./domain-sense-user-count";
 export * from "./edit";
 export * from "./email-invite";
 export * from "./email-invite-data";

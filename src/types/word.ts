@@ -31,6 +31,7 @@ export function newSense(
     glosses: [],
     semanticDomains: [],
     accessibility: State.Active,
+    userId: "",
   };
   if (gloss) {
     sense.glosses.push(newGloss(gloss, lang));
@@ -63,6 +64,7 @@ export function newWord(vernacular = ""): Word {
     projectId: "",
     note: newNote(),
     flag: newFlag(),
+    userId: "",
   };
 }
 

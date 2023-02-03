@@ -225,6 +225,7 @@ function getMergeWords(
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
             accessibility: sense.accessibility,
+            userId: sense.userId,
           });
         }
       });

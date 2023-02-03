@@ -25,6 +25,7 @@ models/banner-type.ts
 models/credentials.ts
 models/custom-field.ts
 models/definition.ts
+models/domain-sense-user-count.ts
 models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
