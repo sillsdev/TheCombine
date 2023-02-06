@@ -3,6 +3,7 @@ import {
   SemanticDomainFull,
   SemanticDomainTreeNode,
   SemanticDomainCount,
+  DomainSenseUserCount,
 } from "api/models";
 import { Bcp47Code } from "types/writingSystem";
 
@@ -29,6 +30,13 @@ export function newSemanticDomainTreeNode(
     lang,
     guid: "",
   };
+}
+
+export function newDomainSenseUserCount(
+  id = "",
+  domainSet = new Set<string>()
+): DomainSenseUserCount {
+  return { id: "", domainSet: domainSet };
 }
 
 export function newSemanticDomainCount(

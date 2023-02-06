@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SemanticDomainStatistics renders without crashing, UI does not change unexpectedly 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+>
+  <div
+    className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+    style={
+      Object {
+        "width": 600,
+      }
+    }
+  >
+    <ul
+      className="MuiList-root MuiList-padding"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-justify-content-xs-space-around"
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+          style={
+            Object {
+              "borderBottomStyle": "dotted",
+              "borderBottomWidth": 1,
+              "position": "relative",
+            }
+          }
+        >
+          <h6
+            className="MuiTypography-root MuiTypography-subtitle1"
+          >
+            statistics.userName
+          </h6>
+        </div>
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+          style={
+            Object {
+              "borderBottomStyle": "dotted",
+              "borderBottomWidth": 1,
+              "position": "relative",
+            }
+          }
+        >
+          <h6
+            className="MuiTypography-root MuiTypography-subtitle1"
+          >
+            statistics.domainCount
+          </h6>
+        </div>
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+          style={
+            Object {
+              "borderBottomStyle": "dotted",
+              "borderBottomWidth": 1,
+              "position": "relative",
+            }
+          }
+        >
+          <h6
+            className="MuiTypography-root MuiTypography-subtitle1"
+          >
+            statistics.senseCount
+          </h6>
+        </div>
+      </div>
+    </ul>
+    <ul
+      className="MuiList-root MuiList-padding"
+    >
+      <li
+        className="MuiListItem-root MuiListItem-gutters"
+        disabled={false}
+        style={
+          Object {
+            "minWidth": "600px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-justify-content-xs-space-around"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            style={
+              Object {
+                "borderBottomStyle": "dotted",
+                "borderBottomWidth": 1,
+                "position": "relative",
+              }
+            }
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+            />
+          </div>
+          <div
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            style={
+              Object {
+                "borderBottomStyle": "dotted",
+                "borderBottomWidth": 1,
+                "position": "relative",
+              }
+            }
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+            />
+          </div>
+          <div
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            style={
+              Object {
+                "borderBottomStyle": "dotted",
+                "borderBottomWidth": 1,
+                "position": "relative",
+              }
+            }
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+            />
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;

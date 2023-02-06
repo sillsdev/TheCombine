@@ -37,7 +37,7 @@ export default function Statistics(): ReactElement {
             onClick={() => {
               setUserView(!userView);
             }}
-            id={`button`}
+            id={`statistic-button`}
           >
             <Typography variant="h4">
               {userView ? t("statistics.domainView") : t("statistics.userView")}

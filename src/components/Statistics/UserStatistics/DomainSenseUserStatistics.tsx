@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import DomainSenseUserTable from "./DomainSenseUserTable";
 import { DomainSenseUserCount, Project } from "api/models";
-import { getDomainSenseUserCounts, getFrontierWords } from "backend";
+import { getDomainSenseUserCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 
 interface DomainSenseUserStatisticsProps {
