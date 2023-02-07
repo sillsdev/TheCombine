@@ -57,52 +57,55 @@ namespace BackendFramework.Services
 
 
         // Fuen's temporarily mark
-        // Get the count of senses and domain per user return a list of domainSenseUserCount objects
-        public async Task<List<DomainSenseUserCount>> GetDomainSenseUserCounts(string projectId)
+        // Get the count of senses and domain per user return a list of SemanticDomainUserCount objects
+        public async Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            Dictionary<string, DomainSenseUserCount> resUserMap = new Dictionary<string, DomainSenseUserCount>();
+            Dictionary<string, SemanticDomainUserCount> resUserMap = new Dictionary<string, SemanticDomainUserCount>();
 
             // get project user
             var allUsers = await _userRepo.GetAllUsers();
             var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
-            // build a domainSenseUserCount object hashMap with userId as key 
+            // build a SemanticDomainUserCount object hashMap with userId as key 
             foreach (User u in projectUsers)
             {
-                resUserMap.Add(u.Id, new DomainSenseUserCount(u.Id, u.Username));
+                resUserMap.Add(u.Id, new SemanticDomainUserCount(u.Id, u.Username));
             }
-            // for legacy database without userId under word and sense model
+            // for legacy database without userId under SemanticDomain model
             var unknownId = "unknownUserId";
             var unknownName = "unknownUser";
-            resUserMap.Add(unknownId, new DomainSenseUserCount(unknownId, unknownName));
+            resUserMap.Add(unknownId, new SemanticDomainUserCount(unknownId, unknownName));
 
 
             foreach (Word word in wordList)
             {
                 foreach (Sense sense in word.Senses)
                 {
-                    var userId = sense.userId;
-                    var domainName = sense.SemanticDomains[0].Name;
-                    var domSenUserValue = new DomainSenseUserCount();
-                    // check is the sense have a userId
-                    domSenUserValue = (userId != null && resUserMap.ContainsKey(userId)
-                        // if new sense model find the domainSenseUserCount
-                        ? domSenUserValue = resUserMap[userId]
-                        // if not new sense model assign to unknownUser
-                        : domSenUserValue = resUserMap[unknownId]);
-
-                    // update DomainCount
-                    if (!domSenUserValue.DomainSet.Contains(domainName))
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
-                        domSenUserValue.DomainSet.Add(domainName);
-                        domSenUserValue.DomainCount++;
+                        var userId = sd.UserId;
+                        var domainName = sd.Name;
+                        var domainUserValue = new SemanticDomainUserCount();
+                        // check is the SemanticDomain have a userId
+                        domainUserValue = (userId != null && resUserMap.ContainsKey(userId)
+                            // if new SemanticDomain model find the SemanticDomainUserCount
+                            ? domainUserValue = resUserMap[userId]
+                            // if not new SemanticDomain model assign to unknownUser
+                            : domainUserValue = resUserMap[unknownId]);
+
+                        // update DomainCount
+                        if (!domainUserValue.DomainSet.Contains(domainName))
+                        {
+                            domainUserValue.DomainSet.Add(domainName);
+                            domainUserValue.DomainCount++;
+                        }
+                        // update WordCount
+                        domainUserValue.WordCount++;
                     }
-                    // updata senseCount
-                    domSenUserValue.SenseCount++;
                 }
             }
             // return descending order by senseCount
-            return resUserMap.Values.ToList().OrderByDescending(t => t.SenseCount).ToList();
+            return resUserMap.Values.ToList().OrderByDescending(t => t.WordCount).ToList();
         }
     }
 }

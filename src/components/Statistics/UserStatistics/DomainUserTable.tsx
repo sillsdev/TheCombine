@@ -1,10 +1,10 @@
 import { Grid, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
-import { DomainSenseUserCount } from "api/models";
+import { SemanticDomainUserCount } from "api/models";
 
 interface StatisticsProps {
-  domainSenseUserCount: DomainSenseUserCount;
+  semanticDomainUserCount: SemanticDomainUserCount;
 }
 
 export default function StatisticsTable(props: StatisticsProps): ReactElement {
@@ -14,7 +14,7 @@ export default function StatisticsTable(props: StatisticsProps): ReactElement {
         <Grid
           item
           xs={5}
-          key={"id_" + props.domainSenseUserCount.id}
+          key={"id_" + props.semanticDomainUserCount.id}
           style={{
             borderBottomStyle: "dotted",
             borderBottomWidth: 1,
@@ -22,13 +22,13 @@ export default function StatisticsTable(props: StatisticsProps): ReactElement {
           }}
         >
           <Typography variant="body1">
-            {props.domainSenseUserCount.username}
+            {props.semanticDomainUserCount.username}
           </Typography>
         </Grid>
         <Grid
           item
           xs={5}
-          key={"domain_" + props.domainSenseUserCount.id}
+          key={"domain_" + props.semanticDomainUserCount.id}
           style={{
             borderBottomStyle: "dotted",
             borderBottomWidth: 1,
@@ -36,13 +36,13 @@ export default function StatisticsTable(props: StatisticsProps): ReactElement {
           }}
         >
           <Typography variant="body1">
-            {props.domainSenseUserCount.domainCount}
+            {props.semanticDomainUserCount.domainCount}
           </Typography>
         </Grid>
         <Grid
           item
           xs={5}
-          key={"statistics_" + props.domainSenseUserCount.id}
+          key={"statistics_" + props.semanticDomainUserCount.id}
           style={{
             borderBottomStyle: "dotted",
             borderBottomWidth: 1,
@@ -50,7 +50,7 @@ export default function StatisticsTable(props: StatisticsProps): ReactElement {
           }}
         >
           <Typography variant="body1">
-            {props.domainSenseUserCount.senseCount}
+            {props.semanticDomainUserCount.wordCount}
           </Typography>
         </Grid>
       </Grid>

@@ -49,10 +49,10 @@ namespace BackendFramework.Controllers
 
         ///  Fuen's temporarily mark ///
         ///  New API
-        /// <summary> Get a list of domainSenseUserCount <see cref="DomainSenseUserCount"/>s of a specific project in order </summary>
-        [HttpGet("GetDomainSenseUserCounts", Name = "GetDomainSenseUserCounts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DomainSenseUserCount>))]
-        public async Task<IActionResult> GetDomainSenseUserCounts(string projectId, string lang)
+        /// <summary> Get a list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>
+        [HttpGet("GetSemanticDomainUserCounts", Name = "GetSemanticDomainUserCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainUserCount>))]
+        public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId, string lang)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -66,7 +66,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _staService.GetDomainSenseUserCounts(projectId));
+            return Ok(await _staService.GetSemanticDomainUserCounts(projectId));
         }
 
     }

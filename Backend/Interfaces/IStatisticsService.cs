@@ -8,6 +8,6 @@ namespace BackendFramework.Interfaces
     {
         Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang);
 
-        Task<List<DomainSenseUserCount>> GetDomainSenseUserCounts(string projectId);
+        Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId);
     }
 }

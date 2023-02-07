@@ -15,37 +15,37 @@
 /**
  *
  * @export
- * @interface DomainSenseUserCount
+ * @interface SemanticDomainUserCount
  */
-export interface DomainSenseUserCount {
+export interface SemanticDomainUserCount {
   /**
    *
    * @type {string}
-   * @memberof DomainSenseUserCount
+   * @memberof SemanticDomainUserCount
    */
   id: string;
   /**
    *
    * @type {string}
-   * @memberof DomainSenseUserCount
+   * @memberof SemanticDomainUserCount
    */
   username?: string | null;
   /**
    *
    * @type {Set<string>}
-   * @memberof DomainSenseUserCount
+   * @memberof SemanticDomainUserCount
    */
   domainSet: Set<string>;
   /**
    *
    * @type {number}
-   * @memberof DomainSenseUserCount
+   * @memberof SemanticDomainUserCount
    */
   domainCount?: number;
   /**
    *
    * @type {number}
-   * @memberof DomainSenseUserCount
+   * @memberof SemanticDomainUserCount
    */
-  senseCount?: number;
+  wordCount?: number;
 }

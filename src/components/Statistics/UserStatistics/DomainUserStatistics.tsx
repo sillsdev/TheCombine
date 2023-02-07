@@ -2,9 +2,9 @@ import { Card, Grid, Typography, ListItem, List } from "@material-ui/core";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import DomainSenseUserTable from "./DomainSenseUserTable";
-import { DomainSenseUserCount, Project } from "api/models";
-import { getDomainSenseUserCounts } from "backend";
+import DomainSenseUserTable from "./DomainUserTable";
+import { SemanticDomainUserCount, Project } from "api/models";
+import { getSemanticDomainUserCount, getFrontierWords } from "backend";
 import * as LocalStorage from "backend/localStorage";
 
 interface DomainSenseUserStatisticsProps {
@@ -15,35 +15,39 @@ interface DomainSenseUserStatisticsProps {
 export default function DomainSenseUserStatistics(
   props: DomainSenseUserStatisticsProps
 ): ReactElement {
-  const [domainSenseUserList, setDomainSenseUser] = useState<
-    DomainSenseUserCount[]
+  const [domainUserCountList, setDomainUserCountList] = useState<
+    SemanticDomainUserCount[]
   >([]);
   const { t } = useTranslation();
 
   useEffect(() => {
-    const updateDomainSenseUserCount = async () => {
-      const counts = await getDomainSenseUserStatistics(
+    const updateSemanticDomainUserCounts = async () => {
+      const counts = await getUserStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
       if (counts != undefined) {
-        return setDomainSenseUser(counts);
+        return setDomainUserCountList(counts);
       }
     };
-    updateDomainSenseUserCount();
+    updateSemanticDomainUserCounts();
   }, [props.lang]);
 
-  async function getDomainSenseUserStatistics(
+  //console.log(getFrontierWords());
+
+  async function getUserStatistics(
     projectId: string,
     lang?: string
-  ): Promise<DomainSenseUserCount[] | undefined> {
-    return await getDomainSenseUserCounts(projectId, lang);
+  ): Promise<SemanticDomainUserCount[] | undefined> {
+    return await getSemanticDomainUserCount(projectId, lang);
   }
 
-  function getDomainSenseUserList(domainSenseUser: DomainSenseUserCount[]) {
-    return domainSenseUser.map((t) => (
+  function getDomainSenseUserList(
+    semanticDomainUserCount: SemanticDomainUserCount[]
+  ) {
+    return semanticDomainUserCount.map((t) => (
       <ListItem style={{ minWidth: "600px" }} key={`${t.id}`}>
-        <DomainSenseUserTable key={`${t.id}`} domainSenseUserCount={t!} />
+        <DomainSenseUserTable key={`${t.id}`} semanticDomainUserCount={t!} />
       </ListItem>
     ));
   }
@@ -95,7 +99,7 @@ export default function DomainSenseUserStatistics(
               </Grid>
             </Grid>
           </List>
-          <List>{getDomainSenseUserList(domainSenseUserList)}</List>
+          <List>{getDomainSenseUserList(domainUserCountList)}</List>
         </Card>
       </Grid>
     </React.Fragment>

@@ -3,7 +3,7 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
-import DomainSenseUserStatistics from "./UserStatistics/DomainSenseUserStatistics";
+import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
 import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
@@ -66,7 +66,7 @@ export default function Statistics(): ReactElement {
           <Grid item>
             {userView && (
               <List>
-                <DomainSenseUserStatistics
+                <DomainUserStatistics
                   currentProject={currentProject}
                   lang={lang}
                 />

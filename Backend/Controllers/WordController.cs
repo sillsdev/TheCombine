@@ -192,7 +192,21 @@ namespace BackendFramework.Controllers
                 return Conflict();
             }
 
+
+            var lastIndexOfSenses = word.Senses.Count - 1;
+            var lastIndexOfSemanticDomains = word.Senses[lastIndexOfSenses].SemanticDomains.Count - 1;
+            var userId = word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId;
+            // Determine whether the userId needs to be updated
+            // If the userId is not null ("") meaning there is new SemanticDomains add to list
+            // then userId it needs to be updated otherwise not update userId
+            if (userId == "")
+            {
+                var updateId = _permissionService.GetUserId(HttpContext);
+                word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId = updateId;
+            }
+
             await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
+
             return Ok(duplicatedWord.Id);
         }
 
@@ -213,13 +227,10 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
             // Fuen's temporarily mark 
-            // The database model update to add a userId at word model and sense model
+            // The database model update to add a userId at semanticDomains
             var userId = _permissionService.GetUserId(HttpContext);
-            word.userId = userId;
-            // The userId under sense model will not be change while adding another SemanticDomain at List<SemanticDomain>
-            // only give credit for first user who add a sense of the domain
-            // After words merge and word's going to have sense List, each sense keep their's userId  
-            word.Senses[0].userId = userId;
+            // Create a new word adding userId to the first SemanticDomain 
+            word.Senses[0].SemanticDomains[0].UserId = userId;
 
             await _wordRepo.Create(word);
             return Ok(word.Id);

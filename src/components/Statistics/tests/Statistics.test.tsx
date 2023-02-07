@@ -15,12 +15,12 @@ const mockProjectId = "mockProjectId";
 
 const mockGetProject = jest.fn();
 const mockGetProjectId = jest.fn();
-const mockGetDomainSenseUserCounts = jest.fn();
+const mockGetDomainUserCounts = jest.fn();
 const mockGetSemanticDomainCounts = jest.fn();
 
 jest.mock("backend", () => ({
   getProject: (projectId: string) => mockGetProject(projectId),
-  getDomainSenseUserCounts: () => mockGetDomainSenseUserCounts(),
+  getSemanticDomainUserCount: () => mockGetDomainUserCounts(),
   getSemanticDomainCounts: () => mockGetSemanticDomainCounts(),
 }));
 

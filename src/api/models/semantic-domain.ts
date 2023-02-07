@@ -48,4 +48,10 @@ export interface SemanticDomain {
    * @memberof SemanticDomain
    */
   lang: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
+  userId?: string | null;
 }

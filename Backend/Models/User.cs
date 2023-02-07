@@ -215,7 +215,7 @@ namespace BackendFramework.Models
 
     // Fuen's temporarily mark
     // new class for statistics only include username and id for data security
-    public class DomainSenseUserCount
+    public class SemanticDomainUserCount
     {
         [Required]
         public string Id { get; set; }
@@ -225,24 +225,24 @@ namespace BackendFramework.Models
 
         public HashSet<string> DomainSet { get; set; }
         public int DomainCount { get; set; }
-        public int SenseCount { get; set; }
+        public int WordCount { get; set; }
 
-        public DomainSenseUserCount(string id, string username)
+        public SemanticDomainUserCount(string id, string username)
         {
             Id = id;
             Username = username;
             DomainSet = new HashSet<string>();
             DomainCount = 0;
-            SenseCount = 0;
+            WordCount = 0;
         }
 
-        public DomainSenseUserCount()
+        public SemanticDomainUserCount()
         {
             Id = "";
             Username = "";
             DomainSet = new HashSet<string>();
             DomainCount = 0;
-            SenseCount = 0;
+            WordCount = 0;
         }
     }
 }

@@ -3,23 +3,23 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
-import { DomainSenseUserCount } from "api";
-import DomainSenseUserStatistics from "components/Statistics/UserStatistics/DomainSenseUserStatistics";
-import { newDomainSenseUserCount } from "types/semanticDomain";
+import { SemanticDomainUserCount } from "api";
+import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
+import { newSemanticDomainUserCount } from "types/semanticDomain";
 
 let testRenderer: ReactTestRenderer;
 
 const mockProjectId = "mockProjectId";
-const mockDomainSenseUserCount = newDomainSenseUserCount();
-const mockDomainSenseUserCountArray: Array<DomainSenseUserCount> = [
-  mockDomainSenseUserCount,
+const mockSemanticDomainUserCount = newSemanticDomainUserCount();
+const mockSemanticDomainUserCountArray: Array<SemanticDomainUserCount> = [
+  mockSemanticDomainUserCount,
 ];
 
 const mockGetDomainSenseUserStatistics = jest.fn();
 const mockGetProjectId = jest.fn();
 
 jest.mock("backend", () => ({
-  getDomainSenseUserCounts: (projectId: string, lang?: string) =>
+  getSemanticDomainUserCount: (projectId: string, lang?: string) =>
     mockGetDomainSenseUserStatistics(projectId, lang),
 }));
 
@@ -30,7 +30,7 @@ jest.mock("backend/localStorage", () => ({
 function setMockFunctions() {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetDomainSenseUserStatistics.mockResolvedValue(
-    mockDomainSenseUserCountArray
+    mockSemanticDomainUserCountArray
   );
 }
 
@@ -38,7 +38,7 @@ beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await renderer.act(async () => {
-    testRenderer = renderer.create(<DomainSenseUserStatistics lang={""} />);
+    testRenderer = renderer.create(<DomainUserStatistics lang={""} />);
   });
 });
 
@@ -54,7 +54,7 @@ describe("SemanticDomainStatistics", () => {
     //Verify ListItem for the DomainSenseUserCount object is present
     const newSenDomCountList = testRenderer.root.findAllByType(ListItem);
     expect(newSenDomCountList.length).toEqual(
-      mockDomainSenseUserCountArray.length
+      mockSemanticDomainUserCountArray.length
     );
   });
 });
