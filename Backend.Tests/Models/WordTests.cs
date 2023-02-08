@@ -90,7 +90,7 @@ namespace Backend.Tests.Models
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
-            Assert.That(oldWord.AppendContainedWordContents(newWord));
+            Assert.That(oldWord.AppendContainedWordContents(newWord, ""));
 
             var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
             Assert.That(updatedSense, Is.Not.Null);
@@ -101,6 +101,9 @@ namespace Backend.Tests.Models
             Assert.That(oldWord.Audio.Contains(Text));
             Assert.That(oldWord.EditedBy.Contains(Text));
             Assert.That(oldWord.History.Contains(Text));
+
+
+
         }
     }
 

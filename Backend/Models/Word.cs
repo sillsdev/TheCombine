@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -219,7 +220,7 @@ namespace BackendFramework.Models
         /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
-        public bool AppendContainedWordContents(Word other)
+        public bool AppendContainedWordContents(Word other, String userId)
         {
             // Confirm that the other word is contained
             if (!Contains(other))
@@ -234,8 +235,25 @@ namespace BackendFramework.Models
                 {
                     return false;
                 }
-                containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
-                containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
+
+
+                // only update the SemanticDomains for where had a change for saving computing resource
+                if (!containingSense.SemanticDomains.SequenceEqual(otherSense.SemanticDomains))
+                {
+                    PropertyInfo? UserIdProperty = containingSense.SemanticDomains[0].GetType().GetProperty("UserId");
+                    // only update userId for new project which using new SemanticDomain data model
+                    // For old project UserIdProperty == null no need to update
+                    // Not sure is this correct Or necessary because the MongoDB may add userId with a value "" to all SemanticDomain model once merge
+                    if (UserIdProperty != null && (UserIdProperty.PropertyType == typeof(string) && UserIdProperty.ToString() != ""))
+                    {
+                        // update most recent SemanticDomain with userId
+                        var lastIndexOfSemDomOtherSense = otherSense.SemanticDomains.Count - 1;
+                        otherSense.SemanticDomains[lastIndexOfSemDomOtherSense].UserId = userId;
+                    }
+                    // update changes then remove duplicates
+                    containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
+                    containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
+                }
             }
 
             // Preserve other word's SemanticDomains, Note, Flag, Audio, EditedBy, History
@@ -246,7 +264,6 @@ namespace BackendFramework.Models
             EditedBy.AddRange(other.EditedBy);
             EditedBy = EditedBy.Distinct().ToList();
             History.AddRange(other.History);
-
             return true;
         }
     }

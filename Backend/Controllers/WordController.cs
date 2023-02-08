@@ -187,23 +187,25 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(dupId);
             }
-            if (!duplicatedWord.AppendContainedWordContents(word))
+
+
+            var userId = _permissionService.GetUserId(HttpContext);
+            if (!duplicatedWord.AppendContainedWordContents(word, userId))
             {
                 return Conflict();
             }
 
+            // var lastIndexOfSenses = word.Senses.Count - 1;
+            // var lastIndexOfSemanticDomains = word.Senses[lastIndexOfSenses].SemanticDomains.Count - 1;
+            // var userId = word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId;
+            // // Determine whether the userId needs to be updated
+            // // If the userId is not null ("") meaning there is new SemanticDomains add to list
+            // // then userId it needs to be updated otherwise not update userId
+            // if (userId == "")
+            // {
 
-            var lastIndexOfSenses = word.Senses.Count - 1;
-            var lastIndexOfSemanticDomains = word.Senses[lastIndexOfSenses].SemanticDomains.Count - 1;
-            var userId = word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId;
-            // Determine whether the userId needs to be updated
-            // If the userId is not null ("") meaning there is new SemanticDomains add to list
-            // then userId it needs to be updated otherwise not update userId
-            if (userId == "")
-            {
-                var updateId = _permissionService.GetUserId(HttpContext);
-                word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId = updateId;
-            }
+            //     word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId = updateId;
+            // }
 
             await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
 
