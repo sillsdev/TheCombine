@@ -35,7 +35,7 @@ colorama==0.4.6
     #   -r dev-requirements.in
     #   mkdocs-material
     #   tox
-cryptography==39.0.0
+cryptography==39.0.1
     # via
     #   pyopenssl
     #   types-pyopenssl
@@ -186,12 +186,6 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.3.2.post1
     # via beautifulsoup4
-tomli==2.0.1
-    # via
-    #   black
-    #   mypy
-    #   pyproject-api
-    #   tox
 tox==4.3.5
     # via -r dev-requirements.in
 types-pyopenssl==23.0.0.2

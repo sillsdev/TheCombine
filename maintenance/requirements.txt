@@ -14,18 +14,18 @@ cffi==1.15.1
     # via cryptography
 charset-normalizer==3.0.1
     # via requests
-cryptography==39.0.0
+cryptography==39.0.1
     # via pyopenssl
 dnspython==2.3.0
     # via pymongo
 google-auth==2.16.0
     # via kubernetes
 humanfriendly==10.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 idna==3.4
     # via requests
 kubernetes==25.3.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 oauthlib==3.2.2
     # via requests-oauthlib
 pyasn1==0.4.8
@@ -37,9 +37,9 @@ pyasn1-modules==0.2.8
 pycparser==2.21
     # via cffi
 pymongo==4.3.3
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 pyopenssl==23.0.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 python-dateutil==2.8.2
     # via kubernetes
 pyyaml==6.0
