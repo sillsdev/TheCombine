@@ -244,7 +244,8 @@ namespace BackendFramework.Models
                     // only update userId for new project which using new SemanticDomain data model
                     // For old project UserIdProperty == null no need to update
                     // Not sure is this correct Or necessary because the MongoDB may add userId with a value "" to all SemanticDomain model once merge
-                    if (UserIdProperty != null && (UserIdProperty.PropertyType == typeof(string) && UserIdProperty.ToString() != ""))
+                    // also could check  (UserIdProperty.PropertyType == typeof(string) && UserIdProperty.ToString() != "")
+                    if (UserIdProperty != null)
                     {
                         // update most recent SemanticDomain with userId
                         var lastIndexOfSemDomOtherSense = otherSense.SemanticDomains.Count - 1;
