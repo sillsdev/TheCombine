@@ -56,26 +56,29 @@ namespace BackendFramework.Services
         }
 
 
-        // Fuen's temporarily mark
-        // Get the count of senses and domain per user return a list of SemanticDomainUserCount objects
+        /// <summary>
+        /// Get the counts of senses and domains for user return a list of SemanticDomainUserCount objects <see cref="SemanticDomainUserCount"/>
+        /// </summary>
+        /// <returns> A List of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/> </returns>
         public async Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
             Dictionary<string, SemanticDomainUserCount> resUserMap = new Dictionary<string, SemanticDomainUserCount>();
 
-            // get project user
+            // Get all user of the project
             var allUsers = await _userRepo.GetAllUsers();
             var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
-            // build a SemanticDomainUserCount object hashMap with userId as key 
+
+            // build a SemanticDomainUserCount object hashMap with userId as the key 
             foreach (User u in projectUsers)
             {
                 resUserMap.Add(u.Id, new SemanticDomainUserCount(u.Id, u.Username));
             }
-            // for legacy database without userId under SemanticDomain model
+
+            // unknownUser is for legacy data model without a userId under SemanticDomain model
             var unknownId = "unknownUserId";
             var unknownName = "unknownUser";
             resUserMap.Add(unknownId, new SemanticDomainUserCount(unknownId, unknownName));
-
 
             foreach (Word word in wordList)
             {
@@ -86,9 +89,9 @@ namespace BackendFramework.Services
                         var userId = sd.UserId;
                         var domainName = sd.Name;
                         var domainUserValue = new SemanticDomainUserCount();
-                        // check is the SemanticDomain have a userId
+                        // if the SemanticDomain have a userId and exist in HashMap
                         domainUserValue = (userId != null && resUserMap.ContainsKey(userId)
-                            // if new SemanticDomain model find the SemanticDomainUserCount
+                            // if new SemanticDomain model
                             ? domainUserValue = resUserMap[userId]
                             // if not new SemanticDomain model assign to unknownUser
                             : domainUserValue = resUserMap[unknownId]);

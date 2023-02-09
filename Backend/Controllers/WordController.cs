@@ -195,18 +195,6 @@ namespace BackendFramework.Controllers
                 return Conflict();
             }
 
-            // var lastIndexOfSenses = word.Senses.Count - 1;
-            // var lastIndexOfSemanticDomains = word.Senses[lastIndexOfSenses].SemanticDomains.Count - 1;
-            // var userId = word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId;
-            // // Determine whether the userId needs to be updated
-            // // If the userId is not null ("") meaning there is new SemanticDomains add to list
-            // // then userId it needs to be updated otherwise not update userId
-            // if (userId == "")
-            // {
-
-            //     word.Senses[lastIndexOfSenses].SemanticDomains[lastIndexOfSemanticDomains].UserId = updateId;
-            // }
-
             await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
 
             return Ok(duplicatedWord.Id);
@@ -227,11 +215,9 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
+            // 
             word.ProjectId = projectId;
-            // Fuen's temporarily mark 
-            // The database model update to add a userId at semanticDomains
             var userId = _permissionService.GetUserId(HttpContext);
-            // Create a new word adding userId to the first SemanticDomain 
             word.Senses[0].SemanticDomains[0].UserId = userId;
 
             await _wordRepo.Create(word);

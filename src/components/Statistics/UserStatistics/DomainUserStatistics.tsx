@@ -33,8 +33,6 @@ export default function DomainSenseUserStatistics(
     updateSemanticDomainUserCounts();
   }, [props.lang]);
 
-  //console.log(getFrontierWords());
-
   async function getUserStatistics(
     projectId: string,
     lang?: string

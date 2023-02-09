@@ -213,8 +213,7 @@ namespace BackendFramework.Models
         }
     }
 
-    // Fuen's temporarily mark
-    // new class for statistics only include username and id for data security
+    /// <summary> Contains Id/username, DomainHashSet/DomainCount and WordCount for Words Per User Statistics </summary>
     public class SemanticDomainUserCount
     {
         [Required]

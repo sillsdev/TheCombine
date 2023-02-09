@@ -15,10 +15,6 @@ export default function Statistics(): ReactElement {
   const [userView, setUserView] = useState<boolean>(true);
   const { t } = useTranslation();
 
-  //  Fuen's temporarily mark
-  //  Decoupling statistics frontend components
-  //  Add a new button to switch between Words per User and Words per Domain
-
   useEffect(() => {
     const updateCurrentProject = async () => {
       await getProject(LocalStorage.getProjectId()).then(setCurrentProject);

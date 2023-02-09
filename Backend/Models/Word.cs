@@ -236,25 +236,16 @@ namespace BackendFramework.Models
                     return false;
                 }
 
-
-                // only update the SemanticDomains for where had a change for saving computing resource
-                if (!containingSense.SemanticDomains.SequenceEqual(otherSense.SemanticDomains))
+                // Get List of items that difference of two sequences update it if userId is NullOrEmpty
+                otherSense.SemanticDomains.Except(containingSense.SemanticDomains).ToList().ForEach((t) =>
                 {
-                    PropertyInfo? UserIdProperty = containingSense.SemanticDomains[0].GetType().GetProperty("UserId");
-                    // only update userId for new project which using new SemanticDomain data model
-                    // For old project UserIdProperty == null no need to update
-                    // Not sure is this correct Or necessary because the MongoDB may add userId with a value "" to all SemanticDomain model once merge
-                    // also could check  (UserIdProperty.PropertyType == typeof(string) && UserIdProperty.ToString() != "")
-                    if (UserIdProperty != null)
+                    if (string.IsNullOrEmpty(t.UserId))
                     {
-                        // update most recent SemanticDomain with userId
-                        var lastIndexOfSemDomOtherSense = otherSense.SemanticDomains.Count - 1;
-                        otherSense.SemanticDomains[lastIndexOfSemDomOtherSense].UserId = userId;
+                        t.UserId = userId;
                     }
-                    // update changes then remove duplicates
-                    containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
-                    containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
-                }
+                });
+                containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
+                containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
             }
 
             // Preserve other word's SemanticDomains, Note, Flag, Audio, EditedBy, History
