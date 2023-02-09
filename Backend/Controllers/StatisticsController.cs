@@ -47,7 +47,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Get a list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>
-        /// <returns> A list of SemanticDomainCount <see cref="SemanticDomainUserCount"/>s </returns>
+        /// <returns> A list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s </returns>
         [HttpGet("GetSemanticDomainUserCounts", Name = "GetSemanticDomainUserCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainUserCount>))]
         public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId, string lang)

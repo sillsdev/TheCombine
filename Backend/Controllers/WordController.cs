@@ -215,7 +215,7 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
-            // 
+            // Add userID to the SemanticDomains for the NEW word
             word.ProjectId = projectId;
             var userId = _permissionService.GetUserId(HttpContext);
             word.Senses[0].SemanticDomains[0].UserId = userId;
