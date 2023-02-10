@@ -372,10 +372,10 @@
     "dataStatistics": "Data Statistics:  ",
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
-    "countSenses": "Collection:",
+    "countSenses": "Words:",
     "userName": "User Name:",
     "domainCount": "Domains:",
-    "senseCount": "Collection:",
+    "senseCount": "Words:",
     "userView": "Words per User",
     "domainView": "Words per Domain"
   }
