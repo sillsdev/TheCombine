@@ -13,6 +13,7 @@ import {
   WritingSystem,
 } from "api/models";
 import * as backend from "backend";
+import { getCurrentUser } from "backend/localStorage";
 import NewEntry, {
   FocusTarget,
 } from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
@@ -62,6 +63,8 @@ export function addSemanticDomainToSense(
   } else {
     const oldSense = existingWord.senses[senseIndex];
     const updatedDomains = [...oldSense.semanticDomains];
+    // Update the UserId for new semanticDomain
+    semanticDomain.userId = getCurrentUser()?.id;
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
       ...oldSense,
@@ -79,6 +82,8 @@ export function addSenseToWord(
   gloss: string,
   language: string
 ): Word {
+  // Update the UserId for new semanticDomain
+  semanticDomain.userId = getCurrentUser()?.id;
   const word: Word = { ...existingWord, senses: [...existingWord.senses] };
   word.senses.push(newSense(gloss, language, semanticDomain));
   return word;
