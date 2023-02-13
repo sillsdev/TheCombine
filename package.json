@@ -61,7 +61,7 @@
     "react-modal": "^3.14.4",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.1",
-    "react-toastify": "^8.2.0",
+    "react-toastify": "^9.1.1",
     "recordrtc": "^5.6.1",
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.8",
