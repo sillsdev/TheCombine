@@ -63,7 +63,7 @@
     "react-router-dom": "^5.3.1",
     "react-toastify": "^8.2.0",
     "recordrtc": "^5.6.1",
-    "redux": "^4.1.2",
+    "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.0",
