@@ -1,4 +1,4 @@
-import { Grid, Typography, List, Button } from "@material-ui/core";
+import { Grid, Typography, List } from "@material-ui/core";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,11 +9,25 @@ import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
 
+import { makeStyles } from "@material-ui/core/styles";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
 export default function Statistics(): ReactElement {
+  const { t } = useTranslation();
+  const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
-  const [userView, setUserView] = useState<boolean>(true);
-  const { t } = useTranslation();
+  const [shown, setShown] = useState<string>(t("statistics.userView"));
 
   useEffect(() => {
     const updateCurrentProject = async () => {
@@ -23,22 +37,75 @@ export default function Statistics(): ReactElement {
     updateCurrentProject();
   }, [lang]);
 
+  function handleDisplay(viewName: string) {
+    return [
+      <Grid item key={t("statistics.dataStatistics") + currentProject?.name}>
+        <Typography variant="h5" align="center">
+          {t("statistics.dataStatistics") + currentProject?.name}
+        </Typography>
+      </Grid>,
+      <Grid item key={"key" + viewName}>
+        <Typography variant="h5" align="center">
+          {viewName}
+        </Typography>
+      </Grid>,
+      (function () {
+        switch (viewName) {
+          case t("statistics.userView"):
+            return (
+              <Grid
+                item
+                key={t("statistics.userView") + "DomainUserStatistics"}
+              >
+                <List>
+                  <DomainUserStatistics
+                    currentProject={currentProject}
+                    lang={lang}
+                  />
+                </List>
+              </Grid>
+            );
+          case t("statistics.domainView"):
+            return (
+              <Grid
+                item
+                key={t("statistics.domainView") + "SemanticDomainStatistics"}
+              >
+                <List>
+                  <SemanticDomainStatistics
+                    currentProject={currentProject}
+                    lang={lang}
+                  />
+                </List>
+              </Grid>
+            );
+          default:
+            null;
+        }
+      })(),
+    ];
+  }
+
   return (
     <React.Fragment>
       <Grid container direction="row" spacing={1}>
         <Grid item xs={2}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              setUserView(!userView);
-            }}
-            id={`statistic-button`}
+          <List
+            component="nav"
+            className={classes.root}
+            aria-label="mailbox folders"
           >
-            <Typography variant="h4">
-              {userView ? t("statistics.domainView") : t("statistics.userView")}
-            </Typography>
-          </Button>
+            <ListItem button onClick={() => setShown(t("statistics.userView"))}>
+              <ListItemText primary={t("statistics.userView")} />
+            </ListItem>
+            <Divider />
+            <ListItem
+              button
+              onClick={() => setShown(t("statistics.domainView"))}
+            >
+              <ListItemText primary={t("statistics.domainView")} />
+            </ListItem>
+          </List>
         </Grid>
 
         <Grid
@@ -49,36 +116,7 @@ export default function Statistics(): ReactElement {
           justifyContent="center"
           spacing={2}
         >
-          <Grid item>
-            <Typography variant="h5" align="center">
-              {t("statistics.dataStatistics") + currentProject?.name}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h5" align="center">
-              {userView ? t("statistics.userView") : t("statistics.domainView")}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {userView && (
-              <List>
-                <DomainUserStatistics
-                  currentProject={currentProject}
-                  lang={lang}
-                />
-              </List>
-            )}
-          </Grid>
-          <Grid item>
-            {!userView && (
-              <List>
-                <SemanticDomainStatistics
-                  currentProject={currentProject}
-                  lang={lang}
-                />
-              </List>
-            )}
-          </Grid>
+          {handleDisplay(shown)}
         </Grid>
       </Grid>
     </React.Fragment>
