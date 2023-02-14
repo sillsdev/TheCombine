@@ -35,7 +35,8 @@
   },
   "appBar": {
     "dataEntry": "data entry",
-    "dataCleanup": "data cleanup"
+    "dataCleanup": "data cleanup",
+    "statistics": "data statistics"
   },
   "login": {
     "title": "Log In",
@@ -366,5 +367,11 @@
     "playTooltip": "Click to play; shift click to delete.",
     "noMicAccess": "Recording error: Could not access a microphone.",
     "deleteRecording": "Delete Recording"
+  },
+  "statistics": {
+    "dataStatistics": "Data Statistics:  ",
+    "domainNumber": "Domain Number:",
+    "domainName": "Domain Name:",
+    "countSenses": "Collection:"
   }
 }

@@ -18,6 +18,7 @@ export * from "./password-reset-request-data";
 export * from "./permission";
 export * from "./project";
 export * from "./semantic-domain";
+export * from "./semantic-domain-count";
 export * from "./semantic-domain-full";
 export * from "./semantic-domain-tree-node";
 export * from "./sense";
