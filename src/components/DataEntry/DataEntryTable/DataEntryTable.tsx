@@ -175,6 +175,10 @@ export class DataEntryTable extends React.Component<
     }
 
     const word = await backend.getWord(wordId);
+    //update userId to new word
+    word.senses[0].semanticDomains[0].userId = getCurrentUser()?.id;
+    await backend.updateWord(word);
+
     this.addToDisplay({ word, senseIndex: 0 }, insertIndex);
   }
 
@@ -184,7 +188,13 @@ export class DataEntryTable extends React.Component<
     duplicatedId: string,
     ignoreRecent?: boolean
   ): Promise<void> {
-    const updatedWord = await backend.updateDuplicate(duplicatedId, wordToAdd);
+    // Get UserId and passing userId parameter to updateDuplicate
+    var userId = getCurrentUser()?.id;
+    const updatedWord = await backend.updateDuplicate(
+      duplicatedId,
+      userId ?? "",
+      wordToAdd
+    );
     const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
     await this.updateExisting();
 

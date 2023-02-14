@@ -169,7 +169,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateDuplicate(
-            string projectId, string dupId, [FromBody, BindRequired] Word word)
+            string projectId, string dupId, string? userId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -188,8 +188,10 @@ namespace BackendFramework.Controllers
                 return NotFound(dupId);
             }
 
-
-            var userId = _permissionService.GetUserId(HttpContext);
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = "";
+            }
             if (!duplicatedWord.AppendContainedWordContents(word, userId))
             {
                 return Conflict();
@@ -215,10 +217,7 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
-            // Add userID to the SemanticDomains for the NEW word
             word.ProjectId = projectId;
-            var userId = _permissionService.GetUserId(HttpContext);
-            word.Senses[0].SemanticDomains[0].UserId = userId;
 
             await _wordRepo.Create(word);
             return Ok(word.Id);
