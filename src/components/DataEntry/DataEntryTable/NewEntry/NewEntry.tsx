@@ -159,7 +159,6 @@ export default class NewEntry extends React.Component<
   }
 
   updateGlossField(newValue: string): void {
-    this.props.semanticDomain.userId = getCurrentUser()?.id;
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
@@ -224,7 +223,6 @@ export default class NewEntry extends React.Component<
   }
 
   addNewWordAndReset(): void {
-    this.props.semanticDomain.userId = getCurrentUser()?.id;
     const newEntry: Word = this.state.newEntry.senses.length
       ? this.state.newEntry
       : {

@@ -676,7 +676,12 @@ export class DataEntryTable extends React.Component<
               addNewWord={(word: Word, audioFileURLs: string[]) =>
                 this.addNewWord(word, audioFileURLs)
               }
-              semanticDomain={this.props.semanticDomain}
+              semanticDomain={(() => {
+                var tempSemanticDomain: SemanticDomain =
+                  this.props.semanticDomain;
+                tempSemanticDomain.userId = getCurrentUser()?.id;
+                return tempSemanticDomain;
+              })()}
               setIsReadyState={(isReady: boolean) =>
                 this.setState((state) => {
                   return state.isReady === isReady ? null : { isReady };
