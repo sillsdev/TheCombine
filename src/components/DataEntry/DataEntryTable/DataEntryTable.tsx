@@ -168,18 +168,15 @@ export class DataEntryTable extends React.Component<
 
     const addedWord = await backend.createWord(wordToAdd);
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
-    const word = await backend.getWord(wordId);
-    //update userId to new word before check ignoreRecent
-    if (word && word.senses && word.senses[0].semanticDomains.length) {
-      word.senses[0].semanticDomains[0].userId = getCurrentUser()?.id;
-    }
-    await backend.updateWord(word);
 
     await this.updateExisting();
 
     if (ignoreRecent) {
       return;
     }
+
+    const word = await backend.getWord(wordId);
+    await backend.updateWord(word);
 
     this.addToDisplay({ word, senseIndex: 0 }, insertIndex);
   }

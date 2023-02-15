@@ -65,7 +65,7 @@ namespace BackendFramework.Services
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
             Dictionary<string, SemanticDomainUserCount> resUserMap = new Dictionary<string, SemanticDomainUserCount>();
 
-            // Get all user of the project
+            // Get all users of the project
             var allUsers = await _userRepo.GetAllUsers();
             var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
@@ -75,7 +75,7 @@ namespace BackendFramework.Services
                 resUserMap.Add(u.Id, new SemanticDomainUserCount(u.Id, u.Username));
             }
 
-            // unknownUser is for legacy data model without a userId under SemanticDomain model
+            // unknownUser is for legacy data without a userId under SemanticDomain model
             var unknownId = "unknownUserId";
             var unknownName = "unknownUser";
             resUserMap.Add(unknownId, new SemanticDomainUserCount(unknownId, unknownName));
