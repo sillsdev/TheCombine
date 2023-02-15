@@ -1,4 +1,8 @@
-import { Grid, Typography, List } from "@material-ui/core";
+import { Grid, Typography, List, ListSubheader } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -8,11 +12,6 @@ import { Project } from "api/models";
 import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
-
-import { makeStyles } from "@material-ui/core/styles";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,9 +90,12 @@ export default function Statistics(): ReactElement {
       <Grid container direction="row" spacing={1}>
         <Grid item xs={2}>
           <List
-            component="nav"
+            subheader={
+              <ListSubheader component="div" id="Optional Views">
+                Optional Views
+              </ListSubheader>
+            }
             className={classes.root}
-            aria-label="mailbox folders"
           >
             <ListItem button onClick={() => setShown(t("statistics.userView"))}>
               <ListItemText primary={t("statistics.userView")} />
