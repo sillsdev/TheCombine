@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomain, Word, WritingSystem } from "api/models";
-import { getCurrentUser } from "backend/localStorage";
 import {
   DeleteEntry,
   EntryNote,
