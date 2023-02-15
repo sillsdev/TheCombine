@@ -26,7 +26,7 @@
     <PackageReference Include="icu.net" Version="2.8.1" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
     <PackageReference Include="SIL.Core" Version="11.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="11.0.1">
+    <PackageReference Include="SIL.Core.Desktop" Version="12.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="SIL.DictionaryServices" Version="11.0.1">
