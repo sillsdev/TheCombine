@@ -169,7 +169,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateDuplicate(
-            string projectId, string dupId, [FromBody, BindRequired] Word word)
+            string projectId, string dupId, string? userId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -187,12 +187,18 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(dupId);
             }
-            if (!duplicatedWord.AppendContainedWordContents(word))
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = "";
+            }
+            if (!duplicatedWord.AppendContainedWordContents(word, userId))
             {
                 return Conflict();
             }
 
             await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
+
             return Ok(duplicatedWord.Id);
         }
 

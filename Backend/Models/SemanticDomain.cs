@@ -26,6 +26,9 @@ namespace BackendFramework.Models
         [BsonElement("lang")]
         public string Lang { get; set; }
 
+        [BsonElement("userId")]
+        public string UserId { get; set; }
+
         public SemanticDomain()
         {
             MongoId = "";
@@ -33,6 +36,7 @@ namespace BackendFramework.Models
             Name = "";
             Id = "";
             Lang = "";
+            UserId = "";
         }
 
         public SemanticDomain Clone()
@@ -44,7 +48,8 @@ namespace BackendFramework.Models
                 Guid = Guid,
                 Name = Name,
                 Id = Id,
-                Lang = Lang
+                Lang = Lang,
+                UserId = UserId,
             };
         }
 
@@ -60,7 +65,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id, Lang, Guid);
+            return HashCode.Combine(Name, Id, Lang, Guid, UserId);
         }
     }
 

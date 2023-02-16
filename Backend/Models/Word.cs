@@ -121,7 +121,7 @@ namespace BackendFramework.Models
                 History = new List<string>(),
                 Senses = new List<Sense>(),
                 Note = Note.Clone(),
-                Flag = Flag.Clone()
+                Flag = Flag.Clone(),
             };
 
             foreach (var file in Audio)
@@ -219,7 +219,7 @@ namespace BackendFramework.Models
         /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
-        public bool AppendContainedWordContents(Word other)
+        public bool AppendContainedWordContents(Word other, String userId)
         {
             // Confirm that the other word is contained
             if (!Contains(other))
@@ -234,6 +234,15 @@ namespace BackendFramework.Models
                 {
                     return false;
                 }
+
+                // Get List of items that difference of two sequences update it if userId is NullOrEmpty
+                otherSense.SemanticDomains.Except(containingSense.SemanticDomains).ToList().ForEach((t) =>
+                {
+                    if (string.IsNullOrEmpty(t.UserId))
+                    {
+                        t.UserId = userId;
+                    }
+                });
                 containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
                 containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
             }
@@ -246,7 +255,6 @@ namespace BackendFramework.Models
             EditedBy.AddRange(other.EditedBy);
             EditedBy = EditedBy.Distinct().ToList();
             History.AddRange(other.History);
-
             return true;
         }
     }
@@ -371,7 +379,7 @@ namespace BackendFramework.Models
                 Accessibility = Accessibility,
                 Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
-                SemanticDomains = new List<SemanticDomain>()
+                SemanticDomains = new List<SemanticDomain>(),
             };
 
             foreach (var definition in Definitions)

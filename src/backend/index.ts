@@ -19,6 +19,7 @@ import {
   UserEdit,
   UserRole,
   Word,
+  SemanticDomainUserCount,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -644,9 +645,15 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
 
 export async function updateDuplicate(
   dupId: string,
+  userId: string,
   word: Word
 ): Promise<Word> {
-  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
+  const params = {
+    projectId: LocalStorage.getProjectId(),
+    dupId,
+    userId,
+    word,
+  };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
   return await getWord(resp.data);
 }
@@ -664,6 +671,18 @@ export async function getSemanticDomainCounts(
   lang?: string
 ): Promise<Array<SemanticDomainCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainUserCount(
+  projectId: string,
+  lang?: string
+): Promise<Array<SemanticDomainUserCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainUserCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
     defaultOptions()
   );
