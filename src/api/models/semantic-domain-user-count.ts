@@ -15,43 +15,37 @@
 /**
  *
  * @export
- * @interface SemanticDomain
+ * @interface SemanticDomainUserCount
  */
-export interface SemanticDomain {
+export interface SemanticDomainUserCount {
   /**
    *
    * @type {string}
-   * @memberof SemanticDomain
-   */
-  mongoId?: string | null;
-  /**
-   *
-   * @type {string}
-   * @memberof SemanticDomain
-   */
-  guid: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SemanticDomain
-   */
-  name: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SemanticDomain
+   * @memberof SemanticDomainUserCount
    */
   id: string;
   /**
    *
    * @type {string}
-   * @memberof SemanticDomain
+   * @memberof SemanticDomainUserCount
    */
-  lang: string;
+  username?: string | null;
   /**
    *
-   * @type {string}
-   * @memberof SemanticDomain
+   * @type {Set<string>}
+   * @memberof SemanticDomainUserCount
    */
-  userId?: string | null;
+  domainSet: Set<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof SemanticDomainUserCount
+   */
+  domainCount?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof SemanticDomainUserCount
+   */
+  wordCount?: number;
 }

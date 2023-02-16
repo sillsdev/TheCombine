@@ -43,6 +43,7 @@ models/project.ts
 models/semantic-domain-count.ts
 models/semantic-domain-full.ts
 models/semantic-domain-tree-node.ts
+models/semantic-domain-user-count.ts
 models/semantic-domain.ts
 models/sense.ts
 models/site-banner.ts
