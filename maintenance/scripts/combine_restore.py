@@ -126,7 +126,6 @@ def main() -> None:
             tar_dir = Path(".")
 
             def is_within_directory(directory: Path, target: Path) -> bool:
-
                 abs_directory = Path(directory).absolute()
                 abs_target = Path(target).absolute()
 
@@ -141,7 +140,6 @@ def main() -> None:
                 *,
                 numeric_owner: bool = False,
             ) -> None:
-
                 for member in tar.getmembers():
                     member_path = path / member.name
                     if not is_within_directory(path, member_path):

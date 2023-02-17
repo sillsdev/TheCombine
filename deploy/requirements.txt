@@ -8,7 +8,7 @@ ansible==7.2.0
     # via -r requirements.in
 ansible-core==2.14.2
     # via ansible
-cachetools==5.2.1
+cachetools==5.3.0
     # via google-auth
 certifi==2022.12.7
     # via
@@ -18,7 +18,7 @@ cffi==1.15.1
     # via cryptography
 charset-normalizer==3.0.1
     # via requests
-cryptography==39.0.0
+cryptography==39.0.1
     # via
     #   ansible-core
     #   pyopenssl
@@ -77,7 +77,7 @@ urllib3==1.26.14
     # via
     #   kubernetes
     #   requests
-websocket-client==1.4.2
+websocket-client==1.5.1
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:

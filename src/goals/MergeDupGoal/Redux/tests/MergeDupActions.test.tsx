@@ -25,7 +25,7 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
-import { GoalsState } from "types/goals";
+import { GoalsState, GoalType } from "types/goals";
 import {
   multiSenseWord,
   newDefinition,
@@ -68,6 +68,7 @@ const mockStoreState: {
     currentGoal: new MergeDups(),
     goalTypeSuggestions: [],
     history: [mockGoal],
+    previousGoalType: GoalType.Default,
   },
   mergeDuplicateGoal: { data: {} as MergeData, tree: {} as MergeTree },
 };

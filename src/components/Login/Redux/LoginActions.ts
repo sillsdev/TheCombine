@@ -1,4 +1,5 @@
-import SHA from "sha.js";
+import Hex from "crypto-js/enc-hex";
+import sha256 from "crypto-js/sha256";
 
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
@@ -19,7 +20,7 @@ export function asyncLogin(username: string, password: string) {
       .then(async (user) => {
         dispatch(loginSuccess(user.username));
         // hash the user name and use it in analytics.identify
-        const analyticsId = SHA("sha256").update(user.id).digest("hex");
+        const analyticsId = Hex.stringify(sha256(user.id));
         analytics.identify(analyticsId);
         history.push(Path.ProjScreen);
       })
