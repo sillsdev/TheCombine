@@ -8,17 +8,11 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2"
   >
     <ul
-      className="MuiList-root makeStyles-root-1 MuiList-padding MuiList-subheader"
+      className="MuiList-root makeStyles-root-1 MuiList-padding"
     >
       <div
-        className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
-        id="Optional Views"
-      >
-        Optional Views
-      </div>
-      <div
         aria-disabled={false}
-        className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+        className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button Mui-selected"
         onBlur={[Function]}
         onClick={[Function]}
         onDragLeave={[Function]}

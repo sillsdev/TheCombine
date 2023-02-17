@@ -1,4 +1,4 @@
-import { Grid, Typography, List, ListSubheader } from "@material-ui/core";
+import { Grid, Typography, List } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -26,7 +26,12 @@ export default function Statistics(): ReactElement {
   const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
-  const [shown, setShown] = useState<string>(t("statistics.userView"));
+  const viewEnum = {
+    User: t("statistics.userView"),
+    Domain: t("statistics.domainView"),
+    DataStatistics: t("statistics.dataStatistics"),
+  };
+  const [viewName, setViewName] = useState<string>(viewEnum.User);
 
   useEffect(() => {
     const updateCurrentProject = async () => {
@@ -36,11 +41,11 @@ export default function Statistics(): ReactElement {
     updateCurrentProject();
   }, [lang]);
 
-  function handleDisplay(viewName: string) {
+  function handleDisplay() {
     return [
-      <Grid item key={t("statistics.dataStatistics") + currentProject?.name}>
+      <Grid item key={viewEnum.DataStatistics + currentProject?.name}>
         <Typography variant="h5" align="center">
-          {t("statistics.dataStatistics") + currentProject?.name}
+          {viewEnum.DataStatistics + currentProject?.name}
         </Typography>
       </Grid>,
       <Grid item key={"key" + viewName}>
@@ -48,66 +53,53 @@ export default function Statistics(): ReactElement {
           {viewName}
         </Typography>
       </Grid>,
-      (function () {
-        switch (viewName) {
-          case t("statistics.userView"):
-            return (
-              <Grid
-                item
-                key={t("statistics.userView") + "DomainUserStatistics"}
-              >
-                <List>
-                  <DomainUserStatistics
-                    currentProject={currentProject}
-                    lang={lang}
-                  />
-                </List>
-              </Grid>
-            );
-          case t("statistics.domainView"):
-            return (
-              <Grid
-                item
-                key={t("statistics.domainView") + "SemanticDomainStatistics"}
-              >
-                <List>
-                  <SemanticDomainStatistics
-                    currentProject={currentProject}
-                    lang={lang}
-                  />
-                </List>
-              </Grid>
-            );
-          default:
-            null;
-        }
-      })(),
+      viewName === viewEnum.User && (
+        <Grid item key={viewEnum.User + "DomainUserStatistics"}>
+          <List>
+            <DomainUserStatistics currentProject={currentProject} lang={lang} />
+          </List>
+        </Grid>
+      ),
+      viewName === viewEnum.Domain && (
+        <Grid item key={viewEnum.Domain + "SemanticDomainStatistics"}>
+          <List>
+            <SemanticDomainStatistics
+              currentProject={currentProject}
+              lang={lang}
+            />
+          </List>
+        </Grid>
+      ),
     ];
+  }
+
+  function handleButton() {
+    return (
+      <List className={classes.root}>
+        <ListItem
+          button
+          onClick={() => setViewName(viewEnum.User)}
+          selected={viewName === viewEnum.User}
+        >
+          <ListItemText primary={viewEnum.User} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => setViewName(viewEnum.Domain)}
+          selected={viewName === viewEnum.Domain}
+        >
+          <ListItemText primary={viewEnum.Domain} />
+        </ListItem>
+      </List>
+    );
   }
 
   return (
     <React.Fragment>
       <Grid container direction="row" spacing={1}>
         <Grid item xs={2}>
-          <List
-            subheader={
-              <ListSubheader component="div" id="Optional Views">
-                Optional Views
-              </ListSubheader>
-            }
-            className={classes.root}
-          >
-            <ListItem button onClick={() => setShown(t("statistics.userView"))}>
-              <ListItemText primary={t("statistics.userView")} />
-            </ListItem>
-            <Divider />
-            <ListItem
-              button
-              onClick={() => setShown(t("statistics.domainView"))}
-            >
-              <ListItemText primary={t("statistics.domainView")} />
-            </ListItem>
-          </List>
+          {handleButton()}
         </Grid>
 
         <Grid
@@ -118,7 +110,7 @@ export default function Statistics(): ReactElement {
           justifyContent="center"
           spacing={2}
         >
-          {handleDisplay(shown)}
+          {handleDisplay()}
         </Grid>
       </Grid>
     </React.Fragment>
