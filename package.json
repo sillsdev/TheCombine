@@ -179,6 +179,9 @@
       }
     }
   },
+  "jest": {
+    "transformIgnorePatterns": ["/node_modules/(!${axios})"]
+  },
   "prettier": {
     "overrides": [
       {
