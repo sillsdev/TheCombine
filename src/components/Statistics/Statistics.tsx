@@ -6,10 +6,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import CircularProgressWithLabel from "./CircularProgressBar";
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
+import LinearProgressWithLabel from "./LinearProgressBar";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
-import { getProject } from "backend";
+import { getProject, getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
 
@@ -33,13 +35,33 @@ export default function Statistics(): ReactElement {
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
   const [viewName, setViewName] = useState<string>(viewEnum.User);
+  const [progressRatio, setProgressRatio] = useState<number>(0);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
   useEffect(() => {
     const updateCurrentProject = async () => {
       await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
     };
 
+    const updateProgress = async () => {
+      const statisticsList = await getSemanticDomainCounts(
+        LocalStorage.getProjectId(),
+        lang
+      );
+      var temp = 0;
+      statisticsList?.forEach((element) => {
+        if (element.count > 0) {
+          temp++;
+        }
+      });
+      setTotalCount(temp);
+      statisticsList
+        ? setProgressRatio(Math.ceil((temp * 100) / statisticsList!.length))
+        : null;
+    };
+
     updateCurrentProject();
+    updateProgress();
   }, [lang]);
 
   function handleDisplay() {
@@ -97,13 +119,33 @@ export default function Statistics(): ReactElement {
     );
   }
 
+  function handleStatisticGoal() {
+    return (
+      <List className={classes.root}>
+        <ListItem>
+          <ListItemText primary={t("statistics.ratioGoal")} />
+          <CircularProgressWithLabel value={progressRatio} />
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemText primary={t("statistics.ratioGoal")} />
+          <LinearProgressWithLabel value={progressRatio} />
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemText primary={t("statistics.totalGoal")} />
+          <Typography>{totalCount}</Typography>
+        </ListItem>
+      </List>
+    );
+  }
+
   return (
     <React.Fragment>
       <Grid container direction="row" spacing={1}>
         <Grid item xs={2}>
           {handleButton()}
         </Grid>
-
         <Grid
           item
           xs={8}
@@ -113,6 +155,9 @@ export default function Statistics(): ReactElement {
           spacing={2}
         >
           {handleDisplay()}
+        </Grid>
+        <Grid item xs={2}>
+          {handleStatisticGoal()}
         </Grid>
       </Grid>
     </React.Fragment>
