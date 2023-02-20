@@ -21,16 +21,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+enum viewEnum {
+  User = "USER",
+  Domain = "DOMAIN",
+  DataStatistics = "STATISTIC",
+}
+
 export default function Statistics(): ReactElement {
   const { t } = useTranslation();
   const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
-  const viewEnum = {
-    User: t("statistics.userView"),
-    Domain: t("statistics.domainView"),
-    DataStatistics: t("statistics.dataStatistics"),
-  };
   const [viewName, setViewName] = useState<string>(viewEnum.User);
 
   useEffect(() => {
@@ -45,12 +46,13 @@ export default function Statistics(): ReactElement {
     return [
       <Grid item key={viewEnum.DataStatistics + currentProject?.name}>
         <Typography variant="h5" align="center">
-          {viewEnum.DataStatistics + currentProject?.name}
+          {t("statistics.dataStatistics") + currentProject?.name}
         </Typography>
       </Grid>,
-      <Grid item key={"key" + viewName}>
+      <Grid item key={"ProjectName" + viewName}>
         <Typography variant="h5" align="center">
-          {viewName}
+          {viewName === viewEnum.User && t("statistics.userView")}
+          {viewName === viewEnum.Domain && t("statistics.domainView")}
         </Typography>
       </Grid>,
       viewName === viewEnum.User && (
@@ -81,7 +83,7 @@ export default function Statistics(): ReactElement {
           onClick={() => setViewName(viewEnum.User)}
           selected={viewName === viewEnum.User}
         >
-          <ListItemText primary={viewEnum.User} />
+          <ListItemText primary={t("statistics.userView")} />
         </ListItem>
         <Divider />
         <ListItem
@@ -89,7 +91,7 @@ export default function Statistics(): ReactElement {
           onClick={() => setViewName(viewEnum.Domain)}
           selected={viewName === viewEnum.Domain}
         >
-          <ListItemText primary={viewEnum.Domain} />
+          <ListItemText primary={t("statistics.domainView")} />
         </ListItem>
       </List>
     );
