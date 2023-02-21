@@ -129,22 +129,22 @@ export default function Statistics(): ReactElement {
     return (
       <List className={classes.root}>
         <ListItem>
-          <ListItemText primary={t("statistics.ratioGoal")} />
+          <ListItemText primary={t("statistics.domainProgress")} />
           <CircularProgressWithLabel value={progressRatio} />
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary={t("statistics.ratioGoal")} />
+          <ListItemText primary={t("statistics.domainProgress")} />
           <LinearProgressWithLabel value={progressRatio} />
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary={t("statistics.totalDomain")} />
+          <ListItemText primary={t("statistics.domainsCollected")} />
           <Typography>{totalDomainCount}</Typography>
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary={t("statistics.totalWord")} />
+          <ListItemText primary={t("statistics.wordsCollected")} />
           <Typography>{totalWordCount}</Typography>
         </ListItem>
       </List>

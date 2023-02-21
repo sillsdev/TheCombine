@@ -378,8 +378,8 @@
     "senseCount": "Words:",
     "userView": "Words per User",
     "domainView": "Words per Domain",
-    "ratioGoal": "Sem-Domains Ratio:",
-    "totalDomain": "Sem-Domains Involved:",
-    "totalWord": "Words Involved:"
+    "domainProgress": "Domain Progress",
+    "domainsCollected": "Domains Collected:",
+    "wordsCollected": "Words Collected:"
   }
 }
