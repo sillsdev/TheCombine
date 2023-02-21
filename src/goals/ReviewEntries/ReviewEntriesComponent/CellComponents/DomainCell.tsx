@@ -59,6 +59,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
             selectedDomain.id
           );
           tempSemanticDomain.userId = getCurrentUser()?.id;
+          tempSemanticDomain.created = new Date().toISOString();
           return tempSemanticDomain;
         })(),
       ]);

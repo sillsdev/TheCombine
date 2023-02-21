@@ -59,6 +59,12 @@ export interface SemanticDomainFull {
    * @type {string}
    * @memberof SemanticDomainFull
    */
+  created?: string | null;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainFull
+   */
   description: string;
   /**
    *

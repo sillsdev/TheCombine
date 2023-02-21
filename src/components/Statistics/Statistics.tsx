@@ -11,7 +11,7 @@ import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistic
 import LinearProgressWithLabel from "./LinearProgressBar";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
-import { getProject, getSemanticDomainCounts } from "backend";
+import { getFrontierWords, getProject, getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
 
@@ -69,6 +69,8 @@ export default function Statistics(): ReactElement {
     updateCurrentProject();
     updateProgress();
   }, [lang]);
+
+  console.log(getFrontierWords());
 
   function handleDisplay() {
     return [

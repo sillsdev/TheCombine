@@ -54,4 +54,10 @@ export interface SemanticDomain {
    * @memberof SemanticDomain
    */
   userId?: string | null;
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomain
+   */
+  created?: string | null;
 }

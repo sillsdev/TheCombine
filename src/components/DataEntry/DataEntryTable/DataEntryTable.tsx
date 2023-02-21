@@ -65,6 +65,7 @@ export function addSemanticDomainToSense(
     const updatedDomains = [...oldSense.semanticDomains];
     // Update the UserId for new semanticDomain
     semanticDomain.userId = getCurrentUser()?.id;
+    semanticDomain.created = new Date().toISOString();
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
       ...oldSense,
@@ -84,6 +85,7 @@ export function addSenseToWord(
 ): Word {
   // Update the UserId for new semanticDomain
   semanticDomain.userId = getCurrentUser()?.id;
+  semanticDomain.created = new Date().toISOString();
   const word: Word = { ...existingWord, senses: [...existingWord.senses] };
   word.senses.push(newSense(gloss, language, semanticDomain));
   return word;
@@ -680,6 +682,7 @@ export class DataEntryTable extends React.Component<
                 var tempSemanticDomain: SemanticDomain =
                   this.props.semanticDomain;
                 tempSemanticDomain.userId = getCurrentUser()?.id;
+                tempSemanticDomain.created = new Date().toISOString();
                 return tempSemanticDomain;
               })()}
               setIsReadyState={(isReady: boolean) =>
