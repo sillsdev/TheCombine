@@ -195,7 +195,7 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            statistics.ratioGoal
+            statistics.domainProgress
           </span>
         </div>
         <div
@@ -257,7 +257,7 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            statistics.ratioGoal
+            statistics.domainProgress
           </span>
         </div>
         <div
@@ -311,7 +311,7 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            statistics.totalDomain
+            statistics.domainsCollected
           </span>
         </div>
         <p
@@ -333,7 +333,7 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            statistics.totalWord
+            statistics.wordsCollected
           </span>
         </div>
         <p
