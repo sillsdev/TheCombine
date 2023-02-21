@@ -17,7 +17,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="MailKit" Version="3.5.0" />
