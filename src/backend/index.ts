@@ -44,6 +44,9 @@ const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
+  if (err.config === undefined) {
+    return Promise.reject(err);
+  }
   const url = err.config.url;
   const response = err.response;
   if (response) {

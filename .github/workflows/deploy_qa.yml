@@ -19,7 +19,7 @@ jobs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -76,7 +76,7 @@ jobs:
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@7c78a8afc01f24051c3bc7aaed57d9699c59c5fa # v1.7.0
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
