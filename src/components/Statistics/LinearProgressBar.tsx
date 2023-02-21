@@ -8,7 +8,7 @@ interface ProgressBarProps {
 
 export default function LinearProgressWithLabel(props: ProgressBarProps) {
   return (
-    <Box sx={{ width: "80%" }}>
+    <Box sx={{ width: "50%" }}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ width: "100%", mr: 1 }}>
           <LinearProgress variant="determinate" {...props} />

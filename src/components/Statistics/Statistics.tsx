@@ -14,11 +14,12 @@ import { Project } from "api/models";
 import { getProject, getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
+import { setWordData } from "goals/MergeDupGoal/Redux/MergeDupActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: 360,
+    maxWidth: "auto",
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -36,7 +37,8 @@ export default function Statistics(): ReactElement {
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
   const [viewName, setViewName] = useState<string>(viewEnum.User);
   const [progressRatio, setProgressRatio] = useState<number>(0);
-  const [totalCount, setTotalCount] = useState<number>(0);
+  const [totalDomainCount, setTotalDomainCount] = useState<number>(0);
+  const [totalWordCount, setTotalWordCount] = useState<number>(0);
 
   useEffect(() => {
     const updateCurrentProject = async () => {
@@ -48,15 +50,20 @@ export default function Statistics(): ReactElement {
         LocalStorage.getProjectId(),
         lang
       );
-      var temp = 0;
+      var domainCount = 0;
+      var wordCount = 0;
       statisticsList?.forEach((element) => {
         if (element.count > 0) {
-          temp++;
+          domainCount++;
+          wordCount += element.count;
         }
       });
-      setTotalCount(temp);
+      setTotalDomainCount(domainCount);
+      setTotalWordCount(wordCount);
       statisticsList
-        ? setProgressRatio(Math.ceil((temp * 100) / statisticsList!.length))
+        ? setProgressRatio(
+            Math.ceil((domainCount * 100) / statisticsList!.length)
+          )
         : null;
     };
 
@@ -133,8 +140,13 @@ export default function Statistics(): ReactElement {
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary={t("statistics.totalGoal")} />
-          <Typography>{totalCount}</Typography>
+          <ListItemText primary={t("statistics.totalDomain")} />
+          <Typography>{totalDomainCount}</Typography>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemText primary={t("statistics.totalWord")} />
+          <Typography>{totalWordCount}</Typography>
         </ListItem>
       </List>
     );
