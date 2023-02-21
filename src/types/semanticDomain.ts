@@ -15,6 +15,17 @@ export function newSemanticDomain(
   return { id, name, guid: "", questions: [], description: "", lang };
 }
 
+export function newSemanticDomainForMongoDB(
+  mongoId = "",
+  guid = "",
+  name = "",
+  id = "",
+  lang = Bcp47Code.Default as string,
+  userId = ""
+): SemanticDomain {
+  return { mongoId, guid, name, id, lang, userId };
+}
+
 export function newSemanticDomainTreeNode(
   id = "",
   name = "",

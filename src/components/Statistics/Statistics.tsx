@@ -1,4 +1,8 @@
-import { Grid, Typography, List, Button } from "@material-ui/core";
+import { Grid, Typography, List } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,11 +13,26 @@ import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+enum viewEnum {
+  User = "USER",
+  Domain = "DOMAIN",
+  DataStatistics = "STATISTIC",
+}
+
 export default function Statistics(): ReactElement {
+  const { t } = useTranslation();
+  const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
-  const [userView, setUserView] = useState<boolean>(true);
-  const { t } = useTranslation();
+  const [viewName, setViewName] = useState<string>(viewEnum.User);
 
   useEffect(() => {
     const updateCurrentProject = async () => {
@@ -23,22 +42,66 @@ export default function Statistics(): ReactElement {
     updateCurrentProject();
   }, [lang]);
 
+  function handleDisplay() {
+    return [
+      <Grid item key={viewEnum.DataStatistics + currentProject?.name}>
+        <Typography variant="h5" align="center">
+          {t("statistics.dataStatistics") + currentProject?.name}
+        </Typography>
+      </Grid>,
+      <Grid item key={"ProjectName" + viewName}>
+        <Typography variant="h5" align="center">
+          {viewName === viewEnum.User && t("statistics.userView")}
+          {viewName === viewEnum.Domain && t("statistics.domainView")}
+        </Typography>
+      </Grid>,
+      viewName === viewEnum.User && (
+        <Grid item key={viewEnum.User + "DomainUserStatistics"}>
+          <List>
+            <DomainUserStatistics currentProject={currentProject} lang={lang} />
+          </List>
+        </Grid>
+      ),
+      viewName === viewEnum.Domain && (
+        <Grid item key={viewEnum.Domain + "SemanticDomainStatistics"}>
+          <List>
+            <SemanticDomainStatistics
+              currentProject={currentProject}
+              lang={lang}
+            />
+          </List>
+        </Grid>
+      ),
+    ];
+  }
+
+  function handleButton() {
+    return (
+      <List className={classes.root}>
+        <ListItem
+          button
+          onClick={() => setViewName(viewEnum.User)}
+          selected={viewName === viewEnum.User}
+        >
+          <ListItemText primary={t("statistics.userView")} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => setViewName(viewEnum.Domain)}
+          selected={viewName === viewEnum.Domain}
+        >
+          <ListItemText primary={t("statistics.domainView")} />
+        </ListItem>
+      </List>
+    );
+  }
+
   return (
     <React.Fragment>
       <Grid container direction="row" spacing={1}>
         <Grid item xs={2}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              setUserView(!userView);
-            }}
-            id={`statistic-button`}
-          >
-            <Typography variant="h4">
-              {userView ? t("statistics.domainView") : t("statistics.userView")}
-            </Typography>
-          </Button>
+          {handleButton()}
         </Grid>
 
         <Grid
@@ -49,36 +112,7 @@ export default function Statistics(): ReactElement {
           justifyContent="center"
           spacing={2}
         >
-          <Grid item>
-            <Typography variant="h5" align="center">
-              {t("statistics.dataStatistics") + currentProject?.name}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h5" align="center">
-              {userView ? t("statistics.userView") : t("statistics.domainView")}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {userView && (
-              <List>
-                <DomainUserStatistics
-                  currentProject={currentProject}
-                  lang={lang}
-                />
-              </List>
-            )}
-          </Grid>
-          <Grid item>
-            {!userView && (
-              <List>
-                <SemanticDomainStatistics
-                  currentProject={currentProject}
-                  lang={lang}
-                />
-              </List>
-            )}
-          </Grid>
+          {handleDisplay()}
         </Grid>
       </Grid>
     </React.Fragment>
