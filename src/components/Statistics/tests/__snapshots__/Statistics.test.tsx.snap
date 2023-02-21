@@ -261,7 +261,7 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
           </span>
         </div>
         <div
-          className="MuiBox-root css-1x97c6v"
+          className="MuiBox-root css-11ze7cv"
         >
           <div
             className="MuiBox-root css-70qvj9"
@@ -311,7 +311,29 @@ exports[`Statistics renders without crashing, UI does not change unexpectedly 1`
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            statistics.totalGoal
+            statistics.totalDomain
+          </span>
+        </div>
+        <p
+          className="MuiTypography-root MuiTypography-body1"
+        >
+          0
+        </p>
+      </li>
+      <hr
+        className="MuiDivider-root"
+      />
+      <li
+        className="MuiListItem-root MuiListItem-gutters"
+        disabled={false}
+      >
+        <div
+          className="MuiListItemText-root"
+        >
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            statistics.totalWord
           </span>
         </div>
         <p
