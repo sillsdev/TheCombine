@@ -14,7 +14,6 @@ import { Project } from "api/models";
 import { getProject, getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
-import { setWordData } from "goals/MergeDupGoal/Redux/MergeDupActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
