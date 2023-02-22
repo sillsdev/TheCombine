@@ -20,10 +20,10 @@ jobs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
+        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
+        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -87,6 +87,8 @@ jobs:
         run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --keep ${{ needs.build.outputs.image_tag }} --remove "${{ env.RM_PATTERN_1 }}" "${{ env.RM_PATTERN_2 }}" --verbose
   deploy_update:
     needs: build
+    # This 'if' condition allows the temporary addition of branch names to the list of branches that will trigger the build
+    # when new code is pushed.  This allows testing of the build for the QA server without actually installing the test build.
     if: ${{ github.ref_name == 'master' }}
     runs-on: [self-hosted, thecombine]
     steps:
