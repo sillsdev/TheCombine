@@ -20,6 +20,7 @@ import {
   UserRole,
   Word,
   SemanticDomainUserCount,
+  SemanticDomainTimestampNode,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -681,6 +682,17 @@ export async function getSemanticDomainUserCount(
 ): Promise<Array<SemanticDomainUserCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainUserCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function GetSemanticDomainTimestampCounts(
+  projectId: string
+): Promise<Array<SemanticDomainTimestampNode> | undefined> {
+  const response = await statisticsApi.getSemanticDomainTimestampCounts(
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.

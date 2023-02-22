@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,6 +56,59 @@ namespace BackendFramework.Services
             return resList;
         }
 
+        public async Task<List<SemanticDomainTimestampNode>> GetSemanticDomainTimestampCounts(string projectId)
+        {
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            Dictionary<string, SemanticDomainTimestampNode> shortTimeHashMap = new Dictionary<string, SemanticDomainTimestampNode>();
+
+            if (wordList == null)
+            {
+                return new List<SemanticDomainTimestampNode>();
+            }
+
+            foreach (Word word in wordList)
+            {
+                foreach (Sense sense in word.Senses)
+                {
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
+                    {
+                        if (!string.IsNullOrEmpty(sd.Created))
+                        {
+                            DateTime tempDate = DateTime.Parse(sd.Created, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+                            if (shortTimeHashMap.ContainsKey(tempDate.ToShortDateString()))
+                            {
+                                var findRoot = shortTimeHashMap[tempDate.ToShortDateString()];
+                                var findNode = findRoot.NodeList.FirstOrDefault(x => x.Hour == tempDate.Hour);
+                                if (findNode != null)
+                                {
+                                    findNode.Count++;
+                                }
+                                else
+                                {
+                                    findRoot.NodeList.Add(new SemanticDomainTimestampNode(sd.Created, 1));
+                                }
+                                findRoot.Count++;
+                            }
+                            else
+                            {
+                                var tempTimestampRoot = new SemanticDomainTimestampNode(sd.Created, 1);
+                                tempTimestampRoot.NodeList.Add(new SemanticDomainTimestampNode(sd.Created, 1));
+                                shortTimeHashMap.Add(tempTimestampRoot.ShortDateString, tempTimestampRoot);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var resList = shortTimeHashMap.Values.ToList().OrderByDescending(t => t.ShortDateString).ToList();
+            foreach (var temp in resList)
+            {
+                temp.NodeList.OrderBy(t => t.Hour).ToList();
+            }
+
+            return resList;
+        }
 
         /// <summary>
         /// Get the counts of senses and domains for user return a list of SemanticDomainUserCount objects <see cref="SemanticDomainUserCount"/>

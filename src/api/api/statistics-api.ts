@@ -39,6 +39,8 @@ import {
 // @ts-ignore
 import { SemanticDomainCount } from "../models";
 // @ts-ignore
+import { SemanticDomainTimestampNode } from "../models";
+// @ts-ignore
 import { SemanticDomainUserCount } from "../models";
 /**
  * StatisticsApi - axios parameter creator
@@ -82,6 +84,50 @@ export const StatisticsApiAxiosParamCreator = function (
 
       if (lang !== undefined) {
         localVarQueryParameter["lang"] = lang;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSemanticDomainTimestampCounts: async (
+      projectId?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/statistics/GetSemanticDomainTimestampCounts`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (projectId !== undefined) {
+        localVarQueryParameter["projectId"] = projectId;
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -192,6 +238,33 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getSemanticDomainTimestampCounts(
+      projectId?: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<SemanticDomainTimestampNode>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getSemanticDomainTimestampCounts(
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} [projectId]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -252,6 +325,20 @@ export const StatisticsApiFactory = function (
     /**
      *
      * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSemanticDomainTimestampCounts(
+      projectId?: string,
+      options?: any
+    ): AxiosPromise<Array<SemanticDomainTimestampNode>> {
+      return localVarFp
+        .getSemanticDomainTimestampCounts(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} [projectId]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -287,6 +374,20 @@ export interface StatisticsApiGetSemanticDomainCountsRequest {
    * @memberof StatisticsApiGetSemanticDomainCounts
    */
   readonly lang?: string;
+}
+
+/**
+ * Request parameters for getSemanticDomainTimestampCounts operation in StatisticsApi.
+ * @export
+ * @interface StatisticsApiGetSemanticDomainTimestampCountsRequest
+ */
+export interface StatisticsApiGetSemanticDomainTimestampCountsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetSemanticDomainTimestampCounts
+   */
+  readonly projectId?: string;
 }
 
 /**
@@ -334,6 +435,22 @@ export class StatisticsApi extends BaseAPI {
         requestParameters.lang,
         options
       )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {StatisticsApiGetSemanticDomainTimestampCountsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsApi
+   */
+  public getSemanticDomainTimestampCounts(
+    requestParameters: StatisticsApiGetSemanticDomainTimestampCountsRequest = {},
+    options?: any
+  ) {
+    return StatisticsApiFp(this.configuration)
+      .getSemanticDomainTimestampCounts(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

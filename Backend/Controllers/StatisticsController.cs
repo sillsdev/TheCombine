@@ -46,6 +46,28 @@ namespace BackendFramework.Controllers
             return Ok(await _staService.GetSemanticDomainCounts(projectId, lang));
         }
 
+
+        [HttpGet("GetSemanticDomainTimestampCounts", Name = "GetSemanticDomainTimestampCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainTimestampNode>))]
+        public async Task<IActionResult> GetSemanticDomainTimestampCounts(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            // Ensure project exists.
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            return Ok(await _staService.GetSemanticDomainTimestampCounts(projectId));
+        }
+
+
+
         /// <summary> Get a list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>
         /// <returns> A list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s </returns>
         [HttpGet("GetSemanticDomainUserCounts", Name = "GetSemanticDomainUserCounts")]

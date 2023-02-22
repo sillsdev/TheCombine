@@ -185,4 +185,31 @@ namespace BackendFramework.Models
             Count = count;
         }
     }
+
+    public class SemanticDomainTimestampNode
+    {
+        [Required]
+        [BsonElement("shortDateString")]
+        public string ShortDateString { get; set; }
+
+        [Required]
+        [BsonElement("hour")]
+        public int Hour { get; set; }
+
+        [Required]
+        [BsonElement("count")]
+        public int Count { get; set; }
+
+        [Required]
+        [BsonElement("nodeList")]
+        public List<SemanticDomainTimestampNode> NodeList { get; set; }
+
+        public SemanticDomainTimestampNode(string isoString, int count)
+        {
+            ShortDateString = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).ToShortDateString();
+            Hour = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).Hour;
+            Count = count;
+            NodeList = new List<SemanticDomainTimestampNode>();
+        }
+    }
 }

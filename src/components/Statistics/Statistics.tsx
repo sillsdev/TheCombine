@@ -11,9 +11,15 @@ import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistic
 import LinearProgressWithLabel from "./LinearProgressBar";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
-import { getFrontierWords, getProject, getSemanticDomainCounts } from "backend";
+import {
+  getFrontierWords,
+  getProject,
+  getSemanticDomainCounts,
+  GetSemanticDomainTimestampCounts,
+} from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
+import NestedList from "./StatisticTreeView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 enum viewEnum {
   User = "USER",
   Domain = "DOMAIN",
+  Time = "Time",
   DataStatistics = "STATISTIC",
 }
 
@@ -70,6 +77,7 @@ export default function Statistics(): ReactElement {
     updateProgress();
   }, [lang]);
 
+  console.log(GetSemanticDomainTimestampCounts(LocalStorage.getProjectId()));
   console.log(getFrontierWords());
 
   function handleDisplay() {
@@ -83,6 +91,7 @@ export default function Statistics(): ReactElement {
         <Typography variant="h5" align="center">
           {viewName === viewEnum.User && t("statistics.userView")}
           {viewName === viewEnum.Domain && t("statistics.domainView")}
+          {viewName === viewEnum.Time && "word per day"}
         </Typography>
       </Grid>,
       viewName === viewEnum.User && (
@@ -99,6 +108,13 @@ export default function Statistics(): ReactElement {
               currentProject={currentProject}
               lang={lang}
             />
+          </List>
+        </Grid>
+      ),
+      viewName === viewEnum.Time && (
+        <Grid item key={viewEnum.Time + "Day"}>
+          <List>
+            <NestedList currentProject={currentProject} />
           </List>
         </Grid>
       ),
@@ -122,6 +138,14 @@ export default function Statistics(): ReactElement {
           selected={viewName === viewEnum.Domain}
         >
           <ListItemText primary={t("statistics.domainView")} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => setViewName(viewEnum.Time)}
+          selected={viewName === viewEnum.Time}
+        >
+          <ListItemText primary={"Words per Day"} />
         </ListItem>
       </List>
     );
