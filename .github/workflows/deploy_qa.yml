@@ -31,12 +31,10 @@ jobs:
             api.github.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
-            archive.ubuntu.com:443
             auth.docker.io:443
             codecov.io:443
             dc.services.visualstudio.com:443
             deb.debian.org:80
-            deb.debian.org:443
             docker.io:443
             dotnetcli.azureedge.net:443
             files.pythonhosted.org:443
@@ -47,9 +45,7 @@ jobs:
             registry.npmjs.org:443
             registry-1.docker.io:443
             security.debian.org:80
-            security.debian.org:443
             security.ubuntu.com:80
-            security.ubuntu.com:443
             storage.googleapis.com:443
             uploader.codecov.io:443
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
