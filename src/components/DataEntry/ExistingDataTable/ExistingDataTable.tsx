@@ -1,4 +1,4 @@
-import { Drawer, Grid, List } from "@material-ui/core";
+import { Drawer, Grid, List } from "@mui/material";
 import React from "react";
 
 import { SemanticDomain } from "api/models";

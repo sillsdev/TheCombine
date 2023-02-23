@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { animate } from "motion";
 import React, { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,6 +1,6 @@
-import { Button, CircularProgress } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
-import { Check } from "@material-ui/icons";
+import { Button, CircularProgress } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
+import { Check } from "@mui/icons-material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 

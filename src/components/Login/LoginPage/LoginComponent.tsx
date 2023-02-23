@@ -6,8 +6,8 @@ import {
   Link,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { Help } from "@material-ui/icons";
+} from "@mui/material";
+import { Help } from "@mui/icons-material";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -163,6 +163,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                     href={"#"}
                     onClick={() => history.push(Path.PwRequest)}
                     variant="subtitle2"
+                    underline="hover"
                   >
                     {this.props.t("login.forgotPassword")}
                   </Link>

@@ -1,5 +1,5 @@
-import { Button, Hidden, Tooltip } from "@material-ui/core";
-import { Settings } from "@material-ui/icons";
+import { Button, Hidden, Tooltip } from "@mui/material";
+import { Settings } from "@mui/icons-material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -31,7 +31,7 @@ export default function ProjectNameButton(
         style={{ background }}
       >
         <Settings />
-        <Hidden xsDown>{projectName}</Hidden>
+        <Hidden smDown>{projectName}</Hidden>
       </Button>
     </Tooltip>
   );

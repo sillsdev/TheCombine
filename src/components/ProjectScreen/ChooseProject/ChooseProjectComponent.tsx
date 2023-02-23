@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  Typography,
-} from "@material-ui/core";
+import { Card, CardContent, List, ListItem, Typography } from "@mui/material";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 

@@ -1,5 +1,5 @@
-import { Button, Card, Grid, TextField, Typography } from "@material-ui/core";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { Button, Card, Grid, TextField, Typography } from "@mui/material";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router-dom";

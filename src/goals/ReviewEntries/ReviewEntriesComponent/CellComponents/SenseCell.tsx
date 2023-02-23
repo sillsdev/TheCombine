@@ -1,5 +1,5 @@
-import { Chip, IconButton } from "@material-ui/core";
-import { Add, Delete, RestoreFromTrash } from "@material-ui/icons";
+import { Chip, IconButton } from "@mui/material";
+import { Add, Delete, RestoreFromTrash } from "@mui/icons-material";
 import { ReactElement } from "react";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";

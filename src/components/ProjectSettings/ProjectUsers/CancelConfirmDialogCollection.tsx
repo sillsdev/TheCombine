@@ -1,5 +1,5 @@
-import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -220,6 +220,7 @@ export default function CancelConfirmDialogCollection(
         <IconButton
           id={idAffix}
           onClick={(event) => setAnchorEl(event.currentTarget)}
+          size="large"
         >
           <MoreVertIcon />
         </IconButton>

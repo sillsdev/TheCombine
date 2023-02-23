@@ -1,3 +1,4 @@
+import { Backspace, Close } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -8,8 +9,7 @@ import {
   InputAdornment,
   TextField,
   Tooltip,
-} from "@material-ui/core";
-import { Backspace, Close } from "@material-ui/icons";
+} from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
@@ -104,6 +104,7 @@ export default function DeleteEditTextDialog(
       </DialogTitle>
       <DialogContent>
         <TextField
+          variant="standard"
           autoFocus
           value={text}
           onChange={(event) => setText(event.target.value)}

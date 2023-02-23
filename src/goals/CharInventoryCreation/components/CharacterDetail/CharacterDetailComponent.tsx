@@ -1,5 +1,5 @@
-import { Grid, IconButton, Typography } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { Grid, IconButton, Typography } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 import CharacterInfo from "goals/CharInventoryCreation/components/CharacterDetail/CharacterInfo";
 import CharacterStatusControl from "goals/CharInventoryCreation/components/CharacterDetail/CharacterStatusControl";
@@ -34,7 +34,7 @@ export default function CharacterDetail(props: CharacterDetailProps) {
         <CharacterStatusControl character={props.character} />
       </Grid>
       <Grid item xs={1}>
-        <IconButton onClick={() => props.close()}>
+        <IconButton onClick={() => props.close()} size="large">
           {" "}
           <Close />
         </IconButton>

@@ -1,3 +1,4 @@
+import { CameraAlt, Email, Person, Phone } from "@mui/icons-material";
 import {
   Avatar,
   Button,
@@ -7,11 +8,10 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  makeStyles,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 

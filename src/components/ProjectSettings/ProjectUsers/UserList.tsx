@@ -8,8 +8,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from "@material-ui/core";
-import { Done } from "@material-ui/icons";
+} from "@mui/material";
+import { Done } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
