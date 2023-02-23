@@ -1,3 +1,4 @@
+import { Clear } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -8,7 +9,6 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import { Clear } from "@mui/icons-material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";

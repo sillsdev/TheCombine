@@ -1,5 +1,5 @@
-import { Grid, IconButton, Typography } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import { Grid, IconButton, Typography } from "@mui/material";
 
 import CharacterInfo from "goals/CharInventoryCreation/components/CharacterDetail/CharacterInfo";
 import CharacterStatusControl from "goals/CharInventoryCreation/components/CharacterDetail/CharacterStatusControl";

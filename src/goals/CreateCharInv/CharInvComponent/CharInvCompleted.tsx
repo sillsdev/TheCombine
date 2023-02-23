@@ -1,5 +1,5 @@
-import { Typography } from "@mui/material";
 import { ArrowRightAlt } from "@mui/icons-material";
+import { Typography } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";

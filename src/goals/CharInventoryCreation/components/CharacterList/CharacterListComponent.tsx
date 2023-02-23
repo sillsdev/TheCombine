@@ -1,5 +1,5 @@
-import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import React, { ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 

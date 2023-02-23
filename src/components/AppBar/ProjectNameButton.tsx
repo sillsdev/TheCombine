@@ -1,5 +1,5 @@
-import { Button, Hidden, Tooltip } from "@mui/material";
 import { Settings } from "@mui/icons-material";
+import { Button, Hidden, Tooltip } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
