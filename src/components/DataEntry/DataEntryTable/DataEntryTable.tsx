@@ -20,6 +20,7 @@ import NewEntry, {
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
+import PositionedSnackbar from "components/SnackBar/SnackBar";
 import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
@@ -51,6 +52,8 @@ interface DataEntryTableState {
   vernacularLang: WritingSystem;
   defunctWordIds: string[];
   isFetchingFrontier: boolean;
+  toastOpen: boolean;
+  toastMessage: string;
 }
 
 export function addSemanticDomainToSense(
@@ -107,6 +110,8 @@ export class DataEntryTable extends React.Component<
       vernacularLang: newWritingSystem("qaa", "Unknown"),
       defunctWordIds: [],
       isFetchingFrontier: false,
+      toastOpen: false,
+      toastMessage: "",
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -226,6 +231,18 @@ export class DataEntryTable extends React.Component<
     this.replaceInDisplay(wordToUpdate.id, updatedWord);
   }
 
+  //Update the alert message and display it for 3 seconds
+  handleToastUpdate(message: string) {
+    this.setState({
+      toastMessage: message,
+      toastOpen: true,
+    });
+    setTimeout(() => {
+      this.setState({ toastMessage: "", toastOpen: false });
+    }, 3000);
+    return;
+  }
+
   // Checks if sense already exists with this gloss and semantic domain
   // returns false if encounters duplicate
   async updateWordWithNewGloss(
@@ -252,7 +269,7 @@ export class DataEntryTable extends React.Component<
             .includes(this.props.semanticDomain.id)
         ) {
           // User is trying to add a sense that already exists
-          alert(
+          this.handleToastUpdate(
             this.props.t("addWords.senseInWord") +
               `: ${existingWord.vernacular}, ${gloss}`
           );
@@ -594,6 +611,18 @@ export class DataEntryTable extends React.Component<
     this.setState({ defunctWordIds: [], recentlyAddedWords: [] });
   }
 
+  handleToastDisplay(bool: boolean) {
+    if (bool)
+      return (
+        <PositionedSnackbar
+          open={this.state.toastOpen}
+          message={this.state.toastMessage}
+          vertical={"top"}
+          horizontal={"center"}
+        />
+      );
+  }
+
   render() {
     return (
       <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => this.submit(e)}>
@@ -721,6 +750,7 @@ export class DataEntryTable extends React.Component<
             </Button>
           </Grid>
         </Grid>
+        {this.handleToastDisplay(this.state.toastOpen)}
       </form>
     );
   }
