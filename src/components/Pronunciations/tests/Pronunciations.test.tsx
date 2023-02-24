@@ -1,3 +1,4 @@
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -12,6 +13,7 @@ import {
   defaultState as pronunciationsState,
   PronunciationsStatus,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import theme from "types/theme";
 
 // Mock the node module used by AudioRecorder
 jest.mock("components/Pronunciations/Recorder");
@@ -33,9 +35,16 @@ function mockRecordingState(wordId: string) {
 beforeAll(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <Pronunciations wordId="2" pronunciationFiles={["a.wav", "b.wav"]} />
-      </Provider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <Pronunciations
+              wordId="2"
+              pronunciationFiles={["a.wav", "b.wav"]}
+            />
+          </Provider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
   });
 });
@@ -55,13 +64,17 @@ describe("Pronunciations", () => {
     const mockStopRecording = jest.fn();
     renderer.act(() => {
       testRenderer.update(
-        <Provider store={mockStore}>
-          <RecorderIcon
-            startRecording={mockStartRecording}
-            stopRecording={mockStopRecording}
-            wordId={"mockId"}
-          />
-        </Provider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <Provider store={mockStore}>
+              <RecorderIcon
+                startRecording={mockStartRecording}
+                stopRecording={mockStopRecording}
+                wordId={"mockId"}
+              />
+            </Provider>
+          </ThemeProvider>
+        </StyledEngineProvider>
       );
     });
     testRenderer.root
@@ -75,9 +88,13 @@ describe("Pronunciations", () => {
   it("default style is iconRelease", () => {
     renderer.act(() => {
       testRenderer.update(
-        <Provider store={mockStore}>
-          <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <StyledEngineProvider>
+            <Provider store={mockStore}>
+              <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
+            </Provider>
+          </StyledEngineProvider>
+        </ThemeProvider>
       );
     });
     const iconRelease = testRenderer.root
@@ -91,9 +108,13 @@ describe("Pronunciations", () => {
     const mockStore2 = createMockStore(mockRecordingState(wordId));
     renderer.act(() => {
       testRenderer.update(
-        <Provider store={mockStore2}>
-          <Pronunciations wordId={wordId} pronunciationFiles={["a.wav"]} />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <StyledEngineProvider>
+            <Provider store={mockStore2}>
+              <Pronunciations wordId={wordId} pronunciationFiles={["a.wav"]} />
+            </Provider>
+          </StyledEngineProvider>
+        </ThemeProvider>
       );
     });
     const iconPress = testRenderer.root
