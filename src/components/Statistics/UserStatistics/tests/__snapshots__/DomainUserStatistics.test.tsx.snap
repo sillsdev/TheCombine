@@ -2,10 +2,10 @@
 
 exports[`SemanticDomainStatistics renders without crashing, UI does not change unexpectedly 1`] = `
 <div
-  className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+  className="MuiGrid-root MuiGrid-container css-1lym95h-MuiGrid-root"
 >
   <div
-    className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
     style={
       Object {
         "width": 600,
@@ -13,13 +13,13 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
     }
   >
     <ul
-      className="MuiList-root MuiList-padding"
+      className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-justify-content-xs-space-around"
+        className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap css-1ymxtd0-MuiGrid-root"
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
           style={
             Object {
               "borderBottomStyle": "dotted",
@@ -29,13 +29,13 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           }
         >
           <h6
-            className="MuiTypography-root MuiTypography-subtitle1"
+            className="MuiTypography-root MuiTypography-subtitle1 css-10wpov9-MuiTypography-root"
           >
             statistics.userName
           </h6>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
           style={
             Object {
               "borderBottomStyle": "dotted",
@@ -45,13 +45,13 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           }
         >
           <h6
-            className="MuiTypography-root MuiTypography-subtitle1"
+            className="MuiTypography-root MuiTypography-subtitle1 css-10wpov9-MuiTypography-root"
           >
             statistics.domainCount
           </h6>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
           style={
             Object {
               "borderBottomStyle": "dotted",
@@ -61,7 +61,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           }
         >
           <h6
-            className="MuiTypography-root MuiTypography-subtitle1"
+            className="MuiTypography-root MuiTypography-subtitle1 css-10wpov9-MuiTypography-root"
           >
             statistics.senseCount
           </h6>
@@ -69,10 +69,10 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
       </div>
     </ul>
     <ul
-      className="MuiList-root MuiList-padding"
+      className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
     >
       <li
-        className="MuiListItem-root MuiListItem-gutters"
+        className="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p823my-MuiListItem-root"
         disabled={false}
         style={
           Object {
@@ -81,10 +81,10 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-justify-content-xs-space-around"
+          className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap css-1ymxtd0-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
             style={
               Object {
                 "borderBottomStyle": "dotted",
@@ -94,11 +94,11 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
             }
           >
             <p
-              className="MuiTypography-root MuiTypography-body1"
+              className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
             />
           </div>
           <div
-            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
             style={
               Object {
                 "borderBottomStyle": "dotted",
@@ -108,11 +108,11 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
             }
           >
             <p
-              className="MuiTypography-root MuiTypography-body1"
+              className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
             />
           </div>
           <div
-            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
+            className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
             style={
               Object {
                 "borderBottomStyle": "dotted",
@@ -122,7 +122,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
             }
           >
             <p
-              className="MuiTypography-root MuiTypography-body1"
+              className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
             />
           </div>
         </div>

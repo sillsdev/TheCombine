@@ -2,11 +2,12 @@
 
 exports[`DomainTile Tile with direction matches the latest snapshot 1`] = `
 <button
-  className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+  className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
   disabled={false}
   id="1"
   onBlur={[Function]}
   onClick={[Function]}
+  onContextMenu={[Function]}
   onDragLeave={[Function]}
   onFocus={[Function]}
   onKeyDown={[Function]}
@@ -29,52 +30,49 @@ exports[`DomainTile Tile with direction matches the latest snapshot 1`] = `
   tabIndex={0}
   type="button"
 >
-  <span
-    className="MuiButton-label"
+  <div
+    className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap css-mmuq0c-MuiGrid-root"
   >
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-space-around"
+      className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
     >
       <div
-        className="MuiGrid-root MuiGrid-item"
-      >
-        <div
-          style={
-            Object {
-              "textTransform": "capitalize",
-            }
+        style={
+          Object {
+            "textTransform": "capitalize",
           }
-        >
-          <span
-            className="MuiTypography-root MuiTypography-overline"
-          >
-            1
-          </span>
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            parent
-          </p>
-        </div>
-      </div>
-      <div
-        className="MuiGrid-root MuiGrid-item"
+        }
       >
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
+        <span
+          className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
         >
-          <path
-            d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-          />
-        </svg>
+          1
+        </span>
+        <p
+          className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          parent
+        </p>
       </div>
     </div>
-  </span>
+    <div
+      className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+    >
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+        data-testid="ChevronRightIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+        />
+      </svg>
+    </div>
+  </div>
   <span
-    className="MuiTouchRipple-root"
+    className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
   />
 </button>
 `;
