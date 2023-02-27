@@ -4,13 +4,13 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import PositionedSnackbar from "components/SnackBar/SnackBar";
 import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import { StoreState } from "types";
+import { useSnackbar } from "notistack";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (
@@ -37,32 +37,8 @@ export default function ReviewEntriesTable(
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
-  const [toastOpen, setToastOpen] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
+  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
-
-  //Update the alert message and display it for 3 seconds
-  function handleToastUpdate(message: string) {
-    setToastMessage(message);
-    setToastOpen(true);
-    setTimeout(() => {
-      setToastMessage("");
-      setToastOpen(false);
-    }, 3000);
-    return;
-  }
-
-  function handleToastDisplay(bool: boolean) {
-    if (bool)
-      return (
-        <PositionedSnackbar
-          open={toastOpen}
-          message={toastMessage}
-          vertical={"top"}
-          horizontal={"center"}
-        />
-      );
-  }
 
   return (
     <React.Fragment>
@@ -89,7 +65,7 @@ export default function ReviewEntriesTable(
                 .onRowUpdate(newData, oldData)
                 .then(resolve)
                 .catch((reason) => {
-                  handleToastUpdate(t(reason));
+                  enqueueSnackbar(t(reason));
                   reject(reason);
                 });
             }),
@@ -108,7 +84,6 @@ export default function ReviewEntriesTable(
           ]),
         }}
       />
-      {handleToastDisplay(toastOpen)}
     </React.Fragment>
   );
 }

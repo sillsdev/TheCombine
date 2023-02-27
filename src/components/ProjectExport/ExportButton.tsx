@@ -7,8 +7,8 @@ import { isFrontierNonempty } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import PositionedSnackbar from "components/SnackBar/SnackBar";
 import { StoreState } from "types";
+import { useSnackbar } from "notistack";
 
 interface ExportButtonProps {
   projectId: string;
@@ -19,26 +19,14 @@ interface ExportButtonProps {
 export default function ExportButton(props: ExportButtonProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [toastOpen, setToastOpen] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
-
-  //Update the alert message and display it for 3 seconds
-  function handleToastUpdate(message: string) {
-    setToastMessage(message);
-    setToastOpen(true);
-    setTimeout(() => {
-      setToastMessage("");
-      setToastOpen(false);
-    }, 3000);
-    return;
-  }
+  const { enqueueSnackbar } = useSnackbar();
 
   function exportProj() {
     isFrontierNonempty(props.projectId).then((isNonempty) => {
       if (isNonempty) {
         dispatch(asyncExportProject(props.projectId));
       } else {
-        handleToastUpdate(t("projectExport.cannotExportEmpty"));
+        enqueueSnackbar(t("projectExport.cannotExportEmpty"));
       }
     });
   }
@@ -50,18 +38,6 @@ export default function ExportButton(props: ExportButtonProps) {
     exportResult.status === ExportStatus.Exporting ||
     exportResult.status === ExportStatus.Success ||
     exportResult.status === ExportStatus.Downloading;
-
-  function handleToastDisplay(bool: boolean) {
-    if (bool)
-      return (
-        <PositionedSnackbar
-          open={toastOpen}
-          message={toastMessage}
-          vertical={"top"}
-          horizontal={"center"}
-        />
-      );
-  }
 
   return (
     <React.Fragment>
@@ -77,7 +53,6 @@ export default function ExportButton(props: ExportButtonProps) {
       >
         {t("buttons.export")}
       </LoadingButton>
-      {handleToastDisplay(toastOpen)}
     </React.Fragment>
   );
 }

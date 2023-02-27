@@ -18,7 +18,6 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
-import PositionedSnackbar from "components/SnackBar/SnackBar";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 import theme from "types/theme";
 import { newUser } from "types/user";
@@ -83,8 +82,6 @@ interface UserSettingsState {
   emailTaken: boolean;
   avatar: string;
   avatarDialogOpen: boolean;
-  toastOpen: boolean;
-  toastMessage: string;
 }
 
 /**
@@ -103,8 +100,6 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
       emailTaken: false,
       avatar: getAvatar(),
       avatarDialogOpen: false,
-      toastOpen: false,
-      toastMessage: "",
     };
   }
 
@@ -131,18 +126,6 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
     return !(await isEmailTaken(this.state.email));
   }
 
-  //Update the alert message and display it for 3 seconds
-  handleToastUpdate(message: string) {
-    this.setState({
-      toastMessage: message,
-      toastOpen: true,
-    });
-    setTimeout(() => {
-      this.setState({ toastMessage: "", toastOpen: false });
-    }, 3000);
-    return;
-  }
-
   async onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (await this.isEmailOkay()) {
@@ -152,22 +135,9 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
         phone: this.state.phone,
         email: this.state.email,
       });
-      this.handleToastUpdate(this.props.t("userSettings.updateSuccess"));
     } else {
       this.setState({ emailTaken: true });
     }
-  }
-
-  handleToastDisplay(bool: boolean) {
-    if (bool)
-      return (
-        <PositionedSnackbar
-          open={this.state.toastOpen}
-          message={this.state.toastMessage}
-          vertical={"top"}
-          horizontal={"center"}
-        />
-      );
   }
 
   render() {
@@ -280,7 +250,6 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
             this.setState({ avatar: getAvatar(), avatarDialogOpen: false });
           }}
         />
-        {this.handleToastDisplay(this.state.toastOpen)}
       </React.Fragment>
     );
   }
