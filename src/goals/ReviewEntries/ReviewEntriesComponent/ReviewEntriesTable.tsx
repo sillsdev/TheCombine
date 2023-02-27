@@ -1,6 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
-import React, { ReactElement, useState } from "react";
+import { useSnackbar } from "notistack";
+import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -10,7 +11,6 @@ import columns, {
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import { StoreState } from "types";
-import { useSnackbar } from "notistack";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (
@@ -37,8 +37,8 @@ export default function ReviewEntriesTable(
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
-  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <React.Fragment>

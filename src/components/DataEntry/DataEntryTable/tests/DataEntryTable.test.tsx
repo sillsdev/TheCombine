@@ -32,7 +32,6 @@ jest.mock("backend", () => ({
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
-jest.mock("components/SnackBar/SnackBar", () => "div");
 jest.spyOn(window, "alert").mockImplementation(() => {});
 
 let testRenderer: ReactTestRenderer;

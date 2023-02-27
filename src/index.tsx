@@ -1,4 +1,5 @@
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import { SnackbarProvider } from "notistack";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
@@ -9,7 +10,6 @@ import App from "components/App/component";
 import "i18n";
 import { persistor, store } from "store";
 import theme from "types/theme";
-import { SnackbarProvider } from "notistack";
 
 //Provider connects store to component containers
 ReactDOM.render(

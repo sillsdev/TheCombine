@@ -1,5 +1,6 @@
 import { ButtonProps } from "@material-ui/core/Button";
-import React, { useState } from "react";
+import { useSnackbar } from "notistack";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,7 +9,6 @@ import LoadingButton from "components/Buttons/LoadingButton";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
-import { useSnackbar } from "notistack";
 
 interface ExportButtonProps {
   projectId: string;
