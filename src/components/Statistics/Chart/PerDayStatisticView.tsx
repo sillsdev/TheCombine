@@ -1,4 +1,4 @@
-import { Card, List } from "@material-ui/core";
+import { List } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
