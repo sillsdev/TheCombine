@@ -1,6 +1,5 @@
 import { ButtonProps } from "@material-ui/core/Button";
 import { useSnackbar } from "notistack";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 

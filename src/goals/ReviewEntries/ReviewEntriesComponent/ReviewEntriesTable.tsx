@@ -1,7 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@material-ui/core";
 import { useSnackbar } from "notistack";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
