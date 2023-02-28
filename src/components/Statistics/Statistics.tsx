@@ -6,9 +6,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import CircularProgressWithLabel from "./CircularProgressBar";
+import CircularProgressWithLabel from "./ProgressBar/CircularProgressBar";
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
-import LinearProgressWithLabel from "./LinearProgressBar";
+import LinearProgressWithLabel from "./ProgressBar/LinearProgressBar";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
 import {
@@ -19,7 +19,8 @@ import {
 } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
-import NestedList from "./Chart/StatisticTreeView";
+import PerDayStatisticView from "./Chart/PerDayStatisticView";
+import ChartComponent, { chartTypeEnum } from "./Chart/ChartComponent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,33 +92,34 @@ export default function Statistics(): ReactElement {
         <Typography variant="h5" align="center">
           {viewName === viewEnum.User && t("statistics.userView")}
           {viewName === viewEnum.Domain && t("statistics.domainView")}
-          {viewName === viewEnum.Time && "word per day"}
+          {viewName === viewEnum.Time && ""}
         </Typography>
       </Grid>,
       viewName === viewEnum.User && (
         <Grid item key={viewEnum.User + "DomainUserStatistics"}>
           <List>
-            <DomainUserStatistics currentProject={currentProject} lang={lang} />
+            <DomainUserStatistics lang={lang} />
           </List>
         </Grid>
       ),
       viewName === viewEnum.Domain && (
         <Grid item key={viewEnum.Domain + "SemanticDomainStatistics"}>
           <List>
-            <SemanticDomainStatistics
-              currentProject={currentProject}
-              lang={lang}
-            />
+            <SemanticDomainStatistics lang={lang} />
           </List>
         </Grid>
       ),
-      viewName === viewEnum.Time && (
-        <Grid item key={viewEnum.Time + "Day"}>
-          <List>
-            <NestedList currentProject={currentProject} />
-          </List>
-        </Grid>
-      ),
+      viewName === viewEnum.Time && [
+        <Grid item key={viewEnum.Time + "ChartComponent"}>
+          <ChartComponent
+            currentProjectId={currentProject!.id}
+            chartType={chartTypeEnum.BarChart}
+          />
+        </Grid>,
+        <Grid item key={viewEnum.Time + "PerDayStatisticView"}>
+          <PerDayStatisticView />
+        </Grid>,
+      ],
     ];
   }
 

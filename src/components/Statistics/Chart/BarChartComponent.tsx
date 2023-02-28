@@ -1,5 +1,5 @@
 import { BarChartTimestampNode } from "api";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
+ChartJS.defaults.font.size = 18;
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -35,7 +35,7 @@ interface BarChartNodeProps {
   datasets: Array<DatasetsProps>;
 }
 
-export default function BarChartComponent(props: BarChartProps) {
+export default function BarChartComp(props: BarChartProps) {
   const [chartOptions, setChartOptions] = useState({});
   const [chartData, setChartData] = useState<BarChartNodeProps>({
     labels: [],
@@ -78,8 +78,6 @@ export default function BarChartComponent(props: BarChartProps) {
 
       return setChartData(barChartNode);
     };
-
-    updateBarChartData();
     setChartOptions({
       responsive: true,
       plugins: {
@@ -100,9 +98,9 @@ export default function BarChartComponent(props: BarChartProps) {
         },
       },
     });
-  }, [props, setChartData]);
 
-  console.log(chartData);
+    updateBarChartData();
+  }, [props]);
 
   return <Bar data={chartData} options={chartOptions} />;
 }
