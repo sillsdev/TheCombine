@@ -1,4 +1,4 @@
-import { Card } from "@material-ui/core";
+import { Card } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";

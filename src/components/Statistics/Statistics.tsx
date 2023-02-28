@@ -1,8 +1,13 @@
-import { Grid, Typography, List } from "@material-ui/core";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Theme,
+  Typography,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +18,7 @@ import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,

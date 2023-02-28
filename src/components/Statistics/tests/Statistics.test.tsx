@@ -1,3 +1,4 @@
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
@@ -7,6 +8,7 @@ import "tests/mockReactI18next";
 
 import Statistics from "components/Statistics/Statistics";
 import { newProject } from "types/project";
+import theme from "types/theme";
 
 let testRenderer: ReactTestRenderer;
 
@@ -37,7 +39,13 @@ beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await renderer.act(async () => {
-    testRenderer = renderer.create(<Statistics />);
+    testRenderer = renderer.create(
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Statistics />{" "}
+        </ThemeProvider>
+      </StyledEngineProvider>
+    );
   });
 });
 

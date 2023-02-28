@@ -22,8 +22,8 @@ jest.mock("@material-table/core", () => ({
   default: () => mockMaterialTable(),
 }));
 // Standard dialog mock-out.
-jest.mock("@material-ui/core", () => {
-  const material = jest.requireActual("@material-ui/core");
+jest.mock("@mui/material", () => {
+  const material = jest.requireActual("@mui/material");
   return {
     ...material,
     Dialog: material.Container,

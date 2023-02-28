@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-} from "@material-ui/core";
+} from "@mui/material";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 

@@ -1,5 +1,5 @@
-import { IconButton } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -37,7 +37,11 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
 
   return (
     <React.Fragment>
-      <IconButton onClick={handleOpen} id={`row-${props.rowData.id}-delete`}>
+      <IconButton
+        onClick={handleOpen}
+        id={`row-${props.rowData.id}-delete`}
+        size="large"
+      >
         <Delete />
       </IconButton>
       <CancelConfirmDialog

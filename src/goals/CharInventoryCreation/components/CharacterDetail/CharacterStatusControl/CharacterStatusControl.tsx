@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from "@material-ui/core";
+import { Button, ButtonGroup } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

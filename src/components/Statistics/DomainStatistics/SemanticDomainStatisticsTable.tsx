@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@mui/material";
 import React, { ReactElement } from "react";
 
 import { SemanticDomainTreeNode } from "api/models";

@@ -1,4 +1,4 @@
-import { Grid, Zoom } from "@material-ui/core";
+import { Grid, Zoom } from "@mui/material";
 import { animate } from "motion";
 import React, { ReactElement, useEffect, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";

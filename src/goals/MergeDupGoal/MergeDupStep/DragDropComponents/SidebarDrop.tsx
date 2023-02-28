@@ -1,5 +1,5 @@
-import { IconButton, Typography } from "@material-ui/core";
-import { ArrowForwardIos } from "@material-ui/icons";
+import { ArrowForwardIos } from "@mui/icons-material";
+import { IconButton, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
@@ -36,7 +36,11 @@ export default function SidebarDrop(props: SidebarDropProps): ReactElement {
             paddingTop: 64 + 30,
           }}
         >
-          <IconButton onClick={() => dispatch(setSidebar())} id="sidebar-close">
+          <IconButton
+            onClick={() => dispatch(setSidebar())}
+            id="sidebar-close"
+            size="large"
+          >
             <ArrowForwardIos />
           </IconButton>
           <Typography variant="h5">{props.vernacular}</Typography>

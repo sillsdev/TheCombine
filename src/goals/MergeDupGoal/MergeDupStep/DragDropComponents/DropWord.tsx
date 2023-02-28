@@ -1,4 +1,4 @@
-import { Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -59,6 +59,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
           <Grid container justifyContent="space-between">
             <Grid>
               <Select
+                variant="standard"
                 value={treeWords[props.wordId].vern}
                 onChange={(e) =>
                   dispatch(setVern(props.wordId, e.target.value as string))

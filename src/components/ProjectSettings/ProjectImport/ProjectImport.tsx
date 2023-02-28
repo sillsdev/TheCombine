@@ -1,4 +1,4 @@
-import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
+import { Grid, Typography, Button, CircularProgress } from "@mui/material";
 import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
 

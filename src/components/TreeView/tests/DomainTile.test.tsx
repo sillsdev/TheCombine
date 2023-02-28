@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
