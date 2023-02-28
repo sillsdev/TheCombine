@@ -1,5 +1,5 @@
-import { Switch, Typography } from "@material-ui/core";
-import { Help } from "@material-ui/icons";
+import { Help } from "@mui/icons-material";
+import { Switch, Typography } from "@mui/material";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";

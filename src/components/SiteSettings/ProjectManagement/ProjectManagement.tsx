@@ -1,4 +1,4 @@
-import { List, ListItem, Typography } from "@material-ui/core";
+import { List, ListItem, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import { Project } from "api/models";

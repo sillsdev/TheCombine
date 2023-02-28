@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 

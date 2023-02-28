@@ -1,4 +1,4 @@
-import { AppBar, Button, Grid, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Button, Grid, Toolbar, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 

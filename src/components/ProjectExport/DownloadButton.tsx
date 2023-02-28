@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from "@material-ui/core";
-import { Cached, Error as ErrorIcon } from "@material-ui/icons";
+import { Cached, Error as ErrorIcon } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import React, { createRef, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -120,6 +120,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
             tabIndex={-1}
             onClick={iconFunction()}
             style={{ color: iconColor() }}
+            size="large"
           >
             {icon()}
           </IconButton>

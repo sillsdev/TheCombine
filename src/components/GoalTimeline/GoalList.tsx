@@ -4,7 +4,7 @@ import {
   ImageList,
   ImageListItem,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { CSSProperties, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 

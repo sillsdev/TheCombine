@@ -1,4 +1,4 @@
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
@@ -12,14 +12,16 @@ import theme from "types/theme";
 
 //Provider connects store to component containers
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <Provider store={store}>
-      <Router history={history}>
-        <PersistGate persistor={persistor}>
-          <App />
-        </PersistGate>
-      </Router>
-    </Provider>
-  </ThemeProvider>,
+  <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <Router history={history}>
+          <PersistGate persistor={persistor}>
+            <App />
+          </PersistGate>
+        </Router>
+      </Provider>
+    </ThemeProvider>
+  </StyledEngineProvider>,
   document.getElementById("root")
 );

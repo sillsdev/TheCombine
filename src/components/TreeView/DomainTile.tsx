@@ -1,10 +1,10 @@
-import { Button, Grid, Typography } from "@material-ui/core";
 import {
   ChevronLeft,
   ChevronRight,
   KeyboardArrowDown,
   KeyboardArrowUp,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
+import { Button, Grid, Typography } from "@mui/material";
 import { t } from "i18next";
 import React, { CSSProperties, ReactElement } from "react";
 

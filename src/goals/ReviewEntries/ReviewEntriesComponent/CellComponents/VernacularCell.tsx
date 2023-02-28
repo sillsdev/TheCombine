@@ -1,4 +1,4 @@
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +15,7 @@ export default function VernacularCell(
 
   return (
     <TextField
+      variant="standard"
       key={`row-${props.rowData.id}-vernacular`}
       id={`row-${props.rowData.id}-vernacular-text`}
       multiline

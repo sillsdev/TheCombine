@@ -1,4 +1,4 @@
-import { Input, TextField } from "@material-ui/core";
+import { Input, TextField } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";

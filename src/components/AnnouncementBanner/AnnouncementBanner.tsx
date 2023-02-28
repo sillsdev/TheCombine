@@ -1,5 +1,5 @@
-import { Box, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { Cancel } from "@material-ui/icons";
+import { Cancel } from "@mui/icons-material";
+import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
@@ -38,7 +38,7 @@ export default function AnnouncementBanner() {
     <React.Fragment>
       {!!banner && (
         <Toolbar style={{ ...margins, backgroundColor: themeColors.warn }}>
-          <IconButton onClick={closeBanner}>
+          <IconButton onClick={closeBanner} size="large">
             <Cancel />
           </IconButton>
           <Box sx={{ width: theme.spacing(2) }} />

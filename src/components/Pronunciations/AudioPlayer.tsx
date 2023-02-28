@@ -1,14 +1,13 @@
+import { Delete, PlayArrow, Stop } from "@mui/icons-material";
 import {
-  createStyles,
   Fade,
   IconButton,
-  makeStyles,
   Menu,
   MenuItem,
   Theme,
   Tooltip,
-} from "@material-ui/core";
-import { Delete, PlayArrow, Stop } from "@material-ui/icons";
+} from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -137,6 +136,7 @@ export default function AudioPlayer(props: PlayerProps) {
           className={classes.button}
           aria-label="play"
           id={`audio-${props.fileName}`}
+          size="large"
         >
           {isPlaying ? (
             <Stop className={classes.icon} />

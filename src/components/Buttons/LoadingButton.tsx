@@ -1,5 +1,5 @@
-import { Button, CircularProgress } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
+import { Button, CircularProgress } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
 import React, { ReactElement } from "react";
 
 import { themeColors } from "types/theme";
