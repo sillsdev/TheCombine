@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from "@material-ui/core";
+import { Button, TextField, Typography } from "@mui/material";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 

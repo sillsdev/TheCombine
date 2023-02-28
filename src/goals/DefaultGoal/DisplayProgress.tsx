@@ -1,4 +1,4 @@
-import { Grid, LinearProgress, Paper, Typography } from "@material-ui/core";
+import { Grid, LinearProgress, Paper, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 

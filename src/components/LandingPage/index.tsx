@@ -1,4 +1,4 @@
-import { Box, Grid, Hidden, Typography } from "@material-ui/core";
+import { Box, Grid, Hidden, Typography } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -12,14 +12,17 @@ import tractor from "resources/tractor.png";
 import theme from "types/theme";
 
 const heightBetweenBars =
-  window.innerHeight - topBarHeight - bottomBarHeight - theme.spacing(1);
+  window.innerHeight -
+  topBarHeight -
+  bottomBarHeight -
+  parseInt(theme.spacing(1));
 
 export default function LandingPage(): ReactElement {
   return (
     <React.Fragment>
       <TopBar />
       <Grid container alignItems="flex-start" justifyContent="space-around">
-        <Hidden xsDown>
+        <Hidden smDown>
           <Grid item sm md xl>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
               <Body />

@@ -59,7 +59,7 @@ flake8==5.0.4
     #   pep8-naming
 flake8-broken-line==0.6.0
     # via -r dev-requirements.in
-flake8-bugbear==23.1.20
+flake8-bugbear==23.2.13
     # via -r dev-requirements.in
 flake8-comprehensions==3.10.1
     # via -r dev-requirements.in
@@ -83,7 +83,7 @@ jinja2==3.1.2
     #   mkdocs-material
 jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
-kubernetes==25.3.0
+kubernetes==26.1.0
     # via -r dev-requirements.in
 markdown==3.3.7
     # via
@@ -103,7 +103,7 @@ mkdocs==1.4.2
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.10.2
     # via -r dev-requirements.in
-mkdocs-material==9.0.11
+mkdocs-material==9.0.12
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.1.1
     # via mkdocs-material
@@ -185,7 +185,7 @@ six==1.16.0
     #   google-auth
     #   kubernetes
     #   python-dateutil
-soupsieve==2.3.2.post1
+soupsieve==2.4
     # via beautifulsoup4
 tomli==2.0.1
     # via
@@ -195,17 +195,17 @@ tomli==2.0.1
     #   tox
 tox==4.4.5
     # via -r dev-requirements.in
-types-pyopenssl==23.0.0.2
+types-pyopenssl==23.0.0.3
     # via -r dev-requirements.in
-types-python-dateutil==2.8.19.6
+types-python-dateutil==2.8.19.7
     # via -r dev-requirements.in
-types-pyyaml==6.0.12.4
+types-pyyaml==6.0.12.6
     # via -r dev-requirements.in
-types-requests==2.28.11.12
+types-requests==2.28.11.13
     # via -r dev-requirements.in
-types-urllib3==1.26.25.5
+types-urllib3==1.26.25.6
     # via types-requests
-typing-extensions==4.4.0
+typing-extensions==4.5.0
     # via mypy
 urllib3==1.26.14
     # via

@@ -1,4 +1,5 @@
-import { ButtonProps } from "@material-ui/core/Button";
+import { ButtonProps } from "@mui/material/Button";
+import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,13 +18,14 @@ interface ExportButtonProps {
 export default function ExportButton(props: ExportButtonProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   function exportProj() {
     isFrontierNonempty(props.projectId).then((isNonempty) => {
       if (isNonempty) {
         dispatch(asyncExportProject(props.projectId));
       } else {
-        alert(t("projectExport.cannotExportEmpty"));
+        enqueueSnackbar(t("projectExport.cannotExportEmpty"));
       }
     });
   }

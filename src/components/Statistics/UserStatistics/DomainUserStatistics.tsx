@@ -1,4 +1,4 @@
-import { Card, Grid, Typography, ListItem, List } from "@material-ui/core";
+import { Card, Grid, Typography, ListItem, List } from "@mui/material";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 

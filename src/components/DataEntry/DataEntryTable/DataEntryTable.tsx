@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@material-ui/core";
-import { ExitToApp, List as ListIcon } from "@material-ui/icons";
+import { ExitToApp, List as ListIcon } from "@mui/icons-material";
+import { Button, Grid, Typography } from "@mui/material";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 
@@ -20,7 +20,7 @@ import NewEntry, {
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
-import theme from "types/theme";
+import theme, { themeColors } from "types/theme";
 import { newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";

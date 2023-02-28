@@ -1,3 +1,4 @@
+import { Cancel } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -5,8 +6,7 @@ import {
   IconButton,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { Cancel } from "@material-ui/icons";
+} from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";

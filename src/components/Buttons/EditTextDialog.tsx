@@ -1,3 +1,4 @@
+import { Clear } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -7,8 +8,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-} from "@material-ui/core";
-import { Clear } from "@material-ui/icons";
+} from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
@@ -61,7 +61,7 @@ export default function EditTextDialog(
 
   const endAdornment = (
     <InputAdornment position="end">
-      <IconButton onClick={() => setText("")}>
+      <IconButton onClick={() => setText("")} size="large">
         <Clear />
       </IconButton>
     </InputAdornment>
@@ -77,6 +77,7 @@ export default function EditTextDialog(
       <DialogTitle id="alert-dialog-title">{t(props.titleId)}</DialogTitle>
       <DialogContent>
         <TextField
+          variant="standard"
           autoFocus
           value={text}
           onChange={(event) => setText(event.target.value)}

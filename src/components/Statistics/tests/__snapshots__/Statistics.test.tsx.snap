@@ -1,348 +1,186 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Statistics renders without crashing, UI does not change unexpectedly 1`] = `
-<div
-  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1"
->
+Array [
   <div
-    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2"
-  >
-    <ul
-      className="MuiList-root makeStyles-root-1 MuiList-padding"
-    >
-      <div
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button Mui-selected"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        role="button"
-        tabIndex={0}
-      >
-        <div
-          className="MuiListItemText-root"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            statistics.userView
-          </span>
-        </div>
-        <span
-          className="MuiTouchRipple-root"
-        />
-      </div>
-      <hr
-        className="MuiDivider-root"
-      />
-      <div
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        role="button"
-        tabIndex={0}
-      >
-        <div
-          className="MuiListItemText-root"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            statistics.domainView
-          </span>
-        </div>
-        <span
-          className="MuiTouchRipple-root"
-        />
-      </div>
-    </ul>
-  </div>
-  <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-direction-xs-column MuiGrid-justify-content-xs-center MuiGrid-grid-xs-8"
+    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
   >
     <div
-      className="MuiGrid-root MuiGrid-item"
-    >
-      <h5
-        className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter"
-      >
-        statistics.dataStatistics
-      </h5>
-    </div>
-    <div
-      className="MuiGrid-root MuiGrid-item"
-    >
-      <h5
-        className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter"
-      >
-        statistics.userView
-      </h5>
-    </div>
-    <div
-      className="MuiGrid-root MuiGrid-item"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 css-1o7apob-MuiGrid-root"
     >
       <ul
-        className="MuiList-root MuiList-padding"
+        className="MuiList-root MuiList-padding makeStyles-root-1 css-h4y409-MuiList-root"
       >
         <div
-          className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+          className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected css-1lfxslu-MuiButtonBase-root-MuiListItem-root"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          tabIndex={0}
         >
           <div
-            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
-            style={
-              Object {
-                "width": 600,
-              }
-            }
+            className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
-            <ul
-              className="MuiList-root MuiList-padding"
+            <span
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
             >
-              <div
-                className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-justify-content-xs-space-around"
-              >
-                <div
-                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
-                  style={
-                    Object {
-                      "borderBottomStyle": "dotted",
-                      "borderBottomWidth": 1,
-                      "position": "relative",
-                    }
-                  }
-                >
-                  <h6
-                    className="MuiTypography-root MuiTypography-subtitle1"
-                  >
-                    statistics.userName
-                  </h6>
-                </div>
-                <div
-                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
-                  style={
-                    Object {
-                      "borderBottomStyle": "dotted",
-                      "borderBottomWidth": 1,
-                      "position": "relative",
-                    }
-                  }
-                >
-                  <h6
-                    className="MuiTypography-root MuiTypography-subtitle1"
-                  >
-                    statistics.domainCount
-                  </h6>
-                </div>
-                <div
-                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
-                  style={
-                    Object {
-                      "borderBottomStyle": "dotted",
-                      "borderBottomWidth": 1,
-                      "position": "relative",
-                    }
-                  }
-                >
-                  <h6
-                    className="MuiTypography-root MuiTypography-subtitle1"
-                  >
-                    statistics.senseCount
-                  </h6>
-                </div>
-              </div>
-            </ul>
-            <ul
-              className="MuiList-root MuiList-padding"
-            />
+              statistics.userView
+            </span>
           </div>
+          <span
+            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </div>
+        <hr
+          className="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+        />
+        <div
+          className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1lfxslu-MuiButtonBase-root-MuiListItem-root"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          <div
+            className="MuiListItemText-root css-tlelie-MuiListItemText-root"
+          >
+            <span
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
+            >
+              statistics.domainView
+            </span>
+          </div>
+          <span
+            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
         </div>
       </ul>
     </div>
-  </div>
-  <div
-    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2"
-  >
-    <ul
-      className="MuiList-root makeStyles-root-1 MuiList-padding"
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-item MuiGrid-spacing-xs-2 MuiGrid-direction-xs-column MuiGrid-grid-xs-8 css-l4fqoi-MuiGrid-root"
     >
-      <li
-        className="MuiListItem-root MuiListItem-gutters"
-        disabled={false}
+      <div
+        className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
       >
-        <div
-          className="MuiListItemText-root"
+        <h5
+          className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-1pb9bi6-MuiTypography-root"
         >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            statistics.domainProgress
-          </span>
-        </div>
-        <div
-          className="MuiBox-root css-rmz4vk"
+          statistics.dataStatistics
+        </h5>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+      >
+        <h5
+          className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-1pb9bi6-MuiTypography-root"
         >
-          <span
-            aria-valuenow={0}
-            className="MuiCircularProgress-root MuiCircularProgress-determinate MuiCircularProgress-colorPrimary css-1rn30mb-MuiCircularProgress-root"
-            role="progressbar"
-            style={
-              Object {
-                "height": 40,
-                "transform": "rotate(-90deg)",
-                "width": 40,
-              }
-            }
+          statistics.userView
+        </h5>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+      >
+        <ul
+          className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-container css-1lym95h-MuiGrid-root"
           >
-            <svg
-              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
-              viewBox="22 22 44 44"
-            >
-              <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleDeterminate css-oxts8u-MuiCircularProgress-circle"
-                cx={44}
-                cy={44}
-                fill="none"
-                r={20.2}
-                strokeWidth={3.6}
-                style={
-                  Object {
-                    "strokeDasharray": "126.920",
-                    "strokeDashoffset": "126.920px",
-                  }
+            <div
+              className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
+              style={
+                Object {
+                  "width": 600,
                 }
-              />
-            </svg>
-          </span>
-          <div
-            className="MuiBox-root css-1o8dslu"
-          >
-            <div
-              className="MuiTypography-root MuiTypography-caption css-ol7wxs-MuiTypography-root"
+              }
             >
-              0%
-            </div>
-          </div>
-        </div>
-      </li>
-      <hr
-        className="MuiDivider-root"
-      />
-      <li
-        className="MuiListItem-root MuiListItem-gutters"
-        disabled={false}
-      >
-        <div
-          className="MuiListItemText-root"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            statistics.domainProgress
-          </span>
-        </div>
-        <div
-          className="MuiBox-root css-11ze7cv"
-        >
-          <div
-            className="MuiBox-root css-70qvj9"
-          >
-            <div
-              className="MuiBox-root css-1bhivts"
-            >
-              <span
-                aria-valuemax={100}
-                aria-valuemin={0}
-                aria-valuenow={0}
-                className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-eglki6-MuiLinearProgress-root"
-                role="progressbar"
+              <ul
+                className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
               >
-                <span
-                  className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-5xe99f-MuiLinearProgress-bar1"
-                  style={
-                    Object {
-                      "transform": "translateX(-100%)",
+                <div
+                  className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap css-1ymxtd0-MuiGrid-root"
+                >
+                  <div
+                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+                    style={
+                      Object {
+                        "borderBottomStyle": "dotted",
+                        "borderBottomWidth": 1,
+                        "position": "relative",
+                      }
                     }
-                  }
-                />
-              </span>
-            </div>
-            <div
-              className="MuiBox-root css-pazuet"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body2 css-r40f8v-MuiTypography-root"
-              >
-                0%
-              </p>
+                  >
+                    <h6
+                      className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
+                    >
+                      statistics.userName
+                    </h6>
+                  </div>
+                  <div
+                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+                    style={
+                      Object {
+                        "borderBottomStyle": "dotted",
+                        "borderBottomWidth": 1,
+                        "position": "relative",
+                      }
+                    }
+                  >
+                    <h6
+                      className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
+                    >
+                      statistics.domainCount
+                    </h6>
+                  </div>
+                  <div
+                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+                    style={
+                      Object {
+                        "borderBottomStyle": "dotted",
+                        "borderBottomWidth": 1,
+                        "position": "relative",
+                      }
+                    }
+                  >
+                    <h6
+                      className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
+                    >
+                      statistics.senseCount
+                    </h6>
+                  </div>
+                </div>
+              </ul>
+              <ul
+                className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
+              />
             </div>
           </div>
-        </div>
-      </li>
-      <hr
-        className="MuiDivider-root"
-      />
-      <li
-        className="MuiListItem-root MuiListItem-gutters"
-        disabled={false}
-      >
-        <div
-          className="MuiListItemText-root"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            statistics.domainsCollected
-          </span>
-        </div>
-        <p
-          className="MuiTypography-root MuiTypography-body1"
-        >
-          0
-        </p>
-      </li>
-      <hr
-        className="MuiDivider-root"
-      />
-      <li
-        className="MuiListItem-root MuiListItem-gutters"
-        disabled={false}
-      >
-        <div
-          className="MuiListItemText-root"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            statistics.wordsCollected
-          </span>
-        </div>
-        <p
-          className="MuiTypography-root MuiTypography-body1"
-        >
-          0
-        </p>
-      </li>
-    </ul>
-  </div>
-</div>
+        </ul>
+      </div>
+    </div>
+  </div>,
+  " ",
+]
 `;

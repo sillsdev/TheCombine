@@ -1,5 +1,6 @@
-import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
-import { FiberManualRecord } from "@material-ui/icons";
+import { FiberManualRecord } from "@mui/icons-material";
+import { IconButton, Theme, Tooltip } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,7 +25,7 @@ export default function RecorderIcon(props: RecorderIconProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles((theme: Theme) => ({
     button: {
       marginRight: theme.spacing(1),
     },
@@ -77,6 +78,7 @@ export default function RecorderIcon(props: RecorderIconProps) {
         className={classes.button}
         aria-label="record"
         id="recordingButton"
+        size="large"
       >
         <FiberManualRecord
           className={

@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from "@material-ui/core";
+import { Button, Grid, TextField } from "@mui/material";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
@@ -39,6 +39,7 @@ export class ProjectName extends React.Component<NameProps, NameState> {
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <TextField
+            variant="standard"
             id="project-name"
             value={this.state.projectName}
             onChange={(e) => this.setState({ projectName: e.target.value })}
@@ -49,11 +50,7 @@ export class ProjectName extends React.Component<NameProps, NameState> {
           <Button
             // No onClick necessary, as name updates on blur away from TextField.
             variant="contained"
-            color={
-              this.state.projectName !== this.props.project.name
-                ? "primary"
-                : "default"
-            }
+            color="primary"
             id="project-name-save"
           >
             {this.props.t("buttons.save")}

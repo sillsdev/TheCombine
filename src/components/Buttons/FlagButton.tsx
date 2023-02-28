@@ -1,4 +1,4 @@
-import { Flag as FlagFilled, FlagOutlined } from "@material-ui/icons";
+import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
 import React, { ReactElement, useEffect, useState } from "react";
 
 import { Flag } from "api/models";

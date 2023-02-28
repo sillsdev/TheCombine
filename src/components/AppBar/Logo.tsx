@@ -1,4 +1,4 @@
-import { Button, Hidden } from "@material-ui/core";
+import { Button, Hidden } from "@mui/material";
 import { ReactElement } from "react";
 
 import history, { Path } from "browserHistory";
@@ -14,7 +14,7 @@ export default function Logo(): ReactElement {
       }}
       id="logo-button"
     >
-      <Hidden xsDown>
+      <Hidden smDown>
         <img src={logo} height="50" alt="Logo" />
       </Hidden>
       <Hidden smUp>

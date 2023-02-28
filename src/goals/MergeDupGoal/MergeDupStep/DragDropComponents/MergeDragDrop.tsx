@@ -1,5 +1,5 @@
-import { Drawer, ImageListItem, Tooltip } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete } from "@mui/icons-material";
+import { Drawer, ImageListItem, Tooltip } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";

@@ -1,5 +1,5 @@
-import { Chip, Grid } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { Add } from "@mui/icons-material";
+import { Chip, Grid } from "@mui/material";
 import { ReactElement, ReactNode } from "react";
 
 export const SPACER = "spacer";

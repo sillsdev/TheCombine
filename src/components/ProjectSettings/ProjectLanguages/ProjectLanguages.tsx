@@ -1,18 +1,19 @@
 import {
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Typography,
-} from "@material-ui/core";
-import {
   Add,
   ArrowUpward,
   Clear,
   Delete,
   Done,
   Search,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
+import {
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React, { ReactElement } from "react";
 import {
@@ -213,6 +214,7 @@ export class ProjectLanguages extends React.Component<
                 disabled={!this.isNewWritingSystem()}
                 onClick={() => this.addAnalysisWritingSystem()}
                 id="analysis-language-new-confirm"
+                size="large"
               >
                 <Done />
               </IconButton>
@@ -221,6 +223,7 @@ export class ProjectLanguages extends React.Component<
               <IconButton
                 onClick={() => this.resetState()}
                 id="analysis-language-new-clear"
+                size="large"
               >
                 <Clear />
               </IconButton>
@@ -248,9 +251,10 @@ export class ProjectLanguages extends React.Component<
           {": "}
         </Typography>
         <Select
+          variant="standard"
           id="semantic-domains-language"
           value={this.props.project.semDomWritingSystem.bcp47}
-          onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
+          onChange={(event: SelectChangeEvent<string>) =>
             this.setSemDomWritingSystem(event.target.value as string)
           }
           /* Use `displayEmpty` and a conditional `renderValue` function to force

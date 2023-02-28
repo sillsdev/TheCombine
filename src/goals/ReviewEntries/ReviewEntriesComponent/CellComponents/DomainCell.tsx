@@ -1,5 +1,5 @@
-import { Chip, Dialog, Grid, IconButton } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { Add } from "@mui/icons-material";
+import { Chip, Dialog, Grid, IconButton } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -128,6 +128,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
                 key={`buttonFor${sense.guid}`}
                 onClick={() => prepAddDomain(sense)}
                 id={`sense-${sense.guid}-domain-add`}
+                size="large"
               >
                 <Add />
               </IconButton>

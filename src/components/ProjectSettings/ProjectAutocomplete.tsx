@@ -1,5 +1,11 @@
-import { Grid, MenuItem, Select, Tooltip } from "@material-ui/core";
-import { HelpOutline } from "@material-ui/icons";
+import { HelpOutline } from "@mui/icons-material";
+import {
+  Grid,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Tooltip,
+} from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,8 +25,9 @@ export default function ProjectAutocomplete() {
     <Grid container>
       <Grid>
         <Select
+          variant="standard"
           value={project.autocompleteSetting}
-          onChange={(event: React.ChangeEvent<{ value: unknown }>) =>
+          onChange={(event: SelectChangeEvent<AutocompleteSetting>) =>
             saveChangesToProject(
               {
                 ...project,

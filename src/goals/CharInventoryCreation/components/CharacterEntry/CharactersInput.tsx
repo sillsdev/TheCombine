@@ -1,4 +1,4 @@
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import { ReactElement } from "react";
 
 import theme from "types/theme";

@@ -1,5 +1,5 @@
-import { Grid, Tooltip, Typography } from "@material-ui/core";
-import { Help } from "@material-ui/icons";
+import { Help } from "@mui/icons-material";
+import { Grid, Tooltip, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 

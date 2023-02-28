@@ -1,4 +1,4 @@
-import { ListItem } from "@material-ui/core";
+import { ListItem } from "@mui/material";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import "tests/mockReactI18next";

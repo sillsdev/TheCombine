@@ -1,3 +1,4 @@
+import { ArrowForwardIos } from "@mui/icons-material";
 import {
   CardContent,
   Chip,
@@ -8,8 +9,7 @@ import {
   TableCell,
   TableRow,
   Typography,
-} from "@material-ui/core";
-import { ArrowForwardIos } from "@material-ui/icons";
+} from "@mui/material";
 import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
 
@@ -145,6 +145,7 @@ export default function SenseCardContent(
           <IconButton
             onClick={props.toggleFunction}
             id={`sidebar-open-sense-${props.senses[0].guid}`}
+            size="large"
           >
             <ArrowForwardIos />
           </IconButton>

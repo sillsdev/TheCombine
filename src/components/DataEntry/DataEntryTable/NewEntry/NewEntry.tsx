@@ -1,5 +1,4 @@
-import { Grid, Typography } from "@material-ui/core";
-import { AutocompleteCloseReason } from "@material-ui/lab";
+import { AutocompleteCloseReason, Grid, Typography } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
@@ -387,7 +386,7 @@ export default class NewEntry extends React.Component<
                 // suggestion and selects it from the Autocomplete. This should
                 // open the dialog.
                 switch (reason) {
-                  case "select-option":
+                  case "selectOption":
                     // User pressed Enter or Left Click on an item.
                     this.updateVernField(this.state.newEntry.vernacular, true);
                     break;
