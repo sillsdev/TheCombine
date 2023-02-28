@@ -1,4 +1,5 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { SnackbarProvider } from "notistack";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
@@ -14,13 +15,15 @@ import theme from "types/theme";
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <Router history={history}>
-          <PersistGate persistor={persistor}>
-            <App />
-          </PersistGate>
-        </Router>
-      </Provider>
+      <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
+        <Provider store={store}>
+          <Router history={history}>
+            <PersistGate persistor={persistor}>
+              <App />
+            </PersistGate>
+          </Router>
+        </Provider>
+      </SnackbarProvider>
     </ThemeProvider>
   </StyledEngineProvider>,
   document.getElementById("root")
