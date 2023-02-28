@@ -51,7 +51,7 @@
     "http-status-codes": "^2.1.4",
     "i18next": "^21.6.16",
     "i18next-browser-languagedetector": "^6.1.4",
-    "i18next-http-backend": "^1.4.1",
+    "i18next-http-backend": "^2.1.1",
     "js-base64": "^3.7.5",
     "make-dir": "^3.1.0",
     "motion": "^10.15.5",
