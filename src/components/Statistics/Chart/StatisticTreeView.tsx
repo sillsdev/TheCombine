@@ -1,19 +1,20 @@
-import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import SendIcon from "@mui/icons-material/Send";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
+
 import { Card, Grid, makeStyles } from "@material-ui/core";
-import { Project, SemanticDomainTimestampNode } from "api";
-import { GetSemanticDomainTimestampCounts } from "backend";
-import React, { ReactElement, useState, useEffect } from "react";
+import {
+  BarChartTimestampNode,
+  Project,
+  SemanticDomainTimestampNode,
+} from "api";
+import {
+  GetBarChartTimestampNodeCounts,
+  GetSemanticDomainTimestampCounts,
+} from "backend";
+import { useState, useEffect } from "react";
+import BarChartComponent from "./BarChartComponent";
 
 interface TimeProps {
   currentProject?: Project;
@@ -30,9 +31,10 @@ const useStyles = makeStyles((theme) => ({
 export default function NestedList(props: TimeProps) {
   const [index, setIndex] = useState<string>();
   const classes = useStyles();
-  const [list, setList] = React.useState<SemanticDomainTimestampNode[]>([]);
+  const [list, setList] = useState<SemanticDomainTimestampNode[]>([]);
+  const [barChartList, setBarChartList] = useState<BarChartTimestampNode[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const updateList = async () => {
       const list = await GetSemanticDomainTimestampCounts(
         props.currentProject!.id
@@ -41,8 +43,20 @@ export default function NestedList(props: TimeProps) {
         return setList(list);
       }
     };
+
+    const updateBarChartList = async () => {
+      const list = await GetBarChartTimestampNodeCounts(
+        props.currentProject!.id
+      );
+      if (list != undefined) {
+        return setBarChartList(list);
+      }
+    };
     updateList();
+    updateBarChartList();
   }, []);
+
+  console.log(barChartList);
 
   function handleList() {
     return list.map((t) => [
@@ -81,10 +95,20 @@ export default function NestedList(props: TimeProps) {
   }
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 600 }}>
-        <List className={classes.root}>{handleList()}</List>
-      </Card>
+    <Grid
+      container
+      direction="column"
+      alignContent="center"
+      justifyContent="center"
+    >
+      <Grid item>
+        <BarChartComponent barChartNodeList={barChartList} />
+      </Grid>
+      <Grid item style={{ width: 1000 }}>
+        <Card>
+          <List className={classes.root}>{handleList()}</List>
+        </Card>
+      </Grid>
     </Grid>
   );
 }

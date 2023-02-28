@@ -22,6 +22,7 @@ git_push.sh
 index.ts
 models/autocomplete-setting.ts
 models/banner-type.ts
+models/bar-chart-timestamp-node.ts
 models/credentials.ts
 models/custom-field.ts
 models/definition.ts

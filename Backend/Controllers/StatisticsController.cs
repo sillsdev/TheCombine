@@ -67,6 +67,26 @@ namespace BackendFramework.Controllers
         }
 
 
+        [HttpGet("GetBarChartTimestampNodeCounts", Name = "GetBarChartTimestampNodeCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BarChartTimestampNode>))]
+        public async Task<IActionResult> GetBarChartTimestampNodeCounts(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            // Ensure project exists.
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            return Ok(await _staService.GetBarChartTimestampNodeCounts(projectId));
+        }
+
+
 
         /// <summary> Get a list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>
         /// <returns> A list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s </returns>
@@ -88,6 +108,5 @@ namespace BackendFramework.Controllers
 
             return Ok(await _staService.GetSemanticDomainUserCounts(projectId));
         }
-
     }
 }

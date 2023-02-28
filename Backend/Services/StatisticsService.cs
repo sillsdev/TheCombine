@@ -110,6 +110,59 @@ namespace BackendFramework.Services
             return resList;
         }
 
+
+        public async Task<List<BarChartTimestampNode>> GetBarChartTimestampNodeCounts(string projectId)
+        {
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            Dictionary<string, BarChartTimestampNode> shortTimeDictionary = new Dictionary<string, BarChartTimestampNode>();
+            Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
+
+            if (wordList == null)
+            {
+                return new List<BarChartTimestampNode>();
+            }
+
+            var allUsers = await _userRepo.GetAllUsers();
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
+
+            foreach (User u in projectUsers)
+            {
+                userNameIdDictionary.Add(u.Id, u.Username);
+            }
+
+            foreach (Word word in wordList)
+            {
+                foreach (Sense sense in word.Senses)
+                {
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
+                    {
+                        if (!string.IsNullOrEmpty(sd.Created))
+                        {
+                            DateTime tempDate = DateTime.Parse(sd.Created, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                            var userName = userNameIdDictionary.GetValueOrDefault(sd.UserId, "");
+
+                            if (shortTimeDictionary.ContainsKey(tempDate.ToShortDateString()) && !string.IsNullOrEmpty(userName))
+                            {
+                                var barChartNode = shortTimeDictionary[tempDate.ToShortDateString()];
+                                barChartNode.UserNameCountDictionary[userName] = barChartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
+                            }
+                            else
+                            {
+                                var tempBarChartNode = new BarChartTimestampNode(sd.Created);
+                                foreach (User u in projectUsers)
+                                {
+                                    tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
+                                }
+                                tempBarChartNode.UserNameCountDictionary[userName] = 1;
+                                shortTimeDictionary.Add(tempBarChartNode.ShortDateString, tempBarChartNode);
+                            }
+                        }
+                    }
+                }
+            }
+            var resList = shortTimeDictionary.Values.ToList().OrderBy(t => t.ShortDateString).ToList();
+            return resList;
+        }
         /// <summary>
         /// Get the counts of senses and domains for user return a list of SemanticDomainUserCount objects <see cref="SemanticDomainUserCount"/>
         /// </summary>

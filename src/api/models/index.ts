@@ -1,5 +1,6 @@
 export * from "./autocomplete-setting";
 export * from "./banner-type";
+export * from "./bar-chart-timestamp-node";
 export * from "./credentials";
 export * from "./custom-field";
 export * from "./definition";

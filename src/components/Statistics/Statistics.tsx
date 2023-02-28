@@ -19,7 +19,7 @@ import {
 } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
-import NestedList from "./StatisticTreeView";
+import NestedList from "./Chart/StatisticTreeView";
 
 const useStyles = makeStyles((theme) => ({
   root: {

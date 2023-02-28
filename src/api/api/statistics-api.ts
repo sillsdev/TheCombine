@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { BarChartTimestampNode } from "../models";
+// @ts-ignore
 import { SemanticDomainCount } from "../models";
 // @ts-ignore
 import { SemanticDomainTimestampNode } from "../models";
@@ -50,6 +52,50 @@ export const StatisticsApiAxiosParamCreator = function (
   configuration?: Configuration
 ) {
   return {
+    /**
+     *
+     * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getBarChartTimestampNodeCounts: async (
+      projectId?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/statistics/GetBarChartTimestampNodeCounts`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (projectId !== undefined) {
+        localVarQueryParameter["projectId"] = projectId;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      *
      * @param {string} [projectId]
@@ -208,6 +254,33 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getBarChartTimestampNodeCounts(
+      projectId?: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<BarChartTimestampNode>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getBarChartTimestampNodeCounts(
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} [projectId]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -309,6 +382,20 @@ export const StatisticsApiFactory = function (
     /**
      *
      * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getBarChartTimestampNodeCounts(
+      projectId?: string,
+      options?: any
+    ): AxiosPromise<Array<BarChartTimestampNode>> {
+      return localVarFp
+        .getBarChartTimestampNodeCounts(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} [projectId]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -354,6 +441,20 @@ export const StatisticsApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for getBarChartTimestampNodeCounts operation in StatisticsApi.
+ * @export
+ * @interface StatisticsApiGetBarChartTimestampNodeCountsRequest
+ */
+export interface StatisticsApiGetBarChartTimestampNodeCountsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetBarChartTimestampNodeCounts
+   */
+  readonly projectId?: string;
+}
 
 /**
  * Request parameters for getSemanticDomainCounts operation in StatisticsApi.
@@ -418,6 +519,22 @@ export interface StatisticsApiGetSemanticDomainUserCountsRequest {
  * @extends {BaseAPI}
  */
 export class StatisticsApi extends BaseAPI {
+  /**
+   *
+   * @param {StatisticsApiGetBarChartTimestampNodeCountsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsApi
+   */
+  public getBarChartTimestampNodeCounts(
+    requestParameters: StatisticsApiGetBarChartTimestampNodeCountsRequest = {},
+    options?: any
+  ) {
+    return StatisticsApiFp(this.configuration)
+      .getBarChartTimestampNodeCounts(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @param {StatisticsApiGetSemanticDomainCountsRequest} requestParameters Request parameters.

@@ -212,4 +212,21 @@ namespace BackendFramework.Models
             NodeList = new List<SemanticDomainTimestampNode>();
         }
     }
+
+    public class BarChartTimestampNode
+    {
+        [Required]
+        [BsonElement("shortDateString")]
+        public string ShortDateString { get; set; }
+
+        [Required]
+        [BsonElement("userNameCountDictionary")]
+        public Dictionary<string, int> UserNameCountDictionary { get; set; }
+
+        public BarChartTimestampNode(string isoString)
+        {
+            ShortDateString = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).ToShortDateString();
+            UserNameCountDictionary = new Dictionary<string, int>();
+        }
+    }
 }
