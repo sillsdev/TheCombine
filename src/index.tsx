@@ -1,6 +1,5 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from "notistack";
-
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
