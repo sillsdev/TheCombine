@@ -30,6 +30,5 @@
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "files.insertFinalNewline": true,
-  "cSpell.words": ["notistack"]
+  "files.insertFinalNewline": true
 }

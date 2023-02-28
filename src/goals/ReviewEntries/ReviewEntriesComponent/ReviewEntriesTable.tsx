@@ -41,49 +41,44 @@ export default function ReviewEntriesTable(
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <React.Fragment>
-      <MaterialTable<any>
-        icons={tableIcons}
-        title={
-          <Typography component="h1" variant="h4">
-            {t("reviewEntries.title")}
-          </Typography>
-        }
-        columns={
-          showDefinitions
-            ? columns
-            : columns.filter((c) => c.title !== ColumnTitle.Definitions)
-        }
-        data={words}
-        editable={{
-          onRowUpdate: (
-            newData: ReviewEntriesWord,
-            oldData: ReviewEntriesWord
-          ) =>
-            new Promise(async (resolve, reject) => {
-              await props
-                .onRowUpdate(newData, oldData)
-                .then(resolve)
-                .catch((reason) => {
-                  enqueueSnackbar(t(reason));
-                  reject(reason);
-                });
-            }),
-        }}
-        options={{
-          draggable: false,
-          filtering: true,
-          pageSize:
-            words.length > 0
-              ? Math.min(words.length, ROWS_PER_PAGE[0])
-              : ROWS_PER_PAGE[0],
-          pageSizeOptions: removeDuplicates([
-            Math.min(words.length, ROWS_PER_PAGE[0]),
-            Math.min(words.length, ROWS_PER_PAGE[1]),
-            Math.min(words.length, ROWS_PER_PAGE[2]),
-          ]),
-        }}
-      />
-    </React.Fragment>
+    <MaterialTable<any>
+      icons={tableIcons}
+      title={
+        <Typography component="h1" variant="h4">
+          {t("reviewEntries.title")}
+        </Typography>
+      }
+      columns={
+        showDefinitions
+          ? columns
+          : columns.filter((c) => c.title !== ColumnTitle.Definitions)
+      }
+      data={words}
+      editable={{
+        onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
+          new Promise(async (resolve, reject) => {
+            await props
+              .onRowUpdate(newData, oldData)
+              .then(resolve)
+              .catch((reason) => {
+                enqueueSnackbar(t(reason));
+                reject(reason);
+              });
+          }),
+      }}
+      options={{
+        draggable: false,
+        filtering: true,
+        pageSize:
+          words.length > 0
+            ? Math.min(words.length, ROWS_PER_PAGE[0])
+            : ROWS_PER_PAGE[0],
+        pageSizeOptions: removeDuplicates([
+          Math.min(words.length, ROWS_PER_PAGE[0]),
+          Math.min(words.length, ROWS_PER_PAGE[1]),
+          Math.min(words.length, ROWS_PER_PAGE[2]),
+        ]),
+      }}
+    />
   );
 }

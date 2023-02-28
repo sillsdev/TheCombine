@@ -135,6 +135,7 @@ class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
         phone: this.state.phone,
         email: this.state.email,
       });
+      alert(this.props.t("userSettings.updateSuccess"));
     } else {
       this.setState({ emailTaken: true });
     }

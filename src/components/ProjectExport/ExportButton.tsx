@@ -40,19 +40,17 @@ export default function ExportButton(props: ExportButtonProps) {
     exportResult.status === ExportStatus.Downloading;
 
   return (
-    <React.Fragment>
-      <LoadingButton
-        loading={loading}
-        disabled={loading}
-        buttonProps={{
-          ...props.buttonProps,
-          onClick: exportProj,
-          color: "primary",
-          id: `project-${props.projectId}-export`,
-        }}
-      >
-        {t("buttons.export")}
-      </LoadingButton>
-    </React.Fragment>
+    <LoadingButton
+      loading={loading}
+      disabled={loading}
+      buttonProps={{
+        ...props.buttonProps,
+        onClick: exportProj,
+        color: "primary",
+        id: `project-${props.projectId}-export`,
+      }}
+    >
+      {t("buttons.export")}
+    </LoadingButton>
   );
 }
