@@ -2,7 +2,7 @@ import {
   Divider,
   Grid,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Theme,
   Typography,
@@ -11,21 +11,19 @@ import { makeStyles } from "@mui/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import CircularProgressWithLabel from "./ProgressBar/CircularProgressBar";
+import ChartComponent, { chartTypeEnum } from "./Chart/ChartComponent";
+import PerDayStatisticView from "./Chart/PerDayStatisticView";
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
-import LinearProgressWithLabel from "./ProgressBar/LinearProgressBar";
+import ProgressBarComponent from "./ProgressBar/ProgressBarComponent";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
 import {
   getFrontierWords,
   getProject,
-  getSemanticDomainCounts,
   GetSemanticDomainTimestampCounts,
 } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
-import PerDayStatisticView from "./Chart/PerDayStatisticView";
-import ChartComponent, { chartTypeEnum } from "./Chart/ChartComponent";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -48,43 +46,13 @@ export default function Statistics(): ReactElement {
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
   const [viewName, setViewName] = useState<string>(viewEnum.User);
-  const [progressRatio, setProgressRatio] = useState<number>(0);
-  const [totalDomainCount, setTotalDomainCount] = useState<number>(0);
-  const [totalWordCount, setTotalWordCount] = useState<number>(0);
 
   useEffect(() => {
     const updateCurrentProject = async () => {
       await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
     };
-
-    const updateProgress = async () => {
-      const statisticsList = await getSemanticDomainCounts(
-        LocalStorage.getProjectId(),
-        lang
-      );
-      var domainCount = 0;
-      var wordCount = 0;
-      statisticsList?.forEach((element) => {
-        if (element.count > 0) {
-          domainCount++;
-          wordCount += element.count;
-        }
-      });
-      setTotalDomainCount(domainCount);
-      setTotalWordCount(wordCount);
-      statisticsList
-        ? setProgressRatio(
-            Math.ceil((domainCount * 100) / statisticsList!.length)
-          )
-        : null;
-    };
-
     updateCurrentProject();
-    updateProgress();
-  }, [lang]);
-
-  console.log(GetSemanticDomainTimestampCounts(LocalStorage.getProjectId()));
-  console.log(getFrontierWords());
+  }, []);
 
   function handleDisplay() {
     return [
@@ -131,55 +99,26 @@ export default function Statistics(): ReactElement {
   function handleButton() {
     return (
       <List className={classes.root}>
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.User)}
           selected={viewName === viewEnum.User}
         >
           <ListItemText primary={t("statistics.userView")} />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.Domain)}
           selected={viewName === viewEnum.Domain}
         >
           <ListItemText primary={t("statistics.domainView")} />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.Time)}
           selected={viewName === viewEnum.Time}
         >
           <ListItemText primary={"Words per Day"} />
-        </ListItem>
-      </List>
-    );
-  }
-
-  function handleStatisticGoal() {
-    return (
-      <List className={classes.root}>
-        <ListItem>
-          <ListItemText primary={t("statistics.domainProgress")} />
-          <CircularProgressWithLabel value={progressRatio} />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText primary={t("statistics.domainProgress")} />
-          <LinearProgressWithLabel value={progressRatio} />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText primary={t("statistics.domainsCollected")} />
-          <Typography>{totalDomainCount}</Typography>
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText primary={t("statistics.wordsCollected")} />
-          <Typography>{totalWordCount}</Typography>
-        </ListItem>
+        </ListItemButton>
       </List>
     );
   }
@@ -201,7 +140,7 @@ export default function Statistics(): ReactElement {
           {handleDisplay()}
         </Grid>
         <Grid item xs={2}>
-          {handleStatisticGoal()}
+          <ProgressBarComponent />
         </Grid>
       </Grid>
     </React.Fragment>

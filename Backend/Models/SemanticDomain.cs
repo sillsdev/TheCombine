@@ -186,6 +186,9 @@ namespace BackendFramework.Models
         }
     }
 
+    //Temporary comment
+    //This data structure is for per day per hour statistic
+    //This structure is probability going to improve or delete after meeting
     public class SemanticDomainTimestampNode
     {
         [Required]
@@ -213,6 +216,8 @@ namespace BackendFramework.Models
         }
     }
 
+    //Temporary comment
+    //This data structure is for per user per day statistic
     public class BarChartTimestampNode
     {
         [Required]

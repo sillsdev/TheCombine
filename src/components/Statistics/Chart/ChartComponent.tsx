@@ -1,7 +1,8 @@
-import { BarChartTimestampNode } from "api";
 import React, { useEffect, useState } from "react";
-import { GetBarChartTimestampNodeCounts } from "backend";
+
 import BarChartComp from "./BarChartComponent";
+import { BarChartTimestampNode } from "api";
+import { GetBarChartTimestampNodeCounts } from "backend";
 
 export enum chartTypeEnum {
   BarChart = "BAR",

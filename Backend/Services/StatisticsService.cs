@@ -56,6 +56,9 @@ namespace BackendFramework.Services
             return resList;
         }
 
+        //Temporary comment
+        //This method is for per day per hour statistic
+        //Return a list of SemanticDomainTimestampNode by Descending order
         public async Task<List<SemanticDomainTimestampNode>> GetSemanticDomainTimestampCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
@@ -110,7 +113,9 @@ namespace BackendFramework.Services
             return resList;
         }
 
-
+        //Temporary comment
+        //This method is for per user per day statistic
+        //return list of BarChartTimestampNode
         public async Task<List<BarChartTimestampNode>> GetBarChartTimestampNodeCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);

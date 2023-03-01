@@ -1,6 +1,3 @@
-import { BarChartTimestampNode } from "api";
-import { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +7,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+
+import { BarChartTimestampNode } from "api";
+
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
   CategoryScale,
@@ -35,7 +37,7 @@ interface BarChartNodeProps {
   datasets: Array<DatasetsProps>;
 }
 
-export default function BarChartComp(props: BarChartProps) {
+export default function BarChartComponent(props: BarChartProps) {
   const [chartOptions, setChartOptions] = useState({});
   const [chartData, setChartData] = useState<BarChartNodeProps>({
     labels: [],
@@ -58,8 +60,8 @@ export default function BarChartComp(props: BarChartProps) {
       props.barChartNodeList.forEach((element) => {
         barChartNode.labels.push(element.shortDateString);
         if (barChartNode.datasets.length == 0) {
-          for (let key in element.userNameCountDictionary) {
-            let value = element.userNameCountDictionary[key];
+          for (const key in element.userNameCountDictionary) {
+            const value = element.userNameCountDictionary[key];
             barChartNode.datasets.push({
               label: key,
               data: [value],
@@ -67,8 +69,8 @@ export default function BarChartComp(props: BarChartProps) {
             });
           }
         } else {
-          for (let key in element.userNameCountDictionary) {
-            let value = element.userNameCountDictionary[key];
+          for (const key in element.userNameCountDictionary) {
+            const value = element.userNameCountDictionary[key];
             barChartNode.datasets
               .find((t) => t.label === key)
               ?.data.push(value);

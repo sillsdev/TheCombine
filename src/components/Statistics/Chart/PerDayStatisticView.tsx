@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 
 import { SemanticDomainTimestampNode } from "api";
 import { GetSemanticDomainTimestampCounts } from "backend";
-
 import * as LocalStorage from "backend/localStorage";
 
 export default function PerDayStatisticView() {
