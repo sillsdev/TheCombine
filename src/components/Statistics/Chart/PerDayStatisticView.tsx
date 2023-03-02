@@ -24,7 +24,6 @@ export default function PerDayStatisticView() {
     updateList();
   }, []);
 
-  console.log("1");
   function handleList(currList: SemanticDomainTimestampNode[]) {
     return currList.map((t) => [
       <ListItemButton

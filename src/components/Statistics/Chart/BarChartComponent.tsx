@@ -7,7 +7,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
+import distinctColors from "distinct-colors";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
@@ -20,8 +20,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
-  autocolors
+  Legend
 );
 
 interface ChartProps {
@@ -31,7 +30,7 @@ interface ChartProps {
 interface DatasetsProps {
   label: string;
   data: Array<number>;
-  //backgroundColor: string;
+  backgroundColor: string;
 }
 
 interface BarChartNodeProps {
@@ -47,41 +46,43 @@ export default function BarChartComponent(props: ChartProps) {
   });
 
   useEffect(() => {
-    const generateColor = () => {
-      const randomColor = Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, "0");
-      return `#${randomColor}`;
-    };
-
     var barChartNode: BarChartNodeProps = {
       labels: [],
       datasets: [],
     };
-    const updateBarChartData = () => {
-      props.chartNodeList.forEach((element) => {
-        barChartNode.labels.push(element.shortDateString);
-        if (barChartNode.datasets.length == 0) {
-          for (const key in element.userNameCountDictionary) {
-            const value = element.userNameCountDictionary[key];
-            barChartNode.datasets.push({
-              label: key,
-              data: [value],
-              //backgroundColor: generateColor(),
-            });
-          }
-        } else {
-          for (const key in element.userNameCountDictionary) {
-            const value = element.userNameCountDictionary[key];
-            barChartNode.datasets
-              .find((t) => t.label === key)
-              ?.data.push(value);
-          }
-        }
+    var palette: chroma.Color[];
+    if (props.chartNodeList.length) {
+      palette = distinctColors({
+        count: Object.keys(props.chartNodeList[0].userNameCountDictionary)
+          .length,
       });
+      const updateBarChartData = () => {
+        props.chartNodeList.forEach((element) => {
+          barChartNode.labels.push(element.shortDateString);
+          if (barChartNode.datasets.length == 0) {
+            let colorIndex = 0;
+            for (const key in element.userNameCountDictionary) {
+              const value = element.userNameCountDictionary[key];
+              barChartNode.datasets.push({
+                label: key,
+                data: [value],
+                backgroundColor: palette[colorIndex++].hex().toString(),
+              });
+            }
+          } else {
+            for (const key in element.userNameCountDictionary) {
+              const value = element.userNameCountDictionary[key];
+              barChartNode.datasets
+                .find((t) => t.label === key)
+                ?.data.push(value);
+            }
+          }
+        });
 
-      return setChartData(barChartNode);
-    };
+        return setChartData(barChartNode);
+      };
+      updateBarChartData();
+    }
     setChartOptions({
       responsive: true,
       plugins: {
@@ -91,9 +92,6 @@ export default function BarChartComponent(props: ChartProps) {
         title: {
           display: true,
           text: "Word Collected Per User Per Day",
-        },
-        autocolors: {
-          enabled: true,
         },
       },
       scales: {
@@ -105,8 +103,6 @@ export default function BarChartComponent(props: ChartProps) {
         },
       },
     });
-
-    updateBarChartData();
   }, [props]);
 
   return <Bar data={chartData} options={chartOptions} />;
