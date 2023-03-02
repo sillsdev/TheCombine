@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 
 import BarChartComp from "./BarChartComponent";
-import { BarChartTimestampNode } from "api";
-import { GetBarChartTimestampNodeCounts } from "backend";
+import LineChartComponent from "./LineChartComponent";
+import { ChartTimestampNode } from "api";
+import { GetChartTimestampNodeCounts } from "backend";
 
 export enum chartTypeEnum {
   BarChart = "BAR",
   otherChart = "TBD",
 }
 
-interface BarChartProps {
+interface ChartProps {
   currentProjectId: string;
   chartType: chartTypeEnum;
 }
 
-export default function ChartComponent(props: BarChartProps) {
-  const [barChartList, setBarChartList] = useState<BarChartTimestampNode[]>([]);
+export default function ChartComponent(props: ChartProps) {
+  const [barChartList, setBarChartList] = useState<ChartTimestampNode[]>([]);
   const [chartType, setChartType] = useState<chartTypeEnum>(props.chartType);
 
   useEffect(() => {
     const updateBarChartList = async () => {
-      const list = await GetBarChartTimestampNodeCounts(props.currentProjectId);
+      const list = await GetChartTimestampNodeCounts(props.currentProjectId);
       if (list != undefined) {
         return setBarChartList(list);
       }
@@ -32,7 +33,10 @@ export default function ChartComponent(props: BarChartProps) {
   return (
     <React.Fragment>
       {chartType === chartTypeEnum.BarChart && (
-        <BarChartComp barChartNodeList={barChartList} />
+        <BarChartComp chartNodeList={barChartList} />
+      )}
+      {chartType === chartTypeEnum.BarChart && (
+        <LineChartComponent chartNodeList={barChartList} />
       )}
     </React.Fragment>
   );

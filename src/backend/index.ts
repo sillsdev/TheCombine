@@ -21,7 +21,7 @@ import {
   Word,
   SemanticDomainUserCount,
   SemanticDomainTimestampNode,
-  BarChartTimestampNode,
+  ChartTimestampNode,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -703,10 +703,10 @@ export async function GetSemanticDomainTimestampCounts(
   return response.data ?? undefined;
 }
 
-export async function GetBarChartTimestampNodeCounts(
+export async function GetChartTimestampNodeCounts(
   projectId: string
-): Promise<Array<BarChartTimestampNode> | undefined> {
-  const response = await statisticsApi.getBarChartTimestampNodeCounts(
+): Promise<Array<ChartTimestampNode> | undefined> {
+  const response = await statisticsApi.getChartTimestampNodeCounts(
     { projectId: projectId },
     defaultOptions()
   );

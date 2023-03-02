@@ -48,6 +48,7 @@
     "@segment/analytics-next": "^1.40.0",
     "axios": "^0.27.2",
     "chart.js": "^4.2.1",
+    "chartjs-plugin-autocolors": "^0.2.2",
     "crypto-js": "^4.1.1",
     "http-status-codes": "^2.1.4",
     "i18next": "^21.6.16",

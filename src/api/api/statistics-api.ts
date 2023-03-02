@@ -37,7 +37,7 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
-import { BarChartTimestampNode } from "../models";
+import { ChartTimestampNode } from "../models";
 // @ts-ignore
 import { SemanticDomainCount } from "../models";
 // @ts-ignore
@@ -58,11 +58,11 @@ export const StatisticsApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getBarChartTimestampNodeCounts: async (
+    getChartTimestampNodeCounts: async (
       projectId?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/statistics/GetBarChartTimestampNodeCounts`;
+      const localVarPath = `/v1/statistics/GetChartTimestampNodeCounts`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -257,17 +257,17 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getBarChartTimestampNodeCounts(
+    async getChartTimestampNodeCounts(
       projectId?: string,
       options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<Array<BarChartTimestampNode>>
+      ) => AxiosPromise<Array<ChartTimestampNode>>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getBarChartTimestampNodeCounts(
+        await localVarAxiosParamCreator.getChartTimestampNodeCounts(
           projectId,
           options
         );
@@ -385,12 +385,12 @@ export const StatisticsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getBarChartTimestampNodeCounts(
+    getChartTimestampNodeCounts(
       projectId?: string,
       options?: any
-    ): AxiosPromise<Array<BarChartTimestampNode>> {
+    ): AxiosPromise<Array<ChartTimestampNode>> {
       return localVarFp
-        .getBarChartTimestampNodeCounts(projectId, options)
+        .getChartTimestampNodeCounts(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -443,15 +443,15 @@ export const StatisticsApiFactory = function (
 };
 
 /**
- * Request parameters for getBarChartTimestampNodeCounts operation in StatisticsApi.
+ * Request parameters for getChartTimestampNodeCounts operation in StatisticsApi.
  * @export
- * @interface StatisticsApiGetBarChartTimestampNodeCountsRequest
+ * @interface StatisticsApiGetChartTimestampNodeCountsRequest
  */
-export interface StatisticsApiGetBarChartTimestampNodeCountsRequest {
+export interface StatisticsApiGetChartTimestampNodeCountsRequest {
   /**
    *
    * @type {string}
-   * @memberof StatisticsApiGetBarChartTimestampNodeCounts
+   * @memberof StatisticsApiGetChartTimestampNodeCounts
    */
   readonly projectId?: string;
 }
@@ -521,17 +521,17 @@ export interface StatisticsApiGetSemanticDomainUserCountsRequest {
 export class StatisticsApi extends BaseAPI {
   /**
    *
-   * @param {StatisticsApiGetBarChartTimestampNodeCountsRequest} requestParameters Request parameters.
+   * @param {StatisticsApiGetChartTimestampNodeCountsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof StatisticsApi
    */
-  public getBarChartTimestampNodeCounts(
-    requestParameters: StatisticsApiGetBarChartTimestampNodeCountsRequest = {},
+  public getChartTimestampNodeCounts(
+    requestParameters: StatisticsApiGetChartTimestampNodeCountsRequest = {},
     options?: any
   ) {
     return StatisticsApiFp(this.configuration)
-      .getBarChartTimestampNodeCounts(requestParameters.projectId, options)
+      .getChartTimestampNodeCounts(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

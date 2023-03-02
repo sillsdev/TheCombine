@@ -67,9 +67,9 @@ namespace BackendFramework.Controllers
         }
 
 
-        [HttpGet("GetBarChartTimestampNodeCounts", Name = "GetBarChartTimestampNodeCounts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BarChartTimestampNode>))]
-        public async Task<IActionResult> GetBarChartTimestampNodeCounts(string projectId)
+        [HttpGet("GetChartTimestampNodeCounts", Name = "GetChartTimestampNodeCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ChartTimestampNode>))]
+        public async Task<IActionResult> GetChartTimestampNodeCounts(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -83,7 +83,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _staService.GetBarChartTimestampNodeCounts(projectId));
+            return Ok(await _staService.GetChartTimestampNodeCounts(projectId));
         }
 
 

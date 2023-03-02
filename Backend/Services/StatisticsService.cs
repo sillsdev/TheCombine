@@ -116,15 +116,15 @@ namespace BackendFramework.Services
         //Temporary comment
         //This method is for per user per day statistic
         //return list of BarChartTimestampNode
-        public async Task<List<BarChartTimestampNode>> GetBarChartTimestampNodeCounts(string projectId)
+        public async Task<List<ChartTimestampNode>> GetChartTimestampNodeCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            Dictionary<string, BarChartTimestampNode> shortTimeDictionary = new Dictionary<string, BarChartTimestampNode>();
+            Dictionary<string, ChartTimestampNode> shortTimeDictionary = new Dictionary<string, ChartTimestampNode>();
             Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
             if (wordList == null)
             {
-                return new List<BarChartTimestampNode>();
+                return new List<ChartTimestampNode>();
             }
 
             var allUsers = await _userRepo.GetAllUsers();
@@ -153,7 +153,7 @@ namespace BackendFramework.Services
                             }
                             else
                             {
-                                var tempBarChartNode = new BarChartTimestampNode(sd.Created);
+                                var tempBarChartNode = new ChartTimestampNode(sd.Created);
                                 foreach (User u in projectUsers)
                                 {
                                     tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);

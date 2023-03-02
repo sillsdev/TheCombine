@@ -218,7 +218,7 @@ namespace BackendFramework.Models
 
     //Temporary comment
     //This data structure is for per user per day statistic
-    public class BarChartTimestampNode
+    public class ChartTimestampNode
     {
         [Required]
         [BsonElement("shortDateString")]
@@ -228,7 +228,7 @@ namespace BackendFramework.Models
         [BsonElement("userNameCountDictionary")]
         public Dictionary<string, int> UserNameCountDictionary { get; set; }
 
-        public BarChartTimestampNode(string isoString)
+        public ChartTimestampNode(string isoString)
         {
             ShortDateString = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).ToShortDateString();
             UserNameCountDictionary = new Dictionary<string, int>();

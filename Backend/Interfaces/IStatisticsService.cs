@@ -9,7 +9,7 @@ namespace BackendFramework.Interfaces
         Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang);
         Task<List<SemanticDomainTimestampNode>> GetSemanticDomainTimestampCounts(string projectId);
 
-        Task<List<BarChartTimestampNode>> GetBarChartTimestampNodeCounts(string projectId);
+        Task<List<ChartTimestampNode>> GetChartTimestampNodeCounts(string projectId);
         Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId);
     }
 }

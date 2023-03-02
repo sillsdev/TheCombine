@@ -15,19 +15,19 @@
 /**
  *
  * @export
- * @interface BarChartTimestampNode
+ * @interface ChartTimestampNode
  */
-export interface BarChartTimestampNode {
+export interface ChartTimestampNode {
   /**
    *
    * @type {string}
-   * @memberof BarChartTimestampNode
+   * @memberof ChartTimestampNode
    */
   shortDateString: string;
   /**
    *
    * @type {{ [key: string]: number; }}
-   * @memberof BarChartTimestampNode
+   * @memberof ChartTimestampNode
    */
   userNameCountDictionary: { [key: string]: number };
 }

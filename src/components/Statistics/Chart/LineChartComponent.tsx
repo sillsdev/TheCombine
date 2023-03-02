@@ -2,14 +2,15 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
   Title,
   Tooltip,
   Legend,
+  LineElement,
+  PointElement,
 } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
 import { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
 import { ChartTimestampNode } from "api";
 
@@ -17,70 +18,73 @@ ChartJS.defaults.font.size = 18;
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
   autocolors
 );
 
-interface ChartProps {
+interface LineChartProps {
   chartNodeList: ChartTimestampNode[];
 }
 
 interface DatasetsProps {
   label: string;
   data: Array<number>;
-  //backgroundColor: string;
 }
 
-interface BarChartNodeProps {
+interface LineChartNodeProps {
   labels: Array<string>;
   datasets: Array<DatasetsProps>;
 }
 
-export default function BarChartComponent(props: ChartProps) {
+export default function LineChartComponent(props: LineChartProps) {
   const [chartOptions, setChartOptions] = useState({});
-  const [chartData, setChartData] = useState<BarChartNodeProps>({
+  const [chartData, setChartData] = useState<LineChartNodeProps>({
     labels: [],
     datasets: [],
   });
 
   useEffect(() => {
-    const generateColor = () => {
-      const randomColor = Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, "0");
-      return `#${randomColor}`;
-    };
-
-    var barChartNode: BarChartNodeProps = {
+    var LineChartNode: LineChartNodeProps = {
       labels: [],
       datasets: [],
     };
-    const updateBarChartData = () => {
+    const updateLineChartData = () => {
       props.chartNodeList.forEach((element) => {
-        barChartNode.labels.push(element.shortDateString);
-        if (barChartNode.datasets.length == 0) {
+        LineChartNode.labels.push(element.shortDateString);
+        if (LineChartNode.datasets.length == 0) {
+          let totalDay = 0;
           for (const key in element.userNameCountDictionary) {
             const value = element.userNameCountDictionary[key];
-            barChartNode.datasets.push({
+            totalDay += value;
+            LineChartNode.datasets.push({
               label: key,
               data: [value],
-              //backgroundColor: generateColor(),
             });
           }
+          LineChartNode.datasets.push({
+            label: "Total",
+            data: [totalDay],
+          });
         } else {
+          let totalDay = 0;
           for (const key in element.userNameCountDictionary) {
             const value = element.userNameCountDictionary[key];
-            barChartNode.datasets
+            totalDay += value;
+            LineChartNode.datasets
               .find((t) => t.label === key)
               ?.data.push(value);
           }
+          LineChartNode.datasets
+            .find((t) => t.label === "Total")
+            ?.data.push(totalDay);
         }
       });
 
-      return setChartData(barChartNode);
+      return setChartData(LineChartNode);
     };
     setChartOptions({
       responsive: true,
@@ -98,16 +102,13 @@ export default function BarChartComponent(props: ChartProps) {
       },
       scales: {
         x: {
-          stacked: true,
-        },
-        y: {
-          stacked: true,
+          beginAtZero: true,
         },
       },
     });
 
-    updateBarChartData();
+    updateLineChartData();
   }, [props]);
 
-  return <Bar data={chartData} options={chartOptions} />;
+  return <Line data={chartData} options={chartOptions} />;
 }
