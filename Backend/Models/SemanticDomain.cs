@@ -186,39 +186,9 @@ namespace BackendFramework.Models
         }
     }
 
-    //Temporary comment
-    //This data structure is for per day per hour statistic
-    //This structure is probability going to improve or delete after meeting
-    public class SemanticDomainTimestampNode
-    {
-        [Required]
-        [BsonElement("shortDateString")]
-        public string ShortDateString { get; set; }
 
-        [Required]
-        [BsonElement("hour")]
-        public int Hour { get; set; }
-
-        [Required]
-        [BsonElement("count")]
-        public int Count { get; set; }
-
-        [Required]
-        [BsonElement("nodeList")]
-        public List<SemanticDomainTimestampNode> NodeList { get; set; }
-
-        public SemanticDomainTimestampNode(string isoString, int count)
-        {
-            ShortDateString = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).ToShortDateString();
-            Hour = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).Hour;
-            Count = count;
-            NodeList = new List<SemanticDomainTimestampNode>();
-        }
-    }
-
-    //Temporary comment
-    //This data structure is for per user per day statistic
-    public class ChartTimestampNode
+    //The data structure is for per user per day chartJS use only
+    public class WordsPerDayUserChartJSCount
     {
         [Required]
         [BsonElement("shortDateString")]
@@ -228,7 +198,7 @@ namespace BackendFramework.Models
         [BsonElement("userNameCountDictionary")]
         public Dictionary<string, int> UserNameCountDictionary { get; set; }
 
-        public ChartTimestampNode(string isoString)
+        public WordsPerDayUserChartJSCount(string isoString)
         {
             ShortDateString = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).ToShortDateString();
             UserNameCountDictionary = new Dictionary<string, int>();

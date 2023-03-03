@@ -220,65 +220,6 @@ Array [
       <ul
         className="MuiList-root MuiList-padding makeStyles-root-2 css-h4y409-MuiList-root"
       >
-        <li
-          className="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1i8meaj-MuiListItem-root"
-          disabled={false}
-        >
-          <div
-            className="MuiListItemText-root css-tlelie-MuiListItemText-root"
-          >
-            <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
-            >
-              statistics.domainProgress
-            </span>
-          </div>
-          <div
-            className="MuiBox-root css-rmz4vk"
-          >
-            <span
-              aria-valuenow={0}
-              className="MuiCircularProgress-root MuiCircularProgress-determinate MuiCircularProgress-colorPrimary css-qngkpy-MuiCircularProgress-root"
-              role="progressbar"
-              style={
-                Object {
-                  "height": 40,
-                  "transform": "rotate(-90deg)",
-                  "width": 40,
-                }
-              }
-            >
-              <svg
-                className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
-                viewBox="22 22 44 44"
-              >
-                <circle
-                  className="MuiCircularProgress-circle MuiCircularProgress-circleDeterminate css-oxts8u-MuiCircularProgress-circle"
-                  cx={44}
-                  cy={44}
-                  fill="none"
-                  r={20.2}
-                  strokeWidth={3.6}
-                  style={
-                    Object {
-                      "strokeDasharray": "126.920",
-                      "strokeDashoffset": "126.920px",
-                    }
-                  }
-                />
-              </svg>
-            </span>
-            <div
-              className="MuiBox-root css-1o8dslu"
-            >
-              <div
-                className="MuiTypography-root MuiTypography-caption css-1luentb-MuiTypography-root"
-              >
-                0%
-              </div>
-            </div>
-          </div>
-        </li>
         <hr
           className="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
         />

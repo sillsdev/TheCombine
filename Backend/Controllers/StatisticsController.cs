@@ -47,9 +47,11 @@ namespace BackendFramework.Controllers
         }
 
 
-        [HttpGet("GetSemanticDomainTimestampCounts", Name = "GetSemanticDomainTimestampCounts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainTimestampNode>))]
-        public async Task<IActionResult> GetSemanticDomainTimestampCounts(string projectId)
+        /// <summary> Get a list of WordsPerDayUserChartJSCount <see cref="WordsPerDayUserChartJSCount"/>s of a specific project in order </summary>
+        /// <returns> A list of WordsPerDayUserChartJSCount <see cref="WordsPerDayUserChartJSCount"/>s </returns>
+        [HttpGet("GetWordsPerDayUserChartJSCounts", Name = "GetWordsPerDayUserChartJSCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayUserChartJSCount>))]
+        public async Task<IActionResult> GetWordsPerDayUserChartJSCounts(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -63,27 +65,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _staService.GetSemanticDomainTimestampCounts(projectId));
-        }
-
-
-        [HttpGet("GetChartTimestampNodeCounts", Name = "GetChartTimestampNodeCounts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ChartTimestampNode>))]
-        public async Task<IActionResult> GetChartTimestampNodeCounts(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            {
-                return Forbid();
-            }
-
-            // Ensure project exists.
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-
-            return Ok(await _staService.GetChartTimestampNodeCounts(projectId));
+            return Ok(await _staService.GetWordsPerDayUserChartJSCounts(projectId));
         }
 
 

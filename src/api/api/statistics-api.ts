@@ -37,13 +37,11 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
-import { ChartTimestampNode } from "../models";
-// @ts-ignore
 import { SemanticDomainCount } from "../models";
 // @ts-ignore
-import { SemanticDomainTimestampNode } from "../models";
-// @ts-ignore
 import { SemanticDomainUserCount } from "../models";
+// @ts-ignore
+import { WordsPerDayUserChartJSCount } from "../models";
 /**
  * StatisticsApi - axios parameter creator
  * @export
@@ -52,50 +50,6 @@ export const StatisticsApiAxiosParamCreator = function (
   configuration?: Configuration
 ) {
   return {
-    /**
-     *
-     * @param {string} [projectId]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getChartTimestampNodeCounts: async (
-      projectId?: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/statistics/GetChartTimestampNodeCounts`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      if (projectId !== undefined) {
-        localVarQueryParameter["projectId"] = projectId;
-      }
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
     /**
      *
      * @param {string} [projectId]
@@ -130,50 +84,6 @@ export const StatisticsApiAxiosParamCreator = function (
 
       if (lang !== undefined) {
         localVarQueryParameter["lang"] = lang;
-      }
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} [projectId]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getSemanticDomainTimestampCounts: async (
-      projectId?: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/statistics/GetSemanticDomainTimestampCounts`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      if (projectId !== undefined) {
-        localVarQueryParameter["projectId"] = projectId;
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -240,6 +150,50 @@ export const StatisticsApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWordsPerDayUserChartJSCounts: async (
+      projectId?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/statistics/GetWordsPerDayUserChartJSCounts`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (projectId !== undefined) {
+        localVarQueryParameter["projectId"] = projectId;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -251,33 +205,6 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator =
     StatisticsApiAxiosParamCreator(configuration);
   return {
-    /**
-     *
-     * @param {string} [projectId]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getChartTimestampNodeCounts(
-      projectId?: string,
-      options?: any
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<ChartTimestampNode>>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getChartTimestampNodeCounts(
-          projectId,
-          options
-        );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
     /**
      *
      * @param {string} [projectId]
@@ -299,33 +226,6 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.getSemanticDomainCounts(
           projectId,
           lang,
-          options
-        );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} [projectId]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getSemanticDomainTimestampCounts(
-      projectId?: string,
-      options?: any
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<SemanticDomainTimestampNode>>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getSemanticDomainTimestampCounts(
-          projectId,
           options
         );
       return createRequestFunction(
@@ -365,6 +265,33 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getWordsPerDayUserChartJSCounts(
+      projectId?: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<WordsPerDayUserChartJSCount>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getWordsPerDayUserChartJSCounts(
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -379,20 +306,6 @@ export const StatisticsApiFactory = function (
 ) {
   const localVarFp = StatisticsApiFp(configuration);
   return {
-    /**
-     *
-     * @param {string} [projectId]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getChartTimestampNodeCounts(
-      projectId?: string,
-      options?: any
-    ): AxiosPromise<Array<ChartTimestampNode>> {
-      return localVarFp
-        .getChartTimestampNodeCounts(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
     /**
      *
      * @param {string} [projectId]
@@ -412,20 +325,6 @@ export const StatisticsApiFactory = function (
     /**
      *
      * @param {string} [projectId]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getSemanticDomainTimestampCounts(
-      projectId?: string,
-      options?: any
-    ): AxiosPromise<Array<SemanticDomainTimestampNode>> {
-      return localVarFp
-        .getSemanticDomainTimestampCounts(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} [projectId]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -439,22 +338,22 @@ export const StatisticsApiFactory = function (
         .getSemanticDomainUserCounts(projectId, lang, options)
         .then((request) => request(axios, basePath));
     },
+    /**
+     *
+     * @param {string} [projectId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWordsPerDayUserChartJSCounts(
+      projectId?: string,
+      options?: any
+    ): AxiosPromise<Array<WordsPerDayUserChartJSCount>> {
+      return localVarFp
+        .getWordsPerDayUserChartJSCounts(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
   };
 };
-
-/**
- * Request parameters for getChartTimestampNodeCounts operation in StatisticsApi.
- * @export
- * @interface StatisticsApiGetChartTimestampNodeCountsRequest
- */
-export interface StatisticsApiGetChartTimestampNodeCountsRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof StatisticsApiGetChartTimestampNodeCounts
-   */
-  readonly projectId?: string;
-}
 
 /**
  * Request parameters for getSemanticDomainCounts operation in StatisticsApi.
@@ -475,20 +374,6 @@ export interface StatisticsApiGetSemanticDomainCountsRequest {
    * @memberof StatisticsApiGetSemanticDomainCounts
    */
   readonly lang?: string;
-}
-
-/**
- * Request parameters for getSemanticDomainTimestampCounts operation in StatisticsApi.
- * @export
- * @interface StatisticsApiGetSemanticDomainTimestampCountsRequest
- */
-export interface StatisticsApiGetSemanticDomainTimestampCountsRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof StatisticsApiGetSemanticDomainTimestampCounts
-   */
-  readonly projectId?: string;
 }
 
 /**
@@ -513,28 +398,26 @@ export interface StatisticsApiGetSemanticDomainUserCountsRequest {
 }
 
 /**
+ * Request parameters for getWordsPerDayUserChartJSCounts operation in StatisticsApi.
+ * @export
+ * @interface StatisticsApiGetWordsPerDayUserChartJSCountsRequest
+ */
+export interface StatisticsApiGetWordsPerDayUserChartJSCountsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetWordsPerDayUserChartJSCounts
+   */
+  readonly projectId?: string;
+}
+
+/**
  * StatisticsApi - object-oriented interface
  * @export
  * @class StatisticsApi
  * @extends {BaseAPI}
  */
 export class StatisticsApi extends BaseAPI {
-  /**
-   *
-   * @param {StatisticsApiGetChartTimestampNodeCountsRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof StatisticsApi
-   */
-  public getChartTimestampNodeCounts(
-    requestParameters: StatisticsApiGetChartTimestampNodeCountsRequest = {},
-    options?: any
-  ) {
-    return StatisticsApiFp(this.configuration)
-      .getChartTimestampNodeCounts(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
   /**
    *
    * @param {StatisticsApiGetSemanticDomainCountsRequest} requestParameters Request parameters.
@@ -557,22 +440,6 @@ export class StatisticsApi extends BaseAPI {
 
   /**
    *
-   * @param {StatisticsApiGetSemanticDomainTimestampCountsRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof StatisticsApi
-   */
-  public getSemanticDomainTimestampCounts(
-    requestParameters: StatisticsApiGetSemanticDomainTimestampCountsRequest = {},
-    options?: any
-  ) {
-    return StatisticsApiFp(this.configuration)
-      .getSemanticDomainTimestampCounts(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
    * @param {StatisticsApiGetSemanticDomainUserCountsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -588,6 +455,22 @@ export class StatisticsApi extends BaseAPI {
         requestParameters.lang,
         options
       )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {StatisticsApiGetWordsPerDayUserChartJSCountsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsApi
+   */
+  public getWordsPerDayUserChartJSCounts(
+    requestParameters: StatisticsApiGetWordsPerDayUserChartJSCountsRequest = {},
+    options?: any
+  ) {
+    return StatisticsApiFp(this.configuration)
+      .getWordsPerDayUserChartJSCounts(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

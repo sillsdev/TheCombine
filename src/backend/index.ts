@@ -20,8 +20,7 @@ import {
   UserRole,
   Word,
   SemanticDomainUserCount,
-  SemanticDomainTimestampNode,
-  ChartTimestampNode,
+  WordsPerDayUserChartJSCount,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -692,21 +691,10 @@ export async function getSemanticDomainUserCount(
   return response.data ?? undefined;
 }
 
-export async function GetSemanticDomainTimestampCounts(
+export async function GetWordsPerDayUserChartJSCounts(
   projectId: string
-): Promise<Array<SemanticDomainTimestampNode> | undefined> {
-  const response = await statisticsApi.getSemanticDomainTimestampCounts(
-    { projectId: projectId },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function GetChartTimestampNodeCounts(
-  projectId: string
-): Promise<Array<ChartTimestampNode> | undefined> {
-  const response = await statisticsApi.getChartTimestampNodeCounts(
+): Promise<Array<WordsPerDayUserChartJSCount> | undefined> {
+  const response = await statisticsApi.getWordsPerDayUserChartJSCounts(
     { projectId: projectId },
     defaultOptions()
   );

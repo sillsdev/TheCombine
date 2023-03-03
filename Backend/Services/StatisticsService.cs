@@ -56,80 +56,24 @@ namespace BackendFramework.Services
             return resList;
         }
 
-        //Temporary comment
-        //This method is for per day per hour statistic
-        //Return a list of SemanticDomainTimestampNode by Descending order
-        public async Task<List<SemanticDomainTimestampNode>> GetSemanticDomainTimestampCounts(string projectId)
+        /// <summary>
+        /// Get the count of words per day per user as a list of WordsPerDayUserChartJSCount objects <see cref="WordsPerDayUserChartJSCount"/>
+        /// </summary>
+        public async Task<List<WordsPerDayUserChartJSCount>> GetWordsPerDayUserChartJSCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            Dictionary<string, SemanticDomainTimestampNode> shortTimeHashMap = new Dictionary<string, SemanticDomainTimestampNode>();
-
-            if (wordList == null)
-            {
-                return new List<SemanticDomainTimestampNode>();
-            }
-
-            foreach (Word word in wordList)
-            {
-                foreach (Sense sense in word.Senses)
-                {
-                    foreach (SemanticDomain sd in sense.SemanticDomains)
-                    {
-                        if (!string.IsNullOrEmpty(sd.Created))
-                        {
-                            DateTime tempDate = DateTime.Parse(sd.Created, null, System.Globalization.DateTimeStyles.RoundtripKind);
-
-                            if (shortTimeHashMap.ContainsKey(tempDate.ToShortDateString()))
-                            {
-                                var findRoot = shortTimeHashMap[tempDate.ToShortDateString()];
-                                var findNode = findRoot.NodeList.FirstOrDefault(x => x.Hour == tempDate.Hour);
-                                if (findNode != null)
-                                {
-                                    findNode.Count++;
-                                }
-                                else
-                                {
-                                    findRoot.NodeList.Add(new SemanticDomainTimestampNode(sd.Created, 1));
-                                }
-                                findRoot.Count++;
-                            }
-                            else
-                            {
-                                var tempTimestampRoot = new SemanticDomainTimestampNode(sd.Created, 1);
-                                tempTimestampRoot.NodeList.Add(new SemanticDomainTimestampNode(sd.Created, 1));
-                                shortTimeHashMap.Add(tempTimestampRoot.ShortDateString, tempTimestampRoot);
-                            }
-                        }
-                    }
-                }
-            }
-
-            var resList = shortTimeHashMap.Values.ToList().OrderByDescending(t => t.ShortDateString).ToList();
-            foreach (var temp in resList)
-            {
-                temp.NodeList.OrderBy(t => t.Hour).ToList();
-            }
-
-            return resList;
-        }
-
-        //Temporary comment
-        //This method is for per user per day statistic
-        //return list of BarChartTimestampNode
-        public async Task<List<ChartTimestampNode>> GetChartTimestampNodeCounts(string projectId)
-        {
-            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            Dictionary<string, ChartTimestampNode> shortTimeDictionary = new Dictionary<string, ChartTimestampNode>();
+            Dictionary<string, WordsPerDayUserChartJSCount> shortTimeDictionary = new Dictionary<string, WordsPerDayUserChartJSCount>();
             Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
             if (wordList == null)
             {
-                return new List<ChartTimestampNode>();
+                return new List<WordsPerDayUserChartJSCount>();
             }
 
             var allUsers = await _userRepo.GetAllUsers();
             var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
+            // only count for current valid users of the project
             foreach (User u in projectUsers)
             {
                 userNameIdDictionary.Add(u.Id, u.Username);
@@ -141,19 +85,21 @@ namespace BackendFramework.Services
                 {
                     foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
+                        // The created timestamp may not exist for some model
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
                             DateTime tempDate = DateTime.Parse(sd.Created, null, System.Globalization.DateTimeStyles.RoundtripKind);
                             var userName = userNameIdDictionary.GetValueOrDefault(sd.UserId, "");
-
+                            // WordsPerDayUserChartJSCount exist for particular day
                             if (shortTimeDictionary.ContainsKey(tempDate.ToShortDateString()) && !string.IsNullOrEmpty(userName))
                             {
                                 var barChartNode = shortTimeDictionary[tempDate.ToShortDateString()];
                                 barChartNode.UserNameCountDictionary[userName] = barChartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
                             }
+                            // WordsPerDayUserChartJSCount NOT exist, create one and update to the Dictionary
                             else
                             {
-                                var tempBarChartNode = new ChartTimestampNode(sd.Created);
+                                var tempBarChartNode = new WordsPerDayUserChartJSCount(sd.Created);
                                 foreach (User u in projectUsers)
                                 {
                                     tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
@@ -165,9 +111,11 @@ namespace BackendFramework.Services
                     }
                 }
             }
+            // sort by date order
             var resList = shortTimeDictionary.Values.ToList().OrderBy(t => t.ShortDateString).ToList();
             return resList;
         }
+
         /// <summary>
         /// Get the counts of senses and domains for user return a list of SemanticDomainUserCount objects <see cref="SemanticDomainUserCount"/>
         /// </summary>

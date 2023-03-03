@@ -10,7 +10,6 @@ import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import CircularProgressWithLabel from "./CircularProgressBar";
 import LinearProgressWithLabel from "./LinearProgressBar";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
@@ -59,10 +58,6 @@ export default function ProgressBarComponent() {
 
   return (
     <List className={classes.root}>
-      <ListItem>
-        <ListItemText primary={t("statistics.domainProgress")} />
-        <CircularProgressWithLabel value={progressRatio} />
-      </ListItem>
       <Divider />
       <ListItem>
         <ListItemText primary={t("statistics.domainProgress")} />

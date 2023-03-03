@@ -12,16 +12,11 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import ChartComponent, { chartTypeEnum } from "./Chart/ChartComponent";
-import PerDayStatisticView from "./Chart/PerDayStatisticView";
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
 import ProgressBarComponent from "./ProgressBar/ProgressBarComponent";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
-import {
-  getFrontierWords,
-  getProject,
-  GetSemanticDomainTimestampCounts,
-} from "backend";
+import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { defaultWritingSystem } from "types/writingSystem";
 
@@ -86,11 +81,8 @@ export default function Statistics(): ReactElement {
         <Grid item key={viewEnum.Time + "ChartComponent"}>
           <ChartComponent
             currentProjectId={currentProject!.id}
-            chartType={chartTypeEnum.BarChart}
+            chartType={chartTypeEnum.LineChart}
           />
-        </Grid>,
-        <Grid item key={viewEnum.Time + "PerDayStatisticView"}>
-          <PerDayStatisticView />
         </Grid>,
       ],
     ];
