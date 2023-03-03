@@ -58,7 +58,6 @@ export default function ProgressBarComponent() {
 
   return (
     <List className={classes.root}>
-      <Divider />
       <ListItem>
         <ListItemText primary={t("statistics.domainProgress")} />
         <LinearProgressWithLabel value={progressRatio} />
