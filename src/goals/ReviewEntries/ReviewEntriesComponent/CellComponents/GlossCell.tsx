@@ -36,6 +36,7 @@ export default function GlossCell(
             glosses={sense.glosses}
             defaultLang={analysisLang}
             keyPrefix={`row-${props.rowData.id}-gloss`}
+            key={`row-${props.rowData.id}-gloss`}
             onChange={(glosses) =>
               props.onRowDataChange &&
               props.onRowDataChange({
