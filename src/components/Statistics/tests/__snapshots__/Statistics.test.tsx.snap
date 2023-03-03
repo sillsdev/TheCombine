@@ -220,9 +220,6 @@ Array [
       <ul
         className="MuiList-root MuiList-padding makeStyles-root-2 css-h4y409-MuiList-root"
       >
-        <hr
-          className="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
-        />
         <li
           className="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1i8meaj-MuiListItem-root"
           disabled={false}
