@@ -11,7 +11,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 
 jobs:
   test_build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         dotnet: ["6.0.x"]
@@ -67,7 +67,7 @@ jobs:
       actions: read # for github/codeql-action/init to get workflow details
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/autobuild to send a status report
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@c8454efe5d0bdefd25384362fe217428ca277d57 # v2.2.0
