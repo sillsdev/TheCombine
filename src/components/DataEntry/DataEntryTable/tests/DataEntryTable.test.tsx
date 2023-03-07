@@ -33,6 +33,14 @@ jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 jest.spyOn(window, "alert").mockImplementation(() => {});
+jest.mock("notistack", () => ({
+  ...jest.requireActual("notistack"),
+  useSnackbar: () => {
+    return {
+      enqueueSnackbar: mockEnqueue,
+    };
+  },
+}));
 
 let testRenderer: ReactTestRenderer;
 let testHandle: ReactTestInstance;
@@ -49,6 +57,7 @@ const mockGetProject = jest.fn();
 const mockGetWord = jest.fn();
 const mockHideQuestions = jest.fn();
 const mockUpdateWord = jest.fn();
+const mockEnqueue = jest.fn();
 function setMockFunction() {
   mockCreateWord.mockResolvedValue(mockWord());
   mockGetProject.mockResolvedValue(newProject());

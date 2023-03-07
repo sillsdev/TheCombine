@@ -115,17 +115,26 @@ export default function DataEntryTable(
   const [isFetchingFrontier, setIsFetchingFrontier] = useState<boolean>(false);
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const refNewEntry = useRef<NewEntry>(null);
-  const recorder = new Recorder();
+  let refNewEntry = useRef<NewEntry>(null);
+  const [recorder, setRecorder] = useState<Recorder>(new Recorder());
+  console.log(1);
 
   useEffect(() => {
     async function fetchData() {
       await updateExisting();
       await getProjectSettings();
     }
-    console.log(1);
+
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useMemo(async () => {
+    if (props.treeIsOpen) {
+      await exitGracefully();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.treeIsOpen]);
 
   async function getProjectSettings(): Promise<void> {
     const proj = await backend.getProject();
@@ -523,7 +532,7 @@ export default function DataEntryTable(
           entry.word = word;
         }
       });
-      defunctWordIdsTemp = defunctWordIds.filter((id) => id !== oldWordId);
+      defunctWordIdsTemp = defunctWordIdsTemp.filter((id) => id !== oldWordId);
     } else {
       const thisDomId = props.semanticDomain.id;
       word.senses.forEach((sense, senseIndex) => {
@@ -554,7 +563,7 @@ export default function DataEntryTable(
           senseIndex--;
         }
         const newEntry: WordAccess = { ...entry, word, senseIndex };
-        recentlyAddedWords.splice(index, 1, newEntry);
+        recentlyAddedWordsTemp.splice(index, 1, newEntry);
       }
     });
     const defunctWordIdsTemp = defunctWordIds.filter((id) => id !== oldWordId);
