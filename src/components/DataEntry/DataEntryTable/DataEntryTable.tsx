@@ -115,19 +115,21 @@ export default function DataEntryTable(
   const [isFetchingFrontier, setIsFetchingFrontier] = useState<boolean>(false);
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  let refNewEntry = useRef<NewEntry>(null);
+  const refNewEntry = useRef<NewEntry>(null);
   const [recorder, setRecorder] = useState<Recorder>(new Recorder());
   console.log(1);
 
   useEffect(() => {
     async function fetchData() {
-      await updateExisting();
+      if (!isFetchingFrontier) {
+        setIsFetchingFrontier(true);
+        setExistingWords(await props.getWordsFromBackend());
+        setIsFetchingFrontier(false);
+      }
       await getProjectSettings();
     }
-
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props]);
 
   useMemo(async () => {
     if (props.treeIsOpen) {
