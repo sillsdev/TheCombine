@@ -2,7 +2,7 @@ import {
   Divider,
   Grid,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Theme,
   Typography,
@@ -83,21 +83,19 @@ export default function Statistics(): ReactElement {
   function handleButton() {
     return (
       <List className={classes.root}>
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.User)}
           selected={viewName === viewEnum.User}
         >
           <ListItemText primary={t("statistics.userView")} />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.Domain)}
           selected={viewName === viewEnum.Domain}
         >
           <ListItemText primary={t("statistics.domainView")} />
-        </ListItem>
+        </ListItemButton>
       </List>
     );
   }
