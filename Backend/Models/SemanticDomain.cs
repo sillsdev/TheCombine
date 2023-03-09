@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SIL.Extensions;
 
 namespace BackendFramework.Models
 {
@@ -200,7 +201,7 @@ namespace BackendFramework.Models
 
         public WordsPerDayUserChartJSCount(string isoString)
         {
-            ShortDateString = DateTime.Parse(isoString, null, System.Globalization.DateTimeStyles.RoundtripKind).ToShortDateString();
+            ShortDateString = DateTimeExtensions.ParseDateTimePermissivelyWithException(isoString).ToISO8601TimeFormatDateOnlyString();
             UserNameCountDictionary = new Dictionary<string, int>();
         }
     }

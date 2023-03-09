@@ -178,7 +178,6 @@ export class DataEntryTable extends React.Component<
     }
 
     const word = await backend.getWord(wordId);
-    await backend.updateWord(word);
 
     this.addToDisplay({ word, senseIndex: 0 }, insertIndex);
   }

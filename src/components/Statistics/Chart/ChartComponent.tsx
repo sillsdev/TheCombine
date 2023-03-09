@@ -20,6 +20,8 @@ export default function ChartComponent(props: ChartProps) {
   >([]);
   const [chartType, setChartType] = useState<chartTypeEnum>(props.chartType);
 
+  console.log(barChartList);
+
   useEffect(() => {
     const updateBarChartList = async () => {
       const list = await GetWordsPerDayUserChartJSCounts(

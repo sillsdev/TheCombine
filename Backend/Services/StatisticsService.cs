@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-
-
+using SIL.Extensions;
 
 namespace BackendFramework.Services
 {
@@ -88,12 +87,12 @@ namespace BackendFramework.Services
                         // The created timestamp may not exist for some model
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            DateTime tempDate = DateTime.Parse(sd.Created, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                            DateTime tempDate = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created);
                             var userName = userNameIdDictionary.GetValueOrDefault(sd.UserId, "");
                             // WordsPerDayUserChartJSCount exist for particular day
-                            if (shortTimeDictionary.ContainsKey(tempDate.ToShortDateString()) && !string.IsNullOrEmpty(userName))
+                            if (shortTimeDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()) && !string.IsNullOrEmpty(userName))
                             {
-                                var barChartNode = shortTimeDictionary[tempDate.ToShortDateString()];
+                                var barChartNode = shortTimeDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()];
                                 barChartNode.UserNameCountDictionary[userName] = barChartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
                             }
                             // WordsPerDayUserChartJSCount NOT exist, create one and update to the Dictionary
