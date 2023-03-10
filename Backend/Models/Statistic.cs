@@ -9,34 +9,6 @@ using SIL.Extensions;
 namespace BackendFramework.Models
 {
 
-    //interface DatasetsProps {
-    //   label: string;
-    //   data: Array<number>;
-    //   borderColor: string;
-    //   backgroundColor: string;
-    // }
-
-    public class Dataset
-    {
-        [Required]
-        public string Label { get; set; }
-        [Required]
-        public int[] Data { get; set; }
-
-        public string BorderColor { get; set; }
-
-        public string BackgroundColor { get; set; }
-
-        public Dataset(string label, int data)
-        {
-            Label = label;
-            Data = new int[] { data };
-            BorderColor = "";
-            BackgroundColor = "";
-        }
-    }
-
-
     /*
         data object just for Service method used only
         Not for MongoDB store
@@ -121,19 +93,46 @@ namespace BackendFramework.Models
     //   datasets: Array<DatasetsProps>;
     // }
 
-    public class ChartData
+    public class ChartJsRootData
     {
         [Required]
-        [BsonElement("labels")]
-        public string[] Labels { get; set; }
+        public List<string> Labels { get; set; }
         [Required]
-        [BsonElement("datasets")]
-        public Dataset[] Datasets { get; set; }
+        public List<Dataset> Datasets { get; set; }
 
-        public ChartData()
+        public ChartJsRootData()
         {
-            Labels = new string[] { };
-            Datasets = new Dataset[] { };
+            Labels = new List<string>();
+            Datasets = new List<Dataset>();
+        }
+    }
+
+    //interface DatasetsProps {
+    //   label: string;
+    //   data: Array<number>;
+    //   borderColor: string;
+    //   backgroundColor: string;
+    // }
+
+    public class Dataset
+    {
+        [Required]
+        public string Label { get; set; }
+        [Required]
+        public List<int> Data { get; set; }
+
+        [Required]
+        public string BorderColor { get; set; }
+
+        [Required]
+        public string BackgroundColor { get; set; }
+
+        public Dataset(string label, int data)
+        {
+            Label = label;
+            Data = new List<int>() { data };
+            BorderColor = "";
+            BackgroundColor = "";
         }
     }
 

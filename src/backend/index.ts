@@ -21,6 +21,7 @@ import {
   Word,
   SemanticDomainUserCount,
   WordsPerDayUserChartJSCount,
+  ChartJsRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -702,13 +703,13 @@ export async function GetWordsPerDayUserChartJSCounts(
   return response.data ?? undefined;
 }
 
-// export async function GetWordsPerDayUserLineChartData(
-//   projectId: string
-// ): Promise<Array<ChartData> | undefined> {
-//   const response = await statisticsApi.getWordsPerDayUserLineChartData(
-//     { projectId: projectId },
-//     defaultOptions()
-//   );
-//   // The backend response for this methods returns null rather than undefined.
-//   return response.data ?? undefined;
-// }
+export async function GetWordsPerDayUserLineChartData(
+  projectId: string
+): Promise<ChartJsRootData | undefined> {
+  const response = await statisticsApi.getWordsPerDayUserLineChartData(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}

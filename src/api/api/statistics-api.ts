@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { ChartJsRootData } from "../models";
+// @ts-ignore
 import { SemanticDomainCount } from "../models";
 // @ts-ignore
 import { SemanticDomainUserCount } from "../models";
@@ -349,7 +351,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<Array<WordsPerDayUserChartJSCount>>
+      ) => AxiosPromise<ChartJsRootData>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getWordsPerDayUserLineChartData(
@@ -432,7 +434,7 @@ export const StatisticsApiFactory = function (
     getWordsPerDayUserLineChartData(
       projectId?: string,
       options?: any
-    ): AxiosPromise<Array<WordsPerDayUserChartJSCount>> {
+    ): AxiosPromise<ChartJsRootData> {
       return localVarFp
         .getWordsPerDayUserLineChartData(projectId, options)
         .then((request) => request(axios, basePath));

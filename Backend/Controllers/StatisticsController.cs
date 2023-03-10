@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SIL.Extensions;
 
 namespace BackendFramework.Controllers
 {
@@ -69,7 +71,7 @@ namespace BackendFramework.Controllers
         }
 
         [HttpGet("GetWordsPerDayUserLineChartData", Name = "GetWordsPerDayUserLineChartData")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayUserChartJSCount>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartJsRootData))]
         public async Task<IActionResult> GetWordsPerDayUserLineChartData(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -83,6 +85,13 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
+
+            // var list = await _staService.GetWordsPerDayUserChartJSCounts(projectId);
+            // if (list is null)
+            // {
+            //     return NoContent();
+            // }
+
 
             return Ok(await _staService.GetWordsPerDayUserLineChartData(projectId));
         }

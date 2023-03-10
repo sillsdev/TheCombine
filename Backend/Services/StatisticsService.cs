@@ -116,25 +116,23 @@ namespace BackendFramework.Services
         }
 
 
-        public async Task<ChartData> GetWordsPerDayUserLineChartData(string projectId)
+        public async Task<ChartJsRootData> GetWordsPerDayUserLineChartData(string projectId)
         {
             List<WordsPerDayUserChartJSCount> list = await GetWordsPerDayUserChartJSCounts(projectId);
-            ChartData LineChartData = new ChartData();
-            if (list == null) return LineChartData;
-
+            ChartJsRootData LineChartData = new ChartJsRootData();
 
             foreach (WordsPerDayUserChartJSCount temp in list)
             {
-                LineChartData.Labels.Append(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
-                if (LineChartData.Datasets.Length == 0)
+                LineChartData.Labels.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
+                if (LineChartData.Datasets.Count == 0)
                 {
                     var totalDay = 0;
                     foreach (var item in temp.UserNameCountDictionary)
                     {
                         totalDay += item.Value;
-                        LineChartData.Datasets.Append(new Dataset(item.Key, item.Value));
+                        LineChartData.Datasets.Add(new Dataset(item.Key, item.Value));
                     }
-                    LineChartData.Datasets.Append(new Dataset("Total", totalDay));
+                    LineChartData.Datasets.Add(new Dataset("Total", totalDay));
                 }
                 else
                 {
@@ -142,9 +140,9 @@ namespace BackendFramework.Services
                     foreach (var item in temp.UserNameCountDictionary)
                     {
                         totalDay += item.Value;
-                        Array.Find(LineChartData.Datasets, element => element.Label == item.Key)?.Data.Append(item.Value);
+                        LineChartData.Datasets.Find(element => element.Label == item.Key)?.Data.Add(item.Value);
                     }
-                    Array.Find(LineChartData.Datasets, element => element.Label == "Total")?.Data.Append(totalDay);
+                    LineChartData.Datasets.Find(element => element.Label == "Total")?.Data.Add(totalDay);
                 }
             }
 

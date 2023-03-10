@@ -13,6 +13,10 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 import { WordsPerDayUserChartJSCount } from "api";
+import {
+  GetWordsPerDayUserChartJSCounts,
+  GetWordsPerDayUserLineChartData,
+} from "backend";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -26,14 +30,14 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  chartNodeList: WordsPerDayUserChartJSCount[];
+  currentProjectId: string;
 }
 
 interface DatasetsProps {
   label: string;
   data: Array<number>;
-  borderColor: string;
-  backgroundColor: string;
+  borderColor?: string;
+  backgroundColor?: string;
 }
 
 interface LineChartDataProps {
@@ -49,20 +53,39 @@ export default function LineChartComponent(props: LineChartProps) {
   });
 
   useEffect(() => {
-    var LineChartData: LineChartDataProps = {
-      labels: [],
-      datasets: [],
+    const updateBarChartList = async () => {
+      var updateChartData: LineChartDataProps = {
+        labels: [],
+        datasets: [],
+      };
+
+      const chartData = await GetWordsPerDayUserLineChartData(
+        props.currentProjectId
+      );
+
+      if (chartData != undefined) {
+        // Get array of unique Color
+        var palette: chroma.Color[];
+        if (chartData.datasets.length) {
+          palette = distinctColors({
+            count: chartData.datasets.length,
+          });
+        }
+        let colorIndex = 0;
+        chartData.labels.forEach((e) => {
+          updateChartData.labels.push(e);
+        });
+        chartData.datasets.forEach((e) => {
+          e.backgroundColor = palette[colorIndex].hex().toString();
+          e.borderColor = palette[colorIndex++].hex().toString();
+          updateChartData.datasets.push(e);
+        });
+      }
+
+      setChartData(updateChartData);
     };
-    // Get array of unique Color
-    var palette: chroma.Color[];
-    if (props.chartNodeList.length) {
-      palette = distinctColors({
-        count:
-          Object.keys(props.chartNodeList[0].userNameCountDictionary).length +
-          1,
-      });
-      // Update chartData to LineChartData
-    }
+
+    updateBarChartList();
 
     // Line Chart Options
     setChartOptions({
