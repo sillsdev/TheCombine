@@ -4,23 +4,21 @@ import LineChartComponent from "./LineChartComponent";
 import { WordsPerDayUserChartJSCount } from "api";
 import { GetWordsPerDayUserChartJSCounts } from "backend";
 
-export enum chartTypeEnum {
+export enum ChartTypeEnum {
   LineChart = "Line",
   otherChart = "TBD",
 }
 
 interface ChartProps {
   currentProjectId: string;
-  chartType: chartTypeEnum;
+  chartType: ChartTypeEnum;
 }
 
 export default function ChartComponent(props: ChartProps) {
-  const [barChartList, setBarChartList] = useState<
-    WordsPerDayUserChartJSCount[]
-  >([]);
-  const [chartType, setChartType] = useState<chartTypeEnum>(props.chartType);
+  const [chartList, setChartList] = useState<WordsPerDayUserChartJSCount[]>([]);
+  const [chartType, setChartType] = useState<ChartTypeEnum>(props.chartType);
 
-  console.log(barChartList);
+  console.log(chartList);
 
   useEffect(() => {
     const updateBarChartList = async () => {
@@ -28,7 +26,7 @@ export default function ChartComponent(props: ChartProps) {
         props.currentProjectId
       );
       if (list != undefined) {
-        return setBarChartList(list);
+        return setChartList(list);
       }
     };
 
@@ -37,8 +35,8 @@ export default function ChartComponent(props: ChartProps) {
 
   return (
     <React.Fragment>
-      {chartType === chartTypeEnum.LineChart && (
-        <LineChartComponent chartNodeList={barChartList} />
+      {chartType === ChartTypeEnum.LineChart && (
+        <LineChartComponent chartNodeList={chartList} />
       )}
     </React.Fragment>
   );

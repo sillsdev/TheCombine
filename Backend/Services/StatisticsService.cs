@@ -92,8 +92,8 @@ namespace BackendFramework.Services
                             // WordsPerDayUserChartJSCount exist for particular day
                             if (shortTimeDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()) && !string.IsNullOrEmpty(userName))
                             {
-                                var barChartNode = shortTimeDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()];
-                                barChartNode.UserNameCountDictionary[userName] = barChartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
+                                var chartNode = shortTimeDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()];
+                                chartNode.UserNameCountDictionary[userName] = chartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
                             }
                             // WordsPerDayUserChartJSCount NOT exist, create one and update to the Dictionary
                             else
@@ -104,16 +104,53 @@ namespace BackendFramework.Services
                                     tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
                                 }
                                 tempBarChartNode.UserNameCountDictionary[userName] = 1;
-                                shortTimeDictionary.Add(tempBarChartNode.ShortDateString, tempBarChartNode);
+                                shortTimeDictionary.Add(tempBarChartNode.DateTime.ToISO8601TimeFormatDateOnlyString(), tempBarChartNode);
                             }
                         }
                     }
                 }
             }
             // sort by date order
-            var resList = shortTimeDictionary.Values.ToList().OrderBy(t => t.ShortDateString).ToList();
+            var resList = shortTimeDictionary.Values.ToList().OrderBy(t => t.DateTime.ToISO8601TimeFormatDateOnlyString()).ToList();
             return resList;
         }
+
+
+        public async Task<ChartData> GetWordsPerDayUserLineChartData(string projectId)
+        {
+            List<WordsPerDayUserChartJSCount> list = await GetWordsPerDayUserChartJSCounts(projectId);
+            ChartData LineChartData = new ChartData();
+            if (list == null) return LineChartData;
+
+
+            foreach (WordsPerDayUserChartJSCount temp in list)
+            {
+                LineChartData.Labels.Append(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
+                if (LineChartData.Datasets.Length == 0)
+                {
+                    var totalDay = 0;
+                    foreach (var item in temp.UserNameCountDictionary)
+                    {
+                        totalDay += item.Value;
+                        LineChartData.Datasets.Append(new Dataset(item.Key, item.Value));
+                    }
+                    LineChartData.Datasets.Append(new Dataset("Total", totalDay));
+                }
+                else
+                {
+                    var totalDay = 0;
+                    foreach (var item in temp.UserNameCountDictionary)
+                    {
+                        totalDay += item.Value;
+                        Array.Find(LineChartData.Datasets, element => element.Label == item.Key)?.Data.Append(item.Value);
+                    }
+                    Array.Find(LineChartData.Datasets, element => element.Label == "Total")?.Data.Append(totalDay);
+                }
+            }
+
+            return LineChartData;
+        }
+
 
         /// <summary>
         /// Get the counts of senses and domains for user return a list of SemanticDomainUserCount objects <see cref="SemanticDomainUserCount"/>

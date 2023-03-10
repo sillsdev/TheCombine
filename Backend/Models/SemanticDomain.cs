@@ -169,40 +169,4 @@ namespace BackendFramework.Models
             Children = new List<SemanticDomain>();
         }
     }
-
-    public class SemanticDomainCount
-    {
-        [Required]
-        [BsonElement("semanticDomainTreeNode")]
-        public SemanticDomainTreeNode SemanticDomainTreeNode { get; set; }
-
-        [Required]
-        [BsonElement("count")]
-        public int Count { get; set; }
-
-        public SemanticDomainCount(SemanticDomainTreeNode semanticDomainTreeNode, int count)
-        {
-            SemanticDomainTreeNode = semanticDomainTreeNode;
-            Count = count;
-        }
-    }
-
-
-    //The data structure is for per user per day chartJS use only
-    public class WordsPerDayUserChartJSCount
-    {
-        [Required]
-        [BsonElement("shortDateString")]
-        public string ShortDateString { get; set; }
-
-        [Required]
-        [BsonElement("userNameCountDictionary")]
-        public Dictionary<string, int> UserNameCountDictionary { get; set; }
-
-        public WordsPerDayUserChartJSCount(string isoString)
-        {
-            ShortDateString = DateTimeExtensions.ParseDateTimePermissivelyWithException(isoString).ToISO8601TimeFormatDateOnlyString();
-            UserNameCountDictionary = new Dictionary<string, int>();
-        }
-    }
 }

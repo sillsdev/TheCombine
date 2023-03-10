@@ -23,7 +23,7 @@ export interface WordsPerDayUserChartJSCount {
    * @type {string}
    * @memberof WordsPerDayUserChartJSCount
    */
-  shortDateString: string;
+  dateTime: string;
   /**
    *
    * @type {{ [key: string]: number; }}

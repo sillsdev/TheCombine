@@ -68,6 +68,26 @@ namespace BackendFramework.Controllers
             return Ok(await _staService.GetWordsPerDayUserChartJSCounts(projectId));
         }
 
+        [HttpGet("GetWordsPerDayUserLineChartData", Name = "GetWordsPerDayUserLineChartData")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayUserChartJSCount>))]
+        public async Task<IActionResult> GetWordsPerDayUserLineChartData(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            // Ensure project exists.
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            return Ok(await _staService.GetWordsPerDayUserLineChartData(projectId));
+        }
+
+
 
 
         /// <summary> Get a list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>

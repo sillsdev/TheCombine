@@ -11,7 +11,7 @@ import { makeStyles } from "@mui/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import ChartComponent, { chartTypeEnum } from "./Chart/ChartComponent";
+import ChartComponent, { ChartTypeEnum } from "./Chart/ChartComponent";
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
 import ProgressBarComponent from "./ProgressBar/ProgressBarComponent";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
@@ -81,7 +81,7 @@ export default function Statistics(): ReactElement {
         <Grid item key={viewEnum.Time + "ChartComponent"}>
           <ChartComponent
             currentProjectId={currentProject!.id}
-            chartType={chartTypeEnum.LineChart}
+            chartType={ChartTypeEnum.LineChart}
           />
         </Grid>,
       ],

@@ -61,50 +61,7 @@ export default function LineChartComponent(props: LineChartProps) {
           Object.keys(props.chartNodeList[0].userNameCountDictionary).length +
           1,
       });
-      // Update the LineCharNode
-      const updateLineChartData = () => {
-        props.chartNodeList.forEach((element) => {
-          LineChartData.labels.push(element.shortDateString);
-          // Create DatasetsProps If have not created yet for LineChartData
-          if (LineChartData.datasets.length == 0) {
-            let totalDay = 0;
-            let colorIndex = 0;
-            for (const key in element.userNameCountDictionary) {
-              const value = element.userNameCountDictionary[key];
-              totalDay += value;
-              LineChartData.datasets.push({
-                label: key,
-                data: [value],
-                borderColor: palette[colorIndex].hex().toString(),
-                backgroundColor: palette[colorIndex++].hex().toString(),
-              });
-            }
-            // Add a extra total element
-            LineChartData.datasets.push({
-              label: "Total",
-              data: [totalDay],
-              borderColor: palette[colorIndex].hex().toString(),
-              backgroundColor: palette[colorIndex++].hex().toString(),
-            });
-          } else {
-            // Update data if DatasetsProps exist
-            let totalDay = 0;
-            for (const key in element.userNameCountDictionary) {
-              const value = element.userNameCountDictionary[key];
-              totalDay += value;
-              LineChartData.datasets
-                .find((t) => t.label === key)
-                ?.data.push(value);
-            }
-            LineChartData.datasets
-              .find((t) => t.label === "Total")
-              ?.data.push(totalDay);
-          }
-        });
-        // Update chartData to LineChartData
-        return setChartData(LineChartData);
-      };
-      updateLineChartData();
+      // Update chartData to LineChartData
     }
 
     // Line Chart Options
