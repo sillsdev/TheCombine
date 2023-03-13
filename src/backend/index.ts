@@ -20,8 +20,8 @@ import {
   UserRole,
   Word,
   SemanticDomainUserCount,
-  WordsPerDayUserChartJSCount,
-  ChartJsRootData,
+  WordsPerDayPerUserCount,
+  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -692,10 +692,10 @@ export async function getSemanticDomainUserCount(
   return response.data ?? undefined;
 }
 
-export async function GetWordsPerDayUserChartJSCounts(
+export async function GetWordsPerDayPerUserCounts(
   projectId: string
-): Promise<Array<WordsPerDayUserChartJSCount> | undefined> {
-  const response = await statisticsApi.getWordsPerDayUserChartJSCounts(
+): Promise<Array<WordsPerDayPerUserCount> | undefined> {
+  const response = await statisticsApi.getWordsPerDayPerUserCounts(
     { projectId: projectId },
     defaultOptions()
   );
@@ -703,10 +703,10 @@ export async function GetWordsPerDayUserChartJSCounts(
   return response.data ?? undefined;
 }
 
-export async function GetWordsPerDayUserLineChartData(
+export async function getLineChartRootData(
   projectId: string
-): Promise<ChartJsRootData | undefined> {
-  const response = await statisticsApi.getWordsPerDayUserLineChartData(
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getLineChartRootData(
     { projectId: projectId },
     defaultOptions()
   );

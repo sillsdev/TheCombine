@@ -12,11 +12,7 @@ import distinctColors from "distinct-colors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-import { WordsPerDayUserChartJSCount } from "api";
-import {
-  GetWordsPerDayUserChartJSCounts,
-  GetWordsPerDayUserLineChartData,
-} from "backend";
+import { getLineChartRootData } from "backend";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -59,9 +55,7 @@ export default function LineChartComponent(props: LineChartProps) {
         datasets: [],
       };
 
-      const chartData = await GetWordsPerDayUserLineChartData(
-        props.currentProjectId
-      );
+      const chartData = await getLineChartRootData(props.currentProjectId);
 
       if (chartData != undefined) {
         // Get array of unique Color
@@ -72,13 +66,17 @@ export default function LineChartComponent(props: LineChartProps) {
           });
         }
         let colorIndex = 0;
-        chartData.labels.forEach((e) => {
+        // Update the updateChartData by retrieve
+        chartData.labels.map((e) => {
           updateChartData.labels.push(e);
         });
         chartData.datasets.forEach((e) => {
-          e.backgroundColor = palette[colorIndex].hex().toString();
-          e.borderColor = palette[colorIndex++].hex().toString();
-          updateChartData.datasets.push(e);
+          updateChartData.datasets.push({
+            label: e.label,
+            data: e.data,
+            borderColor: palette[colorIndex].hex().toString(),
+            backgroundColor: palette[colorIndex++].hex().toString(),
+          });
         });
       }
 

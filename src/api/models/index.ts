@@ -1,6 +1,6 @@
 export * from "./autocomplete-setting";
 export * from "./banner-type";
-export * from "./chart-js-root-data";
+export * from "./chart-root-data";
 export * from "./credentials";
 export * from "./custom-field";
 export * from "./dataset";
@@ -33,5 +33,5 @@ export * from "./user-edit";
 export * from "./user-edit-step-wrapper";
 export * from "./user-role";
 export * from "./word";
-export * from "./words-per-day-user-chart-jscount";
+export * from "./words-per-day-per-user-count";
 export * from "./writing-system";

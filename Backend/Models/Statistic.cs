@@ -9,11 +9,8 @@ using SIL.Extensions;
 namespace BackendFramework.Models
 {
 
-    /*
-        data object just for Service method used only
-        Not for MongoDB store
-    */
-    /// <summary> Contains Id/username, DomainHashSet/DomainCount and WordCount for Words Per User Statistics </summary>
+    ///<summary>This class contains all the data needed by the Statistics service to report on how many words a user has collected in each domain.</summary>
+    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
     public class SemanticDomainUserCount
     {
         [Required]
@@ -45,12 +42,8 @@ namespace BackendFramework.Models
         }
     }
 
-
-
-    /*
-        data object just for Service method used only
-        Not for MongoDB store
-    */
+    ///<summary>This class contains all the data needed by the Statistics service to report on how many words has collected in each domain.</summary>
+    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
     public class SemanticDomainCount
     {
         [Required]
@@ -66,12 +59,9 @@ namespace BackendFramework.Models
         }
     }
 
-    /*
-        data object just for Service method used only
-        Not for MongoDB store
-    */
-    //The data structure is for per user per day chartJS use only
-    public class WordsPerDayUserChartJSCount
+    ///<summary>This class contains the data needed by the Statistics service to generate how many words has collected Per day Per User</summary>
+    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    public class WordsPerDayPerUserCount
     {
         [Required]
         public DateTime DateTime { get; set; }
@@ -79,60 +69,44 @@ namespace BackendFramework.Models
         [Required]
         public Dictionary<string, int> UserNameCountDictionary { get; set; }
 
-        public WordsPerDayUserChartJSCount(string isoString)
+        public WordsPerDayPerUserCount(string isoString)
         {
             DateTime = DateTimeExtensions.ParseDateTimePermissivelyWithException(isoString);
             UserNameCountDictionary = new Dictionary<string, int>();
         }
     }
 
-
-
-    //interface LineChartDataProps {
-    //   labels: Array<string>;
-    //   datasets: Array<DatasetsProps>;
-    // }
-
-    public class ChartJsRootData
+    ///<summary>This class contains the data needed by the Statistics service to create Root Data for Chart</summary>
+    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    public class ChartRootData
     {
         [Required]
+        // The Labels represent a List string of date
         public List<string> Labels { get; set; }
         [Required]
         public List<Dataset> Datasets { get; set; }
 
-        public ChartJsRootData()
+        public ChartRootData()
         {
             Labels = new List<string>();
             Datasets = new List<Dataset>();
         }
     }
 
-    //interface DatasetsProps {
-    //   label: string;
-    //   data: Array<number>;
-    //   borderColor: string;
-    //   backgroundColor: string;
-    // }
-
+    ///<summary>This class contains the data needed by the Statistics service to fill out ChartRootData</summary>
+    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
     public class Dataset
     {
         [Required]
+        //The Label represent UserName
         public string Label { get; set; }
         [Required]
         public List<int> Data { get; set; }
-
-        [Required]
-        public string BorderColor { get; set; }
-
-        [Required]
-        public string BackgroundColor { get; set; }
 
         public Dataset(string label, int data)
         {
             Label = label;
             Data = new List<int>() { data };
-            BorderColor = "";
-            BackgroundColor = "";
         }
     }
 

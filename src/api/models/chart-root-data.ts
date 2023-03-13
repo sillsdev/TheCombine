@@ -17,19 +17,19 @@ import { Dataset } from "./dataset";
 /**
  *
  * @export
- * @interface ChartJsRootData
+ * @interface ChartRootData
  */
-export interface ChartJsRootData {
+export interface ChartRootData {
   /**
    *
    * @type {Array<string>}
-   * @memberof ChartJsRootData
+   * @memberof ChartRootData
    */
   labels: Array<string>;
   /**
    *
    * @type {Array<Dataset>}
-   * @memberof ChartJsRootData
+   * @memberof ChartRootData
    */
   datasets: Array<Dataset>;
 }

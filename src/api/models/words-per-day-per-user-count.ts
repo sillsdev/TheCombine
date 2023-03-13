@@ -15,19 +15,19 @@
 /**
  *
  * @export
- * @interface WordsPerDayUserChartJSCount
+ * @interface WordsPerDayPerUserCount
  */
-export interface WordsPerDayUserChartJSCount {
+export interface WordsPerDayPerUserCount {
   /**
    *
    * @type {string}
-   * @memberof WordsPerDayUserChartJSCount
+   * @memberof WordsPerDayPerUserCount
    */
   dateTime: string;
   /**
    *
    * @type {{ [key: string]: number; }}
-   * @memberof WordsPerDayUserChartJSCount
+   * @memberof WordsPerDayPerUserCount
    */
   userNameCountDictionary: { [key: string]: number };
 }

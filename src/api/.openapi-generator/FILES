@@ -22,7 +22,7 @@ git_push.sh
 index.ts
 models/autocomplete-setting.ts
 models/banner-type.ts
-models/chart-js-root-data.ts
+models/chart-root-data.ts
 models/credentials.ts
 models/custom-field.ts
 models/dataset.ts
@@ -56,5 +56,5 @@ models/user-edit.ts
 models/user-role.ts
 models/user.ts
 models/word.ts
-models/words-per-day-user-chart-jscount.ts
+models/words-per-day-per-user-count.ts
 models/writing-system.ts

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import LineChartComponent from "./LineChartComponent";
-import { WordsPerDayUserChartJSCount } from "api";
-import { GetWordsPerDayUserChartJSCounts } from "backend";
 
 export enum ChartTypeEnum {
   LineChart = "Line",

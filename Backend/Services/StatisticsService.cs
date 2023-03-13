@@ -56,17 +56,17 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get the count of words per day per user as a list of WordsPerDayUserChartJSCount objects <see cref="WordsPerDayUserChartJSCount"/>
+        /// Get the count of words per day per user as a list of WordsPerDayPerUserCount objects <see cref="WordsPerDayPerUserCount"/>
         /// </summary>
-        public async Task<List<WordsPerDayUserChartJSCount>> GetWordsPerDayUserChartJSCounts(string projectId)
+        public async Task<List<WordsPerDayPerUserCount>> GetWordsPerDayPerUserCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            Dictionary<string, WordsPerDayUserChartJSCount> shortTimeDictionary = new Dictionary<string, WordsPerDayUserChartJSCount>();
+            Dictionary<string, WordsPerDayPerUserCount> shortTimeDictionary = new Dictionary<string, WordsPerDayPerUserCount>();
             Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
             if (wordList == null)
             {
-                return new List<WordsPerDayUserChartJSCount>();
+                return new List<WordsPerDayPerUserCount>();
             }
 
             var allUsers = await _userRepo.GetAllUsers();
@@ -89,16 +89,16 @@ namespace BackendFramework.Services
                         {
                             DateTime tempDate = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created);
                             var userName = userNameIdDictionary.GetValueOrDefault(sd.UserId, "");
-                            // WordsPerDayUserChartJSCount exist for particular day
+                            // WordsPerDayPerUserCount exist for particular day
                             if (shortTimeDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()) && !string.IsNullOrEmpty(userName))
                             {
                                 var chartNode = shortTimeDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()];
                                 chartNode.UserNameCountDictionary[userName] = chartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
                             }
-                            // WordsPerDayUserChartJSCount NOT exist, create one and update to the Dictionary
+                            // WordsPerDayPerUserCount NOT exist, create one and update to the Dictionary
                             else
                             {
-                                var tempBarChartNode = new WordsPerDayUserChartJSCount(sd.Created);
+                                var tempBarChartNode = new WordsPerDayPerUserCount(sd.Created);
                                 foreach (User u in projectUsers)
                                 {
                                     tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
@@ -116,14 +116,25 @@ namespace BackendFramework.Services
         }
 
 
-        public async Task<ChartJsRootData> GetWordsPerDayUserLineChartData(string projectId)
+        /// <summary>
+        /// Get a ChartRootData objects <see cref="ChartRootData"/> to generate a Line Chart,
+        /// Return a empty Object if the project is empty or null
+        /// </summary>
+        public async Task<ChartRootData> GetLineChartRootData(string projectId)
         {
-            List<WordsPerDayUserChartJSCount> list = await GetWordsPerDayUserChartJSCounts(projectId);
-            ChartJsRootData LineChartData = new ChartJsRootData();
+            ChartRootData LineChartData = new ChartRootData();
+            List<WordsPerDayPerUserCount> list = await GetWordsPerDayPerUserCounts(projectId);
+            // if the list is null or empty return new ChartRootData to generate a empty Chart
+            if ((list == null) && (!list!.Any()))
+            {
+                return LineChartData;
+            }
 
-            foreach (WordsPerDayUserChartJSCount temp in list)
+            // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
+            foreach (WordsPerDayPerUserCount temp in list!)
             {
                 LineChartData.Labels.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
+                // first traversal, generate a new Dataset
                 if (LineChartData.Datasets.Count == 0)
                 {
                     var totalDay = 0;
@@ -132,8 +143,10 @@ namespace BackendFramework.Services
                         totalDay += item.Value;
                         LineChartData.Datasets.Add(new Dataset(item.Key, item.Value));
                     }
+                    // update "Total", Line Chart needed
                     LineChartData.Datasets.Add(new Dataset("Total", totalDay));
                 }
+                // remaining traversal, update the object by pushing the value to Data array
                 else
                 {
                     var totalDay = 0;
@@ -142,6 +155,7 @@ namespace BackendFramework.Services
                         totalDay += item.Value;
                         LineChartData.Datasets.Find(element => element.Label == item.Key)?.Data.Add(item.Value);
                     }
+                    // update "Total"
                     LineChartData.Datasets.Find(element => element.Label == "Total")?.Data.Add(totalDay);
                 }
             }

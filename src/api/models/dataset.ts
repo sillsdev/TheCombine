@@ -30,16 +30,4 @@ export interface Dataset {
    * @memberof Dataset
    */
   data: Array<number>;
-  /**
-   *
-   * @type {string}
-   * @memberof Dataset
-   */
-  borderColor: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Dataset
-   */
-  backgroundColor: string;
 }

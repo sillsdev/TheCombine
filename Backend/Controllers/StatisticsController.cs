@@ -49,11 +49,11 @@ namespace BackendFramework.Controllers
         }
 
 
-        /// <summary> Get a list of WordsPerDayUserChartJSCount <see cref="WordsPerDayUserChartJSCount"/>s of a specific project in order </summary>
-        /// <returns> A list of WordsPerDayUserChartJSCount <see cref="WordsPerDayUserChartJSCount"/>s </returns>
-        [HttpGet("GetWordsPerDayUserChartJSCounts", Name = "GetWordsPerDayUserChartJSCounts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayUserChartJSCount>))]
-        public async Task<IActionResult> GetWordsPerDayUserChartJSCounts(string projectId)
+        /// <summary> Get a list of WordsPerDayPerUserCount <see cref="WordsPerDayPerUserCount"/>s of a specific project in order </summary>
+        /// <returns> A list of WordsPerDayPerUserCount <see cref="WordsPerDayPerUserCount"/>s </returns>
+        [HttpGet("GetWordsPerDayPerUserCounts", Name = "GetWordsPerDayPerUserCounts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayPerUserCount>))]
+        public async Task<IActionResult> GetWordsPerDayPerUserCounts(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -67,12 +67,14 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _staService.GetWordsPerDayUserChartJSCounts(projectId));
+            return Ok(await _staService.GetWordsPerDayPerUserCounts(projectId));
         }
 
-        [HttpGet("GetWordsPerDayUserLineChartData", Name = "GetWordsPerDayUserLineChartData")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartJsRootData))]
-        public async Task<IActionResult> GetWordsPerDayUserLineChartData(string projectId)
+
+        /// <summary> Get a ChartRootData <see cref="ChartRootData"/> to generate a Line Chart</summary>
+        [HttpGet("GetLineChartRootData", Name = "GetLineChartRootData")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
+        public async Task<IActionResult> GetLineChartRootData(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -86,14 +88,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            // var list = await _staService.GetWordsPerDayUserChartJSCounts(projectId);
-            // if (list is null)
-            // {
-            //     return NoContent();
-            // }
-
-
-            return Ok(await _staService.GetWordsPerDayUserLineChartData(projectId));
+            return Ok(await _staService.GetLineChartRootData(projectId));
         }
 
 
