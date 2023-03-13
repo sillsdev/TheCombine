@@ -36,6 +36,7 @@ export default function DefinitionCell(
             definitions={sense.definitions}
             defaultLang={analysisLang}
             keyPrefix={`row-${props.rowData.id}-definition`}
+            key={`row-${props.rowData.id}-definition`}
             onChange={(definitions) =>
               props.onRowDataChange &&
               props.onRowDataChange({
