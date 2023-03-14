@@ -2,7 +2,6 @@ import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Theme, Tooltip } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import {
   recording,
@@ -10,6 +9,7 @@ import {
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
 interface RecorderIconProps {
@@ -19,10 +19,10 @@ interface RecorderIconProps {
 }
 
 export default function RecorderIcon(props: RecorderIconProps) {
-  const pronunciationsState = useSelector(
+  const pronunciationsState = useAppSelector(
     (state: StoreState) => state.pronunciationsState
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const useStyles = makeStyles((theme: Theme) => ({

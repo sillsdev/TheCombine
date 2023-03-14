@@ -8,17 +8,17 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import { AutocompleteSetting } from "api/models";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 export default function ProjectAutocomplete() {
-  const project = useSelector(
+  const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   return (

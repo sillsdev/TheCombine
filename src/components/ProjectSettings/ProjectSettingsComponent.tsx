@@ -13,7 +13,6 @@ import {
 import { Grid, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { Permission } from "api/models";
@@ -33,15 +32,16 @@ import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 export default function ProjectSettingsComponent() {
-  const projectId = useSelector(
+  const projectId = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.id
   );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   useEffect(() => {
