@@ -66,7 +66,7 @@
     "react-dom": "^17.0.2",
     "react-i18next": "^12.1.4",
     "react-modal": "^3.16.1",
-    "react-redux": "^7.2.6",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^5.3.1",
     "react-toastify": "^9.1.1",
     "recordrtc": "^5.6.1",
