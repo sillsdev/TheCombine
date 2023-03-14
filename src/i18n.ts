@@ -6,12 +6,20 @@ import { initReactI18next } from "react-i18next";
 
 import { Bcp47Code, uiWritingSystems } from "types/writingSystem";
 
+// declare custom type options so the return is always a string.
+declare module "i18next" {
+  interface CustomTypeOptions {
+    returnNull: false;
+  }
+}
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     //debug: true, // Uncomment to troubleshoot
+    returnNull: false,
     // detection: options,
     // ignoring localStorage and cookies for the detection order lets the user change languages
     // more easily (just switch in the browser and reload, instead of clearing all site data)
