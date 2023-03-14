@@ -25,7 +25,7 @@ export interface ChartRootData {
    * @type {Array<string>}
    * @memberof ChartRootData
    */
-  labels: Array<string>;
+  dates: Array<string>;
   /**
    *
    * @type {Array<Dataset>}

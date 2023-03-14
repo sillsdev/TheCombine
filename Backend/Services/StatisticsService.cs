@@ -133,7 +133,7 @@ namespace BackendFramework.Services
             // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
             foreach (WordsPerDayPerUserCount temp in list!)
             {
-                LineChartData.Labels.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
+                LineChartData.Dates.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
                 // first traversal, generate a new Dataset
                 if (LineChartData.Datasets.Count == 0)
                 {
@@ -153,10 +153,10 @@ namespace BackendFramework.Services
                     foreach (var item in temp.UserNameCountDictionary)
                     {
                         totalDay += item.Value;
-                        LineChartData.Datasets.Find(element => element.Label == item.Key)?.Data.Add(item.Value);
+                        LineChartData.Datasets.Find(element => element.UserName == item.Key)?.Data.Add(item.Value);
                     }
                     // update "Total"
-                    LineChartData.Datasets.Find(element => element.Label == "Total")?.Data.Add(totalDay);
+                    LineChartData.Datasets.Find(element => element.UserName == "Total")?.Data.Add(totalDay);
                 }
             }
 

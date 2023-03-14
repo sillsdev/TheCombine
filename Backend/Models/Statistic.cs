@@ -81,14 +81,13 @@ namespace BackendFramework.Models
     public class ChartRootData
     {
         [Required]
-        // The Labels represent a List string of date
-        public List<string> Labels { get; set; }
+        public List<string> Dates { get; set; }
         [Required]
         public List<Dataset> Datasets { get; set; }
 
         public ChartRootData()
         {
-            Labels = new List<string>();
+            Dates = new List<string>();
             Datasets = new List<Dataset>();
         }
     }
@@ -98,14 +97,13 @@ namespace BackendFramework.Models
     public class Dataset
     {
         [Required]
-        //The Label represent UserName
-        public string Label { get; set; }
+        public string UserName { get; set; }
         [Required]
         public List<int> Data { get; set; }
 
-        public Dataset(string label, int data)
+        public Dataset(string userName, int data)
         {
-            Label = label;
+            UserName = userName;
             Data = new List<int>() { data };
         }
     }

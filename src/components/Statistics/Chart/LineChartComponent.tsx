@@ -67,12 +67,12 @@ export default function LineChartComponent(props: LineChartProps) {
         }
         let colorIndex = 0;
         // Update the updateChartData by retrieve
-        chartData.labels.map((e) => {
+        chartData.dates.map((e) => {
           updateChartData.labels.push(e);
         });
         chartData.datasets.forEach((e) => {
           updateChartData.datasets.push({
-            label: e.label,
+            label: e.userName,
             data: e.data,
             borderColor: palette[colorIndex].hex().toString(),
             backgroundColor: palette[colorIndex++].hex().toString(),

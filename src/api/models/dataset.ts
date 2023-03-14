@@ -23,7 +23,7 @@ export interface Dataset {
    * @type {string}
    * @memberof Dataset
    */
-  label: string;
+  userName: string;
   /**
    *
    * @type {Array<number>}
