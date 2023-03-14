@@ -212,36 +212,4 @@ namespace BackendFramework.Models
             Password = "";
         }
     }
-
-    /// <summary> Contains Id/username, DomainHashSet/DomainCount and WordCount for Words Per User Statistics </summary>
-    public class SemanticDomainUserCount
-    {
-        [Required]
-        public string Id { get; set; }
-
-        public string Username { get; set; }
-        [Required]
-
-        public HashSet<string> DomainSet { get; set; }
-        public int DomainCount { get; set; }
-        public int WordCount { get; set; }
-
-        public SemanticDomainUserCount(string id, string username)
-        {
-            Id = id;
-            Username = username;
-            DomainSet = new HashSet<string>();
-            DomainCount = 0;
-            WordCount = 0;
-        }
-
-        public SemanticDomainUserCount()
-        {
-            Id = "";
-            Username = "";
-            DomainSet = new HashSet<string>();
-            DomainCount = 0;
-            WordCount = 0;
-        }
-    }
 }

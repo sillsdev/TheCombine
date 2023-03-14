@@ -20,6 +20,8 @@ import {
   UserRole,
   Word,
   SemanticDomainUserCount,
+  WordsPerDayPerUserCount,
+  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -684,6 +686,28 @@ export async function getSemanticDomainUserCount(
 ): Promise<Array<SemanticDomainUserCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainUserCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function GetWordsPerDayPerUserCounts(
+  projectId: string
+): Promise<Array<WordsPerDayPerUserCount> | undefined> {
+  const response = await statisticsApi.getWordsPerDayPerUserCounts(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getLineChartRootData(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getLineChartRootData(
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
