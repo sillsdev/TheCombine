@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import history, { Path } from "browserHistory";
 import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
@@ -8,16 +7,17 @@ import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/Mer
 import { StoreState } from "types";
 import { goalTypeToGoal } from "types/goalUtilities";
 import { GoalType } from "types/goals";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 /**
  * Dialog for continuing to a new goal or returning to GoalTimeline.
  */
 export default function NextGoalScreen(): ReactElement {
-  const goalType = useSelector(
+  const goalType = useAppSelector(
     (state: StoreState) => state.goalsState.previousGoalType
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   function loadNextGoal(shouldContinue: boolean): void {
     if (shouldContinue) {
       dispatch(asyncAddGoal(goalTypeToGoal(goalType)));
