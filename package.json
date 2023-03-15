@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
+    "@emotion/styled": "^11.10.6",
     "@loadable/component": "^5.15.0",
     "@material-table/core": "^6.1.13",
     "@matt-block/react-recaptcha-v2": "^1.0.6",
