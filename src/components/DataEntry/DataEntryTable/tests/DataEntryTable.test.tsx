@@ -51,7 +51,6 @@ const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockTreeNode = newSemanticDomainTreeNode();
 const mockSemanticDomain = semDomFromTreeNode(mockTreeNode);
 const mockOpenTree = jest.fn();
-const getWordsFromBackendMock = jest.fn();
 const innerGetWordsFromBackendMock = jest.fn();
 const mockGetFrontierWords = jest.fn();
 
@@ -72,7 +71,6 @@ function setMockFunction() {
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunction();
-  getWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
   innerGetWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
   renderer.act(() => {
     testRenderer = renderer.create(
@@ -80,7 +78,6 @@ beforeEach(() => {
         semanticDomain={mockTreeNode}
         openTree={mockOpenTree}
         hideQuestions={mockHideQuestions}
-        getWordsFromBackend={getWordsFromBackendMock}
         showExistingData={jest.fn()}
       />
     );
@@ -95,7 +92,6 @@ async function exitToTree() {
         treeIsOpen
         openTree={mockOpenTree}
         hideQuestions={mockHideQuestions}
-        getWordsFromBackend={getWordsFromBackendMock}
         showExistingData={jest.fn()}
       />
     );

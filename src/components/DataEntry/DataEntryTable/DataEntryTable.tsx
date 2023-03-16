@@ -39,7 +39,6 @@ interface DataEntryTableProps {
   semanticDomain: SemanticDomainTreeNode;
   treeIsOpen?: boolean;
   openTree: () => void;
-  getWordsFromBackend: () => Promise<Word[]>;
   showExistingData: () => void;
   isSmallScreen?: boolean;
   hideQuestions: () => void;
@@ -631,10 +630,13 @@ export default function DataEntryTable(
       recentlyAddedWords: [],
       defunctWordIds: [],
     }));
+    // MUST reset Ref.current otherwise infinite loop of React Hook call
     pageRef.current = true;
   }, [props]);
 
-  const pageRef = useRef(props.treeIsOpen);
+  // To simulate origin logic from class component calling exitGraceFully method
+  // only update if props.treeIsOpen and prevState of props.treeIsOpen is false
+  const pageRef = useRef(true);
 
   useEffect(() => {
     getProjectSettings();
@@ -655,6 +657,7 @@ export default function DataEntryTable(
     /** Submit un-submitted word before resetting. */
     //Check if there is a new word, but user exited without pressing enter
     const innerExitGracefully = async () => {
+      // default the treeIsOpen update Ref if props.treeIsOpen is false
       if (!props.treeIsOpen) pageRef.current = false;
       if (props.treeIsOpen && pageRef.current === false) {
         if (refNewEntry.current) {
