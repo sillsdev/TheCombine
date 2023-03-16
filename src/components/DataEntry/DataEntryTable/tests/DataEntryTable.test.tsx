@@ -28,6 +28,7 @@ jest.mock("backend", () => ({
   getProject: (id: string) => mockGetProject(id),
   getWord: (id: string) => mockGetWord(id),
   updateWord: (word: Word) => mockUpdateWord(word),
+  getFrontierWords: () => mockGetFrontierWords(),
 }));
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
@@ -51,6 +52,8 @@ const mockTreeNode = newSemanticDomainTreeNode();
 const mockSemanticDomain = semDomFromTreeNode(mockTreeNode);
 const mockOpenTree = jest.fn();
 const getWordsFromBackendMock = jest.fn();
+const innerGetWordsFromBackendMock = jest.fn();
+const mockGetFrontierWords = jest.fn();
 
 const mockCreateWord = jest.fn();
 const mockGetProject = jest.fn();
@@ -63,12 +66,14 @@ function setMockFunction() {
   mockGetProject.mockResolvedValue(newProject());
   mockGetWord.mockResolvedValue([mockMultiWord]);
   mockUpdateWord.mockResolvedValue(mockWord());
+  mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
 }
 
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunction();
   getWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
+  innerGetWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
   renderer.act(() => {
     testRenderer = renderer.create(
       <DataEntryTable
@@ -195,9 +200,10 @@ describe("DataEntryTable", () => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
     mockMultiWord.senses[0].semanticDomains = [
       newSemanticDomain("differentSemDomId"),
-      newSemanticDomain(testHandle.instance.props.semanticDomain.id),
+      newSemanticDomain(testHandle.props.semanticDomain.id),
     ];
-    testHandle.instance.setState({ existingWords: [mockMultiWord] }, () => {
+
+    innerGetWordsFromBackendMock().then(
       testRenderer.root
         .findByType(NewEntry)
         .props.updateWordWithNewGloss(
@@ -209,8 +215,8 @@ describe("DataEntryTable", () => {
           // Assert that the backend function for updating the word was NOT called
           expect(mockUpdateWord).not.toBeCalled();
           done();
-        });
-    });
+        })
+    );
   });
 
   it("updates word in backend if gloss exists with different semantic domain", (done) => {
@@ -220,7 +226,7 @@ describe("DataEntryTable", () => {
       newSemanticDomain("anotherDifferentSemDomId"),
       newSemanticDomain("andAThird"),
     ];
-    testHandle.instance.setState({ existingWords: [mockMultiWord] }, () => {
+    innerGetWordsFromBackendMock().then(
       testRenderer.root
         .findByType(NewEntry)
         .props.updateWordWithNewGloss(
@@ -232,13 +238,13 @@ describe("DataEntryTable", () => {
           // Assert that the backend function for updating the word was called once
           expect(mockUpdateWord).toBeCalledTimes(1);
           done();
-        });
-    });
+        })
+    );
   });
 
   it("updates word in backend if gloss doesn't exist", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    testHandle.instance.setState({ existingWords: [mockMultiWord] }, () => {
+    innerGetWordsFromBackendMock().then(
       testRenderer.root
         .findByType(NewEntry)
         .props.updateWordWithNewGloss(mockMultiWord.id, "differentGloss", [])
@@ -246,7 +252,7 @@ describe("DataEntryTable", () => {
           // Assert that the backend function for updating the word was called once
           expect(mockUpdateWord).toBeCalledTimes(1);
           done();
-        });
-    });
+        })
+    );
   });
 });

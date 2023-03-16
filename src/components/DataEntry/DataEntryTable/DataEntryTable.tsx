@@ -129,7 +129,7 @@ export default function DataEntryTable(
     }));
   }, []);
 
-  const InnerGetWordsFromBackend = useCallback(async (): Promise<Word[]> => {
+  const innerGetWordsFromBackend = useCallback(async (): Promise<Word[]> => {
     const existingWords = await backend.getFrontierWords();
     return filterWords(existingWords);
   }, []);
@@ -140,14 +140,14 @@ export default function DataEntryTable(
         ...prevState,
         isFetchingFrontier: true,
       }));
-      const existingWords = await InnerGetWordsFromBackend();
+      const existingWords = await innerGetWordsFromBackend();
       setState((prevState) => ({
         ...prevState,
         isFetchingFrontier: false,
         existingWords: existingWords,
       }));
     }
-  }, [InnerGetWordsFromBackend, state.isFetchingFrontier]);
+  }, [innerGetWordsFromBackend, state.isFetchingFrontier]);
 
   /** Filter out words that do not have at least 1 active sense */
   function filterWords(words: Word[]): Word[] {
@@ -155,22 +155,6 @@ export default function DataEntryTable(
       w.senses.find((s) => s.accessibility === State.Active)
     );
   }
-
-  useEffect(() => {
-    getProjectSettings();
-    const fetchData = async () => {
-      const existingWords = await InnerGetWordsFromBackend();
-      if (existingWords != null) {
-        return setState((prevState) => ({
-          ...prevState,
-          isFetchingFrontier: false,
-          existingWords: existingWords,
-        }));
-      }
-    };
-    fetchData();
-  }, [getProjectSettings, InnerGetWordsFromBackend]);
-  // [getProjectSettings, props, state]
 
   // Use this before updating any word on the backend,
   // to make sure that word doesn't get edited by two different functions
@@ -325,44 +309,6 @@ export default function DataEntryTable(
       updateExisting,
     ]
   );
-
-  const resetEverything = useCallback((): void => {
-    props.hideQuestions();
-    setState((prevState) => ({
-      ...prevState,
-      recentlyAddedWords: [],
-      defunctWordIds: [],
-    }));
-    pageRef.current = true;
-  }, [props]);
-
-  const pageRef = useRef(props.treeIsOpen);
-
-  useEffect(() => {
-    const innerExitGracefully = async () => {
-      if (!props.treeIsOpen) pageRef.current = false;
-      if (props.treeIsOpen && pageRef.current === false) {
-        /** Submit un-submitted word before resetting. */
-        //Check if there is a new word, but user exited without pressing enter
-        if (refNewEntry.current) {
-          const newEntry = refNewEntry.current.state.newEntry;
-          if (!newEntry.senses.length) {
-            newEntry.senses.push(
-              newSense(undefined, undefined, props.semanticDomain)
-            );
-          }
-          const newEntryAudio = refNewEntry.current.state.audioFileURLs;
-          if (newEntry?.vernacular) {
-            await addNewWord(newEntry, newEntryAudio, undefined, true);
-            refNewEntry.current.resetState();
-          }
-        }
-        //Reset everything
-        resetEverything();
-      }
-    };
-    innerExitGracefully();
-  }, [addNewWord, props.semanticDomain, props.treeIsOpen, resetEverything]);
 
   // /** Finished with this page of words, select new semantic domain */
   // // TODO: Implement
@@ -675,6 +621,59 @@ export default function DataEntryTable(
       .deleteFrontierWord(word.id)
       .then(async () => await updateExisting());
   };
+
+  const resetEverything = useCallback((): void => {
+    props.hideQuestions();
+    setState((prevState) => ({
+      ...prevState,
+      recentlyAddedWords: [],
+      defunctWordIds: [],
+    }));
+    pageRef.current = true;
+  }, [props]);
+
+  const pageRef = useRef(props.treeIsOpen);
+
+  useEffect(() => {
+    getProjectSettings();
+    const fetchData = async () => {
+      const existingWords = await innerGetWordsFromBackend();
+      if (existingWords != null) {
+        return setState((prevState) => ({
+          ...prevState,
+          isFetchingFrontier: false,
+          existingWords: existingWords,
+        }));
+      }
+    };
+    fetchData();
+  }, [getProjectSettings, innerGetWordsFromBackend]);
+
+  useEffect(() => {
+    /** Submit un-submitted word before resetting. */
+    //Check if there is a new word, but user exited without pressing enter
+    const innerExitGracefully = async () => {
+      if (!props.treeIsOpen) pageRef.current = false;
+      if (props.treeIsOpen && pageRef.current === false) {
+        if (refNewEntry.current) {
+          const newEntry = refNewEntry.current.state.newEntry;
+          if (!newEntry.senses.length) {
+            newEntry.senses.push(
+              newSense(undefined, undefined, props.semanticDomain)
+            );
+          }
+          const newEntryAudio = refNewEntry.current.state.audioFileURLs;
+          if (newEntry?.vernacular) {
+            await addNewWord(newEntry, newEntryAudio, undefined, true);
+            refNewEntry.current.resetState();
+          }
+        }
+        //Reset everything
+        resetEverything();
+      }
+    };
+    innerExitGracefully();
+  }, [addNewWord, props.semanticDomain, props.treeIsOpen, resetEverything]);
 
   return (
     <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => submit(e)}>
