@@ -44,7 +44,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.119",
     "@mui/material": "^5.11.8",
-    "@mui/styles": "^5.11.7",
+    "@mui/styles": "^5.11.13",
     "@redux-devtools/extension": "^3.2.5",
     "@reduxjs/toolkit": "^1.9.3",
     "@segment/analytics-next": "^1.40.0",
