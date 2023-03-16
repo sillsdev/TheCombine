@@ -50,7 +50,7 @@ license Type:LICENSE.md
 
 ####################################################################################################
 Package:MailKit
-Version:3.5.0
+Version:3.6.0
 project URL:http://www.mimekit.net/
 Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
 
@@ -588,7 +588,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Abstractions
-Version:6.26.1
+Version:6.27.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:A package containing thin abstractions for Microsoft.IdentityModel.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -604,7 +604,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.JsonWebTokens
-Version:6.26.1
+Version:6.27.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -628,7 +628,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Logging
-Version:6.26.1
+Version:6.27.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes Event Source based logging support.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -660,7 +660,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Tokens
-Version:6.26.1
+Version:6.27.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -791,7 +791,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:MimeKit
-Version:3.5.0
+Version:3.6.0
 project URL:http://www.mimekit.net/
 Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
 
@@ -1730,7 +1730,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:System.IdentityModel.Tokens.Jwt
-Version:6.26.1
+Version:6.27.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
 licenseUrl:https://licenses.nuget.org/MIT
