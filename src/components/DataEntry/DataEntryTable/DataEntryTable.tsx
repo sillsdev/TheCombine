@@ -745,31 +745,34 @@ export default function DataEntryTable(
 
         <Grid item xs={12}>
           <NewEntry
-            ref={this.refNewEntry}
-            allWords={this.state.suggestVerns ? this.state.existingWords : []}
-            defunctWordIds={this.state.defunctWordIds}
+            ref={refNewEntry}
+            allWords={state.suggestVerns ? state.existingWords : []}
+            defunctWordIds={state.defunctWordIds}
             updateWordWithNewGloss={(
               wordId: string,
               gloss: string,
               audioFileURLs: string[]
-            ) => this.updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
+            ) => updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
             addNewWord={(word: Word, audioFileURLs: string[]) =>
-              this.addNewWord(word, audioFileURLs)
+              addNewWord(word, audioFileURLs)
             }
             semanticDomain={(() => {
-              var tempSemanticDomain: SemanticDomain =
-                this.props.semanticDomain;
+              var tempSemanticDomain: SemanticDomain = props.semanticDomain;
               tempSemanticDomain.userId = getCurrentUser()?.id;
               return tempSemanticDomain;
             })()}
-            setIsReadyState={(isReady: boolean) =>
-              this.setState((state) => {
-                return state.isReady === isReady ? null : { isReady };
-              })
-            }
-            recorder={this.recorder}
-            analysisLang={this.state.analysisLang}
-            vernacularLang={this.state.vernacularLang}
+            setIsReadyState={(isReadyYet: boolean) => {
+              const temp = state.isReady === isReadyYet ? null : isReadyYet;
+              if (temp)
+                return setState((prevState) => ({
+                  ...prevState,
+                  isReady: temp,
+                }));
+              return;
+            }}
+            recorder={recorder}
+            analysisLang={state.analysisLang}
+            vernacularLang={state.vernacularLang}
           />
         </Grid>
       </Grid>
