@@ -2,7 +2,7 @@ import {
   Divider,
   Grid,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Theme,
   Typography,
@@ -11,7 +11,9 @@ import { makeStyles } from "@mui/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import ChartComponent, { ChartTypeEnum } from "./Chart/ChartComponent";
 import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
+import ProgressBarComponent from "./ProgressBar/ProgressBarComponent";
 import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
 import { getProject } from "backend";
@@ -21,7 +23,7 @@ import { defaultWritingSystem } from "types/writingSystem";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
-    maxWidth: 360,
+    maxWidth: "auto",
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -29,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 enum viewEnum {
   User = "USER",
   Domain = "DOMAIN",
+  Time = "Time",
   DataStatistics = "STATISTIC",
 }
 
@@ -43,9 +46,8 @@ export default function Statistics(): ReactElement {
     const updateCurrentProject = async () => {
       await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
     };
-
     updateCurrentProject();
-  }, [lang]);
+  }, []);
 
   function handleDisplay() {
     return [
@@ -58,46 +60,57 @@ export default function Statistics(): ReactElement {
         <Typography variant="h5" align="center">
           {viewName === viewEnum.User && t("statistics.userView")}
           {viewName === viewEnum.Domain && t("statistics.domainView")}
+          {viewName === viewEnum.Time && ""}
         </Typography>
       </Grid>,
       viewName === viewEnum.User && (
         <Grid item key={viewEnum.User + "DomainUserStatistics"}>
           <List>
-            <DomainUserStatistics currentProject={currentProject} lang={lang} />
+            <DomainUserStatistics lang={lang} />
           </List>
         </Grid>
       ),
       viewName === viewEnum.Domain && (
         <Grid item key={viewEnum.Domain + "SemanticDomainStatistics"}>
           <List>
-            <SemanticDomainStatistics
-              currentProject={currentProject}
-              lang={lang}
-            />
+            <SemanticDomainStatistics lang={lang} />
           </List>
         </Grid>
       ),
+      viewName === viewEnum.Time && [
+        <Grid item key={viewEnum.Time + "ChartComponent"}>
+          <ChartComponent
+            currentProjectId={currentProject!.id}
+            chartType={ChartTypeEnum.LineChart}
+          />
+        </Grid>,
+      ],
     ];
   }
 
   function handleButton() {
     return (
       <List className={classes.root}>
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.User)}
           selected={viewName === viewEnum.User}
         >
           <ListItemText primary={t("statistics.userView")} />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setViewName(viewEnum.Domain)}
           selected={viewName === viewEnum.Domain}
         >
           <ListItemText primary={t("statistics.domainView")} />
-        </ListItem>
+        </ListItemButton>
+        <Divider />
+        <ListItemButton
+          onClick={() => setViewName(viewEnum.Time)}
+          selected={viewName === viewEnum.Time}
+        >
+          <ListItemText primary={"Words per Day"} />
+        </ListItemButton>
       </List>
     );
   }
@@ -108,7 +121,6 @@ export default function Statistics(): ReactElement {
         <Grid item xs={2}>
           {handleButton()}
         </Grid>
-
         <Grid
           item
           xs={8}
@@ -118,6 +130,9 @@ export default function Statistics(): ReactElement {
           spacing={2}
         >
           {handleDisplay()}
+        </Grid>
+        <Grid item xs={2}>
+          <ProgressBarComponent />
         </Grid>
       </Grid>
     </React.Fragment>

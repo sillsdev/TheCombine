@@ -3,12 +3,11 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import StatisticsTable from "./SemanticDomainStatisticsTable";
-import { Project, SemanticDomainCount } from "api/models";
+import { SemanticDomainCount } from "api/models";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 
 interface SemanticDomainStatisticsProps {
-  currentProject?: Project;
   lang: string;
 }
 

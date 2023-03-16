@@ -73,6 +73,7 @@ export function addSemanticDomainToSense(
     const updatedDomains = [...oldSense.semanticDomains];
     // Update the UserId for new semanticDomain
     semanticDomain.userId = getCurrentUser()?.id;
+    semanticDomain.created = new Date().toISOString();
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
       ...oldSense,
@@ -92,6 +93,7 @@ export function addSenseToWord(
 ): Word {
   // Update the UserId for new semanticDomain
   semanticDomain.userId = getCurrentUser()?.id;
+  semanticDomain.created = new Date().toISOString();
   const word: Word = { ...existingWord, senses: [...existingWord.senses] };
   word.senses.push(newSense(gloss, language, semanticDomain));
   return word;
@@ -743,34 +745,31 @@ export default function DataEntryTable(
 
         <Grid item xs={12}>
           <NewEntry
-            ref={refNewEntry}
-            allWords={state.suggestVerns ? state.existingWords : []}
-            defunctWordIds={state.defunctWordIds}
+            ref={this.refNewEntry}
+            allWords={this.state.suggestVerns ? this.state.existingWords : []}
+            defunctWordIds={this.state.defunctWordIds}
             updateWordWithNewGloss={(
               wordId: string,
               gloss: string,
               audioFileURLs: string[]
-            ) => updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
+            ) => this.updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
             addNewWord={(word: Word, audioFileURLs: string[]) =>
-              addNewWord(word, audioFileURLs)
+              this.addNewWord(word, audioFileURLs)
             }
             semanticDomain={(() => {
-              var tempSemanticDomain: SemanticDomain = props.semanticDomain;
+              var tempSemanticDomain: SemanticDomain =
+                this.props.semanticDomain;
               tempSemanticDomain.userId = getCurrentUser()?.id;
               return tempSemanticDomain;
             })()}
-            setIsReadyState={(isReadyYet: boolean) => {
-              const temp = state.isReady === isReadyYet ? null : isReadyYet;
-              if (temp)
-                return setState((prevState) => ({
-                  ...prevState,
-                  isReady: temp,
-                }));
-              return;
-            }}
-            recorder={recorder}
-            analysisLang={state.analysisLang}
-            vernacularLang={state.vernacularLang}
+            setIsReadyState={(isReady: boolean) =>
+              this.setState((state) => {
+                return state.isReady === isReady ? null : { isReady };
+              })
+            }
+            recorder={this.recorder}
+            analysisLang={this.state.analysisLang}
+            vernacularLang={this.state.vernacularLang}
           />
         </Grid>
       </Grid>

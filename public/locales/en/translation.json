@@ -377,6 +377,9 @@
     "domainCount": "Domains:",
     "senseCount": "Words:",
     "userView": "Words per User",
-    "domainView": "Words per Domain"
+    "domainView": "Words per Domain",
+    "domainProgress": "Domain Progress",
+    "domainsCollected": "Domains Collected:",
+    "wordsCollected": "Words Collected:"
   }
 }

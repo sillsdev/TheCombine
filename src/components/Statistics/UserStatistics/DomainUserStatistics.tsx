@@ -8,7 +8,6 @@ import { getSemanticDomainUserCount, getFrontierWords } from "backend";
 import * as LocalStorage from "backend/localStorage";
 
 interface DomainSenseUserStatisticsProps {
-  currentProject?: Project;
   lang: string;
 }
 

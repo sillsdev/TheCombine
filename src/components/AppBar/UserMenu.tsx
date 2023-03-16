@@ -7,12 +7,12 @@ import {
 import { Avatar, Button, Hidden, Menu, MenuItem } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { openUserGuide, Path } from "browserHistory";
 import { clearCurrentProject } from "components/Project/ProjectActions";
+import { useAppDispatch } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme, { tabColor } from "types/theme";
 
@@ -100,7 +100,7 @@ interface UserMenuListProps {
  */
 export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   return (
     <div ref={props.forwardedRef}>

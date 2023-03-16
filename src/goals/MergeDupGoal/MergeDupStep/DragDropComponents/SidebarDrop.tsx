@@ -2,7 +2,6 @@ import { ArrowForwardIos } from "@mui/icons-material";
 import { IconButton, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { useDispatch } from "react-redux";
 
 import SidebarDragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDragSense";
 import {
@@ -10,6 +9,7 @@ import {
   Sidebar,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { useAppDispatch } from "types/hooks";
 
 interface SidebarDropProps {
   sidebar: Sidebar;
@@ -17,7 +17,7 @@ interface SidebarDropProps {
 }
 
 export default function SidebarDrop(props: SidebarDropProps): ReactElement {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <Droppable

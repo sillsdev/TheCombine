@@ -1,19 +1,19 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
 import { downloadIsReady } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub() {
-  const exportState = useSelector(
+  const exportState = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [connection, setConnection] = useState<HubConnection | undefined>();
 
   useEffect(() => {

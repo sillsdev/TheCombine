@@ -2,7 +2,6 @@ import { Cached, Error as ErrorIcon } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import React, { createRef, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import { getProjectName } from "backend";
 import {
@@ -11,6 +10,7 @@ import {
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import { getNowDateTimeString } from "utilities";
 
@@ -23,10 +23,10 @@ interface DownloadButtonProps {
  * when a user's export is done, so there should be exactly one copy of this
  * component rendered at any given time in the logged-in app. */
 export default function DownloadButton(props: DownloadButtonProps) {
-  const exportState = useSelector(
+  const exportState = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [fileName, setFileName] = useState<string | undefined>();
   const [fileUrl, setFileUrl] = useState<string | undefined>();
   const { t } = useTranslation();
