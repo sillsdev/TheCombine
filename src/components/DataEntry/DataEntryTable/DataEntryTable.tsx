@@ -759,6 +759,7 @@ export default function DataEntryTable(
             semanticDomain={(() => {
               var tempSemanticDomain: SemanticDomain = props.semanticDomain;
               tempSemanticDomain.userId = getCurrentUser()?.id;
+              tempSemanticDomain.created = new Date().toISOString();
               return tempSemanticDomain;
             })()}
             setIsReadyState={(isReadyYet: boolean) => {
