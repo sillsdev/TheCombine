@@ -159,157 +159,133 @@ export default function DataEntryTable(
 
   // Use this before updating any word on the backend,
   // to make sure that word doesn't get edited by two different functions
-  const defunctWord = useCallback(
-    (wordId: string): void => {
-      const defunctWordIds = state.defunctWordIds;
-      if (!defunctWordIds.includes(wordId)) {
-        defunctWordIds.push(wordId);
-        setState((prevState) => ({
-          ...prevState,
-          defunctWordIds: defunctWordIds,
-        }));
-      }
-    },
-    [state.defunctWordIds]
-  );
-
-  const addAudiosToBackend = useCallback(
-    async (wordId: string, audioURLs: string[]): Promise<string> => {
-      let updatedWordId = wordId;
-      for (const audioURL of audioURLs) {
-        const audioBlob = await fetch(audioURL).then((result) => result.blob());
-        const fileName = getFileNameForWord(updatedWordId);
-        const audioFile = new File([audioBlob], fileName, {
-          type: audioBlob.type,
-          lastModified: Date.now(),
-        });
-        defunctWord(updatedWordId);
-        updatedWordId = await backend.uploadAudio(updatedWordId, audioFile);
-        URL.revokeObjectURL(audioURL);
-      }
-      return updatedWordId;
-    },
-    [defunctWord]
-  );
-
-  /** Replace every displayed instance of a word, or add if not already there. */
-  const addOrReplaceInDisplay = useCallback(
-    (oldWordId: string, word: Word): void => {
-      const recentlyAddedWords = [...state.recentlyAddedWords];
-      let defunctWordIds = state.defunctWordIds;
-
-      if (recentlyAddedWords.find((w) => w.word.id === oldWordId)) {
-        recentlyAddedWords.forEach((entry) => {
-          if (entry.word.id === oldWordId) {
-            entry.word = word;
-          }
-        });
-        defunctWordIds = defunctWordIds.filter((id) => id !== oldWordId);
-      } else {
-        const thisDomId = props.semanticDomain.id;
-        word.senses.forEach((sense, senseIndex) => {
-          if (sense.semanticDomains.find((dom) => dom.id === thisDomId)) {
-            recentlyAddedWords.push({ word, senseIndex });
-          }
-        });
-      }
+  const defunctWord = (wordId: string): void => {
+    const defunctWordIds = state.defunctWordIds;
+    if (!defunctWordIds.includes(wordId)) {
+      defunctWordIds.push(wordId);
       setState((prevState) => ({
         ...prevState,
-        recentlyAddedWords: recentlyAddedWords,
         defunctWordIds: defunctWordIds,
       }));
-    },
-    [props.semanticDomain.id, state.defunctWordIds, state.recentlyAddedWords]
-  );
+    }
+  };
 
-  const addDuplicateWord = useCallback(
-    async (
-      wordToAdd: Word,
-      audioURLs: string[],
-      duplicatedId: string,
-      ignoreRecent?: boolean
-    ): Promise<void> => {
-      // Get UserId and passing userId parameter to updateDuplicate
-      var userId = getCurrentUser()?.id;
-      const updatedWord = await backend.updateDuplicate(
-        duplicatedId,
-        userId ?? "",
-        wordToAdd
-      );
-      const wordId = await addAudiosToBackend(updatedWord.id, audioURLs);
-      await updateExisting();
+  const addAudiosToBackend = async (
+    wordId: string,
+    audioURLs: string[]
+  ): Promise<string> => {
+    let updatedWordId = wordId;
+    for (const audioURL of audioURLs) {
+      const audioBlob = await fetch(audioURL).then((result) => result.blob());
+      const fileName = getFileNameForWord(updatedWordId);
+      const audioFile = new File([audioBlob], fileName, {
+        type: audioBlob.type,
+        lastModified: Date.now(),
+      });
+      defunctWord(updatedWordId);
+      updatedWordId = await backend.uploadAudio(updatedWordId, audioFile);
+      URL.revokeObjectURL(audioURL);
+    }
+    return updatedWordId;
+  };
 
-      if (ignoreRecent) {
-        return;
-      }
+  /** Replace every displayed instance of a word, or add if not already there. */
+  const addOrReplaceInDisplay = (oldWordId: string, word: Word): void => {
+    const recentlyAddedWords = [...state.recentlyAddedWords];
+    let defunctWordIds = state.defunctWordIds;
 
-      addOrReplaceInDisplay(duplicatedId, await backend.getWord(wordId));
-    },
-    [addAudiosToBackend, addOrReplaceInDisplay, updateExisting]
-  );
+    if (recentlyAddedWords.find((w) => w.word.id === oldWordId)) {
+      recentlyAddedWords.forEach((entry) => {
+        if (entry.word.id === oldWordId) {
+          entry.word = word;
+        }
+      });
+      defunctWordIds = defunctWordIds.filter((id) => id !== oldWordId);
+    } else {
+      const thisDomId = props.semanticDomain.id;
+      word.senses.forEach((sense, senseIndex) => {
+        if (sense.semanticDomains.find((dom) => dom.id === thisDomId)) {
+          recentlyAddedWords.push({ word, senseIndex });
+        }
+      });
+    }
+    setState((prevState) => ({
+      ...prevState,
+      recentlyAddedWords: recentlyAddedWords,
+      defunctWordIds: defunctWordIds,
+    }));
+  };
+
+  const addDuplicateWord = async (
+    wordToAdd: Word,
+    audioURLs: string[],
+    duplicatedId: string,
+    ignoreRecent?: boolean
+  ): Promise<void> => {
+    // Get UserId and passing userId parameter to updateDuplicate
+    var userId = getCurrentUser()?.id;
+    const updatedWord = await backend.updateDuplicate(
+      duplicatedId,
+      userId ?? "",
+      wordToAdd
+    );
+    const wordId = await addAudiosToBackend(updatedWord.id, audioURLs);
+    await updateExisting();
+
+    if (ignoreRecent) {
+      return;
+    }
+
+    addOrReplaceInDisplay(duplicatedId, await backend.getWord(wordId));
+  };
 
   /** Add one-sense word to the display of recent entries. */
-  const addToDisplay = useCallback(
-    (
-      wordAccess: WordAccess,
-      insertIndex?: number,
-      callback?: () => void
-    ): void => {
-      const recentlyAddedWords = [...state.recentlyAddedWords];
-      if (
-        insertIndex !== undefined &&
-        insertIndex < recentlyAddedWords.length
-      ) {
-        recentlyAddedWords.splice(insertIndex, 0, wordAccess);
-      } else {
-        recentlyAddedWords.push(wordAccess);
-      }
-      setState((prevState) => ({
-        ...prevState,
-        recentlyAddedWords: recentlyAddedWords,
-      })),
-        callback ?? (() => {});
-    },
-    [state.recentlyAddedWords]
-  );
+  const addToDisplay = (
+    wordAccess: WordAccess,
+    insertIndex?: number,
+    callback?: () => void
+  ): void => {
+    const recentlyAddedWords = [...state.recentlyAddedWords];
+    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
+      recentlyAddedWords.splice(insertIndex, 0, wordAccess);
+    } else {
+      recentlyAddedWords.push(wordAccess);
+    }
+    setState((prevState) => ({
+      ...prevState,
+      recentlyAddedWords: recentlyAddedWords,
+    })),
+      callback ?? (() => {});
+  };
 
-  const addNewWord = useCallback(
-    async (
-      wordToAdd: Word,
-      audioURLs: string[],
-      insertIndex?: number,
-      ignoreRecent?: boolean
-    ): Promise<void> => {
-      wordToAdd.note.language = state.analysisLang.bcp47;
+  const addNewWord = async (
+    wordToAdd: Word,
+    audioURLs: string[],
+    insertIndex?: number,
+    ignoreRecent?: boolean
+  ): Promise<void> => {
+    wordToAdd.note.language = state.analysisLang.bcp47;
 
-      // Check if word is duplicate to existing word.
-      const dupId = await backend.getDuplicateId(wordToAdd);
-      if (dupId) {
-        await addDuplicateWord(wordToAdd, audioURLs, dupId, ignoreRecent);
-        return;
-      }
+    // Check if word is duplicate to existing word.
+    const dupId = await backend.getDuplicateId(wordToAdd);
+    if (dupId) {
+      await addDuplicateWord(wordToAdd, audioURLs, dupId, ignoreRecent);
+      return;
+    }
 
-      const addedWord = await backend.createWord(wordToAdd);
-      const wordId = await addAudiosToBackend(addedWord.id, audioURLs);
+    const addedWord = await backend.createWord(wordToAdd);
+    const wordId = await addAudiosToBackend(addedWord.id, audioURLs);
 
-      await updateExisting();
+    await updateExisting();
 
-      if (ignoreRecent) {
-        return;
-      }
+    if (ignoreRecent) {
+      return;
+    }
 
-      const word = await backend.getWord(wordId);
+    const word = await backend.getWord(wordId);
 
-      addToDisplay({ word, senseIndex: 0 }, insertIndex);
-    },
-    [
-      addAudiosToBackend,
-      addDuplicateWord,
-      addToDisplay,
-      state.analysisLang.bcp47,
-      updateExisting,
-    ]
-  );
+    addToDisplay({ word, senseIndex: 0 }, insertIndex);
+  };
 
   // /** Finished with this page of words, select new semantic domain */
   // // TODO: Implement
@@ -623,21 +599,6 @@ export default function DataEntryTable(
       .then(async () => await updateExisting());
   };
 
-  const resetEverything = useCallback((): void => {
-    props.hideQuestions();
-    setState((prevState) => ({
-      ...prevState,
-      recentlyAddedWords: [],
-      defunctWordIds: [],
-    }));
-    // MUST reset Ref.current otherwise infinite loop of React Hook call
-    pageRef.current = true;
-  }, [props]);
-
-  // To simulate origin logic from class component calling exitGraceFully method
-  // only update if props.treeIsOpen and prevState of props.treeIsOpen is false
-  const pageRef = useRef(true);
-
   useEffect(() => {
     getProjectSettings();
     const fetchData = async () => {
@@ -653,32 +614,68 @@ export default function DataEntryTable(
     fetchData();
   }, [getProjectSettings, innerGetWordsFromBackend]);
 
-  useEffect(() => {
-    /** Submit un-submitted word before resetting. */
-    //Check if there is a new word, but user exited without pressing enter
-    const innerExitGracefully = async () => {
-      // default the treeIsOpen update Ref if props.treeIsOpen is false
-      if (!props.treeIsOpen) pageRef.current = false;
-      if (props.treeIsOpen && pageRef.current === false) {
-        if (refNewEntry.current) {
-          const newEntry = refNewEntry.current.state.newEntry;
-          if (!newEntry.senses.length) {
-            newEntry.senses.push(
-              newSense(undefined, undefined, props.semanticDomain)
-            );
-          }
-          const newEntryAudio = refNewEntry.current.state.audioFileURLs;
-          if (newEntry?.vernacular) {
-            await addNewWord(newEntry, newEntryAudio, undefined, true);
-            refNewEntry.current.resetState();
+  console.log(state.existingWords);
+  const handleExit = async (): Promise<void> => {
+    if (refNewEntry.current) {
+      console.log(refNewEntry.current.state.newEntry);
+      const newEntry = refNewEntry.current.state.newEntry;
+      const existingWord = state.existingWords.find(
+        (word: Word) => word.vernacular === newEntry.vernacular
+      );
+      if (!existingWord) {
+        if (!newEntry.senses.length) {
+          newEntry.senses.push(
+            newSense(undefined, undefined, props.semanticDomain)
+          );
+        }
+        const newEntryAudio = refNewEntry.current.state.audioFileURLs;
+        if (newEntry?.vernacular) {
+          await addNewWord(newEntry, newEntryAudio, undefined, true);
+          refNewEntry.current.resetState();
+        }
+      } else {
+        for (const [senseIndex, sense] of existingWord.senses.entries()) {
+          if (
+            sense.glosses &&
+            sense.glosses.length &&
+            sense.glosses[0].def === newEntry.senses[0].glosses[0].def
+          ) {
+            if (
+              sense.semanticDomains
+                .map((semanticDomain) => semanticDomain.id)
+                .includes(props.semanticDomain.id)
+            ) {
+              // User is trying to add a sense that already exists
+              enqueueSnackbar(
+                t("addWords.senseInWord") +
+                  `: ${existingWord.vernacular}, ${sense.glosses[0].def}`
+              );
+              return;
+            } else {
+              const updatedWord = addSemanticDomainToSense(
+                props.semanticDomain,
+                existingWord,
+                senseIndex
+              );
+              await updateWordBackAndFront(
+                updatedWord,
+                senseIndex,
+                refNewEntry.current.state.audioFileURLs
+              );
+            }
           }
         }
-        //Reset everything
-        resetEverything();
       }
-    };
-    innerExitGracefully();
-  }, [addNewWord, props.semanticDomain, props.treeIsOpen, resetEverything]);
+    }
+    //Reset everything
+    props.hideQuestions();
+    setState((prevState) => ({
+      ...prevState,
+      recentlyAddedWords: [],
+      defunctWordIds: [],
+    }));
+    return;
+  };
 
   return (
     <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => submit(e)}>
@@ -802,7 +799,10 @@ export default function DataEntryTable(
             style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
-            onClick={props.openTree}
+            onClick={() => {
+              props.openTree();
+              handleExit();
+            }}
           >
             {t("buttons.exit")}
           </Button>
