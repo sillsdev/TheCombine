@@ -60,7 +60,7 @@
     "make-dir": "^3.1.0",
     "motion": "^10.15.5",
     "mui-language-picker": "^1.2.6",
-    "notistack": "^2.0.8",
+    "notistack": "^3.0.1",
     "nspell": "^2.1.5",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
