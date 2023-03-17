@@ -98,6 +98,9 @@ export function addSenseToWord(
   return word;
 }
 
+/**
+ * A data entry table containing recent word entries
+ */
 export default function DataEntryTable(
   props: DataEntryTableProps
 ): ReactElement {
@@ -599,29 +602,32 @@ export default function DataEntryTable(
       .then(async () => await updateExisting());
   };
 
-  useEffect(() => {
-    getProjectSettings();
-    const fetchData = async () => {
-      const existingWords = await innerGetWordsFromBackend();
-      if (existingWords != null) {
-        return setState((prevState) => ({
-          ...prevState,
-          isFetchingFrontier: false,
-          existingWords: existingWords,
-        }));
-      }
-    };
-    fetchData();
-  }, [getProjectSettings, innerGetWordsFromBackend]);
-
-  console.log(state.existingWords);
-  const handleExit = async (): Promise<void> => {
+  function resetEverything() {
+    //MUST Reset everything
+    props.hideQuestions();
+    setState((prevState) => ({
+      ...prevState,
+      recentlyAddedWords: [],
+      defunctWordIds: [],
+    }));
     if (refNewEntry.current) {
-      console.log(refNewEntry.current.state.newEntry);
+      refNewEntry.current.resetState();
+    }
+  }
+
+  /**
+   * Submit un-submitted word before resetting.
+   * hard to keep same logic 100% from class component to function component
+   * replace exitGracefully() from class component which
+   * */
+  const handleExit = async (): Promise<void> => {
+    // Check if there is a new word, but user exited without pressing enter
+    if (refNewEntry.current) {
       const newEntry = refNewEntry.current.state.newEntry;
       const existingWord = state.existingWords.find(
         (word: Word) => word.vernacular === newEntry.vernacular
       );
+      // createNewWord
       if (!existingWord) {
         if (!newEntry.senses.length) {
           newEntry.senses.push(
@@ -631,9 +637,10 @@ export default function DataEntryTable(
         const newEntryAudio = refNewEntry.current.state.audioFileURLs;
         if (newEntry?.vernacular) {
           await addNewWord(newEntry, newEntryAudio, undefined, true);
-          refNewEntry.current.resetState();
         }
+        return resetEverything();
       } else {
+        // Check if try to add sense already exists
         for (const [senseIndex, sense] of existingWord.senses.entries()) {
           if (
             sense.glosses &&
@@ -650,7 +657,7 @@ export default function DataEntryTable(
                 t("addWords.senseInWord") +
                   `: ${existingWord.vernacular}, ${sense.glosses[0].def}`
               );
-              break;
+              return resetEverything();
             } else {
               const updatedWord = addSemanticDomainToSense(
                 props.semanticDomain,
@@ -662,21 +669,42 @@ export default function DataEntryTable(
                 senseIndex,
                 refNewEntry.current.state.audioFileURLs
               );
+              return resetEverything();
             }
           }
         }
+        // The gloss is new for this word, so add a new sense.
+        const updatedWord = addSenseToWord(
+          props.semanticDomain,
+          existingWord,
+          newEntry.senses[0].glosses[0].def,
+          state.analysisLang.bcp47
+        );
+        await updateWordBackAndFront(
+          updatedWord,
+          updatedWord.senses.length - 1, // Was added at the end of the sense list
+          refNewEntry.current.state.audioFileURLs
+        );
       }
-      //Reset everything
-      props.hideQuestions();
-      setState((prevState) => ({
-        ...prevState,
-        recentlyAddedWords: [],
-        defunctWordIds: [],
-      }));
-      refNewEntry.current.resetState();
+      return resetEverything();
     }
-    return;
   };
+
+  useEffect(() => {
+    getProjectSettings();
+    const fetchData = async () => {
+      // use innerGetWordsFromBackend() replace
+      const existingWords = await innerGetWordsFromBackend();
+      if (existingWords != null) {
+        return setState((prevState) => ({
+          ...prevState,
+          isFetchingFrontier: false,
+          existingWords: existingWords,
+        }));
+      }
+    };
+    fetchData();
+  }, [getProjectSettings, innerGetWordsFromBackend]);
 
   return (
     <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => submit(e)}>
