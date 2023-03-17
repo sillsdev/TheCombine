@@ -102,7 +102,8 @@ describe("DataEntryTable", () => {
   describe("exiting--i.e., props updated to open tree", () => {
     it("hides questions", async () => {
       expect(mockHideQuestions).not.toBeCalled();
-      await exitToTree();
+      //await exitToTree();
+      testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
       expect(mockHideQuestions).toBeCalled();
     });
 
@@ -113,7 +114,7 @@ describe("DataEntryTable", () => {
       // Set the new entry to have useful content
       const newEntry = simpleWord("hasVern", "");
       newEntryItems[0].instance.setState({ newEntry });
-      await exitToTree();
+      await testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
       expect(mockCreateWord).toBeCalled();
     });
 
@@ -124,7 +125,8 @@ describe("DataEntryTable", () => {
       // Set the new entry to have no useful content
       const newEntry = simpleWord("", "hasGloss");
       newEntryItems[0].instance.setState({ newEntry });
-      await exitToTree();
+      //await exitToTree();
+      await testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
       expect(mockCreateWord).not.toBeCalled();
     });
   });
