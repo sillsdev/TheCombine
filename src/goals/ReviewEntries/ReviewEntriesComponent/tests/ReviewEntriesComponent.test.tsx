@@ -14,6 +14,7 @@ const mockGetFrontierWords = jest.fn();
 const mockMaterialTable = jest.fn();
 const mockUpdateAllWords = jest.fn();
 const mockUuid = jest.fn();
+const mockEnqueue = jest.fn();
 
 // To deal with the table not wanting to behave in testing.
 jest.mock("@material-table/core", () => ({
@@ -21,13 +22,22 @@ jest.mock("@material-table/core", () => ({
   default: () => mockMaterialTable(),
 }));
 // Standard dialog mock-out.
-jest.mock("@material-ui/core", () => {
-  const material = jest.requireActual("@material-ui/core");
+jest.mock("@mui/material", () => {
+  const material = jest.requireActual("@mui/material");
   return {
     ...material,
     Dialog: material.Container,
   };
 });
+
+jest.mock("notistack", () => ({
+  ...jest.requireActual("notistack"),
+  useSnackbar: () => {
+    return {
+      enqueueSnackbar: mockEnqueue,
+    };
+  },
+}));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
   getFrontierWords: () => mockGetFrontierWords(),

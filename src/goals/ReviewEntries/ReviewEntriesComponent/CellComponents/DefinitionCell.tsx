@@ -1,4 +1,4 @@
-import { Input, TextField } from "@material-ui/core";
+import { Input, TextField } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -36,6 +36,7 @@ export default function DefinitionCell(
             definitions={sense.definitions}
             defaultLang={analysisLang}
             keyPrefix={`row-${props.rowData.id}-definition`}
+            key={`row-${props.rowData.id}-definition`}
             onChange={(definitions) =>
               props.onRowDataChange &&
               props.onRowDataChange({

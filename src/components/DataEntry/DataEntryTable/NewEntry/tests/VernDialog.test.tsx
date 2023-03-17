@@ -1,3 +1,4 @@
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -9,6 +10,7 @@ import {
   StyledMenuItem,
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import theme from "types/theme";
 import { simpleWord, testWordList } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
@@ -28,13 +30,17 @@ describe("VernList ", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <Provider store={mockStore}>
-          <VernList
-            vernacularWords={[simpleWord("", "")]}
-            closeDialog={jest.fn()}
-            analysisLang={defaultWritingSystem.bcp47}
-          />
-        </Provider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <Provider store={mockStore}>
+              <VernList
+                vernacularWords={[simpleWord("", "")]}
+                closeDialog={jest.fn()}
+                analysisLang={defaultWritingSystem.bcp47}
+              />
+            </Provider>
+          </ThemeProvider>
+        </StyledEngineProvider>
       );
     });
   });
@@ -62,12 +68,16 @@ function createVernListInstance(
   _mockCallback: jest.Mock
 ): ReactTestInstance {
   return renderer.create(
-    <Provider store={mockStore}>
-      <VernList
-        vernacularWords={_vernacularWords}
-        closeDialog={_mockCallback}
-        analysisLang={defaultWritingSystem.bcp47}
-      />
-    </Provider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Provider store={mockStore}>
+          <VernList
+            vernacularWords={_vernacularWords}
+            closeDialog={_mockCallback}
+            analysisLang={defaultWritingSystem.bcp47}
+          />
+        </Provider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   ).root;
 }

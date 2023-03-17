@@ -1,4 +1,4 @@
-import { AddComment, Comment } from "@material-ui/icons";
+import { AddComment, Comment } from "@mui/icons-material";
 import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";

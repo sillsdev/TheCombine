@@ -6,12 +6,14 @@ Array [
     className="Toastify"
   />,
   <button
-    aria-describedby={null}
     aria-label="record"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-1"
+    aria-labelledby={null}
+    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-1 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+    data-mui-internal-clone-element={true}
     disabled={false}
     id="recordingButton"
     onBlur={[Function]}
+    onContextMenu={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
@@ -24,38 +26,36 @@ Array [
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={-1}
-    title="pronunciations.recordTooltip"
     type="button"
   >
-    <span
-      className="MuiIconButton-label"
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-iconRelease-3 css-i4bv87-MuiSvgIcon-root"
+      data-testid="FiberManualRecordIcon"
+      focusable="false"
+      id="icon"
+      viewBox="0 0 24 24"
     >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-iconRelease-3"
-        focusable="false"
-        id="icon"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          cx="12"
-          cy="12"
-          r="8"
-        />
-      </svg>
-    </span>
+      <circle
+        cx="12"
+        cy="12"
+        r="8"
+      />
+    </svg>
     <span
-      className="MuiTouchRipple-root"
+      className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
   </button>,
   <button
-    aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
+    aria-labelledby={null}
+    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-4 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+    data-mui-internal-clone-element={true}
     disabled={false}
     id="audio-a.wav"
     onBlur={[Function]}
     onClick={[Function]}
+    onContextMenu={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
@@ -68,35 +68,33 @@ Array [
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={-1}
-    title="pronunciations.playTooltip"
     type="button"
   >
-    <span
-      className="MuiIconButton-label"
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-icon-5 css-i4bv87-MuiSvgIcon-root"
+      data-testid="PlayArrowIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
     >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-icon-5"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M8 5v14l11-7z"
-        />
-      </svg>
-    </span>
+      <path
+        d="M8 5v14l11-7z"
+      />
+    </svg>
     <span
-      className="MuiTouchRipple-root"
+      className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
   </button>,
   <button
-    aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
+    aria-labelledby={null}
+    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-4 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+    data-mui-internal-clone-element={true}
     disabled={false}
     id="audio-b.wav"
     onBlur={[Function]}
     onClick={[Function]}
+    onContextMenu={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
@@ -109,25 +107,21 @@ Array [
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={-1}
-    title="pronunciations.playTooltip"
     type="button"
   >
-    <span
-      className="MuiIconButton-label"
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-icon-5 css-i4bv87-MuiSvgIcon-root"
+      data-testid="PlayArrowIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
     >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-icon-5"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M8 5v14l11-7z"
-        />
-      </svg>
-    </span>
+      <path
+        d="M8 5v14l11-7z"
+      />
+    </svg>
     <span
-      className="MuiTouchRipple-root"
+      className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
   </button>,
 ]

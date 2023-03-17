@@ -1,3 +1,4 @@
+import { MoreVert, SortByAlpha } from "@mui/icons-material";
 import {
   Avatar,
   FormControl,
@@ -8,9 +9,9 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Tooltip,
-} from "@material-ui/core";
-import { MoreVert, SortByAlpha } from "@material-ui/icons";
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -124,7 +125,7 @@ export default function ActiveUsers() {
           userIsProjectAdmin={userIsProjectAdmin}
         />
       ) : (
-        <IconButton disabled>
+        <IconButton disabled size="large">
           <MoreVert />
         </IconButton>
       );
@@ -165,14 +166,15 @@ export default function ActiveUsers() {
 
   return (
     <React.Fragment>
-      <FormControl style={{ minWidth: 100 }}>
+      <FormControl variant="standard" style={{ minWidth: 100 }}>
         <InputLabel id="sorting-order-select">
           {t("charInventory.sortBy")}
         </InputLabel>
         <Select
+          variant="standard"
           labelId="sorting-order-select"
           defaultValue={UserOrder.Username}
-          onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+          onChange={(event: SelectChangeEvent<UserOrder>) => {
             setUserOrder(event.target.value as UserOrder);
             setReverseSorting(false);
           }}
@@ -187,6 +189,7 @@ export default function ActiveUsers() {
         <IconButton
           onClick={() => setReverseSorting(!reverseSorting)}
           id="sorting-order-reverse"
+          size="large"
         >
           <SortByAlpha />
         </IconButton>

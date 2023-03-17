@@ -1,3 +1,4 @@
+import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
@@ -10,9 +11,9 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Typography,
-} from "@material-ui/core";
-import { DeleteForever, VpnKey } from "@material-ui/icons";
+} from "@mui/material";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 
@@ -113,14 +114,15 @@ class UserList extends React.Component<UserListProps, UserListState> {
                 "projectSettings.invite.searchPlaceholder"
               )}
             />
-            <FormControl style={{ minWidth: 100 }}>
+            <FormControl variant="standard" style={{ minWidth: 100 }}>
               <InputLabel id="sorting-order-select">
                 {this.props.t("charInventory.sortBy")}
               </InputLabel>
               <Select
+                variant="standard"
                 labelId="sorting-order-select"
                 defaultValue={UserOrder.Username}
-                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                onChange={(event: SelectChangeEvent<UserOrder>) => {
                   this.setState({ userOrder: event.target.value as UserOrder });
                 }}
               >

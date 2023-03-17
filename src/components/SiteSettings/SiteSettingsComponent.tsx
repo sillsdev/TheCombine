@@ -1,5 +1,5 @@
-import { Grid } from "@material-ui/core";
-import { Announcement, List, People } from "@material-ui/icons";
+import { Announcement, List, People } from "@mui/icons-material";
+import { Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";

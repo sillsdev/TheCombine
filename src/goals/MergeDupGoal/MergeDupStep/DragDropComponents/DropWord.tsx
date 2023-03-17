@@ -1,14 +1,14 @@
-import { Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 
 import { Flag } from "api/models";
 import FlagButton from "components/Buttons/FlagButton";
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
 import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 import { newFlag } from "types/word";
 
@@ -18,7 +18,7 @@ interface DropWordProps {
 }
 
 export default function DropWord(props: DropWordProps): ReactElement {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const treeWords = props.mergeState.tree.words;
@@ -59,6 +59,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
           <Grid container justifyContent="space-between">
             <Grid>
               <Select
+                variant="standard"
                 value={treeWords[props.wordId].vern}
                 onChange={(e) =>
                   dispatch(setVern(props.wordId, e.target.value as string))

@@ -1,4 +1,4 @@
-import { AppBar, Grid, Hidden, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Grid, Hidden, Toolbar, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -23,7 +23,7 @@ export default function TopBar(): ReactElement {
             <Grid item>
               <img src={logo} height="50" alt="Logo" />
             </Grid>
-            <Hidden xsDown>
+            <Hidden smDown>
               <Grid item>
                 <Typography variant="h5">
                   {t("landingPage.subtitle")}

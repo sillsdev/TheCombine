@@ -441,6 +441,7 @@ export const WordApiAxiosParamCreator = function (
      * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
+     * @param {string} [userId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -448,6 +449,7 @@ export const WordApiAxiosParamCreator = function (
       projectId: string,
       dupId: string,
       word: Word,
+      userId?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -473,6 +475,10 @@ export const WordApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      if (userId !== undefined) {
+        localVarQueryParameter["userId"] = userId;
+      }
 
       localVarHeaderParameter["Content-Type"] = "application/json";
 
@@ -763,6 +769,7 @@ export const WordApiFp = function (configuration?: Configuration) {
      * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
+     * @param {string} [userId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -770,6 +777,7 @@ export const WordApiFp = function (configuration?: Configuration) {
       projectId: string,
       dupId: string,
       word: Word,
+      userId?: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
@@ -778,6 +786,7 @@ export const WordApiFp = function (configuration?: Configuration) {
         projectId,
         dupId,
         word,
+        userId,
         options
       );
       return createRequestFunction(
@@ -955,6 +964,7 @@ export const WordApiFactory = function (
      * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
+     * @param {string} [userId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -962,10 +972,11 @@ export const WordApiFactory = function (
       projectId: string,
       dupId: string,
       word: Word,
+      userId?: string,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .updateDuplicate(projectId, dupId, word, options)
+        .updateDuplicate(projectId, dupId, word, userId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1155,6 +1166,13 @@ export interface WordApiUpdateDuplicateRequest {
    * @memberof WordApiUpdateDuplicate
    */
   readonly word: Word;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateDuplicate
+   */
+  readonly userId?: string;
 }
 
 /**
@@ -1341,6 +1359,7 @@ export class WordApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.dupId,
         requestParameters.word,
+        requestParameters.userId,
         options
       )
       .then((request) => request(this.axios, this.basePath));

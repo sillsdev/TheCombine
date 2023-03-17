@@ -1,5 +1,5 @@
 import { Column } from "@material-table/core";
-import { Input, Typography } from "@material-ui/core";
+import { Input, Typography } from "@mui/material";
 
 import { SemanticDomain } from "api/models";
 import {

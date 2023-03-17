@@ -1,9 +1,8 @@
-import { Drawer, ImageListItem, Tooltip } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete } from "@mui/icons-material";
+import { Drawer, ImageListItem, Tooltip } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
@@ -17,13 +16,14 @@ import {
   orderSense,
 } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 
 export const trashId = "trash-drop";
 
 export default function MergeDragDrop(): ReactElement {
-  const dispatch = useDispatch();
-  const mergeState = useSelector(
+  const dispatch = useAppDispatch();
+  const mergeState = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal
   );
   const [senseToDelete, setSenseToDelete] = useState<string>("");
