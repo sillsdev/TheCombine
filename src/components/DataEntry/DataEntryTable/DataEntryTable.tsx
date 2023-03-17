@@ -650,7 +650,7 @@ export default function DataEntryTable(
                 t("addWords.senseInWord") +
                   `: ${existingWord.vernacular}, ${sense.glosses[0].def}`
               );
-              return;
+              break;
             } else {
               const updatedWord = addSemanticDomainToSense(
                 props.semanticDomain,
@@ -666,14 +666,15 @@ export default function DataEntryTable(
           }
         }
       }
+      //Reset everything
+      props.hideQuestions();
+      setState((prevState) => ({
+        ...prevState,
+        recentlyAddedWords: [],
+        defunctWordIds: [],
+      }));
+      refNewEntry.current.resetState();
     }
-    //Reset everything
-    props.hideQuestions();
-    setState((prevState) => ({
-      ...prevState,
-      recentlyAddedWords: [],
-      defunctWordIds: [],
-    }));
     return;
   };
 
