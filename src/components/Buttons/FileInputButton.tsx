@@ -1,5 +1,5 @@
-import { Button } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
+import { Button } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
 import React, { ReactElement } from "react";
 
 interface BrowseProps {

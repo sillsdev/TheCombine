@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
@@ -24,6 +24,7 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   return (
     <Grid style={{ maxWidth: 200 }}>
       <TextField
+        variant="standard"
         fullWidth
         id="domain-tree-search-field"
         label={t("treeView.findDomain")}

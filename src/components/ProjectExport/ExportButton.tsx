@@ -1,12 +1,13 @@
-import { ButtonProps } from "@material-ui/core/Button";
+import { ButtonProps } from "@mui/material/Button";
+import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import { isFrontierNonempty } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 interface ExportButtonProps {
   projectId: string;
@@ -15,20 +16,21 @@ interface ExportButtonProps {
 
 /** A button for exporting project to Lift file */
 export default function ExportButton(props: ExportButtonProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   function exportProj() {
     isFrontierNonempty(props.projectId).then((isNonempty) => {
       if (isNonempty) {
         dispatch(asyncExportProject(props.projectId));
       } else {
-        alert(t("projectExport.cannotExportEmpty"));
+        enqueueSnackbar(t("projectExport.cannotExportEmpty"));
       }
     });
   }
 
-  const exportResult = useSelector(
+  const exportResult = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
   const loading =

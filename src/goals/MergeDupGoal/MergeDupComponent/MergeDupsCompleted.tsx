@@ -1,5 +1,5 @@
-import { Button, Card, Grid, Paper, Typography } from "@material-ui/core";
-import { ArrowRightAlt } from "@material-ui/icons";
+import { ArrowRightAlt } from "@mui/icons-material";
+import { Button, Card, Grid, Paper, Typography } from "@mui/material";
 import React, { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";

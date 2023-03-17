@@ -91,7 +91,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
    - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-5. [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
+5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
    Variable
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
 6. [VS Code](https://code.visualstudio.com/download) and the following extensions:

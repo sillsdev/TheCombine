@@ -1,4 +1,4 @@
-import { AppBar, Grid, Toolbar } from "@material-ui/core";
+import { AppBar, Grid, Toolbar } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 

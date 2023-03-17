@@ -3,31 +3,34 @@
 exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
 <div>
   <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-justify-content-xs-center"
+    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-12n0uxm-MuiGrid-root"
   >
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 MuiGrid-grid-lg-9 MuiGrid-grid-xl-10"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 MuiGrid-grid-lg-9 MuiGrid-grid-xl-10 css-1by3vlg-MuiGrid-root"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-c06c7r-MuiGrid-root"
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
         >
           <h1
-            className="MuiTypography-root MuiTypography-h4"
+            className="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
             style={
               Object {
-                "marginTop": 8,
+                "marginTop": "8px",
               }
             }
           >
             charInventory.characterSet.title
              
             <svg
-              aria-describedby={null}
               aria-hidden={true}
-              className="MuiSvgIcon-root"
+              aria-label="charInventory.characterSet.help"
+              aria-labelledby={null}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-mui-internal-clone-element={true}
+              data-testid="HelpIcon"
               focusable="false"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -35,34 +38,34 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               onMouseOver={[Function]}
               onTouchEnd={[Function]}
               onTouchStart={[Function]}
-              title="charInventory.characterSet.help"
               viewBox="0 0 24 24"
             >
               <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
               />
             </svg>
           </h1>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+            className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-mhc70k-MuiGrid-root"
             style={
               Object {
                 "background": "whitesmoke",
                 "borderTop": "1px solid #ccc",
-                "padding": 8,
+                "padding": "8px",
               }
             }
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-text"
+              className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1e6y48t-MuiButtonBase-root-MuiButton-root"
               disabled={false}
               id="character-entry-submit"
               onBlur={[Function]}
               onClick={[Function]}
+              onContextMenu={[Function]}
               onDragLeave={[Function]}
               onFocus={[Function]}
               onKeyDown={[Function]}
@@ -76,34 +79,31 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               tabIndex={0}
               type="button"
             >
-              <span
-                className="MuiButton-label"
-              >
-                charInventory.characterSet.advanced
-                 
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  style={
-                    Object {
-                      "transform": "rotate(0deg)",
-                      "transition": "all 200ms",
-                    }
+              charInventory.characterSet.advanced
+               
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-testid="KeyboardArrowDownIcon"
+                focusable="false"
+                style={
+                  Object {
+                    "transform": "rotate(0deg)",
+                    "transition": "all 200ms",
                   }
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                  />
-                </svg>
-              </span>
+                }
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
               <span
-                className="MuiTouchRipple-root"
+                className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
             <div
-              className="MuiCollapse-root MuiCollapse-hidden"
+              className="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
               style={
                 Object {
                   "minHeight": "0px",
@@ -112,25 +112,25 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               }
             >
               <div
-                className="MuiCollapse-wrapper"
+                className="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
               >
                 <div
-                  className="MuiCollapse-wrapperInner"
+                  className="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
                 >
                   <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
                   >
                     <div
-                      className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                      className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
                       style={
                         Object {
-                          "marginTop": 8,
+                          "marginTop": "8px",
                           "maxWidth": 512,
                         }
                       }
                     >
                       <label
-                        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
+                        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
                         data-shrink={false}
                         htmlFor="valid-characters-input"
                         id="valid-characters-input-label"
@@ -138,14 +138,14 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         charInventory.characterSet.acceptedCharacters
                       </label>
                       <div
-                        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
+                        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
                         onClick={[Function]}
                       >
                         <input
                           aria-invalid={false}
                           autoComplete="off"
                           autoFocus={false}
-                          className="MuiInputBase-input MuiOutlinedInput-input"
+                          className="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                           disabled={false}
                           id="valid-characters-input"
                           name="characters"
@@ -165,10 +165,10 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         />
                         <fieldset
                           aria-hidden={true}
-                          className="PrivateNotchedOutline-root-1 MuiOutlinedInput-notchedOutline"
+                          className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                         >
                           <legend
-                            className="PrivateNotchedOutline-legendLabelled-3"
+                            className="css-yjsfm1"
                           >
                             <span>
                               charInventory.characterSet.acceptedCharacters
@@ -179,19 +179,19 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                     </div>
                   </div>
                   <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
                   >
                     <div
-                      className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                      className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
                       style={
                         Object {
-                          "marginTop": 8,
+                          "marginTop": "8px",
                           "maxWidth": 512,
                         }
                       }
                     >
                       <label
-                        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
+                        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
                         data-shrink={false}
                         htmlFor="rejected-characters-input"
                         id="rejected-characters-input-label"
@@ -199,14 +199,14 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         charInventory.characterSet.rejectedCharacters
                       </label>
                       <div
-                        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
+                        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
                         onClick={[Function]}
                       >
                         <input
                           aria-invalid={false}
                           autoComplete="off"
                           autoFocus={false}
-                          className="MuiInputBase-input MuiOutlinedInput-input"
+                          className="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                           disabled={false}
                           id="rejected-characters-input"
                           name="characters"
@@ -226,10 +226,10 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                         />
                         <fieldset
                           aria-hidden={true}
-                          className="PrivateNotchedOutline-root-1 MuiOutlinedInput-notchedOutline"
+                          className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
                         >
                           <legend
-                            className="PrivateNotchedOutline-legendLabelled-3"
+                            className="css-yjsfm1"
                           >
                             <span>
                               charInventory.characterSet.rejectedCharacters
@@ -245,25 +245,26 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
           </div>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
         >
           <div
-            className="MuiFormControl-root"
+            className="MuiFormControl-root css-1nrlq1o-MuiFormControl-root"
           >
             <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard css-1c2i806-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink={true}
               htmlFor="sort-order"
             >
               charInventory.sortBy
             </label>
             <div
-              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl  css-m5hdmq-MuiInputBase-root-MuiInput-root-MuiSelect-root"
               onClick={[Function]}
             >
               <div
+                aria-expanded="false"
                 aria-haspopup="listbox"
-                className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                className="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input"
                 onBlur={[Function]}
                 onFocus={[Function]}
                 onKeyDown={[Function]}
@@ -274,18 +275,20 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
                 charInventory.characters
                 <svg
                   aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                  data-testid="ArrowUpwardIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                    d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
                   />
                 </svg>
               </div>
               <input
                 aria-hidden={true}
-                className="MuiSelect-nativeInput"
+                className="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+                disabled={false}
                 id="sort-order"
                 onAnimationStart={[Function]}
                 onChange={[Function]}
@@ -295,7 +298,8 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
               />
               <svg
                 aria-hidden={true}
-                className="MuiSvgIcon-root MuiSelect-icon"
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon"
+                data-testid="ArrowDropDownIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -309,10 +313,10 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
       </div>
     </div>
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 css-1pj7sy7-MuiGrid-root"
     />
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
       style={
         Object {
           "borderTop": "1px solid #ccc",
@@ -320,14 +324,15 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
       }
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+        className="MuiGrid-root MuiGrid-container css-1lym95h-MuiGrid-root"
       >
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
           disabled={false}
           id="pushGoals"
           onBlur={[Function]}
           onClick={[Function]}
+          onContextMenu={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -340,27 +345,24 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
           onTouchStart={[Function]}
           style={
             Object {
-              "margin": 8,
+              "margin": "8px",
             }
           }
           tabIndex={0}
           type="button"
         >
+          buttons.save
           <span
-            className="MuiButton-label"
-          >
-            buttons.save
-          </span>
-          <span
-            className="MuiTouchRipple-root"
+            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-contained"
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
           disabled={false}
           id="cancelInventoryCreation"
           onBlur={[Function]}
           onClick={[Function]}
+          onContextMenu={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -373,20 +375,16 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
           onTouchStart={[Function]}
           style={
             Object {
-              "margin": 8,
+              "margin": "8px",
             }
           }
           tabIndex={0}
           type="button"
         >
+           
+          buttons.cancel
           <span
-            className="MuiButton-label"
-          >
-             
-            buttons.cancel
-          </span>
-          <span
-            className="MuiTouchRipple-root"
+            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
       </div>
@@ -395,39 +393,36 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
   <div
     aria-describedby="alert-dialog-description"
     aria-labelledby="alert-dialog-title"
-    className="MuiContainer-root MuiContainer-maxWidthLg"
+    className="MuiContainer-root MuiContainer-maxWidthLg css-1oqqzyl-MuiContainer-root"
     onClose={[Function]}
     open={false}
   >
-    <div
-      className="MuiDialogTitle-root"
+    <h2
+      className="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root css-bdhsul-MuiTypography-root-MuiDialogTitle-root"
       id="alert-dialog-title"
     >
-      <h2
-        className="MuiTypography-root MuiTypography-h6"
-      >
-        charInventory.dialog.title
-      </h2>
-    </div>
+      charInventory.dialog.title
+    </h2>
     <div
-      className="MuiDialogContent-root"
+      className="MuiDialogContent-root css-ypiqx9-MuiDialogContent-root"
     >
       <p
-        className="MuiTypography-root MuiDialogContentText-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+        className="MuiTypography-root MuiDialogContentText-root MuiTypography-body1 MuiDialogContentText-root css-qfso29-MuiTypography-root-MuiDialogContentText-root"
         id="alert-dialog-description"
       >
         charInventory.dialog.content
       </p>
     </div>
     <div
-      className="MuiDialogActions-root MuiDialogActions-spacing"
+      className="MuiDialogActions-root MuiDialogActions-spacing css-hlj6pa-MuiDialogActions-root"
     >
       <button
         autoFocus={true}
-        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-zcbmsk-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onClick={[Function]}
+        onContextMenu={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
@@ -441,20 +436,17 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
         tabIndex={0}
         type="button"
       >
+        charInventory.dialog.yes
         <span
-          className="MuiButton-label"
-        >
-          charInventory.dialog.yes
-        </span>
-        <span
-          className="MuiTouchRipple-root"
+          className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
       </button>
       <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+        className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1e6y48t-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onClick={[Function]}
+        onContextMenu={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
@@ -468,13 +460,9 @@ exports[`Character Inventory Component Renders properly (snapshot test) 1`] = `
         tabIndex={0}
         type="button"
       >
+        charInventory.dialog.no
         <span
-          className="MuiButton-label"
-        >
-          charInventory.dialog.no
-        </span>
-        <span
-          className="MuiTouchRipple-root"
+          className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
       </button>
     </div>

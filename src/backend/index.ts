@@ -13,11 +13,15 @@ import {
   Project,
   SemanticDomainFull,
   SemanticDomainTreeNode,
+  SemanticDomainCount,
   SiteBanner,
   User,
   UserEdit,
   UserRole,
   Word,
+  SemanticDomainUserCount,
+  WordsPerDayPerUserCount,
+  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -42,6 +46,9 @@ const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
+  if (err.config === undefined) {
+    return Promise.reject(err);
+  }
   const url = err.config.url;
   const response = err.response;
   if (response) {
@@ -99,6 +106,7 @@ const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
+const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
@@ -412,6 +420,17 @@ export async function getSemanticDomainTreeNodeByName(
   return response.data ?? undefined;
 }
 
+export async function getAllSemanticDomainTreeNodes(
+  lang?: string
+): Promise<SemanticDomainTreeNode | undefined> {
+  const response = await semanticDomainApi.getAllSemanticDomainTreeNodes(
+    { lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
 /* UserController.cs */
 
 export async function resetPasswordRequest(
@@ -628,9 +647,15 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
 
 export async function updateDuplicate(
   dupId: string,
+  userId: string,
   word: Word
 ): Promise<Word> {
-  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
+  const params = {
+    projectId: LocalStorage.getProjectId(),
+    dupId,
+    userId,
+    word,
+  };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
   return await getWord(resp.data);
 }
@@ -641,4 +666,50 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
+}
+
+export async function getSemanticDomainCounts(
+  projectId: string,
+  lang?: string
+): Promise<Array<SemanticDomainCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainUserCount(
+  projectId: string,
+  lang?: string
+): Promise<Array<SemanticDomainUserCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainUserCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function GetWordsPerDayPerUserCounts(
+  projectId: string
+): Promise<Array<WordsPerDayPerUserCount> | undefined> {
+  const response = await statisticsApi.getWordsPerDayPerUserCounts(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getLineChartRootData(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getLineChartRootData(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
 }

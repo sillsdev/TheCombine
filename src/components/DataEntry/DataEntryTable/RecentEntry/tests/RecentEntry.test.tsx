@@ -1,3 +1,4 @@
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -16,6 +17,7 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import theme from "types/theme";
 import { simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
@@ -37,23 +39,27 @@ let testHandle: renderer.ReactTestInstance;
 function renderWithWord(word: Word) {
   renderer.act(() => {
     testMaster = renderer.create(
-      <Provider store={mockStore}>
-        <RecentEntry
-          entry={word}
-          rowIndex={0}
-          senseIndex={0}
-          updateGloss={mockUpdateGloss}
-          updateNote={mockUpdateNote}
-          updateVern={mockUpdateVern}
-          removeEntry={jest.fn()}
-          addAudioToWord={jest.fn()}
-          deleteAudioFromWord={jest.fn()}
-          recorder={new Recorder()}
-          focusNewEntry={jest.fn()}
-          analysisLang={newWritingSystem()}
-          vernacularLang={newWritingSystem()}
-        />
-      </Provider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <RecentEntry
+              entry={word}
+              rowIndex={0}
+              senseIndex={0}
+              updateGloss={mockUpdateGloss}
+              updateNote={mockUpdateNote}
+              updateVern={mockUpdateVern}
+              removeEntry={jest.fn()}
+              addAudioToWord={jest.fn()}
+              deleteAudioFromWord={jest.fn()}
+              recorder={new Recorder()}
+              focusNewEntry={jest.fn()}
+              analysisLang={newWritingSystem()}
+              vernacularLang={newWritingSystem()}
+            />
+          </Provider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
   });
   testHandle = testMaster.root;

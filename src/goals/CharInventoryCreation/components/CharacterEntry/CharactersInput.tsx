@@ -1,12 +1,12 @@
-import { TextField } from "@material-ui/core";
-import { ReactElement } from "react";
+import { TextField } from "@mui/material";
+import { ReactElement, ReactNode } from "react";
 
 import theme from "types/theme";
 
 interface CharactersInputProps {
   setCharacters: (characters: string[]) => void;
   characters: string[];
-  label: ReactElement;
+  label: ReactNode;
   id?: string;
 }
 

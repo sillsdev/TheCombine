@@ -1,4 +1,4 @@
-import { Button, Grid, ImageList, Typography } from "@material-ui/core";
+import { Button, Grid, ImageList, Typography } from "@mui/material";
 import React, { ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 
@@ -39,6 +39,11 @@ class MergeDupStep extends React.Component<
   }
 
   render(): ReactElement {
+    // number of columns = wordCount + 2:
+    //  first column for the trash icon
+    //  one column for each word
+    //  last column for the blank card
+    const columnCount = this.props.wordCount + 2;
     return this.props.wordCount ? (
       <React.Fragment>
         {/* Merging pane */}
@@ -48,10 +53,7 @@ class MergeDupStep extends React.Component<
             padding: theme.spacing(1),
           }}
         >
-          <ImageList
-            rowHeight="auto"
-            style={{ flexWrap: "nowrap", overflow: "auto" }}
-          >
+          <ImageList rowHeight="auto" cols={columnCount}>
             <MergeDragDrop />
           </ImageList>
         </div>

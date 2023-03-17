@@ -4,8 +4,8 @@ import {
   MenuItem,
   MenuList,
   Typography,
-  withStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import { withStyles } from "@mui/styles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

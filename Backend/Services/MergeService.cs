@@ -72,10 +72,8 @@ namespace BackendFramework.Services
         /// <returns> List of new words added. </returns>
         public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
         {
-            var newWords = new List<Word>();
-            await Task.WhenAll(mergeWordsList.Where(m => !m.DeleteOnly)
-                                             .Select(m => MergePrepParent(projectId, m)
-                                             .ContinueWith(task => newWords.Add(task.Result))));
+            var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
+            var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
             return await _wordRepo.Create(newWords);
         }

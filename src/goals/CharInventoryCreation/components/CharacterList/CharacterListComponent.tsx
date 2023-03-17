@@ -1,11 +1,5 @@
-import {
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@material-ui/core";
-import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
+import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import React, { ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 
@@ -53,11 +47,12 @@ export class CharacterList extends React.Component<
     return (
       <React.Fragment>
         <Grid item xs={12}>
-          <FormControl>
+          <FormControl variant="standard">
             <InputLabel htmlFor="sort-order">
               {this.props.t("charInventory.sortBy")}
             </InputLabel>
             <Select
+              variant="standard"
               value={this.state.sortOrder}
               onChange={(e) =>
                 this.setState({ sortOrder: e.target.value as SortOrder })

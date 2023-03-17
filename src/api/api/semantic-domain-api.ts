@@ -50,6 +50,50 @@ export const SemanticDomainApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @param {string} [lang]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllSemanticDomainTreeNodes: async (
+      lang?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/semanticdomain/domainGetAll`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (lang !== undefined) {
+        localVarQueryParameter["lang"] = lang;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} [id]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
@@ -211,6 +255,33 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @param {string} [lang]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getAllSemanticDomainTreeNodes(
+      lang?: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<SemanticDomainTreeNode>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getAllSemanticDomainTreeNodes(
+          lang,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} [id]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
@@ -315,6 +386,20 @@ export const SemanticDomainApiFactory = function (
   return {
     /**
      *
+     * @param {string} [lang]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllSemanticDomainTreeNodes(
+      lang?: string,
+      options?: any
+    ): AxiosPromise<SemanticDomainTreeNode> {
+      return localVarFp
+        .getAllSemanticDomainTreeNodes(lang, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} [id]
      * @param {string} [lang]
      * @param {*} [options] Override http request option.
@@ -363,6 +448,20 @@ export const SemanticDomainApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for getAllSemanticDomainTreeNodes operation in SemanticDomainApi.
+ * @export
+ * @interface SemanticDomainApiGetAllSemanticDomainTreeNodesRequest
+ */
+export interface SemanticDomainApiGetAllSemanticDomainTreeNodesRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof SemanticDomainApiGetAllSemanticDomainTreeNodes
+   */
+  readonly lang?: string;
+}
 
 /**
  * Request parameters for getSemanticDomainFull operation in SemanticDomainApi.
@@ -434,6 +533,22 @@ export interface SemanticDomainApiGetSemanticDomainTreeNodeByNameRequest {
  * @extends {BaseAPI}
  */
 export class SemanticDomainApi extends BaseAPI {
+  /**
+   *
+   * @param {SemanticDomainApiGetAllSemanticDomainTreeNodesRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SemanticDomainApi
+   */
+  public getAllSemanticDomainTreeNodes(
+    requestParameters: SemanticDomainApiGetAllSemanticDomainTreeNodesRequest = {},
+    options?: any
+  ) {
+    return SemanticDomainApiFp(this.configuration)
+      .getAllSemanticDomainTreeNodes(requestParameters.lang, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @param {SemanticDomainApiGetSemanticDomainFullRequest} requestParameters Request parameters.

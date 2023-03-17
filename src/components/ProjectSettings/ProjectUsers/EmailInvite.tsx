@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { toast } from "react-toastify";

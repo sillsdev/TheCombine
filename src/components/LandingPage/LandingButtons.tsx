@@ -1,4 +1,4 @@
-import { Button, Card, Grid, Typography } from "@material-ui/core";
+import { Button, Card, Grid, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,11 +10,12 @@ const idAffix = "landing";
 const buttonHeight = 50;
 const buttonWidth = 145;
 
-export const horizontalButtonsHeight = buttonHeight + theme.spacing(2);
-const horizontalButtonsWidth = 3 * buttonWidth + theme.spacing(7);
+export const horizontalButtonsHeight =
+  buttonHeight + parseInt(theme.spacing(2));
+const horizontalButtonsWidth = 3 * buttonWidth + parseInt(theme.spacing(7));
 
-const verticalButtonsHeight = 3 * buttonHeight + theme.spacing(7);
-const verticalButtonsWidth = buttonWidth + theme.spacing(2);
+const verticalButtonsHeight = 3 * buttonHeight + parseInt(theme.spacing(7));
+const verticalButtonsWidth = buttonWidth + parseInt(theme.spacing(2));
 
 interface LandingButtonsProps {
   top?: boolean;
