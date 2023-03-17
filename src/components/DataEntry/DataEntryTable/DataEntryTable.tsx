@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@material-ui/core";
-import { ExitToApp, List as ListIcon } from "@material-ui/icons";
+import { ExitToApp, List as ListIcon } from "@mui/icons-material";
+import { Button, Grid, Typography } from "@mui/material";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 
@@ -13,13 +13,14 @@ import {
   WritingSystem,
 } from "api/models";
 import * as backend from "backend";
+import { getCurrentUser } from "backend/localStorage";
 import NewEntry, {
   FocusTarget,
 } from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
-import theme from "types/theme";
+import theme, { themeColors } from "types/theme";
 import { newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
@@ -62,6 +63,9 @@ export function addSemanticDomainToSense(
   } else {
     const oldSense = existingWord.senses[senseIndex];
     const updatedDomains = [...oldSense.semanticDomains];
+    // Update the UserId for new semanticDomain
+    semanticDomain.userId = getCurrentUser()?.id;
+    semanticDomain.created = new Date().toISOString();
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
       ...oldSense,
@@ -79,6 +83,9 @@ export function addSenseToWord(
   gloss: string,
   language: string
 ): Word {
+  // Update the UserId for new semanticDomain
+  semanticDomain.userId = getCurrentUser()?.id;
+  semanticDomain.created = new Date().toISOString();
   const word: Word = { ...existingWord, senses: [...existingWord.senses] };
   word.senses.push(newSense(gloss, language, semanticDomain));
   return word;
@@ -163,6 +170,7 @@ export class DataEntryTable extends React.Component<
 
     const addedWord = await backend.createWord(wordToAdd);
     const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
+
     await this.updateExisting();
 
     if (ignoreRecent) {
@@ -170,6 +178,7 @@ export class DataEntryTable extends React.Component<
     }
 
     const word = await backend.getWord(wordId);
+
     this.addToDisplay({ word, senseIndex: 0 }, insertIndex);
   }
 
@@ -179,7 +188,13 @@ export class DataEntryTable extends React.Component<
     duplicatedId: string,
     ignoreRecent?: boolean
   ): Promise<void> {
-    const updatedWord = await backend.updateDuplicate(duplicatedId, wordToAdd);
+    // Get UserId and passing userId parameter to updateDuplicate
+    var userId = getCurrentUser()?.id;
+    const updatedWord = await backend.updateDuplicate(
+      duplicatedId,
+      userId ?? "",
+      wordToAdd
+    );
     const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
     await this.updateExisting();
 
@@ -662,7 +677,13 @@ export class DataEntryTable extends React.Component<
               addNewWord={(word: Word, audioFileURLs: string[]) =>
                 this.addNewWord(word, audioFileURLs)
               }
-              semanticDomain={this.props.semanticDomain}
+              semanticDomain={(() => {
+                var tempSemanticDomain: SemanticDomain =
+                  this.props.semanticDomain;
+                tempSemanticDomain.userId = getCurrentUser()?.id;
+                tempSemanticDomain.created = new Date().toISOString();
+                return tempSemanticDomain;
+              })()}
               setIsReadyState={(isReady: boolean) =>
                 this.setState((state) => {
                   return state.isReady === isReady ? null : { isReady };

@@ -1,4 +1,4 @@
-import { Input, TextField } from "@material-ui/core";
+import { Input, TextField } from "@mui/material";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -36,6 +36,7 @@ export default function GlossCell(
             glosses={sense.glosses}
             defaultLang={analysisLang}
             keyPrefix={`row-${props.rowData.id}-gloss`}
+            key={`row-${props.rowData.id}-gloss`}
             onChange={(glosses) =>
               props.onRowDataChange &&
               props.onRowDataChange({

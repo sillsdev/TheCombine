@@ -1,6 +1,5 @@
 import loadable from "@loadable/component";
 import React, { ReactElement, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
@@ -10,6 +9,7 @@ import { clearTree } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 const CharInv = loadable(
   () => import("goals/CreateCharInv/CharInvComponent/CharInv")
@@ -34,7 +34,7 @@ function displayComponent(goal: Goal): ReactElement {
 }
 
 export default function LoadingGoalScreen(): ReactElement {
-  const goalStatus = useSelector(
+  const goalStatus = useAppSelector(
     (state: StoreState) => state.goalsState.currentGoal.status
   );
   return goalStatus === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />;
@@ -44,8 +44,10 @@ export default function LoadingGoalScreen(): ReactElement {
  * Decides which component should be rendered for a goal.
  */
 export function BaseGoalScreen(): ReactElement {
-  const goal = useSelector((state: StoreState) => state.goalsState.currentGoal);
-  const dispatch = useDispatch();
+  const goal = useAppSelector(
+    (state: StoreState) => state.goalsState.currentGoal
+  );
+  const dispatch = useAppDispatch();
   useEffect(() => {
     return function cleanup(): void {
       dispatch(setCurrentGoal());

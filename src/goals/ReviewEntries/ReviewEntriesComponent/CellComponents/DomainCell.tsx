@@ -1,10 +1,11 @@
-import { Chip, Dialog, Grid, IconButton } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { Add } from "@mui/icons-material";
+import { Chip, Dialog, Grid, IconButton } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { SemanticDomain } from "api/models";
+import { getCurrentUser } from "backend/localStorage";
 import TreeView from "components/TreeView/TreeViewComponent";
 import AlignedList, {
   SPACER,
@@ -14,7 +15,7 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
-import { newSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomainForMongoDB } from "types/semanticDomain";
 import { themeColors } from "types/theme";
 
 interface DomainCellProps {
@@ -45,9 +46,22 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
           "Cannot add domain without the selectedDomain property."
         );
       }
+      if (selectedDomain.mongoId == "") {
+        throw new Error("SelectedSemanticDomainTreeNode have no mongoId");
+      }
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
-        newSemanticDomain(selectedDomain.id, selectedDomain.name),
+        (function () {
+          var tempSemanticDomain: SemanticDomain = newSemanticDomainForMongoDB(
+            selectedDomain.mongoId!,
+            selectedDomain.guid,
+            selectedDomain.name,
+            selectedDomain.id
+          );
+          tempSemanticDomain.userId = getCurrentUser()?.id;
+          tempSemanticDomain.created = new Date().toISOString();
+          return tempSemanticDomain;
+        })(),
       ]);
     }
   }
@@ -114,6 +128,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
                 key={`buttonFor${sense.guid}`}
                 onClick={() => prepAddDomain(sense)}
                 id={`sense-${sense.guid}-domain-add`}
+                size="large"
               >
                 <Add />
               </IconButton>

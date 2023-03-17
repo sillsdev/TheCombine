@@ -1,4 +1,4 @@
-import { Grid, ImageList, ImageListItem } from "@material-ui/core";
+import { Grid, ImageList, ImageListItem } from "@mui/material";
 import React, { ReactElement } from "react";
 
 import { SemanticDomain, SemanticDomainTreeNode } from "api";

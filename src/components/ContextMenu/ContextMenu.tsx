@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from "@material-ui/core";
+import { Menu, MenuItem } from "@mui/material";
 import React, { ReactElement } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 

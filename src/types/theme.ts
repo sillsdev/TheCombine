@@ -1,13 +1,9 @@
+import { blue, green, grey, orange, red, yellow } from "@mui/material/colors";
 import {
-  blue,
-  green,
-  grey,
-  orange,
-  red,
-  yellow,
-} from "@material-ui/core/colors";
-import { createTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+  createTheme,
+  responsiveFontSizes,
+  PaletteOptions,
+} from "@mui/material/styles";
 
 import { Path } from "browserHistory";
 
@@ -61,9 +57,13 @@ const baseTheme = createTheme({
   typography: { ...typography },
   palette: { ...palette } as PaletteOptions,
   spacing: 8,
-  props: {
+  components: {
     MuiButtonBase: {
-      disableRipple: false,
+      styleOverrides: {
+        root: {
+          disableRipple: false,
+        },
+      },
     },
   },
 });

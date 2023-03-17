@@ -1,12 +1,12 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import { openTreeAction } from "components/TreeView/TreeViewActions";
+import { useAppDispatch } from "types/hooks";
 import { tabColor } from "types/theme";
 
 interface NavigationButtonsProps {
@@ -26,7 +26,7 @@ export async function getIsAdmin(): Promise<boolean> {
 export default function NavigationButtons(
   props: NavigationButtonsProps
 ): ReactElement {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 

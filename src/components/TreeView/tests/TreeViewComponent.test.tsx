@@ -18,8 +18,8 @@ var treeMaster: ReactTestRenderer;
 var treeHandle: ReactTestInstance;
 
 // Mock out Zoom to avoid issues with portals
-jest.mock("@material-ui/core", () => {
-  const realMaterialUi = jest.requireActual("@material-ui/core");
+jest.mock("@mui/material", () => {
+  const realMaterialUi = jest.requireActual("@mui/material");
   return {
     ...realMaterialUi,
     Zoom: realMaterialUi.Container,

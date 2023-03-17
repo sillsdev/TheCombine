@@ -17,7 +17,7 @@ jobs:
         dotnet: ["6.0.x"]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        uses: step-security/harden-runner@1f99358870fe1c846a3ccba386cc2b2246836776 # v2.2.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -30,9 +30,11 @@ jobs:
             github.com:443
             storage.googleapis.com:443
             uploader.codecov.io:443
+            deb.debian.org:80
             deb.debian.org:443
+            security.debian.org:80
             security.debian.org:443
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
       - name: Setup dotnet
         uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
         with:
@@ -68,7 +70,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        uses: step-security/harden-runner@1f99358870fe1c846a3ccba386cc2b2246836776 # v2.2.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -81,7 +83,7 @@ jobs:
             github.com:443
 
       - name: Checkout repository
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
@@ -89,11 +91,11 @@ jobs:
         with:
           dotnet-version: "6.0.x"
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@17573ee1cc1b9d061760f3a006fc4aac4f944fd5 # v2.2.4
+        uses: github/codeql-action/init@168b99b3c22180941ae7dbdd5f5c9678ede476ba # v2.2.7
         with:
           languages: csharp
       - name: Autobuild
-        uses: github/codeql-action/autobuild@17573ee1cc1b9d061760f3a006fc4aac4f944fd5 # v2.2.4
+        uses: github/codeql-action/autobuild@168b99b3c22180941ae7dbdd5f5c9678ede476ba # v2.2.7
       - name: Upload artifacts if build failed
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: ${{ failure() }}
@@ -101,7 +103,7 @@ jobs:
           name: tracer-logs
           path: ${{ runner.temp }}/*.log
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@17573ee1cc1b9d061760f3a006fc4aac4f944fd5 # v2.2.4
+        uses: github/codeql-action/analyze@168b99b3c22180941ae7dbdd5f5c9678ede476ba # v2.2.7
 
   docker_build:
     runs-on: ubuntu-22.04
@@ -110,7 +112,7 @@ jobs:
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - name: Harden Runner
-        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        uses: step-security/harden-runner@1f99358870fe1c846a3ccba386cc2b2246836776 # v2.2.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -124,7 +126,7 @@ jobs:
             registry-1.docker.io:443
             production.cloudflare.docker.com
             security.debian.org
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
         with:
           fetch-depth: 0
       - name: Build backend

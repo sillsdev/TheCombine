@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SIL.Extensions;
 
 namespace BackendFramework.Models
 {
@@ -26,6 +27,12 @@ namespace BackendFramework.Models
         [BsonElement("lang")]
         public string Lang { get; set; }
 
+        [BsonElement("userId")]
+        public string UserId { get; set; }
+
+        [BsonElement("created")]
+        public string Created { get; set; }
+
         public SemanticDomain()
         {
             MongoId = "";
@@ -33,6 +40,8 @@ namespace BackendFramework.Models
             Name = "";
             Id = "";
             Lang = "";
+            UserId = "";
+            Created = "";
         }
 
         public SemanticDomain Clone()
@@ -44,7 +53,9 @@ namespace BackendFramework.Models
                 Guid = Guid,
                 Name = Name,
                 Id = Id,
-                Lang = Lang
+                Lang = Lang,
+                UserId = UserId,
+                Created = Created
             };
         }
 
@@ -60,7 +71,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id, Lang, Guid);
+            return HashCode.Combine(Name, Id, Lang, Guid, UserId, Created);
         }
     }
 
@@ -156,23 +167,6 @@ namespace BackendFramework.Models
             Name = sd.Name;
             Id = sd.Id;
             Children = new List<SemanticDomain>();
-        }
-    }
-
-    public class SemanticDomainCount
-    {
-        [Required]
-        [BsonElement("semanticDomainTreeNode")]
-        public SemanticDomainTreeNode SemanticDomainTreeNode { get; set; }
-
-        [Required]
-        [BsonElement("count")]
-        public int Count { get; set; }
-
-        public SemanticDomainCount(SemanticDomainTreeNode semanticDomainTreeNode, int count)
-        {
-            SemanticDomainTreeNode = semanticDomainTreeNode;
-            Count = count;
         }
     }
 }

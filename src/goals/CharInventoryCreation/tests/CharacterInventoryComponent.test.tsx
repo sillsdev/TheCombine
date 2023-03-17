@@ -25,8 +25,8 @@ var charHandle: CharacterInventory;
 // This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution.
 // This bypasses the whole issue by replacing the portal-creating object (the Dialog) with a lightweight,
 // innocuous Material-Ui component with no such glitchy properties.
-jest.mock("@material-ui/core", () => {
-  const materialUiCore = jest.requireActual("@material-ui/core");
+jest.mock("@mui/material", () => {
+  const materialUiCore = jest.requireActual("@mui/material");
   return {
     ...materialUiCore,
     Dialog: materialUiCore.Container,

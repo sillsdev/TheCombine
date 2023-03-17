@@ -19,6 +19,9 @@ import {
   UserEdit,
   UserRole,
   Word,
+  SemanticDomainUserCount,
+  WordsPerDayPerUserCount,
+  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
@@ -43,6 +46,9 @@ const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
+  if (err.config === undefined) {
+    return Promise.reject(err);
+  }
   const url = err.config.url;
   const response = err.response;
   if (response) {
@@ -641,9 +647,15 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
 
 export async function updateDuplicate(
   dupId: string,
+  userId: string,
   word: Word
 ): Promise<Word> {
-  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
+  const params = {
+    projectId: LocalStorage.getProjectId(),
+    dupId,
+    userId,
+    word,
+  };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
   return await getWord(resp.data);
 }
@@ -662,6 +674,40 @@ export async function getSemanticDomainCounts(
 ): Promise<Array<SemanticDomainCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainUserCount(
+  projectId: string,
+  lang?: string
+): Promise<Array<SemanticDomainUserCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainUserCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function GetWordsPerDayPerUserCounts(
+  projectId: string
+): Promise<Array<WordsPerDayPerUserCount> | undefined> {
+  const response = await statisticsApi.getWordsPerDayPerUserCounts(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getLineChartRootData(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getLineChartRootData(
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.

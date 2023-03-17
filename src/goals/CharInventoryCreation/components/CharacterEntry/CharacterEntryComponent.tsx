@@ -1,5 +1,5 @@
-import { Grid, Collapse, Button } from "@material-ui/core";
-import { KeyboardArrowDown } from "@material-ui/icons";
+import { KeyboardArrowDown } from "@mui/icons-material";
+import { Grid, Collapse, Button } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,13 +1,13 @@
-import { IconButton } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import React, { ReactElement, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -15,10 +15,10 @@ interface DeleteCellProps {
 
 export default function DeleteCell(props: DeleteCellProps): ReactElement {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const words = useSelector(
+  const words = useAppSelector(
     (state: StoreState) => state.reviewEntriesState.words
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   async function deleteFrontierWord(): Promise<void> {
     const wordId = props.rowData.id;
@@ -37,7 +37,11 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
 
   return (
     <React.Fragment>
-      <IconButton onClick={handleOpen} id={`row-${props.rowData.id}-delete`}>
+      <IconButton
+        onClick={handleOpen}
+        id={`row-${props.rowData.id}-delete`}
+        size="large"
+      >
         <Delete />
       </IconButton>
       <CancelConfirmDialog

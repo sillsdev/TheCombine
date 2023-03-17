@@ -3,54 +3,65 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: nuget
     directory: /Backend.Tests
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: nuget
     directory: /Backend
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: docker
     directory: /Backend
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: docker
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: docker
     directory: /database
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: docker
     directory: /deploy
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: pip
     directory: /deploy
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: docker
     directory: /maintenance
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: pip
     directory: /maintenance
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
 
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: sunday
