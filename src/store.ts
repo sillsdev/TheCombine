@@ -11,6 +11,15 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// To enable the immutability checks for the Redux Reducers,
+// set REACT_APP_IMMUTABLE_CHECK to 1 in .env.development.local
+// (in the project's root folder)
+const immutableCheckConfig =
+  process.env.NODE_ENV == "development" &&
+  process.env.REACT_APP_IMMUTABLE_CHECK == "1"
+    ? { warnAfter: 1000 }
+    : false;
+
 export const store = configureStore({
   reducer: persistedReducer,
   // for each of the default middleware items set to:
@@ -21,7 +30,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: true,
-      immutableCheck: false,
+      immutableCheck: immutableCheckConfig,
       serializableCheck: false,
     }),
   devTools: true,
