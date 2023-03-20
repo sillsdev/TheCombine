@@ -2,13 +2,13 @@ import { Button } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Permission } from "api";
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import { openTreeAction } from "components/TreeView/TreeViewActions";
 import { useAppDispatch } from "types/hooks";
 import { tabColor } from "types/theme";
-import { Permission } from "api";
 
 interface NavigationButtonsProps {
   currentTab: Path;
