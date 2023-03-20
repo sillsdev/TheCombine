@@ -12,7 +12,8 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/statistics")]
+    [Route("v1/projects/{projectId}/statistics")]
+
 
     public class StatisticsController : Controller
     {
@@ -90,7 +91,6 @@ namespace BackendFramework.Controllers
 
             return Ok(await _staService.GetLineChartRootData(projectId));
         }
-
 
 
 
