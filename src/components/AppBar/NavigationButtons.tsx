@@ -2,22 +2,30 @@ import { Button } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getUser } from "backend";
+import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import { openTreeAction } from "components/TreeView/TreeViewActions";
 import { useAppDispatch } from "types/hooks";
 import { tabColor } from "types/theme";
+import { Permission } from "api";
 
 interface NavigationButtonsProps {
   currentTab: Path;
 }
 
-export async function getIsAdmin(): Promise<boolean> {
-  const userId = LocalStorage.getUserId();
-  const user = await getUser(userId);
-  if (user) {
-    return user.isAdmin;
+export async function getIsAdminOrOwner(): Promise<boolean> {
+  const user = LocalStorage.getCurrentUser();
+  if (user?.isAdmin) {
+    return true;
+  } else {
+    const projectId = LocalStorage.getProjectId();
+    const userRoleID = user?.projectRoles[projectId];
+    if (userRoleID) {
+      return backend.getUserRole(userRoleID).then((role) => {
+        return role.permissions.includes(Permission.Owner);
+      });
+    }
   }
   return false;
 }
@@ -28,9 +36,9 @@ export default function NavigationButtons(
 ): ReactElement {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
 
-  getIsAdmin().then(setIsAdmin);
+  getIsAdminOrOwner().then(setIsAdminOrOwner);
 
   return (
     <React.Fragment>
@@ -61,7 +69,7 @@ export default function NavigationButtons(
       >
         {t("appBar.dataCleanup")}
       </Button>
-      {isAdmin && (
+      {isAdminOrOwner && (
         <Button
           id="statistics"
           onClick={() => {
