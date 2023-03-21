@@ -290,8 +290,7 @@ export default function DataEntryTable(
     addToDisplay({ word, senseIndex: 0 }, insertIndex);
   };
 
-  // /** Finished with this page of words, select new semantic domain */
-  // // TODO: Implement
+  /** Finished with this page of words, select new semantic domain */
   const submit = (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) {
       e.preventDefault();
@@ -615,11 +614,7 @@ export default function DataEntryTable(
     }
   }
 
-  /**
-   * Submit un-submitted word before resetting.
-   * hard to keep same logic 100% from class component to function component
-   * replace exitGracefully() from class component which
-   * */
+  // handle exit button submit un-submitted word before resetting
   const handleExit = async (): Promise<void> => {
     // Check if there is a new word, but user exited without pressing enter
     if (refNewEntry.current) {
