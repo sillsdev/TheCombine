@@ -12,7 +12,8 @@ namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("v1/statistics")]
+    [Route("v1/projects/{projectId}/statistics")]
+
 
     public class StatisticsController : Controller
     {
@@ -33,7 +34,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainCount>))]
         public async Task<IActionResult> GetSemanticDomainCounts(string projectId, string lang)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }
@@ -55,7 +56,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayPerUserCount>))]
         public async Task<IActionResult> GetWordsPerDayPerUserCounts(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }
@@ -76,7 +77,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
         public async Task<IActionResult> GetLineChartRootData(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }
@@ -93,14 +94,13 @@ namespace BackendFramework.Controllers
 
 
 
-
         /// <summary> Get a list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>
         /// <returns> A list of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/>s </returns>
         [HttpGet("GetSemanticDomainUserCounts", Name = "GetSemanticDomainUserCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainUserCount>))]
         public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId, string lang)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
             {
                 return Forbid();
             }

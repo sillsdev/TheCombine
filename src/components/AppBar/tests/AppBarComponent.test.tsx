@@ -7,9 +7,7 @@ import "tests/mockReactI18next";
 import { Path } from "browserHistory";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
-import NavigationButtons, {
-  getIsAdmin,
-} from "components/AppBar/NavigationButtons";
+import NavigationButtons from "components/AppBar/NavigationButtons";
 import ProjectNameButton from "components/AppBar/ProjectNameButton";
 import { newUser } from "types/user";
 
