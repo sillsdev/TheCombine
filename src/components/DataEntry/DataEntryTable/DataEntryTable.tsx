@@ -70,7 +70,7 @@ export function addSemanticDomainToSense(
   } else {
     const oldSense = existingWord.senses[senseIndex];
     const updatedDomains = [...oldSense.semanticDomains];
-    // Update the UserId for new semanticDomain
+    // Update the UserId and timestamp for new semanticDomain
     semanticDomain.userId = getCurrentUser()?.id;
     semanticDomain.created = new Date().toISOString();
     updatedDomains.push(semanticDomain);
@@ -90,7 +90,7 @@ export function addSenseToWord(
   gloss: string,
   language: string
 ): Word {
-  // Update the UserId for new semanticDomain
+  // Update the UserId and timestamp for new semanticDomain
   semanticDomain.userId = getCurrentUser()?.id;
   semanticDomain.created = new Date().toISOString();
   const word: Word = { ...existingWord, senses: [...existingWord.senses] };
@@ -602,7 +602,7 @@ export default function DataEntryTable(
   };
 
   function resetEverything() {
-    //MUST Reset everything
+    // Reset everything
     props.hideQuestions();
     setState((prevState) => ({
       ...prevState,
@@ -614,7 +614,7 @@ export default function DataEntryTable(
     }
   }
 
-  // handle exit button submit un-submitted word before resetting
+  // Reset the entry table. If there is an un-submitted word then submit it.
   const handleExit = async (): Promise<void> => {
     // Check if there is a new word, but user exited without pressing enter
     if (refNewEntry.current) {
@@ -622,7 +622,7 @@ export default function DataEntryTable(
       const existingWord = state.existingWords.find(
         (word: Word) => word.vernacular === newEntry.vernacular
       );
-      // createNewWord
+      // not found a existing word create a new word
       if (!existingWord) {
         if (!newEntry.senses.length) {
           newEntry.senses.push(
@@ -633,62 +633,21 @@ export default function DataEntryTable(
         if (newEntry?.vernacular) {
           await addNewWord(newEntry, newEntryAudio, undefined, true);
         }
-        return resetEverything();
       } else {
-        // Check if try to add sense already exists
-        for (const [senseIndex, sense] of existingWord.senses.entries()) {
-          if (
-            sense.glosses &&
-            sense.glosses.length &&
-            sense.glosses[0].def === newEntry.senses[0].glosses[0].def
-          ) {
-            if (
-              sense.semanticDomains
-                .map((semanticDomain) => semanticDomain.id)
-                .includes(props.semanticDomain.id)
-            ) {
-              // User is trying to add a sense that already exists
-              enqueueSnackbar(
-                t("addWords.senseInWord") +
-                  `: ${existingWord.vernacular}, ${sense.glosses[0].def}`
-              );
-              return resetEverything();
-            } else {
-              const updatedWord = addSemanticDomainToSense(
-                props.semanticDomain,
-                existingWord,
-                senseIndex
-              );
-              await updateWordBackAndFront(
-                updatedWord,
-                senseIndex,
-                refNewEntry.current.state.audioFileURLs
-              );
-              return resetEverything();
-            }
-          }
-        }
-        // The gloss is new for this word, so add a new sense.
-        const updatedWord = addSenseToWord(
-          props.semanticDomain,
-          existingWord,
+        //found a existing word update it
+        await updateWordWithNewGloss(
+          existingWord.id,
           newEntry.senses[0].glosses[0].def,
-          state.analysisLang.bcp47
-        );
-        await updateWordBackAndFront(
-          updatedWord,
-          updatedWord.senses.length - 1, // Was added at the end of the sense list
           refNewEntry.current.state.audioFileURLs
         );
       }
-      return resetEverything();
     }
+    return resetEverything();
   };
 
   useEffect(() => {
     getProjectSettings();
-    const fetchData = async () => {
-      // use innerGetWordsFromBackend() replace
+    const fetchExistingWords = async () => {
       const existingWords = await innerGetWordsFromBackend();
       if (existingWords != null) {
         return setState((prevState) => ({
@@ -698,13 +657,12 @@ export default function DataEntryTable(
         }));
       }
     };
-    fetchData();
+    fetchExistingWords();
   }, [getProjectSettings, innerGetWordsFromBackend]);
 
   return (
     <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => submit(e)}>
       <input type="submit" style={{ display: "none" }} />
-
       <Grid container>
         <Grid item xs={4}>
           <Typography
