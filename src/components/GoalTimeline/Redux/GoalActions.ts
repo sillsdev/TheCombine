@@ -5,6 +5,8 @@ import {
   GoalActionTypes,
   LoadUserEditsAction,
   SetCurrentGoalAction,
+  SetGoalIndexAction,
+  SetGoalStatusAction,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
@@ -29,6 +31,19 @@ export function setCurrentGoal(goal?: Goal): SetCurrentGoalAction {
   };
 }
 
+export function setCurrentGoalIndex(index: number): SetGoalIndexAction {
+  return {
+    type: GoalActionTypes.SET_CURRENT_GOAL_INDEX,
+    payload: index,
+  };
+}
+
+export function setCurrentGoalStatus(status: GoalStatus): SetGoalStatusAction {
+  return {
+    type: GoalActionTypes.SET_CURRENT_GOAL_STATUS,
+    payload: status,
+  };
+}
 // Dispatch Functions
 
 export function asyncCreateUserEdits() {
@@ -96,8 +111,8 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
       await saveCurrentStep(goal);
     }
 
-    goal.status = GoalStatus.InProgress;
     dispatch(setCurrentGoal(goal));
+    dispatch(setCurrentGoalStatus(GoalStatus.InProgress));
   };
 }
 

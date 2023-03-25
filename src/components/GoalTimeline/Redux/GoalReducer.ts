@@ -31,6 +31,30 @@ export const goalReducer = (
           : state.previousGoalType;
       return { ...state, currentGoal, goalTypeSuggestions, previousGoalType };
     }
+    case GoalActionTypes.SET_CURRENT_GOAL_INDEX: {
+      return {
+        ...state,
+        currentGoal: {
+          ...state.currentGoal,
+          index: action.payload,
+        },
+      };
+    }
+    case GoalActionTypes.SET_CURRENT_GOAL_STATUS: {
+      return {
+        ...state,
+        currentGoal: {
+          ...state.currentGoal,
+          status: action.payload,
+        },
+      };
+    }
+    case GoalActionTypes.SET_GOAL_CURRENT_STEP: {
+      return { ...state };
+    }
+    case GoalActionTypes.SET_GOAL_STEPS: {
+      return { ...state };
+    }
     case StoreActionTypes.RESET: {
       return defaultState;
     }
