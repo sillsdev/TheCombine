@@ -78,7 +78,7 @@
     "sweetalert2": "^11.7.3",
     "ts-key-enum": "^2.0.12",
     "uuid": "^8.3.2",
-    "validator": "^13.7.0",
+    "validator": "^13.9.0",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
@@ -98,7 +98,7 @@
     "@types/redux-mock-store": "^1.0.3",
     "@types/segment-analytics": "^0.0.34",
     "@types/uuid": "^8.3.1",
-    "@types/validator": "^13.7.11",
+    "@types/validator": "^13.7.14",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.3.1",
     "eslint": "^7.32.0",
