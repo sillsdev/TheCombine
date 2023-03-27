@@ -51,6 +51,7 @@ jobs:
             api.github.com:443
             files.pythonhosted.org:443
             github.com:443
+            objects.githubusercontent.com
             pypi.org:443
             api.nuget.org:443
             dc.services.visualstudio.com:443
