@@ -28,6 +28,7 @@ jobs:
             dc.services.visualstudio.com:443
             dotnetcli.azureedge.net:443
             github.com:443
+            objects.githubusercontent.com:443
             storage.googleapis.com:443
             uploader.codecov.io:443
             deb.debian.org:80
