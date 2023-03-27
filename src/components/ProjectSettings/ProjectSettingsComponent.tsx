@@ -9,6 +9,7 @@ import {
   PersonAdd,
   Sms,
   Language,
+  CalendarMonth,
 } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
@@ -33,6 +34,7 @@ import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectU
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import ProjectSchedule from "./ProjectSchedule/ProjectSchedule";
 
 export default function ProjectSettingsComponent() {
   const projectId = useAppSelector(
@@ -156,6 +158,15 @@ export default function ProjectSettingsComponent() {
           icon={<PersonAdd />}
           title={t("projectSettings.user.addUser")}
           body={<AddProjectUsers />}
+        />
+      )}
+
+      {/* set a workshop schedule */}
+      {permissions.includes(Permission.Owner) && (
+        <BaseSettingsComponent
+          icon={<CalendarMonth />}
+          title={t("projectSettings.schedule.workshopSchedule")}
+          body={<ProjectSchedule />}
         />
       )}
 

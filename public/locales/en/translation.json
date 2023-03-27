@@ -181,6 +181,11 @@
       "archive": "Archive Project",
       "archiveToastSuccess": "Project Archived!"
     },
+    "schedule": {
+      "workshopSchedule": "Workshop Schedule",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
     "exportProject": {
       "label": "Export Project"
     },
