@@ -622,7 +622,7 @@ export default function DataEntryTable(
       const existingWord = state.existingWords.find(
         (word: Word) => word.vernacular === newEntry.vernacular
       );
-      // not found a existing word create a new word
+      // existing word not found, create a new word
       if (!existingWord) {
         if (!newEntry.senses.length) {
           newEntry.senses.push(
@@ -634,7 +634,7 @@ export default function DataEntryTable(
           await addNewWord(newEntry, newEntryAudio, undefined, true);
         }
       } else {
-        //found a existing word update it
+        // found an existing word, update it
         await updateWordWithNewGloss(
           existingWord.id,
           newEntry.senses[0].glosses[0].def,
