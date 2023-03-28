@@ -75,6 +75,9 @@ namespace BackendFramework.Models
         [BsonElement("inviteToken")]
         public List<EmailInvite> InviteTokens { get; set; }
 
+        [BsonElement("workshopSchedule")]
+        public List<DateTime> WorkshopSchedule { get; set; }
+
         public Project()
         {
             Id = "";
@@ -93,6 +96,7 @@ namespace BackendFramework.Models
             WordFields = new List<string>();
             PartsOfSpeech = new List<string>();
             InviteTokens = new List<EmailInvite>();
+            WorkshopSchedule = new List<DateTime>();
         }
 
         public Project Clone()
@@ -114,7 +118,8 @@ namespace BackendFramework.Models
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
                 PartsOfSpeech = new List<string>(),
-                InviteTokens = new List<EmailInvite>()
+                InviteTokens = new List<EmailInvite>(),
+                WorkshopSchedule = new List<DateTime>(),
             };
 
             foreach (var aw in AnalysisWritingSystems)
@@ -148,6 +153,12 @@ namespace BackendFramework.Models
             foreach (var it in InviteTokens)
             {
                 clone.InviteTokens.Add(it.Clone());
+            }
+            //DateTime is a value type, assign === clone it.
+            foreach (var dt in WorkshopSchedule)
+            {
+                var temp = dt;
+                clone.WorkshopSchedule.Add(temp);
             }
 
             return clone;
@@ -186,7 +197,10 @@ namespace BackendFramework.Models
                 other.PartsOfSpeech.All(PartsOfSpeech.Contains) &&
 
                 other.InviteTokens.Count == InviteTokens.Count &&
-                other.InviteTokens.All(InviteTokens.Contains);
+                other.InviteTokens.All(InviteTokens.Contains) &&
+
+                other.WorkshopSchedule.Count == WorkshopSchedule.Count &&
+                other.WorkshopSchedule.All(WorkshopSchedule.Contains);
         }
 
         public override bool Equals(object? obj)
@@ -218,6 +232,7 @@ namespace BackendFramework.Models
             hash.Add(WordFields);
             hash.Add(PartsOfSpeech);
             hash.Add(InviteTokens);
+            hash.Add(WorkshopSchedule);
             return hash.ToHashCode();
         }
     }
