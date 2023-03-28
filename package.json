@@ -39,7 +39,7 @@
     "@emotion/styled": "^11.10.6",
     "@loadable/component": "^5.15.0",
     "@material-table/core": "^6.1.13",
-    "@matt-block/react-recaptcha-v2": "^1.0.6",
+    "@matt-block/react-recaptcha-v2": "^2.0.0",
     "@microsoft/signalr": "^6.0.7",
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.123",
