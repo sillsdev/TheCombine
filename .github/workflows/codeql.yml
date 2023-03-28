@@ -35,23 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language:
-          - name: csharp
-            endpoints: >
-              api.github.com:443
-              api.nuget.org:443
-              dc.services.visualstudio.com:443
-              github.com:443
-          - name: javascript
-            endpoints: >
-              api.github.com:443
-              github.com:443
-          - name: python
-            endpoints: >
-              api.github.com:443
-              files.pythonhosted.org:443
-              github.com:443
-              pypi.org:443
+        language: ["csharp", "javascript", "python"]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         # Use only 'java' to analyze code written in Java, Kotlin or both
         # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
@@ -63,7 +47,14 @@ jobs:
         with:
           disable-sudo: true
           egress-policy: block
-          allowed-endpoints: ${{ matrix.language.endpoints }}
+          allowed-endpoints: >
+            api.github.com:443
+            files.pythonhosted.org:443
+            github.com:443
+            objects.githubusercontent.com:443
+            pypi.org:443
+            api.nuget.org:443
+            dc.services.visualstudio.com:443
       - name: Checkout repository
         uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
 
@@ -71,7 +62,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@168b99b3c22180941ae7dbdd5f5c9678ede476ba # v2.2.7
         with:
-          languages: ${{ matrix.language.name }}
+          languages: ${{ matrix.language }}
           # If you wish to specify custom queries, you can do so here or in a config file.
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
@@ -97,4 +88,4 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@168b99b3c22180941ae7dbdd5f5c9678ede476ba # v2.2.7
         with:
-          category: "/language:${{matrix.language.name}}"
+          category: "/language:${{matrix.language}}"
