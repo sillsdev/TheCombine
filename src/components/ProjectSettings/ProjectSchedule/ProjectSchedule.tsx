@@ -1,19 +1,22 @@
-import * as React from "react";
-import { Dayjs } from "dayjs";
+import { Add, Remove } from "@mui/icons-material";
+import { Grid, Typography } from "@mui/material";
+import {
+  CalendarPicker,
+  PickersDay,
+  PickersDayProps,
+} from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { useTranslation } from "react-i18next";
-import DateSelector from "./DateSelector";
-import { Grid, Typography } from "@mui/material";
+import { Dayjs } from "dayjs";
+import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import * as React from "react";
+import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { useSnackbar } from "notistack";
-import { getProject } from "backend";
 
-import { CalendarPicker } from "@mui/x-date-pickers";
-import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
+import DateSelector from "./DateSelector";
+import { getProject } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { Add, Remove } from "@mui/icons-material";
 
 const customStyles = {
   content: {
@@ -34,7 +37,6 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
   const { t } = useTranslation();
-  const { enqueueSnackbar } = useSnackbar();
 
   function customDayRenderer(
     date: Dayjs,

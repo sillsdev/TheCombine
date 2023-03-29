@@ -28,13 +28,13 @@ import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
+import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
-import ProjectSchedule from "./ProjectSchedule/ProjectSchedule";
 
 export default function ProjectSettingsComponent() {
   const projectId = useAppSelector(
