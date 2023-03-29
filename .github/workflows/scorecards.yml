@@ -12,7 +12,9 @@ on:
   schedule:
     - cron: "18 6 * * 0"
   push:
-    branches: [master]
+    branches:
+      - master
+      - scorecard-update
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -39,15 +41,11 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             api.osv.dev:443
+            auth.docker.io:443
             bestpractices.coreinfrastructure.org:443
-            fulcio.sigstore.dev:443
             github.com:443
             index.docker.io:443
-            mcr.microsoft.com:443
-            sigstore-tuf-root.storage.googleapis.com:443
-            auth.docker.io:443
-            rekor.sigstore.dev:443
-            api.securityscorecards.dev
+
       - name: "Checkout code"
         uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
