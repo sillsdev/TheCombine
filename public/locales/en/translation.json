@@ -184,7 +184,11 @@
     "schedule": {
       "workshopSchedule": "Workshop Schedule",
       "startDate": "Start Date",
-      "endDate": "End Date"
+      "endDate": "End Date",
+      "selectedDateAlert": "Start Date must small than End Date",
+      "setDays": "Set days to the workshop",
+      "removeDays": "Remove days from workshop",
+      "calendarHighlight": "Scheduled Days Highlighted On Calendar"
     },
     "exportProject": {
       "label": "Export Project"

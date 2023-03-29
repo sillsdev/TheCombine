@@ -166,7 +166,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<CalendarMonth />}
           title={t("projectSettings.schedule.workshopSchedule")}
-          body={<ProjectSchedule />}
+          body={<ProjectSchedule projectId={projectId} />}
         />
       )}
 

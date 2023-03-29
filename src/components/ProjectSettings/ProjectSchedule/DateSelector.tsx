@@ -47,7 +47,7 @@ export default function DateSelector(Props: DateSelectorProps) {
 
   async function handleSubmit() {
     if (startDate! > endDate!) {
-      enqueueSnackbar("Start Date must < than End Date");
+      enqueueSnackbar(t("projectSettings.schedule.selectedDateAlert"));
       setStartDate(null);
       setEndDate(null);
       return;
