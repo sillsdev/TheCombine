@@ -185,7 +185,7 @@
       "workshopSchedule": "Workshop Schedule",
       "startDate": "Start Date",
       "endDate": "End Date",
-      "selectedDateAlert": "Start Date must small than End Date",
+      "selectedDateAlert": "The start date must be before the end date",
       "setDays": "Set days to the workshop",
       "removeDays": "Remove days from workshop",
       "calendarHighlight": "Scheduled Days Highlighted On Calendar"

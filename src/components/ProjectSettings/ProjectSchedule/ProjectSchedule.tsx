@@ -38,6 +38,7 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
   const { t } = useTranslation();
 
+  // Custom renderer for PickersDay
   function customDayRenderer(
     date: Dayjs,
     selectedDays: Array<Dayjs | null>,

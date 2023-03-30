@@ -46,15 +46,16 @@ export default function DateSelector(Props: DateSelectorProps) {
   };
 
   async function handleSubmit() {
+    // protect start date before end date
     if (startDate! > endDate!) {
       enqueueSnackbar(t("projectSettings.schedule.selectedDateAlert"));
       setStartDate(null);
       setEndDate(null);
       return;
     }
+    // update the schedule to the project setting
     const projectId = await LocalStorage.getProjectId();
     const project = await getProject(projectId);
-    console.log(project);
     if (startDate && endDate) {
       project.workshopSchedule = getDatesBetween(
         startDate.toDate(),
