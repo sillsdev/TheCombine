@@ -141,7 +141,6 @@ export default class DataEntryComponent extends React.Component<
               semanticDomain={this.props.currentDomainTree}
               treeIsOpen={this.props.treeIsOpen}
               openTree={this.props.openTree}
-              getWordsFromBackend={() => this.getWordsFromBackend()}
               showExistingData={() => this.toggleDrawer(true)}
               isSmallScreen={this.state.isSmallScreen}
               hideQuestions={() => {

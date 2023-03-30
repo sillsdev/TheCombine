@@ -28,11 +28,20 @@ jest.mock("backend", () => ({
   getProject: (id: string) => mockGetProject(id),
   getWord: (id: string) => mockGetWord(id),
   updateWord: (word: Word) => mockUpdateWord(word),
+  getFrontierWords: () => mockGetFrontierWords(),
 }));
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 jest.spyOn(window, "alert").mockImplementation(() => {});
+jest.mock("notistack", () => ({
+  ...jest.requireActual("notistack"),
+  useSnackbar: () => {
+    return {
+      enqueueSnackbar: mockEnqueue,
+    };
+  },
+}));
 
 let testRenderer: ReactTestRenderer;
 let testHandle: ReactTestInstance;
@@ -42,31 +51,33 @@ const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockTreeNode = newSemanticDomainTreeNode();
 const mockSemanticDomain = semDomFromTreeNode(mockTreeNode);
 const mockOpenTree = jest.fn();
-const getWordsFromBackendMock = jest.fn();
+const innerGetWordsFromBackendMock = jest.fn();
+const mockGetFrontierWords = jest.fn();
 
 const mockCreateWord = jest.fn();
 const mockGetProject = jest.fn();
 const mockGetWord = jest.fn();
 const mockHideQuestions = jest.fn();
 const mockUpdateWord = jest.fn();
+const mockEnqueue = jest.fn();
 function setMockFunction() {
   mockCreateWord.mockResolvedValue(mockWord());
   mockGetProject.mockResolvedValue(newProject());
   mockGetWord.mockResolvedValue([mockMultiWord]);
   mockUpdateWord.mockResolvedValue(mockWord());
+  mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
 }
 
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunction();
-  getWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
+  innerGetWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
   renderer.act(() => {
     testRenderer = renderer.create(
       <DataEntryTable
         semanticDomain={mockTreeNode}
         openTree={mockOpenTree}
         hideQuestions={mockHideQuestions}
-        getWordsFromBackend={getWordsFromBackendMock}
         showExistingData={jest.fn()}
       />
     );
@@ -81,7 +92,6 @@ async function exitToTree() {
         treeIsOpen
         openTree={mockOpenTree}
         hideQuestions={mockHideQuestions}
-        getWordsFromBackend={getWordsFromBackendMock}
         showExistingData={jest.fn()}
       />
     );
@@ -92,7 +102,7 @@ describe("DataEntryTable", () => {
   describe("exiting--i.e., props updated to open tree", () => {
     it("hides questions", async () => {
       expect(mockHideQuestions).not.toBeCalled();
-      await exitToTree();
+      testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
       expect(mockHideQuestions).toBeCalled();
     });
 
@@ -103,7 +113,7 @@ describe("DataEntryTable", () => {
       // Set the new entry to have useful content
       const newEntry = simpleWord("hasVern", "");
       newEntryItems[0].instance.setState({ newEntry });
-      await exitToTree();
+      await testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
       expect(mockCreateWord).toBeCalled();
     });
 
@@ -114,7 +124,7 @@ describe("DataEntryTable", () => {
       // Set the new entry to have no useful content
       const newEntry = simpleWord("", "hasGloss");
       newEntryItems[0].instance.setState({ newEntry });
-      await exitToTree();
+      await testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
       expect(mockCreateWord).not.toBeCalled();
     });
   });
@@ -186,9 +196,10 @@ describe("DataEntryTable", () => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
     mockMultiWord.senses[0].semanticDomains = [
       newSemanticDomain("differentSemDomId"),
-      newSemanticDomain(testHandle.instance.props.semanticDomain.id),
+      newSemanticDomain(testHandle.props.semanticDomain.id),
     ];
-    testHandle.instance.setState({ existingWords: [mockMultiWord] }, () => {
+
+    innerGetWordsFromBackendMock().then(
       testRenderer.root
         .findByType(NewEntry)
         .props.updateWordWithNewGloss(
@@ -200,8 +211,8 @@ describe("DataEntryTable", () => {
           // Assert that the backend function for updating the word was NOT called
           expect(mockUpdateWord).not.toBeCalled();
           done();
-        });
-    });
+        })
+    );
   });
 
   it("updates word in backend if gloss exists with different semantic domain", (done) => {
@@ -211,7 +222,7 @@ describe("DataEntryTable", () => {
       newSemanticDomain("anotherDifferentSemDomId"),
       newSemanticDomain("andAThird"),
     ];
-    testHandle.instance.setState({ existingWords: [mockMultiWord] }, () => {
+    innerGetWordsFromBackendMock().then(
       testRenderer.root
         .findByType(NewEntry)
         .props.updateWordWithNewGloss(
@@ -223,13 +234,13 @@ describe("DataEntryTable", () => {
           // Assert that the backend function for updating the word was called once
           expect(mockUpdateWord).toBeCalledTimes(1);
           done();
-        });
-    });
+        })
+    );
   });
 
   it("updates word in backend if gloss doesn't exist", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    testHandle.instance.setState({ existingWords: [mockMultiWord] }, () => {
+    innerGetWordsFromBackendMock().then(
       testRenderer.root
         .findByType(NewEntry)
         .props.updateWordWithNewGloss(mockMultiWord.id, "differentGloss", [])
@@ -237,7 +248,7 @@ describe("DataEntryTable", () => {
           // Assert that the backend function for updating the word was called once
           expect(mockUpdateWord).toBeCalledTimes(1);
           done();
-        });
-    });
+        })
+    );
   });
 });
