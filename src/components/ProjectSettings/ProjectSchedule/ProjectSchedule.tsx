@@ -17,6 +17,7 @@ import Modal from "react-modal";
 import DateSelector from "./DateSelector";
 import { getProject } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import DateRemover from "./DateRemover";
 
 const customStyles = {
   content: {
@@ -34,7 +35,8 @@ interface ProjectScheduleProps {
 }
 
 export default function ProjectSchedule(Props: ProjectScheduleProps) {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showSelector, setShowSelector] = useState<boolean>(false);
+  const [showRemover, setShowRemover] = useState<boolean>(false);
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
   const { t } = useTranslation();
 
@@ -71,7 +73,7 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
       setProjectSchedule(schedule);
     };
     fetchDate();
-  }, [showModal, Props.projectId]);
+  }, [showSelector, showRemover, Props.projectId]);
 
   return (
     <React.Fragment>
@@ -98,15 +100,13 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
           <IconButtonWithTooltip
             icon={<Add />}
             textId="projectSettings.schedule.setDays"
-            onClick={() => setShowModal(true)}
+            onClick={() => setShowSelector(true)}
             buttonId={"Project-Schedule-+"}
           />
           <IconButtonWithTooltip
             icon={<Remove />}
             textId="projectSettings.schedule.removeDays"
-            onClick={() => {
-              enqueueSnackbar("This feature is currently under development");
-            }}
+            onClick={() => setShowRemover(true)}
             buttonId={"Project-Schedule--"}
           />
         </Grid>
@@ -125,12 +125,23 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
       </Grid>
 
       <Modal
-        isOpen={showModal}
+        isOpen={showSelector}
         style={customStyles}
         shouldCloseOnOverlayClick={false}
-        onRequestClose={() => setShowModal(false)}
+        onRequestClose={() => setShowSelector(false)}
       >
-        <DateSelector close={() => setShowModal(false)} />
+        <DateSelector close={() => setShowSelector(false)} />
+      </Modal>
+      <Modal
+        isOpen={showRemover}
+        style={customStyles}
+        shouldCloseOnOverlayClick={false}
+        onRequestClose={() => setShowRemover(false)}
+      >
+        <DateRemover
+          close={() => setShowRemover(false)}
+          projectSchedule={projectSchedule}
+        />
       </Modal>
     </React.Fragment>
   );

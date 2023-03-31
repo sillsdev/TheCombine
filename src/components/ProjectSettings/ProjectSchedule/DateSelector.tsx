@@ -41,7 +41,6 @@ export default function DateSelector(Props: DateSelectorProps) {
         currentDate.getDate() + 1 // Will increase month if over range
       );
     }
-
     return dates;
   };
 
@@ -56,13 +55,12 @@ export default function DateSelector(Props: DateSelectorProps) {
     // update the schedule to the project setting
     const projectId = await LocalStorage.getProjectId();
     const project = await getProject(projectId);
+    let updateDateString: string[] | null | undefined = [];
     if (startDate && endDate) {
-      project.workshopSchedule = getDatesBetween(
-        startDate.toDate(),
-        endDate.toDate()
-      );
-      await updateProject(project);
+      updateDateString = getDatesBetween(startDate.toDate(), endDate.toDate());
     }
+    project.workshopSchedule = updateDateString;
+    await updateProject(project);
     return Props.close();
   }
 
