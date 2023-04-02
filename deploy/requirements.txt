@@ -4,7 +4,7 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
-ansible==7.3.0
+ansible==7.4.0
     # via -r requirements.in
 ansible-core==2.14.4
     # via ansible
