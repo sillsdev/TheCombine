@@ -29,11 +29,6 @@ export default function DateRemover(Props: DateRemoverProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
   const [value, setValue] = useState<Dayjs | null>();
 
-  const isWeekend = (date: Dayjs) => {
-    const day = date.day();
-
-    return day === 0 || day === 6;
-  };
   // Custom renderer for PickersDay
   function customDayRenderer(
     date: Dayjs,
@@ -101,7 +96,6 @@ export default function DateRemover(Props: DateRemoverProps) {
     };
     updateState();
   }, [Props.projectSchedule]);
-  console.log(projectSchedule);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

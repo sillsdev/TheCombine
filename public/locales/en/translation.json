@@ -186,9 +186,11 @@
       "startDate": "Start Date",
       "endDate": "End Date",
       "selectedDateAlert": "The start date must be before the end date",
-      "setDays": "Set days to the workshop",
-      "removeDays": "Remove days from workshop",
-      "calendarHighlight": "Scheduled Days Highlighted On Calendar"
+      "setDays": "Set the range of days for the workshop",
+      "editDays": "Flexibly adjust the workshop schedule",
+      "removeDays": "Remove all days from workshop",
+      "removeAll": "Are you sure you want to remove all the dates",
+      "calendarHighlight": "Workshop Schedule Calendar"
     },
     "exportProject": {
       "label": "Export Project"
