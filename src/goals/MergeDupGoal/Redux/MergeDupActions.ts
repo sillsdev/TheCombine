@@ -309,17 +309,8 @@ export function dispatchMergeStepData(goal: MergeDups) {
   };
 }
 
-/** Modifies the mutable input goal. */
-export async function loadMergeDupsData(goal: MergeDups): Promise<void> {
-  const newGroups = await backend.getDuplicates(5, maxNumSteps(goal.goalType));
-
-  // Add data to goal.
-  goal.data = { plannedWords: newGroups };
-  goal.numSteps = newGroups.length;
-
-  // Reset goal steps.
-  goal.currentStep = 0;
-  goal.steps = [];
+export async function fetchMergeDupsData(goal: MergeDups): Promise<Word[][]> {
+  return await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 }
 
 /** Modifies the mutable input sense. */

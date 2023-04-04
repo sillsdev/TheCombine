@@ -11,7 +11,7 @@ import {
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,
-  loadMergeDupsData,
+  fetchMergeDupsData,
 } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -25,9 +25,15 @@ export function loadUserEdits(history?: Goal[]): LoadUserEditsAction {
 }
 
 export function setCurrentGoal(goal?: Goal): SetCurrentGoalAction {
+  if (goal == null) {
+    return {
+      type: GoalActionTypes.SET_CURRENT_GOAL,
+      payload: new Goal(),
+    };
+  }
   return {
     type: GoalActionTypes.SET_CURRENT_GOAL,
-    payload: goal ?? new Goal(),
+    payload: { ...goal },
   };
 }
 
@@ -89,10 +95,9 @@ export function asyncAddGoal(goal: Goal) {
 
       // Check if this is a new goal.
       if (goal.index === -1) {
-        goal.index = await Backend.addGoalToUserEdit(userEditId, goal);
-
+        const newIndex = await Backend.addGoalToUserEdit(userEditId, goal);
         // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal(goal, userEditId));
+        dispatch(asyncLoadNewGoal({ ...goal, index: newIndex }, userEditId));
       }
 
       // Serve goal.
@@ -119,15 +124,16 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
 export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const goalsState = getState().goalsState;
-    const goal = goalsState.currentGoal;
+    // copy the goal so that we don't mutate the state directly.
+    const goal = { ...goalsState.currentGoal };
     goal.currentStep++;
     if (goal.currentStep < goal.numSteps) {
       // Update data.
       updateStepFromData(goal);
 
       // Dispatch to state.
-      dispatch(dispatchStepData(goal));
       dispatch(setCurrentGoal(goal));
+      dispatch(dispatchStepData({ ...goal }));
 
       // Save to database.
       await saveCurrentStep(goal);
@@ -165,7 +171,11 @@ export function asyncUpdateGoal(goal: Goal) {
 export async function loadGoalData(goal: Goal): Promise<boolean> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      await loadMergeDupsData(goal);
+      const mergeDupsData = await fetchMergeDupsData(goal);
+      goal.data = { plannedWords: mergeDupsData };
+      goal.numSteps = mergeDupsData.length;
+      goal.currentStep = 0;
+      goal.steps = [];
       return true;
     default:
       return false;

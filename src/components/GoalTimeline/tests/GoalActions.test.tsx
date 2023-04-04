@@ -190,9 +190,8 @@ describe("GoalActions", () => {
 
     it("should create an action, but nothing else if no step data to load", async () => {
       const goal: Goal = new CreateCharInv();
-      goal.index = 0;
       await mockStore.dispatch<any>(
-        actions.asyncLoadNewGoal(goal, mockUserEditId)
+        actions.asyncLoadNewGoal({ ...goal, index: 0 }, mockUserEditId)
       );
       expect(mockStore.getActions()[0].type).toEqual(
         GoalActionTypes.SET_CURRENT_GOAL
@@ -203,11 +202,16 @@ describe("GoalActions", () => {
 
     it("should call MergeDups functions when goal is MergeDups", async () => {
       const goal: Goal = new MergeDups();
-      goal.index = 0;
-      goal.numSteps = maxNumSteps(goal.goalType);
-      goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
       await mockStore.dispatch<any>(
-        actions.asyncLoadNewGoal(goal, mockUserEditId)
+        actions.asyncLoadNewGoal(
+          {
+            ...goal,
+            index: 0,
+            numSteps: maxNumSteps(goal.goalType),
+            steps: [{ words: [...goalDataMock.plannedWords[0]] }],
+          },
+          mockUserEditId
+        )
       );
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
       expect(mockLoadMergeDupsData).toBeCalledTimes(1);
