@@ -42,7 +42,6 @@
     "@matt-block/react-recaptcha-v2": "^2.0.0",
     "@microsoft/signalr": "^6.0.7",
     "@mui/icons-material": "^5.11.0",
-    "@mui/lab": "^5.0.0-alpha.123",
     "@mui/material": "^5.11.8",
     "@mui/styles": "^5.11.13",
     "@redux-devtools/extension": "^3.2.5",
