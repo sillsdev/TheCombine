@@ -34,7 +34,6 @@ export default function DateSelector(Props: DateSelectorProps) {
 
     while (currentDate <= endDate) {
       dates.push(currentDate.toISOString());
-
       currentDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),

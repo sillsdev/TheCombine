@@ -1,12 +1,4 @@
-import {
-  Add,
-  ArrowDropDown,
-  CalendarMonth,
-  DateRange,
-  EventRepeat,
-  Remove,
-} from "@mui/icons-material";
-import { Button, Grid, Icon, Typography } from "@mui/material";
+import { Icon } from "@mui/material";
 import {
   CalendarPicker,
   PickersDay,
@@ -15,33 +7,13 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
-import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
-import * as React from "react";
-import { useTranslation } from "react-i18next";
-import Modal from "react-modal";
-
-import DateSelector from "./DateSelector";
-import { getProject, updateProject } from "backend";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import DateRemover from "./DateRemover";
-import * as LocalStorage from "backend/localStorage";
 
 interface CalendarViewProps {
   projectSchedule: Date[];
 }
 
 export default function CalendarView(Props: CalendarViewProps) {
-  const [projectSchedule, setProjectSchedule] = useState<Date[]>([]);
-
-  useEffect(() => {
-    const fetchDate = async () => {
-      setProjectSchedule(Props.projectSchedule);
-    };
-    fetchDate();
-  }, [Props.projectSchedule]);
-
-  // Custom renderer for PickersDay
+  // Custom renderer for CalendarPicker
   function customDayRenderer(
     date: Dayjs,
     selectedDays: Array<Dayjs | null>,
@@ -49,8 +21,8 @@ export default function CalendarView(Props: CalendarViewProps) {
   ) {
     const temp = date.toDate();
     if (
-      projectSchedule &&
-      projectSchedule?.findIndex((e) => {
+      Props.projectSchedule &&
+      Props.projectSchedule?.findIndex((e) => {
         return (
           e.getDate() == temp.getDate() &&
           e.getMonth() == temp.getMonth() &&
@@ -109,7 +81,7 @@ export default function CalendarView(Props: CalendarViewProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {handleCalendarView(getScheduledMonths(projectSchedule))}
+      {handleCalendarView(getScheduledMonths(Props.projectSchedule))}
     </LocalizationProvider>
   );
 }

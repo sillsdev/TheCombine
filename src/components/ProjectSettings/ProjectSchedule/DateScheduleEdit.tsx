@@ -1,35 +1,29 @@
 import { Button, Grid } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   CalendarPicker,
   PickersDay,
   PickersDayProps,
-  StaticDatePicker,
 } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import LoadingButton from "components/Buttons/LoadingButton";
-import DatePicker from "@mui/lab/DatePicker";
-import ProjectSchedule from "./ProjectSchedule";
 
-interface DateRemoverProps {
+interface DateScheduleEditProps {
   close: () => void;
   projectSchedule: Date[] | undefined;
 }
 
-export default function DateRemover(Props: DateRemoverProps) {
-  const { t } = useTranslation();
+export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
+  // The value is not being used, but it helps trigger the render
   const [value, setValue] = useState<Dayjs | null>();
 
-  // Custom renderer for PickersDay
+  // Custom renderer for CalendarPicker
   function customDayRenderer(
     date: Dayjs,
     selectedDays: Array<Dayjs | null>,
@@ -65,6 +59,7 @@ export default function DateRemover(Props: DateRemoverProps) {
     return Props.close();
   }
 
+  // If the date already exists, delete it; otherwise, add it
   async function handleCalendarChange(date: Dayjs | null) {
     if (!date) return;
     const currentDate = date.toDate();
@@ -89,7 +84,7 @@ export default function DateRemover(Props: DateRemoverProps) {
   useEffect(() => {
     const updateState = async () => {
       if (Props.projectSchedule) {
-        let scheduleCopy: Date[] = [];
+        const scheduleCopy: Date[] = [];
         Props.projectSchedule.forEach((t) => scheduleCopy.push(t));
         setProjectSchedule(scheduleCopy);
       }
