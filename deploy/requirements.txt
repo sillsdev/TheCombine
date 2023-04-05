@@ -4,7 +4,7 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
-ansible==7.3.0
+ansible==7.4.0
     # via -r requirements.in
 ansible-core==2.14.4
     # via ansible
@@ -22,7 +22,7 @@ cryptography==40.0.1
     # via
     #   ansible-core
     #   pyopenssl
-google-auth==2.16.3
+google-auth==2.17.1
     # via kubernetes
 idna==3.4
     # via requests
