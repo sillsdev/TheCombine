@@ -32,7 +32,7 @@ namespace BackendFramework.Services
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
             List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
 
-            if (domainTreeNodeList == null || wordList == null)
+            if (domainTreeNodeList == null || !domainTreeNodeList.Any() || !wordList.Any())
             {
                 return new List<SemanticDomainCount>();
             }
@@ -64,7 +64,7 @@ namespace BackendFramework.Services
             Dictionary<string, WordsPerDayPerUserCount> shortTimeDictionary = new Dictionary<string, WordsPerDayPerUserCount>();
             Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
-            if (wordList == null)
+            if (!wordList.Any())
             {
                 return new List<WordsPerDayPerUserCount>();
             }
@@ -115,6 +115,85 @@ namespace BackendFramework.Services
             return resList;
         }
 
+        public async Task<ChartRootData> GetProgressEstimationLineChartRoot(string projectId, Project project)
+        {
+            ChartRootData LineChartData = new ChartRootData();
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            if (!project.WorkshopSchedule.Any() || !wordList.Any())
+            {
+                return LineChartData;
+            }
+            HashSet<string> workshopScheduleSet = new HashSet<string>();
+            foreach (DateTime dt in project.WorkshopSchedule)
+            {
+
+                workshopScheduleSet.Add(dt.ToISO8601TimeFormatDateOnlyString());
+            }
+            Dictionary<string, int> totalCountDictionary = new Dictionary<string, int>();
+
+            foreach (Word word in wordList)
+            {
+                foreach (Sense sense in word.Senses)
+                {
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
+                    {
+
+                        if (!string.IsNullOrEmpty(sd.Created))
+                        {
+
+                            DateTime tempDate = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created);
+                            if (!workshopScheduleSet.Contains(tempDate.ToISO8601TimeFormatDateOnlyString()))
+                            {
+                                continue;
+                            }
+                            else if (totalCountDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()))
+                            {
+                                totalCountDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()]++;
+                            }
+                            else
+                            {
+                                totalCountDictionary.Add(tempDate.ToISO8601TimeFormatDateOnlyString(), 1);
+                            }
+                        }
+                    }
+                }
+            }
+            var averageValue = 0;
+            var tempList = workshopScheduleSet.ToList();
+            tempList.Sort();
+            var totalCountList = totalCountDictionary.Values.ToList();
+            if (totalCountList.Count > 1)
+            {
+                var min = totalCountList.Min();
+                averageValue = (totalCountList.Sum() - min) / (tempList.Count - 1);
+            }
+            else
+            {
+                averageValue = totalCountList[0];
+            }
+
+            var EstimationValue = averageValue;
+
+            foreach (string s in tempList)
+            {
+                LineChartData.Dates.Add(s);
+                if (LineChartData.Datasets.Count == 0)
+                {
+                    LineChartData.Datasets.Add(new Dataset("Daily Count", totalCountDictionary[s]));
+                    LineChartData.Datasets.Add(new Dataset("EstimationTotal", EstimationValue));
+                    LineChartData.Datasets.Add(new Dataset("Average Count", averageValue));
+                }
+                else
+                {
+                    LineChartData.Datasets.Find(element => element.UserName == "Daily Count")?.Data.Add(totalCountDictionary.ContainsKey(s) ? totalCountDictionary[s] : 0);
+                    LineChartData.Datasets.Find(element => element.UserName == "EstimationTotal")?.Data.Add(EstimationValue);
+                    LineChartData.Datasets.Find(element => element.UserName == "Average Count")?.Data.Add(averageValue);
+
+                }
+                EstimationValue += averageValue;
+            }
+            return LineChartData;
+        }
 
         /// <summary>
         /// Get a ChartRootData objects <see cref="ChartRootData"/> to generate a Line Chart,

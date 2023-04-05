@@ -12,7 +12,11 @@ import distinctColors from "distinct-colors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-import { getLineChartRootData } from "backend";
+import {
+  getLineChartRootData,
+  getProgressEstimationLineChartRoot,
+} from "backend";
+import React from "react";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -44,6 +48,10 @@ interface LineChartDataProps {
 export default function LineChartComponent(props: LineChartProps) {
   const [chartOptions, setChartOptions] = useState({});
   const [chartData, setChartData] = useState<LineChartDataProps>({
+    labels: [],
+    datasets: [],
+  });
+  const [tempDate, setTempDate] = useState<LineChartDataProps>({
     labels: [],
     datasets: [],
   });
@@ -80,7 +88,37 @@ export default function LineChartComponent(props: LineChartProps) {
         });
       }
 
+      const tempDate = await getProgressEstimationLineChartRoot(
+        props.currentProjectId
+      );
+      var updateChartData2222: LineChartDataProps = {
+        labels: [],
+        datasets: [],
+      };
+      if (tempDate != undefined) {
+        // Get array of unique Color
+        var palette: chroma.Color[];
+        if (tempDate.datasets.length) {
+          palette = distinctColors({
+            count: tempDate.datasets.length,
+          });
+        }
+        let colorIndex = 0;
+        // Update the updateChartData by retrieve
+        tempDate.dates.map((e) => {
+          updateChartData2222.labels.push(e);
+        });
+        tempDate.datasets.forEach((e) => {
+          updateChartData2222.datasets.push({
+            label: e.userName,
+            data: e.data,
+            borderColor: palette[colorIndex].hex().toString(),
+            backgroundColor: palette[colorIndex++].hex().toString(),
+          });
+        });
+      }
       setChartData(updateChartData);
+      setTempDate(updateChartData2222);
     };
 
     updateBarChartList();
@@ -105,5 +143,12 @@ export default function LineChartComponent(props: LineChartProps) {
     });
   }, [props]);
 
-  return <Line data={chartData} options={chartOptions} />;
+  console.log(tempDate);
+
+  return (
+    <React.Fragment>
+      <Line data={chartData} options={chartOptions} />
+      <Line data={tempDate} options={chartOptions} />
+    </React.Fragment>
+  );
 }

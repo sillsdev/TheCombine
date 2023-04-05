@@ -73,6 +73,28 @@ namespace BackendFramework.Controllers
 
 
         /// <summary> Get a ChartRootData <see cref="ChartRootData"/> to generate a Line Chart</summary>
+        [HttpGet("GetProgressEstimationLineChartRoot", Name = "GetProgressEstimationLineChartRoot")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
+        public async Task<IActionResult> GetProgressEstimationLineChartRoot(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            {
+                return Forbid();
+            }
+
+            // Ensure project exists.
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            return Ok(await _staService.GetProgressEstimationLineChartRoot(projectId, proj));
+        }
+
+
+
+        /// <summary> Get a ChartRootData <see cref="ChartRootData"/> to generate a Line Chart</summary>
         [HttpGet("GetLineChartRootData", Name = "GetLineChartRootData")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
         public async Task<IActionResult> GetLineChartRootData(string projectId)
