@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import LoadingButton from "components/Buttons/LoadingButton";
+import { newProject } from "types/project";
 
 interface DateScheduleEditProps {
   close: () => void;
@@ -20,8 +21,6 @@ interface DateScheduleEditProps {
 
 export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
-  // The value is not being used, but it helps trigger the render
-  const [value, setValue] = useState<Dayjs | null>();
 
   // Custom renderer for CalendarPicker
   function customDayRenderer(
@@ -60,8 +59,8 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   }
 
   // If the date already exists, delete it; otherwise, add it
-  async function handleCalendarChange(date: Dayjs | null) {
-    if (!date) return;
+  function handleCalendarChange(date: Dayjs | null) {
+    if (!date) return projectSchedule;
     const currentDate = date.toDate();
     let removeDate = null;
     projectSchedule?.forEach((temp, index) => {
@@ -71,33 +70,30 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
         temp.getDate() == currentDate.getDate()
       ) {
         removeDate = projectSchedule.splice(index, 1);
-        return setProjectSchedule(projectSchedule);
+        setProjectSchedule(projectSchedule);
       }
     });
-    if (!removeDate) {
-      projectSchedule?.push(date.toDate());
-      projectSchedule?.sort((a, b) => (a > b ? 1 : -1));
-      return setProjectSchedule(projectSchedule);
+    if (!removeDate && projectSchedule) {
+      projectSchedule.push(date.toDate());
+      projectSchedule.sort((a, b) => (a > b ? 1 : -1));
+      setProjectSchedule(projectSchedule);
     }
   }
 
   useEffect(() => {
-    const updateState = async () => {
+    const updateState = () => {
       if (Props.projectSchedule) {
-        const scheduleCopy: Date[] = [];
-        Props.projectSchedule.forEach((t) => scheduleCopy.push(t));
-        setProjectSchedule(scheduleCopy);
+        setProjectSchedule(Props.projectSchedule);
       }
     };
     updateState();
-  }, [Props.projectSchedule]);
+  }, [Props.projectSchedule, projectSchedule]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <CalendarPicker
         onChange={(date) => {
-          setValue(date);
-          handleCalendarChange(date);
+          setProjectSchedule(handleCalendarChange(date));
         }}
         date={null}
         disableHighlightToday
