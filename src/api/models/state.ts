@@ -21,5 +21,6 @@ export enum State {
   Active = "Active",
   Deleted = "Deleted",
   Duplicate = "Duplicate",
+  Protected = "Protected",
   Separate = "Separate",
 }

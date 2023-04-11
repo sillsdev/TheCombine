@@ -153,10 +153,12 @@ export default function DataEntryTable(
     }
   }, [innerGetWordsFromBackend, state.isFetchingFrontier]);
 
-  /** Filter out words that do not have at least 1 active sense */
+  /** Filter out words that do not have at least 1 Active/Protected sense */
   function filterWords(words: Word[]): Word[] {
     return words.filter((w) =>
-      w.senses.find((s) => s.accessibility === State.Active)
+      w.senses.find((s) =>
+        [State.Active, State.Protected].includes(s.accessibility)
+      )
     );
   }
 

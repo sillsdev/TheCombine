@@ -17,7 +17,7 @@ describe("DataEntryComponent", () => {
       expect(filterWords(words)).toEqual(expectedWords);
     });
 
-    it("removes words that aren't Active.", () => {
+    it("removes words that aren't Active/Protected.", () => {
       const words: Word[] = [
         {
           ...mockWord,
@@ -31,8 +31,15 @@ describe("DataEntryComponent", () => {
       expect(filterWords(words)).toHaveLength(0);
     });
 
-    it("keeps words that are Active.", () => {
-      expect(filterWords([mockWord, mockWord])).toHaveLength(2);
+    it("keeps words that are Active/Protected.", () => {
+      const words: Word[] = [
+        mockWord,
+        {
+          ...mockWord,
+          senses: [{ ...newSense(), accessibility: State.Protected }],
+        },
+      ];
+      expect(filterWords(words)).toHaveLength(2);
     });
   });
 
