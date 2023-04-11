@@ -18,7 +18,7 @@ cryptography==40.0.1
     # via pyopenssl
 dnspython==2.3.0
     # via pymongo
-google-auth==2.16.3
+google-auth==2.17.1
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
