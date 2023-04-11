@@ -12,7 +12,7 @@ import distinctColors from "distinct-colors";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-import { getLineChartRootData } from "backend";
+import { getProgressEstimationLineChartRoot } from "backend";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -44,37 +44,37 @@ interface LineChartDataProps {
   datasets: Array<DatasetsProps>;
 }
 
-export default function LineChartComponent(props: LineChartProps) {
+export default function EstimateComponent(props: LineChartProps) {
   const [chartOptions, setChartOptions] = useState({});
-  const [chartData, setChartData] = useState<LineChartDataProps>({
+  const [estimateDate, setEstimateDate] = useState<LineChartDataProps>({
     labels: [],
     datasets: [],
   });
 
   useEffect(() => {
     const updateChartList = async () => {
-      var updateChartData: LineChartDataProps = {
+      const tempDate = await getProgressEstimationLineChartRoot(
+        props.currentProjectId
+      );
+      var updateEstimateDate: LineChartDataProps = {
         labels: [],
         datasets: [],
       };
-
-      const chartData = await getLineChartRootData(props.currentProjectId);
-
-      if (chartData != undefined) {
+      if (tempDate != undefined) {
         // Get array of unique Color
         var palette: chroma.Color[];
-        if (chartData.datasets.length) {
+        if (tempDate.datasets.length) {
           palette = distinctColors({
-            count: chartData.datasets.length,
+            count: tempDate.datasets.length,
           });
         }
         let colorIndex = 0;
         // Update the updateChartData by retrieve
-        chartData.dates.map((e) => {
-          updateChartData.labels.push(e);
+        tempDate.dates.map((e) => {
+          updateEstimateDate.labels.push(e);
         });
-        chartData.datasets.forEach((e) => {
-          updateChartData.datasets.push({
+        tempDate.datasets.forEach((e) => {
+          updateEstimateDate.datasets.push({
             label: e.userName,
             data: e.data,
             borderColor: palette[colorIndex].hex().toString(),
@@ -85,8 +85,7 @@ export default function LineChartComponent(props: LineChartProps) {
           });
         });
       }
-
-      setChartData(updateChartData);
+      setEstimateDate(updateEstimateDate);
     };
 
     updateChartList();
@@ -100,7 +99,7 @@ export default function LineChartComponent(props: LineChartProps) {
         },
         title: {
           display: true,
-          text: "Words Collected Per User Per Day",
+          text: "Workshop Estimate",
         },
       },
       scales: {
@@ -113,7 +112,7 @@ export default function LineChartComponent(props: LineChartProps) {
 
   return (
     <React.Fragment>
-      <Line data={chartData} options={chartOptions} />
+      <Line data={estimateDate} options={chartOptions} />
     </React.Fragment>
   );
 }

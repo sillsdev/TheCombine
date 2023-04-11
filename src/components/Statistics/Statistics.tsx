@@ -33,6 +33,7 @@ enum viewEnum {
   Domain = "DOMAIN",
   Time = "Time",
   DataStatistics = "STATISTIC",
+  Estimate = "ESTIMATE",
 }
 
 export default function Statistics(): ReactElement {
@@ -77,14 +78,22 @@ export default function Statistics(): ReactElement {
           </List>
         </Grid>
       ),
-      viewName === viewEnum.Time && [
+      viewName === viewEnum.Time && (
         <Grid item key={viewEnum.Time + "ChartComponent"}>
           <ChartComponent
             currentProjectId={currentProject!.id}
             chartType={ChartTypeEnum.LineChart}
           />
-        </Grid>,
-      ],
+        </Grid>
+      ),
+      viewName === viewEnum.Estimate && (
+        <Grid item key={viewEnum.Estimate + "Estimate"}>
+          <ChartComponent
+            currentProjectId={currentProject!.id}
+            chartType={ChartTypeEnum.Estimate}
+          />
+        </Grid>
+      ),
     ];
   }
 
@@ -109,7 +118,14 @@ export default function Statistics(): ReactElement {
           onClick={() => setViewName(viewEnum.Time)}
           selected={viewName === viewEnum.Time}
         >
-          <ListItemText primary={"Words per Day"} />
+          <ListItemText primary={t("statistics.dayView")} />
+        </ListItemButton>
+        <Divider />
+        <ListItemButton
+          onClick={() => setViewName(viewEnum.Estimate)}
+          selected={viewName === viewEnum.Estimate}
+        >
+          <ListItemText primary={t("statistics.estimate")} />
         </ListItemButton>
       </List>
     );

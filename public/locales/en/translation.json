@@ -389,6 +389,8 @@
     "senseCount": "Words:",
     "userView": "Words per User",
     "domainView": "Words per Domain",
+    "dayView": "Words per Day",
+    "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
     "domainsCollected": "Domains Collected:",
     "wordsCollected": "Words Collected:"

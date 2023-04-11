@@ -159,13 +159,18 @@ namespace BackendFramework.Services
                 }
             }
             var averageValue = 0;
-            var tempList = workshopScheduleSet.ToList();
-            tempList.Sort();
+            var workshopScheduleList = workshopScheduleSet.ToList();
+            workshopScheduleList.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
-            if (totalCountList.Count > 1)
+            var pastDays = workshopScheduleList.FindAll(day => DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
+            if (totalCountList.Count == pastDays && pastDays > 1)
             {
                 var min = totalCountList.Min();
-                averageValue = (totalCountList.Sum() - min) / (tempList.Count - 1);
+                averageValue = (totalCountList.Sum() - min) / (pastDays - 1);
+            }
+            else if (pastDays > 1)
+            {
+                averageValue = (totalCountList.Sum()) / (pastDays - 1);
             }
             else
             {
@@ -174,21 +179,24 @@ namespace BackendFramework.Services
 
             var EstimationValue = averageValue;
 
-            foreach (string s in tempList)
+            foreach (string day in workshopScheduleList)
             {
-                LineChartData.Dates.Add(s);
+                LineChartData.Dates.Add(day);
                 if (LineChartData.Datasets.Count == 0)
                 {
-                    LineChartData.Datasets.Add(new Dataset("Daily Count", totalCountDictionary[s]));
-                    LineChartData.Datasets.Add(new Dataset("EstimationTotal", EstimationValue));
+                    LineChartData.Datasets.Add(new Dataset("Daily Count", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
                     LineChartData.Datasets.Add(new Dataset("Average Count", averageValue));
+                    LineChartData.Datasets.Add(new Dataset("EstimationTotal", EstimationValue));
+
                 }
                 else
                 {
-                    LineChartData.Datasets.Find(element => element.UserName == "Daily Count")?.Data.Add(totalCountDictionary.ContainsKey(s) ? totalCountDictionary[s] : 0);
+                    if (DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
+                    {
+                        LineChartData.Datasets.Find(element => element.UserName == "Daily Count")?.Data.Add(totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0);
+                        LineChartData.Datasets.Find(element => element.UserName == "Average Count")?.Data.Add(averageValue);
+                    }
                     LineChartData.Datasets.Find(element => element.UserName == "EstimationTotal")?.Data.Add(EstimationValue);
-                    LineChartData.Datasets.Find(element => element.UserName == "Average Count")?.Data.Add(averageValue);
-
                 }
                 EstimationValue += averageValue;
             }

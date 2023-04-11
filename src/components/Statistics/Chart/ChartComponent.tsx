@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
+import EstimateComponent from "./EstimateComponent";
 import LineChartComponent from "./LineChartComponent";
 
 export enum ChartTypeEnum {
   LineChart = "Line",
+  Estimate = "Estimate",
   otherChart = "TBD",
 }
 
@@ -19,6 +21,9 @@ export default function ChartComponent(props: ChartProps) {
     <React.Fragment>
       {chartType === ChartTypeEnum.LineChart && (
         <LineChartComponent currentProjectId={props.currentProjectId} />
+      )}
+      {chartType === ChartTypeEnum.Estimate && (
+        <EstimateComponent currentProjectId={props.currentProjectId} />
       )}
     </React.Fragment>
   );
