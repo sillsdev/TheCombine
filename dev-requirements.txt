@@ -8,9 +8,9 @@ attrs==22.2.0
     # via
     #   flake8-bugbear
     #   flake8-eradicate
-beautifulsoup4==4.11.2
+beautifulsoup4==4.12.0
     # via mkdocs-htmlproofer-plugin
-black==23.1.0
+black==23.3.0
     # via -r dev-requirements.in
 cachetools==5.3.0
     # via
@@ -24,7 +24,7 @@ cffi==1.15.1
     # via cryptography
 chardet==5.1.0
     # via tox
-charset-normalizer==3.0.1
+charset-normalizer==3.1.0
     # via requests
 click==8.1.3
     # via
@@ -35,7 +35,7 @@ colorama==0.4.6
     #   -r dev-requirements.in
     #   mkdocs-material
     #   tox
-cryptography==39.0.1
+cryptography==40.0.1
     # via
     #   pyopenssl
     #   types-pyopenssl
@@ -45,7 +45,7 @@ dnspython==2.3.0
     # via pymongo
 eradicate==2.2.0
     # via flake8-eradicate
-filelock==3.9.0
+filelock==3.10.7
     # via
     #   tox
     #   virtualenv
@@ -59,15 +59,15 @@ flake8==5.0.4
     #   pep8-naming
 flake8-broken-line==0.6.0
     # via -r dev-requirements.in
-flake8-bugbear==23.2.13
+flake8-bugbear==23.3.12
     # via -r dev-requirements.in
-flake8-comprehensions==3.10.1
+flake8-comprehensions==3.11.1
     # via -r dev-requirements.in
 flake8-eradicate==1.4.0
     # via -r dev-requirements.in
 ghp-import==2.1.0
     # via mkdocs
-google-auth==2.16.1
+google-auth==2.17.1
     # via kubernetes
 humanfriendly==10.0
     # via -r dev-requirements.in
@@ -101,13 +101,13 @@ mkdocs==1.4.2
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
-mkdocs-htmlproofer-plugin==0.10.3
+mkdocs-htmlproofer-plugin==0.11.0
     # via -r dev-requirements.in
-mkdocs-material==9.0.15
+mkdocs-material==9.1.5
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.1.1
     # via mkdocs-material
-mypy==1.0.1
+mypy==1.1.1
     # via -r dev-requirements.in
 mypy-extensions==1.0.0
     # via
@@ -121,11 +121,11 @@ packaging==23.0
     #   mkdocs
     #   pyproject-api
     #   tox
-pathspec==0.11.0
+pathspec==0.11.1
     # via black
 pep8-naming==0.13.3
     # via -r dev-requirements.in
-platformdirs==3.0.0
+platformdirs==3.2.0
     # via
     #   black
     #   tox
@@ -146,13 +146,13 @@ pyflakes==2.5.0
     # via flake8
 pygments==2.14.0
     # via mkdocs-material
-pymdown-extensions==9.9.2
+pymdown-extensions==9.10
     # via mkdocs-material
 pymongo==4.3.3
     # via -r dev-requirements.in
-pyopenssl==23.0.0
+pyopenssl==23.1.1
     # via -r dev-requirements.in
-pyproject-api==1.5.0
+pyproject-api==1.5.1
     # via tox
 pyreadline3==3.4.1
     # via -r dev-requirements.in
@@ -165,10 +165,11 @@ pyyaml==6.0
     #   -r dev-requirements.in
     #   kubernetes
     #   mkdocs
+    #   pymdown-extensions
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2022.10.31
+regex==2023.3.23
     # via mkdocs-material
 requests==2.28.2
     # via
@@ -193,27 +194,27 @@ tomli==2.0.1
     #   mypy
     #   pyproject-api
     #   tox
-tox==4.4.6
+tox==4.4.8
     # via -r dev-requirements.in
-types-pyopenssl==23.0.0.4
+types-pyopenssl==23.1.0.1
     # via -r dev-requirements.in
-types-python-dateutil==2.8.19.9
+types-python-dateutil==2.8.19.11
     # via -r dev-requirements.in
-types-pyyaml==6.0.12.8
+types-pyyaml==6.0.12.9
     # via -r dev-requirements.in
-types-requests==2.28.11.15
+types-requests==2.28.11.17
     # via -r dev-requirements.in
-types-urllib3==1.26.25.8
+types-urllib3==1.26.25.10
     # via types-requests
 typing-extensions==4.5.0
     # via mypy
-urllib3==1.26.14
+urllib3==1.26.15
     # via
     #   kubernetes
     #   requests
-virtualenv==20.20.0
+virtualenv==20.21.0
     # via tox
-watchdog==2.3.1
+watchdog==3.0.0
     # via mkdocs
 websocket-client==1.5.1
     # via kubernetes
