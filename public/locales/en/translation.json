@@ -189,7 +189,7 @@
       "setDays": "Set the range of days for the workshop",
       "editDays": "Flexibly adjust the workshop schedule",
       "removeDays": "Remove all days from workshop",
-      "removeAll": "Are you sure you want to remove all the dates ?",
+      "removeAll": "Are you sure you want to remove all the dates?",
       "calendarHighlight": "Workshop Schedule Calendar"
     },
     "exportProject": {

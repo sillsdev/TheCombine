@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import LoadingButton from "components/Buttons/LoadingButton";
-import { newProject } from "types/project";
 
 interface DateScheduleEditProps {
   close: () => void;
