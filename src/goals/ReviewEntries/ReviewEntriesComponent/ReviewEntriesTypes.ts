@@ -28,6 +28,7 @@ export class ReviewEntriesWord {
   pronunciationFiles: string[];
   noteText: string;
   flag: Flag;
+  protected: boolean;
   recorder?: Recorder;
 
   constructor(word?: Word, analysisLang?: string, commonRecorder?: Recorder) {
@@ -42,6 +43,7 @@ export class ReviewEntriesWord {
     this.pronunciationFiles = word.audio;
     this.noteText = word.note.text;
     this.flag = word.flag;
+    this.protected = word.accessibility === Status.Protected;
     this.recorder = commonRecorder;
   }
 }
@@ -52,6 +54,7 @@ export class ReviewEntriesSense {
   glosses: Gloss[];
   domains: SemanticDomain[];
   deleted: boolean;
+  protected: boolean;
 
   constructor(sense?: Sense, analysisLang?: string) {
     if (!sense) {
@@ -68,6 +71,7 @@ export class ReviewEntriesSense {
     this.glosses = cleanGlosses(this.glosses);
     this.domains = [...sense.semanticDomains];
     this.deleted = sense.accessibility === Status.Deleted;
+    this.protected = sense.accessibility === Status.Protected;
   }
 
   private static SEPARATOR = "; ";
