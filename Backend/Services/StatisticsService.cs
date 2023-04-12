@@ -119,18 +119,23 @@ namespace BackendFramework.Services
         {
             ChartRootData LineChartData = new ChartRootData();
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            HashSet<string> workshopScheduleSet = new HashSet<string>();
+            Dictionary<string, int> totalCountDictionary = new Dictionary<string, int>();
+
+            // if not schedule yet or wordList is empty return new ChartRootData
             if (!project.WorkshopSchedule.Any() || !wordList.Any())
             {
                 return LineChartData;
             }
-            HashSet<string> workshopScheduleSet = new HashSet<string>();
+
+            // Build workshop schedule hashSet 
             foreach (DateTime dt in project.WorkshopSchedule)
             {
 
                 workshopScheduleSet.Add(dt.ToISO8601TimeFormatDateOnlyString());
             }
-            Dictionary<string, int> totalCountDictionary = new Dictionary<string, int>();
 
+            // Build daily count Dictionary 
             foreach (Word word in wordList)
             {
                 foreach (Sense sense in word.Senses)
@@ -163,40 +168,50 @@ namespace BackendFramework.Services
             workshopScheduleList.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
             var pastDays = workshopScheduleList.FindAll(day => DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
+            // calculate average daily count
+            // If pastDays is two or more, and pastDays equals the number of days on which at least one word was added
             if (totalCountList.Count == pastDays && pastDays > 1)
             {
                 var min = totalCountList.Min();
                 averageValue = (totalCountList.Sum() - min) / (pastDays - 1);
             }
+            // If pastDays is two or more and at least one of those days had no word added
             else if (pastDays > 1)
             {
                 averageValue = (totalCountList.Sum()) / (pastDays - 1);
             }
+            // no need to remove the lowest data if there's only one past day
             else
             {
                 averageValue = totalCountList[0];
             }
 
             var EstimationValue = averageValue;
-
+            var cumulateTotal = 0;
+            // generate ChartRootData for frontend
             foreach (string day in workshopScheduleList)
             {
                 LineChartData.Dates.Add(day);
                 if (LineChartData.Datasets.Count == 0)
                 {
-                    LineChartData.Datasets.Add(new Dataset("Daily Count", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
-                    LineChartData.Datasets.Add(new Dataset("Average Count", averageValue));
-                    LineChartData.Datasets.Add(new Dataset("EstimationTotal", EstimationValue));
+                    cumulateTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
+                    LineChartData.Datasets.Add(new Dataset("Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
+                    LineChartData.Datasets.Add(new Dataset("Average", averageValue));
+                    LineChartData.Datasets.Add(new Dataset("Cumulate Total", cumulateTotal));
+                    LineChartData.Datasets.Add(new Dataset("Estimation Total", EstimationValue));
 
                 }
                 else
                 {
+                    // not generate data after the current date for "Daily Total", "Average" and "Cumulate Total"
                     if (DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
-                        LineChartData.Datasets.Find(element => element.UserName == "Daily Count")?.Data.Add(totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0);
-                        LineChartData.Datasets.Find(element => element.UserName == "Average Count")?.Data.Add(averageValue);
+                        cumulateTotal += totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
+                        LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0);
+                        LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
+                        LineChartData.Datasets.Find(element => element.UserName == "Cumulate Total")?.Data.Add(cumulateTotal);
                     }
-                    LineChartData.Datasets.Find(element => element.UserName == "EstimationTotal")?.Data.Add(EstimationValue);
+                    LineChartData.Datasets.Find(element => element.UserName == "Estimation Total")?.Data.Add(EstimationValue);
                 }
                 EstimationValue += averageValue;
             }
@@ -231,7 +246,7 @@ namespace BackendFramework.Services
                         LineChartData.Datasets.Add(new Dataset(item.Key, item.Value));
                     }
                     // update "Total", Line Chart needed
-                    LineChartData.Datasets.Add(new Dataset("Total", totalDay));
+                    LineChartData.Datasets.Add(new Dataset("Daily Total", totalDay));
                 }
                 // remaining traversal, update the object by pushing the value to Data array
                 else
@@ -243,7 +258,7 @@ namespace BackendFramework.Services
                         LineChartData.Datasets.Find(element => element.UserName == item.Key)?.Data.Add(item.Value);
                     }
                     // update "Total"
-                    LineChartData.Datasets.Find(element => element.UserName == "Total")?.Data.Add(totalDay);
+                    LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(totalDay);
                 }
             }
 

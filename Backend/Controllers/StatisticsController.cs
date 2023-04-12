@@ -72,7 +72,7 @@ namespace BackendFramework.Controllers
         }
 
 
-        /// <summary> Get a ChartRootData <see cref="ChartRootData"/> to generate a Line Chart</summary>
+        /// <summary> Get a ChartRootData <see cref="ChartRootData"/> to generate an estimate Line Chart</summary>
         [HttpGet("GetProgressEstimationLineChartRoot", Name = "GetProgressEstimationLineChartRoot")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
         public async Task<IActionResult> GetProgressEstimationLineChartRoot(string projectId)
@@ -91,7 +91,6 @@ namespace BackendFramework.Controllers
 
             return Ok(await _staService.GetProgressEstimationLineChartRoot(projectId, proj));
         }
-
 
 
         /// <summary> Get a ChartRootData <see cref="ChartRootData"/> to generate a Line Chart</summary>
