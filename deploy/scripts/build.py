@@ -5,7 +5,10 @@ Build the containerd images for The Combine.
 
 This script currently supports using 'docker' or 'nerdctl' to build the container
 images.  'nerdctl' is recommended when using Rancher Desktop for the development
-environment and 'docker' is recommended when using Docker Desktop.
+environment and 'docker' is recommended when using Docker Desktop with the 'containerd'
+container engine.
+
+When 'docker' is used for the build, the BuildKit backend will be enabled.
 """
 
 from __future__ import annotations
@@ -171,6 +174,9 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--build-args", nargs="*", help="Build arguments to pass to the docker build."
+    )
+    parser.add_argument(
         "--components",
         nargs="*",
         choices=build_specs.keys(),
@@ -235,9 +241,11 @@ def main() -> None:
 
     # Setup required build engine - docker or nerdctl
     if args.nerdctl:
-        build_prog = ["nerdctl", "-n", args.namespace]
+        build_cmd = ["nerdctl", "-n", args.namespace, "build"]
+        push_cmd = ["nerdctl", "-n", args.namespace, "push"]
     else:
-        build_prog = ["docker"]
+        build_cmd = ["docker", "buildx", "build"]
+        push_cmd = ["docker", "push"]
 
     # Setup build options
     build_opts: List[str] = []
@@ -249,6 +257,9 @@ def main() -> None:
         build_opts += ["--no-cache"]
     if args.pull:
         build_opts += ["--pull"]
+    if args.build_args is not None:
+        for build_arg in args.build_args:
+            build_opts += ["--build-arg", build_arg]
 
     if args.components is not None:
         to_do = args.components
@@ -264,8 +275,7 @@ def main() -> None:
         job_set[component] = JobQueue(component)
         job_set[component].add_job(
             Job(
-                build_prog
-                + ["build"]
+                build_cmd
                 + build_opts
                 + [
                     "-t",
@@ -282,7 +292,7 @@ def main() -> None:
                 push_args = ["--quiet"]
             else:
                 push_args = []
-            job_set[component].add_job(Job(build_prog + ["push"] + push_args + [image_name], None))
+            job_set[component].add_job(Job(push_cmd + push_args + [image_name], None))
         logging.info(f"Building component {component}")
 
     # Run jobs in parallel - one job per component
