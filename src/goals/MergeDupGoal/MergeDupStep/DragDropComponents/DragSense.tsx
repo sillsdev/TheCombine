@@ -86,6 +86,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
         mergeSenseId: props.mergeSenseId,
       })}
       index={props.index}
+      isDragDisabled={props.senses[0].protected}
     >
       {(provided, snapshot): ReactElement => (
         <Card

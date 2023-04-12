@@ -8,6 +8,7 @@ import {
   MergeTree,
   MergeTreeReference,
   MergeTreeSense,
+  newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -84,10 +85,10 @@ const S2 = wordA.senses[1].guid;
 const S3 = wordB.senses[0].guid;
 const S4 = wordB.senses[1].guid;
 const data: MergeData = { words: { WA: wordA, WB: wordB }, senses: {} };
-data.senses[S1] = { ...newSense("S1"), guid: S1, srcWordId: idA, order: 0 };
-data.senses[S2] = { ...newSense("S2"), guid: S2, srcWordId: idA, order: 1 };
-data.senses[S3] = { ...newSense("S3"), guid: S3, srcWordId: idB, order: 0 };
-data.senses[S4] = { ...newSense("S4"), guid: S4, srcWordId: idB, order: 1 };
+data.senses[S1] = { ...newMergeTreeSense("S1", idA, 0), guid: S1 };
+data.senses[S2] = { ...newMergeTreeSense("S2", idA, 1), guid: S2 };
+data.senses[S3] = { ...newMergeTreeSense("S3", idB, 0), guid: S3 };
+data.senses[S4] = { ...newMergeTreeSense("S4", idB, 1), guid: S4 };
 
 beforeEach(jest.clearAllMocks);
 

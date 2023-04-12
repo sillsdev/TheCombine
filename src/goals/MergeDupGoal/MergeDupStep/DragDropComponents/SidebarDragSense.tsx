@@ -31,6 +31,7 @@ export default function SidebarDragSense(
       key={props.sense.guid}
       draggableId={JSON.stringify(ref)}
       index={props.index}
+      isDragDisabled={props.sense.protected}
     >
       {(provided, snapshot): ReactElement => (
         <div

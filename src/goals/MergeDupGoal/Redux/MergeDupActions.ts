@@ -161,6 +161,7 @@ function getMergeWords(
               accessibility: nonDeleted.includes(sense.guid)
                 ? Status.Separate
                 : Status.Deleted,
+              protected: sense.accessibility === Status.Protected,
             });
           }
         }
