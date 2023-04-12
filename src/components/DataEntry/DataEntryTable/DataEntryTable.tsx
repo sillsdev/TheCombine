@@ -16,7 +16,7 @@ import {
   SemanticDomain,
   SemanticDomainTreeNode,
   Sense,
-  State,
+  Status,
   Word,
   WritingSystem,
 } from "api/models";
@@ -157,7 +157,7 @@ export default function DataEntryTable(
   function filterWords(words: Word[]): Word[] {
     return words.filter((w) =>
       w.senses.find((s) =>
-        [State.Active, State.Protected].includes(s.accessibility)
+        [Status.Active, Status.Protected].includes(s.accessibility)
       )
     );
   }

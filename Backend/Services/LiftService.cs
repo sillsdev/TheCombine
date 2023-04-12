@@ -214,7 +214,7 @@ namespace BackendFramework.Services
             var allWords = await wordRepo.GetAllWords(projectId);
             var frontier = await wordRepo.GetFrontier(projectId);
             var activeWords = frontier.Where(
-                x => x.Senses.Any(s => s.Accessibility == State.Active || s.Accessibility == State.Protected)).ToList();
+                x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
 
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
@@ -391,7 +391,7 @@ namespace BackendFramework.Services
         private static void AddSenses(LexEntry entry, Word wordEntry)
         {
             var activeSenses = wordEntry.Senses.Where(
-                s => s.Accessibility == State.Active || s.Accessibility == State.Protected).ToList();
+                s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected).ToList();
             foreach (var currentSense in activeSenses)
             {
                 // Merge in senses
@@ -574,7 +574,7 @@ namespace BackendFramework.Services
 
                 if (LiftHelper.IsProtected(entry))
                 {
-                    newWord.Accessibility = State.Protected;
+                    newWord.Accessibility = Status.Protected;
                 }
 
                 // Add Note if one exists.
@@ -621,7 +621,7 @@ namespace BackendFramework.Services
 
                     if (LiftHelper.IsProtected(sense))
                     {
-                        newSense.Accessibility = State.Protected;
+                        newSense.Accessibility = Status.Protected;
                     }
 
                     // Add definitions

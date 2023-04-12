@@ -1,4 +1,4 @@
-import { State, Word } from "api/models";
+import { Status, Word } from "api/models";
 import {
   filterWords,
   filterWordsByDomain,
@@ -21,11 +21,11 @@ describe("DataEntryComponent", () => {
       const words: Word[] = [
         {
           ...mockWord,
-          senses: [{ ...newSense(), accessibility: State.Deleted }],
+          senses: [{ ...newSense(), accessibility: Status.Deleted }],
         },
         {
           ...mockWord,
-          senses: [{ ...newSense(), accessibility: State.Duplicate }],
+          senses: [{ ...newSense(), accessibility: Status.Duplicate }],
         },
       ];
       expect(filterWords(words)).toHaveLength(0);
@@ -36,7 +36,7 @@ describe("DataEntryComponent", () => {
         mockWord,
         {
           ...mockWord,
-          senses: [{ ...newSense(), accessibility: State.Protected }],
+          senses: [{ ...newSense(), accessibility: Status.Protected }],
         },
       ];
       expect(filterWords(words)).toHaveLength(2);

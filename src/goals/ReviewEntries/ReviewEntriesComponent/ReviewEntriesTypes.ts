@@ -4,7 +4,7 @@ import {
   Gloss,
   SemanticDomain,
   Sense,
-  State,
+  Status,
   Word,
 } from "api/models";
 import Recorder from "components/Pronunciations/Recorder";
@@ -67,7 +67,7 @@ export class ReviewEntriesSense {
       : sense.glosses;
     this.glosses = cleanGlosses(this.glosses);
     this.domains = [...sense.semanticDomains];
-    this.deleted = sense.accessibility === State.Deleted;
+    this.deleted = sense.accessibility === Status.Deleted;
   }
 
   private static SEPARATOR = "; ";

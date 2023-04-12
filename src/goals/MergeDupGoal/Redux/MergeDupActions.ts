@@ -5,7 +5,7 @@ import {
   MergeUndoIds,
   MergeWords,
   SemanticDomain,
-  State,
+  Status,
   Word,
 } from "api/models";
 import * as backend from "backend";
@@ -159,8 +159,8 @@ function getMergeWords(
               srcWordId: wordId,
               order: senses[wordId].length,
               accessibility: nonDeleted.includes(sense.guid)
-                ? State.Separate
-                : State.Deleted,
+                ? Status.Separate
+                : Status.Deleted,
             });
           }
         }
@@ -169,16 +169,16 @@ function getMergeWords(
 
     // Set sense and duplicate senses.
     Object.values(word.sensesGuids).forEach((guids) => {
-      // Set the first sense to be merged as State.Active.
+      // Set the first sense to be merged as Status.Active.
       const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.order];
-      mainSense.accessibility = State.Active;
+      mainSense.accessibility = Status.Active;
 
       // Merge the rest as duplicates.
       const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
         const dupSense = senses[dup.srcWordId][dup.order];
-        dupSense.accessibility = State.Duplicate;
+        dupSense.accessibility = Status.Duplicate;
         // Put the duplicate's definitions in the main sense.
         dupSense.definitions.forEach((def) =>
           mergeDefinitionIntoSense(mainSense, def)
@@ -197,14 +197,14 @@ function getMergeWords(
     });
 
     // Don't return empty merges: when the only child is the parent word
-    // and has the same number of senses as parent (all with State.Active)
+    // and has the same number of senses as parent (all with Status.Active)
     // and has the same flag.
     if (Object.values(senses).length === 1) {
       const onlyChild = Object.values(senses)[0];
       if (
         onlyChild[0].srcWordId === wordId &&
         onlyChild.length === data.words[wordId].senses.length &&
-        !onlyChild.find((s) => s.accessibility !== State.Active) &&
+        !onlyChild.find((s) => s.accessibility !== Status.Active) &&
         compareFlags(word.flag, data.words[wordId].flag) === 0
       ) {
         return undefined;
@@ -218,7 +218,7 @@ function getMergeWords(
     }
     const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
       sList.forEach((sense) => {
-        if (sense.accessibility === State.Active) {
+        if (sense.accessibility === Status.Active) {
           parent.senses.push({
             guid: sense.guid,
             definitions: sense.definitions,
@@ -228,7 +228,7 @@ function getMergeWords(
           });
         }
       });
-      const getAudio = !sList.find((s) => s.accessibility === State.Separate);
+      const getAudio = !sList.find((s) => s.accessibility === Status.Separate);
       return { srcWordId: sList[0].srcWordId, getAudio };
     });
 

@@ -5,7 +5,7 @@ import {
   SemanticDomain,
   SemanticDomainFull,
   SemanticDomainTreeNode,
-  State,
+  Status,
   Word,
 } from "api/models";
 import { getFrontierWords, getSemanticDomainFull } from "backend";
@@ -45,7 +45,7 @@ const paperStyle = {
 export function filterWords(words: Word[]): Word[] {
   return words.filter((w) =>
     w.senses.find((s) =>
-      [State.Active, State.Protected].includes(s.accessibility)
+      [Status.Active, Status.Protected].includes(s.accessibility)
     )
   );
 }
@@ -57,7 +57,7 @@ export function filterWordsByDomain(
   const domainWords: DomainWord[] = [];
   for (const currentWord of words) {
     const senses = currentWord.senses.filter((s) =>
-      [State.Active, State.Protected, undefined].includes(s.accessibility)
+      [Status.Active, Status.Protected, undefined].includes(s.accessibility)
     );
     for (const sense of senses) {
       if (sense.semanticDomains.map((dom) => dom.id).includes(domain.id)) {
