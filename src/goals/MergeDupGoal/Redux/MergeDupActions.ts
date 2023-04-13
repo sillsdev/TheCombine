@@ -225,7 +225,9 @@ function getMergeWords(
             definitions: sense.definitions,
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
-            accessibility: sense.accessibility,
+            accessibility: sense.protected
+              ? Status.Protected
+              : sense.accessibility,
           });
         }
       });
@@ -258,8 +260,8 @@ export function mergeAll() {
     );
 
     // Merge words.
-    const words = Object.keys(mergeTree.tree.words);
-    words.forEach((id) => {
+    const wordIds = Object.keys(mergeTree.tree.words);
+    wordIds.forEach((id) => {
       const wordsToMerge = getMergeWords(id, mergeTree);
       if (wordsToMerge) {
         mergeWordsArray.push(wordsToMerge);
