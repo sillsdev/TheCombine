@@ -22,7 +22,7 @@ namespace BackendFramework.Helper
         {
             return sense.Examples.Count > 0 || sense.Fields.Count > 0 || sense.GramInfo != null ||
                 sense.Illustrations.Count > 0 || sense.Relations.Count > 0 || sense.Reversals.Count > 0 ||
-                sense.Subsenses.Count > 0 || (sense.Traits.Find(t => t.Name.StartsWith("semantic-domain")) != null);
+                sense.Subsenses.Count > 0 || (sense.Traits.Find(t => !t.Name.StartsWith("semantic-domain")) != null);
         }
     }
 }
