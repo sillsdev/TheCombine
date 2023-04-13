@@ -115,6 +115,10 @@ namespace BackendFramework.Services
             return resList;
         }
 
+        /// <summary>
+        /// Get a ChartRootData objects <see cref="ChartRootData"/> to generate a Estimate Line Chart,
+        /// Return a empty Object if the workshop schedule or wordList is empty or null
+        /// </summary>
         public async Task<ChartRootData> GetProgressEstimationLineChartRoot(string projectId, Project project)
         {
             ChartRootData LineChartData = new ChartRootData();
@@ -197,8 +201,8 @@ namespace BackendFramework.Services
                     cumulateTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                     LineChartData.Datasets.Add(new Dataset("Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
-                    LineChartData.Datasets.Add(new Dataset("Cumulate Total", cumulateTotal));
-                    LineChartData.Datasets.Add(new Dataset("Estimation Total", EstimationValue));
+                    LineChartData.Datasets.Add(new Dataset("Running Total", cumulateTotal));
+                    LineChartData.Datasets.Add(new Dataset("Estimated Total", EstimationValue));
 
                 }
                 else
@@ -209,9 +213,9 @@ namespace BackendFramework.Services
                         cumulateTotal += totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                         LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0);
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
-                        LineChartData.Datasets.Find(element => element.UserName == "Cumulate Total")?.Data.Add(cumulateTotal);
+                        LineChartData.Datasets.Find(element => element.UserName == "Running Total")?.Data.Add(cumulateTotal);
                     }
-                    LineChartData.Datasets.Find(element => element.UserName == "Estimation Total")?.Data.Add(EstimationValue);
+                    LineChartData.Datasets.Find(element => element.UserName == "Estimated Total")?.Data.Add(EstimationValue);
                 }
                 EstimationValue += averageValue;
             }

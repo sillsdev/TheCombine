@@ -71,7 +71,8 @@ export default function EstimateComponent(props: LineChartProps) {
         let colorIndex = 0;
         // Update the updateChartData by retrieve
         tempDate.dates.map((e) => {
-          updateEstimateDate.labels.push(e);
+          // trim the format from year-mm-dd to mm-dd
+          updateEstimateDate.labels.push(e.slice(-5));
         });
         tempDate.datasets.forEach((e) => {
           updateEstimateDate.datasets.push({
