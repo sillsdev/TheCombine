@@ -26,6 +26,7 @@ export interface MergeTreeWord {
   sensesGuids: Hash<string[]>;
   vern: string;
   flag: Flag;
+  protected: boolean;
 }
 
 export function newMergeTreeSense(
@@ -45,7 +46,12 @@ export function newMergeTreeWord(
   vern = "",
   sensesGuids?: Hash<string[]>
 ): MergeTreeWord {
-  return { vern, sensesGuids: sensesGuids ?? {}, flag: newFlag() };
+  return {
+    vern,
+    sensesGuids: sensesGuids ?? {},
+    flag: newFlag(),
+    protected: false,
+  };
 }
 
 export function convertSenseToMergeTreeSense(
@@ -67,6 +73,7 @@ export function convertWordtoMergeTreeWord(word: Word): MergeTreeWord {
     mergeTreeWord.sensesGuids[v4()] = [sense.guid];
   });
   mergeTreeWord.flag = word.flag;
+  mergeTreeWord.protected = word.accessibility === Status.Protected;
   return mergeTreeWord;
 }
 

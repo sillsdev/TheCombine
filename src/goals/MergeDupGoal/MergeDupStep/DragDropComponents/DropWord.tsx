@@ -53,7 +53,14 @@ export default function DropWord(props: DropWordProps): ReactElement {
     >
       <Paper
         square
-        style={{ padding: theme.spacing(1), height: 44, minWidth: 150 }}
+        style={{
+          backgroundColor: treeWords[props.wordId]?.protected
+            ? "lightyellow"
+            : "white",
+          padding: theme.spacing(1),
+          height: 44,
+          minWidth: 150,
+        }}
       >
         {filled && (
           <Grid container justifyContent="space-between">

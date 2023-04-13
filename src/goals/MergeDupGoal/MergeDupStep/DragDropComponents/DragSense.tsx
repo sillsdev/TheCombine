@@ -110,6 +110,8 @@ export default function DragSense(props: DragSenseProps): ReactElement {
                 ? "lightgreen"
                 : isInSidebar
                 ? "lightblue"
+                : props.senses[0].protected
+                ? "lightyellow"
                 : "white",
           }}
         >

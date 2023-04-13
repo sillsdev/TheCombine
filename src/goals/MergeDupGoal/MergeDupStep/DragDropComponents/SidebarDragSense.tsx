@@ -53,6 +53,8 @@ export default function SidebarDragSense(
                   ? "red"
                   : snapshot.isDragging
                   ? "lightgreen"
+                  : props.sense.protected
+                  ? "lightyellow"
                   : props.index === 0
                   ? "white"
                   : "lightgrey",
