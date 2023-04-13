@@ -2,10 +2,9 @@ import { SemanticDomainTreeNode } from "api/models";
 import {
   TreeViewAction,
   TreeActionType,
+  defaultTreeNode,
 } from "components/TreeView/TreeViewReduxTypes";
-import i18n from "i18n";
 import { StoreAction, StoreActionTypes } from "rootActions";
-import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 export interface TreeViewState {
   currentDomain: SemanticDomainTreeNode;
@@ -16,7 +15,7 @@ export interface TreeViewState {
 export const defaultState: TreeViewState = {
   language: "",
   open: false,
-  currentDomain: newSemanticDomainTreeNode("Sem", "", i18n.language),
+  currentDomain: defaultTreeNode,
 };
 
 export const treeViewReducer = (
@@ -28,6 +27,8 @@ export const treeViewReducer = (
       return { ...state, open: false };
     case TreeActionType.OPEN_TREE:
       return { ...state, open: true };
+    case TreeActionType.RESET_TREE:
+      return defaultState;
     case TreeActionType.SET_DOMAIN_LANGUAGE:
       if (!action.language) {
         throw new Error("Cannot set domain language to undefined.");
