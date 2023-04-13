@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 import {
   setDomainLanguageAction,
-  traverseTreeAction,
+  traverseTree,
 } from "components/TreeView/TreeViewActions";
 import { defaultState } from "components/TreeView/TreeViewReducer";
 import { TreeActionType } from "components/TreeView/TreeViewReduxTypes";
@@ -44,7 +44,7 @@ describe("TraverseTreeAction", () => {
     };
     const mockStore = createMockStore(mockState);
 
-    await mockStore.dispatch<any>(traverseTreeAction(domain));
+    await mockStore.dispatch<any>(traverseTree(domain));
     expect(mockStore.getActions()).toEqual([action]);
   });
 
@@ -53,7 +53,7 @@ describe("TraverseTreeAction", () => {
     const domain = { id: "id", name: "name", guid: "", lang: "" };
     const mockStore = createMockStore(mockState);
 
-    await mockStore.dispatch<any>(traverseTreeAction(domain));
+    await mockStore.dispatch<any>(traverseTree(domain));
     expect(mockStore.getActions()).toEqual([]);
   });
 });
