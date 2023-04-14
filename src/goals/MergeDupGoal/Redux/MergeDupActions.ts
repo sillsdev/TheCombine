@@ -170,12 +170,16 @@ function getMergeWords(
 
     // Set sense and duplicate senses.
     Object.values(word.sensesGuids).forEach((guids) => {
-      // Set the first sense to be merged as Status.Active.
+      // Set the first sense to be merged as Active/Protected.
+      // This was the top sense when the sidebar was opened.
       const senseData = data.senses[guids[0]];
       const mainSense = senses[senseData.srcWordId][senseData.order];
-      mainSense.accessibility = Status.Active;
+      mainSense.accessibility = mainSense.protected
+        ? Status.Protected
+        : Status.Active;
 
       // Merge the rest as duplicates.
+      // These were senses dropped into another sense.
       const dups = guids.slice(1).map((guid) => data.senses[guid]);
       dups.forEach((dup) => {
         const dupSense = senses[dup.srcWordId][dup.order];
@@ -198,14 +202,16 @@ function getMergeWords(
     });
 
     // Don't return empty merges: when the only child is the parent word
-    // and has the same number of senses as parent (all with Status.Active)
+    // and has the same number of senses as parent (all Active/Protected)
     // and has the same flag.
     if (Object.values(senses).length === 1) {
       const onlyChild = Object.values(senses)[0];
       if (
         onlyChild[0].srcWordId === wordId &&
         onlyChild.length === data.words[wordId].senses.length &&
-        !onlyChild.find((s) => s.accessibility !== Status.Active) &&
+        !onlyChild.find(
+          (s) => ![Status.Active, Status.Protected].includes(s.accessibility)
+        ) &&
         compareFlags(word.flag, data.words[wordId].flag) === 0
       ) {
         return undefined;
@@ -219,15 +225,13 @@ function getMergeWords(
     }
     const children: MergeSourceWord[] = Object.values(senses).map((sList) => {
       sList.forEach((sense) => {
-        if (sense.accessibility === Status.Active) {
+        if ([Status.Active, Status.Protected].includes(sense.accessibility)) {
           parent.senses.push({
             guid: sense.guid,
             definitions: sense.definitions,
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
-            accessibility: sense.protected
-              ? Status.Protected
-              : sense.accessibility,
+            accessibility: sense.accessibility,
           });
         }
       });
