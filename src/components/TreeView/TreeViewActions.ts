@@ -34,17 +34,19 @@ export function resetTreeAction(): TreeViewAction {
 export function traverseTree(domain: SemanticDomain) {
   return async (dispatch: StoreStateDispatch) => {
     if (domain) {
-      getSemanticDomainTreeNode(domain.id, domain.lang).then((response) => {
-        if (response) {
-          dispatch(setDomainAction(response));
+      await getSemanticDomainTreeNode(domain.id, domain.lang).then(
+        (response) => {
+          if (response) {
+            dispatch(setDomainAction(response));
+          }
         }
-      });
+      );
     }
   };
 }
 
 export function updateTreeLanguage(language: string) {
-  return async (dispatch: StoreStateDispatch) => {
+  return (dispatch: StoreStateDispatch) => {
     if (language) {
       dispatch(setDomainLanguageAction(language));
     }
@@ -54,11 +56,7 @@ export function updateTreeLanguage(language: string) {
 export function initTreeDomain(language: string) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentDomain = getState().treeViewState.currentDomain;
-    if (currentDomain === defaultState.currentDomain) {
-      if (!currentDomain.lang) {
-        currentDomain.lang = language ?? Bcp47Code.Default;
-      }
-      await dispatch(traverseTree(currentDomain));
-    }
+    currentDomain.lang = language;
+    await dispatch(traverseTree(currentDomain));
   };
 }
