@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
 import CreateProjectComponent from "components/ProjectScreen/CreateProject";
+import { resetTreeAction } from "components/TreeView/TreeViewActions";
 import { useAppDispatch } from "types/hooks";
 
 /** Where users create a project or choose an existing one */
@@ -12,6 +13,7 @@ export default function ProjectScreen() {
   /* Disable Data Entry, Data Cleanup, Project Settings until a project is selected or created. */
   useEffect(() => {
     dispatch(clearCurrentProject());
+    dispatch(resetTreeAction());
   });
 
   return (
