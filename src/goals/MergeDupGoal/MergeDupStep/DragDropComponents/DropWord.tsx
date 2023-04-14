@@ -1,3 +1,4 @@
+import { WarningOutlined } from "@mui/icons-material";
 import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
@@ -5,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { Flag } from "api/models";
 import FlagButton from "components/Buttons/FlagButton";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
 import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
@@ -77,6 +79,14 @@ export default function DropWord(props: DropWordProps): ReactElement {
               </Select>
             </Grid>
             <Grid>
+              {protectedWithOneChild && (
+                <IconButtonWithTooltip
+                  icon={<WarningOutlined />}
+                  textId={"mergeDups.helpText.protectedWord"}
+                  side={"top"}
+                  small
+                />
+              )}
               <FlagButton
                 flag={flag}
                 updateFlag={(newFlag: Flag) => {

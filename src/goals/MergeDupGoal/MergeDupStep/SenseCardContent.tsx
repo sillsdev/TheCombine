@@ -1,4 +1,4 @@
-import { ArrowForwardIos } from "@mui/icons-material";
+import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
 import {
   CardContent,
   Chip,
@@ -13,7 +13,8 @@ import {
 import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
 
-import { Sense } from "api/models";
+import { Sense, Status } from "api/models";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -130,8 +131,30 @@ export default function SenseCardContent(
       )
     ),
   ];
+  // If props.languages is undefined, this is a sidebar sense and needs no warning.
+  const protectedWarning =
+    props.languages !== undefined &&
+    props.senses[0].accessibility === Status.Protected;
+
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
+      {/* Warning for protected senses. */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+        }}
+      >
+        {protectedWarning && (
+          <IconButtonWithTooltip
+            icon={<WarningOutlined />}
+            textId={"mergeDups.helpText.protectedSense"}
+            side={"top"}
+            small
+          />
+        )}
+      </div>
       {/* Button for showing the sidebar, when sense card has multiple senses. */}
       <div
         style={{
