@@ -12,7 +12,7 @@ namespace BackendFramework.Helper
         public static bool IsProtected(LiftEntry entry)
         {
             return entry.Annotations.Count > 0 || entry.Etymologies.Count > 0 || entry.Fields.Count > 0 ||
-                (entry.Notes.Count == 1 && String.IsNullOrEmpty(entry.Notes.First().Type)) ||
+                (entry.Notes.Count == 1 && !String.IsNullOrEmpty(entry.Notes.First().Type)) ||
                 entry.Notes.Count > 1 || entry.Pronunciations.Count > 0 || entry.Relations.Count > 0 ||
                 entry.Traits.Any(t => !t.Value.Equals("stem")) || entry.Variants.Count > 0;
         }
