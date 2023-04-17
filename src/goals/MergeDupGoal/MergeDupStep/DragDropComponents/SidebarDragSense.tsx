@@ -60,7 +60,7 @@ export default function SidebarDragSense(
                   : "lightgrey",
             }}
           >
-            <SenseCardContent senses={[props.sense]} />
+            <SenseCardContent senses={[props.sense]} sidebar />
           </Card>
         </div>
       )}

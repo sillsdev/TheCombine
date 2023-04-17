@@ -107,6 +107,7 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
 interface SenseCardContentProps {
   senses: Sense[];
   languages?: string[];
+  sidebar?: boolean;
   toggleFunction?: () => void;
 }
 
@@ -131,10 +132,8 @@ export default function SenseCardContent(
       )
     ),
   ];
-  // If props.languages is undefined, this is a sidebar sense and needs no warning.
   const protectedWarning =
-    props.languages !== undefined &&
-    props.senses[0].accessibility === Status.Protected;
+    !props.sidebar && props.senses[0].accessibility === Status.Protected;
 
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
