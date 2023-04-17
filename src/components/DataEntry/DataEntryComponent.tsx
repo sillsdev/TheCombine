@@ -57,6 +57,7 @@ export function filterWordsByDomain(
   const domainWords: DomainWord[] = [];
   for (const currentWord of words) {
     const senses = currentWord.senses.filter((s) =>
+      // The undefined is for Statuses created before .accessibility was required in the frontend.
       [Status.Active, Status.Protected, undefined].includes(s.accessibility)
     );
     for (const sense of senses) {
