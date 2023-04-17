@@ -194,6 +194,8 @@ namespace BackendFramework.Services
             var cumulateTotal = 0;
             var burstProjection = 0;
             var burstProjectionAverage = 0;
+            var today = 0;
+            var yesterday = 0;
             // generate ChartRootData for frontend
             for (int i = 0; i < workshopScheduleList.Count; i++)
             {
@@ -206,10 +208,7 @@ namespace BackendFramework.Services
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", cumulateTotal));
                     LineChartData.Datasets.Add(new Dataset("Projection", projection));
-                    // if (workshopScheduleList.Count >= 2)
-                    // {
-                    //     LineChartData.Datasets.Add(new Dataset("Burst Projection", null));
-                    // }
+                    LineChartData.Datasets.Add(new Dataset("Burst Projection", 0));
                 }
                 else
                 {
@@ -217,24 +216,19 @@ namespace BackendFramework.Services
                     if (DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
                         cumulateTotal += totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
-                        LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0);
+                        yesterday = today;
+                        today = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
+                        LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
                         LineChartData.Datasets.Find(element => element.UserName == "Running Total")?.Data.Add(cumulateTotal);
+                        LineChartData.Datasets.Find(element => element.UserName == "Burst Projection")?.Data.Add(0);
+                        burstProjectionAverage = (today + yesterday) / 2;
+                        burstProjection = cumulateTotal + burstProjectionAverage;
                     }
                     else
                     {
-                        if (workshopScheduleList.Count >= 2)
-                        {
-                            var today = totalCountDictionary.ContainsKey(DateTime.Now.ToISO8601TimeFormatDateOnlyString())
-                                        ? totalCountDictionary[DateTime.Now.ToISO8601TimeFormatDateOnlyString()]
-                                        : 0;
-                            var yesterday = totalCountDictionary.ContainsKey(DateTime.Now.AddDays(-1).ToISO8601TimeFormatDateOnlyString())
-                                        ? totalCountDictionary[DateTime.Now.ToISO8601TimeFormatDateOnlyString()]
-                                        : 0;
-                            burstProjection = today;
-                            burstProjectionAverage = (today + yesterday) / 2;
-                            LineChartData.Datasets.Add(new Dataset("Burst Projection", burstProjection));
-                        }
+                        LineChartData.Datasets.Find(element => element.UserName == "Burst Projection")?.Data.Add((burstProjection));
+                        burstProjection += burstProjectionAverage;
                     }
                     LineChartData.Datasets.Find(element => element.UserName == "Projection")?.Data.Add(projection);
                 }

@@ -44,6 +44,15 @@ interface LineChartDataProps {
   datasets: Array<DatasetsProps>;
 }
 
+function FilteredData(numbers: number[]): number[] {
+  numbers.forEach((num, index) => {
+    if (num == 0) {
+      numbers[index] = NaN;
+    }
+  });
+  return numbers;
+}
+
 export default function EstimateComponent(props: LineChartProps) {
   const [chartOptions, setChartOptions] = useState({});
   const [estimateDate, setEstimateDate] = useState<LineChartDataProps>({
@@ -77,7 +86,7 @@ export default function EstimateComponent(props: LineChartProps) {
         tempDate.datasets.forEach((e) => {
           updateEstimateDate.datasets.push({
             label: e.userName,
-            data: e.data,
+            data: FilteredData(e.data),
             borderColor: palette[colorIndex].hex().toString(),
             backgroundColor: palette[colorIndex++].hex().toString(),
             tension: 0.4,
@@ -103,6 +112,7 @@ export default function EstimateComponent(props: LineChartProps) {
           text: "Workshop Estimate",
         },
       },
+      spanGaps: true,
       scales: {
         x: {
           beginAtZero: true,
