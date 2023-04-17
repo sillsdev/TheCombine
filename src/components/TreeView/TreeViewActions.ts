@@ -1,13 +1,11 @@
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
-import { defaultState } from "components/TreeView/TreeViewReducer";
 import {
   TreeActionType,
   TreeViewAction,
 } from "components/TreeView/TreeViewReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { Bcp47Code } from "types/writingSystem";
 
 export function closeTreeAction(): TreeViewAction {
   return { type: TreeActionType.CLOSE_TREE };
