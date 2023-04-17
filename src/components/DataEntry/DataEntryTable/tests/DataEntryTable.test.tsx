@@ -188,7 +188,6 @@ describe("DataEntryTable", () => {
   describe("updateWordWithNewGloss", () => {
     it("doesn't update word in backend if sense is a duplicate", async () => {
       testHandle = testRenderer.root.findByType(DataEntryTable);
-      expect;
       mockMultiWord.senses[0].semanticDomains = [
         newSemanticDomain("differentSemDomId"),
         newSemanticDomain(testHandle.props.semanticDomain.id),
