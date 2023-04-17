@@ -1,5 +1,5 @@
-# User guide build environment using Python 3.11.1.
-FROM python@sha256:7efc1ae7e6e9c5263d87845cb00f6ab7f6b27670cae29c9d93fa7910d6ab12c0 AS user_guide_builder
+# User guide build environment using Python 3.11.3
+FROM python@sha256:9c88ce9c15d69674c0d5da21e6ba45d91cd12010e92825ef0e60e5184c9453ad AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,7 +16,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:18.15-bullseye-slim AS frontend_builder
+FROM node:18.16-bullseye-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
