@@ -161,7 +161,7 @@ export default function ProjectSettingsComponent() {
         />
       )}
 
-      {/* set a workshop schedule */}
+      {/* Set a workshop schedule */}
       {permissions.includes(Permission.Owner) && (
         <BaseSettingsComponent
           icon={<CalendarMonth />}

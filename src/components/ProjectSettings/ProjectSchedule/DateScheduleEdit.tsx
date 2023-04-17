@@ -12,14 +12,16 @@ import { useEffect, useState } from "react";
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import LoadingButton from "components/Buttons/LoadingButton";
+import { useTranslation } from "react-i18next";
 
 interface DateScheduleEditProps {
   close: () => void;
-  projectSchedule: Date[] | undefined;
+  projectSchedule?: Date[];
 }
 
 export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
+  const { t } = useTranslation();
 
   // Custom renderer for CalendarPicker
   function customDayRenderer(
@@ -28,31 +30,25 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
     pickersDayProps: PickersDayProps<Dayjs>
   ) {
     const temp = date.toDate();
-    if (
-      projectSchedule &&
-      projectSchedule?.findIndex((e) => {
+    const selected =
+      Props.projectSchedule &&
+      Props.projectSchedule.findIndex((e) => {
         return (
           e.getDate() == temp.getDate() &&
           e.getMonth() == temp.getMonth() &&
           e.getFullYear() == temp.getFullYear()
         );
-      }) >= 0
-    ) {
-      return <PickersDay {...pickersDayProps} selected />;
-    } else {
-      return <PickersDay {...pickersDayProps} selected={false} />;
-    }
+      }) >= 0;
+    return <PickersDay {...pickersDayProps} selected={selected} />;
   }
 
   async function handleSubmit() {
     // update the schedule to the project setting
-    const projectId = await LocalStorage.getProjectId();
+    const projectId = LocalStorage.getProjectId();
     const project = await getProject(projectId);
-    const updateDateString: string[] | null | undefined = [];
-    projectSchedule?.forEach((t) => {
-      updateDateString.push(t.toISOString());
-    });
-    project.workshopSchedule = updateDateString;
+    project.workshopSchedule = projectSchedule?.map((date) =>
+      date.toISOString()
+    );
     await updateProject(project);
     return Props.close();
   }
@@ -64,9 +60,9 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
     let removeDate = null;
     projectSchedule?.forEach((temp, index) => {
       if (
-        temp.getFullYear() == currentDate.getFullYear() &&
-        temp.getMonth() == currentDate.getMonth() &&
-        temp.getDate() == currentDate.getDate()
+        temp.getFullYear() === currentDate.getFullYear() &&
+        temp.getMonth() === currentDate.getMonth() &&
+        temp.getDate() === currentDate.getDate()
       ) {
         removeDate = projectSchedule.splice(index, 1);
         setProjectSchedule(projectSchedule);
@@ -107,7 +103,7 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
             }}
             id="DateSelectorCancelButton"
           >
-            {"cancel"}
+            {t("buttons.cancel")}
           </Button>
         </Grid>
         <Grid item marginTop={1} style={{ width: 100 }}>
@@ -121,7 +117,7 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
               color: "primary",
             }}
           >
-            {"Submit"}
+            {t("buttons.confirm")}
           </LoadingButton>
         </Grid>
       </Grid>

@@ -36,7 +36,7 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
 
   // remove all elements from workshopSchedule in project settings
   async function handleRemoveAll() {
-    const projectId = await LocalStorage.getProjectId();
+    const projectId = LocalStorage.getProjectId();
     const project = await getProject(projectId);
     project.workshopSchedule = [];
     await updateProject(project);
@@ -148,7 +148,7 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
               }}
               id="DateRemoveAllButtonCancel"
             >
-              {"cancel"}
+              {t("buttons.cancel")}
             </Button>
           </Grid>
           <Grid item marginTop={1} style={{ width: 100 }}>
@@ -160,7 +160,7 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
               }}
               id="DateRemoveAllButtonSubmit"
             >
-              {"Submit"}
+              {t("buttons.confirm")}
             </Button>
           </Grid>
         </Grid>

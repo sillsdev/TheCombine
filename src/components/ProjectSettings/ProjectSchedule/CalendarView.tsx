@@ -20,30 +20,24 @@ export default function CalendarView(Props: CalendarViewProps) {
     pickersDayProps: PickersDayProps<Dayjs>
   ) {
     const temp = date.toDate();
-    if (
+    const selected =
       Props.projectSchedule &&
-      Props.projectSchedule?.findIndex((e) => {
+      Props.projectSchedule.findIndex((e) => {
         return (
           e.getDate() == temp.getDate() &&
           e.getMonth() == temp.getMonth() &&
           e.getFullYear() == temp.getFullYear()
         );
-      }) >= 0
-    ) {
-      return <PickersDay {...pickersDayProps} selected />;
-    } else {
-      return <PickersDay {...pickersDayProps} selected={false} />;
-    }
+      }) >= 0;
+    return <PickersDay {...pickersDayProps} selected={selected} />;
   }
 
-  function handleCalendarView(monthToRender: Dayjs[] | undefined) {
+  function handleCalendarView(monthToRender?: Dayjs[]) {
     return monthToRender?.map((tempDayjs) => (
       <CalendarPicker
         key={"calendarPick" + tempDayjs.toString()}
         components={{
-          LeftArrowButton: undefined,
           LeftArrowIcon: Icon,
-          RightArrowButton: undefined,
           RightArrowIcon: Icon,
         }}
         readOnly

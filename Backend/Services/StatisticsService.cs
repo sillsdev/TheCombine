@@ -149,19 +149,18 @@ namespace BackendFramework.Services
 
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-
-                            DateTime tempDate = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created);
-                            if (!workshopScheduleSet.Contains(tempDate.ToISO8601TimeFormatDateOnlyString()))
+                            string dateString = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created).ToISO8601TimeFormatDateOnlyString();
+                            if (!workshopScheduleSet.Contains(dateString))
                             {
                                 continue;
                             }
-                            else if (totalCountDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()))
+                            else if (totalCountDictionary.ContainsKey(dateString))
                             {
-                                totalCountDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()]++;
+                                totalCountDictionary[dateString]++;
                             }
                             else
                             {
-                                totalCountDictionary.Add(tempDate.ToISO8601TimeFormatDateOnlyString(), 1);
+                                totalCountDictionary.Add(dateString, 1);
                             }
                         }
                     }
@@ -174,9 +173,10 @@ namespace BackendFramework.Services
             var pastDays = workshopScheduleList.FindAll(day => DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
             // calculate average daily count
             // If pastDays is two or more, and pastDays equals the number of days on which at least one word was added
+            var min = 0;
             if (totalCountList.Count == pastDays && pastDays > 1)
             {
-                var min = totalCountList.Min();
+                min = totalCountList.Min();
                 averageValue = (totalCountList.Sum() - min) / (pastDays - 1);
             }
             // If pastDays is two or more and at least one of those days had no word added
@@ -190,20 +190,26 @@ namespace BackendFramework.Services
                 averageValue = totalCountList[0];
             }
 
-            var EstimationValue = averageValue;
+            var projection = averageValue - min;
             var cumulateTotal = 0;
+            var burstProjection = 0;
+            var burstProjectionAverage = 0;
             // generate ChartRootData for frontend
-            foreach (string day in workshopScheduleList)
+            for (int i = 0; i < workshopScheduleList.Count; i++)
             {
-                LineChartData.Dates.Add(day);
+                LineChartData.Dates.Add(workshopScheduleList[i]);
+                var day = workshopScheduleList[i];
                 if (LineChartData.Datasets.Count == 0)
                 {
                     cumulateTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                     LineChartData.Datasets.Add(new Dataset("Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", cumulateTotal));
-                    LineChartData.Datasets.Add(new Dataset("Estimated Total", EstimationValue));
-
+                    LineChartData.Datasets.Add(new Dataset("Projection", projection));
+                    // if (workshopScheduleList.Count >= 2)
+                    // {
+                    //     LineChartData.Datasets.Add(new Dataset("Burst Projection", null));
+                    // }
                 }
                 else
                 {
@@ -215,9 +221,24 @@ namespace BackendFramework.Services
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
                         LineChartData.Datasets.Find(element => element.UserName == "Running Total")?.Data.Add(cumulateTotal);
                     }
-                    LineChartData.Datasets.Find(element => element.UserName == "Estimated Total")?.Data.Add(EstimationValue);
+                    else
+                    {
+                        if (workshopScheduleList.Count >= 2)
+                        {
+                            var today = totalCountDictionary.ContainsKey(DateTime.Now.ToISO8601TimeFormatDateOnlyString())
+                                        ? totalCountDictionary[DateTime.Now.ToISO8601TimeFormatDateOnlyString()]
+                                        : 0;
+                            var yesterday = totalCountDictionary.ContainsKey(DateTime.Now.AddDays(-1).ToISO8601TimeFormatDateOnlyString())
+                                        ? totalCountDictionary[DateTime.Now.ToISO8601TimeFormatDateOnlyString()]
+                                        : 0;
+                            burstProjection = today;
+                            burstProjectionAverage = (today + yesterday) / 2;
+                            LineChartData.Datasets.Add(new Dataset("Burst Projection", burstProjection));
+                        }
+                    }
+                    LineChartData.Datasets.Find(element => element.UserName == "Projection")?.Data.Add(projection);
                 }
-                EstimationValue += averageValue;
+                projection += averageValue;
             }
             return LineChartData;
         }

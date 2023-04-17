@@ -154,11 +154,9 @@ namespace BackendFramework.Models
             {
                 clone.InviteTokens.Add(it.Clone());
             }
-            //DateTime is a value type, assign === clone it.
             foreach (var dt in WorkshopSchedule)
             {
-                var temp = dt;
-                clone.WorkshopSchedule.Add(temp);
+                clone.WorkshopSchedule.Add(new DateTime(dt.Ticks));
             }
 
             return clone;

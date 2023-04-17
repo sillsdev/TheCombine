@@ -52,7 +52,7 @@ export default function DateSelector(Props: DateSelectorProps) {
       return;
     }
     // update the schedule to the project setting
-    const projectId = await LocalStorage.getProjectId();
+    const projectId = LocalStorage.getProjectId();
     const project = await getProject(projectId);
     let updateDateString: string[] | null | undefined = [];
     if (startDate && endDate) {
@@ -91,7 +91,7 @@ export default function DateSelector(Props: DateSelectorProps) {
             }}
             id="DateSelectorCancelButton"
           >
-            {"cancel"}
+            {t("buttons.cancel")}
           </Button>
         </Grid>
         <Grid item marginTop={1} style={{ width: 100 }}>
@@ -106,7 +106,7 @@ export default function DateSelector(Props: DateSelectorProps) {
               color: "primary",
             }}
           >
-            {"Submit"}
+            {t("buttons.confirm")}
           </LoadingButton>
         </Grid>
       </Grid>
