@@ -22,6 +22,14 @@ import { multiSenseWord, newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
 
+jest.mock("@mui/material/Autocomplete", () => "div");
+jest.mock("notistack", () => ({
+  ...jest.requireActual("notistack"),
+  useSnackbar: () => {
+    return { enqueueSnackbar: mockEnqueue };
+  },
+}));
+
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),
   getDuplicateId: jest.fn(),
@@ -33,15 +41,8 @@ jest.mock("backend", () => ({
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
+
 jest.spyOn(window, "alert").mockImplementation(() => {});
-jest.mock("notistack", () => ({
-  ...jest.requireActual("notistack"),
-  useSnackbar: () => {
-    return {
-      enqueueSnackbar: mockEnqueue,
-    };
-  },
-}));
 
 let testRenderer: ReactTestRenderer;
 let testHandle: ReactTestInstance;
@@ -51,7 +52,6 @@ const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockTreeNode = newSemanticDomainTreeNode();
 const mockSemanticDomain = semDomFromTreeNode(mockTreeNode);
 const mockOpenTree = jest.fn();
-const innerGetWordsFromBackendMock = jest.fn();
 const mockGetFrontierWords = jest.fn();
 
 const mockCreateWord = jest.fn();
@@ -60,7 +60,7 @@ const mockGetWord = jest.fn();
 const mockHideQuestions = jest.fn();
 const mockUpdateWord = jest.fn();
 const mockEnqueue = jest.fn();
-function setMockFunction() {
+function setMocks() {
   mockCreateWord.mockResolvedValue(mockWord());
   mockGetProject.mockResolvedValue(newProject());
   mockGetWord.mockResolvedValue([mockMultiWord]);
@@ -68,12 +68,11 @@ function setMockFunction() {
   mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   jest.clearAllMocks();
-  setMockFunction();
-  innerGetWordsFromBackendMock.mockResolvedValue([mockMultiWord]);
-  renderer.act(() => {
-    testRenderer = renderer.create(
+  setMocks();
+  await renderer.act(async () => {
+    testRenderer = await renderer.create(
       <DataEntryTable
         semanticDomain={mockTreeNode}
         openTree={mockOpenTree}
@@ -84,25 +83,12 @@ beforeEach(() => {
   });
 });
 
-async function exitToTree() {
-  await renderer.act(async () => {
-    testRenderer.update(
-      <DataEntryTable
-        semanticDomain={mockTreeNode}
-        treeIsOpen
-        openTree={mockOpenTree}
-        hideQuestions={mockHideQuestions}
-        showExistingData={jest.fn()}
-      />
-    );
-  });
-}
-
 describe("DataEntryTable", () => {
-  describe("exiting--i.e., props updated to open tree", () => {
+  describe("exit button", () => {
     it("hides questions", async () => {
       expect(mockHideQuestions).not.toBeCalled();
-      testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
+      testHandle = testRenderer.root.findByProps({ id: exitButtonId });
+      await renderer.act(async () => await testHandle.props.onClick());
       expect(mockHideQuestions).toBeCalled();
     });
 
@@ -113,7 +99,8 @@ describe("DataEntryTable", () => {
       // Set the new entry to have useful content
       const newEntry = simpleWord("hasVern", "");
       newEntryItems[0].instance.setState({ newEntry });
-      await testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
+      testHandle = testRenderer.root.findByProps({ id: exitButtonId });
+      await renderer.act(async () => await testHandle.props.onClick());
       expect(mockCreateWord).toBeCalled();
     });
 
@@ -124,131 +111,131 @@ describe("DataEntryTable", () => {
       // Set the new entry to have no useful content
       const newEntry = simpleWord("", "hasGloss");
       newEntryItems[0].instance.setState({ newEntry });
-      await testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
+      testHandle = testRenderer.root.findByProps({ id: exitButtonId });
+      await renderer.act(async () => await testHandle.props.onClick());
       expect(mockCreateWord).not.toBeCalled();
+    });
+
+    it("opens the domain tree", async () => {
+      expect(mockOpenTree).not.toBeCalled();
+      testHandle = testRenderer.root.findByProps({ id: exitButtonId });
+      await renderer.act(async () => await testHandle.props.onClick());
+      expect(mockOpenTree).toBeCalledTimes(1);
     });
   });
 
-  it("open the domain tree when exit is clicked", () => {
-    expect(mockOpenTree).not.toBeCalled();
-    testRenderer.root.findByProps({ id: exitButtonId }).props.onClick();
-    expect(mockOpenTree).toBeCalledTimes(1);
+  describe("addSenseToWord", () => {
+    it("adds a sense to a word that has no senses", () => {
+      const word = mockWord();
+      word.senses = [];
+      const gloss = "firstSense";
+      const language = Bcp47Code.Es;
+
+      const expectedSense = newSense(gloss, language, mockSemanticDomain);
+      expectedSense.guid = expect.any(String);
+      const expectedWord: Word = { ...word, senses: [expectedSense] };
+
+      const resultWord = addSenseToWord(
+        mockSemanticDomain,
+        word,
+        gloss,
+        language
+      );
+      expect(resultWord).toEqual(expectedWord);
+    });
+
+    it("adds a sense to a word that already has a sense", () => {
+      const word = mockWord();
+      const gloss = "newSense";
+      const language = Bcp47Code.Es;
+
+      const expectedSense = newSense(gloss, language, mockSemanticDomain);
+      expectedSense.guid = expect.any(String);
+      const expectedWord: Word = {
+        ...word,
+        senses: [...word.senses, expectedSense],
+      };
+
+      const resultWord = addSenseToWord(
+        mockSemanticDomain,
+        word,
+        gloss,
+        language
+      );
+      expect(resultWord).toEqual(expectedWord);
+    });
   });
 
-  it("adds a sense to a word that has no senses", () => {
-    const word = mockWord();
-    word.senses = [];
-    const gloss = "firstSense";
-    const language = Bcp47Code.Es;
+  describe("addSemanticDomainToSense", () => {
+    it("adds a semantic domain to existing sense", () => {
+      const word = mockWord();
+      const gloss = "senseToBeModified";
+      const language = Bcp47Code.Fr;
+      const sense = newSense(gloss, language);
+      word.senses = [sense];
 
-    const expectedSense = newSense(gloss, language, mockSemanticDomain);
-    expectedSense.guid = expect.any(String);
-    const expectedWord: Word = { ...word, senses: [expectedSense] };
+      const expectedSense: Sense = {
+        ...sense,
+        semanticDomains: [mockSemanticDomain],
+      };
+      const expectedWord: Word = { ...word, senses: [expectedSense] };
 
-    const resultWord = addSenseToWord(
-      mockSemanticDomain,
-      word,
-      gloss,
-      language
-    );
-    expect(resultWord).toEqual(expectedWord);
+      const resultWord = addSemanticDomainToSense(mockSemanticDomain, word, 0);
+      expect(resultWord).toEqual(expectedWord);
+    });
   });
 
-  it("adds a sense to a word that already has a sense", () => {
-    const word = mockWord();
-    const gloss = "newSense";
-    const language = Bcp47Code.Es;
+  describe("updateWordWithNewGloss", () => {
+    it("doesn't update word in backend if sense is a duplicate", async () => {
+      testHandle = testRenderer.root.findByType(DataEntryTable);
+      mockMultiWord.senses[0].semanticDomains = [
+        newSemanticDomain("differentSemDomId"),
+        newSemanticDomain(testHandle.props.semanticDomain.id),
+      ];
 
-    const expectedSense = newSense(gloss, language, mockSemanticDomain);
-    expectedSense.guid = expect.any(String);
-    const expectedWord: Word = {
-      ...word,
-      senses: [...word.senses, expectedSense],
-    };
+      testHandle = testRenderer.root.findByType(NewEntry);
+      await renderer.act(
+        async () =>
+          await testHandle.props.updateWordWithNewGloss(
+            mockMultiWord.id,
+            firstGlossText(mockMultiWord.senses[0]),
+            []
+          )
+      );
+      // Assert that the backend function for updating the word was NOT called
+      expect(mockUpdateWord).not.toBeCalled();
+    });
 
-    const resultWord = addSenseToWord(
-      mockSemanticDomain,
-      word,
-      gloss,
-      language
-    );
-    expect(resultWord).toEqual(expectedWord);
-  });
-
-  it("adds a semantic domain to existing sense", () => {
-    const word = mockWord();
-    const gloss = "senseToBeModified";
-    const language = Bcp47Code.Fr;
-    const sense = newSense(gloss, language);
-    word.senses = [sense];
-
-    const expectedSense: Sense = {
-      ...sense,
-      semanticDomains: [mockSemanticDomain],
-    };
-    const expectedWord: Word = { ...word, senses: [expectedSense] };
-
-    const resultWord = addSemanticDomainToSense(mockSemanticDomain, word, 0);
-    expect(resultWord).toEqual(expectedWord);
-  });
-
-  it("doesn't update word in backend if sense is a duplicate", (done) => {
-    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    mockMultiWord.senses[0].semanticDomains = [
-      newSemanticDomain("differentSemDomId"),
-      newSemanticDomain(testHandle.props.semanticDomain.id),
-    ];
-
-    innerGetWordsFromBackendMock().then(
-      testRenderer.root
-        .findByType(NewEntry)
-        .props.updateWordWithNewGloss(
+    it("updates word in backend if gloss exists with different semantic domain", async () => {
+      mockMultiWord.senses[0].semanticDomains = [
+        newSemanticDomain("differentSemDomId"),
+        newSemanticDomain("anotherDifferentSemDomId"),
+        newSemanticDomain("andAThird"),
+      ];
+      testHandle = testRenderer.root.findByType(NewEntry);
+      await renderer.act(async () => {
+        await testHandle.props.updateWordWithNewGloss(
           mockMultiWord.id,
           firstGlossText(mockMultiWord.senses[0]),
           []
-        )
-        .then(() => {
-          // Assert that the backend function for updating the word was NOT called
-          expect(mockUpdateWord).not.toBeCalled();
-          done();
-        })
-    );
-  });
+        );
+      });
+      // Assert that the backend function for updating the word was called once
+      expect(mockUpdateWord).toBeCalledTimes(1);
+    });
 
-  it("updates word in backend if gloss exists with different semantic domain", (done) => {
-    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    mockMultiWord.senses[0].semanticDomains = [
-      newSemanticDomain("differentSemDomId"),
-      newSemanticDomain("anotherDifferentSemDomId"),
-      newSemanticDomain("andAThird"),
-    ];
-    innerGetWordsFromBackendMock().then(
-      testRenderer.root
-        .findByType(NewEntry)
-        .props.updateWordWithNewGloss(
-          mockMultiWord.id,
-          firstGlossText(mockMultiWord.senses[0]),
-          []
-        )
-        .then(() => {
-          // Assert that the backend function for updating the word was called once
-          expect(mockUpdateWord).toBeCalledTimes(1);
-          done();
-        })
-    );
-  });
-
-  it("updates word in backend if gloss doesn't exist", (done) => {
-    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    innerGetWordsFromBackendMock().then(
-      testRenderer.root
-        .findByType(NewEntry)
-        .props.updateWordWithNewGloss(mockMultiWord.id, "differentGloss", [])
-        .then(() => {
-          // Assert that the backend function for updating the word was called once
-          expect(mockUpdateWord).toBeCalledTimes(1);
-          done();
-        })
-    );
+    it("updates word in backend if gloss doesn't exist", async () => {
+      testHandle = testRenderer.root.findByType(NewEntry);
+      await renderer.act(
+        async () =>
+          await testHandle.props.updateWordWithNewGloss(
+            mockMultiWord.id,
+            "differentGloss",
+            []
+          )
+      );
+      // Assert that the backend function for updating the word was called once
+      expect(mockUpdateWord).toBeCalledTimes(1);
+    });
   });
 });

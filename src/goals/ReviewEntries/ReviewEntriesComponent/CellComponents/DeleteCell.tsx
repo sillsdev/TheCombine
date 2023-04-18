@@ -1,5 +1,6 @@
 import { Delete } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import { t } from "i18next";
 import React, { ReactElement, useState } from "react";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
@@ -19,11 +20,12 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
     (state: StoreState) => state.reviewEntriesState.words
   );
   const dispatch = useAppDispatch();
+  const word = props.rowData;
+  const disabled = word.protected || !!word.senses.find((s) => s.protected);
 
   async function deleteFrontierWord(): Promise<void> {
-    const wordId = props.rowData.id;
-    await deleteFromBackend(wordId);
-    const updatedWords = words.filter((w) => w.id !== wordId);
+    await deleteFromBackend(word.id);
+    const updatedWords = words.filter((w) => w.id !== word.id);
     dispatch(updateAllWords(updatedWords));
     handleClose();
   }
@@ -37,13 +39,21 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
 
   return (
     <React.Fragment>
-      <IconButton
-        onClick={handleOpen}
-        id={`row-${props.rowData.id}-delete`}
-        size="large"
+      <Tooltip
+        title={disabled ? t("reviewEntries.deleteDisabled") : ""}
+        placement="left"
       >
-        <Delete />
-      </IconButton>
+        <span>
+          <IconButton
+            onClick={handleOpen}
+            id={`row-${props.rowData.id}-delete`}
+            size="large"
+            disabled={disabled}
+          >
+            <Delete />
+          </IconButton>
+        </span>
+      </Tooltip>
       <CancelConfirmDialog
         open={dialogOpen}
         textId={"reviewEntries.deleteWordWarning"}

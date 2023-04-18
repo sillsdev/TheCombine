@@ -26,7 +26,7 @@ export * from "./semantic-domain-tree-node";
 export * from "./semantic-domain-user-count";
 export * from "./sense";
 export * from "./site-banner";
-export * from "./state";
+export * from "./status";
 export * from "./user";
 export * from "./user-created-project";
 export * from "./user-edit";
