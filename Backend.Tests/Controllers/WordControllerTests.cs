@@ -76,7 +76,7 @@ namespace Backend.Tests.Controllers
             updatedWords.ForEach(w => Assert.That(
                 w.Id == wordToDelete.Id ||
                 w.Id == otherWord.Id ||
-                w.Accessibility == State.Deleted));
+                w.Accessibility == Status.Deleted));
             var updatedFrontier = await _wordRepo.GetFrontier(_projId);
             Assert.That(updatedFrontier, Has.Count.EqualTo(1));
             Assert.That(updatedFrontier.First().Id, Is.EqualTo(otherWord.Id));

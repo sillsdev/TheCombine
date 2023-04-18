@@ -66,7 +66,7 @@ namespace Backend.Tests
         {
             return new Sense
             {
-                Accessibility = State.Active,
+                Accessibility = Status.Active,
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
                 SemanticDomains = new List<SemanticDomain>
                 {

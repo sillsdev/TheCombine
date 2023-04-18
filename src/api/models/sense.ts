@@ -15,7 +15,7 @@
 import { Definition } from "./definition";
 import { Gloss } from "./gloss";
 import { SemanticDomain } from "./semantic-domain";
-import { State } from "./state";
+import { Status } from "./status";
 
 /**
  *
@@ -49,8 +49,8 @@ export interface Sense {
   semanticDomains: Array<SemanticDomain>;
   /**
    *
-   * @type {State}
+   * @type {Status}
    * @memberof Sense
    */
-  accessibility: State;
+  accessibility: Status;
 }
