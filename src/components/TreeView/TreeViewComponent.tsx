@@ -49,7 +49,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
     if (newLang && newLang !== semDomLanguage) {
       dispatch(updateTreeLanguage(newLang));
     }
-    dispatch(initTreeDomain(newLang)).catch(console.error);
+    dispatch(initTreeDomain(newLang));
   }, [semDomLanguage, semDomWritingSystem, dispatch, i18n.resolvedLanguage]);
 
   function animateHandler(domain: SemanticDomain): Promise<void> {
