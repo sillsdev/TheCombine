@@ -1,7 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -36,7 +36,7 @@ function getPageSizeOptions(max?: number): number[] {
 }
 
 // Constants
-const ROWS_PER_PAGE = [10, 100, 250];
+const ROWS_PER_PAGE = [10, 50, 250];
 const tableRef: React.RefObject<any> = React.createRef();
 
 export default function ReviewEntriesTable(
@@ -56,17 +56,17 @@ export default function ReviewEntriesTable(
   );
 
   const updateMaxRows = () => {
-    console.info("updateMaxRows");
     if (tableRef.current) {
-      console.info("table");
       const tableRows = tableRef.current.state.data.length;
-      console.info(`tableRows: ${tableRows}`);
       if (tableRows !== maxRows) {
-        console.info("setMaxRows");
         setMaxRows(tableRows);
       }
     }
   };
+
+  useEffect(() => {
+    setPageSizeOptions(getPageSizeOptions(maxRows));
+  }, [maxRows, setPageSizeOptions]);
 
   return (
     <MaterialTable<any>
