@@ -20,7 +20,7 @@ interface VernWithSuggestionsProps {
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   vernacularLang: WritingSystem;
   textFieldId: string;
-  onComponentDidUpdate?: () => void;
+  onUpdate?: () => void;
 }
 
 /**
@@ -28,8 +28,8 @@ interface VernWithSuggestionsProps {
  */
 export default class VernWithSuggestions extends React.Component<VernWithSuggestionsProps> {
   componentDidUpdate() {
-    if (this.props.onComponentDidUpdate) {
-      this.props.onComponentDidUpdate();
+    if (this.props.onUpdate) {
+      this.props.onUpdate();
     }
   }
 

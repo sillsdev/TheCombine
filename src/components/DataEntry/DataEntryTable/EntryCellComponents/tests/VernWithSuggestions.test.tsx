@@ -1,14 +1,14 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import LocalizedVernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
+import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
 import { newWritingSystem } from "types/writingSystem";
 
 describe("Tests VernWithSuggestions", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedVernWithSuggestions
+        <VernWithSuggestions
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
           updateVernField={jest.fn()}
@@ -24,7 +24,7 @@ describe("Tests VernWithSuggestions", () => {
   it("renders new without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedVernWithSuggestions
+        <VernWithSuggestions
           isNew
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
@@ -41,7 +41,7 @@ describe("Tests VernWithSuggestions", () => {
   it("renders disabled without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedVernWithSuggestions
+        <VernWithSuggestions
           isDisabled
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
