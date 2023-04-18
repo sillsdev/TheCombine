@@ -92,14 +92,6 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
             buttonId={"Project-Schedule-removeDays"}
           />
         </Grid>
-
-        {projectSchedule && projectSchedule.length > 0 && (
-          <Grid item xs={12} marginTop={2}>
-            <Typography>
-              {t("projectSettings.schedule.calendarHighlight")}
-            </Typography>
-          </Grid>
-        )}
         <Grid
           item
           container
