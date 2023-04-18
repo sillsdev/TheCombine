@@ -156,7 +156,7 @@ namespace BackendFramework.Models
             }
             foreach (var dt in WorkshopSchedule)
             {
-                clone.WorkshopSchedule.Add(new DateTime(dt.Ticks));
+                clone.WorkshopSchedule.Add(dt);
             }
 
             return clone;

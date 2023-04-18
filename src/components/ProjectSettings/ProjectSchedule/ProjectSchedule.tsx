@@ -77,19 +77,19 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
             icon={<CalendarMonth />}
             textId="projectSettings.schedule.setDays"
             onClick={() => setShowSelector(true)}
-            buttonId={"Project-Schedule-+"}
+            buttonId={"Project-Schedule-setDays"}
           />
           <IconButtonWithTooltip
             icon={<DateRange />}
             textId="projectSettings.schedule.editDays"
             onClick={() => setShowEdit(true)}
-            buttonId={"Project-Schedule--"}
+            buttonId={"Project-Schedule-editDays"}
           />
           <IconButtonWithTooltip
             icon={<EventRepeat />}
             textId="projectSettings.schedule.removeDays"
             onClick={() => setRemove(true)}
-            buttonId={"Project-Schedule--"}
+            buttonId={"Project-Schedule-removeDays"}
           />
         </Grid>
 

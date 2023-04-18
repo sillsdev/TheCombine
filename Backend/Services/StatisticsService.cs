@@ -23,7 +23,7 @@ namespace BackendFramework.Services
 
 
         /// <summary>
-        /// Get the count of senses which use each semantic domain as a list of SemanticDomainCount objects
+        /// Get a <see cref="SemanticDomainCount"/> to generate a SemanticDomain statistics
         /// </summary>
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
@@ -56,7 +56,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get the count of words per day per user as a list of WordsPerDayPerUserCount objects <see cref="WordsPerDayPerUserCount"/>
+        /// Get a <see cref="WordsPerDayPerUserCount"/> to generate a WordsPerDayPerUser statistics
         /// </summary>
         public async Task<List<WordsPerDayPerUserCount>> GetWordsPerDayPerUserCounts(string projectId)
         {
@@ -116,7 +116,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get a ChartRootData objects <see cref="ChartRootData"/> to generate a Estimate Line Chart,
+        /// Get a <see cref="ChartRootData"/> to generate a Estimate Line Chart,
         /// Return a empty Object if the workshop schedule or wordList is empty or null
         /// </summary>
         public async Task<ChartRootData> GetProgressEstimationLineChartRoot(string projectId, Project project)
@@ -190,12 +190,7 @@ namespace BackendFramework.Services
                 averageValue = totalCountList[0];
             }
 
-            var projection = averageValue - min;
-            var cumulateTotal = 0;
-            var burstProjection = 0;
-            var burstProjectionAverage = 0;
-            var today = 0;
-            var yesterday = 0;
+            int cumulateTotal = 0, burstProjection = 0, burstProjectionAverage = 0, today = 0, yesterday = 0, projection = averageValue - min;
             // generate ChartRootData for frontend
             for (int i = 0; i < workshopScheduleList.Count; i++)
             {
@@ -238,7 +233,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get a ChartRootData objects <see cref="ChartRootData"/> to generate a Line Chart,
+        /// Get a <see cref="ChartRootData"/> to generate a Line Chart,
         /// Return a empty Object if the project is empty or null
         /// </summary>
         public async Task<ChartRootData> GetLineChartRootData(string projectId)
@@ -286,7 +281,7 @@ namespace BackendFramework.Services
 
 
         /// <summary>
-        /// Get the counts of senses and domains for user return a list of SemanticDomainUserCount objects <see cref="SemanticDomainUserCount"/>
+        /// Get <see cref="SemanticDomainUserCount"/> to generate a SemanticDomain per User statistics
         /// </summary>
         /// <returns> A List of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/> </returns>
         public async Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId)

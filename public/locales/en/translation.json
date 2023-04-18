@@ -393,6 +393,8 @@
     "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
     "domainsCollected": "Domains Collected:",
-    "wordsCollected": "Words Collected:"
+    "wordsCollected": "Words Collected:",
+    "wordsPerDay": "Words Collected Per User Per Day",
+    "workshopSchedule": "Workshop Schedule"
   }
 }

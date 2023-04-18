@@ -12,7 +12,7 @@ import distinctColors from "distinct-colors";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-import { getLineChartRootData } from "backend";
+import { ChartRootData } from "api";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -26,7 +26,9 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  currentProjectId: string;
+  titleText: string;
+  isFilterZero: boolean;
+  fetchData: () => Promise<ChartRootData | undefined>;
 }
 
 interface DatasetsProps {
@@ -44,6 +46,15 @@ interface LineChartDataProps {
   datasets: Array<DatasetsProps>;
 }
 
+function FilteredData(numbers: number[]): number[] {
+  numbers.forEach((num, index) => {
+    if (num == 0) {
+      numbers[index] = NaN;
+    }
+  });
+  return numbers;
+}
+
 export default function LineChartComponent(props: LineChartProps) {
   const [chartOptions, setChartOptions] = useState({});
   const [chartData, setChartData] = useState<LineChartDataProps>({
@@ -53,30 +64,29 @@ export default function LineChartComponent(props: LineChartProps) {
 
   useEffect(() => {
     const updateChartList = async () => {
-      var updateChartData: LineChartDataProps = {
+      const tempDate = await props.fetchData();
+      var updateEstimateDate: LineChartDataProps = {
         labels: [],
         datasets: [],
       };
-
-      const chartData = await getLineChartRootData(props.currentProjectId);
-
-      if (chartData != undefined) {
+      if (tempDate != undefined) {
         // Get array of unique Color
         var palette: chroma.Color[];
-        if (chartData.datasets.length) {
+        if (tempDate.datasets.length) {
           palette = distinctColors({
-            count: chartData.datasets.length,
+            count: tempDate.datasets.length,
           });
         }
         let colorIndex = 0;
         // Update the updateChartData by retrieve
-        chartData.dates.map((e) => {
-          updateChartData.labels.push(e);
+        tempDate.dates.map((e) => {
+          // trim the format from year-mm-dd to mm-dd
+          updateEstimateDate.labels.push(e.slice(-5));
         });
-        chartData.datasets.forEach((e) => {
-          updateChartData.datasets.push({
+        tempDate.datasets.forEach((e) => {
+          updateEstimateDate.datasets.push({
             label: e.userName,
-            data: e.data,
+            data: props.isFilterZero ? FilteredData(e.data) : e.data,
             borderColor: palette[colorIndex].hex().toString(),
             backgroundColor: palette[colorIndex++].hex().toString(),
             tension: 0.4,
@@ -85,8 +95,7 @@ export default function LineChartComponent(props: LineChartProps) {
           });
         });
       }
-
-      setChartData(updateChartData);
+      setChartData(updateEstimateDate);
     };
 
     updateChartList();
@@ -100,7 +109,7 @@ export default function LineChartComponent(props: LineChartProps) {
         },
         title: {
           display: true,
-          text: "Words Collected Per User Per Day",
+          text: props.titleText,
         },
       },
       scales: {
@@ -111,9 +120,5 @@ export default function LineChartComponent(props: LineChartProps) {
     });
   }, [props]);
 
-  return (
-    <React.Fragment>
-      <Line data={chartData} options={chartOptions} />
-    </React.Fragment>
-  );
+  return <Line data={chartData} options={chartOptions} />;
 }

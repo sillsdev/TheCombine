@@ -8,11 +8,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import LoadingButton from "components/Buttons/LoadingButton";
-import { useTranslation } from "react-i18next";
 
 interface DateScheduleEditProps {
   close: () => void;
