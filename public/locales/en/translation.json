@@ -245,6 +245,7 @@
     "noDomain": "No domain selected",
     "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
+    "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
       "domain": "Domains cannot be left blank",
@@ -309,7 +310,9 @@
       "list": "Drag this word to the right to start merging it with other words",
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
-      "deleteDialog": "Delete this sense?"
+      "deleteDialog": "Delete this sense?",
+      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so to prevent deletion, it cannot be moved. You may still drop other senses into this one to merge them.",
+      "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
     },
     "completed": {
       "number": "Number of merges completed: "
