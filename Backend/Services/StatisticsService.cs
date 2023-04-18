@@ -188,7 +188,7 @@ namespace BackendFramework.Services
                 averageValue = totalCountList[0];
             }
 
-            int runningTotal = 0, burstProjection = 0, burstProjectionAverage = 0, today = 0, yesterday = 0, projection = averageValue - min;
+            int runningTotal = 0, burstProjection = 0, burstProjectionAverage = 0, today = 0, yesterday = 0, projection = min;
             // generate ChartRootData for frontend
             for (int i = 0; i < workshopSchedule.Count; i++)
             {
@@ -197,6 +197,7 @@ namespace BackendFramework.Services
                 if (LineChartData.Datasets.Count == 0)
                 {
                     runningTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
+                    today = yesterday = runningTotal;
                     LineChartData.Datasets.Add(new Dataset("Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", runningTotal));
@@ -208,14 +209,14 @@ namespace BackendFramework.Services
                     // not generate data after the current date for "Daily Total", "Average" and "Running Total"
                     if (DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
-                        runningTotal += totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
-                        yesterday = today;
                         today = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
+                        runningTotal += today;
                         LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
                         LineChartData.Datasets.Find(element => element.UserName == "Running Total")?.Data.Add(runningTotal);
                         LineChartData.Datasets.Find(element => element.UserName == "Burst Projection")?.Data.Add(0);
                         burstProjectionAverage = (today + yesterday) / 2;
+                        yesterday = today;
                         burstProjection = runningTotal + burstProjectionAverage;
                     }
                     else
