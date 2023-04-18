@@ -1,5 +1,6 @@
 import { Add, Delete, RestoreFromTrash } from "@mui/icons-material";
-import { Chip, IconButton } from "@mui/material";
+import { Chip, IconButton, Tooltip } from "@mui/material";
+import { t } from "i18next";
 import { ReactElement } from "react";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
@@ -31,15 +32,23 @@ export default function SenseCell(
     <AlignedList
       key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
-      contents={props.rowData.senses.map((value) => (
-        <IconButton
-          size="small"
-          onClick={() => props.delete!(value.guid)}
-          id={`sense-${value.guid}-delete`}
-          key={value.guid}
+      contents={props.rowData.senses.map((sense) => (
+        <Tooltip
+          title={sense.protected ? t("reviewEntries.deleteDisabled") : ""}
+          placement="right"
+          key={sense.guid}
         >
-          {value.deleted ? <RestoreFromTrash /> : <Delete />}
-        </IconButton>
+          <span>
+            <IconButton
+              size="small"
+              onClick={() => props.delete!(sense.guid)}
+              id={`sense-${sense.guid}-delete`}
+              disabled={sense.protected}
+            >
+              {sense.deleted ? <RestoreFromTrash /> : <Delete />}
+            </IconButton>
+          </span>
+        </Tooltip>
       ))}
       bottomCell={addSense()}
     />

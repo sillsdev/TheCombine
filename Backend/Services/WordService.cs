@@ -36,11 +36,11 @@ namespace BackendFramework.Services
             wordToDelete.Id = "";
             wordToDelete.Modified = "";
             wordToDelete.History = new List<string> { wordId };
-            wordToDelete.Accessibility = State.Deleted;
+            wordToDelete.Accessibility = Status.Deleted;
 
             foreach (var senseAcc in wordToDelete.Senses)
             {
-                senseAcc.Accessibility = State.Deleted;
+                senseAcc.Accessibility = Status.Deleted;
             }
 
             await _wordRepo.Create(wordToDelete);
@@ -98,7 +98,7 @@ namespace BackendFramework.Services
             word.Id = "";
             word.Modified = "";
             word.ProjectId = projectId;
-            word.Accessibility = State.Deleted;
+            word.Accessibility = Status.Deleted;
 
             // Keep track of the old word, adding it to the history.
             word.History.Add(wordId);

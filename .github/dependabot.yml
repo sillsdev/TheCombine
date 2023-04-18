@@ -1,67 +1,89 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: /
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: nuget
-    directory: /Backend.Tests
+  - package-ecosystem: "nuget"
+    directory: "/Backend.Tests"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: nuget
-    directory: /Backend
+  - package-ecosystem: "nuget"
+    directory: "/Backend"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: docker
-    directory: /Backend
+  - package-ecosystem: "docker"
+    directory: "/Backend"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: docker
-    directory: /
+  - package-ecosystem: "docker"
+    directory: "/"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: docker
-    directory: /database
+  - package-ecosystem: "docker"
+    directory: "/database"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: docker
-    directory: /deploy
+  - package-ecosystem: "docker"
+    directory: "/deploy"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: pip
-    directory: /deploy
+  - package-ecosystem: "pip"
+    directory: "/deploy"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: docker
-    directory: /maintenance
+  - package-ecosystem: "docker"
+    directory: "/maintenance"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: pip
-    directory: /maintenance
+  - package-ecosystem: "pip"
+    directory: "/maintenance"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
 
-  - package-ecosystem: npm
-    directory: /
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: weekly
-      day: sunday
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"

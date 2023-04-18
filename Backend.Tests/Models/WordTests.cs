@@ -264,7 +264,7 @@ namespace Backend.Tests.Models
 
     public class SenseTests
     {
-        private const State Accessibility = State.Duplicate;
+        private const Status Accessibility = Status.Duplicate;
 
         /// <summary> Words create a unique Guid by default. Use a common GUID to ensure equality in tests. </summary>
         private readonly Guid _commonGuid = Guid.NewGuid();
@@ -286,7 +286,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var sense = new Sense { Accessibility = State.Deleted };
+            var sense = new Sense { Accessibility = Status.Deleted };
             Assert.AreEqual(sense, sense.Clone());
         }
 
@@ -294,8 +294,8 @@ namespace Backend.Tests.Models
         public void TestHashCode()
         {
             Assert.AreNotEqual(
-                new Sense { Guid = _commonGuid, Accessibility = State.Active }.GetHashCode(),
-                new Sense { Guid = _commonGuid, Accessibility = State.Deleted }.GetHashCode());
+                new Sense { Guid = _commonGuid, Accessibility = Status.Active }.GetHashCode(),
+                new Sense { Guid = _commonGuid, Accessibility = Status.Deleted }.GetHashCode());
         }
 
         [Test]

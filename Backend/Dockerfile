@@ -1,5 +1,5 @@
-# Docker multi-stage build using bitnami/dotnet-sdk:6
-FROM bitnami/dotnet-sdk@sha256:b8426ee39b7ec43d905d3b198f7819552c791472485fae95275e3832ab251480 AS builder
+# Docker multi-stage build using bitnami/dotnet-sdk:6.0.408-debian-11-r1
+FROM bitnami/dotnet-sdk@sha256:9cad65e627c44abde2b7ed86c6e0dd297ff865f4aeb1062c6ffd963241ef8d24 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -10,8 +10,8 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o build
 
-# Build runtime image.  Using bitnami/aspnet-core:6.0.14-debian-11-r5
-FROM bitnami/aspnet-core@sha256:80c88a840f65dface986751beb8fe1f39f5a9367a6056f1724bd0f4fa0dc65d3
+# Build runtime image.  Using bitnami/aspnet-core:6.0.16-debian-11-r1
+FROM bitnami/aspnet-core@sha256:69c22b3fba651f47cc919e90c1bef6a9557757514465706e2e398f5b3d32a235
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1

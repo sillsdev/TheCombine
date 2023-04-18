@@ -3,7 +3,10 @@ import {
   defaultState,
   ReviewEntriesActionTypes,
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
 import { newSemanticDomain } from "types/semanticDomain";
 import { Bcp47Code } from "types/writingSystem";
@@ -18,14 +21,13 @@ const reviewEntriesWord: ReviewEntriesWord = {
   vernacular: "toadTOAD",
   senses: [
     {
+      ...new ReviewEntriesSense(),
       guid: "1",
-      definitions: [],
       glosses: [{ def: "bupBUP", language: Bcp47Code.En }],
       domains: [
         newSemanticDomain("number", "domain"),
         newSemanticDomain("number2", "domain2"),
       ],
-      deleted: false,
     },
   ],
 };
@@ -35,14 +37,13 @@ const result: ReviewEntriesWord = {
   vernacular: "toadTOAD",
   senses: [
     {
+      ...new ReviewEntriesSense(),
       guid: "1",
-      definitions: [],
       glosses: [{ def: "bupBUP", language: Bcp47Code.En }],
       domains: [
         newSemanticDomain("number", "domain"),
         newSemanticDomain("number2", "domain2"),
       ],
-      deleted: false,
     },
   ],
 };

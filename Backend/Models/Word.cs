@@ -50,7 +50,7 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
-        public State Accessibility { get; set; }
+        public Status Accessibility { get; set; }
 
         [Required]
         [BsonElement("history")]
@@ -93,7 +93,7 @@ namespace BackendFramework.Models
             PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
-            Accessibility = State.Active;
+            Accessibility = Status.Active;
             Audio = new List<string>();
             EditedBy = new List<string>();
             History = new List<string>();
@@ -359,13 +359,13 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
-        public State Accessibility { get; set; }
+        public Status Accessibility { get; set; }
 
         public Sense()
         {
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
-            Accessibility = State.Active;
+            Accessibility = Status.Active;
             Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
@@ -616,12 +616,13 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> Information about the state of the word or sense used for merging. </summary>
-    public enum State
+    /// <summary> Information about the status of the word or sense used for merging. </summary>
+    public enum Status
     {
         Active,
         Deleted,
         Duplicate,
+        Protected,
         Separate
     }
 }
