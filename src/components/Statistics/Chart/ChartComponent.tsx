@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import LineChartComponent from "./LineChartComponent";
 import {
   getLineChartRootData,
   getProgressEstimationLineChartRoot,
 } from "backend";
+import LineChartComponent from "components/Statistics/Chart/LineChartComponent";
 
 export enum ChartTypeEnum {
-  LineChart = "Line",
-  Estimate = "Estimate",
+  LineChart = "LINE",
+  Estimate = "ESTIMATE",
   otherChart = "TBD",
 }
 

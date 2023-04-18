@@ -87,7 +87,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _statService.GetProgressEstimationLineChartRoot(projectId, proj));
+            return Ok(await _statService.GetProgressEstimationLineChartRoot(projectId, proj.WorkshopSchedule));
         }
 
 

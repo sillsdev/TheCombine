@@ -11,13 +11,15 @@ import { makeStyles } from "@mui/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import ChartComponent, { ChartTypeEnum } from "./Chart/ChartComponent";
-import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
-import ProgressBarComponent from "./ProgressBar/ProgressBarComponent";
-import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
 import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import ChartComponent, {
+  ChartTypeEnum,
+} from "components/Statistics/Chart/ChartComponent";
+import SemanticDomainStatistics from "components/Statistics/DomainStatistics/SemanticDomainStatistics";
+import ProgressBarComponent from "components/Statistics/ProgressBar/ProgressBarComponent";
+import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 enum viewEnum {
   User = "USER",
   Domain = "DOMAIN",
-  Time = "Time",
+  Time = "TIME",
   DataStatistics = "STATISTIC",
   Estimate = "ESTIMATE",
 }
