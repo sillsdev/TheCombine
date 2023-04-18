@@ -19,10 +19,20 @@ interface ReviewEntriesTableProps {
   ) => Promise<void>;
 }
 
-// Remove the duplicates from an array; sugar syntax, as the place it's used
-// is already hideous enough without adding more
+// Remove the duplicates from an array
 function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
+}
+
+function getPageSizeOptions(max?: number): number[] {
+  if (max === undefined) {
+    return ROWS_PER_PAGE;
+  }
+  return removeDuplicates([
+    Math.min(max, ROWS_PER_PAGE[0]),
+    Math.min(max, ROWS_PER_PAGE[1]),
+    Math.min(max, ROWS_PER_PAGE[2]),
+  ]);
 }
 
 // Constants
@@ -41,6 +51,9 @@ export default function ReviewEntriesTable(
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [maxRows, setMaxRows] = useState(0);
+  const [pageSizeOptions, setPageSizeOptions] = useState(
+    getPageSizeOptions(words.length)
+  );
 
   const updateMaxRows = () => {
     console.info("updateMaxRows");
@@ -49,8 +62,6 @@ export default function ReviewEntriesTable(
       const tableRows = tableRef.current.state.data.length;
       console.info(`tableRows: ${tableRows}`);
       if (tableRows !== maxRows) {
-        console.info("updateMaxRows");
-
         console.info("setMaxRows");
         setMaxRows(tableRows);
       }
@@ -92,11 +103,7 @@ export default function ReviewEntriesTable(
           words.length > 0
             ? Math.min(words.length, ROWS_PER_PAGE[0])
             : ROWS_PER_PAGE[0],
-        pageSizeOptions: removeDuplicates([
-          Math.min(words.length, ROWS_PER_PAGE[0]),
-          Math.min(words.length, ROWS_PER_PAGE[1]),
-          Math.min(words.length, ROWS_PER_PAGE[2]),
-        ]),
+        pageSizeOptions: pageSizeOptions,
       }}
     />
   );
