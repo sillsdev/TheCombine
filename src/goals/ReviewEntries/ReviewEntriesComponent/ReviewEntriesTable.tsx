@@ -1,7 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -27,6 +27,7 @@ function removeDuplicates<T>(array: T[]): T[] {
 
 // Constants
 const ROWS_PER_PAGE = [10, 100, 250];
+const tableRef: React.RefObject<any> = React.createRef();
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
@@ -39,9 +40,26 @@ export default function ReviewEntriesTable(
   );
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
+  const [maxRows, setMaxRows] = useState(0);
+
+  const updateMaxRows = () => {
+    console.info("updateMaxRows");
+    if (tableRef.current) {
+      console.info("table");
+      const tableRows = tableRef.current.state.data.length;
+      console.info(`tableRows: ${tableRows}`);
+      if (tableRows !== maxRows) {
+        console.info("updateMaxRows");
+
+        console.info("setMaxRows");
+        setMaxRows(tableRows);
+      }
+    }
+  };
 
   return (
     <MaterialTable<any>
+      tableRef={tableRef}
       icons={tableIcons}
       title={
         <Typography component="h1" variant="h4">
@@ -54,6 +72,7 @@ export default function ReviewEntriesTable(
           : columns.filter((c) => c.title !== ColumnTitle.Definitions)
       }
       data={words}
+      onFilterChange={updateMaxRows}
       editable={{
         onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
           new Promise(async (resolve, reject) => {
