@@ -148,7 +148,7 @@ export default function DataEntryTable(
       setState((prevState) => ({
         ...prevState,
         isFetchingFrontier: false,
-        existingWords: existingWords,
+        existingWords,
       }));
     }
   }, [innerGetWordsFromBackend, state.isFetchingFrontier]);
@@ -168,10 +168,7 @@ export default function DataEntryTable(
     const defunctWordIds = state.defunctWordIds;
     if (!defunctWordIds.includes(wordId)) {
       defunctWordIds.push(wordId);
-      setState((prevState) => ({
-        ...prevState,
-        defunctWordIds: defunctWordIds,
-      }));
+      setState((prevState) => ({ ...prevState, defunctWordIds }));
     }
   };
 
@@ -330,9 +327,7 @@ export default function DataEntryTable(
     gloss: string,
     audioFileURLs?: string[]
   ): Promise<void> => {
-    const existingWord = state.existingWords.find(
-      (word: Word) => word.id === wordId
-    );
+    const existingWord = state.existingWords.find((w: Word) => w.id === wordId);
     if (!existingWord) {
       throw new Error("You are trying to update a nonexistent word");
     }
