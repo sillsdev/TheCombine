@@ -27,7 +27,6 @@ interface DataEntryProps {
 
 interface DataEntryState {
   domain: SemanticDomainFull;
-  existingWords: Word[];
   domainWords: DomainWord[];
   isSmallScreen: boolean;
   drawerOpen: boolean;
@@ -70,10 +69,10 @@ export function filterWordsByDomain(
 }
 
 export function sortDomainWordByVern(
-  existingWords: Word[],
+  words: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  const domainWords = filterWordsByDomain(existingWords, domain);
+  const domainWords = filterWordsByDomain(words, domain);
   return domainWords.sort((a, b) => {
     const comp = a.vernacular.localeCompare(b.vernacular);
     return comp !== 0 ? comp : a.gloss.localeCompare(b.gloss);
@@ -96,7 +95,6 @@ export default class DataEntryComponent extends React.Component<
         this.props.currentDomainTree.name,
         this.props.currentDomainTree.lang
       ),
-      existingWords: [],
       domainWords: [],
       isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
       drawerOpen: false,
@@ -118,12 +116,6 @@ export default class DataEntryComponent extends React.Component<
   }
 
   toggleDrawer = (drawerOpen: boolean) => this.setState({ drawerOpen });
-
-  async getWordsFromBackend(): Promise<Word[]> {
-    const existingWords = await getFrontierWords();
-    this.setState({ existingWords });
-    return filterWords(existingWords);
-  }
 
   render(): ReactElement {
     return (
@@ -161,11 +153,11 @@ export default class DataEntryComponent extends React.Component<
         <Dialog fullScreen open={!!this.props.treeIsOpen}>
           <AppBar />
           <TreeView
-            returnControlToCaller={() =>
-              this.getWordsFromBackend().then(() => {
-                this.setState((prevState, props) => ({
+            returnControlToCaller={async () =>
+              await getFrontierWords().then((words) => {
+                this.setState((_, props) => ({
                   domainWords: sortDomainWordByVern(
-                    prevState.existingWords,
+                    words,
                     props.currentDomainTree
                   ),
                 }));
