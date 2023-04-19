@@ -136,6 +136,8 @@ describe("DataEntryTable", () => {
 
       const expectedSense = newSense(gloss, language, mockSemanticDomain);
       expectedSense.guid = expect.any(String);
+      expectedSense.semanticDomains[0].created = expect.any(String);
+      expectedSense.semanticDomains[0].userId = undefined;
       const expectedWord: Word = { ...word, senses: [expectedSense] };
 
       const resultWord = addSenseToWord(
@@ -154,6 +156,8 @@ describe("DataEntryTable", () => {
 
       const expectedSense = newSense(gloss, language, mockSemanticDomain);
       expectedSense.guid = expect.any(String);
+      expectedSense.semanticDomains[0].created = expect.any(String);
+      expectedSense.semanticDomains[0].userId = undefined;
       const expectedWord: Word = {
         ...word,
         senses: [...word.senses, expectedSense],
