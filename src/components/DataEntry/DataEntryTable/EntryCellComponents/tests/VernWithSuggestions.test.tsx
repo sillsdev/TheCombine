@@ -15,7 +15,7 @@ describe("Tests VernWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
-          textFieldId={""}
+          textFieldId={"test-vern"}
         />
       );
     });
@@ -32,7 +32,7 @@ describe("Tests VernWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
-          textFieldId={""}
+          textFieldId={"test-vern-new"}
         />
       );
     });
@@ -49,7 +49,7 @@ describe("Tests VernWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
-          textFieldId={""}
+          textFieldId={"test-vern-disabled"}
         />
       );
     });

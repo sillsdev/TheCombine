@@ -55,7 +55,9 @@ export default function GlossWithSuggestions(
       options={spellCheck.getSpellingSuggestions(props.gloss)}
       value={props.gloss}
       onBlur={() => {
-        if (props.onBlur) props.onBlur();
+        if (props.onBlur) {
+          props.onBlur();
+        }
       }}
       onChange={(_e, newValue) => {
         const newText = newValue ? (newValue as string) : "";
