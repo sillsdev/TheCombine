@@ -582,8 +582,8 @@ export default function DataEntryTable(
 
     setState((prevState) => ({
       ...prevState,
-      recentlyAddedWords: recentlyAddedWords,
-      defunctWordIds: defunctWordIds,
+      recentlyAddedWords,
+      defunctWordIds,
     }));
   };
 
