@@ -39,7 +39,7 @@ export default function GlossWithSuggestions(
     if (props.analysisLang.bcp47 !== spellCheck.lang) {
       setSpellCheck(new SpellChecker(props.analysisLang.bcp47));
     }
-  }, [props.analysisLang.bcp47]);
+  }, [props.analysisLang.bcp47, spellCheck.lang]);
 
   return (
     <Autocomplete
