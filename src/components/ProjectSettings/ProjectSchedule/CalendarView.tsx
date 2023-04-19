@@ -24,9 +24,9 @@ export default function CalendarView(Props: CalendarViewProps) {
       Props.projectSchedule &&
       Props.projectSchedule.findIndex((e) => {
         return (
-          e.getDate() == temp.getDate() &&
-          e.getMonth() == temp.getMonth() &&
-          e.getFullYear() == temp.getFullYear()
+          e.getDate() === temp.getDate() &&
+          e.getMonth() === temp.getMonth() &&
+          e.getFullYear() === temp.getFullYear()
         );
       }) >= 0;
     return <PickersDay {...pickersDayProps} selected={selected} />;
@@ -58,13 +58,7 @@ export default function CalendarView(Props: CalendarViewProps) {
     const tempMonths = new Array<Dayjs>();
     if (schedule && schedule.length) {
       schedule.forEach((temp) => {
-        monthSet.add(
-          temp.getFullYear().toString() +
-            "-" +
-            (temp.getMonth() + 1).toString() +
-            "-" +
-            "01"
-        );
+        monthSet.add(`${temp.getFullYear()}-${temp.getMonth() + 1}-01`);
       });
       Array.from(monthSet)
         .sort()

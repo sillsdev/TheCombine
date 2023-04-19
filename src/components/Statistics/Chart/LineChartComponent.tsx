@@ -27,7 +27,7 @@ ChartJS.register(
 
 interface LineChartProps {
   titleText: string;
-  isFilterZero: boolean;
+  isFilterZero?: boolean;
   fetchData: () => Promise<ChartRootData | undefined>;
 }
 
@@ -47,12 +47,7 @@ interface LineChartDataProps {
 }
 
 function FilteredData(numbers: number[]): number[] {
-  numbers.forEach((num, index) => {
-    if (num == 0) {
-      numbers[index] = NaN;
-    }
-  });
-  return numbers;
+  return numbers.map((num) => (num ? num : NaN));
 }
 
 export default function LineChartComponent(props: LineChartProps) {
@@ -69,7 +64,7 @@ export default function LineChartComponent(props: LineChartProps) {
         labels: [],
         datasets: [],
       };
-      if (tempDate != undefined) {
+      if (tempDate !== undefined) {
         // Get array of unique Color
         var palette: chroma.Color[];
         if (tempDate.datasets.length) {
@@ -104,19 +99,10 @@ export default function LineChartComponent(props: LineChartProps) {
     setChartOptions({
       responsive: true,
       plugins: {
-        legend: {
-          position: "top",
-        },
-        title: {
-          display: true,
-          text: props.titleText,
-        },
+        legend: { position: "top" },
+        title: { display: true, text: props.titleText },
       },
-      scales: {
-        x: {
-          beginAtZero: true,
-        },
-      },
+      scales: { x: { beginAtZero: true } },
     });
   }, [props]);
 

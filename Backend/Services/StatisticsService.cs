@@ -32,7 +32,7 @@ namespace BackendFramework.Services
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
             List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
 
-            if (domainTreeNodeList == null || !domainTreeNodeList.Any() || !wordList.Any())
+            if (domainTreeNodeList is null || !domainTreeNodeList.Any() || !wordList.Any())
             {
                 return new List<SemanticDomainCount>();
             }

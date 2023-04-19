@@ -19,7 +19,7 @@ interface ChartProps {
 }
 
 export default function ChartComponent(props: ChartProps) {
-  const [chartType, setChartType] = useState<ChartTypeEnum>(props.chartType);
+  const [chartType] = useState<ChartTypeEnum>(props.chartType);
   const { t } = useTranslation();
 
   return (
@@ -27,7 +27,6 @@ export default function ChartComponent(props: ChartProps) {
       {chartType === ChartTypeEnum.LineChart && (
         <LineChartComponent
           titleText={t("statistics.wordsPerDay")}
-          isFilterZero={false}
           fetchData={() => getLineChartRootData(props.currentProjectId)}
         />
       )}

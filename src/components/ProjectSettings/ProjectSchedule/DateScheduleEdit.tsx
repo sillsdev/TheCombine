@@ -34,9 +34,9 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
       Props.projectSchedule &&
       Props.projectSchedule.findIndex((e) => {
         return (
-          e.getDate() == temp.getDate() &&
-          e.getMonth() == temp.getMonth() &&
-          e.getFullYear() == temp.getFullYear()
+          e.getDate() === temp.getDate() &&
+          e.getMonth() === temp.getMonth() &&
+          e.getFullYear() === temp.getFullYear()
         );
       }) >= 0;
     return <PickersDay {...pickersDayProps} selected={selected} />;
@@ -76,12 +76,9 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   }
 
   useEffect(() => {
-    const updateState = () => {
-      if (Props.projectSchedule) {
-        setProjectSchedule(Props.projectSchedule);
-      }
-    };
-    updateState();
+    if (Props.projectSchedule) {
+      setProjectSchedule(Props.projectSchedule);
+    }
   }, [Props.projectSchedule, projectSchedule]);
 
   return (

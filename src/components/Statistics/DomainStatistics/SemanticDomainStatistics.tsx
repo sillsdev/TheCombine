@@ -25,7 +25,7 @@ export default function SemanticDomainStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
-      if (counts != undefined) {
+      if (counts !== undefined) {
         return setStatisticsList(counts);
       }
     };

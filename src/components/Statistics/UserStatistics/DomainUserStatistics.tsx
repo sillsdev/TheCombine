@@ -25,7 +25,7 @@ export default function DomainSenseUserStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
-      if (counts != undefined) {
+      if (counts !== undefined) {
         return setDomainUserCountList(counts);
       }
     };

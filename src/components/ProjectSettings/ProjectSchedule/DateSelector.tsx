@@ -47,8 +47,6 @@ export default function DateSelector(Props: DateSelectorProps) {
     // protect start date before end date
     if (startDate! > endDate!) {
       enqueueSnackbar(t("projectSettings.schedule.selectedDateAlert"));
-      setStartDate(null);
-      setEndDate(null);
       return;
     }
     // update the schedule to the project setting
