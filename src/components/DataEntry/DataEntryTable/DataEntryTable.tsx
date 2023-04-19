@@ -646,7 +646,7 @@ export default function DataEntryTable(
     getProjectSettings();
     const fetchExistingWords = async () => {
       const existingWords = await innerGetWordsFromBackend();
-      if (existingWords != null) {
+      if (existingWords !== null) {
         return setState((prevState) => ({
           ...prevState,
           isFetchingFrontier: false,
