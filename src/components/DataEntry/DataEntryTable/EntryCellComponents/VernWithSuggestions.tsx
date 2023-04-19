@@ -3,7 +3,7 @@ import {
   AutocompleteCloseReason,
   TextField,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api";
@@ -26,7 +26,9 @@ interface VernWithSuggestionsProps {
 /**
  * An editable vernacular field for new words, that suggests words already in database.
  */
-export default function VernWithSuggestions(props: VernWithSuggestionsProps) {
+export default function VernWithSuggestions(
+  props: VernWithSuggestionsProps
+): ReactElement {
   useEffect(() => {
     if (props.onUpdate) {
       props.onUpdate();

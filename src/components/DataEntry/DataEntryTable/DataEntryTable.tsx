@@ -253,10 +253,7 @@ export default function DataEntryTable(
     } else {
       recentlyAddedWords.push(wordAccess);
     }
-    setState((prevState) => ({
-      ...prevState,
-      recentlyAddedWords: recentlyAddedWords,
-    })),
+    setState((prevState) => ({ ...prevState, recentlyAddedWords })),
       callback ?? (() => {});
   };
 
@@ -741,14 +738,10 @@ export default function DataEntryTable(
               tempSemanticDomain.created = new Date().toISOString();
               return tempSemanticDomain;
             })()}
-            setIsReadyState={(isReadyYet: boolean) => {
-              const temp = state.isReady === isReadyYet ? null : isReadyYet;
-              if (temp)
-                return setState((prevState) => ({
-                  ...prevState,
-                  isReady: temp,
-                }));
-              return;
+            setIsReadyState={(isReady: boolean) => {
+              if (isReady && !state.isReady) {
+                setState((prevState) => ({ ...prevState, isReady }));
+              }
             }}
             recorder={recorder}
             analysisLang={state.analysisLang}

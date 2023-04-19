@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 
 import { Sense, Word, WritingSystem } from "api/models";
 import {
@@ -36,7 +36,7 @@ interface RecentEntryProps {
 /**
  * Displays a recently entered word that a user can still edit
  */
-export default function RecentEntry(props: RecentEntryProps) {
+export default function RecentEntry(props: RecentEntryProps): ReactElement {
   const sense: Sense = { ...props.entry.senses[props.senseIndex] };
   if (sense.glosses.length < 1) {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
@@ -78,9 +78,7 @@ export default function RecentEntry(props: RecentEntryProps) {
           vernacular={vernacular}
           isDisabled={props.disabled || props.entry.senses.length > 1}
           updateVernField={setVernacular}
-          onBlur={() => {
-            conditionallyUpdateVern();
-          }}
+          onBlur={() => conditionallyUpdateVern()}
           handleEnterAndTab={() => {
             if (vernacular) {
               props.focusNewEntry();
@@ -103,9 +101,7 @@ export default function RecentEntry(props: RecentEntryProps) {
           gloss={gloss}
           isDisabled={props.disabled}
           updateGlossField={setGloss}
-          onBlur={() => {
-            conditionallyUpdateGloss();
-          }}
+          onBlur={() => conditionallyUpdateGloss()}
           handleEnterAndTab={() => {
             if (gloss) {
               props.focusNewEntry();
