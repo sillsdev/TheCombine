@@ -5,12 +5,12 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 
-import CalendarView from "components/ProjectSettings/ProjectSchedule/CalendarView";
-import DateScheduleEdit from "components/ProjectSettings/ProjectSchedule/DateScheduleEdit";
-import DateSelector from "components/ProjectSettings/ProjectSchedule/DateSelector";
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import CalendarView from "components/ProjectSettings/ProjectSchedule/CalendarView";
+import DateScheduleEdit from "components/ProjectSettings/ProjectSchedule/DateScheduleEdit";
+import DateSelector from "components/ProjectSettings/ProjectSchedule/DateSelector";
 
 const customStyles = {
   content: {
