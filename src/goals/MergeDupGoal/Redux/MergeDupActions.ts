@@ -12,7 +12,6 @@ import * as backend from "backend";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import {
   defaultSidebar,
-  Hash,
   MergeTreeReference,
   MergeTreeSense,
   Sidebar,
@@ -42,6 +41,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { maxNumSteps } from "types/goalUtilities";
 import { GoalType } from "types/goals";
+import { Hash } from "types/hash";
 import { compareFlags } from "types/wordUtilities";
 
 // Action Creators

@@ -19,7 +19,7 @@ const idAffix = "recent-entry";
 interface RecentEntryProps {
   rowIndex: number;
   entry: Word;
-  senseIndex: number;
+  senseGuid: string;
   updateGloss: (gloss: string) => void;
   updateNote: (newText: string) => Promise<void>;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
@@ -37,7 +37,7 @@ interface RecentEntryProps {
  * Displays a recently entered word that a user can still edit
  */
 export default function RecentEntry(props: RecentEntryProps): ReactElement {
-  const sense: Sense = { ...props.entry.senses[props.senseIndex] };
+  const sense = props.entry.senses.find((s) => s.guid === props.senseGuid)!;
   if (sense.glosses.length < 1) {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
   }
@@ -46,7 +46,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
   function conditionallyUpdateGloss() {
-    if (firstGlossText(props.entry.senses[props.senseIndex]) !== gloss) {
+    if (firstGlossText(sense) !== gloss) {
       props.updateGloss(gloss);
     }
   }
