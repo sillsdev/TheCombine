@@ -47,7 +47,7 @@ function renderWithWord(word: Word) {
             <RecentEntry
               entry={word}
               rowIndex={0}
-              senseIndex={0}
+              senseGuid={word.senses[0].guid}
               updateGloss={mockUpdateGloss}
               updateNote={mockUpdateNote}
               updateVern={mockUpdateVern}
