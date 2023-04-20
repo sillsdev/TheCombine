@@ -2,10 +2,10 @@ import { Card, Grid, Typography, ListItem, List } from "@mui/material";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import DomainSenseUserTable from "./DomainUserTable";
-import { SemanticDomainUserCount, Project } from "api/models";
-import { getSemanticDomainUserCount, getFrontierWords } from "backend";
+import { SemanticDomainUserCount } from "api/models";
+import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import DomainSenseUserTable from "components/Statistics/UserStatistics/DomainUserTable";
 
 interface DomainSenseUserStatisticsProps {
   lang: string;
@@ -25,7 +25,7 @@ export default function DomainSenseUserStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
-      if (counts != undefined) {
+      if (counts !== undefined) {
         return setDomainUserCountList(counts);
       }
     };

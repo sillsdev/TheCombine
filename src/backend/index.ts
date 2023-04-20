@@ -713,3 +713,14 @@ export async function getLineChartRootData(
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
 }
+
+export async function getProgressEstimationLineChartRoot(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getProgressEstimationLineChartRoot(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
