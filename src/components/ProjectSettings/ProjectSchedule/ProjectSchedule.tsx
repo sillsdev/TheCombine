@@ -1,7 +1,6 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 
@@ -27,7 +26,7 @@ interface ProjectScheduleProps {
   projectId: string;
 }
 
-export default function ProjectSchedule(Props: ProjectScheduleProps) {
+export default function ProjectSchedule(props: ProjectScheduleProps) {
   const [showSelector, setShowSelector] = useState<boolean>(false);
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [remove, setRemove] = useState<boolean>(false);
@@ -47,14 +46,14 @@ export default function ProjectSchedule(Props: ProjectScheduleProps) {
   useEffect(() => {
     const fetchDate = async () => {
       const schedule = new Array<Date>();
-      const project = await getProject(Props.projectId);
+      const project = await getProject(props.projectId);
       project.workshopSchedule?.forEach((temp) => {
         schedule.push(new Date(temp));
       });
       setProjectSchedule(schedule);
     };
     fetchDate();
-  }, [showSelector, showEdit, remove, Props.projectId]);
+  }, [showSelector, showEdit, remove, props.projectId]);
 
   return (
     <React.Fragment>

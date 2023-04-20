@@ -16,7 +16,7 @@ interface DateSelectorProps {
   close: () => void;
 }
 
-export default function DateSelector(Props: DateSelectorProps) {
+export default function DateSelector(props: DateSelectorProps) {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const { t } = useTranslation();
@@ -52,13 +52,13 @@ export default function DateSelector(Props: DateSelectorProps) {
     // update the schedule to the project setting
     const projectId = LocalStorage.getProjectId();
     const project = await getProject(projectId);
-    let updateDateString: string[] | null | undefined = [];
+    let updateDateString: string[] = [];
     if (startDate && endDate) {
       updateDateString = getDatesBetween(startDate.toDate(), endDate.toDate());
     }
     project.workshopSchedule = updateDateString;
     await updateProject(project);
-    return Props.close();
+    props.close();
   }
 
   return (
@@ -85,7 +85,7 @@ export default function DateSelector(Props: DateSelectorProps) {
           <Button
             variant="contained"
             onClick={() => {
-              Props.close();
+              props.close();
             }}
             id="DateSelectorCancelButton"
           >

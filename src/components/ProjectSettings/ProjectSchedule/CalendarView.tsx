@@ -12,7 +12,7 @@ interface CalendarViewProps {
   projectSchedule: Date[];
 }
 
-export default function CalendarView(Props: CalendarViewProps) {
+export default function CalendarView(props: CalendarViewProps) {
   // Custom renderer for CalendarPicker
   function customDayRenderer(
     date: Dayjs,
@@ -21,8 +21,8 @@ export default function CalendarView(Props: CalendarViewProps) {
   ) {
     const temp = date.toDate();
     const selected =
-      Props.projectSchedule &&
-      Props.projectSchedule.findIndex((e) => {
+      props.projectSchedule &&
+      props.projectSchedule.findIndex((e) => {
         return (
           e.getDate() === temp.getDate() &&
           e.getMonth() === temp.getMonth() &&
@@ -69,7 +69,7 @@ export default function CalendarView(Props: CalendarViewProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {handleCalendarView(getScheduledMonths(Props.projectSchedule))}
+      {handleCalendarView(getScheduledMonths(props.projectSchedule))}
     </LocalizationProvider>
   );
 }

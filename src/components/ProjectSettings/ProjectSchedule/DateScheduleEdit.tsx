@@ -16,10 +16,10 @@ import LoadingButton from "components/Buttons/LoadingButton";
 
 interface DateScheduleEditProps {
   close: () => void;
-  projectSchedule?: Date[];
+  projectSchedule: Date[];
 }
 
-export default function DateScheduleEdit(Props: DateScheduleEditProps) {
+export default function DateScheduleEdit(props: DateScheduleEditProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>();
   const { t } = useTranslation();
 
@@ -31,8 +31,8 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   ) {
     const temp = date.toDate();
     const selected =
-      Props.projectSchedule &&
-      Props.projectSchedule.findIndex((e) => {
+      props.projectSchedule &&
+      props.projectSchedule.findIndex((e) => {
         return (
           e.getDate() === temp.getDate() &&
           e.getMonth() === temp.getMonth() &&
@@ -50,7 +50,7 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
       date.toISOString()
     );
     await updateProject(project);
-    return Props.close();
+    props.close();
   }
 
   // If the date already exists, delete it; otherwise, add it
@@ -76,10 +76,10 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
   }
 
   useEffect(() => {
-    if (Props.projectSchedule) {
-      setProjectSchedule(Props.projectSchedule);
+    if (props.projectSchedule) {
+      setProjectSchedule(props.projectSchedule);
     }
-  }, [Props.projectSchedule, projectSchedule]);
+  }, [props.projectSchedule, projectSchedule]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -96,7 +96,7 @@ export default function DateScheduleEdit(Props: DateScheduleEditProps) {
           <Button
             variant="contained"
             onClick={() => {
-              Props.close();
+              props.close();
             }}
             id="DateSelectorCancelButton"
           >
