@@ -1,17 +1,15 @@
+import { Delete, PlayArrow, Stop } from "@mui/icons-material";
 import {
-  createStyles,
   Fade,
   IconButton,
-  makeStyles,
   Menu,
   MenuItem,
   Theme,
   Tooltip,
-} from "@material-ui/core";
-import { Delete, PlayArrow, Stop } from "@material-ui/icons";
+} from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
 import {
@@ -20,6 +18,7 @@ import {
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
 interface PlayerProps {
@@ -43,10 +42,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function AudioPlayer(props: PlayerProps) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const pronunciationsState = useSelector(
+  const pronunciationsState = useAppSelector(
     (state: StoreState) => state.pronunciationsState
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState<boolean>(false);
@@ -137,6 +136,7 @@ export default function AudioPlayer(props: PlayerProps) {
           className={classes.button}
           aria-label="play"
           id={`audio-${props.fileName}`}
+          size="large"
         >
           {isPlaying ? (
             <Stop className={classes.icon} />

@@ -7,7 +7,7 @@ import {
   Note,
   SemanticDomain,
   Sense,
-  State,
+  Status,
   Word,
 } from "api/models";
 import { randomIntString } from "utilities";
@@ -30,7 +30,7 @@ export function newSense(
     definitions: [],
     glosses: [],
     semanticDomains: [],
-    accessibility: State.Active,
+    accessibility: Status.Active,
   };
   if (gloss) {
     sense.glosses.push(newGloss(gloss, lang));
@@ -58,7 +58,7 @@ export function newWord(vernacular = ""): Word {
     audio: [],
     created: "",
     modified: "",
-    accessibility: State.Active,
+    accessibility: Status.Active,
     history: [],
     projectId: "",
     note: newNote(),

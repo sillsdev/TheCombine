@@ -1,14 +1,14 @@
-import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import { useAppDispatch } from "types/hooks";
 
 const idAffix = "user-options";
 const idRemoveUser = `${idAffix}-remove`;
@@ -30,7 +30,7 @@ interface CancelConfirmDialogCollectionProps {
 export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
 ) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
   const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
   const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
@@ -220,6 +220,7 @@ export default function CancelConfirmDialogCollection(
         <IconButton
           id={idAffix}
           onClick={(event) => setAnchorEl(event.currentTarget)}
+          size="large"
         >
           <MoreVertIcon />
         </IconButton>

@@ -1,4 +1,4 @@
-import { ListItem } from "@material-ui/core";
+import { ListItem } from "@mui/material";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";

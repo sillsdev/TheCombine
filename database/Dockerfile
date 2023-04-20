@@ -1,4 +1,5 @@
-FROM mongo:5.0
+# Use mongo:6.0.5 for linux/amd64
+FROM mongo@sha256:83801634df07132cff11fab970dd54182ebcd39428b1a6bdef02d35ca8328a71
 
 WORKDIR /
 

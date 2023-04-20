@@ -1,5 +1,5 @@
-# User guide build environment.
-FROM python:3.10 AS user_guide_builder
+# User guide build environment using Python 3.11.1.
+FROM python@sha256:7efc1ae7e6e9c5263d87845cb00f6ab7f6b27670cae29c9d93fa7910d6ab12c0 AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,12 +16,12 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:16 AS frontend_builder
+FROM node:18.16-bullseye-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Build application.
 COPY . ./

@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from "@material-ui/core";
-import { AddComment, Comment } from "@material-ui/icons";
+import { AddComment, Comment } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,18 +1,18 @@
-import { Avatar, Button, Hidden, Menu, MenuItem } from "@material-ui/core";
 import {
   ExitToApp,
   Help,
   Person,
   SettingsApplications,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
+import { Avatar, Button, Hidden, Menu, MenuItem } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { openUserGuide, Path } from "browserHistory";
 import { clearCurrentProject } from "components/Project/ProjectActions";
+import { useAppDispatch } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme, { tabColor } from "types/theme";
 
@@ -59,7 +59,7 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
         style={{ background: tabColor(props.currentTab, Path.UserSettings) }}
         id={`avatar-${idAffix}`}
       >
-        <Hidden smDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
+        <Hidden mdDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} style={{ marginLeft: 5 }} />
         ) : (
@@ -73,7 +73,6 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
         onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
-        getContentAnchorEl={undefined}
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
@@ -101,7 +100,7 @@ interface UserMenuListProps {
  */
 export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   return (
     <div ref={props.forwardedRef}>

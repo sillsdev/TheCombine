@@ -15,14 +15,13 @@ export default function mockWords(): ReviewEntriesWord[] {
       vernacular: "toad",
       senses: [
         {
+          ...new ReviewEntriesSense(),
           guid: "1",
-          definitions: [],
           glosses: [
             { def: "bup", language: Bcp47Code.En },
             { def: "AHHHHHH", language: Bcp47Code.Es },
           ],
           domains: [newSemanticDomain("number", "domain")],
-          deleted: false,
         },
       ],
       noteText: "first word",
@@ -33,11 +32,10 @@ export default function mockWords(): ReviewEntriesWord[] {
       vernacular: "vern",
       senses: [
         {
+          ...new ReviewEntriesSense(),
           guid: "2",
-          definitions: [],
           glosses: [{ def: "gloss", language: Bcp47Code.En }],
           domains: [newSemanticDomain("number", "domain")],
-          deleted: false,
         },
       ],
       flag: newFlag("second word"),

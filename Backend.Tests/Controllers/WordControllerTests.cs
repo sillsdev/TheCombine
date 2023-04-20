@@ -76,7 +76,7 @@ namespace Backend.Tests.Controllers
             updatedWords.ForEach(w => Assert.That(
                 w.Id == wordToDelete.Id ||
                 w.Id == otherWord.Id ||
-                w.Accessibility == State.Deleted));
+                w.Accessibility == Status.Deleted));
             var updatedFrontier = await _wordRepo.GetFrontier(_projId);
             Assert.That(updatedFrontier, Has.Count.EqualTo(1));
             Assert.That(updatedFrontier.First().Id, Is.EqualTo(otherWord.Id));
@@ -259,7 +259,7 @@ namespace Backend.Tests.Controllers
             var dupWord = origWord.Clone();
             dupWord.Flag = new Flag("New Flag");
             var expectedWord = dupWord.Clone();
-            var id = (string)((ObjectResult)await _wordController.UpdateDuplicate(_projId, origWord.Id, dupWord)).Value!;
+            var id = (string)((ObjectResult)await _wordController.UpdateDuplicate(_projId, origWord.Id, "", dupWord)).Value!;
             var updatedWord = await _wordRepo.GetWord(_projId, id);
             Assert.That(expectedWord.ContentEquals(updatedWord!));
         }
@@ -270,7 +270,7 @@ namespace Backend.Tests.Controllers
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             var word = await _wordRepo.Create(Util.RandomWord(_projId));
-            var result = await _wordController.UpdateDuplicate(_projId, word.Id, word);
+            var result = await _wordController.UpdateDuplicate(_projId, word.Id, "", word);
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 
@@ -278,7 +278,7 @@ namespace Backend.Tests.Controllers
         public async Task TestUpdateDuplicateMissingProject()
         {
             var word = await _wordRepo.Create(Util.RandomWord(_projId));
-            var result = await _wordController.UpdateDuplicate(MissingId, word.Id, word);
+            var result = await _wordController.UpdateDuplicate(MissingId, word.Id, "", word);
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -286,7 +286,7 @@ namespace Backend.Tests.Controllers
         public async Task TestUpdateDuplicateMissingWord()
         {
             var word = Util.RandomWord(_projId);
-            var result = await _wordController.UpdateDuplicate(_projId, MissingId, word);
+            var result = await _wordController.UpdateDuplicate(_projId, MissingId, "", word);
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -296,7 +296,7 @@ namespace Backend.Tests.Controllers
             var origWord = await _wordRepo.Create(Util.RandomWord(_projId));
             var nonDup = origWord.Clone();
             nonDup.Vernacular = "differentVern";
-            var result = await _wordController.UpdateDuplicate(_projId, origWord.Id, nonDup);
+            var result = await _wordController.UpdateDuplicate(_projId, origWord.Id, "", nonDup);
             Assert.IsInstanceOf<ConflictResult>(result);
         }
 

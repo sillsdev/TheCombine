@@ -1,4 +1,4 @@
-import { Button, ImageList, ImageListItem } from "@material-ui/core";
+import { Button, ImageList, ImageListItem } from "@mui/material";
 import { useCallback, useEffect } from "react";
 import { Key } from "ts-key-enum";
 

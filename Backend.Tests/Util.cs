@@ -35,9 +35,11 @@ namespace Backend.Tests
         public static List<Word> RandomWordList(int length, string? projId = null)
         {
             var wordList = new List<Word>();
-            foreach (var _ in Range(0, length))
+            foreach (var i in Range(0, length))
             {
-                wordList.Add(RandomWord(projId));
+                var word = RandomWord(projId);
+                word.Vernacular += i;
+                wordList.Add(word);
             }
             return wordList;
         }
@@ -64,7 +66,7 @@ namespace Backend.Tests
         {
             return new Sense
             {
-                Accessibility = State.Active,
+                Accessibility = Status.Active,
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
                 SemanticDomains = new List<SemanticDomain>
                 {

@@ -26,7 +26,7 @@ import re
 import sys
 import tarfile
 import tempfile
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from aws_backup import AwsBackup
 from combine_app import CombineApp
@@ -123,7 +123,31 @@ def main() -> None:
         step.print("Unpack the backup.")
         os.chdir(restore_dir)
         with tarfile.open(restore_file, "r:gz") as tar:
-            tar.extractall()
+            tar_dir = Path(".")
+
+            def is_within_directory(directory: Path, target: Path) -> bool:
+                abs_directory = Path(directory).absolute()
+                abs_target = Path(target).absolute()
+
+                prefix = Path(os.path.commonprefix([abs_directory, abs_target]))
+
+                return prefix == abs_directory
+
+            def safe_extract(
+                tar: tarfile.TarFile,
+                path: Path = tar_dir,
+                members: Optional[List[tarfile.TarInfo]] = None,
+                *,
+                numeric_owner: bool = False,
+            ) -> None:
+                for member in tar.getmembers():
+                    member_path = path / member.name
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+
+                tar.extractall(path, members, numeric_owner=numeric_owner)
+
+            safe_extract(tar)
 
         step.print("Restore the database.")
         db_pod = combine.get_pod_id(CombineApp.Component.Database)

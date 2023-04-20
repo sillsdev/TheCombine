@@ -50,7 +50,7 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
-        public State Accessibility { get; set; }
+        public Status Accessibility { get; set; }
 
         [Required]
         [BsonElement("history")]
@@ -93,7 +93,7 @@ namespace BackendFramework.Models
             PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
-            Accessibility = State.Active;
+            Accessibility = Status.Active;
             Audio = new List<string>();
             EditedBy = new List<string>();
             History = new List<string>();
@@ -121,7 +121,7 @@ namespace BackendFramework.Models
                 History = new List<string>(),
                 Senses = new List<Sense>(),
                 Note = Note.Clone(),
-                Flag = Flag.Clone()
+                Flag = Flag.Clone(),
             };
 
             foreach (var file in Audio)
@@ -219,7 +219,7 @@ namespace BackendFramework.Models
         /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
-        public bool AppendContainedWordContents(Word other)
+        public bool AppendContainedWordContents(Word other, String userId)
         {
             // Confirm that the other word is contained
             if (!Contains(other))
@@ -234,6 +234,15 @@ namespace BackendFramework.Models
                 {
                     return false;
                 }
+
+                // Get List of items that difference of two sequences update it if userId is NullOrEmpty
+                otherSense.SemanticDomains.Except(containingSense.SemanticDomains).ToList().ForEach((t) =>
+                {
+                    if (string.IsNullOrEmpty(t.UserId))
+                    {
+                        t.UserId = userId;
+                    }
+                });
                 containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
                 containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
             }
@@ -246,7 +255,6 @@ namespace BackendFramework.Models
             EditedBy.AddRange(other.EditedBy);
             EditedBy = EditedBy.Distinct().ToList();
             History.AddRange(other.History);
-
             return true;
         }
     }
@@ -351,13 +359,13 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("accessibility")]
         [BsonRepresentation(BsonType.String)]
-        public State Accessibility { get; set; }
+        public Status Accessibility { get; set; }
 
         public Sense()
         {
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
-            Accessibility = State.Active;
+            Accessibility = Status.Active;
             Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
@@ -371,7 +379,7 @@ namespace BackendFramework.Models
                 Accessibility = Accessibility,
                 Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
-                SemanticDomains = new List<SemanticDomain>()
+                SemanticDomains = new List<SemanticDomain>(),
             };
 
             foreach (var definition in Definitions)
@@ -608,12 +616,13 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> Information about the state of the word or sense used for merging. </summary>
-    public enum State
+    /// <summary> Information about the status of the word or sense used for merging. </summary>
+    public enum Status
     {
         Active,
         Deleted,
         Duplicate,
+        Protected,
         Separate
     }
 }

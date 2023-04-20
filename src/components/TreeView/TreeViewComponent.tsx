@@ -1,18 +1,18 @@
-import { Grid, Zoom } from "@material-ui/core";
+import { Grid, Zoom } from "@mui/material";
 import { animate } from "motion";
 import React, { ReactElement, useEffect, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import { SemanticDomain, WritingSystem } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {
   initTreeDomain,
-  traverseTreeAction,
+  traverseTree,
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
@@ -26,17 +26,17 @@ export interface TreeViewProps extends WithTranslation {
 }
 
 export function TreeView(props: TreeViewProps): ReactElement {
-  const currentDomain = useSelector(
+  const currentDomain = useAppSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
-  const semDomLanguage = useSelector(
+  const semDomLanguage = useAppSelector(
     (state: StoreState) => state.treeViewState.language
   );
-  const semDomWritingSystem = useSelector(
+  const semDomWritingSystem = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.semDomWritingSystem
   );
   const [visible, setVisible] = useState(true);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { i18n } = props;
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
       return new Promise((resolve) =>
         setTimeout(() => {
           if (domain.id !== currentDomain.id) {
-            dispatch(traverseTreeAction(domain));
+            dispatch(traverseTree(domain));
             setVisible(true);
           } else {
             props.returnControlToCaller();

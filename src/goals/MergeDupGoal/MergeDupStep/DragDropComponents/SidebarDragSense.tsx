@@ -1,4 +1,4 @@
-import { Card } from "@material-ui/core";
+import { Card } from "@mui/material";
 import { ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
@@ -31,6 +31,7 @@ export default function SidebarDragSense(
       key={props.sense.guid}
       draggableId={JSON.stringify(ref)}
       index={props.index}
+      isDragDisabled={props.sense.protected}
     >
       {(provided, snapshot): ReactElement => (
         <div
@@ -52,12 +53,14 @@ export default function SidebarDragSense(
                   ? "red"
                   : snapshot.isDragging
                   ? "lightgreen"
+                  : props.sense.protected
+                  ? "lightyellow"
                   : props.index === 0
                   ? "white"
                   : "lightgrey",
             }}
           >
-            <SenseCardContent senses={[props.sense]} />
+            <SenseCardContent senses={[props.sense]} sidebar />
           </Card>
         </div>
       )}

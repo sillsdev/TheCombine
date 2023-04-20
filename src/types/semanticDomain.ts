@@ -2,6 +2,8 @@ import {
   SemanticDomain,
   SemanticDomainFull,
   SemanticDomainTreeNode,
+  SemanticDomainCount,
+  SemanticDomainUserCount,
 } from "api/models";
 import { Bcp47Code } from "types/writingSystem";
 
@@ -11,6 +13,17 @@ export function newSemanticDomain(
   lang = Bcp47Code.Default as string
 ): SemanticDomainFull {
   return { id, name, guid: "", questions: [], description: "", lang };
+}
+
+export function newSemanticDomainForMongoDB(
+  mongoId = "",
+  guid = "",
+  name = "",
+  id = "",
+  lang = Bcp47Code.Default as string,
+  userId = ""
+): SemanticDomain {
+  return { mongoId, guid, name, id, lang, userId };
 }
 
 export function newSemanticDomainTreeNode(
@@ -27,6 +40,22 @@ export function newSemanticDomainTreeNode(
     name,
     lang,
     guid: "",
+  };
+}
+
+export function newSemanticDomainUserCount(
+  domainSet = new Set<string>()
+): SemanticDomainUserCount {
+  return { id: "", domainSet: domainSet };
+}
+
+export function newSemanticDomainCount(
+  semanticDomainTreeNode: SemanticDomainTreeNode,
+  count = 0
+): SemanticDomainCount {
+  return {
+    semanticDomainTreeNode: semanticDomainTreeNode,
+    count: count,
   };
 }
 

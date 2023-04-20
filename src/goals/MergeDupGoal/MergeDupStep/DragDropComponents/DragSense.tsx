@@ -1,13 +1,13 @@
-import { Card } from "@material-ui/core";
+import { Card } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { useDispatch, useSelector } from "react-redux";
 
 import { trashId } from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 
 interface DragSenseProps {
@@ -15,6 +15,7 @@ interface DragSenseProps {
   wordId: string;
   mergeSenseId: string;
   senses: MergeTreeSense[];
+  isDragDisabled: boolean;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
@@ -27,13 +28,13 @@ function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
 
 export default function DragSense(props: DragSenseProps): ReactElement {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
-  const analysisLangs = useSelector((state: StoreState) =>
+  const analysisLangs = useAppSelector((state: StoreState) =>
     state.currentProjectState.project.analysisWritingSystems.map(
       (ws) => ws.bcp47
     )
   );
-  const dispatch = useDispatch();
-  const sidebar = useSelector(
+  const dispatch = useAppDispatch();
+  const sidebar = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
   const isInSidebar =
@@ -86,6 +87,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
         mergeSenseId: props.mergeSenseId,
       })}
       index={props.index}
+      isDragDisabled={props.isDragDisabled}
     >
       {(provided, snapshot): ReactElement => (
         <Card
@@ -109,6 +111,8 @@ export default function DragSense(props: DragSenseProps): ReactElement {
                 ? "lightgreen"
                 : isInSidebar
                 ? "lightblue"
+                : props.senses[0].protected
+                ? "lightyellow"
                 : "white",
           }}
         >

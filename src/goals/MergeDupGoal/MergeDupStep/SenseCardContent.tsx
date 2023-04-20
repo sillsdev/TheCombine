@@ -1,3 +1,4 @@
+import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
 import {
   CardContent,
   Chip,
@@ -8,12 +9,12 @@ import {
   TableCell,
   TableRow,
   Typography,
-} from "@material-ui/core";
-import { ArrowForwardIos } from "@material-ui/icons";
+} from "@mui/material";
 import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
 
-import { Sense } from "api/models";
+import { Sense, Status } from "api/models";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -106,6 +107,7 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
 interface SenseCardContentProps {
   senses: Sense[];
   languages?: string[];
+  sidebar?: boolean;
   toggleFunction?: () => void;
 }
 
@@ -130,8 +132,28 @@ export default function SenseCardContent(
       )
     ),
   ];
+  const protectedWarning =
+    !props.sidebar && props.senses[0].accessibility === Status.Protected;
+
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
+      {/* Warning for protected senses. */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+        }}
+      >
+        {protectedWarning && (
+          <IconButtonWithTooltip
+            icon={<WarningOutlined />}
+            textId={"mergeDups.helpText.protectedSense"}
+            side={"top"}
+            small
+          />
+        )}
+      </div>
       {/* Button for showing the sidebar, when sense card has multiple senses. */}
       <div
         style={{
@@ -145,6 +167,7 @@ export default function SenseCardContent(
           <IconButton
             onClick={props.toggleFunction}
             id={`sidebar-open-sense-${props.senses[0].guid}`}
+            size="large"
           >
             <ArrowForwardIos />
           </IconButton>

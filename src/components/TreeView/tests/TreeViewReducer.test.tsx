@@ -17,25 +17,21 @@ describe("Test the TreeViewReducer", () => {
     );
   });
 
-  it("Returns default state when reset action is passed", () => {
-    const action: StoreAction = { type: StoreActionTypes.RESET };
+  it("Returns default state when tree reset action is passed", () => {
+    const action: TreeViewAction = { type: TreeActionType.RESET_TREE };
+    expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
+  });
 
+  it("Returns default state when store reset action is passed", () => {
+    const action: StoreAction = { type: StoreActionTypes.RESET };
     expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
   });
 
   it("Returns state passed in when passed an invalid action", () => {
-    expect(
-      treeViewReducer(
-        {
-          ...defaultState,
-          currentDomain: defaultState.currentDomain,
-        },
-        { type: "Nothing" } as any as TreeViewAction
-      )
-    ).toEqual({
-      ...defaultState,
-      currentDomain: defaultState.currentDomain,
-    });
+    const badAction = { type: "Nothing" } as any as TreeViewAction;
+    expect(treeViewReducer({ ...defaultState, open: true }, badAction)).toEqual(
+      { ...defaultState, open: true }
+    );
   });
 
   it("Closes the tree when requested", () => {

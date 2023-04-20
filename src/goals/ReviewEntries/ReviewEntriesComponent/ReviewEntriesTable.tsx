@@ -1,5 +1,6 @@
 import MaterialTable from "@material-table/core";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -37,6 +38,7 @@ export default function ReviewEntriesTable(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <MaterialTable<any>
@@ -59,7 +61,7 @@ export default function ReviewEntriesTable(
               .onRowUpdate(newData, oldData)
               .then(resolve)
               .catch((reason) => {
-                alert(t(reason));
+                enqueueSnackbar(t(reason));
                 reject(reason);
               });
           }),

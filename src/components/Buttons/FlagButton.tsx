@@ -1,4 +1,4 @@
-import { Flag as FlagFilled, FlagOutlined } from "@material-ui/icons";
+import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
 import React, { ReactElement, useEffect, useState } from "react";
 
 import { Flag } from "api/models";
@@ -57,7 +57,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
         }
         buttonId={props.buttonId}
-        side="left"
+        side="top"
       />
       {props.updateFlag ? (
         <DeleteEditTextDialog

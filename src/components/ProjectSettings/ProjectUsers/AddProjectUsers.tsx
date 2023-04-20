@@ -1,8 +1,7 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { Permission, User } from "api/models";
@@ -12,6 +11,7 @@ import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 const customStyles = {
@@ -26,10 +26,10 @@ const customStyles = {
 };
 
 export default function AddProjectUsers() {
-  const projectUsers = useSelector(
+  const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
   const { t } = useTranslation();
 

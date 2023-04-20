@@ -1,13 +1,14 @@
-import { IconButton } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
+import { t } from "i18next";
 import React, { ReactElement, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -15,15 +16,16 @@ interface DeleteCellProps {
 
 export default function DeleteCell(props: DeleteCellProps): ReactElement {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const words = useSelector(
+  const words = useAppSelector(
     (state: StoreState) => state.reviewEntriesState.words
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const word = props.rowData;
+  const disabled = word.protected || !!word.senses.find((s) => s.protected);
 
   async function deleteFrontierWord(): Promise<void> {
-    const wordId = props.rowData.id;
-    await deleteFromBackend(wordId);
-    const updatedWords = words.filter((w) => w.id !== wordId);
+    await deleteFromBackend(word.id);
+    const updatedWords = words.filter((w) => w.id !== word.id);
     dispatch(updateAllWords(updatedWords));
     handleClose();
   }
@@ -37,9 +39,21 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
 
   return (
     <React.Fragment>
-      <IconButton onClick={handleOpen} id={`row-${props.rowData.id}-delete`}>
-        <Delete />
-      </IconButton>
+      <Tooltip
+        title={disabled ? t("reviewEntries.deleteDisabled") : ""}
+        placement="left"
+      >
+        <span>
+          <IconButton
+            onClick={handleOpen}
+            id={`row-${props.rowData.id}-delete`}
+            size="large"
+            disabled={disabled}
+          >
+            <Delete />
+          </IconButton>
+        </span>
+      </Tooltip>
       <CancelConfirmDialog
         open={dialogOpen}
         textId={"reviewEntries.deleteWordWarning"}

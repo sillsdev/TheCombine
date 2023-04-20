@@ -90,7 +90,9 @@ namespace Backend.Tests.Models
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
-            Assert.That(oldWord.AppendContainedWordContents(newWord));
+            // create a userId
+            var userId = Util.RandString();
+            Assert.That(oldWord.AppendContainedWordContents(newWord, userId));
 
             var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
             Assert.That(updatedSense, Is.Not.Null);
@@ -101,6 +103,65 @@ namespace Backend.Tests.Models
             Assert.That(oldWord.Audio.Contains(Text));
             Assert.That(oldWord.EditedBy.Contains(Text));
             Assert.That(oldWord.History.Contains(Text));
+
+            // if userId append successfully
+            Assert.That(updatedDom?.UserId, Is.EqualTo(userId));
+
+
+            // test2
+            // 1. create newWord2
+            var newWord2 = Util.RandomWord(oldWord.ProjectId);
+            newWord2.Vernacular = oldWord.Vernacular;
+
+            // 2. Make newWord2 have a cloned sense of oldWord, add one more new semantic domain
+            var newSense2 = oldWord.Senses.First().Clone();
+            var newSemDom2 = Util.RandomSemanticDomain();
+            newSense2.SemanticDomains.Add(newSemDom2);
+            newWord2.Senses = new List<Sense> { newSense2 };
+
+            // 3. AppendContainedWordContents with a empty userId
+            Assert.That(oldWord.AppendContainedWordContents(newWord2, ""));
+            var updatedSense2 = oldWord.Senses.Find(s => s.Guid == newSense2.Guid);
+            Assert.That(updatedSense2, Is.Not.Null);
+            var updatedDom2 = updatedSense2!.SemanticDomains.Find(dom => dom.Id == newSemDom2.Id);
+            Assert.That(updatedDom2, Is.Not.Null);
+
+            // 4.test userId still be empty after append
+            Assert.That(updatedDom2?.UserId, Is.Empty);
+
+
+            // test3
+            // test Adding multiple items at same time
+            // Make newWord3 have a cloned sense of oldWord,
+            var newWord3 = Util.RandomWord(oldWord.ProjectId);
+            newWord3.Vernacular = oldWord.Vernacular;
+
+            // add three more new semantic domains
+            var newSense3 = oldWord.Senses.First().Clone();
+            var newSemDom3 = Util.RandomSemanticDomain();
+            var newSemDom4 = Util.RandomSemanticDomain();
+            var newSemDom5 = Util.RandomSemanticDomain();
+            newSense3.SemanticDomains.Add(newSemDom3);
+            newSense3.SemanticDomains.Add(newSemDom4);
+            newSense3.SemanticDomains.Add(newSemDom5);
+            newWord3.Senses = new List<Sense> { newSense3 };
+
+            // create a userId2
+            var userId2 = Util.RandString();
+            Assert.That(oldWord.AppendContainedWordContents(newWord3, userId2));
+            var updatedSense3 = oldWord.Senses.Find(s => s.Guid == newSense3.Guid);
+            Assert.That(updatedSense3, Is.Not.Null);
+
+            // test all updateDoms have the same userId
+            var updatedDom3 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom3.Id);
+            Assert.That(updatedDom3, Is.Not.Null);
+            Assert.That(updatedDom3?.UserId, Is.EqualTo(userId2));
+            var updatedDom4 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom4.Id);
+            Assert.That(updatedDom4, Is.Not.Null);
+            Assert.That(updatedDom4?.UserId, Is.EqualTo(userId2));
+            var updatedDom5 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom5.Id);
+            Assert.That(updatedDom5, Is.Not.Null);
+            Assert.That(updatedDom5?.UserId, Is.EqualTo(userId2));
         }
     }
 
@@ -203,7 +264,7 @@ namespace Backend.Tests.Models
 
     public class SenseTests
     {
-        private const State Accessibility = State.Duplicate;
+        private const Status Accessibility = Status.Duplicate;
 
         /// <summary> Words create a unique Guid by default. Use a common GUID to ensure equality in tests. </summary>
         private readonly Guid _commonGuid = Guid.NewGuid();
@@ -225,7 +286,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var sense = new Sense { Accessibility = State.Deleted };
+            var sense = new Sense { Accessibility = Status.Deleted };
             Assert.AreEqual(sense, sense.Clone());
         }
 
@@ -233,8 +294,8 @@ namespace Backend.Tests.Models
         public void TestHashCode()
         {
             Assert.AreNotEqual(
-                new Sense { Guid = _commonGuid, Accessibility = State.Active }.GetHashCode(),
-                new Sense { Guid = _commonGuid, Accessibility = State.Deleted }.GetHashCode());
+                new Sense { Guid = _commonGuid, Accessibility = Status.Active }.GetHashCode(),
+                new Sense { Guid = _commonGuid, Accessibility = Status.Deleted }.GetHashCode());
         }
 
         [Test]

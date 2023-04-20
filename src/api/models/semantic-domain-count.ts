@@ -12,14 +12,24 @@
  * Do not edit the class manually.
  */
 
+import { SemanticDomainTreeNode } from "./semantic-domain-tree-node";
+
 /**
  *
  * @export
- * @enum {string}
+ * @interface SemanticDomainCount
  */
-export enum State {
-  Active = "Active",
-  Deleted = "Deleted",
-  Duplicate = "Duplicate",
-  Separate = "Separate",
+export interface SemanticDomainCount {
+  /**
+   *
+   * @type {SemanticDomainTreeNode}
+   * @memberof SemanticDomainCount
+   */
+  semanticDomainTreeNode: SemanticDomainTreeNode;
+  /**
+   *
+   * @type {number}
+   * @memberof SemanticDomainCount
+   */
+  count: number;
 }
