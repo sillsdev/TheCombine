@@ -51,19 +51,6 @@ interface WordAccess {
   senseGuid: string;
 }
 
-enum FetchStatus {
-  Default = "DEFAULT",
-  Fetching = "FETCHING",
-  ToFetch = "TO_FETCH",
-}
-
-function startFetch(status: FetchStatus) {
-  if (status === FetchStatus.Default) {
-    return FetchStatus.ToFetch;
-  }
-  return status;
-}
-
 interface DataEntryTableState {
   existingWords: Word[];
   recentWords: WordAccess[];
@@ -72,7 +59,7 @@ interface DataEntryTableState {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
   defunctWordIds: Hash<string>;
-  fetchFrontier: FetchStatus;
+  isFetchingFrontier: boolean;
 }
 
 export function addSemanticDomainToSense(
@@ -119,7 +106,7 @@ export default function DataEntryTable(
     analysisLang: defaultWritingSystem,
     vernacularLang: newWritingSystem("qaa", "Unknown"),
     defunctWordIds: {},
-    fetchFrontier: FetchStatus.Default,
+    isFetchingFrontier: false,
   });
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -129,46 +116,24 @@ export default function DataEntryTable(
 
   const getProjectSettings = useCallback(async (): Promise<void> => {
     const proj = await backend.getProject();
-    const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
-    const analysisLang = proj.analysisWritingSystems[0] ?? defaultWritingSystem;
-    const vernacularLang = proj.vernacularWritingSystem;
     setState((prevState) => ({
       ...prevState,
-      analysisLang,
-      vernacularLang,
-      suggestVerns,
-      fetchFrontier: FetchStatus.ToFetch,
+      analysisLang: proj.analysisWritingSystems[0] ?? defaultWritingSystem,
+      isFetchingFrontier: true,
+      suggestVerns: proj.autocompleteSetting === AutocompleteSetting.On,
+      vernacularLang: proj.vernacularWritingSystem,
     }));
   }, []);
 
-  const innerGetWordsFromBackend = useCallback(async (): Promise<Word[]> => {
-    const existingWords = await backend.getFrontierWords();
-    return filterWords(existingWords);
-  }, []);
-
-  const updateExisting = useCallback(async (): Promise<void> => {
-    if (state.fetchFrontier !== FetchStatus.Fetching) {
-      setState((prevState) => ({
-        ...prevState,
-        fetchFrontier: FetchStatus.Fetching,
-      }));
-      const existingWords = await innerGetWordsFromBackend();
-      setState((prevState) => ({
-        ...prevState,
-        fetchFrontier: FetchStatus.Default,
-        existingWords,
-      }));
-    }
-  }, [innerGetWordsFromBackend, state.fetchFrontier]);
-
   // Use this before updating any word on the backend,
   // to make sure that word doesn't get edited by two different functions
-  const defunctWord = (wordId: string, newWordId?: string): void => {
-    if (newWordId || !Object.keys(state.defunctWordIds).includes(wordId)) {
+  const defunctWord = (oldId: string, newId?: string): void => {
+    console.info(`${oldId}->${newId}`);
+    if (newId || !Object.keys(state.defunctWordIds).includes(oldId)) {
       setState((prevState) => {
-        const defunctWordIds = prevState.defunctWordIds;
-        if (!defunctWordIds[wordId]) {
-          defunctWordIds[wordId] = newWordId ?? "";
+        const defunctWordIds = { ...prevState.defunctWordIds };
+        if (!defunctWordIds[oldId]) {
+          defunctWordIds[oldId] = newId ?? "";
         }
         return { ...prevState, defunctWordIds };
       });
@@ -205,22 +170,17 @@ export default function DataEntryTable(
   ): Promise<void> => {
     const isInDisplay =
       state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
-    if (isInDisplay) {
-      defunctWord(oldId);
-    }
+    defunctWord(oldId);
     const userId = getCurrentUser()?.id ?? "";
     const newWord = await backend.updateDuplicate(oldId, userId, word);
-    var newId = newWord.id;
-    if (isInDisplay) {
-      defunctWord(oldId, newId);
-    }
-    newId = await addAudiosToBackend(newWord.id, audioURLs);
+    defunctWord(oldId, newWord.id);
+    const newId = await addAudiosToBackend(newWord.id, audioURLs);
 
     if (!isInDisplay) {
       const word = await backend.getWord(newId);
       const domId = props.semanticDomain.id;
       setState((prevState) => {
-        const recentWords = prevState.recentWords;
+        const recentWords = [...prevState.recentWords];
         word.senses.forEach((s) => {
           if (s.semanticDomains.find((dom) => dom.id === domId)) {
             recentWords.push({ word, senseGuid: s.guid });
@@ -234,14 +194,13 @@ export default function DataEntryTable(
   /** Add one-sense word to the display of recent entries. */
   const addToDisplay = (wordAccess: WordAccess, insertIndex?: number): void => {
     setState((prevState) => {
-      const fetchFrontier = startFetch(prevState.fetchFrontier);
       const recentWords = [...prevState.recentWords];
       if (insertIndex !== undefined && insertIndex < recentWords.length) {
         recentWords.splice(insertIndex, 0, wordAccess);
       } else {
         recentWords.push(wordAccess);
       }
-      return { ...prevState, fetchFrontier, recentWords };
+      return { ...prevState, isFetchingFrontier: true, recentWords };
     });
   };
 
@@ -366,38 +325,36 @@ export default function DataEntryTable(
   };
 
   const removeRecentEntry = (index: number): void => {
-    if (index < 0 || index >= state.recentWords.length) {
-      throw new RangeError("Entry doesn't exist in recent entries.");
-    }
     setState((prevState) => {
-      const recentWords = prevState.recentWords;
-      recentWords.splice(index, 1);
+      const recentWords = prevState.recentWords.filter((_w, i) => i !== index);
       return { ...prevState, recentWords };
     });
   };
 
-  const undoRecentEntry = async (index: number): Promise<void> => {
-    const recentEntry = state.recentWords[index];
-    const oldWord = recentEntry.word;
-    defunctWord(oldWord.id);
-    removeRecentEntry(index);
-    const guid = recentEntry.senseGuid;
-    const oldSenses = oldWord.senses;
-    const oldSense = oldSenses.find((s) => s.guid === guid)!;
+  const undoRecentEntry = async (eIndex: number): Promise<void> => {
+    const { word, senseGuid } = state.recentWords[eIndex];
+    const sIndex = word.senses.findIndex((s) => s.guid === senseGuid);
+    if (sIndex === -1) {
+      throw new Error("Entry does not have specified sense.");
+    }
+    defunctWord(word.id);
+    removeRecentEntry(eIndex);
+    const senses = [...word.senses];
+    const oldSense = senses[sIndex];
     const oldDoms = oldSense.semanticDomains;
     if (oldDoms.length > 1) {
       // If there is more than one semantic domain in this sense, only remove the domain
       const doms = oldDoms.filter((d) => d.id !== props.semanticDomain.id);
       const newSense: Sense = { ...oldSense, semanticDomains: doms };
-      const senses = oldSenses.map((s) => (s.guid === guid ? newSense : s));
-      await updateWordInBackend({ ...oldWord, senses });
-    } else if (oldSenses.length > 1) {
+      senses.splice(sIndex, 1, newSense);
+      await updateWordInBackend({ ...word, senses });
+    } else if (senses.length > 1) {
       // If there is more than one sense in this word, only remove this sense.
-      const senses = oldSenses.filter((s) => s.guid !== guid);
-      await updateWordInBackend({ ...oldWord, senses });
+      senses.splice(sIndex, 1);
+      await updateWordInBackend({ ...word, senses });
     } else {
       // Since this is the only sense, delete the word.
-      await backend.deleteFrontierWord(oldWord.id);
+      await backend.deleteFrontierWord(word.id);
     }
   };
 
@@ -478,19 +435,23 @@ export default function DataEntryTable(
     async (oldId: string, newId: string): Promise<void> => {
       const word = await backend.getWord(newId);
       setState((prevState) => {
-        const defunctWordIds = prevState.defunctWordIds;
-        delete defunctWordIds[oldId];
-        const fetchFrontier = startFetch(prevState.fetchFrontier);
+        const defunctWordIds = { ...prevState.defunctWordIds };
+        defunctWordIds[oldId] = "";
         const recentWords = prevState.recentWords.map((a) =>
           a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
         );
-        return { ...prevState, defunctWordIds, fetchFrontier, recentWords };
+        return {
+          ...prevState,
+          defunctWordIds,
+          isFetchingFrontier: true,
+          recentWords,
+        };
       });
     },
     [state.defunctWordIds, state.recentWords]
   );
 
-  function resetEverything() {
+  const resetEverything = () => {
     // Reset everything
     props.hideQuestions();
     setState((prevState) => ({
@@ -501,7 +462,7 @@ export default function DataEntryTable(
     if (refNewEntry.current) {
       refNewEntry.current.resetState();
     }
-  }
+  };
 
   // Reset the entry table. If there is an un-submitted word then submit it.
   const handleExit = async (): Promise<void> => {
@@ -539,21 +500,30 @@ export default function DataEntryTable(
   }, [getProjectSettings]);
 
   useEffect(() => {
-    if (state.fetchFrontier === FetchStatus.ToFetch) {
-      updateExisting();
-    } // eslint-disable-next-line
-  }, [state.fetchFrontier]);
+    if (state.isFetchingFrontier) {
+      console.info("fetchFrontier");
+      backend.getFrontierWords().then((words) => {
+        const existingWords = filterWords(words);
+        setState((prevState) => ({
+          ...prevState,
+          isFetchingFrontier: false,
+          existingWords,
+        }));
+      });
+    }
+  }, [state.isFetchingFrontier]);
 
   useEffect(() => {
-    const allIds = Object.keys(state.defunctWordIds);
-    if (!allIds.length) {
+    const ids = Object.keys(state.defunctWordIds).filter(
+      (id) => state.defunctWordIds[id]
+    );
+    if (!ids.length) {
       return;
     }
-
-    const oldId = allIds.find(
-      (id) =>
-        state.defunctWordIds[id] &&
-        state.recentWords.find((w) => w.word.id === id)
+    console.info("update defuncts");
+    console.info(Object.entries(state.defunctWordIds));
+    const oldId = ids.find((id) =>
+      state.recentWords.find((w) => w.word.id === id)
     );
     if (oldId) {
       // Do an update if there's one to be done.
@@ -565,17 +535,16 @@ export default function DataEntryTable(
     } else {
       // When recent entries are up to date, update the list of all words
       setState((prevState) => {
-        const defunctWordIds = prevState.defunctWordIds;
+        const defunctWordIds = { ...prevState.defunctWordIds };
         for (const id in Object.keys(defunctWordIds)) {
           if (!prevState.recentWords.find((w) => w.word.id === id)) {
-            delete defunctWordIds[id];
+            defunctWordIds[id] = "";
           }
         }
-        const fetchFrontier = startFetch(prevState.fetchFrontier);
-        return { ...prevState, defunctWordIds, fetchFrontier };
+        return { ...prevState, defunctWordIds, isFetchingFrontier: true };
       });
     }
-  }, [replaceInDisplay, state.defunctWordIds]);
+  }, [state.defunctWordIds]);
 
   return (
     <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => submit(e)}>

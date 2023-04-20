@@ -171,6 +171,8 @@ describe("DataEntryTable", () => {
       word.senses = [sense];
 
       const expectedSense: Sense = { ...sense, semanticDomains: [mockSemDom] };
+      expectedSense.semanticDomains[0].created = expect.any(String);
+      expectedSense.semanticDomains[0].userId = undefined;
       const expectedWord: Word = { ...word, senses: [expectedSense] };
 
       const resultWord = addSemanticDomainToSense(mockSemDom, word, sense.guid);
