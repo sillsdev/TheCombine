@@ -7,7 +7,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getProject, updateProject } from "backend";
@@ -20,25 +20,24 @@ interface DateScheduleEditProps {
 }
 
 export default function DateScheduleEdit(props: DateScheduleEditProps) {
-  const [projectSchedule, setProjectSchedule] = useState<Date[]>();
+  const [projectSchedule, setProjectSchedule] = useState<Date[]>(
+    props.projectSchedule
+  );
   const { t } = useTranslation();
-
   // Custom renderer for CalendarPicker
   function customDayRenderer(
-    date: Dayjs,
-    selectedDays: Array<Dayjs | null>,
+    day: Dayjs,
+    _selectedDays: Array<Dayjs | null>,
     pickersDayProps: PickersDayProps<Dayjs>
   ) {
-    const temp = date.toDate();
+    const date = day.toDate();
     const selected =
-      props.projectSchedule &&
-      props.projectSchedule.findIndex((e) => {
-        return (
-          e.getDate() === temp.getDate() &&
-          e.getMonth() === temp.getMonth() &&
-          e.getFullYear() === temp.getFullYear()
-        );
-      }) >= 0;
+      projectSchedule.findIndex(
+        (d) =>
+          d.getDate() === date.getDate() &&
+          d.getMonth() === date.getMonth() &&
+          d.getFullYear() === date.getFullYear()
+      ) >= 0;
     return <PickersDay {...pickersDayProps} selected={selected} />;
   }
 
@@ -46,7 +45,7 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
     // update the schedule to the project setting
     const projectId = LocalStorage.getProjectId();
     const project = await getProject(projectId);
-    project.workshopSchedule = projectSchedule?.map((date) =>
+    project.workshopSchedule = projectSchedule.map((date) =>
       date.toISOString()
     );
     await updateProject(project);
@@ -54,39 +53,32 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
   }
 
   // If the date already exists, delete it; otherwise, add it
-  function handleCalendarChange(date: Dayjs | null) {
-    if (!date) return projectSchedule;
-    const currentDate = date.toDate();
-    let removeDate = null;
-    projectSchedule?.forEach((temp, index) => {
-      if (
-        temp.getFullYear() === currentDate.getFullYear() &&
-        temp.getMonth() === currentDate.getMonth() &&
-        temp.getDate() === currentDate.getDate()
-      ) {
-        removeDate = projectSchedule.splice(index, 1);
-        setProjectSchedule(projectSchedule);
+  function handleCalendarChange(day: Dayjs | null) {
+    if (!day) {
+      return;
+    }
+    const date = day.toDate();
+    setProjectSchedule((prevSchedule) => {
+      const schedule = [...prevSchedule];
+      const index = schedule.findIndex(
+        (d) =>
+          d.getFullYear() === date.getFullYear() &&
+          d.getMonth() === date.getMonth() &&
+          d.getDate() === date.getDate()
+      );
+      if (index >= 0) {
+        schedule.splice(index, 1);
+      } else {
+        schedule.push(date);
       }
+      return schedule;
     });
-    if (!removeDate && projectSchedule) {
-      projectSchedule.push(date.toDate());
-      projectSchedule.sort((a, b) => (a > b ? 1 : -1));
-      setProjectSchedule(projectSchedule);
-    }
   }
-
-  useEffect(() => {
-    if (props.projectSchedule) {
-      setProjectSchedule(props.projectSchedule);
-    }
-  }, [props.projectSchedule, projectSchedule]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <CalendarPicker
-        onChange={(date) => {
-          setProjectSchedule(handleCalendarChange(date));
-        }}
+        onChange={handleCalendarChange}
         date={null}
         disableHighlightToday
         renderDay={customDayRenderer}
@@ -95,9 +87,7 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
         <Grid item marginTop={1} style={{ width: 100 }}>
           <Button
             variant="contained"
-            onClick={() => {
-              props.close();
-            }}
+            onClick={() => props.close()}
             id="DateSelectorCancelButton"
           >
             {t("buttons.cancel")}
@@ -107,9 +97,7 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
           <LoadingButton
             buttonProps={{
               id: "DateSelectorSubmitButton",
-              onClick: () => {
-                handleSubmit();
-              },
+              onClick: handleSubmit,
               variant: "contained",
               color: "primary",
             }}

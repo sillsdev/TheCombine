@@ -185,7 +185,7 @@ namespace BackendFramework.Services
             // no need to remove the lowest data if there's only one past day
             else
             {
-                averageValue = totalCountList[0];
+                averageValue = totalCountList.Count > 0 ? totalCountList[0] : 0;
             }
 
             int runningTotal = 0, burstProjection = 0, burstProjectionAverage = 0, today = 0, yesterday = 0, projection = min;
