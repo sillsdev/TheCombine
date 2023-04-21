@@ -128,7 +128,6 @@ export default function DataEntryTable(
   // Use this before updating any word on the backend,
   // to make sure that word doesn't get edited by two different functions
   const defunctWord = (oldId: string, newId?: string): void => {
-    console.info(`${oldId}->${newId}`);
     if (newId || !Object.keys(state.defunctWordIds).includes(oldId)) {
       setState((prevState) => {
         const defunctWordIds = { ...prevState.defunctWordIds };
@@ -500,7 +499,6 @@ export default function DataEntryTable(
 
   useEffect(() => {
     if (state.isFetchingFrontier) {
-      console.info("fetchFrontier");
       backend.getFrontierWords().then((words) => {
         const existingWords = filterWords(words);
         setState((prevState) => ({
@@ -519,8 +517,6 @@ export default function DataEntryTable(
     if (!ids.length) {
       return;
     }
-    console.info("update defuncts");
-    console.info(Object.entries(state.defunctWordIds));
     const oldId = ids.find((id) =>
       state.recentWords.find((w) => w.word.id === id)
     );
@@ -535,7 +531,7 @@ export default function DataEntryTable(
       // When recent entries are up to date, update the list of all words
       setState((prevState) => {
         const defunctWordIds = { ...prevState.defunctWordIds };
-        for (const id in Object.keys(defunctWordIds)) {
+        for (const id of Object.keys(defunctWordIds)) {
           if (!prevState.recentWords.find((w) => w.word.id === id)) {
             defunctWordIds[id] = "";
           }
