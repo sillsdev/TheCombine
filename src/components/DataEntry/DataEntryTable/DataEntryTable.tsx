@@ -22,7 +22,7 @@ import {
   WritingSystem,
 } from "api/models";
 import * as backend from "backend";
-import { getCurrentUser } from "backend/localStorage";
+import { getUserId } from "backend/localStorage";
 import NewEntry, {
   FocusTarget,
 } from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
@@ -62,6 +62,7 @@ interface DataEntryTableState {
   isFetchingFrontier: boolean;
 }
 
+/** Add current semantic domain to specified sense within a word. */
 export function addSemanticDomainToSense(
   semDom: SemanticDomain,
   word: Word,
@@ -76,14 +77,13 @@ export function addSemanticDomainToSense(
   return { ...word, senses };
 }
 
-// Update the UserId and timestamp for a semantic domain
-function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
+/** Update the semantic domain with current UserId and timestamp. */
+export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
   const created = new Date().toISOString();
-  const userId = getCurrentUser()?.id;
-  return { ...semDom, created, userId };
+  return { ...semDom, created, userId: getUserId() };
 }
 
-/** Filter out words that do not have at least 1 Active/Protected sense */
+/** Filter out words that do not have at least one Active/Protected sense. */
 function filterWords(words: Word[]): Word[] {
   return words.filter((w) =>
     w.senses.find((s) =>
@@ -171,8 +171,7 @@ export default function DataEntryTable(
     const isInDisplay =
       state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
     defunctWord(oldId);
-    const userId = getCurrentUser()?.id ?? "";
-    const newWord = await backend.updateDuplicate(oldId, userId, word);
+    const newWord = await backend.updateDuplicate(oldId, getUserId(), word);
     defunctWord(oldId, newWord.id);
     const newId = await addAudiosToBackend(newWord.id, audioURLs);
 
