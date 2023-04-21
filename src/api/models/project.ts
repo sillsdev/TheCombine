@@ -120,4 +120,10 @@ export interface Project {
    * @memberof Project
    */
   inviteTokens: Array<EmailInvite>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Project
+   */
+  workshopSchedule?: Array<string> | null;
 }

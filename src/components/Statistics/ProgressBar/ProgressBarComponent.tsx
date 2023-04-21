@@ -10,9 +10,9 @@ import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import LinearProgressWithLabel from "./LinearProgressBar";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import LinearProgressWithLabel from "components/Statistics/ProgressBar/LinearProgressBar";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const useStyles = makeStyles((theme: Theme) => ({

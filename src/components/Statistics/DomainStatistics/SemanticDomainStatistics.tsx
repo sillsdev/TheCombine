@@ -2,10 +2,10 @@ import { Card, Grid, Typography, ListItem, List } from "@mui/material";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import StatisticsTable from "./SemanticDomainStatisticsTable";
 import { SemanticDomainCount } from "api/models";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import StatisticsTable from "components/Statistics/DomainStatistics/SemanticDomainStatisticsTable";
 
 interface SemanticDomainStatisticsProps {
   lang: string;
@@ -25,7 +25,7 @@ export default function SemanticDomainStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
-      if (counts != undefined) {
+      if (counts !== undefined) {
         return setStatisticsList(counts);
       }
     };
