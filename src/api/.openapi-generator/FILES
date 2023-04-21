@@ -49,7 +49,7 @@ models/semantic-domain-user-count.ts
 models/semantic-domain.ts
 models/sense.ts
 models/site-banner.ts
-models/state.ts
+models/status.ts
 models/user-created-project.ts
 models/user-edit-step-wrapper.ts
 models/user-edit.ts
