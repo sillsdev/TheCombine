@@ -181,6 +181,16 @@
       "archive": "Archive Project",
       "archiveToastSuccess": "Project Archived!"
     },
+    "schedule": {
+      "workshopSchedule": "Workshop Schedule",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "selectedDateAlert": "The start date must be before the end date",
+      "setDays": "Set the range of days for the workshop",
+      "editDays": "Flexibly adjust the workshop schedule",
+      "removeDays": "Remove all days from workshop",
+      "removeAll": "Are you sure you want to remove all the dates?"
+    },
     "exportProject": {
       "label": "Export Project"
     },
@@ -381,8 +391,12 @@
     "senseCount": "Words:",
     "userView": "Words per User",
     "domainView": "Words per Domain",
+    "dayView": "Words per Day",
+    "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
     "domainsCollected": "Domains Collected:",
-    "wordsCollected": "Words Collected:"
+    "wordsCollected": "Words Collected:",
+    "wordsPerDay": "Words Collected Per User Per Day",
+    "workshopSchedule": "Workshop Schedule"
   }
 }
