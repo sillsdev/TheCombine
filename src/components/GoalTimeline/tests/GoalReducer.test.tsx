@@ -2,11 +2,11 @@ import {
   defaultState,
   emptyGoalState,
 } from "components/GoalTimeline/DefaultState";
-import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import {
-  GoalAction,
-  GoalActionTypes,
-} from "components/GoalTimeline/Redux/GoalReduxTypes";
+  loadUserEdits,
+  setCurrentGoal,
+} from "components/GoalTimeline/Redux/GoalActions";
+import goalReducer from "components/GoalTimeline/Redux/GoalSlice";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -19,12 +19,10 @@ import { Goal, GoalsState } from "types/goals";
 describe("GoalReducer", () => {
   describe("GoalActionTypes.LOAD_USER_EDITS", () => {
     it("Should return the default state", () => {
-      const loadUserEditsAction: GoalAction = {
-        type: GoalActionTypes.LOAD_USER_EDITS,
-        payload: [],
-      };
-
-      expect(goalReducer(undefined, loadUserEditsAction)).toEqual(defaultState);
+      const loadUserEditsTestAction = loadUserEdits([]);
+      expect(goalReducer(undefined, loadUserEditsTestAction)).toEqual(
+        defaultState
+      );
     });
 
     it("Should set the goal history to the payload and leave everything else unchanged", () => {
@@ -44,28 +42,21 @@ describe("GoalReducer", () => {
       const goal6: Goal = new HandleFlags();
       const goal7: Goal = new ValidateChars();
 
-      const loadUserEditsAction: GoalAction = {
-        type: GoalActionTypes.LOAD_USER_EDITS,
-        payload: [goal6, goal7],
-      };
-
+      const loadUserEditsTestAction = loadUserEdits([goal6, goal7]);
       const newState: GoalsState = {
         ...state,
         history: [goal6, goal7],
         previousGoalType: goal7.goalType,
       };
 
-      expect(goalReducer(state, loadUserEditsAction)).toEqual(newState);
+      expect(goalReducer(state, loadUserEditsTestAction)).toEqual(newState);
     });
   });
 
   describe("GoalActionTypes.SET_CURRENT_GOAL", () => {
     it("Should replace current goal, and remove type from top suggestion", () => {
       const currentGoal: Goal = new CreateCharInv();
-      const updateGoalAction: GoalAction = {
-        type: GoalActionTypes.SET_CURRENT_GOAL,
-        payload: currentGoal,
-      };
+      const updateGoalAction = setCurrentGoal(currentGoal);
       const goalTypeSuggestions = defaultState.goalTypeSuggestions.slice();
       if (goalTypeSuggestions[0] === currentGoal.goalType) {
         goalTypeSuggestions.splice(0, 1);

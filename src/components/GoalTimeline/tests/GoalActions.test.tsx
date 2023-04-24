@@ -150,11 +150,11 @@ describe("GoalActions", () => {
       LocalStorage.setCurrentUser(mockUser);
       LocalStorage.setProjectId(mockProjectId);
       await mockStore.dispatch<any>(actions.asyncGetUserEdits());
-      const loadUserEditsAction: LoadUserEditsAction = {
+      const loadUserEditsActionAction: LoadUserEditsAction = {
         type: GoalActionTypes.LOAD_USER_EDITS,
         payload: [],
       };
-      expect(mockStore.getActions()).toEqual([loadUserEditsAction]);
+      expect(mockStore.getActions()).toEqual([loadUserEditsActionAction]);
     });
 
     it("should not dispatch any actions when creating a new user edit", async () => {

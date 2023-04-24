@@ -1,13 +1,15 @@
+import { PayloadAction } from "@reduxjs/toolkit";
+
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import {
-  GoalActionTypes,
-  LoadUserEditsAction,
-  SetCurrentGoalAction,
-  SetGoalIndexAction,
-  SetGoalStatusAction,
-} from "components/GoalTimeline/Redux/GoalReduxTypes";
+  loadUserEditsAction,
+  setCurrentGoalAction,
+  setCurrentGoalIndexAction,
+  setCurrentGoalStatusAction,
+  reset,
+} from "components/GoalTimeline/Redux/GoalSlice";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,
@@ -20,35 +22,23 @@ import { Goal, GoalStatus, GoalType } from "types/goals";
 
 // Action Creators
 
-export function loadUserEdits(history?: Goal[]): LoadUserEditsAction {
-  return { type: GoalActionTypes.LOAD_USER_EDITS, payload: history ?? [] };
+export function loadUserEdits(history?: Goal[]): PayloadAction {
+  return loadUserEditsAction(history ?? []);
 }
 
-export function setCurrentGoal(goal?: Goal): SetCurrentGoalAction {
+export function setCurrentGoal(goal?: Goal): PayloadAction {
   if (goal == null) {
-    return {
-      type: GoalActionTypes.SET_CURRENT_GOAL,
-      payload: new Goal(),
-    };
+    return setCurrentGoalAction(new Goal());
   }
-  return {
-    type: GoalActionTypes.SET_CURRENT_GOAL,
-    payload: { ...goal },
-  };
+  return setCurrentGoalAction({ ...goal });
 }
 
-export function setCurrentGoalIndex(index: number): SetGoalIndexAction {
-  return {
-    type: GoalActionTypes.SET_CURRENT_GOAL_INDEX,
-    payload: index,
-  };
+export function setCurrentGoalIndex(index: number): PayloadAction {
+  return setCurrentGoalIndexAction(index);
 }
 
-export function setCurrentGoalStatus(status: GoalStatus): SetGoalStatusAction {
-  return {
-    type: GoalActionTypes.SET_CURRENT_GOAL_STATUS,
-    payload: status,
-  };
+export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
+  return setCurrentGoalStatusAction(status);
 }
 // Dispatch Functions
 
