@@ -40,7 +40,7 @@ jest.mock("backend", () => ({
   getWord: (id: string) => mockGetWord(id),
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
-jest.mock("backend/LocalStorage", () => ({
+jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
 }));
 jest.mock(
