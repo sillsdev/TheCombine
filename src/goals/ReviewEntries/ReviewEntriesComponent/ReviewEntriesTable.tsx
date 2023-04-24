@@ -19,20 +19,23 @@ interface ReviewEntriesTableProps {
   ) => Promise<void>;
 }
 
+interface PageState {
+  pageSize: number;
+  pageSizeOptions: number[];
+}
+
 // Remove the duplicates from an array
 function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
-function getPageSizeOptions(max?: number): number[] {
-  if (max === undefined) {
-    return ROWS_PER_PAGE;
-  }
-  return removeDuplicates([
-    Math.min(max, ROWS_PER_PAGE[0]),
-    Math.min(max, ROWS_PER_PAGE[1]),
-    Math.min(max, ROWS_PER_PAGE[2]),
-  ]);
+function getPageSizeOptions(max: number): number[] {
+  return removeDuplicates(ROWS_PER_PAGE.map((num) => Math.min(max, num)));
+}
+
+function getPageState(wordCount: number): PageState {
+  const pageSizeOptions = getPageSizeOptions(wordCount);
+  return { pageSize: pageSizeOptions[0], pageSizeOptions };
 }
 
 // Constants
@@ -50,10 +53,8 @@ export default function ReviewEntriesTable(
   );
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const [maxRows, setMaxRows] = useState(0);
-  const [pageSizeOptions, setPageSizeOptions] = useState(
-    getPageSizeOptions(words.length)
-  );
+  const [maxRows, setMaxRows] = useState(words.length);
+  const [pageState, setPageState] = useState(getPageState(words.length));
 
   const updateMaxRows = () => {
     if (tableRef.current) {
@@ -65,8 +66,15 @@ export default function ReviewEntriesTable(
   };
 
   useEffect(() => {
-    setPageSizeOptions(getPageSizeOptions(maxRows));
-  }, [maxRows, setPageSizeOptions]);
+    setPageState((prevState) => {
+      const options = getPageSizeOptions(maxRows);
+      var i = 0;
+      while (i < options.length - 1 && options[i] < prevState.pageSize) {
+        i++;
+      }
+      return { pageSize: options[i], pageSizeOptions: options };
+    });
+  }, [maxRows, setPageState]);
 
   return (
     <MaterialTable<any>
@@ -96,15 +104,7 @@ export default function ReviewEntriesTable(
               });
           }),
       }}
-      options={{
-        draggable: false,
-        filtering: true,
-        pageSize:
-          words.length > 0
-            ? Math.min(words.length, ROWS_PER_PAGE[0])
-            : ROWS_PER_PAGE[0],
-        pageSizeOptions: pageSizeOptions,
-      }}
+      options={{ draggable: false, filtering: true, ...pageState }}
     />
   );
 }
