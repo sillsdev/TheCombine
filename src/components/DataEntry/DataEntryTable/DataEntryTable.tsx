@@ -57,6 +57,11 @@ interface WordAccess {
   senseGuid: string;
 }
 
+enum DefunctStatus {
+  Recent = "RECENT",
+  Retire = "RETIRE",
+}
+
 interface DataEntryTableState {
   // project properties
   analysisLang: WritingSystem;
@@ -66,7 +71,8 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentWords: WordAccess[];
   // state management
-  defunctWordIds: Hash<string>;
+  defunctUpdates: Hash<string>;
+  defunctWordIds: Hash<DefunctStatus>;
   isFetchingFrontier: boolean;
   isReady: boolean;
   senseSwitches: SenseSwitch[];
@@ -139,7 +145,6 @@ function updateEntryGloss(
 
     // Replace the sense with two senses.
     const senses = entry.word.senses.filter((s) => s.guid !== entry.senseGuid);
-    // Important that the new sense is last!
     senses.push(oldSense, newSense);
     return { ...entry.word, senses };
   }
@@ -158,6 +163,7 @@ export default function DataEntryTable(
     existingWords: [],
     recentWords: [],
     // state management
+    defunctUpdates: {},
     defunctWordIds: {},
     isFetchingFrontier: false,
     isReady: false,
@@ -192,15 +198,23 @@ export default function DataEntryTable(
    * Use this with newId to specify the replacement of a defunct word.
    */
   const defunctWord = (oldId: string, newId?: string): void => {
-    if (!newId && Object.keys(state.defunctWordIds).includes(oldId)) {
+    if (!newId && state.defunctWordIds[oldId]) {
+      return;
+    }
+    if (!newId) {
+      setState((prevState) => {
+        const defunctWordIds = { ...prevState.defunctWordIds };
+        defunctWordIds[oldId] = DefunctStatus.Recent;
+        return { ...prevState, defunctWordIds };
+      });
       return;
     }
     setState((prevState) => {
+      const defunctUpdates = { ...prevState.defunctUpdates };
       const defunctWordIds = { ...prevState.defunctWordIds };
-      if (!defunctWordIds[oldId]) {
-        defunctWordIds[oldId] = newId ?? "";
-      }
-      return { ...prevState, defunctWordIds };
+      defunctUpdates[oldId] = newId;
+      defunctWordIds[oldId] = DefunctStatus.Recent;
+      return { ...prevState, defunctUpdates, defunctWordIds };
     });
   };
 
@@ -280,19 +294,10 @@ export default function DataEntryTable(
   /*** Replace every displayed instance of a word. */
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
-      // ToDo: consider whether this is a good place to be clearing defunct ids.
-      const defunctWordIds = { ...prevState.defunctWordIds };
-      defunctWordIds[oldId] = "";
-
       const recentWords = prevState.recentWords.map((a) =>
         a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
       );
-      return {
-        ...prevState,
-        defunctWordIds,
-        isFetchingFrontier: true,
-        recentWords,
-      };
+      return { ...prevState, isFetchingFrontier: true, recentWords };
     });
   };
 
@@ -301,6 +306,7 @@ export default function DataEntryTable(
     props.hideQuestions();
     setState((prevState) => ({
       ...prevState,
+      defunctUpdates: {},
       defunctWordIds: {},
       senseSwitches: [],
       recentWords: [],
@@ -343,22 +349,41 @@ export default function DataEntryTable(
     if (state.isFetchingFrontier) {
       backend.getFrontierWords().then((words) => {
         const existingWords = filterWords(words);
-        setState((prevState) => ({
-          ...prevState,
-          isFetchingFrontier: false,
-          existingWords,
-        }));
+        setState((prevState) => {
+          const defunctWordIds: Hash<DefunctStatus> = {};
+          for (const id of Object.keys(prevState.defunctWordIds)) {
+            // After a successful frontier fetch,
+            // move Recent defunct ids to Retire,
+            // and only keep Retire ids if they are still in the display.
+            if (
+              prevState.defunctWordIds[id] === DefunctStatus.Recent ||
+              prevState.recentWords.find((w) => w.word.id === id)
+            ) {
+              defunctWordIds[id] = DefunctStatus.Retire;
+            }
+          }
+          const defunctUpdates: Hash<string> = {};
+          for (const id of Object.keys(prevState.defunctUpdates)) {
+            // Only keep update mappings for ids that are still defunct.
+            if (defunctWordIds[id]) {
+              defunctUpdates[id] = prevState.defunctUpdates[id];
+            }
+          }
+          return {
+            ...prevState,
+            isFetchingFrontier: false,
+            existingWords,
+            defunctUpdates,
+            defunctWordIds,
+          };
+        });
       });
     }
   }, [state.isFetchingFrontier]);
 
-  /*** Manages the defunctWordIds queue.
-   * Updates the display if possible.
-   */
+  /*** Act on the defunctUpdates queue. */
   useEffect(() => {
-    const ids = Object.keys(state.defunctWordIds).filter(
-      (id) => state.defunctWordIds[id]
-    );
+    const ids = Object.keys(state.defunctUpdates);
     if (!ids.length) {
       return;
     }
@@ -368,25 +393,17 @@ export default function DataEntryTable(
     if (oldId) {
       // Do an update if there's one to be done.
       let newId = oldId;
-      while (state.defunctWordIds[newId]) {
-        newId = state.defunctWordIds[newId];
+      while (state.defunctUpdates[newId]) {
+        newId = state.defunctUpdates[newId];
       }
       backend.getWord(newId).then((w) => replaceInDisplay(oldId, w));
     } else {
       // When recent entries are up to date, update the list of all words
       setState((prevState) => {
-        const defunctWordIds = { ...prevState.defunctWordIds };
-        for (const id of Object.keys(defunctWordIds)) {
-          if (!prevState.recentWords.find((w) => w.word.id === id)) {
-            // For now, just remove the mapping and keep the id just in case.
-            // ToDo: add back garbage collection--maybe clear old ones after fetching frontier?
-            defunctWordIds[id] = "";
-          }
-        }
-        return { ...prevState, defunctWordIds, isFetchingFrontier: true };
+        return { ...prevState, isFetchingFrontier: true };
       });
     } // eslint-disable-next-line
-  }, [state.defunctWordIds]); // omitted: state.recentWords
+  }, [state.defunctUpdates]); // omitted: state.recentWords
 
   ////////////////////////////////////
   // Async functions that wrap around a backend update to a word.
@@ -439,6 +456,7 @@ export default function DataEntryTable(
   ): Promise<void> => {
     const isInDisplay =
       state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
+
     defunctWord(oldId);
     const newWord = await backend.updateDuplicate(oldId, getUserId(), word);
     defunctWord(oldId, newWord.id);
@@ -469,13 +487,14 @@ export default function DataEntryTable(
   };
 
   //////////////////////////
-  //
+  // Other functions.
   /////////////////////////////////
 
   const addNewWord = async (
     wordToAdd: Word,
     audioURLs: string[],
     insertIndex?: number
+    //ignoreRecent?: boolean,
   ): Promise<void> => {
     wordToAdd.note.language = state.analysisLang.bcp47;
 
@@ -487,15 +506,13 @@ export default function DataEntryTable(
 
     let word = await backend.createWord(wordToAdd);
     const wordId = await addAudiosToBackend(word.id, audioURLs);
+    // ToDo: Evaluate if the removed `ignoreRecent` functionality is still needed.
+    /*if (ignoreRecent) {
+      return;
+    }*/
     if (wordId !== word.id) {
       word = await backend.getWord(wordId);
     }
-    // ToDo: Evaluate if the removed `ignoreRecent` functionality is still needed.
-    /*if (ignoreRecent) {
-      await updateExisting();
-      return;
-    }
-    const word = await backend.getWord(wordId);*/
     addToDisplay({ word, senseGuid: word.senses[0].guid }, insertIndex);
   };
 
@@ -513,9 +530,7 @@ export default function DataEntryTable(
     addToDisplay({ word, senseGuid });
   };
 
-  /***  Checks if sense already exists with this gloss and semantic domain.
-   * Returns false if encounters duplicate.
-   */
+  /***  Checks if sense already exists with this gloss and semantic domain. */
   const updateWordWithNewGloss = async (
     wordId: string,
     gloss: string,
@@ -527,19 +542,13 @@ export default function DataEntryTable(
     }
 
     for (const sense of existingWord.senses) {
-      if (
-        sense.glosses &&
-        sense.glosses.length &&
-        sense.glosses[0].def === gloss
-      ) {
+      if (sense.glosses?.length && sense.glosses[0].def === gloss) {
         if (
-          sense.semanticDomains
-            .map((semanticDomain) => semanticDomain.id)
-            .includes(props.semanticDomain.id)
+          sense.semanticDomains.find((d) => d.id === props.semanticDomain.id)
         ) {
           // User is trying to add a sense that already exists
           enqueueSnackbar(
-            t("addWords.senseInWord") + `: ${existingWord.vernacular}, ${gloss}`
+            `${t("addWords.senseInWord")}: ${existingWord.vernacular}, ${gloss}`
           );
           return;
         } else {
@@ -554,10 +563,10 @@ export default function DataEntryTable(
       }
     }
     // The gloss is new for this word, so add a new sense.
-    const senses = [...existingWord.senses];
+    defunctWord(existingWord.id);
     const semDom = makeSemDomCurrent(props.semanticDomain);
     const sense = newSense(gloss, state.analysisLang.bcp47, semDom);
-    senses.push(sense);
+    const senses = [...existingWord.senses, sense];
     const newWord: Word = { ...existingWord, senses };
 
     await updateWordBackAndFront(newWord, sense.guid, audioFileURLs);
@@ -654,27 +663,27 @@ export default function DataEntryTable(
     // Check if there is a new word, but user exited without pressing enter
     if (refNewEntry.current) {
       const newEntry = refNewEntry.current.state.newEntry;
-      const existingWord = state.existingWords.find(
-        (word: Word) => word.vernacular === newEntry.vernacular
-      );
-      // existing word not found, create a new word
-      if (!existingWord) {
-        if (!newEntry.senses.length) {
-          newEntry.senses.push(
-            newSense(undefined, undefined, props.semanticDomain)
+      if (newEntry?.vernacular) {
+        const existingWord = state.existingWords.find(
+          (w) => w.vernacular === newEntry.vernacular
+        );
+        // existing word not found, create a new word
+        if (!existingWord) {
+          if (!newEntry.senses.length) {
+            newEntry.senses.push(
+              newSense(undefined, undefined, props.semanticDomain)
+            );
+          }
+          const newEntryAudio = refNewEntry.current.state.audioFileURLs;
+          await addNewWord(newEntry, newEntryAudio);
+        } else {
+          // found an existing word, update it
+          await updateWordWithNewGloss(
+            existingWord.id,
+            newEntry.senses[0].glosses[0].def,
+            refNewEntry.current.state.audioFileURLs
           );
         }
-        const newEntryAudio = refNewEntry.current.state.audioFileURLs;
-        if (newEntry?.vernacular) {
-          await addNewWord(newEntry, newEntryAudio);
-        }
-      } else {
-        // found an existing word, update it
-        await updateWordWithNewGloss(
-          existingWord.id,
-          newEntry.senses[0].glosses[0].def,
-          refNewEntry.current.state.audioFileURLs
-        );
       }
     }
     resetEverything();
