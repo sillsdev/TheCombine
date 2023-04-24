@@ -5,11 +5,13 @@ import renderer, {
 
 import "tests/mockReactI18next";
 
-import { Sense, Word } from "api/models";
+import { Gloss, SemanticDomain, Sense, Word } from "api/models";
 import DataEntryTable, {
+  WordAccess,
   addSemanticDomainToSense,
   exitButtonId,
   makeSemDomCurrent,
+  updateEntryGloss,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
@@ -55,7 +57,7 @@ let testHandle: ReactTestInstance;
 
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
-const mockTreeNode = newSemanticDomainTreeNode();
+const mockTreeNode = newSemanticDomainTreeNode("semDomId");
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
 const mockUserId = "mockUserId";
 
@@ -176,6 +178,40 @@ describe("DataEntryTable", () => {
       const currentDom = makeSemDomCurrent(mockSemDom);
       expect(currentDom.created).not.toBeUndefined();
       expect(currentDom.userId).toEqual(mockUserId);
+    });
+  });
+
+  describe("updateEntryGloss", () => {
+    it("directly updates a sense with no other semantic domains", () => {
+      const senseIndex = 1;
+      const sense = mockMultiWord.senses[senseIndex];
+      sense.semanticDomains = [mockSemDom];
+      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const def = "newGlossDef";
+
+      const expectedGloss: Gloss = { ...sense.glosses[0], def };
+      const expectedWord: Word = { ...entry.word };
+      expectedWord.senses[senseIndex] = { ...sense, glosses: [expectedGloss] };
+
+      expect(updateEntryGloss(entry, def, mockSemDom.id)).toEqual(expectedWord);
+    });
+
+    it("splits a sense with multiple semantic domains", () => {
+      const word = mockWord();
+      const sense = word.senses[0];
+      const otherDomain: SemanticDomain = { ...mockSemDom, id: "otherId" };
+      sense.semanticDomains = [otherDomain, mockSemDom];
+      const entry: WordAccess = { word, senseGuid: sense.guid };
+      const def = "newGlossDef";
+
+      const oldSense: Sense = { ...sense, semanticDomains: [otherDomain] };
+      const newSense: Sense = { ...sense };
+      newSense.glosses = [{ ...sense.glosses[0], def }];
+      newSense.guid = expect.any(String);
+      newSense.semanticDomains = [mockSemDom];
+      const expectedWord: Word = { ...word, senses: [oldSense, newSense] };
+
+      expect(updateEntryGloss(entry, def, mockSemDom.id)).toEqual(expectedWord);
     });
   });
 

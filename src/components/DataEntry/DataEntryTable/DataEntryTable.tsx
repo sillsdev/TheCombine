@@ -52,7 +52,7 @@ interface SenseSwitch {
   newGuid: string;
 }
 
-interface WordAccess {
+export interface WordAccess {
   word: Word;
   senseGuid: string;
 }
@@ -111,43 +111,43 @@ export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
 /*** Update the gloss on the specified sense of a WordAccess.
  * If that sense has multiple semantic domains, split into two senses.
  */
-function updateEntryGloss(
+export function updateEntryGloss(
   entry: WordAccess,
   def: string,
   semDomId: string
 ): Word {
-  const oldSense = entry.word.senses.find((s) => s.guid === entry.senseGuid);
-  if (!oldSense) {
+  const sense = entry.word.senses.find((s) => s.guid === entry.senseGuid);
+  if (!sense) {
     throw new Error("Word has no sense with specified guid");
   }
-  const newSense: Sense = { ...oldSense };
-  newSense.glosses = [{ ...oldSense.glosses[0], def }];
 
-  if (oldSense.semanticDomains.length === 1) {
-    // The word can simply be updated as it stands.
-    return { ...entry.word, senses: [newSense] };
-  } else {
-    // The other semantic domains should be retained with the old sense.
-    // The current semantic domain should be split into a new sense.
-    newSense.guid = v4();
+  const newSense: Sense = { ...sense };
+  newSense.glosses = [{ ...sense.glosses[0], def }];
+  const oldSense: Sense = { ...sense };
 
-    // Split the semantic domains between the old and new sense.
-    const doms: SemanticDomain[] = [...oldSense.semanticDomains];
-    oldSense.semanticDomains = [];
-    newSense.semanticDomains = [];
-    for (const d of doms) {
-      if (d.id === semDomId) {
-        newSense.semanticDomains.push(d);
-      } else {
-        oldSense.semanticDomains.push(d);
-      }
+  // Move only the current semantic domain to the new sense.
+  const doms = [...sense.semanticDomains];
+  newSense.semanticDomains = [];
+  oldSense.semanticDomains = [];
+  for (const d of doms) {
+    if (d.id === semDomId) {
+      newSense.semanticDomains.push(d);
+    } else {
+      oldSense.semanticDomains.push(d);
     }
-
-    // Replace the sense with two senses.
-    const senses = entry.word.senses.filter((s) => s.guid !== entry.senseGuid);
-    senses.push(oldSense, newSense);
-    return { ...entry.word, senses };
   }
+
+  const senses = entry.word.senses.filter((s) => s.guid !== entry.senseGuid);
+  // Check whether any other semantic domains are present.
+  if (!oldSense.semanticDomains.length) {
+    // If not, the word can simply be updated to the new sense.
+    senses.push(newSense);
+  } else {
+    // Otherwise, the other semantic domains should be retained with the old sense.
+    newSense.guid = v4();
+    senses.push(oldSense, newSense);
+  }
+  return { ...entry.word, senses };
 }
 
 /*** A data entry table containing recent word entries. */
