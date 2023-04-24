@@ -15,7 +15,7 @@
 import { Flag } from "./flag";
 import { Note } from "./note";
 import { Sense } from "./sense";
-import { State } from "./state";
+import { Status } from "./status";
 
 /**
  *
@@ -73,10 +73,10 @@ export interface Word {
   modified: string;
   /**
    *
-   * @type {State}
+   * @type {Status}
    * @memberof Word
    */
-  accessibility: State;
+  accessibility: Status;
   /**
    *
    * @type {Array<string>}

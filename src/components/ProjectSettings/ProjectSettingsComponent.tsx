@@ -1,14 +1,15 @@
 import {
   Archive,
   Assignment,
+  CalendarMonth,
   CloudUpload,
   Edit,
   GetApp,
+  Language,
   List,
   People,
   PersonAdd,
   Sms,
-  Language,
 } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
@@ -27,6 +28,7 @@ import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
+import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
@@ -156,6 +158,15 @@ export default function ProjectSettingsComponent() {
           icon={<PersonAdd />}
           title={t("projectSettings.user.addUser")}
           body={<AddProjectUsers />}
+        />
+      )}
+
+      {/* Set a workshop schedule */}
+      {permissions.includes(Permission.Owner) && (
+        <BaseSettingsComponent
+          icon={<CalendarMonth />}
+          title={t("projectSettings.schedule.workshopSchedule")}
+          body={<ProjectSchedule projectId={projectId} />}
         />
       )}
 

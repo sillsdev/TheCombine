@@ -15,6 +15,7 @@ interface DragSenseProps {
   wordId: string;
   mergeSenseId: string;
   senses: MergeTreeSense[];
+  isDragDisabled: boolean;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
@@ -86,6 +87,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
         mergeSenseId: props.mergeSenseId,
       })}
       index={props.index}
+      isDragDisabled={props.isDragDisabled}
     >
       {(provided, snapshot): ReactElement => (
         <Card
@@ -109,6 +111,8 @@ export default function DragSense(props: DragSenseProps): ReactElement {
                 ? "lightgreen"
                 : isInSidebar
                 ? "lightblue"
+                : props.senses[0].protected
+                ? "lightyellow"
                 : "white",
           }}
         >

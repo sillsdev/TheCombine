@@ -8,7 +8,7 @@ import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {
   initTreeDomain,
-  traverseTreeAction,
+  traverseTree,
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
 import { StoreState } from "types";
@@ -58,7 +58,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
       return new Promise((resolve) =>
         setTimeout(() => {
           if (domain.id !== currentDomain.id) {
-            dispatch(traverseTreeAction(domain));
+            dispatch(traverseTree(domain));
             setVisible(true);
           } else {
             props.returnControlToCaller();

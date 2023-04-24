@@ -107,7 +107,8 @@ namespace BackendFramework.Repositories
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
                 .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)
-                .Set(x => x.InviteTokens, project.InviteTokens);
+                .Set(x => x.InviteTokens, project.InviteTokens)
+                .Set(x => x.WorkshopSchedule, project.WorkshopSchedule);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 

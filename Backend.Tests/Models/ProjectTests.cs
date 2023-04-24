@@ -1,4 +1,5 @@
-﻿using BackendFramework.Models;
+﻿using System;
+using BackendFramework.Models;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -80,6 +81,10 @@ namespace Backend.Tests.Models
 
             project2 = project.Clone();
             project2.InviteTokens.Add(new EmailInvite());
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
+            project2.WorkshopSchedule.Add(DateTime.Now);
             Assert.IsFalse(project.Equals(project2));
         }
 

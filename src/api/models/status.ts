@@ -17,9 +17,10 @@
  * @export
  * @enum {string}
  */
-export enum State {
+export enum Status {
   Active = "Active",
   Deleted = "Deleted",
   Duplicate = "Duplicate",
+  Protected = "Protected",
   Separate = "Separate",
 }

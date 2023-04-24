@@ -16,7 +16,7 @@ import {
   SemanticDomain,
   SemanticDomainTreeNode,
   Sense,
-  State,
+  Status,
   Word,
   WritingSystem,
 } from "api/models";
@@ -148,15 +148,17 @@ export default function DataEntryTable(
       setState((prevState) => ({
         ...prevState,
         isFetchingFrontier: false,
-        existingWords: existingWords,
+        existingWords,
       }));
     }
   }, [innerGetWordsFromBackend, state.isFetchingFrontier]);
 
-  /** Filter out words that do not have at least 1 active sense */
+  /** Filter out words that do not have at least 1 Active/Protected sense */
   function filterWords(words: Word[]): Word[] {
     return words.filter((w) =>
-      w.senses.find((s) => s.accessibility === State.Active)
+      w.senses.find((s) =>
+        [Status.Active, Status.Protected].includes(s.accessibility)
+      )
     );
   }
 
@@ -166,10 +168,7 @@ export default function DataEntryTable(
     const defunctWordIds = state.defunctWordIds;
     if (!defunctWordIds.includes(wordId)) {
       defunctWordIds.push(wordId);
-      setState((prevState) => ({
-        ...prevState,
-        defunctWordIds: defunctWordIds,
-      }));
+      setState((prevState) => ({ ...prevState, defunctWordIds }));
     }
   };
 
@@ -328,9 +327,7 @@ export default function DataEntryTable(
     gloss: string,
     audioFileURLs?: string[]
   ): Promise<void> => {
-    const existingWord = state.existingWords.find(
-      (word: Word) => word.id === wordId
-    );
+    const existingWord = state.existingWords.find((w: Word) => w.id === wordId);
     if (!existingWord) {
       throw new Error("You are trying to update a nonexistent word");
     }
