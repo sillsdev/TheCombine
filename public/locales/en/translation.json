@@ -321,7 +321,7 @@
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
       "deleteDialog": "Delete this sense?",
-      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so to prevent deletion, it cannot be moved. You may still drop other senses into this one to merge them.",
+      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense or drop other senses into this one to merge them.",
       "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
     },
     "completed": {
