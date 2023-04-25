@@ -1,5 +1,5 @@
 import { ListItem } from "@mui/material";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
@@ -7,7 +7,7 @@ import { SemanticDomainUserCount } from "api";
 import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
 import { newSemanticDomainUserCount } from "types/semanticDomain";
 
-let testRenderer: ReactTestRenderer;
+let testRenderer: renderer.ReactTestRenderer;
 
 const mockProjectId = "mockProjectId";
 const mockSemanticDomainUserCount = newSemanticDomainUserCount();

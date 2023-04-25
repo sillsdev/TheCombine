@@ -1,13 +1,13 @@
-import { ListItem } from "@mui/material";
+import { ListItemButton } from "@mui/material";
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { ProjectSwitch } from "components/ProjectSettings/ProjectSwitch/ProjectSwitch";
 import { newProject, randomProject } from "types/project";
 
 const projects = [randomProject(), randomProject(), randomProject()];
-var switchMaster: ReactTestRenderer;
+var switchMaster: renderer.ReactTestRenderer;
 var switchHandle: ProjectSwitch;
 
 const createMockStore = configureMockStore();
@@ -28,7 +28,7 @@ describe("ProjectSwitch", () => {
 
   it("generates correct number of ListItems", () => {
     switchHandle.setState({ projectList: projects });
-    expect(switchMaster.root.findAllByType(ListItem).length).toEqual(
+    expect(switchMaster.root.findAllByType(ListItemButton).length).toEqual(
       projects.length
     );
   });

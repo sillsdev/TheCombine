@@ -1,4 +1,4 @@
-import { List, ListItem, Typography } from "@mui/material";
+import { List, ListItemButton, Typography } from "@mui/material";
 import React from "react";
 
 import { Project } from "api/models";
@@ -46,9 +46,8 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
   getListItems() {
     return this.state.projectList.map((project) => {
       return (
-        <ListItem
+        <ListItemButton
           key={project.id + randomIntString()}
-          button
           onClick={() => this.selectProject(project)}
         >
           <Typography
@@ -59,7 +58,7 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
           >
             {project.name}
           </Typography>
-        </ListItem>
+        </ListItemButton>
       );
     });
   }

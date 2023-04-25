@@ -1,5 +1,4 @@
 import { Button, ButtonGroup } from "@mui/material";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 interface CharacterStatusControlProps {
@@ -15,22 +14,20 @@ export default function CharacterStatusControl(
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
-      <ButtonGroup
-        variant="contained"
-        size="small"
-        aria-label="small outlined secondary button group"
-      >
-        <Button onClick={() => props.accept(props.character)}>
-          {t("buttons.accept")}
-        </Button>
-        <Button onClick={() => props.unset(props.character)}>
-          {t("buttons.undecided")}
-        </Button>
-        <Button onClick={() => props.reject(props.character)}>
-          {t("buttons.reject")}
-        </Button>
-      </ButtonGroup>
-    </React.Fragment>
+    <ButtonGroup
+      variant="contained"
+      size="small"
+      aria-label="small outlined secondary button group"
+    >
+      <Button onClick={() => props.accept(props.character)}>
+        {t("buttons.accept")}
+      </Button>
+      <Button onClick={() => props.unset(props.character)}>
+        {t("buttons.undecided")}
+      </Button>
+      <Button onClick={() => props.reject(props.character)}>
+        {t("buttons.reject")}
+      </Button>
+    </ButtonGroup>
   );
 }

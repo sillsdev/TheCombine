@@ -45,11 +45,8 @@ export default function ProjectSchedule(props: ProjectScheduleProps) {
 
   useEffect(() => {
     const fetchDate = async () => {
-      const schedule = new Array<Date>();
       const project = await getProject(props.projectId);
-      project.workshopSchedule?.forEach((temp) => {
-        schedule.push(new Date(temp));
-      });
+      const schedule = project.workshopSchedule?.map((d) => new Date(d)) ?? [];
       setProjectSchedule(schedule);
     };
     fetchDate();

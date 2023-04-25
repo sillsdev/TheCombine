@@ -66,27 +66,21 @@ export default function DateSelector(props: DateSelectorProps) {
       <DatePicker
         label={t("projectSettings.schedule.startDate")}
         value={startDate}
-        onChange={(newValue) => {
-          setStartDate(newValue);
-        }}
+        onChange={(newValue) => setStartDate(newValue)}
         renderInput={(params) => <TextField {...params} />}
       />
       <span>&nbsp;&nbsp;</span>
       <DatePicker
         label={t("projectSettings.schedule.endDate")}
         value={endDate}
-        onChange={(newValue) => {
-          setEndDate(newValue);
-        }}
+        onChange={(newValue) => setEndDate(newValue)}
         renderInput={(params) => <TextField {...params} />}
       />
       <Grid container justifyContent="flex-end" spacing={2}>
         <Grid item marginTop={1} style={{ width: 100 }}>
           <Button
             variant="contained"
-            onClick={() => {
-              props.close();
-            }}
+            onClick={() => props.close()}
             id="DateSelectorCancelButton"
           >
             {t("buttons.cancel")}
@@ -97,9 +91,7 @@ export default function DateSelector(props: DateSelectorProps) {
             disabled={!startDate || !endDate}
             buttonProps={{
               id: "DateSelectorSubmitButton",
-              onClick: () => {
-                handleSubmit();
-              },
+              onClick: () => handleSubmit(),
               variant: "contained",
               color: "primary",
             }}

@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -9,7 +9,7 @@ import AvatarUpload from "components/UserSettings/AvatarUpload";
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore()();
 
-let testRenderer: ReactTestRenderer;
+let testRenderer: renderer.ReactTestRenderer;
 
 describe("AvatarUpload", () => {
   it("renders without crashing", () => {

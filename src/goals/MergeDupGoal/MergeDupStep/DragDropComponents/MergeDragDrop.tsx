@@ -5,7 +5,6 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
-import { Status } from "api";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
 import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
