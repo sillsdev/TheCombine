@@ -40,7 +40,7 @@ export const exitButtonId = "exit-to-domain-tree";
 
 interface DataEntryTableProps {
   semanticDomain: SemanticDomainTreeNode;
-  isSmallScreen?: boolean;
+  hasDrawerButton?: boolean;
   isTreeOpen?: boolean;
   hideQuestions: () => void;
   openTree: () => void;
@@ -778,7 +778,7 @@ export default function DataEntryTable(
 
       <Grid container justifyContent="space-between" spacing={3}>
         <Grid item>
-          {props.isSmallScreen ? (
+          {props.hasDrawerButton ? (
             <Button
               id="toggle-existing-data"
               style={{ marginTop: theme.spacing(2) }}

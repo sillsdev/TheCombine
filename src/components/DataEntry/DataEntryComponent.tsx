@@ -135,7 +135,9 @@ export default class DataEntryComponent extends React.Component<
               isTreeOpen={this.props.isTreeOpen}
               openTree={this.props.openTree}
               showExistingData={() => this.toggleDrawer(true)}
-              isSmallScreen={this.state.isSmallScreen}
+              hasDrawerButton={
+                this.state.isSmallScreen && this.state.domainWords.length > 0
+              }
               hideQuestions={() => {
                 this.setState({ questionsVisible: false });
               }}
