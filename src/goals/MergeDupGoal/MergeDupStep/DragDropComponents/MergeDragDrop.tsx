@@ -42,15 +42,27 @@ export default function MergeDragDrop(): ReactElement {
       // Case 0: The final sense of a protected word cannot be moved.
       return;
     } else if (res.destination?.droppableId === trashId) {
-      // Case 1: the sense was dropped on the trash icon.
+      // Case 1: The sense was dropped on the trash icon.
+      if (senseRef.isSenseProtected) {
+        // Case 1a: Cannot delete a protected sense.
+        return;
+      }
       setSenseToDelete(res.draggableId);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
+      if (senseRef.isSenseProtected) {
+        // Case 2a: Cannot merge a protected sense into another sense.
+        if (sourceId !== res.combine.droppableId) {
+          // The target sense is in a different word, so move instead of combine.
+          dispatch(moveSense(senseRef, res.combine.droppableId, 0));
+        }
+        return;
+      }
       const combineRef: MergeTreeReference = JSON.parse(
         res.combine.draggableId
       );
       if (combineRef.order !== undefined) {
-        // If the target is a sidebar sub-sense, it cannot receive a combine.
+        // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
       dispatch(combineSense(senseRef, combineRef));
