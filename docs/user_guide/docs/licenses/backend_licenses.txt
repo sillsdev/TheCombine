@@ -97,11 +97,11 @@ license Type:
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.JwtBearer
-Version:6.0.2
+Version:7.0.3
 project URL:https://asp.net/
 Description:ASP.NET Core middleware that enables an application to receive an OpenID Connect bearer token.
 
-This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/1dcf7acfacf0fe154adcc23270cb0da11ff44ace
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/febee99db845fd8766a13bdb391a07c3ee90b4ba
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
@@ -604,7 +604,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.JsonWebTokens
-Version:6.15.0
+Version:6.15.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -620,15 +620,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Logging
-Version:6.10.0
-project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
-Description:Includes Event Source based logging support.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:Microsoft.IdentityModel.Logging
-Version:6.15.0
+Version:6.15.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes Event Source based logging support.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -644,7 +636,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Protocols
-Version:6.10.0
+Version:6.15.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Provides base protocol support for OpenIdConnect and WsFederation.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -652,7 +644,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Protocols.OpenIdConnect
-Version:6.10.0
+Version:6.15.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for OpenIdConnect protocol.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -660,7 +652,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Tokens
-Version:6.15.0
+Version:6.15.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1722,7 +1714,7 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.IdentityModel.Tokens.Jwt
-Version:6.15.0
+Version:6.15.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
 licenseUrl:https://licenses.nuget.org/MIT
