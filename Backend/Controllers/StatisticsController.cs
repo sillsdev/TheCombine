@@ -19,7 +19,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IProjectRepository _projRepo;
 
-        public StatisticsController(IStatisticsService statService, IPermissionService permissionService, IProjectRepository projRepo)
+        public StatisticsController(
+            IStatisticsService statService, IPermissionService permissionService, IProjectRepository projRepo)
         {
             _statService = statService;
             _permissionService = permissionService;
@@ -70,7 +71,7 @@ namespace BackendFramework.Controllers
         }
 
 
-        /// <summary> Get a <see cref="ChartRootData"/> to generate an estimate Line Chart</summary>
+        /// <summary> Get a <see cref="ChartRootData"/> to generate an estimate Line Chart </summary>
         [HttpGet("GetProgressEstimationLineChartRoot", Name = "GetProgressEstimationLineChartRoot")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
         public async Task<IActionResult> GetProgressEstimationLineChartRoot(string projectId)
@@ -91,7 +92,7 @@ namespace BackendFramework.Controllers
         }
 
 
-        /// <summary> Get a <see cref="ChartRootData"/> to generate a Line Chart</summary>
+        /// <summary> Get a <see cref="ChartRootData"/> to generate a Line Chart </summary>
         [HttpGet("GetLineChartRootData", Name = "GetLineChartRootData")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
         public async Task<IActionResult> GetLineChartRootData(string projectId)

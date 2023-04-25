@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using SIL.Extensions;
+using static SIL.Extensions.DateTimeExtensions;
 
 namespace BackendFramework.Services
 {
@@ -14,7 +14,8 @@ namespace BackendFramework.Services
         private readonly ISemanticDomainRepository _domainRepo;
         private readonly IUserRepository _userRepo;
 
-        public StatisticsService(IWordRepository wordRepo, ISemanticDomainRepository domainRepo, IUserRepository userRepo)
+        public StatisticsService(
+            IWordRepository wordRepo, ISemanticDomainRepository domainRepo, IUserRepository userRepo)
         {
             _wordRepo = wordRepo;
             _domainRepo = domainRepo;
@@ -61,7 +62,8 @@ namespace BackendFramework.Services
         public async Task<List<WordsPerDayPerUserCount>> GetWordsPerDayPerUserCounts(string projectId)
         {
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            Dictionary<string, WordsPerDayPerUserCount> shortTimeDictionary = new Dictionary<string, WordsPerDayPerUserCount>();
+            Dictionary<string, WordsPerDayPerUserCount> shortTimeDictionary =
+                new Dictionary<string, WordsPerDayPerUserCount>();
             Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
             if (!wordList.Any())
@@ -87,13 +89,15 @@ namespace BackendFramework.Services
                         // The created timestamp may not exist for some model
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            DateTime tempDate = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created);
+                            DateTime tempDate = ParseDateTimePermissivelyWithException(sd.Created);
                             var userName = userNameIdDictionary.GetValueOrDefault(sd.UserId, "");
                             // WordsPerDayPerUserCount exist for particular day
-                            if (shortTimeDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()) && !string.IsNullOrEmpty(userName))
+                            if (shortTimeDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()) &&
+                                !string.IsNullOrEmpty(userName))
                             {
                                 var chartNode = shortTimeDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()];
-                                chartNode.UserNameCountDictionary[userName] = chartNode.UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
+                                chartNode.UserNameCountDictionary[userName] = chartNode
+                                    .UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
                             }
                             // WordsPerDayPerUserCount NOT exist, create one and update to the Dictionary
                             else
@@ -104,14 +108,16 @@ namespace BackendFramework.Services
                                     tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
                                 }
                                 tempBarChartNode.UserNameCountDictionary[userName] = 1;
-                                shortTimeDictionary.Add(tempBarChartNode.DateTime.ToISO8601TimeFormatDateOnlyString(), tempBarChartNode);
+                                shortTimeDictionary.Add(
+                                    tempBarChartNode.DateTime.ToISO8601TimeFormatDateOnlyString(), tempBarChartNode);
                             }
                         }
                     }
                 }
             }
             // sort by date order
-            var resList = shortTimeDictionary.Values.ToList().OrderBy(t => t.DateTime.ToISO8601TimeFormatDateOnlyString()).ToList();
+            var resList = shortTimeDictionary.Values.ToList()
+                .OrderBy(t => t.DateTime.ToISO8601TimeFormatDateOnlyString()).ToList();
             return resList;
         }
 
@@ -148,7 +154,8 @@ namespace BackendFramework.Services
 
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            string dateString = DateTimeExtensions.ParseDateTimePermissivelyWithException(sd.Created).ToISO8601TimeFormatDateOnlyString();
+                            string dateString = ParseDateTimePermissivelyWithException(sd.Created)
+                                .ToISO8601TimeFormatDateOnlyString();
                             if (!workshopSchedule.Contains(dateString))
                             {
                                 continue;
@@ -168,7 +175,8 @@ namespace BackendFramework.Services
             var averageValue = 0;
             workshopSchedule.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
-            var pastDays = workshopSchedule.FindAll(day => DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
+            var pastDays = workshopSchedule.FindAll(day =>
+                ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
             // calculate average daily count
             // If pastDays is two or more, and pastDays equals the number of days on which at least one word was added
             var min = 0;
@@ -188,7 +196,7 @@ namespace BackendFramework.Services
                 averageValue = totalCountList.Count > 0 ? totalCountList[0] : 0;
             }
 
-            int runningTotal = 0, burstProjection = 0, burstProjectionAverage = 0, today = 0, yesterday = 0, projection = min;
+            int burst = 0, burstProjection = 0, projection = min, runningTotal = 0, today = 0, yesterday = 0;
             // generate ChartRootData for frontend
             for (int i = 0; i < workshopSchedule.Count; i++)
             {
@@ -198,7 +206,8 @@ namespace BackendFramework.Services
                 {
                     runningTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                     today = yesterday = runningTotal;
-                    LineChartData.Datasets.Add(new Dataset("Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
+                    LineChartData.Datasets.Add(new Dataset(
+                        "Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", runningTotal));
                     LineChartData.Datasets.Add(new Dataset("Projection", projection));
@@ -206,23 +215,27 @@ namespace BackendFramework.Services
                 }
                 else
                 {
+                    int daysAfterToday = ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now);
                     // not generate data after the current date for "Daily Total", "Average" and "Running Total"
-                    if (DateTimeExtensions.ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
+                    if (ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
                         today = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                         runningTotal += today;
                         LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
-                        LineChartData.Datasets.Find(element => element.UserName == "Running Total")?.Data.Add(runningTotal);
-                        LineChartData.Datasets.Find(element => element.UserName == "Burst Projection")?.Data.Add(0);
-                        burstProjectionAverage = (today + yesterday) / 2;
+                        LineChartData.Datasets.Find(
+                            element => element.UserName == "Running Total")?.Data.Add(runningTotal);
+                        LineChartData.Datasets.Find(
+                            element => element.UserName == "Burst Projection")?.Data.Add(runningTotal);
+                        burst = (today + yesterday) / 2;
+                        burstProjection = runningTotal + burst;
                         yesterday = today;
-                        burstProjection = runningTotal + burstProjectionAverage;
                     }
                     else
                     {
-                        LineChartData.Datasets.Find(element => element.UserName == "Burst Projection")?.Data.Add((burstProjection));
-                        burstProjection += burstProjectionAverage;
+                        LineChartData.Datasets.Find(
+                            element => element.UserName == "Burst Projection")?.Data.Add((burstProjection));
+                        burstProjection += burst;
                     }
                     LineChartData.Datasets.Find(element => element.UserName == "Projection")?.Data.Add(projection);
                 }
