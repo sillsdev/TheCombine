@@ -32,20 +32,16 @@ const mockStore = configureMockStore([thunk])({
   },
 });
 
-beforeAll(() => {
-  createTree();
-});
-
 describe("TreeView", () => {
-  it("Renders without crashing", () => {
-    createTree();
+  it("Renders without crashing", async () => {
+    await createTree();
     expect(treeHandle).toBeTruthy();
   });
 });
 
-function createTree(): void {
-  renderer.act(() => {
-    treeMaster = renderer.create(
+async function createTree(): Promise<void> {
+  await renderer.act(async () => {
+    treeMaster = await renderer.create(
       <Provider store={mockStore}>
         <TreeView returnControlToCaller={jest.fn()} />
       </Provider>
