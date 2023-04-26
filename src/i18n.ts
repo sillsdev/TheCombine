@@ -18,7 +18,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    //debug: true, // Uncomment to troubleshoot
+    debug: true, // Uncomment to troubleshoot
     returnNull: false,
     // detection: options,
     // ignoring localStorage and cookies for the detection order lets the user change languages

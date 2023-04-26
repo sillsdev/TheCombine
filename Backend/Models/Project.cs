@@ -282,6 +282,8 @@ namespace BackendFramework.Models
         [Required]
         public string Font { get; set; }
 
+        public string? Dir { get; set; }
+
         public WritingSystem()
         {
             Name = "";
@@ -295,7 +297,8 @@ namespace BackendFramework.Models
             {
                 Name = (string)Name.Clone(),
                 Bcp47 = (string)Bcp47.Clone(),
-                Font = (string)Font.Clone()
+                Font = (string)Font.Clone(),
+                Dir = (string?)Dir?.Clone()
             };
         }
 
@@ -306,17 +309,22 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font;
+            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font && Dir == ws.Dir;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Bcp47, Font);
+            return HashCode.Combine(Name, Bcp47, Font, Dir);
         }
 
         public override string ToString()
         {
-            return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}>";
+            if (Dir is null)
+            {
+                return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}>";
+            }
+            return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}, dir: {Dir}>";
+
         }
     }
 

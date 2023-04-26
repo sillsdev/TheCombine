@@ -2,12 +2,14 @@ import { WritingSystem } from "api/models";
 
 export enum Bcp47Code {
   Default = "en",
+  Ar = "ar",
   En = "en",
   Es = "es",
   Fr = "fr",
 }
 
 const writingSystem = {
+  [Bcp47Code.Ar]: newWritingSystem(Bcp47Code.Ar, "اَلْعَرَبِيَّةُ", "", "rtl"),
   [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"),
   [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"),
@@ -17,6 +19,7 @@ export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
 
 // This list should cover the languages in public/locales/
 export const uiWritingSystems = [
+  writingSystem[Bcp47Code.Ar],
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],
   writingSystem[Bcp47Code.Fr],
@@ -32,7 +35,11 @@ export const semDomWritingSystems = [
 export function newWritingSystem(
   bcp47 = "",
   name = "",
-  font = ""
+  font = "",
+  dir?: string
 ): WritingSystem {
-  return { bcp47, name, font };
+  if (dir) {
+    return { bcp47, name, font };
+  }
+  return { bcp47, name, font, dir };
 }
