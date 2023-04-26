@@ -204,7 +204,7 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem { };
             var sysString = system.ToString();
-            Assert.IsTrue(sysString.Contains("Name") && !sysString.Contains("Dir"));
+            Assert.IsTrue(sysString.Contains("name") && !sysString.Contains("dir"));
         }
 
         [Test]

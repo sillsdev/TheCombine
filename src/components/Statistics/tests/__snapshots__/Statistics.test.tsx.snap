@@ -155,7 +155,7 @@ Array [
         <h5
           className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-1pb9bi6-MuiTypography-root"
         >
-          statistics.dataStatistics
+          statistics.title
         </h5>
       </div>
       <div
@@ -271,7 +271,7 @@ Array [
             className="MuiBox-root css-19uqgym"
           >
             <div
-              className="MuiBox-root css-1bhivts"
+              className="MuiBox-root css-nhgqyj"
             >
               <span
                 aria-valuemax={100}
@@ -295,9 +295,7 @@ Array [
             >
               <p
                 className="MuiTypography-root MuiTypography-body2 css-1svc9sv-MuiTypography-root"
-              >
-                0%
-              </p>
+              />
             </div>
           </div>
         </li>
@@ -317,11 +315,6 @@ Array [
               statistics.domainsCollected
             </span>
           </div>
-          <p
-            className="MuiTypography-root MuiTypography-body1 css-15ouo8w-MuiTypography-root"
-          >
-            0
-          </p>
         </li>
         <hr
           className="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
@@ -339,11 +332,6 @@ Array [
               statistics.wordsCollected
             </span>
           </div>
-          <p
-            className="MuiTypography-root MuiTypography-body1 css-15ouo8w-MuiTypography-root"
-          >
-            0
-          </p>
         </li>
       </ul>
     </div>
