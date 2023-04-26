@@ -60,7 +60,7 @@ export default function LineChartComponent(props: LineChartProps) {
   useEffect(() => {
     const updateChartList = async () => {
       const tempDate = await props.fetchData();
-      let updateEstimateDate: LineChartDataProps = {
+      const updateEstimateDate: LineChartDataProps = {
         labels: [],
         datasets: [],
       };

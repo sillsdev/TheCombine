@@ -21,7 +21,7 @@ import {
   WritingSystem,
 } from "api/models";
 import * as backend from "backend";
-import { getUserId } from "backend/localStorage";
+import { getCurrentUser } from "backend/localStorage";
 import NewEntry, {
   FocusTarget,
 } from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
@@ -71,7 +71,7 @@ export function addSemanticDomainToSense(
     const oldSense = existingWord.senses[senseIndex];
     const updatedDomains = [...oldSense.semanticDomains];
     // Update the UserId and timestamp for new semanticDomain
-    semanticDomain.userId = getUserId();
+    semanticDomain.userId = getCurrentUser()?.id;
     semanticDomain.created = new Date().toISOString();
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
@@ -91,7 +91,7 @@ export function addSenseToWord(
   language: string
 ): Word {
   // Update the UserId and timestamp for new semanticDomain
-  semanticDomain.userId = getUserId();
+  semanticDomain.userId = getCurrentUser()?.id;
   semanticDomain.created = new Date().toISOString();
   const word: Word = { ...existingWord, senses: [...existingWord.senses] };
   word.senses.push(newSense(gloss, language, semanticDomain));
@@ -225,9 +225,10 @@ export default function DataEntryTable(
     ignoreRecent?: boolean
   ): Promise<void> => {
     // Get UserId and passing userId parameter to updateDuplicate
+    var userId = getCurrentUser()?.id;
     const updatedWord = await backend.updateDuplicate(
       duplicatedId,
-      getUserId(),
+      userId ?? "",
       wordToAdd
     );
     const wordId = await addAudiosToBackend(updatedWord.id, audioURLs);
@@ -735,8 +736,8 @@ export default function DataEntryTable(
               addNewWord(word, audioFileURLs)
             }
             semanticDomain={(() => {
-              let tempSemanticDomain: SemanticDomain = props.semanticDomain;
-              tempSemanticDomain.userId = getUserId();
+              var tempSemanticDomain: SemanticDomain = props.semanticDomain;
+              tempSemanticDomain.userId = getCurrentUser()?.id;
               tempSemanticDomain.created = new Date().toISOString();
               return tempSemanticDomain;
             })()}
