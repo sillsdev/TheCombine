@@ -295,7 +295,9 @@ Array [
             >
               <p
                 className="MuiTypography-root MuiTypography-body2 css-1svc9sv-MuiTypography-root"
-              />
+              >
+                statistics.percent
+              </p>
             </div>
           </div>
         </li>
