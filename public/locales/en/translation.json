@@ -382,7 +382,7 @@
     "deleteRecording": "Delete Recording"
   },
   "statistics": {
-    "dataStatistics": "Data Statistics:  ",
+    "title": "Data Statistics: {{ val }}",
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
     "countSenses": "Words:",
@@ -394,9 +394,10 @@
     "dayView": "Words per Day",
     "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
-    "domainsCollected": "Domains Collected:",
-    "wordsCollected": "Words Collected:",
+    "domainsCollected": "Domains Collected: {{ val }}",
+    "wordsCollected": "Words Collected: {{ val }}",
     "wordsPerDay": "Words Collected Per User Per Day",
-    "workshopSchedule": "Workshop Schedule"
+    "workshopSchedule": "Workshop Schedule",
+    "percent": "{{ val }}%"
   }
 }

@@ -56,7 +56,7 @@ export default function Statistics(): ReactElement {
     return [
       <Grid item key={viewEnum.DataStatistics + currentProject?.name}>
         <Typography variant="h5" align="center">
-          {t("statistics.dataStatistics") + currentProject?.name}
+          {t("statistics.title", { val: currentProject?.name })}
         </Typography>
       </Grid>,
       <Grid item key={"ProjectName" + viewName}>

@@ -27,13 +27,13 @@ export default function AppBarComponent(): ReactElement {
             spacing={2}
             alignItems="center"
           >
-            <Grid item xs={7} md={5} lg={4}>
+            <Grid item xs={8} sm={7} md={6} lg={4}>
               <Logo />
               {!!getProjectId() && (
                 <NavigationButtons currentTab={currentTab} />
               )}
             </Grid>
-            <Grid item xs={2} sm={3} md={4}>
+            <Grid item xs={1} sm={2} md={3} lg={4}>
               {!!getProjectId() && (
                 <ProjectNameButton currentTab={currentTab} />
               )}
