@@ -19,7 +19,7 @@ import theme from "types/theme";
 jest.mock("components/Pronunciations/Recorder");
 
 // Variables
-var testRenderer: ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const createMockStore = configureMockStore();
 const mockStore = createMockStore({ pronunciationsState });

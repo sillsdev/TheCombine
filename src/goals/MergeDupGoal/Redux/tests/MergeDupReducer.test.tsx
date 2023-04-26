@@ -22,7 +22,7 @@ import { newFlag, testWordList } from "types/word";
 jest.mock("uuid");
 const mockUuid = require("uuid") as { v4: jest.Mock };
 
-var uuidIndex = 0;
+let uuidIndex = 0;
 // getMockUuid(false) gives the next uuid to be assigned by our mocked v4.
 function getMockUuid(increment = true): string {
   const uuid = `mockUuid${uuidIndex}`;

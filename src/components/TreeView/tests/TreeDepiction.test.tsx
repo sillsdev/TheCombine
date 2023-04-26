@@ -8,7 +8,8 @@ import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/MockSemanticDomain";
 
-var treeMaster: ReactTestRenderer;
+let treeMaster: ReactTestRenderer;
+
 describe("Tests AddWords", () => {
   testFromNode("Renders correctly: from parent", testDomainMap[mapIds.parent]);
   testFromNode(

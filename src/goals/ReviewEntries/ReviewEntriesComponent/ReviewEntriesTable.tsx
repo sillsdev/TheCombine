@@ -68,7 +68,7 @@ export default function ReviewEntriesTable(
   useEffect(() => {
     setPageState((prevState) => {
       const options = getPageSizeOptions(maxRows);
-      var i = 0;
+      let i = 0;
       while (i < options.length - 1 && options[i] < prevState.pageSize) {
         i++;
       }
@@ -91,7 +91,7 @@ export default function ReviewEntriesTable(
       },
     },
     header: {
-      actions: t("reviewEntries.materialTable.body.editTooltip"),
+      actions: t("reviewEntries.materialTable.body.edit"),
     },
     pagination: {
       labelDisplayedRows: t(

@@ -6,7 +6,7 @@ import "tests/mockReactI18next.ts";
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
-var tileMaster: ReactTestRenderer;
+let tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
 describe("DomainTile", () => {

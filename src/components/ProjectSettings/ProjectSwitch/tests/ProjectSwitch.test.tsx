@@ -7,8 +7,8 @@ import { ProjectSwitch } from "components/ProjectSettings/ProjectSwitch/ProjectS
 import { newProject, randomProject } from "types/project";
 
 const projects = [randomProject(), randomProject(), randomProject()];
-var switchMaster: ReactTestRenderer;
-var switchHandle: ProjectSwitch;
+let switchMaster: ReactTestRenderer;
+let switchHandle: ProjectSwitch;
 
 const createMockStore = configureMockStore();
 

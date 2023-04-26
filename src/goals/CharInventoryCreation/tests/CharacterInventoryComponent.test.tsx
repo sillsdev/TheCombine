@@ -19,8 +19,8 @@ const SET_INV = jest.fn();
 const UPLOAD_INV = jest.fn();
 
 // Variables
-var charMaster: ReactTestRenderer;
-var charHandle: CharacterInventory;
+let charMaster: ReactTestRenderer;
+let charHandle: CharacterInventory;
 
 // This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution.
 // This bypasses the whole issue by replacing the portal-creating object (the Dialog) with a lightweight,

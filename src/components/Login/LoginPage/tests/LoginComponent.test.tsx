@@ -15,14 +15,11 @@ jest.mock("backend", () => ({
 }));
 
 const LOGOUT = jest.fn();
-var loginMaster: ReactTestRenderer;
-var loginHandle: ReactTestInstance;
+let loginMaster: ReactTestRenderer;
+let loginHandle: ReactTestInstance;
 
 const DATA = "stuff";
-const MOCK_EVENT = {
-  preventDefault: jest.fn(),
-  target: { value: DATA },
-};
+const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 
 describe("Testing login component", () => {
   beforeEach(() => {

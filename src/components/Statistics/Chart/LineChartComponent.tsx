@@ -60,17 +60,15 @@ export default function LineChartComponent(props: LineChartProps) {
   useEffect(() => {
     const updateChartList = async () => {
       const tempDate = await props.fetchData();
-      var updateEstimateDate: LineChartDataProps = {
+      let updateEstimateDate: LineChartDataProps = {
         labels: [],
         datasets: [],
       };
       if (tempDate !== undefined) {
         // Get array of unique Color
-        var palette: chroma.Color[];
+        let palette: chroma.Color[];
         if (tempDate.datasets.length) {
-          palette = distinctColors({
-            count: tempDate.datasets.length,
-          });
+          palette = distinctColors({ count: tempDate.datasets.length });
         }
         let colorIndex = 0;
         // Update the updateChartData by retrieve

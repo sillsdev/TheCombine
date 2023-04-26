@@ -14,8 +14,8 @@ import { defaultState as treeViewState } from "components/TreeView/TreeViewReduc
 import mockMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
-var treeMaster: ReactTestRenderer;
-var treeHandle: ReactTestInstance;
+let treeMaster: ReactTestRenderer;
+let treeHandle: ReactTestInstance;
 
 // Mock out Zoom to avoid issues with portals
 jest.mock("@mui/material", () => {
