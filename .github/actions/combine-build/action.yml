@@ -55,15 +55,11 @@ runs:
         password: ${{ inputs.aws_secret_access_key }}
 
     - name: Build The Combine
+      uses: FedericoCarboni/setup-ffmpeg@v2
       run: >
         deploy/scripts/build.py
+        --ffmpeg -i input.avi output.mkv
         --components ${{ inputs.build_component }}
         --tag ${{ env.IMAGE_TAG }}
         --repo ${{ inputs.image_registry }}${{ inputs.image_registry_alias}}
       shell: bash
-
-    - name: Setup FFmpeg
-      uses: FedericoCarboni/setup-ffmpeg@v2
-      id: setup-ffmpeg
-      run: ffmpeg -i input.avi output.mkv
-
