@@ -1,13 +1,14 @@
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 interface ProgressBarProps {
   value: number;
 }
 
 export default function LinearProgressWithLabel(props: ProgressBarProps) {
+  const { t } = useTranslation();
   return (
     <Box sx={{ display: "flex", alignItems: "center", width: "50%" }}>
       <Box sx={{ width: "100%", m: 1 }}>

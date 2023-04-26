@@ -5,8 +5,8 @@ import {
   KeyboardArrowUp,
 } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import { t } from "i18next";
 import React, { CSSProperties, ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
 
@@ -25,17 +25,20 @@ interface DomainTileProps {
 
 const RootId = "Sem";
 
-export function domainText(
-  domain: SemanticDomain,
-  extraProps: CSSProperties = {}
-): ReactElement {
+interface DomainTextProps {
+  domain: SemanticDomain;
+  extraProps?: CSSProperties;
+}
+
+export function DomainText(props: DomainTextProps): ReactElement {
+  const { t } = useTranslation();
   return (
-    <div style={{ ...extraProps, textTransform: "capitalize" }}>
+    <div style={{ ...props.extraProps, textTransform: "capitalize" }}>
       <Typography variant={"overline"}>
-        {domain.id !== RootId ? domain.id : ""}
+        {props.domain.id !== RootId ? props.domain.id : ""}
       </Typography>
       <Typography variant={"body1"}>
-        {domain.id !== RootId ? domain.name : t("addWords.domain")}
+        {props.domain.id !== RootId ? props.domain.name : t("addWords.domain")}
       </Typography>
     </div>
   );
@@ -47,11 +50,12 @@ export default class DomainTile extends React.Component<DomainTileProps> {
     domain: SemanticDomain,
     direction: Direction | undefined
   ): ReactElement {
+    const rtl = document.body.dir === "rtl";
     switch (direction) {
       case Direction.Down:
         return (
           <div>
-            {domainText(domain)}
+            <DomainText domain={domain} />
             <KeyboardArrowDown />
           </div>
         );
@@ -63,10 +67,10 @@ export default class DomainTile extends React.Component<DomainTileProps> {
             justifyContent="space-around"
             wrap="nowrap"
           >
+            <Grid item>{rtl ? <ChevronRight /> : <ChevronLeft />}</Grid>
             <Grid item>
-              <ChevronLeft />
+              <DomainText domain={domain} />
             </Grid>
-            <Grid item>{domainText(domain)}</Grid>
           </Grid>
         );
       case Direction.Right:
@@ -77,21 +81,21 @@ export default class DomainTile extends React.Component<DomainTileProps> {
             justifyContent="space-around"
             wrap="nowrap"
           >
-            <Grid item>{domainText(domain)}</Grid>
             <Grid item>
-              <ChevronRight />
+              <DomainText domain={domain} />
             </Grid>
+            <Grid item>{rtl ? <ChevronLeft /> : <ChevronRight />}</Grid>
           </Grid>
         );
       case Direction.Up:
         return (
           <div>
             <KeyboardArrowUp />
-            {domainText(domain)}
+            <DomainText domain={domain} />
           </div>
         );
       default:
-        return <div>{domainText(domain)}</div>;
+        return <DomainText domain={domain} />;
     }
   }
 

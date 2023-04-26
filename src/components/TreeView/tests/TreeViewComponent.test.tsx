@@ -26,10 +26,7 @@ jest.mock("@mui/material", () => {
   };
 });
 const mockStore = configureMockStore([thunk])({
-  treeViewState: {
-    ...treeViewState,
-    currentDomain: mockMap[mapIds.parent],
-  },
+  treeViewState: { ...treeViewState, currentDomain: mockMap[mapIds.parent] },
   currentProjectState: {
     project: { semDomWritingSystem: newWritingSystem() },
   },

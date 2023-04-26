@@ -1,5 +1,4 @@
 import { SemanticDomainTreeNode } from "api/models";
-import i18n from "i18n";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 export enum TreeActionType {
@@ -16,8 +15,4 @@ export interface TreeViewAction {
   language?: string;
 }
 
-export const defaultTreeNode = newSemanticDomainTreeNode(
-  "Sem",
-  "",
-  i18n.language
-);
+export const defaultTreeNode = newSemanticDomainTreeNode("Sem");

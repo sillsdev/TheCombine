@@ -38,6 +38,11 @@ jest.mock("backend", () => ({
   updateWord: (word: Word) => mockUpdateWord(word),
   getFrontierWords: () => mockGetFrontierWords(),
 }));
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
+jest.mock(
+  "components/DataEntry/DataEntryTable/NewEntry/VernDialog",
+  () => "div"
+);
 jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");

@@ -1,6 +1,8 @@
 import { Button } from "@mui/material";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import "tests/mockReactI18next.ts";
+
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 

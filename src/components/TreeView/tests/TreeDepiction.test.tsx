@@ -1,5 +1,7 @@
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
+import "tests/mockReactI18next.ts";
+
 import { SemanticDomainTreeNode } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import testDomainMap, {
