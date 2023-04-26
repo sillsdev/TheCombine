@@ -272,24 +272,18 @@
     },
     "materialTable": {
       "body": {
-        "editRow": {
-          "cancelTooltip": "Cancel",
-          "saveTooltip": "Save"
-        },
-        "editTooltip": "Edit",
+        "edit": "Edit",
         "emptyDataSourceMessage": "No entries to display",
-        "filterRow": {
-          "filterTooltip": "Filter"
-        }
+        "filter": "Filter"
       },
       "pagination": {
         "labelDisplayedRows": "{from}-{to} of {count}",
         "labelRows": "rows",
         "labelRowsPerPage": "Rows per page:",
         "first": "First Page",
-        "previous": "Previous Page",
+        "last": "Last Page",
         "next": "Next Page",
-        "last": "Last Page"
+        "previous": "Previous Page"
       },
       "toolbar": {
         "search": "Search"

@@ -82,14 +82,12 @@ export default function ReviewEntriesTable(
         cancelTooltip: t("buttons.cancel"),
         saveTooltip: t("buttons.save"),
       },
-      editTooltip: t("reviewEntries.materialTable.body.editTooltip"),
+      editTooltip: t("reviewEntries.materialTable.body.edit"),
       emptyDataSourceMessage: t(
         "reviewEntries.materialTable.body.emptyDataSourceMessage"
       ),
       filterRow: {
-        filterTooltip: t(
-          "reviewEntries.materialTable.body.filterRow.filterTooltip"
-        ),
+        filterTooltip: t("reviewEntries.materialTable.body.filter"),
       },
     },
     header: {
