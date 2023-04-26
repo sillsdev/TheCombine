@@ -249,6 +249,14 @@
       "domain": "Los dominios no pueden dejarse en blanco",
       "senses": "No guardar entrada sin sentidos",
       "vernacular": "El vernáculo no puede dejarse en blanco"
+    },
+    "columns": {
+      "definitions": "Definiciones",
+      "domains": "Dominios",
+      "glosses": "Glosas",
+      "note": "Nota",
+      "senses": "Sentidos",
+      "vernacular": "Vernáculo"
     }
   },
   "charInventory": {

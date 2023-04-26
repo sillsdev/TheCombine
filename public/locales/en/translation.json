@@ -261,6 +261,42 @@
       "domain": "Domains cannot be left blank",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
+    },
+    "columns": {
+      "definitions": "Definitions",
+      "delete": "Delete",
+      "domains": "Domains",
+      "flag": "Flag",
+      "glosses": "Glosses",
+      "note": "Note",
+      "pronunciations": "Pronunciations",
+      "senses": "Senses",
+      "vernacular": "Vernacular"
+    },
+    "materialTable": {
+      "body": {
+        "editRow": {
+          "cancelTooltip": "Cancel",
+          "saveTooltip": "Save"
+        },
+        "editTooltip": "Edit",
+        "emptyDataSourceMessage": "No entries to display",
+        "filterRow": {
+          "filterTooltip": "Filter"
+        }
+      },
+      "pagination": {
+        "labelDisplayedRows": "{from}-{to} of {count}",
+        "labelRows": "rows",
+        "labelRowsPerPage": "Rows per page:",
+        "first": "First Page",
+        "previous": "Previous Page",
+        "next": "Next Page",
+        "last": "Last Page"
+      },
+      "toolbar": {
+        "search": "Search"
+      }
     }
   },
   "charInventory": {

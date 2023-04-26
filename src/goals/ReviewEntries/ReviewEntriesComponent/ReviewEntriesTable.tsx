@@ -76,6 +76,49 @@ export default function ReviewEntriesTable(
     });
   }, [maxRows, setPageState]);
 
+  const materialTableLocalization = {
+    body: {
+      editRow: {
+        cancelTooltip: t("buttons.cancel"),
+        saveTooltip: t("buttons.save"),
+      },
+      editTooltip: t("reviewEntries.materialTable.body.editTooltip"),
+      emptyDataSourceMessage: t(
+        "reviewEntries.materialTable.body.emptyDataSourceMessage"
+      ),
+      filterRow: {
+        filterTooltip: t(
+          "reviewEntries.materialTable.body.filterRow.filterTooltip"
+        ),
+      },
+    },
+    header: {
+      actions: t("reviewEntries.materialTable.body.editTooltip"),
+    },
+    pagination: {
+      labelDisplayedRows: t(
+        "reviewEntries.materialTable.pagination.labelDisplayedRows"
+      ),
+      labelRows: t("reviewEntries.materialTable.pagination.labelRows"),
+      labelRowsPerPage: t(
+        "reviewEntries.materialTable.pagination.labelRowsPerPage"
+      ),
+      firstAriaLabel: t("reviewEntries.materialTable.pagination.first"),
+      firstTooltip: t("reviewEntries.materialTable.pagination.first"),
+      lastAriaLabel: t("reviewEntries.materialTable.pagination.last"),
+      lastTooltip: t("reviewEntries.materialTable.pagination.last"),
+      nextAriaLabel: t("reviewEntries.materialTable.pagination.next"),
+      nextTooltip: t("reviewEntries.materialTable.pagination.next"),
+      previousAriaLabel: t("reviewEntries.materialTable.pagination.previous"),
+      previousTooltip: t("reviewEntries.materialTable.pagination.previous"),
+    },
+    toolbar: {
+      searchAriaLabel: t("reviewEntries.materialTable.toolbar.search"),
+      searchPlaceholder: t("reviewEntries.materialTable.toolbar.search"),
+      searchTooltip: t("reviewEntries.materialTable.toolbar.search"),
+    },
+  };
+
   return (
     <MaterialTable<any>
       tableRef={tableRef}
@@ -105,6 +148,7 @@ export default function ReviewEntriesTable(
           }),
       }}
       options={{ draggable: false, filtering: true, ...pageState }}
+      localization={materialTableLocalization}
     />
   );
 }
