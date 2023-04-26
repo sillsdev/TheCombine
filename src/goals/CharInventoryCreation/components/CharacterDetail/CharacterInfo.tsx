@@ -23,8 +23,9 @@ export default function CharacterInfo(props: CharacterInfoProps) {
         {t("charInventory.characterSet.charDetails")}
       </Typography>
       <Typography variant="body1">
-        {countCharacterOccurrences(props.character, allWords)}{" "}
-        {t("charInventory.characterSet.occurrences")}
+        {t("charInventory.characterSet.occurrences", {
+          val: countCharacterOccurrences(props.character, allWords),
+        })}
       </Typography>
     </React.Fragment>
   );

@@ -225,11 +225,8 @@
       "noHistory": "Nothing yet",
       "done": "All done"
     },
-    "progress": {
-      "step": "Step",
-      "stepMerge": "Merge Set",
-      "of": "of"
-    }
+    "progress": "Step {{ val1 }} of {{ val2 }}",
+    "progressMerge": "Merge Set {{ val1 }} of {{ val2 }}"
   },
   "createStrWordInv": {
     "title": "Create Structural Word Inventory"
@@ -303,7 +300,7 @@
     "title": "Create Character Inventory",
     "characters": "characters",
     "examples": "Examples",
-    "occurrences": "occurrences",
+    "occurrences": "{{ val }} occurrences",
     "status": "status",
     "sortBy": "Sort by",
     "characterSet": {
