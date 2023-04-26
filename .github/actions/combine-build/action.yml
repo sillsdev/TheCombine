@@ -61,3 +61,9 @@ runs:
         --tag ${{ env.IMAGE_TAG }}
         --repo ${{ inputs.image_registry }}${{ inputs.image_registry_alias}}
       shell: bash
+
+    - name: Setup FFmpeg
+      uses: FedericoCarboni/setup-ffmpeg@v2
+      id: setup-ffmpeg
+      run: ffmpeg -i input.avi output.mkv
+

@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -6,6 +8,9 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Xabe.FFmpeg;
+using Xabe.FFmpeg.Downloader;
+using Xabe.FFmpeg.Exceptions;
 
 namespace BackendFramework.Controllers
 {
@@ -90,21 +95,28 @@ namespace BackendFramework.Controllers
 
             // This path should be unique even though it is only based on the Word ID because currently, a new
             // Word is created each time an audio file is uploaded.
-            fileUpload.FilePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
+            var filePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
 
             // Copy the file data to a new local file
-            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
+            await using (var fs = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }
 
+            // Convert WebM/PCM files to WAV/PCM for greater compatibility
+            FileInfo fileInfo = new FileInfo(filePath);
+            if (fileInfo.Extension.Equals(".webm", StringComparison.InvariantCultureIgnoreCase))
+            {
+                filePath = await ConvertToWav(filePath);
+            }
+            
             // Add the relative path to the audio field
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
                 return NotFound(wordId);
             }
-            word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
+            word.Audio.Add(Path.GetFileName(filePath));
 
             // Update the word with new audio file
             await _wordService.Update(projectId, wordId, word);
@@ -135,5 +147,43 @@ namespace BackendFramework.Controllers
             }
             return NotFound("The project was found, but the word audio was not deleted");
         }
+
+        private async Task<string> ConvertToWav(string filePath)
+        {
+            var destFilePath = Path.ChangeExtension(filePath, ".wav");
+
+            // Convert the WebM/PCM file to WAV/PCM for greater compatibility
+            try
+            {
+                #if !TARGET_WINDOWS
+                    using (Process proc = Process.Start("/bin/bash", "-c \"chmod +x ffmpeg\""))
+                    {
+                        await proc.WaitForExitAsync();
+                    }
+                #endif
+                string arguments = $"-y -i \"{filePath}\" {destFilePath}\"";
+                await FFmpeg.Conversions.New().Start(arguments);
+            }
+            catch (Exception)
+            {
+                // Install FFmpeg
+                await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official);
+                #if !TARGET_WINDOWS
+                    using (Process proc = Process.Start("/bin/bash", "-c \"chmod +x ffmpeg\""))
+                    {
+                        await proc.WaitForExitAsync();
+                    }
+                #endif
+                string arguments = $"-y -i \"{filePath}\" {destFilePath}\"";
+                await FFmpeg.Conversions.New().Start(arguments);
+            }
+            
+
+            // delete the WebM file, keep the WAV file
+            System.IO.File.Delete(filePath);
+            return destFilePath;
+        }
+
+
     }
 }
