@@ -95,9 +95,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           >
             <p
               className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-            >
-              
-            </p>
+            />
           </div>
           <div
             className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
@@ -111,9 +109,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           >
             <p
               className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-            >
-              
-            </p>
+            />
           </div>
           <div
             className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
@@ -127,9 +123,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           >
             <p
               className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-            >
-              
-            </p>
+            />
           </div>
         </div>
       </li>
