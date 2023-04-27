@@ -15,20 +15,19 @@ interface CalendarViewProps {
 export default function CalendarView(props: CalendarViewProps) {
   // Custom renderer for CalendarPicker
   function customDayRenderer(
-    date: Dayjs,
-    selectedDays: Array<Dayjs | null>,
+    day: Dayjs,
+    _selectedDays: Array<Dayjs | null>,
     pickersDayProps: PickersDayProps<Dayjs>
   ) {
-    const temp = date.toDate();
+    const date = day.toDate();
     const selected =
       props.projectSchedule &&
-      props.projectSchedule.findIndex((e) => {
-        return (
-          e.getDate() === temp.getDate() &&
-          e.getMonth() === temp.getMonth() &&
-          e.getFullYear() === temp.getFullYear()
-        );
-      }) >= 0;
+      props.projectSchedule.findIndex(
+        (d) =>
+          d.getDate() === date.getDate() &&
+          d.getMonth() === date.getMonth() &&
+          d.getFullYear() === date.getFullYear()
+      ) >= 0;
     return <PickersDay {...pickersDayProps} selected={selected} />;
   }
 
@@ -36,10 +35,7 @@ export default function CalendarView(props: CalendarViewProps) {
     return monthToRender?.map((tempDayjs) => (
       <CalendarPicker
         key={"calendarPick" + tempDayjs.toString()}
-        components={{
-          LeftArrowIcon: Icon,
-          RightArrowIcon: Icon,
-        }}
+        components={{ LeftArrowIcon: Icon, RightArrowIcon: Icon }}
         readOnly
         disabled
         defaultCalendarMonth={tempDayjs}

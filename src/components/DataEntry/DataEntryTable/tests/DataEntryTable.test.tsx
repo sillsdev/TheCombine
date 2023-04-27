@@ -1,7 +1,4 @@
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
@@ -52,8 +49,8 @@ jest.mock("components/Pronunciations/Recorder");
 
 jest.spyOn(window, "alert").mockImplementation(() => {});
 
-let testRenderer: ReactTestRenderer;
-let testHandle: ReactTestInstance;
+let testRenderer: renderer.ReactTestRenderer;
+let testHandle: renderer.ReactTestInstance;
 
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);

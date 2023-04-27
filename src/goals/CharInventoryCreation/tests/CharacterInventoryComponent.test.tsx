@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -19,7 +19,7 @@ const SET_INV = jest.fn();
 const UPLOAD_INV = jest.fn();
 
 // Variables
-var charMaster: ReactTestRenderer;
+var charMaster: renderer.ReactTestRenderer;
 var charHandle: CharacterInventory;
 
 // This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution.

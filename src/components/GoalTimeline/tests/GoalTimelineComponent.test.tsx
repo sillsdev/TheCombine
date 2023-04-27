@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -36,7 +36,7 @@ const STATE = {
 const mockStore = configureMockStore()(STATE);
 
 // Handles
-let timeMaster: ReactTestRenderer;
+let timeMaster: renderer.ReactTestRenderer;
 let timeHandle: GoalTimeline;
 
 beforeAll(() => {

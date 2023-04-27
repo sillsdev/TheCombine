@@ -8,9 +8,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
-  return {
-    resetState: state.passwordResetState.resetState,
-  };
+  return { resetState: state.passwordResetState.resetState };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch): ResetDispatchProps {

@@ -1,5 +1,5 @@
 import { ListItem } from "@mui/material";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
@@ -12,7 +12,7 @@ const mockProjects = [randomProject(), randomProject(), randomProject()];
 
 jest.mock("components/ProjectExport/ExportButton", () => "div");
 
-var testRenderer: ReactTestRenderer;
+var testRenderer: renderer.ReactTestRenderer;
 
 beforeAll(() => {
   renderer.act(() => {
