@@ -19,7 +19,9 @@ export function ColumnHead(props: { titleId: string }): ReactElement {
   );
 }
 
-export function TableCell(props: { text: string | number }): ReactElement {
+export function TableCell(props: {
+  text?: string | number | null;
+}): ReactElement {
   return (
     <Grid
       item

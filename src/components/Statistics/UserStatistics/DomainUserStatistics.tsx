@@ -1,4 +1,4 @@
-import { Card, Grid, Typography, ListItem, List } from "@mui/material";
+import { Card, Grid, ListItem, List } from "@mui/material";
 import { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -65,15 +65,15 @@ function TableRow(props: { counts: SemanticDomainUserCount }): ReactElement {
       <Grid container wrap="nowrap" justifyContent="space-around">
         <TableCell
           key={"username_" + props.counts.id}
-          text={props.counts.username ?? ""}
+          text={props.counts.username}
         />
         <TableCell
           key={"domCount_" + props.counts.id}
-          text={props.counts.domainCount ?? ""}
+          text={props.counts.domainCount}
         />
         <TableCell
           key={"wordCount_" + props.counts.id}
-          text={props.counts.wordCount ?? ""}
+          text={props.counts.wordCount}
         />
       </Grid>
     </ListItem>

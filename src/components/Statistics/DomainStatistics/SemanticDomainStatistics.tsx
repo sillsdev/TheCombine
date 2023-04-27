@@ -70,7 +70,7 @@ function TableRow(props: {
       <Grid container wrap="nowrap" justifyContent="space-around">
         <TableCell key={"id_" + props.dom.id} text={props.dom.id} />
         <TableCell key={"domain_" + props.dom.id} text={props.dom.name} />
-        <TableCell key={"count_" + props.dom.id} text={`${props.count}`} />
+        <TableCell key={"count_" + props.dom.id} text={props.count} />
       </Grid>
     </ListItem>
   );
