@@ -215,7 +215,6 @@ namespace BackendFramework.Services
                 }
                 else
                 {
-                    int daysAfterToday = ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now);
                     // not generate data after the current date for "Daily Total", "Average" and "Running Total"
                     if (ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
@@ -259,7 +258,7 @@ namespace BackendFramework.Services
             }
 
             // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
-            foreach (WordsPerDayPerUserCount temp in list!)
+            foreach (WordsPerDayPerUserCount temp in list)
             {
                 LineChartData.Dates.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
                 // first traversal, generate a new Dataset
