@@ -9,6 +9,7 @@ import {
   dispatchMergeStepData,
   fetchMergeDupsData,
 } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { StoreActionTypes } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { convertEditToGoal } from "types/goalUtilities";
@@ -40,14 +41,16 @@ export const goalSlice = createSlice({
     setCurrentGoalStatusAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
-    reset: (state) => {
-      state = defaultState;
-    },
+    reset: () => defaultState,
   },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
 });
 
-// Remove 'export' and delete GoalActions.ts and GoalReducer.ts before
-// merging with master branch.
+export const actionType = (actionName: string) => {
+  return `${goalSlice.name}/${actionName}Action`;
+};
+
 const {
   loadUserEditsAction,
   setCurrentGoalAction,
