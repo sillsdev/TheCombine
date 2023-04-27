@@ -16,7 +16,7 @@ export function getFileNameForWord(wordId: string): string {
   const fourCharParts = wordId.match(/.{1,6}/g);
   const compressed = fourCharParts?.map((i) =>
     Number("0x" + i).toString(36)
-  ) ?? ["unknownword"];
+  ) ?? ["unknownWord"];
   return compressed.join("") + "_" + new Date().getTime().toString(36);
 }
 

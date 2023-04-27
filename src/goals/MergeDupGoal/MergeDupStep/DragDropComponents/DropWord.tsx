@@ -114,9 +114,8 @@ export default function DropWord(props: DropWordProps): ReactElement {
                       wordId={props.wordId}
                       mergeSenseId={id}
                       senses={senses}
-                      isDragDisabled={
-                        protectedWithOneChild || senses[0].protected
-                      }
+                      isOnlySenseInProtectedWord={protectedWithOneChild}
+                      isProtectedSense={senses[0].protected}
                     />
                   );
                 })}

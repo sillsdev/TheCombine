@@ -3,6 +3,7 @@ import React from "react";
 
 import { SemanticDomain } from "api/models";
 import { ImmutableExistingData } from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
+import theme from "types/theme";
 import { DomainWord } from "types/word";
 
 interface ExistingDataTableProps {
@@ -43,6 +44,7 @@ export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
             anchor={"left"}
             open={this.props.drawerOpen}
             onClose={this.closeDrawer}
+            style={{ zIndex: theme.zIndex.drawer + 1 }}
           >
             {this.list()}
           </Drawer>

@@ -15,7 +15,8 @@ interface DragSenseProps {
   wordId: string;
   mergeSenseId: string;
   senses: MergeTreeSense[];
-  isDragDisabled: boolean;
+  isOnlySenseInProtectedWord: boolean;
+  isProtectedSense: boolean;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
@@ -85,9 +86,10 @@ export default function DragSense(props: DragSenseProps): ReactElement {
       draggableId={JSON.stringify({
         wordId: props.wordId,
         mergeSenseId: props.mergeSenseId,
+        isSenseProtected: props.isProtectedSense,
       })}
       index={props.index}
-      isDragDisabled={props.isDragDisabled}
+      isDragDisabled={props.isOnlySenseInProtectedWord}
     >
       {(provided, snapshot): ReactElement => (
         <Card
@@ -101,19 +103,19 @@ export default function DragSense(props: DragSenseProps): ReactElement {
             minWidth: 150,
             maxWidth: 300,
             opacity:
-              snapshot.draggingOver === trashId || snapshot.combineWith
+              !props.isProtectedSense &&
+              (snapshot.draggingOver === trashId || snapshot.combineWith)
                 ? 0.7
                 : 1,
-            background:
-              snapshot.draggingOver === trashId
-                ? "red"
-                : snapshot.isDragging || snapshot.combineTargetFor
-                ? "lightgreen"
-                : isInSidebar
-                ? "lightblue"
-                : props.senses[0].protected
-                ? "lightyellow"
-                : "white",
+            background: isInSidebar
+              ? "lightblue"
+              : props.isProtectedSense
+              ? "lightyellow"
+              : snapshot.draggingOver === trashId
+              ? "red"
+              : snapshot.isDragging || snapshot.combineTargetFor
+              ? "lightgreen"
+              : "white",
           }}
         >
           <SenseCardContent

@@ -20,6 +20,7 @@ export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
   order?: number;
+  isSenseProtected?: boolean;
 }
 
 export interface MergeTreeWord {

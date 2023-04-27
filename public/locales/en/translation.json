@@ -286,7 +286,7 @@
       "find": "Find",
       "replace": "Replace",
       "replaceWith": "Replace with",
-      "replaceAll": "Replace all occurences of",
+      "replaceAll": "Replace all occurrences of",
       "findAndReplace": "Find & Replace",
       "apply": "apply",
       "charDetails": "(Character Details has not been implemented.)"
@@ -321,7 +321,7 @@
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
       "deleteDialog": "Delete this sense?",
-      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so to prevent deletion, it cannot be moved. You may still drop other senses into this one to merge them.",
+      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense or drop other senses into this one to merge them.",
       "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
     },
     "completed": {
@@ -386,7 +386,7 @@
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
     "countSenses": "Words:",
-    "userName": "User Name:",
+    "username": "Username:",
     "domainCount": "Domains:",
     "senseCount": "Words:",
     "userView": "Words per User",
