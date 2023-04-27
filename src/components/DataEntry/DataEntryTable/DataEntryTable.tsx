@@ -102,14 +102,17 @@ function filterWords(words: Word[]): Word[] {
   );
 }
 
-/*** Update the semantic domain with current UserId and timestamp. */
+/*** Return a copy of the semantic domain with current UserId and timestamp. */
 export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
   const created = new Date().toISOString();
   return { ...semDom, created, userId: getUserId() };
 }
 
-/*** Update the gloss on the specified sense of a WordAccess.
- * If that sense has multiple semantic domains, split into two senses.
+/*** Given a WordAccess and a new gloss, returns a copy of the word
+ * with the gloss of the specified sense change to the new gloss.
+ * If that sense has multiple semantic domains, split into two senses:
+ * one with the specified domain and the new gloss,
+ * a second with the other domains and the former gloss.
  */
 export function updateEntryGloss(
   entry: WordAccess,
