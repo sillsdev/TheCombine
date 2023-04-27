@@ -26,6 +26,7 @@ describe("Tests GlossWithSuggestions", () => {
         <GlossWithSuggestions
           isNew
           gloss={""}
+          glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={jest.fn()}
           handleEnterAndTab={jest.fn()}
           analysisLang={{} as WritingSystem}
@@ -41,6 +42,7 @@ describe("Tests GlossWithSuggestions", () => {
         <GlossWithSuggestions
           isDisabled
           gloss={""}
+          glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={jest.fn()}
           handleEnterAndTab={jest.fn()}
           analysisLang={{} as WritingSystem}
