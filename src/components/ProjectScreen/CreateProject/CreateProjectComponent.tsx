@@ -205,10 +205,8 @@ export class CreateProject extends React.Component<
                 updateFile={(file: File) => this.updateLanguageData(file)}
                 accept=".zip"
                 buttonProps={{
-                  style: {
-                    margin: theme.spacing(1),
-                    id: "create-project-select-file",
-                  },
+                  id: "create-project-select-file",
+                  style: { margin: theme.spacing(1) },
                 }}
               >
                 {this.props.t("buttons.browse")}

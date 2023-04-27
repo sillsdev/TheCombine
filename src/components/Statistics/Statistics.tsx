@@ -42,7 +42,7 @@ export default function Statistics(): ReactElement {
   const { t } = useTranslation();
   const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
-  const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
+  const [lang] = useState<string>(defaultWritingSystem.bcp47);
   const [viewName, setViewName] = useState<string>(viewEnum.User);
 
   useEffect(() => {

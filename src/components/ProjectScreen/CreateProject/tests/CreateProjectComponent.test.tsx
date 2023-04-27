@@ -1,9 +1,6 @@
 import { I18nextProvider } from "react-i18next";
 import { Provider } from "react-redux";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import CreateProjectWithProps from "components/ProjectScreen/CreateProject";
@@ -30,8 +27,8 @@ const MOCK_EVENT = {
   },
 };
 
-let projectMaster: ReactTestRenderer;
-let projectHandle: ReactTestInstance;
+let projectMaster: renderer.ReactTestRenderer;
+let projectHandle: renderer.ReactTestInstance;
 
 it("renders without crashing", () => {
   renderer.act(() => {

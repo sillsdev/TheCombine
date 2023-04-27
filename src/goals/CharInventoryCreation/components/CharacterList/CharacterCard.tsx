@@ -19,42 +19,40 @@ export default function CharacterCard(props: CharacterCardProps) {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
-      <Card
-        style={{
-          maxWidth: props.cardWidth,
-          margin: theme.spacing(1),
-        }}
-        onClick={props.onClick}
-      >
-        <CardActionArea>
-          <Typography
-            variant="h2"
-            align="center"
-            style={{
-              height: props.fontHeight,
-              marginLeft: theme.spacing(1),
-              paddingTop: theme.spacing(1),
-            }}
-            id="character"
-          >
-            {props.char}
-            {""}
-            {/* There is a zero-width joiner here to make height consistent for non-printing characters. */}
-          </Typography>
+    <Card
+      style={{
+        maxWidth: props.cardWidth,
+        margin: theme.spacing(1),
+      }}
+      onClick={props.onClick}
+    >
+      <CardActionArea>
+        <Typography
+          variant="h2"
+          align="center"
+          style={{
+            height: props.fontHeight,
+            marginLeft: theme.spacing(1),
+            paddingTop: theme.spacing(1),
+          }}
+          id="character"
+        >
+          {props.char}
+          {""}
+          {/* There is a zero-width joiner here to make height consistent for non-printing characters. */}
+        </Typography>
 
-          <CardContent>
-            <Typography gutterBottom variant="h6" component="h2">
-              {charToHexValue(props.char)}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {props.count} {t("charInventory.characterSet.occurrences")}
-            </Typography>
-            <CharacterStatusText status={props.status} />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </React.Fragment>
+        <CardContent>
+          <Typography gutterBottom variant="h6" component="h2">
+            {charToHexValue(props.char)}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {props.count} {t("charInventory.characterSet.occurrences")}
+          </Typography>
+          <CharacterStatusText status={props.status} />
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 }
 

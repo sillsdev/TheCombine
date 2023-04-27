@@ -1,8 +1,5 @@
 import { Provider } from "react-redux";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -14,8 +11,8 @@ import { defaultState as treeViewState } from "components/TreeView/TreeViewReduc
 import mockMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
-let treeMaster: ReactTestRenderer;
-let treeHandle: ReactTestInstance;
+let treeMaster: renderer.ReactTestRenderer;
+let treeHandle: renderer.ReactTestInstance;
 
 // Mock out Zoom to avoid issues with portals
 jest.mock("@mui/material", () => {

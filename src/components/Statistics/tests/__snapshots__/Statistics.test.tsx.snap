@@ -203,7 +203,7 @@ Array [
                     <h6
                       className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
                     >
-                      statistics.userName
+                      statistics.username
                     </h6>
                   </div>
                   <div

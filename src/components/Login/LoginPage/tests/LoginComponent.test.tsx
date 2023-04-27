@@ -1,7 +1,4 @@
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
@@ -15,8 +12,8 @@ jest.mock("backend", () => ({
 }));
 
 const LOGOUT = jest.fn();
-let loginMaster: ReactTestRenderer;
-let loginHandle: ReactTestInstance;
+let loginMaster: renderer.ReactTestRenderer;
+let loginHandle: renderer.ReactTestInstance;
 
 const DATA = "stuff";
 const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };

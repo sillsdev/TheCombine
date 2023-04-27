@@ -313,7 +313,7 @@
       "find": "Find",
       "replace": "Replace",
       "replaceWith": "Replace with",
-      "replaceAll": "Replace all occurences of",
+      "replaceAll": "Replace all occurrences of",
       "findAndReplace": "Find & Replace",
       "apply": "apply",
       "charDetails": "(Character Details has not been implemented.)"
@@ -413,7 +413,7 @@
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
     "countSenses": "Words:",
-    "userName": "User Name:",
+    "username": "Username:",
     "domainCount": "Domains:",
     "senseCount": "Words:",
     "userView": "Words per User",

@@ -1,4 +1,4 @@
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next.ts";
 
@@ -8,7 +8,7 @@ import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/MockSemanticDomain";
 
-let treeMaster: ReactTestRenderer;
+let treeMaster: renderer.ReactTestRenderer;
 
 describe("Tests AddWords", () => {
   testFromNode("Renders correctly: from parent", testDomainMap[mapIds.parent]);

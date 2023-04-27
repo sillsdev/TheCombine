@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import renderer, { ReactTestInstance } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -66,7 +66,7 @@ describe("VernList ", () => {
 function createVernListInstance(
   _vernacularWords: Word[],
   _mockCallback: jest.Mock
-): ReactTestInstance {
+): renderer.ReactTestInstance {
   return renderer.create(
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
