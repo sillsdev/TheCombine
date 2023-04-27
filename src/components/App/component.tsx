@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import { ReactElement, Suspense, useEffect } from "react";
+import { ReactElement, Suspense } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
@@ -12,7 +12,6 @@ import ResetRequest from "components/PasswordReset/RequestPage";
 import PasswordReset from "components/PasswordReset/ResetPage";
 import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite";
-import i18n from "i18n";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
@@ -20,10 +19,6 @@ const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
  * The top-level component
  */
 export default function App(): ReactElement {
-  useEffect(() => {
-    document.body.dir = i18n.dir();
-  }, []);
-
   return (
     <div className="App">
       <Suspense fallback={<div />}>
