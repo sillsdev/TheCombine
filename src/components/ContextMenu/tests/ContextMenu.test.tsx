@@ -1,8 +1,5 @@
 import { ReactElement } from "react";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
@@ -52,8 +49,8 @@ const TEST_OPTIONS: MenuType[] = [
 let documentHandle: ReactElement;
 let documentRightClick: (event: any) => void;
 
-let contextMaster: ReactTestRenderer;
-let contextHandle: ReactTestInstance;
+let contextMaster: renderer.ReactTestRenderer;
+let contextHandle: renderer.ReactTestInstance;
 
 beforeAll(() => {
   documentHandle = (

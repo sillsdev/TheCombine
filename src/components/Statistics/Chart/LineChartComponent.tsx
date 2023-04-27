@@ -68,9 +68,7 @@ export default function LineChartComponent(props: LineChartProps) {
         // Get array of unique Color
         var palette: chroma.Color[];
         if (tempDate.datasets.length) {
-          palette = distinctColors({
-            count: tempDate.datasets.length,
-          });
+          palette = distinctColors({ count: tempDate.datasets.length });
         }
         let colorIndex = 0;
         // Update the updateChartData by retrieve

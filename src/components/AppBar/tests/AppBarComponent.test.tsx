@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -25,7 +25,7 @@ jest.mock("backend", () => ({
 
 const mockStore = configureMockStore()(defaultState);
 
-let testRenderer: ReactTestRenderer;
+let testRenderer: renderer.ReactTestRenderer;
 
 function setMockFunctions() {
   mockGetUser.mockResolvedValue(mockUser);

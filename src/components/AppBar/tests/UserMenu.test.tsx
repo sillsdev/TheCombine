@@ -1,6 +1,6 @@
 import { Button, MenuItem } from "@mui/material";
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -18,7 +18,7 @@ jest.mock("backend/localStorage", () => ({
   getUserId: () => mockGetUserId(),
 }));
 
-let testRenderer: ReactTestRenderer;
+let testRenderer: renderer.ReactTestRenderer;
 
 const mockStore = configureMockStore()();
 

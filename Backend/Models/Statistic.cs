@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using SIL.Extensions;
 
 namespace BackendFramework.Models
 {
 
-    ///<summary>This class contains all the data needed by the Statistics service to report on how many words a user has collected in each domain.</summary>
-    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    /// <summary>
+    /// This class contains all the data needed by the Statistics service to report on how many words a user has
+    /// collected in each domain.
+    /// </summary>
+    /// <remarks> This object is for use in the Statistics service and is not stored in the database. </remarks>
     public class SemanticDomainUserCount
     {
         [Required]
@@ -42,8 +42,11 @@ namespace BackendFramework.Models
         }
     }
 
-    ///<summary>This class contains all the data needed by the Statistics service to report on how many words has collected in each domain.</summary>
-    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    /// <summary>
+    /// This class contains all the data needed by the Statistics service to report on how many words has collected
+    /// in each domain.
+    /// </summary>
+    /// <remarks> This object is for use in the Statistics service and is not stored in the database. </remarks>
     public class SemanticDomainCount
     {
         [Required]
@@ -59,8 +62,11 @@ namespace BackendFramework.Models
         }
     }
 
-    ///<summary>This class contains the data needed by the Statistics service to generate how many words has collected Per day Per User</summary>
-    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    /// <summary>
+    /// This class contains the data needed by the Statistics service to generate how many words has collected per day
+    /// per user
+    /// </summary>
+    /// <remarks> This object is for use in the Statistics service and is not stored in the database. </remarks>
     public class WordsPerDayPerUserCount
     {
         [Required]
@@ -76,8 +82,8 @@ namespace BackendFramework.Models
         }
     }
 
-    ///<summary>This class contains the data needed by the Statistics service to create Root Data for Chart</summary>
-    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    /// <summary> This class contains the data needed by the Statistics service to create Root Data for Chart </summary>
+    /// <remarks> This object is for use in the Statistics service and is not stored in the database. </remarks>
     public class ChartRootData
     {
         [Required]
@@ -92,8 +98,8 @@ namespace BackendFramework.Models
         }
     }
 
-    ///<summary>This class contains the data needed by the Statistics service to fill out ChartRootData</summary>
-    ///<remarks>This object is for use in the Statistics service and is not stored in the database.</remarks>
+    /// <summary> This class contains the data needed by the Statistics service to fill out ChartRootData </summary>
+    /// <remarks> This object is for use in the Statistics service and is not stored in the database. </remarks>
     public class Dataset
     {
         [Required]

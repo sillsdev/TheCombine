@@ -6,9 +6,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState) {
-  return {
-    allCharacters: state.characterInventoryState.characterSet,
-  };
+  return { allCharacters: state.characterInventoryState.characterSet };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {

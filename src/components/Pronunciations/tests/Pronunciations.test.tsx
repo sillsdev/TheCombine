@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -19,7 +19,7 @@ import theme from "types/theme";
 jest.mock("components/Pronunciations/Recorder");
 
 // Variables
-var testRenderer: ReactTestRenderer;
+var testRenderer: renderer.ReactTestRenderer;
 
 const createMockStore = configureMockStore();
 const mockStore = createMockStore({ pronunciationsState });
