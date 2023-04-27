@@ -5,12 +5,12 @@ import thunk from "redux-thunk";
 import { User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import { defaultState as goalsState } from "components/GoalTimeline/DefaultState";
-import * as actions from "components/GoalTimeline/Redux/GoalActions";
 import {
   GoalActionTypes,
   LoadUserEditsAction,
   SetCurrentGoalAction,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
+import * as actions from "components/GoalTimeline/Redux/GoalSlice";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
@@ -113,7 +113,7 @@ afterAll(() => {
   }
 });
 
-describe("GoalActions", () => {
+describe("GoalSlice", () => {
   describe("action creators", () => {
     it("loadUserEdits should create an action to load user edits", () => {
       const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];

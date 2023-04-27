@@ -1,7 +1,7 @@
 import loadable from "@loadable/component";
 import React, { ReactElement, useEffect } from "react";
 
-import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
+import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalSlice";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";

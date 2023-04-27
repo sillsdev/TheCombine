@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 import history, { Path } from "browserHistory";
-import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
+import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalSlice";
 import PageNotFound from "components/PageNotFound/component";
 import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/MergeDupContinueDialog";
 import { StoreState } from "types";

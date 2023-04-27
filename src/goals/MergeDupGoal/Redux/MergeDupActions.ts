@@ -9,7 +9,7 @@ import {
   Word,
 } from "api/models";
 import * as backend from "backend";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalSlice";
 import {
   defaultSidebar,
   Hash,
@@ -304,7 +304,7 @@ function addCompletedMergeToGoal(
   };
 }
 
-// Used in MergeDups cases of GoalActions functions
+// Used in MergeDups cases of GoalSlice functions
 
 export function dispatchMergeStepData(goal: MergeDups) {
   return (dispatch: StoreStateDispatch) => {

@@ -1,7 +1,7 @@
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import history, { Path } from "browserHistory";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
+import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalSlice";
 import { saveChangesToProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,

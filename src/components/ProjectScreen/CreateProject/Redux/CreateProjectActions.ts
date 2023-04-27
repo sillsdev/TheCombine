@@ -1,7 +1,7 @@
 import { WritingSystem } from "api/models";
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
-import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
+import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalSlice";
 import {
   setCurrentProject,
   setNewCurrentProject,

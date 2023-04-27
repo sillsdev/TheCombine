@@ -2,11 +2,10 @@ import {
   defaultState,
   emptyGoalState,
 } from "components/GoalTimeline/DefaultState";
-import {
+import goalReducer, {
   loadUserEdits,
   setCurrentGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
-import goalReducer from "components/GoalTimeline/Redux/GoalSlice";
+} from "components/GoalTimeline/Redux/GoalSlice";
 import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
