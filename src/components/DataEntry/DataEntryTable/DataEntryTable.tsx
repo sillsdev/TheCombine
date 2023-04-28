@@ -109,7 +109,7 @@ export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
 }
 
 /*** Given a WordAccess and a new gloss, returns a copy of the word
- * with the gloss of the specified sense change to the new gloss.
+ * with the gloss of the specified sense changed to the new gloss.
  * If that sense has multiple semantic domains, split into two senses:
  * one with the specified domain and the new gloss,
  * a second with the other domains and the former gloss.
