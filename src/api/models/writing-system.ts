@@ -36,10 +36,4 @@ export interface WritingSystem {
    * @memberof WritingSystem
    */
   font: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WritingSystem
-   */
-  dir?: string | null;
 }

@@ -165,7 +165,6 @@ namespace Backend.Tests.Models
         private const string Name = "System 1";
         private const string Bcp47 = "lang-1";
         private const string Font = "calibri";
-        private const string Dir = "rtl";
 
         [Test]
         public void TestEquals()
@@ -186,31 +185,20 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
             Assert.IsFalse(system.Equals(new WritingSystem { Name = Name }));
-            system = new WritingSystem { Name = Name, Dir = Dir };
-            Assert.IsFalse(system.Equals(new WritingSystem { Dir = Dir }));
         }
 
         [Test]
         public void TestToString()
         {
-            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = Font, Dir = Dir };
+            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
             var sysString = system.ToString();
-            Assert.IsTrue(sysString.Contains(Name) && sysString.Contains(Bcp47) &&
-                sysString.Contains(Font) && sysString.Contains(Dir));
-        }
-
-        [Test]
-        public void TestToStringWithoutDir()
-        {
-            var system = new WritingSystem { };
-            var sysString = system.ToString();
-            Assert.IsTrue(sysString.Contains("name") && !sysString.Contains("dir"));
+            Assert.IsTrue(sysString.Contains(Name) && sysString.Contains(Bcp47));
         }
 
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = Font, Dir = Dir };
+            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = Font };
             var clonedSystem = system.Clone();
             Assert.AreEqual(system, clonedSystem);
         }

@@ -9,7 +9,7 @@ export enum Bcp47Code {
 }
 
 const writingSystem = {
-  [Bcp47Code.Ar]: newWritingSystem(Bcp47Code.Ar, "اَلْعَرَبِيَّةُ", "", "rtl"),
+  [Bcp47Code.Ar]: newWritingSystem(Bcp47Code.Ar, "اَلْعَرَبِيَّةُ"),
   [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"),
   [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"),
@@ -35,11 +35,7 @@ export const semDomWritingSystems = [
 export function newWritingSystem(
   bcp47 = "",
   name = "",
-  font = "",
-  dir?: string
+  font = ""
 ): WritingSystem {
-  if (dir) {
-    return { bcp47, name, font };
-  }
-  return { bcp47, name, font, dir };
+  return { bcp47, name, font };
 }
