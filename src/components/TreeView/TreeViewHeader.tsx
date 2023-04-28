@@ -23,7 +23,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           <DomainTile
             domain={getPrevSibling(props)!}
             onClick={props.animate}
-            direction={Direction.Left}
+            direction={Direction.Prev}
           />
         ) : null}
       </ImageListItem>
@@ -49,7 +49,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           <DomainTile
             domain={getNextSibling(props)!}
             onClick={props.animate}
-            direction={Direction.Right}
+            direction={Direction.Next}
           />
         ) : null}
       </ImageListItem>

@@ -27,6 +27,7 @@
     "deleteRowWarning": "This row will be permanently deleted!",
     "addNote": "Add a note",
     "domain": "Domain",
+    "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "gloss": "Gloss",
     "glosses": "Glosses",
     "pressEnter": "Press enter to save word",

@@ -12,8 +12,8 @@ import { SemanticDomain } from "api/models";
 
 export enum Direction {
   Down,
-  Left,
-  Right,
+  Next,
+  Prev,
   Up,
 }
 
@@ -46,10 +46,7 @@ export function DomainText(props: DomainTextProps): ReactElement {
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default class DomainTile extends React.Component<DomainTileProps> {
-  textWithArrow(
-    domain: SemanticDomain,
-    direction: Direction | undefined
-  ): ReactElement {
+  textWithArrow(domain: SemanticDomain, direction?: Direction): ReactElement {
     const rtl = document.body.dir === "rtl";
     switch (direction) {
       case Direction.Down:
@@ -59,7 +56,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
             <KeyboardArrowDown />
           </div>
         );
-      case Direction.Left:
+      case Direction.Prev:
         return (
           <Grid
             container
@@ -73,7 +70,7 @@ export default class DomainTile extends React.Component<DomainTileProps> {
             </Grid>
           </Grid>
         );
-      case Direction.Right:
+      case Direction.Next:
         return (
           <Grid
             container

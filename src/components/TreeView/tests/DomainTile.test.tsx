@@ -15,11 +15,11 @@ describe("DomainTile", () => {
   });
 
   it("Renders directional tile without crashing", () => {
-    createTile(Direction.Right);
+    createTile(Direction.Next);
   });
 
   it("Tile with direction matches the latest snapshot", () => {
-    createTile(Direction.Right);
+    createTile(Direction.Next);
     snapTest();
   });
 
