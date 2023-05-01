@@ -31,7 +31,7 @@ i18n
       fallbackLng: Bcp47Code.Default,
       interpolation: { escapeValue: false },
     },
-    setDir
+    setDir // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized
   );
 
 function setDir() {

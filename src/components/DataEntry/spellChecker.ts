@@ -4,10 +4,12 @@ import { aff, dic } from "resources/dictionaries";
 import { defaultWritingSystem, Bcp47Code } from "types/writingSystem";
 
 class SpellChecker {
-  spell: nspell;
+  readonly lang: string;
+  private spell: nspell;
 
   constructor(analysisLang = defaultWritingSystem.bcp47) {
-    switch (analysisLang.split("-")[0]) {
+    this.lang = analysisLang.split("-")[0];
+    switch (this.lang) {
       case Bcp47Code.Es:
         this.spell = nspell(aff.es, dic.es);
         break;
