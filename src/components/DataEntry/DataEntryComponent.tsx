@@ -20,7 +20,7 @@ import { DomainWord } from "types/word";
 
 interface DataEntryProps {
   currentDomainTree: SemanticDomainTreeNode;
-  treeIsOpen?: boolean;
+  isTreeOpen?: boolean;
   closeTree: () => void;
   openTree: () => void;
 }
@@ -132,7 +132,7 @@ export default class DataEntryComponent extends React.Component<
             <Divider />
             <DataEntryTable
               semanticDomain={this.props.currentDomainTree}
-              treeIsOpen={this.props.treeIsOpen}
+              isTreeOpen={this.props.isTreeOpen}
               openTree={this.props.openTree}
               showExistingData={() => this.toggleDrawer(true)}
               hasDrawerButton={
@@ -152,7 +152,7 @@ export default class DataEntryComponent extends React.Component<
           toggleDrawer={this.toggleDrawer}
         />
 
-        <Dialog fullScreen open={!!this.props.treeIsOpen}>
+        <Dialog fullScreen open={!!this.props.isTreeOpen}>
           <AppBar />
           <TreeView
             returnControlToCaller={async () =>

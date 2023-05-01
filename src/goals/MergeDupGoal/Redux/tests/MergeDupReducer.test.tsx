@@ -1,7 +1,6 @@
 import {
   convertSenseToMergeTreeSense,
   defaultSidebar,
-  Hash,
   MergeTreeReference,
   MergeTreeWord,
   newMergeTreeWord,
@@ -17,6 +16,7 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
