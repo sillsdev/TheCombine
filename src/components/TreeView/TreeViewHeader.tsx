@@ -4,7 +4,7 @@ import { Key } from "ts-key-enum";
 
 import { SemanticDomain, SemanticDomainTreeNode } from "api";
 import DomainTile, {
-  domainText,
+  DomainText,
   Direction,
 } from "components/TreeView/DomainTile";
 
@@ -23,7 +23,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           <DomainTile
             domain={getPrevSibling(props)!}
             onClick={props.animate}
-            direction={Direction.Left}
+            direction={Direction.Prev}
           />
         ) : null}
       </ImageListItem>
@@ -38,7 +38,10 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           id="current-domain"
           style={{ height: "95%" }}
         >
-          {domainText(props.currentDomain, { minWidth: 200 })}
+          <DomainText
+            domain={props.currentDomain}
+            extraProps={{ minWidth: 200 }}
+          />
         </Button>
       </ImageListItem>
       <ImageListItem cols={2}>
@@ -46,7 +49,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           <DomainTile
             domain={getNextSibling(props)!}
             onClick={props.animate}
-            direction={Direction.Right}
+            direction={Direction.Next}
           />
         ) : null}
       </ImageListItem>
@@ -67,13 +70,14 @@ export function useTreeNavigation(props: TreeHeaderProps) {
   // Navigate tree via arrow keys
   const navigateDomainArrowKeys = useCallback(
     (event: KeyboardEvent) => {
+      const rtl = document.body.dir === "rtl";
       let domain: SemanticDomain | undefined;
       switch (event.key) {
         case Key.ArrowLeft:
-          domain = getPrevSibling(props);
+          domain = rtl ? getNextSibling(props) : getPrevSibling(props);
           break;
         case Key.ArrowRight:
-          domain = getNextSibling(props);
+          domain = rtl ? getPrevSibling(props) : getNextSibling(props);
           break;
         case Key.ArrowUp:
           if (props.currentDomain.parent !== undefined) {

@@ -47,12 +47,7 @@ class MergeDupStep extends React.Component<
     return this.props.wordCount ? (
       <React.Fragment>
         {/* Merging pane */}
-        <div
-          style={{
-            background: "#eee",
-            padding: theme.spacing(1),
-          }}
-        >
+        <div style={{ background: "#eee", padding: theme.spacing(1) }}>
           <ImageList rowHeight="auto" cols={columnCount}>
             <MergeDragDrop />
           </ImageList>

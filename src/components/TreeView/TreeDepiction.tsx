@@ -97,6 +97,7 @@ export default class TreeDepiction extends React.Component<
     const teeCount = this.props.currentDomain.children.length - 2;
     const middleTeeCount = teeCount % 2;
     const halfTeeCount = (teeCount - middleTeeCount) / 2;
+    const rtl = document.body.dir === "rtl";
 
     // If there is only one child, the joist row has no branching.
     if (teeCount === -1) {
@@ -106,14 +107,14 @@ export default class TreeDepiction extends React.Component<
       return row;
     }
 
-    /* Left endcap */
+    /* Start endcap */
     row.push(...this.halfTileGap());
-    row.push(this.treeTile(endcapLeft));
+    row.push(this.treeTile(rtl ? endcapRight : endcapLeft));
 
-    /* Left */
+    /* Start -> Middle */
     for (let i = 0; i < halfTeeCount; i++) {
       row.push(...this.multiSpan(RATIO_TILE_TO_GAP));
-      row.push(this.treeTile(teeUpRight));
+      row.push(this.treeTile(rtl ? teeUpLeft : teeUpRight));
     }
 
     /* Middle */
@@ -127,14 +128,14 @@ export default class TreeDepiction extends React.Component<
       row.push(...this.multiSpan(HALF_TILE));
     }
 
-    /* Right */
+    /* Middle -> End */
     for (let i = 0; i < halfTeeCount; i++) {
-      row.push(this.treeTile(teeUpLeft));
+      row.push(this.treeTile(rtl ? teeUpRight : teeUpLeft));
       row.push(...this.multiSpan(RATIO_TILE_TO_GAP));
     }
 
-    /* Right endcap */
-    row.push(this.treeTile(endcapRight));
+    /* End endcap */
+    row.push(this.treeTile(rtl ? endcapLeft : endcapRight));
     row.push(...this.halfTileGap());
 
     return row;

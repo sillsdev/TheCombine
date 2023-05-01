@@ -35,6 +35,7 @@ export const treeViewReducer = (
       }
       return {
         ...state,
+        currentDomain: { ...state.currentDomain, lang: action.language },
         language: action.language,
       };
     case TreeActionType.SET_CURRENT_DOMAIN:

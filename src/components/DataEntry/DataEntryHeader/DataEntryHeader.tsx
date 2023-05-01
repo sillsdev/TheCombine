@@ -26,9 +26,10 @@ export class DataEntryHeader extends React.Component<DataEntryHeaderProps> {
         align="center"
         style={{ marginBottom: theme.spacing(2) }}
       >
-        {this.props.t("addWords.domain")}
-        {": "}
-        {this.props.domain.name + " (" + this.props.domain.id + ")"}
+        {this.props.t("addWords.domainTitle", {
+          val1: this.props.domain.name,
+          val2: this.props.domain.id,
+        })}
         <Typography>{this.props.domain.description}</Typography>
         <Switch
           id="questionVisibilitySwitch"

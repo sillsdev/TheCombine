@@ -13,16 +13,11 @@ jest.mock("backend", () => ({
 }));
 
 const mockReset = jest.fn();
-var signUpMaster: renderer.ReactTestRenderer;
-var signUpHandle: renderer.ReactTestInstance;
+let signUpMaster: renderer.ReactTestRenderer;
+let signUpHandle: renderer.ReactTestInstance;
 
 const DATA = "stuff";
-const MOCK_EVENT = {
-  preventDefault: jest.fn(),
-  target: {
-    value: DATA,
-  },
-};
+const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 
 describe("Testing sign up component", () => {
   beforeEach(() => {
