@@ -17,10 +17,10 @@ import {
   getProgressEstimationLineChartRoot,
   getProject,
 } from "backend";
-import LineChartComponent from "components/Statistics/Chart/LineChartComponent";
-import SemanticDomainStatistics from "components/Statistics/DomainStatistics/SemanticDomainStatistics";
+import SemanticDomainStatistics from "components/Statistics/DomainStatistics";
+import LineChartComponent from "components/Statistics/LineChartComponent";
 import ProgressBarComponent from "components/Statistics/ProgressBar/ProgressBarComponent";
-import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
+import DomainUserStatistics from "components/Statistics/UserStatistics";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const useStyles = makeStyles((theme: Theme) => ({

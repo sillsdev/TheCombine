@@ -6,12 +6,12 @@ import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { ColumnHead, TableCell } from "components/Statistics/TableCells";
 
-interface SemanticDomainStatisticsProps {
+interface DomainStatisticsProps {
   lang: string;
 }
 
-export default function SemanticDomainStatistics(
-  props: SemanticDomainStatisticsProps
+export default function DomainStatistics(
+  props: DomainStatisticsProps
 ): ReactElement {
   const [statisticsList, setStatisticsList] = useState<SemanticDomainCount[]>(
     []

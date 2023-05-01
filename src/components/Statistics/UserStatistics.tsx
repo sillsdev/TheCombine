@@ -7,12 +7,12 @@ import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { ColumnHead, TableCell } from "components/Statistics/TableCells";
 
-interface DomainSenseUserStatisticsProps {
+interface UserStatisticsProps {
   lang: string;
 }
 
-export default function DomainSenseUserStatistics(
-  props: DomainSenseUserStatisticsProps
+export default function UserStatistics(
+  props: UserStatisticsProps
 ): ReactElement {
   const [domainUserCountList, setDomainUserCountList] = useState<
     SemanticDomainUserCount[]
