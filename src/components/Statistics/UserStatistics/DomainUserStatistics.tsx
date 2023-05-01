@@ -44,9 +44,9 @@ export default function DomainSenseUserStatistics(
       <Card style={{ width: 600 }}>
         <List>
           <Grid container wrap="nowrap" justifyContent="space-around">
-            <ColumnHead titleId={"statistics.username"} />
-            <ColumnHead titleId={"statistics.domainCount"} />
-            <ColumnHead titleId={"statistics.senseCount"} />
+            <ColumnHead titleId={"statistics.column.username"} />
+            <ColumnHead titleId={"statistics.column.domainCount"} />
+            <ColumnHead titleId={"statistics.column.senseCount"} />
           </Grid>
         </List>
         <List>

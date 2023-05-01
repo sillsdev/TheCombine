@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import {
   getLineChartRootData,
@@ -20,19 +19,16 @@ interface ChartProps {
 
 export default function ChartComponent(props: ChartProps) {
   const [chartType] = useState<ChartTypeEnum>(props.chartType);
-  const { t } = useTranslation();
 
   return (
     <React.Fragment>
       {chartType === ChartTypeEnum.LineChart && (
         <LineChartComponent
-          titleText={t("statistics.wordsPerDay")}
           fetchData={() => getLineChartRootData(props.currentProjectId)}
         />
       )}
       {chartType === ChartTypeEnum.Estimate && (
         <LineChartComponent
-          titleText={t("statistics.workshopSchedule")}
           isFilterZero
           fetchData={() =>
             getProgressEstimationLineChartRoot(props.currentProjectId)

@@ -31,7 +31,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           <h6
             className="MuiTypography-root MuiTypography-subtitle1 css-10wpov9-MuiTypography-root"
           >
-            statistics.username
+            statistics.column.username
           </h6>
         </div>
         <div
@@ -47,7 +47,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           <h6
             className="MuiTypography-root MuiTypography-subtitle1 css-10wpov9-MuiTypography-root"
           >
-            statistics.domainCount
+            statistics.column.domainCount
           </h6>
         </div>
         <div
@@ -63,7 +63,7 @@ exports[`SemanticDomainStatistics renders without crashing, UI does not change u
           <h6
             className="MuiTypography-root MuiTypography-subtitle1 css-10wpov9-MuiTypography-root"
           >
-            statistics.senseCount
+            statistics.column.senseCount
           </h6>
         </div>
       </div>

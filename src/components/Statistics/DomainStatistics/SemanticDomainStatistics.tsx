@@ -42,9 +42,9 @@ export default function SemanticDomainStatistics(
       <Card style={{ width: 600 }}>
         <List>
           <Grid container wrap="nowrap" justifyContent="space-around">
-            <ColumnHead titleId={"statistics.domainNumber"} />
-            <ColumnHead titleId={"statistics.domainName"} />
-            <ColumnHead titleId={"statistics.countSenses"} />
+            <ColumnHead titleId={"statistics.column.domainNumber"} />
+            <ColumnHead titleId={"statistics.column.domainName"} />
+            <ColumnHead titleId={"statistics.column.senseCount"} />
           </Grid>
         </List>
         <List>
