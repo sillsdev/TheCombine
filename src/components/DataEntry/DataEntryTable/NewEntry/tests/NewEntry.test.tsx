@@ -6,6 +6,8 @@ import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
+jest.mock("@mui/material/Autocomplete", () => "div");
+
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 

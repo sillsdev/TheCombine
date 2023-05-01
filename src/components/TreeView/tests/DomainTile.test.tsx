@@ -1,10 +1,12 @@
 import { Button } from "@mui/material";
 import renderer from "react-test-renderer";
 
+import "tests/mockReactI18next.ts";
+
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
-var tileMaster: renderer.ReactTestRenderer;
+let tileMaster: renderer.ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
 describe("DomainTile", () => {
@@ -13,11 +15,11 @@ describe("DomainTile", () => {
   });
 
   it("Renders directional tile without crashing", () => {
-    createTile(Direction.Right);
+    createTile(Direction.Next);
   });
 
   it("Tile with direction matches the latest snapshot", () => {
-    createTile(Direction.Right);
+    createTile(Direction.Next);
     snapTest();
   });
 

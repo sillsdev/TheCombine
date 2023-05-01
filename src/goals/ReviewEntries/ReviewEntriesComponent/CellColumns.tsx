@@ -1,5 +1,6 @@
 import { Column } from "@material-table/core";
 import { Input, Typography } from "@mui/material";
+import { t } from "i18next";
 
 import { SemanticDomain } from "api/models";
 import {
@@ -34,16 +35,16 @@ enum SortStyle {
   None,
 }
 
-export enum ColumnTitle {
-  Vernacular = "Vernacular",
-  Senses = "Senses",
-  Definitions = "Definitions",
-  Glosses = "Glosses",
-  Domains = "Domains",
-  Pronunciations = "Pronunciations",
-  Note = "Note",
-  Flag = "Flag",
-  Delete = "Delete",
+export class ColumnTitle {
+  static Vernacular = t("reviewEntries.columns.vernacular");
+  static Senses = t("reviewEntries.columns.senses");
+  static Definitions = t("reviewEntries.columns.definitions");
+  static Glosses = t("reviewEntries.columns.glosses");
+  static Domains = t("reviewEntries.columns.domains");
+  static Pronunciations = t("reviewEntries.columns.pronunciations");
+  static Note = t("reviewEntries.columns.note");
+  static Flag = t("reviewEntries.columns.flag");
+  static Delete = t("reviewEntries.columns.delete");
 }
 
 function domainNumberToArray(id: string): number[] {

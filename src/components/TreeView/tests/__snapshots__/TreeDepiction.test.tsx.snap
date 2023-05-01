@@ -81,7 +81,9 @@ Array [
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              />
+              >
+                addWords.domain
+              </p>
             </div>
           </div>
           <span

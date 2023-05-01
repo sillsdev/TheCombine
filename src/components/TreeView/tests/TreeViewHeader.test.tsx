@@ -2,6 +2,8 @@ import { render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { Key } from "ts-key-enum";
 
+import "tests/mockReactI18next.ts";
+
 import {
   TreeViewHeader,
   TreeHeaderProps,

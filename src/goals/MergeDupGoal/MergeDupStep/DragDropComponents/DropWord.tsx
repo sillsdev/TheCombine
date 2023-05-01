@@ -26,7 +26,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
   const treeWord = props.mergeState.tree.words[props.wordId];
   const data = props.mergeState.data;
   const flag = data.words[props.wordId]?.flag ?? newFlag();
-  var protectedWithOneChild = false;
+  let protectedWithOneChild = false;
   const verns: string[] = [];
   if (treeWord) {
     protectedWithOneChild =

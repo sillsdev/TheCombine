@@ -27,6 +27,7 @@
     "deleteRowWarning": "This row will be permanently deleted!",
     "addNote": "Add a note",
     "domain": "Domain",
+    "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "gloss": "Gloss",
     "glosses": "Glosses",
     "pressEnter": "Press enter to save word",
@@ -225,11 +226,8 @@
       "noHistory": "Nothing yet",
       "done": "All done"
     },
-    "progress": {
-      "step": "Step",
-      "stepMerge": "Merge Set",
-      "of": "of"
-    }
+    "progress": "Step {{ val1 }} of {{ val2 }}",
+    "progressMerge": "Merge Set {{ val1 }} of {{ val2 }}"
   },
   "createStrWordInv": {
     "title": "Create Structural Word Inventory"
@@ -261,13 +259,43 @@
       "domain": "Domains cannot be left blank",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
+    },
+    "columns": {
+      "definitions": "Definitions",
+      "delete": "Delete",
+      "domains": "Domains",
+      "flag": "Flag",
+      "glosses": "Glosses",
+      "note": "Note",
+      "pronunciations": "Pronunciations",
+      "senses": "Senses",
+      "vernacular": "Vernacular"
+    },
+    "materialTable": {
+      "body": {
+        "edit": "Edit",
+        "emptyDataSourceMessage": "No entries to display",
+        "filter": "Filter"
+      },
+      "pagination": {
+        "labelDisplayedRows": "{from}-{to} of {count}",
+        "labelRows": "rows",
+        "labelRowsPerPage": "Rows per page:",
+        "first": "First Page",
+        "last": "Last Page",
+        "next": "Next Page",
+        "previous": "Previous Page"
+      },
+      "toolbar": {
+        "search": "Search"
+      }
     }
   },
   "charInventory": {
     "title": "Create Character Inventory",
     "characters": "characters",
     "examples": "Examples",
-    "occurrences": "occurrences",
+    "occurrences": "{{ val }} occurrences",
     "status": "status",
     "sortBy": "Sort by",
     "characterSet": {
@@ -382,7 +410,7 @@
     "deleteRecording": "Delete Recording"
   },
   "statistics": {
-    "dataStatistics": "Data Statistics:  ",
+    "title": "Data Statistics: {{ val }}",
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
     "countSenses": "Words:",
@@ -394,9 +422,10 @@
     "dayView": "Words per Day",
     "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
-    "domainsCollected": "Domains Collected:",
-    "wordsCollected": "Words Collected:",
+    "domainsCollected": "Domains Collected: {{ val }}",
+    "wordsCollected": "Words Collected: {{ val }}",
     "wordsPerDay": "Words Collected Per User Per Day",
-    "workshopSchedule": "Workshop Schedule"
+    "workshopSchedule": "Workshop Schedule",
+    "percent": "{{ val }}%"
   }
 }

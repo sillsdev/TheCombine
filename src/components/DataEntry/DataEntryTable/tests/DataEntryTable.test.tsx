@@ -40,6 +40,11 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
 }));
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
+jest.mock(
+  "components/DataEntry/DataEntryTable/NewEntry/VernDialog",
+  () => "div"
+);
 jest.mock(
   "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry",
   () => "div"
