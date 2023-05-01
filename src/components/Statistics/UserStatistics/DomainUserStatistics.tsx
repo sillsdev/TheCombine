@@ -1,11 +1,11 @@
-import { Card, Grid, Typography, ListItem, List } from "@mui/material";
-import React, { ReactElement, useState, useEffect } from "react";
+import { Card, Grid, ListItem, List } from "@mui/material";
+import { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import DomainSenseUserTable from "./DomainUserTable";
-import { SemanticDomainUserCount, Project } from "api/models";
-import { getSemanticDomainUserCount, getFrontierWords } from "backend";
+import { SemanticDomainUserCount } from "api/models";
+import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import { ColumnHead, TableCell } from "components/Statistics/TableCells";
 
 interface DomainSenseUserStatisticsProps {
   lang: string;
@@ -25,7 +25,7 @@ export default function DomainSenseUserStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
-      if (counts != undefined) {
+      if (counts !== undefined) {
         return setDomainUserCountList(counts);
       }
     };
@@ -39,66 +39,43 @@ export default function DomainSenseUserStatistics(
     return await getSemanticDomainUserCount(projectId, lang);
   }
 
-  function getDomainSenseUserList(
-    semanticDomainUserCount: SemanticDomainUserCount[]
-  ) {
-    return semanticDomainUserCount.map((t) => (
-      <ListItem style={{ minWidth: "600px" }} key={`${t.id}`}>
-        <DomainSenseUserTable key={`${t.id}`} semanticDomainUserCount={t!} />
-      </ListItem>
-    ));
-  }
-
   return (
-    <React.Fragment>
-      <Grid container justifyContent="center">
-        <Card style={{ width: 600 }}>
-          <List>
-            <Grid container wrap="nowrap" justifyContent="space-around">
-              <Grid
-                item
-                xs={5}
-                style={{
-                  borderBottomStyle: "dotted",
-                  borderBottomWidth: 1,
-                  position: "relative",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  {t("statistics.userName")}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={5}
-                style={{
-                  borderBottomStyle: "dotted",
-                  borderBottomWidth: 1,
-                  position: "relative",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  {t("statistics.domainCount")}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={5}
-                style={{
-                  borderBottomStyle: "dotted",
-                  borderBottomWidth: 1,
-                  position: "relative",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  {t("statistics.senseCount")}
-                </Typography>
-              </Grid>
-            </Grid>
-          </List>
-          <List>{getDomainSenseUserList(domainUserCountList)}</List>
-        </Card>
+    <Grid container justifyContent="center">
+      <Card style={{ width: 600 }}>
+        <List>
+          <Grid container wrap="nowrap" justifyContent="space-around">
+            <ColumnHead titleId={"statistics.username"} />
+            <ColumnHead titleId={"statistics.domainCount"} />
+            <ColumnHead titleId={"statistics.senseCount"} />
+          </Grid>
+        </List>
+        <List>
+          {domainUserCountList.map((t) => (
+            <TableRow key={t.id} counts={t} />
+          ))}
+        </List>
+      </Card>
+    </Grid>
+  );
+}
+
+function TableRow(props: { counts: SemanticDomainUserCount }): ReactElement {
+  return (
+    <ListItem style={{ minWidth: "600px" }}>
+      <Grid container wrap="nowrap" justifyContent="space-around">
+        <TableCell
+          key={"username_" + props.counts.id}
+          text={props.counts.username}
+        />
+        <TableCell
+          key={"domCount_" + props.counts.id}
+          text={props.counts.domainCount}
+        />
+        <TableCell
+          key={"wordCount_" + props.counts.id}
+          text={props.counts.wordCount}
+        />
       </Grid>
-    </React.Fragment>
+    </ListItem>
   );
 }

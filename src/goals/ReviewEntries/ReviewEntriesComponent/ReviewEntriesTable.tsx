@@ -1,7 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -19,14 +19,28 @@ interface ReviewEntriesTableProps {
   ) => Promise<void>;
 }
 
-// Remove the duplicates from an array; sugar syntax, as the place it's used
-// is already hideous enough without adding more
+interface PageState {
+  pageSize: number;
+  pageSizeOptions: number[];
+}
+
+// Remove the duplicates from an array
 function removeDuplicates<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
+function getPageSizeOptions(max: number): number[] {
+  return removeDuplicates(ROWS_PER_PAGE.map((num) => Math.min(max, num)));
+}
+
+function getPageState(wordCount: number): PageState {
+  const pageSizeOptions = getPageSizeOptions(wordCount);
+  return { pageSize: pageSizeOptions[0], pageSizeOptions };
+}
+
 // Constants
-const ROWS_PER_PAGE = [10, 100, 250];
+const ROWS_PER_PAGE = [10, 50, 250];
+const tableRef: React.RefObject<any> = React.createRef();
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
@@ -39,9 +53,32 @@ export default function ReviewEntriesTable(
   );
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
+  const [maxRows, setMaxRows] = useState(words.length);
+  const [pageState, setPageState] = useState(getPageState(words.length));
+
+  const updateMaxRows = () => {
+    if (tableRef.current) {
+      const tableRows = tableRef.current.state.data.length;
+      if (tableRows !== maxRows) {
+        setMaxRows(tableRows);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setPageState((prevState) => {
+      const options = getPageSizeOptions(maxRows);
+      var i = 0;
+      while (i < options.length - 1 && options[i] < prevState.pageSize) {
+        i++;
+      }
+      return { pageSize: options[i], pageSizeOptions: options };
+    });
+  }, [maxRows, setPageState]);
 
   return (
     <MaterialTable<any>
+      tableRef={tableRef}
       icons={tableIcons}
       title={
         <Typography component="h1" variant="h4">
@@ -54,6 +91,7 @@ export default function ReviewEntriesTable(
           : columns.filter((c) => c.title !== ColumnTitle.Definitions)
       }
       data={words}
+      onFilterChange={updateMaxRows}
       editable={{
         onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
           new Promise(async (resolve, reject) => {
@@ -66,19 +104,7 @@ export default function ReviewEntriesTable(
               });
           }),
       }}
-      options={{
-        draggable: false,
-        filtering: true,
-        pageSize:
-          words.length > 0
-            ? Math.min(words.length, ROWS_PER_PAGE[0])
-            : ROWS_PER_PAGE[0],
-        pageSizeOptions: removeDuplicates([
-          Math.min(words.length, ROWS_PER_PAGE[0]),
-          Math.min(words.length, ROWS_PER_PAGE[1]),
-          Math.min(words.length, ROWS_PER_PAGE[2]),
-        ]),
-      }}
+      options={{ draggable: false, filtering: true, ...pageState }}
     />
   );
 }

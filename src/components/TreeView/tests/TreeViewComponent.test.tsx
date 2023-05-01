@@ -1,8 +1,5 @@
 import { Provider } from "react-redux";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -14,8 +11,8 @@ import { defaultState as treeViewState } from "components/TreeView/TreeViewReduc
 import mockMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
-var treeMaster: ReactTestRenderer;
-var treeHandle: ReactTestInstance;
+var treeMaster: renderer.ReactTestRenderer;
+var treeHandle: renderer.ReactTestInstance;
 
 // Mock out Zoom to avoid issues with portals
 jest.mock("@mui/material", () => {
@@ -35,20 +32,16 @@ const mockStore = configureMockStore([thunk])({
   },
 });
 
-beforeAll(() => {
-  createTree();
-});
-
 describe("TreeView", () => {
-  it("Renders without crashing", () => {
-    createTree();
+  it("Renders without crashing", async () => {
+    await createTree();
     expect(treeHandle).toBeTruthy();
   });
 });
 
-function createTree(): void {
-  renderer.act(() => {
-    treeMaster = renderer.create(
+async function createTree(): Promise<void> {
+  await renderer.act(async () => {
+    treeMaster = await renderer.create(
       <Provider store={mockStore}>
         <TreeView returnControlToCaller={jest.fn()} />
       </Provider>

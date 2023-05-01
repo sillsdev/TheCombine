@@ -1,13 +1,13 @@
 import { v4 } from "uuid";
 
-import { Flag, Sense, Word } from "api/models";
-import { newFlag } from "types/word";
-
-export type Hash<V> = { [key: string]: V };
+import { Flag, Sense, Status, Word } from "api/models";
+import { Hash } from "types/hash";
+import { newFlag, newSense } from "types/word";
 
 export interface MergeTreeSense extends Sense {
   srcWordId: string;
   order: number;
+  protected: boolean;
 }
 
 export interface MergeData {
@@ -19,19 +19,52 @@ export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
   order?: number;
+  isSenseProtected?: boolean;
 }
 
 export interface MergeTreeWord {
   sensesGuids: Hash<string[]>;
   vern: string;
   flag: Flag;
+  protected: boolean;
+}
+
+export function newMergeTreeSense(
+  gloss = "",
+  srcWordId = "",
+  order = 0
+): MergeTreeSense {
+  return {
+    ...newSense(gloss),
+    srcWordId,
+    order,
+    protected: false,
+  };
 }
 
 export function newMergeTreeWord(
   vern = "",
   sensesGuids?: Hash<string[]>
 ): MergeTreeWord {
-  return { vern, sensesGuids: sensesGuids ?? {}, flag: newFlag() };
+  return {
+    vern,
+    sensesGuids: sensesGuids ?? {},
+    flag: newFlag(),
+    protected: false,
+  };
+}
+
+export function convertSenseToMergeTreeSense(
+  sense?: Sense,
+  srcWordId = "",
+  order = 0
+): MergeTreeSense {
+  return {
+    ...(sense ?? newSense()),
+    srcWordId,
+    order,
+    protected: sense?.accessibility === Status.Protected,
+  };
 }
 
 export function convertWordtoMergeTreeWord(word: Word): MergeTreeWord {
@@ -40,6 +73,7 @@ export function convertWordtoMergeTreeWord(word: Word): MergeTreeWord {
     mergeTreeWord.sensesGuids[v4()] = [sense.guid];
   });
   mergeTreeWord.flag = word.flag;
+  mergeTreeWord.protected = word.accessibility === Status.Protected;
   return mergeTreeWord;
 }
 

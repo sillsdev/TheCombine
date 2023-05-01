@@ -1,11 +1,10 @@
-import { Card, Grid, Typography, ListItem, List } from "@mui/material";
-import React, { ReactElement, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { Card, Grid, ListItem, List } from "@mui/material";
+import { ReactElement, useState, useEffect } from "react";
 
-import StatisticsTable from "./SemanticDomainStatisticsTable";
-import { SemanticDomainCount } from "api/models";
+import { SemanticDomainCount, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import { ColumnHead, TableCell } from "components/Statistics/TableCells";
 
 interface SemanticDomainStatisticsProps {
   lang: string;
@@ -17,7 +16,6 @@ export default function SemanticDomainStatistics(
   const [statisticsList, setStatisticsList] = useState<SemanticDomainCount[]>(
     []
   );
-  const { t } = useTranslation();
 
   useEffect(() => {
     const updateStatisticList = async () => {
@@ -25,7 +23,7 @@ export default function SemanticDomainStatistics(
         LocalStorage.getProjectId(),
         props.lang
       );
-      if (counts != undefined) {
+      if (counts !== undefined) {
         return setStatisticsList(counts);
       }
     };
@@ -39,71 +37,41 @@ export default function SemanticDomainStatistics(
     return await getSemanticDomainCounts(projectId, lang);
   }
 
-  function getStatisticsList(statisticsList: SemanticDomainCount[]) {
-    return statisticsList.map((t) => (
-      <ListItem
-        style={{ minWidth: "600px" }}
-        key={`${t.semanticDomainTreeNode.id}`}
-      >
-        <StatisticsTable
-          key={`${t.semanticDomainTreeNode.id}`}
-          domain={t.semanticDomainTreeNode!}
-          count={t.count!}
-        />
-      </ListItem>
-    ));
-  }
-
   return (
-    <React.Fragment>
-      <Grid container justifyContent="center">
-        <Card style={{ width: 600 }}>
-          <List>
-            <Grid container wrap="nowrap" justifyContent="space-around">
-              <Grid
-                item
-                xs={5}
-                style={{
-                  borderBottomStyle: "dotted",
-                  borderBottomWidth: 1,
-                  position: "relative",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  {t("statistics.domainNumber")}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={5}
-                style={{
-                  borderBottomStyle: "dotted",
-                  borderBottomWidth: 1,
-                  position: "relative",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  {t("statistics.domainName")}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={5}
-                style={{
-                  borderBottomStyle: "dotted",
-                  borderBottomWidth: 1,
-                  position: "relative",
-                }}
-              >
-                <Typography variant="subtitle1">
-                  {t("statistics.countSenses")}
-                </Typography>
-              </Grid>
-            </Grid>
-          </List>
-          <List>{getStatisticsList(statisticsList)}</List>
-        </Card>
+    <Grid container justifyContent="center">
+      <Card style={{ width: 600 }}>
+        <List>
+          <Grid container wrap="nowrap" justifyContent="space-around">
+            <ColumnHead titleId={"statistics.domainNumber"} />
+            <ColumnHead titleId={"statistics.domainName"} />
+            <ColumnHead titleId={"statistics.countSenses"} />
+          </Grid>
+        </List>
+        <List>
+          {statisticsList.map((t) => (
+            <TableRow
+              key={t.semanticDomainTreeNode.id}
+              dom={t.semanticDomainTreeNode}
+              count={t.count}
+            />
+          ))}
+        </List>
+      </Card>
+    </Grid>
+  );
+}
+
+function TableRow(props: {
+  dom: SemanticDomainTreeNode;
+  count: number;
+}): ReactElement {
+  return (
+    <ListItem style={{ minWidth: "600px" }}>
+      <Grid container wrap="nowrap" justifyContent="space-around">
+        <TableCell key={"id_" + props.dom.id} text={props.dom.id} />
+        <TableCell key={"domain_" + props.dom.id} text={props.dom.name} />
+        <TableCell key={"count_" + props.dom.id} text={props.count} />
       </Grid>
-    </React.Fragment>
+    </ListItem>
   );
 }

@@ -11,13 +11,15 @@ import { makeStyles } from "@mui/styles";
 import React, { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import ChartComponent, { ChartTypeEnum } from "./Chart/ChartComponent";
-import SemanticDomainStatistics from "./DomainStatistics/SemanticDomainStatistics";
-import ProgressBarComponent from "./ProgressBar/ProgressBarComponent";
-import DomainUserStatistics from "./UserStatistics/DomainUserStatistics";
 import { Project } from "api/models";
 import { getProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import ChartComponent, {
+  ChartTypeEnum,
+} from "components/Statistics/Chart/ChartComponent";
+import SemanticDomainStatistics from "components/Statistics/DomainStatistics/SemanticDomainStatistics";
+import ProgressBarComponent from "components/Statistics/ProgressBar/ProgressBarComponent";
+import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,15 +33,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 enum viewEnum {
   User = "USER",
   Domain = "DOMAIN",
-  Time = "Time",
+  Time = "TIME",
   DataStatistics = "STATISTIC",
+  Estimate = "ESTIMATE",
 }
 
 export default function Statistics(): ReactElement {
   const { t } = useTranslation();
   const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
-  const [lang, setLang] = useState<string>(defaultWritingSystem.bcp47);
+  const [lang] = useState<string>(defaultWritingSystem.bcp47);
   const [viewName, setViewName] = useState<string>(viewEnum.User);
 
   useEffect(() => {
@@ -77,14 +80,22 @@ export default function Statistics(): ReactElement {
           </List>
         </Grid>
       ),
-      viewName === viewEnum.Time && [
+      viewName === viewEnum.Time && (
         <Grid item key={viewEnum.Time + "ChartComponent"}>
           <ChartComponent
             currentProjectId={currentProject!.id}
             chartType={ChartTypeEnum.LineChart}
           />
-        </Grid>,
-      ],
+        </Grid>
+      ),
+      viewName === viewEnum.Estimate && (
+        <Grid item key={viewEnum.Estimate + "Estimate"}>
+          <ChartComponent
+            currentProjectId={currentProject!.id}
+            chartType={ChartTypeEnum.Estimate}
+          />
+        </Grid>
+      ),
     ];
   }
 
@@ -109,7 +120,14 @@ export default function Statistics(): ReactElement {
           onClick={() => setViewName(viewEnum.Time)}
           selected={viewName === viewEnum.Time}
         >
-          <ListItemText primary={"Words per Day"} />
+          <ListItemText primary={t("statistics.dayView")} />
+        </ListItemButton>
+        <Divider />
+        <ListItemButton
+          onClick={() => setViewName(viewEnum.Estimate)}
+          selected={viewName === viewEnum.Estimate}
+        >
+          <ListItemText primary={t("statistics.estimate")} />
         </ListItemButton>
       </List>
     );

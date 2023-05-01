@@ -183,6 +183,16 @@
       "archive": "Archive Project",
       "archiveToastSuccess": "Project Archived!"
     },
+    "schedule": {
+      "workshopSchedule": "Workshop Schedule",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "selectedDateAlert": "The start date must be before the end date",
+      "setDays": "Set the range of days for the workshop",
+      "editDays": "Flexibly adjust the workshop schedule",
+      "removeDays": "Remove all days from workshop",
+      "removeAll": "Are you sure you want to remove all the dates?"
+    },
     "exportProject": {
       "label": "Export Project"
     },
@@ -247,6 +257,7 @@
     "noDomain": "No domain selected",
     "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
+    "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
       "domain": "Domains cannot be left blank",
@@ -277,7 +288,7 @@
       "find": "Find",
       "replace": "Replace",
       "replaceWith": "Replace with",
-      "replaceAll": "Replace all occurences of",
+      "replaceAll": "Replace all occurrences of",
       "findAndReplace": "Find & Replace",
       "apply": "apply",
       "charDetails": "(Character Details has not been implemented.)"
@@ -311,7 +322,9 @@
       "list": "Drag this word to the right to start merging it with other words",
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
-      "deleteDialog": "Delete this sense?"
+      "deleteDialog": "Delete this sense?",
+      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense or drop other senses into this one to merge them.",
+      "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
     },
     "completed": {
       "number": "Number of merges completed: "
@@ -375,13 +388,17 @@
     "domainNumber": "Domain Number:",
     "domainName": "Domain Name:",
     "countSenses": "Words:",
-    "userName": "User Name:",
+    "username": "Username:",
     "domainCount": "Domains:",
     "senseCount": "Words:",
     "userView": "Words per User",
     "domainView": "Words per Domain",
+    "dayView": "Words per Day",
+    "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
     "domainsCollected": "Domains Collected:",
-    "wordsCollected": "Words Collected:"
+    "wordsCollected": "Words Collected:",
+    "wordsPerDay": "Words Collected Per User Per Day",
+    "workshopSchedule": "Workshop Schedule"
   }
 }

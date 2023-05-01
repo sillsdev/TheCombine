@@ -34,34 +34,59 @@ export default function MergeDragDrop(): ReactElement {
 
   function handleDrop(res: DropResult): void {
     const senseRef: MergeTreeReference = JSON.parse(res.draggableId);
-    if (res.destination?.droppableId === trashId) {
-      // Case 1: the sense was dropped on the trash icon.
+    const sourceId = res.source.droppableId;
+    if (
+      treeWords[sourceId]?.protected &&
+      Object.keys(treeWords[sourceId].sensesGuids).length == 1
+    ) {
+      // Case 0: The final sense of a protected word cannot be moved.
+      return;
+    } else if (res.destination?.droppableId === trashId) {
+      // Case 1: The sense was dropped on the trash icon.
+      if (senseRef.isSenseProtected) {
+        // Case 1a: Cannot delete a protected sense.
+        return;
+      }
       setSenseToDelete(res.draggableId);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
+      if (senseRef.isSenseProtected) {
+        // Case 2a: Cannot merge a protected sense into another sense.
+        if (sourceId !== res.combine.droppableId) {
+          // The target sense is in a different word, so move instead of combine.
+          dispatch(moveSense(senseRef, res.combine.droppableId, 0));
+        }
+        return;
+      }
       const combineRef: MergeTreeReference = JSON.parse(
         res.combine.draggableId
       );
       if (combineRef.order !== undefined) {
-        // If the target is a sidebar sub-sense, it cannot receive a combine.
+        // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
       dispatch(combineSense(senseRef, combineRef));
     } else if (res.destination) {
+      const destId = res.destination.droppableId;
       // Case 3: The sense was dropped in a droppable.
-      if (res.source.droppableId !== res.destination.droppableId) {
+      if (sourceId !== destId) {
         // Case 3a: The source, dest droppables are different.
-        const wordId = res.destination.droppableId;
-        if (wordId.split(" ").length > 1) {
+        if (destId.split(" ").length > 1) {
           // If the destination is SidebarDrop, it cannot receive drags from elsewhere.
           return;
         }
         // Move the sense to the dest MergeWord.
-        dispatch(moveSense(senseRef, wordId, res.destination.index));
+        dispatch(moveSense(senseRef, destId, res.destination.index));
       } else {
-        // Case 3b: The source, dest droppables are the same, so we reorder, not move.
+        // Case 3b: The source & dest droppables are the same, so we reorder, not move.
         const order = res.destination.index;
-        if (senseRef.order === order) {
+        if (
+          senseRef.order === order ||
+          (order === 0 &&
+            senseRef.order !== undefined &&
+            sidebar.senses[0].protected)
+        ) {
+          // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
           return;
         }
         dispatch(orderSense(senseRef, order));

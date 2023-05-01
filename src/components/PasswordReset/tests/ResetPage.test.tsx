@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
@@ -11,7 +11,7 @@ import PasswordReset, {
   MatchParams,
 } from "components/PasswordReset/ResetPage/component";
 
-var testRenderer: ReactTestRenderer;
+var testRenderer: renderer.ReactTestRenderer;
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore([])({});
 

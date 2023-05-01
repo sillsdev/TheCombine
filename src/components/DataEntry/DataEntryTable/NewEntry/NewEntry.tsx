@@ -404,9 +404,7 @@ export default class NewEntry extends React.Component<
               }
               vernacularLang={this.props.vernacularLang}
               textFieldId={`${idAffix}-vernacular`}
-              onComponentDidUpdate={() =>
-                this.conditionalFocus(FocusTarget.Vernacular)
-              }
+              onUpdate={() => this.conditionalFocus(FocusTarget.Vernacular)}
             />
             <VernDialog
               open={this.state.vernOpen}
@@ -452,9 +450,7 @@ export default class NewEntry extends React.Component<
             }
             analysisLang={this.props.analysisLang}
             textFieldId={`${idAffix}-gloss`}
-            onComponentDidUpdate={() =>
-              this.conditionalFocus(FocusTarget.Gloss)
-            }
+            onUpdate={() => this.conditionalFocus(FocusTarget.Gloss)}
           />
         </Grid>
         <Grid

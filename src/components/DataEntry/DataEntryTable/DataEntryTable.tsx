@@ -1,731 +1,814 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useSnackbar } from "notistack";
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { v4 } from "uuid";
 
 import {
   AutocompleteSetting,
   Note,
+  Project,
   SemanticDomain,
   SemanticDomainTreeNode,
   Sense,
+  Status,
   Word,
   WritingSystem,
 } from "api/models";
 import * as backend from "backend";
-import { getCurrentUser } from "backend/localStorage";
+import { getUserId } from "backend/localStorage";
 import NewEntry, {
   FocusTarget,
 } from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
-import theme, { themeColors } from "types/theme";
+import { Hash } from "types/hash";
+import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 
 export const exitButtonId = "exit-to-domain-tree";
 
-interface DataEntryTableProps extends WithTranslation {
+interface DataEntryTableProps {
   semanticDomain: SemanticDomainTreeNode;
-  treeIsOpen?: boolean;
-  openTree: () => void;
-  getWordsFromBackend: () => Promise<Word[]>;
-  showExistingData: () => void;
-  isSmallScreen?: boolean;
+  hasDrawerButton?: boolean;
+  isTreeOpen?: boolean;
   hideQuestions: () => void;
+  openTree: () => void;
+  showExistingData: () => void;
 }
 
-interface WordAccess {
+interface SenseSwitch {
+  oldGuid: string;
+  newGuid: string;
+}
+
+export interface WordAccess {
   word: Word;
-  senseIndex: number;
+  senseGuid: string;
+}
+
+enum DefunctStatus {
+  Recent = "RECENT",
+  Retire = "RETIRE",
 }
 
 interface DataEntryTableState {
-  existingWords: Word[];
-  recentlyAddedWords: WordAccess[];
-  isReady: boolean;
-  suggestVerns: boolean;
+  // project properties
   analysisLang: WritingSystem;
+  suggestVerns: boolean;
   vernacularLang: WritingSystem;
-  defunctWordIds: string[];
+  // word data
+  existingWords: Word[];
+  recentWords: WordAccess[];
+  // state management
+  defunctUpdates: Hash<string>;
+  defunctWordIds: Hash<DefunctStatus>;
   isFetchingFrontier: boolean;
+  isReady: boolean;
+  senseSwitches: SenseSwitch[];
 }
 
+/*** Add current semantic domain to specified sense within a word. */
 export function addSemanticDomainToSense(
-  semanticDomain: SemanticDomain,
-  existingWord: Word,
-  senseIndex: number
+  semDom: SemanticDomain,
+  word: Word,
+  senseGuid: string
 ): Word {
-  if (senseIndex >= existingWord.senses.length) {
-    throw new RangeError("senseIndex too large");
-  } else {
-    const oldSense = existingWord.senses[senseIndex];
-    const updatedDomains = [...oldSense.semanticDomains];
-    // Update the UserId for new semanticDomain
-    semanticDomain.userId = getCurrentUser()?.id;
-    semanticDomain.created = new Date().toISOString();
-    updatedDomains.push(semanticDomain);
-    const updatedSense: Sense = {
-      ...oldSense,
-      semanticDomains: updatedDomains,
-    };
-    const updatedSenses = [...existingWord.senses];
-    updatedSenses.splice(senseIndex, 1, updatedSense);
-    return { ...existingWord, senses: updatedSenses };
+  const sense = word.senses.find((s) => s.guid === senseGuid);
+  if (!sense) {
+    throw new Error("Word has no sense with specified guid");
   }
+  sense.semanticDomains.push(makeSemDomCurrent(semDom));
+  const senses = word.senses.map((s) => (s.guid === senseGuid ? sense : s));
+  return { ...word, senses };
 }
 
-export function addSenseToWord(
-  semanticDomain: SemanticDomain,
-  existingWord: Word,
-  gloss: string,
-  language: string
-): Word {
-  // Update the UserId for new semanticDomain
-  semanticDomain.userId = getCurrentUser()?.id;
-  semanticDomain.created = new Date().toISOString();
-  const word: Word = { ...existingWord, senses: [...existingWord.senses] };
-  word.senses.push(newSense(gloss, language, semanticDomain));
-  return word;
+/*** Filter out words that do not have at least one Active/Protected sense. */
+function filterWords(words: Word[]): Word[] {
+  return words.filter((w) =>
+    w.senses.find((s) =>
+      [Status.Active, Status.Protected].includes(s.accessibility)
+    )
+  );
 }
 
-/**
- * A data entry table containing recent word entries
+/*** Return a copy of the semantic domain with current UserId and timestamp. */
+export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
+  const created = new Date().toISOString();
+  return { ...semDom, created, userId: getUserId() };
+}
+
+/*** Given a WordAccess and a new gloss, returns a copy of the word
+ * with the gloss of the specified sense changed to the new gloss.
+ * If that sense has multiple semantic domains, split into two senses:
+ * one with the specified domain and the new gloss,
+ * a second with the other domains and the former gloss.
  */
-export class DataEntryTable extends React.Component<
-  DataEntryTableProps,
-  DataEntryTableState
-> {
-  constructor(props: DataEntryTableProps) {
-    super(props);
-    this.state = {
-      existingWords: [],
-      recentlyAddedWords: [],
-      isReady: false,
-      suggestVerns: true,
-      analysisLang: defaultWritingSystem,
-      vernacularLang: newWritingSystem("qaa", "Unknown"),
-      defunctWordIds: [],
-      isFetchingFrontier: false,
-    };
-    this.refNewEntry = React.createRef<NewEntry>();
-    this.recorder = new Recorder();
-  }
-  refNewEntry: React.RefObject<NewEntry>;
-  recorder: Recorder;
-
-  async componentDidMount() {
-    await this.updateExisting();
-    await this.getProjectSettings();
+export function updateEntryGloss(
+  entry: WordAccess,
+  def: string,
+  semDomId: string
+): Word {
+  const sense = entry.word.senses.find((s) => s.guid === entry.senseGuid);
+  if (!sense) {
+    throw new Error("Word has no sense with specified guid");
   }
 
-  async componentDidUpdate(prevProps: DataEntryTableProps) {
-    if (this.props.treeIsOpen && !prevProps.treeIsOpen) {
-      await this.exitGracefully();
+  const newSense: Sense = { ...sense };
+  newSense.glosses = [{ ...sense.glosses[0], def }];
+  const oldSense: Sense = { ...sense };
+
+  // Move only the current semantic domain to the new sense.
+  const doms = [...sense.semanticDomains];
+  newSense.semanticDomains = [];
+  oldSense.semanticDomains = [];
+  for (const d of doms) {
+    if (d.id === semDomId) {
+      newSense.semanticDomains.push(d);
+    } else {
+      oldSense.semanticDomains.push(d);
     }
   }
 
-  async getProjectSettings(): Promise<void> {
-    const proj = await backend.getProject();
-    const suggestVerns = proj.autocompleteSetting === AutocompleteSetting.On;
-    const analysisLang = proj.analysisWritingSystems[0] ?? defaultWritingSystem;
-    const vernacularLang = proj.vernacularWritingSystem;
-    this.setState({ analysisLang, vernacularLang, suggestVerns });
+  const senses = entry.word.senses.filter((s) => s.guid !== entry.senseGuid);
+  // Check whether any other semantic domains are present.
+  if (!oldSense.semanticDomains.length) {
+    // If not, the word can simply be updated to the new sense.
+    senses.push(newSense);
+  } else {
+    // Otherwise, the other semantic domains should be retained with the old sense.
+    newSense.guid = v4();
+    senses.push(oldSense, newSense);
   }
+  return { ...entry.word, senses };
+}
 
-  /** Finished with this page of words, select new semantic domain */
-  // TODO: Implement
-  submit(e?: React.FormEvent<HTMLFormElement>) {
-    if (e) {
-      e.preventDefault();
+/*** A data entry table containing recent word entries. */
+export default function DataEntryTable(
+  props: DataEntryTableProps
+): ReactElement {
+  const [state, setState] = useState<DataEntryTableState>({
+    // project properties to be set
+    analysisLang: defaultWritingSystem,
+    suggestVerns: true,
+    vernacularLang: newWritingSystem("qaa", "Unknown"),
+    // word data
+    existingWords: [],
+    recentWords: [],
+    // state management
+    defunctUpdates: {},
+    defunctWordIds: {},
+    isFetchingFrontier: false,
+    isReady: false,
+    senseSwitches: [],
+  });
+
+  const { enqueueSnackbar } = useSnackbar();
+  const recorder = new Recorder();
+  const refNewEntry = useRef<NewEntry>(null);
+  const { t } = useTranslation();
+
+  ////////////////////////////////////
+  // State-updating functions
+  // These are preferably non-async function that return void.
+  ////////////////////////////////////
+
+  /*** Apply language and autocomplete setting from the project.
+   * Then trigger the initial fetch of frontier data.
+   */
+  const applyProjSettings = useCallback((proj: Project): void => {
+    setState((prevState) => ({
+      ...prevState,
+      analysisLang: proj.analysisWritingSystems[0] ?? defaultWritingSystem,
+      isFetchingFrontier: true,
+      suggestVerns: proj.autocompleteSetting === AutocompleteSetting.On,
+      vernacularLang: proj.vernacularWritingSystem,
+    }));
+  }, []);
+
+  /*** Use this without newId before updating any word on the backend,
+   * to make sure that word doesn't get edited by two different functions.
+   * Use this with newId to specify the replacement of a defunct word.
+   */
+  const defunctWord = (oldId: string, newId?: string): void => {
+    if (!newId && state.defunctWordIds[oldId]) {
+      return;
     }
-  }
-
-  // Use this before updating any word on the backend,
-  // to make sure that word doesn't get edited by two different functions
-  defunctWord(wordId: string): void {
-    const defunctWordIds = this.state.defunctWordIds;
-    if (!defunctWordIds.includes(wordId)) {
-      defunctWordIds.push(wordId);
-      this.setState({ defunctWordIds });
+    if (!newId) {
+      setState((prevState) => {
+        const defunctWordIds = { ...prevState.defunctWordIds };
+        defunctWordIds[oldId] = DefunctStatus.Recent;
+        return { ...prevState, defunctWordIds };
+      });
+      return;
     }
-  }
+    setState((prevState) => {
+      const defunctUpdates = { ...prevState.defunctUpdates };
+      const defunctWordIds = { ...prevState.defunctWordIds };
+      defunctUpdates[oldId] = newId;
+      defunctWordIds[oldId] = DefunctStatus.Recent;
+      return { ...prevState, defunctUpdates, defunctWordIds };
+    });
+  };
 
-  async addNewWord(
+  /*** Update whether the exit button is highlighted. */
+  const setIsReady = (isReady: boolean): void => {
+    if (isReady !== state.isReady) {
+      setState((prevState) => ({ ...prevState, isReady }));
+    }
+  };
+
+  /*** Update a recent entry to a different sense of the same word. */
+  const switchSense = useCallback(
+    (oldGuid: string, newGuid: string): void => {
+      const entry = state.recentWords.find((w) => w.senseGuid === oldGuid);
+      if (!entry || !entry.word.senses.find((s) => s.guid === newGuid)) {
+        return;
+      }
+      setState((prevState) => {
+        const recentWords = prevState.recentWords.map((w) =>
+          w.senseGuid === oldGuid ? { ...w, senseGuid: newGuid } : w
+        );
+        const senseSwitches = prevState.senseSwitches.filter(
+          (s) => s.oldGuid !== oldGuid
+        );
+        return { ...prevState, recentWords, senseSwitches };
+      });
+    },
+    [state.recentWords]
+  );
+
+  /*** Add to recent entries every sense of the word with the current semantic domain. */
+  const addAllSensesToDisplay = (word: Word): void => {
+    const domId = props.semanticDomain.id;
+    setState((prevState) => {
+      const recentWords = [...prevState.recentWords];
+      word.senses.forEach((s) => {
+        if (s.semanticDomains.find((dom) => dom.id === domId)) {
+          recentWords.push({ word, senseGuid: s.guid });
+        }
+      });
+      return { ...prevState, recentWords };
+    });
+  };
+
+  /*** Add one-sense word to the display of recent entries. */
+  const addToDisplay = (wordAccess: WordAccess, insertIndex?: number): void => {
+    setState((prevState) => {
+      const recentWords = [...prevState.recentWords];
+      if (insertIndex !== undefined && insertIndex < recentWords.length) {
+        recentWords.splice(insertIndex, 0, wordAccess);
+      } else {
+        recentWords.push(wordAccess);
+      }
+      return { ...prevState, isFetchingFrontier: true, recentWords };
+    });
+  };
+
+  /*** Remove recent entry from specified index. */
+  const removeRecentEntry = (index: number): void => {
+    setState((prevState) => {
+      const recentWords = prevState.recentWords.filter((_w, i) => i !== index);
+      return { ...prevState, recentWords };
+    });
+  };
+
+  /*** Add a senseSwitch to the queue to be processed when possible. */
+  const queueSenseSwitch = (oldGuid: string, newGuid: string): void => {
+    if (!oldGuid || !newGuid) {
+      return;
+    }
+    setState((prevState) => {
+      const senseSwitches = [...prevState.senseSwitches, { newGuid, oldGuid }];
+      return { ...prevState, senseSwitches };
+    });
+  };
+
+  /*** Replace every displayed instance of a word. */
+  const replaceInDisplay = (oldId: string, word: Word): void => {
+    setState((prevState) => {
+      const recentWords = prevState.recentWords.map((a) =>
+        a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
+      );
+      return { ...prevState, isFetchingFrontier: true, recentWords };
+    });
+  };
+
+  /*** Reset things specific to the current data entry session in the current semantic domain. */
+  const resetEverything = (): void => {
+    props.hideQuestions();
+    setState((prevState) => ({
+      ...prevState,
+      defunctUpdates: {},
+      defunctWordIds: {},
+      senseSwitches: [],
+      recentWords: [],
+    }));
+    if (refNewEntry.current) {
+      refNewEntry.current.resetState();
+    }
+  };
+
+  ////////////////////////////////////
+  // useEffect functions to manage re-renders.
+  // These cannot be async, so use asyncFunction().then(...) as needed.
+  ////////////////////////////////////
+
+  /*** Happens once on initial render to load in projectSettings. */
+  useEffect(() => {
+    backend.getProject().then(applyProjSettings);
+  }, [applyProjSettings]);
+
+  /*** Manages the senseSwitches queue. */
+  useEffect(() => {
+    if (!state.senseSwitches.length) {
+      return;
+    }
+    const { oldGuid, newGuid } = state.senseSwitches[0];
+    const oldEntry = state.recentWords.find((w) => w.senseGuid === oldGuid);
+    if (!oldEntry) {
+      return;
+    }
+    if (!oldEntry.word.senses.find((s) => s.guid === newGuid)) {
+      return;
+    }
+    switchSense(oldGuid, newGuid);
+  }, [switchSense, state.recentWords, state.senseSwitches]);
+
+  /*** Manages fetching the frontier.
+   * This is the ONLY place to update existingWords or switch isFetchingFrontier to false.
+   */
+  useEffect(() => {
+    if (state.isFetchingFrontier) {
+      backend.getFrontierWords().then((words) => {
+        const existingWords = filterWords(words);
+        setState((prevState) => {
+          const defunctWordIds: Hash<DefunctStatus> = {};
+          for (const id of Object.keys(prevState.defunctWordIds)) {
+            // After a successful frontier fetch,
+            // move Recent defunct ids to Retire,
+            // and only keep Retire ids if they are still in the display.
+            if (
+              prevState.defunctWordIds[id] === DefunctStatus.Recent ||
+              prevState.recentWords.find((w) => w.word.id === id)
+            ) {
+              defunctWordIds[id] = DefunctStatus.Retire;
+            }
+          }
+          const defunctUpdates: Hash<string> = {};
+          for (const id of Object.keys(prevState.defunctUpdates)) {
+            // Only keep update mappings for ids that are still defunct.
+            if (defunctWordIds[id]) {
+              defunctUpdates[id] = prevState.defunctUpdates[id];
+            }
+          }
+          return {
+            ...prevState,
+            isFetchingFrontier: false,
+            existingWords,
+            defunctUpdates,
+            defunctWordIds,
+          };
+        });
+      });
+    }
+  }, [state.isFetchingFrontier]);
+
+  /*** Act on the defunctUpdates queue. */
+  useEffect(() => {
+    const ids = Object.keys(state.defunctUpdates);
+    if (!ids.length) {
+      return;
+    }
+    const oldId = ids.find((id) =>
+      state.recentWords.find((w) => w.word.id === id)
+    );
+    if (oldId) {
+      // Do an update if there's one to be done.
+      let newId = oldId;
+      while (state.defunctUpdates[newId]) {
+        newId = state.defunctUpdates[newId];
+      }
+      backend.getWord(newId).then((w) => replaceInDisplay(oldId, w));
+    } else {
+      // When recent entries are up to date, update the list of all words
+      setState((prevState) => {
+        return { ...prevState, isFetchingFrontier: true };
+      });
+    } // eslint-disable-next-line
+  }, [state.defunctUpdates]); // omitted: state.recentWords
+
+  ////////////////////////////////////
+  // Async functions that wrap around a backend update to a word.
+  // Before the update, defunctWord(word.id).
+  // After the update, defunctWord(updatedWord.id).
+  ////////////////////////////////////
+
+  /*** Given an array of audio file urls, add them all to specified word. */
+  const addAudiosToBackend = async (
+    oldId: string,
+    audioURLs: string[]
+  ): Promise<string> => {
+    if (!audioURLs.length) {
+      return oldId;
+    }
+    defunctWord(oldId);
+    let newId = oldId;
+    for (const audioURL of audioURLs) {
+      const audioBlob = await fetch(audioURL).then((result) => result.blob());
+      const fileName = getFileNameForWord(newId);
+      const audioFile = new File([audioBlob], fileName, {
+        type: audioBlob.type,
+        lastModified: Date.now(),
+      });
+      newId = await backend.uploadAudio(newId, audioFile);
+      URL.revokeObjectURL(audioURL);
+    }
+    defunctWord(oldId, newId);
+    return newId;
+  };
+
+  /*** Given a single audio file, add to specified word. */
+  const addAudioFileToWord = async (
+    oldId: string,
+    audioFile: File
+  ): Promise<void> => {
+    defunctWord(oldId);
+    const newId = await backend.uploadAudio(oldId, audioFile);
+    defunctWord(oldId, newId);
+  };
+
+  /*** Add a word determined to be a duplicate.
+   * Ensures the updated word has representation in the display.
+   * Note: Only for use after backend.getDuplicateId().
+   */
+  const addDuplicateWord = async (
+    word: Word,
+    audioURLs: string[],
+    oldId: string
+  ): Promise<void> => {
+    const isInDisplay =
+      state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
+
+    defunctWord(oldId);
+    const newWord = await backend.updateDuplicate(oldId, getUserId(), word);
+    defunctWord(oldId, newWord.id);
+
+    const newId = await addAudiosToBackend(newWord.id, audioURLs);
+
+    if (!isInDisplay) {
+      addAllSensesToDisplay(await backend.getWord(newId));
+    }
+  };
+
+  /*** Deletes specified audio file from specified word. */
+  const deleteAudioFromWord = async (
+    oldId: string,
+    fileName: string
+  ): Promise<void> => {
+    defunctWord(oldId);
+    const newId = await backend.deleteAudio(oldId, fileName);
+    defunctWord(oldId, newId);
+  };
+
+  /*** Updates word. */
+  const updateWordInBackend = async (word: Word): Promise<Word> => {
+    defunctWord(word.id);
+    const newWord = await backend.updateWord(word);
+    defunctWord(word.id, newWord.id);
+    return newWord;
+  };
+
+  //////////////////////////
+  // Other functions.
+  /////////////////////////////////
+
+  const addNewWord = async (
     wordToAdd: Word,
     audioURLs: string[],
-    insertIndex?: number,
-    ignoreRecent?: boolean
-  ): Promise<void> {
-    wordToAdd.note.language = this.state.analysisLang.bcp47;
+    insertIndex?: number
+    //ignoreRecent?: boolean,
+  ): Promise<void> => {
+    wordToAdd.note.language = state.analysisLang.bcp47;
 
     // Check if word is duplicate to existing word.
     const dupId = await backend.getDuplicateId(wordToAdd);
     if (dupId) {
-      await this.addDuplicateWord(wordToAdd, audioURLs, dupId, ignoreRecent);
-      return;
+      return await addDuplicateWord(wordToAdd, audioURLs, dupId);
     }
 
-    const addedWord = await backend.createWord(wordToAdd);
-    const wordId = await this.addAudiosToBackend(addedWord.id, audioURLs);
-
-    await this.updateExisting();
-
-    if (ignoreRecent) {
+    let word = await backend.createWord(wordToAdd);
+    const wordId = await addAudiosToBackend(word.id, audioURLs);
+    // ToDo: Evaluate if the removed `ignoreRecent` functionality is still needed.
+    /*if (ignoreRecent) {
       return;
-    }
-
-    const word = await backend.getWord(wordId);
-
-    this.addToDisplay({ word, senseIndex: 0 }, insertIndex);
-  }
-
-  async addDuplicateWord(
-    wordToAdd: Word,
-    audioURLs: string[],
-    duplicatedId: string,
-    ignoreRecent?: boolean
-  ): Promise<void> {
-    // Get UserId and passing userId parameter to updateDuplicate
-    var userId = getCurrentUser()?.id;
-    const updatedWord = await backend.updateDuplicate(
-      duplicatedId,
-      userId ?? "",
-      wordToAdd
-    );
-    const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
-    await this.updateExisting();
-
-    if (ignoreRecent) {
-      return;
-    }
-
-    this.addOrReplaceInDisplay(duplicatedId, await backend.getWord(wordId));
-  }
-
-  /** Update the word in the backend and the frontend */
-  async updateWordBackAndFront(
-    wordToUpdate: Word,
-    senseIndex: number,
-    audioURLs?: string[]
-  ): Promise<void> {
-    let word = await this.updateWordInBackend(wordToUpdate);
-    if (audioURLs && audioURLs.length) {
-      const wordId = await this.addAudiosToBackend(word.id, audioURLs);
+    }*/
+    if (wordId !== word.id) {
       word = await backend.getWord(wordId);
     }
+    addToDisplay({ word, senseGuid: word.senses[0].guid }, insertIndex);
+  };
 
-    this.addToDisplay({ word, senseIndex }, undefined, () => {
-      this.replaceInDisplay(wordToUpdate.id, word);
-    });
-  }
+  /*** Update the word in the backend and the frontend */
+  const updateWordBackAndFront = async (
+    wordToUpdate: Word,
+    senseGuid: string,
+    audioURLs?: string[]
+  ): Promise<void> => {
+    let word = await updateWordInBackend(wordToUpdate);
+    if (audioURLs?.length) {
+      const wordId = await addAudiosToBackend(word.id, audioURLs);
+      word = await backend.getWord(wordId);
+    }
+    addToDisplay({ word, senseGuid });
+  };
 
-  async updateWordBackAndFrontSimple(wordToUpdate: Word): Promise<void> {
-    const updatedWord = await this.updateWordInBackend(wordToUpdate);
-    this.replaceInDisplay(wordToUpdate.id, updatedWord);
-  }
-
-  // Checks if sense already exists with this gloss and semantic domain
-  // returns false if encounters duplicate
-  async updateWordWithNewGloss(
+  /***  Checks if sense already exists with this gloss and semantic domain. */
+  const updateWordWithNewGloss = async (
     wordId: string,
     gloss: string,
     audioFileURLs?: string[]
-  ): Promise<void> {
-    const existingWord = this.state.existingWords.find(
-      (word: Word) => word.id === wordId
-    );
+  ): Promise<void> => {
+    const existingWord = state.existingWords.find((w: Word) => w.id === wordId);
     if (!existingWord) {
       throw new Error("You are trying to update a nonexistent word");
     }
 
-    for (const [senseIndex, sense] of existingWord.senses.entries()) {
-      if (
-        sense.glosses &&
-        sense.glosses.length &&
-        sense.glosses[0].def === gloss
-      ) {
+    for (const sense of existingWord.senses) {
+      if (sense.glosses?.length && sense.glosses[0].def === gloss) {
         if (
-          sense.semanticDomains
-            .map((semanticDomain) => semanticDomain.id)
-            .includes(this.props.semanticDomain.id)
+          sense.semanticDomains.find((d) => d.id === props.semanticDomain.id)
         ) {
           // User is trying to add a sense that already exists
-          alert(
-            this.props.t("addWords.senseInWord") +
-              `: ${existingWord.vernacular}, ${gloss}`
+          enqueueSnackbar(
+            `${t("addWords.senseInWord")}: ${existingWord.vernacular}, ${gloss}`
           );
           return;
         } else {
           const updatedWord = addSemanticDomainToSense(
-            this.props.semanticDomain,
+            props.semanticDomain,
             existingWord,
-            senseIndex
+            sense.guid
           );
-          await this.updateWordBackAndFront(
-            updatedWord,
-            senseIndex,
-            audioFileURLs
-          );
+          await updateWordBackAndFront(updatedWord, sense.guid, audioFileURLs);
           return;
         }
       }
     }
     // The gloss is new for this word, so add a new sense.
-    const updatedWord = addSenseToWord(
-      this.props.semanticDomain,
-      existingWord,
-      gloss,
-      this.state.analysisLang.bcp47
-    );
-    await this.updateWordBackAndFront(
-      updatedWord,
-      updatedWord.senses.length - 1, // Was added at the end of the sense list
-      audioFileURLs
-    );
+    defunctWord(existingWord.id);
+    const semDom = makeSemDomCurrent(props.semanticDomain);
+    const sense = newSense(gloss, state.analysisLang.bcp47, semDom);
+    const senses = [...existingWord.senses, sense];
+    const newWord: Word = { ...existingWord, senses };
+
+    await updateWordBackAndFront(newWord, sense.guid, audioFileURLs);
     return;
-  }
+  };
 
-  async addAudiosToBackend(
-    wordId: string,
-    audioURLs: string[]
-  ): Promise<string> {
-    let updatedWordId = wordId;
-    for (const audioURL of audioURLs) {
-      const audioBlob = await fetch(audioURL).then((result) => result.blob());
-      const fileName = getFileNameForWord(updatedWordId);
-      const audioFile = new File([audioBlob], fileName, {
-        type: audioBlob.type,
-        lastModified: Date.now(),
-      });
-      this.defunctWord(updatedWordId);
-      updatedWordId = await backend.uploadAudio(updatedWordId, audioFile);
-      URL.revokeObjectURL(audioURL);
+  const undoRecentEntry = async (eIndex: number): Promise<void> => {
+    const { word, senseGuid } = state.recentWords[eIndex];
+    const sIndex = word.senses.findIndex((s) => s.guid === senseGuid);
+    if (sIndex === -1) {
+      throw new Error("Entry does not have specified sense.");
     }
-    return updatedWordId;
-  }
-
-  async addAudioToRecentWord(
-    oldWordId: string,
-    audioFile: File
-  ): Promise<void> {
-    this.defunctWord(oldWordId);
-    await backend.uploadAudio(oldWordId, audioFile).then(async (newWordId) => {
-      await backend.getWord(newWordId).then(async (w) => {
-        this.replaceInDisplay(oldWordId, w);
-        await this.updateExisting();
-      });
-    });
-  }
-
-  async deleteAudioFromRecentWord(
-    oldWordId: string,
-    fileName: string
-  ): Promise<void> {
-    this.defunctWord(oldWordId);
-    await backend.deleteAudio(oldWordId, fileName).then(async (newWordId) => {
-      await backend.getWord(newWordId).then(async (w) => {
-        this.replaceInDisplay(oldWordId, w);
-        await this.updateExisting();
-      });
-    });
-  }
-
-  async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
-    this.defunctWord(wordToUpdate.id);
-    const updatedWord = await backend.updateWord(wordToUpdate);
-    await this.updateExisting();
-    return updatedWord;
-  }
-
-  async updateExisting(): Promise<void> {
-    if (!this.state.isFetchingFrontier) {
-      this.setState({ isFetchingFrontier: true });
-      const existingWords = await this.props.getWordsFromBackend();
-      const isFetchingFrontier = false;
-      this.setState({ existingWords, isFetchingFrontier });
-    }
-  }
-
-  async undoRecentEntry(entryIndex: number): Promise<string> {
-    if (entryIndex >= this.state.recentlyAddedWords.length) {
-      throw new RangeError("Entry doesn't exist in recent entries.");
-    }
-    const recentEntry: WordAccess = this.state.recentlyAddedWords[entryIndex];
-
-    // Copy all the parts we need
-    const recentWord: Word = { ...recentEntry.word };
-    const senseCount = recentWord.senses.length;
-    const senseIndex = recentEntry.senseIndex;
-    const recentSense: Sense = { ...recentWord.senses[senseIndex] };
-
-    this.removeRecentEntry(entryIndex);
-
-    if (recentSense.semanticDomains.length > 1) {
-      // If there is more than one semantic domain in this sense, only remove the domain
-      const updatedSemanticDomains: SemanticDomain[] =
-        recentSense.semanticDomains.filter(
-          (semDom) => semDom.id !== this.props.semanticDomain.id
-        );
-      const updatedSense: Sense = {
-        ...recentSense,
-        semanticDomains: updatedSemanticDomains,
-      };
-      return await this.updateSense(recentWord, senseIndex, updatedSense);
-    } else if (senseCount > 1) {
+    defunctWord(word.id);
+    removeRecentEntry(eIndex);
+    const senses = [...word.senses];
+    const oldSense = senses[sIndex];
+    const oldDoms = oldSense.semanticDomains;
+    if (oldDoms.length > 1) {
+      // If there is more than one semantic domain in this sense, only remove the domain.
+      const doms = oldDoms.filter((d) => d.id !== props.semanticDomain.id);
+      const newSense: Sense = { ...oldSense, semanticDomains: doms };
+      senses.splice(sIndex, 1, newSense);
+      await updateWordInBackend({ ...word, senses });
+    } else if (senses.length > 1) {
       // If there is more than one sense in this word, only remove this sense.
-      return await this.removeSense(recentWord, senseIndex);
+      senses.splice(sIndex, 1);
+      await updateWordInBackend({ ...word, senses });
     } else {
       // Since this is the only sense, delete the word.
-      await this.deleteWord(recentWord);
-      return "";
+      await backend.deleteFrontierWord(word.id);
     }
-  }
+  };
 
-  async updateRecentEntryVern(
-    entryIndex: number,
-    newVern: string,
+  const updateRecentVern = async (
+    index: number,
+    vernacular: string,
     targetWordId?: string
-  ): Promise<void> {
+  ): Promise<void> => {
     if (targetWordId !== undefined) {
       throw new Error("VernDialog on RecentEntry is not yet supported.");
     }
-    const oldEntry = this.state.recentlyAddedWords[entryIndex];
-    const oldWord = oldEntry.word;
-    const oldSense = oldWord.senses[oldEntry.senseIndex];
+    const oldEntry = state.recentWords[index];
+    const oldSenses = oldEntry.word.senses;
+    const oldSense = oldSenses.find((s) => s.guid === oldEntry.senseGuid);
+    if (!oldSense) {
+      throw new Error("Entry does not have specified sense.");
+    }
 
-    if (
-      oldWord.senses.length === 1 &&
-      oldWord.senses[0].semanticDomains.length === 1
-    ) {
+    if (oldSenses.length === 1 && oldSense.semanticDomains.length === 1) {
       // The word can simply be updated as it stand
-      await this.updateVernacular(oldWord, newVern);
+      await updateWordInBackend({ ...oldEntry.word, vernacular });
     } else {
-      // This is a modification that has to be retracted and replaced with a new entry
-      const word = simpleWord(newVern, firstGlossText(oldSense));
+      // Retract and replaced with a new entry.
+      const word = simpleWord(vernacular, firstGlossText(oldSense));
       word.id = "";
-      await this.undoRecentEntry(entryIndex).then(async () => {
-        await this.addNewWord(word, [], entryIndex);
-      });
+      await undoRecentEntry(index);
+      await addNewWord(word, [], index);
     }
-  }
+  };
 
-  async updateRecentEntryGloss(entryIndex: number, def: string): Promise<void> {
-    const oldEntry = this.state.recentlyAddedWords[entryIndex];
-    const oldWord = oldEntry.word;
-    const senseIndex = oldEntry.senseIndex;
-    const oldSense = oldWord.senses[senseIndex];
-    const oldGloss = oldSense.glosses[0];
+  const updateRecentGloss = async (
+    index: number,
+    def: string
+  ): Promise<void> => {
+    const oldEntry = state.recentWords[index];
+    defunctWord(oldEntry.word.id);
+    const newWord = updateEntryGloss(oldEntry, def, props.semanticDomain.id);
+    await updateWordInBackend(newWord);
 
-    if (oldWord.senses.length === 1 && oldSense.semanticDomains.length === 1) {
-      // The word can simply be updated as it stands
-      const newSense: Sense = {
-        ...oldSense,
-        glosses: [{ ...oldGloss, def }],
-      };
-      await this.updateSense(oldWord, senseIndex, newSense);
-    } else {
-      // This is a modification that has to be retracted and replaced with a new entry
-      await this.undoRecentEntry(entryIndex).then(async (wordId) => {
-        await this.updateWordWithNewGloss(wordId, def);
-      });
-    }
-  }
-
-  async updateRecentEntryNote(
-    entryIndex: number,
-    newText: string
-  ): Promise<void> {
-    const oldEntry = this.state.recentlyAddedWords[entryIndex];
-    const oldWord = oldEntry.word;
-    const oldNote = oldWord.note;
-    if (newText !== oldNote.text) {
-      const updatedNote: Note = { ...oldNote, text: newText };
-      const updatedWord: Word = { ...oldWord, note: updatedNote };
-      await this.updateWordBackAndFrontSimple(updatedWord);
-    }
-  }
-
-  removeRecentEntry(entryIndex: number): void {
-    this.setState((prevState) => {
-      const recentlyAddedWords = [...prevState.recentlyAddedWords];
-      recentlyAddedWords.splice(entryIndex, 1);
-      return { recentlyAddedWords };
-    });
-  }
-
-  /** Update a vern in a word and replace every displayed instance of that word. */
-  async updateVernacular(word: Word, vernacular: string): Promise<void> {
-    const updatedWord: Word = { ...word, vernacular };
-    await this.updateWordInBackend(updatedWord).then((updatedWord) =>
-      this.replaceInDisplay(word.id, updatedWord)
-    );
-  }
-
-  /** Update a sense in a word and replace every displayed instance of that word. */
-  async updateSense(
-    word: Word,
-    senseIndex: number,
-    updatedSense: Sense
-  ): Promise<string> {
-    const senses = [...word.senses];
-    senses.splice(senseIndex, 1, updatedSense);
-    const updatedWord: Word = { ...word, senses };
-    return await this.updateWordInBackend(updatedWord).then((w) => {
-      this.replaceInDisplay(word.id, w);
-      return w.id;
-    });
-  }
-
-  /** Remove a sense from a word and replace every displayed instance of that word. */
-  async removeSense(word: Word, senseIndex: number): Promise<string> {
-    const senses = [...word.senses];
-    senses.splice(senseIndex, 1);
-    const updatedWord: Word = { ...word, senses };
-    return await this.updateWordInBackend(updatedWord).then((w) => {
-      this.replaceInDisplay(word.id, w, senseIndex);
-      return w.id;
-    });
-  }
-
-  /** Add one-sense word to the display of recent entries. */
-  addToDisplay(
-    wordAccess: WordAccess,
-    insertIndex?: number,
-    callback?: () => void
-  ): void {
-    this.setState((prevState) => {
-      const recentlyAddedWords = [...prevState.recentlyAddedWords];
-      if (
-        insertIndex !== undefined &&
-        insertIndex < recentlyAddedWords.length
-      ) {
-        recentlyAddedWords.splice(insertIndex, 0, wordAccess);
-      } else {
-        recentlyAddedWords.push(wordAccess);
-      }
-      return { recentlyAddedWords };
-    }, callback ?? (() => {}));
-  }
-
-  /** Replace every displayed instance of a word, or add if not already there. */
-  addOrReplaceInDisplay(oldWordId: string, word: Word): void {
-    this.setState((prevState) => {
-      const recentlyAddedWords = [...prevState.recentlyAddedWords];
-      let defunctWordIds = prevState.defunctWordIds;
-
-      if (recentlyAddedWords.find((w) => w.word.id === oldWordId)) {
-        recentlyAddedWords.forEach((entry) => {
-          if (entry.word.id === oldWordId) {
-            entry.word = word;
-          }
-        });
-        defunctWordIds = defunctWordIds.filter((id) => id !== oldWordId);
-      } else {
-        const thisDomId = this.props.semanticDomain.id;
-        word.senses.forEach((sense, senseIndex) => {
-          if (sense.semanticDomains.find((dom) => dom.id === thisDomId)) {
-            recentlyAddedWords.push({ word, senseIndex });
-          }
-        });
-      }
-
-      return { recentlyAddedWords, defunctWordIds };
-    });
-  }
-
-  /** Replace every displayed instance of a word.
-   * If removedSenseIndex is provided, that sense was removed. */
-  replaceInDisplay(
-    oldWordId: string,
-    word: Word,
-    removedSenseIndex?: number
-  ): void {
-    this.setState((prevState) => {
-      const recentlyAddedWords = [...prevState.recentlyAddedWords];
-      recentlyAddedWords.forEach((entry, index) => {
-        if (entry.word.id === oldWordId) {
-          let senseIndex = entry.senseIndex;
-          if (
-            removedSenseIndex !== undefined &&
-            senseIndex >= removedSenseIndex
-          ) {
-            senseIndex--;
-          }
-          const newEntry: WordAccess = { ...entry, word, senseIndex };
-          recentlyAddedWords.splice(index, 1, newEntry);
-        }
-      });
-      const defunctWordIds = prevState.defunctWordIds.filter(
-        (id) => id !== oldWordId
+    // If a sense with a new guid was added, it needs to replace the old sense in the display.
+    if (newWord.senses.length > oldEntry.word.senses.length) {
+      const newSense = newWord.senses.find(
+        (sense) => !oldEntry.word.senses.find((s) => s.guid === sense.guid)
       );
-      return { recentlyAddedWords, defunctWordIds };
-    });
-  }
-
-  /** Delete specified word and clear from recent words. */
-  async deleteWord(word: Word): Promise<void> {
-    this.defunctWord(word.id);
-    await backend
-      .deleteFrontierWord(word.id)
-      .then(async () => await this.updateExisting());
-  }
-
-  /** Submit un-submitted word before resetting. */
-  async exitGracefully(): Promise<void> {
-    // Check if there is a new word, but user exited without pressing enter
-    if (this.refNewEntry.current) {
-      const newEntry = this.refNewEntry.current.state.newEntry;
-      if (!newEntry.senses.length) {
-        newEntry.senses.push(
-          newSense(undefined, undefined, this.props.semanticDomain)
-        );
-      }
-      const newEntryAudio = this.refNewEntry.current.state.audioFileURLs;
-      if (newEntry?.vernacular) {
-        await this.addNewWord(newEntry, newEntryAudio, undefined, true);
-        this.refNewEntry.current.resetState();
+      if (newSense) {
+        queueSenseSwitch(oldEntry.senseGuid, newSense.guid);
       }
     }
+  };
 
-    // Reset everything
-    this.props.hideQuestions();
-    this.setState({ defunctWordIds: [], recentlyAddedWords: [] });
-  }
+  const updateRecentNote = async (
+    index: number,
+    text: string
+  ): Promise<void> => {
+    const oldWord = state.recentWords[index].word;
+    if (text !== oldWord.note.text) {
+      const note: Note = { ...oldWord.note, text };
+      await updateWordInBackend({ ...oldWord, note });
+    }
+  };
 
-  render() {
-    return (
-      <form onSubmit={(e?: React.FormEvent<HTMLFormElement>) => this.submit(e)}>
-        <input type="submit" style={{ display: "none" }} />
+  /*** Reset the entry table. If there is an un-submitted word then submit it. */
+  const handleExit = async (): Promise<void> => {
+    // Check if there is a new word, but user exited without pressing enter
+    if (refNewEntry.current) {
+      const newEntry = refNewEntry.current.state.newEntry;
+      if (newEntry?.vernacular) {
+        const existingWord = state.existingWords.find(
+          (w) => w.vernacular === newEntry.vernacular
+        );
+        // existing word not found, create a new word
+        if (!existingWord) {
+          if (!newEntry.senses.length) {
+            newEntry.senses.push(
+              newSense(undefined, undefined, props.semanticDomain)
+            );
+          }
+          const newEntryAudio = refNewEntry.current.state.audioFileURLs;
+          await addNewWord(newEntry, newEntryAudio);
+        } else {
+          // found an existing word, update it
+          await updateWordWithNewGloss(
+            existingWord.id,
+            newEntry.senses[0].glosses[0].def,
+            refNewEntry.current.state.audioFileURLs
+          );
+        }
+      }
+    }
+    resetEverything();
+  };
 
-        <Grid container>
-          <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              align="center"
-              style={{
-                marginTop: theme.spacing(2),
-                marginBottom: theme.spacing(2),
-              }}
-            >
-              {this.props.t("addWords.vernacular")}
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography
-              variant="h5"
-              align="center"
-              style={{
-                marginTop: theme.spacing(2),
-                marginBottom: theme.spacing(2),
-              }}
-            >
-              {this.props.t("addWords.glosses")}
-            </Typography>
-          </Grid>
+  return (
+    <form
+      onSubmit={(e?: React.FormEvent<HTMLFormElement>) => e?.preventDefault()}
+    >
+      <input type="submit" style={{ display: "none" }} />
+      <Grid container>
+        <Grid item xs={4}>
+          <Typography
+            variant="h5"
+            align="center"
+            style={{
+              marginTop: theme.spacing(2),
+              marginBottom: theme.spacing(2),
+            }}
+          >
+            {t("addWords.vernacular")}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography
+            variant="h5"
+            align="center"
+            style={{
+              marginTop: theme.spacing(2),
+              marginBottom: theme.spacing(2),
+            }}
+          >
+            {t("addWords.glosses")}
+          </Typography>
+        </Grid>
 
-          {this.state.recentlyAddedWords.map((wordAccess, index) => (
-            <Grid item xs={12} key={index}>
-              <RecentEntry
-                key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                rowIndex={index}
-                entry={wordAccess.word}
-                senseIndex={wordAccess.senseIndex}
-                updateGloss={(newDef: string) =>
-                  this.updateRecentEntryGloss(index, newDef)
-                }
-                updateNote={(newText: string) =>
-                  this.updateRecentEntryNote(index, newText)
-                }
-                updateVern={(newVernacular: string, targetWordId?: string) =>
-                  this.updateRecentEntryVern(index, newVernacular, targetWordId)
-                }
-                removeEntry={() => this.undoRecentEntry(index)}
-                addAudioToWord={(wordId: string, audioFile: File) =>
-                  this.addAudioToRecentWord(wordId, audioFile)
-                }
-                deleteAudioFromWord={(wordId: string, fileName: string) =>
-                  this.deleteAudioFromRecentWord(wordId, fileName)
-                }
-                recorder={this.recorder}
-                focusNewEntry={() => {
-                  if (this.refNewEntry.current) {
-                    this.refNewEntry.current.focus(FocusTarget.Vernacular);
-                  }
-                }}
-                analysisLang={this.state.analysisLang}
-                vernacularLang={this.state.vernacularLang}
-                disabled={this.state.defunctWordIds.includes(
-                  wordAccess.word.id
-                )}
-              />
-            </Grid>
-          ))}
-
-          <Grid item xs={12}>
-            <NewEntry
-              ref={this.refNewEntry}
-              allWords={this.state.suggestVerns ? this.state.existingWords : []}
-              defunctWordIds={this.state.defunctWordIds}
-              updateWordWithNewGloss={(
-                wordId: string,
-                gloss: string,
-                audioFileURLs: string[]
-              ) => this.updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
-              addNewWord={(word: Word, audioFileURLs: string[]) =>
-                this.addNewWord(word, audioFileURLs)
+        {state.recentWords.map((wordAccess, index) => (
+          <Grid item xs={12} key={index}>
+            <RecentEntry
+              key={wordAccess.word.id + "_" + wordAccess.senseGuid}
+              rowIndex={index}
+              entry={wordAccess.word}
+              senseGuid={wordAccess.senseGuid}
+              updateGloss={(newDef: string) => updateRecentGloss(index, newDef)}
+              updateNote={(newText: string) => updateRecentNote(index, newText)}
+              updateVern={(newVernacular: string, targetWordId?: string) =>
+                updateRecentVern(index, newVernacular, targetWordId)
               }
-              semanticDomain={(() => {
-                var tempSemanticDomain: SemanticDomain =
-                  this.props.semanticDomain;
-                tempSemanticDomain.userId = getCurrentUser()?.id;
-                tempSemanticDomain.created = new Date().toISOString();
-                return tempSemanticDomain;
-              })()}
-              setIsReadyState={(isReady: boolean) =>
-                this.setState((state) => {
-                  return state.isReady === isReady ? null : { isReady };
-                })
+              removeEntry={() => undoRecentEntry(index)}
+              addAudioToWord={(wordId: string, audioFile: File) =>
+                addAudioFileToWord(wordId, audioFile)
               }
-              recorder={this.recorder}
-              analysisLang={this.state.analysisLang}
-              vernacularLang={this.state.vernacularLang}
+              deleteAudioFromWord={(wordId: string, fileName: string) =>
+                deleteAudioFromWord(wordId, fileName)
+              }
+              recorder={recorder}
+              focusNewEntry={() => {
+                if (refNewEntry.current) {
+                  refNewEntry.current.focus(FocusTarget.Vernacular);
+                }
+              }}
+              analysisLang={state.analysisLang}
+              vernacularLang={state.vernacularLang}
+              disabled={Object.keys(state.defunctWordIds).includes(
+                wordAccess.word.id
+              )}
             />
           </Grid>
-        </Grid>
+        ))}
 
-        <Grid container justifyContent="space-between" spacing={3}>
-          <Grid item>
-            {this.props.isSmallScreen ? (
-              <Button
-                id="toggle-existing-data"
-                style={{ marginTop: theme.spacing(2) }}
-                onClick={this.props.showExistingData}
-              >
-                <ListIcon fontSize={"medium"} color={"inherit"} />
-              </Button>
-            ) : null}
-          </Grid>
-          <Grid item>
+        <Grid item xs={12}>
+          <NewEntry
+            ref={refNewEntry}
+            allWords={state.suggestVerns ? state.existingWords : []}
+            defunctWordIds={Object.keys(state.defunctWordIds)}
+            updateWordWithNewGloss={(
+              wordId: string,
+              gloss: string,
+              audioFileURLs: string[]
+            ) => updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
+            addNewWord={(word: Word, audioFileURLs: string[]) =>
+              addNewWord(word, audioFileURLs)
+            }
+            semanticDomain={makeSemDomCurrent(props.semanticDomain)}
+            setIsReadyState={(isReady: boolean) => setIsReady(isReady)}
+            recorder={recorder}
+            analysisLang={state.analysisLang}
+            vernacularLang={state.vernacularLang}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container justifyContent="space-between" spacing={3}>
+        <Grid item>
+          {props.hasDrawerButton ? (
             <Button
-              id={exitButtonId}
-              type="submit"
-              variant="contained"
-              color={this.state.isReady ? "primary" : "secondary"}
+              id="toggle-existing-data"
               style={{ marginTop: theme.spacing(2) }}
-              endIcon={<ExitToApp />}
-              tabIndex={-1}
-              onClick={this.props.openTree}
+              onClick={props.showExistingData}
             >
-              {this.props.t("buttons.exit")}
+              <ListIcon fontSize={"medium"} color={"inherit"} />
             </Button>
-          </Grid>
+          ) : null}
         </Grid>
-      </form>
-    );
-  }
+        <Grid item>
+          <Button
+            id={exitButtonId}
+            type="submit"
+            variant="contained"
+            color={state.isReady ? "primary" : "secondary"}
+            style={{ marginTop: theme.spacing(2) }}
+            endIcon={<ExitToApp />}
+            tabIndex={-1}
+            onClick={() => {
+              props.openTree();
+              handleExit();
+            }}
+          >
+            {t("buttons.exit")}
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
+  );
 }
-
-export default withTranslation()(DataEntryTable);

@@ -5,7 +5,7 @@ import {
   SemanticDomain,
   SemanticDomainFull,
   SemanticDomainTreeNode,
-  State,
+  Status,
   Word,
 } from "api/models";
 import { getFrontierWords, getSemanticDomainFull } from "backend";
@@ -20,14 +20,13 @@ import { DomainWord } from "types/word";
 
 interface DataEntryProps {
   currentDomainTree: SemanticDomainTreeNode;
-  treeIsOpen?: boolean;
+  isTreeOpen?: boolean;
   closeTree: () => void;
   openTree: () => void;
 }
 
 interface DataEntryState {
   domain: SemanticDomainFull;
-  existingWords: Word[];
   domainWords: DomainWord[];
   isSmallScreen: boolean;
   drawerOpen: boolean;
@@ -44,7 +43,9 @@ const paperStyle = {
 /** Filter out words that do not have at least 1 active sense */
 export function filterWords(words: Word[]): Word[] {
   return words.filter((w) =>
-    w.senses.find((s) => s.accessibility === State.Active)
+    w.senses.find((s) =>
+      [Status.Active, Status.Protected].includes(s.accessibility)
+    )
   );
 }
 
@@ -54,13 +55,12 @@ export function filterWordsByDomain(
 ): DomainWord[] {
   const domainWords: DomainWord[] = [];
   for (const currentWord of words) {
-    for (const sense of currentWord.senses) {
-      if (
-        // This is for States created before .accessibility was required in the frontend.
-        (sense.accessibility === undefined ||
-          sense.accessibility === State.Active) &&
-        sense.semanticDomains.map((dom) => dom.id).includes(domain.id)
-      ) {
+    const senses = currentWord.senses.filter((s) =>
+      // The undefined is for Statuses created before .accessibility was required in the frontend.
+      [Status.Active, Status.Protected, undefined].includes(s.accessibility)
+    );
+    for (const sense of senses) {
+      if (sense.semanticDomains.map((dom) => dom.id).includes(domain.id)) {
         domainWords.push(new DomainWord({ ...currentWord, senses: [sense] }));
       }
     }
@@ -69,10 +69,10 @@ export function filterWordsByDomain(
 }
 
 export function sortDomainWordByVern(
-  existingWords: Word[],
+  words: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  const domainWords = filterWordsByDomain(existingWords, domain);
+  const domainWords = filterWordsByDomain(words, domain);
   return domainWords.sort((a, b) => {
     const comp = a.vernacular.localeCompare(b.vernacular);
     return comp !== 0 ? comp : a.gloss.localeCompare(b.gloss);
@@ -95,7 +95,6 @@ export default class DataEntryComponent extends React.Component<
         this.props.currentDomainTree.name,
         this.props.currentDomainTree.lang
       ),
-      existingWords: [],
       domainWords: [],
       isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
       drawerOpen: false,
@@ -118,12 +117,6 @@ export default class DataEntryComponent extends React.Component<
 
   toggleDrawer = (drawerOpen: boolean) => this.setState({ drawerOpen });
 
-  async getWordsFromBackend(): Promise<Word[]> {
-    const existingWords = await getFrontierWords();
-    this.setState({ existingWords });
-    return filterWords(existingWords);
-  }
-
   render(): ReactElement {
     return (
       <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
@@ -139,11 +132,12 @@ export default class DataEntryComponent extends React.Component<
             <Divider />
             <DataEntryTable
               semanticDomain={this.props.currentDomainTree}
-              treeIsOpen={this.props.treeIsOpen}
+              isTreeOpen={this.props.isTreeOpen}
               openTree={this.props.openTree}
-              getWordsFromBackend={() => this.getWordsFromBackend()}
               showExistingData={() => this.toggleDrawer(true)}
-              isSmallScreen={this.state.isSmallScreen}
+              hasDrawerButton={
+                this.state.isSmallScreen && this.state.domainWords.length > 0
+              }
               hideQuestions={() => {
                 this.setState({ questionsVisible: false });
               }}
@@ -158,14 +152,14 @@ export default class DataEntryComponent extends React.Component<
           toggleDrawer={this.toggleDrawer}
         />
 
-        <Dialog fullScreen open={!!this.props.treeIsOpen}>
+        <Dialog fullScreen open={!!this.props.isTreeOpen}>
           <AppBar />
           <TreeView
-            returnControlToCaller={() =>
-              this.getWordsFromBackend().then(() => {
-                this.setState((prevState, props) => ({
+            returnControlToCaller={async () =>
+              await getFrontierWords().then((words) => {
+                this.setState((_, props) => ({
                   domainWords: sortDomainWordByVern(
-                    prevState.existingWords,
+                    words,
                     props.currentDomainTree
                   ),
                 }));

@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import DomainTile, { Direction } from "components/TreeView/DomainTile";
 import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 
-var tileMaster: ReactTestRenderer;
+var tileMaster: renderer.ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
 describe("DomainTile", () => {

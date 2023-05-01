@@ -1,8 +1,7 @@
 import {
+  convertSenseToMergeTreeSense,
   defaultSidebar,
-  Hash,
   MergeTreeReference,
-  MergeTreeSense,
   MergeTreeWord,
   newMergeTreeWord,
 } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
@@ -17,6 +16,7 @@ import {
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
@@ -268,6 +268,7 @@ describe("MergeDupReducer", () => {
 
       checkTreeWords(testAction, expectedWords);
     });
+
     it("deletes multi-sense sense from a word with multiple senses", () => {
       const wordId = "word3";
       const testRef: MergeTreeReference = {
@@ -282,6 +283,7 @@ describe("MergeDupReducer", () => {
 
       checkTreeWords(testAction, expectedWords);
     });
+
     it("deletes word when deleting final sense", () => {
       const wordId = "word2";
       const testRef: MergeTreeReference = {
@@ -518,7 +520,7 @@ describe("MergeDupReducer", () => {
       expect(Object.keys(treeState.data.words)).toContain(srcWordId);
       // check each sense of word
       for (const [order, sense] of word.senses.entries()) {
-        const treeSense: MergeTreeSense = { ...sense, srcWordId, order };
+        const treeSense = convertSenseToMergeTreeSense(sense, srcWordId, order);
         const senses = treeState.data.senses;
         expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
           JSON.stringify(treeSense)

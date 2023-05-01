@@ -12,7 +12,7 @@ import distinctColors from "distinct-colors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-import { getLineChartRootData } from "backend";
+import { ChartRootData } from "api";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -26,7 +26,9 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  currentProjectId: string;
+  titleText: string;
+  isFilterZero?: boolean;
+  fetchData: () => Promise<ChartRootData | undefined>;
 }
 
 interface DatasetsProps {
@@ -34,11 +36,18 @@ interface DatasetsProps {
   data: Array<number>;
   borderColor?: string;
   backgroundColor?: string;
+  tension: 0.4;
+  fill: false;
+  cubicInterpolationMode: "monotone";
 }
 
 interface LineChartDataProps {
   labels: Array<string>;
   datasets: Array<DatasetsProps>;
+}
+
+function FilteredData(numbers: number[]): number[] {
+  return numbers.map((num) => (num ? num : NaN));
 }
 
 export default function LineChartComponent(props: LineChartProps) {
@@ -49,59 +58,49 @@ export default function LineChartComponent(props: LineChartProps) {
   });
 
   useEffect(() => {
-    const updateBarChartList = async () => {
-      var updateChartData: LineChartDataProps = {
+    const updateChartList = async () => {
+      const tempDate = await props.fetchData();
+      var updateEstimateDate: LineChartDataProps = {
         labels: [],
         datasets: [],
       };
-
-      const chartData = await getLineChartRootData(props.currentProjectId);
-
-      if (chartData != undefined) {
+      if (tempDate !== undefined) {
         // Get array of unique Color
         var palette: chroma.Color[];
-        if (chartData.datasets.length) {
-          palette = distinctColors({
-            count: chartData.datasets.length,
-          });
+        if (tempDate.datasets.length) {
+          palette = distinctColors({ count: tempDate.datasets.length });
         }
         let colorIndex = 0;
         // Update the updateChartData by retrieve
-        chartData.dates.map((e) => {
-          updateChartData.labels.push(e);
+        tempDate.dates.map((e) => {
+          // trim the format from year-mm-dd to mm-dd
+          updateEstimateDate.labels.push(e.slice(-5));
         });
-        chartData.datasets.forEach((e) => {
-          updateChartData.datasets.push({
+        tempDate.datasets.forEach((e) => {
+          updateEstimateDate.datasets.push({
             label: e.userName,
-            data: e.data,
+            data: props.isFilterZero ? FilteredData(e.data) : e.data,
             borderColor: palette[colorIndex].hex().toString(),
             backgroundColor: palette[colorIndex++].hex().toString(),
+            tension: 0.4,
+            fill: false,
+            cubicInterpolationMode: "monotone",
           });
         });
       }
-
-      setChartData(updateChartData);
+      setChartData(updateEstimateDate);
     };
 
-    updateBarChartList();
+    updateChartList();
 
     // Line Chart Options
     setChartOptions({
       responsive: true,
       plugins: {
-        legend: {
-          position: "top",
-        },
-        title: {
-          display: true,
-          text: "Words Collected Per User Per Day",
-        },
+        legend: { position: "top" },
+        title: { display: true, text: props.titleText },
       },
-      scales: {
-        x: {
-          beginAtZero: true,
-        },
-      },
+      scales: { x: { beginAtZero: true } },
     });
   }, [props]);
 

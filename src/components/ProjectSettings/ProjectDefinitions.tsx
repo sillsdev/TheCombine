@@ -6,7 +6,6 @@ import {
   SelectChangeEvent,
   Tooltip,
 } from "@mui/material";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { saveChangesToProject } from "components/Project/ProjectActions";

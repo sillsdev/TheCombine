@@ -1,7 +1,10 @@
 import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newDefinition, newFlag, newGloss } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
@@ -19,6 +22,7 @@ const WORD: ReviewEntriesWord = {
   vernacular: "pootis",
   senses: [
     {
+      ...new ReviewEntriesSense(),
       guid: "sense0",
       definitions: [DEFINITION],
       glosses: [
@@ -26,14 +30,12 @@ const WORD: ReviewEntriesWord = {
         newGloss("life's meaning", LANG),
       ],
       domains: [DOMAIN2, DOMAIN_BAD],
-      deleted: false,
     },
     {
+      ...new ReviewEntriesSense(),
       guid: "sense1",
-      definitions: [],
       glosses: [newGloss("heavy noise", LANG), GLOSS],
       domains: [DOMAIN, DOMAIN_BAD],
-      deleted: false,
     },
   ],
   flag: FLAG,

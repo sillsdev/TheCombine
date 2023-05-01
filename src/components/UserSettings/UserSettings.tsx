@@ -12,8 +12,9 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { useSnackbar } from "notistack";
+import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
@@ -74,188 +75,148 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
   );
 }
 
-interface UserSettingsState {
-  user: User;
-  name: string;
-  phone: string;
-  email: string;
-  emailTaken: boolean;
-  avatar: string;
-  avatarDialogOpen: boolean;
-}
+export default function UserSettings(): ReactElement {
+  const { t } = useTranslation();
+  const potentialUser = getCurrentUser();
+  const userCurr = potentialUser ?? newUser();
+  const [user, SetUser] = useState<User>(userCurr);
+  const [name, setName] = useState<string>(userCurr.name);
+  const [phone, setPhone] = useState<string>(userCurr.phone);
+  const [email, setEmail] = useState<string>(userCurr.email);
+  const [emailTaken, setEmailTaken] = useState<boolean>(false);
+  const [avatar, setAvatar] = useState<string>(getAvatar());
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState<boolean>(false);
+  const { enqueueSnackbar } = useSnackbar();
 
-/**
- * A page to edit a user's details
- */
-class UserSettings extends React.Component<WithTranslation, UserSettingsState> {
-  constructor(props: WithTranslation) {
-    super(props);
-    const potentialUser = getCurrentUser();
-    const user = potentialUser ?? newUser();
-    this.state = {
-      user: user,
-      name: user.name,
-      phone: user.phone,
-      email: user.email,
-      emailTaken: false,
-      avatar: getAvatar(),
-      avatarDialogOpen: false,
-    };
-  }
-
-  /** Updates the state to match the value in a textbox */
-  updateField<K extends keyof UserSettingsState>(
-    e: React.ChangeEvent<
-      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >,
-    field: K
-  ) {
-    const value = e.target.value;
-
-    this.setState({ [field]: value } as Pick<UserSettingsState, K>);
-  }
-
-  async isEmailOkay(): Promise<boolean> {
-    const emailUnchanged =
-      this.state.email.toLowerCase() === this.state.user.email.toLowerCase();
-
+  async function isEmailOkay(): Promise<boolean> {
+    const emailUnchanged = email.toLowerCase() === user.email.toLowerCase();
     if (emailUnchanged) {
       return true;
     }
-
-    return !(await isEmailTaken(this.state.email));
+    return !(await isEmailTaken(email));
   }
 
-  async onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (await this.isEmailOkay()) {
+    if (await isEmailOkay()) {
       await updateUser({
-        ...this.state.user,
-        name: this.state.name,
-        phone: this.state.phone,
-        email: this.state.email,
+        ...user,
+        name: name,
+        phone: phone,
+        email: email,
       });
-      alert(this.props.t("userSettings.updateSuccess"));
+      enqueueSnackbar(t("userSettings.updateSuccess"));
     } else {
-      this.setState({ emailTaken: true });
+      setEmailTaken(true);
     }
   }
 
-  render() {
-    return (
-      <React.Fragment>
-        <Grid container justifyContent="center">
-          <Card style={{ width: 450 }}>
-            <form onSubmit={(e) => this.onSubmit(e)}>
-              <CardContent>
-                <Grid item container spacing={6}>
-                  <Grid item container spacing={2} alignItems="center">
+  return (
+    <React.Fragment>
+      <Grid container justifyContent="center">
+        <Card style={{ width: 450 }}>
+          <form onSubmit={(e) => onSubmit(e)}>
+            <CardContent>
+              <Grid item container spacing={6}>
+                <Grid item container spacing={2} alignItems="center">
+                  <Grid item>
+                    <ClickableAvatar
+                      avatar={avatar}
+                      onClick={() => setAvatarDialogOpen(true)}
+                    />
+                  </Grid>
+                  <Grid item xs>
+                    <TextField
+                      id={`${idAffix}-name`}
+                      fullWidth
+                      variant="outlined"
+                      value={name}
+                      label={t("login.name")}
+                      onChange={(e) => setName(e.target.value)}
+                      inputProps={{ maxLength: 100 }}
+                      style={{
+                        margin: theme.spacing(1),
+                        marginLeft: 0,
+                      }}
+                    />
+                    <Typography variant="subtitle2" style={{ color: "grey" }}>
+                      {t("login.username")}
+                      {": "}
+                      {user.username}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid item container spacing={2}>
+                  <Grid item>
+                    <Typography variant="h6">Contact</Typography>
+                  </Grid>
+
+                  <Grid item container spacing={1} alignItems="center">
                     <Grid item>
-                      <ClickableAvatar
-                        avatar={this.state.avatar}
-                        onClick={() =>
-                          this.setState({ avatarDialogOpen: true })
-                        }
-                      />
+                      <Phone />
                     </Grid>
                     <Grid item xs>
                       <TextField
-                        id={`${idAffix}-name`}
+                        id={`${idAffix}-phone`}
                         fullWidth
                         variant="outlined"
-                        value={this.state.name}
-                        label={this.props.t("login.name")}
-                        onChange={(e) => this.updateField(e, "name")}
-                        inputProps={{ maxLength: 100 }}
-                        style={{
-                          margin: theme.spacing(1),
-                          marginLeft: 0,
-                        }}
+                        value={phone}
+                        label="Phone"
+                        onChange={(e) => setPhone(e.target.value)}
+                        type="tel"
                       />
-                      <Typography variant="subtitle2" style={{ color: "grey" }}>
-                        {this.props.t("login.username")}
-                        {": "}
-                        {this.state.user.username}
-                      </Typography>
                     </Grid>
                   </Grid>
 
-                  <Grid item container spacing={2}>
+                  <Grid item container spacing={1} alignItems="center">
                     <Grid item>
-                      <Typography variant="h6">
-                        {this.props.t("userSettings.contact")}
-                      </Typography>
+                      <Email />
                     </Grid>
-
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item>
-                        <Phone />
-                      </Grid>
-                      <Grid item xs>
-                        <TextField
-                          id={`${idAffix}-phone`}
-                          fullWidth
-                          variant="outlined"
-                          value={this.state.phone}
-                          label={this.props.t("userSettings.phone")}
-                          onChange={(e) => this.updateField(e, "phone")}
-                          type="tel"
-                        />
-                      </Grid>
+                    <Grid item xs>
+                      <TextField
+                        id={`${idAffix}-email`}
+                        required
+                        fullWidth
+                        variant="outlined"
+                        value={email}
+                        label={t("login.email")}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          setEmailTaken(false);
+                        }}
+                        error={emailTaken}
+                        helperText={
+                          emailTaken ? t("login.emailTaken") : undefined
+                        }
+                        type="email"
+                      />
                     </Grid>
-
-                    <Grid item container spacing={1} alignItems="center">
-                      <Grid item>
-                        <Email />
-                      </Grid>
-                      <Grid item xs>
-                        <TextField
-                          id={`${idAffix}-email`}
-                          required
-                          fullWidth
-                          variant="outlined"
-                          value={this.state.email}
-                          label={this.props.t("login.email")}
-                          onChange={(e) => {
-                            this.updateField(e, "email");
-                            this.setState({ emailTaken: false });
-                          }}
-                          error={this.state.emailTaken}
-                          helperText={
-                            this.state.emailTaken
-                              ? this.props.t("login.emailTaken")
-                              : undefined
-                          }
-                          type="email"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item container justifyContent="flex-end">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      id={`${idAffix}-save`}
-                    >
-                      {this.props.t("buttons.save")}
-                    </Button>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </form>
-          </Card>
-        </Grid>
 
-        <AvatarDialog
-          open={this.state.avatarDialogOpen}
-          onClose={() => {
-            this.setState({ avatar: getAvatar(), avatarDialogOpen: false });
-          }}
-        />
-      </React.Fragment>
-    );
-  }
+                <Grid item container justifyContent="flex-end">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    id={`${idAffix}-save`}
+                  >
+                    {t("buttons.save")}
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </form>
+        </Card>
+      </Grid>
+
+      <AvatarDialog
+        open={avatarDialogOpen}
+        onClose={() => {
+          setAvatar(getAvatar());
+          setAvatarDialogOpen(false);
+        }}
+      />
+    </React.Fragment>
+  );
 }
-
-export default withTranslation()(UserSettings);

@@ -1,8 +1,5 @@
 import { LanguagePicker } from "mui-language-picker";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
@@ -16,9 +13,9 @@ const mockAnalysisWritingSystems: WritingSystem[] = [
 ];
 const mockUpdateProject = jest.fn();
 
-let projectMaster: ReactTestRenderer;
-let pickerHandle: ReactTestInstance;
-let buttonHandle: ReactTestInstance;
+let projectMaster: renderer.ReactTestRenderer;
+let pickerHandle: renderer.ReactTestInstance;
+let buttonHandle: renderer.ReactTestInstance;
 
 function mockProject(systems?: WritingSystem[]) {
   return { ...newProject(), analysisWritingSystems: systems ?? [] };

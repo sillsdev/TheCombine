@@ -6,7 +6,6 @@ import {
   defaultState,
   CreateProjectAction,
   CreateProjectActionTypes,
-  CreateProjectState,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 
 const createMockStore = configureMockStore([thunk]);

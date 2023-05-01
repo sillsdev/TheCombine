@@ -17,7 +17,7 @@ const writingSystem = {
 
 export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
 
-// This list should cover the languages of public/locales/*/translation.json
+// This list should cover the languages in public/locales/
 export const uiWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],
@@ -25,7 +25,7 @@ export const uiWritingSystems = [
   writingSystem[Bcp47Code.Zh],
 ];
 
-// This list should cover the domain data in resources/semantic-domains/
+// This list should cover the languages in deploy/scripts/semantic_domains/xml/
 export const semDomWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],

@@ -12,13 +12,13 @@ certifi==2022.12.7
     #   requests
 cffi==1.15.1
     # via cryptography
-charset-normalizer==3.0.1
+charset-normalizer==3.1.0
     # via requests
-cryptography==39.0.1
+cryptography==40.0.2
     # via pyopenssl
 dnspython==2.3.0
     # via pymongo
-google-auth==2.16.1
+google-auth==2.17.3
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
@@ -38,7 +38,7 @@ pycparser==2.21
     # via cffi
 pymongo==4.3.3
     # via -r requirements.in
-pyopenssl==23.0.0
+pyopenssl==23.1.1
     # via -r requirements.in
 python-dateutil==2.8.2
     # via kubernetes
@@ -57,7 +57,7 @@ six==1.16.0
     #   google-auth
     #   kubernetes
     #   python-dateutil
-urllib3==1.26.14
+urllib3==1.26.15
     # via
     #   kubernetes
     #   requests
