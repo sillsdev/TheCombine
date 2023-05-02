@@ -4,9 +4,9 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
-ansible==7.4.0
+ansible==7.5.0
     # via -r requirements.in
-ansible-core==2.14.4
+ansible-core==2.14.5
     # via ansible
 cachetools==5.3.0
     # via google-auth
@@ -41,11 +41,11 @@ oauthlib==3.2.2
     # via requests-oauthlib
 packaging==23.1
     # via ansible-core
-pyasn1==0.4.8
+pyasn1==0.5.0
     # via
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.2.8
+pyasn1-modules==0.3.0
     # via google-auth
 pycparser==2.21
     # via cffi
@@ -58,7 +58,7 @@ pyyaml==6.0
     #   -r requirements.in
     #   ansible-core
     #   kubernetes
-requests==2.28.2
+requests==2.29.0
     # via
     #   kubernetes
     #   requests-oauthlib
