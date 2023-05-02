@@ -176,7 +176,7 @@ namespace BackendFramework.Services
             workshopSchedule.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
             var pastDays = workshopSchedule.FindAll(day =>
-                ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
+                ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count;
             // calculate average daily count
             // If pastDays is two or more, and pastDays equals the number of days on which at least one word was added
             var min = totalCountList.Min();
