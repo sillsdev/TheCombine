@@ -100,11 +100,12 @@
     "@types/validator": "^13.7.15",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.3.1",
-    "eslint": "^7.32.0",
+    "eslint": "^8.39.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "jest-canvas-mock": "^2.5.0",
     "license-checker-rseidelsohn": "^4.2.0",
     "npm-run-all": "^4.1.5",
@@ -130,8 +131,8 @@
     "rules": {
       "@typescript-eslint/no-empty-interface": "warn",
       "@typescript-eslint/no-inferrable-types": "warn",
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/switch-exhaustiveness-check": "warn",
-      "react/display-name": "off",
       "import/first": "warn",
       "import/newline-after-import": "warn",
       "import/no-duplicates": "warn",
@@ -160,7 +161,9 @@
       ],
       "no-undef": "off",
       "prefer-const": "warn",
-      "react/jsx-boolean-value": "warn"
+      "react/display-name": "off",
+      "react/jsx-boolean-value": "warn",
+      "unused-imports/no-unused-imports": "error"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -170,8 +173,9 @@
       "project": "./tsconfig.json"
     },
     "plugins": [
+      "@typescript-eslint",
       "react",
-      "@typescript-eslint"
+      "unused-imports"
     ],
     "settings": {
       "react": {
