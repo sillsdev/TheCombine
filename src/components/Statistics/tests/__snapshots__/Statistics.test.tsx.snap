@@ -35,7 +35,7 @@ Array [
             <span
               className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
             >
-              statistics.userView
+              statistics.view.user
             </span>
           </div>
           <span
@@ -69,7 +69,7 @@ Array [
             <span
               className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
             >
-              statistics.domainView
+              statistics.view.domain
             </span>
           </div>
           <span
@@ -103,7 +103,7 @@ Array [
             <span
               className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
             >
-              statistics.dayView
+              statistics.view.day
             </span>
           </div>
           <span
@@ -137,7 +137,7 @@ Array [
             <span
               className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-w8l8fw-MuiTypography-root"
             >
-              statistics.estimate
+              statistics.view.workshop
             </span>
           </div>
           <span
@@ -152,11 +152,11 @@ Array [
       <div
         className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
       >
-        <h5
-          className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-1pb9bi6-MuiTypography-root"
+        <h4
+          className="MuiTypography-root MuiTypography-h4 MuiTypography-alignCenter css-19n81d9-MuiTypography-root"
         >
           statistics.title
-        </h5>
+        </h4>
       </div>
       <div
         className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -164,88 +164,84 @@ Array [
         <h5
           className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-1pb9bi6-MuiTypography-root"
         >
-          statistics.userView
+          statistics.view.user
         </h5>
       </div>
       <div
         className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
       >
-        <ul
-          className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
+        <div
+          className="MuiGrid-root MuiGrid-container css-1lym95h-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-container css-1lym95h-MuiGrid-root"
-          >
-            <div
-              className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
-              style={
-                Object {
-                  "width": 600,
-                }
+            className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
+            style={
+              Object {
+                "width": 600,
               }
+            }
+          >
+            <ul
+              className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
             >
-              <ul
-                className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
+              <div
+                className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap css-1ymxtd0-MuiGrid-root"
               >
                 <div
-                  className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap css-1ymxtd0-MuiGrid-root"
+                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+                  style={
+                    Object {
+                      "borderBottomStyle": "dotted",
+                      "borderBottomWidth": 1,
+                      "position": "relative",
+                    }
+                  }
                 >
-                  <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
-                    style={
-                      Object {
-                        "borderBottomStyle": "dotted",
-                        "borderBottomWidth": 1,
-                        "position": "relative",
-                      }
-                    }
+                  <h6
+                    className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
                   >
-                    <h6
-                      className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
-                    >
-                      statistics.username
-                    </h6>
-                  </div>
-                  <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
-                    style={
-                      Object {
-                        "borderBottomStyle": "dotted",
-                        "borderBottomWidth": 1,
-                        "position": "relative",
-                      }
-                    }
-                  >
-                    <h6
-                      className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
-                    >
-                      statistics.domainCount
-                    </h6>
-                  </div>
-                  <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
-                    style={
-                      Object {
-                        "borderBottomStyle": "dotted",
-                        "borderBottomWidth": 1,
-                        "position": "relative",
-                      }
-                    }
-                  >
-                    <h6
-                      className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
-                    >
-                      statistics.senseCount
-                    </h6>
-                  </div>
+                    statistics.column.username
+                  </h6>
                 </div>
-              </ul>
-              <ul
-                className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
-              />
-            </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+                  style={
+                    Object {
+                      "borderBottomStyle": "dotted",
+                      "borderBottomWidth": 1,
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <h6
+                    className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
+                  >
+                    statistics.column.domainCount
+                  </h6>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+                  style={
+                    Object {
+                      "borderBottomStyle": "dotted",
+                      "borderBottomWidth": 1,
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <h6
+                    className="MuiTypography-root MuiTypography-subtitle1 css-1m0pdmy-MuiTypography-root"
+                  >
+                    statistics.column.senseCount
+                  </h6>
+                </div>
+              </div>
+            </ul>
+            <ul
+              className="MuiList-root MuiList-padding css-h4y409-MuiList-root"
+            />
           </div>
-        </ul>
+        </div>
       </div>
     </div>
     <div
