@@ -2,7 +2,7 @@ import { Drawer, Grid, List } from "@mui/material";
 import React, { ReactElement } from "react";
 
 import { SemanticDomain } from "api/models";
-import { ImmutableExistingData } from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
+import ImmutableExistingData from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
 
