@@ -12,7 +12,6 @@ import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
-import { newFlag } from "types/word";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
