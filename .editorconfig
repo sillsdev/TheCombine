@@ -8,7 +8,11 @@ indent_size = 2
 max_line_length = 120
 indent_size = 4
 dotnet_diagnostic.CA1710.severity = warning
+# CA1816 is our only exception to <AnalysisMode>Minimum</AnalysisMode>.
 dotnet_diagnostic.CA1816.severity = none
+# CS1591 is our only exception to EnforceCodeStyleInBuild+GenerateDocumentationFile.
+dotnet_diagnostic.CS1591.severity = none
+# IDE0005 requires both EnforceCodeStyleInBuild and GenerateDocumentationFile set to true.
 dotnet_diagnostic.IDE0005.severity = warning
 
 [*.py]
