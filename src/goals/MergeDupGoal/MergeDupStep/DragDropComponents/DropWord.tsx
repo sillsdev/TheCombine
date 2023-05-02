@@ -25,7 +25,6 @@ export default function DropWord(props: DropWordProps): ReactElement {
 
   const treeWord = props.mergeState.tree.words[props.wordId];
   const data = props.mergeState.data;
-  const flag = data.words[props.wordId]?.flag ?? newFlag();
   let protectedWithOneChild = false;
   const verns: string[] = [];
   if (treeWord) {
@@ -88,7 +87,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
                 />
               )}
               <FlagButton
-                flag={flag}
+                flag={treeWord.flag}
                 updateFlag={(newFlag: Flag) => {
                   dispatch(flagWord(props.wordId, newFlag));
                 }}
