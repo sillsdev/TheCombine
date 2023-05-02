@@ -11,6 +11,7 @@ import {
 import distinctColors from "distinct-colors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 import { ChartRootData } from "api";
 
@@ -26,7 +27,6 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  titleText: string;
   isFilterZero?: boolean;
   fetchData: () => Promise<ChartRootData | undefined>;
 }
@@ -46,63 +46,57 @@ interface LineChartDataProps {
   datasets: Array<DatasetsProps>;
 }
 
+const getDefaultProps = (): LineChartDataProps => ({
+  labels: [],
+  datasets: [],
+});
+
 function FilteredData(numbers: number[]): number[] {
   return numbers.map((num) => (num ? num : NaN));
 }
 
 export default function LineChartComponent(props: LineChartProps) {
-  const [chartOptions, setChartOptions] = useState({});
-  const [chartData, setChartData] = useState<LineChartDataProps>({
-    labels: [],
-    datasets: [],
-  });
+  const [chartData, setChartData] = useState(getDefaultProps());
 
   useEffect(() => {
     const updateChartList = async () => {
-      const tempDate = await props.fetchData();
-      const updateEstimateDate: LineChartDataProps = {
-        labels: [],
-        datasets: [],
-      };
-      if (tempDate !== undefined) {
+      const tempData = await props.fetchData();
+      const newChartData = getDefaultProps();
+      if (tempData) {
         // Get array of unique Color
-        let palette: chroma.Color[];
-        if (tempDate.datasets.length) {
-          palette = distinctColors({ count: tempDate.datasets.length });
-        }
-        let colorIndex = 0;
+        const palette = distinctColors({ count: tempData.datasets.length });
         // Update the updateChartData by retrieve
-        tempDate.dates.map((e) => {
+        tempData.dates.map((e) => {
           // trim the format from year-mm-dd to mm-dd
-          updateEstimateDate.labels.push(e.slice(-5));
+          newChartData.labels.push(e.slice(-5));
         });
-        tempDate.datasets.forEach((e) => {
-          updateEstimateDate.datasets.push({
+        tempData.datasets.forEach((e, index) => {
+          newChartData.datasets.push({
             label: e.userName,
             data: props.isFilterZero ? FilteredData(e.data) : e.data,
-            borderColor: palette[colorIndex].hex().toString(),
-            backgroundColor: palette[colorIndex++].hex().toString(),
+            borderColor: palette[index].hex().toString(),
+            backgroundColor: palette[index].hex().toString(),
             tension: 0.4,
             fill: false,
             cubicInterpolationMode: "monotone",
           });
         });
       }
-      setChartData(updateEstimateDate);
+      setChartData(newChartData);
     };
 
     updateChartList();
-
-    // Line Chart Options
-    setChartOptions({
-      responsive: true,
-      plugins: {
-        legend: { position: "top" },
-        title: { display: true, text: props.titleText },
-      },
-      scales: { x: { beginAtZero: true } },
-    });
   }, [props]);
+
+  const { t } = useTranslation();
+  const chartOptions = {
+    responsive: true,
+    plugins: { legend: { position: "top" } },
+    scales: {
+      x: { title: { display: true, text: t("statistics.axisLabel.date") } },
+      y: { title: { display: true, text: t("statistics.axisLabel.words") } },
+    },
+  } as any;
 
   return <Line data={chartData} options={chartOptions} />;
 }
