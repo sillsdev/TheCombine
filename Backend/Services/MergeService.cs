@@ -114,14 +114,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>
-        /// <exception cref="InvalidBlacklistEntryError"> Throws when wordIds has count less than 2. </exception>
+        /// <exception cref="InvalidBlacklistEntryException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> The <see cref="MergeBlacklistEntry"/> created. </returns>
         public async Task<MergeBlacklistEntry> AddToMergeBlacklist(
             string projectId, string userId, List<string> wordIds)
         {
             if (wordIds.Count < 2)
             {
-                throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
+                throw new InvalidBlacklistEntryException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
             // When we switch from individual to common blacklist, the userId argument here should be removed.
             var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
@@ -137,13 +137,13 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Check if List of wordIds is in MergeBlacklist for specified <see cref="Project"/>. </summary>
-        /// <exception cref="InvalidBlacklistEntryError"> Throws when wordIds has count less than 2. </exception>
+        /// <exception cref="InvalidBlacklistEntryException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> A bool, true if in the blacklist. </returns>
         public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null)
         {
             if (wordIds.Count < 2)
             {
-                throw new InvalidBlacklistEntryError("Cannot blacklist a list of fewer than 2 wordIds.");
+                throw new InvalidBlacklistEntryException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
             var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
             foreach (var entry in blacklist)
@@ -218,11 +218,11 @@ namespace BackendFramework.Services
         }
 
         [Serializable]
-        public class InvalidBlacklistEntryError : Exception
+        public class InvalidBlacklistEntryException : Exception
         {
-            public InvalidBlacklistEntryError() { }
+            public InvalidBlacklistEntryException() { }
 
-            public InvalidBlacklistEntryError(string message) : base(message) { }
+            public InvalidBlacklistEntryException(string message) : base(message) { }
         }
     }
 }
