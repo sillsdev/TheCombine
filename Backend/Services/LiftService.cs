@@ -48,6 +48,7 @@ namespace BackendFramework.Services
             }
         }
 
+        // This raises error CA1816, which is currently suppressed in .editorconfig.
         public override void Dispose()
         {
             // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation

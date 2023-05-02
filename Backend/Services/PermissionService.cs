@@ -150,14 +150,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
-        /// <exception cref="InvalidJwtTokenError"> Throws when null userId extracted from token. </exception>
+        /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)
         {
             var jsonToken = GetJwt(request);
             var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
             if (userId is null)
             {
-                throw new InvalidJwtTokenError();
+                throw new InvalidJwtTokenException();
             }
 
             return userId;
@@ -236,13 +236,13 @@ namespace BackendFramework.Services
         }
 
         [Serializable]
-        public class InvalidJwtTokenError : Exception
+        public class InvalidJwtTokenException : Exception
         {
-            public InvalidJwtTokenError() { }
+            public InvalidJwtTokenException() { }
 
-            public InvalidJwtTokenError(string message) : base(message) { }
+            public InvalidJwtTokenException(string msg) : base(msg) { }
 
-            public InvalidJwtTokenError(string message, Exception innerException) : base(message, innerException) { }
+            public InvalidJwtTokenException(string msg, Exception innerException) : base(msg, innerException) { }
         }
     }
 

@@ -7,6 +7,9 @@ indent_size = 2
 [*.cs]
 max_line_length = 120
 indent_size = 4
+dotnet_diagnostic.CA1710.severity = warning
+dotnet_diagnostic.CA1816.severity = none
+dotnet_diagnostic.IDE0005.severity = warning
 
 [*.py]
 max_line_length = 99
