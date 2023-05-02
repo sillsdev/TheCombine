@@ -5,9 +5,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/mockReactI18next";
 
 import { SemanticDomainFull } from "api";
-import DataEntryHeader, {
-  getQuestions,
-} from "components/DataEntry/DataEntryHeader/DataEntryHeader";
+import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import { newSemanticDomain } from "types/semanticDomain";
 
 const mockStore = configureMockStore()();
@@ -28,7 +26,6 @@ describe("DataEntryHeader", () => {
       id: "questionVisibilitySwitch",
     });
     expect(questionSwitch.props.disabled).toBeTruthy();
-    expect(getQuestions(true, [])).toEqual([]);
   });
 
   it("Questions Visible should show questions", () => {
@@ -48,10 +45,6 @@ describe("DataEntryHeader", () => {
       });
       expect(question.props.children).toEqual(questionString);
     });
-  });
-
-  it("Questions not visible should hide questions", () => {
-    expect(getQuestions(false, ["Q1", "Q2"])).toBeUndefined();
   });
 
   it("Callback should be called on switch click", () => {
