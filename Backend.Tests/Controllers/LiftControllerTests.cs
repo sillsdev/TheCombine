@@ -215,7 +215,7 @@ namespace Backend.Tests.Controllers
         {
             const string invalidProjectId = "INVALID_ID";
             Assert.ThrowsAsync<MissingProjectException>(
-                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId));
+                async () => await _liftController.CreateLiftExport(invalidProjectId));
         }
 
         /// <summary>
