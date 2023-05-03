@@ -23,7 +23,6 @@ export default function AnnouncementBanner() {
   // Check for announcement banner on (re)load or navigation to a new page.
   useEffect(() => {
     getBannerText(BannerType.Announcement).then((text) => {
-      console.info(`Got banner: ${text}`);
       setBanner(text !== getClosedBanner() ? text : "");
     });
   }, [loc, setBanner]);
