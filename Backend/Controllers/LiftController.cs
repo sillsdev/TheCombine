@@ -255,10 +255,11 @@ namespace BackendFramework.Controllers
                 await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
                 return true;
             }
-            catch
+            catch (Exception e)
             {
                 await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
-                return false;
+                _logger.LogError(e, "Error exporting project {ProjectId}", projectId);
+                throw e;
             }
         }
 
