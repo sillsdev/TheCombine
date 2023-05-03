@@ -23,11 +23,10 @@ export default function AnnouncementBanner() {
   // Check for announcement banner on (re)load or navigation to a new page.
   useEffect(() => {
     getBannerText(BannerType.Announcement).then((text) => {
-      if (text !== banner && (!text || text !== getClosedBanner())) {
-        setBanner(text);
-      }
-    }); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loc]);
+      console.info(`Got banner: ${text}`);
+      setBanner(text !== getClosedBanner() ? text : "");
+    });
+  }, [loc, setBanner]);
 
   function closeBanner() {
     setClosedBanner(banner);
