@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import React from "react";
+import { ReactElement } from "react";
 
 interface ImmutableExistingDataProps {
   vernacular: string;
@@ -9,35 +9,35 @@ interface ImmutableExistingDataProps {
 /**
  * Displays a word users cannot edit any more
  */
-export class ImmutableExistingData extends React.Component<ImmutableExistingDataProps> {
-  render() {
-    return (
-      <Grid container wrap="nowrap" justifyContent="space-around">
-        <Grid
-          item
-          xs={5}
-          key={"vernacular_" + this.props.vernacular}
-          style={{
-            borderBottomStyle: "dotted",
-            borderBottomWidth: 1,
-            position: "relative",
-          }}
-        >
-          <Typography variant="body1">{this.props.vernacular}</Typography>
-        </Grid>
-        <Grid
-          item
-          xs={5}
-          key={"gloss_" + this.props.gloss}
-          style={{
-            borderBottomStyle: "dotted",
-            borderBottomWidth: 1,
-            position: "relative",
-          }}
-        >
-          <Typography variant="body1">{this.props.gloss}</Typography>
-        </Grid>
+export default function ImmutableExistingData(
+  props: ImmutableExistingDataProps
+): ReactElement {
+  return (
+    <Grid container wrap="nowrap" justifyContent="space-around">
+      <Grid
+        item
+        xs={5}
+        key={"vernacular_" + props.vernacular}
+        style={{
+          borderBottomStyle: "dotted",
+          borderBottomWidth: 1,
+          position: "relative",
+        }}
+      >
+        <Typography variant="body1">{props.vernacular}</Typography>
       </Grid>
-    );
-  }
+      <Grid
+        item
+        xs={5}
+        key={"gloss_" + props.gloss}
+        style={{
+          borderBottomStyle: "dotted",
+          borderBottomWidth: 1,
+          position: "relative",
+        }}
+      >
+        <Typography variant="body1">{props.gloss}</Typography>
+      </Grid>
+    </Grid>
+  );
 }
