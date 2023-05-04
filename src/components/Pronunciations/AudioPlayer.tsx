@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
@@ -36,15 +36,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AudioPlayer(props: PlayerProps) {
-  const playState = useAppSelector(
-    (state: StoreState) => state.pronunciationsState
+export default function AudioPlayer(props: PlayerProps): ReactElement {
+  const playThis = useAppSelector(
+    (state: StoreState) =>
+      state.pronunciationsState.payload === props.fileName &&
+      state.pronunciationsState.type === PronunciationsStatus.Playing
   );
 
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
-  const [deleteConf, setDeleteConf] = useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [deleteConf, setDeleteConf] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const classes = useStyles();
   const dispatch = useAppDispatch();
@@ -52,11 +54,8 @@ export default function AudioPlayer(props: PlayerProps) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    setIsPlaying(
-      playState.payload === props.fileName &&
-        playState.type === PronunciationsStatus.Playing
-    );
-  }, [playState, props.fileName, setIsPlaying]);
+    setIsPlaying(playThis);
+  }, [playThis, setIsPlaying]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -68,13 +67,13 @@ export default function AudioPlayer(props: PlayerProps) {
     }
   }, [audio, dispatchReset, isPlaying]);
 
-  function deleteAudio() {
+  function deleteAudio(): void {
     if (props.deleteAudio) {
       props.deleteAudio(props.wordId, props.fileName);
     }
   }
 
-  function togglePlay() {
+  function togglePlay(): void {
     if (!isPlaying) {
       dispatch(playing(props.fileName));
     } else {
@@ -82,7 +81,7 @@ export default function AudioPlayer(props: PlayerProps) {
     }
   }
 
-  function deleteOrTogglePlay(event?: any) {
+  function deleteOrTogglePlay(event?: any): void {
     if (event?.shiftKey) {
       setDeleteConf(true);
     } else {
@@ -90,20 +89,20 @@ export default function AudioPlayer(props: PlayerProps) {
     }
   }
 
-  function handleClose() {
+  function handleClose(): void {
     setAnchor(undefined);
     enableContextMenu();
   }
 
-  function disableContextMenu(event: any) {
+  function disableContextMenu(event: any): void {
     event.preventDefault();
     enableContextMenu();
   }
-  function enableContextMenu() {
+  function enableContextMenu(): void {
     document.removeEventListener("contextmenu", disableContextMenu, false);
   }
 
-  function handleTouch(event: any) {
+  function handleTouch(event: any): void {
     // Temporarily disable context menu since some browsers
     // interpret a long-press touch as a right-click.
     document.addEventListener("contextmenu", disableContextMenu, false);
@@ -136,14 +135,8 @@ export default function AudioPlayer(props: PlayerProps) {
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <MenuItem
           id={isPlaying ? "audio-stop" : "audio-play"}
