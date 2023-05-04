@@ -7,7 +7,7 @@ import {
   ListItemText,
   SelectChangeEvent,
 } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Permission, User, UserRole } from "api/models";
@@ -92,7 +92,7 @@ export default function ActiveUsers() {
     Permission.Owner
   );
 
-  const userList = sortedUsers.map((user) => {
+  const userListItem = (user: User): ReactElement => {
     const userIsProjectAdmin = hasProjectPermission(
       user.projectRoles[currentProjectId],
       Permission.DeleteEditSettingsAndUsers
@@ -135,7 +135,7 @@ export default function ActiveUsers() {
         {manageUser}
       </ListItem>
     );
-  });
+  };
 
   return (
     <React.Fragment>
@@ -147,7 +147,7 @@ export default function ActiveUsers() {
         }}
         onReverseClick={() => setReverseSorting(!reverseSorting)}
       />
-      <List>{userList}</List>
+      <List>{sortedUsers.map(userListItem)}</List>
     </React.Fragment>
   );
 }
