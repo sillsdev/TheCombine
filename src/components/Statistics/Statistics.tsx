@@ -8,18 +8,19 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React, { ReactElement, useState, useEffect } from "react";
+import { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Project } from "api/models";
-import { getProject } from "backend";
-import * as LocalStorage from "backend/localStorage";
-import ChartComponent, {
-  ChartTypeEnum,
-} from "components/Statistics/Chart/ChartComponent";
-import SemanticDomainStatistics from "components/Statistics/DomainStatistics/SemanticDomainStatistics";
+import {
+  getLineChartRootData,
+  getProgressEstimationLineChartRoot,
+  getProject,
+} from "backend";
+import SemanticDomainStatistics from "components/Statistics/DomainStatistics";
+import LineChartComponent from "components/Statistics/LineChartComponent";
 import ProgressBarComponent from "components/Statistics/ProgressBar/ProgressBarComponent";
-import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
+import DomainUserStatistics from "components/Statistics/UserStatistics";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,12 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+// The strings should match the keys for statistics.view in translation.json
 enum viewEnum {
-  User = "USER",
-  Domain = "DOMAIN",
-  Time = "TIME",
-  DataStatistics = "STATISTIC",
-  Estimate = "ESTIMATE",
+  User = "user",
+  Domain = "domain",
+  Day = "day",
+  Workshop = "workshop",
 }
 
 export default function Statistics(): ReactElement {
@@ -46,56 +47,50 @@ export default function Statistics(): ReactElement {
   const [viewName, setViewName] = useState<string>(viewEnum.User);
 
   useEffect(() => {
-    const updateCurrentProject = async () => {
-      await getProject(LocalStorage.getProjectId()).then(setCurrentProject);
-    };
-    updateCurrentProject();
+    getProject().then(setCurrentProject);
   }, []);
+
+  function componentToDisplay(view: viewEnum) {
+    switch (view) {
+      case viewEnum.User:
+        return <DomainUserStatistics lang={lang} />;
+      case viewEnum.Domain:
+        return <SemanticDomainStatistics lang={lang} />;
+      case viewEnum.Day:
+        return (
+          <LineChartComponent
+            fetchData={() => getLineChartRootData(currentProject!.id)}
+          />
+        );
+      case viewEnum.Workshop:
+        return (
+          <LineChartComponent
+            isFilterZero
+            fetchData={() =>
+              getProgressEstimationLineChartRoot(currentProject!.id)
+            }
+          />
+        );
+      default:
+        return <div />;
+    }
+  }
 
   function handleDisplay() {
     return [
-      <Grid item key={viewEnum.DataStatistics + currentProject?.name}>
-        <Typography variant="h5" align="center">
-          {t("statistics.dataStatistics") + currentProject?.name}
+      <Grid item key={"statistics-title"}>
+        <Typography variant="h4" align="center">
+          {t("statistics.title", { val: currentProject?.name })}
         </Typography>
       </Grid>,
-      <Grid item key={"ProjectName" + viewName}>
+      <Grid item key={"statistics-subtitle"}>
         <Typography variant="h5" align="center">
-          {viewName === viewEnum.User && t("statistics.userView")}
-          {viewName === viewEnum.Domain && t("statistics.domainView")}
-          {viewName === viewEnum.Time && ""}
+          {t(`statistics.view.${viewName}`)}
         </Typography>
       </Grid>,
-      viewName === viewEnum.User && (
-        <Grid item key={viewEnum.User + "DomainUserStatistics"}>
-          <List>
-            <DomainUserStatistics lang={lang} />
-          </List>
-        </Grid>
-      ),
-      viewName === viewEnum.Domain && (
-        <Grid item key={viewEnum.Domain + "SemanticDomainStatistics"}>
-          <List>
-            <SemanticDomainStatistics lang={lang} />
-          </List>
-        </Grid>
-      ),
-      viewName === viewEnum.Time && (
-        <Grid item key={viewEnum.Time + "ChartComponent"}>
-          <ChartComponent
-            currentProjectId={currentProject!.id}
-            chartType={ChartTypeEnum.LineChart}
-          />
-        </Grid>
-      ),
-      viewName === viewEnum.Estimate && (
-        <Grid item key={viewEnum.Estimate + "Estimate"}>
-          <ChartComponent
-            currentProjectId={currentProject!.id}
-            chartType={ChartTypeEnum.Estimate}
-          />
-        </Grid>
-      ),
+      <Grid item key={"statistics-view"}>
+        {componentToDisplay(viewName as viewEnum)}
+      </Grid>,
     ];
   }
 
@@ -106,53 +101,51 @@ export default function Statistics(): ReactElement {
           onClick={() => setViewName(viewEnum.User)}
           selected={viewName === viewEnum.User}
         >
-          <ListItemText primary={t("statistics.userView")} />
+          <ListItemText primary={t("statistics.view.user")} />
         </ListItemButton>
         <Divider />
         <ListItemButton
           onClick={() => setViewName(viewEnum.Domain)}
           selected={viewName === viewEnum.Domain}
         >
-          <ListItemText primary={t("statistics.domainView")} />
+          <ListItemText primary={t("statistics.view.domain")} />
         </ListItemButton>
         <Divider />
         <ListItemButton
-          onClick={() => setViewName(viewEnum.Time)}
-          selected={viewName === viewEnum.Time}
+          onClick={() => setViewName(viewEnum.Day)}
+          selected={viewName === viewEnum.Day}
         >
-          <ListItemText primary={t("statistics.dayView")} />
+          <ListItemText primary={t("statistics.view.day")} />
         </ListItemButton>
         <Divider />
         <ListItemButton
-          onClick={() => setViewName(viewEnum.Estimate)}
-          selected={viewName === viewEnum.Estimate}
+          onClick={() => setViewName(viewEnum.Workshop)}
+          selected={viewName === viewEnum.Workshop}
         >
-          <ListItemText primary={t("statistics.estimate")} />
+          <ListItemText primary={t("statistics.view.workshop")} />
         </ListItemButton>
       </List>
     );
   }
 
   return (
-    <React.Fragment>
-      <Grid container direction="row" spacing={1}>
-        <Grid item xs={2}>
-          {handleButton()}
-        </Grid>
-        <Grid
-          item
-          xs={8}
-          container
-          direction="column"
-          justifyContent="center"
-          spacing={2}
-        >
-          {handleDisplay()}
-        </Grid>
-        <Grid item xs={2}>
-          <ProgressBarComponent />
-        </Grid>
+    <Grid container direction="row" spacing={1}>
+      <Grid item xs={2}>
+        {handleButton()}
       </Grid>
-    </React.Fragment>
+      <Grid
+        item
+        xs={8}
+        container
+        direction="column"
+        justifyContent="center"
+        spacing={2}
+      >
+        {handleDisplay()}
+      </Grid>
+      <Grid item xs={2}>
+        <ProgressBarComponent />
+      </Grid>
+    </Grid>
   );
 }

@@ -1,3 +1,5 @@
+import "tests/mockReactI18next";
+
 import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
@@ -8,6 +10,11 @@ import {
 import { newSemanticDomain } from "types/semanticDomain";
 import { newDefinition, newFlag, newGloss } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
+
+jest.mock("i18next", () => {
+  const i18n = jest.requireActual("i18next");
+  return { ...i18n, t: (s: string) => s };
+});
 
 const LANG = Bcp47Code.En;
 const DEFINITION = newDefinition("groovy", LANG);

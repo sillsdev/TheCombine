@@ -12,7 +12,7 @@ const mockProjects = [randomProject(), randomProject(), randomProject()];
 
 jest.mock("components/ProjectExport/ExportButton", () => "div");
 
-var testRenderer: renderer.ReactTestRenderer;
+let testRenderer: renderer.ReactTestRenderer;
 
 beforeAll(() => {
   renderer.act(() => {

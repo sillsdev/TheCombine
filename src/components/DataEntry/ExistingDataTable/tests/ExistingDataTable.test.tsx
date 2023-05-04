@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { ExistingDataTable } from "components/DataEntry/ExistingDataTable/ExistingDataTable";
+import ExistingDataTable from "components/DataEntry/ExistingDataTable/ExistingDataTable";
 import { newSemanticDomain } from "types/semanticDomain";
 
 jest.mock("components/DataEntry/ExistingDataTable/ImmutableExistingData");

@@ -1,7 +1,7 @@
 import { Delete } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { t } from "i18next";
 import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
@@ -20,6 +20,8 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
     (state: StoreState) => state.reviewEntriesState.words
   );
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+
   const word = props.rowData;
   const disabled = word.protected || !!word.senses.find((s) => s.protected);
 

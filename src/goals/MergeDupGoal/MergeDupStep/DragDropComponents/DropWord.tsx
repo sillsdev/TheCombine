@@ -12,7 +12,6 @@ import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
-import { newFlag } from "types/word";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
@@ -25,8 +24,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
 
   const treeWord = props.mergeState.tree.words[props.wordId];
   const data = props.mergeState.data;
-  const flag = data.words[props.wordId]?.flag ?? newFlag();
-  var protectedWithOneChild = false;
+  let protectedWithOneChild = false;
   const verns: string[] = [];
   if (treeWord) {
     protectedWithOneChild =
@@ -88,7 +86,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
                 />
               )}
               <FlagButton
-                flag={flag}
+                flag={treeWord.flag}
                 updateFlag={(newFlag: Flag) => {
                   dispatch(flagWord(props.wordId, newFlag));
                 }}

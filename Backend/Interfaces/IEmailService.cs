@@ -5,6 +5,6 @@ namespace BackendFramework.Interfaces
 {
     public interface IEmailService
     {
-        Task<bool> SendEmail(MimeMessage msg);
+        Task<bool> SendEmail(MimeMessage message);
     }
 }

@@ -50,7 +50,7 @@ function success(projectId: string): ExportProjectAction {
     projectId,
   };
 }
-function failure(projectId: string): ExportProjectAction {
+export function failure(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.Failure,
     projectId,

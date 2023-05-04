@@ -11,8 +11,8 @@ import { defaultState as treeViewState } from "components/TreeView/TreeViewReduc
 import mockMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
-var treeMaster: renderer.ReactTestRenderer;
-var treeHandle: renderer.ReactTestInstance;
+let treeMaster: renderer.ReactTestRenderer;
+let treeHandle: renderer.ReactTestInstance;
 
 // Mock out Zoom to avoid issues with portals
 jest.mock("@mui/material", () => {
@@ -23,10 +23,7 @@ jest.mock("@mui/material", () => {
   };
 });
 const mockStore = configureMockStore([thunk])({
-  treeViewState: {
-    ...treeViewState,
-    currentDomain: mockMap[mapIds.parent],
-  },
+  treeViewState: { ...treeViewState, currentDomain: mockMap[mapIds.parent] },
   currentProjectState: {
     project: { semDomWritingSystem: newWritingSystem() },
   },
@@ -41,7 +38,7 @@ describe("TreeView", () => {
 
 async function createTree(): Promise<void> {
   await renderer.act(async () => {
-    treeMaster = await renderer.create(
+    treeMaster = renderer.create(
       <Provider store={mockStore}>
         <TreeView returnControlToCaller={jest.fn()} />
       </Provider>

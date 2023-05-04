@@ -21,6 +21,8 @@ import theme from "types/theme";
 import { simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
+jest.mock("@mui/material/Autocomplete", () => "div");
+
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");
 
@@ -45,7 +47,7 @@ function renderWithWord(word: Word) {
             <RecentEntry
               entry={word}
               rowIndex={0}
-              senseIndex={0}
+              senseGuid={word.senses[0].guid}
               updateGloss={mockUpdateGloss}
               updateNote={mockUpdateNote}
               updateVern={mockUpdateVern}
@@ -85,27 +87,37 @@ describe("ExistingEntry", () => {
   });
 
   describe("vernacular", () => {
-    it("updates if changed", () => {
+    it("updates if changed", async () => {
       renderWithWord(mockWord);
       testHandle = testHandle.findByType(VernWithSuggestions);
-      testHandle.props.updateVernField(mockVern);
-      testHandle.props.onBlur();
+      async function updateVernAndBlur(text: string) {
+        await renderer.act(async () => {
+          await testHandle.props.updateVernField(text);
+          await testHandle.props.onBlur();
+        });
+      }
+
+      await updateVernAndBlur(mockVern);
       expect(mockUpdateVern).toBeCalledTimes(0);
-      testHandle.props.updateVernField(mockText);
-      testHandle.props.onBlur();
+      await updateVernAndBlur(mockText);
       expect(mockUpdateVern).toBeCalledWith(mockText);
     });
   });
 
   describe("gloss", () => {
-    it("updates if changed", () => {
+    it("updates if changed", async () => {
       renderWithWord(mockWord);
       testHandle = testHandle.findByType(GlossWithSuggestions);
-      testHandle.props.updateGlossField(mockGloss);
-      testHandle.props.onBlur();
+      async function updateGlossAndBlur(text: string) {
+        await renderer.act(async () => {
+          await testHandle.props.updateGlossField(text);
+          await testHandle.props.onBlur();
+        });
+      }
+
+      await updateGlossAndBlur(mockGloss);
       expect(mockUpdateGloss).toBeCalledTimes(0);
-      testHandle.props.updateGlossField(mockText);
-      testHandle.props.onBlur();
+      await updateGlossAndBlur(mockText);
       expect(mockUpdateGloss).toBeCalledWith(mockText);
     });
   });
@@ -114,7 +126,9 @@ describe("ExistingEntry", () => {
     it("updates text", () => {
       renderWithWord(mockWord);
       testHandle = testHandle.findByType(EntryNote).findByType(EditTextDialog);
-      testHandle.props.updateText(mockText);
+      renderer.act(() => {
+        testHandle.props.updateText(mockText);
+      });
       expect(mockUpdateNote).toBeCalledWith(mockText);
     });
   });

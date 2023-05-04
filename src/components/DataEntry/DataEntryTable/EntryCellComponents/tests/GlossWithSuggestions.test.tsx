@@ -2,19 +2,19 @@ import React from "react";
 import renderer from "react-test-renderer";
 
 import { WritingSystem } from "api/models";
-import LocalizedGlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
+import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
 
 describe("Tests GlossWithSuggestions", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossWithSuggestions
+        <GlossWithSuggestions
           gloss={""}
           glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={jest.fn()}
           handleEnterAndTab={jest.fn()}
           analysisLang={{} as WritingSystem}
-          textFieldId={""}
+          textFieldId={"test-gloss"}
         />
       );
     });
@@ -23,14 +23,14 @@ describe("Tests GlossWithSuggestions", () => {
   it("renders new without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossWithSuggestions
+        <GlossWithSuggestions
           isNew
           gloss={""}
           glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={jest.fn()}
           handleEnterAndTab={jest.fn()}
           analysisLang={{} as WritingSystem}
-          textFieldId={""}
+          textFieldId={"test-gloss-new"}
         />
       );
     });
@@ -39,14 +39,14 @@ describe("Tests GlossWithSuggestions", () => {
   it("renders disabled without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossWithSuggestions
+        <GlossWithSuggestions
           isDisabled
           gloss={""}
           glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={jest.fn()}
           handleEnterAndTab={jest.fn()}
           analysisLang={{} as WritingSystem}
-          textFieldId={""}
+          textFieldId={"test-gloss-disabled"}
         />
       );
     });

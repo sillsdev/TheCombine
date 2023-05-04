@@ -176,13 +176,12 @@ namespace BackendFramework.Services
             workshopSchedule.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
             var pastDays = workshopSchedule.FindAll(day =>
-                ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count();
+                ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count;
             // calculate average daily count
             // If pastDays is two or more, and pastDays equals the number of days on which at least one word was added
-            var min = 0;
+            var min = totalCountList.Min();
             if (totalCountList.Count == pastDays && pastDays > 1)
             {
-                min = totalCountList.Min();
                 averageValue = (totalCountList.Sum() - min) / (pastDays - 1);
             }
             // If pastDays is two or more and at least one of those days had no word added
@@ -211,7 +210,7 @@ namespace BackendFramework.Services
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", runningTotal));
                     LineChartData.Datasets.Add(new Dataset("Projection", projection));
-                    LineChartData.Datasets.Add(new Dataset("Burst Projection", 0));
+                    LineChartData.Datasets.Add(new Dataset("Burst Projection", runningTotal));
                 }
                 else
                 {

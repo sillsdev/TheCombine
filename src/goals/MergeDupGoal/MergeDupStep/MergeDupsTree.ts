@@ -1,9 +1,8 @@
 import { v4 } from "uuid";
 
 import { Flag, Sense, Status, Word } from "api/models";
+import { Hash } from "types/hash";
 import { newFlag, newSense } from "types/word";
-
-export type Hash<V> = { [key: string]: V };
 
 export interface MergeTreeSense extends Sense {
   srcWordId: string;

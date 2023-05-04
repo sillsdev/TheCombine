@@ -6,12 +6,12 @@ import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { ColumnHead, TableCell } from "components/Statistics/TableCells";
 
-interface SemanticDomainStatisticsProps {
+interface DomainStatisticsProps {
   lang: string;
 }
 
-export default function SemanticDomainStatistics(
-  props: SemanticDomainStatisticsProps
+export default function DomainStatistics(
+  props: DomainStatisticsProps
 ): ReactElement {
   const [statisticsList, setStatisticsList] = useState<SemanticDomainCount[]>(
     []
@@ -42,9 +42,9 @@ export default function SemanticDomainStatistics(
       <Card style={{ width: 600 }}>
         <List>
           <Grid container wrap="nowrap" justifyContent="space-around">
-            <ColumnHead titleId={"statistics.domainNumber"} />
-            <ColumnHead titleId={"statistics.domainName"} />
-            <ColumnHead titleId={"statistics.countSenses"} />
+            <ColumnHead titleId={"statistics.column.domainNumber"} />
+            <ColumnHead titleId={"statistics.column.domainName"} />
+            <ColumnHead titleId={"statistics.column.senseCount"} />
           </Grid>
         </List>
         <List>

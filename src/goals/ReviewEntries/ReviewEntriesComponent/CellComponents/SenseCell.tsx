@@ -1,7 +1,7 @@
 import { Add, Delete, RestoreFromTrash } from "@mui/icons-material";
 import { Chip, IconButton, Tooltip } from "@mui/material";
-import { t } from "i18next";
 import { ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
@@ -14,6 +14,8 @@ interface SenseCellProps {
 export default function SenseCell(
   props: SenseCellProps & FieldParameterStandard
 ): ReactElement {
+  const { t } = useTranslation();
+
   function addSense(): ReactElement {
     const senses = [...props.rowData.senses, new ReviewEntriesSense()];
     return (

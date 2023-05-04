@@ -1,11 +1,4 @@
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Divider, List, ListItem, ListItemText, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,25 +25,23 @@ export default function ProgressBarComponent() {
 
   useEffect(() => {
     const updateProgress = async () => {
-      const statisticsList = await getSemanticDomainCounts(
+      const statList = await getSemanticDomainCounts(
         LocalStorage.getProjectId(),
         defaultWritingSystem.bcp47
       );
-      var domainCount = 0;
-      var wordCount = 0;
-      statisticsList?.forEach((element) => {
-        if (element.count > 0) {
-          domainCount++;
-          wordCount += element.count;
-        }
-      });
+      let domainCount = 0;
+      let wordCount = 0;
+      if (statList?.length) {
+        statList.forEach((s) => {
+          if (s.count) {
+            domainCount++;
+            wordCount += s.count;
+          }
+        });
+        setProgressRatio(Math.ceil((domainCount * 100) / statList.length));
+      }
       setTotalDomainCount(domainCount);
       setTotalWordCount(wordCount);
-      statisticsList
-        ? setProgressRatio(
-            Math.ceil((domainCount * 100) / statisticsList!.length)
-          )
-        : null;
     };
 
     updateProgress();
@@ -64,13 +55,15 @@ export default function ProgressBarComponent() {
       </ListItem>
       <Divider />
       <ListItem>
-        <ListItemText primary={t("statistics.domainsCollected")} />
-        <Typography>{totalDomainCount}</Typography>
+        <ListItemText
+          primary={t("statistics.domainsCollected", { val: totalDomainCount })}
+        />
       </ListItem>
       <Divider />
       <ListItem>
-        <ListItemText primary={t("statistics.wordsCollected")} />
-        <Typography>{totalWordCount}</Typography>
+        <ListItemText
+          primary={t("statistics.wordsCollected", { val: totalWordCount })}
+        />
       </ListItem>
     </List>
   );
