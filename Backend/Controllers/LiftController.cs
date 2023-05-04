@@ -247,12 +247,20 @@ namespace BackendFramework.Controllers
         internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
         {
             // Export the data to a zip, read into memory, and delete zip.
-            var exportedFilepath = await CreateLiftExport(projectId);
-
-            // Store the temporary path to the exported file for user to download later.
-            _liftService.StoreExport(userId, exportedFilepath);
-            await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
-            return true;
+            try
+            {
+                var exportedFilepath = await CreateLiftExport(projectId);
+                // Store the temporary path to the exported file for user to download later.
+                _liftService.StoreExport(userId, exportedFilepath);
+                await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+                return true;
+            }
+            catch
+            {
+                await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
+                _logger.LogError("Error exporting project {ProjectId}", projectId);
+                throw;
+            }
         }
 
         internal async Task<string> CreateLiftExport(string projectId)

@@ -1,6 +1,12 @@
 import { Cached, Error as ErrorIcon } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, { createRef, ReactElement, useEffect, useState } from "react";
+import React, {
+  createRef,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { getProjectName } from "backend";
@@ -13,6 +19,10 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import { getNowDateTimeString } from "utilities";
+
+function makeExportName(projectName: string) {
+  return `${projectName}_${getNowDateTimeString()}.zip`;
+}
 
 interface DownloadButtonProps {
   colorSecondary?: boolean;
@@ -32,41 +42,37 @@ export default function DownloadButton(props: DownloadButtonProps) {
   const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
+  const reset = useCallback(() => {
+    dispatch(resetExport(exportState.projectId));
+  }, [dispatch, exportState.projectId]);
+
   useEffect(() => {
     if (downloadLink.current && fileUrl) {
       downloadLink.current.click();
       URL.revokeObjectURL(fileUrl);
+      setFileName(undefined);
       setFileUrl(undefined);
     }
   }, [downloadLink, fileUrl]);
 
   useEffect(() => {
+    if (fileName) {
+      dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
+        if (url) {
+          setFileUrl(url);
+          reset();
+        }
+      });
+    }
+  }, [dispatch, exportState.projectId, fileName, reset, setFileUrl]);
+
+  useEffect(() => {
     if (exportState.status === ExportStatus.Success) {
-      download();
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exportState.status]);
-
-  function makeExportName(projectName: string) {
-    return `${projectName}_${getNowDateTimeString()}.zip`;
-  }
-
-  function download() {
-    getProjectName(exportState.projectId).then((projectName) => {
-      setFileName(makeExportName(projectName));
-      asyncDownloadExport(exportState.projectId)(dispatch)
-        .then((url) => {
-          if (url) {
-            setFileUrl(url);
-            reset();
-          }
-        })
-        .catch(console.error);
-    });
-  }
-
-  function reset() {
-    resetExport(exportState.projectId)(dispatch);
-  }
+      getProjectName(exportState.projectId).then((projectName) => {
+        setFileName(makeExportName(projectName));
+      });
+    }
+  }, [exportState, setFileName]);
 
   function textId(): string {
     switch (exportState.status) {
