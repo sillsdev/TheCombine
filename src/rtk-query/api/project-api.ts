@@ -64,14 +64,6 @@ const injectedRtkApi = api.injectEndpoints({
         method: "DELETE",
       }),
     }),
-    projectDuplicateCheck: build.query<
-      ProjectDuplicateCheckApiResponse,
-      ProjectDuplicateCheckApiArg
-    >({
-      query: (queryArg) => ({
-        url: `/v1/projects/duplicate/${queryArg.projectName}`,
-      }),
-    }),
     getProjectUserEdits: build.query<
       GetProjectUserEditsApiResponse,
       GetProjectUserEditsApiArg
@@ -155,11 +147,6 @@ export type UpdateProjectApiArg = {
 export type DeleteProjectApiResponse = unknown;
 export type DeleteProjectApiArg = {
   projectId: string;
-};
-export type ProjectDuplicateCheckApiResponse =
-  /** status 200 Success */ boolean;
-export type ProjectDuplicateCheckApiArg = {
-  projectName: string;
 };
 export type GetProjectUserEditsApiResponse =
   /** status 200 Success */ UserEdit[];
@@ -341,7 +328,6 @@ export const {
   useGetProjectQuery,
   useUpdateProjectMutation,
   useDeleteProjectMutation,
-  useProjectDuplicateCheckQuery,
   useGetProjectUserEditsQuery,
   useGetProjectUserRolesQuery,
   useDeleteProjectUserRolesMutation,

@@ -17,26 +17,6 @@ const injectedRtkApi = api.injectEndpoints({
         url: `/v1/projects/${queryArg.projectId}/statistics/GetWordsPerDayPerUserCounts`,
       }),
     }),
-    resetPasswordRequest: build.mutation<
-      ResetPasswordRequestApiResponse,
-      ResetPasswordRequestApiArg
-    >({
-      query: (queryArg) => ({
-        url: `/v1/users/forgot`,
-        method: "POST",
-        body: queryArg.passwordResetRequestData,
-      }),
-    }),
-    resetPassword: build.mutation<
-      ResetPasswordApiResponse,
-      ResetPasswordApiArg
-    >({
-      query: (queryArg) => ({
-        url: `/v1/users/forgot/reset`,
-        method: "POST",
-        body: queryArg.passwordResetData,
-      }),
-    }),
     deleteProjectWords: build.mutation<
       DeleteProjectWordsApiResponse,
       DeleteProjectWordsApiArg
@@ -82,6 +62,14 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.word,
       }),
     }),
+    isFrontierNonempty: build.query<
+      IsFrontierNonemptyApiResponse,
+      IsFrontierNonemptyApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/v1/projects/${queryArg.projectId}/words/isfrontiernonempty`,
+      }),
+    }),
     getProjectFrontierWords: build.query<
       GetProjectFrontierWordsApiResponse,
       GetProjectFrontierWordsApiArg
@@ -103,14 +91,6 @@ export type GetWordsPerDayPerUserCountsApiResponse =
   /** status 200 Success */ WordsPerDayPerUserCount[];
 export type GetWordsPerDayPerUserCountsApiArg = {
   projectId: string;
-};
-export type ResetPasswordRequestApiResponse = unknown;
-export type ResetPasswordRequestApiArg = {
-  passwordResetRequestData: PasswordResetRequestData;
-};
-export type ResetPasswordApiResponse = unknown;
-export type ResetPasswordApiArg = {
-  passwordResetData: PasswordResetData;
 };
 export type DeleteProjectWordsApiResponse = /** status 200 Success */ boolean;
 export type DeleteProjectWordsApiArg = {
@@ -140,6 +120,10 @@ export type UpdateWordApiArg = {
   projectId: string;
   wordId: string;
   word: Word;
+};
+export type IsFrontierNonemptyApiResponse = /** status 200 Success */ boolean;
+export type IsFrontierNonemptyApiArg = {
+  projectId: string;
 };
 export type GetProjectFrontierWordsApiResponse =
   /** status 200 Success */ Word[];
@@ -217,24 +201,15 @@ export type WordsPerDayPerUserCount = {
     [key: string]: number;
   };
 };
-export type PasswordResetRequestData = {
-  domain: string;
-  emailOrUsername: string;
-};
-export type PasswordResetData = {
-  newPassword: string;
-  token: string;
-};
 export const {
   useMergeWordsMutation,
   useGetWordsPerDayPerUserCountsQuery,
-  useResetPasswordRequestMutation,
-  useResetPasswordMutation,
   useDeleteProjectWordsMutation,
   useGetProjectWordsQuery,
   useCreateWordMutation,
   useDeleteFrontierWordMutation,
   useGetWordQuery,
   useUpdateWordMutation,
+  useIsFrontierNonemptyQuery,
   useGetProjectFrontierWordsQuery,
 } = injectedRtkApi;

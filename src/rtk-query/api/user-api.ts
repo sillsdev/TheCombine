@@ -27,6 +27,26 @@ const injectedRtkApi = api.injectEndpoints({
         params: { lang: queryArg.lang },
       }),
     }),
+    resetPasswordRequest: build.mutation<
+      ResetPasswordRequestApiResponse,
+      ResetPasswordRequestApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/v1/users/forgot`,
+        method: "POST",
+        body: queryArg.passwordResetRequestData,
+      }),
+    }),
+    resetPassword: build.mutation<
+      ResetPasswordApiResponse,
+      ResetPasswordApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/v1/users/forgot/reset`,
+        method: "POST",
+        body: queryArg.passwordResetData,
+      }),
+    }),
     getAllUsers: build.query<GetAllUsersApiResponse, GetAllUsersApiArg>({
       query: () => ({ url: `/v1/users` }),
     }),
@@ -185,6 +205,14 @@ export type GetSemanticDomainUserCountsApiArg = {
   projectId: string;
   lang?: string;
 };
+export type ResetPasswordRequestApiResponse = unknown;
+export type ResetPasswordRequestApiArg = {
+  passwordResetRequestData: PasswordResetRequestData;
+};
+export type ResetPasswordApiResponse = unknown;
+export type ResetPasswordApiArg = {
+  passwordResetData: PasswordResetData;
+};
 export type GetAllUsersApiResponse = /** status 200 Success */ User[];
 export type GetAllUsersApiArg = void;
 export type CreateUserApiResponse = /** status 200 Success */ string;
@@ -309,6 +337,14 @@ export type SemanticDomainUserCount = {
   domainCount?: number;
   wordCount?: number;
 };
+export type PasswordResetRequestData = {
+  domain: string;
+  emailOrUsername: string;
+};
+export type PasswordResetData = {
+  newPassword: string;
+  token: string;
+};
 export type Edit = {
   guid: string;
   goalType: number;
@@ -340,6 +376,8 @@ export const {
   useGetAllProjectUsersQuery,
   useGetWordsPerDayPerUserCountsQuery,
   useGetSemanticDomainUserCountsQuery,
+  useResetPasswordRequestMutation,
+  useResetPasswordMutation,
   useGetAllUsersQuery,
   useCreateUserMutation,
   useGetUserQuery,

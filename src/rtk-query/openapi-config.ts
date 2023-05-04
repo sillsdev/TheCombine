@@ -6,43 +6,56 @@ const config: ConfigFile = {
   apiImport: "emptySplitApi",
   outputFiles: {
     "./api/audio-api.ts": {
-      filterEndpoints: [/audio/i],
+      filterEndpoints: [/Audio/],
     },
     "./api/avatar-api.ts": {
-      filterEndpoints: [/avatar/i],
+      filterEndpoints: [/Avatar/],
     },
     "./api/banner-api.ts": {
-      filterEndpoints: [/banner/i],
+      filterEndpoints: [/Banner/],
     },
     "./api/invite-api.ts": {
-      filterEndpoints: [/invite/i],
+      filterEndpoints: [/Invite/, /Validate/i],
     },
     "./api/lift-api.ts": {
-      filterEndpoints: [/lift/i],
+      filterEndpoints: [/Lift/],
     },
     "./api/merge-api.ts": {
-      filterEndpoints: [/merge/i],
+      filterEndpoints: [/Merge/, /Blacklist/, /PotentialDuplicates/],
     },
     "./api/project-api.ts": {
-      filterEndpoints: [/project/i],
+      filterEndpoints: [
+        /(?!Email).*Projects?.*(?!Words|UserRoles|UserEdits)/,
+        "PutChars",
+      ],
     },
-    "./api/semantic-domain-api.ts": {
-      filterEndpoints: [/semantic-domain/i],
+    "./api/semanticdomain-api.ts": {
+      filterEndpoints: [/SemanticDomain(Full|TreeNode)/],
     },
     "./api/statistics-api.ts": {
-      filterEndpoints: [/statistics/i],
+      filterEndpoints: [/Counts/, /LineChart/],
     },
     "./api/user-api.ts": {
-      filterEndpoints: [/user/i],
+      filterEndpoints: [
+        /(?!Project)User/,
+        /Password/,
+        /Authenticate/,
+        /CheckEmail/,
+      ],
     },
     "./api/user-edit-api.ts": {
-      filterEndpoints: [/user-edit/i],
+      filterEndpoints: [/UserEdit/],
     },
     "./api/user-role-api.ts": {
-      filterEndpoints: [/user-role/i],
+      filterEndpoints: [/UserRole/],
     },
     "./api/word-api.ts": {
-      filterEndpoints: [/word/i],
+      filterEndpoints: [
+        /Word/,
+        /Frontier/,
+        /GetDuplicateId/,
+        /UpdateDuplicate/,
+      ],
     },
   },
   hooks: true,

@@ -2,13 +2,6 @@ import { emptySplitApi as api } from "./emptyApi";
 
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
-    mergeWords: build.mutation<MergeWordsApiResponse, MergeWordsApiArg>({
-      query: (queryArg) => ({
-        url: `/v1/projects/${queryArg.projectId}/merge`,
-        method: "PUT",
-        body: queryArg.body,
-      }),
-    }),
     undoMerge: build.mutation<UndoMergeApiResponse, UndoMergeApiArg>({
       query: (queryArg) => ({
         url: `/v1/projects/${queryArg.projectId}/merge/undo`,
@@ -16,19 +9,34 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.mergeUndoIds,
       }),
     }),
+    getPotentialDuplicates: build.query<
+      GetPotentialDuplicatesApiResponse,
+      GetPotentialDuplicatesApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/v1/projects/${queryArg.projectId}/merge/dups/${queryArg.maxInList}/${queryArg.maxLists}/${queryArg.userId}`,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 export { injectedRtkApi as enhancedApi };
-export type MergeWordsApiResponse = /** status 200 Success */ string[];
-export type MergeWordsApiArg = {
-  projectId: string;
-  body: MergeWords[];
-};
 export type UndoMergeApiResponse = /** status 200 Success */ boolean;
 export type UndoMergeApiArg = {
   projectId: string;
   mergeUndoIds: MergeUndoIds;
+};
+export type GetPotentialDuplicatesApiResponse =
+  /** status 200 Success */ Word[][];
+export type GetPotentialDuplicatesApiArg = {
+  projectId: string;
+  maxInList: number;
+  maxLists: number;
+  userId: string;
+};
+export type MergeUndoIds = {
+  parentIds: string[];
+  childIds: string[];
 };
 export type Definition = {
   language: string;
@@ -86,17 +94,5 @@ export type Word = {
   note: Note;
   flag: Flag;
 };
-export type MergeSourceWord = {
-  srcWordId: string;
-  getAudio: boolean;
-};
-export type MergeWords = {
-  parent: Word;
-  children: MergeSourceWord[];
-  deleteOnly: boolean;
-};
-export type MergeUndoIds = {
-  parentIds: string[];
-  childIds: string[];
-};
-export const { useMergeWordsMutation, useUndoMergeMutation } = injectedRtkApi;
+export const { useUndoMergeMutation, useGetPotentialDuplicatesQuery } =
+  injectedRtkApi;
