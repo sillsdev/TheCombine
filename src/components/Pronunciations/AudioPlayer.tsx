@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
@@ -31,62 +31,47 @@ interface PlayerProps {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    button: {
-      marginRight: theme.spacing(1),
-    },
-    icon: {
-      color: themeColors.success,
-    },
+    button: { marginRight: theme.spacing(1) },
+    icon: { color: themeColors.success },
   })
 );
 
 export default function AudioPlayer(props: PlayerProps) {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const pronunciationsState = useAppSelector(
+  const playState = useAppSelector(
     (state: StoreState) => state.pronunciationsState
   );
-  const dispatch = useAppDispatch();
+
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
   const classes = useStyles();
+  const dispatch = useAppDispatch();
+  const dispatchReset = useCallback(() => dispatch(reset()), [dispatch]);
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (
-      pronunciationsState.type !== PronunciationsStatus.Playing ||
-      pronunciationsState.payload !== props.fileName
-    ) {
-      if (isPlaying) {
-        stop();
-      }
-    } else {
-      play();
-    }
-    // We want pronunciationsState alone on the dependency list.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pronunciationsState]);
+    setIsPlaying(
+      playState.payload === props.fileName &&
+        playState.type === PronunciationsStatus.Playing
+    );
+  }, [playState, props.fileName, setIsPlaying]);
 
-  const dispatchReset = () => dispatch(reset());
+  useEffect(() => {
+    if (isPlaying) {
+      audio.addEventListener("ended", dispatchReset);
+      audio.play().catch(dispatchReset);
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }, [audio, dispatchReset, isPlaying]);
 
   function deleteAudio() {
     if (props.deleteAudio) {
       props.deleteAudio(props.wordId, props.fileName);
     }
-  }
-
-  function stop() {
-    setIsPlaying(false);
-    audio.pause();
-    audio.currentTime = 0;
-  }
-
-  function play() {
-    audio.addEventListener("ended", dispatchReset);
-    audio
-      .play()
-      .then(() => setIsPlaying(true))
-      .catch(dispatchReset);
   }
 
   function togglePlay() {
