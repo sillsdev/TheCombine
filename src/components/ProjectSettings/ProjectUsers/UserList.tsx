@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { avatarSrc, getAllUsers } from "backend";
+import { Hash } from "types/hash";
 import theme from "types/theme";
 
 interface UserListProps {
@@ -24,7 +25,7 @@ interface UserListProps {
 
 export default function UserList(props: UserListProps) {
   const [nonProjUsers, setNonProjUsers] = useState<User[]>([]);
-  const [userAvatar, setUserAvatar] = useState<{ [key: string]: string }>({});
+  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
   const [filterInput, setFilterInput] = useState<string>("");
   const [hoverUserId, setHoverUserId] = useState<string>("");
   const [filteredProjUsers, setFilteredProjUsers] = useState<User[]>([]);
@@ -43,14 +44,13 @@ export default function UserList(props: UserListProps) {
   }, [props.projectUsers, setNonProjUsers]);
 
   useEffect(() => {
-    const tempUserAvatar = { ...userAvatar };
+    const newUserAvatar: Hash<string> = {};
     const promises = props.projectUsers.map(async (u) => {
       if (u.hasAvatar) {
-        tempUserAvatar[u.id] = await avatarSrc(u.id);
+        newUserAvatar[u.id] = await avatarSrc(u.id);
       }
     });
-    Promise.all(promises).then(() => setUserAvatar(tempUserAvatar));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
   }, [props.projectUsers, setUserAvatar]);
 
   function clearFilter() {

@@ -2,15 +2,11 @@ import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  FormControl,
   Grid,
   Input,
-  InputLabel,
   List,
   ListItem,
   ListItemText,
-  MenuItem,
-  Select,
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
@@ -19,17 +15,15 @@ import { WithTranslation, withTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { getUserId } from "backend/localStorage";
+import SortOptions, {
+  UserOrder,
+} from "components/ProjectSettings/ProjectUsers/SortOptions";
+import { Hash } from "types/hash";
 import theme from "types/theme";
-
-enum UserOrder {
-  Username,
-  Name,
-  Email,
-}
 
 interface UserListProps extends WithTranslation {
   allUsers: User[];
-  userAvatar: { [key: string]: string };
+  userAvatar: Hash<string>;
   handleOpenModal: (user: User) => void;
 }
 
@@ -114,29 +108,12 @@ class UserList extends React.Component<UserListProps, UserListState> {
                 "projectSettings.invite.searchPlaceholder"
               )}
             />
-            <FormControl variant="standard" style={{ minWidth: 100 }}>
-              <InputLabel id="sorting-order-select">
-                {this.props.t("charInventory.sortBy")}
-              </InputLabel>
-              <Select
-                variant="standard"
-                labelId="sorting-order-select"
-                defaultValue={UserOrder.Username}
-                onChange={(event: SelectChangeEvent<UserOrder>) => {
-                  this.setState({ userOrder: event.target.value as UserOrder });
-                }}
-              >
-                <MenuItem value={UserOrder.Name}>
-                  {this.props.t("projectSettings.language.name")}
-                </MenuItem>
-                <MenuItem value={UserOrder.Username}>
-                  {this.props.t("login.username")}
-                </MenuItem>
-                <MenuItem value={UserOrder.Email}>
-                  {this.props.t("login.email")}
-                </MenuItem>
-              </Select>
-            </FormControl>
+            <SortOptions
+              includeEmail
+              onChange={(e: SelectChangeEvent<UserOrder>) => {
+                this.setState({ userOrder: e.target.value as UserOrder });
+              }}
+            />
           </Grid>
           <List>
             {this.getSortedUsers().map((user) => (
