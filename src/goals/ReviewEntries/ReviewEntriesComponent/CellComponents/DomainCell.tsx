@@ -52,7 +52,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
         (function () {
-          var tempSemanticDomain: SemanticDomain = newSemanticDomainForMongoDB(
+          const tempSemanticDomain = newSemanticDomainForMongoDB(
             selectedDomain.mongoId!,
             selectedDomain.guid,
             selectedDomain.name,

@@ -68,13 +68,54 @@ export default function ReviewEntriesTable(
   useEffect(() => {
     setPageState((prevState) => {
       const options = getPageSizeOptions(maxRows);
-      var i = 0;
+      let i = 0;
       while (i < options.length - 1 && options[i] < prevState.pageSize) {
         i++;
       }
       return { pageSize: options[i], pageSizeOptions: options };
     });
   }, [maxRows, setPageState]);
+
+  const materialTableLocalization = {
+    body: {
+      editRow: {
+        cancelTooltip: t("buttons.cancel"),
+        saveTooltip: t("buttons.save"),
+      },
+      editTooltip: t("reviewEntries.materialTable.body.edit"),
+      emptyDataSourceMessage: t(
+        "reviewEntries.materialTable.body.emptyDataSourceMessage"
+      ),
+      filterRow: {
+        filterTooltip: t("reviewEntries.materialTable.body.filter"),
+      },
+    },
+    header: {
+      actions: t("reviewEntries.materialTable.body.edit"),
+    },
+    pagination: {
+      labelDisplayedRows: t(
+        "reviewEntries.materialTable.pagination.labelDisplayedRows"
+      ),
+      labelRows: t("reviewEntries.materialTable.pagination.labelRows"),
+      labelRowsPerPage: t(
+        "reviewEntries.materialTable.pagination.labelRowsPerPage"
+      ),
+      firstAriaLabel: t("reviewEntries.materialTable.pagination.first"),
+      firstTooltip: t("reviewEntries.materialTable.pagination.first"),
+      lastAriaLabel: t("reviewEntries.materialTable.pagination.last"),
+      lastTooltip: t("reviewEntries.materialTable.pagination.last"),
+      nextAriaLabel: t("reviewEntries.materialTable.pagination.next"),
+      nextTooltip: t("reviewEntries.materialTable.pagination.next"),
+      previousAriaLabel: t("reviewEntries.materialTable.pagination.previous"),
+      previousTooltip: t("reviewEntries.materialTable.pagination.previous"),
+    },
+    toolbar: {
+      searchAriaLabel: t("reviewEntries.materialTable.toolbar.search"),
+      searchPlaceholder: t("reviewEntries.materialTable.toolbar.search"),
+      searchTooltip: t("reviewEntries.materialTable.toolbar.search"),
+    },
+  };
 
   return (
     <MaterialTable<any>
@@ -105,6 +146,7 @@ export default function ReviewEntriesTable(
           }),
       }}
       options={{ draggable: false, filtering: true, ...pageState }}
+      localization={materialTableLocalization}
     />
   );
 }

@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
-import { downloadIsReady } from "components/ProjectExport/Redux/ExportProjectActions";
+import {
+  downloadIsReady,
+  failure,
+} from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -34,22 +37,34 @@ export default function SignalRHub() {
 
   useEffect(() => {
     if (connection) {
-      // The methodName must match what is in Backend/Helper/CombineHub.cs.
-      const methodName = "DownloadReady";
+      // Name must match what is in Backend/Helper/CombineHub.cs.
+      const failName = "ExportFailed";
+      const successName = "DownloadReady";
+
       // The method is what the frontend does upon message receipt.
-      const method = (userId: string) => {
+      const failMethod = (userId: string) => {
         if (userId === getUserId()) {
-          downloadIsReady(exportState.projectId)(dispatch);
+          dispatch(failure(exportState.projectId));
           // After dispatch, stop the connection completely.
           // We don't need it active unless a new export is started,
           // and that might be with a different projectId.
           connection.stop();
         }
       };
-      connection
-        .start()
-        .then(() => connection.on(methodName, method))
-        .catch(console.error);
+      const successMethod = (userId: string) => {
+        if (userId === getUserId()) {
+          dispatch(downloadIsReady(exportState.projectId));
+          // After dispatch, stop the connection completely.
+          // We don't need it active unless a new export is started,
+          // and that might be with a different projectId.
+          connection.stop();
+        }
+      };
+
+      connection.start().then(() => {
+        connection.on(failName, failMethod);
+        connection.on(successName, successMethod);
+      });
     }
     // We reference dispatch and exportState, but they're not dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps

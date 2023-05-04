@@ -4,6 +4,10 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisMode>Minimum</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CA1816;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Data\sdList.txt" />
@@ -16,8 +20,8 @@
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.29.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.30.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
     <PackageReference Include="MailKit" Version="4.0.0" />

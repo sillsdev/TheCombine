@@ -2,11 +2,13 @@ import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
-import { Sense, Word } from "api/models";
+import { Gloss, SemanticDomain, Sense, Word } from "api/models";
 import DataEntryTable, {
+  WordAccess,
   addSemanticDomainToSense,
-  addSenseToWord,
   exitButtonId,
+  makeSemDomCurrent,
+  updateEntryGloss,
 } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newProject } from "types/project";
@@ -30,12 +32,23 @@ jest.mock("notistack", () => ({
 jest.mock("backend", () => ({
   createWord: (word: Word) => mockCreateWord(word),
   getDuplicateId: jest.fn(),
+  getFrontierWords: () => mockGetFrontierWords(),
   getProject: (id: string) => mockGetProject(id),
   getWord: (id: string) => mockGetWord(id),
   updateWord: (word: Word) => mockUpdateWord(word),
-  getFrontierWords: () => mockGetFrontierWords(),
 }));
-jest.mock("components/DataEntry/DataEntryTable/RecentEntry/RecentEntry");
+jest.mock("backend/localStorage", () => ({
+  getUserId: () => mockUserId,
+}));
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
+jest.mock(
+  "components/DataEntry/DataEntryTable/NewEntry/VernDialog",
+  () => "div"
+);
+jest.mock(
+  "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry",
+  () => "div"
+);
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 
@@ -46,30 +59,35 @@ let testHandle: renderer.ReactTestInstance;
 
 const mockWord = () => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
-const mockTreeNode = newSemanticDomainTreeNode();
-const mockSemanticDomain = semDomFromTreeNode(mockTreeNode);
-const mockOpenTree = jest.fn();
-const mockGetFrontierWords = jest.fn();
+const mockTreeNode = newSemanticDomainTreeNode("semDomId");
+const mockSemDom = semDomFromTreeNode(mockTreeNode);
+const mockUserId = "mockUserId";
 
 const mockCreateWord = jest.fn();
+const mockEnqueue = jest.fn();
+const mockGetFrontierWords = jest.fn();
 const mockGetProject = jest.fn();
 const mockGetWord = jest.fn();
 const mockHideQuestions = jest.fn();
+const mockOpenTree = jest.fn();
 const mockUpdateWord = jest.fn();
-const mockEnqueue = jest.fn();
+
 function setMocks() {
   mockCreateWord.mockResolvedValue(mockWord());
-  mockGetProject.mockResolvedValue(newProject());
-  mockGetWord.mockResolvedValue([mockMultiWord]);
-  mockUpdateWord.mockResolvedValue(mockWord());
   mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
+  mockGetProject.mockResolvedValue(newProject());
+  mockGetWord.mockResolvedValue(mockMultiWord);
+  mockUpdateWord.mockResolvedValue(mockWord());
 }
 
-beforeEach(async () => {
+beforeEach(() => {
   jest.clearAllMocks();
   setMocks();
+});
+
+const renderTable = async () => {
   await renderer.act(async () => {
-    testRenderer = await renderer.create(
+    testRenderer = renderer.create(
       <DataEntryTable
         semanticDomain={mockTreeNode}
         openTree={mockOpenTree}
@@ -78,10 +96,25 @@ beforeEach(async () => {
       />
     );
   });
-});
+};
 
 describe("DataEntryTable", () => {
+  describe("initial render", () => {
+    beforeEach(async () => {
+      await renderTable();
+    });
+
+    it("gets project data and frontier word", () => {
+      expect(mockGetProject).toBeCalledTimes(1);
+      expect(mockGetFrontierWords).toBeCalledTimes(1);
+    });
+  });
+
   describe("exit button", () => {
+    beforeEach(async () => {
+      await renderTable();
+    });
+
     it("hides questions", async () => {
       expect(mockHideQuestions).not.toBeCalled();
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
@@ -121,48 +154,6 @@ describe("DataEntryTable", () => {
     });
   });
 
-  describe("addSenseToWord", () => {
-    it("adds a sense to a word that has no senses", () => {
-      const word = mockWord();
-      word.senses = [];
-      const gloss = "firstSense";
-      const language = Bcp47Code.Es;
-
-      const expectedSense = newSense(gloss, language, mockSemanticDomain);
-      expectedSense.guid = expect.any(String);
-      const expectedWord: Word = { ...word, senses: [expectedSense] };
-
-      const resultWord = addSenseToWord(
-        mockSemanticDomain,
-        word,
-        gloss,
-        language
-      );
-      expect(resultWord).toEqual(expectedWord);
-    });
-
-    it("adds a sense to a word that already has a sense", () => {
-      const word = mockWord();
-      const gloss = "newSense";
-      const language = Bcp47Code.Es;
-
-      const expectedSense = newSense(gloss, language, mockSemanticDomain);
-      expectedSense.guid = expect.any(String);
-      const expectedWord: Word = {
-        ...word,
-        senses: [...word.senses, expectedSense],
-      };
-
-      const resultWord = addSenseToWord(
-        mockSemanticDomain,
-        word,
-        gloss,
-        language
-      );
-      expect(resultWord).toEqual(expectedWord);
-    });
-  });
-
   describe("addSemanticDomainToSense", () => {
     it("adds a semantic domain to existing sense", () => {
       const word = mockWord();
@@ -171,18 +162,66 @@ describe("DataEntryTable", () => {
       const sense = newSense(gloss, language);
       word.senses = [sense];
 
-      const expectedSense: Sense = {
-        ...sense,
-        semanticDomains: [mockSemanticDomain],
-      };
+      const semDom = makeSemDomCurrent(mockSemDom);
+      semDom.created = expect.any(String);
+      const expectedSense: Sense = { ...sense, semanticDomains: [semDom] };
       const expectedWord: Word = { ...word, senses: [expectedSense] };
 
-      const resultWord = addSemanticDomainToSense(mockSemanticDomain, word, 0);
+      const resultWord = addSemanticDomainToSense(mockSemDom, word, sense.guid);
       expect(resultWord).toEqual(expectedWord);
     });
   });
 
+  describe("makeSemDomCurrent", () => {
+    it("adds timestamp and the current user", () => {
+      expect(mockSemDom.created).toBeUndefined;
+      expect(mockSemDom.userId).toBeUndefined;
+
+      const currentDom = makeSemDomCurrent(mockSemDom);
+      expect(currentDom.created).not.toBeUndefined();
+      expect(currentDom.userId).toEqual(mockUserId);
+    });
+  });
+
+  describe("updateEntryGloss", () => {
+    it("directly updates a sense with no other semantic domains", () => {
+      const senseIndex = 1;
+      const sense = mockMultiWord.senses[senseIndex];
+      sense.semanticDomains = [mockSemDom];
+      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const def = "newGlossDef";
+
+      const expectedGloss: Gloss = { ...sense.glosses[0], def };
+      const expectedWord: Word = { ...entry.word };
+      expectedWord.senses[senseIndex] = { ...sense, glosses: [expectedGloss] };
+
+      expect(updateEntryGloss(entry, def, mockSemDom.id)).toEqual(expectedWord);
+    });
+
+    it("splits a sense with multiple semantic domains", () => {
+      const word = mockWord();
+      const sense = word.senses[0];
+      const otherDomain: SemanticDomain = { ...mockSemDom, id: "otherId" };
+      sense.semanticDomains = [otherDomain, mockSemDom];
+      const entry: WordAccess = { word, senseGuid: sense.guid };
+      const def = "newGlossDef";
+
+      const oldSense: Sense = { ...sense, semanticDomains: [otherDomain] };
+      const newSense: Sense = { ...sense };
+      newSense.glosses = [{ ...sense.glosses[0], def }];
+      newSense.guid = expect.any(String);
+      newSense.semanticDomains = [mockSemDom];
+      const expectedWord: Word = { ...word, senses: [oldSense, newSense] };
+
+      expect(updateEntryGloss(entry, def, mockSemDom.id)).toEqual(expectedWord);
+    });
+  });
+
   describe("updateWordWithNewGloss", () => {
+    beforeEach(async () => {
+      await renderTable();
+    });
+
     it("doesn't update word in backend if sense is a duplicate", async () => {
       testHandle = testRenderer.root.findByType(DataEntryTable);
       mockMultiWord.senses[0].semanticDomains = [
@@ -199,7 +238,6 @@ describe("DataEntryTable", () => {
             []
           )
       );
-      // Assert that the backend function for updating the word was NOT called
       expect(mockUpdateWord).not.toBeCalled();
     });
 
@@ -217,7 +255,6 @@ describe("DataEntryTable", () => {
           []
         );
       });
-      // Assert that the backend function for updating the word was called once
       expect(mockUpdateWord).toBeCalledTimes(1);
     });
 
@@ -231,7 +268,6 @@ describe("DataEntryTable", () => {
             []
           )
       );
-      // Assert that the backend function for updating the word was called once
       expect(mockUpdateWord).toBeCalledTimes(1);
     });
   });

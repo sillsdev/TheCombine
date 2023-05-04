@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import { ReactElement, useState } from "react";
 
-import { Sense, Word, WritingSystem } from "api/models";
+import { Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -19,7 +19,7 @@ const idAffix = "recent-entry";
 interface RecentEntryProps {
   rowIndex: number;
   entry: Word;
-  senseIndex: number;
+  senseGuid: string;
   updateGloss: (gloss: string) => void;
   updateNote: (newText: string) => Promise<void>;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
@@ -33,186 +33,142 @@ interface RecentEntryProps {
   disabled?: boolean;
 }
 
-interface RecentEntryState {
-  vernacular: string;
-  gloss: string;
-  hovering: boolean;
-}
-
 /**
  * Displays a recently entered word that a user can still edit
  */
-export default class RecentEntry extends React.Component<
-  RecentEntryProps,
-  RecentEntryState
-> {
-  constructor(props: RecentEntryProps) {
-    super(props);
-
-    const sense: Sense = { ...props.entry.senses[props.senseIndex] };
-    if (sense.glosses.length < 1) {
-      sense.glosses.push(newGloss("", this.props.analysisLang.bcp47));
-    }
-
-    this.state = {
-      vernacular: props.entry.vernacular,
-      gloss: firstGlossText(sense),
-      hovering: false,
-    };
+export default function RecentEntry(props: RecentEntryProps): ReactElement {
+  const sense = props.entry.senses.find((s) => s.guid === props.senseGuid)!;
+  if (sense.glosses.length < 1) {
+    sense.glosses.push(newGloss("", props.analysisLang.bcp47));
   }
+  const [gloss, setGloss] = useState(firstGlossText(sense));
+  const [hovering, setHovering] = useState(false);
+  const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
-  updateGlossField(gloss: string) {
-    this.setState({ gloss });
-  }
-
-  updateVernField(newValue?: string): Word[] {
-    this.setState({ vernacular: newValue ?? "" });
-    return [];
-  }
-
-  conditionallyUpdateGloss() {
-    if (
-      firstGlossText(this.props.entry.senses[this.props.senseIndex]) !==
-      this.state.gloss
-    ) {
-      this.props.updateGloss(this.state.gloss);
+  function conditionallyUpdateGloss() {
+    if (firstGlossText(sense) !== gloss) {
+      props.updateGloss(gloss);
     }
   }
 
-  conditionallyUpdateVern() {
-    if (this.props.entry.vernacular !== this.state.vernacular) {
-      this.props.updateVern(this.state.vernacular);
+  function conditionallyUpdateVern() {
+    if (props.entry.vernacular !== vernacular) {
+      props.updateVern(vernacular);
     }
   }
 
-  focusOnNewEntry = () => {
-    this.props.focusNewEntry();
-  };
-
-  render() {
-    return (
+  return (
+    <Grid
+      id={`${idAffix}-${props.rowIndex}`}
+      container
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      alignItems="center"
+    >
       <Grid
-        id={`${idAffix}-${this.props.rowIndex}`}
-        container
-        onMouseEnter={() => this.setState({ hovering: true })}
-        onMouseLeave={() => this.setState({ hovering: false })}
-        alignItems="center"
+        item
+        xs={4}
+        style={{
+          paddingLeft: theme.spacing(2),
+          paddingRight: theme.spacing(2),
+          position: "relative",
+        }}
       >
-        <Grid
-          item
-          xs={4}
-          style={{
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
-            position: "relative",
-          }}
-        >
-          <VernWithSuggestions
-            vernacular={this.state.vernacular}
-            isDisabled={
-              this.props.disabled || this.props.entry.senses.length > 1
+        <VernWithSuggestions
+          vernacular={vernacular}
+          isDisabled={props.disabled || props.entry.senses.length > 1}
+          updateVernField={setVernacular}
+          onBlur={() => conditionallyUpdateVern()}
+          handleEnterAndTab={() => {
+            if (vernacular) {
+              props.focusNewEntry();
             }
-            updateVernField={(newValue: string) =>
-              this.updateVernField(newValue)
-            }
-            onBlur={() => {
-              this.conditionallyUpdateVern();
-            }}
-            handleEnterAndTab={() => {
-              if (this.state.vernacular) {
-                this.focusOnNewEntry();
-              }
-            }}
-            vernacularLang={this.props.vernacularLang}
-            textFieldId={`${idAffix}-${this.props.rowIndex}-vernacular`}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={4}
-          style={{
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
-            position: "relative",
           }}
-        >
-          <GlossWithSuggestions
-            gloss={this.state.gloss}
-            isDisabled={this.props.disabled}
-            updateGlossField={(newValue: string) =>
-              this.updateGlossField(newValue)
-            }
-            onBlur={() => {
-              this.conditionallyUpdateGloss();
-            }}
-            handleEnterAndTab={() => {
-              if (this.state.gloss) {
-                this.focusOnNewEntry();
-              }
-            }}
-            analysisLang={this.props.analysisLang}
-            textFieldId={`${idAffix}-${this.props.rowIndex}-gloss`}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={1}
-          style={{
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            position: "relative",
-          }}
-        >
-          {!this.props.disabled && (
-            <EntryNote
-              noteText={this.props.entry.note.text}
-              updateNote={this.props.updateNote}
-              buttonId={`${idAffix}-${this.props.rowIndex}-note`}
-            />
-          )}
-        </Grid>
-        <Grid
-          item
-          xs={2}
-          style={{
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            position: "relative",
-          }}
-        >
-          {!this.props.disabled && (
-            <Pronunciations
-              wordId={this.props.entry.id}
-              pronunciationFiles={this.props.entry.audio}
-              recorder={this.props.recorder}
-              deleteAudio={(wordId: string, fileName: string) => {
-                this.props.deleteAudioFromWord(wordId, fileName);
-              }}
-              uploadAudio={(wordId: string, audioFile: File) => {
-                this.props.addAudioToWord(wordId, audioFile);
-              }}
-            />
-          )}
-        </Grid>
-        <Grid
-          item
-          xs={1}
-          style={{
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            position: "relative",
-          }}
-        >
-          {!this.props.disabled && this.state.hovering && (
-            <DeleteEntry
-              removeEntry={() => this.props.removeEntry()}
-              buttonId={`${idAffix}-${this.props.rowIndex}-delete`}
-              confirmId={"addWords.deleteRowWarning"}
-              wordId={this.props.entry.id}
-            />
-          )}
-        </Grid>
+          vernacularLang={props.vernacularLang}
+          textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
+        />
       </Grid>
-    );
-  }
+      <Grid
+        item
+        xs={4}
+        style={{
+          paddingLeft: theme.spacing(2),
+          paddingRight: theme.spacing(2),
+          position: "relative",
+        }}
+      >
+        <GlossWithSuggestions
+          gloss={gloss}
+          isDisabled={props.disabled}
+          updateGlossField={setGloss}
+          onBlur={() => conditionallyUpdateGloss()}
+          handleEnterAndTab={() => {
+            if (gloss) {
+              props.focusNewEntry();
+            }
+          }}
+          analysisLang={props.analysisLang}
+          textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
+        />
+      </Grid>
+      <Grid
+        item
+        xs={1}
+        style={{
+          paddingLeft: theme.spacing(1),
+          paddingRight: theme.spacing(1),
+          position: "relative",
+        }}
+      >
+        {!props.disabled && (
+          <EntryNote
+            noteText={props.entry.note.text}
+            updateNote={props.updateNote}
+            buttonId={`${idAffix}-${props.rowIndex}-note`}
+          />
+        )}
+      </Grid>
+      <Grid
+        item
+        xs={2}
+        style={{
+          paddingLeft: theme.spacing(1),
+          paddingRight: theme.spacing(1),
+          position: "relative",
+        }}
+      >
+        {!props.disabled && (
+          <Pronunciations
+            wordId={props.entry.id}
+            pronunciationFiles={props.entry.audio}
+            recorder={props.recorder}
+            deleteAudio={(wordId: string, fileName: string) => {
+              props.deleteAudioFromWord(wordId, fileName);
+            }}
+            uploadAudio={(wordId: string, audioFile: File) => {
+              props.addAudioToWord(wordId, audioFile);
+            }}
+          />
+        )}
+      </Grid>
+      <Grid
+        item
+        xs={1}
+        style={{
+          paddingLeft: theme.spacing(1),
+          paddingRight: theme.spacing(1),
+          position: "relative",
+        }}
+      >
+        {!props.disabled && hovering && (
+          <DeleteEntry
+            removeEntry={() => props.removeEntry()}
+            buttonId={`${idAffix}-${props.rowIndex}-delete`}
+            confirmId={"addWords.deleteRowWarning"}
+            wordId={props.entry.id}
+          />
+        )}
+      </Grid>
+    </Grid>
+  );
 }

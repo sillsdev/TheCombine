@@ -42,7 +42,7 @@
     "@matt-block/react-recaptcha-v2": "^2.0.0",
     "@microsoft/signalr": "^6.0.7",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.12.1",
+    "@mui/material": "^5.12.2",
     "@mui/styles": "^5.12.0",
     "@redux-devtools/extension": "^3.2.5",
     "@reduxjs/toolkit": "^1.9.3",
@@ -69,7 +69,7 @@
     "react-i18next": "^12.1.4",
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^5.3.1",
+    "react-router-dom": "^5.3.3",
     "react-toastify": "^9.1.1",
     "recordrtc": "^5.6.1",
     "redux": "^4.2.1",
@@ -102,15 +102,16 @@
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.3.1",
     "esbuild-runner": "^2.2.2",
-    "eslint": "^7.32.0",
+    "eslint": "^8.39.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "jest-canvas-mock": "^2.5.0",
     "license-checker-rseidelsohn": "^4.2.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "react-scripts": "^5.0.1",
     "react-test-renderer": "^17.0.1",
     "redux-mock-store": "^1.5.4",
@@ -132,8 +133,8 @@
     "rules": {
       "@typescript-eslint/no-empty-interface": "warn",
       "@typescript-eslint/no-inferrable-types": "warn",
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/switch-exhaustiveness-check": "warn",
-      "react/display-name": "off",
       "import/first": "warn",
       "import/newline-after-import": "warn",
       "import/no-duplicates": "warn",
@@ -162,7 +163,9 @@
       ],
       "no-undef": "off",
       "prefer-const": "warn",
-      "react/jsx-boolean-value": "warn"
+      "react/display-name": "off",
+      "react/jsx-boolean-value": "warn",
+      "unused-imports/no-unused-imports": "error"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -172,8 +175,9 @@
       "project": "./tsconfig.json"
     },
     "plugins": [
+      "@typescript-eslint",
       "react",
-      "@typescript-eslint"
+      "unused-imports"
     ],
     "settings": {
       "react": {

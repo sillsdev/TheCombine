@@ -24,19 +24,14 @@ export default function DisplayProgress() {
 
   const percentComplete = (currentStep / numSteps) * 100;
   const stepTranslateId =
-    goalType === GoalType.MergeDups
-      ? "goal.progress.stepMerge"
-      : "goal.progress.step";
+    goalType === GoalType.MergeDups ? "goal.progressMerge" : "goal.progress";
 
   return numSteps > 1 ? (
     <Paper key={currentStep}>
       <Grid container direction="column">
         <Grid item xs>
           <Typography variant={"h4"}>
-            {t(stepTranslateId)}
-            {` ${currentStep + 1} `}
-            {t("goal.progress.of")}
-            {` ${numSteps}`}
+            {t(stepTranslateId, { val1: currentStep + 1, val2: numSteps })}
           </Typography>
         </Grid>
         <Grid item xs>

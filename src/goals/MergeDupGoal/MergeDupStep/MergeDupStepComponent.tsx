@@ -1,96 +1,71 @@
-import { Button, Grid, ImageList, Typography } from "@mui/material";
-import React, { ReactElement } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { Button, Grid, Typography } from "@mui/material";
+import React, { ReactElement, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
 
-interface MergeDupStepProps extends WithTranslation {
+interface MergeDupStepProps {
   wordCount: number;
   advanceStep: () => void;
   clearSidebar: () => void;
   mergeAll: () => Promise<void>;
 }
 
-interface MergeDupStepState {
-  isSaving: boolean;
-}
+export default function MergeDupStep(props: MergeDupStepProps): ReactElement {
+  const [isSaving, setIsSaving] = useState(false);
+  const { t } = useTranslation();
 
-class MergeDupStep extends React.Component<
-  MergeDupStepProps,
-  MergeDupStepState
-> {
-  constructor(props: MergeDupStepProps) {
-    super(props);
-    this.state = { isSaving: false };
-  }
+  const next = (): void => {
+    props.clearSidebar();
+    setIsSaving(false);
+    props.advanceStep();
+  };
 
-  next(): void {
-    this.props.clearSidebar();
-    this.setState({ isSaving: false });
-    this.props.advanceStep();
-  }
+  const saveContinue = (): void => {
+    setIsSaving(true);
+    props.clearSidebar();
+    props.mergeAll().then(() => next());
+  };
 
-  saveContinue(): void {
-    this.setState({ isSaving: true });
-    this.props.clearSidebar();
-    this.props.mergeAll().then(() => this.next());
-  }
-
-  render(): ReactElement {
-    // number of columns = wordCount + 2:
-    //  first column for the trash icon
-    //  one column for each word
-    //  last column for the blank card
-    const columnCount = this.props.wordCount + 2;
-    return this.props.wordCount ? (
-      <React.Fragment>
-        {/* Merging pane */}
-        <div
-          style={{
-            background: "#eee",
-            padding: theme.spacing(1),
-          }}
-        >
-          <ImageList rowHeight="auto" cols={columnCount}>
-            <MergeDragDrop />
-          </ImageList>
-        </div>
-        {/* Merge/skip buttons */}
-        <Grid container justifyContent="flex-start">
-          <Grid item>
-            <LoadingButton
-              loading={this.state.isSaving}
-              buttonProps={{
-                color: "primary",
-                variant: "contained",
-                style: { marginRight: theme.spacing(3) },
-                onClick: () => this.saveContinue(),
-                title: this.props.t("mergeDups.helpText.saveAndContinue"),
-                id: "merge-save",
-              }}
-            >
-              {this.props.t("buttons.saveAndContinue")}
-            </LoadingButton>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ marginRight: theme.spacing(3) }}
-              onClick={() => this.next()}
-              title={this.props.t("mergeDups.helpText.skip")}
-              id="merge-skip"
-            >
-              {this.props.t("buttons.skip")}
-            </Button>
-          </Grid>
+  return props.wordCount ? (
+    <React.Fragment>
+      {/* Merging pane */}
+      <div style={{ background: "#eee", padding: theme.spacing(1) }}>
+        <MergeDragDrop />
+      </div>
+      {/* Merge/skip buttons */}
+      <Grid container justifyContent="flex-start">
+        <Grid item>
+          <LoadingButton
+            loading={isSaving}
+            buttonProps={{
+              color: "primary",
+              variant: "contained",
+              style: { marginRight: theme.spacing(3) },
+              onClick: () => saveContinue(),
+              title: t("mergeDups.helpText.saveAndContinue"),
+              id: "merge-save",
+            }}
+          >
+            {t("buttons.saveAndContinue")}
+          </LoadingButton>
+          <Button
+            color="secondary"
+            variant="contained"
+            style={{ marginRight: theme.spacing(3) }}
+            onClick={() => next()}
+            title={t("mergeDups.helpText.skip")}
+            id="merge-skip"
+          >
+            {t("buttons.skip")}
+          </Button>
         </Grid>
-      </React.Fragment>
-    ) : (
-      // TODO: create component with button back to goals.
-      <Typography>{this.props.t("mergeDups.helpText.noDups")}</Typography>
-    );
-  }
+      </Grid>
+    </React.Fragment>
+  ) : (
+    // TODO: create component with button back to goals.
+    <Typography>{t("mergeDups.helpText.noDups")}</Typography>
+  );
 }
-
-export default withTranslation()(MergeDupStep);
