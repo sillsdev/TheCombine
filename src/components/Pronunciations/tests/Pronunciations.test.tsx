@@ -15,8 +15,11 @@ import {
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 
-// Mock the node module used by AudioRecorder
+// Mock the audio components
 jest.mock("components/Pronunciations/Recorder");
+jest
+  .spyOn(window.HTMLMediaElement.prototype, "pause")
+  .mockImplementation(() => {});
 
 // Variables
 let testRenderer: renderer.ReactTestRenderer;
@@ -50,8 +53,8 @@ beforeAll(() => {
 });
 describe("Pronunciations", () => {
   it("renders one record button and one play button for each pronunciation file", () => {
-    expect(testRenderer.root.findAllByType(AudioRecorder).length).toBe(1);
-    expect(testRenderer.root.findAllByType(AudioPlayer).length).toBe(2);
+    expect(testRenderer.root.findAllByType(AudioRecorder)).toHaveLength(1);
+    expect(testRenderer.root.findAllByType(AudioPlayer)).toHaveLength(2);
   });
 
   // Snapshot
