@@ -38,7 +38,7 @@ describe("TreeView", () => {
 
 async function createTree(): Promise<void> {
   await renderer.act(async () => {
-    treeMaster = await renderer.create(
+    treeMaster = renderer.create(
       <Provider store={mockStore}>
         <TreeView returnControlToCaller={jest.fn()} />
       </Provider>

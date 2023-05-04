@@ -71,7 +71,7 @@ function setMockFunctions() {
   mockMaterialTable.mockReturnValue(React.Fragment);
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   // Prep for component creation
   setMockFunctions();
   for (const word of mockReviewEntryWords) {
@@ -80,7 +80,7 @@ beforeEach(() => {
     }
   }
 
-  renderer.act(() => {
+  await renderer.act(async () => {
     renderer.create(
       <Provider store={mockStore}>
         <ReviewEntriesComponent

@@ -87,7 +87,7 @@ beforeEach(() => {
 
 const renderTable = async () => {
   await renderer.act(async () => {
-    testRenderer = await renderer.create(
+    testRenderer = renderer.create(
       <DataEntryTable
         semanticDomain={mockTreeNode}
         openTree={mockOpenTree}
