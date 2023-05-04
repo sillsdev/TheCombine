@@ -1,11 +1,11 @@
 import { Grid } from "@mui/material";
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
 import { User } from "api/models";
-import { avatarSrc, deleteUser, getAllUsers } from "backend";
+import { deleteUser, getAllUsers } from "backend";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 import UserList from "components/SiteSettings/UserManagement/UserList";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
@@ -21,105 +21,70 @@ const customStyles = {
   },
 };
 
-interface UserState {
-  allUsers: User[];
-  openUser?: User;
-  userAvatar: { [key: string]: string };
-  showModal: boolean;
-  userToEdit?: User;
-  prevUserToEdit?: User;
-}
+export default function UserManagement(): ReactElement {
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [openUser, setOpenUser] = useState<User | undefined>();
+  const [showModal, setShowModal] = useState(false);
 
-class UserManagement extends React.Component<WithTranslation, UserState> {
-  constructor(props: WithTranslation) {
-    super(props);
-    this.state = {
-      allUsers: [],
-      userAvatar: {},
-      showModal: false,
-    };
-  }
+  const { t } = useTranslation();
 
-  async componentDidMount() {
-    Modal.setAppElement("body");
-    await this.populateUsers();
-  }
-
-  handleOpenModal = (user: User) => {
-    this.setState({ showModal: true, userToEdit: user });
-  };
-
-  handleCloseModal = () => {
-    this.setState({ showModal: false });
-  };
-
-  async componentDidUpdate() {
-    if (this.state.userToEdit !== this.state.prevUserToEdit) {
-      await this.populateUsers();
-      this.setState((prevState) => ({ prevUserToEdit: prevState.userToEdit }));
-    }
-  }
-
-  private async populateUsers() {
+  const populateUsers = useCallback(async (): Promise<void> => {
     await getAllUsers()
-      .then((allUsers) => {
-        this.setState({ allUsers });
-        const userAvatar = this.state.userAvatar;
-        const promises = allUsers.map(async (u) => {
-          if (u.hasAvatar) {
-            userAvatar[u.id] = await avatarSrc(u.id);
-          }
-        });
-        Promise.all(promises).then(() => {
-          this.setState({ userAvatar });
-        });
-      })
+      .then(setAllUsers)
       .catch((err) => {
         console.error(err);
-        toast.error(this.props.t("siteSettings.populateUsers.toastFailure"));
+        toast.error(t("siteSettings.populateUsers.toastFailure"));
       });
-  }
+  }, [setAllUsers, t]);
 
-  deleteUser(userId: string) {
+  useEffect(() => {
+    Modal.setAppElement("body");
+  }, [populateUsers]);
+
+  useEffect(() => {
+    if (!openUser) {
+      populateUsers();
+    }
+  }, [openUser, populateUsers]);
+
+  const handleOpenModal = (user: User) => {
+    setShowModal(true);
+    setOpenUser(user);
+  };
+  const handleCloseModal = () => setShowModal(false);
+
+  const delUser = (userId: string): void => {
     deleteUser(userId)
       .then(() => {
-        toast.success(this.props.t("siteSettings.deleteUser.toastSuccess"));
-        this.populateUsers();
+        toast.success(t("siteSettings.deleteUser.toastSuccess"));
+        setOpenUser(undefined);
       })
       .catch((err) => {
         console.error(err);
-        toast.error(this.props.t("siteSettings.deleteUser.toastFailure"));
+        toast.error(t("siteSettings.deleteUser.toastFailure"));
       });
-    this.handleCloseModal();
-  }
+    handleCloseModal();
+  };
 
-  render() {
-    return (
-      <React.Fragment>
-        <Grid container spacing={1}>
-          <UserList
-            allUsers={this.state.allUsers}
-            userAvatar={this.state.userAvatar}
-            handleOpenModal={(user: User) => this.handleOpenModal(user)}
-          />
-          <UpperRightToastContainer />
-        </Grid>
+  return (
+    <React.Fragment>
+      <Grid container spacing={1}>
+        <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
+        <UpperRightToastContainer />
+      </Grid>
 
-        <Modal
-          isOpen={this.state.showModal}
-          style={customStyles}
-          shouldCloseOnOverlayClick
-          onRequestClose={this.handleCloseModal}
-        >
-          <ConfirmDeletion
-            user={this.state.userToEdit}
-            deleteUser={(userId: string) => this.deleteUser(userId)}
-            handleCloseModal={this.handleCloseModal}
-          />
-        </Modal>
-      </React.Fragment>
-    );
-  }
+      <Modal
+        isOpen={showModal}
+        style={customStyles}
+        shouldCloseOnOverlayClick
+        onRequestClose={handleCloseModal}
+      >
+        <ConfirmDeletion
+          user={openUser}
+          deleteUser={delUser}
+          handleCloseModal={handleCloseModal}
+        />
+      </Modal>
+    </React.Fragment>
+  );
 }
-
-export default withTranslation()(UserManagement);

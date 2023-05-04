@@ -16,6 +16,7 @@ import { getCurrentUser, getProjectId } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
 import SortOptions, {
   UserOrder,
+  getUserCompare,
 } from "components/ProjectSettings/ProjectUsers/SortOptions";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
@@ -32,19 +33,7 @@ export default function ActiveUsers() {
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
 
   const compareUsers = useCallback(
-    (a: User, b: User) => {
-      const reverse = reverseSorting ? -1 : 1;
-      switch (userOrder) {
-        case UserOrder.Name:
-          return a.name.localeCompare(b.name) * reverse;
-        case UserOrder.Username:
-          return a.username.localeCompare(b.username) * reverse;
-        case UserOrder.Email:
-          return a.email.localeCompare(b.email) * reverse;
-        default:
-          throw new Error();
-      }
-    },
+    (a: User, b: User) => getUserCompare(userOrder, reverseSorting)(a, b),
     [reverseSorting, userOrder]
   );
 

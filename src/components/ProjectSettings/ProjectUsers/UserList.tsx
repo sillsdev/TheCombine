@@ -21,9 +21,9 @@ import theme from "types/theme";
 export function doesTextMatchUser(text: string, user: User) {
   const lower = text.toLocaleLowerCase();
   return (
-    user.name.toLowerCase().includes(lower) ||
-    user.username.toLowerCase().includes(lower) ||
-    user.email.toLowerCase().includes(lower)
+    user.name.toLocaleLowerCase().includes(lower) ||
+    user.username.toLocaleLowerCase().includes(lower) ||
+    user.email.toLocaleLowerCase().includes(lower)
   );
 }
 
@@ -125,7 +125,7 @@ export default function UserList(props: UserListProps): ReactElement {
       <Input
         type="text"
         onChange={(e) => updateUsers(e.target.value)}
-        placeholder="Search..."
+        placeholder={t("projectSettings.invite.searchPlaceholder")}
         value={filterInput}
       />
       <List>

@@ -11,10 +11,28 @@ import {
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
+import { User } from "api/models";
+
 export enum UserOrder {
   Username,
   Name,
   Email,
+}
+
+export function getUserCompare(order: UserOrder, reverse = false) {
+  const rev = reverse ? -1 : 1;
+  return (a: User, b: User) => {
+    switch (order) {
+      case UserOrder.Name:
+        return a.name.localeCompare(b.name) * rev;
+      case UserOrder.Username:
+        return a.username.localeCompare(b.username) * rev;
+      case UserOrder.Email:
+        return a.email.localeCompare(b.email) * rev;
+      default:
+        throw new Error();
+    }
+  };
 }
 
 interface SortOptionsProps {
