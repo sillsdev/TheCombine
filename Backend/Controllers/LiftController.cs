@@ -257,8 +257,9 @@ namespace BackendFramework.Controllers
             }
             catch
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
                 _logger.LogError("Error exporting project {ProjectId}", projectId);
+                _liftService.DeleteExport(userId);
+                await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
                 throw;
             }
         }

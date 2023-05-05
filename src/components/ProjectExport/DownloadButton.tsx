@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { getProjectName } from "backend";
 import {
   asyncDownloadExport,
-  resetExport,
+  asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
@@ -42,9 +42,9 @@ export default function DownloadButton(props: DownloadButtonProps) {
   const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
-  const reset = useCallback(() => {
-    dispatch(resetExport(exportState.projectId));
-  }, [dispatch, exportState.projectId]);
+  const reset = useCallback(async () => {
+    await dispatch(asyncResetExport());
+  }, [dispatch]);
 
   useEffect(() => {
     if (downloadLink.current && fileUrl) {
