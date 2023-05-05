@@ -2,8 +2,6 @@
   "schemaFile": "http://localhost:5000/openapi/v1/openapi.json",
   "apiFile": "./api/emptyApi.ts",
   "apiImport": "emptySplitApi",
-  "outputFiles": {
-    "./outputFileSpecs": {}
-  },
+  "outputFiles": {},
   "hooks": true
 }
