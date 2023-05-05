@@ -25,7 +25,7 @@ export default function SignalRHub() {
   const [disconnect, setDisconnect] = useState(false);
   const [reconnect, setReconnect] = useState(false);
 
-  const forceDisconnect = useCallback(() => {
+  const finishDisconnect = useCallback(() => {
     setConnection(undefined);
     setDisconnect(false);
   }, [setConnection, setDisconnect]);
@@ -34,12 +34,12 @@ export default function SignalRHub() {
   useEffect(() => {
     if (disconnect) {
       if (connection) {
-        connection.stop().then(forceDisconnect).catch(forceDisconnect);
+        connection.stop().then(finishDisconnect).catch(finishDisconnect);
       } else {
         setDisconnect(false);
       }
     }
-  }, [connection, disconnect, forceDisconnect]);
+  }, [connection, disconnect, finishDisconnect]);
 
   /** Once disconnect state is acted on, act on the reconnect state. */
   useEffect(() => {
