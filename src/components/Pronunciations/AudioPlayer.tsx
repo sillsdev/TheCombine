@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function AudioPlayer(props: PlayerProps): ReactElement {
-  const playThis = useAppSelector(
+  const isPlaying = useAppSelector(
     (state: StoreState) =>
       state.pronunciationsState.payload === props.fileName &&
       state.pronunciationsState.type === PronunciationsStatus.Playing
@@ -52,16 +52,11 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const dispatchReset = useCallback(() => dispatch(reset()), [dispatch]);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setIsPlaying(playThis);
-  }, [playThis, setIsPlaying]);
 
   useEffect(() => {
     if (isPlaying) {
