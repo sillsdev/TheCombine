@@ -10,6 +10,7 @@ import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 import {
+  PronunciationsState,
   defaultState as pronunciationsState,
   PronunciationsStatus,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
@@ -26,7 +27,9 @@ let testRenderer: renderer.ReactTestRenderer;
 
 const createMockStore = configureMockStore();
 const mockStore = createMockStore({ pronunciationsState });
-function mockRecordingState(wordId: string) {
+function mockRecordingState(wordId: string): {
+  pronunciationsState: Partial<PronunciationsState>;
+} {
   return {
     pronunciationsState: {
       type: PronunciationsStatus.Recording,

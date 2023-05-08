@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -20,15 +20,15 @@ export function getFileNameForWord(wordId: string): string {
   return compressed.join("") + "_" + new Date().getTime().toString(36);
 }
 
-export default function AudioRecorder(props: RecorderProps) {
+export default function AudioRecorder(props: RecorderProps): ReactElement {
   const { t } = useTranslation();
   const recorder = props.recorder ?? new Recorder();
 
-  function startRecording() {
+  function startRecording(): void {
     recorder.startRecording();
   }
 
-  function stopRecording() {
+  function stopRecording(): void {
     recorder
       .stopRecording()
       .then(() => {
@@ -49,13 +49,13 @@ export default function AudioRecorder(props: RecorderProps) {
   }
 
   return (
-    <React.Fragment>
+    <Fragment>
       <UpperRightToastContainer />
       <RecorderIcon
         wordId={props.wordId}
         startRecording={startRecording}
         stopRecording={stopRecording}
       />
-    </React.Fragment>
+    </Fragment>
   );
 }

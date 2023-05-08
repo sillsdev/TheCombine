@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment, memo, ReactElement } from "react";
 
 import * as backend from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
@@ -15,9 +15,9 @@ interface PronunciationProps {
 }
 
 /** Audio recording/playing component */
-export function Pronunciations(props: PronunciationProps) {
-  const audioButtons = props.pronunciationFiles.map((fileName) => {
-    return (
+export function Pronunciations(props: PronunciationProps): ReactElement {
+  const audioButtons: ReactElement[] = props.pronunciationFiles.map(
+    (fileName) => (
       <AudioPlayer
         key={fileName}
         wordId={props.wordId}
@@ -29,32 +29,31 @@ export function Pronunciations(props: PronunciationProps) {
         }
         deleteAudio={props.deleteAudio}
       />
-    );
-  });
+    )
+  );
   return (
-    <React.Fragment>
+    <Fragment>
       <AudioRecorder
         wordId={props.wordId}
         recorder={props.recorder}
         uploadAudio={props.uploadAudio}
       />
       {audioButtons}
-    </React.Fragment>
+    </Fragment>
   );
 }
 
 // Memoize to decrease unnecessary fetching of audio files.
 // https://dmitripavlutin.com/use-react-memo-wisely/#11-custom-equality-check-of-props
 function pronunciationPropsAreEqual(
-  props: PronunciationProps,
-  nextProps: PronunciationProps
-) {
-  if (nextProps.wordId === props.wordId) {
-    const hasSameAudio =
-      JSON.stringify(nextProps.pronunciationFiles) ===
-      JSON.stringify(props.pronunciationFiles);
-    return hasSameAudio;
-  }
-  return false;
+  prev: PronunciationProps,
+  next: PronunciationProps
+): boolean {
+  return (
+    prev.wordId === next.wordId &&
+    JSON.stringify(prev.pronunciationFiles) ===
+      JSON.stringify(next.pronunciationFiles)
+  );
 }
-export default React.memo(Pronunciations, pronunciationPropsAreEqual);
+
+export default memo(Pronunciations, pronunciationPropsAreEqual);
