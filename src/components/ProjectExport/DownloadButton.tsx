@@ -1,7 +1,8 @@
 import { Cached, Error as ErrorIcon } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, {
+import {
   createRef,
+  Fragment,
   ReactElement,
   useCallback,
   useEffect,
@@ -12,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { getProjectName } from "backend";
 import {
   asyncDownloadExport,
-  resetExport,
+  asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
@@ -32,7 +33,9 @@ interface DownloadButtonProps {
  * A button to show export status. This automatically initiates a download
  * when a user's export is done, so there should be exactly one copy of this
  * component rendered at any given time in the logged-in app. */
-export default function DownloadButton(props: DownloadButtonProps) {
+export default function DownloadButton(
+  props: DownloadButtonProps
+): ReactElement {
   const exportState = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
@@ -42,9 +45,9 @@ export default function DownloadButton(props: DownloadButtonProps) {
   const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
-  const reset = useCallback(() => {
-    dispatch(resetExport(exportState.projectId));
-  }, [dispatch, exportState.projectId]);
+  const reset = useCallback(async (): Promise<void> => {
+    await dispatch(asyncResetExport());
+  }, [dispatch]);
 
   useEffect(() => {
     if (downloadLink.current && fileUrl) {
@@ -97,7 +100,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
       case ExportStatus.Failure:
         return <ErrorIcon />;
       default:
-        return <div />;
+        return <Fragment />;
     }
   }
 
@@ -119,7 +122,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   }
 
   return (
-    <React.Fragment>
+    <Fragment>
       {exportState.status !== ExportStatus.Default && (
         <Tooltip title={t(textId())} placement="bottom">
           <IconButton
@@ -142,6 +145,6 @@ export default function DownloadButton(props: DownloadButtonProps) {
           (This link should not be visible)
         </a>
       )}
-    </React.Fragment>
+    </Fragment>
   );
 }

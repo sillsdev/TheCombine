@@ -8,12 +8,8 @@ import { StoreStateDispatch } from "types/Redux/actions";
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(exporting(projectId));
-    exportLift(projectId).catch(() => dispatch(failure(projectId)));
+    await exportLift(projectId).catch(() => dispatch(failure(projectId)));
   };
-}
-
-export function downloadIsReady(projectId: string) {
-  return (dispatch: StoreStateDispatch) => dispatch(success(projectId));
 }
 
 export function asyncDownloadExport(projectId: string) {
@@ -25,10 +21,10 @@ export function asyncDownloadExport(projectId: string) {
   };
 }
 
-export function resetExport(projectId?: string) {
-  return (dispatch: StoreStateDispatch) => {
+export function asyncResetExport() {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(reset());
-    deleteLift(projectId);
+    await deleteLift();
   };
 }
 
@@ -44,7 +40,7 @@ function downloading(projectId: string): ExportProjectAction {
     projectId,
   };
 }
-function success(projectId: string): ExportProjectAction {
+export function success(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.Success,
     projectId,

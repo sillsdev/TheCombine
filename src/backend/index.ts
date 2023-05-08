@@ -252,10 +252,12 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
-/** After downloading a LIFT file, clear it from the backend. */
-export async function deleteLift(projectId?: string): Promise<void> {
-  projectId = projectId ? projectId : LocalStorage.getProjectId();
-  await liftApi.deleteLiftFile({ projectId }, defaultOptions());
+/** After downloading a LIFT file, clear it from the backend.
+ * The backend deletes by user, not by project,
+ * but a nonempty projectId in the url is still required.
+ */
+export async function deleteLift(): Promise<void> {
+  await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
 }
 
 export async function canUploadLift(): Promise<boolean> {

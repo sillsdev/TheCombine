@@ -20,10 +20,10 @@ export default function ExportButton(props: ExportButtonProps) {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  function exportProj() {
-    isFrontierNonempty(props.projectId).then((isNonempty) => {
+  async function exportProj() {
+    await isFrontierNonempty(props.projectId).then(async (isNonempty) => {
       if (isNonempty) {
-        dispatch(asyncExportProject(props.projectId));
+        await dispatch(asyncExportProject(props.projectId));
       } else {
         enqueueSnackbar(t("projectExport.cannotExportEmpty"));
       }
