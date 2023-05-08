@@ -2,8 +2,8 @@ import { Grid } from "@mui/material";
 import { useEffect } from "react";
 
 import { clearCurrentProject } from "components/Project/ProjectActions";
-import ChooseProjectComponent from "components/ProjectScreen/ChooseProject";
-import CreateProjectComponent from "components/ProjectScreen/CreateProject";
+import ChooseProject from "components/ProjectScreen/ChooseProject";
+import CreateProject from "components/ProjectScreen/CreateProject";
 import { resetTreeAction } from "components/TreeView/TreeViewActions";
 import { useAppDispatch } from "types/hooks";
 
@@ -20,11 +20,11 @@ export default function ProjectScreen() {
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} sm={6}>
         <Grid container justifyContent="flex-end">
-          <ChooseProjectComponent />
+          <ChooseProject />
         </Grid>
       </Grid>
       <Grid item xs={12} sm={6}>
-        <CreateProjectComponent />
+        <CreateProject />
       </Grid>
     </Grid>
   );
