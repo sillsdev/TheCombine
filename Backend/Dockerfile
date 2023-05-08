@@ -1,5 +1,5 @@
 # Docker multi-stage build using bitnami/dotnet-sdk:6.0.408-debian-11-r8
-FROM bitnami/dotnet-sdk@sha256:e9e0647da363ab10fa575e49810840e955a6a7c01f21c4d9dcbd01403b7a20cc AS builder
+FROM bitnami/dotnet-sdk@sha256:09f5dda04c638d686b5a2d49d1be5e2bca2d11aa84ea896f26b9eb1a894d18a4 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
