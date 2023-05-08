@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import ChooseProject from "components/ProjectScreen/ChooseProject";
@@ -8,7 +8,7 @@ import { resetTreeAction } from "components/TreeView/TreeViewActions";
 import { useAppDispatch } from "types/hooks";
 
 /** Where users create a project or choose an existing one */
-export default function ProjectScreen() {
+export default function ProjectScreen(): ReactElement {
   const dispatch = useAppDispatch();
   /* Disable Data Entry, Data Cleanup, Project Settings until a project is selected or created. */
   useEffect(() => {
