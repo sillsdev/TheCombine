@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 
 import { getFrontierWords } from "backend";
 import Recorder from "components/Pronunciations/Recorder";
@@ -15,40 +15,29 @@ interface ReviewEntriesProps {
   ) => Promise<void>;
 }
 
-interface ReviewEntriesState {
-  loaded: boolean;
-}
+export default function ReviewEntriesComponent(
+  props: ReviewEntriesProps
+): ReactElement {
+  const [loaded, setLoaded] = useState(false);
+  const recorder = useMemo(() => new Recorder(), []);
+  const { updateAllWords, updateFrontierWord } = props;
 
-export default class ReviewEntriesComponent extends React.Component<
-  ReviewEntriesProps,
-  ReviewEntriesState
-> {
-  recorder: Recorder;
+  useEffect(() => {
+    getFrontierWords().then((frontier) => {
+      updateAllWords(
+        frontier.map((w) => new ReviewEntriesWord(w, undefined, recorder))
+      );
+      setLoaded(true);
+    });
+  }, [updateAllWords, recorder]);
 
-  constructor(props: ReviewEntriesProps) {
-    super(props);
-    this.state = { loaded: false };
-    this.recorder = new Recorder();
-  }
-
-  async componentDidMount(): Promise<void> {
-    const frontier = await getFrontierWords();
-    this.props.updateAllWords(
-      frontier.map((w) => new ReviewEntriesWord(w, undefined, this.recorder))
-    );
-    this.setState({ loaded: true });
-  }
-
-  render() {
-    return (
-      this.state.loaded && (
-        <ReviewEntriesTable
-          onRowUpdate={(
-            newData: ReviewEntriesWord,
-            oldData: ReviewEntriesWord
-          ) => this.props.updateFrontierWord(newData, oldData)}
-        />
-      )
-    );
-  }
+  return loaded ? (
+    <ReviewEntriesTable
+      onRowUpdate={(newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
+        updateFrontierWord(newData, oldData)
+      }
+    />
+  ) : (
+    <div />
+  );
 }

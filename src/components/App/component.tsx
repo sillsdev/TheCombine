@@ -8,7 +8,7 @@ import LandingPage from "components/LandingPage";
 import Login from "components/Login/LoginPage";
 import SignUp from "components/Login/SignUpPage";
 import PageNotFound from "components/PageNotFound/component";
-import ResetRequest from "components/PasswordReset/RequestPage";
+import PasswordRequest from "components/PasswordReset/Request";
 import PasswordReset from "components/PasswordReset/ResetPage";
 import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite";
@@ -29,7 +29,7 @@ export default function App(): ReactElement {
           <Route path={Path.Login} component={Login} />
           <Route path={Path.SignUp} component={SignUp} />
           <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
-          <Route path={Path.PwRequest} component={ResetRequest} />
+          <Route path={Path.PwRequest} component={PasswordRequest} />
           <Route
             path={`${Path.ProjInvite}/:project/:token`}
             component={ProjectInvite}

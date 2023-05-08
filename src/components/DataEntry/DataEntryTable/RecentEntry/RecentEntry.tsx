@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
 
-import { Sense, Word, WritingSystem } from "api/models";
+import { Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
