@@ -2,7 +2,6 @@ import renderer from "react-test-renderer";
 
 import ProjectScreen from "components/ProjectScreen";
 
-jest.mock("components/AppBar/AppBarComponent", () => "div");
 jest.mock("components/ProjectScreen/ChooseProject", () => "div");
 jest.mock("components/ProjectScreen/CreateProject", () => "div");
 jest.mock("types/hooks", () => ({
