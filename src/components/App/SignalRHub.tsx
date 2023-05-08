@@ -3,7 +3,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
-import React, { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
@@ -25,7 +25,7 @@ export default function SignalRHub() {
   const [disconnect, setDisconnect] = useState(false);
   const [reconnect, setReconnect] = useState(false);
 
-  const finishDisconnect = useCallback(() => {
+  const finishDisconnect = useCallback((): void => {
     setConnection(undefined);
     setDisconnect(false);
   }, [setConnection, setDisconnect]);
@@ -74,12 +74,12 @@ export default function SignalRHub() {
     const successName = "DownloadReady";
 
     // The method is what the frontend does upon message receipt.
-    const failMethod = (userId: string) => {
+    const failMethod = (userId: string): void => {
       if (userId === getUserId()) {
         dispatch(failure(exportState.projectId));
       }
     };
-    const successMethod = (userId: string) => {
+    const successMethod = (userId: string): void => {
       if (userId === getUserId()) {
         dispatch(success(exportState.projectId));
       }
@@ -91,5 +91,5 @@ export default function SignalRHub() {
     });
   }, [connection, dispatch, exportState.projectId]);
 
-  return <React.Fragment />;
+  return <Fragment />;
 }
