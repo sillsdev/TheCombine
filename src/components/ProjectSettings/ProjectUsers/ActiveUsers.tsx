@@ -7,7 +7,13 @@ import {
   ListItemText,
   SelectChangeEvent,
 } from "@mui/material";
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 
 import { Permission, User, UserRole } from "api/models";
@@ -22,7 +28,7 @@ import { StoreState } from "types";
 import { Hash } from "types/hash";
 import theme from "types/theme";
 
-export default function ActiveUsers() {
+export default function ActiveUsers(): ReactElement {
   const projectUsers = useSelector(
     (state: StoreState) => state.currentProjectState.users
   );
@@ -33,7 +39,8 @@ export default function ActiveUsers() {
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
 
   const compareUsers = useCallback(
-    (a: User, b: User) => getUserCompare(userOrder, reverseSorting)(a, b),
+    (a: User, b: User): number =>
+      getUserCompare(userOrder, reverseSorting)(a, b),
     [reverseSorting, userOrder]
   );
 
@@ -69,7 +76,7 @@ export default function ActiveUsers() {
   const currentUser = getCurrentUser();
   const currentProjectId = getProjectId();
   if (!currentUser || !currentProjectId) {
-    return <div />;
+    return <Fragment />;
   }
 
   const currentUserIsProjectAdmin = hasProjectPermission(
@@ -127,7 +134,7 @@ export default function ActiveUsers() {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <SortOptions
         includeEmail={currentUserIsProjectOwner || currentUser.isAdmin}
         onChange={(e: SelectChangeEvent<UserOrder>) => {
@@ -137,6 +144,6 @@ export default function ActiveUsers() {
         onReverseClick={() => setReverseSorting(!reverseSorting)}
       />
       <List>{sortedUsers.map(userListItem)}</List>
-    </React.Fragment>
+    </Fragment>
   );
 }

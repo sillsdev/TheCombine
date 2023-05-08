@@ -1,6 +1,6 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
-import React, { useState } from "react";
+import { Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -29,7 +29,7 @@ interface CancelConfirmDialogCollectionProps {
  */
 export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
-) {
+): ReactElement {
   const dispatch = useAppDispatch();
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
   const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
@@ -38,7 +38,7 @@ export default function CancelConfirmDialogCollection(
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
   const { t } = useTranslation();
 
-  function removeUser(userId: string) {
+  function removeUser(userId: string): void {
     removeUserRole([Permission.DeleteEditSettingsAndUsers], userId)
       .then(() => {
         setRemoveUser(false);
@@ -56,7 +56,7 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  function makeAdmin(userId: string) {
+  function makeAdmin(userId: string): void {
     addOrUpdateUserRole(
       [
         Permission.WordEntry,
@@ -80,7 +80,7 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  function removeAdmin(userId: string) {
+  function removeAdmin(userId: string): void {
     addOrUpdateUserRole(
       [Permission.MergeAndReviewEntries, Permission.WordEntry],
       userId
@@ -101,7 +101,7 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  function makeOwner(userId: string) {
+  function makeOwner(userId: string): void {
     addOrUpdateUserRole(
       [
         Permission.WordEntry,
@@ -137,7 +137,7 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  const managementOptions = [
+  const managementOptions: ReactElement[] = [
     <MenuItem
       key={idRemoveUser}
       id={idRemoveUser}
@@ -180,7 +180,7 @@ export default function CancelConfirmDialogCollection(
   }
 
   return (
-    <React.Fragment>
+    <Fragment>
       <CancelConfirmDialog
         open={removeUserDialogOpen}
         textId="projectSettings.userManagement.removeUserWarning"
@@ -234,6 +234,6 @@ export default function CancelConfirmDialogCollection(
       >
         {managementOptions}
       </Menu>
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -29,7 +29,7 @@ interface UserListProps {
   handleOpenModal: (user: User) => void;
 }
 
-export default function UserList(props: UserListProps) {
+export default function UserList(props: UserListProps): ReactElement {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [filterInput, setFilterInput] = useState<string>("");
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
@@ -39,7 +39,8 @@ export default function UserList(props: UserListProps) {
   const { t } = useTranslation();
 
   const compareUsers = useCallback(
-    (a: User, b: User) => getUserCompare(userOrder, reverseSorting)(a, b),
+    (a: User, b: User): number =>
+      getUserCompare(userOrder, reverseSorting)(a, b),
     [reverseSorting, userOrder]
   );
 

@@ -1,5 +1,11 @@
 import { Grid } from "@mui/material";
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
@@ -47,11 +53,11 @@ export default function UserManagement(): ReactElement {
     }
   }, [openUser, populateUsers]);
 
-  const handleOpenModal = (user: User) => {
+  const handleOpenModal = (user: User): void => {
     setShowModal(true);
     setOpenUser(user);
   };
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = (): void => setShowModal(false);
 
   const delUser = (userId: string): void => {
     deleteUser(userId)
@@ -67,7 +73,7 @@ export default function UserManagement(): ReactElement {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Grid container spacing={1}>
         <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
         <UpperRightToastContainer />
@@ -85,6 +91,6 @@ export default function UserManagement(): ReactElement {
           handleCloseModal={handleCloseModal}
         />
       </Modal>
-    </React.Fragment>
+    </Fragment>
   );
 }

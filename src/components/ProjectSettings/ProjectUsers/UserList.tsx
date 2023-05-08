@@ -18,7 +18,7 @@ import { avatarSrc, getAllUsers } from "backend";
 import { Hash } from "types/hash";
 import theme from "types/theme";
 
-export function doesTextMatchUser(text: string, user: User) {
+export function doesTextMatchUser(text: string, user: User): boolean {
   const lower = text.toLocaleLowerCase();
   return (
     user.name.toLocaleLowerCase().includes(lower) ||

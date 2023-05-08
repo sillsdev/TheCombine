@@ -8,7 +8,7 @@ import {
   SelectChangeEvent,
   Tooltip,
 } from "@mui/material";
-import React, { ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
@@ -19,7 +19,10 @@ export enum UserOrder {
   Email,
 }
 
-export function getUserCompare(order: UserOrder, reverse = false) {
+export function getUserCompare(
+  order: UserOrder,
+  reverse = false
+): (a: User, b: User) => number {
   const rev = reverse ? -1 : 1;
   return (a: User, b: User) => {
     switch (order) {
@@ -44,7 +47,7 @@ interface SortOptionsProps {
 export default function SortOptions(props: SortOptionsProps): ReactElement {
   const { t } = useTranslation();
 
-  const sortOptions = [
+  const sortOptions: ReactElement[] = [
     <MenuItem key="sortByName" value={UserOrder.Name}>
       {t("projectSettings.language.name")}
     </MenuItem>,
@@ -60,7 +63,7 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
     );
   }
 
-  const reverseButton = () => {
+  const reverseButton = (): ReactElement => {
     return props.onReverseClick ? (
       <Tooltip
         title={t("projectSettings.userManagement.reverseOrder")}
@@ -75,12 +78,12 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
         </IconButton>
       </Tooltip>
     ) : (
-      <div />
+      <Fragment />
     );
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <FormControl variant="standard" style={{ minWidth: 100 }}>
         <InputLabel id="sorting-order-select">
           {t("charInventory.sortBy")}
@@ -95,6 +98,6 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
         </Select>
       </FormControl>
       {reverseButton()}
-    </React.Fragment>
+    </Fragment>
   );
 }
