@@ -144,7 +144,7 @@ namespace BackendFramework.Services
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.Remove(userId, out var filePath);
-            if (removeSuccessful && filePath is not null)
+            if (removeSuccessful && filePath is not null && filePath != InProgress)
             {
                 File.Delete(filePath);
             }
