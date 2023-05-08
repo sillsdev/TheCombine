@@ -100,7 +100,7 @@ export default function DownloadButton(
       case ExportStatus.Failure:
         return <ErrorIcon />;
       default:
-        return <div />;
+        return <Fragment />;
     }
   }
 
