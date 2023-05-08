@@ -83,7 +83,7 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
   };
 
   return (
-    <Fragment>
+    <>
       <FormControl variant="standard" style={{ minWidth: 100 }}>
         <InputLabel id="sorting-order-select">
           {t("charInventory.sortBy")}
@@ -98,6 +98,6 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
         </Select>
       </FormControl>
       {reverseButton()}
-    </Fragment>
+    </>
   );
 }
