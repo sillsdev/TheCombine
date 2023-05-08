@@ -1,7 +1,9 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, {
+import {
+  FormEvent,
+  Fragment,
   ReactElement,
   useCallback,
   useEffect,
@@ -710,9 +712,7 @@ export default function DataEntryTable(
   };
 
   return (
-    <form
-      onSubmit={(e?: React.FormEvent<HTMLFormElement>) => e?.preventDefault()}
-    >
+    <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
       <input type="submit" style={{ display: "none" }} />
       <Grid container>
         <Grid item xs={4}>
@@ -806,7 +806,9 @@ export default function DataEntryTable(
             >
               <ListIcon fontSize={"medium"} color={"inherit"} />
             </Button>
-          ) : null}
+          ) : (
+            <Fragment />
+          )}
         </Grid>
         <Grid item>
           <Button
