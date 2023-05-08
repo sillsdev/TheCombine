@@ -1,4 +1,4 @@
-import { Fragment, memo, ReactElement } from "react";
+import { memo, ReactElement } from "react";
 
 import * as backend from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
@@ -32,14 +32,14 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
     )
   );
   return (
-    <Fragment>
+    <>
       <AudioRecorder
         wordId={props.wordId}
         recorder={props.recorder}
         uploadAudio={props.uploadAudio}
       />
       {audioButtons}
-    </Fragment>
+    </>
   );
 }
 

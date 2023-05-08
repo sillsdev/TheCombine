@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -49,13 +49,13 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   }
 
   return (
-    <Fragment>
+    <>
       <UpperRightToastContainer />
       <RecorderIcon
         wordId={props.wordId}
         startRecording={startRecording}
         stopRecording={stopRecording}
       />
-    </Fragment>
+    </>
   );
 }

@@ -8,13 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
@@ -111,7 +105,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   }
 
   return (
-    <Fragment>
+    <>
       <Tooltip title={t("pronunciations.playTooltip")} placement="top">
         <IconButton
           tabIndex={-1}
@@ -171,6 +165,6 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         buttonIdClose="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />
-    </Fragment>
+    </>
   );
 }
