@@ -1,6 +1,6 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
-import { Fragment, ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -180,7 +180,7 @@ export default function CancelConfirmDialogCollection(
   }
 
   return (
-    <Fragment>
+    <>
       <CancelConfirmDialog
         open={removeUserDialogOpen}
         textId="projectSettings.userManagement.removeUserWarning"
@@ -234,6 +234,6 @@ export default function CancelConfirmDialogCollection(
       >
         {managementOptions}
       </Menu>
-    </Fragment>
+    </>
   );
 }

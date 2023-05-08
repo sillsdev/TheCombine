@@ -1,11 +1,5 @@
 import { Grid } from "@mui/material";
-import {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
@@ -73,7 +67,7 @@ export default function UserManagement(): ReactElement {
   };
 
   return (
-    <Fragment>
+    <>
       <Grid container spacing={1}>
         <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
         <UpperRightToastContainer />
@@ -91,6 +85,6 @@ export default function UserManagement(): ReactElement {
           handleCloseModal={handleCloseModal}
         />
       </Modal>
-    </Fragment>
+    </>
   );
 }

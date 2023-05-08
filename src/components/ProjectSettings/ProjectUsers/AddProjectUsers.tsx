@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@mui/material";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
@@ -56,7 +56,7 @@ export default function AddProjectUsers(): ReactElement {
   }
 
   return (
-    <Fragment>
+    <>
       <Grid container spacing={1}>
         <UserList projectUsers={projectUsers} addToProject={addToProject} />
         <UpperRightToastContainer />
@@ -93,6 +93,6 @@ export default function AddProjectUsers(): ReactElement {
           />
         </Modal>
       )}
-    </Fragment>
+    </>
   );
 }

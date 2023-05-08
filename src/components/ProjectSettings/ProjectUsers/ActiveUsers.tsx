@@ -134,7 +134,7 @@ export default function ActiveUsers(): ReactElement {
   };
 
   return (
-    <Fragment>
+    <>
       <SortOptions
         includeEmail={currentUserIsProjectOwner || currentUser.isAdmin}
         onChange={(e: SelectChangeEvent<UserOrder>) => {
@@ -144,6 +144,6 @@ export default function ActiveUsers(): ReactElement {
         onReverseClick={() => setReverseSorting(!reverseSorting)}
       />
       <List>{sortedUsers.map(userListItem)}</List>
-    </Fragment>
+    </>
   );
 }

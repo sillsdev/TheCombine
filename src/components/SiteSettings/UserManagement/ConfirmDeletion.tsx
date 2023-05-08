@@ -26,7 +26,7 @@ export default function ConfirmDeletion(
     return <Fragment />;
   }
   return (
-    <Fragment>
+    <>
       <Grid container justifyContent="center">
         <Card style={{ width: 500 }}>
           <CardContent>
@@ -83,6 +83,6 @@ export default function ConfirmDeletion(
           </CardActions>
         </Card>
       </Grid>
-    </Fragment>
+    </>
   );
 }
