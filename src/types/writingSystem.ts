@@ -35,6 +35,18 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Fr],
 ];
 
+export const i18nextFallbacks = {
+  es: [Bcp47Code.Pt, Bcp47Code.Default],
+  it: [Bcp47Code.Es, Bcp47Code.Pt, Bcp47Code.Default],
+  pt: [Bcp47Code.Es, Bcp47Code.Default],
+  default: [Bcp47Code.Default],
+};
+
+// Add any lang covered in ini18nextFallbacks
+export const i18nextLangs = uiWritingSystems
+  .map((ws) => ws.bcp47)
+  .concat(["it"]);
+
 export function newWritingSystem(
   bcp47 = "",
   name = "",

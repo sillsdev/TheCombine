@@ -36,8 +36,7 @@
   },
   "appBar": {
     "dataEntry": "entrada de dados",
-    "dataCleanup": "limpeza de dados",
-    "statistics": "data statistics"
+    "dataCleanup": "limpeza de dados"
   },
   "login": {
     "title": "Entrar",
@@ -176,16 +175,7 @@
       "archive": "Arquivar Projeto",
       "archiveToastSuccess": "Projeto Arquivado!"
     },
-    "schedule": {
-      "workshopSchedule": "Workshop Schedule",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "selectedDateAlert": "The start date must be before the end date",
-      "setDays": "Set the range of days for the workshop",
-      "editDays": "Flexibly adjust the workshop schedule",
-      "removeDays": "Remove all days from workshop",
-      "removeAll": "Are you sure you want to remove all the dates?"
-    },
+    "schedule": {},
     "exportProject": { "label": "Exportar Projeto" },
     "autocomplete": {
       "label": "Autocomplemento",
@@ -218,8 +208,7 @@
       "noHistory": "Nada ainda",
       "done": "Tudo pronto"
     },
-    "progress": "Passo {{ val1 }} de {{ val2 }}",
-    "progressMerge": "Merge Set {{ val1 }} of {{ val2 }}"
+    "progress": "Passo {{ val1 }} de {{ val2 }}"
   },
   "createStrWordInv": { "title": "Criar Inventário de Palavra Estrutural" },
   "handleFlags": { "title": "Bandeiras de identificadores" },
@@ -235,7 +224,6 @@
     "noDomain": "Nenhum domínio selecionado",
     "noNote": "Nenhuma nota",
     "deleteWordWarning": "Esta palavra será apagada permanentemente!",
-    "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "As glosas não podem ser deixadas em branco",
       "domain": "Os domínios não podem ser deixados em branco",
@@ -246,29 +234,20 @@
       "definitions": "Definições",
       "delete": "Excluir",
       "domains": "Domínios",
-      "flag": "Flag",
       "glosses": "Glosas",
       "note": "Nota",
-      "pronunciations": "Pronunciations",
       "senses": "Sentidos",
       "vernacular": "Vernáculo"
     },
     "materialTable": {
-      "body": {
-        "edit": "Edit",
-        "emptyDataSourceMessage": "No entries to display",
-        "filter": "Filter"
-      },
+      "body": {},
       "pagination": {
         "labelDisplayedRows": "{from}-{to} de {count}",
         "labelRows": "linhas",
-        "labelRowsPerPage": "Rows per page:",
         "first": "Primeira página",
-        "last": "Última página",
-        "next": "Next Page",
-        "previous": "Previous Page"
+        "last": "Última página"
       },
-      "toolbar": { "search": "Search" }
+      "toolbar": {}
     }
   },
   "charInventory": {
@@ -328,9 +307,7 @@
       "list": "Arrastar esta palavra para a direita para começar a mesclar com outras palavras",
       "noDups": "Nada para mesclar.",
       "delete": "Excluir o significado",
-      "deleteDialog": "Excluir este o significado?",
-      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense or drop other senses into this one to merge them.",
-      "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
+      "deleteDialog": "Excluir este o significado?"
     },
     "completed": { "number": "Número de fusões concluídas: " },
     "continueDialog": {
@@ -388,17 +365,8 @@
     "deleteRecording": "Eliminar Gravação"
   },
   "statistics": {
-    "title": "Data Statistics: {{ val }}",
-    "domainProgress": "Domain Progress",
-    "domainsCollected": "Domains Collected: {{ val }}",
-    "wordsCollected": "Words Collected: {{ val }}",
     "percent": "{{ val }}%",
-    "view": {
-      "user": "Words per User",
-      "domain": "Words per Domain",
-      "day": "Words per Day",
-      "workshop": "Workshop Progress"
-    },
+    "view": {},
     "column": {
       "domainNumber": "Número de domínio:",
       "domainName": "Nome de domínio:",
@@ -406,6 +374,6 @@
       "domainCount": "Domínios:",
       "senseCount": "Palavras:"
     },
-    "axisLabel": { "date": "Date", "words": "Words Collected" }
+    "axisLabel": {}
   }
 }
