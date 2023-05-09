@@ -6,7 +6,7 @@ import { Path } from "browserHistory";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
-import ProjectScreen from "components/ProjectScreen/ProjectScreenComponent";
+import ProjectScreen from "components/ProjectScreen";
 import ProjectSettings from "components/ProjectSettings/ProjectSettingsComponent";
 import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
 import Statistics from "components/Statistics/Statistics";
