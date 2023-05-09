@@ -73,7 +73,6 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentWords: WordAccess[];
   // state management
-  defunctIdToUpdate: string;
   defunctUpdates: Hash<string>;
   defunctWordIds: Hash<DefunctStatus>;
   isFetchingFrontier: boolean;
@@ -169,7 +168,6 @@ export default function DataEntryTable(
     existingWords: [],
     recentWords: [],
     // state management
-    defunctIdToUpdate: "",
     defunctUpdates: {},
     defunctWordIds: {},
     isFetchingFrontier: false,
@@ -301,10 +299,8 @@ export default function DataEntryTable(
   /*** Replace every displayed instance of a word. */
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
-      const defunctId = prevState.defunctIdToUpdate;
       return {
         ...prevState,
-        defunctIdToUpdate: oldId === defunctId ? "" : defunctId,
         isFetchingFrontier: true,
         recentWords: prevState.recentWords.map((a) =>
           a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
@@ -393,39 +389,26 @@ export default function DataEntryTable(
     }
   }, [state.isFetchingFrontier]);
 
-  /*** Queue up the next update of defunctUpdates */
+  /*** Act on defunctUpdates */
   useEffect(() => {
-    if (state.defunctIdToUpdate) {
-      return;
-    }
     const ids = Object.keys(state.defunctUpdates);
     if (!ids.length) {
       return;
     }
-    const id = ids.find((id) =>
+    const oldId = ids.find((id) =>
       state.recentWords.find((w) => w.word.id === id)
     );
-    if (id) {
-      // Trigger an update if there's one to be done.
-      setState((prevState) => ({ ...prevState, defunctIdToUpdate: id }));
+    if (oldId) {
+      let newId = oldId;
+      while (state.defunctUpdates[newId]) {
+        newId = state.defunctUpdates[newId];
+      }
+      backend.getWord(newId).then((w) => replaceInDisplay(oldId, w));
     } else {
       // When recent entries are up to date, update the list of all words
       setState((prevState) => ({ ...prevState, isFetchingFrontier: true }));
     }
-  }, [state.defunctIdToUpdate, state.defunctUpdates, state.recentWords]);
-
-  /*** Act on the defunctIdToUpdate. */
-  useEffect(() => {
-    const oldId = state.defunctIdToUpdate;
-    if (!oldId) {
-      return;
-    }
-    let newId = oldId;
-    while (state.defunctUpdates[newId]) {
-      newId = state.defunctUpdates[newId];
-    }
-    backend.getWord(newId).then((w) => replaceInDisplay(oldId, w));
-  }, [state.defunctIdToUpdate, state.defunctUpdates, state.recentWords]);
+  }, [state.defunctUpdates, state.recentWords]);
 
   ////////////////////////////////////
   // Async functions that wrap around a backend update to a word.
