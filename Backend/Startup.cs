@@ -68,7 +68,7 @@ namespace BackendFramework
                 return contents;
             }
 
-            _logger.LogError($"Environment variable: `{name}` is not defined. {error}");
+            _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
             return defaultValue;
         }
 
@@ -109,8 +109,8 @@ namespace BackendFramework
             const int minKeyLength = 128 / 8;
             if (secretKey is null || secretKey.Length < minKeyLength)
             {
-                _logger.LogError($"Must set {secretKeyEnvName} environment variable " +
-                                 $"to string of length {minKeyLength} or longer.");
+                _logger.LogError("Must set {EnvName} environment variable to string of length {MinLength} or longer.",
+                    secretKeyEnvName, minKeyLength);
                 throw new EnvironmentNotConfiguredException();
             }
 
@@ -339,30 +339,30 @@ namespace BackendFramework
             var existingUser = userRepo.GetAllUsers().Result.Find(x => x.Username == username);
             if (existingUser is not null)
             {
-                _logger.LogInformation($"User {username} already exists. Updating password and granting " +
-                                       "admin permissions.");
+                _logger.LogInformation(
+                    "User {User} already exists. Updating password and granting admin permissions.", username);
                 if (userRepo.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
                 {
-                    _logger.LogError($"Failed to find user {username}.");
+                    _logger.LogError("Failed to find user {User}.", username);
                     throw new AdminUserCreationException();
                 }
 
                 existingUser.IsAdmin = true;
                 if (userRepo.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
                 {
-                    _logger.LogError($"Failed to find user {username}.");
+                    _logger.LogError("Failed to find user {User}.", username);
                     throw new AdminUserCreationException();
                 }
 
                 return true;
             }
 
-            _logger.LogInformation($"Creating admin user: {username} ({adminEmail})");
+            _logger.LogInformation("Creating admin user: {User} ({Email}).", username, adminEmail);
             var user = new User { Username = username, Password = password, Email = adminEmail, IsAdmin = true };
             var returnedUser = userRepo.Create(user).Result;
             if (returnedUser is null)
             {
-                _logger.LogError($"Failed to create admin user {username}, {adminEmail}.");
+                _logger.LogError("Failed to create admin user {User} ({Email}).", username, adminEmail);
                 throw new AdminUserCreationException();
             }
 

@@ -1,18 +1,29 @@
 import { Cached, Error as ErrorIcon } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, { createRef, ReactElement, useEffect, useState } from "react";
+import {
+  createRef,
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { getProjectName } from "backend";
 import {
   asyncDownloadExport,
-  resetExport,
+  asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import { getNowDateTimeString } from "utilities";
+
+function makeExportName(projectName: string) {
+  return `${projectName}_${getNowDateTimeString()}.zip`;
+}
 
 interface DownloadButtonProps {
   colorSecondary?: boolean;
@@ -22,7 +33,9 @@ interface DownloadButtonProps {
  * A button to show export status. This automatically initiates a download
  * when a user's export is done, so there should be exactly one copy of this
  * component rendered at any given time in the logged-in app. */
-export default function DownloadButton(props: DownloadButtonProps) {
+export default function DownloadButton(
+  props: DownloadButtonProps
+): ReactElement {
   const exportState = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
@@ -32,41 +45,37 @@ export default function DownloadButton(props: DownloadButtonProps) {
   const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
+  const reset = useCallback(async (): Promise<void> => {
+    await dispatch(asyncResetExport());
+  }, [dispatch]);
+
   useEffect(() => {
     if (downloadLink.current && fileUrl) {
       downloadLink.current.click();
       URL.revokeObjectURL(fileUrl);
+      setFileName(undefined);
       setFileUrl(undefined);
     }
   }, [downloadLink, fileUrl]);
 
   useEffect(() => {
+    if (fileName) {
+      dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
+        if (url) {
+          setFileUrl(url);
+          reset();
+        }
+      });
+    }
+  }, [dispatch, exportState.projectId, fileName, reset, setFileUrl]);
+
+  useEffect(() => {
     if (exportState.status === ExportStatus.Success) {
-      download();
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exportState.status]);
-
-  function makeExportName(projectName: string) {
-    return `${projectName}_${getNowDateTimeString()}.zip`;
-  }
-
-  function download() {
-    getProjectName(exportState.projectId).then((projectName) => {
-      setFileName(makeExportName(projectName));
-      asyncDownloadExport(exportState.projectId)(dispatch)
-        .then((url) => {
-          if (url) {
-            setFileUrl(url);
-            reset();
-          }
-        })
-        .catch(console.error);
-    });
-  }
-
-  function reset() {
-    resetExport(exportState.projectId)(dispatch);
-  }
+      getProjectName(exportState.projectId).then((projectName) => {
+        setFileName(makeExportName(projectName));
+      });
+    }
+  }, [exportState, setFileName]);
 
   function textId(): string {
     switch (exportState.status) {
@@ -91,7 +100,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
       case ExportStatus.Failure:
         return <ErrorIcon />;
       default:
-        return <div />;
+        return <Fragment />;
     }
   }
 
@@ -113,7 +122,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   }
 
   return (
-    <React.Fragment>
+    <Fragment>
       {exportState.status !== ExportStatus.Default && (
         <Tooltip title={t(textId())} placement="bottom">
           <IconButton
@@ -136,6 +145,6 @@ export default function DownloadButton(props: DownloadButtonProps) {
           (This link should not be visible)
         </a>
       )}
-    </React.Fragment>
+    </Fragment>
   );
 }

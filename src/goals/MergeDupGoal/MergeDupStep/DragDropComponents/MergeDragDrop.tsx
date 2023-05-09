@@ -1,5 +1,5 @@
 import { Delete } from "@mui/icons-material";
-import { Drawer, ImageListItem, Tooltip } from "@mui/material";
+import { Drawer, ImageList, ImageListItem, Tooltip } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -118,39 +118,44 @@ export default function MergeDragDrop(): ReactElement {
   }
 
   const newId = v4();
+  const colCount = Object.keys(treeWords).length + 2; // +2 for trash and extra empty word
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      <ImageListItem key={"trash"} style={{ marginTop: "70vh" }}>
-        <Droppable key={trashId} droppableId={trashId}>
-          {(provided): ReactElement => (
-            <div ref={provided.innerRef}>
-              <Tooltip title={t("mergeDups.helpText.delete")} placement="top">
-                <Delete fontSize="large" />
-              </Tooltip>
-              <div style={{ position: "absolute" }}>{provided.placeholder}</div>
-            </div>
-          )}
-        </Droppable>
-      </ImageListItem>
-      {Object.keys(treeWords).map((key) => (
-        <ImageListItem
-          key={key}
-          style={{ height: "70vh", margin: theme.spacing(1) }}
-        >
-          <DropWord mergeState={mergeState} wordId={key} />
+      <ImageList rowHeight="auto" cols={colCount}>
+        <ImageListItem key={"trash"} style={{ marginTop: "70vh" }}>
+          <Droppable key={trashId} droppableId={trashId}>
+            {(provided): ReactElement => (
+              <div ref={provided.innerRef}>
+                <Tooltip title={t("mergeDups.helpText.delete")} placement="top">
+                  <Delete fontSize="large" />
+                </Tooltip>
+                <div style={{ position: "absolute" }}>
+                  {provided.placeholder}
+                </div>
+              </div>
+            )}
+          </Droppable>
         </ImageListItem>
-      ))}
-      <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
-        <DropWord mergeState={mergeState} wordId={newId} />
-      </ImageListItem>
-      {renderSidebar()}
-      <CancelConfirmDialog
-        open={!!senseToDelete}
-        textId="mergeDups.helpText.deleteDialog"
-        handleCancel={() => setSenseToDelete("")}
-        handleConfirm={performDelete}
-      />
+        {Object.keys(treeWords).map((key) => (
+          <ImageListItem
+            key={key}
+            style={{ height: "70vh", margin: theme.spacing(1) }}
+          >
+            <DropWord mergeState={mergeState} wordId={key} />
+          </ImageListItem>
+        ))}
+        <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
+          <DropWord mergeState={mergeState} wordId={newId} />
+        </ImageListItem>
+        {renderSidebar()}
+        <CancelConfirmDialog
+          open={!!senseToDelete}
+          textId="mergeDups.helpText.deleteDialog"
+          handleCancel={() => setSenseToDelete("")}
+          handleConfirm={performDelete}
+        />
+      </ImageList>
     </DragDropContext>
   );
 }

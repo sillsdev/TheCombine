@@ -3,24 +3,27 @@ import renderer from "react-test-renderer";
 
 import "tests/mockReactI18next";
 
-import { SemanticDomainUserCount } from "api";
-import DomainUserStatistics from "components/Statistics/UserStatistics/DomainUserStatistics";
-import { newSemanticDomainUserCount } from "types/semanticDomain";
+import { SemanticDomainCount } from "api";
+import DomainStatistics from "components/Statistics/DomainStatistics";
+import {
+  newSemanticDomainCount,
+  newSemanticDomainTreeNode,
+} from "types/semanticDomain";
 
 let testRenderer: renderer.ReactTestRenderer;
 
 const mockProjectId = "mockProjectId";
-const mockSemanticDomainUserCount = newSemanticDomainUserCount();
-const mockSemanticDomainUserCountArray: Array<SemanticDomainUserCount> = [
-  mockSemanticDomainUserCount,
+const mockTreeNode = newSemanticDomainTreeNode();
+const mockSemanticDomainCountArray: Array<SemanticDomainCount> = [
+  newSemanticDomainCount(mockTreeNode),
 ];
 
-const mockGetDomainSenseUserStatistics = jest.fn();
+const mockGetStatisticsCounts = jest.fn();
 const mockGetProjectId = jest.fn();
 
 jest.mock("backend", () => ({
-  getSemanticDomainUserCount: (projectId: string, lang?: string) =>
-    mockGetDomainSenseUserStatistics(projectId, lang),
+  getSemanticDomainCounts: (projectId: string, lang?: string) =>
+    mockGetStatisticsCounts(projectId, lang),
 }));
 
 jest.mock("backend/localStorage", () => ({
@@ -29,20 +32,18 @@ jest.mock("backend/localStorage", () => ({
 
 function setMockFunctions() {
   mockGetProjectId.mockReturnValue(mockProjectId);
-  mockGetDomainSenseUserStatistics.mockResolvedValue(
-    mockSemanticDomainUserCountArray
-  );
+  mockGetStatisticsCounts.mockResolvedValue(mockSemanticDomainCountArray);
 }
 
 beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await renderer.act(async () => {
-    testRenderer = renderer.create(<DomainUserStatistics lang={""} />);
+    testRenderer = renderer.create(<DomainStatistics lang={""} />);
   });
 });
 
-describe("SemanticDomainStatistics", () => {
+describe("DomainStatistics", () => {
   it("renders without crashing, UI does not change unexpectedly", async () => {
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
@@ -51,10 +52,10 @@ describe("SemanticDomainStatistics", () => {
     //Verify the mock function called
     expect(mockGetProjectId).toBeCalled();
 
-    //Verify ListItem for the DomainSenseUserCount object is present
+    //Verify ListItem for the SemanticDomainCount object is present
     const newSenDomCountList = testRenderer.root.findAllByType(ListItem);
     expect(newSenDomCountList.length).toEqual(
-      mockSemanticDomainUserCountArray.length
+      mockSemanticDomainCountArray.length
     );
   });
 });

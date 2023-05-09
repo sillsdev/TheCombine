@@ -1,9 +1,16 @@
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import React, { useEffect, useState } from "react";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  HubConnectionState,
+} from "@microsoft/signalr";
+import { Fragment, useCallback, useEffect, useState } from "react";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
-import { downloadIsReady } from "components/ProjectExport/Redux/ExportProjectActions";
+import {
+  failure,
+  success,
+} from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -15,45 +22,74 @@ export default function SignalRHub() {
   );
   const dispatch = useAppDispatch();
   const [connection, setConnection] = useState<HubConnection | undefined>();
+  const [disconnect, setDisconnect] = useState(false);
+  const [reconnect, setReconnect] = useState(false);
 
-  useEffect(() => {
-    if (connection) {
-      connection.stop();
-    }
+  const finishDisconnect = useCallback((): void => {
     setConnection(undefined);
-    if (exportState.status === ExportStatus.Exporting) {
+    setDisconnect(false);
+  }, [setConnection, setDisconnect]);
+
+  /** Act on the disconnect state to stop and delete the connection. */
+  useEffect(() => {
+    if (disconnect) {
+      if (connection) {
+        connection.stop().then(finishDisconnect).catch(finishDisconnect);
+      } else {
+        setDisconnect(false);
+      }
+    }
+  }, [connection, disconnect, finishDisconnect]);
+
+  /** Once disconnect state is acted on, act on the reconnect state. */
+  useEffect(() => {
+    if (!disconnect && reconnect) {
       const newConnection = new HubConnectionBuilder()
         .withUrl(`${baseURL}/hub`)
         .withAutomaticReconnect()
         .build();
+      setReconnect(false);
       setConnection(newConnection);
     }
-    // We reference connection, but don't want it in the dependency list.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exportState]);
+  }, [disconnect, reconnect, setConnection, setReconnect]);
 
+  /** Any change in exportState should cause a disconnect.
+   * Only ExportStatus.Exporting should open a new connection.
+   */
   useEffect(() => {
-    if (connection) {
-      // The methodName must match what is in Backend/Helper/CombineHub.cs.
-      const methodName = "DownloadReady";
-      // The method is what the frontend does upon message receipt.
-      const method = (userId: string) => {
-        if (userId === getUserId()) {
-          downloadIsReady(exportState.projectId)(dispatch);
-          // After dispatch, stop the connection completely.
-          // We don't need it active unless a new export is started,
-          // and that might be with a different projectId.
-          connection.stop();
-        }
-      };
-      connection
-        .start()
-        .then(() => connection.on(methodName, method))
-        .catch(console.error);
+    setDisconnect(true);
+    if (exportState.status === ExportStatus.Exporting) {
+      setReconnect(true);
     }
-    // We reference dispatch and exportState, but they're not dependencies.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connection]);
+  }, [exportState, setDisconnect, setReconnect]);
 
-  return <React.Fragment />;
+  /** Once a connection is opened, start the relevant methods. */
+  useEffect(() => {
+    if (connection?.state !== HubConnectionState.Disconnected) {
+      return;
+    }
+
+    // Name must match what is in Backend/Helper/CombineHub.cs.
+    const failName = "ExportFailed";
+    const successName = "DownloadReady";
+
+    // The method is what the frontend does upon message receipt.
+    const failMethod = (userId: string): void => {
+      if (userId === getUserId()) {
+        dispatch(failure(exportState.projectId));
+      }
+    };
+    const successMethod = (userId: string): void => {
+      if (userId === getUserId()) {
+        dispatch(success(exportState.projectId));
+      }
+    };
+
+    connection.start().then(() => {
+      connection.on(failName, failMethod);
+      connection.on(successName, successMethod);
+    });
+  }, [connection, dispatch, exportState.projectId]);
+
+  return <Fragment />;
 }

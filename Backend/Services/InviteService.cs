@@ -73,7 +73,7 @@ namespace BackendFramework.Services
                 var updatedUser = await _permissionService.MakeJwt(user);
                 if (updatedUser is null)
                 {
-                    throw new PermissionService.InvalidJwtTokenError(
+                    throw new PermissionService.InvalidJwtTokenException(
                         "Unable to generate JWT.");
                 }
 
@@ -86,7 +86,7 @@ namespace BackendFramework.Services
 
                 return true;
             }
-            catch (PermissionService.InvalidJwtTokenError)
+            catch (PermissionService.InvalidJwtTokenException)
             {
                 return false;
             }

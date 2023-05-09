@@ -413,21 +413,26 @@
   },
   "statistics": {
     "title": "Data Statistics: {{ val }}",
-    "domainNumber": "Domain Number:",
-    "domainName": "Domain Name:",
-    "countSenses": "Words:",
-    "username": "Username:",
-    "domainCount": "Domains:",
-    "senseCount": "Words:",
-    "userView": "Words per User",
-    "domainView": "Words per Domain",
-    "dayView": "Words per Day",
-    "estimate": "Workshop Estimate",
     "domainProgress": "Domain Progress",
     "domainsCollected": "Domains Collected: {{ val }}",
     "wordsCollected": "Words Collected: {{ val }}",
-    "wordsPerDay": "Words Collected Per User Per Day",
-    "workshopSchedule": "Workshop Schedule",
-    "percent": "{{ val }}%"
+    "percent": "{{ val }}%",
+    "view": {
+      "user": "Words per User",
+      "domain": "Words per Domain",
+      "day": "Words per Day",
+      "workshop": "Workshop Progress"
+    },
+    "column": {
+      "domainNumber": "Domain Number:",
+      "domainName": "Domain Name:",
+      "username": "Username:",
+      "domainCount": "Domains:",
+      "senseCount": "Words:"
+    },
+    "axisLabel": {
+      "date": "Date",
+      "words": "Words Collected"
+    }
   }
 }

@@ -214,9 +214,9 @@ namespace Backend.Tests.Services
             _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryError>(
+            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
                 async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds0); });
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryError>(
+            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
                 async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds1); });
         }
 
@@ -238,9 +238,9 @@ namespace Backend.Tests.Services
             _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryError>(
+            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
                 async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds0); });
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryError>(
+            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
                 async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds1); });
         }
 

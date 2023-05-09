@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
 
-import { Sense, Word, WritingSystem } from "api/models";
+import { Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -45,13 +45,13 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
   const [hovering, setHovering] = useState(false);
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
-  function conditionallyUpdateGloss() {
+  function conditionallyUpdateGloss(): void {
     if (firstGlossText(sense) !== gloss) {
       props.updateGloss(gloss);
     }
   }
 
-  function conditionallyUpdateVern() {
+  function conditionallyUpdateVern(): void {
     if (props.entry.vernacular !== vernacular) {
       props.updateVern(vernacular);
     }

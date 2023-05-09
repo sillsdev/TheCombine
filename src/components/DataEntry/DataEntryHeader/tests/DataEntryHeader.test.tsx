@@ -5,13 +5,11 @@ import configureMockStore from "redux-mock-store";
 import "tests/mockReactI18next";
 
 import { SemanticDomainFull } from "api";
-import DataEntryHeader, {
-  getQuestions,
-} from "components/DataEntry/DataEntryHeader/DataEntryHeader";
+import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import { newSemanticDomain } from "types/semanticDomain";
 
 const mockStore = configureMockStore()();
-const mockCallback = jest.fn();
+const visSwitchId = "questionVisibilitySwitch";
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -22,40 +20,33 @@ describe("DataEntryHeader", () => {
     const instance = createDataEntryHeaderInstance(
       newSemanticDomain(),
       true,
-      mockCallback
+      jest.fn()
     );
-    const questionSwitch = instance.findByProps({
-      id: "questionVisibilitySwitch",
-    });
+    const questionSwitch = instance.findByProps({ id: visSwitchId });
     expect(questionSwitch.props.disabled).toBeTruthy();
-    expect(getQuestions(true, [])).toEqual([]);
   });
 
   it("Questions Visible should show questions", () => {
-    const newDomain = {
-      ...newSemanticDomain(),
-      questions: ["Q1", "Q2", "Q3"],
-    };
+    const newDom = { ...newSemanticDomain(), questions: ["Q1", "Q2", "Q3"] };
 
-    const instance = createDataEntryHeaderInstance(
-      newDomain,
-      true,
-      mockCallback
-    );
-    newDomain.questions.forEach((questionString, index) => {
-      const question: ReactTestInstance = instance.findByProps({
-        id: `q${index}`,
-      });
-      expect(question.props.children).toEqual(questionString);
+    const instance = createDataEntryHeaderInstance(newDom, true, jest.fn());
+    newDom.questions.forEach((q, i) => {
+      expect(instance.findByProps({ id: `q${i}` }).props.children).toEqual(q);
     });
   });
 
-  it("Questions not visible should hide questions", () => {
-    expect(getQuestions(false, ["Q1", "Q2"])).toBeUndefined();
+  it("Questions not Visible should not show questions", () => {
+    const newDom = { ...newSemanticDomain(), questions: ["Q1", "Q2", "Q3"] };
+
+    const instance = createDataEntryHeaderInstance(newDom, false, jest.fn());
+    newDom.questions.forEach((_, i) => {
+      expect(instance.findAllByProps({ id: `q${i}` })).toHaveLength(0);
+    });
   });
 
   it("Callback should be called on switch click", () => {
     const newDomain = { ...newSemanticDomain(), questions: ["Q1", "Q2"] };
+    const mockCallback = jest.fn();
 
     const instance: ReactTestInstance = createDataEntryHeaderInstance(
       newDomain,
@@ -63,10 +54,7 @@ describe("DataEntryHeader", () => {
       mockCallback
     );
 
-    const questionSwitch: ReactTestInstance = instance.findByProps({
-      id: "questionVisibilitySwitch",
-    });
-    questionSwitch.props.onChange();
+    instance.findByProps({ id: visSwitchId }).props.onChange();
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 });

@@ -69,6 +69,7 @@ namespace Backend.Tests.Mocks
         /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
+        /// <param name="permission"> Same as the real implementation. </param>
         /// </summary>
         public Task<bool> HasProjectPermission(HttpContext? request, Permission permission)
         {

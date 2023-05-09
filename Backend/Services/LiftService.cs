@@ -48,6 +48,7 @@ namespace BackendFramework.Services
             }
         }
 
+        // This raises error CA1816, which is currently suppressed in .editorconfig and with <NoWarn>.
         public override void Dispose()
         {
             // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation
@@ -143,7 +144,7 @@ namespace BackendFramework.Services
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.Remove(userId, out var filePath);
-            if (removeSuccessful && filePath is not null)
+            if (removeSuccessful && filePath is not null && filePath != InProgress)
             {
                 File.Delete(filePath);
             }
