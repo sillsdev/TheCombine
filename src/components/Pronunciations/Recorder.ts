@@ -12,7 +12,7 @@ export default class Recorder {
       .catch(Recorder.onError);
   }
 
-  startRecording() {
+  startRecording(): void {
     if (this.recordRTC) {
       this.recordRTC.reset();
       this.recordRTC.startRecording();
@@ -29,7 +29,7 @@ export default class Recorder {
     return this.recordRTC.getBlob();
   }
 
-  private onMicrophoneAvailable(audioStream: MediaStream) {
+  private onMicrophoneAvailable(audioStream: MediaStream): void {
     this.recordRTC = new RecordRTC(audioStream, {
       disableLogs: true, // Comment out or switch to false for dev
       type: "audio",
@@ -37,7 +37,7 @@ export default class Recorder {
     });
   }
 
-  private static onError(err: Error) {
+  private static onError(err: Error): void {
     console.error(err);
     errorToast.fire({
       title: "Audio Recorder",

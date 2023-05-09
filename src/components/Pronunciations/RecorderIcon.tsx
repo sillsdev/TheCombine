@@ -1,6 +1,7 @@
 import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Theme, Tooltip } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -18,7 +19,7 @@ interface RecorderIconProps {
   stopRecording: () => void;
 }
 
-export default function RecorderIcon(props: RecorderIconProps) {
+export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const pronunciationsState = useAppSelector(
     (state: StoreState) => state.pronunciationsState
   );
@@ -26,44 +27,38 @@ export default function RecorderIcon(props: RecorderIconProps) {
   const { t } = useTranslation();
 
   const useStyles = makeStyles((theme: Theme) => ({
-    button: {
-      marginRight: theme.spacing(1),
-    },
-    iconPress: {
-      color: themeColors.recordActive,
-    },
-    iconRelease: {
-      color: themeColors.recordIdle,
-    },
+    button: { marginRight: theme.spacing(1) },
+    iconPress: { color: themeColors.recordActive },
+    iconRelease: { color: themeColors.recordIdle },
   }));
 
   const classes = useStyles();
 
-  function toggleIsRecordingToTrue() {
+  function toggleIsRecordingToTrue(): void {
     dispatch(recording(props.wordId));
     props.startRecording();
   }
-  function toggleIsRecordingToFalse() {
+  function toggleIsRecordingToFalse(): void {
     props.stopRecording();
     dispatch(reset());
   }
 
-  function handleTouchStart() {
+  function handleTouchStart(): void {
     // Temporarily disable context menu since some browsers
     // interpret a long-press touch as a right-click.
     document.addEventListener("contextmenu", disableContextMenu, false);
     toggleIsRecordingToTrue();
   }
-  function handleTouchEnd() {
+  function handleTouchEnd(): void {
     enableContextMenu();
     toggleIsRecordingToFalse();
   }
 
-  function disableContextMenu(event: any) {
+  function disableContextMenu(event: any): void {
     event.preventDefault();
     enableContextMenu();
   }
-  function enableContextMenu() {
+  function enableContextMenu(): void {
     document.removeEventListener("contextmenu", disableContextMenu, false);
   }
 
