@@ -28,7 +28,12 @@ i18n
       supportedLngs: uiWritingSystems.map((ws) => ws.bcp47),
       // nonExplicitSupportedLngs will (e.g.) use 'es' if the browser is 'es-MX'
       nonExplicitSupportedLngs: true,
-      fallbackLng: Bcp47Code.Default,
+      fallbackLng: {
+        es: [Bcp47Code.Pt],
+        it: [Bcp47Code.Es, Bcp47Code.Pt],
+        pt: [Bcp47Code.Es],
+        default: [Bcp47Code.Default],
+      },
       interpolation: { escapeValue: false },
     },
     setDir // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized

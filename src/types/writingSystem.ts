@@ -6,6 +6,7 @@ export enum Bcp47Code {
   En = "en",
   Es = "es",
   Fr = "fr",
+  Pt = "pt",
 }
 
 const writingSystem = {
@@ -13,6 +14,7 @@ const writingSystem = {
   [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"),
   [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"),
+  [Bcp47Code.Pt]: newWritingSystem(Bcp47Code.Pt, "Português"),
 };
 
 export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
@@ -23,6 +25,7 @@ export const uiWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],
   writingSystem[Bcp47Code.Fr],
+  writingSystem[Bcp47Code.Pt],
 ];
 
 // This list should cover the languages in deploy/scripts/semantic_domains/xml/
