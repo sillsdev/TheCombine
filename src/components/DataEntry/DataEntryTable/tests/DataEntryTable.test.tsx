@@ -24,9 +24,7 @@ import { Bcp47Code } from "types/writingSystem";
 jest.mock("@mui/material/Autocomplete", () => "div");
 jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
-  useSnackbar: () => {
-    return { enqueueSnackbar: mockEnqueue };
-  },
+  useSnackbar: () => ({ enqueueSnackbar: jest.fn() }),
 }));
 
 jest.mock("backend", () => ({
@@ -57,14 +55,13 @@ jest.spyOn(window, "alert").mockImplementation(() => {});
 let testRenderer: renderer.ReactTestRenderer;
 let testHandle: renderer.ReactTestInstance;
 
-const mockWord = () => simpleWord("mockVern", "mockGloss");
+const mockWord = (): Word => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockTreeNode = newSemanticDomainTreeNode("semDomId");
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
 const mockUserId = "mockUserId";
 
 const mockCreateWord = jest.fn();
-const mockEnqueue = jest.fn();
 const mockGetFrontierWords = jest.fn();
 const mockGetProject = jest.fn();
 const mockGetWord = jest.fn();
@@ -72,7 +69,7 @@ const mockHideQuestions = jest.fn();
 const mockOpenTree = jest.fn();
 const mockUpdateWord = jest.fn();
 
-function setMocks() {
+function setMocks(): void {
   mockCreateWord.mockResolvedValue(mockWord());
   mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
   mockGetProject.mockResolvedValue(newProject());
@@ -85,7 +82,7 @@ beforeEach(() => {
   setMocks();
 });
 
-const renderTable = async () => {
+const renderTable = async (): Promise<void> => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
       <DataEntryTable
