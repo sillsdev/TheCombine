@@ -25,16 +25,36 @@ export default function AppWithBar(): ReactElement {
       <SignalRHub />
       <AppBar />
       <Switch>
-        <Route exact path={Path.DataEntry} component={DataEntry} />
-        <Route exact path={Path.GoalCurrent} component={BaseGoalScreen} />
-        <Route exact path={Path.GoalNext} component={NextGoalScreen} />
-        <Route exact path={Path.Goals} component={GoalTimeline} />
-        <Route exact path={Path.ProjScreen} component={ProjectScreen} />
-        <Route exact path={Path.ProjSettings} component={ProjectSettings} />
-        <Route exact path={Path.SiteSettings} component={SiteSettings} />
-        <Route exact path={Path.Statistics} component={Statistics} />
-        <Route exact path={Path.UserSettings} component={UserSettings} />
-        <Route component={PageNotFound} />
+        <Route exact path={Path.DataEntry}>
+          <DataEntry />
+        </Route>
+        <Route exact path={Path.GoalCurrent}>
+          <BaseGoalScreen />
+        </Route>
+        <Route exact path={Path.GoalNext}>
+          <NextGoalScreen />
+        </Route>
+        <Route exact path={Path.Goals}>
+          <GoalTimeline />
+        </Route>
+        <Route exact path={Path.ProjScreen}>
+          <ProjectScreen />
+        </Route>
+        <Route exact path={Path.ProjSettings}>
+          <ProjectSettings />
+        </Route>
+        <Route exact path={Path.SiteSettings}>
+          <SiteSettings />
+        </Route>
+        <Route exact path={Path.Statistics}>
+          <Statistics />
+        </Route>
+        <Route exact path={Path.UserSettings}>
+          <UserSettings />
+        </Route>
+        <Route>
+          <PageNotFound />
+        </Route>
       </Switch>
     </React.Fragment>
   );

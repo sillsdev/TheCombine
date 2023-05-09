@@ -24,17 +24,31 @@ export default function App(): ReactElement {
       <Suspense fallback={<div />}>
         <AnnouncementBanner />
         <Switch>
-          <Route exact path={Path.Root} component={LandingPage} />
-          <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
-          <Route path={Path.Login} component={Login} />
-          <Route path={Path.SignUp} component={SignUp} />
-          <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
-          <Route path={Path.PwRequest} component={PasswordRequest} />
-          <Route
-            path={`${Path.ProjInvite}/:project/:token`}
-            component={ProjectInvite}
-          />
-          <Route component={PageNotFound} />
+          <Route exact path={Path.Root}>
+            <LandingPage />
+          </Route>
+          <PrivateRoute path={Path.ProjScreen}>
+            <AppWithBar />
+          </PrivateRoute>
+          <Route path={Path.Login}>
+            <Login />
+          </Route>
+          <Route path={Path.SignUp}>
+            <SignUp />
+          </Route>
+          <Route path={`${Path.PwReset}/:token`}>
+            {/* see Dynamic Nested Routing at https://www.sitepoint.com/react-router-complete-guide/ */}
+            <PasswordReset />
+          </Route>
+          <Route path={Path.PwRequest}>
+            <PasswordRequest />
+          </Route>
+          <Route path={`${Path.ProjInvite}/:project/:token`}>
+            <ProjectInvite />
+          </Route>
+          <Route>
+            <PageNotFound />
+          </Route>
         </Switch>
       </Suspense>
     </div>
