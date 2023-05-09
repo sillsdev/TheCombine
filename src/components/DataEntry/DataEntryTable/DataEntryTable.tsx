@@ -299,13 +299,10 @@ export default function DataEntryTable(
   /*** Replace every displayed instance of a word. */
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
-      return {
-        ...prevState,
-        isFetchingFrontier: true,
-        recentWords: prevState.recentWords.map((a) =>
-          a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
-        ),
-      };
+      const recentWords = prevState.recentWords.map((a) =>
+        a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
+      );
+      return { ...prevState, isFetchingFrontier: true, recentWords };
     });
   };
 
