@@ -1,7 +1,9 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, {
+import {
+  FormEvent,
+  Fragment,
   ReactElement,
   useCallback,
   useEffect,
@@ -402,11 +404,9 @@ export default function DataEntryTable(
       backend.getWord(newId).then((w) => replaceInDisplay(oldId, w));
     } else {
       // When recent entries are up to date, update the list of all words
-      setState((prevState) => {
-        return { ...prevState, isFetchingFrontier: true };
-      });
-    } // eslint-disable-next-line
-  }, [state.defunctUpdates]); // omitted: state.recentWords
+      setState((prevState) => ({ ...prevState, isFetchingFrontier: true }));
+    }
+  }, [state.defunctUpdates, state.recentWords]);
 
   ////////////////////////////////////
   // Async functions that wrap around a backend update to a word.
@@ -693,9 +693,7 @@ export default function DataEntryTable(
   };
 
   return (
-    <form
-      onSubmit={(e?: React.FormEvent<HTMLFormElement>) => e?.preventDefault()}
-    >
+    <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
       <input type="submit" style={{ display: "none" }} />
       <Grid container>
         <Grid item xs={4}>
@@ -789,7 +787,9 @@ export default function DataEntryTable(
             >
               <ListIcon fontSize={"medium"} color={"inherit"} />
             </Button>
-          ) : null}
+          ) : (
+            <Fragment />
+          )}
         </Grid>
         <Grid item>
           <Button
