@@ -9,10 +9,8 @@ import SortOptions, {
 
 let testRenderer: renderer.ReactTestRenderer;
 
-const renderSortOptions = async (
-  props: Partial<SortOptionsProps> = {}
-): Promise<void> => {
-  await renderer.act(async () => {
+const renderSortOptions = (props: Partial<SortOptionsProps> = {}): void => {
+  renderer.act(() => {
     testRenderer = renderer.create(
       <SortOptions
         includeEmail={props.includeEmail}
@@ -28,15 +26,15 @@ beforeEach(() => {
 });
 
 describe("SortOptions", () => {
-  it("has no reverse button when no reverse function provided", async () => {
-    await renderSortOptions();
+  it("has no reverse button when no reverse function provided", () => {
+    renderSortOptions();
     const button = testRenderer.root.findAllByProps({ id: reverseButtonId });
     expect(button).toHaveLength(0);
   });
 
-  it("has reverse button when reverse function provided", async () => {
+  it("has reverse button when reverse function provided", () => {
     const mockReverse = jest.fn();
-    await renderSortOptions({ onReverseClick: mockReverse });
+    renderSortOptions({ onReverseClick: mockReverse });
     const button = testRenderer.root.findByProps({ id: reverseButtonId });
     expect(button).not.toBeNull();
     button.props.onClick();
