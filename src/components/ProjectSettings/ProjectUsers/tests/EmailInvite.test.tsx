@@ -11,10 +11,8 @@ jest.mock("backend", () => ({
   isEmailTaken: () => mockIsEmailTaken(),
 }));
 jest.mock("backend/localStorage", () => ({
-  getProjectId: () => mockId,
+  getProjectId: () => "mockId",
 }));
-
-const mockId = "mockId";
 
 const mockAddToProject = jest.fn();
 const mockClose = jest.fn();

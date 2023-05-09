@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 
+export const reverseButtonId = "sort-options-reverse";
+
 export enum UserOrder {
   Username,
   Name,
@@ -38,7 +40,7 @@ export function getUserCompare(
   };
 }
 
-interface SortOptionsProps {
+export interface SortOptionsProps {
   includeEmail?: boolean;
   onChange: (e: SelectChangeEvent<UserOrder>) => void;
   onReverseClick?: () => void;
@@ -71,7 +73,7 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
       >
         <IconButton
           onClick={props.onReverseClick}
-          id="sorting-order-reverse"
+          id={reverseButtonId}
           size="large"
         >
           <SortByAlpha />
@@ -85,12 +87,12 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
   return (
     <>
       <FormControl variant="standard" style={{ minWidth: 100 }}>
-        <InputLabel id="sorting-order-select">
+        <InputLabel id="sort-options-input">
           {t("charInventory.sortBy")}
         </InputLabel>
         <Select
           variant="standard"
-          labelId="sorting-order-select"
+          labelId="sort-options-select"
           defaultValue={UserOrder.Username}
           onChange={props.onChange}
         >
