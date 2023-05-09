@@ -4,7 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
-import { i18nextFallbacks, i18nextLangs } from "types/writingSystem";
+import { i18nFallbacks, i18nLangs } from "types/writingSystem";
 
 // declare custom type options so the return is always a string.
 declare module "i18next" {
@@ -19,16 +19,16 @@ i18n
   .use(initReactI18next)
   .init(
     {
-      debug: true, // Uncomment to troubleshoot
+      //debug: true, // Uncomment to troubleshoot
       returnNull: false,
       // detection: options,
       // ignoring localStorage and cookies for the detection order lets the user change languages
       // more easily (just switch in the browser and reload, instead of clearing all site data)
       detection: { order: ["queryString", "path", "navigator"] },
-      supportedLngs: i18nextLangs,
+      supportedLngs: i18nLangs,
       // nonExplicitSupportedLngs will (e.g.) use 'es' if the browser is 'es-MX'
       nonExplicitSupportedLngs: true,
-      fallbackLng: i18nextFallbacks,
+      fallbackLng: i18nFallbacks,
       interpolation: { escapeValue: false },
     },
     setDir // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized

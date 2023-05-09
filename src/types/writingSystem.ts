@@ -2,11 +2,11 @@ import { WritingSystem } from "api/models";
 
 export enum Bcp47Code {
   Default = "en",
-  Ar = "ar",
-  En = "en",
-  Es = "es",
-  Fr = "fr",
-  Pt = "pt",
+  Ar = "ar", // Arabic
+  En = "en", // English
+  Es = "es", // Spanish
+  Fr = "fr", // French
+  Pt = "pt", // Portuguese
 }
 
 const writingSystem = {
@@ -35,17 +35,16 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Fr],
 ];
 
-export const i18nextFallbacks = {
+// Used by i18n for missing translations.
+export const i18nFallbacks = {
   es: [Bcp47Code.Pt, Bcp47Code.Default],
   it: [Bcp47Code.Es, Bcp47Code.Pt, Bcp47Code.Default],
   pt: [Bcp47Code.Es, Bcp47Code.Default],
   default: [Bcp47Code.Default],
 };
 
-// Add any lang covered in ini18nextFallbacks
-export const i18nextLangs = uiWritingSystems
-  .map((ws) => ws.bcp47)
-  .concat(["it"]);
+// Add support for langs covered in i18nFallbacks above.
+export const i18nLangs = uiWritingSystems.map((ws) => ws.bcp47).concat(["it"]);
 
 export function newWritingSystem(
   bcp47 = "",
