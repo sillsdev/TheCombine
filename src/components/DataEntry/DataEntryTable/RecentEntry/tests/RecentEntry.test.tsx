@@ -26,6 +26,10 @@ jest.mock("@mui/material/Autocomplete", () => "div");
 jest.mock("backend");
 jest.mock("components/Pronunciations/Recorder");
 
+jest
+  .spyOn(window.HTMLMediaElement.prototype, "pause")
+  .mockImplementation(() => {});
+
 const mockStore = configureMockStore()({ pronunciationsState });
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
