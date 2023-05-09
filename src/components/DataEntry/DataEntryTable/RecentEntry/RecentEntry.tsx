@@ -45,13 +45,13 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
   const [hovering, setHovering] = useState(false);
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
-  function conditionallyUpdateGloss() {
+  function conditionallyUpdateGloss(): void {
     if (firstGlossText(sense) !== gloss) {
       props.updateGloss(gloss);
     }
   }
 
-  function conditionallyUpdateVern() {
+  function conditionallyUpdateVern(): void {
     if (props.entry.vernacular !== vernacular) {
       props.updateVern(vernacular);
     }
