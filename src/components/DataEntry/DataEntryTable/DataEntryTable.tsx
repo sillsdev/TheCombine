@@ -386,7 +386,7 @@ export default function DataEntryTable(
     }
   }, [state.isFetchingFrontier]);
 
-  /*** Act on defunctUpdates */
+  /*** Act on the defunctUpdates queue. */
   useEffect(() => {
     const ids = Object.keys(state.defunctUpdates);
     if (!ids.length) {
@@ -396,6 +396,7 @@ export default function DataEntryTable(
       state.recentWords.find((w) => w.word.id === id)
     );
     if (oldId) {
+      // Do an update if there's one to be done.
       let newId = oldId;
       while (state.defunctUpdates[newId]) {
         newId = state.defunctUpdates[newId];
