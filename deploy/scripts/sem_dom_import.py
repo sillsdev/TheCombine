@@ -279,6 +279,8 @@ def generate_semantic_domains(
         logging.info(f"Parsing {xmlfile}")
         tree = ElementTree.parse(xmlfile)
         root = tree.getroot()
+        if len(root) == 1:
+            root = root[0]
         # Find the languages defined in this file
         # We need to do this first so that we know which keys
         # to create in the global structures.
@@ -287,6 +289,7 @@ def generate_semantic_domains(
                 # Languages can be found in the Name element
                 for sub_elem in elem:
                     lang, name_text = get_auni_text(sub_elem)
+                    logging.info(f"Language code: {lang}")
                     if lang not in domain_tree:
                         domain_tree[lang] = {}
                     if lang not in domain_nodes:
