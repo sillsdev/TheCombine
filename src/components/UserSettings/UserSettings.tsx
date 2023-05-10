@@ -45,9 +45,7 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
     },
     avatarOverlay: {
       transition: "opacity 0.2s",
-      "&:hover": {
-        opacity: 0.9,
-      },
+      "&:hover": { opacity: 0.9 },
       position: "absolute",
       width: 60,
       height: 60,
@@ -79,7 +77,7 @@ export default function UserSettings(): ReactElement {
   const { t } = useTranslation();
   const potentialUser = getCurrentUser();
   const userCurr = potentialUser ?? newUser();
-  const [user, SetUser] = useState<User>(userCurr);
+  const [user] = useState<User>(userCurr);
   const [name, setName] = useState<string>(userCurr.name);
   const [phone, setPhone] = useState<string>(userCurr.phone);
   const [email, setEmail] = useState<string>(userCurr.email);
@@ -149,7 +147,9 @@ export default function UserSettings(): ReactElement {
 
                 <Grid item container spacing={2}>
                   <Grid item>
-                    <Typography variant="h6">Contact</Typography>
+                    <Typography variant="h6">
+                      {t("userSettings.contact")}
+                    </Typography>
                   </Grid>
 
                   <Grid item container spacing={1} alignItems="center">
@@ -162,7 +162,7 @@ export default function UserSettings(): ReactElement {
                         fullWidth
                         variant="outlined"
                         value={phone}
-                        label="Phone"
+                        label={t("userSettings.phone")}
                         onChange={(e) => setPhone(e.target.value)}
                         type="tel"
                       />
