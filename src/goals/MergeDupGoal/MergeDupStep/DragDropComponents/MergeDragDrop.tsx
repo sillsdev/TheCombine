@@ -118,7 +118,7 @@ export default function MergeDragDrop(): ReactElement {
   }
 
   const newId = v4();
-  const colCount = Object.keys(treeWords).length + 1; // +1 for trash and extra empty word
+  const colCount = Object.keys(treeWords).length + 1; // +1 for extra empty word.
 
   // This prevents things from moving when a draggable is dragged over the trash.
   const trashPlaceholderStyle: CSSProperties = {
