@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { CSSProperties, ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
@@ -120,6 +120,13 @@ export default function MergeDragDrop(): ReactElement {
   const newId = v4();
   const colCount = Object.keys(treeWords).length + 1; // +1 for trash and extra empty word
 
+  // This prevents things from moving when a draggable is dragged over the trash.
+  const trashPlaceholderStyle: CSSProperties = {
+    height: 0,
+    overflow: "hidden",
+    position: "absolute",
+  };
+
   return (
     <DragDropContext onDragEnd={handleDrop}>
       <Grid container>
@@ -130,9 +137,7 @@ export default function MergeDragDrop(): ReactElement {
                 <Tooltip title={t("mergeDups.helpText.delete")} placement="top">
                   <Delete fontSize="large" />
                 </Tooltip>
-                <div style={{ position: "absolute" }}>
-                  {provided.placeholder}
-                </div>
+                <div style={trashPlaceholderStyle}>{provided.placeholder}</div>
               </div>
             )}
           </Droppable>
