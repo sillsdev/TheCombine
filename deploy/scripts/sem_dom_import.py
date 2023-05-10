@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import logging
 from pathlib import Path
+import sys
 from typing import Dict, List, Tuple
 from uuid import UUID
 from xml.etree import ElementTree
@@ -254,7 +255,7 @@ def write_json(output_dir: Path) -> None:
     """
     Serialize the domain_nodes and domain_tree structures to JSON files.
 
-    The data structures are serialized to a file of contatenated JSON elements;
+    The data structures are serialized to a file of concatenated JSON elements;
     not an array of JSON elements nor a nested structure.  This allows the files
     to be used by mongoimport.
     """
@@ -275,16 +276,18 @@ def write_json(output_dir: Path) -> None:
 def generate_semantic_domains(
     input_files: List[Path], output_dir: Path, *, flatten_questions: bool = True
 ) -> None:
-    for xmlfile in input_files:
-        logging.info(f"Parsing {xmlfile}")
-        tree = ElementTree.parse(xmlfile)
-        root = tree.getroot()
+    for xml_file in input_files:
+        logging.info(f"Parsing {xml_file}")
+        tree = ElementTree.parse(xml_file)
         # Set the semantic domain list as the root.
-        if "field" not in root.attrib.keys():
-            for elem in root:
-                if elem.attrib["field"] == "SemanticDomainList":
-                    root = elem
-                    break
+        root = None
+        for elem in tree.getroot():
+            if "field" in elem.attrib.keys() and elem.attrib["field"] == "SemanticDomainList":
+                root = elem
+                break
+        if root is None:
+            logging.critical("No semantic domain list found!")
+            sys.exit(1)
         # Find the languages defined in this file
         # We need to do this first so that we know which keys
         # to create in the global structures.
