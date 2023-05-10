@@ -50,7 +50,7 @@ export default function NavigationButtons(
         }}
         color="inherit"
         style={{
-          width: "min-content",
+          width: "fit-content",
           background: tabColor(props.currentTab, Path.DataEntry),
         }}
       >
@@ -63,7 +63,7 @@ export default function NavigationButtons(
         }}
         color="inherit"
         style={{
-          width: "min-content",
+          width: "fit-content",
           background: tabColor(props.currentTab, Path.Goals),
         }}
       >
