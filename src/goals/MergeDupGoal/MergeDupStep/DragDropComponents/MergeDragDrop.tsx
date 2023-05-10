@@ -123,7 +123,10 @@ export default function MergeDragDrop(): ReactElement {
   return (
     <DragDropContext onDragEnd={handleDrop}>
       <ImageList rowHeight="auto" cols={colCount}>
-        <ImageListItem key={"trash"} style={{ marginTop: "70vh" }}>
+        <ImageListItem
+          key={"trash"}
+          style={{ marginTop: "65vh", width: "40px" }}
+        >
           <Droppable key={trashId} droppableId={trashId}>
             {(provided): ReactElement => (
               <div ref={provided.innerRef}>
