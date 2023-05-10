@@ -279,6 +279,7 @@ def generate_semantic_domains(
         logging.info(f"Parsing {xmlfile}")
         tree = ElementTree.parse(xmlfile)
         root = tree.getroot()
+        # Set the semantic domain list as the root.
         if not "field" in root.attrib.keys():
             for elem in root:
                 if elem.attrib["field"] == "SemanticDomainList":
