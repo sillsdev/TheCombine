@@ -283,6 +283,7 @@ def generate_semantic_domains(
             for elem in root:
                 if elem.attrib["field"] == "SemanticDomainList":
                     root = elem
+                    break
         # Find the languages defined in this file
         # We need to do this first so that we know which keys
         # to create in the global structures.
