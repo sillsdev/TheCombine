@@ -279,8 +279,10 @@ def generate_semantic_domains(
         logging.info(f"Parsing {xmlfile}")
         tree = ElementTree.parse(xmlfile)
         root = tree.getroot()
-        if len(root) == 1:
-            root = root[0]
+        if not "field" in root.attrib.keys():
+            for elem in root:
+                if elem.attrib["field"] == "SemanticDomainList":
+                    root = elem
         # Find the languages defined in this file
         # We need to do this first so that we know which keys
         # to create in the global structures.
