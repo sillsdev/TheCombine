@@ -1,4 +1,4 @@
-import { AppBar, Grid, Toolbar } from "@mui/material";
+import { AppBar, Grid, Hidden, Toolbar } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -27,8 +27,10 @@ export default function AppBarComponent(): ReactElement {
             spacing={2}
             alignItems="center"
           >
-            <Grid item xs={8} sm={7} md={6} lg={4}>
-              <Logo />
+            <Grid item sm={7} md={6} lg={5}>
+              <Hidden smDown>
+                <Logo />
+              </Hidden>
               {!!getProjectId() && (
                 <NavigationButtons currentTab={currentTab} />
               )}
