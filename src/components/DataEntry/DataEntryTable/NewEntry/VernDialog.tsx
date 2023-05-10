@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
-import React from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
@@ -22,7 +22,7 @@ interface vernDialogProps {
   analysisLang?: string;
 }
 
-export default function VernDialog(props: vernDialogProps) {
+export default function VernDialog(props: vernDialogProps): ReactElement {
   return (
     <Dialog
       open={props.open}
@@ -65,7 +65,7 @@ export function VernList(props: VernListProps) {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word) => (
@@ -94,6 +94,6 @@ export function VernList(props: VernListProps) {
           {props.vernacularWords[0].vernacular}
         </StyledMenuItem>
       </MenuList>
-    </React.Fragment>
+    </>
   );
 }

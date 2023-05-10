@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { withStyles } from "@mui/styles";
-import React from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
@@ -22,7 +22,7 @@ interface SenseDialogProps {
   analysisLang: string;
 }
 
-export default function SenseDialog(props: SenseDialogProps) {
+export default function SenseDialog(props: SenseDialogProps): ReactElement {
   return (
     <Dialog
       open={props.open}
@@ -65,7 +65,7 @@ export function SenseList(props: SenseListProps) {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
       <MenuList autoFocusItem>
         {props.selectedWord.senses.map((sense, index) => (
@@ -81,10 +81,7 @@ export function SenseList(props: SenseListProps) {
               <DomainCell
                 rowData={
                   new ReviewEntriesWord(
-                    {
-                      ...props.selectedWord,
-                      senses: [sense],
-                    },
+                    { ...props.selectedWord, senses: [sense] },
                     props.analysisLang
                   )
                 }
@@ -98,6 +95,6 @@ export function SenseList(props: SenseListProps) {
           {props.selectedWord.vernacular}
         </StyledMenuItem>
       </MenuList>
-    </React.Fragment>
+    </>
   );
 }

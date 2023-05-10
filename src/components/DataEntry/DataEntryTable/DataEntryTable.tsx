@@ -5,6 +5,7 @@ import {
   FormEvent,
   Fragment,
   ReactElement,
+  RefObject,
   useCallback,
   useEffect,
   useRef,
@@ -26,15 +27,13 @@ import {
 } from "api/models";
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
-import NewEntry, {
-  FocusTarget,
-} from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { Hash } from "types/hash";
 import theme from "types/theme";
-import { newSense, simpleWord } from "types/word";
+import { newSense, newWord, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
 import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
 
@@ -72,6 +71,9 @@ interface DataEntryTableState {
   // word data
   existingWords: Word[];
   recentWords: WordAccess[];
+  // new entry
+  newAudioUrls: string[];
+  newEntry: Word;
   // state management
   defunctUpdates: Hash<string>;
   defunctWordIds: Hash<DefunctStatus>;
@@ -102,6 +104,14 @@ function filterWords(words: Word[]): Word[] {
       [Status.Active, Status.Protected].includes(s.accessibility)
     )
   );
+}
+
+/*** Focus on a specified object. */
+export function focusInput(ref: RefObject<HTMLDivElement>): void {
+  if (ref.current) {
+    ref.current.focus();
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  }
 }
 
 /*** Return a copy of the semantic domain with current UserId and timestamp. */
@@ -167,6 +177,9 @@ export default function DataEntryTable(
     // word data
     existingWords: [],
     recentWords: [],
+    // new entry
+    newAudioUrls: [],
+    newEntry: newWord(),
     // state management
     defunctUpdates: {},
     defunctWordIds: {},
@@ -177,7 +190,7 @@ export default function DataEntryTable(
 
   const { enqueueSnackbar } = useSnackbar();
   const recorder = new Recorder();
-  const refNewEntry = useRef<NewEntry>(null);
+  const newVernInput = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   ////////////////////////////////////
@@ -306,19 +319,36 @@ export default function DataEntryTable(
     });
   };
 
+  /*** Add an audio file to newAudioUrls. */
+  const addNewAudioUrl = (file: File): void => {
+    setState((prevState) => {
+      const newAudioUrls = [...prevState.newAudioUrls];
+      newAudioUrls.push(URL.createObjectURL(file));
+      return { ...prevState, newAudioUrls };
+    });
+  };
+
+  /*** Delete a url from newAudioUrls. */
+  const delNewAudioUrl = (url: string): void => {
+    setState((prevState) => {
+      const newAudioUrls = prevState.newAudioUrls.filter((u) => u !== url);
+      return { ...prevState, newAudioUrls };
+    });
+  };
+
   /*** Reset things specific to the current data entry session in the current semantic domain. */
   const resetEverything = (): void => {
+    props.openTree();
     props.hideQuestions();
     setState((prevState) => ({
       ...prevState,
       defunctUpdates: {},
       defunctWordIds: {},
+      newAudioUrls: [],
+      newEntry: newWord(),
       senseSwitches: [],
       recentWords: [],
     }));
-    if (refNewEntry.current) {
-      refNewEntry.current.resetState();
-    }
   };
 
   ////////////////////////////////////
@@ -663,30 +693,25 @@ export default function DataEntryTable(
 
   /*** Reset the entry table. If there is an un-submitted word then submit it. */
   const handleExit = async (): Promise<void> => {
-    // Check if there is a new word, but user exited without pressing enter
-    if (refNewEntry.current) {
-      const newEntry = refNewEntry.current.state.newEntry;
-      if (newEntry?.vernacular) {
-        const existingWord = state.existingWords.find(
-          (w) => w.vernacular === newEntry.vernacular
-        );
-        // existing word not found, create a new word
-        if (!existingWord) {
-          if (!newEntry.senses.length) {
-            newEntry.senses.push(
-              newSense(undefined, undefined, props.semanticDomain)
-            );
-          }
-          const newEntryAudio = refNewEntry.current.state.audioFileURLs;
-          await addNewWord(newEntry, newEntryAudio);
-        } else {
-          // found an existing word, update it
-          await updateWordWithNewGloss(
-            existingWord.id,
-            newEntry.senses[0].glosses[0].def,
-            refNewEntry.current.state.audioFileURLs
-          );
+    // Check if there is a new word, but user exited without pressing enter.
+    if (state.newEntry.vernacular) {
+      const existingWord = state.existingWords.find(
+        (w) => w.vernacular === state.newEntry.vernacular
+      );
+      const senses = [...state.newEntry.senses];
+      if (!existingWord) {
+        // Existing word not found, so create a new word.
+        if (!senses.length) {
+          senses.push(newSense(undefined, undefined, props.semanticDomain));
         }
+        await addNewWord(state.newEntry, state.newAudioUrls);
+      } else {
+        // Found an existing word, so add a sense to it.
+        await updateWordWithNewGloss(
+          existingWord.id,
+          senses[0].glosses[0].def,
+          state.newAudioUrls
+        );
       }
     }
     resetEverything();
@@ -741,11 +766,7 @@ export default function DataEntryTable(
                 deleteAudioFromWord(wordId, fileName)
               }
               recorder={recorder}
-              focusNewEntry={() => {
-                if (refNewEntry.current) {
-                  refNewEntry.current.focus(FocusTarget.Vernacular);
-                }
-              }}
+              focusNewEntry={() => focusInput(newVernInput)}
               analysisLang={state.analysisLang}
               vernacularLang={state.vernacularLang}
               disabled={Object.keys(state.defunctWordIds).includes(
@@ -757,7 +778,6 @@ export default function DataEntryTable(
 
         <Grid item xs={12}>
           <NewEntry
-            ref={refNewEntry}
             allWords={state.suggestVerns ? state.existingWords : []}
             defunctWordIds={Object.keys(state.defunctWordIds)}
             updateWordWithNewGloss={(
@@ -773,6 +793,14 @@ export default function DataEntryTable(
             recorder={recorder}
             analysisLang={state.analysisLang}
             vernacularLang={state.vernacularLang}
+            newAudioUrls={state.newAudioUrls}
+            addNewAudioUrl={addNewAudioUrl}
+            delNewAudioUrl={delNewAudioUrl}
+            newEntry={state.newEntry}
+            setNewEntry={(w: Word) =>
+              setState((prev) => ({ ...prev, newEntry: w }))
+            }
+            vernInput={newVernInput}
           />
         </Grid>
       </Grid>
@@ -800,10 +828,7 @@ export default function DataEntryTable(
             style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
-            onClick={() => {
-              props.openTree();
-              handleExit();
-            }}
+            onClick={() => handleExit()}
           >
             {t("buttons.exit")}
           </Button>
