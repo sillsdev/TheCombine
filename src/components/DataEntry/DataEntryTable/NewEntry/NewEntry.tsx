@@ -69,6 +69,30 @@ interface NewEntryProps {
  * Displays data related to creating a new word entry
  */
 export default function NewEntry(props: NewEntryProps): ReactElement {
+  const {
+    analysisLang,
+    vernacularLang,
+    recorder,
+    // Parent component handles new entry state:
+    addNewEntry,
+    updateWordWithNewGloss,
+    newAudioUrls,
+    addNewAudioUrl,
+    delNewAudioUrl,
+    newGloss,
+    setNewGloss,
+    newNote,
+    setNewNote,
+    newVern,
+    setNewVern,
+    vernInput,
+    // Parent component handles vern suggestion state:
+    selectedDup,
+    setSelectedDup,
+    suggestedVerns,
+    suggestedDups,
+  } = props;
+
   const isTreeOpen = useSelector(
     (state: StoreState) => state.treeViewState.open
   );
@@ -87,20 +111,20 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           focusInput(glossInput);
           return;
         case FocusTarget.Vernacular:
-          focusInput(props.vernInput);
+          focusInput(vernInput);
           return;
       }
     },
-    [glossInput, props.vernInput]
+    [glossInput, vernInput]
   );
 
   const resetState = useCallback((): void => {
-    props.setNewGloss("");
-    props.setNewNote("");
-    props.setNewVern("");
+    setNewGloss("");
+    setNewNote("");
+    setNewVern("");
     // May also need to reset newAudioUrls in the parent component.
     focus(FocusTarget.Vernacular);
-  }, [focus]);
+  }, [focus, setNewGloss, setNewNote, setNewVern]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
@@ -119,11 +143,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
    * which is passed to each input component to call on update. */
   useEffect(() => {
     if (!(senseOpen || vernOpen)) {
-      setShouldFocus(
-        props.selectedDup ? FocusTarget.Gloss : FocusTarget.Vernacular
-      );
+      setShouldFocus(selectedDup ? FocusTarget.Gloss : FocusTarget.Vernacular);
     }
-  }, [props.selectedDup, senseOpen, vernOpen]);
+  }, [selectedDup, senseOpen, vernOpen]);
 
   /** This function is for a child input component to call on update
    * to move focus to itself, if shouldFocus says it should. */
@@ -135,24 +157,24 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   };
 
   const updateVernField = (vern: string, openVernDialog?: boolean): void => {
-    props.setNewVern(vern);
+    setNewVern(vern);
     setVernOpen(!!openVernDialog);
   };
 
   const addNewEntryAndReset = async (): Promise<void> => {
-    await props.addNewEntry();
+    await addNewEntry();
     resetState();
   };
 
   const addOrUpdateWord = async (): Promise<void> => {
-    if (props.suggestedDups.length) {
+    if (suggestedDups.length) {
       // Duplicate vern ...
-      if (!props.selectedDup) {
+      if (!selectedDup) {
         // ... and user hasn't made a selection
         setVernOpen(true);
-      } else if (!props.selectedDup.id) {
+      } else if (!selectedDup.id) {
         // ... and user has selected an entry to modify
-        await props.updateWordWithNewGloss(props.selectedDup.id);
+        await updateWordWithNewGloss(selectedDup.id);
         resetState();
       } else {
         // ... and user has selected new entry
@@ -170,9 +192,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   ): Promise<void> => {
     if (!vernOpen && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular
-      if (props.newVern) {
+      if (newVern) {
         // The user can conditionally submit a new entry without a gloss
-        if (props.newGloss || !checkGloss) {
+        if (newGloss || !checkGloss) {
           await addOrUpdateWord();
           focus(FocusTarget.Vernacular);
         } else {
@@ -186,7 +208,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   const handleCloseVernDialog = (id?: string): void => {
     if (id !== undefined) {
-      props.setSelectedDup(id);
+      setSelectedDup(id);
     }
 
     if (id) {
@@ -198,10 +220,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   const handleCloseSenseDialog = (gloss?: string): void => {
     if (gloss) {
-      props.setNewGloss(gloss);
+      setNewGloss(gloss);
     } else if (gloss === undefined) {
       // If gloss is undefined, the user exited the dialog without a selection.
-      props.setSelectedDup();
+      setSelectedDup();
       setVernOpen(true);
     }
     // else: an empty string indicates new sense for the selectedWord.
@@ -215,8 +237,8 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         <Grid item xs={12}>
           <VernWithSuggestions
             isNew
-            vernacular={props.newVern}
-            vernInput={props.vernInput}
+            vernacular={newVern}
+            vernInput={vernInput}
             updateVernField={(newValue: string, openDialog?: boolean) =>
               updateVernField(newValue, openDialog)
             }
@@ -229,28 +251,26 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
                 setVernOpen(true);
               }
             }}
-            suggestedVerns={props.suggestedVerns}
+            suggestedVerns={suggestedVerns}
             // To prevent unintentional no-gloss submissions:
             // If enter pressed from the vern field, check whether gloss is empty
             handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, true)}
-            vernacularLang={props.vernacularLang}
+            vernacularLang={vernacularLang}
             textFieldId={`${idAffix}-vernacular`}
             onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
           />
           <VernDialog
-            open={
-              vernOpen && !!props.suggestedDups.length && !props.selectedDup
-            }
+            open={vernOpen && !!suggestedDups.length && !selectedDup}
             handleClose={handleCloseVernDialog}
-            vernacularWords={props.suggestedDups}
-            analysisLang={props.analysisLang.bcp47}
+            vernacularWords={suggestedDups}
+            analysisLang={analysisLang.bcp47}
           />
-          {props.selectedDup && (
+          {selectedDup && (
             <SenseDialog
-              selectedWord={props.selectedDup}
+              selectedWord={selectedDup}
               open={senseOpen}
               handleClose={handleCloseSenseDialog}
-              analysisLang={props.analysisLang.bcp47}
+              analysisLang={analysisLang.bcp47}
             />
           )}
         </Grid>
@@ -258,23 +278,23 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid item xs={4} style={gridItemStyle(1)}>
         <GlossWithSuggestions
           isNew
-          gloss={props.newGloss}
+          gloss={newGloss}
           glossInput={glossInput}
-          updateGlossField={props.setNewGloss}
+          updateGlossField={setNewGloss}
           // To allow intentional no-gloss submissions:
           // If enter pressed from the gloss field, don't check whether gloss is empty
           handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, false)}
-          analysisLang={props.analysisLang}
+          analysisLang={analysisLang}
           textFieldId={`${idAffix}-gloss`}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>
-        {!props.selectedDup?.id && (
+        {!selectedDup?.id && (
           // note is not available if user selected to modify an exiting entry
           <EntryNote
-            noteText={props.newNote}
-            updateNote={props.setNewNote}
+            noteText={newNote}
+            updateNote={setNewNote}
             buttonId="note-entry-new"
           />
         )}
@@ -282,10 +302,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid item xs={2} style={gridItemStyle(1)}>
         <Pronunciations
           wordId={""}
-          pronunciationFiles={props.newAudioUrls}
-          recorder={props.recorder}
-          deleteAudio={(_, fileName: string) => props.delNewAudioUrl(fileName)}
-          uploadAudio={(_, audioFile: File) => props.addNewAudioUrl(audioFile)}
+          pronunciationFiles={newAudioUrls}
+          recorder={recorder}
+          deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
+          uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
           getAudioUrl={(_, fileName: string) => fileName}
         />
       </Grid>

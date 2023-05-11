@@ -476,9 +476,6 @@ export default function DataEntryTable(
     if (state.isFetchingFrontier) {
       backend.getFrontierWords().then((words) => {
         const allWords = filterWords(words);
-        const allVerns = suggestVerns
-          ? [...new Set(allWords.map((w) => w.vernacular))]
-          : [];
         setState((prevState) => {
           const defunctWordIds: Hash<DefunctStatus> = {};
           for (const id of Object.keys(prevState.defunctWordIds)) {
@@ -502,7 +499,6 @@ export default function DataEntryTable(
           return {
             ...prevState,
             isFetchingFrontier: false,
-            allVerns,
             allWords,
             defunctUpdates,
             defunctWordIds,
@@ -511,6 +507,16 @@ export default function DataEntryTable(
       });
     }
   }, [state.isFetchingFrontier]);
+
+  /*** If vern-autocomplete is on for the project, make list of all vernaculars. */
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      allVerns: suggestVerns
+        ? [...new Set(prev.allWords.map((w) => w.vernacular))]
+        : [],
+    }));
+  }, [state.allWords, suggestVerns]);
 
   /*** Act on the defunctUpdates queue. */
   useEffect(() => {
@@ -562,7 +568,7 @@ export default function DataEntryTable(
         levDist.getDistance
       ),
     }));
-  }, [state.newVern]);
+  }, [levDist.getDistance, state.newVern]);
 
   ////////////////////////////////////
   // Async functions that wrap around a backend update to a word.
