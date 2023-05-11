@@ -266,11 +266,11 @@ namespace Backend.Tests.Controllers
             new("RWC.zip", "es", new List<string>(), 132),
             new("Sena.zip", "seh", new List<string>(), 1462),
             new(
-                "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
+                "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.wav" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
             new(
-                "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
+                "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.wav", "short1.wav" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
         };
@@ -339,7 +339,9 @@ namespace Backend.Tests.Controllers
             Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                Assert.That(File.Exists(Path.Combine(exportedProjDir, "audio", audioFile)));
+                var path = Path.Combine(exportedProjDir, "audio", audioFile);
+                Assert.That(File.Exists(path),
+                    $"The file {audioFile} can not be found at this path: {path}");
             }
             Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
