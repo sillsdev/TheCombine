@@ -6,10 +6,8 @@ import configureMockStore from "redux-mock-store";
 import "tests/mockReactI18next";
 
 import { Word } from "api/models";
-import {
-  StyledMenuItem,
-  VernList,
-} from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
+import { VernList } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import theme from "types/theme";
 import { simpleWord, testWordList } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";

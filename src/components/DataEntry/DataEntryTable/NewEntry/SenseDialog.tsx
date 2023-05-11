@@ -1,15 +1,9 @@
-import {
-  Dialog,
-  DialogContent,
-  MenuItem,
-  MenuList,
-  Typography,
-} from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { Dialog, DialogContent, MenuList, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
+import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
@@ -18,7 +12,8 @@ import { firstGlossText } from "types/wordUtilities";
 interface SenseDialogProps {
   selectedWord: Word;
   open: boolean;
-  handleClose: (senseIndex?: number) => void;
+  // Call handleClose with no input to indicate no selection was made.
+  handleClose: (gloss?: string) => void;
   analysisLang: string;
 }
 
@@ -45,21 +40,9 @@ export default function SenseDialog(props: SenseDialogProps): ReactElement {
 
 interface SenseListProps {
   selectedWord: Word;
-  closeDialog: (senseIndex: number) => void;
+  closeDialog: (gloss: string) => void;
   analysisLang: string;
 }
-
-// Copied from customized menus at https://material-ui.com/components/menus/
-export const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
 
 export function SenseList(props: SenseListProps) {
   const { t } = useTranslation();
@@ -68,29 +51,32 @@ export function SenseList(props: SenseListProps) {
     <>
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
       <MenuList autoFocusItem>
-        {props.selectedWord.senses.map((sense, index) => (
-          <StyledMenuItem
-            onClick={() => props.closeDialog(index)}
-            key={firstGlossText(sense)}
-            id={firstGlossText(sense)}
-          >
-            <div style={{ margin: theme.spacing(4) }}>
-              <h3>{firstGlossText(sense)}</h3>
-            </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={
-                  new ReviewEntriesWord(
-                    { ...props.selectedWord, senses: [sense] },
-                    props.analysisLang
-                  )
-                }
-              />
-            </div>
-          </StyledMenuItem>
-        ))}
+        {props.selectedWord.senses.map((sense) => {
+          const gloss = firstGlossText(sense);
+          return (
+            <StyledMenuItem
+              onClick={() => props.closeDialog(gloss)}
+              key={gloss}
+              id={gloss}
+            >
+              <div style={{ margin: theme.spacing(4) }}>
+                <h3>{gloss}</h3>
+              </div>
+              <div style={{ margin: theme.spacing(4) }}>
+                <DomainCell
+                  rowData={
+                    new ReviewEntriesWord(
+                      { ...props.selectedWord, senses: [sense] },
+                      props.analysisLang
+                    )
+                  }
+                />
+              </div>
+            </StyledMenuItem>
+          );
+        })}
 
-        <StyledMenuItem onClick={() => props.closeDialog(-1)}>
+        <StyledMenuItem onClick={() => props.closeDialog("")}>
           {t("addWords.newSenseFor")}
           {props.selectedWord.vernacular}
         </StyledMenuItem>

@@ -22,7 +22,6 @@
     "selectSense": "Escoger un sentido",
     "newEntryFor": "Nuevo entrada para: ",
     "newSenseFor": "Sentido nuevo para: ",
-    "senseInWord": "La palabra ya tiene este sentido en este dominio",
     "deleteRow": "Borrar esta fila",
     "deleteRowWarning": "¡Esta fila se eliminará permanentemente!",
     "addNote": "Add a note",

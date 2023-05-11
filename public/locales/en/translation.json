@@ -22,7 +22,7 @@
     "selectSense": "Select a sense",
     "newEntryFor": "New entry for: ",
     "newSenseFor": "New sense for: ",
-    "senseInWord": "The word already has this sense in this semantic domain",
+    "senseInWord": "The word already has this sense in this semantic domain: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Delete this row",
     "deleteRowWarning": "This row will be permanently deleted!",
     "addNote": "Add a note",
