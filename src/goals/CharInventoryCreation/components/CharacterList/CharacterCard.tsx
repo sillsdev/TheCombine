@@ -47,7 +47,7 @@ export default function CharacterCard(props: CharacterCardProps) {
             {charToHexValue(props.char)}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.count} {t("charInventory.characterSet.occurrences")}
+            {t("charInventory.characterSet.occurrences", { val: props.count })}
           </Typography>
           <CharacterStatusText status={props.status} />
         </CardContent>
