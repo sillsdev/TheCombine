@@ -9,14 +9,14 @@ import smallLogo from "resources/CombineSmallLogoV1.png";
 export default function Logo(): ReactElement {
   return (
     <Button onClick={() => history.push(Path.ProjScreen)} id="logo-button">
-      <Hidden mdDown>
+      <Hidden lgDown>
         <img src={logo} height="50" alt="Logo" />
       </Hidden>
-      <Hidden mdUp smDown>
-        <img src={smallLogo} height="40" alt="Logo" />
+      <Hidden lgUp mdDown>
+        <img src={logo} height="40" alt="Logo" />
       </Hidden>
-      <Hidden smUp>
-        <img src={smallLogo} height="30" alt="Logo" />
+      <Hidden mdUp>
+        <img src={smallLogo} height="35" alt="Logo" />
       </Hidden>
     </Button>
   );
