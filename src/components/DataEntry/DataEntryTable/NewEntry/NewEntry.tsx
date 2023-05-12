@@ -1,12 +1,12 @@
 import { AutocompleteCloseReason, Grid, Typography } from "@mui/material";
 import {
-  createRef,
   CSSProperties,
   KeyboardEvent,
   ReactElement,
   RefObject,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -102,7 +102,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   const [vernOpen, setVernOpen] = useState(false);
   const [wasTreeClosed, setWasTreeClosed] = useState(false);
 
-  const glossInput = createRef<HTMLDivElement>();
+  const glossInput = useRef<HTMLDivElement>(null);
 
   const focus = useCallback(
     (target: FocusTarget): void => {
@@ -122,9 +122,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     setNewGloss("");
     setNewNote("");
     setNewVern("");
+    setVernOpen(false);
     // May also need to reset newAudioUrls in the parent component.
     focus(FocusTarget.Vernacular);
-  }, [focus, setNewGloss, setNewNote, setNewVern]);
+  }, [focus, setNewGloss, setNewNote, setNewVern, setVernOpen]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
@@ -190,7 +191,8 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     e: KeyboardEvent,
     checkGloss: boolean
   ): Promise<void> => {
-    if (!vernOpen && e.key === Key.Enter) {
+    console.info(vernOpen);
+    if ((true || !vernOpen) && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular
       if (newVern) {
         // The user can conditionally submit a new entry without a gloss

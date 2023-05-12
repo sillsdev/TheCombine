@@ -8,6 +8,7 @@ import {
   RefObject,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -18,7 +19,6 @@ import { v4 } from "uuid";
 import {
   AutocompleteSetting,
   Note,
-  Project,
   SemanticDomain,
   SemanticDomainTreeNode,
   Sense,
@@ -97,39 +97,35 @@ export function focusInput(ref: RefObject<HTMLDivElement>): void {
   }
 }
 
-/*** Find suggestions for given vern from a list of verns. */
-const getVernSuggestions = (
-  vern: string,
-  allVerns: string[],
+/*** Find suggestions for given text from a list of strings. */
+const getSuggestions = (
+  text: string,
+  all: string[],
   dist: (a: string, b: string) => number
 ): string[] => {
-  if (!vern || !allVerns.length) {
+  if (!text || !all.length) {
     return [];
   }
   const maxSuggestions = 5;
   const maxDistance = 3;
 
-  const verns = allVerns
-    .filter((v) => v.startsWith(vern))
+  const some = all
+    .filter((s) => s.startsWith(text))
     .sort((a, b) => a.length - b.length);
   // Take 2 shortest and the rest longest (should make finding the long words easier).
-  if (verns.length > maxSuggestions) {
-    verns.splice(2, verns.length - maxSuggestions);
+  if (some.length > maxSuggestions) {
+    some.splice(2, some.length - maxSuggestions);
   }
 
-  if (verns.length < maxSuggestions) {
-    const viableVerns = allVerns
-      .filter((v) => dist(v, vern) < maxDistance)
-      .sort((a, b) => dist(a, vern) - dist(b, vern));
-    let candidate: string;
-    while (verns.length < maxSuggestions && viableVerns.length) {
-      candidate = viableVerns.shift()!;
-      if (!verns.includes(candidate)) {
-        verns.push(candidate);
-      }
+  if (some.length < maxSuggestions) {
+    const viable = all
+      .filter((s) => dist(s, text) < maxDistance && !some.includes(s))
+      .sort((a, b) => dist(a, text) - dist(b, text));
+    while (some.length < maxSuggestions && viable.length) {
+      some.push(viable.shift()!);
     }
   }
-  return verns;
+  return some;
 };
 
 /*** Return a copy of the semantic domain with current UserId and timestamp. */
@@ -207,21 +203,6 @@ interface DataEntryTableState {
 export default function DataEntryTable(
   props: DataEntryTableProps
 ): ReactElement {
-  /*const analysisLang = useSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems[0] ??
-      defaultWritingSystem
-  );
-  const suggestVerns = useSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.autocompleteSetting ===
-      AutocompleteSetting.On
-  );
-  const vernacularLang = useSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.vernacularWritingSystem
-  );*/
-
   const { analysisLang, suggestVerns, vernacularLang } = useSelector(
     (state: StoreState) => {
       const proj = state.currentProjectState.project;
@@ -253,28 +234,15 @@ export default function DataEntryTable(
   });
 
   const { enqueueSnackbar } = useSnackbar();
-  const levDist = new LevenshteinDistance();
+  const levDist = useMemo(() => new LevenshteinDistance(), []);
   const newVernInput = useRef<HTMLDivElement>(null);
-  const recorder = new Recorder();
+  const recorder = useMemo(() => new Recorder(), []);
   const { t } = useTranslation();
 
   ////////////////////////////////////
   // State-updating functions
   // These are preferably non-async function that return void.
   ////////////////////////////////////
-
-  /*** Apply language and autocomplete setting from the project.
-   * Then trigger the initial fetch of frontier data.
-   */
-  const applyProjSettings = useCallback((proj: Project): void => {
-    setState((prevState) => ({
-      ...prevState,
-      analysisLang: proj.analysisWritingSystems[0] ?? defaultWritingSystem,
-      isFetchingFrontier: true,
-      suggestVerns: proj.autocompleteSetting === AutocompleteSetting.On,
-      vernacularLang: proj.vernacularWritingSystem,
-    }));
-  }, []);
 
   /*** Use this without newId before updating any word on the backend,
    * to make sure that word doesn't get edited by two different functions.
@@ -562,13 +530,13 @@ export default function DataEntryTable(
   useEffect(() => {
     setState((prev) => ({
       ...prev,
-      suggestedVerns: getVernSuggestions(
+      suggestedVerns: getSuggestions(
         prev.newVern,
         prev.allVerns,
-        levDist.getDistance
+        (a: string, b: string) => levDist.getDistance(a, b)
       ),
     }));
-  }, [levDist.getDistance, state.newVern]);
+  }, [levDist, state.newVern]);
 
   ////////////////////////////////////
   // Async functions that wrap around a backend update to a word.
