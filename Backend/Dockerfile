@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.  Using bitnami/aspnet-core:6.0.16-debian-11-r6
-FROM bitnami/aspnet-core@sha256:83d7e223ade1178c9bdcf1b3f2594a95a17930df361ce9d78574372c070ed95d
+FROM bitnami/aspnet-core@sha256:de597ad402e1e4cd713e34c5ba599a5f2255be699d534fbc378325bea1cae586
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
