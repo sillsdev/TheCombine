@@ -48,7 +48,7 @@
     "@reduxjs/toolkit": "^1.9.3",
     "@segment/analytics-next": "^1.51.6",
     "axios": "^0.27.2",
-    "chart.js": "^4.2.1",
+    "chart.js": "^4.3.0",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",
     "distinct-colors": "^3.0.0",
