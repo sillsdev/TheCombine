@@ -107,7 +107,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Prepare the Environment
 
-1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
+1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 32 characters**, such as
    _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
    _System_ app (Windows).
 2. If you want the email services to work you will need to set the following environment variables. These values must be
