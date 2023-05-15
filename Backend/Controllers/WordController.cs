@@ -124,6 +124,23 @@ namespace BackendFramework.Controllers
             return Ok(await _wordRepo.IsFrontierNonempty(projectId));
         }
 
+        /// <summary> Checks if project has any <see cref="Definition"/>s in its frontier. </summary>
+        [HttpGet("doesprojecthavedefinitions", Name = "DoesProjectHaveDefinitions")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> DoesProjectHaveDefinitions(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+            var project = await _projRepo.GetProject(projectId);
+            if (project is null)
+            {
+                return NotFound(projectId);
+            }
+            return Ok(await _wordService.DoesProjectHaveDefinitions(projectId));
+        }
+
         /// <summary> Returns all Frontier <see cref="Word"/> in specified <see cref="Project"/>. </summary>
         [HttpGet("frontier", Name = "GetProjectFrontierWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]

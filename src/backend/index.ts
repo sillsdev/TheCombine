@@ -622,6 +622,12 @@ export async function deleteFrontierWord(wordId: string): Promise<string> {
   return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
 }
 
+export async function doesProjHaveDefs(projectId?: string): Promise<boolean> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
+  return (await wordApi.doesProjectHaveDefinitions(params, defaultOptions()))
+    .data;
+}
+
 export async function getAllWords(): Promise<Word[]> {
   const projectId = LocalStorage.getProjectId();
   return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;

@@ -5,6 +5,7 @@ import {
   ProjectAction,
   ProjectActionType,
 } from "components/Project/ProjectReduxTypes";
+import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 export function setCurrentProject(payload?: Project): ProjectAction {
@@ -47,5 +48,16 @@ export function setNewCurrentProject(project?: Project) {
   return (dispatch: StoreStateDispatch) => {
     setProjectId(project?.id);
     dispatch(setCurrentProject(project));
+  };
+}
+
+export function setDefinitionsEnabled(definitionsEnabled: boolean) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const proj: Project = {
+      ...getState().currentProjectState.project,
+      definitionsEnabled,
+    };
+    await updateProject(proj);
+    dispatch(setCurrentProject(proj));
   };
 }

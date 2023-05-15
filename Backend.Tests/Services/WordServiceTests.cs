@@ -107,5 +107,31 @@ namespace Backend.Tests.Services
             var dupId = _wordService.FindContainingWord(newWord).Result;
             Assert.That(dupId, Is.EqualTo(oldWord.Id));
         }
+
+        [Test]
+        public void TestDoesProjectHaveDefinitionsFalse()
+        {
+            var word = Util.RandomWord(ProjId);
+            var sense = Util.RandomSense();
+            sense.Definitions.Clear();
+            word.Senses = new List<Sense> { sense };
+            var _ = _wordRepo.Create(word).Result;
+
+            var hasDefs = _wordService.DoesProjectHaveDefinitions(ProjId).Result;
+            Assert.That(hasDefs, Is.False);
+        }
+
+        [Test]
+        public void TestDoesProjectHaveDefinitionsTrue()
+        {
+            var word = Util.RandomWord(ProjId);
+            var sense = Util.RandomSense();
+            sense.Definitions.Add(Util.RandomDefinition());
+            word.Senses.Add(sense);
+            var _ = _wordRepo.Create(word).Result;
+
+            var hasDefs = _wordService.DoesProjectHaveDefinitions(ProjId).Result;
+            Assert.That(hasDefs, Is.True);
+        }
     }
 }
