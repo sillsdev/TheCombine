@@ -37,7 +37,6 @@ export default function App(): ReactElement {
             <SignUp />
           </Route>
           <Route path={`${Path.PwReset}/:token`}>
-            {/* see Dynamic Nested Routing at https://www.sitepoint.com/react-router-complete-guide/ */}
             <PasswordReset />
           </Route>
           <Route path={Path.PwRequest}>
