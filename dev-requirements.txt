@@ -146,7 +146,7 @@ pyflakes==2.5.0
     # via flake8
 pygments==2.15.1
     # via mkdocs-material
-pymdown-extensions==9.11
+pymdown-extensions==10.0
     # via mkdocs-material
 pymongo==4.3.3
     # via -r dev-requirements.in
@@ -188,12 +188,6 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.4.1
     # via beautifulsoup4
-tomli==2.0.1
-    # via
-    #   black
-    #   mypy
-    #   pyproject-api
-    #   tox
 tox==4.5.1
     # via -r dev-requirements.in
 types-pyopenssl==23.1.0.2
