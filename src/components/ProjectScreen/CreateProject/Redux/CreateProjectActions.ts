@@ -18,14 +18,16 @@ export function asyncCreateProject(
   name: string,
   vernacularLanguage: WritingSystem,
   analysisLanguages: WritingSystem[],
+  recordingConsented: boolean,
   languageData?: File
 ) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(inProgress(name, vernacularLanguage, analysisLanguages));
+    dispatch(inProgress());
     // Create project
     const project = newProject(name);
     project.vernacularWritingSystem = vernacularLanguage;
     project.analysisWritingSystems = analysisLanguages;
+    project.recordingConsented = recordingConsented;
 
     await backend
       .createProject(project)
@@ -39,81 +41,50 @@ export function asyncCreateProject(
             .getProject(createdProject.id)
             .then((updatedProject) => {
               dispatch(setCurrentProject(updatedProject));
-              dispatch(success(name, vernacularLanguage, analysisLanguages));
+              dispatch(success());
               // Manually pause so they have a chance to see the success message.
               setTimeout(() => {
                 dispatch(asyncCreateUserEdits());
                 history.push(Path.ProjSettings);
               }, 1000);
             })
-            .catch((err) => {
-              dispatch(
-                failure(
-                  name,
-                  vernacularLanguage,
-                  analysisLanguages,
-                  err.response?.statusText
-                )
-              );
-            });
+            .catch((err) => dispatch(failure(err.response?.statusText)));
         } else {
-          dispatch(success(name, vernacularLanguage, analysisLanguages));
+          dispatch(success());
           setTimeout(() => {
             dispatch(asyncCreateUserEdits());
             history.push(Path.ProjSettings);
           }, 1000);
         }
       })
-      .catch((err) => {
-        const errorMessage = err.response?.statusText;
-        dispatch(
-          failure(name, vernacularLanguage, analysisLanguages, errorMessage)
-        );
-      });
+      .catch((err) => dispatch(failure(err.response?.statusText)));
   };
 }
 
-export function inProgress(
-  name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[]
-): CreateProjectAction {
+export function inProgress(): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: { name, vernacularLanguage, analysisLanguages },
+    payload: {},
   };
 }
 
-export function success(
-  name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[]
-): CreateProjectAction {
+export function success(): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_SUCCESS,
-    payload: { name, vernacularLanguage, analysisLanguages },
+    payload: {},
   };
 }
 
-export function failure(
-  name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[],
-  errorMsg = ""
-): CreateProjectAction {
+export function failure(errorMsg = ""): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_FAILURE,
-    payload: { name, errorMsg, vernacularLanguage, analysisLanguages },
+    payload: { errorMsg },
   };
 }
 
 export function reset(): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_RESET,
-    payload: {
-      name: "",
-      vernacularLanguage: { name: "", bcp47: "", font: "" },
-      analysisLanguages: [{ name: "", bcp47: "", font: "" }],
-    },
+    payload: {},
   };
 }

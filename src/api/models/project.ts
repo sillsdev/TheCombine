@@ -56,6 +56,12 @@ export interface Project {
   definitionsEnabled: boolean;
   /**
    *
+   * @type {boolean}
+   * @memberof Project
+   */
+  recordingConsented?: boolean;
+  /**
+   *
    * @type {AutocompleteSetting}
    * @memberof Project
    */

@@ -1,6 +1,3 @@
-import { Project, WritingSystem } from "api/models";
-import { newWritingSystem } from "types/writingSystem";
-
 export enum CreateProjectActionTypes {
   CREATE_PROJECT_FAILURE = "CREATE_PROJECT_FAILURE",
   CREATE_PROJECT_IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS",
@@ -20,27 +17,16 @@ export interface CreateProjectAction {
 }
 
 export interface CreateProjectData {
-  name: string;
-  vernacularLanguage: WritingSystem;
-  analysisLanguages: WritingSystem[];
-  languageData?: File;
   errorMsg?: string;
 }
 
 export interface CreateProjectState {
-  name: string;
-  vernacularLanguage: WritingSystem;
-  analysisLanguages: WritingSystem[];
   inProgress: boolean;
   success: boolean;
   errorMsg: string;
-  project?: Project;
 }
 
 export const defaultState: CreateProjectState = {
-  name: "",
-  vernacularLanguage: newWritingSystem(),
-  analysisLanguages: [newWritingSystem()],
   success: false,
   inProgress: false,
   errorMsg: "",

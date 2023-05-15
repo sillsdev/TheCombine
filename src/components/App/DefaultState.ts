@@ -17,11 +17,7 @@ export const defaultState = {
   passwordResetState: { ...passwordResetState },
 
   //project
-  createProjectState: {
-    ...createProjectState,
-    name: "Test",
-    success: true,
-  },
+  createProjectState: { ...createProjectState },
   currentProjectState: { ...currentProjectState },
   exportProjectState: { ...exportProjectState },
 

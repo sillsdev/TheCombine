@@ -88,7 +88,9 @@
     "create": "Create Project",
     "fileSelected": "File selected",
     "success": "Project Created!",
-    "nameTaken": "Name taken"
+    "nameTaken": "Name taken",
+    "enableRecording": "Enable audio recording?",
+    "enableRecordingConsent": "As owner of the project, do you affirm that you are responsible for obtaining all necessary Audio Releases for those whose voices will be recorded?"
   },
   "selectProject": {
     "title": "Select Project"

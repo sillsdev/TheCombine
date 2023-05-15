@@ -12,7 +12,6 @@ const createMockStore = configureMockStore([thunk]);
 
 const project = {
   name: "testProjectName",
-
   vernacularLanguage: {
     name: "testVernName",
     bcp47: "testVernCode",
@@ -25,6 +24,7 @@ const project = {
       font: "testAnalysisFont",
     },
   ],
+  recordingConsented: false,
   languageData: new File([], "testFile.lift"),
 };
 
@@ -32,27 +32,13 @@ describe("CreateProjectAction Tests", () => {
   const mockState = defaultState;
   const CreateProject: CreateProjectAction = {
     type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: {
-      name: project.name,
-      vernacularLanguage: project.vernacularLanguage,
-      analysisLanguages: project.analysisLanguages,
-    },
+    payload: {},
   };
 
   test("inProgress returns correct value", () => {
-    expect(
-      action.inProgress(
-        project.name,
-        project.vernacularLanguage,
-        project.analysisLanguages
-      )
-    ).toEqual({
+    expect(action.inProgress()).toEqual({
       type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-      payload: {
-        name: project.name,
-        vernacularLanguage: project.vernacularLanguage,
-        analysisLanguages: project.analysisLanguages,
-      },
+      payload: {},
     });
   });
 
@@ -63,6 +49,7 @@ describe("CreateProjectAction Tests", () => {
         project.name,
         project.vernacularLanguage,
         project.analysisLanguages,
+        project.recordingConsented,
         project.languageData
       )
     );

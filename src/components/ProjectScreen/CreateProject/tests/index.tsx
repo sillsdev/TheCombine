@@ -3,15 +3,13 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import CreateProjectWithProps from "components/ProjectScreen/CreateProject";
-import { CreateProject } from "components/ProjectScreen/CreateProject/CreateProjectComponent";
+import CreateProject from "components/ProjectScreen/CreateProject";
 import i18n from "tests/i18nMock";
 
 const createMockStore = configureMockStore();
 const mockState = {
   currentProjectState: { project: {} },
   createProjectState: {
-    name: "",
     inProgress: false,
     success: false,
     errorMsg: "",
@@ -22,9 +20,7 @@ const mockStore = createMockStore(mockState);
 const DATA = "stuff";
 const MOCK_EVENT = {
   preventDefault: jest.fn(),
-  target: {
-    value: DATA,
-  },
+  target: { value: DATA },
 };
 
 let projectMaster: renderer.ReactTestRenderer;
@@ -35,7 +31,7 @@ it("renders without crashing", () => {
     renderer.create(
       <Provider store={mockStore}>
         <I18nextProvider i18n={i18n}>
-          <CreateProjectWithProps />
+          <CreateProject />
         </I18nextProvider>
       </Provider>
     );
@@ -46,7 +42,7 @@ it("errors on empty name", () => {
   renderer.act(() => {
     projectMaster = renderer.create(
       <Provider store={mockStore}>
-        <CreateProjectWithProps />
+        <CreateProject />
       </Provider>
     );
   });

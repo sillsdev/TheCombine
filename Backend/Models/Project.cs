@@ -30,6 +30,9 @@ namespace BackendFramework.Models
         [BsonElement("definitionsEnabled")]
         public bool DefinitionsEnabled { get; set; }
 
+        [BsonElement("recordingConsented")]
+        public bool RecordingConsented { get; set; }
+
         [Required]
         [BsonElement("autocompleteSetting")]
         [BsonRepresentation(BsonType.String)]
@@ -85,6 +88,7 @@ namespace BackendFramework.Models
             IsActive = true;
             LiftImported = false;
             DefinitionsEnabled = false;
+            RecordingConsented = false;
             AutocompleteSetting = AutocompleteSetting.On;
             SemDomWritingSystem = new WritingSystem();
             VernacularWritingSystem = new WritingSystem();
@@ -108,6 +112,7 @@ namespace BackendFramework.Models
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
+                RecordingConsented = RecordingConsented,
                 AutocompleteSetting = AutocompleteSetting,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
@@ -169,6 +174,7 @@ namespace BackendFramework.Models
                 other.IsActive.Equals(IsActive) &&
                 other.LiftImported.Equals(LiftImported) &&
                 other.DefinitionsEnabled.Equals(DefinitionsEnabled) &&
+                other.RecordingConsented.Equals(RecordingConsented) &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
@@ -216,9 +222,10 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
+            hash.Add(IsActive);
             hash.Add(LiftImported);
             hash.Add(DefinitionsEnabled);
-            hash.Add(IsActive);
+            hash.Add(RecordingConsented);
             hash.Add(AutocompleteSetting);
             hash.Add(SemDomWritingSystem);
             hash.Add(VernacularWritingSystem);
