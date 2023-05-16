@@ -48,7 +48,7 @@ export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
             FillerText<strong>{{ val: props.dialogFindValue }}</strong>
           </Trans>
           <br />
-          <Trans i18nKey="charInventory.characterSet.replaceWith">
+          <Trans i18nKey="charInventory.characterSet.replaceAllWith">
             FillerText<strong>{{ val: props.dialogReplaceValue }}</strong>
           </Trans>
         </DialogContentText>

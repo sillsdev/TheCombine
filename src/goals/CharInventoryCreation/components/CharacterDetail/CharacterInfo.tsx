@@ -19,9 +19,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
   return (
     <React.Fragment>
       <Typography variant="body1">{charToHexValue(props.character)}</Typography>
-      <Typography variant="body1">
-        {t("charInventory.characterSet.charDetails")}
-      </Typography>
+      <br />
       <Typography variant="body1">
         {t("charInventory.characterSet.occurrences", {
           val: countCharacterOccurrences(props.character, allWords),

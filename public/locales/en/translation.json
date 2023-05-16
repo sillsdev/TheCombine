@@ -315,12 +315,12 @@
       "occurrences": "{{ val }} occurrences",
       "find": "Find",
       "replace": "Replace",
+      "replaceWith": "Replace with",
       "replaceAll": "Replace all occurrences of: <1>{{ val }}</1>",
-      "replaceWith": "Replace with: <1>{{ val }}</1>",
+      "replaceAllWith": "Replace with: <1>{{ val }}</1>",
       "findAndReplace": "Find & Replace",
       "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
-      "apply": "apply",
-      "charDetails": "(Character Details has not been implemented.)"
+      "apply": "apply"
     },
     "sampleWords": {
       "title": "Sample Words",
