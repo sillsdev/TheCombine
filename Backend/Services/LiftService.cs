@@ -452,16 +452,22 @@ namespace BackendFramework.Services
             {
                 var lexPhonetic = new LexPhonetic();
                 var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
-                var dest = Path.ChangeExtension(Path.Combine(path, audioFile), ".wav");
+                var dest = Path.Combine(path, audioFile);
 
-                if (File.Exists(src))
+                if (!File.Exists(src)) continue;
+                if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
                 {
+                    dest = Path.ChangeExtension(dest, ".wav");
                     await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
-
-                    var proMultiText = new LiftMultiText { { "href", dest } };
-                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-                    entry.Pronunciations.Add(lexPhonetic);
                 }
+                else
+                {
+                    File.Copy(src, dest, true);
+                }
+
+                var proMultiText = new LiftMultiText { { "href", dest } };
+                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                entry.Pronunciations.Add(lexPhonetic);
             }
         }
 
