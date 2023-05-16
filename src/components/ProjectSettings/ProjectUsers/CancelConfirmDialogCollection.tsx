@@ -7,10 +7,12 @@ import { toast } from "react-toastify";
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import {
+  asyncRefreshCurrentProjectUsers,
+  saveChangesToProject,
+} from "components/Project/ProjectActions";
 import { StoreState } from "types";
-import { saveChangesToProject } from "components/Project/ProjectActions";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
 const idAffix = "user-options";
 const idRemoveUser = `${idAffix}-remove`;
