@@ -8,7 +8,9 @@ import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "types/hooks";
+import { StoreState } from "types";
+import { saveChangesToProject } from "components/Project/ProjectActions";
 
 const idAffix = "user-options";
 const idRemoveUser = `${idAffix}-remove`;
@@ -31,6 +33,10 @@ export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
 ): ReactElement {
   const dispatch = useAppDispatch();
+  const project = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project
+  );
+
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
   const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
   const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
@@ -102,6 +108,10 @@ export default function CancelConfirmDialogCollection(
   }
 
   function makeOwner(userId: string): void {
+    if (!props.isProjectOwner) {
+      return;
+    }
+
     addOrUpdateUserRole(
       [
         Permission.WordEntry,
@@ -124,6 +134,12 @@ export default function CancelConfirmDialogCollection(
         );
       })
       .then(() => {
+        if (project.recordingConsented) {
+          saveChangesToProject(
+            { ...project, recordingConsented: false },
+            dispatch
+          );
+        }
         setMakeOwner(false);
         setAnchorEl(undefined);
         toast.success(

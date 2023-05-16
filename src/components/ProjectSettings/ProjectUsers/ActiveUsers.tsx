@@ -98,22 +98,23 @@ export default function ActiveUsers(): ReactElement {
       Permission.Owner
     );
 
-    const manageUser =
+    const canManageUser =
       currentUserIsProjectAdmin &&
       user.id !== currentUser.id &&
       !userIsProjectOwner &&
-      (!userIsProjectAdmin || currentUserIsProjectOwner) ? (
-        <CancelConfirmDialogCollection
-          userId={user.id}
-          currentUserId={currentUser.id}
-          isProjectOwner={currentUserIsProjectOwner}
-          userIsProjectAdmin={userIsProjectAdmin}
-        />
-      ) : (
-        <IconButton disabled size="large">
-          <MoreVert />
-        </IconButton>
-      );
+      (!userIsProjectAdmin || currentUserIsProjectOwner);
+    const manageUser: ReactElement = canManageUser ? (
+      <CancelConfirmDialogCollection
+        userId={user.id}
+        currentUserId={currentUser.id}
+        isProjectOwner={currentUserIsProjectOwner}
+        userIsProjectAdmin={userIsProjectAdmin}
+      />
+    ) : (
+      <IconButton disabled size="large">
+        <MoreVert />
+      </IconButton>
+    );
 
     const displayString =
       currentUserIsProjectOwner || currentUser.isAdmin
