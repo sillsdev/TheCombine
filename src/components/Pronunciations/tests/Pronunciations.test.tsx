@@ -8,113 +8,57 @@ import "tests/mockReactI18next";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
-import RecorderIcon from "components/Pronunciations/RecorderIcon";
-import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { defaultState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 
-// Mock the audio components
 jest.mock("components/Pronunciations/Recorder");
 jest
   .spyOn(window.HTMLMediaElement.prototype, "pause")
   .mockImplementation(() => {});
 
-// Variables
 let testRenderer: renderer.ReactTestRenderer;
+const mockAudioFiles = ["a.wav", "b.wav"];
 
-const mockStore = (status = PronunciationsStatus.Default, wordId?: string) => {
-  return configureMockStore()({
-    currentProjectState: { project: { recordingConsented: true } },
-    pronunciationsState: { type: status, payload: wordId },
+const renderPronunciations = (recordingConsented = true): void => {
+  const store = configureMockStore()({
+    currentProjectState: { project: { recordingConsented } },
+    pronunciationsState: defaultState,
   });
-};
-
-beforeAll(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <Provider store={mockStore()}>
+          <Provider store={store}>
             <Pronunciations
-              wordId="2"
-              pronunciationFiles={["a.wav", "b.wav"]}
+              wordId={"wordId"}
+              pronunciationFiles={mockAudioFiles}
             />
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>
     );
   });
-});
+};
+
 describe("Pronunciations", () => {
   it("renders one record button and one play button for each pronunciation file", () => {
+    renderPronunciations();
     expect(testRenderer.root.findAllByType(AudioRecorder)).toHaveLength(1);
-    expect(testRenderer.root.findAllByType(AudioPlayer)).toHaveLength(2);
+    expect(testRenderer.root.findAllByType(AudioPlayer)).toHaveLength(
+      mockAudioFiles.length
+    );
   });
 
-  // Snapshot
-  it("displays buttons", () => {
+  it("renders no record button if project.recordingConsented is false", () => {
+    renderPronunciations(false);
+    expect(testRenderer.root.findAllByType(AudioRecorder)).toHaveLength(0);
+    expect(testRenderer.root.findAllByType(AudioPlayer)).toHaveLength(
+      mockAudioFiles.length
+    );
+  });
+
+  it("displays buttons to match snapshot", () => {
+    renderPronunciations();
     expect(testRenderer.toJSON()).toMatchSnapshot();
-  });
-
-  it("mouseDown and mouseUp", () => {
-    const mockStartRecording = jest.fn();
-    const mockStopRecording = jest.fn();
-    renderer.act(() => {
-      testRenderer.update(
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <Provider store={mockStore()}>
-              <RecorderIcon
-                startRecording={mockStartRecording}
-                stopRecording={mockStopRecording}
-                wordId={"mockId"}
-              />
-            </Provider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      );
-    });
-    testRenderer.root
-      .findByProps({ id: "recordingButton" })
-      .props.onMouseDown();
-    expect(mockStartRecording).toBeCalled();
-    testRenderer.root.findByProps({ id: "recordingButton" }).props.onMouseUp();
-    expect(mockStopRecording).toBeCalled();
-  });
-
-  it("default style is iconRelease", () => {
-    renderer.act(() => {
-      testRenderer.update(
-        <ThemeProvider theme={theme}>
-          <StyledEngineProvider>
-            <Provider store={mockStore()}>
-              <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
-            </Provider>
-          </StyledEngineProvider>
-        </ThemeProvider>
-      );
-    });
-    const iconRelease = testRenderer.root
-      .findByProps({ id: "icon" })
-      .props.className.includes("iconRelease");
-    expect(iconRelease).toBeTruthy();
-  });
-
-  it("style depends on pronunciations state", () => {
-    const wordId = "1";
-    renderer.act(() => {
-      testRenderer.update(
-        <ThemeProvider theme={theme}>
-          <StyledEngineProvider>
-            <Provider store={mockStore(PronunciationsStatus.Recording, wordId)}>
-              <Pronunciations wordId={wordId} pronunciationFiles={["a.wav"]} />
-            </Provider>
-          </StyledEngineProvider>
-        </ThemeProvider>
-      );
-    });
-    const iconPress = testRenderer.root
-      .findByProps({ id: "icon" })
-      .props.className.includes("iconPress");
-    expect(iconPress).toBeTruthy();
   });
 });

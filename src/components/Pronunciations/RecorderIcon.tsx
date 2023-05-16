@@ -19,6 +19,9 @@ interface RecorderIconProps {
   stopRecording: () => void;
 }
 
+export const recordingButtonId = "recording-button";
+export const recordingIconId = "recording-icon";
+
 export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const pronunciationsState = useAppSelector(
     (state: StoreState) => state.pronunciationsState
@@ -72,7 +75,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
         onTouchEnd={handleTouchEnd}
         className={classes.button}
         aria-label="record"
-        id="recordingButton"
+        id={recordingButtonId}
         size="large"
       >
         <FiberManualRecord
@@ -82,7 +85,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
               ? classes.iconPress
               : classes.iconRelease
           }
-          id="icon"
+          id={recordingIconId}
         />
       </IconButton>
     </Tooltip>

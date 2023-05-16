@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Pronunciations displays buttons 1`] = `
+exports[`Pronunciations displays buttons to match snapshot 1`] = `
 Array [
   <div
     className="Toastify"
@@ -8,10 +8,10 @@ Array [
   <button
     aria-label="record"
     aria-labelledby={null}
-    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-1 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-8 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
     data-mui-internal-clone-element={true}
     disabled={false}
-    id="recordingButton"
+    id="recording-button"
     onBlur={[Function]}
     onContextMenu={[Function]}
     onDragLeave={[Function]}
@@ -30,10 +30,10 @@ Array [
   >
     <svg
       aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-iconRelease-3 css-i4bv87-MuiSvgIcon-root"
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-iconRelease-10 css-i4bv87-MuiSvgIcon-root"
       data-testid="FiberManualRecordIcon"
       focusable="false"
-      id="icon"
+      id="recording-icon"
       viewBox="0 0 24 24"
     >
       <circle
@@ -49,7 +49,7 @@ Array [
   <button
     aria-label="play"
     aria-labelledby={null}
-    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-4 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-11 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
     data-mui-internal-clone-element={true}
     disabled={false}
     id="audio-a.wav"
@@ -72,7 +72,7 @@ Array [
   >
     <svg
       aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-icon-5 css-i4bv87-MuiSvgIcon-root"
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-icon-12 css-i4bv87-MuiSvgIcon-root"
       data-testid="PlayArrowIcon"
       focusable="false"
       viewBox="0 0 24 24"
@@ -88,7 +88,7 @@ Array [
   <button
     aria-label="play"
     aria-labelledby={null}
-    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-4 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge makeStyles-button-11 css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
     data-mui-internal-clone-element={true}
     disabled={false}
     id="audio-b.wav"
@@ -111,7 +111,7 @@ Array [
   >
     <svg
       aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-icon-5 css-i4bv87-MuiSvgIcon-root"
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-icon-12 css-i4bv87-MuiSvgIcon-root"
       data-testid="PlayArrowIcon"
       focusable="false"
       viewBox="0 0 24 24"

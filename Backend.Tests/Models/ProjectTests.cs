@@ -36,6 +36,14 @@ namespace Backend.Tests.Models
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
+            project2.DefinitionsEnabled = !project.DefinitionsEnabled;
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
+            project2.RecordingConsented = !project.RecordingConsented;
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
             project2.AutocompleteSetting = 1 - project.AutocompleteSetting;
             Assert.IsFalse(project.Equals(project2));
 
