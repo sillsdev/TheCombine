@@ -12,7 +12,6 @@ import {
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import { FormEvent, Fragment, ReactElement, useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import { projectDuplicateCheck } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
@@ -23,7 +22,7 @@ import {
   reset,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import { StoreState } from "types";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 
@@ -34,13 +33,13 @@ interface ErrorState {
 }
 
 export default function CreateProject(): ReactElement {
-  const submitError = useSelector(
+  const submitError = useAppSelector(
     (state: StoreState) => state.createProjectState.errorMsg
   );
-  const submitInProgress = useSelector(
+  const submitInProgress = useAppSelector(
     (state: StoreState) => state.createProjectState.inProgress
   );
-  const submitSuccess = useSelector(
+  const submitSuccess = useAppSelector(
     (state: StoreState) => state.createProjectState.success
   );
 
@@ -60,35 +59,23 @@ export default function CreateProject(): ReactElement {
   const { t } = useTranslation();
 
   const setVernBcp47 = (bcp47: string): void => {
-    if (bcp47) {
-      setVernLang((prev) => ({ ...prev, bcp47 }));
-    }
+    setVernLang((prev) => ({ ...prev, bcp47 }));
   };
   const setVernName = (name: string): void => {
-    if (name) {
-      setVernLang((prev) => ({ ...prev, name }));
-    }
+    setVernLang((prev) => ({ ...prev, name }));
   };
   const setVernFont = (font: string): void => {
-    if (font) {
-      setVernLang((prev) => ({ ...prev, font }));
-    }
+    setVernLang((prev) => ({ ...prev, font }));
   };
 
   const setAnalysisBcp47 = (bcp47: string): void => {
-    if (bcp47) {
-      setAnalysisLang((prev) => ({ ...prev, bcp47 }));
-    }
+    setAnalysisLang((prev) => ({ ...prev, bcp47 }));
   };
   const setAnalysisName = (name: string): void => {
-    if (name) {
-      setAnalysisLang((prev) => ({ ...prev, name }));
-    }
+    setAnalysisLang((prev) => ({ ...prev, name }));
   };
   const setAnalysisFont = (font: string): void => {
-    if (font) {
-      setAnalysisLang((prev) => ({ ...prev, font }));
-    }
+    setAnalysisLang((prev) => ({ ...prev, font }));
   };
 
   useEffect(() => {
@@ -107,8 +94,6 @@ export default function CreateProject(): ReactElement {
       projectDuplicateCheck(trimmedName).then((nameTaken) =>
         setError({ empty: false, nameTaken, submit: "" })
       );
-    } else {
-      setError({ empty: true, nameTaken: false, submit: "" });
     }
   }, [projName, setError]);
 
@@ -119,6 +104,10 @@ export default function CreateProject(): ReactElement {
   const createProject = async (e: FormEvent<EventTarget>): Promise<void> => {
     e.preventDefault();
     if (error.empty || error.nameTaken || submitInProgress || submitSuccess) {
+      return;
+    }
+    if (!projName.trim()) {
+      setError({ empty: true, nameTaken: false, submit: "" });
       return;
     }
     await dispatch(
@@ -144,7 +133,7 @@ export default function CreateProject(): ReactElement {
           <TextField
             id="create-project-name"
             label={t("createProject.name")}
-            value={name}
+            value={projName}
             onChange={(e) => setProjName(e.target.value)}
             variant="outlined"
             style={{ width: "100%", marginBottom: theme.spacing(2) }}
@@ -171,7 +160,7 @@ export default function CreateProject(): ReactElement {
               {t("createProject.upload?")}
             </Typography>
             <FileInputButton
-              updateFile={(file: File) => updateLanguageData(file)}
+              updateFile={updateLanguageData}
               accept=".zip"
               buttonProps={{
                 id: "create-project-select-file",
@@ -231,8 +220,13 @@ export default function CreateProject(): ReactElement {
           <FormControlLabel
             control={
               <Checkbox
+                checked={recordingConsented}
                 value={recordingConsented ? "on" : "off"}
-                onClick={() => setRecordingConsentOpen(true)}
+                onClick={() =>
+                  recordingConsented
+                    ? setRecordingConsented(false)
+                    : setRecordingConsentOpen(true)
+                }
               />
             }
             label={t("createProject.enableRecording")}
@@ -249,7 +243,7 @@ export default function CreateProject(): ReactElement {
               setRecordingConsentOpen(false);
             }}
             buttonIdCancel="create-proj-recording-cancel"
-            buttonIdConfirm="create-proj=recording-confirm"
+            buttonIdConfirm="create-proj-recording-confirm"
           />
           {/* Form submission button */}
           <Grid

@@ -7,6 +7,7 @@ import {
   GetApp,
   Language,
   List,
+  Mic,
   People,
   PersonAdd,
   Sms,
@@ -28,6 +29,7 @@ import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
+import ProjectRecording from "components/ProjectSettings/ProjectRecording";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
@@ -140,6 +142,19 @@ export default function ProjectSettingsComponent() {
           icon={<Assignment />}
           title={t("projectSettings.definitions.label")}
           body={<ProjectDefinitions />}
+        />
+      )}
+
+      {/* Audio recording toggle */}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Mic />}
+          title={t("projectSettings.recording.label")}
+          body={
+            <ProjectRecording
+              isOwner={permissions.includes(Permission.Owner)}
+            />
+          }
         />
       )}
 

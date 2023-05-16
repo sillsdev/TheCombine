@@ -151,6 +151,7 @@
     "userManagement": {
       "makeAdminWarning": "Make this user a project admin?",
       "makeOwnerWarning": "Transfer project ownership to this user?",
+      "recordingWarning": "Audio recording will be disabled in this project until it is turned on by the new project owner.",
       "removeAdminWarning": "Remove project admin from this user?",
       "removeUserWarning": "Remove this user from the project?",
       "userRemovedToastSuccess": "User removed from the project.",
@@ -208,6 +209,11 @@
     "definitions": {
       "label": "Display Definitions",
       "hint": "In Review Entries, show a Definitions column; in Merge Duplicates, show the Definition below the Gloss."
+    },
+    "recording": {
+      "label": "Enable Audio Recording",
+      "hintOther": "Only the project owner can enable audio recording in the project.",
+      "hintOwner": "Enable recording audio in this project."
     },
     "invite": {
       "inviteByEmailLabel": "Invite by Email",

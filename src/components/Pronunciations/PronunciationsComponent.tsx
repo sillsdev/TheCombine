@@ -4,6 +4,7 @@ import * as backend from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
+import { useAppSelector } from "types/hooks";
 
 interface PronunciationProps {
   wordId: string;
@@ -16,6 +17,10 @@ interface PronunciationProps {
 
 /** Audio recording/playing component */
 export function Pronunciations(props: PronunciationProps): ReactElement {
+  const recordingConsented = useAppSelector(
+    (state) => state.currentProjectState.project.recordingConsented
+  );
+
   const audioButtons: ReactElement[] = props.pronunciationFiles.map(
     (fileName) => (
       <AudioPlayer
@@ -31,13 +36,16 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
       />
     )
   );
+
   return (
     <>
-      <AudioRecorder
-        wordId={props.wordId}
-        recorder={props.recorder}
-        uploadAudio={props.uploadAudio}
-      />
+      {recordingConsented && (
+        <AudioRecorder
+          wordId={props.wordId}
+          recorder={props.recorder}
+          uploadAudio={props.uploadAudio}
+        />
+      )}
       {audioButtons}
     </>
   );
