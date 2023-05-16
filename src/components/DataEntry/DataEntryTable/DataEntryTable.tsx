@@ -13,7 +13,6 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { v4 } from "uuid";
 
 import {
@@ -33,6 +32,7 @@ import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
+import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { newNote, newSense, newWord, simpleWord } from "types/word";
 import { firstGlossText } from "types/wordUtilities";
@@ -203,7 +203,7 @@ interface DataEntryTableState {
 export default function DataEntryTable(
   props: DataEntryTableProps
 ): ReactElement {
-  const { analysisLang, suggestVerns, vernacularLang } = useSelector(
+  const { analysisLang, suggestVerns, vernacularLang } = useAppSelector(
     (state: StoreState) => {
       const proj = state.currentProjectState.project;
       return {
@@ -508,7 +508,7 @@ export default function DataEntryTable(
     }
   }, [state.defunctUpdates, state.recentWords]);
 
-  /*** Update duplicate-vern word suggestions. */
+  /*** Update vern suggestions. */
   useEffect(() => {
     setState((prev) => {
       const trimmed = prev.newVern.trim();
@@ -522,20 +522,13 @@ export default function DataEntryTable(
                 !Object.keys(prev.defunctWordIds).includes(w.id)
             )
           : [],
+        suggestedVerns: getSuggestions(
+          prev.newVern,
+          prev.allVerns,
+          (a: string, b: string) => levDist.getDistance(a, b)
+        ),
       };
     });
-  }, [state.newVern]);
-
-  /*** Update vern suggestions. */
-  useEffect(() => {
-    setState((prev) => ({
-      ...prev,
-      suggestedVerns: getSuggestions(
-        prev.newVern,
-        prev.allVerns,
-        (a: string, b: string) => levDist.getDistance(a, b)
-      ),
-    }));
   }, [levDist, state.newVern]);
 
   ////////////////////////////////////
