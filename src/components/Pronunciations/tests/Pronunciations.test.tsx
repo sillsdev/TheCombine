@@ -30,7 +30,7 @@ const renderPronunciations = (recordingConsented = true): void => {
         <ThemeProvider theme={theme}>
           <Provider store={store}>
             <Pronunciations
-              wordId={"wordId"}
+              wordId="wordId"
               pronunciationFiles={mockAudioFiles}
             />
           </Provider>

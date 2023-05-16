@@ -12,7 +12,6 @@ import RecorderIcon, {
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 
-// Variables
 let testRenderer: renderer.ReactTestRenderer;
 const wordId = "wordId";
 
@@ -22,7 +21,7 @@ const mockStopRecording = jest.fn();
 const renderRecorderIcon = (
   status = PronunciationsStatus.Default,
   stateWordId?: string
-) => {
+): void => {
   const mockState = {
     pronunciationsState: { type: status, payload: stateWordId },
   };
