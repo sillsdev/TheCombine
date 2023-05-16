@@ -9,11 +9,7 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
-import {
-  PronunciationsState,
-  defaultState as pronunciationsState,
-  PronunciationsStatus,
-} from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 
 // Mock the audio components
@@ -25,25 +21,19 @@ jest
 // Variables
 let testRenderer: renderer.ReactTestRenderer;
 
-const createMockStore = configureMockStore();
-const mockStore = createMockStore({ pronunciationsState });
-function mockRecordingState(wordId: string): {
-  pronunciationsState: Partial<PronunciationsState>;
-} {
-  return {
-    pronunciationsState: {
-      type: PronunciationsStatus.Recording,
-      payload: wordId,
-    },
-  };
-}
+const mockStore = (status = PronunciationsStatus.Default, wordId?: string) => {
+  return configureMockStore()({
+    currentProjectState: { project: { recordingConsented: true } },
+    pronunciationsState: { type: status, payload: wordId },
+  });
+};
 
 beforeAll(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <Provider store={mockStore}>
+          <Provider store={mockStore()}>
             <Pronunciations
               wordId="2"
               pronunciationFiles={["a.wav", "b.wav"]}
@@ -72,7 +62,7 @@ describe("Pronunciations", () => {
       testRenderer.update(
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
-            <Provider store={mockStore}>
+            <Provider store={mockStore()}>
               <RecorderIcon
                 startRecording={mockStartRecording}
                 stopRecording={mockStopRecording}
@@ -96,7 +86,7 @@ describe("Pronunciations", () => {
       testRenderer.update(
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
-            <Provider store={mockStore}>
+            <Provider store={mockStore()}>
               <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
             </Provider>
           </StyledEngineProvider>
@@ -111,12 +101,11 @@ describe("Pronunciations", () => {
 
   it("style depends on pronunciations state", () => {
     const wordId = "1";
-    const mockStore2 = createMockStore(mockRecordingState(wordId));
     renderer.act(() => {
       testRenderer.update(
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
-            <Provider store={mockStore2}>
+            <Provider store={mockStore(PronunciationsStatus.Recording, wordId)}>
               <Pronunciations wordId={wordId} pronunciationFiles={["a.wav"]} />
             </Provider>
           </StyledEngineProvider>

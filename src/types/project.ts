@@ -9,6 +9,7 @@ export function newProject(name = ""): Project {
     isActive: true,
     liftImported: false,
     definitionsEnabled: false,
+    recordingConsented: false,
     semanticDomains: [],
     semDomWritingSystem: newWritingSystem(),
     vernacularWritingSystem: newWritingSystem(),

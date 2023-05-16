@@ -30,7 +30,10 @@ jest
   .spyOn(window.HTMLMediaElement.prototype, "pause")
   .mockImplementation(() => {});
 
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockStore = configureMockStore()({
+  currentProjectState: { project: { recordingConsented: true } },
+  pronunciationsState,
+});
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
 const mockWord = simpleWord(mockVern, mockGloss);
