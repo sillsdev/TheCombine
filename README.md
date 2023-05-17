@@ -1,9 +1,9 @@
 # The Combine
 
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
-[![Frontend Coverage][frontend-codecov-badge]][codecov]
+[![Frontend Coverage][frontend-codecov-badge]][codecov-frontend]
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
-[![Backend Coverage][backend-codecov-badge]][codecov]
+[![Backend Coverage][backend-codecov-badge]][codecov-backend]
 [![Python Actions Status][github-actions-python-badge]][github-actions]
 [![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
 [![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
@@ -14,7 +14,8 @@
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
 [frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
-[codecov]: https://codecov.io/gh/sillsdev/TheCombine
+[codecov-frontend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/src
+[codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg

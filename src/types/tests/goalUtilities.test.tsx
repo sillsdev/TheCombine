@@ -1,6 +1,6 @@
 import { MergeUndoIds } from "api/models";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
-import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
+import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MergeDupDataMock";
 import {
   convertEditToGoal,
   convertGoalToEdit,

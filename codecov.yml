@@ -1,0 +1,4 @@
+ignore:
+  - "src/api"
+  - "**/*Mock.ts"
+  - "**/*ReduxTypes.ts"

@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="UserRole"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="UserRole"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class UserRoleRepository : IUserRoleRepository
     {

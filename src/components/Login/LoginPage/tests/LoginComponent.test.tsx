@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import Login from "components/Login/LoginPage/LoginComponent";
 

@@ -3,12 +3,12 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeView from "components/TreeView/TreeViewComponent";
 import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
-import mockMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
+import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newWritingSystem } from "types/writingSystem";
 
 let treeMaster: renderer.ReactTestRenderer;
