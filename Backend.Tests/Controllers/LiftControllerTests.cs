@@ -428,7 +428,9 @@ namespace Backend.Tests.Controllers
             Assert.IsTrue(File.Exists(pathToStartZip));
 
             // Init the project the .zip info is added to.
-            var proj1 = _projRepo.Create(Util.RandomProject()).Result;
+            var proj = Util.RandomProject();
+            proj.VernacularWritingSystem.Bcp47 = "qaa";
+            proj = _projRepo.Create(proj).Result;
 
             // Upload the zip file.
             // Generate api parameter with filestream.
@@ -437,18 +439,18 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(stream, filename);
 
                 // Make api call.
-                var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
+                var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
                 Assert.That(result is OkObjectResult);
             }
 
-            proj1 = _projRepo.GetProject(proj1.Id).Result;
-            if (proj1 is null)
+            proj = _projRepo.GetProject(proj.Id).Result;
+            if (proj is null)
             {
                 Assert.Fail();
                 return;
             }
 
-            Assert.That(proj1.DefinitionsEnabled, Is.False);
+            Assert.That(proj.DefinitionsEnabled, Is.False);
         }
 
         [Test]
@@ -460,7 +462,9 @@ namespace Backend.Tests.Controllers
             Assert.IsTrue(File.Exists(pathToStartZip));
 
             // Init the project the .zip info is added to.
-            var proj1 = _projRepo.Create(Util.RandomProject()).Result;
+            var proj = Util.RandomProject();
+            proj.VernacularWritingSystem.Bcp47 = "qaa";
+            proj = _projRepo.Create(proj).Result;
 
             // Upload the zip file.
             // Generate api parameter with filestream.
@@ -469,18 +473,18 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(stream, filename);
 
                 // Make api call.
-                var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
+                var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
                 Assert.That(result is OkObjectResult);
             }
 
-            proj1 = _projRepo.GetProject(proj1.Id).Result;
-            if (proj1 is null)
+            proj = _projRepo.GetProject(proj.Id).Result;
+            if (proj is null)
             {
                 Assert.Fail();
                 return;
             }
 
-            Assert.That(proj1.DefinitionsEnabled, Is.True);
+            Assert.That(proj.DefinitionsEnabled, Is.True);
         }
 
         private class MockLogger : ILogger<LiftController>
