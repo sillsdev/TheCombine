@@ -419,6 +419,70 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        [Test]
+        public void TestHasNoDefinitions()
+        {
+            // This test assumes you have the starting .zip (filename) included in your project files.
+            var filename = "SingleEntryLiftWithSound.zip";
+            var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
+            Assert.IsTrue(File.Exists(pathToStartZip));
+
+            // Init the project the .zip info is added to.
+            var proj1 = _projRepo.Create(Util.RandomProject()).Result;
+
+            // Upload the zip file.
+            // Generate api parameter with filestream.
+            using (var stream = File.OpenRead(pathToStartZip))
+            {
+                var fileUpload = InitFile(stream, filename);
+
+                // Make api call.
+                var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
+                Assert.That(result is OkObjectResult);
+            }
+
+            proj1 = _projRepo.GetProject(proj1.Id).Result;
+            if (proj1 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Assert.That(proj1.DefinitionsEnabled, Is.False);
+        }
+
+        [Test]
+        public void TestHasDefinitions()
+        {
+            // This test assumes you have the starting .zip (filename) included in your project files.
+            var filename = "Natqgu.zip";
+            var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
+            Assert.IsTrue(File.Exists(pathToStartZip));
+
+            // Init the project the .zip info is added to.
+            var proj1 = _projRepo.Create(Util.RandomProject()).Result;
+
+            // Upload the zip file.
+            // Generate api parameter with filestream.
+            using (var stream = File.OpenRead(pathToStartZip))
+            {
+                var fileUpload = InitFile(stream, filename);
+
+                // Make api call.
+                var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
+                Assert.That(result is OkObjectResult);
+            }
+
+            proj1 = _projRepo.GetProject(proj1.Id).Result;
+            if (proj1 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Assert.That(proj1.DefinitionsEnabled, Is.True);
+        }
+
         private class MockLogger : ILogger<LiftController>
         {
             public IDisposable BeginScope<TState>(TState state)
