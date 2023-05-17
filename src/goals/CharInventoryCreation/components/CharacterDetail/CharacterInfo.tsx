@@ -29,7 +29,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
 }
 
 function charToHexValue(char: string) {
-  let hex = char.charCodeAt(0).toString(16).toUpperCase();
+  const hex = char.charCodeAt(0).toString(16).toUpperCase();
   return `U+${"0".repeat(4 - hex.length)}${hex}`;
 }
 
