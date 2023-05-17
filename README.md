@@ -11,7 +11,7 @@
 [![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
-![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
+[![Localization][localization-badge]][localization-crowdin] [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
@@ -26,6 +26,7 @@
   https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [localization-badge]: https://img.shields.io/badge/localization-Ar%20En%20Es%20Fr%20Pt-blue
+[localization-crowdin]: https://crowdin.com/project/the-combine
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
