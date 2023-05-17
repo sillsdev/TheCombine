@@ -1,6 +1,6 @@
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { setSelectedCharacter } from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
@@ -25,8 +25,8 @@ export default function CharacterList() {
     (state: StoreState) => state.characterInventoryState.characterSet
   );
 
-  const [sortOrder, setSortOrder] = useState(SortOrder.CharacterAscending);
   const [orderedChars, setOrderedChars] = useState<CharacterSetEntry[]>([]);
+  const [sortOrder, setSortOrder] = useState(SortOrder.CharacterAscending);
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export default function CharacterList() {
   }, [allChars, setOrderedChars, sortOrder]);
 
   return (
-    <Fragment>
+    <>
       <Grid item xs={12}>
         <FormControl variant="standard">
           <InputLabel htmlFor="sort-order">
@@ -74,23 +74,21 @@ export default function CharacterList() {
           </Select>
         </FormControl>
       </Grid>
-      <Fragment>
-        {
-          /* The grid of character tiles */
-          orderedChars.map((character) => (
-            <CharacterCard
-              char={character.character}
-              key={character.character}
-              count={character.occurrences}
-              status={character.status}
-              onClick={() => selectCharacter(character.character)}
-              fontHeight={fontHeight}
-              cardWidth={cardWidth}
-            />
-          ))
-        }
-      </Fragment>
-    </Fragment>
+      {
+        /* The grid of character tiles */
+        orderedChars.map((character) => (
+          <CharacterCard
+            key={character.character}
+            char={character.character}
+            count={character.occurrences}
+            status={character.status}
+            onClick={() => selectCharacter(character.character)}
+            fontHeight={fontHeight}
+            cardWidth={cardWidth}
+          />
+        ))
+      }
+    </>
   );
 }
 
