@@ -1,5 +1,6 @@
 import {
   Archive,
+  Assignment,
   CalendarMonth,
   CloudUpload,
   Edit,
@@ -20,12 +21,10 @@ import * as backend from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
-import {
-  asyncRefreshCurrentProjectUsers,
-  setDefinitionsEnabled,
-} from "components/Project/ProjectActions";
+import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
+import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
@@ -38,9 +37,6 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 export default function ProjectSettingsComponent() {
-  const definitionsEnabled = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
   const projectId = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.id
   );
@@ -70,14 +66,6 @@ export default function ProjectSettingsComponent() {
       dispatch(asyncRefreshCurrentProjectUsers());
     }
   }, [permissions, dispatch]);
-
-  useEffect(() => {
-    backend.doesProjHaveDefs().then(async (hasDefs) => {
-      if (hasDefs !== definitionsEnabled) {
-        await dispatch(setDefinitionsEnabled(hasDefs));
-      }
-    });
-  }, [definitionsEnabled, dispatch]);
 
   function archiveUpdate() {
     toast.success(t("projectSettings.user.archiveToastSuccess"));
@@ -145,6 +133,15 @@ export default function ProjectSettingsComponent() {
         title={t("projectSettings.autocomplete.label")}
         body={<ProjectAutocomplete />}
       />
+
+      {/* Definitions toggle */}
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Assignment />}
+          title={t("projectSettings.definitions.label")}
+          body={<ProjectDefinitions />}
+        />
+      )}
 
       {/* See current users in project */}
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (

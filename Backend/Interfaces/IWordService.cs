@@ -10,6 +10,5 @@ namespace BackendFramework.Interfaces
         Task<string?> FindContainingWord(Word word);
         Task<Word?> Delete(string projectId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string wordId);
-        Task<bool> DoesProjectHaveDefinitions(string projectId);
     }
 }

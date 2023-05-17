@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -139,14 +138,6 @@ namespace BackendFramework.Services
             var frontier = await _wordRepo.GetFrontier(word.ProjectId);
             var duplicatedWord = frontier.Find(w => w.Contains(word));
             return duplicatedWord?.Id;
-        }
-
-
-        /// <summary> Checks if project has any <see cref="Definition"/>s in its frontier. </summary>
-        public async Task<bool> DoesProjectHaveDefinitions(string projectId)
-        {
-            var frontier = await _wordRepo.GetFrontier(projectId);
-            return frontier.Any(w => (w.Senses.Any(s => s.Definitions.Count > 0)));
         }
     }
 }
