@@ -1,5 +1,4 @@
 import { Typography } from "@mui/material";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -17,7 +16,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="body1">{charToHexValue(props.character)}</Typography>
       <br />
       <Typography variant="body1">
@@ -25,16 +24,13 @@ export default function CharacterInfo(props: CharacterInfoProps) {
           val: countCharacterOccurrences(props.character, allWords),
         })}
       </Typography>
-    </React.Fragment>
+    </>
   );
 }
 
 function charToHexValue(char: string) {
   let hex = char.charCodeAt(0).toString(16).toUpperCase();
-  while (hex.length < 4) {
-    hex = "0" + hex;
-  }
-  return "U+" + hex;
+  return `U+${"0".repeat(4 - hex.length)}${hex}`;
 }
 
 function countCharacterOccurrences(char: string, words: string[]) {
