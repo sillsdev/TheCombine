@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -39,7 +39,7 @@ export default function FindAndReplace(
   };
 
   return (
-    <Fragment>
+    <>
       <Typography variant="overline">
         {t("charInventory.characterSet.findAndReplace")}
       </Typography>
@@ -71,6 +71,6 @@ export default function FindAndReplace(
         handleCancel={() => setWarningDialogOpen(false)}
         handleAccept={dispatchFindAndReplace}
       />
-    </Fragment>
+    </>
   );
 }
