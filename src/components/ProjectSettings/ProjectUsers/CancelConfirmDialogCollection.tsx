@@ -9,7 +9,7 @@ import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import {
   asyncRefreshCurrentProjectUsers,
-  saveChangesToProject,
+  asyncUpdateCurrentProject,
 } from "components/Project/ProjectActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -109,50 +109,43 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  function makeOwner(userId: string): void {
+  async function makeOwner(userId: string): Promise<void> {
     if (!props.isProjectOwner) {
       return;
     }
-
-    addOrUpdateUserRole(
-      [
-        Permission.WordEntry,
-        Permission.MergeAndReviewEntries,
-        Permission.ImportExport,
-        Permission.DeleteEditSettingsAndUsers,
-        Permission.Owner,
-      ],
-      userId
-    )
-      .then(() => {
-        addOrUpdateUserRole(
-          [
-            Permission.WordEntry,
-            Permission.MergeAndReviewEntries,
-            Permission.ImportExport,
-            Permission.DeleteEditSettingsAndUsers,
-          ],
-          props.currentUserId
+    try {
+      await addOrUpdateUserRole(
+        [
+          Permission.WordEntry,
+          Permission.MergeAndReviewEntries,
+          Permission.ImportExport,
+          Permission.DeleteEditSettingsAndUsers,
+          Permission.Owner,
+        ],
+        userId
+      );
+      await addOrUpdateUserRole(
+        [
+          Permission.WordEntry,
+          Permission.MergeAndReviewEntries,
+          Permission.ImportExport,
+          Permission.DeleteEditSettingsAndUsers,
+        ],
+        props.currentUserId
+      );
+      if (project.recordingConsented) {
+        await dispatch(
+          asyncUpdateCurrentProject({ ...project, recordingConsented: false })
         );
-      })
-      .then(() => {
-        if (project.recordingConsented) {
-          saveChangesToProject(
-            { ...project, recordingConsented: false },
-            dispatch
-          );
-        }
-        setMakeOwner(false);
-        setAnchorEl(undefined);
-        toast.success(
-          t("projectSettings.userManagement.makeOwnerToastSuccess")
-        );
-        dispatch(asyncRefreshCurrentProjectUsers());
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error(t("projectSettings.userManagement.makeOwnerToastFailure"));
-      });
+      }
+      toast.success(t("projectSettings.userManagement.makeOwnerToastSuccess"));
+    } catch (err) {
+      console.error(err);
+      toast.error(t("projectSettings.userManagement.makeOwnerToastFailure"));
+    }
+    setMakeOwner(false);
+    setAnchorEl(undefined);
+    await dispatch(asyncRefreshCurrentProjectUsers());
   }
 
   const managementOptions: ReactElement[] = [

@@ -1,15 +1,9 @@
 import { HelpOutline } from "@mui/icons-material";
-import {
-  Grid,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Tooltip,
-} from "@mui/material";
+import { Grid, MenuItem, Select, Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { AutocompleteSetting } from "api/models";
-import { saveChangesToProject } from "components/Project/ProjectActions";
+import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
@@ -20,20 +14,20 @@ export default function ProjectAutocomplete() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
+  const updateAutocompleteSetting = async (
+    autocompleteSetting: AutocompleteSetting
+  ): Promise<void> => {
+    dispatch(asyncUpdateCurrentProject({ ...project, autocompleteSetting }));
+  };
+
   return (
     <Grid container>
       <Grid>
         <Select
           variant="standard"
           value={project.autocompleteSetting}
-          onChange={(event: SelectChangeEvent<AutocompleteSetting>) =>
-            saveChangesToProject(
-              {
-                ...project,
-                autocompleteSetting: event.target.value as AutocompleteSetting,
-              },
-              dispatch
-            )
+          onChange={(e) =>
+            updateAutocompleteSetting(e.target.value as AutocompleteSetting)
           }
         >
           <MenuItem value={AutocompleteSetting.Off}>
