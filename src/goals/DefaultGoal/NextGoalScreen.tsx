@@ -5,9 +5,9 @@ import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/MergeDupContinueDialog";
 import { StoreState } from "types";
-import { goalTypeToGoal } from "types/goalUtilities";
 import { GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { goalTypeToGoal } from "utilities/goalUtilities";
 
 /**
  * Dialog for continuing to a new goal or returning to GoalTimeline.

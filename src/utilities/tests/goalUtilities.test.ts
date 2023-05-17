@@ -5,7 +5,7 @@ import {
   convertEditToGoal,
   convertGoalToEdit,
   maxNumSteps,
-} from "types/goalUtilities";
+} from "utilities/goalUtilities";
 import { Goal } from "types/goals";
 
 describe("goalUtilities", () => {

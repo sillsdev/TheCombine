@@ -35,8 +35,8 @@ import Recorder from "components/Pronunciations/Recorder";
 import { Hash } from "types/hash";
 import theme from "types/theme";
 import { newSense, simpleWord } from "types/word";
-import { firstGlossText } from "types/wordUtilities";
 import { defaultWritingSystem, newWritingSystem } from "types/writingSystem";
+import { firstGlossText } from "utilities/wordUtilities";
 
 export const exitButtonId = "exit-to-domain-tree";
 

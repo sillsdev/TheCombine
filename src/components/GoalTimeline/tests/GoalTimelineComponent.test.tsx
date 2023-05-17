@@ -9,7 +9,7 @@ import { defaultState } from "components/GoalTimeline/DefaultState";
 import GoalTimelineWithTranslation, {
   GoalTimeline,
 } from "components/GoalTimeline/GoalTimelineComponent";
-import { goalTypeToGoal } from "types/goalUtilities";
+import { goalTypeToGoal } from "utilities/goalUtilities";
 import { Goal, GoalType } from "types/goals";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment

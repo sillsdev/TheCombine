@@ -18,7 +18,7 @@ import {
   semDomFromTreeNode,
 } from "types/semanticDomain";
 import { multiSenseWord, newSense, simpleWord } from "types/word";
-import { firstGlossText } from "types/wordUtilities";
+import { firstGlossText } from "utilities/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
