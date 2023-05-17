@@ -29,12 +29,11 @@ export function clearCurrentProject() {
   };
 }
 
-export async function saveChangesToProject(
-  project: Project,
-  dispatch: StoreStateDispatch
-) {
-  dispatch(setCurrentProject(project));
-  await updateProject(project);
+export function asyncUpdateCurrentProject(project: Project) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(setCurrentProject(project));
+    await updateProject(project);
+  };
 }
 
 export function asyncRefreshCurrentProjectUsers() {

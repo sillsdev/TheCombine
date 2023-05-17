@@ -6,7 +6,7 @@ import { Project } from "api/models";
 
 interface NameProps extends WithTranslation {
   project: Project;
-  saveChangesToProject: (project: Project) => void;
+  saveChangesToProject: (project: Project) => Promise<void>;
 }
 
 interface NameState {
@@ -21,8 +21,8 @@ export class ProjectName extends React.Component<NameProps, NameState> {
     };
   }
 
-  private updateName(newName: string) {
-    this.props.saveChangesToProject({
+  private async updateName(newName: string) {
+    await this.props.saveChangesToProject({
       ...this.props.project,
       name: newName,
     });

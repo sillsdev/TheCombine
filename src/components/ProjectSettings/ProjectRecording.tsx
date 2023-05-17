@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import { saveChangesToProject } from "components/Project/ProjectActions";
+import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
@@ -26,9 +26,13 @@ export default function ProjectRecording(props: ProjectRecordingProps) {
   const [recordingConsentOpen, setRecordingConsentOpen] = useState(false);
   const { t } = useTranslation();
 
-  const setRecordingConsented = (recordingConsented: boolean): void => {
+  const setRecordingConsented = async (
+    recordingConsented: boolean
+  ): Promise<void> => {
     if (recordingConsented !== project.recordingConsented) {
-      saveChangesToProject({ ...project, recordingConsented }, dispatch);
+      await dispatch(
+        asyncUpdateCurrentProject({ ...project, recordingConsented })
+      );
     }
   };
 

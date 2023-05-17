@@ -61,13 +61,13 @@ export class ProjectLanguages extends React.Component<
     langsInProject: undefined,
   };
 
-  setNewAnalysisDefault(index: number): void {
+  async setNewAnalysisDefault(index: number): Promise<void> {
     const newDefault = this.props.project.analysisWritingSystems.splice(
       index,
       1
     )[0];
     this.props.project.analysisWritingSystems.splice(0, 0, newDefault);
-    this.props
+    await this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
       .catch((err) => {
@@ -80,9 +80,9 @@ export class ProjectLanguages extends React.Component<
       });
   }
 
-  deleteAnalysisWritingSystem(index: number): void {
+  async deleteAnalysisWritingSystem(index: number): Promise<void> {
     this.props.project.analysisWritingSystems.splice(index, 1);
-    this.props
+    await this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
       .catch((err) => {
@@ -93,14 +93,14 @@ export class ProjectLanguages extends React.Component<
       });
   }
 
-  addAnalysisWritingSystem(): void {
+  async addAnalysisWritingSystem(): Promise<void> {
     const ws = {
       name: this.state.name,
       bcp47: this.state.bcp47,
       font: this.state.font,
     };
     this.props.project.analysisWritingSystems.push(ws);
-    this.props
+    await this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
       .catch((err) => {
@@ -158,7 +158,7 @@ export class ProjectLanguages extends React.Component<
     this.props.project.semDomWritingSystem =
       semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
       newWritingSystem();
-    this.props
+    await this.props
       .saveChangesToProject(this.props.project)
       .then(() => this.resetState())
       .catch((err) => {

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { Project } from "api/models";
-import { saveChangesToProject } from "components/Project/ProjectActions";
+import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import ProjectName from "components/ProjectSettings/ProjectName/ProjectName";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -12,8 +12,8 @@ function mapStateToProps(state: StoreState) {
 
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
-    saveChangesToProject: (project: Project) =>
-      saveChangesToProject(project, dispatch),
+    saveChangesToProject: async (project: Project) =>
+      await dispatch(asyncUpdateCurrentProject(project)),
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectName);

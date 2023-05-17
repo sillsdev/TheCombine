@@ -2,7 +2,7 @@ import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import history, { Path } from "browserHistory";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
-import { saveChangesToProject } from "components/Project/ProjectActions";
+import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
   CharacterSetEntry,
@@ -119,17 +119,19 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
 export function uploadInventory(goal: Goal) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
-    const changes = getChangesFromState(state);
+    const proj: Project = { ...state.currentProjectState.project };
+    const charInvState = state.characterInventoryState;
+    const changes = getChanges(proj, charInvState);
     if (!changes.length) {
       exit();
       return;
     }
-    const updatedProject = updateCurrentProject(state);
-    await saveChangesToProject(updatedProject, dispatch);
-    const updatedGoal: Goal = {
-      ...goal,
-      changes: { charChanges: changes },
-    };
+
+    proj.validCharacters = charInvState.validCharacters;
+    proj.rejectedCharacters = charInvState.rejectedCharacters;
+    await dispatch(asyncUpdateCurrentProject(proj));
+
+    const updatedGoal: Goal = { ...goal, changes: { charChanges: changes } };
     await dispatch(asyncUpdateGoal(updatedGoal));
     exit();
   };
@@ -187,12 +189,6 @@ function countCharacterOccurrences(char: string, words: string[]) {
   return count;
 }
 
-function getChangesFromState(state: StoreState): CharacterChange[] {
-  const proj = state.currentProjectState.project;
-  const charInvState = state.characterInventoryState;
-  return getChanges(proj, charInvState);
-}
-
 export function getChanges(
   proj: Project,
   charInvState: CharacterInventoryState
@@ -246,12 +242,4 @@ function getChange(
   if (newRej.includes(c)) {
     return [c, CharacterStatus.Undecided, CharacterStatus.Rejected];
   }
-  return undefined;
-}
-
-function updateCurrentProject(state: StoreState): Project {
-  const project = state.currentProjectState.project;
-  project.validCharacters = state.characterInventoryState.validCharacters;
-  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
-  return project;
 }
