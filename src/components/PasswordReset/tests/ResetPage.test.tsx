@@ -1,21 +1,19 @@
 import { Provider } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
+import { MemoryRouter, RouteChildrenProps } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/mockReactI18next";
 
 import { resetFail } from "components/PasswordReset/Redux/ResetActions";
-import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
-import PasswordReset, {
-  MatchParams,
-} from "components/PasswordReset/ResetPage/component";
+// import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
+import { PasswordReset, MatchParams } from "components/PasswordReset/ResetPage";
 
 var testRenderer: renderer.ReactTestRenderer;
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore([])({});
 
-const mockRouteComponentProps: RouteComponentProps<MatchParams> = {
+const mockRouteComponentProps: RouteChildrenProps<MatchParams> = {
   location: {} as any,
   history: {} as any,
   match: { params: { token: "" } } as any,
@@ -25,11 +23,9 @@ beforeEach(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <PasswordReset
-          resetState={0}
-          passwordReset={jest.fn()}
-          {...mockRouteComponentProps}
-        />
+        <MemoryRouter>
+          <PasswordReset />
+        </MemoryRouter>
       </Provider>
     );
   });
@@ -43,6 +39,9 @@ describe("PasswordReset", () => {
     var resetPages = testRenderer.root.findAllByType(PasswordReset);
     expect(resetPages.length).toBe(1);
     var resetPage = resetPages[0];
+
+    // set token
+    const match = { params: { token: "" } };
 
     // set state
     resetPage.instance.setState(
@@ -160,11 +159,7 @@ describe("PasswordReset", () => {
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <PasswordReset
-            resetState={RequestState.Fail}
-            passwordReset={jest.fn()}
-            {...mockRouteComponentProps}
-          />
+          <PasswordReset />
         </Provider>
       );
     });

@@ -9,7 +9,7 @@ import Login from "components/Login/LoginPage";
 import SignUp from "components/Login/SignUpPage";
 import PageNotFound from "components/PageNotFound/component";
 import PasswordRequest from "components/PasswordReset/Request";
-import PasswordReset from "components/PasswordReset/ResetPage";
+import { PasswordReset } from "components/PasswordReset/ResetPage";
 import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite";
 
