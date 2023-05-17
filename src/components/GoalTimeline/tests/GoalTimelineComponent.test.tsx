@@ -9,8 +9,8 @@ import { defaultState } from "components/GoalTimeline/DefaultState";
 import GoalTimelineWithTranslation, {
   GoalTimeline,
 } from "components/GoalTimeline/GoalTimelineComponent";
-import { goalTypeToGoal } from "utilities/goalUtilities";
 import { Goal, GoalType } from "types/goals";
+import { goalTypeToGoal } from "utilities/goalUtilities";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();

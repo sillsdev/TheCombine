@@ -18,8 +18,8 @@ import {
   semDomFromTreeNode,
 } from "types/semanticDomain";
 import { multiSenseWord, newSense, simpleWord } from "types/word";
-import { firstGlossText } from "utilities/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
+import { firstGlossText } from "utilities/wordUtilities";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 jest.mock("notistack", () => ({
