@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
@@ -44,13 +44,13 @@ export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Trans i18nKey="charInventory.characterSet.replaceAll">
-            FillerText<strong>{{ val: props.dialogFindValue }}</strong>
-          </Trans>
+          {t("charInventory.characterSet.replaceAll", {
+            val: props.dialogFindValue,
+          })}
           <br />
-          <Trans i18nKey="charInventory.characterSet.replaceAllWith">
-            FillerText<strong>{{ val: props.dialogReplaceValue }}</strong>
-          </Trans>
+          {t("charInventory.characterSet.replaceAllWith", {
+            val: props.dialogReplaceValue,
+          })}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

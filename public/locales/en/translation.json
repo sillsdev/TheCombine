@@ -316,8 +316,8 @@
       "find": "Find",
       "replace": "Replace",
       "replaceWith": "Replace with",
-      "replaceAll": "Replace all occurrences of: <1>{{ val }}</1>",
-      "replaceAllWith": "Replace with: <1>{{ val }}</1>",
+      "replaceAll": "Replace all occurrences of: {{ val }}",
+      "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
       "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
       "apply": "apply"
