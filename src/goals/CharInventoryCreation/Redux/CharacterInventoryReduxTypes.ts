@@ -53,3 +53,7 @@ export interface CharacterSetEntry {
   occurrences: number;
   status: CharacterStatus;
 }
+
+export function newCharacterSetEntry(character: string): CharacterSetEntry {
+  return { character, occurrences: 0, status: CharacterStatus.Undecided };
+}

@@ -2,14 +2,14 @@ import { render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { Key } from "ts-key-enum";
 
-import "tests/mockReactI18next.ts";
+import "tests/reactI18nextMock.ts";
 
 import {
   TreeViewHeader,
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
-import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { semDomFromTreeNode } from "types/semanticDomain";
 
 // Handles

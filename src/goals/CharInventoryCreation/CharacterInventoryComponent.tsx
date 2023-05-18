@@ -16,7 +16,7 @@ import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterIn
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
 import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
-import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterList/CharacterSetHeader";
+import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterSetHeader";
 import { Goal } from "types/goals";
 import theme from "types/theme";
 

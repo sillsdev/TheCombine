@@ -174,6 +174,18 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        public class DefinitionImportObj
+        {
+            public string Filename { get; }
+            public bool HasDefinitions { get; }
+
+            public DefinitionImportObj(string filename, bool hasDefinitions)
+            {
+                Filename = filename;
+                HasDefinitions = hasDefinitions;
+            }
+        }
+
         /// <summary>  Read all of the bytes from a Stream into byte array. </summary>
         private static byte[] ReadAllBytes(Stream stream)
         {
@@ -436,6 +448,45 @@ namespace Backend.Tests.Controllers
             {
                 _projRepo.Delete(project.Id);
             }
+        }
+
+        private static DefinitionImportObj[] _defImportCases =
+        {
+            new("Natqgu.zip", true),
+            new("SingleEntryLiftWithSound.zip", false)
+        };
+
+        [TestCaseSource(nameof(_defImportCases))]
+        public void TestHasDefinitions(DefinitionImportObj defImportObj)
+        {
+            // This test assumes you have the starting .zip (filename) included in your project files.
+            var pathToStartZip = Path.Combine(Util.AssetsDir, defImportObj.Filename);
+            Assert.IsTrue(File.Exists(pathToStartZip));
+
+            // Init the project the .zip info is added to.
+            var proj = Util.RandomProject();
+            proj.VernacularWritingSystem.Bcp47 = "qaa";
+            proj = _projRepo.Create(proj).Result;
+
+            // Upload the zip file.
+            // Generate api parameter with filestream.
+            using (var stream = File.OpenRead(pathToStartZip))
+            {
+                var fileUpload = InitFile(stream, defImportObj.Filename);
+
+                // Make api call.
+                var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
+                Assert.That(result is OkObjectResult);
+            }
+
+            proj = _projRepo.GetProject(proj.Id).Result;
+            if (proj is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Assert.AreEqual(proj.DefinitionsEnabled, defImportObj.HasDefinitions);
         }
 
         private class MockLogger : ILogger<LiftController>

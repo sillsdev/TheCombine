@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
 import DataEntryTable, {
@@ -18,8 +18,8 @@ import {
   semDomFromTreeNode,
 } from "types/semanticDomain";
 import { multiSenseWord, newSense, simpleWord } from "types/word";
-import { firstGlossText } from "types/wordUtilities";
 import { Bcp47Code } from "types/writingSystem";
+import { firstGlossText } from "utilities/wordUtilities";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 jest.mock("notistack", () => ({

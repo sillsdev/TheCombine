@@ -1,5 +1,4 @@
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
@@ -10,7 +9,7 @@ interface CharacterCardProps {
   char: string;
   count: number;
   status: CharacterStatus;
-  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onClick?: () => void;
   fontHeight: number;
   cardWidth: number;
 }
@@ -20,10 +19,7 @@ export default function CharacterCard(props: CharacterCardProps) {
 
   return (
     <Card
-      style={{
-        maxWidth: props.cardWidth,
-        margin: theme.spacing(1),
-      }}
+      style={{ maxWidth: props.cardWidth, margin: theme.spacing(1) }}
       onClick={props.onClick}
     >
       <CardActionArea>
@@ -47,7 +43,7 @@ export default function CharacterCard(props: CharacterCardProps) {
             {charToHexValue(props.char)}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.count} {t("charInventory.characterSet.occurrences")}
+            {t("charInventory.characterSet.occurrences", { val: props.count })}
           </Typography>
           <CharacterStatusText status={props.status} />
         </CardContent>

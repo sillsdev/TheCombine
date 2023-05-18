@@ -3,7 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { resetFail } from "components/PasswordReset/Redux/ResetActions";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";

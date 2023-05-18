@@ -53,16 +53,16 @@
     "signUpNew": "Sign Up New User",
     "signUpSuccess": "User Created",
     "signUpFailed": "Failed to sign up",
-    "usernameInvalid": "This username is too short or already taken",
+    "usernameInvalid": "Username is too short or already taken.",
     "usernameRequirements": "Username must be 3 characters or longer.",
-    "emailTaken": "A user with this email already exists",
+    "emailTaken": "A user with this email already exists.",
     "networkError": "Network error",
     "loggingIn": "Logging in...",
     "required": "Required",
     "confirmPassword": "Confirm Password",
-    "confirmPasswordError": "Passwords do not match",
+    "confirmPasswordError": "Passwords do not match.",
     "email": "Email",
-    "emailError": "Please enter a valid email"
+    "emailError": "Please enter a valid email."
   },
   "passwordReset": {
     "emailOrUsername": "Email OR Username",
@@ -97,12 +97,12 @@
     "archiveProjectText": "This project will not be accessible to any users.",
     "restoreProjectText": "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
     "deleteUser": {
-      "confirm": "Confirm Deleting User from The Combine Database",
-      "toastSuccess": "User successfully deleted",
-      "toastFailure": "Failed to delete user"
+      "confirm": "Confirm deleting user from The Combine database.",
+      "toastSuccess": "User successfully deleted from The Combine.",
+      "toastFailure": "Failed to delete user from The Combine."
     },
     "populateUsers": {
-      "toastFailure": "Failed to populate users"
+      "toastFailure": "Failed to populate list of all users."
     },
     "banners": {
       "title": "Banners",
@@ -151,13 +151,13 @@
       "makeOwnerWarning": "Transfer project ownership to this user?",
       "removeAdminWarning": "Remove project admin from this user?",
       "removeUserWarning": "Remove this user from the project?",
-      "userRemovedToastSuccess": "User Removed!",
-      "userRemovedToastFailure": "Failed to Remove User.",
-      "makeAdminToastSuccess": "User Given Project Admin!",
+      "userRemovedToastSuccess": "User removed from the project.",
+      "userRemovedToastFailure": "Failed to remove user from the project.",
+      "makeAdminToastSuccess": "Project admin given to user.",
       "makeAdminToastFailure": "Failed to give project admin to user.",
-      "removeAdminToastSuccess": "Removed Project Admin from User!",
+      "removeAdminToastSuccess": "Project admin removed from user.",
       "removeAdminToastFailure": "Failed to remove project admin from user.",
-      "makeOwnerToastSuccess": "Transferred Project Ownership!",
+      "makeOwnerToastSuccess": "Project ownership transferred.",
       "makeOwnerToastFailure": "Failed to transfer project ownership.",
       "manageUser": "Manage User",
       "reverseOrder": "Reverse Order"
@@ -188,10 +188,10 @@
       "workshopSchedule": "Workshop Schedule",
       "startDate": "Start Date",
       "endDate": "End Date",
-      "selectedDateAlert": "The start date must be before the end date",
-      "setDays": "Set the range of days for the workshop",
-      "editDays": "Flexibly adjust the workshop schedule",
-      "removeDays": "Remove all days from workshop",
+      "selectedDateAlert": "The start date must be before the end date.",
+      "setDays": "Set the range of days for the workshop.",
+      "editDays": "Adjust the workshop schedule.",
+      "removeDays": "Remove all days from workshop.",
       "removeAll": "Are you sure you want to remove all the dates?"
     },
     "exportProject": {
@@ -209,14 +209,14 @@
     },
     "invite": {
       "inviteByEmailLabel": "Invite by Email",
-      "userExists": "This user is already registered!",
+      "userExists": "This user is already registered.",
       "or": "OR",
       "searchPlaceholder": "Search...",
       "searchTitle": "Find Users",
       "emailLabel": "Email",
       "messageLabel": "Message",
-      "toastSuccess": "Added User!",
-      "toastFail": "Failed to add user!"
+      "toastSuccess": "User added to the project.",
+      "toastFail": "Failed to add user to the project."
     }
   },
   "goal": {
@@ -297,7 +297,7 @@
     "title": "Create Character Inventory",
     "characters": "characters",
     "examples": "Examples",
-    "occurrences": "{{ val }} occurrences",
+    "occurrences": "occurrences",
     "status": "status",
     "sortBy": "Sort by",
     "characterSet": {
@@ -312,14 +312,15 @@
       "noCharacters": "No characters yet! Type characters into the box below to get started.",
       "required": "Add characters by entering them in this box",
       "advanced": "Advanced",
-      "occurrences": "occurrences",
+      "occurrences": "{{ val }} occurrences",
       "find": "Find",
       "replace": "Replace",
       "replaceWith": "Replace with",
-      "replaceAll": "Replace all occurrences of",
+      "replaceAll": "Replace all occurrences of: {{ val }}",
+      "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
-      "apply": "apply",
-      "charDetails": "(Character Details has not been implemented.)"
+      "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
+      "apply": "apply"
     },
     "sampleWords": {
       "title": "Sample Words",
@@ -341,7 +342,7 @@
   "mergeDups": {
     "title": "Merge Duplicates",
     "helpText": {
-      "dragCard": "Drag a card here to merge.",
+      "dragCard": "Drag a card here to merge",
       "root": "Drag words here to start merging them",
       "dups": "Drag duplicate words here",
       "sense": "Drag new sense here",
@@ -351,7 +352,7 @@
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
       "deleteDialog": "Delete this sense?",
-      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense or drop other senses into this one to merge them.",
+      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense to another word or drop other senses into this one to merge them.",
       "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
     },
     "completed": {
