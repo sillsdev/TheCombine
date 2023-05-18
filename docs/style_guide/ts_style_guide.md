@@ -2,25 +2,34 @@
 
 Key Sections:
 
-- [Variable](#variable-and-function)
-- [Class](#class)
-- [Component](#component)
-- [Interface](#interface)
-- [Type](#type)
-- [Namespace](#namespace)
-- [Enum](#enum)
+- [Case](#case) (`camelCase` vs. `PascalCase` vs. `ALL_CAPS`)
+  - [Variable](#variable-and-function)
+  - [Component](#component)
+  - [Class](#class)
+  - [Interface](#interface)
+  - [Type](#type)
+  - [Namespace](#namespace)
+  - [Enum](#enum)
+  - [Filename](#filename)
+- [Interface names](#interface-names)
+- [Test filenames](#test-filenames)
+- [Type files](#type-files)
 - [`null` vs. `undefined`](#null-vs-undefined)
 - [Formatting](#formatting)
-- [Single vs. Double Quotes](#quotes)
+- [Quotes](#quotes) (single vs. double)
 - [Use semicolons](#semicolons)
 - [Annotate Arrays as `Type[]`](#array)
-- [File Names](#filename)
 - [`type` vs `interface`](#type-vs-interface)
 - [One-line `if` statements](#one-line-if-statements)
-- [imports](#imports)
-- [KeyboardEvents](#keyboardevents)
+- [`import`s](#imports)
+- [`KeyboardEvent`s](#keyboardevents)
+- [Components](#components)
+- [Function return type](#function-return-type)
+- [Hooks](#hooks)
 
-## Variable and Function
+## Case
+
+### Variable and Function
 
 - Use `camelCase` for variable and function names
 
@@ -40,7 +49,29 @@ var fooVar;
 function barFunc() {}
 ```
 
-## Class
+### Component
+
+- Use `PascalCase` for component name, even if function component.
+
+> Reason: Follows React naming convention.
+
+**Bad**
+
+```tsx
+const component: React.FC = () => {
+  return <subComponent />;
+};
+```
+
+**Good**
+
+```tsx
+const Component: React.FC = () => {
+  return <SubComponent />;
+};
+```
+
+### Class
 
 - Use `PascalCase` for class names.
 
@@ -80,29 +111,7 @@ class Foo {
 }
 ```
 
-## Component
-
-- Use `PascalCase` for component name, even if function component.
-
-> Reason: Follows React naming convention.
-
-**Bad**
-
-```tsx
-const component: React.FC = () => {
-  return <subComponent />;
-};
-```
-
-**Good**
-
-```tsx
-const Component: React.FC = () => {
-  return <SubComponent />;
-};
-```
-
-## Interface
+### Interface
 
 - Use `PascalCase` for name.
 
@@ -112,23 +121,7 @@ const Component: React.FC = () => {
 
 > Reason: Similar to class
 
-- **Don't** prefix with `I`
-
-> Reason: Unconventional. `lib.d.ts` defines important interfaces without an `I` (e.g. Window, Document etc).
-
-**Bad**
-
-```ts
-interface IFoo {}
-```
-
-**Good**
-
-```ts
-interface Foo {}
-```
-
-## Type
+### Type
 
 - Use `PascalCase` for name.
 
@@ -142,7 +135,7 @@ interface Foo {}
 
 > Reason: Follows Redux naming convention
 
-## Namespace
+### Namespace
 
 - Use `PascalCase` for names
 
@@ -161,7 +154,7 @@ namespace foo {}
 namespace Foo {}
 ```
 
-## Enum
+### Enum
 
 - Use `PascalCase` for enum names
 
@@ -199,6 +192,47 @@ enum Color {
   Red,
 }
 ```
+
+### Filename
+
+Name files and folders with `camelCase` (e.g., `utilities.ts`, `index.tsx`, `tractor.png`, `components/`), unless it is
+the name of the contained Component (e.g., `DataEntryTable.tsx`, `ReviewEntries/`).
+
+> Reason: `camelCase` is conventional across many JS teams.
+
+## Interface names
+
+- **Don't** prefix with `I`
+
+> Reason: Unconventional. `lib.d.ts` defines important interfaces without an `I` (e.g. Window, Document etc).
+
+**Bad**
+
+```ts
+interface IFoo {}
+```
+
+**Good**
+
+```ts
+interface Foo {}
+```
+
+## Test filenames
+
+- The test file associated with `path/to/Component.tsx` should be `path/to/tests/Component.test.tsx`.
+
+- Auxiliary test files with data or mock objects should have filenames ending in `Mock.ts`, e.g.,
+  `path/to/tests/DataMock.ts`.
+
+> Reason: `*.test.*` and `*Mock.ts` files are ignored by our CodeCov settings.
+
+## Type files
+
+- Separate type files should contain `type`s, `class`es, `interface`s, `enum`s but not any classes or functions that
+  need unit testings. Such files should have filenames ending in `Types.ts`, e.g., `MergeDupReduxTypes.ts`.
+
+> Reason: `*Types.ts` files are ignored by our CodeCov settings.
 
 ## Null vs. Undefined
 
@@ -274,7 +308,7 @@ Use [Prettier](https://prettier.io/) to format TypeScript code as described in t
 
 ## Quotes
 
-- Prefer double quotes (").
+- Prefer double quotes (`"your text"`) to single quotes (`'your text'`).
 
 > Reason: Follows Prettier naming convention.
 
@@ -295,12 +329,6 @@ Use [Prettier](https://prettier.io/) to format TypeScript code as described in t
 
 > Reasons: Its easier to read. Its used by the TypeScript team. Makes easier to know something is an array as the mind
 > is trained to detect `[]`.
-
-## Filename
-
-Name files with `camelCase`. E.g. `accordion.tsx`, `myControl.tsx`, `utils.ts`, `map.ts` etc.
-
-> Reason: Conventional across many JS teams.
 
 ## type vs. interface
 
@@ -329,7 +357,7 @@ class X implements FooBar {
 
 ## One line `if` statements
 
-Add braces to one-line `if` statements;
+- Add braces to one-line `if` statements;
 
 **Good**
 
@@ -351,7 +379,7 @@ if (isEmpty)
 
 ## imports
 
-Use absolute `import` statements everywhere for consistency.
+- Use absolute `import` statements everywhere for consistency.
 
 **Good**
 
@@ -372,7 +400,7 @@ import { Project } from "../../../../types/project";
 
 ## KeyboardEvents
 
-Use `ts-key-enum` when comparing to `React.KeyboardEvent`s.
+- Use `ts-key-enum` when comparing to `React.KeyboardEvent`s.
 
 **Good**
 
@@ -391,3 +419,87 @@ if (event.key === "Enter") {
 ```
 
 > Reason: Avoid typos and increase the number of mistakes that can be caught at compile time.
+
+## Components
+
+- Prefer functional components to class components.
+
+**Good**
+
+```ts
+function Component(props: ComponentProps): ReactElement {
+  return <SubComponent />;
+}
+```
+
+**Bad**
+
+```ts
+class Component extends React.Component<ComponentProps, ComponentState> {
+  render() {
+    return <SubComponent />;
+  }
+}
+```
+
+## Function return type
+
+- Specify the return type of a named function, whether declared as a `function` or `const`.
+- The return type of a functional component should be `ReactElement`.
+
+**Good**
+
+```tsx
+import {ReactElement} from React;
+
+function Component(props: { name: string }): ReactElement {
+  const sayHi = (name: string): string => {
+    return `Hi, ${name}!`;
+  }
+
+  return sayHi(props.name);
+}
+```
+
+**Bad**
+
+```tsx
+function Component(props: { name: string }) {
+  const sayHi = (name: string) => {
+    return `Hi, ${name}!`;
+  };
+
+  return sayHi(props.name);
+}
+```
+
+> Reason: Ensure all return paths are the expected type.
+
+## Hooks
+
+- Prefer `useAppDispatch` to `useDispatch` and `useAppSelector` to `useSelector`.
+
+**Good**
+
+```ts
+import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
+
+function Component(): ReactElement {
+  const dispatch = useAppDispatch();
+  const subState = useAppSelector((state: StoreState) => state.subState);
+}
+```
+
+**Bad**
+
+```ts
+import { useDispatch, useSelector } from "react-redux";
+
+function Component(): ReactElement {
+  const dispatch = useDispatch();
+  const subState = useSelector((state) => state.subState);
+}
+```
+
+> Reason: See `types/hooks.ts`.

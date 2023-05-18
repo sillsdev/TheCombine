@@ -75,7 +75,9 @@ export default function GoalList(props: GoalListProps): ReactElement {
         : makeGoalTile(tileSize, props.orientation)}
       <div
         ref={(element: HTMLDivElement) => {
-          if (props.scrollToEnd && element) element.scrollIntoView(true);
+          if (props.scrollToEnd && element) {
+            element.scrollIntoView(true);
+          }
         }}
       />
     </ImageList>
