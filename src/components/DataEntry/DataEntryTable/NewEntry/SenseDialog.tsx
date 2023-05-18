@@ -7,7 +7,7 @@ import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledM
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import theme from "types/theme";
-import { firstGlossText } from "types/wordUtilities";
+import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
   selectedWord: Word;

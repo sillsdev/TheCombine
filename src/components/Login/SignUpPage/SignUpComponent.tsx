@@ -15,7 +15,7 @@ import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
-} from "utilities";
+} from "utilities/utilities";
 
 const idAffix = "signUp";
 

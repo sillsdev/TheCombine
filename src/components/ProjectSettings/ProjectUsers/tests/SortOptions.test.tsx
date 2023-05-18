@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next.ts";
+import "tests/reactI18nextMock.ts";
 
 import SortOptions, {
   SortOptionsProps,

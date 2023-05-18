@@ -1,6 +1,6 @@
-import * as utilities from "utilities";
+import * as utilities from "utilities/utilities";
 
-describe("utilities", () => {
+describe("utilities/utilities", () => {
   describe("quicksort", () => {
     const compareItem = (input: number) => {
       return input;
