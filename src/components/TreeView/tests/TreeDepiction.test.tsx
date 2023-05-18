@@ -1,12 +1,12 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next.ts";
+import "tests/reactI18nextMock.ts";
 
 import { SemanticDomainTreeNode } from "api";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import testDomainMap, {
   mapIds,
-} from "components/TreeView/tests/MockSemanticDomain";
+} from "components/TreeView/tests/SemanticDomainMock";
 
 let treeMaster: renderer.ReactTestRenderer;
 

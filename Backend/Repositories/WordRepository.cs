@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="Word"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="Word"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class WordRepository : IWordRepository
     {

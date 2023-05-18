@@ -16,8 +16,8 @@ import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newSense, newWord } from "types/word";
-import { firstGlossText } from "types/wordUtilities";
-import { LevenshteinDistance } from "utilities";
+import { LevenshteinDistance } from "utilities/utilities";
+import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "new-entry";
 
