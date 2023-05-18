@@ -165,6 +165,18 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        public class DefinitionImportObj
+        {
+            public string Filename { get; }
+            public bool HasDefinitions { get; }
+
+            public DefinitionImportObj(string filename, bool hasDefinitions)
+            {
+                Filename = filename;
+                HasDefinitions = hasDefinitions;
+            }
+        }
+
         /// <summary>  Read all of the bytes from a Stream into byte array. </summary>
         private static byte[] ReadAllBytes(Stream stream)
         {
@@ -419,12 +431,17 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        [Test]
-        public void TestHasNoDefinitions()
+        private static DefinitionImportObj[] _defImportCases =
+        {
+            new("qaa-x-stc-natqgu", true),
+            new("SingleEntryLiftWithSound.zip", false)
+        };
+
+        [TestCaseSource(nameof(_defImportCases))]
+        public void TestHasDefinitions(DefinitionImportObj defImportObj)
         {
             // This test assumes you have the starting .zip (filename) included in your project files.
-            var filename = "SingleEntryLiftWithSound.zip";
-            var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
+            var pathToStartZip = Path.Combine(Util.AssetsDir, defImportObj.Filename);
             Assert.IsTrue(File.Exists(pathToStartZip));
 
             // Init the project the .zip info is added to.
@@ -436,7 +453,7 @@ namespace Backend.Tests.Controllers
             // Generate api parameter with filestream.
             using (var stream = File.OpenRead(pathToStartZip))
             {
-                var fileUpload = InitFile(stream, filename);
+                var fileUpload = InitFile(stream, defImportObj.Filename);
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
@@ -450,41 +467,7 @@ namespace Backend.Tests.Controllers
                 return;
             }
 
-            Assert.That(proj.DefinitionsEnabled, Is.False);
-        }
-
-        [Test]
-        public void TestHasDefinitions()
-        {
-            // This test assumes you have the starting .zip (filename) included in your project files.
-            var filename = "Natqgu.zip";
-            var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
-            Assert.IsTrue(File.Exists(pathToStartZip));
-
-            // Init the project the .zip info is added to.
-            var proj = Util.RandomProject();
-            proj.VernacularWritingSystem.Bcp47 = "qaa";
-            proj = _projRepo.Create(proj).Result;
-
-            // Upload the zip file.
-            // Generate api parameter with filestream.
-            using (var stream = File.OpenRead(pathToStartZip))
-            {
-                var fileUpload = InitFile(stream, filename);
-
-                // Make api call.
-                var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
-                Assert.That(result is OkObjectResult);
-            }
-
-            proj = _projRepo.GetProject(proj.Id).Result;
-            if (proj is null)
-            {
-                Assert.Fail();
-                return;
-            }
-
-            Assert.That(proj.DefinitionsEnabled, Is.True);
+            Assert.AreEqual(proj.DefinitionsEnabled, defImportObj.HasDefinitions);
         }
 
         private class MockLogger : ILogger<LiftController>
