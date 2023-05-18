@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router-dom";
 
 import history, { Path } from "browserHistory";
 import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
-import { meetsPasswordRequirements } from "utilities";
+import { meetsPasswordRequirements } from "utilities/utilities";
 
 export interface MatchParams {
   token: string;
