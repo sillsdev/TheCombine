@@ -433,7 +433,7 @@ namespace Backend.Tests.Controllers
 
         private static DefinitionImportObj[] _defImportCases =
         {
-            new("qaa-x-stc-natqgu", true),
+            new("Natqgu.zip", true),
             new("SingleEntryLiftWithSound.zip", false)
         };
 
