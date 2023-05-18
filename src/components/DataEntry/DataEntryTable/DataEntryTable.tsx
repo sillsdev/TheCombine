@@ -36,7 +36,7 @@ import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { newNote, newSense, newWord, simpleWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
-import { LevenshteinDistance } from "utilities";
+import { LevenshteinDistance } from "utilities/utilities";
 import { firstGlossText } from "utilities/wordUtilities";
 
 export const exitButtonId = "exit-to-domain-tree";
