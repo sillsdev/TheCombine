@@ -27,6 +27,7 @@ function getSemDomWritingSystem(
 }
 
 export const exitButtonId = "tree-view-exit";
+export const topButtonId = "tree-view-top";
 
 export interface TreeViewProps {
   exit?: () => void;
@@ -118,7 +119,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
             icon={<KeyboardDoubleArrowUp />}
             textId={"treeView.returnToTop"}
             onClick={onClickTop}
-            buttonId="tree-view-top"
+            buttonId={topButtonId}
           />
           {exit && (
             <IconButtonWithTooltip
