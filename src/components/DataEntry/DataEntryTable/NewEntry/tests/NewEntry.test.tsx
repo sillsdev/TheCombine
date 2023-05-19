@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
 import { newSemanticDomain } from "types/semanticDomain";

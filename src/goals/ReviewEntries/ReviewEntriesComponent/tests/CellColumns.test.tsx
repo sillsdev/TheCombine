@@ -1,4 +1,4 @@
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import columns, {
   ColumnTitle,

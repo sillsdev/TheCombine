@@ -12,7 +12,7 @@ import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newGloss } from "types/word";
-import { firstGlossText } from "types/wordUtilities";
+import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
 

@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { SemanticDomainTreeNode } from "api";
 import * as backend from "backend";
@@ -14,7 +14,7 @@ import TreeSearch, {
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
-import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 // Handles

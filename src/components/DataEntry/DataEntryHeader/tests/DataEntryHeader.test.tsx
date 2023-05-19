@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { SemanticDomainFull } from "api";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";

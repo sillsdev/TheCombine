@@ -543,6 +543,15 @@ namespace BackendFramework.Services
             }
 
             /// <summary>
+            /// Check for any Definitions in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A boolean: true if at least one word has a definition. </returns>
+            public bool DoesImportHaveDefinitions()
+            {
+                return _importEntries.Any(w => w.Senses.Any(s => s.Definitions.Count > 0));
+            }
+
+            /// <summary>
             /// <see cref="Word"/>s are added to the private field <see cref="_importEntries"/>
             /// during lift import. This saves the contents of _importEntries to the database.
             /// </summary>

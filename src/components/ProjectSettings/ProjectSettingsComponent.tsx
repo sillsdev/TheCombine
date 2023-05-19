@@ -1,6 +1,5 @@
 import {
   Archive,
-  Assignment,
   CalendarMonth,
   CloudUpload,
   Edit,
@@ -25,7 +24,6 @@ import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
-import ProjectDefinitions from "components/ProjectSettings/ProjectDefinitions";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
@@ -135,15 +133,6 @@ export default function ProjectSettingsComponent() {
         title={t("projectSettings.autocomplete.label")}
         body={<ProjectAutocomplete />}
       />
-
-      {/* Definitions toggle */}
-      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-        <BaseSettingsComponent
-          icon={<Assignment />}
-          title={t("projectSettings.definitions.label")}
-          body={<ProjectDefinitions />}
-        />
-      )}
 
       {/* Audio recording toggle */}
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
