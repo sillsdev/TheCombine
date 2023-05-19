@@ -70,9 +70,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
         exit();
       }
     };
-    document.addEventListener("keydown", handleEsc, true);
+    window.addEventListener("keydown", handleEsc, true);
     return () => {
-      document.removeEventListener("keydown", handleEsc, true);
+      window.removeEventListener("keydown", handleEsc, true);
     };
   }, [exit]);
 

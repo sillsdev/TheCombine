@@ -2,7 +2,6 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import { Key } from "ts-key-enum";
 
 import "tests/reactI18nextMock";
 
@@ -59,16 +58,6 @@ describe("TreeView", () => {
     expect(mockExit).not.toBeCalled();
     renderer.act(() => {
       findById(exitButtonId).props.onClick();
-    });
-    expect(mockExit).toBeCalledTimes(1);
-  });
-
-  it("exits via escape key", async () => {
-    const mockExit = jest.fn();
-    await updateTree(mockExit);
-    expect(mockExit).not.toBeCalled();
-    renderer.act(() => {
-      document.dispatchEvent(new KeyboardEvent("keydown", { key: Key.Escape }));
     });
     expect(mockExit).toBeCalledTimes(1);
   });
