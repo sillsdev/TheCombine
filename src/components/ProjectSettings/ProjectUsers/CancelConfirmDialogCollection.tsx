@@ -7,12 +7,8 @@ import { toast } from "react-toastify";
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import {
-  asyncRefreshCurrentProjectUsers,
-  asyncUpdateCurrentProject,
-} from "components/Project/ProjectActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import { useAppDispatch } from "types/hooks";
 
 const idAffix = "user-options";
 const idRemoveUser = `${idAffix}-remove`;
@@ -35,10 +31,6 @@ export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
 ): ReactElement {
   const dispatch = useAppDispatch();
-  const project = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project
-  );
-
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
   const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
   const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
@@ -109,43 +101,40 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  async function makeOwner(userId: string): Promise<void> {
-    if (!props.isProjectOwner) {
-      return;
-    }
-    try {
-      await addOrUpdateUserRole(
-        [
-          Permission.WordEntry,
-          Permission.MergeAndReviewEntries,
-          Permission.ImportExport,
-          Permission.DeleteEditSettingsAndUsers,
-          Permission.Owner,
-        ],
-        userId
-      );
-      await addOrUpdateUserRole(
-        [
-          Permission.WordEntry,
-          Permission.MergeAndReviewEntries,
-          Permission.ImportExport,
-          Permission.DeleteEditSettingsAndUsers,
-        ],
-        props.currentUserId
-      );
-      if (project.recordingConsented) {
-        await dispatch(
-          asyncUpdateCurrentProject({ ...project, recordingConsented: false })
+  function makeOwner(userId: string): void {
+    addOrUpdateUserRole(
+      [
+        Permission.WordEntry,
+        Permission.MergeAndReviewEntries,
+        Permission.ImportExport,
+        Permission.DeleteEditSettingsAndUsers,
+        Permission.Owner,
+      ],
+      userId
+    )
+      .then(() => {
+        addOrUpdateUserRole(
+          [
+            Permission.WordEntry,
+            Permission.MergeAndReviewEntries,
+            Permission.ImportExport,
+            Permission.DeleteEditSettingsAndUsers,
+          ],
+          props.currentUserId
         );
-      }
-      toast.success(t("projectSettings.userManagement.makeOwnerToastSuccess"));
-    } catch (err) {
-      console.error(err);
-      toast.error(t("projectSettings.userManagement.makeOwnerToastFailure"));
-    }
-    setMakeOwner(false);
-    setAnchorEl(undefined);
-    await dispatch(asyncRefreshCurrentProjectUsers());
+      })
+      .then(() => {
+        setMakeOwner(false);
+        setAnchorEl(undefined);
+        toast.success(
+          t("projectSettings.userManagement.makeOwnerToastSuccess")
+        );
+        dispatch(asyncRefreshCurrentProjectUsers());
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error(t("projectSettings.userManagement.makeOwnerToastFailure"));
+      });
   }
 
   const managementOptions: ReactElement[] = [

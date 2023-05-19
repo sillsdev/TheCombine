@@ -150,7 +150,7 @@
     "userList": "Users",
     "userManagement": {
       "makeAdminWarning": "Make this user a project admin?",
-      "makeOwnerWarning": "Transfer project ownership to this user? (Audio recording will be disabled in this project until it is turned on by the new project owner.)",
+      "makeOwnerWarning": "Transfer project ownership to this user? (You are still responsible for obtaining all necessary Audio Releases for this project until you get the new project owner to assume the responsibility.)",
       "removeAdminWarning": "Remove project admin from this user?",
       "removeUserWarning": "Remove this user from the project?",
       "userRemovedToastSuccess": "User removed from the project.",
