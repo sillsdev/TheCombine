@@ -15,6 +15,7 @@ Key Sections:
 - [Test filenames](#test-filenames)
 - [Type files](#type-files)
 - [`null` vs. `undefined`](#null-vs-undefined)
+- [`const` vs. `let` vs. `var`](#const-vs-let-vs-var)
 - [Formatting](#formatting)
 - [Quotes](#quotes) (single vs. double)
 - [Use semicolons](#semicolons)
@@ -299,6 +300,34 @@ if (error)
 
 > Remark: Use `===` / `!==` to check for `null` / `undefined` on **primitives** that might be other falsy values (like
 > `''`,`0`,`false`).
+
+## `const` vs. `let` vs. `var`
+
+- `const` allows the variable to be mutated, but doesn't allow it to be redeclared; prefer `const` any time your
+  variable only needs to be declared once.
+
+- `let` and `var` both allow redeclaration, but `var` is a global variable and `let` is limited to the scope of its
+  declaration; prefer `let` to `var`.
+
+**Bad**
+
+```ts
+var shouldClapHands = false;
+for (var i = 0; i < 3; i++) {
+  var you = getYouAtTime(i);
+  shouldClapHands ||= you.isHappy() && you.knowsIt();
+}
+```
+
+**Good**
+
+```ts
+let shouldClapHands = false;
+for (let i = 0; i < 3; i++) {
+  const you = getYouAtTime(i);
+  shouldClapHands ||= you.isHappy() && you.knowsIt();
+}
+```
 
 ## Formatting
 
