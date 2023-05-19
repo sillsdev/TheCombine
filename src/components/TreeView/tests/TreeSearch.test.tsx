@@ -18,7 +18,7 @@ import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 // Handles
-const MOCK_ANIMATE = jest.fn((domain: SemanticDomainTreeNode) => {
+const MOCK_ANIMATE = jest.fn((_domain: SemanticDomainTreeNode) => {
   console.log("MockAnimateCalled");
   return Promise.resolve();
 });
@@ -30,6 +30,10 @@ const testProps: TreeSearchProps = {
 beforeEach(() => {
   jest.clearAllMocks();
 });
+
+function getSearchInput(): HTMLInputElement {
+  return screen.getByTestId(testId);
+}
 
 function setupSpies(domain: SemanticDomainTreeNode | undefined) {
   jest.spyOn(backend, "getSemanticDomainTreeNode").mockResolvedValue(domain);
@@ -71,7 +75,6 @@ describe("TreeSearch", () => {
       const node = domMap[mapIds.firstKid];
       setupSpies(node);
       await simulateTypeAndEnter(node.id);
-      expect(MOCK_ANIMATE).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 
@@ -111,39 +114,26 @@ describe("TreeSearch", () => {
   describe("Integration tests, verify component uses hooks to achieve desired UX", () => {
     it("typing non-matching domain search data does not clear input, or attempt to navigate", async () => {
       render(<TreeSearch {...testProps} />);
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        ""
-      );
+      expect(getSearchInput().value).toEqual("");
+      const searchText = "flibbertigibbet";
       await act(
         async () =>
-          await userEvent.type(
-            screen.getByTestId(testId),
-            "flibbertigibbet{enter}"
-          )
+          await userEvent.type(getSearchInput(), `${searchText}{enter}`)
       );
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        "flibbertigibbet"
-      );
+      expect(getSearchInput().value).toEqual(searchText);
       // verify that no attempt to switch domains happened
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
     it("typing valid domain number navigates and clears input", async () => {
       render(<TreeSearch {...testProps} />);
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        ""
-      );
+      expect(getSearchInput().value).toEqual("");
       setupSpies(domMap[mapIds.lastKid]);
       await act(
         async () =>
-          await userEvent.type(
-            screen.getByTestId(testId),
-            `${mapIds.lastKid}{enter}`
-          )
+          await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`)
       );
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        ""
-      );
+      expect(getSearchInput().value).toEqual("");
       // verify that we would switch to the domain requested
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);
     });

@@ -1,9 +1,12 @@
+import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
 import { Grid, Zoom } from "@mui/material";
 import { animate } from "motion";
-import React, { ReactElement, useEffect, useState } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Key } from "ts-key-enum";
 
 import { SemanticDomain, WritingSystem } from "api";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {
@@ -11,8 +14,10 @@ import {
   traverseTree,
   updateTreeLanguage,
 } from "components/TreeView/TreeViewActions";
+import { defaultTreeNode } from "components/TreeView/TreeViewReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { newSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
@@ -21,11 +26,15 @@ function getSemDomWritingSystem(
   return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
-export interface TreeViewProps extends WithTranslation {
-  returnControlToCaller: () => void;
+export const exitButtonId = "tree-view-exit";
+
+export interface TreeViewProps {
+  exit?: () => void;
+  returnControlToCaller: () => void | Promise<void>;
 }
 
-export function TreeView(props: TreeViewProps): ReactElement {
+export default function TreeView(props: TreeViewProps): ReactElement {
+  const { exit, returnControlToCaller } = props;
   const currentDomain = useAppSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
@@ -37,43 +46,89 @@ export function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
-  const { i18n } = props;
+  const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {
     /* Select the language used for the semantic domains.
      * Primary: Has it been specified for the project?
      * Secondary: What is the current browser/ui language? */
     const newLang =
-      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ??
-      i18n.resolvedLanguage;
+      getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ?? resolvedLanguage;
     if (newLang && newLang !== semDomLanguage) {
       dispatch(updateTreeLanguage(newLang));
     }
     dispatch(initTreeDomain(newLang));
-  }, [semDomLanguage, semDomWritingSystem, dispatch, i18n.resolvedLanguage]);
+  }, [semDomLanguage, semDomWritingSystem, dispatch, resolvedLanguage]);
 
-  function animateHandler(domain: SemanticDomain): Promise<void> {
+  useEffect(() => {
+    if (!exit) {
+      return;
+    }
+    const handleEsc = (event: KeyboardEvent) => {
+      if (exit && event.key === Key.Escape) {
+        exit();
+      }
+    };
+    document.addEventListener("keydown", handleEsc, true);
+    return () => {
+      document.removeEventListener("keydown", handleEsc, true);
+    };
+  }, [exit]);
+
+  useEffect(() => {
+    setVisible(true);
+  }, [currentDomain]);
+
+  const goToDomFromId = useCallback(
+    async (dom: SemanticDomain, id: string): Promise<void> => {
+      if (dom.id !== id) {
+        await dispatch(traverseTree(dom));
+      } else if (dom.id !== defaultTreeNode.id) {
+        await returnControlToCaller();
+      } else {
+        setVisible(true);
+      }
+    },
+    [dispatch, returnControlToCaller, setVisible]
+  );
+
+  const animateHandler = async (dom?: SemanticDomain): Promise<void> => {
     if (visible) {
       setVisible(false);
-      return new Promise((resolve) =>
-        setTimeout(() => {
-          if (domain.id !== currentDomain.id) {
-            dispatch(traverseTree(domain));
-            setVisible(true);
-          } else {
-            props.returnControlToCaller();
-          }
-          resolve();
-        }, 300)
-      );
-    } else return Promise.reject("Change already in-progress");
-  }
+      dom ||= newSemanticDomain(defaultTreeNode.id, "", currentDomain.lang);
+      await goToDomFromId(dom, currentDomain.id);
+    }
+  };
+
+  const onClickTop =
+    currentDomain.id === defaultTreeNode.id
+      ? undefined
+      : () => animateHandler();
 
   return (
-    <React.Fragment>
+    <>
       {/* Domain search */}
-      <Grid container justifyContent="center">
-        <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
+      <Grid container justifyContent="space-between">
+        <Grid item style={{ minWidth: exit ? 80 : 40 }} />
+        <Grid item>
+          <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
+        </Grid>
+        <Grid item>
+          <IconButtonWithTooltip
+            icon={<KeyboardDoubleArrowUp />}
+            textId={"treeView.returnToTop"}
+            onClick={onClickTop}
+            buttonId="tree-view-top"
+          />
+          {exit && (
+            <IconButtonWithTooltip
+              icon={<Close />}
+              textId={"buttons.exit"}
+              onClick={exit}
+              buttonId={exitButtonId}
+            />
+          )}
+        </Grid>
       </Grid>
       {/* Domain tree */}
       <Zoom
@@ -83,7 +138,7 @@ export function TreeView(props: TreeViewProps): ReactElement {
             animate(
               "#current-domain",
               { transform: ["none", "scale(.9)", "none"] },
-              { delay: 0.25, duration: 1 }
+              { duration: 1 }
             );
           }
         }}
@@ -100,8 +155,6 @@ export function TreeView(props: TreeViewProps): ReactElement {
           />
         </Grid>
       </Zoom>
-    </React.Fragment>
+    </>
   );
 }
-
-export default withTranslation()(TreeView);

@@ -15,7 +15,8 @@
   },
   "treeView": {
     "findDomain": "Find a domain",
-    "domainNotFound": "Domain not found"
+    "domainNotFound": "Domain not found",
+    "returnToTop": "Return to the top of the domain tree."
   },
   "addWords": {
     "selectEntry": "Select an entry",

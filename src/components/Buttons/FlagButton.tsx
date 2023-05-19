@@ -1,5 +1,5 @@
 import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
-import React, { ReactElement, useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 
 import { Flag } from "api/models";
 import DeleteEditTextDialog from "components/Buttons/DeleteEditTextDialog";
@@ -8,8 +8,8 @@ import { themeColors } from "types/theme";
 
 interface FlagButtonProps {
   flag: Flag;
+  buttonId: string;
   updateFlag?: (flag: Flag) => void;
-  buttonId?: string;
 }
 
 export default function FlagButton(props: FlagButtonProps): ReactElement {
@@ -39,7 +39,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <>
       <IconButtonWithTooltip
         icon={
           active ? (
@@ -47,7 +47,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           ) : props.updateFlag ? (
             <FlagOutlined />
           ) : (
-            <div />
+            <Fragment />
           )
         }
         text={text}
@@ -59,7 +59,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         buttonId={props.buttonId}
         side="top"
       />
-      {props.updateFlag ? (
+      {props.updateFlag && (
         <DeleteEditTextDialog
           open={open}
           text={props.flag.text}
@@ -72,7 +72,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           buttonTextIdDelete="flags.remove"
           buttonTextIdSave="flags.save"
         />
-      ) : null}
-    </React.Fragment>
+      )}
+    </>
   );
 }
