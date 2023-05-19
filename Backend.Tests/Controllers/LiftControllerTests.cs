@@ -143,6 +143,7 @@ namespace Backend.Tests.Controllers
             return extractionPath;
         }
 
+        /// <summary> Return the given file name with its .webm extension (if it has one) changed to .wav. </summary>
         private static string ChangeWebmToWav(string fileName)
         {
             if (Path.GetExtension(fileName).Equals(".webm", StringComparison.OrdinalIgnoreCase))
