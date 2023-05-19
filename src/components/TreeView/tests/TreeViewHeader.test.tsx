@@ -51,24 +51,24 @@ beforeEach(() => {
 describe("TreeViewHeader", () => {
   describe("getPrevSibling and getNextSibling", () => {
     it("return undefined when there are no brothers", () => {
-      const { result } = renderHook(() => useTreeNavigation(testProps));
+      const { current } = renderHook(() => useTreeNavigation(testProps)).result;
 
       // The top domain (used in testProps) has no brother on either side
-      expect(result.current.getPrevSibling(testProps)).toEqual(undefined);
-      expect(result.current.getNextSibling(testProps)).toEqual(undefined);
+      expect(current.getPrevSibling(testProps)).toBeUndefined();
+      expect(current.getNextSibling(testProps)).toBeUndefined();
     });
 
     // getBrotherDomain
     it("return the expected brothers", () => {
-      const { result } = renderHook(() =>
+      const { current } = renderHook(() =>
         useTreeNavigation(twoBrothersManyKids)
-      );
+      ).result;
 
-      // The top domain (used in testProps) has no brother on either side
-      expect(result.current.getPrevSibling(twoBrothersManyKids)).toEqual(
+      // The domain twoBrothersManyKids is a middle child
+      expect(current.getPrevSibling(twoBrothersManyKids)).toEqual(
         semDomFromTreeNode(domMap[mapIds.firstKid])
       );
-      expect(result.current.getNextSibling(twoBrothersManyKids)).toEqual(
+      expect(current.getNextSibling(twoBrothersManyKids)).toEqual(
         semDomFromTreeNode(domMap[mapIds.lastKid])
       );
     });

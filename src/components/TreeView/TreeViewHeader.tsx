@@ -1,5 +1,5 @@
 import { Button, ImageList, ImageListItem } from "@mui/material";
-import { useCallback, useEffect } from "react";
+import { ReactElement, useCallback, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomain, SemanticDomainTreeNode } from "api";
@@ -13,19 +13,21 @@ export interface TreeHeaderProps {
   animate: (domain: SemanticDomain) => Promise<void>;
 }
 
-export function TreeViewHeader(props: TreeHeaderProps) {
+export function TreeViewHeader(props: TreeHeaderProps): ReactElement {
   const { getPrevSibling, getNextSibling } = useTreeNavigation(props);
+  const prevSib = getPrevSibling(props);
+  const nextSib = getNextSibling(props);
 
   return (
     <ImageList cols={7} gap={20} rowHeight={"auto"}>
       <ImageListItem cols={2}>
-        {getPrevSibling(props) ? (
+        {prevSib && (
           <DomainTile
-            domain={getPrevSibling(props)!}
+            domain={prevSib}
             onClick={props.animate}
             direction={Direction.Prev}
           />
-        ) : null}
+        )}
       </ImageListItem>
       <ImageListItem cols={3}>
         <Button
@@ -45,56 +47,55 @@ export function TreeViewHeader(props: TreeHeaderProps) {
         </Button>
       </ImageListItem>
       <ImageListItem cols={2}>
-        {getNextSibling(props) ? (
+        {nextSib && (
           <DomainTile
-            domain={getNextSibling(props)!}
+            domain={nextSib}
             onClick={props.animate}
             direction={Direction.Next}
           />
-        ) : null}
+        )}
       </ImageListItem>
     </ImageList>
   );
 }
 
-// exported for unit testing only
-export function useTreeNavigation(props: TreeHeaderProps) {
-  function getNextSibling(props: TreeHeaderProps): SemanticDomain | undefined {
-    return props.currentDomain.next;
-  }
+interface TreeNavigation {
+  getNextSibling: (props: TreeHeaderProps) => SemanticDomain | undefined;
+  getPrevSibling: (props: TreeHeaderProps) => SemanticDomain | undefined;
+}
 
-  function getPrevSibling(props: TreeHeaderProps): SemanticDomain | undefined {
-    return props.currentDomain.previous;
-  }
+// exported for unit testing only
+export function useTreeNavigation(props: TreeHeaderProps): TreeNavigation {
+  const { animate, currentDomain } = props;
 
   // Navigate tree via arrow keys
-  const navigateDomainArrowKeys = useCallback(
-    (event: KeyboardEvent) => {
+  const getArrowKeyDomain = useCallback(
+    (e: KeyboardEvent): SemanticDomain | undefined => {
       const rtl = document.body.dir === "rtl";
-      let domain: SemanticDomain | undefined;
-      switch (event.key) {
+      switch (e.key) {
         case Key.ArrowLeft:
-          domain = rtl ? getNextSibling(props) : getPrevSibling(props);
-          break;
+          return rtl ? currentDomain.next : currentDomain.previous;
         case Key.ArrowRight:
-          domain = rtl ? getPrevSibling(props) : getNextSibling(props);
-          break;
+          return rtl ? currentDomain.previous : currentDomain.next;
         case Key.ArrowUp:
-          if (props.currentDomain.parent !== undefined) {
-            domain = props.currentDomain.parent;
-          }
-          break;
+          return currentDomain.parent;
         case Key.ArrowDown:
-          if (props.currentDomain.children.length === 1) {
-            domain = props.currentDomain.children[0];
+          if (currentDomain.children.length === 1) {
+            return currentDomain.children[0];
           }
-          break;
-      }
-      if (domain) {
-        props.animate(domain);
       }
     },
-    [props]
+    [currentDomain]
+  );
+
+  const navigateDomainArrowKeys = useCallback(
+    async (e: KeyboardEvent): Promise<void> => {
+      const domain = getArrowKeyDomain(e);
+      if (domain) {
+        await animate(domain);
+      }
+    },
+    [animate, getArrowKeyDomain]
   );
 
   // Add event listeners
@@ -107,7 +108,7 @@ export function useTreeNavigation(props: TreeHeaderProps) {
   }, [navigateDomainArrowKeys]);
 
   return {
-    getNextSibling,
-    getPrevSibling,
+    getNextSibling: (props: TreeHeaderProps) => props.currentDomain.next,
+    getPrevSibling: (props: TreeHeaderProps) => props.currentDomain.previous,
   };
 }
