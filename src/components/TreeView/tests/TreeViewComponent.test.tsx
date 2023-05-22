@@ -2,6 +2,7 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
+import { Key } from "ts-key-enum";
 
 import "tests/reactI18nextMock";
 
@@ -25,6 +26,13 @@ jest.mock("@mui/material", () => {
 });
 
 jest.mock("components/TreeView/TreeDepiction");
+jest.mock("types/hooks", () => {
+  const realHooks = jest.requireActual("types/hooks");
+  return {
+    ...realHooks,
+    useAppDispatch: () => jest.fn(),
+  };
+});
 
 const mockStore = configureMockStore([thunk])({
   treeViewState: { ...treeViewState, currentDomain: mockMap[mapIds.parent] },
@@ -47,25 +55,36 @@ beforeAll(async () => {
 });
 
 describe("TreeView", () => {
-  it("renders with top button and no exit button by default", () => {
+  it("renders with top button and no exit button by default", async () => {
+    await renderTree();
     expect(() => findById(topButtonId)).not.toThrow();
     expect(() => findById(exitButtonId)).toThrow();
   });
 
   it("exits via exit button", async () => {
     const mockExit = jest.fn();
-    await updateTree(mockExit);
+    await renderTree(mockExit);
     expect(mockExit).not.toBeCalled();
     renderer.act(() => {
       findById(exitButtonId).props.onClick();
     });
     expect(mockExit).toBeCalledTimes(1);
   });
+
+  it("exits via escape key", async () => {
+    const mockExit = jest.fn();
+    await renderTree(mockExit);
+    expect(mockExit).not.toBeCalled();
+    renderer.act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: Key.Escape }));
+    });
+    expect(mockExit).toBeCalledTimes(1);
+  });
 });
 
-async function updateTree(exit?: () => void): Promise<void> {
+async function renderTree(exit?: () => void): Promise<void> {
   await renderer.act(async () => {
-    treeMaster.update(
+    treeMaster = renderer.create(
       <Provider store={mockStore}>
         <TreeView returnControlToCaller={jest.fn()} exit={exit} />
       </Provider>
