@@ -123,6 +123,8 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             *.data.mcr.microsoft.com:443
+            archive.ubuntu.com:80
+            security.ubuntu.com:80
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           fetch-depth: 0
