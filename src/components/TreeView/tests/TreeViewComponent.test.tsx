@@ -44,16 +44,6 @@ const mockStore = configureMockStore([thunk])({
 const findById = (id: string): renderer.ReactTestInstance =>
   treeMaster.root.findByProps({ id });
 
-beforeAll(async () => {
-  await renderer.act(async () => {
-    treeMaster = renderer.create(
-      <Provider store={mockStore}>
-        <TreeView returnControlToCaller={jest.fn()} />
-      </Provider>
-    );
-  });
-});
-
 describe("TreeView", () => {
   it("renders with top button and no exit button by default", async () => {
     await renderTree();
