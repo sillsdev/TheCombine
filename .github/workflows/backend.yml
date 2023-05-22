@@ -23,6 +23,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             aka.ms:443
+            api.githug.com:443
             api.nuget.org:443
             *.codecov.io:443
             dc.services.visualstudio.com:443
@@ -76,6 +77,7 @@ jobs:
             api.nuget.org:443
             dc.services.visualstudio.com:443
             dotnetcli.azureedge.net:443
+            *.blob.storage.azure.net:
             github.com:443
             objects.githubusercontent.com:443
 
