@@ -10,7 +10,7 @@ ansible-core==2.14.5
     # via ansible
 cachetools==5.3.0
     # via google-auth
-certifi==2022.12.7
+certifi==2023.5.7
     # via
     #   kubernetes
     #   requests
@@ -22,7 +22,7 @@ cryptography==40.0.2
     # via
     #   ansible-core
     #   pyopenssl
-google-auth==2.17.3
+google-auth==2.18.1
     # via kubernetes
 idna==3.4
     # via requests
@@ -58,7 +58,7 @@ pyyaml==6.0
     #   -r requirements.in
     #   ansible-core
     #   kubernetes
-requests==2.29.0
+requests==2.30.0
     # via
     #   kubernetes
     #   requests-oauthlib
@@ -75,9 +75,10 @@ six==1.16.0
     #   python-dateutil
 urllib3==1.26.15
     # via
+    #   google-auth
     #   kubernetes
     #   requests
-websocket-client==1.5.1
+websocket-client==1.5.2
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:

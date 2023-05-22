@@ -16,7 +16,7 @@ cachetools==5.3.0
     # via
     #   google-auth
     #   tox
-certifi==2022.12.7
+certifi==2023.5.7
     # via
     #   kubernetes
     #   requests
@@ -67,7 +67,7 @@ flake8-eradicate==1.4.0
     # via -r dev-requirements.in
 ghp-import==2.1.0
     # via mkdocs
-google-auth==2.17.3
+google-auth==2.18.1
     # via kubernetes
 humanfriendly==10.0
     # via -r dev-requirements.in
@@ -97,17 +97,17 @@ mccabe==0.7.0
     # via flake8
 mergedeep==1.3.4
     # via mkdocs
-mkdocs==1.4.2
+mkdocs==1.4.3
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==0.13.1
     # via -r dev-requirements.in
-mkdocs-material==9.1.9
+mkdocs-material==9.1.14
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.1.1
     # via mkdocs-material
-mypy==1.2.0
+mypy==1.3.0
     # via -r dev-requirements.in
 mypy-extensions==1.0.0
     # via
@@ -125,7 +125,7 @@ pathspec==0.11.1
     # via black
 pep8-naming==0.13.3
     # via -r dev-requirements.in
-platformdirs==3.5.0
+platformdirs==3.5.1
     # via
     #   black
     #   tox
@@ -146,7 +146,7 @@ pyflakes==2.5.0
     # via flake8
 pygments==2.15.1
     # via mkdocs-material
-pymdown-extensions==9.11
+pymdown-extensions==10.0.1
     # via mkdocs-material
 pymongo==4.3.3
     # via -r dev-requirements.in
@@ -169,9 +169,9 @@ pyyaml==6.0
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2023.5.4
+regex==2023.5.5
     # via mkdocs-material
-requests==2.29.0
+requests==2.30.0
     # via
     #   kubernetes
     #   mkdocs-htmlproofer-plugin
@@ -196,27 +196,28 @@ tomli==2.0.1
     #   tox
 tox==4.5.1
     # via -r dev-requirements.in
-types-pyopenssl==23.1.0.2
+types-pyopenssl==23.1.0.3
     # via -r dev-requirements.in
-types-python-dateutil==2.8.19.12
+types-python-dateutil==2.8.19.13
     # via -r dev-requirements.in
 types-pyyaml==6.0.12.9
     # via -r dev-requirements.in
-types-requests==2.29.0.0
+types-requests==2.30.0.0
     # via -r dev-requirements.in
-types-urllib3==1.26.25.12
+types-urllib3==1.26.25.13
     # via types-requests
 typing-extensions==4.5.0
     # via mypy
 urllib3==1.26.15
     # via
+    #   google-auth
     #   kubernetes
     #   requests
 virtualenv==20.23.0
     # via tox
 watchdog==3.0.0
     # via mkdocs
-websocket-client==1.5.1
+websocket-client==1.5.2
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:
