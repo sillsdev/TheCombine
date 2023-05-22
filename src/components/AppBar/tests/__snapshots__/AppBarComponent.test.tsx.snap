@@ -22,7 +22,8 @@ Array [
     style={
       Object {
         "background": "#1976d2",
-        "width": "fit-content",
+        "maxHeight": 64,
+        "width": "min-content",
       }
     }
     tabIndex={0}
@@ -33,7 +34,7 @@ Array [
   <button
     className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit css-1y942vo-MuiButtonBase-root-MuiButton-root"
     disabled={false}
-    id="goals"
+    id="data-cleanup"
     onBlur={[Function]}
     onClick={[Function]}
     onContextMenu={[Function]}
@@ -50,7 +51,8 @@ Array [
     style={
       Object {
         "background": "inherit",
-        "width": "fit-content",
+        "maxHeight": 64,
+        "width": "min-content",
       }
     }
     tabIndex={0}
@@ -63,12 +65,12 @@ Array [
 
 exports[`NavigationButtons has only one tab shaded 2`] = `
 <button
-  aria-label="userMenu.projectSettings"
+  aria-label="appBar.projectSettings"
   aria-labelledby={null}
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit css-1y942vo-MuiButtonBase-root-MuiButton-root"
   data-mui-internal-clone-element={true}
   disabled={false}
-  id="project-name"
+  id="project-settings"
   onBlur={[Function]}
   onClick={[Function]}
   onContextMenu={[Function]}
@@ -86,6 +88,7 @@ exports[`NavigationButtons has only one tab shaded 2`] = `
   style={
     Object {
       "background": "inherit",
+      "minWidth": 0,
     }
   }
   tabIndex={0}
@@ -110,12 +113,12 @@ exports[`NavigationButtons has only one tab shaded 2`] = `
 
 exports[`NavigationButtons has only one tab shaded 3`] = `
 <button
-  aria-label="userMenu.projectSettings"
+  aria-label="appBar.projectSettings"
   aria-labelledby={null}
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit css-1y942vo-MuiButtonBase-root-MuiButton-root"
   data-mui-internal-clone-element={true}
   disabled={false}
-  id="project-name"
+  id="project-settings"
   onBlur={[Function]}
   onClick={[Function]}
   onContextMenu={[Function]}
@@ -133,6 +136,7 @@ exports[`NavigationButtons has only one tab shaded 3`] = `
   style={
     Object {
       "background": "inherit",
+      "minWidth": 0,
     }
   }
   tabIndex={0}
@@ -157,12 +161,12 @@ exports[`NavigationButtons has only one tab shaded 3`] = `
 
 exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
 <button
-  aria-label="userMenu.projectSettings"
+  aria-label="appBar.projectSettings"
   aria-labelledby={null}
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit css-1y942vo-MuiButtonBase-root-MuiButton-root"
   data-mui-internal-clone-element={true}
   disabled={false}
-  id="project-name"
+  id="project-settings"
   onBlur={[Function]}
   onClick={[Function]}
   onContextMenu={[Function]}
@@ -180,6 +184,7 @@ exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
   style={
     Object {
       "background": "#1976d2",
+      "minWidth": 0,
     }
   }
   tabIndex={0}

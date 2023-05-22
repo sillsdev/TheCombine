@@ -1,4 +1,4 @@
-import { AppBar, Grid, Hidden, Toolbar } from "@mui/material";
+import { AppBar, Grid, Toolbar } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -18,7 +18,9 @@ export const appBarHeight = 64;
 export default function AppBarComponent(): ReactElement {
   const location = useLocation();
   const [currentTab, setCurrentTab] = useState<Path>(Path.ProjScreen);
+
   useEffect(() => setCurrentTab(getBasePath(location.pathname)), [location]);
+
   return (
     <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
       <AppBar
@@ -27,15 +29,13 @@ export default function AppBarComponent(): ReactElement {
       >
         <Toolbar>
           <Grid container justifyContent="space-between" alignItems="center">
-            <Grid item sm={7} md={6} lg={5}>
-              <Hidden smDown>
-                <Logo />
-              </Hidden>
+            <Grid item>
+              <Logo />
               {!!getProjectId() && (
                 <NavigationButtons currentTab={currentTab} />
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={3} lg={4}>
+            <Grid item>
               {!!getProjectId() && (
                 <ProjectNameButton currentTab={currentTab} />
               )}
