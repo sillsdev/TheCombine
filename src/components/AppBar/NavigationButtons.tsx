@@ -1,13 +1,12 @@
 import { Button } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Permission } from "api";
 import * as backend from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
-import { openTreeAction } from "components/TreeView/TreeViewActions";
-import { useAppDispatch } from "types/hooks";
+import { appBarHeight } from "components/AppBar/AppBarComponent";
 import { tabColor } from "types/theme";
 
 interface NavigationButtonsProps {
@@ -16,16 +15,16 @@ interface NavigationButtonsProps {
 
 export async function getIsAdminOrOwner(): Promise<boolean> {
   const user = LocalStorage.getCurrentUser();
-  if (user?.isAdmin) {
+  if (!user) {
+    return false;
+  }
+  if (user.isAdmin) {
     return true;
-  } else {
-    const projectId = LocalStorage.getProjectId();
-    const userRoleID = user?.projectRoles[projectId];
-    if (userRoleID) {
-      return backend.getUserRole(userRoleID).then((role) => {
-        return role.permissions.includes(Permission.Owner);
-      });
-    }
+  }
+  const userRoleID = user.projectRoles[LocalStorage.getProjectId()];
+  if (userRoleID) {
+    const role = await backend.getUserRole(userRoleID);
+    return role.permissions.includes(Permission.Owner);
   }
   return false;
 }
@@ -34,56 +33,33 @@ export async function getIsAdminOrOwner(): Promise<boolean> {
 export default function NavigationButtons(
   props: NavigationButtonsProps
 ): ReactElement {
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
 
   getIsAdminOrOwner().then(setIsAdminOrOwner);
 
+  const navButton = (path: Path, stringId: string): ReactElement => {
+    return (
+      <Button
+        id={stringId.split(".").pop()}
+        onClick={() => history.push(path)}
+        color="inherit"
+        style={{
+          background: tabColor(props.currentTab, path),
+          maxHeight: appBarHeight,
+          width: "min-content",
+        }}
+      >
+        {t(stringId)}
+      </Button>
+    );
+  };
+
   return (
-    <React.Fragment>
-      <Button
-        id="data-entry"
-        onClick={() => {
-          dispatch(openTreeAction());
-          history.push(Path.DataEntry);
-        }}
-        color="inherit"
-        style={{
-          width: "fit-content",
-          background: tabColor(props.currentTab, Path.DataEntry),
-        }}
-      >
-        {t("appBar.dataEntry")}
-      </Button>
-      <Button
-        id="goals"
-        onClick={() => {
-          history.push(Path.Goals);
-        }}
-        color="inherit"
-        style={{
-          width: "fit-content",
-          background: tabColor(props.currentTab, Path.Goals),
-        }}
-      >
-        {t("appBar.dataCleanup")}
-      </Button>
-      {isAdminOrOwner && (
-        <Button
-          id="statistics"
-          onClick={() => {
-            history.push(Path.Statistics);
-          }}
-          color="inherit"
-          style={{
-            width: "min-content",
-            background: tabColor(props.currentTab, Path.Statistics),
-          }}
-        >
-          {t("appBar.statistics")}
-        </Button>
-      )}
-    </React.Fragment>
+    <>
+      {navButton(Path.DataEntry, "appBar.dataEntry")}
+      {navButton(Path.Goals, "appBar.dataCleanup")}
+      {isAdminOrOwner && navButton(Path.Statistics, "appBar.statistics")}
+    </>
   );
 }

@@ -16,7 +16,7 @@ export default function Logo(): ReactElement {
         <img src={logo} height="40" alt="Logo" />
       </Hidden>
       <Hidden mdUp>
-        <img src={smallLogo} height="35" alt="Logo" />
+        <img src={smallLogo} height="30" alt="Logo" />
       </Hidden>
     </Button>
   );
