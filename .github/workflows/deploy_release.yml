@@ -17,11 +17,28 @@ jobs:
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
+          egress-policy: audit
+          allowed-endpoints: >
+            *.data.mcr.microsoft.com:443
+            api.ecr-public.us-east-1.amazonaws.com:443
+            api.github.com:443
+            api.nuget.org:443
+            archive.ubuntu.com:80
+            auth.docker.io:443
+            files.pythonhosted.org:443
+            github.com:443
+            mcr.microsoft.com:443
+            production.cloudflare.docker.com:443
+            public.ecr.aws:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+            sts.us-east-1.amazonaws.com:443
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Build The Combine
         id: build_combine

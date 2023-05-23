@@ -19,6 +19,7 @@ using SIL.Lift.Options;
 using SIL.Lift.Parsing;
 using SIL.Text;
 using SIL.WritingSystems;
+using Xabe.FFmpeg;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
@@ -244,7 +245,7 @@ namespace BackendFramework.Services
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
-                AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry, audioDir, projectId);
 
                 liftWriter.Add(entry);
             }
@@ -257,7 +258,7 @@ namespace BackendFramework.Services
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, vernacularBcp47);
                 AddSenses(entry, wordEntry);
-                AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry, audioDir, projectId);
 
                 liftWriter.AddDeletedEntry(entry);
             }
@@ -445,7 +446,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private static void AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
+        private static async Task AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
         {
             foreach (var audioFile in wordEntry.Audio)
             {
@@ -453,14 +454,20 @@ namespace BackendFramework.Services
                 var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
                 var dest = Path.Combine(path, audioFile);
 
-                if (File.Exists(src))
+                if (!File.Exists(src)) continue;
+                if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+                {
+                    dest = Path.ChangeExtension(dest, ".wav");
+                    await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
+                }
+                else
                 {
                     File.Copy(src, dest, true);
-
-                    var proMultiText = new LiftMultiText { { "href", dest } };
-                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-                    entry.Pronunciations.Add(lexPhonetic);
                 }
+
+                var proMultiText = new LiftMultiText { { "href", dest } };
+                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                entry.Pronunciations.Add(lexPhonetic);
             }
         }
 

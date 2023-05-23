@@ -151,6 +151,7 @@ export default function SenseCardContent(
             textId={"mergeDups.helpText.protectedSense"}
             side={"top"}
             small
+            buttonId={`sense-${props.senses[0].guid}-protected`}
           />
         )}
       </div>
