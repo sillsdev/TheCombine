@@ -12,7 +12,7 @@ import {
   RequestState,
 } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { meetsPasswordRequirements } from "utilities";
+import { meetsPasswordRequirements } from "utilities/utilities";
 
 export interface MatchParams {
   token: string;

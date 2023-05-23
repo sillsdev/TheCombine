@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Switch } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
 
 import { Path } from "browserHistory";
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 // import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { PasswordReset } from "components/PasswordReset/ResetPage";
 
