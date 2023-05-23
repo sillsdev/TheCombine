@@ -138,7 +138,10 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
         bottomCell={props.editDomains ? SPACER : undefined}
       />
       <Dialog fullScreen open={addingDomains}>
-        <TreeView returnControlToCaller={addDomain} />
+        <TreeView
+          exit={() => setAddingDomains(false)}
+          returnControlToCaller={addDomain}
+        />
       </Dialog>
     </React.Fragment>
   );
