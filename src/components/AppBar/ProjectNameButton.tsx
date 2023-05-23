@@ -1,4 +1,4 @@
-import { QueryStats, Settings } from "@mui/icons-material";
+import { BarChart, Settings } from "@mui/icons-material";
 import { Button, Hidden, Tooltip, Typography } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -56,7 +56,7 @@ export default function ProjectNameButton(
               minWidth: 0,
             }}
           >
-            <QueryStats />
+            <BarChart />
           </Button>
         </Tooltip>
       )}
