@@ -83,6 +83,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
                   textId={"mergeDups.helpText.protectedWord"}
                   side={"top"}
                   small
+                  buttonId={`word-${props.wordId}-protected`}
                 />
               )}
               <FlagButton

@@ -4,7 +4,10 @@
  * It must come before any file that imports `react-i18next`. */
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (str: string) => str }),
+  useTranslation: () => ({
+    t: (str: string) => str,
+    i18n: { resolvedLanguage: "" },
+  }),
   withTranslation: () => (Component: any) => {
     Component.defaultProps = {
       ...Component.defaultProps,
