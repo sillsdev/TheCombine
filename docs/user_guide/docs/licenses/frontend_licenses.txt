@@ -1042,7 +1042,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/base 5.0.0-alpha.128
+@mui/base 5.0.0-beta.1
 MIT
 The MIT License (MIT)
 
@@ -1067,7 +1067,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/core-downloads-tracker 5.12.3
+@mui/core-downloads-tracker 5.13.1
 MIT
 The MIT License (MIT)
 
@@ -1117,7 +1117,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/material 5.12.3
+@mui/material 5.13.1
 MIT
 The MIT License (MIT)
 
@@ -1142,7 +1142,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/private-theming 5.12.3
+@mui/private-theming 5.13.1
 MIT
 The MIT License (MIT)
 
@@ -1217,7 +1217,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/system 5.12.3
+@mui/system 5.13.1
 MIT
 The MIT License (MIT)
 
@@ -1267,7 +1267,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/utils 5.12.3
+@mui/utils 5.13.1
 MIT
 The MIT License (MIT)
 
@@ -1366,7 +1366,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@reduxjs/toolkit 1.9.3
+@reduxjs/toolkit 1.9.5
 MIT
 MIT License
 
@@ -40399,7 +40399,7 @@ MIT
     SOFTWARE
 
 
-@types/react-is 17.0.3
+@types/react-is 18.2.0
 MIT
     MIT License
 
@@ -40449,7 +40449,7 @@ MIT
     SOFTWARE
 
 
-@types/react-transition-group 4.4.5
+@types/react-transition-group 4.4.6
 MIT
     MIT License
 
@@ -42061,7 +42061,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-i18next 22.4.15
+i18next 22.5.0
 MIT
 The MIT License (MIT)
 
@@ -42086,7 +42086,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-immer 9.0.19
+immer 9.0.21
 MIT
 MIT License
 
@@ -43783,7 +43783,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-reselect 4.1.7
+reselect 4.1.8
 MIT
 The MIT License (MIT)
 
