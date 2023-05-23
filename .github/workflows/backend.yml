@@ -39,6 +39,8 @@ jobs:
         uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
         with:
           dotnet-version: ${{ matrix.dotnet }}
+      - name: Install ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v2 # v2.0.0
 
       # Coverage.
       - name: run coverage tests
