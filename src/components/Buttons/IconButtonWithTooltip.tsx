@@ -8,7 +8,7 @@ interface IconButtonWithTooltipProps {
   textId?: string;
   small?: boolean;
   onClick?: () => void;
-  buttonId?: string;
+  buttonId: string;
   side?: "bottom" | "left" | "right" | "top";
 }
 
