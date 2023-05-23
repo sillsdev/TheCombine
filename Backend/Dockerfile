@@ -27,7 +27,7 @@ ENV APP_FILES=${HOME}/.CombineFiles
 RUN apt-get update \
   && apt-get install -y \
   # icu.net dependency: libdl.so
-  libc6-dev \
+  libc6-dev ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
 # Create the home directory for the new app user.
