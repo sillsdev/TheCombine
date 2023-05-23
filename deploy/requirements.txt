@@ -58,7 +58,7 @@ pyyaml==6.0
     #   -r requirements.in
     #   ansible-core
     #   kubernetes
-requests==2.29.0
+requests==2.31.0
     # via
     #   kubernetes
     #   requests-oauthlib
