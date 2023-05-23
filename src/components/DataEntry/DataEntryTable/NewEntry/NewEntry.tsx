@@ -1,9 +1,20 @@
 import { AutocompleteCloseReason, Grid, Typography } from "@mui/material";
-import React, { ReactElement } from "react";
+import {
+  CSSProperties,
+  KeyboardEvent,
+  ReactElement,
+  RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, Word, WritingSystem } from "api/models";
+import { Word, WritingSystem } from "api/models";
+import { focusInput } from "components/DataEntry/DataEntryTable/DataEntryTable";
 import {
   DeleteEntry,
   EntryNote,
@@ -14,503 +25,301 @@ import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialo
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
+import { StoreState } from "types";
 import theme from "types/theme";
-import { newSense, newWord } from "types/word";
-import { firstGlossText } from "types/wordUtilities";
-import { LevenshteinDistance } from "utilities";
 
 const idAffix = "new-entry";
-
-interface NewEntryProps {
-  allWords: Word[];
-  defunctWordIds: string[];
-  updateWordWithNewGloss: (
-    wordId: string,
-    gloss: string,
-    audioFileURLs: string[]
-  ) => void;
-  addNewWord: (newEntry: Word, newAudio: string[]) => void;
-  semanticDomain: SemanticDomain;
-  setIsReadyState: (isReady: boolean) => void;
-  recorder?: Recorder;
-  analysisLang: WritingSystem;
-  vernacularLang: WritingSystem;
-}
 
 export enum FocusTarget {
   Gloss,
   Vernacular,
 }
 
-interface NewEntryState {
-  newEntry: Word;
-  allVerns: string[];
-  suggestedVerns: string[];
-  dupVernWords: Word[];
-  activeGloss: string;
-  audioFileURLs: string[];
-  vernOpen: boolean;
-  senseOpen: boolean;
-  selectedWord?: Word;
-  shouldFocus?: FocusTarget;
-}
+const gridItemStyle = (spacing: number): CSSProperties => ({
+  paddingLeft: theme.spacing(spacing),
+  paddingRight: theme.spacing(spacing),
+  position: "relative",
+});
 
-function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
-  if (inputRef.current) {
-    inputRef.current.focus();
-    inputRef.current.scrollIntoView({ behavior: "smooth" });
-  }
+interface NewEntryProps {
+  analysisLang: WritingSystem;
+  vernacularLang: WritingSystem;
+  recorder?: Recorder;
+  // Parent component handles new entry state:
+  addNewEntry: () => Promise<void>;
+  updateWordWithNewGloss: (wordId: string) => Promise<void>;
+  newAudioUrls: string[];
+  addNewAudioUrl: (file: File) => void;
+  delNewAudioUrl: (url: string) => void;
+  newGloss: string;
+  setNewGloss: (gloss: string) => void;
+  newNote: string;
+  setNewNote: (note: string) => void;
+  newVern: string;
+  setNewVern: (vern: string) => void;
+  vernInput: RefObject<HTMLDivElement>;
+  // Parent component handles vern suggestion state:
+  selectedDup?: Word;
+  setSelectedDup: (id?: string) => void;
+  suggestedVerns: string[];
+  suggestedDups: Word[];
 }
 
 /**
  * Displays data related to creating a new word entry
  */
-export default class NewEntry extends React.Component<
-  NewEntryProps,
-  NewEntryState
-> {
-  private readonly levDistance = new LevenshteinDistance();
-  private readonly maxSuggestions = 5;
-  private readonly maxLevDistance = 3;
+export default function NewEntry(props: NewEntryProps): ReactElement {
+  const {
+    analysisLang,
+    vernacularLang,
+    recorder,
+    // Parent component handles new entry state:
+    addNewEntry,
+    updateWordWithNewGloss,
+    newAudioUrls,
+    addNewAudioUrl,
+    delNewAudioUrl,
+    newGloss,
+    setNewGloss,
+    newNote,
+    setNewNote,
+    newVern,
+    setNewVern,
+    vernInput,
+    // Parent component handles vern suggestion state:
+    selectedDup,
+    setSelectedDup,
+    suggestedVerns,
+    suggestedDups,
+  } = props;
 
-  constructor(props: NewEntryProps) {
-    super(props);
-    this.state = {
-      newEntry: newWord(),
-      activeGloss: "",
-      allVerns: [],
-      audioFileURLs: [],
-      suggestedVerns: [],
-      dupVernWords: [],
-      vernOpen: false,
-      senseOpen: false,
-    };
-    this.vernInput = React.createRef<HTMLDivElement>();
-    this.glossInput = React.createRef<HTMLDivElement>();
-  }
+  const isTreeOpen = useSelector(
+    (state: StoreState) => state.treeViewState.open
+  );
 
-  vernInput: React.RefObject<HTMLDivElement>;
-  glossInput: React.RefObject<HTMLDivElement>;
+  const [senseOpen, setSenseOpen] = useState(false);
+  const [shouldFocus, setShouldFocus] = useState<FocusTarget | undefined>();
+  const [vernOpen, setVernOpen] = useState(false);
+  const [wasTreeClosed, setWasTreeClosed] = useState(false);
 
-  async componentDidUpdate(
-    prevProps: NewEntryProps,
-    prevState: NewEntryState
-  ): Promise<void> {
-    if (prevProps.allWords !== this.props.allWords) {
-      this.setState((_, props) => {
-        const vernsWithDups = props.allWords.map((w: Word) => w.vernacular);
-        return { allVerns: [...new Set(vernsWithDups)] };
-      });
-    }
+  const glossInput = useRef<HTMLDivElement>(null);
 
-    /* When the vern/sense dialogs are closed, focus needs to return to text
-    fields. The following sets a flag (state.shouldFocus) to trigger focus once
-    the input components are updated. Focus is triggered by
-    this.conditionalFocus() passed to each input component and called within its
-    respective componentDidUpdate(). */
-    if (
-      (prevState.vernOpen || prevState.senseOpen) &&
-      !(this.state.vernOpen || this.state.senseOpen)
-    ) {
-      this.setState((state: NewEntryState) => ({
-        shouldFocus: state.selectedWord
-          ? FocusTarget.Gloss
-          : FocusTarget.Vernacular,
-      }));
-    }
-  }
-
-  focus(target: FocusTarget): void {
-    switch (target) {
-      case FocusTarget.Gloss:
-        focusInput(this.glossInput);
-        return;
-      case FocusTarget.Vernacular:
-        focusInput(this.vernInput);
-        return;
-    }
-  }
-
-  /** This function is for a child input component to call in componentDidUpdate
-   * to move focus to itself, if the current state.shouldFocus says it should. */
-  conditionalFocus(target: FocusTarget): void {
-    if (this.state.shouldFocus === target) {
-      this.focus(target);
-      this.setState({ shouldFocus: undefined });
-    }
-  }
-
-  addAudio(audioFile: File): void {
-    this.setState((prevState) => {
-      const audioFileURLs = [...prevState.audioFileURLs];
-      audioFileURLs.push(URL.createObjectURL(audioFile));
-      return { audioFileURLs };
-    });
-  }
-
-  removeAudio(fileName: string): void {
-    this.setState((prevState) => ({
-      audioFileURLs: prevState.audioFileURLs.filter(
-        (fileURL) => fileURL !== fileName
-      ),
-    }));
-  }
-
-  updateGlossField(newValue: string): void {
-    this.setState((prevState, props) => ({
-      newEntry: {
-        ...prevState.newEntry,
-        senses: [
-          newSense(newValue, props.analysisLang.bcp47, props.semanticDomain),
-        ],
-      },
-      activeGloss: newValue,
-    }));
-  }
-
-  updateVernField(newValue: string, openDialog?: boolean): void {
-    const stateUpdates: Partial<NewEntryState> = {};
-    if (newValue !== this.state.newEntry.vernacular) {
-      if (this.state.selectedWord) {
-        this.setState({ selectedWord: undefined });
+  const focus = useCallback(
+    (target: FocusTarget): void => {
+      switch (target) {
+        case FocusTarget.Gloss:
+          focusInput(glossInput);
+          return;
+        case FocusTarget.Vernacular:
+          focusInput(vernInput);
+          return;
       }
-      this.props.setIsReadyState(newValue.trim().length > 0);
-      this.updateSuggestedVerns(newValue);
-      let dupVernWords: Word[] = [];
-      if (newValue) {
-        dupVernWords = this.props.allWords.filter(
-          (word) =>
-            word.vernacular === newValue &&
-            !this.props.defunctWordIds.includes(word.id)
-          // Weed out any words that are already being edited
-        );
+    },
+    [glossInput, vernInput]
+  );
+
+  const resetState = useCallback((): void => {
+    setNewGloss("");
+    setNewNote("");
+    setNewVern("");
+    setVernOpen(false);
+    // May also need to reset newAudioUrls in the parent component.
+    focus(FocusTarget.Vernacular);
+  }, [focus, setNewGloss, setNewNote, setNewVern, setVernOpen]);
+
+  /** Reset when tree opens, except for the first time it is open. */
+  useEffect(() => {
+    if (isTreeOpen) {
+      if (wasTreeClosed) {
+        resetState();
       }
-      stateUpdates.dupVernWords = dupVernWords;
-      stateUpdates.newEntry = { ...this.state.newEntry, vernacular: newValue };
+      setWasTreeClosed(false);
+    } else {
+      setWasTreeClosed(true);
     }
-    this.setState(stateUpdates as NewEntryState, () => {
-      if (
-        openDialog &&
-        this.state.dupVernWords.length &&
-        !this.state.selectedWord
-      ) {
-        this.setState({ vernOpen: true });
-      }
-    });
-  }
+  }, [isTreeOpen, resetState, wasTreeClosed]);
 
-  updateNote(text: string): void {
-    this.setState((prevState, props) => ({
-      newEntry: {
-        ...prevState.newEntry,
-        note: { text, language: props.analysisLang.bcp47 },
-      },
-    }));
-  }
+  /** When the vern/sense dialogs are closed, focus needs to return to text fields.
+   * The following sets a flag (shouldFocus) to be triggered by conditionalFocus(),
+   * which is passed to each input component to call on update. */
+  useEffect(() => {
+    if (!(senseOpen || vernOpen)) {
+      setShouldFocus(selectedDup ? FocusTarget.Gloss : FocusTarget.Vernacular);
+    }
+  }, [selectedDup, senseOpen, vernOpen]);
 
-  resetState(): void {
-    this.setState({
-      newEntry: newWord(),
-      activeGloss: "",
-      audioFileURLs: [],
-      suggestedVerns: [],
-      dupVernWords: [],
-      selectedWord: undefined,
-    });
-    this.focus(FocusTarget.Vernacular);
-  }
+  /** This function is for a child input component to call on update
+   * to move focus to itself, if shouldFocus says it should. */
+  const conditionalFocus = (target: FocusTarget): void => {
+    if (shouldFocus === target) {
+      focus(target);
+      setShouldFocus(undefined);
+    }
+  };
 
-  addNewWordAndReset(): void {
-    const newEntry: Word = this.state.newEntry.senses.length
-      ? this.state.newEntry
-      : {
-          ...this.state.newEntry,
-          senses: [
-            newSense(
-              "",
-              this.props.analysisLang.bcp47,
-              this.props.semanticDomain
-            ),
-          ],
-        };
-    this.props.addNewWord(newEntry, this.state.audioFileURLs);
-    this.resetState();
-  }
+  const updateVernField = (vern: string, openVernDialog?: boolean): void => {
+    setNewVern(vern);
+    setVernOpen(!!openVernDialog);
+  };
 
-  addOrUpdateWord(): void {
-    if (this.state.dupVernWords.length) {
+  const addNewEntryAndReset = async (): Promise<void> => {
+    await addNewEntry();
+    resetState();
+  };
+
+  const addOrUpdateWord = async (): Promise<void> => {
+    if (suggestedDups.length) {
       // Duplicate vern ...
-      if (!this.state.selectedWord) {
+      if (!selectedDup) {
         // ... and user hasn't made a selection
-        this.setState({ vernOpen: true });
-      } else if (this.state.selectedWord.id) {
+        setVernOpen(true);
+      } else if (!selectedDup.id) {
         // ... and user has selected an entry to modify
-        this.props.updateWordWithNewGloss(
-          this.state.selectedWord.id,
-          this.state.activeGloss,
-          this.state.audioFileURLs
-        );
-        this.resetState();
+        await updateWordWithNewGloss(selectedDup.id);
+        resetState();
       } else {
         // ... and user has selected new entry
-        this.addNewWordAndReset();
+        await addNewEntryAndReset();
       }
     } else {
-      // New Vern is typed
-      this.addNewWordAndReset();
+      // New vern is typed
+      await addNewEntryAndReset();
     }
-  }
+  };
 
-  handleEnter(e: React.KeyboardEvent, checkGloss: boolean): void {
-    if (!this.state.vernOpen && e.key === Key.Enter) {
+  const handleEnter = async (
+    e: KeyboardEvent,
+    checkGloss: boolean
+  ): Promise<void> => {
+    console.info(vernOpen);
+    if ((true || !vernOpen) && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular
-      if (this.state.newEntry.vernacular) {
+      if (newVern) {
         // The user can conditionally submit a new entry without a gloss
-        if (this.state.activeGloss || !checkGloss) {
-          this.addOrUpdateWord();
-          this.focus(FocusTarget.Vernacular);
+        if (newGloss || !checkGloss) {
+          await addOrUpdateWord();
+          focus(FocusTarget.Vernacular);
         } else {
-          this.focus(FocusTarget.Gloss);
+          focus(FocusTarget.Gloss);
         }
       } else {
-        this.focus(FocusTarget.Vernacular);
+        focus(FocusTarget.Vernacular);
       }
     }
-  }
+  };
 
-  handleCloseVernDialog(selectedWordId?: string): void {
-    this.setState((prevState) => {
-      let selectedWord: Word | undefined;
-      let senseOpen = false;
-      if (selectedWordId === "") {
-        selectedWord = newWord(prevState.newEntry.vernacular);
-      } else if (selectedWordId) {
-        selectedWord = prevState.dupVernWords.find(
-          (word: Word) => word.id === selectedWordId
-        );
-        senseOpen = true;
-      }
-      return { selectedWord, senseOpen, vernOpen: false };
-    });
-  }
-
-  handleCloseSenseDialog(senseIndex?: number): void {
-    if (senseIndex === undefined) {
-      this.setState({ selectedWord: undefined, vernOpen: true });
-    } else if (senseIndex >= 0) {
-      // SenseDialog can only be open when this.state.selectedWord is defined.
-      const gloss = firstGlossText(this.state.selectedWord!.senses[senseIndex]);
-      this.updateGlossField(gloss);
-    } // The remaining case, senseIndex===-1, indicates new sense for the selectedWord.
-    this.setState({ senseOpen: false });
-  }
-
-  autoCompleteCandidates(vernacular: string): string[] {
-    // filter allVerns to those that start with vernacular
-    // then map them into an array sorted by length and take the 2 shortest
-    // and the rest longest (should make finding the long words easier)
-    const scoredStartsWith: [string, number][] = [];
-    const startsWith = this.state.allVerns.filter((vern: string) =>
-      vern.startsWith(vernacular)
-    );
-    for (const v of startsWith) {
-      scoredStartsWith.push([v, v.length]);
+  const handleCloseVernDialog = (id?: string): void => {
+    if (id !== undefined) {
+      setSelectedDup(id);
     }
-    const keepers = scoredStartsWith
-      .sort((a, b) => a[1] - b[1])
-      .map((vern) => vern[0]);
-    if (keepers.length > this.maxSuggestions) {
-      keepers.splice(2, keepers.length - this.maxSuggestions);
-    }
-    return keepers;
-  }
 
-  updateSuggestedVerns(value?: string): void {
-    let suggestedVerns: string[] = [];
-    if (value) {
-      suggestedVerns = [...this.autoCompleteCandidates(value)];
-      if (suggestedVerns.length < this.maxSuggestions) {
-        const viableVerns: string[] = this.state.allVerns.filter(
-          (vern: string) =>
-            this.levDistance.getDistance(vern, value) < this.maxLevDistance
-        );
-        const sortedVerns: string[] = viableVerns.sort(
-          (a: string, b: string) =>
-            this.levDistance.getDistance(a, value) -
-            this.levDistance.getDistance(b, value)
-        );
-        let candidate: string;
-        while (
-          suggestedVerns.length < this.maxSuggestions &&
-          sortedVerns.length
-        ) {
-          candidate = sortedVerns.shift()!;
-          if (!suggestedVerns.includes(candidate)) {
-            suggestedVerns.push(candidate);
-          }
-        }
-      }
+    if (id) {
+      setSenseOpen(true);
     }
-    this.setState({ suggestedVerns });
-  }
 
-  render(): ReactElement {
-    return (
-      <Grid container id={idAffix} alignItems="center">
-        <Grid
-          container
-          item
-          xs={4}
-          style={{
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
-            position: "relative",
-          }}
-        >
-          <Grid item xs={12}>
-            <VernWithSuggestions
-              isNew
-              vernacular={this.state.newEntry.vernacular}
-              vernInput={this.vernInput}
-              updateVernField={(newValue: string, openDialog?: boolean) => {
-                this.updateVernField(newValue, openDialog);
-              }}
-              onBlur={() => {
-                this.updateVernField(this.state.newEntry.vernacular, true);
-              }}
-              onClose={(
-                _: React.ChangeEvent<{}>,
-                reason: AutocompleteCloseReason
-              ): void => {
-                // Handle if the user fully types an identical vernacular to a
-                // suggestion and selects it from the Autocomplete. This should
-                // open the dialog.
-                switch (reason) {
-                  case "selectOption":
-                    // User pressed Enter or Left Click on an item.
-                    this.updateVernField(this.state.newEntry.vernacular, true);
-                    break;
-                  default:
-                    // If the user Escapes out of the Autocomplete, do nothing.
-                    break;
-                }
-              }}
-              suggestedVerns={this.state.suggestedVerns}
-              handleEnterAndTab={(e: React.KeyboardEvent) =>
-                // To prevent unintentional no-gloss submissions:
-                // If enter pressed from the vern field,
-                // check whether gloss is empty
-                this.handleEnter(e, true)
-              }
-              vernacularLang={this.props.vernacularLang}
-              textFieldId={`${idAffix}-vernacular`}
-              onUpdate={() => this.conditionalFocus(FocusTarget.Vernacular)}
-            />
-            <VernDialog
-              open={this.state.vernOpen}
-              handleClose={(selectedWordId?: string) =>
-                this.handleCloseVernDialog(selectedWordId)
-              }
-              vernacularWords={this.state.dupVernWords}
-              analysisLang={this.props.analysisLang.bcp47}
-            />
-            {this.state.selectedWord && (
-              <SenseDialog
-                selectedWord={this.state.selectedWord}
-                open={this.state.senseOpen}
-                handleClose={(senseIndex?: number) =>
-                  this.handleCloseSenseDialog(senseIndex)
-                }
-                analysisLang={this.props.analysisLang.bcp47}
-              />
-            )}
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          xs={4}
-          style={{
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
-            position: "relative",
-          }}
-        >
-          <GlossWithSuggestions
+    setVernOpen(false);
+  };
+
+  const handleCloseSenseDialog = (gloss?: string): void => {
+    if (gloss) {
+      setNewGloss(gloss);
+    } else if (gloss === undefined) {
+      // If gloss is undefined, the user exited the dialog without a selection.
+      setSelectedDup();
+      setVernOpen(true);
+    }
+    // else: an empty string indicates new sense for the selectedWord.
+
+    setSenseOpen(false);
+  };
+
+  return (
+    <Grid container id={idAffix} alignItems="center">
+      <Grid container item xs={4} style={gridItemStyle(2)}>
+        <Grid item xs={12}>
+          <VernWithSuggestions
             isNew
-            gloss={this.state.activeGloss}
-            glossInput={this.glossInput}
-            updateGlossField={(newValue: string) =>
-              this.updateGlossField(newValue)
+            vernacular={newVern}
+            vernInput={vernInput}
+            updateVernField={(newValue: string, openDialog?: boolean) =>
+              updateVernField(newValue, openDialog)
             }
-            handleEnterAndTab={(e: React.KeyboardEvent) =>
-              // To allow intentional no-gloss submissions:
-              // If enter pressed from the gloss field,
-              // don't check whether gloss is empty
-              this.handleEnter(e, false)
-            }
-            analysisLang={this.props.analysisLang}
-            textFieldId={`${idAffix}-gloss`}
-            onUpdate={() => this.conditionalFocus(FocusTarget.Gloss)}
+            onBlur={() => setVernOpen(true)}
+            onClose={(_, reason: AutocompleteCloseReason) => {
+              // Handle if the user fully types an identical vernacular to a suggestion
+              // and selects it from the Autocomplete. This should open the dialog.
+              if (reason === "selectOption") {
+                // User pressed Enter or Left Click on an item.
+                setVernOpen(true);
+              }
+            }}
+            suggestedVerns={suggestedVerns}
+            // To prevent unintentional no-gloss submissions:
+            // If enter pressed from the vern field, check whether gloss is empty
+            handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, true)}
+            vernacularLang={vernacularLang}
+            textFieldId={`${idAffix}-vernacular`}
+            onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
           />
-        </Grid>
-        <Grid
-          item
-          xs={1}
-          style={{
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            position: "relative",
-          }}
-        >
-          {!this.state.selectedWord?.id && (
-            // note is not available if user selected to modify an exiting entry
-            <EntryNote
-              noteText={this.state.newEntry.note.text}
-              updateNote={(text: string) => this.updateNote(text)}
-              buttonId="note-entry-new"
+          <VernDialog
+            open={vernOpen && !!suggestedDups.length && !selectedDup}
+            handleClose={handleCloseVernDialog}
+            vernacularWords={suggestedDups}
+            analysisLang={analysisLang.bcp47}
+          />
+          {selectedDup && (
+            <SenseDialog
+              selectedWord={selectedDup}
+              open={senseOpen}
+              handleClose={handleCloseSenseDialog}
+              analysisLang={analysisLang.bcp47}
             />
           )}
         </Grid>
-        <Grid
-          item
-          xs={2}
-          style={{
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            position: "relative",
-          }}
-        >
-          <Pronunciations
-            wordId={""}
-            pronunciationFiles={this.state.audioFileURLs}
-            recorder={this.props.recorder}
-            deleteAudio={(_, fileName: string) => {
-              this.removeAudio(fileName);
-            }}
-            uploadAudio={(_, audioFile: File) => {
-              this.addAudio(audioFile);
-            }}
-            getAudioUrl={(_, fileName: string) => fileName}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={1}
-          style={{
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            position: "relative",
-          }}
-        >
-          <DeleteEntry
-            removeEntry={() => this.resetState()}
-            buttonId={`${idAffix}-delete`}
-          />
-        </Grid>
-        <EnterGrid />
       </Grid>
-    );
-  }
+      <Grid item xs={4} style={gridItemStyle(1)}>
+        <GlossWithSuggestions
+          isNew
+          gloss={newGloss}
+          glossInput={glossInput}
+          updateGlossField={setNewGloss}
+          // To allow intentional no-gloss submissions:
+          // If enter pressed from the gloss field, don't check whether gloss is empty
+          handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, false)}
+          analysisLang={analysisLang}
+          textFieldId={`${idAffix}-gloss`}
+          onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
+        />
+      </Grid>
+      <Grid item xs={1} style={gridItemStyle(1)}>
+        {!selectedDup?.id && (
+          // note is not available if user selected to modify an exiting entry
+          <EntryNote
+            noteText={newNote}
+            updateNote={setNewNote}
+            buttonId="note-entry-new"
+          />
+        )}
+      </Grid>
+      <Grid item xs={2} style={gridItemStyle(1)}>
+        <Pronunciations
+          wordId={""}
+          pronunciationFiles={newAudioUrls}
+          recorder={recorder}
+          deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
+          uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
+          getAudioUrl={(_, fileName: string) => fileName}
+        />
+      </Grid>
+      <Grid item xs={1} style={gridItemStyle(1)}>
+        <DeleteEntry
+          removeEntry={() => resetState()}
+          buttonId={`${idAffix}-delete`}
+        />
+      </Grid>
+      <EnterGrid />
+    </Grid>
+  );
 }
 
 function EnterGrid(): ReactElement {

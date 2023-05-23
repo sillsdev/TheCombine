@@ -5,7 +5,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { defaultState } from "components/App/DefaultState";
 import App from "components/App/component";

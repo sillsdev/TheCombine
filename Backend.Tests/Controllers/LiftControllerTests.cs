@@ -143,6 +143,16 @@ namespace Backend.Tests.Controllers
             return extractionPath;
         }
 
+        /// <summary> Return the given file name with its .webm extension (if it has one) changed to .wav. </summary>
+        private static string ChangeWebmToWav(string fileName)
+        {
+            if (Path.GetExtension(fileName).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.ChangeExtension(fileName, ".wav");
+            }
+            return fileName;
+        }
+
         public class RoundTripObj
         {
             public string Filename { get; }
@@ -162,6 +172,18 @@ namespace Backend.Tests.Controllers
                 NumOfWords = numOfWords;
                 EntryGuid = entryGuid;
                 SenseGuid = senseGuid;
+            }
+        }
+
+        public class DefinitionImportObj
+        {
+            public string Filename { get; }
+            public bool HasDefinitions { get; }
+
+            public DefinitionImportObj(string filename, bool hasDefinitions)
+            {
+                Filename = filename;
+                HasDefinitions = hasDefinitions;
             }
         }
 
@@ -272,6 +294,10 @@ namespace Backend.Tests.Controllers
             new(
                 "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
+            new(
+                "SingleEntryLiftWithWebmSound.zip", "ptn", new List<string> { "short.webm" }, 1,
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
         };
 
@@ -312,14 +338,20 @@ namespace Backend.Tests.Controllers
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
             Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
 
-            // We are currently only testing guids on the single-entry data sets.
-            if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
+            // We are currently only testing guids and imported audio on the single-entry data sets.
+            if (allWords.Count == 1)
             {
+                Assert.AreNotEqual(roundTripObj.EntryGuid, "");
                 Assert.AreEqual(allWords[0].Guid.ToString(), roundTripObj.EntryGuid);
                 if (roundTripObj.SenseGuid != "")
                 {
                     Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripObj.SenseGuid);
                 }
+                foreach (var audioFile in allWords[0].Audio)
+                {
+                    Assert.That(roundTripObj.AudioFiles.Contains(Path.GetFileName(audioFile)));
+                }
+
             }
 
             // Assert that the first SemanticDomain doesn't have an empty MongoId.
@@ -339,7 +371,8 @@ namespace Backend.Tests.Controllers
             Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                Assert.That(File.Exists(Path.Combine(exportedProjDir, "audio", audioFile)));
+                var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
+                Assert.That(File.Exists(path), $"No file exists at this path: {path}");
             }
             Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
@@ -401,9 +434,8 @@ namespace Backend.Tests.Controllers
             Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                var path = Path.Combine(exportedProjDir, "audio", audioFile);
-                Assert.That(File.Exists(path),
-                    $"The file {audioFile} can not be found at this path: {path}");
+                var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
+                Assert.That(File.Exists(path), $"No file exists at this path: {path}");
             }
             Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
@@ -417,6 +449,45 @@ namespace Backend.Tests.Controllers
             {
                 _projRepo.Delete(project.Id);
             }
+        }
+
+        private static DefinitionImportObj[] _defImportCases =
+        {
+            new("Natqgu.zip", true),
+            new("SingleEntryLiftWithSound.zip", false)
+        };
+
+        [TestCaseSource(nameof(_defImportCases))]
+        public void TestHasDefinitions(DefinitionImportObj defImportObj)
+        {
+            // This test assumes you have the starting .zip (filename) included in your project files.
+            var pathToStartZip = Path.Combine(Util.AssetsDir, defImportObj.Filename);
+            Assert.IsTrue(File.Exists(pathToStartZip));
+
+            // Init the project the .zip info is added to.
+            var proj = Util.RandomProject();
+            proj.VernacularWritingSystem.Bcp47 = "qaa";
+            proj = _projRepo.Create(proj).Result;
+
+            // Upload the zip file.
+            // Generate api parameter with filestream.
+            using (var stream = File.OpenRead(pathToStartZip))
+            {
+                var fileUpload = InitFile(stream, defImportObj.Filename);
+
+                // Make api call.
+                var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
+                Assert.That(result is OkObjectResult);
+            }
+
+            proj = _projRepo.GetProject(proj.Id).Result;
+            if (proj is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Assert.AreEqual(proj.DefinitionsEnabled, defImportObj.HasDefinitions);
         }
 
         private class MockLogger : ILogger<LiftController>

@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="User"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="User"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class UserRepository : IUserRepository
     {

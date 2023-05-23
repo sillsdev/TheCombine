@@ -1,7 +1,7 @@
 import { LanguagePicker } from "mui-language-picker";
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { Project, WritingSystem } from "api/models";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages/ProjectLanguages";

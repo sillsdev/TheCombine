@@ -13,7 +13,7 @@ import {
   firstGlossText,
   getAnalysisLangsFromWords,
   sep,
-} from "types/wordUtilities";
+} from "utilities/wordUtilities";
 
 describe("wordUtilities", () => {
   describe("cleanDefinitions", () => {

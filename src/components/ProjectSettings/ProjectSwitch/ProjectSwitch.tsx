@@ -4,7 +4,7 @@ import React from "react";
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
-import { randomIntString } from "utilities";
+import { randomIntString } from "utilities/utilities";
 
 interface SwitchProps {
   project: Project;

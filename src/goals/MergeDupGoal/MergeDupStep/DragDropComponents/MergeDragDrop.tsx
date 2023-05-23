@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
-import { Drawer, ImageList, ImageListItem, Tooltip } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
+import { CSSProperties, ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
@@ -118,44 +118,53 @@ export default function MergeDragDrop(): ReactElement {
   }
 
   const newId = v4();
-  const colCount = Object.keys(treeWords).length + 2; // +2 for trash and extra empty word
+  const colCount = Object.keys(treeWords).length + 1; // +1 for extra empty word.
+
+  // This prevents things from moving when a draggable is dragged over the trash.
+  const trashPlaceholderStyle: CSSProperties = {
+    height: 0,
+    overflow: "hidden",
+    position: "absolute",
+  };
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      <ImageList rowHeight="auto" cols={colCount}>
-        <ImageListItem key={"trash"} style={{ marginTop: "70vh" }}>
+      <Grid container>
+        <Grid item columns={1} key={"trash"} style={{ marginTop: "70vh" }}>
           <Droppable key={trashId} droppableId={trashId}>
             {(provided): ReactElement => (
               <div ref={provided.innerRef}>
                 <Tooltip title={t("mergeDups.helpText.delete")} placement="top">
                   <Delete fontSize="large" />
                 </Tooltip>
-                <div style={{ position: "absolute" }}>
-                  {provided.placeholder}
-                </div>
+                <div style={trashPlaceholderStyle}>{provided.placeholder}</div>
               </div>
             )}
           </Droppable>
-        </ImageListItem>
-        {Object.keys(treeWords).map((key) => (
-          <ImageListItem
-            key={key}
-            style={{ height: "70vh", margin: theme.spacing(1) }}
-          >
-            <DropWord mergeState={mergeState} wordId={key} />
-          </ImageListItem>
-        ))}
-        <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
-          <DropWord mergeState={mergeState} wordId={newId} />
-        </ImageListItem>
-        {renderSidebar()}
-        <CancelConfirmDialog
-          open={!!senseToDelete}
-          textId="mergeDups.helpText.deleteDialog"
-          handleCancel={() => setSenseToDelete("")}
-          handleConfirm={performDelete}
-        />
-      </ImageList>
+        </Grid>
+        <Grid item sm={11} xs={10 /* Allow trash icon more space. */}>
+          <ImageList rowHeight="auto" cols={colCount} style={{ width: "90vw" }}>
+            {Object.keys(treeWords).map((key) => (
+              <ImageListItem
+                key={key}
+                style={{ height: "70vh", margin: theme.spacing(1) }}
+              >
+                <DropWord mergeState={mergeState} wordId={key} />
+              </ImageListItem>
+            ))}
+            <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
+              <DropWord mergeState={mergeState} wordId={newId} />
+            </ImageListItem>
+            {renderSidebar()}
+            <CancelConfirmDialog
+              open={!!senseToDelete}
+              textId="mergeDups.helpText.deleteDialog"
+              handleCancel={() => setSenseToDelete("")}
+              handleConfirm={performDelete}
+            />
+          </ImageList>
+        </Grid>
+      </Grid>
     </DragDropContext>
   );
 }

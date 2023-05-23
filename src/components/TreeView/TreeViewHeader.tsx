@@ -1,5 +1,5 @@
 import { Button, ImageList, ImageListItem } from "@mui/material";
-import { useCallback, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomain, SemanticDomainTreeNode } from "api";
@@ -13,19 +13,53 @@ export interface TreeHeaderProps {
   animate: (domain: SemanticDomain) => Promise<void>;
 }
 
-export function TreeViewHeader(props: TreeHeaderProps) {
-  const { getPrevSibling, getNextSibling } = useTreeNavigation(props);
+export function TreeViewHeader(props: TreeHeaderProps): ReactElement {
+  const { getNextSibling, getOnlyChild, getParent, getPrevSibling } =
+    useTreeNavigation(props);
+  const nextSib = getNextSibling();
+  const prevSib = getPrevSibling();
+
+  // Navigate tree via arrow keys.
+  const getArrowKeyDomain = (e: KeyboardEvent): SemanticDomain | undefined => {
+    const rtl = document.body.dir === "rtl";
+    switch (e.key) {
+      case Key.ArrowLeft:
+        return rtl ? nextSib : prevSib;
+      case Key.ArrowRight:
+        return rtl ? prevSib : nextSib;
+      case Key.ArrowUp:
+        return getParent();
+      case Key.ArrowDown:
+        return getOnlyChild();
+    }
+  };
+
+  const navigateDomainArrowKeys = async (e: KeyboardEvent): Promise<void> => {
+    const domain = getArrowKeyDomain(e);
+    if (domain) {
+      await props.animate(domain);
+    }
+  };
+
+  // Add event listeners.
+  useEffect(() => {
+    window.addEventListener("keydown", navigateDomainArrowKeys);
+    // Remove event listeners on cleanup.
+    return () => {
+      window.removeEventListener("keydown", navigateDomainArrowKeys);
+    };
+  });
 
   return (
     <ImageList cols={7} gap={20} rowHeight={"auto"}>
       <ImageListItem cols={2}>
-        {getPrevSibling(props) ? (
+        {prevSib && (
           <DomainTile
-            domain={getPrevSibling(props)!}
+            domain={prevSib}
             onClick={props.animate}
             direction={Direction.Prev}
           />
-        ) : null}
+        )}
       </ImageListItem>
       <ImageListItem cols={3}>
         <Button
@@ -33,7 +67,7 @@ export function TreeViewHeader(props: TreeHeaderProps) {
           size="large"
           color="primary"
           variant="contained"
-          disabled={!props.currentDomain.parent}
+          disabled={!getParent()}
           onClick={() => props.animate(props.currentDomain)}
           id="current-domain"
           style={{ height: "95%" }}
@@ -45,69 +79,33 @@ export function TreeViewHeader(props: TreeHeaderProps) {
         </Button>
       </ImageListItem>
       <ImageListItem cols={2}>
-        {getNextSibling(props) ? (
+        {nextSib && (
           <DomainTile
-            domain={getNextSibling(props)!}
+            domain={nextSib}
             onClick={props.animate}
             direction={Direction.Next}
           />
-        ) : null}
+        )}
       </ImageListItem>
     </ImageList>
   );
 }
 
-// exported for unit testing only
-export function useTreeNavigation(props: TreeHeaderProps) {
-  function getNextSibling(props: TreeHeaderProps): SemanticDomain | undefined {
-    return props.currentDomain.next;
-  }
+interface TreeNavigation {
+  getNextSibling: () => SemanticDomain | undefined;
+  getOnlyChild: () => SemanticDomain | undefined;
+  getParent: () => SemanticDomain | undefined;
+  getPrevSibling: () => SemanticDomain | undefined;
+}
 
-  function getPrevSibling(props: TreeHeaderProps): SemanticDomain | undefined {
-    return props.currentDomain.previous;
-  }
-
-  // Navigate tree via arrow keys
-  const navigateDomainArrowKeys = useCallback(
-    (event: KeyboardEvent) => {
-      const rtl = document.body.dir === "rtl";
-      let domain: SemanticDomain | undefined;
-      switch (event.key) {
-        case Key.ArrowLeft:
-          domain = rtl ? getNextSibling(props) : getPrevSibling(props);
-          break;
-        case Key.ArrowRight:
-          domain = rtl ? getPrevSibling(props) : getNextSibling(props);
-          break;
-        case Key.ArrowUp:
-          if (props.currentDomain.parent !== undefined) {
-            domain = props.currentDomain.parent;
-          }
-          break;
-        case Key.ArrowDown:
-          if (props.currentDomain.children.length === 1) {
-            domain = props.currentDomain.children[0];
-          }
-          break;
-      }
-      if (domain) {
-        props.animate(domain);
-      }
-    },
-    [props]
-  );
-
-  // Add event listeners
-  useEffect(() => {
-    window.addEventListener("keydown", navigateDomainArrowKeys);
-    // Remove event listeners on cleanup
-    return () => {
-      window.removeEventListener("keydown", navigateDomainArrowKeys);
-    };
-  }, [navigateDomainArrowKeys]);
-
+// Export for unit testing.
+export function useTreeNavigation(props: TreeHeaderProps): TreeNavigation {
+  const dom = props.currentDomain;
   return {
-    getNextSibling,
-    getPrevSibling,
+    getNextSibling: () => dom.next,
+    getOnlyChild: () =>
+      dom.children.length === 1 ? dom.children[0] : undefined,
+    getParent: () => dom.parent,
+    getPrevSibling: () => dom.previous,
   };
 }

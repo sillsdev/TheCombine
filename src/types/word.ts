@@ -10,7 +10,7 @@ import {
   Status,
   Word,
 } from "api/models";
-import { randomIntString } from "utilities";
+import { randomIntString } from "utilities/utilities";
 
 export function newDefinition(text = "", language = ""): Definition {
   return { text, language };

@@ -1,6 +1,6 @@
 import { Card, CardContent, Grid, TextField, Typography } from "@mui/material";
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { ReactElement, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import validator from "validator";
 
@@ -9,121 +9,81 @@ import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
-interface InviteProps extends WithTranslation {
+interface InviteProps {
   addToProject: (user: User) => void;
   close: () => void;
 }
 
-interface InviteState {
-  emailAddress: string;
-  message: string;
-  isValid: boolean;
-  loading: boolean;
-  done: boolean;
-}
+export default function EmailInvite(props: InviteProps): ReactElement {
+  const [email, setEmail] = useState("");
+  const [isDone, setIsDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const [message, setMessage] = useState("");
 
-class EmailInvite extends React.Component<InviteProps, InviteState> {
-  constructor(props: InviteProps) {
-    super(props);
-    this.state = {
-      emailAddress: "",
-      message: "",
-      isValid: false,
-      loading: false,
-      done: false,
-    };
-  }
+  const { t } = useTranslation();
 
-  async onSubmit() {
-    this.setState({ loading: true });
-    const email = this.state.emailAddress;
+  const onSubmit = async (): Promise<void> => {
+    setIsLoading(true);
     if (await backend.isEmailTaken(email)) {
-      await backend.getUserByEmail(email).then((u) => {
-        this.props.addToProject(u);
-        toast.error(this.props.t("projectSettings.invite.userExists"));
-      });
+      const user = await backend.getUserByEmail(email);
+      props.addToProject(user);
+      toast.error(t("projectSettings.invite.userExists"));
     } else {
-      await backend.emailInviteToProject(
-        getProjectId(),
-        email,
-        this.state.message
-      );
+      await backend.emailInviteToProject(getProjectId(), email, message);
     }
-    this.setState({ loading: false, done: true });
-    this.props.close();
-  }
+    setIsDone(true);
+    setIsLoading(false);
+    props.close();
+  };
 
-  /** Updates the state to match the value in a textbox */
-  updateEmailField(
-    e: React.ChangeEvent<
-      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
-  ) {
-    const emailAddress = e.target.value;
-    const isValid =
-      validator.isEmail(emailAddress) && emailAddress !== "example@gmail.com";
-    this.setState({ emailAddress, isValid });
-  }
+  useEffect(() => {
+    setIsValid(validator.isEmail(email) && email !== "example@gmail.com");
+  }, [email, setIsValid]);
 
-  updateMessageField(
-    e: React.ChangeEvent<
-      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
-  ) {
-    this.setState({ message: e.target.value });
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Grid container justifyContent="center">
-          <Card style={{ width: 450 }}>
-            <CardContent>
-              <Typography variant="h5" align="center" gutterBottom>
-                {this.props.t("projectSettings.invite.inviteByEmailLabel")}
-              </Typography>
-              <TextField
-                id="project-user-invite-email"
-                required
-                label={this.props.t("projectSettings.invite.emailLabel")}
-                onChange={(e) => this.updateEmailField(e)}
-                variant="outlined"
-                style={{ width: "100%" }}
-                margin="normal"
-                autoFocus
-                inputProps={{ maxLength: 100 }}
-              />
-              <TextField
-                id="project-user-invite-message"
-                label="Message"
-                onChange={(e) => this.updateMessageField(e)}
-                variant="outlined"
-                style={{ width: "100%" }}
-                margin="normal"
-              />
-              <Grid container justifyContent="flex-end" spacing={2}>
-                <Grid item>
-                  <LoadingDoneButton
-                    disabled={!this.state.isValid}
-                    loading={this.state.loading}
-                    done={this.state.done}
-                    buttonProps={{
-                      id: "project-user-invite-submit",
-                      onClick: () => this.onSubmit(),
-                      variant: "contained",
-                      color: "primary",
-                    }}
-                  >
-                    {this.props.t("buttons.invite")}
-                  </LoadingDoneButton>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
+  return (
+    <Card style={{ width: 450 }}>
+      <CardContent>
+        <Typography variant="h5" align="center" gutterBottom>
+          {t("projectSettings.invite.inviteByEmailLabel")}
+        </Typography>
+        <TextField
+          id="project-user-invite-email"
+          required
+          label={t("projectSettings.invite.emailLabel")}
+          onChange={(e) => setEmail(e.target.value)}
+          variant="outlined"
+          style={{ width: "100%" }}
+          margin="normal"
+          autoFocus
+          inputProps={{ maxLength: 100 }}
+        />
+        <TextField
+          id="project-user-invite-message"
+          label="Message"
+          onChange={(e) => setMessage(e.target.value)}
+          variant="outlined"
+          style={{ width: "100%" }}
+          margin="normal"
+        />
+        <Grid container justifyContent="flex-end" spacing={2}>
+          <Grid item>
+            <LoadingDoneButton
+              disabled={!isValid}
+              loading={isLoading}
+              done={isDone}
+              buttonProps={{
+                id: "project-user-invite-submit",
+                onClick: () => onSubmit(),
+                variant: "contained",
+                color: "primary",
+              }}
+            >
+              {t("buttons.invite")}
+            </LoadingDoneButton>
+          </Grid>
         </Grid>
-      </React.Fragment>
-    );
-  }
+      </CardContent>
+    </Card>
+  );
 }
-
-export default withTranslation()(EmailInvite);

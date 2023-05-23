@@ -2,21 +2,21 @@ import { WritingSystem } from "api/models";
 
 export enum Bcp47Code {
   Default = "en",
-  Ar = "ar",
-  En = "en",
-  Es = "es",
-  Fr = "fr",
-  Hi = "hi",
-  Ml = "ml",
-  My = "my",
-  Pt = "pt",
-  Ru = "ru",
-  Sw = "sw",
+  Ar = "ar", // Arabic
+  En = "en", // English
+  Es = "es", // Spanish
+  Fr = "fr", // French
+  Hi = "hi", // Hindi
+  Ml = "ml", // Malayalam
+  My = "my", // Burmese
+  Pt = "pt", // Portuguese
+  Ru = "ru", // Russian
+  Sw = "sw", // Swahili
 }
 
 const writingSystem = {
   [Bcp47Code.Ar]: newWritingSystem(Bcp47Code.Ar, "اَلْعَرَبِيَّةُ"), // Arabic
-  [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"),
+  [Bcp47Code.En]: newWritingSystem(Bcp47Code.En, "English"), // English
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"), // Spanish
   [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"), // French
   [Bcp47Code.Hi]: newWritingSystem(Bcp47Code.Hi, "हिन्दी"), // Hindi
@@ -35,6 +35,7 @@ export const uiWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],
   writingSystem[Bcp47Code.Fr],
+  writingSystem[Bcp47Code.Pt],
 ];
 
 // This list should cover the languages in deploy/scripts/semantic_domains/xml/
@@ -50,6 +51,16 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Ru],
   writingSystem[Bcp47Code.Sw],
 ];
+
+// Used by i18n for un(der)-supported languages.
+export const i18nFallbacks = {
+  // Example for how to add non-English fallbacks:
+  //  it: [Bcp47Code.Es, Bcp47Code.Pt, Bcp47Code.Default],
+  default: [Bcp47Code.Default],
+};
+
+// Add support for langs covered in i18nFallbacks above.
+export const i18nLangs = uiWritingSystems.map((ws) => ws.bcp47); //.concat(["it"]);
 
 export function newWritingSystem(
   bcp47 = "",

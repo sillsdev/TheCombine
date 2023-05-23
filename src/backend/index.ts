@@ -27,10 +27,10 @@ import * as LocalStorage from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import authHeader from "components/Login/AuthHeaders";
 import { errorToast } from "components/Toast/SwalToast";
-import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { Bcp47Code } from "types/writingSystem";
+import { convertGoalToEdit } from "utilities/goalUtilities";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;

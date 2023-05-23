@@ -5,8 +5,8 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { getUserRole } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import GoalList from "components/GoalTimeline/GoalList";
-import { requiredPermission, goalTypeToGoal } from "types/goalUtilities";
 import { Goal, GoalsState, GoalType } from "types/goals";
+import { requiredPermission, goalTypeToGoal } from "utilities/goalUtilities";
 
 const timelineStyle = {
   centerButton: {

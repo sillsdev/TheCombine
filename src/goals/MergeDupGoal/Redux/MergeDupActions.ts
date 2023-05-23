@@ -39,10 +39,10 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { maxNumSteps } from "types/goalUtilities";
 import { GoalType } from "types/goals";
 import { Hash } from "types/hash";
-import { compareFlags } from "types/wordUtilities";
+import { maxNumSteps } from "utilities/goalUtilities";
+import { compareFlags } from "utilities/wordUtilities";
 
 // Action Creators
 

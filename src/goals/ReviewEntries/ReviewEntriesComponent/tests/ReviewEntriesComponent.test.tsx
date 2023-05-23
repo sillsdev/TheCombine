@@ -3,12 +3,12 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
 import mockWords, {
   mockCreateWord,
-} from "goals/ReviewEntries/ReviewEntriesComponent/tests/MockWords";
+} from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
 const mockGetFrontierWords = jest.fn();
 const mockMaterialTable = jest.fn();

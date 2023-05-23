@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -21,14 +21,14 @@ export default function CharacterWords(
   const words = getWordsContainingChar(props.character, allWords, 5);
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="overline">{t("charInventory.examples")}</Typography>
       {words.map((word) => (
         <Typography variant="body1" key={`${props.character}_${word}`}>
           {highlightCharacterInWord(props.character, word)}
         </Typography>
       ))}
-    </React.Fragment>
+    </>
   );
 }
 

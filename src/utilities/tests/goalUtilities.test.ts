@@ -1,12 +1,12 @@
 import { MergeUndoIds } from "api/models";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
-import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
+import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MergeDupDataMock";
+import { Goal } from "types/goals";
 import {
   convertEditToGoal,
   convertGoalToEdit,
   maxNumSteps,
-} from "types/goalUtilities";
-import { Goal } from "types/goals";
+} from "utilities/goalUtilities";
 
 describe("goalUtilities", () => {
   describe("convertGoalToEdit, convertEditToGoal", () => {

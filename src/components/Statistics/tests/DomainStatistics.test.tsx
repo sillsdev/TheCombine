@@ -1,7 +1,7 @@
 import { ListItem } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { SemanticDomainCount } from "api";
 import DomainStatistics from "components/Statistics/DomainStatistics";

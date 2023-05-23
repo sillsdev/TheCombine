@@ -2,173 +2,117 @@ import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  FormControl,
   Grid,
   Input,
-  InputLabel,
   List,
   ListItem,
   ListItemText,
-  MenuItem,
-  Select,
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
+import { avatarSrc } from "backend";
 import { getUserId } from "backend/localStorage";
+import SortOptions, {
+  UserOrder,
+  getUserCompare,
+} from "components/ProjectSettings/ProjectUsers/SortOptions";
+import { doesTextMatchUser } from "components/ProjectSettings/ProjectUsers/UserList";
+import { Hash } from "types/hash";
 import theme from "types/theme";
 
-enum UserOrder {
-  Username,
-  Name,
-  Email,
-}
-
-interface UserListProps extends WithTranslation {
+interface UserListProps {
   allUsers: User[];
-  userAvatar: { [key: string]: string };
   handleOpenModal: (user: User) => void;
 }
 
-interface UserListState {
-  currentUserId: string;
-  filterInput: string;
-  filteredUsers: User[];
-  prevFilterInput?: string;
-  userOrder: UserOrder;
-}
+export default function UserList(props: UserListProps): ReactElement {
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [filterInput, setFilterInput] = useState<string>("");
+  const [reverseSorting, setReverseSorting] = useState<boolean>(false);
+  const [sortedUsers, setSortedUsers] = useState<User[]>([]);
+  const [userOrder, setUserOrder] = useState(UserOrder.Username);
+  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
+  const { t } = useTranslation();
 
-class UserList extends React.Component<UserListProps, UserListState> {
-  constructor(props: UserListProps) {
-    super(props);
+  const compareUsers = useCallback(
+    (a: User, b: User): number =>
+      getUserCompare(userOrder, reverseSorting)(a, b),
+    [reverseSorting, userOrder]
+  );
 
-    this.state = {
-      currentUserId: getUserId(),
-      filterInput: "",
-      filteredUsers: [],
-      userOrder: UserOrder.Username,
-    };
-  }
-  componentDidUpdate() {
-    if (this.state.prevFilterInput !== this.state.filterInput) {
-      this.handleChange(this.state.filterInput);
-      this.setState((state) => ({ prevFilterInput: state.filterInput }));
-    }
-  }
+  useEffect(() => {
+    setSortedUsers([...filteredUsers].sort(compareUsers));
+  }, [compareUsers, filteredUsers, setFilteredUsers]);
 
-  handleChange(event: string) {
-    let filteredUsers: User[] = [];
-
-    if (event.length >= 1) {
-      filteredUsers = this.props.allUsers.filter((user) => {
-        const name = user.name.toLowerCase();
-        const username = user.username.toLowerCase();
-        const email = user.email.toLowerCase();
-        const filter = event.toLowerCase();
-
-        return (
-          name.includes(filter) ||
-          username.includes(filter) ||
-          email.includes(filter)
-        );
-      });
-    }
-
-    this.setState({ filterInput: event, filteredUsers });
-  }
-
-  private getSortedUsers() {
-    const users = this.state.filteredUsers;
-
-    // Need to make a copy of the "users" field in the state because sort()
-    // mutates
-    return users.slice(0).sort((a: User, b: User) => {
-      switch (this.state.userOrder) {
-        case UserOrder.Name:
-          return a.name.localeCompare(b.name);
-        case UserOrder.Username:
-          return a.username.localeCompare(b.username);
-        case UserOrder.Email:
-          return a.email.localeCompare(b.email);
-        default:
-          throw new Error();
+  useEffect(() => {
+    const newUserAvatar: Hash<string> = {};
+    const promises = props.allUsers.map(async (u) => {
+      if (u.hasAvatar) {
+        newUserAvatar[u.id] = await avatarSrc(u.id);
       }
     });
-  }
+    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
+  }, [props.allUsers, setUserAvatar]);
 
-  render() {
-    return (
-      <React.Fragment>
-        <Grid item xs={12}>
-          <Typography>
-            {this.props.t("projectSettings.invite.searchTitle")}
-          </Typography>
-          <Grid container alignItems="flex-end">
-            <Input
-              type="text"
-              onChange={(e) => this.handleChange(e.target.value)}
-              placeholder={this.props.t(
-                "projectSettings.invite.searchPlaceholder"
-              )}
-            />
-            <FormControl variant="standard" style={{ minWidth: 100 }}>
-              <InputLabel id="sorting-order-select">
-                {this.props.t("charInventory.sortBy")}
-              </InputLabel>
-              <Select
-                variant="standard"
-                labelId="sorting-order-select"
-                defaultValue={UserOrder.Username}
-                onChange={(event: SelectChangeEvent<UserOrder>) => {
-                  this.setState({ userOrder: event.target.value as UserOrder });
-                }}
-              >
-                <MenuItem value={UserOrder.Name}>
-                  {this.props.t("projectSettings.language.name")}
-                </MenuItem>
-                <MenuItem value={UserOrder.Username}>
-                  {this.props.t("login.username")}
-                </MenuItem>
-                <MenuItem value={UserOrder.Email}>
-                  {this.props.t("login.email")}
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <List>
-            {this.getSortedUsers().map((user) => (
-              <ListItem key={user.id}>
-                <Avatar
-                  alt="User Avatar"
-                  src={this.props.userAvatar[user.id]}
-                  style={{ marginRight: theme.spacing(1) }}
-                />
-                <ListItemText
-                  primary={`${user.name} (${user.username} | ${user.email})`}
-                />
-                {user.id !== this.state.currentUserId &&
-                  (user.isAdmin ? (
-                    <Button disabled>
-                      <VpnKey />
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => this.props.handleOpenModal(user)}
-                      id={`user-delete-${user.username}`}
-                    >
-                      <DeleteForever />
-                    </Button>
-                  ))}
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-      </React.Fragment>
+  useEffect(() => {
+    setFilteredUsers(
+      filterInput.length
+        ? props.allUsers.filter((u) => doesTextMatchUser(filterInput, u))
+        : []
     );
-  }
-}
+  }, [filterInput, props.allUsers]);
 
-export default withTranslation()(UserList);
+  const userListItem = (user: User): ReactElement => {
+    return (
+      <ListItem key={user.id}>
+        <Avatar
+          alt="User Avatar"
+          src={userAvatar[user.id]}
+          style={{ marginRight: theme.spacing(1) }}
+        />
+        <ListItemText
+          primary={`${user.name} (${user.username} | ${user.email})`}
+        />
+        {user.id !== getUserId() &&
+          (user.isAdmin ? (
+            <Button disabled>
+              <VpnKey />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => props.handleOpenModal(user)}
+              id={`user-delete-${user.username}`}
+            >
+              <DeleteForever />
+            </Button>
+          ))}
+      </ListItem>
+    );
+  };
+
+  return (
+    <Grid item xs={12}>
+      <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
+      <Grid container alignItems="flex-end">
+        <Input
+          type="text"
+          onChange={(e) => setFilterInput(e.target.value)}
+          placeholder={t("projectSettings.invite.searchPlaceholder")}
+          value={filterInput}
+        />
+        <SortOptions
+          includeEmail
+          onChange={(e: SelectChangeEvent<UserOrder>) =>
+            setUserOrder(e.target.value as UserOrder)
+          }
+          onReverseClick={() => setReverseSorting(!reverseSorting)}
+        />
+      </Grid>
+      <List>{sortedUsers.map(userListItem)}</List>
+    </Grid>
+  );
+}

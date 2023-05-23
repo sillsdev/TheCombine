@@ -19,7 +19,7 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { compareFlags } from "types/wordUtilities";
+import { compareFlags } from "utilities/wordUtilities";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
