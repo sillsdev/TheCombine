@@ -18,6 +18,8 @@ jobs:
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:
@@ -66,6 +68,8 @@ jobs:
       RM_PATTERN_2: \d+\.\d+\.\d+-[a-z]+\.\d+-master\.\d+
     runs-on: ubuntu-latest
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:

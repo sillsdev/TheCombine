@@ -16,6 +16,8 @@ jobs:
       matrix:
         dotnet: ["6.0.x"]
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:
@@ -67,6 +69,8 @@ jobs:
       security-events: write # for github/codeql-action/autobuild to send a status report
     runs-on: ubuntu-20.04
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:
@@ -109,8 +113,8 @@ jobs:
     runs-on: ubuntu-22.04
     #    if: ${{ github.event.type }} == "PullRequest"
     steps:
-      # For subfolders, currently a full checkout is required.
-      # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
         uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
         with:
@@ -126,6 +130,8 @@ jobs:
             *.data.mcr.microsoft.com:443
             archive.ubuntu.com:80
             security.ubuntu.com:80
+      # For subfolders, currently a full checkout is required.
+      # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           fetch-depth: 0
