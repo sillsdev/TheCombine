@@ -171,7 +171,7 @@ pyyaml-env-tag==0.1
     # via mkdocs
 regex==2023.5.4
     # via mkdocs-material
-requests==2.29.0
+requests==2.31.0
     # via
     #   kubernetes
     #   mkdocs-htmlproofer-plugin
@@ -188,12 +188,6 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.4.1
     # via beautifulsoup4
-tomli==2.0.1
-    # via
-    #   black
-    #   mypy
-    #   pyproject-api
-    #   tox
 tox==4.5.1
     # via -r dev-requirements.in
 types-pyopenssl==23.1.0.2
