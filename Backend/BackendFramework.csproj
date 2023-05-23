@@ -25,6 +25,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
     <PackageReference Include="MailKit" Version="4.0.0" />
+    <PackageReference Include="Xabe.FFmpeg" Version="5.2.6"/>
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.9.0" />
