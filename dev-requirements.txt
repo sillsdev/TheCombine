@@ -171,7 +171,7 @@ pyyaml-env-tag==0.1
     # via mkdocs
 regex==2023.5.5
     # via mkdocs-material
-requests==2.30.0
+requests==2.31.0
     # via
     #   kubernetes
     #   mkdocs-htmlproofer-plugin
@@ -200,15 +200,15 @@ types-pyopenssl==23.1.0.3
     # via -r dev-requirements.in
 types-python-dateutil==2.8.19.13
     # via -r dev-requirements.in
-types-pyyaml==6.0.12.9
+types-pyyaml==6.0.12.10
     # via -r dev-requirements.in
-types-requests==2.30.0.0
+types-requests==2.31.0.0
     # via -r dev-requirements.in
 types-urllib3==1.26.25.13
     # via types-requests
-typing-extensions==4.5.0
+typing-extensions==4.6.0
     # via mypy
-urllib3==1.26.15
+urllib3==1.26.16
     # via
     #   google-auth
     #   kubernetes
