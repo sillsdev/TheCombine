@@ -42,16 +42,16 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             api.osv.dev:443
+            api.securityscorecards.dev
+            auth.docker.io:443
             bestpractices.coreinfrastructure.org:443
             fulcio.sigstore.dev:443
-            oauth2.sigstore.dev:443
             github.com:443
             index.docker.io:443
             mcr.microsoft.com:443
-            sigstore-tuf-root.storage.googleapis.com:443
-            auth.docker.io:443
+            oauth2.sigstore.dev:443
             rekor.sigstore.dev:443
-            api.securityscorecards.dev
+            sigstore-tuf-root.storage.googleapis.com:443
       - name: "Checkout code"
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:

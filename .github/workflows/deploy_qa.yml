@@ -28,7 +28,6 @@ jobs:
           allowed-endpoints: >
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             api.github.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
@@ -43,11 +42,12 @@ jobs:
             pipelines.actions.githubusercontent.com:443
             production.cloudflare.docker.com:443
             pypi.org:443
-            registry.npmjs.org:443
             registry-1.docker.io:443
+            registry.npmjs.org:443
             security.debian.org:80
             security.ubuntu.com:80
             storage.googleapis.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             uploader.codecov.io:443
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
