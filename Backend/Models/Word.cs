@@ -147,11 +147,11 @@ namespace BackendFramework.Models
         public bool ContentEquals(Word other)
         {
             return
-                other.Vernacular.Equals(Vernacular) &&
-                other.Plural.Equals(Plural) &&
-                other.PartOfSpeech.Equals(PartOfSpeech) &&
-                other.OtherField.Equals(OtherField) &&
-                other.ProjectId.Equals(ProjectId) &&
+                other.Vernacular.Equals(Vernacular, StringComparison.Ordinal) &&
+                other.Plural.Equals(Plural, StringComparison.Ordinal) &&
+                other.PartOfSpeech.Equals(PartOfSpeech, StringComparison.Ordinal) &&
+                other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
 
                 other.Audio.Count == Audio.Count &&
                 other.Audio.All(Audio.Contains) &&
@@ -171,11 +171,11 @@ namespace BackendFramework.Models
             }
 
             return
-                other.Id.Equals(Id) &&
+                other.Id.Equals(Id, StringComparison.Ordinal) &&
                 ContentEquals(other) &&
                 other.Guid == Guid &&
-                other.Created.Equals(Created) &&
-                other.Modified.Equals(Modified) &&
+                other.Created.Equals(Created, StringComparison.Ordinal) &&
+                other.Modified.Equals(Modified, StringComparison.Ordinal) &&
                 other.EditedBy.Count == EditedBy.Count &&
                 other.EditedBy.All(EditedBy.Contains) &&
                 other.History.Count == History.Count &&
@@ -325,7 +325,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Language.Equals(other.Language) && Text.Equals(other.Text);
+            return Language.Equals(other.Language, StringComparison.Ordinal) &&
+                Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -479,7 +480,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Language.Equals(other.Language) && Text.Equals(other.Text);
+            return Language.Equals(other.Language, StringComparison.Ordinal) &&
+                Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -527,7 +529,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Active.Equals(other.Active) && Text.Equals(other.Text);
+            return Active == other.Active && Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -588,7 +590,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Language.Equals(other.Language) && Def.Equals(other.Def);
+            return Language.Equals(other.Language, StringComparison.Ordinal) &&
+                Def.Equals(other.Def, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

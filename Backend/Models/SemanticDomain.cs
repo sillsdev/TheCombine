@@ -49,13 +49,13 @@ namespace BackendFramework.Models
             return new SemanticDomain
             {
                 // If this clone is ever used in production, the MongoId may need to be excluded.
-                MongoId = MongoId,
-                Guid = Guid,
-                Name = Name,
-                Id = Id,
-                Lang = Lang,
-                UserId = UserId,
-                Created = Created
+                MongoId = (string)MongoId.Clone(),
+                Guid = (string)Guid.Clone(),
+                Name = (string)Name.Clone(),
+                Id = (string)Id.Clone(),
+                Lang = (string)Lang.Clone(),
+                UserId = (string)UserId.Clone(),
+                Created = (string)Created.Clone()
             };
         }
 
@@ -66,7 +66,10 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name.Equals(other.Name) && Id.Equals(other.Id) && Lang.Equals(other.Lang) && Guid.Equals(other.Guid);
+            return Name.Equals(other.Name, StringComparison.Ordinal) &&
+                Id.Equals(other.Id, StringComparison.Ordinal) &&
+                Lang.Equals(other.Lang, StringComparison.Ordinal) &&
+                Guid.Equals(other.Guid, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -96,12 +99,12 @@ namespace BackendFramework.Models
         public new SemanticDomainFull Clone()
         {
             var clone = (SemanticDomainFull)base.Clone();
-            clone.Description = Description;
-            clone.Questions = Questions;
+            clone.Description = (string)Description.Clone();
+            clone.Questions = new List<string>();
 
             foreach (var question in Questions)
             {
-                clone.Questions.Add(question);
+                clone.Questions.Add((string)question.Clone());
             }
 
             return clone;
@@ -116,7 +119,7 @@ namespace BackendFramework.Models
 
             return
                 base.Equals(other) &&
-                Description.Equals(other.Description) &&
+                Description.Equals(other.Description, StringComparison.Ordinal) &&
                 Questions.Count == other.Questions.Count &&
                 Questions.All(other.Questions.Contains);
         }

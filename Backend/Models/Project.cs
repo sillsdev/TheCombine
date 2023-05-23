@@ -165,10 +165,10 @@ namespace BackendFramework.Models
         public bool ContentEquals(Project other)
         {
             return
-                other.Name.Equals(Name) &&
-                other.IsActive.Equals(IsActive) &&
-                other.LiftImported.Equals(LiftImported) &&
-                other.DefinitionsEnabled.Equals(DefinitionsEnabled) &&
+                other.Name.Equals(Name, StringComparison.Ordinal) &&
+                other.IsActive == IsActive &&
+                other.LiftImported == LiftImported &&
+                other.DefinitionsEnabled == DefinitionsEnabled &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
@@ -208,7 +208,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -264,7 +264,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == customField.Name && Type == customField.Type;
+            return Name.Equals(customField.Name, StringComparison.Ordinal) &&
+                Type.Equals(customField.Type, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -306,7 +307,9 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font;
+            return Name.Equals(ws.Name, StringComparison.Ordinal) &&
+                Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
+                Font.Equals(ws.Font, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

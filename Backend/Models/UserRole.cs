@@ -51,7 +51,7 @@ namespace BackendFramework.Models
         public bool ContentEquals(UserRole other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
                 other.Permissions.Count == Permissions.Count &&
                 other.Permissions.All(Permissions.Contains);
         }
@@ -63,7 +63,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()

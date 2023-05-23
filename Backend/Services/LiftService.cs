@@ -657,7 +657,7 @@ namespace BackendFramework.Services
                     var semanticDomainStrings = new List<string>();
                     foreach (var trait in sense.Traits)
                     {
-                        if (trait.Name.StartsWith("semantic-domain"))
+                        if (trait.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase))
                         {
                             semanticDomainStrings.Add(trait.Value);
                         }

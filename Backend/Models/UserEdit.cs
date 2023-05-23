@@ -50,7 +50,7 @@ namespace BackendFramework.Models
         public bool ContentEquals(UserEdit other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
                 other.Edits.Count == Edits.Count &&
                 other.Edits.All(Edits.Contains);
         }
@@ -62,7 +62,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -100,8 +100,9 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.GoalIndex.Equals(GoalIndex)
-                && other.StepString.Equals(StepString) && other.StepIndex.Equals(StepIndex);
+            return other.GoalIndex == GoalIndex &&
+                other.StepString.Equals(StepString, StringComparison.Ordinal) &&
+                other.StepIndex == StepIndex;
         }
 
         public override int GetHashCode()
@@ -162,9 +163,11 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Guid.Equals(Guid) && other.GoalType.Equals(GoalType) &&
+            return other.Guid.Equals(Guid) &&
+                other.GoalType.Equals(GoalType) &&
                 other.StepData.Count == StepData.Count &&
-                other.StepData.All(StepData.Contains) && other.Changes.Equals(Changes);
+                other.StepData.All(StepData.Contains) &&
+                other.Changes.Equals(Changes, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

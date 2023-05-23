@@ -136,18 +136,18 @@ namespace BackendFramework.Models
         public bool ContentEquals(User other)
         {
             return
-                other.Id.Equals(Id) &&
-                other.Avatar.Equals(Avatar) &&
-                other.HasAvatar.Equals(HasAvatar) &&
-                other.Name.Equals(Name) &&
-                other.Email.Equals(Email) &&
-                other.Phone.Equals(Phone) &&
-                other.OtherConnectionField.Equals(OtherConnectionField) &&
-                other.Agreement.Equals(Agreement) &&
-                other.Password.Equals(Password) &&
-                other.Username.Equals(Username) &&
-                other.UILang.Equals(UILang) &&
-                other.Token.Equals(Token) &&
+                other.Id.Equals(Id, StringComparison.Ordinal) &&
+                other.Avatar.Equals(Avatar, StringComparison.Ordinal) &&
+                other.HasAvatar == HasAvatar &&
+                other.Name.Equals(Name, StringComparison.Ordinal) &&
+                other.Email.Equals(Email, StringComparison.Ordinal) &&
+                other.Phone.Equals(Phone, StringComparison.Ordinal) &&
+                other.OtherConnectionField.Equals(OtherConnectionField, StringComparison.Ordinal) &&
+                other.Agreement == Agreement &&
+                other.Password.Equals(Password, StringComparison.Ordinal) &&
+                other.Username.Equals(Username, StringComparison.Ordinal) &&
+                other.UILang.Equals(UILang, StringComparison.Ordinal) &&
+                other.Token.Equals(Token, StringComparison.Ordinal) &&
 
                 other.WorkedProjects.Count == WorkedProjects.Count &&
                 other.WorkedProjects.All(WorkedProjects.Contains) &&
@@ -163,7 +163,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()

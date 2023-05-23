@@ -49,8 +49,8 @@ namespace BackendFramework.Models
         public bool ContentEquals(MergeBlacklistEntry other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
-                other.UserId.Equals(UserId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
+                other.UserId.Equals(UserId, StringComparison.Ordinal) &&
                 other.WordIds.Count == WordIds.Count &&
                 other.WordIds.All(WordIds.Contains);
         }
@@ -61,7 +61,7 @@ namespace BackendFramework.Models
             {
                 return false;
             }
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()

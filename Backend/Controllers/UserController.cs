@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,14 +40,13 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
         {
             // Find user attached to email or username.
-            var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
             var user = (await _userRepo.GetAllUsers()).SingleOrDefault(u =>
-                u.Email.ToLowerInvariant().Equals(emailOrUsername) ||
-                u.Username.ToLowerInvariant().Equals(emailOrUsername));
+                u.Email.Equals(data.EmailOrUsername, StringComparison.InvariantCultureIgnoreCase) ||
+                u.Username.Equals(data.EmailOrUsername, StringComparison.InvariantCultureIgnoreCase));
 
             if (user is null)
             {
-                return NotFound(emailOrUsername);
+                return NotFound(data.EmailOrUsername);
             }
 
             // Create password reset.
