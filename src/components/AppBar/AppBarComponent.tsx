@@ -6,7 +6,7 @@ import { getProjectId } from "backend/localStorage";
 import { getBasePath, Path } from "browserHistory";
 import Logo from "components/AppBar/Logo";
 import NavigationButtons from "components/AppBar/NavigationButtons";
-import ProjectNameButton from "components/AppBar/ProjectNameButton";
+import ProjectButtons from "components/AppBar/ProjectButtons";
 import UserMenu from "components/AppBar/UserMenu";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import DownloadButton from "components/ProjectExport/DownloadButton";
@@ -36,9 +36,7 @@ export default function AppBarComponent(): ReactElement {
               )}
             </Grid>
             <Grid item>
-              {!!getProjectId() && (
-                <ProjectNameButton currentTab={currentTab} />
-              )}
+              {!!getProjectId() && <ProjectButtons currentTab={currentTab} />}
               <DownloadButton colorSecondary />
             </Grid>
             <Grid item>

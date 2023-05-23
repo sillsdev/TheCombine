@@ -159,7 +159,7 @@ exports[`NavigationButtons has only one tab shaded 3`] = `
 </button>
 `;
 
-exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
+exports[`ProjectButtons has tab shaded when itself is called 1`] = `
 <button
   aria-label="appBar.projectSettings"
   aria-labelledby={null}

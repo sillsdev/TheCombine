@@ -11,7 +11,7 @@ import history, { Path } from "browserHistory";
 import { StoreState } from "types";
 import { tabColor } from "types/theme";
 
-interface ProjectNameButtonProps {
+interface ProjectButtonsProps {
   currentTab: Path;
 }
 
@@ -32,8 +32,8 @@ export async function getIsAdminOrOwner(): Promise<boolean> {
 }
 
 /** A button that redirects to the project settings */
-export default function ProjectNameButton(
-  props: ProjectNameButtonProps
+export default function ProjectButtons(
+  props: ProjectButtonsProps
 ): ReactElement {
   const projectName = useSelector(
     (state: StoreState) => state.currentProjectState.project.name
