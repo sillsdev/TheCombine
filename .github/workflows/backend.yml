@@ -25,7 +25,8 @@ jobs:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
-            *.codecov.io:443
+            codecov.io:443
+            uploader.codecov.io:443
             dc.services.visualstudio.com:443
             deb.debian.org:80
             dotnetbuilds.azureedge.net:443
