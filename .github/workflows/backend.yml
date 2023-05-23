@@ -33,6 +33,9 @@ jobs:
             dotnetbuilds.azureedge.net:443
             dotnetcli.azureedge.net:443
             github.com:443
+            md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
+            objects.githubusercontent.com:443
+            storage.googleapis.com:443
             uploader.codecov.io:443
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Setup dotnet
