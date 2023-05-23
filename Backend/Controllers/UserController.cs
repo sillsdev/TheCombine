@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -39,12 +37,9 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
         {
+
             // Find user attached to email or username.
-            var user = (await _userRepo.GetAllUsers()).SingleOrDefault(u =>
-#pragma warning disable CA1309
-                u.Email.Equals(data.EmailOrUsername, StringComparison.InvariantCultureIgnoreCase) ||
-                u.Username.Equals(data.EmailOrUsername, StringComparison.InvariantCultureIgnoreCase));
-#pragma warning restore CA1309
+            var user = await _userRepo.GetUserByEmailOrUsername(data.EmailOrUsername, false);
 
             if (user is null)
             {
@@ -171,22 +166,23 @@ namespace BackendFramework.Controllers
 
         /// <summary> Checks whether specified username is taken or empty. </summary>
         [AllowAnonymous]
-        [HttpGet("isusernametaken/{username}", Name = "CheckUsername")]
+        [HttpGet("isusernametaken/{username}", Name = "IsUsernameUnavailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> CheckUsername(string username)
+        public async Task<IActionResult> IsUsernameUnavailable(string username)
         {
             var isUnavailable = string.IsNullOrWhiteSpace(username)
                 || await _userRepo.GetUserByUsername(username) is not null;
             return Ok(isUnavailable);
         }
 
-        /// <summary> Checks whether specified email address is taken or empty. </summary>
+        /// <summary> Checks whether specified email address is invalid or taken. </summary>
         [AllowAnonymous]
-        [HttpGet("isemailtaken/{email}", Name = "CheckEmail")]
+        [HttpGet("isemailtaken/{email}", Name = "IsEmailUnavailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> CheckEmail(string email)
+        public async Task<IActionResult> IsEmailUnavailable(string email)
         {
-            var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
+            var isUnavailable = !email.Contains('@') ||
+                await _userRepo.GetUserByEmail(Sanitization.ConvertEmailForDatabase(email)) is not null;
             return Ok(isUnavailable);
         }
 

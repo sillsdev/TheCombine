@@ -2,7 +2,7 @@ import { Card, Grid, TextField, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { isEmailTaken, isUsernameTaken } from "backend";
+import { isEmailUnavailable, isUsernameUnavailable } from "backend";
 import history, { Path } from "browserHistory";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { asyncResetRequest } from "components/PasswordReset/Redux/ResetActions";
@@ -25,8 +25,8 @@ export default function ResetRequest(): ReactElement {
   const tryResetRequest = async (): Promise<void> => {
     setIsLoading(true);
     const exists =
-      (await isEmailTaken(emailOrUsername)) ||
-      (await isUsernameTaken(emailOrUsername));
+      (await isEmailUnavailable(emailOrUsername)) ||
+      (await isUsernameUnavailable(emailOrUsername));
     if (exists) {
       await dispatch(asyncResetRequest(emailOrUsername));
       setIsDone(true);

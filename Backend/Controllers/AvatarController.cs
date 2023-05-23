@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
             //     return Forbid();
             // }
 
-            var user = await _userRepo.GetUser(userId);
+            var user = await _userRepo.GetUser(userId, false);
             var avatar = string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
 
             if (avatar is null)
@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get user to apply avatar to.
-            var user = await _userRepo.GetUser(userId);
+            var user = await _userRepo.GetUser(userId, false);
             if (user is null)
             {
                 return NotFound(userId);

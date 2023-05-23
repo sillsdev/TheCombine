@@ -17,7 +17,7 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
-import { isEmailTaken, updateUser } from "backend";
+import { isEmailUnavailable, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 import theme from "types/theme";
@@ -91,7 +91,7 @@ export default function UserSettings(): ReactElement {
     if (emailUnchanged) {
       return true;
     }
-    return !(await isEmailTaken(email));
+    return !(await isEmailUnavailable(email));
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

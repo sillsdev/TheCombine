@@ -8,7 +8,7 @@ import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 jest.mock("backend", () => ({
   emailInviteToProject: () => mockEmailInviteToProject(),
   getUserByEmail: jest.fn(),
-  isEmailTaken: () => mockIsEmailTaken(),
+  isEmailUnavailable: () => mockIsEmailTaken(),
 }));
 jest.mock("backend/localStorage", () => ({
   getProjectId: () => "mockId",

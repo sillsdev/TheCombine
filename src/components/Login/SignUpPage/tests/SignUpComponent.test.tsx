@@ -8,8 +8,8 @@ jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
 jest.mock("backend", () => ({
-  isEmailTaken: () => false,
-  isUsernameTaken: () => false,
+  isEmailUnavailable: () => false,
+  isUsernameUnavailable: () => false,
 }));
 
 const mockReset = jest.fn();

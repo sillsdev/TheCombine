@@ -26,7 +26,12 @@ namespace Backend.Tests.Controllers
 
         private static User RandomUser()
         {
-            var user = new User { Username = Util.RandString(10), Password = Util.RandString(10) };
+            var user = new User
+            {
+                Username = Util.RandString(10),
+                Password = Util.RandString(10),
+                Email = $"{Util.RandString(5)}@{Util.RandString(5)}",
+            };
             return user;
         }
 
@@ -147,7 +152,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestCheckUsername()
+        public void TestIsUsernameUnavailable()
         {
             var user1 = RandomUser();
             var user2 = RandomUser();
@@ -156,24 +161,24 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (ObjectResult)_userController.CheckUsername(username1.ToLowerInvariant()).Result;
+            var result1 = (ObjectResult)_userController.IsUsernameUnavailable(username1.ToLowerInvariant()).Result;
             Assert.IsTrue((bool)result1.Value!);
 
-            var result2 = (ObjectResult)_userController.CheckUsername(username2.ToUpperInvariant()).Result;
+            var result2 = (ObjectResult)_userController.IsUsernameUnavailable(username2.ToUpperInvariant()).Result;
             Assert.IsTrue((bool)result2.Value!);
 
-            var result3 = (ObjectResult)_userController.CheckUsername(username1).Result;
+            var result3 = (ObjectResult)_userController.IsUsernameUnavailable(username1).Result;
             Assert.IsTrue((bool)result3.Value!);
 
-            var result4 = (ObjectResult)_userController.CheckUsername("NewUsername").Result;
+            var result4 = (ObjectResult)_userController.IsUsernameUnavailable("NewUsername").Result;
             Assert.IsFalse((bool)result4.Value!);
 
-            var result5 = (ObjectResult)_userController.CheckUsername("").Result;
+            var result5 = (ObjectResult)_userController.IsUsernameUnavailable("").Result;
             Assert.IsTrue((bool)result5.Value!);
         }
 
         [Test]
-        public void TestCheckEmail()
+        public void TestIsEmailUnavailable()
         {
             var user1 = RandomUser();
             var user2 = RandomUser();
@@ -182,20 +187,23 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (ObjectResult)_userController.CheckEmail(email1.ToLowerInvariant()).Result;
+            var result1 = (ObjectResult)_userController.IsEmailUnavailable(email1.ToLowerInvariant()).Result;
             Assert.IsTrue((bool)result1.Value!);
 
-            var result2 = (ObjectResult)_userController.CheckEmail(email2.ToUpperInvariant()).Result;
+            var result2 = (ObjectResult)_userController.IsEmailUnavailable(email2.ToUpperInvariant()).Result;
             Assert.IsTrue((bool)result2.Value!);
 
-            var result3 = (ObjectResult)_userController.CheckEmail(email1).Result;
+            var result3 = (ObjectResult)_userController.IsEmailUnavailable(email1).Result;
             Assert.IsTrue((bool)result3.Value!);
 
-            var result4 = (ObjectResult)_userController.CheckEmail("NewEmail").Result;
+            var result4 = (ObjectResult)_userController.IsEmailUnavailable("new@e.mail").Result;
             Assert.IsFalse((bool)result4.Value!);
 
-            var result5 = (ObjectResult)_userController.CheckEmail("").Result;
+            var result5 = (ObjectResult)_userController.IsEmailUnavailable("InvalidEmail").Result;
             Assert.IsTrue((bool)result5.Value!);
+
+            var result6 = (ObjectResult)_userController.IsEmailUnavailable("").Result;
+            Assert.IsTrue((bool)result6.Value!);
         }
     }
 }

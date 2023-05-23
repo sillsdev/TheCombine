@@ -169,7 +169,7 @@ namespace BackendFramework.Services
         public async Task<User?> Authenticate(string username, string password)
         {
             // Fetch the stored user.
-            var user = await _userRepo.GetUserByUsername(username);
+            var user = await _userRepo.GetUserByUsername(username, false);
 
             // Return null if user with specified username not found.
             if (user is null)

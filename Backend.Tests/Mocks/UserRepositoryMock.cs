@@ -55,13 +55,21 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(success);
         }
 
-        public Task<User?> GetUserByEmail(string email)
+        public Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
             var user = _users.Find(u => u.Email.ToLowerInvariant() == email.ToLowerInvariant());
             return Task.FromResult(user);
         }
 
-        public Task<User?> GetUserByUsername(string username)
+        public Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
+        {
+            var user = _users.Find(u =>
+                u.Email.ToLowerInvariant() == emailOrUsername.ToLowerInvariant() ||
+                u.Username.ToLowerInvariant() == emailOrUsername.ToLowerInvariant());
+            return Task.FromResult(user);
+        }
+
+        public Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
             var user = _users.Find(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant());
             return Task.FromResult(user);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
@@ -93,5 +94,40 @@ namespace BackendFramework.Helper
             }
             return fallback;
         }
+
+        /// <summary> Converts an email address with a unicode domain to one with a punycode domain. </summary>
+        /// <exception cref="InvalidDomainException"> If IdnMapping fails. </exception>
+        public static string ConvertEmailForDatabase(string email)
+        {
+            IdnMapping idn = new IdnMapping();
+            var parts = email.Split("@");
+            try
+            {
+                return $"{parts[0]}@{idn.GetAscii(parts[1])}".ToLowerInvariant();
+            }
+            catch
+            {
+                throw new InvalidDomainException();
+            }
+        }
+
+        /// <summary> Converts an email address with a punycode domain to one with a unicode domain. </summary>
+        /// <exception cref="InvalidDomainException"> If IdnMapping fails. </exception>
+        public static string ConvertEmailFromDatabase(string email)
+        {
+            IdnMapping idn = new IdnMapping();
+            var parts = email.Split("@");
+            try
+            {
+                return $"{parts[0]}@{idn.GetUnicode(parts[1])}".ToLowerInvariant();
+            }
+            catch
+            {
+                throw new InvalidDomainException();
+            }
+        }
+
+        [Serializable]
+        public class InvalidDomainException : Exception { }
     }
 }

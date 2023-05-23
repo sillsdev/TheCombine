@@ -138,7 +138,7 @@ namespace BackendFramework.Controllers
             }
 
             // Fetch the user -> fetch user role -> remove project from user's project roles
-            var changeUser = await _userRepo.GetUser(userId);
+            var changeUser = await _userRepo.GetUser(userId, false);
             if (changeUser is null)
             {
                 return NotFound(userId);
@@ -172,7 +172,7 @@ namespace BackendFramework.Controllers
             }
 
             // Fetch the user -> fetch user role -> update user role
-            var changeUser = await _userRepo.GetUser(userId);
+            var changeUser = await _userRepo.GetUser(userId, false);
             if (changeUser is null)
             {
                 return NotFound(userId);
