@@ -81,7 +81,7 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
-    "@testing-library/react": "^12.1.2",
+    "@testing-library/react": "^12.1.5",
     "@testing-library/react-hooks": "^8.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/crypto-js": "^4.1.1",
