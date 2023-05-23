@@ -155,7 +155,7 @@ namespace BackendFramework.Controllers
                 return Ok(editIndex);
             }
 
-            return NotFound(editIndex.ToString());
+            return NotFound($"{editIndex}");
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>

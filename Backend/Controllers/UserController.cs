@@ -41,8 +41,10 @@ namespace BackendFramework.Controllers
         {
             // Find user attached to email or username.
             var user = (await _userRepo.GetAllUsers()).SingleOrDefault(u =>
+#pragma warning disable CA1309
                 u.Email.Equals(data.EmailOrUsername, StringComparison.InvariantCultureIgnoreCase) ||
                 u.Username.Equals(data.EmailOrUsername, StringComparison.InvariantCultureIgnoreCase));
+#pragma warning restore CA1309
 
             if (user is null)
             {
@@ -58,9 +60,10 @@ namespace BackendFramework.Controllers
             message.Subject = "Combine password reset";
             message.Body = new TextPart("plain")
             {
-                Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset "
-                        + "{0}'s password. {1}/forgot/reset/{2} \n\n If you did not request a password reset please "
-                        + "ignore this email", user.Username, data.Domain, resetRequest.Token)
+                Text = $"A password reset has been requested for the user {user.Username}. " +
+                    $"Follow the link to reset {user.Username}'s password. " +
+                    $"{data.Domain}/forgot/reset/{resetRequest.Token} \n\n " +
+                    "If you did not request a password reset please ignore this email."
             };
             if (await _emailService.SendEmail(message))
             {
