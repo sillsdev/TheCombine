@@ -28,13 +28,7 @@ export default function SidebarDrop(props: SidebarDropProps): ReactElement {
         <div
           ref={providedDroppable.innerRef}
           {...providedDroppable.droppableProps}
-          /* Add the height of the app bar (64) to the top padding. */
-          style={{
-            backgroundColor: "lightblue",
-            height: "100%",
-            padding: 30,
-            paddingTop: 64 + 30,
-          }}
+          style={{ backgroundColor: "lightblue", height: "100%", padding: 20 }}
         >
           <IconButton
             onClick={() => dispatch(setSidebar())}

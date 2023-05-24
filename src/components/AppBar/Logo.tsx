@@ -8,15 +8,19 @@ import smallLogo from "resources/CombineSmallLogoV1.png";
 /** A button that redirects to the home page */
 export default function Logo(): ReactElement {
   return (
-    <Button onClick={() => history.push(Path.ProjScreen)} id="logo-button">
-      <Hidden lgDown>
-        <img src={logo} height="50" alt="Logo" />
+    <Button
+      id="logo-button"
+      onClick={() => history.push(Path.ProjScreen)}
+      style={{ minWidth: 0, padding: 0 }}
+    >
+      <Hidden mdDown>
+        <img src={logo} height="45" alt="Logo" />
       </Hidden>
-      <Hidden lgUp mdDown>
-        <img src={logo} height="40" alt="Logo" />
+      <Hidden smDown mdUp>
+        <img src={smallLogo} height="30" alt="Logo" />
       </Hidden>
-      <Hidden mdUp>
-        <img src={smallLogo} height="35" alt="Logo" />
+      <Hidden smUp>
+        <img src={smallLogo} height="15" alt="Logo" />
       </Hidden>
     </Button>
   );

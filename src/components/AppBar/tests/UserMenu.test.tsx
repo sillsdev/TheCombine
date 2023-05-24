@@ -49,19 +49,14 @@ describe("UserMenu", () => {
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
   });
 
-  it("getIsAdmin returns correct value", (done) => {
+  it("getIsAdmin returns correct value", async () => {
     mockUser.isAdmin = false;
-    getIsAdmin().then((result) => {
-      expect(result).toEqual(false);
-      mockUser.isAdmin = true;
-      getIsAdmin().then((result) => {
-        expect(result).toEqual(true);
-        done();
-      });
-    });
+    expect(await getIsAdmin()).toBeFalsy();
+    mockUser.isAdmin = true;
+    expect(await getIsAdmin()).toBeTruthy();
   });
 
-  it("admin users see one more item: Site Settings", async () => {
+  it("UserMenuList has one more item for admins (Site Settings)", () => {
     renderMenuList();
     const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
     renderMenuList(true);

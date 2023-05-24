@@ -8,7 +8,7 @@ import { Path } from "browserHistory";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
 import NavigationButtons from "components/AppBar/NavigationButtons";
-import ProjectNameButton from "components/AppBar/ProjectNameButton";
+import ProjectButtons from "components/AppBar/ProjectButtons";
 import { newUser } from "types/user";
 
 const mockPath = jest.fn();
@@ -60,26 +60,26 @@ describe("NavigationButtons", () => {
 
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectNameButton currentTab={Path.Goals} />
+        <ProjectButtons currentTab={Path.Goals} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();
 
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectNameButton currentTab={Path.Statistics} />
+        <ProjectButtons currentTab={Path.Statistics} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
 
-describe("ProjectNameButton", () => {
+describe("ProjectButtons", () => {
   it("has tab shaded when itself is called", () => {
     mockPath.mockReturnValue(Path.ProjSettings);
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectNameButton currentTab={Path.ProjSettings} />
+        <ProjectButtons currentTab={Path.ProjSettings} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();

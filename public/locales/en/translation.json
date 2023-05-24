@@ -36,9 +36,10 @@
     "wordInDatabase": "This word is already in the database"
   },
   "appBar": {
-    "dataEntry": "data entry",
-    "dataCleanup": "data cleanup",
-    "statistics": "data statistics"
+    "dataEntry": "Data Entry",
+    "dataCleanup": "Data Cleanup",
+    "statistics": "Data Statistics",
+    "projectSettings": "Project Settings"
   },
   "login": {
     "title": "Log In",
@@ -77,7 +78,6 @@
   },
   "userMenu": {
     "siteSettings": "Site Settings",
-    "projectSettings": "Project Settings",
     "userSettings": "User Settings",
     "logout": "Log Out",
     "userGuide": "User Guide"

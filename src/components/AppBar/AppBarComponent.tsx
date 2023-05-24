@@ -1,4 +1,4 @@
-import { AppBar, Grid, Hidden, Toolbar } from "@mui/material";
+import { AppBar, Grid, Toolbar } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -6,39 +6,37 @@ import { getProjectId } from "backend/localStorage";
 import { getBasePath, Path } from "browserHistory";
 import Logo from "components/AppBar/Logo";
 import NavigationButtons from "components/AppBar/NavigationButtons";
-import ProjectNameButton from "components/AppBar/ProjectNameButton";
+import ProjectButtons from "components/AppBar/ProjectButtons";
 import UserMenu from "components/AppBar/UserMenu";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import DownloadButton from "components/ProjectExport/DownloadButton";
 import theme from "types/theme";
 
+export const appBarHeight = 64;
+
 /** An app bar shown at the top of all logged in pages */
 export default function AppBarComponent(): ReactElement {
   const location = useLocation();
   const [currentTab, setCurrentTab] = useState<Path>(Path.ProjScreen);
+
   useEffect(() => setCurrentTab(getBasePath(location.pathname)), [location]);
+
   return (
     <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
-      <AppBar position="fixed" style={{ zIndex: theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        style={{ maxHeight: appBarHeight, zIndex: theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={2}
-            alignItems="center"
-          >
-            <Grid item sm={7} md={6} lg={5}>
-              <Hidden smDown>
-                <Logo />
-              </Hidden>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Grid item>
+              <Logo />
               {!!getProjectId() && (
                 <NavigationButtons currentTab={currentTab} />
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={3} lg={4}>
-              {!!getProjectId() && (
-                <ProjectNameButton currentTab={currentTab} />
-              )}
+            <Grid item>
+              {!!getProjectId() && <ProjectButtons currentTab={currentTab} />}
               <DownloadButton colorSecondary />
             </Grid>
             <Grid item>

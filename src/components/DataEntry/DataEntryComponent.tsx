@@ -103,6 +103,7 @@ export default class DataEntryComponent extends React.Component<
   }
 
   componentDidMount(): void {
+    this.props.openTree();
     window.addEventListener("resize", () => this.handleWindowSizeChange());
   }
 
