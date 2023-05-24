@@ -1,82 +1,66 @@
-import { MoreVert, SortByAlpha } from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import {
   Avatar,
-  FormControl,
   IconButton,
-  InputLabel,
   List,
   ListItem,
   ListItemText,
-  MenuItem,
-  Select,
   SelectChangeEvent,
-  Tooltip,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 
 import { Permission, User, UserRole } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
+import SortOptions, {
+  UserOrder,
+  getUserCompare,
+} from "components/ProjectSettings/ProjectUsers/SortOptions";
 import { StoreState } from "types";
+import { Hash } from "types/hash";
 import theme from "types/theme";
 
-enum UserOrder {
-  Username,
-  Name,
-  Email,
-}
-
-export default function ActiveUsers() {
+export default function ActiveUsers(): ReactElement {
   const projectUsers = useSelector(
     (state: StoreState) => state.currentProjectState.users
   );
   const [projUserRoles, setProjUserRoles] = useState<UserRole[]>([]);
-  const [userAvatar, setUserAvatar] = useState<{ [key: string]: string }>({});
+  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
-  const { t } = useTranslation();
+
+  const compareUsers = useCallback(
+    (a: User, b: User): number =>
+      getUserCompare(userOrder, reverseSorting)(a, b),
+    [reverseSorting, userOrder]
+  );
 
   useEffect(() => {
     getUserRoles().then(setProjUserRoles);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectUsers, setProjUserRoles]);
 
   useEffect(() => {
-    const tempUserAvatar = { ...userAvatar };
+    const newUserAvatar: Hash<string> = {};
     const promises = projectUsers.map(async (u) => {
       if (u.hasAvatar) {
-        tempUserAvatar[u.id] = await avatarSrc(u.id);
+        newUserAvatar[u.id] = await avatarSrc(u.id);
       }
     });
-    Promise.all(promises).then(() => setUserAvatar(tempUserAvatar));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
   }, [projectUsers, setUserAvatar]);
 
   useEffect(() => {
-    setSortedUsers(getSortedUsers());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectUsers, userOrder, reverseSorting, setSortedUsers]);
-
-  function getSortedUsers() {
-    // Copy the "projectUsers" array because reverse(), sort() mutate.
-    const users = [...projectUsers].sort((a: User, b: User) => {
-      switch (userOrder) {
-        case UserOrder.Name:
-          return a.name.localeCompare(b.name);
-        case UserOrder.Username:
-          return a.username.localeCompare(b.username);
-        case UserOrder.Email:
-          return a.email.localeCompare(b.email);
-        default:
-          throw new Error();
-      }
-    });
-    return reverseSorting ? users.reverse() : users;
-  }
+    setSortedUsers([...projectUsers].sort(compareUsers));
+  }, [compareUsers, projectUsers, setSortedUsers]);
 
   function hasProjectPermission(
     userRoleId: string,
@@ -92,8 +76,9 @@ export default function ActiveUsers() {
   const currentUser = getCurrentUser();
   const currentProjectId = getProjectId();
   if (!currentUser || !currentProjectId) {
-    return <div />;
+    return <Fragment />;
   }
+
   const currentUserIsProjectAdmin = hasProjectPermission(
     currentUser.projectRoles[currentProjectId],
     Permission.DeleteEditSettingsAndUsers
@@ -103,7 +88,7 @@ export default function ActiveUsers() {
     Permission.Owner
   );
 
-  const userList = sortedUsers.map((user) => {
+  const userListItem = (user: User): ReactElement => {
     const userIsProjectAdmin = hasProjectPermission(
       user.projectRoles[currentProjectId],
       Permission.DeleteEditSettingsAndUsers
@@ -146,55 +131,19 @@ export default function ActiveUsers() {
         {manageUser}
       </ListItem>
     );
-  });
-
-  const sortOptions = [
-    <MenuItem key="sortByName" value={UserOrder.Name}>
-      {t("projectSettings.language.name")}
-    </MenuItem>,
-    <MenuItem key="sortByUsername" value={UserOrder.Username}>
-      {t("login.username")}
-    </MenuItem>,
-  ];
-  if (currentUserIsProjectOwner || currentUser.isAdmin) {
-    sortOptions.push(
-      <MenuItem key="sortByEmail" value={UserOrder.Email}>
-        {t("login.email")}
-      </MenuItem>
-    );
-  }
+  };
 
   return (
-    <React.Fragment>
-      <FormControl variant="standard" style={{ minWidth: 100 }}>
-        <InputLabel id="sorting-order-select">
-          {t("charInventory.sortBy")}
-        </InputLabel>
-        <Select
-          variant="standard"
-          labelId="sorting-order-select"
-          defaultValue={UserOrder.Username}
-          onChange={(event: SelectChangeEvent<UserOrder>) => {
-            setUserOrder(event.target.value as UserOrder);
-            setReverseSorting(false);
-          }}
-        >
-          {sortOptions}
-        </Select>
-      </FormControl>
-      <Tooltip
-        title={t("projectSettings.userManagement.reverseOrder")}
-        placement="right"
-      >
-        <IconButton
-          onClick={() => setReverseSorting(!reverseSorting)}
-          id="sorting-order-reverse"
-          size="large"
-        >
-          <SortByAlpha />
-        </IconButton>
-      </Tooltip>
-      <List>{userList}</List>
-    </React.Fragment>
+    <>
+      <SortOptions
+        includeEmail={currentUserIsProjectOwner || currentUser.isAdmin}
+        onChange={(e: SelectChangeEvent<UserOrder>) => {
+          setUserOrder(e.target.value as UserOrder);
+          setReverseSorting(false);
+        }}
+        onReverseClick={() => setReverseSorting(!reverseSorting)}
+      />
+      <List>{sortedUsers.map(userListItem)}</List>
+    </>
   );
 }

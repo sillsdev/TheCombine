@@ -19,7 +19,7 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { compareFlags } from "types/wordUtilities";
+import { compareFlags } from "utilities/wordUtilities";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
@@ -332,7 +332,9 @@ const columns: Column<any>[] = [
           }
 
           // If the two glosses SEEM identical, sort by length
-          if (compare === 0) compare = codeA.length - codeB.length;
+          if (compare === 0) {
+            compare = codeA.length - codeB.length;
+          }
         }
         count++;
       }

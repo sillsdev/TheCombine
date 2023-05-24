@@ -9,7 +9,7 @@ import {
 } from "api/models";
 import Recorder from "components/Pronunciations/Recorder";
 import { newSense, newWord } from "types/word";
-import { cleanDefinitions, cleanGlosses } from "types/wordUtilities";
+import { cleanDefinitions, cleanGlosses } from "utilities/wordUtilities";
 
 // These must match the ReviewEntriesWord fields for use in ReviewEntriesTable
 export enum ReviewEntriesWordField {

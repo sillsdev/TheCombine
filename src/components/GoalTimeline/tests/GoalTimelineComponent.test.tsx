@@ -3,14 +3,14 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import GoalTimelineWithTranslation, {
   GoalTimeline,
 } from "components/GoalTimeline/GoalTimelineComponent";
-import { goalTypeToGoal } from "types/goalUtilities";
 import { Goal, GoalType } from "types/goals";
+import { goalTypeToGoal } from "utilities/goalUtilities";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();

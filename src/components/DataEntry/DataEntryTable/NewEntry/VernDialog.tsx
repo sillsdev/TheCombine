@@ -1,15 +1,9 @@
-import {
-  Dialog,
-  DialogContent,
-  MenuItem,
-  MenuList,
-  Typography,
-} from "@mui/material";
-import { withStyles } from "@mui/styles";
-import React from "react";
+import { Dialog, DialogContent, MenuList, Typography } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
+import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -18,11 +12,12 @@ import theme from "types/theme";
 interface vernDialogProps {
   vernacularWords: Word[];
   open: boolean;
+  // Call handleClose with no input to indicate no selection was made.
   handleClose: (selectedWordId?: string) => void;
   analysisLang?: string;
 }
 
-export default function VernDialog(props: vernDialogProps) {
+export default function VernDialog(props: vernDialogProps): ReactElement {
   return (
     <Dialog
       open={props.open}
@@ -45,27 +40,15 @@ export default function VernDialog(props: vernDialogProps) {
 
 interface VernListProps {
   vernacularWords: Word[];
-  closeDialog: (selectedWordId: string) => void;
+  closeDialog: (wordId: string) => void;
   analysisLang?: string;
 }
-
-// Copied from customized menus at https://material-ui.com/components/menus/
-export const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
 
 export function VernList(props: VernListProps) {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word) => (
@@ -94,6 +77,6 @@ export function VernList(props: VernListProps) {
           {props.vernacularWords[0].vernacular}
         </StyledMenuItem>
       </MenuList>
-    </React.Fragment>
+    </>
   );
 }

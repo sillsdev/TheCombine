@@ -19,7 +19,7 @@ import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxT
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
-import { getNowDateTimeString } from "utilities";
+import { getNowDateTimeString } from "utilities/utilities";
 
 function makeExportName(projectName: string) {
   return `${projectName}_${getNowDateTimeString()}.zip`;

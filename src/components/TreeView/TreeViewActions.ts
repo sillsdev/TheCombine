@@ -51,7 +51,7 @@ export function updateTreeLanguage(language: string) {
   };
 }
 
-export function initTreeDomain(language: string) {
+export function initTreeDomain(language = "") {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentDomain = getState().treeViewState.currentDomain;
     currentDomain.lang = language;

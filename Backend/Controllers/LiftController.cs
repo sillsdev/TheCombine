@@ -149,6 +149,7 @@ namespace BackendFramework.Controllers
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
+            var doesImportHaveDefinitions = false;
             try
             {
                 // Add character set to project from ldml file
@@ -166,6 +167,11 @@ namespace BackendFramework.Controllers
 
                 // Import words from .lift file
                 liftParseResult = parser.ReadLiftFile(extractedLiftFiles.First());
+
+                // Check if there are any definitions in the imported words
+                // before they are deleted by SaveImportEntries.
+                doesImportHaveDefinitions = liftMerger.DoesImportHaveDefinitions();
+
                 await liftMerger.SaveImportEntries();
             }
             catch (Exception e)
@@ -183,6 +189,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
+            project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.LiftImported = true;
             await _projRepo.Update(projectId, project);
 

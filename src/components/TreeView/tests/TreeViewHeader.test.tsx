@@ -2,22 +2,22 @@ import { render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { Key } from "ts-key-enum";
 
-import "tests/mockReactI18next.ts";
+import "tests/reactI18nextMock.ts";
 
 import {
   TreeViewHeader,
   TreeHeaderProps,
   useTreeNavigation,
 } from "components/TreeView/TreeViewHeader";
-import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { semDomFromTreeNode } from "types/semanticDomain";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
 
-// Current domain with no siblings, three kids
-const testProps: TreeHeaderProps = {
-  currentDomain: domMap[mapIds.parent],
+// Head domain with no parent, no siblings, one kid
+const headNode: TreeHeaderProps = {
+  currentDomain: domMap[mapIds.head],
   animate: MOCK_ANIMATE,
 };
 // Current domain with a parent, two siblings, and multiple kids
@@ -49,27 +49,51 @@ beforeEach(() => {
 });
 
 describe("TreeViewHeader", () => {
-  describe("getPrevSibling and getNextSibling", () => {
-    it("return undefined when there are no brothers", () => {
-      const { result } = renderHook(() => useTreeNavigation(testProps));
-
-      // The top domain (used in testProps) has no brother on either side
-      expect(result.current.getPrevSibling(testProps)).toEqual(undefined);
-      expect(result.current.getNextSibling(testProps)).toEqual(undefined);
+  describe("useTreeNavigation", () => {
+    it("returns undefined when no parent/sibling", () => {
+      // The domain headNode has no parent or siblings.
+      const { current } = renderHook(() => useTreeNavigation(headNode)).result;
+      expect(current.getNextSibling()).toBeUndefined();
+      expect(current.getParent()).toBeUndefined();
+      expect(current.getPrevSibling()).toBeUndefined();
     });
 
-    // getBrotherDomain
-    it("return the expected brothers", () => {
-      const { result } = renderHook(() =>
-        useTreeNavigation(twoBrothersManyKids)
-      );
+    it("getOnlyChild returns undefined if no children", () => {
+      const { current } = renderHook(() =>
+        useTreeNavigation(noBrothersNoKids)
+      ).result;
+      expect(current.getOnlyChild()).toBeUndefined();
+    });
 
-      // The top domain (used in testProps) has no brother on either side
-      expect(result.current.getPrevSibling(twoBrothersManyKids)).toEqual(
-        semDomFromTreeNode(domMap[mapIds.firstKid])
+    it("getOnlyChild returns undefined if more than one child", () => {
+      const { current } = renderHook(() =>
+        useTreeNavigation(twoBrothersManyKids)
+      ).result;
+      expect(current.getOnlyChild()).toBeUndefined();
+    });
+
+    it("getOnlyChild returns child if only one", () => {
+      const { current } = renderHook(() =>
+        useTreeNavigation(noBrothersOneKid)
+      ).result;
+      expect(current.getOnlyChild()).toEqual(
+        semDomFromTreeNode(domMap[mapIds.depth4])
       );
-      expect(result.current.getNextSibling(twoBrothersManyKids)).toEqual(
+    });
+
+    it("returns the expected parent and siblings", () => {
+      // The domain twoBrothersManyKids is the middle child of parentDomain.
+      const { current } = renderHook(() =>
+        useTreeNavigation(twoBrothersManyKids)
+      ).result;
+      expect(current.getNextSibling()).toEqual(
         semDomFromTreeNode(domMap[mapIds.lastKid])
+      );
+      expect(current.getParent()).toEqual(
+        semDomFromTreeNode(domMap[mapIds.parent])
+      );
+      expect(current.getPrevSibling()).toEqual(
+        semDomFromTreeNode(domMap[mapIds.firstKid])
       );
     });
   });

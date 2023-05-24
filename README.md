@@ -1,20 +1,23 @@
 # The Combine
 
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
-[![Frontend Coverage][frontend-codecov-badge]][codecov]
+[![Frontend Coverage][frontend-codecov-badge]][codecov-frontend]
+
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
-[![Backend Coverage][backend-codecov-badge]][codecov]
-[![Python Actions Status][github-actions-python-badge]][github-actions]
+[![Backend Coverage][backend-codecov-badge]][codecov-backend]
+
 [![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
 [![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
-![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
+[![Localization][localization-badge]][localization-crowdin] [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
 [frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
-[codecov]: https://codecov.io/gh/sillsdev/TheCombine
+[codecov-frontend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/src
+[codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
@@ -22,7 +25,8 @@
 [github-actions-ossf-badge]:
   https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
-[localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
+[localization-badge]: https://img.shields.io/badge/localization-Ar%20En%20Es%20Fr%20Pt-blue
+[localization-crowdin]: https://crowdin.com/project/the-combine
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
@@ -107,9 +111,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Prepare the Environment
 
-1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
-   _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
-   _System_ app (Windows).
+1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 32 characters**, such as
+   _This is a secret key that is longer_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
+   10.15+), or the _System_ app (Windows).
 2. If you want the email services to work you will need to set the following environment variables. These values must be
    kept secret, so ask your email administrator to supply them.
 

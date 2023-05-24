@@ -28,8 +28,8 @@ import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import theme from "types/theme";
-import { getAnalysisLangsFromWords } from "types/wordUtilities";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
+import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
 interface LanguageProps extends WithTranslation {
   project: Project;

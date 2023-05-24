@@ -25,7 +25,7 @@ import {
   MergeTreeActionTypes,
   MergeTreeState,
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
-import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MockMergeDupData";
+import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MergeDupDataMock";
 import { GoalsState, GoalType } from "types/goals";
 import {
   multiSenseWord,
