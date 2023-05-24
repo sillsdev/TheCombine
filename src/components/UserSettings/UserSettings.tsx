@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { validate } from "email-validator";
 import { useSnackbar } from "notistack";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -78,20 +79,34 @@ export default function UserSettings(): ReactElement {
   const potentialUser = getCurrentUser();
   const userCurr = potentialUser ?? newUser();
   const [user] = useState<User>(userCurr);
-  const [name, setName] = useState<string>(userCurr.name);
-  const [phone, setPhone] = useState<string>(userCurr.phone);
-  const [email, setEmail] = useState<string>(userCurr.email);
-  const [emailTaken, setEmailTaken] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<string>(getAvatar());
-  const [avatarDialogOpen, setAvatarDialogOpen] = useState<boolean>(false);
+  const [name, setName] = useState(userCurr.name);
+  const [phone, setPhone] = useState(userCurr.phone);
+  const [email, setEmail] = useState(userCurr.email);
+  const [emailInvalid, setEmailInvalid] = useState(false);
+  const [emailTaken, setEmailTaken] = useState(false);
+  const [avatar, setAvatar] = useState(getAvatar());
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   async function isEmailOkay(): Promise<boolean> {
+    if (emailInvalid) {
+      return false;
+    }
     const emailUnchanged = email.toLowerCase() === user.email.toLowerCase();
     if (emailUnchanged) {
       return true;
     }
-    return !(await isEmailUnavailable(email));
+    if (await isEmailUnavailable(email)) {
+      setEmailTaken(true);
+      return false;
+    }
+    return true;
+  }
+
+  function onEmailChange(email: string): void {
+    setEmail(email);
+    setEmailInvalid(!validate(email));
+    setEmailTaken(false);
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -104,13 +119,11 @@ export default function UserSettings(): ReactElement {
         email: email,
       });
       enqueueSnackbar(t("userSettings.updateSuccess"));
-    } else {
-      setEmailTaken(true);
     }
   }
 
   return (
-    <React.Fragment>
+    <>
       <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>
           <form onSubmit={(e) => onSubmit(e)}>
@@ -132,10 +145,7 @@ export default function UserSettings(): ReactElement {
                       label={t("login.name")}
                       onChange={(e) => setName(e.target.value)}
                       inputProps={{ maxLength: 100 }}
-                      style={{
-                        margin: theme.spacing(1),
-                        marginLeft: 0,
-                      }}
+                      style={{ margin: theme.spacing(1), marginLeft: 0 }}
                     />
                     <Typography variant="subtitle2" style={{ color: "grey" }}>
                       {t("login.username")}
@@ -181,15 +191,15 @@ export default function UserSettings(): ReactElement {
                         variant="outlined"
                         value={email}
                         label={t("login.email")}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setEmailTaken(false);
-                        }}
-                        error={emailTaken}
+                        onChange={(e) => onEmailChange(e.target.value)}
+                        error={emailInvalid || emailTaken}
                         helperText={
-                          emailTaken ? t("login.emailTaken") : undefined
+                          emailInvalid
+                            ? t("login.emailInvalid")
+                            : emailTaken
+                            ? t("login.emailTaken")
+                            : undefined
                         }
-                        type="email"
                       />
                     </Grid>
                   </Grid>
@@ -217,6 +227,6 @@ export default function UserSettings(): ReactElement {
           setAvatarDialogOpen(false);
         }}
       />
-    </React.Fragment>
+    </>
   );
 }

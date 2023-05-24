@@ -33,16 +33,17 @@ describe("Testing sign up component", () => {
   describe("signUp", () => {
     // Test whether various combinations of sign up data should result in errors
     test("no data", () => {
-      testSignUp("", "", "", "", "", true, true, true, true, false);
+      testSignUp("", "", "", "", "", true, true, true, false, true, false);
     });
 
     test("confirm password doesn't match password", () => {
       testSignUp(
         "Frodo Baggins",
         "underhill",
-        "a@b.c",
+        "a@b.cd",
         "1234567890",
         "1234567899",
+        false,
         false,
         false,
         false,
@@ -55,9 +56,26 @@ describe("Testing sign up component", () => {
       testSignUp(
         "Samwise Gamgee",
         "sg",
-        "a@b.c",
+        "a@b.cd",
         "12345678",
         "12345678",
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      );
+    });
+
+    test("email invalid", () => {
+      testSignUp(
+        "Sméagol",
+        "Gollum",
+        "a@b@c",
+        "myprecious",
+        "myprecious",
+        false,
         false,
         true,
         false,
@@ -70,9 +88,10 @@ describe("Testing sign up component", () => {
       testSignUp(
         "Bilbo Baggins",
         "bbb",
-        "a@b.c",
+        "a@b.cd",
         "sting",
         "sting",
+        false,
         false,
         false,
         false,
@@ -91,7 +110,8 @@ async function testSignUp(
   confirmPassword: string,
   error_name: boolean,
   error_username: boolean,
-  error_email: boolean,
+  error_emailInvalid: boolean,
+  error_emailTaken: boolean,
   error_password: boolean,
   error_confirmPassword: boolean
 ) {
@@ -106,7 +126,8 @@ async function testSignUp(
   expect(signUpHandle.instance.state.error).toEqual({
     name: error_name,
     username: error_username,
-    email: error_email,
+    emailInvalid: error_emailInvalid,
+    emailTaken: error_emailTaken,
     password: error_password,
     confirmPassword: error_confirmPassword,
   });

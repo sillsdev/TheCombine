@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using BackendFramework.Helper;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -193,10 +192,6 @@ namespace BackendFramework.Models
             Avatar = "";
             Password = "";
             Token = "";
-            if (!String.IsNullOrWhiteSpace(Email))
-            {
-                Email = Sanitization.ConvertEmailFromDatabase(Email);
-            }
         }
     }
 

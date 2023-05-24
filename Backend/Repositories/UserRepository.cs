@@ -117,9 +117,8 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
-            email = Sanitization.ConvertEmailForDatabase(email);
-            var user = (await _userDatabase.Users.FindAsync(x => x.Email.ToLowerInvariant() == email))
-                .FirstOrDefault();
+            var user = (await _userDatabase.Users.FindAsync(
+                x => x.Email.ToLowerInvariant() == email.ToLowerInvariant())).FirstOrDefault();
             if (sanitize && user is not null)
             {
                 user.Sanitize();
@@ -132,14 +131,8 @@ namespace BackendFramework.Repositories
         public async Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
         {
             var lower = emailOrUsername.ToLowerInvariant();
-            var user = (await _userDatabase.Users.FindAsync(u => u.Username.ToLowerInvariant() == lower))
-                .FirstOrDefault();
-            if (user is null)
-            {
-                var email = Sanitization.ConvertEmailForDatabase(lower);
-                user = (await _userDatabase.Users.FindAsync(u => u.Email.ToLowerInvariant() == email))
-                    .FirstOrDefault();
-            }
+            var user = (await _userDatabase.Users.FindAsync(
+                u => u.Username.ToLowerInvariant() == lower || u.Email.ToLowerInvariant() == lower)).FirstOrDefault();
             if (sanitize && user is not null)
             {
                 user.Sanitize();
@@ -151,9 +144,8 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
-            username = username.ToLowerInvariant();
-            var user = (await _userDatabase.Users.FindAsync(x => x.Username.ToLowerInvariant() == username))
-                .FirstOrDefault();
+            var user = (await _userDatabase.Users.FindAsync(
+                x => x.Username.ToLowerInvariant() == username.ToLowerInvariant())).FirstOrDefault();
             if (sanitize && user is not null)
             {
                 user.Sanitize();
@@ -172,12 +164,14 @@ namespace BackendFramework.Repositories
                 return ResultOfUpdate.NotFound;
             }
 
-            // Confirm that email and username aren't empty and aren't taken by another user.
+            // Confirm that email and username aren't empty.
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username))
             {
                 return ResultOfUpdate.Failed;
             }
-            if (user.Email.ToLowerInvariant() != Sanitization.ConvertEmailFromDatabase(oldUser.Email)
+
+            // Confirm that email and username aren't taken by another user.
+            if (user.Email.ToLowerInvariant() != oldUser.Email.ToLowerInvariant()
                 && await GetUserByEmail(user.Email) is not null)
             {
                 return ResultOfUpdate.Failed;
@@ -187,6 +181,8 @@ namespace BackendFramework.Repositories
             {
                 return ResultOfUpdate.Failed;
             }
+
+
 
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
 

@@ -57,6 +57,7 @@
     "signUpFailed": "Failed to sign up",
     "usernameInvalid": "Username is too short or already taken.",
     "usernameRequirements": "Username must be 3 characters or longer.",
+    "emailInvalid": "Invalid email address.",
     "emailTaken": "A user with this email already exists.",
     "networkError": "Network error",
     "loggingIn": "Logging in...",

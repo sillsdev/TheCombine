@@ -125,23 +125,5 @@ namespace Backend.Tests.Helper
             Assert.That(MakeFriendlyForPath("", fallback), Is.EqualTo(fallback));
             Assert.That(MakeFriendlyForPath(nonEmpty, fallback), Is.EqualTo(nonEmpty));
         }
-
-        [Test]
-        public void TestConvertEmailForDatabase()
-        {
-            const string unicodeEmail = "email@ドд测öş.com";
-            const string punycodeEmail = "email@xn--nda4sr1fl05e5hyd.com";
-            Assert.That(ConvertEmailForDatabase(unicodeEmail), Is.EqualTo(punycodeEmail));
-            Assert.Throws<InvalidDomainException>(() => { ConvertEmailForDatabase("invalidEmail"); });
-        }
-
-        [Test]
-        public void TestConvertEmailFromDatabase()
-        {
-            const string unicodeEmail = "email@ドд测öş.com";
-            const string punycodeEmail = "email@xn--nda4sr1fl05e5hyd.com";
-            Assert.That(ConvertEmailFromDatabase(punycodeEmail), Is.EqualTo(unicodeEmail));
-            Assert.Throws<InvalidDomainException>(() => { ConvertEmailFromDatabase("invalidEmail"); });
-        }
     }
 }
