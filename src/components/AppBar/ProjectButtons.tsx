@@ -1,6 +1,6 @@
 import { BarChart, Settings } from "@mui/icons-material";
 import { Button, Hidden, Tooltip, Typography } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -41,7 +41,9 @@ export default function ProjectButtons(
   const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  getIsAdminOrOwner().then(setIsAdminOrOwner);
+  useEffect(() => {
+    getIsAdminOrOwner().then(setIsAdminOrOwner);
+  }, [setIsAdminOrOwner]);
 
   return (
     <>
