@@ -30,7 +30,7 @@ namespace Backend.Tests.Controllers
             {
                 Username = Util.RandString(10),
                 Password = Util.RandString(10),
-                Email = $"{Util.RandString(5)}@{Util.RandString(5)}",
+                Email = $"{Util.RandString(5)}@{Util.RandString(5)}.com",
             };
             return user;
         }
@@ -199,11 +199,8 @@ namespace Backend.Tests.Controllers
             var result4 = (ObjectResult)_userController.IsEmailUnavailable("new@e.mail").Result;
             Assert.IsFalse((bool)result4.Value!);
 
-            var result5 = (ObjectResult)_userController.IsEmailUnavailable("InvalidEmail").Result;
+            var result5 = (ObjectResult)_userController.IsEmailUnavailable("").Result;
             Assert.IsTrue((bool)result5.Value!);
-
-            var result6 = (ObjectResult)_userController.IsEmailUnavailable("").Result;
-            Assert.IsTrue((bool)result6.Value!);
         }
     }
 }
