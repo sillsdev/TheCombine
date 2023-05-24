@@ -4,7 +4,14 @@ import {
   Person,
   SettingsApplications,
 } from "@mui/icons-material";
-import { Avatar, Button, Hidden, Menu, MenuItem } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Hidden,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -50,16 +57,24 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
   getIsAdmin().then(setIsAdmin);
 
   return (
-    <React.Fragment>
+    <>
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
         onClick={handleClick}
         color="secondary"
-        style={{ background: tabColor(props.currentTab, Path.UserSettings) }}
+        style={{
+          background: tabColor(props.currentTab, Path.UserSettings),
+          minWidth: 0,
+          padding: 0,
+        }}
         id={`avatar-${idAffix}`}
       >
-        <Hidden mdDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
+        <Hidden mdDown>
+          <Typography style={{ margin: 5 }}>
+            {LocalStorage.getCurrentUser()?.username}
+          </Typography>
+        </Hidden>
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} style={{ marginLeft: 5 }} />
         ) : (
@@ -76,7 +91,7 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
-    </React.Fragment>
+    </>
   );
 }
 
