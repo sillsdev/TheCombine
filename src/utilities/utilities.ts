@@ -16,7 +16,9 @@ export function randomIntString(): string {
 
 /** Quicksort implementation O(n log n). */
 export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
-  if (arr.length <= 1) return arr;
+  if (arr.length <= 1) {
+    return arr;
+  }
 
   const pivotIndex = 0;
   const pivot = arr[0];
