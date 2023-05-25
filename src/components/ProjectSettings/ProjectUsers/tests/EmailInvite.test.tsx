@@ -8,7 +8,7 @@ import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 jest.mock("backend", () => ({
   emailInviteToProject: () => mockEmailInviteToProject(),
   getUserByEmail: jest.fn(),
-  isEmailUnavailable: () => mockIsEmailUnavailable(),
+  isEmailTaken: () => mockIsEmailTaken(),
 }));
 jest.mock("backend/localStorage", () => ({
   getProjectId: () => "mockId",
@@ -17,7 +17,7 @@ jest.mock("backend/localStorage", () => ({
 const mockAddToProject = jest.fn();
 const mockClose = jest.fn();
 const mockEmailInviteToProject = jest.fn();
-const mockIsEmailUnavailable = jest.fn();
+const mockIsEmailTaken = jest.fn();
 
 let testRenderer: renderer.ReactTestRenderer;
 
@@ -41,7 +41,7 @@ describe("EmailInvite", () => {
   });
 
   it("adds user if already exists", async () => {
-    mockIsEmailUnavailable.mockResolvedValueOnce(true);
+    mockIsEmailTaken.mockResolvedValueOnce(true);
     await renderer.act(async () => {
       testRenderer.root
         .findByType(LoadingDoneButton)
@@ -52,7 +52,7 @@ describe("EmailInvite", () => {
   });
 
   it("invite user if doesn't exists", async () => {
-    mockIsEmailUnavailable.mockResolvedValueOnce(false);
+    mockIsEmailTaken.mockResolvedValueOnce(false);
     await renderer.act(async () => {
       testRenderer.root
         .findByType(LoadingDoneButton)

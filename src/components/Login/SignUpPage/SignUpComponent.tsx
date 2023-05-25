@@ -10,7 +10,7 @@ import { validate } from "email-validator";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-import { isEmailUnavailable, isUsernameUnavailable } from "backend";
+import { isEmailTaken, isUsernameTaken } from "backend";
 import history, { Path } from "browserHistory";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import {
@@ -107,7 +107,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
   async checkUsername(username: string) {
     if (
       !meetsUsernameRequirements(this.state.username) ||
-      (await isUsernameUnavailable(username))
+      (await isUsernameTaken(username))
     ) {
       this.setState((prevState) => ({
         error: { ...prevState.error, username: true },
@@ -120,7 +120,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
       this.setState((prevState) => ({
         error: { ...prevState.error, emailInvalid: true },
       }));
-    } else if (await isEmailUnavailable(this.state.email)) {
+    } else if (await isEmailTaken(this.state.email)) {
       this.setState((prevState) => ({
         error: { ...prevState.error, emailTaken: true },
       }));
@@ -140,9 +140,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
       name: name === "",
       username:
         !meetsUsernameRequirements(username) ||
-        (await isUsernameUnavailable(username)),
+        (await isUsernameTaken(username)),
       emailInvalid: !validate(email),
-      emailTaken: await isEmailUnavailable(email),
+      emailTaken: await isEmailTaken(email),
       password: !meetsPasswordRequirements(password),
       confirmPassword: password !== confirmPassword,
     };

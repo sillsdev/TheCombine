@@ -18,7 +18,7 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
-import { isEmailUnavailable, updateUser } from "backend";
+import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 import theme from "types/theme";
@@ -96,7 +96,7 @@ export default function UserSettings(): ReactElement {
     if (emailUnchanged) {
       return true;
     }
-    if (await isEmailUnavailable(email)) {
+    if (await isEmailTaken(email)) {
       setEmailTaken(true);
       return false;
     }
