@@ -123,12 +123,6 @@ describe("PasswordReset", () => {
     );
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
 
-    if (reqErrors.length > 0) {
-      console.log(
-        `Tag: ${reqErrors[0].tagName}\nhidden: ${reqErrors[0].hidden}\nInner Text: ${reqErrors[0].innerText}`
-      );
-    }
-
     expect(reqErrors.length).toBe(0);
     expect(confirmErrors.length).toBeGreaterThan(0);
     expect(submitButton.closest("button")).toBeDisabled();
