@@ -175,14 +175,13 @@ namespace BackendFramework.Controllers
             return Ok(isUnavailable);
         }
 
-        /// <summary> Checks whether specified email address is taken. </summary>
+        /// <summary> Checks whether specified email address is taken or empty. </summary>
         [AllowAnonymous]
         [HttpGet("isemailtaken/{email}", Name = "IsEmailUnavailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> IsEmailUnavailable(string email)
         {
-            var isUnavailable = string.IsNullOrWhiteSpace(email) ||
-                await _userRepo.GetUserByEmail(email) is not null;
+            var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
             return Ok(isUnavailable);
         }
 

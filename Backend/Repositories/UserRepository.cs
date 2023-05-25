@@ -182,8 +182,6 @@ namespace BackendFramework.Repositories
                 return ResultOfUpdate.Failed;
             }
 
-
-
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
 
             // Note: Nulls out values not in update body

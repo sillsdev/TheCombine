@@ -191,7 +191,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     e: KeyboardEvent,
     checkGloss: boolean
   ): Promise<void> => {
-    console.info(vernOpen);
     if ((true || !vernOpen) && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular
       if (newVern) {
