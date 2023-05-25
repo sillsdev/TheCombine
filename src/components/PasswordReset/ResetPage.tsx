@@ -26,6 +26,16 @@ interface PasswordResetProps extends RouteComponentProps<MatchParams> {
   resetState: RequestState;
 }
 
+export enum PasswordResetTestIds {
+  Password = "PasswordReset.password",
+  PasswordReqError = "PasswordReset.requirements-error",
+  ConfirmPassword = "PasswordReset.confirm-password",
+  PasswordMatchError = "PasswordReset.match-error",
+  PasswordResetFail = "PasswordReset.reset-fail",
+  BackToLoginButton = "PasswordReset.button.back-to-login",
+  SubmitButton = "PasswordReset.button.submit",
+}
+
 export function PasswordReset(): ReactElement {
   const { token }: MatchParams = useParams();
   const [password, setPassword] = useState("");
@@ -81,6 +91,7 @@ export function PasswordReset(): ReactElement {
                 style={{ width: "100%" }}
                 margin="normal"
                 error={!passwordFitsRequirements}
+                data-testid={PasswordResetTestIds.Password}
                 onChange={(e) =>
                   onChangePassword(e.target.value, passwordConfirm)
                 }
@@ -88,6 +99,7 @@ export function PasswordReset(): ReactElement {
               {!passwordFitsRequirements && (
                 <Typography
                   id="login.passwordRequirements"
+                  data-testid={PasswordResetTestIds.PasswordReqError}
                   variant="body2"
                   style={{ display: "inline", margin: 24, color: "red" }}
                 >
@@ -98,6 +110,7 @@ export function PasswordReset(): ReactElement {
             <Grid item>
               <TextField
                 id="password-reset-password2"
+                data-testid={PasswordResetTestIds.ConfirmPassword}
                 variant="outlined"
                 label={t("login.confirmPassword")}
                 type="password"
@@ -110,6 +123,7 @@ export function PasswordReset(): ReactElement {
               {!isPasswordConfirmed && passwordConfirm.length > 0 && (
                 <Typography
                   id="login.confirmPasswordError"
+                  data-testid={PasswordResetTestIds.PasswordMatchError}
                   variant="body2"
                   style={{ display: "inline", margin: 24, color: "red" }}
                 >
@@ -124,6 +138,7 @@ export function PasswordReset(): ReactElement {
                   <React.Fragment>
                     <Typography
                       id="passwordReset.resetFail"
+                      data-testid={PasswordResetTestIds.PasswordResetFail}
                       variant="body2"
                       style={{ display: "inline", margin: 24, color: "red" }}
                     >
@@ -133,6 +148,7 @@ export function PasswordReset(): ReactElement {
                       id="password-reset-submit"
                       variant="contained"
                       color="primary"
+                      data-testid={PasswordResetTestIds.BackToLoginButton}
                       onClick={backToLogin}
                     >
                       {t("passwordReset.backToLogin")}
@@ -143,6 +159,7 @@ export function PasswordReset(): ReactElement {
                 ) : (
                   <Button
                     id="password-reset-submit"
+                    data-testid={PasswordResetTestIds.SubmitButton}
                     variant="contained"
                     color="primary"
                     disabled={
@@ -161,13 +178,3 @@ export function PasswordReset(): ReactElement {
     </div>
   );
 }
-
-// function mapDispatchToProps(dispatch: StoreStateDispatch): ResetDispatchProps {
-//   return {
-//     passwordReset: (token: string, password: string) => {
-//       dispatch(asyncReset(token, password));
-//     },
-//   };
-// }
-
-// export default connect(null, mapDispatchToProps)(PasswordResetComponent);
