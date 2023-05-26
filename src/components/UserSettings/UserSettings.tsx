@@ -1,108 +1,54 @@
-import { CameraAlt, Email, Person, Phone } from "@mui/icons-material";
+import { Email, Phone } from "@mui/icons-material";
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Grid,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { useSnackbar } from "notistack";
-import React, { ReactElement, useState } from "react";
+import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
-import AvatarUpload from "components/UserSettings/AvatarUpload";
+import ClickableAvatar from "components/UserSettings/ClickableAvatar";
+import { updateLangFromUser } from "i18n";
 import theme from "types/theme";
-import { newUser } from "types/user";
+import { uiWritingSystems } from "types/writingSystem";
 
 const idAffix = "user-settings";
 
-function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
-  return (
-    <Dialog onClose={props.onClose} open={props.open}>
-      <DialogTitle>Set user avatar</DialogTitle>
-      <DialogContent>
-        <AvatarUpload doneCallback={props.onClose} />
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-/** An avatar with a camera icon when hovered */
-function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
-  const classes = makeStyles({
-    avatar: {
-      width: 60,
-      height: 60,
-    },
-    avatarOverlay: {
-      transition: "opacity 0.2s",
-      "&:hover": { opacity: 0.9 },
-      position: "absolute",
-      width: 60,
-      height: 60,
-      top: 0,
-      opacity: 0,
-      cursor: "pointer",
-    },
-  })();
-
-  return (
-    <div style={{ position: "relative" }}>
-      {props.avatar ? (
-        <Avatar
-          className={classes.avatar}
-          alt="User avatar"
-          src={props.avatar}
-        />
-      ) : (
-        <Person style={{ fontSize: 60 }} />
-      )}
-      <Avatar className={classes.avatarOverlay} onClick={props.onClick}>
-        <CameraAlt />
-      </Avatar>
-    </div>
-  );
-}
-
-export default function UserSettings(): ReactElement {
-  const { t } = useTranslation();
+export default (): ReactElement => {
   const potentialUser = getCurrentUser();
-  const userCurr = potentialUser ?? newUser();
-  const [user] = useState<User>(userCurr);
-  const [name, setName] = useState<string>(userCurr.name);
-  const [phone, setPhone] = useState<string>(userCurr.phone);
-  const [email, setEmail] = useState<string>(userCurr.email);
-  const [emailTaken, setEmailTaken] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<string>(getAvatar());
-  const [avatarDialogOpen, setAvatarDialogOpen] = useState<boolean>(false);
+  return potentialUser ? <UserSettings user={potentialUser} /> : <Fragment />;
+};
+
+export function UserSettings(props: { user: User }): ReactElement {
+  const [name, setName] = useState(props.user.name);
+  const [phone, setPhone] = useState(props.user.phone);
+  const [email, setEmail] = useState(props.user.email);
+  const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
+  const [emailTaken, setEmailTaken] = useState(false);
+  const [avatar, setAvatar] = useState(getAvatar());
+
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useTranslation();
 
   async function isEmailOkay(): Promise<boolean> {
-    const emailUnchanged = email.toLowerCase() === user.email.toLowerCase();
-    if (emailUnchanged) {
-      return true;
-    }
-    return !(await isEmailTaken(email));
+    const unchanged = email.toLowerCase() === props.user.email.toLowerCase();
+    return unchanged || !(await isEmailTaken(email));
   }
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     if (await isEmailOkay()) {
-      await updateUser({
-        ...user,
-        name: name,
-        phone: phone,
-        email: email,
-      });
+      await updateUser({ ...props.user, name, phone, email, uiLang });
+      updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
     } else {
       setEmailTaken(true);
@@ -110,7 +56,7 @@ export default function UserSettings(): ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>
           <form onSubmit={(e) => onSubmit(e)}>
@@ -118,10 +64,7 @@ export default function UserSettings(): ReactElement {
               <Grid item container spacing={6}>
                 <Grid item container spacing={2} alignItems="center">
                   <Grid item>
-                    <ClickableAvatar
-                      avatar={avatar}
-                      onClick={() => setAvatarDialogOpen(true)}
-                    />
+                    <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
                   </Grid>
                   <Grid item xs>
                     <TextField
@@ -132,15 +75,12 @@ export default function UserSettings(): ReactElement {
                       label={t("login.name")}
                       onChange={(e) => setName(e.target.value)}
                       inputProps={{ maxLength: 100 }}
-                      style={{
-                        margin: theme.spacing(1),
-                        marginLeft: 0,
-                      }}
+                      style={{ margin: theme.spacing(1), marginLeft: 0 }}
                     />
                     <Typography variant="subtitle2" style={{ color: "grey" }}>
                       {t("login.username")}
                       {": "}
-                      {user.username}
+                      {props.user.username}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -195,6 +135,40 @@ export default function UserSettings(): ReactElement {
                   </Grid>
                 </Grid>
 
+                <Grid item container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">
+                      {t("userSettings.uiLanguage")}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item>
+                    <Select
+                      variant="standard"
+                      id="semantic-domains-language"
+                      value={uiLang}
+                      onChange={(e) => setUiLang(e.target.value ?? "")}
+                      /* Use `displayEmpty` and a conditional `renderValue` function to force
+                       * something to appear when the menu is closed and its value is "" */
+                      displayEmpty
+                      renderValue={
+                        uiLang
+                          ? undefined
+                          : () => t("userSettings.uiLanguageDefault")
+                      }
+                    >
+                      <MenuItem value={""}>
+                        {t("userSettings.uiLanguageDefault")}
+                      </MenuItem>
+                      {uiWritingSystems.map((ws) => (
+                        <MenuItem key={ws.bcp47} value={ws.bcp47}>
+                          {`${ws.bcp47} (${ws.name})`}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                </Grid>
+
                 <Grid item container justifyContent="flex-end">
                   <Button
                     type="submit"
@@ -209,14 +183,6 @@ export default function UserSettings(): ReactElement {
           </form>
         </Card>
       </Grid>
-
-      <AvatarDialog
-        open={avatarDialogOpen}
-        onClose={() => {
-          setAvatar(getAvatar());
-          setAvatarDialogOpen(false);
-        }}
-      />
-    </React.Fragment>
+    </>
   );
 }

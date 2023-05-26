@@ -114,6 +114,8 @@
   "userSettings": {
     "contact": "Contact info",
     "phone": "Phone number",
+    "uiLanguage": "User-interface language",
+    "uiLanguageDefault": "(Default to browser language)",
     "updateSuccess": "Settings successfully updated."
   },
   "projectExport": {

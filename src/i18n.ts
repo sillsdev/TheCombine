@@ -4,6 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
+import { getCurrentUser } from "backend/localStorage";
 import { i18nFallbacks, i18nLangs } from "types/writingSystem";
 
 // declare custom type options so the return is always a string.
@@ -34,8 +35,15 @@ i18n
     setDir // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized
   );
 
-function setDir() {
+function setDir(): void {
   document.body.dir = i18n.dir();
+}
+
+export function updateLangFromUser(): void {
+  const uiLang = getCurrentUser()?.uiLang;
+  if (uiLang && uiLang !== i18n.resolvedLanguage) {
+    i18n.changeLanguage(uiLang, setDir);
+  }
 }
 
 export default i18n;
