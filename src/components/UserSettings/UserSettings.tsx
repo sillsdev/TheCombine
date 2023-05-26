@@ -145,7 +145,7 @@ export function UserSettings(props: { user: User }): ReactElement {
                   <Grid item>
                     <Select
                       variant="standard"
-                      id="semantic-domains-language"
+                      id="ui-language"
                       value={uiLang}
                       onChange={(e) => setUiLang(e.target.value ?? "")}
                       /* Use `displayEmpty` and a conditional `renderValue` function to force
