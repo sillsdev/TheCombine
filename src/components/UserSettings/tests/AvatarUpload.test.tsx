@@ -1,25 +1,16 @@
-import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
-import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
-// This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore()();
-
 let testRenderer: renderer.ReactTestRenderer;
 
 describe("AvatarUpload", () => {
-  it("renders without crashing", () => {
+  it("renders", () => {
     renderer.act(() => {
-      testRenderer = renderer.create(
-        <Provider store={mockStore}>
-          <AvatarUpload />
-        </Provider>
-      );
+      testRenderer = renderer.create(<AvatarUpload />);
     });
-    expect(testRenderer.root.findAllByType(AvatarUpload).length).toBe(1);
+    expect(testRenderer.root.findAllByType(AvatarUpload)).toHaveLength(1);
   });
 });
