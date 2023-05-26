@@ -6,17 +6,6 @@ import { ReactElement, useState } from "react";
 import { getAvatar } from "backend/localStorage";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
-function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
-  return (
-    <Dialog onClose={props.onClose} open={props.open}>
-      <DialogTitle>Set user avatar</DialogTitle>
-      <DialogContent>
-        <AvatarUpload doneCallback={props.onClose} />
-      </DialogContent>
-    </Dialog>
-  );
-}
-
 const clickableAvatarClassProps: Styles<DefaultTheme, {}> = {
   avatar: { width: 60, height: 60 },
   avatarOverlay: {
@@ -43,6 +32,11 @@ export default function ClickableAvatar(
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const classes = makeStyles(clickableAvatarClassProps)();
 
+  const closeDialog = (): void => {
+    props.setAvatar(getAvatar());
+    setAvatarDialogOpen(false);
+  };
+
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -63,13 +57,12 @@ export default function ClickableAvatar(
         </Avatar>
       </div>
 
-      <AvatarDialog
-        open={avatarDialogOpen}
-        onClose={() => {
-          props.setAvatar(getAvatar());
-          setAvatarDialogOpen(false);
-        }}
-      />
+      <Dialog onClose={closeDialog} open={avatarDialogOpen}>
+        <DialogTitle>Set user avatar</DialogTitle>
+        <DialogContent>
+          <AvatarUpload doneCallback={closeDialog} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

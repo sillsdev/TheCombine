@@ -21,9 +21,7 @@ const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 
 export default function AppWithBar(): ReactElement {
-  useEffect(() => {
-    updateLangFromUser();
-  }, []);
+  useEffect(updateLangFromUser, []);
 
   return (
     <>
