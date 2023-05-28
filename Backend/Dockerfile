@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.  Using 6.0.16-focal-amd64
-FROM mcr.microsoft.com/dotnet/aspnet@sha256:7bf9ac0ea764f4bd3669b43bcde2bda92fc950af36eebeb466a89e1186145466
+FROM mcr.microsoft.com/dotnet/aspnet@sha256:3fbe582ae85438ca0b0095f7926b0613a3645afb3f1845daddf901855e9207f4
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
