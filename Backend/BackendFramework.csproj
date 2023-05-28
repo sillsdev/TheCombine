@@ -40,6 +40,6 @@
     <PackageReference Include="SIL.Lift" Version="12.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="12.0.0" />
+    <PackageReference Include="SIL.WritingSystems" Version="12.0.1" />
   </ItemGroup>
 </Project>
