@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import React, { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Path } from "browserHistory";
@@ -12,6 +12,7 @@ import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
 import Statistics from "components/Statistics/Statistics";
 import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
+import { updateLangFromUser } from "i18n";
 
 const BaseGoalScreen = loadable(
   () => import("goals/DefaultGoal/BaseGoalScreen")
@@ -20,8 +21,10 @@ const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 
 export default function AppWithBar(): ReactElement {
+  useEffect(updateLangFromUser, []);
+
   return (
-    <React.Fragment>
+    <>
       <SignalRHub />
       <AppBar />
       <Switch>
@@ -36,6 +39,6 @@ export default function AppWithBar(): ReactElement {
         <Route exact path={Path.UserSettings} component={UserSettings} />
         <Route component={PageNotFound} />
       </Switch>
-    </React.Fragment>
+    </>
   );
 }

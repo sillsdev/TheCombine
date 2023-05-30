@@ -169,20 +169,20 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   const addOrUpdateWord = async (): Promise<void> => {
     if (suggestedDups.length) {
-      // Duplicate vern ...
+      // Case 1: Duplicate vern is typed
       if (!selectedDup) {
-        // ... and user hasn't made a selection
+        // Case 1a: User hasn't made a selection
         setVernOpen(true);
-      } else if (!selectedDup.id) {
-        // ... and user has selected an entry to modify
+      } else if (selectedDup.id) {
+        // Case 1b: User has selected an entry to modify
         await updateWordWithNewGloss(selectedDup.id);
         resetState();
       } else {
-        // ... and user has selected new entry
+        // Case 1c: User has selected new entry
         await addNewEntryAndReset();
       }
     } else {
-      // New vern is typed
+      // Case 2: New vern is typed
       await addNewEntryAndReset();
     }
   };
