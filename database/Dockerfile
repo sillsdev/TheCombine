@@ -1,5 +1,5 @@
 # Use mongo:6.0.6-jammy for linux/amd64
-FROM mongo@sha256:028650e24cdc662da15e11809d63b4f2a0b7eb782f3ca4f80a303a4c255fab89
+FROM mongo@sha256:695cc4d237d158d32d5ddcadefe06444dbbd5feac2d50f560b60b70f2198c16c
 
 WORKDIR /
 
