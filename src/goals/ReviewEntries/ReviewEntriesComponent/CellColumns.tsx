@@ -332,7 +332,9 @@ const columns: Column<any>[] = [
           }
 
           // If the two glosses SEEM identical, sort by length
-          if (compare === 0) compare = codeA.length - codeB.length;
+          if (compare === 0) {
+            compare = codeA.length - codeB.length;
+          }
         }
         count++;
       }

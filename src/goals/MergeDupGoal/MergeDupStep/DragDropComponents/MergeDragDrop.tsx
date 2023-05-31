@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
+import { appBarHeight } from "components/AppBar/AppBarComponent";
 import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
 import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
 import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
@@ -108,6 +109,12 @@ export default function MergeDragDrop(): ReactElement {
         anchor="right"
         variant="persistent"
         open={sidebar.senses.length > 1}
+        SlideProps={{
+          style: {
+            height: `calc(100% - ${appBarHeight}px)`,
+            top: appBarHeight,
+          },
+        }}
       >
         <SidebarDrop
           sidebar={sidebar}

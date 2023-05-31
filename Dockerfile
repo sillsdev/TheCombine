@@ -28,7 +28,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.23
+FROM nginx:1.25
 
 WORKDIR /app
 
