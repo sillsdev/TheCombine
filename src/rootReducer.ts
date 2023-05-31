@@ -2,7 +2,6 @@ import { combineReducers, Reducer } from "redux";
 
 import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import { loginReducer } from "components/Login/Redux/LoginReducer";
-import { passwordResetReducer } from "components/PasswordReset/Redux/ResetReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
 import { exportProjectReducer } from "components/ProjectExport/Redux/ExportProjectReducer";
 import { createProjectReducer } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
@@ -17,7 +16,6 @@ import { analyticsReducer } from "types/Redux/analytics";
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //login
   loginState: loginReducer,
-  passwordResetState: passwordResetReducer,
 
   //project
   createProjectState: createProjectReducer,

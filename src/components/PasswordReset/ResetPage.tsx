@@ -2,16 +2,10 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
+import { resetPassword } from "backend";
 import history, { Path } from "browserHistory";
-import { asyncReset } from "components/PasswordReset/Redux/ResetActions";
-import {
-  PasswordResetState,
-  RequestState,
-} from "components/PasswordReset/Redux/ResetReduxTypes";
-import { StoreStateDispatch } from "types/Redux/actions";
 import { meetsPasswordRequirements } from "utilities/utilities";
 
 export interface MatchParams {
@@ -20,10 +14,6 @@ export interface MatchParams {
 
 export interface ResetDispatchProps {
   passwordReset: (token: string, password: string) => void;
-}
-
-interface PasswordResetProps extends RouteComponentProps<MatchParams> {
-  resetState: RequestState;
 }
 
 export enum PasswordResetTestIds {
@@ -36,45 +26,58 @@ export enum PasswordResetTestIds {
   SubmitButton = "PasswordReset.button.submit",
 }
 
+enum RequestState {
+  None,
+  Attempt,
+  Fail,
+  Success,
+}
+
 export function PasswordReset(): ReactElement {
   const { token }: MatchParams = useParams();
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [sentAttempt, setSentAttempt] = useState(false);
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
     useState(false);
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
-
+  const [requestState, setRequestState] = useState(RequestState.None);
   const { t } = useTranslation();
-
-  const resetState = useSelector(
-    (state: PasswordResetState) => state.resetState
-  );
-
-  const dispatch: StoreStateDispatch = useDispatch();
 
   const backToLogin = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
     history.push(Path.Login);
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLElement>) => {
-    setSentAttempt(true);
+  const onSubmit = async (event: React.FormEvent<HTMLElement>) => {
     if (token) {
-      dispatch(asyncReset(token, password));
+      setRequestState(RequestState.Attempt);
+      await asyncReset(token, password);
       event.preventDefault();
     }
   };
 
-  const onChangePassword = (password: string, confirmPassword: string) => {
-    setPasswordFitsRequirements(meetsPasswordRequirements(password));
-    setIsPasswordConfirmed(password === confirmPassword);
-    setPassword(password);
-    setPasswordConfirm(confirmPassword);
+  const onChangePassword = (
+    newPassword: string,
+    newConfirmPassword: string
+  ) => {
+    setPasswordFitsRequirements(meetsPasswordRequirements(newPassword));
+    setIsPasswordConfirmed(newPassword === newConfirmPassword);
+    setPassword(newPassword);
+    setPasswordConfirm(newConfirmPassword);
+  };
+
+  const asyncReset = async (token: string, password: string) => {
+    if (await resetPassword(token, password)) {
+      setRequestState(RequestState.Success);
+      history.push(Path.Login);
+    } else {
+      setRequestState(RequestState.Fail);
+    }
   };
 
   return (
     <div>
+      TextField
       <Grid container justifyContent="center">
         <Card style={{ padding: 10, width: 450 }}>
           <form onSubmit={onSubmit}>
@@ -91,7 +94,7 @@ export function PasswordReset(): ReactElement {
                 style={{ width: "100%" }}
                 margin="normal"
                 error={!passwordFitsRequirements}
-                data-testid={PasswordResetTestIds.Password}
+                inputProps={{ "data-testid": PasswordResetTestIds.Password }}
                 onChange={(e) =>
                   onChangePassword(e.target.value, passwordConfirm)
                 }
@@ -110,7 +113,9 @@ export function PasswordReset(): ReactElement {
             <Grid item>
               <TextField
                 id="password-reset-password2"
-                data-testid={PasswordResetTestIds.ConfirmPassword}
+                inputProps={{
+                  "data-testid": PasswordResetTestIds.ConfirmPassword,
+                }}
                 variant="outlined"
                 label={t("login.confirmPassword")}
                 type="password"
@@ -134,7 +139,7 @@ export function PasswordReset(): ReactElement {
 
             <Grid container justifyContent="flex-end" spacing={2}>
               <Grid item>
-                {resetState === RequestState.Fail && sentAttempt ? (
+                {requestState === RequestState.Fail ? (
                   <React.Fragment>
                     <Typography
                       id="passwordReset.resetFail"
