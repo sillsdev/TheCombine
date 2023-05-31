@@ -12,7 +12,7 @@ export interface MatchParams {
   token: string;
 }
 
-export interface ResetDispatchProps {
+interface ResetDispatchProps {
   passwordReset: (token: string, password: string) => void;
 }
 
@@ -78,110 +78,105 @@ export default function PasswordReset(): ReactElement {
   };
 
   return (
-    <>
-      TextField
-      <Grid container justifyContent="center">
-        <Card style={{ padding: 10, width: 450 }}>
-          <form onSubmit={onSubmit}>
-            <Typography variant="h5" align="center" gutterBottom>
-              {t("passwordReset.resetTitle")}
-            </Typography>
-            <Grid item>
-              <TextField
-                id="password-reset-password1"
-                variant="outlined"
-                label={t("login.password")}
-                type="password"
-                value={password}
-                style={{ width: "100%" }}
-                margin="normal"
-                error={!passwordFitsRequirements}
-                inputProps={{ "data-testid": PasswordResetTestIds.Password }}
-                onChange={(e) =>
-                  onChangePassword(e.target.value, passwordConfirm)
-                }
-              />
-              {!passwordFitsRequirements && (
-                <Typography
-                  id="login.passwordRequirements"
-                  data-testid={PasswordResetTestIds.PasswordReqError}
-                  variant="body2"
-                  style={{ display: "inline", margin: 24, color: "red" }}
-                >
-                  {t("login.passwordRequirements")}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item>
-              <TextField
-                id="password-reset-password2"
-                inputProps={{
-                  "data-testid": PasswordResetTestIds.ConfirmPassword,
-                }}
-                variant="outlined"
-                label={t("login.confirmPassword")}
-                type="password"
-                value={passwordConfirm}
-                style={{ width: "100%" }}
-                margin="normal"
-                error={!isPasswordConfirmed && passwordConfirm.length > 0}
-                onChange={(e) => onChangePassword(password, e.target.value)}
-              />
-              {!isPasswordConfirmed && passwordConfirm.length > 0 && (
-                <Typography
-                  id="login.confirmPasswordError"
-                  data-testid={PasswordResetTestIds.PasswordMatchError}
-                  variant="body2"
-                  style={{ display: "inline", margin: 24, color: "red" }}
-                >
-                  {t("login.confirmPasswordError")}
-                </Typography>
-              )}
-            </Grid>
+    <Grid container justifyContent="center">
+      <Card style={{ padding: 10, width: 450 }}>
+        <form onSubmit={onSubmit}>
+          <Typography variant="h5" align="center" gutterBottom>
+            {t("passwordReset.resetTitle")}
+          </Typography>
+          <Grid item>
+            <TextField
+              id="password-reset-password1"
+              variant="outlined"
+              label={t("login.password")}
+              type="password"
+              value={password}
+              style={{ width: "100%" }}
+              margin="normal"
+              error={!passwordFitsRequirements}
+              inputProps={{ "data-testid": PasswordResetTestIds.Password }}
+              onChange={(e) =>
+                onChangePassword(e.target.value, passwordConfirm)
+              }
+            />
+            {!passwordFitsRequirements && (
+              <Typography
+                id="login.passwordRequirements"
+                data-testid={PasswordResetTestIds.PasswordReqError}
+                variant="body2"
+                style={{ display: "inline", margin: 24, color: "red" }}
+              >
+                {t("login.passwordRequirements")}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item>
+            <TextField
+              id="password-reset-password2"
+              inputProps={{
+                "data-testid": PasswordResetTestIds.ConfirmPassword,
+              }}
+              variant="outlined"
+              label={t("login.confirmPassword")}
+              type="password"
+              value={passwordConfirm}
+              style={{ width: "100%" }}
+              margin="normal"
+              error={!isPasswordConfirmed && passwordConfirm.length > 0}
+              onChange={(e) => onChangePassword(password, e.target.value)}
+            />
+            {!isPasswordConfirmed && passwordConfirm.length > 0 && (
+              <Typography
+                id="login.confirmPasswordError"
+                data-testid={PasswordResetTestIds.PasswordMatchError}
+                variant="body2"
+                style={{ display: "inline", margin: 24, color: "red" }}
+              >
+                {t("login.confirmPasswordError")}
+              </Typography>
+            )}
+          </Grid>
 
-            <Grid container justifyContent="flex-end" spacing={2}>
-              <Grid item>
-                {requestState === RequestState.Fail ? (
-                  <React.Fragment>
-                    <Typography
-                      id="passwordReset.resetFail"
-                      data-testid={PasswordResetTestIds.PasswordResetFail}
-                      variant="body2"
-                      style={{ display: "inline", margin: 24, color: "red" }}
-                    >
-                      {t("passwordReset.resetFail")}
-                    </Typography>
-                    <Button
-                      id="password-reset-submit"
-                      variant="contained"
-                      color="primary"
-                      data-testid={PasswordResetTestIds.BackToLoginButton}
-                      onClick={backToLogin}
-                    >
-                      {t("passwordReset.backToLogin")}
-                      &nbsp;
-                      <ExitToAppIcon />
-                    </Button>
-                  </React.Fragment>
-                ) : (
+          <Grid container justifyContent="flex-end" spacing={2}>
+            <Grid item>
+              {requestState === RequestState.Fail ? (
+                <React.Fragment>
+                  <Typography
+                    id="passwordReset.resetFail"
+                    data-testid={PasswordResetTestIds.PasswordResetFail}
+                    variant="body2"
+                    style={{ display: "inline", margin: 24, color: "red" }}
+                  >
+                    {t("passwordReset.resetFail")}
+                  </Typography>
                   <Button
                     id="password-reset-submit"
-                    data-testid={PasswordResetTestIds.SubmitButton}
                     variant="contained"
                     color="primary"
-                    disabled={
-                      !(passwordFitsRequirements && isPasswordConfirmed)
-                    }
-                    onClick={onSubmit}
+                    data-testid={PasswordResetTestIds.BackToLoginButton}
+                    onClick={backToLogin}
                   >
-                    {t("passwordReset.submit")}
+                    {t("passwordReset.backToLogin")}
+                    &nbsp;
+                    <ExitToAppIcon />
                   </Button>
-                )}
-              </Grid>
+                </React.Fragment>
+              ) : (
+                <Button
+                  id="password-reset-submit"
+                  data-testid={PasswordResetTestIds.SubmitButton}
+                  variant="contained"
+                  color="primary"
+                  disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
+                  onClick={onSubmit}
+                >
+                  {t("passwordReset.submit")}
+                </Button>
+              )}
             </Grid>
-          </form>
-        </Card>
-      </Grid>
-    </>
+          </Grid>
+        </form>
+      </Card>
+    </Grid>
   );
 }
