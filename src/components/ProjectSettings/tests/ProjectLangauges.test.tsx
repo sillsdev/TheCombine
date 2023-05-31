@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock";
 
 import { Project, WritingSystem } from "api/models";
-import { ProjectLanguages } from "components/ProjectSettings/ProjectLanguages";
+import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import { newProject } from "types/project";
 import { newWritingSystem } from "types/writingSystem";
 

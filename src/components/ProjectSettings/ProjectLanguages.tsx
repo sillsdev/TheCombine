@@ -19,34 +19,18 @@ import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { Project, WritingSystem } from "api/models";
+import { WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
+import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
-export default () => {
-  const dispatch = useAppDispatch();
-  const project = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project
-  );
-  const updateProject = async (proj: Project) => {
-    dispatch(asyncUpdateCurrentProject(proj));
-  };
-  return <ProjectLanguages project={project} updateProject={updateProject} />;
-};
-
-interface ProjectLanguagesProps {
-  project: Project;
-  updateProject: (project: Project) => Promise<void>;
-}
-
-export function ProjectLanguages(props: ProjectLanguagesProps): ReactElement {
+export default function ProjectLanguages(
+  props: ProjectSettingProps
+): ReactElement {
   const [add, setAdd] = useState(false);
   const [isNewLang, setIsNewLang] = useState(false);
   const [langsInProj, setLangsInProj] = useState("");

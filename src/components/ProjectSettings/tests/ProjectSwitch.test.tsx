@@ -1,7 +1,7 @@
 import { ListItemButton } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import { ProjectSwitch } from "components/ProjectSettings/ProjectSwitch";
+import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
 import { newProject, randomProject } from "types/project";
 
 jest.mock("backend", () => ({

@@ -4,28 +4,14 @@ import { ReactElement, useEffect, useState } from "react";
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
-import { setNewCurrentProject } from "components/Project/ProjectActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
 import { randomIntString } from "utilities/utilities";
-
-export default () => {
-  const dispatch = useAppDispatch();
-  const project = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project
-  );
-  const setProject = async (proj: Project) => {
-    dispatch(setNewCurrentProject(proj));
-  };
-  return <ProjectSwitch project={project} setProject={setProject} />;
-};
 
 interface SwitchProps {
   project: Project;
   setProject: (project: Project) => void;
 }
 
-export function ProjectSwitch(props: SwitchProps): ReactElement {
+export default function ProjectSwitch(props: SwitchProps): ReactElement {
   const [projList, setProjList] = useState<Project[]>([]);
 
   useEffect(() => {

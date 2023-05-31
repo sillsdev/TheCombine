@@ -3,21 +3,15 @@ import { Grid, MenuItem, Select, Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { AutocompleteSetting } from "api/models";
-import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
-export default function ProjectAutocomplete() {
-  const project = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project
-  );
-  const dispatch = useAppDispatch();
+export default function ProjectAutocomplete(props: ProjectSettingProps) {
   const { t } = useTranslation();
 
   const updateAutocompleteSetting = async (
     autocompleteSetting: AutocompleteSetting
   ): Promise<void> => {
-    dispatch(asyncUpdateCurrentProject({ ...project, autocompleteSetting }));
+    props.updateProject({ ...props.project, autocompleteSetting });
   };
 
   return (
@@ -25,7 +19,7 @@ export default function ProjectAutocomplete() {
       <Grid>
         <Select
           variant="standard"
-          value={project.autocompleteSetting}
+          value={props.project.autocompleteSetting}
           onChange={(e) =>
             updateAutocompleteSetting(e.target.value as AutocompleteSetting)
           }
