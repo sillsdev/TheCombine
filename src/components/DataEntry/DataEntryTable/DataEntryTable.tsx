@@ -510,9 +510,6 @@ export default function DataEntryTable(
 
   /*** Update vern suggestions. */
   useEffect(() => {
-    if (!suggestVerns) {
-      return;
-    }
     setState((prev) => {
       const trimmed = prev.newVern.trim();
       return {
@@ -532,7 +529,7 @@ export default function DataEntryTable(
         ),
       };
     });
-  }, [levDist, state.newVern, suggestVerns]);
+  }, [levDist, state.newVern]);
 
   ////////////////////////////////////
   // Async functions that wrap around a backend update to a word.
