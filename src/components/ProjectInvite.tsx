@@ -25,11 +25,6 @@ export interface ProjectInviteStateProps {
   failureMessage: string;
 }
 
-interface ProjectInviteState {
-  isValidLink: boolean;
-  isAlreadyUser: boolean;
-}
-
 export function ProjectInviteComponent(
   props: ProjectInviteDispatchProps
 ): ReactElement {
@@ -57,7 +52,7 @@ export function ProjectInviteComponent(
     return pathname.substring(0, index);
   }
 
-  async function validateLink() {
+  async function validateLink(): Promise<void> {
     let pathname = location.pathname;
 
     // TODO: Use regex to more cleanly parse this.

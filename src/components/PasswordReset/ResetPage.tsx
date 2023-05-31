@@ -33,7 +33,7 @@ enum RequestState {
   Success,
 }
 
-export function PasswordReset(): ReactElement {
+export default function PasswordReset(): ReactElement {
   const { token }: MatchParams = useParams();
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -43,12 +43,14 @@ export function PasswordReset(): ReactElement {
   const [requestState, setRequestState] = useState(RequestState.None);
   const { t } = useTranslation();
 
-  const backToLogin = (event: React.FormEvent<HTMLElement>) => {
+  const backToLogin = (event: React.FormEvent<HTMLElement>): void => {
     event.preventDefault();
     history.push(Path.Login);
   };
 
-  const onSubmit = async (event: React.FormEvent<HTMLElement>) => {
+  const onSubmit = async (
+    event: React.FormEvent<HTMLElement>
+  ): Promise<void> => {
     if (token) {
       setRequestState(RequestState.Attempt);
       await asyncReset(token, password);
@@ -59,14 +61,14 @@ export function PasswordReset(): ReactElement {
   const onChangePassword = (
     newPassword: string,
     newConfirmPassword: string
-  ) => {
+  ): void => {
     setPasswordFitsRequirements(meetsPasswordRequirements(newPassword));
     setIsPasswordConfirmed(newPassword === newConfirmPassword);
     setPassword(newPassword);
     setPasswordConfirm(newConfirmPassword);
   };
 
-  const asyncReset = async (token: string, password: string) => {
+  const asyncReset = async (token: string, password: string): Promise<void> => {
     if (await resetPassword(token, password)) {
       setRequestState(RequestState.Success);
       history.push(Path.Login);
@@ -76,7 +78,7 @@ export function PasswordReset(): ReactElement {
   };
 
   return (
-    <div>
+    <>
       TextField
       <Grid container justifyContent="center">
         <Card style={{ padding: 10, width: 450 }}>
@@ -180,6 +182,6 @@ export function PasswordReset(): ReactElement {
           </form>
         </Card>
       </Grid>
-    </div>
+    </>
   );
 }

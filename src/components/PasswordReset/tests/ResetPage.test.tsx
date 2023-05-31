@@ -14,8 +14,7 @@ import configureMockStore from "redux-mock-store";
 
 import { Path } from "browserHistory";
 import "tests/reactI18nextMock";
-import {
-  PasswordReset,
+import PasswordReset, {
   PasswordResetTestIds,
 } from "components/PasswordReset/ResetPage";
 
@@ -116,9 +115,7 @@ describe("PasswordReset", () => {
 
   it("renders with no password errors", async () => {
     const user = userEvent.setup();
-    // act(() => {
     customRender(<PasswordReset />);
-    // });
 
     const passwordEntry = "password";
     const confirmEntry = "password";
