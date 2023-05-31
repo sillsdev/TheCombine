@@ -42,6 +42,9 @@ describe("ProjectName", () => {
   it("toasts on error", async () => {
     await renderName();
     const textField = testRenderer.root.findByType(TextField);
+    await renderer.act(async () =>
+      textField.props.onChange({ target: { value: "new-name" } })
+    );
     mockUpdateProject.mockRejectedValueOnce({});
     expect(mockToastError).not.toBeCalled();
     await renderer.act(async () => textField.props.onBlur());
