@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { validate } from "email-validator";
 import { useSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,8 +32,9 @@ export default (): ReactElement => {
 export function UserSettings(props: { user: User }): ReactElement {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
-  const [email, setEmail] = useState(props.user.email);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
+  const [email, setEmail] = useState(props.user.email);
+  const [emailInvalid, setEmailInvalid] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
 
@@ -40,8 +42,24 @@ export function UserSettings(props: { user: User }): ReactElement {
   const { t } = useTranslation();
 
   async function isEmailOkay(): Promise<boolean> {
+    if (emailInvalid) {
+      return false;
+    }
     const unchanged = email.toLowerCase() === props.user.email.toLowerCase();
-    return unchanged || !(await isEmailTaken(email));
+    if (unchanged) {
+      return true;
+    }
+    if (await isEmailTaken(email)) {
+      setEmailTaken(true);
+      return false;
+    }
+    return true;
+  }
+
+  function onEmailChange(email: string): void {
+    setEmail(email);
+    setEmailInvalid(!validate(email));
+    setEmailTaken(false);
   }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
@@ -50,8 +68,6 @@ export function UserSettings(props: { user: User }): ReactElement {
       await updateUser({ ...props.user, name, phone, email, uiLang });
       updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
-    } else {
-      setEmailTaken(true);
     }
   }
 
@@ -121,15 +137,15 @@ export function UserSettings(props: { user: User }): ReactElement {
                         variant="outlined"
                         value={email}
                         label={t("login.email")}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setEmailTaken(false);
-                        }}
-                        error={emailTaken}
+                        onChange={(e) => onEmailChange(e.target.value)}
+                        error={emailInvalid || emailTaken}
                         helperText={
-                          emailTaken ? t("login.emailTaken") : undefined
+                          emailInvalid
+                            ? t("login.emailInvalid")
+                            : emailTaken
+                            ? t("login.emailTaken")
+                            : undefined
                         }
-                        type="email"
                       />
                     </Grid>
                   </Grid>
