@@ -6,7 +6,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { validate } from "email-validator";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
@@ -43,22 +42,19 @@ interface SignUpProps
   returnToEmailInvite?: () => void;
 }
 
-interface SignUpErrorState {
-  name: boolean;
-  username: boolean;
-  emailInvalid: boolean;
-  emailTaken: boolean;
-  password: boolean;
-  confirmPassword: boolean;
-}
-
 interface SignUpState {
   name: string;
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
-  error: SignUpErrorState;
+  error: {
+    name: boolean;
+    username: boolean;
+    email: boolean;
+    password: boolean;
+    confirmPassword: boolean;
+  };
 }
 
 export class SignUp extends React.Component<SignUpProps, SignUpState> {
@@ -73,8 +69,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
       error: {
         name: false,
         username: false,
-        emailInvalid: false,
-        emailTaken: false,
+        email: false,
         password: false,
         confirmPassword: false,
       },
@@ -115,14 +110,11 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     }
   }
 
-  async checkEmail(): Promise<void> {
-    if (!validate(this.state.email)) {
+  async checkEmail(username: string) {
+    const emailTaken = await isEmailTaken(username);
+    if (emailTaken) {
       this.setState((prevState) => ({
-        error: { ...prevState.error, emailInvalid: true },
-      }));
-    } else if (await isEmailTaken(this.state.email)) {
-      this.setState((prevState) => ({
-        error: { ...prevState.error, emailTaken: true },
+        error: { ...prevState.error, email: true },
       }));
     }
   }
@@ -136,16 +128,13 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     const confirmPassword = this.state.confirmPassword.trim();
 
     // Error checking.
-    const error: SignUpErrorState = {
-      name: name === "",
-      username:
-        !meetsUsernameRequirements(username) ||
-        (await isUsernameTaken(username)),
-      emailInvalid: !validate(email),
-      emailTaken: await isEmailTaken(email),
-      password: !meetsPasswordRequirements(password),
-      confirmPassword: password !== confirmPassword,
-    };
+    const error = { ...this.state.error };
+    error.name = name === "";
+    error.username =
+      !meetsUsernameRequirements(username) || (await isUsernameTaken(username));
+    error.email = email === "" || (await isEmailTaken(email));
+    error.password = !meetsPasswordRequirements(password);
+    error.confirmPassword = password !== confirmPassword;
 
     if (Object.values(error).some((e) => e)) {
       this.setState({ error });
@@ -188,9 +177,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 label={this.props.t("login.name")}
                 value={this.state.name}
                 onChange={(e) => this.updateField(e, "name")}
-                error={this.state.error.name}
+                error={this.state.error["name"]}
                 helperText={
-                  this.state.error.name
+                  this.state.error["name"]
                     ? this.props.t("login.required")
                     : undefined
                 }
@@ -209,9 +198,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
                 onBlur={() => this.checkUsername(this.state.username)}
-                error={this.state.error.username}
+                error={this.state.error["username"]}
                 helperText={this.props.t(
-                  this.state.error.username
+                  this.state.error["username"]
                     ? "login.usernameInvalid"
                     : "login.usernameRequirements"
                 )}
@@ -225,18 +214,17 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
               <TextField
                 id={`${idAffix}-email`}
                 required
+                type="email"
                 autoComplete="email"
                 label={this.props.t("login.email")}
                 value={this.state.email}
                 onChange={(e) => this.updateField(e, "email")}
-                onBlur={() => this.checkEmail()}
-                error={
-                  this.state.error.emailInvalid || this.state.error.emailTaken
+                onBlur={() =>
+                  this.state.email ? this.checkEmail(this.state.email) : null
                 }
+                error={this.state.error["email"]}
                 helperText={
-                  this.state.error.emailInvalid
-                    ? this.props.t("login.emailInvalid")
-                    : this.state.error.emailTaken
+                  this.state.error["email"]
                     ? this.props.t("login.emailTaken")
                     : undefined
                 }
@@ -255,9 +243,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 type="password"
                 value={this.state.password}
                 onChange={(e) => this.updateField(e, "password")}
-                error={this.state.error.password}
+                error={this.state.error["password"]}
                 helperText={this.props.t(
-                  this.state.error.password
+                  this.state.error["password"]
                     ? "login.passwordRequirements"
                     : "login.passwordRequirements"
                 )}
@@ -275,9 +263,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 type="password"
                 value={this.state.confirmPassword}
                 onChange={(e) => this.updateField(e, "confirmPassword")}
-                error={this.state.error.confirmPassword}
+                error={this.state.error["confirmPassword"]}
                 helperText={
-                  this.state.error.confirmPassword
+                  this.state.error["confirmPassword"]
                     ? this.props.t("login.confirmPasswordError")
                     : undefined
                 }
