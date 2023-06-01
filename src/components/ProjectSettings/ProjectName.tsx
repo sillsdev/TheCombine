@@ -3,9 +3,11 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
+import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
 
-export default function ProjectName(props: ProjectSettingProps): ReactElement {
+export default function ProjectName(
+  props: ProjectSettingPropsWithUpdate
+): ReactElement {
   const [projName, setProjName] = useState(props.project.name);
   const { t } = useTranslation();
 

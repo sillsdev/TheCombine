@@ -1,10 +1,11 @@
-import { Grid, Typography, Button, CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { Grid, Typography } from "@mui/material";
+import { ReactElement, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { getProject, uploadLift } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
-import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
 
 enum UploadState {
   Awaiting,
@@ -15,25 +16,21 @@ enum UploadState {
 const selectFileButtonId = "project-import-select-file";
 export const uploadFileButtonId = "project-import-upload-file";
 
-export default function ProjectImport(props: ProjectSettingProps) {
+export default function ProjectImport(
+  props: ProjectSettingPropsWithSet
+): ReactElement {
   const [liftFile, setLiftFile] = useState<File | undefined>();
-  const [liftFilename, setLiftFilename] = useState<string | undefined>();
   const [uploadState, setUploadState] = useState(UploadState.Awaiting);
 
   const { t } = useTranslation();
-
-  const updateLiftFile = (file: File): void => {
-    setLiftFile(file);
-    setLiftFilename(file.name);
-  };
 
   const uploadWords = async (): Promise<void> => {
     if (liftFile) {
       setUploadState(UploadState.InProgress);
       await uploadLift(props.project.id, liftFile);
-      props.updateProject(await getProject(props.project.id));
-      setLiftFile(undefined);
       setUploadState(UploadState.Done);
+      setLiftFile(undefined);
+      props.setProject(await getProject(props.project.id));
     }
   };
 
@@ -55,7 +52,7 @@ export default function ProjectImport(props: ProjectSettingProps) {
       <Grid item>
         {/* Choose file button */}
         <FileInputButton
-          updateFile={updateLiftFile}
+          updateFile={setLiftFile}
           accept=".zip"
           buttonProps={{
             disabled: uploadState === UploadState.Done,
@@ -68,40 +65,23 @@ export default function ProjectImport(props: ProjectSettingProps) {
 
       <Grid item>
         {/* Upload button */}
-        <Button
-          color="primary"
-          variant="contained"
-          disabled={
-            liftFile === undefined || uploadState === UploadState.InProgress
-          }
-          onClick={uploadWords}
-          id={uploadFileButtonId}
+        <LoadingDoneButton
+          buttonProps={{ id: uploadFileButtonId, onClick: uploadWords }}
+          disabled={!liftFile}
+          done={uploadState === UploadState.Done}
+          loading={uploadState === UploadState.InProgress}
         >
-          {t(
-            uploadState === UploadState.Done ? "buttons.done" : "buttons.upload"
-          )}
-          {uploadState === UploadState.InProgress && (
-            <CircularProgress
-              size={24}
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                marginTop: -12,
-                marginLeft: -12,
-              }}
-            />
-          )}
-        </Button>
+          {t("buttons.upload")}
+        </LoadingDoneButton>
       </Grid>
 
       <Grid item>
         {/* Displays the name of the selected file */}
-        {liftFilename && (
+        {liftFile && (
           <Typography variant="body1" noWrap>
             {t("createProject.fileSelected")}
             {": "}
-            {liftFilename}
+            {liftFile.name}
           </Typography>
         )}
       </Grid>

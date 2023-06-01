@@ -4,14 +4,12 @@ import { ReactElement, useEffect, useState } from "react";
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
+import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
 import { randomIntString } from "utilities/utilities";
 
-interface SwitchProps {
-  project: Project;
-  setProject: (project: Project) => void;
-}
-
-export default function ProjectSwitch(props: SwitchProps): ReactElement {
+export default function ProjectSwitch(
+  props: ProjectSettingPropsWithSet
+): ReactElement {
   const [projList, setProjList] = useState<Project[]>([]);
 
   useEffect(() => {

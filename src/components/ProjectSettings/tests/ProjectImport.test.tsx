@@ -8,7 +8,7 @@ import ProjectImport, {
 } from "components/ProjectSettings/ProjectImport";
 import { randomProject } from "types/project";
 
-const mockUpdateProject = jest.fn();
+const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
 
@@ -18,7 +18,7 @@ let uploadButton: renderer.ReactTestInstance;
 const renderImport = async (): Promise<void> => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
-      <ProjectImport project={mockProject} updateProject={mockUpdateProject} />
+      <ProjectImport project={mockProject} setProject={mockSetProject} />
     );
   });
   uploadButton = testRenderer.root.findByProps({ id: uploadFileButtonId });

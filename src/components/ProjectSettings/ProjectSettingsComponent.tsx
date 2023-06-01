@@ -42,9 +42,6 @@ export default function ProjectSettingsComponent() {
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const projectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
@@ -52,11 +49,11 @@ export default function ProjectSettingsComponent() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const roleId = currentRoles[projectId];
+    const roleId = currentRoles[project.id];
     if (roleId) {
       getUserRole(roleId).then((role) => setPermissions(role.permissions));
     }
-  }, [currentRoles, projectId]);
+  }, [currentRoles, project]);
 
   useEffect(() => {
     if (permissions.includes(Permission.ImportExport)) {
@@ -123,7 +120,7 @@ export default function ProjectSettingsComponent() {
           title={t("projectSettings.import.header")}
           body={
             imports ? (
-              <ProjectImport project={project} updateProject={updateProject} />
+              <ProjectImport project={project} setProject={setProject} />
             ) : (
               <Typography variant="body2">
                 {t("projectSettings.import.notAllowed")}
@@ -138,7 +135,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<GetApp />}
           title={t("projectSettings.exportProject.label")}
-          body={<ExportButton projectId={projectId} />}
+          body={<ExportButton projectId={project.id} />}
         />
       )}
 
@@ -177,7 +174,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<CalendarMonth />}
           title={t("projectSettings.schedule.workshopSchedule")}
-          body={<ProjectSchedule projectId={projectId} />}
+          body={<ProjectSchedule projectId={project.id} />}
         />
       )}
 
@@ -189,7 +186,7 @@ export default function ProjectSettingsComponent() {
           body={
             <ProjectButtonWithConfirmation
               archive // Project Settings are only available for active projects
-              projectId={projectId}
+              projectId={project.id}
               updateParent={archiveUpdate}
               warn
             />

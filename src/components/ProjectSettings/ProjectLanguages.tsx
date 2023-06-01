@@ -22,14 +22,14 @@ import { toast } from "react-toastify";
 import { WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
+import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
 import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
 export default function ProjectLanguages(
-  props: ProjectSettingProps
+  props: ProjectSettingPropsWithUpdate
 ): ReactElement {
   const [add, setAdd] = useState(false);
   const [isNewLang, setIsNewLang] = useState(false);
