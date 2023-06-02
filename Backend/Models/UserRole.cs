@@ -35,8 +35,8 @@ namespace BackendFramework.Models
         {
             var clone = new UserRole
             {
-                Id = (string)Id.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
+                Id = Id,
+                ProjectId = ProjectId,
                 Permissions = new List<Permission>()
             };
 
@@ -51,7 +51,7 @@ namespace BackendFramework.Models
         public bool ContentEquals(UserRole other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
                 other.Permissions.Count == Permissions.Count &&
                 other.Permissions.All(Permissions.Contains);
         }
@@ -63,7 +63,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()

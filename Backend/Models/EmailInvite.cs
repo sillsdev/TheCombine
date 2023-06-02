@@ -42,8 +42,8 @@ namespace BackendFramework.Models
         {
             return new EmailInvite
             {
-                Email = (string)Email.Clone(),
-                Token = (string)Token.Clone(),
+                Email = Email,
+                Token = Token,
                 ExpireTime = ExpireTime
             };
         }
@@ -55,9 +55,9 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Email == emailInvite.Email
-                   && Token == emailInvite.Token
-                   && ExpireTime == emailInvite.ExpireTime;
+            return Email.Equals(emailInvite.Email, StringComparison.Ordinal) &&
+                   Token.Equals(emailInvite.Token, StringComparison.Ordinal) &&
+                   ExpireTime == emailInvite.ExpireTime;
         }
 
         public override int GetHashCode()

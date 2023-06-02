@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -38,15 +37,13 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
         {
+
             // Find user attached to email or username.
-            var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
-            var user = (await _userRepo.GetAllUsers()).SingleOrDefault(u =>
-                u.Email.ToLowerInvariant().Equals(emailOrUsername) ||
-                u.Username.ToLowerInvariant().Equals(emailOrUsername));
+            var user = await _userRepo.GetUserByEmailOrUsername(data.EmailOrUsername, false);
 
             if (user is null)
             {
-                return NotFound(emailOrUsername);
+                return NotFound(data.EmailOrUsername);
             }
 
             // Create password reset.
@@ -58,9 +55,10 @@ namespace BackendFramework.Controllers
             message.Subject = "Combine password reset";
             message.Body = new TextPart("plain")
             {
-                Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset "
-                        + "{0}'s password. {1}/forgot/reset/{2} \n\n If you did not request a password reset please "
-                        + "ignore this email", user.Username, data.Domain, resetRequest.Token)
+                Text = $"A password reset has been requested for the user {user.Username}. " +
+                    $"Follow the link to reset {user.Username}'s password. " +
+                    $"{data.Domain}/forgot/reset/{resetRequest.Token} \n\n " +
+                    "If you did not request a password reset please ignore this email."
             };
             if (await _emailService.SendEmail(message))
             {
@@ -168,9 +166,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Checks whether specified username is taken or empty. </summary>
         [AllowAnonymous]
-        [HttpGet("isusernametaken/{username}", Name = "CheckUsername")]
+        [HttpGet("isusernametaken/{username}", Name = "IsUsernameUnavailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> CheckUsername(string username)
+        public async Task<IActionResult> IsUsernameUnavailable(string username)
         {
             var isUnavailable = string.IsNullOrWhiteSpace(username)
                 || await _userRepo.GetUserByUsername(username) is not null;
@@ -179,9 +177,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Checks whether specified email address is taken or empty. </summary>
         [AllowAnonymous]
-        [HttpGet("isemailtaken/{email}", Name = "CheckEmail")]
+        [HttpGet("isemailtaken/{email}", Name = "IsEmailUnavailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> CheckEmail(string email)
+        public async Task<IActionResult> IsEmailUnavailable(string email)
         {
             var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
             return Ok(isUnavailable);

@@ -1,4 +1,4 @@
-﻿using BackendFramework.Helper;
+﻿using static BackendFramework.Helper.PasswordHash;
 using NUnit.Framework;
 
 namespace Backend.Tests.Helper
@@ -10,26 +10,26 @@ namespace Backend.Tests.Helper
         [Test]
         public void HashPasswordValidRoundtrip()
         {
-            var hash = PasswordHash.HashPassword(Password);
+            var hash = HashPassword(Password);
             Assert.AreNotEqual(Password, hash);
-            Assert.That(PasswordHash.ValidatePassword(hash, Password));
+            Assert.That(ValidatePassword(hash, Password));
         }
 
         [Test]
         public void HashPasswordInvalidHashByteRoundtrip()
         {
-            var hash = PasswordHash.HashPassword(Password);
+            var hash = HashPassword(Password);
             // Change a single byte of the hash and validate that the hash fails.
             hash[0] ^= 0xff;
-            Assert.IsFalse(PasswordHash.ValidatePassword(hash, Password));
+            Assert.IsFalse(ValidatePassword(hash, Password));
         }
 
         [Test]
         public void HashPasswordInvalidPasswordCharacterRoundtrip()
         {
-            var hash = PasswordHash.HashPassword(Password);
+            var hash = HashPassword(Password);
             var mutatedPassword = $"Z{Password}";
-            Assert.IsFalse(PasswordHash.ValidatePassword(hash, mutatedPassword));
+            Assert.IsFalse(ValidatePassword(hash, mutatedPassword));
         }
     }
 }
