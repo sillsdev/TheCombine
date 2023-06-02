@@ -25,7 +25,7 @@ interface CancelConfirmDialogCollectionProps {
 
 /**
  * Collection of dialogs to cancel or confirm an action used in
- * ActiveUsers.tsx
+ * ActiveProjectUsers.tsx
  */
 export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps

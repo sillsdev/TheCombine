@@ -11,16 +11,20 @@ import {
   Sms,
 } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { Permission } from "api/models";
-import * as backend from "backend";
+import { Permission, Project } from "api/models";
+import { canUploadLift, getUserRole } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import history, { Path } from "browserHistory";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
-import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import {
+  asyncRefreshCurrentProjectUsers,
+  asyncUpdateCurrentProject,
+  setNewCurrentProject,
+} from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
@@ -28,15 +32,15 @@ import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
 import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
-import ActiveUsers from "components/ProjectSettings/ProjectUsers/ActiveUsers";
+import ActiveProjectUsers from "components/ProjectSettings/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 export default function ProjectSettingsComponent() {
-  const projectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
+  const project = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project
   );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -45,17 +49,15 @@ export default function ProjectSettingsComponent() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const roleId = currentRoles[projectId];
+    const roleId = currentRoles[project.id];
     if (roleId) {
-      backend
-        .getUserRole(roleId)
-        .then((role) => setPermissions(role.permissions));
+      getUserRole(roleId).then((role) => setPermissions(role.permissions));
     }
-  }, [currentRoles, projectId]);
+  }, [currentRoles, project]);
 
   useEffect(() => {
     if (permissions.includes(Permission.ImportExport)) {
-      backend.canUploadLift().then(setImports);
+      canUploadLift().then(setImports);
     }
   }, [permissions, setImports]);
 
@@ -65,12 +67,22 @@ export default function ProjectSettingsComponent() {
     }
   }, [permissions, dispatch]);
 
-  function archiveUpdate() {
+  const archiveUpdate = (): void => {
     toast.success(t("projectSettings.user.archiveToastSuccess"));
     setTimeout(() => {
       history.push(Path.ProjScreen);
     }, 2000);
-  }
+  };
+
+  const setProject = useCallback(
+    (proj: Project) => dispatch(setNewCurrentProject(proj)),
+    [dispatch]
+  );
+
+  const updateProject = useCallback(
+    async (proj: Project) => await dispatch(asyncUpdateCurrentProject(proj)),
+    [dispatch]
+  );
 
   return (
     <Grid container justifyContent="center" spacing={6}>
@@ -78,7 +90,7 @@ export default function ProjectSettingsComponent() {
       <BaseSettingsComponent
         icon={<List />}
         title={t("projectSettings.projectList")}
-        body={<ProjectSwitch />}
+        body={<ProjectSwitch project={project} setProject={setProject} />}
       />
 
       {/* Project name */}
@@ -86,7 +98,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<Edit />}
           title={t("projectSettings.name")}
-          body={<ProjectName />}
+          body={<ProjectName project={project} updateProject={updateProject} />}
         />
       )}
 
@@ -95,7 +107,9 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<Language />}
           title={t("projectSettings.language.languages")}
-          body={<ProjectLanguages />}
+          body={
+            <ProjectLanguages project={project} updateProject={updateProject} />
+          }
         />
       )}
 
@@ -106,7 +120,7 @@ export default function ProjectSettingsComponent() {
           title={t("projectSettings.import.header")}
           body={
             imports ? (
-              <ProjectImport />
+              <ProjectImport project={project} setProject={setProject} />
             ) : (
               <Typography variant="body2">
                 {t("projectSettings.import.notAllowed")}
@@ -121,7 +135,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<GetApp />}
           title={t("projectSettings.exportProject.label")}
-          body={<ExportButton projectId={projectId} />}
+          body={<ExportButton projectId={project.id} />}
         />
       )}
 
@@ -129,7 +143,12 @@ export default function ProjectSettingsComponent() {
       <BaseSettingsComponent
         icon={<Sms />}
         title={t("projectSettings.autocomplete.label")}
-        body={<ProjectAutocomplete />}
+        body={
+          <ProjectAutocomplete
+            project={project}
+            updateProject={updateProject}
+          />
+        }
       />
 
       {/* See current users in project */}
@@ -137,7 +156,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<People />}
           title={t("projectSettings.user.currentUsers")}
-          body={<ActiveUsers />}
+          body={<ActiveProjectUsers />}
         />
       )}
 
@@ -155,7 +174,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<CalendarMonth />}
           title={t("projectSettings.schedule.workshopSchedule")}
-          body={<ProjectSchedule projectId={projectId} />}
+          body={<ProjectSchedule projectId={project.id} />}
         />
       )}
 
@@ -167,7 +186,7 @@ export default function ProjectSettingsComponent() {
           body={
             <ProjectButtonWithConfirmation
               archive // Project Settings are only available for active projects
-              projectId={projectId}
+              projectId={project.id}
               updateParent={archiveUpdate}
               warn
             />

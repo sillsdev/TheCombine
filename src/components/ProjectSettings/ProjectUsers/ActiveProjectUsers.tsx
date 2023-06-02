@@ -28,7 +28,7 @@ import { StoreState } from "types";
 import { Hash } from "types/hash";
 import theme from "types/theme";
 
-export default function ActiveUsers(): ReactElement {
+export default function ActiveProjectUsers(): ReactElement {
   const projectUsers = useSelector(
     (state: StoreState) => state.currentProjectState.users
   );
