@@ -147,6 +147,7 @@
       "updateSemDomWritingSystemFailed": "Failed to update semantic domains language"
     },
     "name": "Project Name",
+    "nameUpdateFailed": "Project name is already taken.",
     "projectList": "Projects",
     "userList": "Users",
     "userManagement": {

@@ -1,11 +1,10 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 
 import { getProject, updateProject } from "backend";
-import * as LocalStorage from "backend/localStorage";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import CalendarView from "components/ProjectSettings/ProjectSchedule/CalendarView";
 import DateScheduleEdit from "components/ProjectSettings/ProjectSchedule/DateScheduleEdit";
@@ -27,33 +26,36 @@ interface ProjectScheduleProps {
 }
 
 export default function ProjectSchedule(props: ProjectScheduleProps) {
-  const [showSelector, setShowSelector] = useState<boolean>(false);
-  const [showEdit, setShowEdit] = useState<boolean>(false);
-  const [remove, setRemove] = useState<boolean>(false);
   const [projectSchedule, setProjectSchedule] = useState<Date[]>([]);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showRemove, setShowRemove] = useState(false);
+  const [showSelector, setShowSelector] = useState(false);
+
   const { t } = useTranslation();
 
-  // remove all elements from workshopSchedule in project settings
-  async function handleRemoveAll() {
-    const projectId = LocalStorage.getProjectId();
-    const project = await getProject(projectId);
-    project.workshopSchedule = [];
-    await updateProject(project);
+  /** Remove all elements from workshopSchedule in project settings */
+  async function handleRemoveAll(): Promise<void> {
+    const project = await getProject();
+    await updateProject({ ...project, workshopSchedule: [] });
     setProjectSchedule([]);
-    return;
+    setShowRemove(false);
   }
 
+  const fetchSchedule = useCallback(async (): Promise<void> => {
+    const project = await getProject();
+    const schedule = project.workshopSchedule?.map((d) => new Date(d)) ?? [];
+    setProjectSchedule(schedule);
+  }, [setProjectSchedule]);
+
   useEffect(() => {
-    const fetchDate = async () => {
-      const project = await getProject(props.projectId);
-      const schedule = project.workshopSchedule?.map((d) => new Date(d)) ?? [];
-      setProjectSchedule(schedule);
-    };
-    fetchDate();
-  }, [showSelector, showEdit, remove, props.projectId]);
+    // Every time a modal is closed, fetch the updated schedule.
+    if (!showEdit && !showRemove && !showSelector) {
+      fetchSchedule();
+    }
+  }, [fetchSchedule, props.projectId, showEdit, showRemove, showSelector]);
 
   return (
-    <React.Fragment>
+    <>
       <Grid
         container
         direction="column"
@@ -84,7 +86,7 @@ export default function ProjectSchedule(props: ProjectScheduleProps) {
           <IconButtonWithTooltip
             icon={<EventRepeat />}
             textId="projectSettings.schedule.removeDays"
-            onClick={() => setRemove(true)}
+            onClick={() => setShowRemove(true)}
             buttonId={"Project-Schedule-removeDays"}
           />
         </Grid>
@@ -120,10 +122,10 @@ export default function ProjectSchedule(props: ProjectScheduleProps) {
         />
       </Modal>
       <Modal
-        isOpen={remove}
+        isOpen={showRemove}
         style={customStyles}
         shouldCloseOnOverlayClick={false}
-        onRequestClose={() => setRemove(false)}
+        onRequestClose={() => setShowRemove(false)}
       >
         <Typography>{t("projectSettings.schedule.removeAll")}</Typography>
 
@@ -131,9 +133,7 @@ export default function ProjectSchedule(props: ProjectScheduleProps) {
           <Grid item marginTop={1} style={{ width: 100 }}>
             <Button
               variant="contained"
-              onClick={() => {
-                setRemove(false);
-              }}
+              onClick={() => setShowRemove(false)}
               id="DateRemoveAllButtonCancel"
             >
               {t("buttons.cancel")}
@@ -142,10 +142,7 @@ export default function ProjectSchedule(props: ProjectScheduleProps) {
           <Grid item marginTop={1} style={{ width: 100 }}>
             <Button
               variant="contained"
-              onClick={() => {
-                handleRemoveAll();
-                setRemove(false);
-              }}
+              onClick={() => handleRemoveAll()}
               id="DateRemoveAllButtonSubmit"
             >
               {t("buttons.confirm")}
@@ -153,6 +150,6 @@ export default function ProjectSchedule(props: ProjectScheduleProps) {
           </Grid>
         </Grid>
       </Modal>
-    </React.Fragment>
+    </>
   );
 }
