@@ -74,6 +74,10 @@ export default function ProjectLanguages(
   };
 
   const addAnalysisWritingSystem = async (): Promise<void> => {
+    if (!isNewLang) {
+      toast.error(t("projectSettings.language.addAnalysisLanguageFailed"));
+      return;
+    }
     const analysisWritingSystems = [...props.project.analysisWritingSystems];
     analysisWritingSystems.push(newLang);
     await props
