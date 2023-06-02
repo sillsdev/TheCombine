@@ -103,8 +103,8 @@ namespace BackendFramework.Models
         {
             var clone = new Project
             {
-                Id = (string)Id.Clone(),
-                Name = (string)Name.Clone(),
+                Id = Id,
+                Name = Name,
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
@@ -132,11 +132,11 @@ namespace BackendFramework.Models
             }
             foreach (var cs in ValidCharacters)
             {
-                clone.ValidCharacters.Add((string)cs.Clone());
+                clone.ValidCharacters.Add(cs);
             }
             foreach (var cs in RejectedCharacters)
             {
-                clone.RejectedCharacters.Add((string)cs.Clone());
+                clone.RejectedCharacters.Add(cs);
             }
             foreach (var cf in CustomFields)
             {
@@ -144,11 +144,11 @@ namespace BackendFramework.Models
             }
             foreach (var wf in WordFields)
             {
-                clone.WordFields.Add((string)wf.Clone());
+                clone.WordFields.Add(wf);
             }
             foreach (var pos in PartsOfSpeech)
             {
-                clone.PartsOfSpeech.Add((string)pos.Clone());
+                clone.PartsOfSpeech.Add(pos);
             }
             foreach (var it in InviteTokens)
             {
@@ -252,8 +252,8 @@ namespace BackendFramework.Models
         {
             return new CustomField
             {
-                Name = (string)Name.Clone(),
-                Type = (string)Type.Clone()
+                Name = Name,
+                Type = Type
             };
         }
 
@@ -294,9 +294,9 @@ namespace BackendFramework.Models
         {
             return new WritingSystem
             {
-                Name = (string)Name.Clone(),
-                Bcp47 = (string)Bcp47.Clone(),
-                Font = (string)Font.Clone()
+                Name = Name,
+                Bcp47 = Bcp47,
+                Font = Font
             };
         }
 

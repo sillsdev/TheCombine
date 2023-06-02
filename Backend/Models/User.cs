@@ -104,30 +104,30 @@ namespace BackendFramework.Models
         {
             var clone = new User
             {
-                Id = (string)Id.Clone(),
-                Avatar = (string)Avatar.Clone(),
+                Id = Id,
+                Avatar = Avatar,
                 HasAvatar = HasAvatar,
-                Name = (string)Name.Clone(),
-                Email = (string)Email.Clone(),
-                Phone = (string)Phone.Clone(),
-                OtherConnectionField = (string)OtherConnectionField.Clone(),
+                Name = Name,
+                Email = Email,
+                Phone = Phone,
+                OtherConnectionField = OtherConnectionField,
                 Agreement = Agreement,
-                Password = (string)Password.Clone(),
-                Username = (string)Username.Clone(),
-                UILang = (string)UILang.Clone(),
-                Token = (string)Token.Clone(),
+                Password = Password,
+                Username = Username,
+                UILang = UILang,
+                Token = Token,
                 WorkedProjects = new Dictionary<string, string>(),
                 ProjectRoles = new Dictionary<string, string>()
             };
 
             foreach (var projId in WorkedProjects.Keys)
             {
-                clone.WorkedProjects.Add((string)projId.Clone(), (string)WorkedProjects[projId].Clone());
+                clone.WorkedProjects.Add(projId, WorkedProjects[projId]);
             }
 
             foreach (var projId in ProjectRoles.Keys)
             {
-                clone.ProjectRoles.Add((string)projId.Clone(), (string)ProjectRoles[projId].Clone());
+                clone.ProjectRoles.Add(projId, ProjectRoles[projId]);
             }
 
             return clone;

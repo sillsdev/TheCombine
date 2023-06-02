@@ -106,15 +106,15 @@ namespace BackendFramework.Models
         {
             var clone = new Word
             {
-                Id = (string)Id.Clone(),
+                Id = Id,
                 Guid = Guid,
-                Vernacular = (string)Vernacular.Clone(),
-                Plural = (string)Plural.Clone(),
-                Created = (string)Created.Clone(),
-                Modified = (string)Modified.Clone(),
-                PartOfSpeech = (string)PartOfSpeech.Clone(),
-                OtherField = (string)OtherField.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
+                Vernacular = Vernacular,
+                Plural = Plural,
+                Created = Created,
+                Modified = Modified,
+                PartOfSpeech = PartOfSpeech,
+                OtherField = OtherField,
+                ProjectId = ProjectId,
                 Accessibility = Accessibility,
                 Audio = new List<string>(),
                 EditedBy = new List<string>(),
@@ -126,15 +126,15 @@ namespace BackendFramework.Models
 
             foreach (var file in Audio)
             {
-                clone.Audio.Add((string)file.Clone());
+                clone.Audio.Add(file);
             }
             foreach (var id in EditedBy)
             {
-                clone.EditedBy.Add((string)id.Clone());
+                clone.EditedBy.Add(id);
             }
             foreach (var id in History)
             {
-                clone.History.Add((string)id.Clone());
+                clone.History.Add(id);
             }
             foreach (var sense in Senses)
             {
@@ -286,8 +286,8 @@ namespace BackendFramework.Models
         {
             return new Note
             {
-                Language = (string)Language.Clone(),
-                Text = (string)Text.Clone()
+                Language = Language,
+                Text = Text
             };
         }
 
@@ -468,8 +468,8 @@ namespace BackendFramework.Models
         {
             return new Definition
             {
-                Language = (string)Language.Clone(),
-                Text = (string)Text.Clone()
+                Language = Language,
+                Text = Text
             };
         }
 
@@ -518,7 +518,7 @@ namespace BackendFramework.Models
             return new Flag
             {
                 Active = Active,
-                Text = (string)Text.Clone()
+                Text = Text
             };
         }
 
@@ -578,8 +578,8 @@ namespace BackendFramework.Models
         {
             return new Gloss
             {
-                Language = (string)Language.Clone(),
-                Def = (string)Def.Clone()
+                Language = Language,
+                Def = Def
             };
         }
 

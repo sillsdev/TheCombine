@@ -49,13 +49,13 @@ namespace BackendFramework.Models
             return new SemanticDomain
             {
                 // If this clone is ever used in production, the MongoId may need to be excluded.
-                MongoId = (string)MongoId.Clone(),
-                Guid = (string)Guid.Clone(),
-                Name = (string)Name.Clone(),
-                Id = (string)Id.Clone(),
-                Lang = (string)Lang.Clone(),
-                UserId = (string)UserId.Clone(),
-                Created = (string)Created.Clone()
+                MongoId = MongoId,
+                Guid = Guid,
+                Name = Name,
+                Id = Id,
+                Lang = Lang,
+                UserId = UserId,
+                Created = Created
             };
         }
 
@@ -99,12 +99,12 @@ namespace BackendFramework.Models
         public new SemanticDomainFull Clone()
         {
             var clone = (SemanticDomainFull)base.Clone();
-            clone.Description = (string)Description.Clone();
+            clone.Description = Description;
             clone.Questions = new List<string>();
 
             foreach (var question in Questions)
             {
-                clone.Questions.Add((string)question.Clone());
+                clone.Questions.Add(question);
             }
 
             return clone;

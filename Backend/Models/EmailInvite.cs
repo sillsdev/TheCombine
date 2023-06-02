@@ -42,8 +42,8 @@ namespace BackendFramework.Models
         {
             return new EmailInvite
             {
-                Email = (string)Email.Clone(),
-                Token = (string)Token.Clone(),
+                Email = Email,
+                Token = Token,
                 ExpireTime = ExpireTime
             };
         }

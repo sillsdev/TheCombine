@@ -34,14 +34,14 @@ namespace BackendFramework.Models
         {
             var clone = new MergeBlacklistEntry
             {
-                Id = (string)Id.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
-                UserId = (string)UserId.Clone(),
+                Id = Id,
+                ProjectId = ProjectId,
+                UserId = UserId,
                 WordIds = new List<string>()
             };
             foreach (var id in WordIds)
             {
-                clone.WordIds.Add((string)id.Clone());
+                clone.WordIds.Add(id);
             }
             return clone;
         }

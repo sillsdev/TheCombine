@@ -79,12 +79,12 @@ namespace BackendFramework.Models
 
             foreach (var id in ParentIds)
             {
-                clone.ParentIds.Add((string)id.Clone());
+                clone.ParentIds.Add(id);
             }
 
             foreach (var id in ChildIds)
             {
-                clone.ChildIds.Add((string)id.Clone());
+                clone.ChildIds.Add(id);
             }
 
             return clone;
