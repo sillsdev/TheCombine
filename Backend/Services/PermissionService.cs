@@ -21,6 +21,7 @@ namespace BackendFramework.Services
 
         // TODO: This appears intrinsic to mongodb implementation and is brittle.
         private const int ProjIdLength = 24;
+        private const string ProjPath = "projects/";
 
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
@@ -104,15 +105,15 @@ namespace BackendFramework.Services
 
             // Retrieve project ID from HTTP request
             // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
-            const string projectPath = "projects/";
-            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
-            if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
+            var pathString = request.Request.Path.ToString();
+            var projIdIndex = pathString.LastIndexOf(ProjPath, StringComparison.OrdinalIgnoreCase) + ProjPath.Length;
+            if (projIdIndex + ProjIdLength > pathString.Length)
             {
                 // If there is no project ID, do not allow changes
                 return false;
             }
 
-            var projectId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
+            var projectId = pathString.Substring(projIdIndex, ProjIdLength);
             return HasProjectPermission(request, permission, projectId);
         }
 
@@ -168,7 +169,7 @@ namespace BackendFramework.Services
         public async Task<User?> Authenticate(string username, string password)
         {
             // Fetch the stored user.
-            var user = await _userRepo.GetUserByUsername(username);
+            var user = await _userRepo.GetUserByUsername(username, false);
 
             // Return null if user with specified username not found.
             if (user is null)

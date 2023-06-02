@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+using static BackendFramework.Helper.Sanitization;
 using NUnit.Framework;
-
-using BackendFramework.Helper;
 
 namespace Backend.Tests.Helper
 {
@@ -16,7 +15,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_validIds))]
         public void TestValidIds(string id)
         {
-            Assert.That(Sanitization.SanitizeId(id));
+            Assert.That(SanitizeId(id));
         }
 
         private static List<string> _invalidIds = new()
@@ -49,7 +48,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_invalidIds))]
         public void TestInvalidIds(string id)
         {
-            Assert.False(Sanitization.SanitizeId(id));
+            Assert.False(SanitizeId(id));
         }
 
         private static List<string> _validFileNames = new()
@@ -69,7 +68,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_validFileNames))]
         public void TestValidFileNames(string fileName)
         {
-            Assert.That(Sanitization.SanitizeFileName(fileName));
+            Assert.That(SanitizeFileName(fileName));
         }
 
         private static List<string> _invalidFileNames = new()
@@ -98,7 +97,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_invalidFileNames))]
         public void TestInvalidFileNames(string fileName)
         {
-            Assert.False(Sanitization.SanitizeFileName(fileName));
+            Assert.False(SanitizeFileName(fileName));
         }
 
         private static List<List<string>> _namesUnfriendlyFriendly = new()
@@ -114,7 +113,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_namesUnfriendlyFriendly))]
         public void TestMakeFriendlyForPath(List<string> nameName)
         {
-            Assert.That(Sanitization.MakeFriendlyForPath(nameName[0]), Is.EqualTo(nameName[1]));
+            Assert.That(MakeFriendlyForPath(nameName[0]), Is.EqualTo(nameName[1]));
         }
 
         [Test]
@@ -122,9 +121,9 @@ namespace Backend.Tests.Helper
         {
             const string fallback = "Lift";
             const string nonEmpty = "qwerty";
-            Assert.That(Sanitization.MakeFriendlyForPath(""), Is.EqualTo(""));
-            Assert.That(Sanitization.MakeFriendlyForPath("", fallback), Is.EqualTo(fallback));
-            Assert.That(Sanitization.MakeFriendlyForPath(nonEmpty, fallback), Is.EqualTo(nonEmpty));
+            Assert.That(MakeFriendlyForPath(""), Is.EqualTo(""));
+            Assert.That(MakeFriendlyForPath("", fallback), Is.EqualTo(fallback));
+            Assert.That(MakeFriendlyForPath(nonEmpty, fallback), Is.EqualTo(nonEmpty));
         }
     }
 }

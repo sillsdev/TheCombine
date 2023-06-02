@@ -103,8 +103,8 @@ namespace BackendFramework.Models
         {
             var clone = new Project
             {
-                Id = (string)Id.Clone(),
-                Name = (string)Name.Clone(),
+                Id = Id,
+                Name = Name,
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
@@ -132,11 +132,11 @@ namespace BackendFramework.Models
             }
             foreach (var cs in ValidCharacters)
             {
-                clone.ValidCharacters.Add((string)cs.Clone());
+                clone.ValidCharacters.Add(cs);
             }
             foreach (var cs in RejectedCharacters)
             {
-                clone.RejectedCharacters.Add((string)cs.Clone());
+                clone.RejectedCharacters.Add(cs);
             }
             foreach (var cf in CustomFields)
             {
@@ -144,11 +144,11 @@ namespace BackendFramework.Models
             }
             foreach (var wf in WordFields)
             {
-                clone.WordFields.Add((string)wf.Clone());
+                clone.WordFields.Add(wf);
             }
             foreach (var pos in PartsOfSpeech)
             {
-                clone.PartsOfSpeech.Add((string)pos.Clone());
+                clone.PartsOfSpeech.Add(pos);
             }
             foreach (var it in InviteTokens)
             {
@@ -165,10 +165,10 @@ namespace BackendFramework.Models
         public bool ContentEquals(Project other)
         {
             return
-                other.Name.Equals(Name) &&
-                other.IsActive.Equals(IsActive) &&
-                other.LiftImported.Equals(LiftImported) &&
-                other.DefinitionsEnabled.Equals(DefinitionsEnabled) &&
+                other.Name.Equals(Name, StringComparison.Ordinal) &&
+                other.IsActive == IsActive &&
+                other.LiftImported == LiftImported &&
+                other.DefinitionsEnabled == DefinitionsEnabled &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
@@ -208,7 +208,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -252,8 +252,8 @@ namespace BackendFramework.Models
         {
             return new CustomField
             {
-                Name = (string)Name.Clone(),
-                Type = (string)Type.Clone()
+                Name = Name,
+                Type = Type
             };
         }
 
@@ -264,7 +264,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == customField.Name && Type == customField.Type;
+            return Name.Equals(customField.Name, StringComparison.Ordinal) &&
+                Type.Equals(customField.Type, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -293,9 +294,9 @@ namespace BackendFramework.Models
         {
             return new WritingSystem
             {
-                Name = (string)Name.Clone(),
-                Bcp47 = (string)Bcp47.Clone(),
-                Font = (string)Font.Clone()
+                Name = Name,
+                Bcp47 = Bcp47,
+                Font = Font
             };
         }
 
@@ -306,7 +307,9 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font;
+            return Name.Equals(ws.Name, StringComparison.Ordinal) &&
+                Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
+                Font.Equals(ws.Font, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

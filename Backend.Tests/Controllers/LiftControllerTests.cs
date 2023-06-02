@@ -270,7 +270,8 @@ namespace Backend.Tests.Controllers
             // Make sure we exported 2 live and one dead entry
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
-            Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
+            Assert.That(text.IndexOf("dateDeleted", StringComparison.Ordinal),
+                Is.EqualTo(text.LastIndexOf("dateDeleted", StringComparison.Ordinal)));
 
             // Delete the export
             await _liftController.DeleteLiftFile(UserId);

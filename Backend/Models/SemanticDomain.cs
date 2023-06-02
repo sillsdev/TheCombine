@@ -66,7 +66,10 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name.Equals(other.Name) && Id.Equals(other.Id) && Lang.Equals(other.Lang) && Guid.Equals(other.Guid);
+            return Name.Equals(other.Name, StringComparison.Ordinal) &&
+                Id.Equals(other.Id, StringComparison.Ordinal) &&
+                Lang.Equals(other.Lang, StringComparison.Ordinal) &&
+                Guid.Equals(other.Guid, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -97,7 +100,7 @@ namespace BackendFramework.Models
         {
             var clone = (SemanticDomainFull)base.Clone();
             clone.Description = Description;
-            clone.Questions = Questions;
+            clone.Questions = new List<string>();
 
             foreach (var question in Questions)
             {
@@ -116,7 +119,7 @@ namespace BackendFramework.Models
 
             return
                 base.Equals(other) &&
-                Description.Equals(other.Description) &&
+                Description.Equals(other.Description, StringComparison.Ordinal) &&
                 Questions.Count == other.Questions.Count &&
                 Questions.All(other.Questions.Contains);
         }
