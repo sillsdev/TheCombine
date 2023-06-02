@@ -33,7 +33,7 @@ const renderProjLangs = async (project: Project): Promise<void> => {
 
 const renderAndClickAdd = async (): Promise<void> => {
   await renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
-  expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(0);
+  expect(projectMaster.root.findAllByType(LanguagePicker)).toHaveLength(0);
   renderer.act(() => {
     projectMaster.root
       .findByProps({ textId: "projectSettings.language.addAnalysisLanguage" })
