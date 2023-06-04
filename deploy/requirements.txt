@@ -4,9 +4,9 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
-ansible==7.6.0
+ansible==8.0.0
     # via -r requirements.in
-ansible-core==2.14.6
+ansible-core==2.15.0
     # via ansible
 cachetools==5.3.0
     # via google-auth
