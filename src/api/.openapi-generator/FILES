@@ -22,7 +22,6 @@ git_push.sh
 index.ts
 models/autocomplete-setting.ts
 models/banner-type.ts
-models/category-group.ts
 models/chart-root-data.ts
 models/credentials.ts
 models/custom-field.ts
@@ -34,6 +33,7 @@ models/email-invite-status.ts
 models/email-invite.ts
 models/flag.ts
 models/gloss.ts
+models/gram-cat-group.ts
 models/grammatical-info.ts
 models/index.ts
 models/merge-source-word.ts

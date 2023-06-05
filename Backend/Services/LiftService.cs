@@ -561,12 +561,12 @@ namespace BackendFramework.Services
             /// <summary>
             /// Check for any GrammaticalInfo in the private field <see cref="_importEntries"/>
             /// </summary>
-            /// <returns> A boolean: true if at least one word has a CategoryGroup other than Unspecified. </returns>
+            /// <returns> A boolean: true if at least one word has a GramCatGroup other than Unspecified. </returns>
             public bool DoesImportHaveGrammaticalInfo()
             {
                 return _importEntries.Any(w => w.Senses.Any(
                     s => s.GrammaticalInfo is not null &&
-                    s.GrammaticalInfo.CatGroup != GrammaticalCategory.CategoryGroup.Unspecified));
+                    s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
             }
 
             /// <summary>

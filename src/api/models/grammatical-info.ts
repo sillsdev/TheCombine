@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { CategoryGroup } from "./category-group";
+import { GramCatGroup } from "./gram-cat-group";
 
 /**
  *
@@ -28,8 +28,8 @@ export interface GrammaticalInfo {
   grammaticalCategory: string;
   /**
    *
-   * @type {CategoryGroup}
+   * @type {GramCatGroup}
    * @memberof GrammaticalInfo
    */
-  catGroup: CategoryGroup;
+  catGroup: GramCatGroup;
 }

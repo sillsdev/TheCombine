@@ -1,6 +1,5 @@
 export * from "./autocomplete-setting";
 export * from "./banner-type";
-export * from "./category-group";
 export * from "./chart-root-data";
 export * from "./credentials";
 export * from "./custom-field";
@@ -12,6 +11,7 @@ export * from "./email-invite-data";
 export * from "./email-invite-status";
 export * from "./flag";
 export * from "./gloss";
+export * from "./gram-cat-group";
 export * from "./grammatical-info";
 export * from "./merge-source-word";
 export * from "./merge-undo-ids";

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using BackendFramework.Models;
 
 namespace BackendFramework.Helper
 {
@@ -13,38 +14,15 @@ namespace BackendFramework.Helper
     /// </summary>
     public static class GrammaticalCategory
     {
-        public enum CategoryGroup
-        {
-            Adjective,
-            Adposition,
-            Adverb,
-            Classifier,
-            Connective,
-            Determiner,
-            ExistentialMarker,
-            Expletive,
-            Interjection,
-            Noun,
-            Participle,
-            Particle,
-            Prenoun,
-            Preverb,
-            ProForm,
-            Verb,
-            Unknown,
-            Unspecified,
-
-        }
-
         private class GroupPattern
         {
             public List<string> Has { get; set; }
             public List<string>? Is { get; set; }
-            public CategoryGroup CatGroup { get; set; }
+            public GramCatGroup CatGroup { get; set; }
 
             public GroupPattern()
             {
-                CatGroup = CategoryGroup.Unspecified;
+                CatGroup = GramCatGroup.Unspecified;
                 Has = new List<string>();
             }
 
@@ -83,50 +61,50 @@ namespace BackendFramework.Helper
         //   e.g., you have to check for adverbs before verbs.
         private static List<GroupPattern> patterns = new List<GroupPattern> {
             new GroupPattern{
-                CatGroup = CategoryGroup.Classifier,
+                CatGroup = GramCatGroup.Classifier,
                 Has = new List<string> { "clas", "clf", "клас", "类" },
                 Is = new List<string> { "сч" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.ExistentialMarker,
+                CatGroup = GramCatGroup.ExistentialMarker,
                 Has = new List<string> { "exist", "экз", "存在" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Expletive,
+                CatGroup = GramCatGroup.Expletive,
                 Has = new List<string> { "expl", "форм", "填补" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Interjection,
+                CatGroup = GramCatGroup.Interjection,
                 Has = new List<string> { "interj", "intj", "межд", "叹" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Noun,
+                CatGroup = GramCatGroup.Noun,
                 Has = new List<string> { "compound", "prop" },
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Participle,
+                CatGroup = GramCatGroup.Participle,
                 Has = new List<string> { "partici", "ptcp", "прич" },
                 Is = new List<string> { "part", "分", "分词" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Prenoun,
+                CatGroup = GramCatGroup.Prenoun,
                 Has = new List<string> { "pren", "名词前" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Preverb,
+                CatGroup = GramCatGroup.Preverb,
                 Has = new List<string> { "prev", "动词前" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Particle,
+                CatGroup = GramCatGroup.Particle,
                 Has = new List<string> { "marc", "mark", "particl", "particu", "prt", "част", "助" },
                 Is = new List<string> { "partic", "q", "во", "疑问" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Determiner,
+                CatGroup = GramCatGroup.Determiner,
                 Has = new List<string> { "指示" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.ProForm,
+                CatGroup = GramCatGroup.ProForm,
                 Has = new List<string> {
                     "emph", "interr", "pers", "poss", "prn", "pro", "recp", "refl",
                     "вопр", "мест", "代", "领", "疑问"
@@ -134,26 +112,26 @@ namespace BackendFramework.Helper
                 Is = new List<string> { "pos" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Determiner,
+                CatGroup = GramCatGroup.Determiner,
                 Has = new List<string> {
-                    "art", "def", "dem", "det", "ind", "num", "ord", "quant",
+                    "art", "def", "dem", "det", "ind", "num", "ordinal", "quant",
                     "арт", "указ", "числ", "квант", "опр", "定", "冠", "数"
                 }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Adposition,
+                CatGroup = GramCatGroup.Adposition,
                 Has = new List<string> { "adp", "pos", "prep", "лог", "предл", "置" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Adjective,
+                CatGroup = GramCatGroup.Adjective,
                 Has = new List<string> { "adj", "прил", "形" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Connective,
+                CatGroup = GramCatGroup.Connective,
                 Has = new List<string> { "com", "con", "isateur", "iz", "rel", "изатор", "союз", "连" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Noun,
+                CatGroup = GramCatGroup.Noun,
                 Has = new List<string> {
                     "ger", "nom", "noun", "subs", "sus",
                     "гер", "сущ", "имя", "собс", "名", "体"
@@ -161,21 +139,21 @@ namespace BackendFramework.Helper
                 Is = new List<string> { "n" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Adverb,
+                CatGroup = GramCatGroup.Adverb,
                 Has = new List<string> { "adv", "нареч", "副" }
             },
             new GroupPattern{
-                CatGroup = CategoryGroup.Verb,
+                CatGroup = GramCatGroup.Verb,
                 Has = new List<string> { "cop", "trans", "v", "гл", "动" }
             }
         };
 
-        public static CategoryGroup GetCategoryGroup(string grammaticalCategory)
+        public static GramCatGroup GetGramCatGroup(string grammaticalCategory)
         {
             var gramCat = removeAccents(grammaticalCategory);
             if (String.IsNullOrWhiteSpace(Regex.Match(gramCat, @"[^\W]+").Value))
             {
-                return CategoryGroup.Unspecified;
+                return GramCatGroup.Unspecified;
             }
             foreach (GroupPattern pattern in patterns)
             {
@@ -184,7 +162,7 @@ namespace BackendFramework.Helper
                     return pattern.CatGroup;
                 }
             }
-            return CategoryGroup.Unknown;
+            return GramCatGroup.Other;
         }
 
         /// <summary> Remove accents (and other non-spacing characters) from a string. </summary>

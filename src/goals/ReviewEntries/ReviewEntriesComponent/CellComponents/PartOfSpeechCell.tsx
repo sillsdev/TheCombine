@@ -1,7 +1,7 @@
 import { Chip, Grid } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 
-import { CategoryGroup, GrammaticalInfo } from "api/models";
+import { GramCatGroup, GrammaticalInfo } from "api/models";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
@@ -29,7 +29,7 @@ export default function PartOfSpeechCell(
       listId={`partsOfSpeech${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, senseIndex) => (
         <Grid container direction="row" spacing={2} key={senseIndex}>
-          {sense.partOfSpeech.catGroup !== CategoryGroup.Unspecified ? (
+          {sense.partOfSpeech.catGroup !== GramCatGroup.Unspecified ? (
             <Chip
               color={sense.deleted ? "secondary" : "default"}
               style={getChipStyle(senseIndex)}

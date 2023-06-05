@@ -1,10 +1,10 @@
 import { v4 } from "uuid";
 
 import {
-  CategoryGroup,
   Definition,
   Flag,
   Gloss,
+  GramCatGroup,
   GrammaticalInfo,
   Note,
   SemanticDomain,
@@ -53,7 +53,7 @@ export function newNote(text = "", language = ""): Note {
 }
 
 export function newGrammaticalInfo(): GrammaticalInfo {
-  return { catGroup: CategoryGroup.Unspecified, grammaticalCategory: "" };
+  return { catGroup: GramCatGroup.Unspecified, grammaticalCategory: "" };
 }
 
 export function newWord(vernacular = ""): Word {

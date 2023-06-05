@@ -17,7 +17,7 @@
  * @export
  * @enum {string}
  */
-export enum CategoryGroup {
+export enum GramCatGroup {
   Adjective = "Adjective",
   Adposition = "Adposition",
   Adverb = "Adverb",
@@ -34,6 +34,6 @@ export enum CategoryGroup {
   Preverb = "Preverb",
   ProForm = "ProForm",
   Verb = "Verb",
-  Unknown = "Unknown",
+  Other = "Other",
   Unspecified = "Unspecified",
 }

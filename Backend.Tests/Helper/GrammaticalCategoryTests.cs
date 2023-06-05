@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BackendFramework.Models;
 using NUnit.Framework;
 using static BackendFramework.Helper.GrammaticalCategory;
 
@@ -13,7 +14,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_blank))]
         public void TestUnspecified(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Unspecified));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Unspecified));
         }
         private static List<string> _meaningless = new()
         {
@@ -25,9 +26,9 @@ namespace Backend.Tests.Helper
             "7", "8", "9", "0"
         };
         [TestCaseSource(nameof(_meaningless))]
-        public void TestUnknown(string gramCat)
+        public void TestOther(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Unknown));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Other));
         }
 
         private static List<string> _adj = new()
@@ -39,7 +40,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_adj))]
         public void TestAdjectives(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Adjective));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Adjective));
         }
 
         private static List<string> _adp = new()
@@ -60,7 +61,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_adp))]
         public void TestAdposition(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Adposition));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Adposition));
         }
 
         private static List<string> _adv = new()
@@ -72,7 +73,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_adv))]
         public void TestAdverb(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Adverb));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Adverb));
         }
 
         private static List<string> _clf = new()
@@ -90,7 +91,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_clf))]
         public void TestClassifier(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Classifier));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Classifier));
         }
 
         private static List<string> _conn = new()
@@ -132,7 +133,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_conn))]
         public void TestConnective(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Connective));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Connective));
         }
 
         private static List<string> _det = new()
@@ -194,7 +195,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_det))]
         public void TestDeterminer(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Determiner));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Determiner));
         }
 
         private static List<string> _exist = new()
@@ -208,7 +209,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_exist))]
         public void TestExistentialMarker(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.ExistentialMarker));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.ExistentialMarker));
         }
 
         private static List<string> _expl = new()
@@ -220,7 +221,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_expl))]
         public void TestExpletive(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Expletive));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Expletive));
         }
 
         private static List<string> _interj = new()
@@ -232,7 +233,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_interj))]
         public void TestInterjection(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Interjection));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Interjection));
         }
 
         private static List<string> _n = new()
@@ -257,7 +258,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_n))]
         public void TestNoun(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Noun));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Noun));
         }
 
         private static List<string> _ptcp = new()
@@ -270,7 +271,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_ptcp))]
         public void TestParticiple(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Participle));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Participle));
         }
 
         private static List<string> _prt = new()
@@ -297,7 +298,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_prt))]
         public void TestParticle(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Particle));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Particle));
         }
 
         private static List<string> _pren = new()
@@ -309,7 +310,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_pren))]
         public void TestPrenoun(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Prenoun));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Prenoun));
         }
 
         private static List<string> _prev = new()
@@ -320,7 +321,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_prev))]
         public void TestPreverb(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Preverb));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Preverb));
         }
 
         private static List<string> _pro = new()
@@ -384,7 +385,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_pro))]
         public void TestProForm(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.ProForm));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.ProForm));
         }
 
         private static List<string> _v = new()
@@ -411,7 +412,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_v))]
         public void TestVerb(string gramCat)
         {
-            Assert.That(GetCategoryGroup(gramCat), Is.EqualTo(CategoryGroup.Verb));
+            Assert.That(GetGramCatGroup(gramCat), Is.EqualTo(GramCatGroup.Verb));
         }
     }
 }
