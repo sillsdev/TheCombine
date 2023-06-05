@@ -22,6 +22,7 @@ namespace BackendFramework.Interfaces
     public interface ILiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
         bool DoesImportHaveDefinitions();
+        bool DoesImportHaveGrammaticalInfo();
         Task<List<Word>> SaveImportEntries();
     }
 }

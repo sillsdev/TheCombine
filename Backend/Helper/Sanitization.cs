@@ -48,7 +48,7 @@ namespace BackendFramework.Helper
         {
             // Method modified from https://stackoverflow.com/a/780800
             var normalizedName = name.Normalize(NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder(capacity: normalizedName.Length);
 
             foreach (var c in normalizedName)
             {

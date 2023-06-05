@@ -559,6 +559,17 @@ namespace BackendFramework.Services
             }
 
             /// <summary>
+            /// Check for any GrammaticalInfo in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A boolean: true if at least one word has a CategoryGroup other than Unspecified. </returns>
+            public bool DoesImportHaveGrammaticalInfo()
+            {
+                return _importEntries.Any(w => w.Senses.Any(
+                    s => s.GrammaticalInfo is not null &&
+                    s.GrammaticalInfo.CatGroup != GrammaticalCategory.CategoryGroup.Unspecified));
+            }
+
+            /// <summary>
             /// <see cref="Word"/>s are added to the private field <see cref="_importEntries"/>
             /// during lift import. This saves the contents of _importEntries to the database.
             /// </summary>
@@ -675,6 +686,12 @@ namespace BackendFramework.Services
                                 MongoId = ObjectId.GenerateNewId().ToString(),
                                 Name = splitSemDom[1]
                             });
+                    }
+
+                    // Add grammatical info
+                    if (!String.IsNullOrWhiteSpace(sense.GramInfo.Value))
+                    {
+                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value);
                     }
 
                     newWord.Senses.Add(newSense);

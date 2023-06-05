@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using static BackendFramework.Helper.GrammaticalCategory;
 
 namespace BackendFramework.Models
 {
@@ -346,6 +347,15 @@ namespace BackendFramework.Models
         public Guid Guid { get; set; }
 
         [Required]
+        [BsonElement("accessibility")]
+        [BsonRepresentation(BsonType.String)]
+        public Status Accessibility { get; set; }
+
+        [Required]
+        [BsonElement("grammaticalInfo")]
+        public GrammaticalInfo GrammaticalInfo { get; set; }
+
+        [Required]
         [BsonElement("Definitions")]
         public List<Definition> Definitions { get; set; }
 
@@ -357,16 +367,12 @@ namespace BackendFramework.Models
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
-        [Required]
-        [BsonElement("accessibility")]
-        [BsonRepresentation(BsonType.String)]
-        public Status Accessibility { get; set; }
-
         public Sense()
         {
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
             Accessibility = Status.Active;
+            GrammaticalInfo = new GrammaticalInfo();
             Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
@@ -378,6 +384,7 @@ namespace BackendFramework.Models
             {
                 Guid = Guid,
                 Accessibility = Accessibility,
+                GrammaticalInfo = GrammaticalInfo.Clone(),
                 Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>(),
@@ -409,6 +416,7 @@ namespace BackendFramework.Models
             return
                 other.Guid == Guid &&
                 other.Accessibility == Accessibility &&
+                other.GrammaticalInfo.Equals(GrammaticalInfo) &&
                 other.Definitions.Count == Definitions.Count &&
                 other.Definitions.All(Definitions.Contains) &&
                 other.Glosses.Count == Glosses.Count &&
@@ -419,7 +427,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Accessibility, Definitions, Glosses, SemanticDomains);
+            return HashCode.Combine(Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, SemanticDomains);
         }
 
         public bool IsEmpty()
@@ -432,6 +440,7 @@ namespace BackendFramework.Models
         /// <summary>
         /// Check if all Gloss, Definition strings are contained in other Sense.
         /// If they are all empty, also require other sense is empty and includes same Semantic Domains.
+        /// TODO: Consider if GrammaticalInfo should be a factor.
         /// </summary>
         public bool IsContainedIn(Sense other)
         {
@@ -556,6 +565,55 @@ namespace BackendFramework.Models
 
             Text += $"; {other.Text}";
         }
+    }
+
+    public class GrammaticalInfo
+    {
+        /// <summary> User-specified text. </summary>
+        [Required]
+        public string GrammaticalCategory { get; set; }
+
+        /// <summary> Group which contains the category. </summary>
+        [Required]
+        public CategoryGroup CatGroup { get; set; }
+
+        public GrammaticalInfo()
+        {
+            CatGroup = CategoryGroup.Unspecified;
+            GrammaticalCategory = "";
+        }
+
+        public GrammaticalInfo(string gramCat)
+        {
+            CatGroup = GetCategoryGroup(gramCat);
+            GrammaticalCategory = gramCat;
+        }
+
+        public GrammaticalInfo Clone()
+        {
+            return new GrammaticalInfo
+            {
+                CatGroup = CatGroup,
+                GrammaticalCategory = GrammaticalCategory
+            };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not GrammaticalInfo other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return CatGroup == other.CatGroup &&
+                GrammaticalCategory.Equals(other.GrammaticalCategory, StringComparison.Ordinal);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(CatGroup, GrammaticalCategory);
+        }
+
     }
 
     public class Gloss

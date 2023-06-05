@@ -58,7 +58,8 @@ namespace Backend.Tests
                 EditedBy = new List<string> { RandString(), RandString() },
                 ProjectId = projId ?? RandString(),
                 Senses = new List<Sense> { RandomSense(), RandomSense(), RandomSense() },
-                Note = new Note { Language = RandString(), Text = RandString() }
+                Note = new Note { Language = RandString(), Text = RandString() },
+                Flag = new Flag(RandString())
             };
         }
 
@@ -67,6 +68,7 @@ namespace Backend.Tests
             return new Sense
             {
                 Accessibility = Status.Active,
+                GrammaticalInfo = new GrammaticalInfo(RandString()),
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
                 SemanticDomains = new List<SemanticDomain>
                 {

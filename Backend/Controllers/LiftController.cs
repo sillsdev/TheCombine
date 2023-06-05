@@ -150,6 +150,7 @@ namespace BackendFramework.Controllers
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
             var doesImportHaveDefinitions = false;
+            var doesImportHaveGrammaticalInfo = false;
             try
             {
                 // Add character set to project from ldml file
@@ -171,6 +172,7 @@ namespace BackendFramework.Controllers
                 // Check if there are any definitions in the imported words
                 // before they are deleted by SaveImportEntries.
                 doesImportHaveDefinitions = liftMerger.DoesImportHaveDefinitions();
+                doesImportHaveGrammaticalInfo = liftMerger.DoesImportHaveGrammaticalInfo();
 
                 await liftMerger.SaveImportEntries();
             }
@@ -190,6 +192,7 @@ namespace BackendFramework.Controllers
             }
 
             project.DefinitionsEnabled = doesImportHaveDefinitions;
+            project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
             project.LiftImported = true;
             await _projRepo.Update(projectId, project);
 
