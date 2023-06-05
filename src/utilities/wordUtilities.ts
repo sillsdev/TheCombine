@@ -1,4 +1,5 @@
-import { Definition, Flag, Gloss, Sense, Word } from "api/models";
+import { Definition, Flag, Gloss, GramCatGroup, Sense, Word } from "api/models";
+import { HEX, colorblindSafePalette } from "types/theme";
 import { newDefinition, newGloss } from "types/word";
 
 export const sep = "; ";
@@ -74,4 +75,46 @@ function wordReducer(accumulator: string[], word: Word): string[] {
     .flatMap((s) => [...s.definitions, ...s.glosses])
     .map((dg) => dg.language);
   return [...new Set([...accumulator, ...newLangs])];
+}
+
+/** Asign a different color to each grammatical category group. */
+export function getGramCatGroupColor(group: GramCatGroup): HEX {
+  switch (group) {
+    case GramCatGroup.Unspecified:
+      return "#ffffff";
+    case GramCatGroup.Other:
+      return "#000000";
+    case GramCatGroup.Adjective:
+      return colorblindSafePalette[1];
+    case GramCatGroup.Adposition:
+      return colorblindSafePalette[2];
+    case GramCatGroup.Adverb:
+      return colorblindSafePalette[3];
+    case GramCatGroup.Classifier:
+      return colorblindSafePalette[4];
+    case GramCatGroup.Connective:
+      return colorblindSafePalette[5];
+    case GramCatGroup.Determiner:
+      return colorblindSafePalette[6];
+    case GramCatGroup.ExistentialMarker:
+      return colorblindSafePalette[7];
+    case GramCatGroup.Expletive:
+      return colorblindSafePalette[8];
+    case GramCatGroup.Interjection:
+      return colorblindSafePalette[9];
+    case GramCatGroup.Noun:
+      return colorblindSafePalette[10];
+    case GramCatGroup.Participle:
+      return colorblindSafePalette[11];
+    case GramCatGroup.Particle:
+      return colorblindSafePalette[12];
+    case GramCatGroup.Prenoun:
+      return colorblindSafePalette[13];
+    case GramCatGroup.Preverb:
+      return colorblindSafePalette[14];
+    case GramCatGroup.ProForm:
+      return colorblindSafePalette[15];
+    case GramCatGroup.Verb:
+      return colorblindSafePalette[16];
+  }
 }
