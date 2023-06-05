@@ -1,9 +1,11 @@
 import { v4 } from "uuid";
 
 import {
+  CategoryGroup,
   Definition,
   Flag,
   Gloss,
+  GrammaticalInfo,
   Note,
   SemanticDomain,
   Sense,
@@ -31,6 +33,7 @@ export function newSense(
     glosses: [],
     semanticDomains: [],
     accessibility: Status.Active,
+    grammaticalInfo: newGrammaticalInfo(),
   };
   if (gloss) {
     sense.glosses.push(newGloss(gloss, lang));
@@ -47,6 +50,10 @@ export function newFlag(text = ""): Flag {
 
 export function newNote(text = "", language = ""): Note {
   return { text, language };
+}
+
+export function newGrammaticalInfo(): GrammaticalInfo {
+  return { catGroup: CategoryGroup.Unspecified, grammaticalCategory: "" };
 }
 
 export function newWord(vernacular = ""): Word {

@@ -97,15 +97,15 @@ namespace BackendFramework.Helper
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Interjection,
-                Has = new List<string> { "interj", "межд", "叹" }
+                Has = new List<string> { "interj", "intj", "межд", "叹" }
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Noun,
-                Has = new List<string> { "prop" }
+                Has = new List<string> { "compound", "prop" },
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Participle,
-                Has = new List<string> { "ptcp", "partici", "прич" },
+                Has = new List<string> { "partici", "ptcp", "прич" },
                 Is = new List<string> { "part", "分", "分词" }
             },
             new GroupPattern{
@@ -118,7 +118,7 @@ namespace BackendFramework.Helper
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Particle,
-                Has = new List<string> { "prt", "particl", "particu", "marc", "mark", "част", "助" },
+                Has = new List<string> { "marc", "mark", "particl", "particu", "prt", "част", "助" },
                 Is = new List<string> { "partic", "q", "во", "疑问" }
             },
             new GroupPattern{
@@ -128,7 +128,7 @@ namespace BackendFramework.Helper
             new GroupPattern{
                 CatGroup = CategoryGroup.ProForm,
                 Has = new List<string> {
-                    "pro", "interr", "pers", "emph", "poss", "refl", "recp",
+                    "emph", "interr", "pers", "poss", "prn", "pro", "recp", "refl",
                     "вопр", "мест", "代", "领", "疑问"
                 },
                 Is = new List<string> { "pos" }
@@ -136,7 +136,7 @@ namespace BackendFramework.Helper
             new GroupPattern{
                 CatGroup = CategoryGroup.Determiner,
                 Has = new List<string> {
-                    "det", "art", "def", "ind", "dem", "quant", "num",
+                    "art", "def", "dem", "det", "ind", "num", "ord", "quant",
                     "арт", "указ", "числ", "квант", "опр", "定", "冠", "数"
                 }
             },
@@ -150,12 +150,12 @@ namespace BackendFramework.Helper
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Connective,
-                Has = new List<string> { "com", "con", "iz", "isateur", "rel", "изатор", "союз", "连" }
+                Has = new List<string> { "com", "con", "isateur", "iz", "rel", "изатор", "союз", "连" }
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Noun,
                 Has = new List<string> {
-                    "noun", "nom", "ger", "subs", "sus",
+                    "ger", "nom", "noun", "subs", "sus",
                     "гер", "сущ", "имя", "собс", "名", "体"
                 },
                 Is = new List<string> { "n" }
@@ -166,7 +166,7 @@ namespace BackendFramework.Helper
             },
             new GroupPattern{
                 CatGroup = CategoryGroup.Verb,
-                Has = new List<string> { "cop", "v", "trans", "гл", "动" }
+                Has = new List<string> { "cop", "trans", "v", "гл", "动" }
             }
         };
 

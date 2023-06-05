@@ -689,7 +689,7 @@ namespace BackendFramework.Services
                     }
 
                     // Add grammatical info
-                    if (!String.IsNullOrWhiteSpace(sense.GramInfo.Value))
+                    if (!String.IsNullOrWhiteSpace(sense.GramInfo?.Value))
                     {
                         newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value);
                     }
@@ -832,6 +832,22 @@ namespace BackendFramework.Services
                     entry.Notes.Add(note);
                 }
             }
+
+            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits)
+            {
+                if (senseOrReversal is LiftSense sense)
+                {
+                    if (sense.GramInfo is null)
+                    {
+                        sense.GramInfo = new LiftGrammaticalInfo { Value = val };
+                    }
+                    else
+                    {
+                        sense.GramInfo.Value = val;
+                    }
+                }
+            }
+
             /// <summary> Adds in each semantic domain to a list </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
@@ -884,7 +900,6 @@ namespace BackendFramework.Services
 
             public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
-            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
 
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(

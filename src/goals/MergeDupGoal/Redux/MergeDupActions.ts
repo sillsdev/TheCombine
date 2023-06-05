@@ -232,6 +232,7 @@ function getMergeWords(
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
             accessibility: sense.accessibility,
+            grammaticalInfo: sense.grammaticalInfo,
           });
         }
       });
