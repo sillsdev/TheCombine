@@ -58,8 +58,7 @@ namespace Backend.Tests
                 EditedBy = new List<string> { RandString(), RandString() },
                 ProjectId = projId ?? RandString(),
                 Senses = new List<Sense> { RandomSense(), RandomSense(), RandomSense() },
-                Note = new Note { Language = RandString(), Text = RandString() },
-                Flag = new Flag(RandString())
+                Note = new Note { Language = RandString(), Text = RandString() }
             };
         }
 
