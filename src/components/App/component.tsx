@@ -11,7 +11,7 @@ import PageNotFound from "components/PageNotFound/component";
 import PasswordRequest from "components/PasswordReset/Request";
 import PasswordReset from "components/PasswordReset/ResetPage";
 import PrivateRoute from "components/PrivateRoute";
-import ProjectInvite from "components/ProjectInvite";
+import ProjectInvite from "components/ProjectInvite/ProjectInvite";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
