@@ -8,9 +8,9 @@ using BackendFramework.Models;
 namespace BackendFramework.Helper
 {
     /// <summary>
-    /// Classifying the grammatical category of a word.
+    /// Classifying the grammatical category of a sense.
     ///
-    /// Altough FLEx provides a list of options, custom strings are allowed.
+    /// Although FLEx provides a list of options, custom strings are allowed.
     /// </summary>
     public static class GrammaticalCategory
     {
@@ -52,12 +52,16 @@ namespace BackendFramework.Helper
 
         // The following patterns cover all grammatical categories in Fieldworks for:
         //   English (en), Spanish (es), French (fr), Portuguese (pt), Russian (ru), Chinese (zh)
-        // Exceptions:
+        // Omissions due to conflicting abbreviations:
         //   Spanish "indf" for Indefinite Pronoun (conflicts with abbrev. for Indefinite article)
         //   Spanish "rel" for Relative Pronoun (conflicts with abbrev. for Relativizer)
         //   Portugues "pos" for Postposition (conflicts with Spanish "pos" for Possesive pronoun)
         //   Russian "вопр" for Question Particle (conflict with Russian "вопр" for Interrogative pro-form)
-        // The order of this list is important:
+        // Additions based on user-data:
+        //   Determiner: "ordinal" (for Ordinal numbers with out "num")
+        //   Interjection: "intj"
+        //   Noun: "compound" (for Compound nouns to be caught before the "com" of Connective)
+        // The order of this list is important;
         //   e.g., you have to check for adverbs before verbs.
         private static List<GroupPattern> patterns = new List<GroupPattern> {
             new GroupPattern{
