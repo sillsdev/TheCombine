@@ -2,10 +2,9 @@ import { Card, Grid, TextField, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { isEmailTaken, isUsernameTaken } from "backend";
+import { isEmailTaken, isUsernameTaken, resetPasswordRequest } from "backend";
 import history, { Path } from "browserHistory";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { asyncResetRequest } from "components/PasswordReset/Redux/ResetActions";
 import { useAppDispatch } from "types/hooks";
 
 export default function ResetRequest(): ReactElement {
@@ -28,7 +27,7 @@ export default function ResetRequest(): ReactElement {
       (await isEmailTaken(emailOrUsername)) ||
       (await isUsernameTaken(emailOrUsername));
     if (exists) {
-      await dispatch(asyncResetRequest(emailOrUsername));
+      await resetPasswordRequest(emailOrUsername);
       setIsDone(true);
       setTimeout(() => history.push(Path.Login), 1000);
     } else {

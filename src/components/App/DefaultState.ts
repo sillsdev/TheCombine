@@ -1,6 +1,5 @@
 import { defaultState as goalTimelineState } from "components/GoalTimeline/DefaultState";
 import { defaultState as loginState } from "components/Login/Redux/LoginReducer";
-import { defaultState as passwordResetState } from "components/PasswordReset/Redux/ResetReducer";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { defaultState as createProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
@@ -14,7 +13,6 @@ import { defaultState as analyticsState } from "types/Redux/analyticsReduxTypes"
 export const defaultState = {
   //login
   loginState: { ...loginState },
-  passwordResetState: { ...passwordResetState },
 
   //project
   createProjectState: {

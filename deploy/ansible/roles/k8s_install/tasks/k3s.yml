@@ -7,7 +7,6 @@
 - name: Install k3s
   shell:
     cmd: curl -sfL https://get.k3s.io | sh -s - {{ k3s_options | join(' ') }}
-    warn: no
     creates: /usr/local/bin/k3s
 
 # Change KillMode from "process" to "mixed" to eliminate 90 wait for k3s containers
