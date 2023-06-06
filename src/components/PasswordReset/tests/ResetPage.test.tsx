@@ -73,10 +73,9 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    if (passwdField && passwdConfirm) {
-      await user.type(passwdField, shortPassword);
-      await user.type(passwdConfirm, shortPassword);
-    }
+    await user.type(passwdField, shortPassword);
+    await user.type(passwdConfirm, shortPassword);
+
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
     );
@@ -143,8 +142,6 @@ describe("PasswordReset", () => {
     expect(confirmErrors.length).toBe(0);
     expect(submitButton.closest("button")).toBeEnabled();
   });
-
-  // ------------------------------------------------------------
 
   it("renders with expire error", async () => {
     // rerender the component with the resetFailure prop set.
