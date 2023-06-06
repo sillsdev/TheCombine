@@ -1,5 +1,4 @@
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
-import { PasswordResetState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
@@ -15,7 +14,6 @@ import { GoalsState } from "types/goals";
 export interface StoreState {
   //login
   loginState: LoginState;
-  passwordResetState: PasswordResetState;
 
   //project
   createProjectState: CreateProjectState;

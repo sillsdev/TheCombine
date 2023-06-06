@@ -41,6 +41,9 @@
     "statistics": "Data Statistics",
     "projectSettings": "Project Settings"
   },
+  "invite": {
+    "invalidInvitationURL": "Project Invitation link is invalid."
+  },
   "login": {
     "title": "Log In",
     "name": "Your Name",

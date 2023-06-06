@@ -753,7 +753,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@microsoft/signalr 6.0.16
+@microsoft/signalr 6.0.7
 MIT
 JavaScript and TypeScript clients for SignalR for ASP.NET Core and Azure SignalR Service
 
