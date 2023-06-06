@@ -4,6 +4,7 @@ import {
   cleanup,
   render,
   RenderOptions,
+  RenderResult,
   screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -32,7 +33,7 @@ jest.mock("backend", () => ({
 }));
 
 // This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore([])();
+const mockStore = configureMockStore()();
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -40,10 +41,14 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const ResetPageProviders = ({ children }: { children: React.ReactNode }) => {
+const ResetPageProviders = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): ReactElement => {
   return (
     <Provider store={mockStore}>
-      <MemoryRouter initialEntries={[`/forgot/reset/testPasswordReset`]}>
+      <MemoryRouter initialEntries={[`${Path.PwReset}/testPasswordReset`]}>
         <Switch>
           <Route path={`${Path.PwReset}/:token`}>{children}</Route>
         </Switch>
@@ -55,7 +60,7 @@ const ResetPageProviders = ({ children }: { children: React.ReactNode }) => {
 const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper">
-) => render(ui, { wrapper: ResetPageProviders, ...options });
+): RenderResult => render(ui, { wrapper: ResetPageProviders, ...options });
 
 describe("PasswordReset", () => {
   it("renders with password length error", async () => {
@@ -95,10 +100,9 @@ describe("PasswordReset", () => {
     const passwdConfirm = screen.getByTestId(
       PasswordResetTestIds.ConfirmPassword
     );
-    if (passwdField && passwdConfirm) {
-      await user.type(passwdField, passwordEntry);
-      await user.type(passwdConfirm, confirmEntry);
-    }
+
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -123,10 +127,9 @@ describe("PasswordReset", () => {
     const passwdConfirm = screen.getByTestId(
       PasswordResetTestIds.ConfirmPassword
     );
-    if (passwdField && passwdConfirm) {
-      await user.type(passwdField, passwordEntry);
-      await user.type(passwdConfirm, confirmEntry);
-    }
+
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -144,27 +147,25 @@ describe("PasswordReset", () => {
   // ------------------------------------------------------------
 
   it("renders with expire error", async () => {
+    // rerender the component with the resetFailure prop set.
+    const user = userEvent.setup();
+    customRender(<PasswordReset />);
+
+    const passwordEntry = "password";
+    const confirmEntry = "password";
+    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
+    const passwdConfirm = screen.getByTestId(
+      PasswordResetTestIds.ConfirmPassword
+    );
+
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
+
+    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
     await act(async () => {
-      // rerender the component with the resetFailure prop set.
-      const user = userEvent.setup();
-      customRender(<PasswordReset />);
-
-      const passwordEntry = "password";
-      const confirmEntry = "password";
-      const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
-      const passwdConfirm = screen.getByTestId(
-        PasswordResetTestIds.ConfirmPassword
-      );
-      if (passwdField && passwdConfirm) {
-        await user.type(passwdField, passwordEntry);
-        await user.type(passwdConfirm, confirmEntry);
-      }
-
-      const submitButton = screen.getByTestId(
-        PasswordResetTestIds.SubmitButton
-      );
       await user.click(submitButton);
     });
+
     const resetErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordResetFail
     );
