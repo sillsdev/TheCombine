@@ -30,7 +30,7 @@ enum RequestState {
 }
 
 export default function PasswordReset(): ReactElement {
-  const { token }: MatchParams = useParams();
+  const { token } = useParams<MatchParams>();
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
