@@ -53,9 +53,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    3. [Running the Automated Tests](#running-the-automated-tests)
    4. [Import Semantic Domains](#import-semantic-domains)
    5. [Generate License Reports](#generate-license-reports)
-   6. [Set Project Version](#set-project-version)
-   7. [Inspect Database](#inspect-database)
-   8. [Cleanup Local Repository](#cleanup-local-repository)
+   6. [Inspect Database](#inspect-database)
+   7. [Cleanup Local Repository](#cleanup-local-repository)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -434,20 +433,6 @@ npm run license-report-frontend
 ```
 
 > Note: This should be performed each time production dependencies are changed.
-
-### Set Project Version
-
-To update the version of the project:
-
-1. Edit package.json `"version"` to a [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) compatible
-   string (e.g. `"0.1.1-alpha.0"`).
-2. Run `npm install` to automatically update `package-lock.json`.
-
-To retrieve the current version of the project from the terminal:
-
-```bash
-npm run --silent version
-```
 
 ### Inspect Database
 
