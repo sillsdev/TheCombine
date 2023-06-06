@@ -94,13 +94,13 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
    - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add its `bin/` to PATH
+5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add its `/bin` to PATH
    Environment Variable.
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
    - If `mongosh` is not a recognized command, you may have to separately install the
-     [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `bin/` to your PATH.
+     [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
    - If `mongoimport` is not a recognized command, you may have to separately install the
-     [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) and add its `bin/` to your PATH.
+     [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) and add its `/bin` to your PATH.
 6. [VS Code](https://code.visualstudio.com/download).
    - When you open this repo folder in VS Code, it should recommend the extensions used in this project (see
      `.vscode/extensions.json`).
