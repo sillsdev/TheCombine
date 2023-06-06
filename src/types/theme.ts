@@ -15,7 +15,8 @@ export const themeColors = {
   warn: orange[300],
   success: green[600],
   highlight: yellow[200],
-  shade: blue[700], // tabColor()
+  lightShade: blue[700], // tabColor()
+  darkShade: blue[900], // tabColor()
   recordIdle: red[500], // RecorderIcon.tsx
   recordActive: red[900], // RecorderIcon.tsx
 };
@@ -69,7 +70,9 @@ const baseTheme = createTheme({
 });
 
 export function tabColor(currentTab: Path, tabName: Path): string {
-  return currentTab.indexOf(tabName) !== -1 ? themeColors.shade : "inherit";
+  return currentTab.indexOf(tabName) !== -1
+    ? themeColors.darkShade
+    : themeColors.lightShade;
 }
 
 // Can have a number of additional options passed in; here, sticks with defaults

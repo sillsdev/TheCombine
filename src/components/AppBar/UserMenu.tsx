@@ -71,12 +71,12 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
         id={`avatar-${idAffix}`}
       >
         <Hidden mdDown>
-          <Typography style={{ margin: 5 }}>
+          <Typography style={{ marginLeft: 5, marginRight: 5 }}>
             {LocalStorage.getCurrentUser()?.username}
           </Typography>
         </Hidden>
         {avatar ? (
-          <Avatar alt="User avatar" src={avatar} style={{ marginLeft: 5 }} />
+          <Avatar alt="User avatar" src={avatar} />
         ) : (
           <Person style={{ fontSize: 40 }} />
         )}

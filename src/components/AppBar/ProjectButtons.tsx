@@ -56,6 +56,7 @@ export default function ProjectButtons(
             style={{
               background: tabColor(props.currentTab, Path.Statistics),
               minWidth: 0,
+              margin: 10,
             }}
           >
             <BarChart />
@@ -73,13 +74,13 @@ export default function ProjectButtons(
           }}
         >
           <Settings />
+          <Hidden smDown>
+            <Typography display="inline" style={{ margin: 5 }}>
+              {projectName}
+            </Typography>
+          </Hidden>
         </Button>
       </Tooltip>
-      <Hidden smDown>
-        <Typography display="inline" style={{ margin: 5 }}>
-          {projectName}
-        </Typography>
-      </Hidden>
     </>
   );
 }

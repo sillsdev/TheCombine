@@ -14,34 +14,48 @@ interface NavigationButtonsProps {
 export default function NavigationButtons(
   props: NavigationButtonsProps
 ): ReactElement {
+  return (
+    <>
+      <NavButton
+        buttonId="data-entry"
+        currentPath={props.currentTab}
+        targetPath={Path.DataEntry}
+        textId="appBar.dataEntry"
+      />
+      <NavButton
+        buttonId="data-cleanup"
+        currentPath={props.currentTab}
+        targetPath={Path.Goals}
+        textId="appBar.dataCleanup"
+      />
+    </>
+  );
+}
+
+interface NavButtonProps {
+  buttonId: string;
+  currentPath: Path;
+  targetPath: Path;
+  textId: string;
+}
+
+function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <>
-      <Button
-        id={"data-entry"}
-        onClick={() => history.push(Path.DataEntry)}
-        color="inherit"
-        style={{
-          background: tabColor(props.currentTab, Path.DataEntry),
-          maxHeight: appBarHeight,
-          width: "min-content",
-        }}
-      >
-        {t("appBar.dataEntry")}
-      </Button>
-      <Button
-        id={"data-cleanup"}
-        onClick={() => history.push(Path.Goals)}
-        color="inherit"
-        style={{
-          background: tabColor(props.currentTab, Path.Goals),
-          maxHeight: appBarHeight,
-          width: "min-content",
-        }}
-      >
-        {t("appBar.dataCleanup")}
-      </Button>
-    </>
+    <Button
+      id={props.buttonId}
+      onClick={() => history.push(props.targetPath)}
+      color="inherit"
+      style={{
+        background: tabColor(props.currentPath, props.targetPath),
+        marginLeft: 2,
+        marginRight: 2,
+        maxHeight: appBarHeight,
+        width: "min-content",
+      }}
+    >
+      {t(props.textId)}
+    </Button>
   );
 }
