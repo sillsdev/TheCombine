@@ -1,12 +1,11 @@
-import { Grid, Typography } from "@mui/material";
-import Stack from "@mui/material/Stack";
+import { Help } from "@mui/icons-material";
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import * as backend from "backend";
-import history, { Path } from "browserHistory";
-import LandingButtons from "components/LandingPage/LandingButtons";
+import history, { openUserGuide, Path } from "browserHistory";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 import { reset } from "rootActions";
@@ -78,15 +77,44 @@ export default function ProjectInvite(): ReactElement {
         />
       )}
       {!isValidLink && (
-        <Grid container>
-          <Grid item>
-            <Stack spacing={10}>
+        <Grid container justifyContent="center">
+          <Card style={{ width: 450 }}>
+            <CardContent>
               <Typography variant="h5" align="center" gutterBottom>
                 {t("invite.invalidInvitationURL")}
               </Typography>
-              <LandingButtons top />
-            </Stack>
-          </Grid>
+              {/* User Guide, Sign Up, and Log In buttons */}
+              <Grid container justifyContent="flex-end" spacing={2}>
+                <Grid item xs={4} sm={6}>
+                  <Button id={`${idAffix}-guide`} onClick={openUserGuide}>
+                    <Help />
+                  </Button>
+                </Grid>
+
+                <Grid item xs={4} sm={3}>
+                  <Button
+                    id={`${idAffix}-signUp`}
+                    onClick={() => {
+                      history.push(Path.SignUp);
+                    }}
+                  >
+                    {t("login.signUp")}
+                  </Button>
+                </Grid>
+
+                <Grid item xs={4} sm={3}>
+                  <Button
+                    id={`${idAffix}-login`}
+                    onClick={() => {
+                      history.push(Path.Login);
+                    }}
+                  >
+                    {t("login.login")}
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </Grid>
       )}
     </>
