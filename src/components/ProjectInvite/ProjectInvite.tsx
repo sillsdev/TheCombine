@@ -38,6 +38,7 @@ export default function ProjectInvite(): ReactElement {
     const status = await backend.validateLink(project, token);
     if (status.isTokenValid && status.isUserRegistered) {
       history.push(Path.Login);
+      return;
     }
     setIsValidLink(status.isTokenValid);
     setIsAlreadyUser(status.isUserRegistered);
