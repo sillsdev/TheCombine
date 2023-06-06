@@ -440,5 +440,27 @@
       "date": "Date",
       "words": "Words Collected"
     }
+  },
+  "grammaticalCategory": {
+    "group": {
+      "Adjective": "Adjective",
+      "Adposition": "Adposition",
+      "Adverb": "Adverb",
+      "Classifier": "Classifier",
+      "Connective": "Connective",
+      "Determiner": "Determiner",
+      "ExistentialMarker": "Existential marker",
+      "Expletive": "Expletive",
+      "Interjection": "Interjection",
+      "Noun": "Noun",
+      "Participle": "Participle",
+      "Particle": "Particle",
+      "Prenoun": "Prenoun",
+      "Preverb": "Preverb",
+      "ProForm": "Pro-form",
+      "Verb": "Verb",
+      "Other": "Other",
+      "Unspecified": "Unspecified"
+    }
   }
 }

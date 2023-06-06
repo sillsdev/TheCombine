@@ -171,6 +171,7 @@ namespace BackendFramework.Models
         }
     }
 
+    // Each of these should be in "public/locales/en/translation.json" under "grammaticalCategory.group.___".
     public enum GramCatGroup
     {
         Adjective,

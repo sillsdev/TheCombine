@@ -77,7 +77,7 @@ function wordReducer(accumulator: string[], word: Word): string[] {
   return [...new Set([...accumulator, ...newLangs])];
 }
 
-/** Asign a different color to each grammatical category group. */
+/** Assign a different color to each grammatical category group. */
 export function getGramCatGroupColor(group: GramCatGroup): HEX {
   switch (group) {
     case GramCatGroup.Unspecified:

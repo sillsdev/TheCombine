@@ -1,4 +1,4 @@
-import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
+import { ArrowForwardIos, Circle, WarningOutlined } from "@mui/icons-material";
 import {
   CardContent,
   Chip,
@@ -8,15 +8,16 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import React, { ReactElement } from "react";
-import { useSelector } from "react-redux";
+import React, { Fragment, ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 
-import { Sense, Status } from "api/models";
+import { GramCatGroup, GrammaticalInfo, Sense, Status } from "api/models";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { StoreState } from "types";
 import theme from "types/theme";
+import { getGramCatGroupColor } from "utilities/wordUtilities";
 
 interface SenseInLanguage {
   language: string; // bcp-47 code
@@ -26,7 +27,6 @@ interface SenseInLanguage {
 
 function getSenseInLanguage(
   sense: Sense,
-  includeDefinitions: boolean,
   language: string,
   displaySep = "; "
 ): SenseInLanguage {
@@ -36,7 +36,7 @@ function getSenseInLanguage(
       .filter((g) => g.language === language)
       .map((g) => g.def)
       .join(displaySep),
-    definitionText: includeDefinitions
+    definitionText: sense.definitions.length
       ? sense.definitions
           .filter((d) => d.language === language)
           .map((d) => d.text)
@@ -47,17 +47,14 @@ function getSenseInLanguage(
 
 function getSenseInLanguages(
   sense: Sense,
-  includeDefinitions: boolean,
   languages?: string[]
 ): SenseInLanguage[] {
   if (!languages) {
     languages = sense.glosses.map((g) => g.language);
-    if (includeDefinitions) {
-      languages.push(...sense.definitions.map((d) => d.language));
-    }
+    languages.push(...sense.definitions.map((d) => d.language));
     languages = [...new Set(languages)];
   }
-  return languages.map((l) => getSenseInLanguage(sense, includeDefinitions, l));
+  return languages.map((l) => getSenseInLanguage(sense, l));
 }
 
 function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
@@ -117,12 +114,8 @@ interface SenseCardContentProps {
 export default function SenseCardContent(
   props: SenseCardContentProps
 ): ReactElement {
-  const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
   const senseTextInLangs = getSenseInLanguages(
     props.senses[0],
-    showDefinitions,
     props.languages
   );
   const semDoms = [
@@ -134,17 +127,18 @@ export default function SenseCardContent(
   ];
   const protectedWarning =
     !props.sidebar && props.senses[0].accessibility === Status.Protected;
+  const gramInfo = props.senses
+    .map((s) => s.grammaticalInfo)
+    .find((g) => g.catGroup !== GramCatGroup.Unspecified);
 
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
+      {/* Part-of-speech icon. */}
+      <div style={{ position: "absolute", left: 0, top: 0 }}>
+        {gramInfo && <PartOfSpeech gramInfo={gramInfo} />}
+      </div>
       {/* Warning for protected senses. */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-        }}
-      >
+      <div style={{ position: "absolute", right: 0, top: 0 }}>
         {protectedWarning && (
           <IconButtonWithTooltip
             icon={<WarningOutlined />}
@@ -185,5 +179,29 @@ export default function SenseCardContent(
         ))}
       </Grid>
     </CardContent>
+  );
+}
+
+interface PartOfSpeechProps {
+  gramInfo: GrammaticalInfo;
+}
+
+function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
+  const { t } = useTranslation();
+  const { catGroup, grammaticalCategory } = props.gramInfo;
+  return catGroup === GramCatGroup.Unspecified ? (
+    <Fragment />
+  ) : (
+    <Tooltip
+      title={
+        <>
+          {"[" + t(`grammaticalCategory.group.${catGroup}`) + "]"}
+          <br />
+          {`${grammaticalCategory}`}
+        </>
+      }
+    >
+      <Circle fontSize="small" sx={{ color: getGramCatGroupColor(catGroup) }} />
+    </Tooltip>
   );
 }
