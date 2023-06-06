@@ -12,10 +12,6 @@ export interface MatchParams {
   token: string;
 }
 
-interface ResetDispatchProps {
-  passwordReset: (token: string, password: string) => void;
-}
-
 export enum PasswordResetTestIds {
   Password = "PasswordReset.password",
   PasswordReqError = "PasswordReset.requirements-error",

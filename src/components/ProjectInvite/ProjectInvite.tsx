@@ -23,7 +23,7 @@ export interface ProjectInviteStateProps {
 }
 
 export default function ProjectInvite(): ReactElement {
-  const { token, project }: MatchParams = useParams();
+  const { token, project } = useParams<MatchParams>();
   const inProgress = useAppSelector((state) => state.loginState.signUpAttempt);
   const success = useAppSelector((state) => state.loginState.signUpSuccess);
   const failureMessage = useAppSelector(
@@ -36,23 +36,18 @@ export default function ProjectInvite(): ReactElement {
 
   const validateLink = useCallback(async (): Promise<void> => {
     const status = await backend.validateLink(project, token);
-    if (status.isTokenValid) {
-      setIsValidLink(true);
-    }
-    if (status.isUserRegistered) {
-      setIsAlreadyUser(true);
-    }
-
     if (status.isTokenValid && status.isUserRegistered) {
       history.push(Path.Login);
     }
+    setIsValidLink(status.isTokenValid);
+    setIsAlreadyUser(status.isUserRegistered);
   }, [project, token]);
 
   const dispatch = useAppDispatch();
   const idAffix = "invite";
 
   useEffect(() => {
-    validateLink().then();
+    validateLink();
   });
 
   return (
