@@ -30,6 +30,12 @@ import { RuntimeConfig } from "types/runtimeConfig";
 
 const idAffix = "user-menu";
 
+const enum usernameLength {
+  md = 13,
+  lg = 19,
+  xl = 25,
+}
+
 export async function getIsAdmin(): Promise<boolean> {
   const user = await getUser(LocalStorage.getUserId());
   if (user) {
@@ -75,12 +81,12 @@ export default function UserMenu(props: TabProps): ReactElement {
         {username ? (
           <Hidden mdDown>
             <Typography style={{ marginLeft: 5, marginRight: 5 }}>
-              <Hidden xlDown>{shortenName(username, 25)}</Hidden>
+              <Hidden xlDown>{shortenName(username, usernameLength.xl)}</Hidden>
               <Hidden xlUp lgDown>
-                {shortenName(username, 19)}
+                {shortenName(username, usernameLength.lg)}
               </Hidden>
               <Hidden lgUp mdDown>
-                {shortenName(username, 13)}
+                {shortenName(username, usernameLength.md)}
               </Hidden>
             </Typography>
           </Hidden>

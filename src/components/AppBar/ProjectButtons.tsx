@@ -19,6 +19,13 @@ import { StoreState } from "types";
 export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";
 
+const enum projNameLength {
+  sm = 21,
+  md = 31,
+  lg = 51,
+  xl = 81,
+}
+
 export async function getIsAdminOrOwner(): Promise<boolean> {
   const user = getCurrentUser();
   if (!user) {
@@ -83,15 +90,17 @@ export default function ProjectButtons(props: TabProps): ReactElement {
               display="inline"
               style={{ marginLeft: 5, marginRight: 5 }}
             >
-              <Hidden xlDown>{shortenName(projectName, 81)}</Hidden>
+              <Hidden xlDown>
+                {shortenName(projectName, projNameLength.xl)}
+              </Hidden>
               <Hidden lgDown xlUp>
-                {shortenName(projectName, 51)}
+                {shortenName(projectName, projNameLength.lg)}
               </Hidden>
               <Hidden mdDown lgUp>
-                {shortenName(projectName, 31)}
+                {shortenName(projectName, projNameLength.md)}
               </Hidden>
               <Hidden mdUp smDown>
-                {shortenName(projectName, 21)}
+                {shortenName(projectName, projNameLength.sm)}
               </Hidden>
             </Typography>
           </Hidden>
