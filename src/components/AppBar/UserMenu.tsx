@@ -21,12 +21,12 @@ import history, { openUserGuide, Path } from "browserHistory";
 import {
   buttonMinHeight,
   shortenName,
+  tabColor,
   TabProps,
 } from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme, { tabColor } from "types/theme";
 
 const idAffix = "user-menu";
 
@@ -129,6 +129,10 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+
+  const iconStyle: React.CSSProperties =
+    document.body.dir == "rtl" ? { marginLeft: 6 } : { marginRight: 6 };
+
   return (
     <div ref={props.forwardedRef}>
       {/* Only show Site Settings link to Admin users. */}
@@ -141,7 +145,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
             props.onSelect();
           }}
         >
-          <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+          <SettingsApplications style={iconStyle} />
           {t("userMenu.siteSettings")}
         </MenuItem>
       )}
@@ -153,7 +157,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <Person style={{ marginRight: theme.spacing(1) }} />
+        <Person style={iconStyle} />
         {t("userMenu.userSettings")}
       </MenuItem>
 
@@ -164,7 +168,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <Help style={{ marginRight: theme.spacing(1) }} />
+        <Help style={iconStyle} />
         {t("userMenu.userGuide")}
       </MenuItem>
 
@@ -175,7 +179,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <ExitToApp style={{ marginRight: theme.spacing(1) }} />
+        <ExitToApp style={iconStyle} />
         {t("userMenu.logout")}
       </MenuItem>
 

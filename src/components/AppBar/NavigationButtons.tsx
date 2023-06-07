@@ -7,8 +7,8 @@ import {
   TabProps,
   appBarHeight,
   buttonMinHeight,
+  tabColor,
 } from "components/AppBar/AppBarTypes";
-import { tabColor } from "types/theme";
 
 export const dataEntryButtonId = "data-entry";
 export const dataCleanupButtonId = "data-cleanup";

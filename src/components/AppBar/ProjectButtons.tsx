@@ -12,9 +12,9 @@ import {
   TabProps,
   buttonMinHeight,
   shortenName,
+  tabColor,
 } from "components/AppBar/AppBarTypes";
 import { StoreState } from "types";
-import { tabColor } from "types/theme";
 
 export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";

@@ -1,10 +1,17 @@
 import { Path } from "browserHistory";
+import { themeColors } from "types/theme";
 
 export const buttonMinHeight = 40;
 export const appBarHeight = 64;
 
 export interface TabProps {
   currentTab: Path;
+}
+
+export function tabColor(currentTab: Path, tabName: Path): string {
+  return currentTab.indexOf(tabName) !== -1
+    ? themeColors.darkShade
+    : themeColors.lightShade;
 }
 
 export function shortenName(name: string, maxLength: number): string {
