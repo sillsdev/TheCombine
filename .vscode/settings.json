@@ -31,5 +31,35 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.insertFinalNewline": true,
-  "cSpell.words": ["Adposition", "Bson", "Dups", "Guids", "Prenoun", "Preverb"]
+  "cSpell.words": [
+    "Adposition",
+    "axios",
+    "bootable",
+    "Bson",
+    "containerd",
+    "devs",
+    "Dups",
+    "globaltool",
+    "Guids",
+    "kubeconfig",
+    "kubernete",
+    "letsencrypt",
+    "Linq",
+    "maint",
+    "mongoimport",
+    "mongosh",
+    "nerdctl",
+    "oneshot",
+    "openapi",
+    "piptools",
+    "Prenoun",
+    "Preverb",
+    "reportgenerator",
+    "sillsdev",
+    "targetdir",
+    "textfile",
+    "thecombine",
+    "upsert",
+    "venv"
+  ]
 }
