@@ -18,6 +18,11 @@ import { useTranslation } from "react-i18next";
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import history, { openUserGuide, Path } from "browserHistory";
+import {
+  buttonMinHeight,
+  shortenName,
+  TabProps,
+} from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -26,25 +31,21 @@ import theme, { tabColor } from "types/theme";
 const idAffix = "user-menu";
 
 export async function getIsAdmin(): Promise<boolean> {
-  const userId = LocalStorage.getUserId();
-  const user = await getUser(userId);
+  const user = await getUser(LocalStorage.getUserId());
   if (user) {
     return user.isAdmin;
   }
   return false;
 }
 
-interface UserMenuProps {
-  currentTab: Path;
-}
-
 /**
  * Avatar in AppBar with dropdown UserMenu
  */
-export default function UserMenu(props: UserMenuProps): ReactElement {
+export default function UserMenu(props: TabProps): ReactElement {
   const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
   const avatar = LocalStorage.getAvatar();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const username = LocalStorage.getCurrentUser()?.username;
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
@@ -65,16 +66,27 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
         color="secondary"
         style={{
           background: tabColor(props.currentTab, Path.UserSettings),
+          minHeight: buttonMinHeight,
           minWidth: 0,
           padding: 0,
         }}
         id={`avatar-${idAffix}`}
       >
-        <Hidden mdDown>
-          <Typography style={{ marginLeft: 5, marginRight: 5 }}>
-            {LocalStorage.getCurrentUser()?.username}
-          </Typography>
-        </Hidden>
+        {username ? (
+          <Hidden mdDown>
+            <Typography style={{ marginLeft: 5, marginRight: 5 }}>
+              <Hidden xlDown>{shortenName(username, 25)}</Hidden>
+              <Hidden xlUp lgDown>
+                {shortenName(username, 19)}
+              </Hidden>
+              <Hidden lgUp mdDown>
+                {shortenName(username, 13)}
+              </Hidden>
+            </Typography>
+          </Hidden>
+        ) : (
+          <React.Fragment />
+        )}
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
         ) : (

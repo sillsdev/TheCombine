@@ -8,12 +8,16 @@ import { Permission } from "api/models";
 import { getUserRole } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import history, { Path } from "browserHistory";
+import {
+  TabProps,
+  buttonMinHeight,
+  shortenName,
+} from "components/AppBar/AppBarTypes";
 import { StoreState } from "types";
 import { tabColor } from "types/theme";
 
-interface ProjectButtonsProps {
-  currentTab: Path;
-}
+export const projButtonId = "project-settings";
+export const statButtonId = "project-statistics";
 
 export async function getIsAdminOrOwner(): Promise<boolean> {
   const user = getCurrentUser();
@@ -32,9 +36,7 @@ export async function getIsAdminOrOwner(): Promise<boolean> {
 }
 
 /** A button that redirects to the project settings */
-export default function ProjectButtons(
-  props: ProjectButtonsProps
-): ReactElement {
+export default function ProjectButtons(props: TabProps): ReactElement {
   const projectName = useSelector(
     (state: StoreState) => state.currentProjectState.project.name
   );
@@ -50,13 +52,14 @@ export default function ProjectButtons(
       {isAdminOrOwner && (
         <Tooltip title={t("appBar.statistics")}>
           <Button
-            id="project-statistics"
+            id={statButtonId}
             onClick={() => history.push(Path.Statistics)}
             color="inherit"
             style={{
               background: tabColor(props.currentTab, Path.Statistics),
+              minHeight: buttonMinHeight,
               minWidth: 0,
-              margin: 10,
+              margin: 5,
             }}
           >
             <BarChart />
@@ -65,18 +68,31 @@ export default function ProjectButtons(
       )}
       <Tooltip title={t("appBar.projectSettings")}>
         <Button
-          id="project-settings"
+          id={projButtonId}
           onClick={() => history.push(Path.ProjSettings)}
           color="inherit"
           style={{
             background: tabColor(props.currentTab, Path.ProjSettings),
+            minHeight: buttonMinHeight,
             minWidth: 0,
           }}
         >
           <Settings />
           <Hidden smDown>
-            <Typography display="inline" style={{ margin: 5 }}>
-              {projectName}
+            <Typography
+              display="inline"
+              style={{ marginLeft: 5, marginRight: 5 }}
+            >
+              <Hidden xlDown>{shortenName(projectName, 81)}</Hidden>
+              <Hidden lgDown xlUp>
+                {shortenName(projectName, 51)}
+              </Hidden>
+              <Hidden mdDown lgUp>
+                {shortenName(projectName, 31)}
+              </Hidden>
+              <Hidden mdUp smDown>
+                {shortenName(projectName, 21)}
+              </Hidden>
             </Typography>
           </Hidden>
         </Button>

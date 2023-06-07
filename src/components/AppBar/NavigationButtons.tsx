@@ -3,28 +3,29 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import history, { Path } from "browserHistory";
-import { appBarHeight } from "components/AppBar/AppBarComponent";
+import {
+  TabProps,
+  appBarHeight,
+  buttonMinHeight,
+} from "components/AppBar/AppBarTypes";
 import { tabColor } from "types/theme";
 
-interface NavigationButtonsProps {
-  currentTab: Path;
-}
+export const dataEntryButtonId = "data-entry";
+export const dataCleanupButtonId = "data-cleanup";
 
 /** A button that redirects to the home page */
-export default function NavigationButtons(
-  props: NavigationButtonsProps
-): ReactElement {
+export default function NavigationButtons(props: TabProps): ReactElement {
   return (
     <>
       <NavButton
-        buttonId="data-entry"
-        currentPath={props.currentTab}
+        buttonId={dataEntryButtonId}
+        currentTab={props.currentTab}
         targetPath={Path.DataEntry}
         textId="appBar.dataEntry"
       />
       <NavButton
-        buttonId="data-cleanup"
-        currentPath={props.currentTab}
+        buttonId={dataCleanupButtonId}
+        currentTab={props.currentTab}
         targetPath={Path.Goals}
         textId="appBar.dataCleanup"
       />
@@ -32,9 +33,8 @@ export default function NavigationButtons(
   );
 }
 
-interface NavButtonProps {
+interface NavButtonProps extends TabProps {
   buttonId: string;
-  currentPath: Path;
   targetPath: Path;
   textId: string;
 }
@@ -48,10 +48,11 @@ function NavButton(props: NavButtonProps): ReactElement {
       onClick={() => history.push(props.targetPath)}
       color="inherit"
       style={{
-        background: tabColor(props.currentPath, props.targetPath),
+        background: tabColor(props.currentTab, props.targetPath),
         marginLeft: 2,
         marginRight: 2,
         maxHeight: appBarHeight,
+        minHeight: buttonMinHeight,
         width: "min-content",
       }}
     >
