@@ -53,9 +53,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    3. [Running the Automated Tests](#running-the-automated-tests)
    4. [Import Semantic Domains](#import-semantic-domains)
    5. [Generate License Reports](#generate-license-reports)
-   6. [Set Project Version](#set-project-version)
-   7. [Inspect Database](#inspect-database)
-   8. [Cleanup Local Repository](#cleanup-local-repository)
+   6. [Inspect Database](#inspect-database)
+   7. [Cleanup Local Repository](#cleanup-local-repository)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -95,12 +94,16 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
    - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
-   Variable
+5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add its `/bin` to PATH
+   Environment Variable.
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
-6. [VS Code](https://code.visualstudio.com/download) and the following extensions:
-   - C# (`ms-dotnettools.csharp`)
-   - Prettier - Code formatter (`esbenp.prettier-vscode`)
+   - If `mongosh` is not a recognized command, you may have to separately install the
+     [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
+   - If `mongoimport` is not a recognized command, you may have to separately install the
+     [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) and add its `/bin` to your PATH.
+6. [VS Code](https://code.visualstudio.com/download).
+   - When you open this repo folder in VS Code, it should recommend the extensions used in this project (see
+     `.vscode/extensions.json`).
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
 8. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
@@ -430,20 +433,6 @@ npm run license-report-frontend
 ```
 
 > Note: This should be performed each time production dependencies are changed.
-
-### Set Project Version
-
-To update the version of the project:
-
-1. Edit package.json `"version"` to a [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) compatible
-   string (e.g. `"0.1.1-alpha.0"`).
-2. Run `npm install` to automatically update `package-lock.json`.
-
-To retrieve the current version of the project from the terminal:
-
-```bash
-npm run --silent version
-```
 
 ### Inspect Database
 
