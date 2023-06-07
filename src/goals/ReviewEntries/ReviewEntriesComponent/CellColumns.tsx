@@ -225,10 +225,7 @@ const columns: Column<any>[] = [
     field: ReviewEntriesWordField.Senses,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <PartOfSpeechCell
-        rowData={rowData}
-        sortingByThis={currentSort === SortStyle.PartOfSpeech}
-      />
+      <PartOfSpeechCell rowData={rowData} />
     ),
     editComponent: (props: FieldParameterStandard) => {
       const editGramInfo = (guid: string, partOfSpeech: GrammaticalInfo) => {

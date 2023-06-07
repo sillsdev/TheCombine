@@ -1,4 +1,4 @@
-import { ArrowForwardIos, Circle, WarningOutlined } from "@mui/icons-material";
+import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
 import {
   CardContent,
   Chip,
@@ -8,16 +8,14 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import React, { Fragment, ReactElement } from "react";
-import { useTranslation } from "react-i18next";
+import { Fragment, ReactElement } from "react";
 
-import { GramCatGroup, GrammaticalInfo, Sense, Status } from "api/models";
+import { GramCatGroup, Sense, Status } from "api/models";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import theme from "types/theme";
-import { getGramCatGroupColor } from "utilities/wordUtilities";
 
 interface SenseInLanguage {
   language: string; // bcp-47 code
@@ -62,7 +60,7 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
     <Table padding="none">
       <TableBody>
         {senseInLangs.map((sInLang, index) => (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             <TableRow key={sInLang.language}>
               <TableCell style={{ borderBottom: "none" }}>
                 <Typography variant="caption">{`${sInLang.language}: `}</Typography>
@@ -94,7 +92,7 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
                 </TableCell>
               </TableRow>
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
       </TableBody>
     </Table>
@@ -135,7 +133,13 @@ export default function SenseCardContent(
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
       {/* Part-of-speech icon. */}
       <div style={{ position: "absolute", left: 0, top: 0 }}>
-        {gramInfo && <PartOfSpeech gramInfo={gramInfo} />}
+        {gramInfo && (
+          <PartOfSpeechButton
+            buttonId={`sense-${props.senses[0].guid}-part-of-speech`}
+            gramInfo={gramInfo}
+            onlyIcon
+          />
+        )}
       </div>
       {/* Warning for protected senses. */}
       <div style={{ position: "absolute", right: 0, top: 0 }}>
@@ -179,29 +183,5 @@ export default function SenseCardContent(
         ))}
       </Grid>
     </CardContent>
-  );
-}
-
-interface PartOfSpeechProps {
-  gramInfo: GrammaticalInfo;
-}
-
-function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
-  const { t } = useTranslation();
-  const { catGroup, grammaticalCategory } = props.gramInfo;
-  return catGroup === GramCatGroup.Unspecified ? (
-    <Fragment />
-  ) : (
-    <Tooltip
-      title={
-        <>
-          {"[" + t(`grammaticalCategory.group.${catGroup}`) + "]"}
-          <br />
-          {`${grammaticalCategory}`}
-        </>
-      }
-    >
-      <Circle fontSize="small" sx={{ color: getGramCatGroupColor(catGroup) }} />
-    </Tooltip>
   );
 }

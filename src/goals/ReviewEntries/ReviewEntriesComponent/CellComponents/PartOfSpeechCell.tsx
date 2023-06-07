@@ -1,27 +1,24 @@
-import { Chip, Grid } from "@mui/material";
-import { Fragment, ReactElement } from "react";
+import { Grid } from "@mui/material";
+import { ReactElement, useState } from "react";
 
-import { GramCatGroup, GrammaticalInfo } from "api/models";
+import { GrammaticalInfo } from "api/models";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { themeColors } from "types/theme";
 
 interface PartOfSpeechCellProps {
   rowData: ReviewEntriesWord;
-  sortingByThis?: boolean;
   editGramInfo?: (guid: string, newGramInfo: GrammaticalInfo) => void;
 }
 
 export default function PartOfSpeechCell(
   props: PartOfSpeechCellProps
 ): ReactElement {
-  function getChipStyle(senseIndex: number): { backgroundColor?: string } {
-    return props.sortingByThis && senseIndex === 0
-      ? { backgroundColor: themeColors.highlight as string }
-      : {};
-  }
+  const [open, setOpen] = useState(false);
+
+  const onClick = props.editGramInfo ? (): void => setOpen(true) : undefined;
 
   return (
     <AlignedList
@@ -29,19 +26,11 @@ export default function PartOfSpeechCell(
       listId={`partsOfSpeech${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, senseIndex) => (
         <Grid container direction="row" spacing={2} key={senseIndex}>
-          {sense.partOfSpeech.catGroup !== GramCatGroup.Unspecified ? (
-            <Chip
-              color={sense.deleted ? "secondary" : "default"}
-              style={getChipStyle(senseIndex)}
-              label={`${sense.partOfSpeech.catGroup}: ${sense.partOfSpeech.grammaticalCategory}`}
-              onDelete={
-                props.editGramInfo && !sense.deleted ? () => {} : undefined
-              }
-              id={`sense-${sense.guid}-part-of-speech`}
-            />
-          ) : (
-            <Fragment />
-          )}
+          <PartOfSpeechButton
+            buttonId={`sense-${sense.guid}-part-of-speech`}
+            gramInfo={sense.partOfSpeech}
+            onClick={onClick}
+          />
         </Grid>
       ))}
       bottomCell={props.editGramInfo ? SPACER : undefined}
