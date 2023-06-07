@@ -9,7 +9,10 @@ import { Permission } from "api/models";
 import { Path } from "browserHistory";
 import ProjectButtons, {
   getIsAdminOrOwner,
+  projButtonId,
+  statButtonId,
 } from "components/AppBar/ProjectButtons";
+import { themeColors } from "types/theme";
 
 jest.mock("backend", () => ({
   getUserRole: () => mockGetUserRole(),
@@ -31,11 +34,11 @@ const mockStore = configureMockStore()({
   currentProjectState: { project: { name: "" } },
 });
 
-const renderProjectButtons = async () => {
+const renderProjectButtons = async (path = Path.Root) => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectButtons currentTab={Path.Root} />
+        <ProjectButtons currentTab={path} />
       </Provider>
     );
   });
@@ -55,6 +58,27 @@ describe("ProjectButtons", () => {
     mockGetCurrentUser.mockReturnValueOnce({ isAdmin: true });
     await renderProjectButtons();
     expect(testRenderer.root.findAllByType(Button)).toHaveLength(2);
+  });
+
+  it("has settings tab shaded correctly", async () => {
+    await renderProjectButtons();
+    let button = testRenderer.root.findByProps({ id: projButtonId });
+    expect(button.props.style.background).toEqual(themeColors.lightShade);
+
+    await renderProjectButtons(Path.ProjSettings);
+    button = testRenderer.root.findByProps({ id: projButtonId });
+    expect(button.props.style.background).toEqual(themeColors.darkShade);
+  });
+
+  it("has stats tab shaded correctly", async () => {
+    mockGetCurrentUser.mockReturnValue({ isAdmin: true });
+    await renderProjectButtons();
+    let button = testRenderer.root.findByProps({ id: statButtonId });
+    expect(button.props.style.background).toEqual(themeColors.lightShade);
+
+    await renderProjectButtons(Path.Statistics);
+    button = testRenderer.root.findByProps({ id: statButtonId });
+    expect(button.props.style.background).toEqual(themeColors.darkShade);
   });
 
   describe("getIsAdminOrOwner", () => {
