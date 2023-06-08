@@ -10,8 +10,8 @@ import SignUp from "components/Login/SignUpPage";
 import PageNotFound from "components/PageNotFound/component";
 import PasswordRequest from "components/PasswordReset/Request";
 import PasswordReset from "components/PasswordReset/ResetPage";
-import PrivateRoute from "components/PrivateRoute";
 import ProjectInvite from "components/ProjectInvite/ProjectInvite";
+import RequireAuth from "components/RequireAuth";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
@@ -27,9 +27,14 @@ export default function App(): ReactElement {
           <Route exact path={Path.Root}>
             <LandingPage />
           </Route>
-          <PrivateRoute path={Path.ProjScreen}>
-            <AppWithBar />
-          </PrivateRoute>
+          <Route
+            path={Path.ProjScreen}
+            render={() => (
+              <RequireAuth redirectTo={Path.Login}>
+                <AppWithBar />
+              </RequireAuth>
+            )}
+          />
           <Route path={Path.Login}>
             <Login />
           </Route>
