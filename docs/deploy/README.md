@@ -165,7 +165,7 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
       | Your Server Name | nuc1, nuc2, or nuc3               |
       | Pick a username  | sillsdev                          |
 
-      You may choose any name, username that you like. If you use a different servername than one of the three listed,
+      You may choose any name, username that you like. If you use a different server name than one of the three listed,
       you will need to provide alternate configuration files. See the
       [Creating your own Configurations](#creating-your-own-configurations) section. This is not recommended when
       running the installation from a Docker image.

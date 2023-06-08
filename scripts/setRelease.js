@@ -8,7 +8,7 @@ function runPy() {
   if (arguments.length > 0) {
     var args = Array.prototype.slice.call(arguments);
     let cmd;
-    if (process.plaform === "win32") {
+    if (process.platform === "win32") {
       cmd = spawnSync("py", args);
     } else {
       cmd = spawnSync("python3", args);

@@ -3,45 +3,60 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import history, { Path } from "browserHistory";
-import { appBarHeight } from "components/AppBar/AppBarComponent";
-import { tabColor } from "types/theme";
+import {
+  TabProps,
+  appBarHeight,
+  buttonMinHeight,
+  tabColor,
+} from "components/AppBar/AppBarTypes";
 
-interface NavigationButtonsProps {
-  currentTab: Path;
-}
+export const dataEntryButtonId = "data-entry";
+export const dataCleanupButtonId = "data-cleanup";
 
 /** A button that redirects to the home page */
-export default function NavigationButtons(
-  props: NavigationButtonsProps
-): ReactElement {
+export default function NavigationButtons(props: TabProps): ReactElement {
+  return (
+    <>
+      <NavButton
+        buttonId={dataEntryButtonId}
+        currentTab={props.currentTab}
+        targetPath={Path.DataEntry}
+        textId="appBar.dataEntry"
+      />
+      <NavButton
+        buttonId={dataCleanupButtonId}
+        currentTab={props.currentTab}
+        targetPath={Path.Goals}
+        textId="appBar.dataCleanup"
+      />
+    </>
+  );
+}
+
+interface NavButtonProps extends TabProps {
+  buttonId: string;
+  targetPath: Path;
+  textId: string;
+}
+
+function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <>
-      <Button
-        id={"data-entry"}
-        onClick={() => history.push(Path.DataEntry)}
-        color="inherit"
-        style={{
-          background: tabColor(props.currentTab, Path.DataEntry),
-          maxHeight: appBarHeight,
-          width: "min-content",
-        }}
-      >
-        {t("appBar.dataEntry")}
-      </Button>
-      <Button
-        id={"data-cleanup"}
-        onClick={() => history.push(Path.Goals)}
-        color="inherit"
-        style={{
-          background: tabColor(props.currentTab, Path.Goals),
-          maxHeight: appBarHeight,
-          width: "min-content",
-        }}
-      >
-        {t("appBar.dataCleanup")}
-      </Button>
-    </>
+    <Button
+      id={props.buttonId}
+      onClick={() => history.push(props.targetPath)}
+      color="inherit"
+      style={{
+        background: tabColor(props.currentTab, props.targetPath),
+        marginLeft: 2,
+        marginRight: 2,
+        maxHeight: appBarHeight,
+        minHeight: buttonMinHeight,
+        width: "min-content",
+      }}
+    >
+      {t(props.textId)}
+    </Button>
   );
 }

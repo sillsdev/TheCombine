@@ -106,10 +106,11 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      `.vscode/extensions.json`).
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
-8. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-10. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
+9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
+10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
     `dotnet tool update --global dotnet-project-licenses`
 
 ### Prepare the Environment
