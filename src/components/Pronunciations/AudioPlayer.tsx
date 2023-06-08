@@ -11,7 +11,7 @@ import { createStyles, makeStyles } from "@mui/styles";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
+import { ButtonConfirmation } from "components/Dialogs";
 import {
   playing,
   reset,

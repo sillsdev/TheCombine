@@ -11,7 +11,7 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { Project } from "api/models";
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";

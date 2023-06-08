@@ -13,8 +13,7 @@ import {
 import { Fragment, ReactElement } from "react";
 
 import { GramCatGroup, Sense, Status } from "api/models";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
+import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import theme from "types/theme";
 
 interface SenseInLanguage {

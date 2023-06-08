@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 
 import { Flag, MergeUndoIds, Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
-import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
-import FlagButton from "components/Buttons/FlagButton";
+import { FlagButton } from "components/Buttons";
+import { CancelConfirmDialog } from "components/Dialogs";
 import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { StoreState } from "types";

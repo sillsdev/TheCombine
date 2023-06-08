@@ -13,8 +13,7 @@ import { Trans, withTranslation, WithTranslation } from "react-i18next";
 
 import { WritingSystem } from "api/models";
 import { projectDuplicateCheck } from "backend";
-import FileInputButton from "components/Buttons/FileInputButton";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 

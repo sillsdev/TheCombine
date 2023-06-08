@@ -4,7 +4,7 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
-import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import { CancelConfirmDialog } from "components/Dialogs";
 import { updateAllWords } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";

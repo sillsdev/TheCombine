@@ -1,10 +1,10 @@
-import { Circle } from "@mui/icons-material";
+import { Square } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, GrammaticalInfo } from "api/models";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { IconButtonWithTooltip } from "components/Buttons";
 import { getGramCatGroupColor } from "utilities/wordUtilities";
 
 interface PartOfSpeechProps {
@@ -17,7 +17,7 @@ interface PartOfSpeechProps {
 export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
   const { t } = useTranslation();
   const { catGroup, grammaticalCategory } = props.gramInfo;
-  if (catGroup === GramCatGroup.Unspecified) {
+  if (catGroup === GramCatGroup.Unspecified && !props.onClick) {
     return <Fragment />;
   }
   const catGroupText = t(`grammaticalCategory.group.${catGroup}`);
@@ -36,7 +36,7 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
       <IconButtonWithTooltip
         buttonId={props.buttonId}
         icon={
-          <Circle
+          <Square
             fontSize="small"
             sx={{ color: getGramCatGroupColor(catGroup) }}
           />
@@ -45,7 +45,9 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
         text={hoverText}
         small
       />
-      {!props.onlyIcon && <Typography>grammaticalCategory</Typography>}
+      {!props.onlyIcon && (
+        <Typography display="inline">{grammaticalCategory}</Typography>
+      )}
     </>
   );
 }

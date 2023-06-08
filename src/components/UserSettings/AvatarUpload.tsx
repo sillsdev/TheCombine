@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { uploadAvatar } from "backend";
 import { getUserId } from "backend/localStorage";
-import FileInputButton from "components/Buttons/FileInputButton";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 
 /**
  * Allows the current user to select an image and upload as their avatar

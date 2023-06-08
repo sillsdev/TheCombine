@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomain, WritingSystem } from "api";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { IconButtonWithTooltip } from "components/Buttons";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeSearch from "components/TreeView/TreeSearch";
 import {

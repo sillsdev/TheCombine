@@ -464,6 +464,9 @@
       "Verb": "Verb",
       "Other": "Other",
       "Unspecified": "Unspecified"
+    },
+    "partOfSpeech": {
+      "editTitle": "Edit part of speech"
     }
   }
 }

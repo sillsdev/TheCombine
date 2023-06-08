@@ -2,8 +2,8 @@ import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 
 import { Flag } from "api/models";
-import DeleteEditTextDialog from "components/Buttons/DeleteEditTextDialog";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { IconButtonWithTooltip } from "components/Buttons";
+import { DeleteEditTextDialog } from "components/Dialogs";
 import { themeColors } from "types/theme";
 
 interface FlagButtonProps {

@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import EditTextDialog from "components/Buttons/EditTextDialog";
+import { EditTextDialog } from "components/Dialogs";
 
 interface EntryNoteProps {
   noteText: string;
