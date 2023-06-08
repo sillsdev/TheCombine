@@ -27,12 +27,6 @@ export default function App(): ReactElement {
           <Route exact path={Path.Root}>
             <LandingPage />
           </Route>
-          {/* <Route
-            path={path}
-            render={() =>
-              isAuthenticated ? children : <Redirect to={redirectTo} />
-            }
-          /> */}
           <Route
             path={Path.ProjScreen}
             render={() => (
