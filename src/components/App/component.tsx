@@ -36,7 +36,7 @@ export default function App(): ReactElement {
           <Route
             path={Path.ProjScreen}
             render={() => (
-              <RequireAuth redirectTo={Path.Root}>
+              <RequireAuth redirectTo={Path.Login}>
                 <AppWithBar />
               </RequireAuth>
             )}
