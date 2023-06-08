@@ -1,6 +1,6 @@
 import loadable from "@loadable/component";
 import { ReactElement, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { Path } from "browserHistory";
 import SignalRHub from "components/App/SignalRHub";
@@ -27,7 +27,7 @@ export default function AppWithBar(): ReactElement {
     <>
       <SignalRHub />
       <AppBar />
-      <Switch>
+      <Routes>
         <Route exact path={Path.DataEntry}>
           <DataEntry />
         </Route>
@@ -58,7 +58,7 @@ export default function AppWithBar(): ReactElement {
         <Route>
           <PageNotFound />
         </Route>
-      </Switch>
+      </Routes>
     </>
   );
 }

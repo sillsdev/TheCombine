@@ -1,6 +1,6 @@
 import loadable from "@loadable/component";
 import { ReactElement, Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { Path } from "browserHistory";
 import AnnouncementBanner from "components/AnnouncementBanner/AnnouncementBanner";
@@ -23,7 +23,7 @@ export default function App(): ReactElement {
     <div className="App">
       <Suspense fallback={<div />}>
         <AnnouncementBanner />
-        <Switch>
+        <Routes>
           <Route exact path={Path.Root}>
             <LandingPage />
           </Route>
@@ -59,7 +59,7 @@ export default function App(): ReactElement {
           <Route>
             <PageNotFound />
           </Route>
-        </Switch>
+        </Routes>
       </Suspense>
     </div>
   );

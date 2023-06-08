@@ -10,7 +10,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { ReactElement } from "react";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Switch } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
 
 import { Path } from "browserHistory";
@@ -49,9 +49,9 @@ const ResetPageProviders = ({
   return (
     <Provider store={mockStore}>
       <MemoryRouter initialEntries={[`${Path.PwReset}/testPasswordReset`]}>
-        <Switch>
+        <Routes>
           <Route path={`${Path.PwReset}/:token`}>{children}</Route>
-        </Switch>
+        </Routes>
       </MemoryRouter>
     </Provider>
   );
