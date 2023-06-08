@@ -226,7 +226,7 @@ describe("CellColumns filter and sort functions", () => {
     });
   });
 
-  describe("Domains column", () => {
+  describe("Semantic Domains column", () => {
     const col = columns.find((c) => c.title === ColumnTitle.Domains);
 
     it("returns true when searching a word for an extant domain", () => {

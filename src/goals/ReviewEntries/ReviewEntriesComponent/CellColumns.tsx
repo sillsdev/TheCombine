@@ -218,7 +218,7 @@ const columns: Column<any>[] = [
     },
   },
 
-  // Part-of-speech column
+  // Part of Speech column
   {
     title: ColumnTitle.PartOfSpeech,
     disableClick: true,

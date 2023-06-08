@@ -7,7 +7,7 @@ import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMoc
 
 const mockWord = mockWords()[1];
 
-describe("NoteCell", () => {
+describe("SenseCell", () => {
   it("renders", () => {
     renderer.act(() => {
       renderer.create(

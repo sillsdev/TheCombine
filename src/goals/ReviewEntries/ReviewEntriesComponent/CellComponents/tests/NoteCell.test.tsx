@@ -5,7 +5,7 @@ import "tests/reactI18nextMock";
 import { NoteCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
-// The multiline Input, TextField cause problems in the mock environment.
+// The multiline TextField causes problems in the mock environment.
 jest.mock("@mui/material/TextField", () => "div");
 
 const mockWord = mockWords()[0];
