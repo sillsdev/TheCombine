@@ -43,7 +43,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
     <React.Fragment>
       <Tooltip
         title={disabled ? t("reviewEntries.deleteDisabled") : ""}
-        placement="left"
+        placement={document.body.dir === "rtl" ? "right" : "left"}
       >
         <span>
           <IconButton

@@ -69,7 +69,7 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
     return props.onReverseClick ? (
       <Tooltip
         title={t("projectSettings.userManagement.reverseOrder")}
-        placement="right"
+        placement={document.body.dir === "rtl" ? "left" : "right"}
       >
         <IconButton
           onClick={props.onReverseClick}

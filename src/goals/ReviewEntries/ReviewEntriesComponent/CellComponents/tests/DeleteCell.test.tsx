@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
+import { DeleteCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
@@ -12,7 +12,7 @@ const mockStore = configureMockStore()({ reviewEntriesState });
 const mockWord = mockWords()[0];
 
 describe("DeleteCell", () => {
-  it("renders without crashing", () => {
+  it("renders", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>

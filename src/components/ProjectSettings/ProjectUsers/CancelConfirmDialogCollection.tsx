@@ -215,7 +215,7 @@ export default function CancelConfirmDialogCollection(
       />
       <Tooltip
         title={t("projectSettings.userManagement.manageUser")}
-        placement="right"
+        placement={document.body.dir === "rtl" ? "left" : "right"}
       >
         <IconButton
           id={idAffix}
