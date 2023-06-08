@@ -115,7 +115,7 @@ Although not explicitly shown in the diagram, the `daily-backup` uses the same `
 
 The specialized Docker images that are used to deploy the combine, `combine_frontend`, `combine_backend`, and
 `combine_maint`, are stored in AWS ECR. AWS ECR requires users/applications to generate login credentials to pull images
-from AWS ECR; the credentials are valid for 12 hours. In order to accomodate this requirement, when the Kubernetes
+from AWS ECR; the credentials are valid for 12 hours. In order to accommodate this requirement, when the Kubernetes
 resources are installed or reconfigured, the following jobs are created:
 
 - `ecr-cred-helper` is a one-time Job that is run to create the `aws-login-credentials` Secret. The Secret type is
@@ -170,7 +170,7 @@ certificates for the NUCs. The following resources are required to generate the 
 
 | Resource                    | Kind                | Description                                                                                                                                                                                                                                                                                             |
 | --------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ingress-nuc1-thecombine-app | Ingress             | `ingress-nuc1-thecombine-app` is an Ingress that specifies the certificate issuer and the webserver to use for the HTTP01 challenges                                                                                                                                                                    |
+| ingress-nuc1-thecombine-app | Ingress             | `ingress-nuc1-thecombine-app` is an Ingress that specifies the certificate issuer and the web server to use for the HTTP01 challenges                                                                                                                                                                   |
 | letsencrypt-prod            | Issuer              | `letsencrypt-prod` specifies that a certificate is to be issued by the Let's Encrypt production server and to enable the HTTP01 challenge provider.                                                                                                                                                     |
 | nuc-proxy-server            | Deployment, Service | The `nuc-proxy-server` deployment runs the `nginx:1.21` image and provides the response for the HTTP01 challenge. In addition, it provides a web page to redirect the user when he/she attempts to navigate to a NUC's home page when connected to the internet instead of the NUC's WiFi Access Point. |
 | env-nginx-proxy             | ConfigMap           | `env-nginx-proxy` provides configuration variables for the web server running in `nuc-proxy-server`.                                                                                                                                                                                                    |
