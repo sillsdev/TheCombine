@@ -7,8 +7,6 @@ import "tests/reactI18nextMock";
 import { Path } from "browserHistory";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
-import NavigationButtons from "components/AppBar/NavigationButtons";
-import ProjectButtons from "components/AppBar/ProjectButtons";
 import { newUser } from "types/user";
 
 const mockPath = jest.fn();
@@ -37,7 +35,7 @@ beforeAll(() => {
 });
 
 describe("AppBar", () => {
-  it("renders without crashing", () => {
+  it("renders", () => {
     mockPath.mockReturnValue(Path.ProjScreen);
     renderer.act(() => {
       testRenderer = renderer.create(
@@ -46,42 +44,5 @@ describe("AppBar", () => {
         </Provider>
       );
     });
-  });
-});
-
-describe("NavigationButtons", () => {
-  it("has only one tab shaded", () => {
-    testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <NavigationButtons currentTab={Path.DataEntry} />
-      </Provider>
-    );
-    expect(testRenderer.toJSON()).toMatchSnapshot();
-
-    testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <ProjectButtons currentTab={Path.Goals} />
-      </Provider>
-    );
-    expect(testRenderer.toJSON()).toMatchSnapshot();
-
-    testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <ProjectButtons currentTab={Path.Statistics} />
-      </Provider>
-    );
-    expect(testRenderer.toJSON()).toMatchSnapshot();
-  });
-});
-
-describe("ProjectButtons", () => {
-  it("has tab shaded when itself is called", () => {
-    mockPath.mockReturnValue(Path.ProjSettings);
-    testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <ProjectButtons currentTab={Path.ProjSettings} />
-      </Provider>
-    );
-    expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });

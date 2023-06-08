@@ -6,8 +6,6 @@ import {
 } from "@mui/material/styles";
 import { TypographyOptions } from "@mui/material/styles/createTypography";
 
-import { Path } from "browserHistory";
-
 export type HEX = `#${string}`;
 
 // Constants which define colors later:
@@ -18,7 +16,8 @@ export const themeColors: { [key: string]: HEX } = {
   warn: orange[300],
   success: green[600],
   highlight: yellow[200],
-  shade: blue[700], // tabColor()
+  lightShade: blue[700], // AppBarTypes.ts
+  darkShade: blue[900], // AppBarTypes.ts
   recordIdle: red[500], // RecorderIcon.tsx
   recordActive: red[900], // RecorderIcon.tsx
 };
@@ -58,10 +57,6 @@ const baseTheme = createTheme({
 
 // Can have a number of additional options passed in; here, sticks with defaults
 export default responsiveFontSizes(baseTheme, dynamicFontParams);
-
-export function tabColor(currentTab: Path, tabName: Path): string {
-  return currentTab.indexOf(tabName) !== -1 ? themeColors.shade : "inherit";
-}
 
 // A 20-color palette from https://grafify-vignettes.netlify.app/colour_palettes.html#graf-hex
 export const colorblindSafePalette: { [key: number]: HEX } = {
