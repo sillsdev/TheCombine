@@ -2,7 +2,7 @@ import { Column } from "@material-table/core";
 import { Input, Typography } from "@mui/material";
 import { t } from "i18next";
 
-import { GrammaticalInfo, SemanticDomain } from "api/models";
+import { SemanticDomain } from "api/models";
 import {
   DefinitionCell,
   DeleteCell,
@@ -221,25 +221,12 @@ const columns: Column<any>[] = [
   // Part-of-speech column
   {
     title: ColumnTitle.PartOfSpeech,
-    // field determines what is passed as props.value to editComponent
-    field: ReviewEntriesWordField.Senses,
     disableClick: true,
+    editable: "never",
+    field: ReviewEntriesWordField.Senses,
     render: (rowData: ReviewEntriesWord) => (
       <PartOfSpeechCell rowData={rowData} />
     ),
-    editComponent: (props: FieldParameterStandard) => {
-      const editGramInfo = (guid: string, partOfSpeech: GrammaticalInfo) => {
-        if (props.onRowDataChange) {
-          props.onRowDataChange({
-            ...props.rowData,
-            senses: props.rowData.senses.map((s) =>
-              s.guid === guid ? { ...s, partOfSpeech } : s
-            ),
-          });
-        }
-      };
-      return <PartOfSpeechCell {...props} editGramInfo={editGramInfo} />;
-    },
     customFilterAndSearch: (
       term: string,
       rowData: ReviewEntriesWord

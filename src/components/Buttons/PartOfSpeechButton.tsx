@@ -31,22 +31,30 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
     catGroupText
   );
 
+  const CatGroupButton = () => (
+    <IconButtonWithTooltip
+      buttonId={props.buttonId}
+      icon={
+        <Square
+          fontSize="small"
+          sx={{ color: getGramCatGroupColor(catGroup) }}
+        />
+      }
+      onClick={props.onClick}
+      text={hoverText}
+      small
+    />
+  );
+
   return (
     <>
-      <IconButtonWithTooltip
-        buttonId={props.buttonId}
-        icon={
-          <Square
-            fontSize="small"
-            sx={{ color: getGramCatGroupColor(catGroup) }}
-          />
-        }
-        onClick={props.onClick}
-        text={hoverText}
-        small
-      />
-      {!props.onlyIcon && (
-        <Typography display="inline">{grammaticalCategory}</Typography>
+      {props.onlyIcon ? (
+        <CatGroupButton />
+      ) : (
+        <Typography>
+          <CatGroupButton />
+          {grammaticalCategory}
+        </Typography>
       )}
     </>
   );
