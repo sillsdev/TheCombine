@@ -41,8 +41,9 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
         />
       }
       onClick={props.onClick}
-      text={hoverText}
+      side="top"
       small
+      text={hoverText}
     />
   );
 
