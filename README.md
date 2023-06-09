@@ -534,9 +534,9 @@ If the following tools were not installed with either _Rancher Desktop_ or _Dock
 links:
 
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-cli`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-cli`
 2. [helm](https://helm.sh/docs/intro/install/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-helm`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-helm`
 
 ## Setup The Combine
 
