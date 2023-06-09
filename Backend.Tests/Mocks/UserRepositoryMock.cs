@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -102,5 +103,10 @@ namespace Backend.Tests.Mocks
     }
 
     [Serializable]
-    public class UserCreationException : Exception { }
+    public class UserCreationException : Exception
+    {
+        public UserCreationException() { }
+
+        protected UserCreationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
 }
