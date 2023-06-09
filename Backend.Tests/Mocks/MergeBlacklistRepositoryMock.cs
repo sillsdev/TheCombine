@@ -39,11 +39,11 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public Task<MergeBlacklistEntry> Create(MergeBlacklistEntry entry)
+        public Task<MergeBlacklistEntry> Create(MergeBlacklistEntry blacklistEntry)
         {
-            entry.Id = Guid.NewGuid().ToString();
-            _mergeBlacklist.Add(entry.Clone());
-            return Task.FromResult(entry.Clone());
+            blacklistEntry.Id = Guid.NewGuid().ToString();
+            _mergeBlacklist.Add(blacklistEntry.Clone());
+            return Task.FromResult(blacklistEntry.Clone());
         }
 
         public Task<bool> DeleteAll(string projectId)
@@ -58,16 +58,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
         }
 
-        public Task<ResultOfUpdate> Update(MergeBlacklistEntry entry)
+        public Task<ResultOfUpdate> Update(MergeBlacklistEntry blacklistEntry)
         {
-            var foundEntry = _mergeBlacklist.Single(e => e.ProjectId == entry.ProjectId && e.Id == entry.Id);
+            var foundEntry = _mergeBlacklist.Single(
+                e => e.ProjectId == blacklistEntry.ProjectId && e.Id == blacklistEntry.Id);
             var success = _mergeBlacklist.Remove(foundEntry);
             if (!success)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            _mergeBlacklist.Add(entry.Clone());
+            _mergeBlacklist.Add(blacklistEntry.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }
