@@ -26,7 +26,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainFull_DomainFound()
+        public void GetSemanticDomainFullDomainFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(_semDom);
             var domain = (SemanticDomainFull?)(
@@ -37,7 +37,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainFull_DomainNotFound()
+        public void GetSemanticDomainFullDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
             var domain = (SemanticDomainFull?)(
@@ -46,7 +46,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNode_DomainFound()
+        public void GetSemanticDomainTreeNodeDomainFound()
         {
             var treeNode = new SemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
@@ -58,7 +58,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNode_DomainNotFound()
+        public void GetSemanticDomainTreeNodeDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
             var domain = (SemanticDomainTreeNode?)(
@@ -67,7 +67,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNodeByName_DomainFound()
+        public void GetSemanticDomainTreeNodeByNameDomainFound()
         {
             var treeNode = new SemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
@@ -79,7 +79,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNodeByName_DomainNotFound()
+        public void GetSemanticDomainTreeNodeByNameDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
             var domain = (SemanticDomainTreeNode?)(
