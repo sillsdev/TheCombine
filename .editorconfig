@@ -7,6 +7,8 @@ indent_size = 2
 [*.cs]
 max_line_length = 120
 indent_size = 4
+# CA1001 makes unnecessary demands on our use of _variable in Backend.Tests.
+dotnet_diagnostic.CA1001.severity = none
 # CA1305 requires using a FormatProvider with int.Parse and string.Format.
 dotnet_diagnostic.CA1305.severity = none
 dotnet_diagnostic.CA1710.severity = warning
