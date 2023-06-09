@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -50,7 +49,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetUser()
         {
-            var user = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
 
             _userRepo.Create(RandomUser());
             _userRepo.Create(RandomUser());
@@ -75,7 +74,7 @@ namespace Backend.Tests.Controllers
             const string email = "example@gmail.com";
             var user = _userRepo.Create(
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
-            ).Result ?? throw new Exception();
+            ).Result ?? throw new UserCreationException();
 
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
@@ -96,9 +95,9 @@ namespace Backend.Tests.Controllers
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             const string email = "example@gmail.com";
-            var _ = _userRepo.Create(new User
-            { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
-            ).Result ?? throw new Exception();
+            var _ = _userRepo.Create(
+                new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
+            ).Result ?? throw new UserCreationException();
 
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ForbidResult>(action);
@@ -116,7 +115,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUser()
         {
-            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
             var modUser = origUser.Clone();
             modUser.Username = "Mark";
 
@@ -130,8 +129,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUserCantUpdateIsAdmin()
         {
-            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
-            var modUser = origUser.Clone() ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
+            var modUser = origUser.Clone() ?? throw new UserCreationException();
             modUser.IsAdmin = true;
 
             _ = _userController.UpdateUser(modUser.Id, modUser);
@@ -144,7 +143,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteUser()
         {
-            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
             Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(1));
 
             _ = _userController.DeleteUser(origUser.Id).Result;

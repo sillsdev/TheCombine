@@ -129,4 +129,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult<User?>(user);
         }
     }
+
+    [Serializable]
+    public class UserAuthenticationException : Exception { }
 }

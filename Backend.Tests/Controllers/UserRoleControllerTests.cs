@@ -209,15 +209,17 @@ namespace Backend.Tests.Controllers
             var userId = (await _userRepo.Create(user))!.Id;
 
             Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(1));
-            var fetchedUser = await _userRepo.GetUser(userId) ?? throw new System.Exception();
-            Assert.That(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            var fetchedUser = await _userRepo.GetUser(userId);
+            Assert.IsNotNull(fetchedUser);
+            Assert.That(fetchedUser!.ProjectRoles.ContainsKey(_projId));
             Assert.That(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
 
             await _userRoleController.DeleteUserRole(_projId, userId);
 
             Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(0));
-            fetchedUser = await _userRepo.GetUser(userId) ?? throw new System.Exception();
-            Assert.False(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            fetchedUser = await _userRepo.GetUser(userId);
+            Assert.IsNotNull(fetchedUser);
+            Assert.False(fetchedUser!.ProjectRoles.ContainsKey(_projId));
             Assert.False(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
         }
 

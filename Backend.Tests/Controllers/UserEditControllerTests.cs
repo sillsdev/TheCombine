@@ -42,8 +42,8 @@ namespace Backend.Tests.Controllers
 
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             await _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = await _permissionService.Authenticate(
-                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password) ?? throw new Exception();
+            _jwtAuthenticatedUser = await _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
+                _jwtAuthenticatedUser.Password) ?? throw new UserAuthenticationException();
             _userEditController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
             _projId = (await _projRepo.Create(new Project { Name = "UserEditControllerTests" }))!.Id;
         }

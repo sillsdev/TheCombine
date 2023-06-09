@@ -100,4 +100,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }
+
+    [Serializable]
+    public class UserCreationException : Exception { }
 }
