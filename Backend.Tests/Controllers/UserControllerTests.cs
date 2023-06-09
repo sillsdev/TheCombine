@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -8,11 +9,25 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserControllerTests
+    public class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private IPermissionService _permissionService = null!;
         private UserController _userController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _userController?.Dispose();
+            }
+        }
 
         [SetUp]
         public void Setup()

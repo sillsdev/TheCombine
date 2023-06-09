@@ -13,7 +13,7 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserEditControllerTests
+    public class UserEditControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
@@ -21,6 +21,20 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private IUserEditService _userEditService = null!;
         private UserEditController _userEditController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _userEditController?.Dispose();
+            }
+        }
 
         private User _jwtAuthenticatedUser = null!;
         private string _projId = null!;

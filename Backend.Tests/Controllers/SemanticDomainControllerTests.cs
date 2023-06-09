@@ -1,4 +1,5 @@
-﻿using Backend.Tests.Mocks;
+﻿using System;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -7,15 +8,28 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class SemanticDomainControllerTests
+    public class SemanticDomainControllerTests : IDisposable
     {
         private ISemanticDomainRepository _semDomRepository = null!;
         private SemanticDomainController _semDomController = null!;
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _semDomController?.Dispose();
+            }
+        }
+
         private const string Id = "1";
         private const string Lang = "en";
         private const string Name = "Universe";
-
         private readonly SemanticDomainFull _semDom = new() { Id = Id, Lang = Lang, Name = Name };
 
         [SetUp]

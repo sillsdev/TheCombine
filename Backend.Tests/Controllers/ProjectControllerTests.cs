@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -9,13 +10,27 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class ProjectControllerTests
+    public class ProjectControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
         private UserRoleRepositoryMock _userRoleRepo = null!;
         private IPermissionService _permissionService = null!;
         private ProjectController _projController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _projController?.Dispose();
+            }
+        }
 
         private User _jwtAuthenticatedUser = null!;
 
