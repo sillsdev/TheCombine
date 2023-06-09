@@ -21,6 +21,7 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
     return <Fragment />;
   }
   const catGroupText = t(`grammaticalCategory.group.${catGroup}`);
+  const color = getGramCatGroupColor(catGroup);
   const hoverText = props.onlyIcon ? (
     <>
       {`[${catGroupText}]`}
@@ -34,12 +35,7 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
   const CatGroupButton = () => (
     <IconButtonWithTooltip
       buttonId={props.buttonId}
-      icon={
-        <Square
-          fontSize="small"
-          sx={{ color: getGramCatGroupColor(catGroup) }}
-        />
-      }
+      icon={<Square fontSize="small" sx={{ color }} />}
       onClick={props.onClick}
       side="top"
       small
@@ -47,16 +43,12 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
     />
   );
 
-  return (
-    <>
-      {props.onlyIcon ? (
-        <CatGroupButton />
-      ) : (
-        <Typography>
-          <CatGroupButton />
-          {grammaticalCategory}
-        </Typography>
-      )}
-    </>
+  return props.onlyIcon ? (
+    <CatGroupButton />
+  ) : (
+    <Typography>
+      <CatGroupButton />
+      {grammaticalCategory}
+    </Typography>
   );
 }

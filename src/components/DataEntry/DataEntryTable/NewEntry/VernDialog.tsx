@@ -1,13 +1,21 @@
-import { Dialog, DialogContent, MenuList, Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  Grid,
+  MenuList,
+  Typography,
+} from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Word } from "api/models";
+import { GramCatGroup, Word } from "api/models";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
-import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
+import {
+  DomainCell,
+  GlossCell,
+  PartOfSpeechCell,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import theme from "types/theme";
 
 interface vernDialogProps {
   vernacularWords: Word[];
@@ -20,12 +28,13 @@ interface vernDialogProps {
 export default function VernDialog(props: vernDialogProps): ReactElement {
   return (
     <Dialog
-      open={props.open}
+      maxWidth={false}
       onClose={(_, reason) => {
         if (reason !== "backdropClick") {
           props.handleClose();
         }
       }}
+      open={props.open}
     >
       <DialogContent>
         <VernList
@@ -47,30 +56,48 @@ interface VernListProps {
 export function VernList(props: VernListProps) {
   const { t } = useTranslation();
 
+  const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
+    w.senses.find(
+      (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+    )
+  );
+
   return (
     <>
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
       <MenuList autoFocusItem>
-        {props.vernacularWords.map((word) => (
-          <StyledMenuItem
-            onClick={() => props.closeDialog(word.id)}
-            key={word.id}
-            id={word.id}
-          >
-            {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
-            <div style={{ margin: theme.spacing(4) }}>
-              <GlossCell
-                value={new ReviewEntriesWord(word, props.analysisLang).senses}
-                rowData={new ReviewEntriesWord(word, props.analysisLang)}
-              />
-            </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={new ReviewEntriesWord(word, props.analysisLang)}
-              />
-            </div>
-          </StyledMenuItem>
-        ))}
+        {props.vernacularWords.map((w) => {
+          const entry = new ReviewEntriesWord(w, props.analysisLang);
+          return (
+            <StyledMenuItem
+              id={w.id}
+              key={w.id}
+              onClick={() => props.closeDialog(w.id)}
+            >
+              <Grid
+                container
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={5}
+              >
+                <Grid item xs="auto">
+                  <Typography variant="h5">{w.vernacular}</Typography>
+                </Grid>
+                <Grid item xs="auto">
+                  <GlossCell rowData={entry} value={entry.senses} />
+                </Grid>
+                {hasPartsOfSpeech && (
+                  <Grid item xs="auto">
+                    <PartOfSpeechCell rowData={entry} />
+                  </Grid>
+                )}
+                <Grid item xs>
+                  <DomainCell rowData={entry} />
+                </Grid>
+              </Grid>
+            </StyledMenuItem>
+          );
+        })}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
           {t("addWords.newEntryFor")}

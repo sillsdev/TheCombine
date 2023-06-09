@@ -1,12 +1,20 @@
-import { Dialog, DialogContent, MenuList, Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  Grid,
+  MenuList,
+  Typography,
+} from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Word } from "api/models";
+import { GramCatGroup, Word } from "api/models";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
-import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import {
+  DomainCell,
+  PartOfSpeechCell,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import theme from "types/theme";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
@@ -20,12 +28,13 @@ interface SenseDialogProps {
 export default function SenseDialog(props: SenseDialogProps): ReactElement {
   return (
     <Dialog
-      open={props.open}
+      maxWidth={false}
       onClose={(_, reason) => {
         if (reason !== "backdropClick") {
           props.handleClose();
         }
       }}
+      open={props.open}
     >
       <DialogContent>
         <SenseList
@@ -47,31 +56,44 @@ interface SenseListProps {
 export function SenseList(props: SenseListProps) {
   const { t } = useTranslation();
 
+  const hasPartsOfSpeech = !!props.selectedWord.senses.find(
+    (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+  );
+
   return (
     <>
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
       <MenuList autoFocusItem>
         {props.selectedWord.senses.map((sense) => {
+          const entry = new ReviewEntriesWord(
+            { ...props.selectedWord, senses: [sense] },
+            props.analysisLang
+          );
           const gloss = firstGlossText(sense);
           return (
             <StyledMenuItem
+              id={sense.guid}
+              key={sense.guid}
               onClick={() => props.closeDialog(gloss)}
-              key={gloss}
-              id={gloss}
             >
-              <div style={{ margin: theme.spacing(4) }}>
-                <h3>{gloss}</h3>
-              </div>
-              <div style={{ margin: theme.spacing(4) }}>
-                <DomainCell
-                  rowData={
-                    new ReviewEntriesWord(
-                      { ...props.selectedWord, senses: [sense] },
-                      props.analysisLang
-                    )
-                  }
-                />
-              </div>
+              <Grid
+                container
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={5}
+              >
+                <Grid item xs="auto">
+                  <Typography variant="h5">{gloss}</Typography>
+                </Grid>
+                {hasPartsOfSpeech && (
+                  <Grid item xs="auto">
+                    <PartOfSpeechCell rowData={entry} />
+                  </Grid>
+                )}
+                <Grid item xs>
+                  <DomainCell rowData={entry} />
+                </Grid>
+              </Grid>
             </StyledMenuItem>
           );
         })}
