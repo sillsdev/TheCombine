@@ -431,17 +431,25 @@ namespace BackendFramework.Services
                 lexSense.Definition.MergeIn(MultiTextBase.Create(defDict));
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(glossDict));
                 lexSense.Id = currentSense.Guid.ToString();
-                entry.Senses.Add(lexSense);
+
+                // Add grammatical info
+                if (currentSense.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified)
+                {
+                    var optionRef = new OptionRef(currentSense.GrammaticalInfo.GrammaticalCategory);
+                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                        LexSense.WellKnownProperties.PartOfSpeech, optionRef));
+                }
 
                 // Merge in semantic domains
                 foreach (var semDom in currentSense.SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
                     orc.Add(semDom.Id + " " + semDom.Name);
-
-                    lexSense.Properties.Add(
-                        new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                        LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
                 }
+
+                entry.Senses.Add(lexSense);
             }
         }
 

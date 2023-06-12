@@ -315,18 +315,16 @@ namespace BackendFramework.Controllers
         /// <returns> UserId, if successful </returns>
         [HttpGet("deleteexport", Name = "DeleteLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> DeleteLiftFile()
+        public IActionResult DeleteLiftFile()
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await DeleteLiftFile(userId);
+            return DeleteLiftFile(userId);
         }
 
-        internal async Task<IActionResult> DeleteLiftFile(string userId)
+        internal IActionResult DeleteLiftFile(string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
-            {
-                return Forbid();
-            }
+            // Don't check _permissionService.HasProjectPermission,
+            // since the lift-file is user-specific, not tied to a project.
 
             _liftService.DeleteExport(userId);
             return Ok(userId);
