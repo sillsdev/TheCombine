@@ -1,5 +1,5 @@
-# User guide build environment using Python 3.11.3-bullseye
-FROM python@sha256:181e49146bfdc8643ebe0f66cd06f27f42df40a0921438e96770dab09797effb AS user_guide_builder
+# User guide build environment using Python 3.11.4-bullseye
+FROM python@sha256:354903e205598c82f91ab025139923fcde8ab6e0cd3bb0f5b753aeaaecb71923 AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
