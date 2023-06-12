@@ -9,13 +9,19 @@ import { Word } from "api/models";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import { VernList } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import theme from "types/theme";
-import { simpleWord, testWordList } from "types/word";
+import { testWordList } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
+
+// Replace <MenuItem> with <div> to eliminate console error:
+//  MUI: Unable to set focus to a MenuItem whose component has not been rendered.
+jest.mock("@mui/material/MenuItem", () => "div");
 
 jest.mock(
   "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell",
   () => "div"
 );
+
+let testRenderer: renderer.ReactTestRenderer;
 
 const mockState = {
   currentProjectState: {
@@ -25,29 +31,11 @@ const mockState = {
 const mockStore = configureMockStore()(mockState);
 
 describe("VernList ", () => {
-  it("renders without crashing", () => {
-    renderer.act(() => {
-      renderer.create(
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <Provider store={mockStore}>
-              <VernList
-                vernacularWords={[simpleWord("", "")]}
-                closeDialog={jest.fn()}
-                analysisLang={defaultWritingSystem.bcp47}
-              />
-            </Provider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      );
-    });
-  });
-
   it("closes dialog when selecting a menu item", () => {
     const closeDialogMockCallback = jest.fn();
     const words = testWordList();
-    const instance = createVernListInstance(words, closeDialogMockCallback);
-    const menuItem = instance.findByProps({ id: words[0].id });
+    createVernListInstance(words, closeDialogMockCallback);
+    const menuItem = testRenderer.root.findByProps({ id: words[0].id });
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(0);
     menuItem.props.onClick();
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(1);
@@ -55,27 +43,29 @@ describe("VernList ", () => {
 
   it("has the correct number of menu items", () => {
     const words = testWordList();
-    const instance = createVernListInstance(words, jest.fn());
-    const menuItemsCount = instance.findAllByType(StyledMenuItem).length;
-    expect(words.length + 1).toBe(menuItemsCount);
+    createVernListInstance(words, jest.fn());
+    const menuItems = testRenderer.root.findAllByType(StyledMenuItem);
+    expect(menuItems).toHaveLength(words.length + 1);
   });
 });
 
 function createVernListInstance(
   _vernacularWords: Word[],
   _mockCallback: jest.Mock
-): renderer.ReactTestInstance {
-  return renderer.create(
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <Provider store={mockStore}>
-          <VernList
-            vernacularWords={_vernacularWords}
-            closeDialog={_mockCallback}
-            analysisLang={defaultWritingSystem.bcp47}
-          />
-        </Provider>
-      </ThemeProvider>
-    </StyledEngineProvider>
-  ).root;
+): void {
+  renderer.act(() => {
+    testRenderer = renderer.create(
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <VernList
+              vernacularWords={_vernacularWords}
+              closeDialog={_mockCallback}
+              analysisLang={defaultWritingSystem.bcp47}
+            />
+          </Provider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    );
+  });
 }

@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  Divider,
   Grid,
   MenuList,
   Typography,
@@ -62,48 +63,55 @@ export function VernList(props: VernListProps) {
     )
   );
 
+  const menuItem = (word: Word): ReactElement => {
+    const entry = new ReviewEntriesWord(word, props.analysisLang);
+    return (
+      <StyledMenuItem
+        id={word.id}
+        key={word.id}
+        onClick={() => props.closeDialog(word.id)}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={5}
+        >
+          <Grid item xs="auto">
+            <Typography variant="h5">{word.vernacular}</Typography>
+          </Grid>
+          <Grid item xs="auto">
+            <GlossCell rowData={entry} value={entry.senses} />
+          </Grid>
+          {hasPartsOfSpeech && (
+            <Grid item xs="auto">
+              <PartOfSpeechCell rowData={entry} />
+            </Grid>
+          )}
+          <Grid item xs>
+            <DomainCell rowData={entry} />
+          </Grid>
+        </Grid>
+      </StyledMenuItem>
+    );
+  };
+
+  const menuItems: ReactElement[] = [];
+  for (const w of props.vernacularWords) {
+    menuItems.push(menuItem(w));
+    menuItems.push(<Divider key={`${w.id}-divider`} />);
+  }
+  menuItems.push(
+    <StyledMenuItem key="new-entry" onClick={() => props.closeDialog("")}>
+      {t("addWords.newEntryFor")}
+      {props.vernacularWords[0].vernacular}
+    </StyledMenuItem>
+  );
+
   return (
     <>
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
-      <MenuList autoFocusItem>
-        {props.vernacularWords.map((w) => {
-          const entry = new ReviewEntriesWord(w, props.analysisLang);
-          return (
-            <StyledMenuItem
-              id={w.id}
-              key={w.id}
-              onClick={() => props.closeDialog(w.id)}
-            >
-              <Grid
-                container
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={5}
-              >
-                <Grid item xs="auto">
-                  <Typography variant="h5">{w.vernacular}</Typography>
-                </Grid>
-                <Grid item xs="auto">
-                  <GlossCell rowData={entry} value={entry.senses} />
-                </Grid>
-                {hasPartsOfSpeech && (
-                  <Grid item xs="auto">
-                    <PartOfSpeechCell rowData={entry} />
-                  </Grid>
-                )}
-                <Grid item xs>
-                  <DomainCell rowData={entry} />
-                </Grid>
-              </Grid>
-            </StyledMenuItem>
-          );
-        })}
-
-        <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {t("addWords.newEntryFor")}
-          {props.vernacularWords[0].vernacular}
-        </StyledMenuItem>
-      </MenuList>
+      <MenuList autoFocusItem>{menuItems}</MenuList>
     </>
   );
 }

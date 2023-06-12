@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  Divider,
   Grid,
   MenuList,
   Typography,
@@ -8,7 +9,7 @@ import {
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, Word } from "api/models";
+import { GramCatGroup, Sense, Word } from "api/models";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import {
   DomainCell,
@@ -60,49 +61,56 @@ export function SenseList(props: SenseListProps) {
     (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
   );
 
+  const menuItem = (sense: Sense): ReactElement => {
+    const entry = new ReviewEntriesWord(
+      { ...props.selectedWord, senses: [sense] },
+      props.analysisLang
+    );
+    const gloss = firstGlossText(sense);
+    return (
+      <StyledMenuItem
+        id={sense.guid}
+        key={sense.guid}
+        onClick={() => props.closeDialog(gloss)}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={5}
+        >
+          <Grid item xs="auto">
+            <Typography variant="h5">{gloss}</Typography>
+          </Grid>
+          {hasPartsOfSpeech && (
+            <Grid item xs="auto">
+              <PartOfSpeechCell rowData={entry} />
+            </Grid>
+          )}
+          <Grid item xs>
+            <DomainCell rowData={entry} />
+          </Grid>
+        </Grid>
+      </StyledMenuItem>
+    );
+  };
+
+  const menuItems: ReactElement[] = [];
+  for (const s of props.selectedWord.senses) {
+    menuItems.push(menuItem(s));
+    menuItems.push(<Divider key={`${s.guid}-divider`} />);
+  }
+  menuItems.push(
+    <StyledMenuItem key="new-sense" onClick={() => props.closeDialog("")}>
+      {t("addWords.newSenseFor")}
+      {props.selectedWord.vernacular}
+    </StyledMenuItem>
+  );
+
   return (
     <>
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
-      <MenuList autoFocusItem>
-        {props.selectedWord.senses.map((sense) => {
-          const entry = new ReviewEntriesWord(
-            { ...props.selectedWord, senses: [sense] },
-            props.analysisLang
-          );
-          const gloss = firstGlossText(sense);
-          return (
-            <StyledMenuItem
-              id={sense.guid}
-              key={sense.guid}
-              onClick={() => props.closeDialog(gloss)}
-            >
-              <Grid
-                container
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={5}
-              >
-                <Grid item xs="auto">
-                  <Typography variant="h5">{gloss}</Typography>
-                </Grid>
-                {hasPartsOfSpeech && (
-                  <Grid item xs="auto">
-                    <PartOfSpeechCell rowData={entry} />
-                  </Grid>
-                )}
-                <Grid item xs>
-                  <DomainCell rowData={entry} />
-                </Grid>
-              </Grid>
-            </StyledMenuItem>
-          );
-        })}
-
-        <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {t("addWords.newSenseFor")}
-          {props.selectedWord.vernacular}
-        </StyledMenuItem>
-      </MenuList>
+      <MenuList autoFocusItem>{menuItems}</MenuList>
     </>
   );
 }
