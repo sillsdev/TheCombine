@@ -106,6 +106,7 @@ interface SenseCardContentProps {
 }
 
 // Only show first sense's glosses/definitions; in merging, others deleted as duplicates.
+// Show first part of speech, if any.
 // Show semantic domains from all senses.
 // In merging, user can select a different one by reordering in the sidebar.
 export default function SenseCardContent(
@@ -130,7 +131,7 @@ export default function SenseCardContent(
 
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
-      {/* Part-of-speech icon. */}
+      {/* Icon for part of speech (if any). */}
       <div style={{ position: "absolute", left: 0, top: 0 }}>
         {gramInfo && (
           <PartOfSpeechButton
@@ -171,9 +172,9 @@ export default function SenseCardContent(
           </IconButton>
         )}
       </div>
-      {/* List glosses and (if enabled) definitions. */}
+      {/* List glosses and (if any) definitions. */}
       {senseText(senseTextInLangs)}
-      {/* List semantic domains */}
+      {/* List semantic domains. */}
       <Grid container spacing={2}>
         {semDoms.map((dom) => (
           <Grid item key={dom}>
