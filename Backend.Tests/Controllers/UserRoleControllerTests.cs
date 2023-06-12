@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
@@ -9,13 +10,27 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserRoleControllerTests
+    public class UserRoleControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;
         private IPermissionService _permissionService = null!;
         private UserRoleController _userRoleController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _userRoleController?.Dispose();
+            }
+        }
 
         private string _projId = null!;
         private const string MissingId = "MISSING_ID";
@@ -209,15 +224,17 @@ namespace Backend.Tests.Controllers
             var userId = (await _userRepo.Create(user))!.Id;
 
             Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(1));
-            var fetchedUser = await _userRepo.GetUser(userId) ?? throw new System.Exception();
-            Assert.That(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            var fetchedUser = await _userRepo.GetUser(userId);
+            Assert.IsNotNull(fetchedUser);
+            Assert.That(fetchedUser!.ProjectRoles.ContainsKey(_projId));
             Assert.That(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
 
             await _userRoleController.DeleteUserRole(_projId, userId);
 
             Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(0));
-            fetchedUser = await _userRepo.GetUser(userId) ?? throw new System.Exception();
-            Assert.False(fetchedUser.ProjectRoles.ContainsKey(_projId));
+            fetchedUser = await _userRepo.GetUser(userId);
+            Assert.IsNotNull(fetchedUser);
+            Assert.False(fetchedUser!.ProjectRoles.ContainsKey(_projId));
             Assert.False(fetchedUser.ProjectRoles.ContainsValue(userRole.Id));
         }
 

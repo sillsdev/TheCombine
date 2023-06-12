@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,13 +12,27 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class WordControllerTests
+    public class WordControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
-        private IWordService _wordService = null!;
         private IPermissionService _permissionService = null!;
+        private IWordService _wordService = null!;
         private WordController _wordController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _wordController?.Dispose();
+            }
+        }
 
         private string _projId = null!;
         private const string MissingId = "MISSING_ID";
