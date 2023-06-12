@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -128,5 +129,14 @@ namespace Backend.Tests.Mocks
             user.Password = "";
             return Task.FromResult<User?>(user);
         }
+    }
+
+    [Serializable]
+    public class UserAuthenticationException : Exception
+    {
+        public UserAuthenticationException() { }
+
+        protected UserAuthenticationException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

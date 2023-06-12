@@ -19,7 +19,7 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
-    public class LiftControllerTests
+    public class LiftControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -28,6 +28,20 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _liftController?.Dispose();
+            }
+        }
 
         private ILogger<LiftController> _logger = null!;
         private string _projId = null!;

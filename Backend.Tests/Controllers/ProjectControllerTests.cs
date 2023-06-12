@@ -10,13 +10,27 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class ProjectControllerTests
+    public class ProjectControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
         private UserRoleRepositoryMock _userRoleRepo = null!;
         private IPermissionService _permissionService = null!;
         private ProjectController _projController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _projController?.Dispose();
+            }
+        }
 
         private User _jwtAuthenticatedUser = null!;
 
@@ -35,8 +49,8 @@ namespace Backend.Tests.Controllers
 
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _permissionService.Authenticate(
-                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
+            _jwtAuthenticatedUser = _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
+                _jwtAuthenticatedUser.Password).Result ?? throw new UserAuthenticationException();
 
             _projController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
