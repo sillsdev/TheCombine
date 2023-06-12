@@ -509,7 +509,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@emotion/styled 11.10.6
+@emotion/styled 11.11.0
 MIT
 MIT License
 
@@ -1042,7 +1042,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/base 5.0.0-beta.2
+@mui/base 5.0.0-beta.4
 MIT
 The MIT License (MIT)
 
@@ -1067,7 +1067,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/core-downloads-tracker 5.13.2
+@mui/core-downloads-tracker 5.13.4
 MIT
 The MIT License (MIT)
 
@@ -1117,7 +1117,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/material 5.13.2
+@mui/material 5.13.4
 MIT
 The MIT License (MIT)
 
@@ -1317,7 +1317,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@popperjs/core 2.11.7
+@popperjs/core 2.11.8
 MIT
 The MIT License (MIT)
 
@@ -43326,11 +43326,11 @@ SOFTWARE.
 
 
 
-react-i18next 12.1.4
+react-i18next 12.3.1
 MIT
 The MIT License (MIT)
 
-Copyright (c) 2022 i18next
+Copyright (c) 2023 i18next
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43576,11 +43576,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-toastify 9.1.1
+react-toastify 9.1.3
 MIT
 MIT License
 
-Copyright (c) 2022 Fadi Khadra
+Copyright (c) 2023 Fadi Khadra
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43599,6 +43599,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 
 react-transition-group 4.4.5
 BSD-3-Clause
