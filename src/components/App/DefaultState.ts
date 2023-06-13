@@ -1,4 +1,4 @@
-import { defaultState as goalTimelineState } from "components/GoalTimeline/DefaultState";
+import { defaultState as goalTimelineState } from "components/GoalTimeline/GoalTimelineTypes";
 import { defaultState as loginState } from "components/Login/Redux/LoginReducer";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";

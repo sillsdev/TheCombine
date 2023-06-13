@@ -5,7 +5,7 @@ import {
   ImageListItem,
   Typography,
 } from "@mui/material";
-import { CSSProperties, ReactElement, useState } from "react";
+import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
@@ -14,7 +14,7 @@ import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompl
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 
-export type Orientation = "horizontal" | "vertical";
+type Orientation = "horizontal" | "vertical";
 
 function gridStyle(
   orientation: Orientation,
@@ -87,17 +87,9 @@ export default function GoalList(props: GoalListProps): ReactElement {
 function buttonStyle(orientation: Orientation, size: number): CSSProperties {
   switch (orientation) {
     case "horizontal":
-      return {
-        height: "95%",
-        padding: "1vw",
-        width: size + "vw",
-      };
+      return { height: "95%", padding: "1vw", width: size + "vw" };
     case "vertical":
-      return {
-        height: "95%",
-        padding: "1vw",
-        width: "100%",
-      };
+      return { height: "95%", padding: "1vw", width: "100%" };
   }
 }
 
@@ -140,26 +132,24 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
   }
 
   if (goal.status === GoalStatus.Completed) {
-    let goalInfo: ReactElement | null;
-    switch (goal.goalType) {
-      case GoalType.CreateCharInv:
-        goalInfo = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
-        break;
-      case GoalType.MergeDups:
-        goalInfo = MergesCount(goal.changes as MergesCompleted);
-        break;
-      case GoalType.ReviewEntries:
-      default:
-        goalInfo = null;
-        break;
-    }
     return (
       <Typography variant="h6">
         {t(goal.name + ".title")}
-        {goalInfo}
+        {getCompletedGoalInfo(goal)}
       </Typography>
     );
   }
 
   return <Typography variant="h4">{t(goal.name + ".title")}</Typography>;
+}
+
+function getCompletedGoalInfo(goal: Goal): ReactElement {
+  switch (goal.goalType) {
+    case GoalType.CreateCharInv:
+      return CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
+    case GoalType.MergeDups:
+      return MergesCount(goal.changes as MergesCompleted);
+    default:
+      return <Fragment />;
+  }
 }
